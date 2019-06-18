@@ -2,164 +2,243 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBCAC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:11:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4B8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:12:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 526B62082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:11:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B21CC2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:12:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="pChkqb2/"
+	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="x8SMGPt5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730834AbfFRWLN (ORCPT
+        id S1730713AbfFRWMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:11:13 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:47254 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729982AbfFRWLM (ORCPT
+        Tue, 18 Jun 2019 18:12:35 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:40242 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730301AbfFRWMc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:11:12 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IM9Wp6080715;
-        Tue, 18 Jun 2019 22:10:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=Zc2OUm1tnM3N2m7NXIMcwM3Hdgj3tqDikz5h/JZLlPw=;
- b=pChkqb2/rjNMRDRJzKlMsm16PdLxVJCZ10fEz2t3p+DvZsTUNdQq+YZgzkFrJ3IqK9Hc
- DM8cDMG7F0TCra0DDX+J3I5TU5qskXQD/1nbeA43TDZq7sVefljpljvMfxfi3IaaXI3U
- iKiuEa+Mw3wPAE+sWYFsLAHnQatG2AbO9KcUdGJcWkk9IUKfqNwHhaOpj7nAjMcRpqHp
- SdnJrlUV8wtS0g1X5ysVMy7UWs6Y4MopeiLMIyeeEUJkpTu3/IW+wJoPtiayxTxGtABm
- wwe4axjpwLYzzebmfYEUwi1+YsHBQuGfpUgybKABBZN5OAXqsODj7VizdE9Gf2LZoQwK 2g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2t7809839u-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 22:10:37 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IM983t057436;
-        Tue, 18 Jun 2019 22:10:37 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2t77ymrcde-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 22:10:37 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5IMAZqp004922;
-        Tue, 18 Jun 2019 22:10:35 GMT
-Received: from [10.159.158.20] (/10.159.158.20)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 15:10:35 -0700
-Subject: Re: [PATCH 0/6] libnvdimm: Fix async operations and locking
-To:     Dan Williams <dan.j.williams@intel.com>, linux-nvdimm@lists.01.org
-Cc:     Ira Weiny <ira.weiny@intel.com>, Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>, stable@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Erwin Tsaur <erwin.tsaur@oracle.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org
-References: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   Jane Chu <jane.chu@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <53fa618d-376f-2200-c8ba-e22ba004cdc0@oracle.com>
-Date:   Tue, 18 Jun 2019 15:10:33 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 18:12:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id a9so10465073lff.7
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 15:12:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7ijTfZvfI5wTJeK3N+IrXSjofyksCP1FMpQA/cT2QWU=;
+        b=x8SMGPt5CiziwkN3SCSA7Z0jWoPKkMXC56QCq+rhpdnCQb7X0zm6NrCqztIGSaqu0S
+         nyx9ubiWqlPc5g01uCZnYqwpwQ+ekwt2L19wdNEr8eQ4SMT23yDlXm6uyuKiKEAncj8a
+         38eLY2zHb8L9ly8vD63stgevnXOR2av3Rl1kjVaJ7v5e41jfNdl5sO7i6uBeFqHOn2lc
+         xuI2Ibg6KEl9kMayLNOnRibmy+knfntp/5G3h4GQKG3amw+q/cyR6WDR5lE5sr9TXTPy
+         O24VLdSd2ef7nPlyXmjKEsQCNSlingjELGr0xPg14Yar7eH7+qJMmBrqv91BJaROoXyo
+         10NA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7ijTfZvfI5wTJeK3N+IrXSjofyksCP1FMpQA/cT2QWU=;
+        b=Saaanh5v54e2AACyH0coqmktnxNfwtadc7wJeDxQvaKiNRMhiY9p0Fdk+QYs0h6ehj
+         y/WBV/Xg6mIfizG2ZjF07wqzbLIOQ5OrSMowrSjtOLQubHhKMURqchQ0QdsikWV5RX7O
+         IXexpC6Iqae0rcWNsJyi44Cv2dCGVlWSDG3ia6WsiWgr/bMPzQiQSY1pztk1Ly5tA+N7
+         QmEFlmv0eyCs7ESA5KAcmmJl8XOLYzxkAYQl87R7ay+ERNLf5csgjrieEj/WC3e3VqGA
+         g5uiyZMuTacxSgAFZtgL4RmkrlgCifLVrVtlgJApJ6mo9/HBL+dOVqNXEheolNymMBL4
+         krEQ==
+X-Gm-Message-State: APjAAAVj4RkY7YUreiy69xOX8n1jt3qUNo6l1aaGMiTPhA55kegkmwdV
+        js0jQwOKDpi1ZSqwfYPdX4m3Yg2vdm+OT5tnGWsA
+X-Google-Smtp-Source: APXvYqzZQi06PsgleLiA9BnZDSf+AVj02P6GpIYllhxTaBU8QmqZTlzv0Kz7u7O4QUVbSMdtwS/xzb4L+qw66/UkkdQ=
+X-Received: by 2002:ac2:5310:: with SMTP id c16mr59181153lfh.119.1560895948607;
+ Tue, 18 Jun 2019 15:12:28 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906180177
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906180177
+References: <20190529145742.GA8959@cisco> <20190531002058.tsddah4edcazkuzs@madcap2.tricolour.ca>
+ <CAHC9VhTrM1op_EH=YAn9pU8dMOr=jB-Ph4SxFeqGFskwLmFnCA@mail.gmail.com> <97478582.yP93vGJyqj@x2>
+In-Reply-To: <97478582.yP93vGJyqj@x2>
+From:   Paul Moore <paul@paul-moore.com>
+Date:   Tue, 18 Jun 2019 18:12:17 -0400
+Message-ID: <CAHC9VhQTPUnHt73SVn=iA_PW1mHkkDf=Nri1kgw_m5mcoiJV9A@mail.gmail.com>
+Subject: Re: [PATCH ghak90 V6 02/10] audit: add container id
+To:     Steve Grubb <sgrubb@redhat.com>
+Cc:     Richard Guy Briggs <rgb@redhat.com>,
+        Tycho Andersen <tycho@tycho.ws>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        containers@lists.linux-foundation.org, linux-api@vger.kernel.org,
+        Linux-Audit Mailing List <linux-audit@redhat.com>,
+        linux-fsdevel@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        omosnace@redhat.com, dhowells@redhat.com, simo@redhat.com,
+        Eric Paris <eparis@parisplace.org>, ebiederm@xmission.com,
+        nhorman@tuxdriver.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/2019 4:25 PM, Dan Williams wrote:
-> The libnvdimm subsystem uses async operations to parallelize device
-> probing operations and to allow sysfs to trigger device_unregister() on
-> deleted namepsaces. A multithreaded stress test of the libnvdimm sysfs
-> interface uncovered a case where device_unregister() is triggered
-> multiple times, and the subsequent investigation uncovered a broken
-> locking scenario.
-> 
-> The lack of lockdep coverage for device_lock() stymied the debug. That
-> is, until patch6 "driver-core, libnvdimm: Let device subsystems add
-> local lockdep coverage" solved that with a shadow lock, with lockdep
-> coverage, to mirror device_lock() operations. Given the time saved with
-> shadow-lock debug-hack, patch6 attempts to generalize device_lock()
-> debug facility that might be able to be carried upstream. Patch6 is
-> staged at the end of this fix series in case it is contentious and needs
-> to be dropped.
-> 
-> Patch1 "drivers/base: Introduce kill_device()" could be achieved with
-> local libnvdimm infrastructure. However, the existing 'dead' flag in
-> 'struct device_private' aims to solve similar async register/unregister
-> races so the fix in patch2 "libnvdimm/bus: Prevent duplicate
-> device_unregister() calls" can be implemented with existing driver-core
-> infrastructure.
-> 
-> Patch3 is a rare lockdep warning that is intermittent based on
-> namespaces racing ahead of the completion of probe of their parent
-> region. It is not related to the other fixes, it just happened to
-> trigger as a result of the async stress test.
-> 
-> Patch4 and patch5 address an ABBA deadlock tripped by the stress test.
-> 
-> These patches pass the failing stress test and the existing libnvdimm
-> unit tests with CONFIG_PROVE_LOCKING=y and the new "dev->lockdep_mutex"
-> shadow lock with no lockdep warnings.
-> 
-> ---
-> 
-> Dan Williams (6):
->        drivers/base: Introduce kill_device()
->        libnvdimm/bus: Prevent duplicate device_unregister() calls
->        libnvdimm/region: Register badblocks before namespaces
->        libnvdimm/bus: Stop holding nvdimm_bus_list_mutex over __nd_ioctl()
->        libnvdimm/bus: Fix wait_nvdimm_bus_probe_idle() ABBA deadlock
->        driver-core, libnvdimm: Let device subsystems add local lockdep coverage
-> 
-> 
->   drivers/acpi/nfit/core.c        |   28 ++++---
->   drivers/acpi/nfit/nfit.h        |   24 ++++++
->   drivers/base/core.c             |   30 ++++++--
->   drivers/nvdimm/btt_devs.c       |   16 ++--
->   drivers/nvdimm/bus.c            |  154 +++++++++++++++++++++++++++------------
->   drivers/nvdimm/core.c           |   10 +--
->   drivers/nvdimm/dimm_devs.c      |    4 +
->   drivers/nvdimm/namespace_devs.c |   36 +++++----
->   drivers/nvdimm/nd-core.h        |   71 ++++++++++++++++++
->   drivers/nvdimm/pfn_devs.c       |   24 +++---
->   drivers/nvdimm/pmem.c           |    4 +
->   drivers/nvdimm/region.c         |   24 +++---
->   drivers/nvdimm/region_devs.c    |   12 ++-
->   include/linux/device.h          |    6 ++
->   14 files changed, 308 insertions(+), 135 deletions(-)
-> 
+On Mon, Jun 3, 2019 at 4:24 PM Steve Grubb <sgrubb@redhat.com> wrote:
+> Hello Paul,
+>
+> I am curious about this. We seemed to be close to getting this patch pulled
+> in. A lot of people are waiting for it. Can you summarize what you think the
+> patches need and who we think needs to do it? I'm lost. Does LXC people need
+> to propose something? Does Richard? Someone else? Who's got the ball?
 
-Tested-by: Jane Chu <jane.chu@oracle.com>
+[My apologies, this was lost in my inbox and I just not noticed it.]
 
-Specifically, running parallel ndctls creating/destroying namespaces in 
-multiple processes concurrently led to system panic, that has been 
-verified fixed by this patch series.
+Please don't top post on things sent to the mailing lists Steve, you
+know better than that.
 
-Thanks!
--jane
+Yes, things were moving along well, but upon talking with the LXC
+folks it appears we underestimated the importance of nested
+orchestrators.  I suspect my reply to Dan on the 4th covered your
+questions, if you didn't see it, here is the relevant snippet:
+
+"To be clear, that's where we are at: we need to figure out what the
+kernel API would look like to support nested container orchestrators.
+My gut feeling is that this isn't going to be terribly complicated
+compared to the rest of the audit container ID work, but it is going
+to be some work.  We had a discussion about some potential solutions
+in the cover letter and it sounds like Richard is working up some
+ideas now, let's wait to see what that looks like."
+
+... and that is where we are at.  I'm looking forward to seeing
+Richard's next patchset.
+
+> On Friday, May 31, 2019 8:44:45 AM EDT Paul Moore wrote:
+> > On Thu, May 30, 2019 at 8:21 PM Richard Guy Briggs <rgb@redhat.com> wrote:
+> > > On 2019-05-30 19:26, Paul Moore wrote:
+> > > > On Thu, May 30, 2019 at 5:29 PM Tycho Andersen <tycho@tycho.ws> wrote:
+> > > > > On Thu, May 30, 2019 at 03:29:32PM -0400, Paul Moore wrote:
+> > > > > > [REMINDER: It is an "*audit* container ID" and not a general
+> > > > > > "container ID" ;)  Smiley aside, I'm not kidding about that part.]
+> > > > >
+> > > > > This sort of seems like a distinction without a difference;
+> > > > > presumably
+> > > > > audit is going to want to differentiate between everything that
+> > > > > people
+> > > > > in userspace call a container. So you'll have to support all this
+> > > > > insanity anyway, even if it's "not a container ID".
+> > > >
+> > > > That's not quite right.  Audit doesn't care about what a container is,
+> > > > or is not, it also doesn't care if the "audit container ID" actually
+> > > > matches the ID used by the container engine in userspace and I think
+> > > > that is a very important line to draw.  Audit is simply given a value
+> > > > which it calls the "audit container ID", it ensures that the value is
+> > > > inherited appropriately (e.g. children inherit their parent's audit
+> > > > container ID), and it uses the value in audit records to provide some
+> > > > additional context for log analysis.  The distinction isn't limited to
+> > > > the value itself, but also to how it is used; it is an "audit
+> > > > container ID" and not a "container ID" because this value is
+> > > > exclusively for use by the audit subsystem.  We are very intentionally
+> > > > not adding a generic container ID to the kernel.  If the kernel does
+> > > > ever grow a general purpose container ID we will be one of the first
+> > > > ones in line to make use of it, but we are not going to be the ones to
+> > > > generically add containers to the kernel.  Enough people already hate
+> > > > audit ;)
+> > > >
+> > > > > > I'm not interested in supporting/merging something that isn't
+> > > > > > useful;
+> > > > > > if this doesn't work for your use case then we need to figure out
+> > > > > > what
+> > > > > > would work.  It sounds like nested containers are much more common
+> > > > > > in
+> > > > > > the lxc world, can you elaborate a bit more on this?
+> > > > > >
+> > > > > > As far as the possible solutions you mention above, I'm not sure I
+> > > > > > like the per-userns audit container IDs, I'd much rather just emit
+> > > > > > the
+> > > > > > necessary tracking information via the audit record stream and let
+> > > > > > the
+> > > > > > log analysis tools figure it out.  However, the bigger question is
+> > > > > > how
+> > > > > > to limit (re)setting the audit container ID when you are in a
+> > > > > > non-init
+> > > > > > userns.  For reasons already mentioned, using capable() is a non
+> > > > > > starter for everything but the initial userns, and using
+> > > > > > ns_capable()
+> > > > > > is equally poor as it essentially allows any userns the ability to
+> > > > > > munge it's audit container ID (obviously not good).  It appears we
+> > > > > > need a different method for controlling access to the audit
+> > > > > > container
+> > > > > > ID.
+> > > > >
+> > > > > One option would be to make it a string, and have it be append only.
+> > > > > That should be safe with no checks.
+> > > > >
+> > > > > I know there was a long thread about what type to make this thing. I
+> > > > > think you could accomplish the append-only-ness with a u64 if you had
+> > > > > some rule about only allowing setting lower order bits than those
+> > > > > that
+> > > > > are already set. With 4 bits for simplicity:
+> > > > >
+> > > > > 1100         # initial container id
+> > > > > 1100 -> 1011 # not allowed
+> > > > > 1100 -> 1101 # allowed, but now 1101 is set in stone since there are
+> > > > >
+> > > > >              # no lower order bits left
+> > > > >
+> > > > > There are probably fancier ways to do it if you actually understand
+> > > > > math :)
+> > > >
+> > > >  ;)
+> > > >
+> > > > > Since userns nesting is limited to 32 levels (right now, IIRC), and
+> > > > > you have 64 bits, this might be reasonable. You could just teach
+> > > > > container engines to use the first say N bits for themselves, with a
+> > > > > 1
+> > > > > bit for the barrier at the end.
+> > > >
+> > > > I like the creativity, but I worry that at some point these
+> > > > limitations are going to be raised (limits have a funny way of doing
+> > > > that over time) and we will be in trouble.  I say "trouble" because I
+> > > > want to be able to quickly do an audit container ID comparison and
+> > > > we're going to pay a penalty for these larger values (we'll need this
+> > > > when we add multiple auditd support and the requisite record routing).
+> > > >
+> > > > Thinking about this makes me also realize we probably need to think a
+> > > > bit longer about audit container ID conflicts between orchestrators.
+> > > > Right now we just take the value that is given to us by the
+> > > > orchestrator, but if we want to allow multiple container orchestrators
+> > > > to work without some form of cooperation in userspace (I think we have
+> > > > to assume the orchestrators will not talk to each other) we likely
+> > > > need to have some way to block reuse of an audit container ID.  We
+> > > > would either need to prevent the orchestrator from explicitly setting
+> > > > an audit container ID to a currently in use value, or instead generate
+> > > > the audit container ID in the kernel upon an event triggered by the
+> > > > orchestrator (e.g. a write to a /proc file).  I suspect we should
+> > > > start looking at the idr code, I think we will need to make use of it.
+> > >
+> > > My first reaction to using the IDR code is that once an idr is given up,
+> > > it can be reused.  I suppose we request IDRs and then never give them up
+> > > to avoid reuse...
+> >
+> > I'm not sure we ever what to guarantee that an audit container ID
+> > won't be reused during the lifetime of the system, it is a discrete
+> > integer after all.  What I think we do want to guarantee is that we
+> > won't allow an unintentional audit container ID collision between
+> > different orchestrators; if a single orchestrator wants to reuse an
+> > audit container ID then that is its choice.
+> >
+> > > I already had some ideas of preventing an existing ID from being reused,
+> >
+> > Cool.  I only made the idr suggestion since it is used for PIDs and
+> > solves a very similar problem.
+> >
+> > > but that makes the practice of some container engines injecting
+> > > processes into existing containers difficult if not impossible.
+> >
+> > Yes, we'll need some provision to indicate which orchestrator
+> > "controls" that particular audit container ID, and allow that
+> > orchestrator to reuse that particular audit container ID (until all
+> > those containers disappear and the audit container ID is given back to
+> > the pool).
+>
+>
+>
+>
+
+
+--
+paul moore
+www.paul-moore.com
