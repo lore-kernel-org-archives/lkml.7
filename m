@@ -4,94 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F312CC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:20:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2900C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:22:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD4552085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C37132080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:22:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfFRLUL (ORCPT
+        id S1729664AbfFRLWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:20:11 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:54111 "EHLO
+        Tue, 18 Jun 2019 07:22:43 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:53727 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729110AbfFRLUK (ORCPT
+        with ESMTP id S1729110AbfFRLWm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:20:10 -0400
+        Tue, 18 Jun 2019 07:22:42 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1N7zJl-1ihrb10qH5-014zfL; Tue, 18 Jun 2019 13:20:00 +0200
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M3D3N-1hcMiR2pDh-003bdJ; Tue, 18 Jun 2019 13:22:30 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
+To:     Steffen Klassert <steffen.klassert@secunet.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Eric Biggers <ebiggers@google.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [v2] crypto: serpent - mark __serpent_setkey_sbox noinline
-Date:   Tue, 18 Jun 2019 13:19:42 +0200
-Message-Id: <20190618111953.3183723-1-arnd@arndb.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Florian Westphal <fw@strlen.de>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [v2] ipsec: select crypto ciphers for xfrm_algo
+Date:   Tue, 18 Jun 2019 13:22:13 +0200
+Message-Id: <20190618112227.3322313-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:VIWQh7CGc1e7ltY83od0FlOkocpGFJuJKawvgRQ5EwYbCB8I42u
- 7dpn0qwdoSWNr3+V9YzfMMHU1OpbH+9VYy4ji/hfTL9c6Wq8Lh+d9yDy3ahSKquSfPrDTG8
- 2h35j5Wt7KmOHdFtds3TtDu0YGLppBaMxodi+EGl9/yHBYi/CozL9FgopJ0565GQr01thZR
- ghX1zLytq4EqAVWGu8UeQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:Exce4h1rSxc=:NgW1DRQhB2jU9fDRpSqrqZ
- NkDrx8pqzA+SOEghvSwELrk+k5e28L/lu2Dvb3w08iOS2AQcgAjDVLM5qu8CDynf3unvNWXsG
- ocV8xs4MiaMcWy1aFIY30PNEClGYcsKB0koAPKDuR5g3lMim4knCt+9nPpzfpWTRyumokvQ1z
- zL1tNTQ0tABgrEZt1Y0DiO50cFXxKdCJ3vnmt8ogaNf0mp7LLR41hQgKSj2gbt3sVKIcpnoaq
- +fTdZ25uu/v7TkjVdb2UMtyS+BtWrRsXUDA0FHU1B45G7Q6zaHQjh6ngWUe4TlwG0TjYKY0xt
- fcelSULF6cE/+BZ47RpnkFIlH5Y2taWPn0SJSid3PC8vKk6LarpRfmZnILQ0jCfG8KffXy9y7
- nb+0lxYmR6SwCctbz8RwvL1sitaARBXE6A5rTktbTQV4s3jC8Bfkn3emvU1Q0SLGqj0gbcOle
- uuFDuSbExWqqeAOCp9mjQtcgQhDFuuWw04Uuj0Rmd3r4DD5fOOplGQk0xF4DOo9+DxvsrMqLq
- jvmuM4EVvAxhgjw4LqC9IP0RoSm9/lct5arMN8z8KOL/8JivZrA+7VK2X7E6r++Cap1/d+/6p
- Zzb+A9k/d6Rqj507JIBJVl61YYqLt4+nHU4MaKHoXgqG/h4AfibQ6AClwExY9TRI32M6OQZMr
- UM74UFE/kM9wqbAy+bZ/BnzfG9Sdlrp/OWbBUokBvkvAPqwJqCQZ5yerxNgStKu/08TBZcCqG
- GXD3BsGaK9GHy5hwCDdTEktYAI3vnhP9nEPF6g==
+X-Provags-ID: V03:K1:lw/hXW2vB3PxvLPFBjrfkYIPVf2yXaIQORIsqAOgDFhnL84DA4J
+ dhVA4ckt++OIzSK04xeN0mEfdNrwclg6nZVM/LfQRR/IVWV6eh+enRiuzT2Nc9Rkw5HpaLH
+ D3LvW31viw6IbVRcHXwmWTYpE5k8cnUdBPw4R1KmbiJUzXIWv3q1jKmKUa2FVrBlxv9tCTP
+ 8Wj4xP6RLMsSl0CMVjHbQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:m/LZHXpwX90=:mFZxy/qdnw7gHjPsjoAtgb
+ r6ENAoh5kpgj/Qwhf9FP/iop2ulo7mBq/tIZbXccWcXekIqWXLyyyddTVMvs1/3VdOWhnfZai
+ DeIYmQm02WQku3i+E4KeAVKWIlS3sM8tfW1W7SWH3k0gsVhq14VFxPN2ZQ2n0pC7BhgQYx9zk
+ ADiBjsnpNtcGLXQutUWveCLHm9Cjy1K6jfPRYmIIYMNIBzUl+m/oQLiinqmY9Nfq5FYZstdi+
+ 4JwfeSmW7Nmc6uaNFyuejiUKHikaWybcyRQFgW15/X34RVE15I9BF9MfT79lu8wIx2ZsjeXT9
+ bOtOzKiuJGTPEz68rDy8xLeljcb2+XGmRpNATWFr+KDUZ9gF8FvYEtfX9cMCabs1FMEHTcBv+
+ XVwa9vvS1sRrG5AC9xqO1WA6pRLAgA2Hcnua52mP8v24sn0KWOG+j6+aROydGKMWRpW/SoopL
+ fiXE9JrY8kHH+m3RAT4fC13cVJnnimUbXYvqnB05WVVVVY3w1oVU+ki6OkUrWUse3ZB4igCrc
+ C/38/Mqpuk/J2kPwuL8crdpeirfeg6Wa7EAaSS9FjsJUMdcH4/OzFkbS4mCrQfD0H6K2E44ih
+ CTeBTGIcXUs6qdaPHfPC7L9gQt+fjoVJ0zV1kwlQ8ZOsYHAXLc0nk8OtRGNoggKgx7rCF9uNG
+ Orciti3i/Z3wM2OCJr2pZUL01osHobaTROAdrCbWoEN8MZ++Fo12pnArQ1xBDUaKlBXiaogvi
+ +TIU8WOq8OTq88Wogw5P1gvmfF+ZjRzqLFWcCg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The same bug that gcc hit in the past is apparently now showing
-up with clang, which decides to inline __serpent_setkey_sbox:
+kernelci.org reports failed builds on arc because of what looks
+like an old missed 'select' statement:
 
-crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
+net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
+xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
 
-Marking it 'noinline' reduces the stack usage from 2112 bytes to
-192 and 96 bytes, respectively, and seems to generate more
-useful object code.
+I don't see this in randconfig builds on other architectures, but
+it's fairly clear we want to select the hash code for it, like we
+do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
+is also required even though it has not popped up in build tests.
 
-Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
+Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
-v2: style improvements suggested by Eric Biggers
----
- crypto/serpent_generic.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ net/xfrm/Kconfig | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
-index e57757904677..56fa665a4f01 100644
---- a/crypto/serpent_generic.c
-+++ b/crypto/serpent_generic.c
-@@ -225,7 +225,13 @@
- 	x4 ^= x2;					\
- 	})
+diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
+index c967fc3c38c8..51bb6018f3bf 100644
+--- a/net/xfrm/Kconfig
++++ b/net/xfrm/Kconfig
+@@ -15,6 +15,8 @@ config XFRM_ALGO
+ 	tristate
+ 	select XFRM
+ 	select CRYPTO
++	select CRYPTO_HASH
++	select CRYPTO_BLKCIPHER
  
--static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
-+/*
-+ * both gcc and clang have misoptimized this function in the past,
-+ * producing horrible object code from spilling temporary variables
-+ * on the stack. Forcing this part out of line avoids that.
-+ */
-+static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
-+					   u32 r3, u32 r4, u32 *k)
- {
- 	k += 100;
- 	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
+ if INET
+ config XFRM_USER
 -- 
 2.20.0
 
