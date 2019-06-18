@@ -2,112 +2,126 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 300C2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:46:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 945CBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:47:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03D3D21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:46:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tO8Fsho/"
+	by mail.kernel.org (Postfix) with ESMTP id 746992147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:47:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729485AbfFROqD (ORCPT
+        id S1729220AbfFROrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:46:03 -0400
-Received: from mail-ua1-f67.google.com ([209.85.222.67]:40881 "EHLO
-        mail-ua1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726446AbfFROqD (ORCPT
+        Tue, 18 Jun 2019 10:47:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:28156 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727105AbfFROrt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:46:03 -0400
-Received: by mail-ua1-f67.google.com with SMTP id s4so6244607uad.7;
-        Tue, 18 Jun 2019 07:46:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/f14cHYF/JwNNEW7ZZ5tU2/Q+E6LWRIS5CopK+Dp/ws=;
-        b=tO8Fsho/8ZrXFwXiDsWwBqJ0ukz1/kUdIS6NDsUPNHp4wR7PH0Qpr8pqVtqeOyQvwe
-         ZCdCsl/x8ghDwv+91RrzEhYehxPH9/ZU8nswFi9vgpFqUd8aVx+RIJ+B8B7W+lKpqN8q
-         oVZqEnfnoMwUGJnYn4DFbG9W8in/zQWU/EXoEFdg5XjQ1K3cTd+FrQPYfJ5ZccEgDmyz
-         MNagThdbCpX8jKLrSGXXMR5hMhj2nFnuK2Zexrpja2BQVJf1a77FV+NCWGlsRQWjFvI+
-         tIaE/NsQIfNIag1Ot61qgL5xc9dlxn1UNL1Ly4CYopbH7jg3eVqTuV6wcERxcsWXY8L2
-         W+mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/f14cHYF/JwNNEW7ZZ5tU2/Q+E6LWRIS5CopK+Dp/ws=;
-        b=MmLGPJFe+MNPUakRnQIOI0LBDmko5s8TFQeSi23++u871ObTqdSQy+FN+m9jM4KGtm
-         upAL1z5uTas4biqZ03XmEp9x92+R0kUBYMAX+WYohlnYQ4yiTTSeyr4IvYm4J9hs34c+
-         o/R85MT+B3Msy9EzP3ATDCI8L6qeLjkBajZhRrCTCnbjQKB6ecGr3DcUM9OOF/9LYGFw
-         iI98VeNt/r3UoKZUO4AvclZ/9G8ViL+syyYDIPVRCjvbjC/SbIDJB5nG3gYcZf0EhWnw
-         +Me2x7EeO0/vxehOC13LRtQ3a3db82eIyVfsACSHDQOzpsEYz+PSQaH7Hja87J7QtHhh
-         XK9Q==
-X-Gm-Message-State: APjAAAW12u2uRpnCKWH17tu19tS5B5wBCTsW5P2oj5yKm9aEzXAGCecb
-        UfEsykDJRl1beabTYJAIK+WWEvhjFq5ZgJrnnW8=
-X-Google-Smtp-Source: APXvYqwtowx0jtZrX1Tnda+aSiwu1+T/1zNbO4rK+It/3z/Xya6kgIlPAocEw5taRgj7RNINbPtPoDBEuvrYufn2K4Y=
-X-Received: by 2002:a67:f259:: with SMTP id y25mr53460097vsm.50.1560869161931;
- Tue, 18 Jun 2019 07:46:01 -0700 (PDT)
+        Tue, 18 Jun 2019 10:47:49 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5IEklvO060662
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:47:48 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t71bk2cs5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:47:47 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
+        Tue, 18 Jun 2019 15:47:46 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Jun 2019 15:47:41 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5IElW7838732272
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 14:47:32 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BCA7C11C05C;
+        Tue, 18 Jun 2019 14:47:40 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF5E411C052;
+        Tue, 18 Jun 2019 14:47:38 +0000 (GMT)
+Received: from naverao1-tp.ibmuc.com (unknown [9.85.74.6])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Jun 2019 14:47:38 +0000 (GMT)
+From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/7] ftrace: Expose flags used for ftrace_replace_code()
+Date:   Tue, 18 Jun 2019 20:17:00 +0530
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
 MIME-Version: 1.0
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
- <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
-In-Reply-To: <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Tue, 18 Jun 2019 20:15:50 +0530
-Message-ID: <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061814-4275-0000-0000-000003436187
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061814-4276-0000-0000-0000385389D9
+Message-Id: <91fa32785911eebc357f1713eb64a20fdd7e9d6b.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=934 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906180119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 7:32 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> Hi Pintu,
->
-> On Mon, Jun 17, 2019 at 10:50 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
-> >
-> > Hi All,
-> >
-> > I am trying to implement suspend/resume functionality to to imx-hdmi driver:
-> > https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/gpu/drm/imx/dw_hdmi-imx.c?h=v4.9.181
->
-> Please test a recent kernel, such as 5.1.11. I recall that last time
-> you reported an issue with the dw hdmi you were running kernel 3.10
-> with backported patches from 4.9.
->
-> Just tried suspend/resume on a imx6q board and HDMI behaves correctly.
+Since ftrace_replace_code() is a __weak function and can be overridden,
+we need to expose the flags that can be set. So, move the flags enum to
+the header file.
 
-Thank you so much for your reply.
-Yes, I already checked the latest mainline kernel changes until 5.2-**.
-I see that there are many cleanup related changes, but still I see
-that suspend/resume functions are missing in dw_hdmi-imx driver.
-So, I am trying to implement myself.
-Also, I see that suspend/resume is missing even in :
-drivers/gpu/drm/imx/ipuv3-crtc.c
-I am trying this also (not sure if we need this as well).
+Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+---
+ include/linux/ftrace.h | 5 +++++
+ kernel/trace/ftrace.c  | 5 -----
+ 2 files changed, 5 insertions(+), 5 deletions(-)
 
-Can you point out some specific patches which can be helpful ?
+diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+index 25e2995d4a4c..e97789c95c4e 100644
+--- a/include/linux/ftrace.h
++++ b/include/linux/ftrace.h
+@@ -162,6 +162,11 @@ enum {
+ 	FTRACE_OPS_FL_TRACE_ARRAY		= 1 << 15,
+ };
+ 
++enum {
++	FTRACE_MODIFY_ENABLE_FL		= (1 << 0),
++	FTRACE_MODIFY_MAY_SLEEP_FL	= (1 << 1),
++};
++
+ #ifdef CONFIG_DYNAMIC_FTRACE
+ /* The hash used to know what functions callbacks trace */
+ struct ftrace_ops_hash {
+diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+index 38277af44f5c..5710a6b3edc1 100644
+--- a/kernel/trace/ftrace.c
++++ b/kernel/trace/ftrace.c
+@@ -75,11 +75,6 @@
+ #define INIT_OPS_HASH(opsname)
+ #endif
+ 
+-enum {
+-	FTRACE_MODIFY_ENABLE_FL		= (1 << 0),
+-	FTRACE_MODIFY_MAY_SLEEP_FL	= (1 << 1),
+-};
+-
+ struct ftrace_ops ftrace_list_end __read_mostly = {
+ 	.func		= ftrace_stub,
+ 	.flags		= FTRACE_OPS_FL_RECURSION_SAFE | FTRACE_OPS_FL_STUB,
+-- 
+2.22.0
 
-Currently, what I observed is that hdmi bind() functions are not getting called.
-Not sure who is responsible for triggering this bind function.
-Or, irq remains disabled after resume, and we need to enable it back
-again (but how ?)
-Or, we may need to enable vblank events and thus irqs can be enabled.
-
-So, I am exploring many possibilities.
-If you have any suggestions please let me know.
-
-Thanks,
-Pintu
