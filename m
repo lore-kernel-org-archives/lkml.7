@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06FD6C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28B60C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC309213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:03:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 022A32080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:03:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QLNmM8Ym"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="pKMdFCu6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729065AbfFRKDB (ORCPT
+        id S1729139AbfFRKDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:03:01 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:25738 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725913AbfFRKDB (ORCPT
+        Tue, 18 Jun 2019 06:03:05 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27384 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726023AbfFRKDC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:03:01 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I9ug4W007561;
-        Tue, 18 Jun 2019 12:02:37 +0200
+        Tue, 18 Jun 2019 06:03:02 -0400
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5IA1kqT030835;
+        Tue, 18 Jun 2019 12:02:45 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=h01JWVwcjqILFh4YSO7W65sajs6sEQaVQ79mN3RX8qQ=;
- b=QLNmM8Ym6XwFgwWEWHrCnihEcWc1VtywI4qxDJ1y07gq6pLzS6LqMBnyj+bx4Bz4vXzd
- /TauvCyjVPOhiJO1QvGhcOV9gNzPdMDgl/GxNPp4z5LOLi4df/L7Z1FttIduxDTgwc/5
- +rvAI7NUxvqoGC+yZ9akFbW1Mqqn3IAsKFMW42TK/ijPpv/W9zYZW5UtN1QbZr82blPr
- ecRstm6j6+unZ/8cvQeAe/NkKYJVT5fy9fmxLvP5GitcPz3ZfWMEkMcjagxZRRWcyzpD
- xQop4ni9R2rTwxlJiJRvhUxq6sRrqRYCZYrkiR7qtt/S4V3reILsXQ6wTStX/5lhAhy1 8Q== 
+ bh=ZNwrI9/E19QXLogxcwXLV+/wtFzsSvuPA6hnm0JPcRM=;
+ b=pKMdFCu6z9l+iNvnnuFWzm/ITOJ4O7pD3VwiAG1XRPj/EB74vBLEw9mGVCi62jp2V5X5
+ RjADxoXBtw/U9b/GCXEAfxfHiMYwkJXGI5Gn6qLPyYbpQc+I0Qo6stg4MqxSDer2tBN5
+ L4mqGeMTarLq8Kl/+5adGTt4SDB9/1dBIKMgdYNmSS870lUw+A8L2npVXeztPIxUIRmp
+ 1cAEHe/3YSBft1VMmwYslw9wRl3BTvDm25TYlOGgdzrrYZGmU9CmzZs6zsFXvgM4Ec9x
+ TIpUF7DcIxoi1jwFxLdZ1vc8OlxFpsDDMs5FplvHeTTLvb5lpfNAHiRdaXy4EmSC+oy3 HA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t4nt883jd-1
+        by mx07-00178001.pphosted.com with ESMTP id 2t68n3nv0e-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 18 Jun 2019 12:02:37 +0200
+        Tue, 18 Jun 2019 12:02:45 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 7A74438;
-        Tue, 18 Jun 2019 10:02:36 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 59DB025D7;
-        Tue, 18 Jun 2019 10:02:36 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
- 2019 12:02:36 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C84553A;
+        Tue, 18 Jun 2019 10:02:43 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A704725DD;
+        Tue, 18 Jun 2019 10:02:43 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
+ 2019 12:02:43 +0200
 Received: from localhost (10.201.23.31) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun 2019 12:02:35
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun 2019 12:02:43
  +0200
 From:   Erwan Le Ray <erwan.leray@st.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -62,9 +62,9 @@ CC:     <linux-serial@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         "Erwan Le Ray" <erwan.leray@st.com>,
         Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [PATCH 2/5] serial: stm32: update PIO transmission
-Date:   Tue, 18 Jun 2019 12:02:23 +0200
-Message-ID: <1560852146-3393-3-git-send-email-erwan.leray@st.com>
+Subject: [PATCH 5/5] serial: stm32: add RX and TX FIFO flush
+Date:   Tue, 18 Jun 2019 12:02:26 +0200
+Message-ID: <1560852146-3393-6-git-send-email-erwan.leray@st.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1560852146-3393-1-git-send-email-erwan.leray@st.com>
 References: <1560852146-3393-1-git-send-email-erwan.leray@st.com>
@@ -78,61 +78,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Improves PIO transmission:
-- Replaces the FIFO filling per character by a filling per blocks of
-  characters, which provides better performances
-- Replaces the active waiting loop by TX empty interrupt dynamic handling.
-  TXE interrupt is now enabled when data has to be sent (ie when
-  uart_circ is not empty), and inhibited when there is no more data to
-  send (ie when uart_circ is empty).
+Adds a flush of RX and TX FIFOs, and fixes some errors:
+- adds RX FIFO flush in startup fonction
+- removes the useless transmitter enabling in startup fonction
+  (e.g. receiver only, see Documentation/serial/driver)
+- configures FIFO threshold before enabling it, rather than after
+- flushes both TX and RX in set_termios function
 
 Signed-off-by: Erwan Le Ray <erwan.leray@st.com>
 
 diff --git a/drivers/tty/serial/stm32-usart.c b/drivers/tty/serial/stm32-usart.c
-index e1cfb1e..8316e19 100644
+index 4083145..21dc380 100644
 --- a/drivers/tty/serial/stm32-usart.c
 +++ b/drivers/tty/serial/stm32-usart.c
-@@ -303,27 +303,26 @@ static void stm32_transmit_chars_pio(struct uart_port *port)
- 	struct stm32_port *stm32_port = to_stm32_port(port);
- 	struct stm32_usart_offsets *ofs = &stm32_port->info->ofs;
- 	struct circ_buf *xmit = &port->state->xmit;
--	unsigned int isr;
--	int ret;
+@@ -602,11 +602,11 @@ static int stm32_startup(struct uart_port *port)
+ 	if (ret)
+ 		return ret;
  
- 	if (stm32_port->tx_dma_busy) {
- 		stm32_clr_bits(port, ofs->cr3, USART_CR3_DMAT);
- 		stm32_port->tx_dma_busy = false;
+-	val = stm32_port->cr1_irq | USART_CR1_TE | USART_CR1_RE;
+-	if (stm32_port->fifoen)
+-		val |= USART_CR1_FIFOEN;
+-	stm32_set_bits(port, ofs->cr1, val);
++	/* RX FIFO Flush */
++	if (ofs->rqr != UNDEF_REG)
++		stm32_set_bits(port, ofs->rqr, USART_RQR_RXFRQ);
+ 
++	/* Tx and RX FIFO configuration */
+ 	if (stm32_port->fifoen) {
+ 		val = readl_relaxed(port->membase + ofs->cr3);
+ 		val &= ~(USART_CR3_TXFTCFG_MASK | USART_CR3_RXFTCFG_MASK);
+@@ -615,6 +615,12 @@ static int stm32_startup(struct uart_port *port)
+ 		writel_relaxed(val, port->membase + ofs->cr3);
  	}
  
--	ret = readl_relaxed_poll_timeout_atomic(port->membase + ofs->isr,
--						isr,
--						(isr & USART_SR_TXE),
--						10, 100000);
--
--	if (ret)
--		dev_err(port->dev, "tx empty not set\n");
--
--	stm32_set_bits(port, ofs->cr1, USART_CR1_TXEIE);
-+	while (!uart_circ_empty(xmit)) {
-+		/* Check that TDR is empty before filling FIFO */
-+		if (!(readl_relaxed(port->membase + ofs->isr) & USART_SR_TXE))
-+			break;
-+		writel_relaxed(xmit->buf[xmit->tail], port->membase + ofs->tdr);
-+		xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-+		port->icount.tx++;
-+	}
- 
--	writel_relaxed(xmit->buf[xmit->tail], port->membase + ofs->tdr);
--	xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
--	port->icount.tx++;
-+	/* rely on TXE irq (mask or unmask) for sending remaining data */
-+	if (uart_circ_empty(xmit))
-+		stm32_clr_bits(port, ofs->cr1, USART_CR1_TXEIE);
-+	else
-+		stm32_set_bits(port, ofs->cr1, USART_CR1_TXEIE);
++	/* RX FIFO enabling */
++	val = stm32_port->cr1_irq | USART_CR1_RE;
++	if (stm32_port->fifoen)
++		val |= USART_CR1_FIFOEN;
++	stm32_set_bits(port, ofs->cr1, val);
++
+ 	return 0;
  }
  
- static void stm32_transmit_chars_dma(struct uart_port *port)
+@@ -697,8 +703,12 @@ static void stm32_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	/* Stop serial port and reset value */
+ 	writel_relaxed(0, port->membase + ofs->cr1);
+ 
+-	cr1 = USART_CR1_TE | USART_CR1_RE;
++	/* flush RX & TX FIFO */
++	if (ofs->rqr != UNDEF_REG)
++		stm32_set_bits(port, ofs->rqr,
++			       USART_RQR_TXFRQ | USART_RQR_RXFRQ);
+ 
++	cr1 = USART_CR1_TE | USART_CR1_RE;
+ 	if (stm32_port->fifoen)
+ 		cr1 |= USART_CR1_FIFOEN;
+ 	cr2 = 0;
 -- 
 1.9.1
 
