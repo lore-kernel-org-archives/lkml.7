@@ -2,169 +2,152 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1EC3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C88EBC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E9A2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:27:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qQN5Ajlv"
+	by mail.kernel.org (Postfix) with ESMTP id A45232080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:28:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560882533;
+	bh=LToRJZS8YHj+oypRdIwuL4yZ56goIwhO72efseMCRQI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ejoTiWeVrVtVEgkZ4CTg4ZhhUUrkrucjSmKtJ8QjfjDR6gi2zwQYzTFyH8nSsaVaR
+	 3UEn4EfBTRDh9eZ9BysYy0u6ckUOhlLdn1TRxyWDBsrPMoc3Z2OcqveZ3zDBYCL5b1
+	 9h+J29SCLcB1eSAkPqf905XoMx/EH6lNPiwyVBRE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730364AbfFRS1a (ORCPT
+        id S1730223AbfFRS2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:27:30 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45394 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727616AbfFRS1a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:27:30 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r1so8132814pfq.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=f1jztib4H2AhReDzbfPoXEq38V+b/2OjoyCgjVjM/vY=;
-        b=qQN5AjlvxoOzG6zwGQCL4kP4KMEGWQWZBJwkiUejECOHE1LzLRRze29XzBsI9kIf93
-         wefOzzVhaGj5tNJujkqJULJTeDydev5qgyw4XF6HkP+Ibpgb5e6/AStQywOrVor3B6/Q
-         NVSTQ9Ja0CMVgNihdqI1lmDS6BApg51HwyNKsdR5c9azUL5XFNq17/aIFbk79uZiyHfF
-         Gs4O7vnSFTyBoXDBJ44AMiaJCbQt5Yhz8pFgOL0ik8VWl1sTVT1QciHexbnlCrBMUC8x
-         7j0OXIkL1A/A+GTeaY8OC46Xt8uiz9yxPQWCIbvQhqjdc5v2YlwMMDFfGqgiE2gYZGJ+
-         DAEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=f1jztib4H2AhReDzbfPoXEq38V+b/2OjoyCgjVjM/vY=;
-        b=Kycnr4AGaeCLir7n7T/7RAwCD83oL9eR7nSD65lZ4j8pIQ98lUMWpCYoykWq9l924j
-         egoM6hQGkMJTXIx4VARLvHA/HWP/1opH2qiUevxLq/YI7SSpxLjGBnww4HFSE3TZSu7v
-         gwtURr6OGHlqYYMo26oH27oKVLoNnL0N9tKtdnSkvI1mLsKK6rXo//y1ibUvKqoKpZB/
-         HjRHqwvE5MuLxOXIgnxNeoD0F+gcPK54v+zydkpHoUOhRGgppAVm14zcAdJgpe5fuQqP
-         3hBgcLIBmfRMaHHaQTjO/dAzE21QbJ71nQ99B3b932SB+1yBQ8RB0vRkXViF1mHmcElD
-         K9aw==
-X-Gm-Message-State: APjAAAXa0j2EiqMfVYYi0Hms7froQdOuRn4DpldMVm7FUJcnB9Zma4nd
-        wH/61UHq/ulnwwNPMbtzpi0WpIhc
-X-Google-Smtp-Source: APXvYqz03SVDLN2muSEnZep8XNk3L8zbZHPF+1yClksQ9xmMNrWxQpH80qjXYUyIlPzm4unlxTnPHQ==
-X-Received: by 2002:a63:6883:: with SMTP id d125mr3963722pgc.281.1560882449634;
-        Tue, 18 Jun 2019 11:27:29 -0700 (PDT)
-Received: from mail.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id k4sm6639480pfk.42.2019.06.18.11.27.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 11:27:29 -0700 (PDT)
-From:   Kamal Dasu <kdasu.kdev@gmail.com>
-To:     linux-mtd@lists.infradead.org
-Cc:     bcm-kernel-feedback-list@broadcom.com,
-        linux-kernel@vger.kernel.org, Kamal Dasu <kdasu.kdev@gmail.com>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Subject: [PATCH v4 2/2] mtd: nand: raw: brcmnand: When oops in progress use pio and interrupt polling
-Date:   Tue, 18 Jun 2019 14:26:43 -0400
-Message-Id: <1560882420-727-2-git-send-email-kdasu.kdev@gmail.com>
-X-Mailer: git-send-email 1.9.0.138.g2de3478
-In-Reply-To: <1560882420-727-1-git-send-email-kdasu.kdev@gmail.com>
-References: <1560882420-727-1-git-send-email-kdasu.kdev@gmail.com>
+        Tue, 18 Jun 2019 14:28:52 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49042 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729642AbfFRS2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:28:51 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5D800AE5D;
+        Tue, 18 Jun 2019 18:28:49 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 20:28:48 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
+ correctly in mbind
+Message-ID: <20190618182848.GJ3318@dhcp22.suse.cz>
+References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190618130253.GH3318@dhcp22.suse.cz>
+ <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If mtd_oops is in progress, switch to polling during NAND command
-completion instead of relying on DMA/interrupts so that the mtd_oops
-buffer can be completely written in the assigned NAND partition.
+On Tue 18-06-19 10:06:54, Yang Shi wrote:
+> 
+> 
+> On 6/18/19 6:02 AM, Michal Hocko wrote:
+> > [Cc networking people - see a question about setsockopt below]
+> > 
+> > On Tue 18-06-19 02:48:10, Yang Shi wrote:
+> > > When running syzkaller internally, we ran into the below bug on 4.9.x
+> > > kernel:
+> > > 
+> > > kernel BUG at mm/huge_memory.c:2124!
+> > What is the BUG_ON because I do not see any BUG_ON neither in v4.9 nor
+> > the latest stable/linux-4.9.y
+> 
+> The line number might be not exactly same with upstream 4.9 since there
+> might be some our internal patches.
+> 
+> It is line 2096 at mm/huge_memory.c in 4.9.182.
 
-Signed-off-by: Kamal Dasu <kdasu.kdev@gmail.com>
----
- drivers/mtd/nand/raw/brcmnand/brcmnand.c | 48 ++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 3 deletions(-)
+So it is 
+	VM_BUG_ON_PAGE(!PageSwapBacked(page), page);
+that is later mentioned that has been removed. Good. Thanks for the
+clarification!
 
-diff --git a/drivers/mtd/nand/raw/brcmnand/brcmnand.c b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-index 8735277..27b22d6 100644
---- a/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-+++ b/drivers/mtd/nand/raw/brcmnand/brcmnand.c
-@@ -151,6 +151,7 @@ struct brcmnand_controller {
- 	u32			nand_cs_nand_xor;
- 	u32			corr_stat_threshold;
- 	u32			flash_dma_mode;
-+	bool			pio_poll_mode;
- };
+> > > invalid opcode: 0000 [#1] SMP KASAN
+> > [...]
+> > > Code: c7 80 1c 02 00 e8 26 0a 76 01 <0f> 0b 48 c7 c7 40 46 45 84 e8 4c
+> > > RIP  [<ffffffff81895d6b>] split_huge_page_to_list+0x8fb/0x1030 mm/huge_memory.c:2124
+> > >   RSP <ffff88006899f980>
+> > > 
+> > > with the below test:
+> > > 
+> > > ---8<---
+> > > 
+> > > uint64_t r[1] = {0xffffffffffffffff};
+> > > 
+> > > int main(void)
+> > > {
+> > > 	syscall(__NR_mmap, 0x20000000, 0x1000000, 3, 0x32, -1, 0);
+> > > 				intptr_t res = 0;
+> > > 	res = syscall(__NR_socket, 0x11, 3, 0x300);
+> > > 	if (res != -1)
+> > > 		r[0] = res;
+> > > *(uint32_t*)0x20000040 = 0x10000;
+> > > *(uint32_t*)0x20000044 = 1;
+> > > *(uint32_t*)0x20000048 = 0xc520;
+> > > *(uint32_t*)0x2000004c = 1;
+> > > 	syscall(__NR_setsockopt, r[0], 0x107, 0xd, 0x20000040, 0x10);
+> > > 	syscall(__NR_mmap, 0x20fed000, 0x10000, 0, 0x8811, r[0], 0);
+> > > *(uint64_t*)0x20000340 = 2;
+> > > 	syscall(__NR_mbind, 0x20ff9000, 0x4000, 0x4002, 0x20000340,
+> > > 0x45d4, 3);
+> > > 	return 0;
+> > > }
+> > > 
+> > > ---8<---
+> > > 
+> > > Actually the test does:
+> > > 
+> > > mmap(0x20000000, 16777216, PROT_READ|PROT_WRITE, MAP_PRIVATE|MAP_FIXED|MAP_ANONYMOUS, -1, 0) = 0x20000000
+> > > socket(AF_PACKET, SOCK_RAW, 768)        = 3
+> > > setsockopt(3, SOL_PACKET, PACKET_TX_RING, {block_size=65536, block_nr=1, frame_size=50464, frame_nr=1}, 16) = 0
+> > > mmap(0x20fed000, 65536, PROT_NONE, MAP_SHARED|MAP_FIXED|MAP_POPULATE|MAP_DENYWRITE, 3, 0) = 0x20fed000
+> > > mbind(..., MPOL_MF_STRICT|MPOL_MF_MOVE) = 0
+> > Ughh. Do I get it right that that this setsockopt allows an arbitrary
+> > contiguous memory allocation size to be requested by a unpriviledged
+> > user? Or am I missing something that restricts there any restriction?
+> 
+> It needs CAP_NET_RAW to call socket() to set socket type to RAW. The test is
+> run by root user.
+
+OK, good. That is much better. I just didn't see the capability check. I
+can see one in packet_create but I do not see any in setsockopt. Maybe I
+just got lost in indirection or implied security model.
  
- struct brcmnand_cfg {
-@@ -815,6 +816,20 @@ static inline bool has_flash_dma(struct brcmnand_controller *ctrl)
- 	return ctrl->flash_dma_base;
- }
- 
-+static inline void disable_ctrl_irqs(struct brcmnand_controller *ctrl)
-+{
-+	if (ctrl->pio_poll_mode)
-+		return;
-+
-+	if (has_flash_dma(ctrl)) {
-+		ctrl->flash_dma_base = 0;
-+		disable_irq(ctrl->dma_irq);
-+	}
-+
-+	disable_irq(ctrl->irq);
-+	ctrl->pio_poll_mode = true;
-+}
-+
- static inline bool flash_dma_buf_ok(const void *buf)
- {
- 	return buf && !is_vmalloc_addr(buf) &&
-@@ -1229,15 +1244,42 @@ static void brcmnand_cmd_ctrl(struct nand_chip *chip, int dat,
- 	/* intentionally left blank */
- }
- 
-+static bool brcmstb_nand_wait_for_completion(struct nand_chip *chip)
-+{
-+	struct brcmnand_host *host = nand_get_controller_data(chip);
-+	struct brcmnand_controller *ctrl = host->ctrl;
-+	struct mtd_info *mtd = nand_to_mtd(chip);
-+	bool err = false;
-+	int sts;
-+
-+	if (mtd->panic_write_triggered) {
-+		/* switch to interrupt polling and PIO mode */
-+		disable_ctrl_irqs(ctrl);
-+		sts = bcmnand_ctrl_poll_status(ctrl, NAND_CTRL_RDY,
-+					       NAND_CTRL_RDY, 0);
-+		err = (sts < 0) ? true : false;
-+	} else {
-+		unsigned long timeo = msecs_to_jiffies(
-+						NAND_POLL_STATUS_TIMEOUT_MS);
-+		/* wait for completion interrupt */
-+		sts = wait_for_completion_timeout(&ctrl->done, timeo);
-+		err = (sts <= 0) ? true : false;
-+	}
-+
-+	return err;
-+}
-+
- static int brcmnand_waitfunc(struct nand_chip *chip)
- {
- 	struct brcmnand_host *host = nand_get_controller_data(chip);
- 	struct brcmnand_controller *ctrl = host->ctrl;
--	unsigned long timeo = msecs_to_jiffies(100);
-+	bool err = false;
- 
- 	dev_dbg(ctrl->dev, "wait on native cmd %d\n", ctrl->cmd_pending);
--	if (ctrl->cmd_pending &&
--			wait_for_completion_timeout(&ctrl->done, timeo) <= 0) {
-+	if (ctrl->cmd_pending)
-+		err = brcmstb_nand_wait_for_completion(chip);
-+
-+	if (err) {
- 		u32 cmd = brcmnand_read_reg(ctrl, BRCMNAND_CMD_START)
- 					>> brcmnand_cmd_shift(ctrl);
- 
+[...]
+> > > Change migrate_page_add() to check if the page is movable or not, if it
+> > > is unmovable, just return -EIO.  We don't have to check non-LRU movable
+> > > pages since just zsmalloc and virtio-baloon support this.  And, they
+> > > should be not able to reach here.
+> > You are not checking whether the page is movable, right? You only rely
+> > on PageLRU check which is not really an equivalent thing. There are
+> > movable pages which are not LRU and also pages might be off LRU
+> > temporarily for many reasons so this could lead to false positives.
+> 
+> I'm supposed non-LRU movable pages could not reach here. Since most of them
+> are not mmapable, i.e. virtio-balloon, zsmalloc. zram device is mmapable,
+> but the page fault to that vma would end up allocating user space pages
+> which are on LRU. If I miss something please let me know.
+
+That might be true right now but it is a very subtle assumption that
+might break easily in the future. The point is still that even LRU pages
+might be isolated from the LRU list temporarily and you do not want this
+to cause the failure easily.
+
 -- 
-1.9.0.138.g2de3478
-
+Michal Hocko
+SUSE Labs
