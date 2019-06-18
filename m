@@ -2,146 +2,174 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B1C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:42:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2593CC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:42:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 975E920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:42:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDA28206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:42:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="o4hxEGOB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfFRImG (ORCPT
+        id S1729217AbfFRIm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:42:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:57310 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRImG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:42:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1179F28;
-        Tue, 18 Jun 2019 01:42:05 -0700 (PDT)
-Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 341043F246;
-        Tue, 18 Jun 2019 01:42:04 -0700 (PDT)
-Subject: Re: [PATCH] irqchip/mbigen: stop printing kernel addresses
-To:     Kefeng Wang <wangkefeng.wang@huawei.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Jason Cooper <jason@lakedaemon.net>,
-        linux-kernel@vger.kernel.org, guohanjun@huawei.com
-References: <20190618032202.11087-1-wangkefeng.wang@huawei.com>
- <86h88npc47.wl-marc.zyngier@arm.com>
- <d529faf2-9edd-8362-c208-fd1902d539e7@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
- Z46HaNmN2hZS/oJ69c1DI5Rcww==
-Organization: ARM Ltd
-Message-ID: <209f546b-8da2-982d-2f37-258da556f45c@arm.com>
-Date:   Tue, 18 Jun 2019 09:42:02 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 04:42:56 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3615 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728818AbfFRIm4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:42:56 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d08a40f0001>; Tue, 18 Jun 2019 01:42:55 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 01:42:54 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 01:42:54 -0700
+Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 08:42:54 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 18 Jun 2019 08:42:54 +0000
+Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d08a40b0006>; Tue, 18 Jun 2019 01:42:54 -0700
+From:   Bitan Biswas <bbiswas@nvidia.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Dmitry Osipenko <digetx@gmail.com>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>
+Subject: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
+Date:   Tue, 18 Jun 2019 01:42:48 -0700
+Message-ID: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-In-Reply-To: <d529faf2-9edd-8362-c208-fd1902d539e7@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560847375; bh=HqDxJokKgFe1kNELmIXIfg1rSInkOt34jaRIIaxFV6c=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=o4hxEGOBt4jHW3AFM4uPmORRpOmNjwGP8oUU8ZQbkzc5+fZLQ8K0vW2m4yxcTdL2o
+         NMVJuIi4dwqn84EqY1B+FcKwYnHX1V19S4s2qwYN6O1zBEISZgxmwXO02OulJZOo2T
+         wrsGLliKsvC0jfdv7DIRAAWKVrL77VAXbFEnEhtPjePR0e0jdXNM3RWuY/Cv3KWH+8
+         C4V4AHpBboog2tr0U3IlQfkMLpnFwWINn/eVbKCAjiYgusTdShVgpBcZzH1UGESC5d
+         40RCE7Me3Y1grrVGY/BuslqMIDDf3oqjg60CW18AlFR3s8GaUyfc/lrW+z5YmeqrGk
+         /booCGUDRst8w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2019 09:35, Kefeng Wang wrote:
-> 
-> 
-> On 2019/6/18 15:48, Marc Zyngier wrote:
->> Hi Kefeng,
->>
->> On Tue, 18 Jun 2019 04:22:02 +0100,
->> Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
->>>
->>> After commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
->>> it will print "____ptrval____" instead of actual addresses when mbigen
->>> create domain fails,
->>>
->>>   Hisilicon MBIGEN-V2 HISI0152:00: Failed to create mbi-gen@(____ptrval____) irqdomain
->>>   Hisilicon MBIGEN-V2: probe of HISI0152:00 failed with error -12
->>>
->>> Instead of changing the print to "%px", and leaking kernel addresses,
->>> just remove the print completely.
->>>
->>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
->>> ---
->>>  drivers/irqchip/irq-mbigen.c | 3 +--
->>>  1 file changed, 1 insertion(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
->>> index 98b6e1d4b1a6..d0cf596c801b 100644
->>> --- a/drivers/irqchip/irq-mbigen.c
->>> +++ b/drivers/irqchip/irq-mbigen.c
->>> @@ -355,8 +355,7 @@ static int mbigen_device_probe(struct platform_device *pdev)
->>>  		err = -EINVAL;
->>>  
->>>  	if (err) {
->>> -		dev_err(&pdev->dev, "Failed to create mbi-gen@%p irqdomain",
->>> -			mgn_chip->base);
->>> +		dev_err(&pdev->dev, "Failed to create mbi-gen irqdomain");
->>
->> The alternative would be to print res as a resource, which would still
->> help identifying the offending device by printing its physical
->> layout, and still not reveal much.
-> 
-> It's better to print res to show the physical layout, and add missing "\n",
-> will resend v2.
+tegra_i2c_xfer_msg initiates the I2C transfer in DMA
+or PIO mode. It involves steps that need FIFO register
+access, DMA API calls like dma_sync_single_for_device, etc.
+Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
+and in DMA/PIO mode writes different I2C registers including
+I2C interrupt status. ISR cannot start processing
+before the preparation step at tegra_i2c_xfer_msg is complete.
+Hence, a synchronization between ISR and tegra_i2c_xfer_msg
+is in place today using spinlock.
 
-As Hanjun mentioned in a separate email, pdev->dev seems to be enough to
-identify which MBIGEN has failed to probe. So maybe all you need to do
-is to add the missing '\n', and tidy up the commit message to reflect that.
+Spinlock busy waits and can add avoidable delays.
 
-Thanks,
+In this patch needed synchronization is achieved by disabling
+I2C interrupt during preparation step and enabling interrupt
+once preparation is over and spinlock is no longer needed.
 
-	M.
+Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+---
+ drivers/i2c/busses/i2c-tegra.c | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+index 6fb545e..ccc7fae 100644
+--- a/drivers/i2c/busses/i2c-tegra.c
++++ b/drivers/i2c/busses/i2c-tegra.c
+@@ -240,7 +240,6 @@ struct tegra_i2c_hw_feature {
+  * @bus_clk_rate: current I2C bus clock rate
+  * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
+  * @is_multimaster_mode: track if I2C controller is in multi-master mode
+- * @xfer_lock: lock to serialize transfer submission and processing
+  * @tx_dma_chan: DMA transmit channel
+  * @rx_dma_chan: DMA receive channel
+  * @dma_phys: handle to DMA resources
+@@ -270,8 +269,6 @@ struct tegra_i2c_dev {
+ 	u32 bus_clk_rate;
+ 	u16 clk_divisor_non_hs_mode;
+ 	bool is_multimaster_mode;
+-	/* xfer_lock: lock to serialize transfer submission and processing */
+-	spinlock_t xfer_lock;
+ 	struct dma_chan *tx_dma_chan;
+ 	struct dma_chan *rx_dma_chan;
+ 	dma_addr_t dma_phys;
+@@ -835,7 +832,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 
+ 	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
+ 
+-	spin_lock(&i2c_dev->xfer_lock);
+ 	if (status == 0) {
+ 		dev_warn(i2c_dev->dev, "irq status 0 %08x %08x %08x\n",
+ 			 i2c_readl(i2c_dev, I2C_PACKET_TRANSFER_STATUS),
+@@ -935,7 +931,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+ 
+ 	complete(&i2c_dev->msg_complete);
+ done:
+-	spin_unlock(&i2c_dev->xfer_lock);
+ 	return IRQ_HANDLED;
+ }
+ 
+@@ -1054,7 +1049,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 	u32 packet_header;
+ 	u32 int_mask;
+ 	unsigned long time_left;
+-	unsigned long flags;
+ 	size_t xfer_size;
+ 	u32 *buffer = NULL;
+ 	int err = 0;
+@@ -1085,7 +1079,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 	 */
+ 	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
+ 					i2c_dev->bus_clk_rate);
+-	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
++	if (!i2c_dev->irq_disabled) {
++		disable_irq_nosync(i2c_dev->irq);
++		i2c_dev->irq_disabled = true;
++	}
+ 
+ 	int_mask = I2C_INT_NO_ACK | I2C_INT_ARBITRATION_LOST;
+ 	tegra_i2c_unmask_irq(i2c_dev, int_mask);
+@@ -1180,7 +1177,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+ 		i2c_readl(i2c_dev, I2C_INT_MASK));
+ 
+ unlock:
+-	spin_unlock_irqrestore(&i2c_dev->xfer_lock, flags);
++	if (i2c_dev->irq_disabled) {
++		i2c_dev->irq_disabled = false;
++		enable_irq(i2c_dev->irq);
++	}
+ 
+ 	if (dma) {
+ 		if (err)
+@@ -1576,7 +1576,6 @@ static int tegra_i2c_probe(struct platform_device *pdev)
+ 				I2C_PACKET_HEADER_SIZE;
+ 	init_completion(&i2c_dev->msg_complete);
+ 	init_completion(&i2c_dev->dma_complete);
+-	spin_lock_init(&i2c_dev->xfer_lock);
+ 
+ 	if (!i2c_dev->hw->has_single_clk_source) {
+ 		fast_clk = devm_clk_get(&pdev->dev, "fast-clk");
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
