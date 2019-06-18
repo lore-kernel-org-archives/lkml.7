@@ -2,70 +2,137 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DEFC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D52E0C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF3972080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560841989;
-	bh=iSzPbJOxtUpG63TXwYWTX8utSWETqRhTDTXN4LMFPKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LmopmtiJrvrG/639lgAZpIiZJgv8xPaOYyTfmFJhVzqfbYpq1t5/LiM/5OVtbgchS
-	 wAARr2cQat7/Lz8WFz7NygTdb9kjvgqU7szvwmt3G5hXCfwowoYvOJwKGlmNqadLh6
-	 osZocQb/W2aBiA+Z8jJNIyFEyW5Ckc0A5En7v5LI=
+	by mail.kernel.org (Postfix) with ESMTP id AB3C620679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:13:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="B5HKKSVZ";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="atN1Si4h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728885AbfFRHNI (ORCPT
+        id S1728933AbfFRHNm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38296 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfFRHNI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:13:08 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        Tue, 18 Jun 2019 03:13:42 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:40570 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfFRHNm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:13:42 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1E30B6090E; Tue, 18 Jun 2019 07:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560842021;
+        bh=XTiimhV+n9VzS1rZyfIwb9pLvIYzN1Osq4PZikeOl/4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=B5HKKSVZtAPIdRyC3FIXb3LV8KFcX+dbVBp1rqarNtbdm/clH0IKb80cSXpOfP0pa
+         mwN25N8RhWG8ungDBKCrG6de/pRJeMCTcZkulUrln5kgwdq650TOGqxvIFVySUzrpd
+         I1udRLOjLEzlNUSn4rnWuLoKwEQpWcjj+wPsOO7o=
+Received: from [10.201.2.161] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F00DE20679;
-        Tue, 18 Jun 2019 07:12:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560841987;
-        bh=iSzPbJOxtUpG63TXwYWTX8utSWETqRhTDTXN4LMFPKw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=M1dES81Pzw/AzeY3PeaMwfrxTHwVwe6MN+8JHE6Ab3tMbWm6vQYPxghH7tzqAupzo
-         cvAdEiq+SUEPxVa9ZY2ggTDLKVIMv0tOeLClBlQEZuSN4cmoRk+hCEE/8YmHDU+NTg
-         2RsHvYJcFQIoOozSxtTullHSStHDrmSLQdkLja4w=
-Date:   Tue, 18 Jun 2019 15:12:11 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Anson.Huang@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, s.hauer@pengutronix.de,
-        kernel@pengutronix.de, festevam@gmail.com, l.stach@pengutronix.de,
-        ccaione@baylibre.com, abel.vesa@nxp.com, baruch@tkos.co.il,
-        daniel.baluta@nxp.com, andrew.smirnov@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
-Subject: Re: [PATCH] arm64: dts: imx8mq-evk: Enable SNVS power key
-Message-ID: <20190618071210.GF29881@dragon>
-References: <20190613010227.46860-1-Anson.Huang@nxp.com>
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 30887602BC;
+        Tue, 18 Jun 2019 07:13:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560842019;
+        bh=XTiimhV+n9VzS1rZyfIwb9pLvIYzN1Osq4PZikeOl/4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=atN1Si4hNIPPz+RxguhRNz9bE9uWQZ1ukCyEbAdtLm1WsHgFACS5aWiBBY39HnJt0
+         OhThHmAdJxVJLbzajmtEBFRzm9kDHG5gxRLrEmhI/bFVQ5+qGOLFqmzl5V6s6ZHJOY
+         zyG2oH9rQ/3R4SEVodbGQb6IcbTrAICXmajFolpM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 30887602BC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+Date:   Tue, 18 Jun 2019 12:43:35 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613010227.46860-1-Anson.Huang@nxp.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 09:02:27AM +0800, Anson.Huang@nxp.com wrote:
-> From: Anson Huang <Anson.Huang@nxp.com>
-> 
-> Enable SNVS power key for i.MX8MQ EVK board.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Hi Srini,
 
-Applied, thanks.
+On 6/14/2019 7:50 PM, Srinivas Kandagatla wrote:
+> For some reason arguments to most of the circular buffers
+> macros are used in reverse, tail is used for head and vice versa.
+> 
+> This leads to bam thinking that there is an extra descriptor at the
+> end and leading to retransmitting descriptor which was not scheduled
+> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
+> and done, so most of the drivers would not notice this, unless they are
+> heavily using bam dma. Originally found this issue while testing
+> SoundWire over SlimBus on DB845c which uses DMA very heavily for
+> read/writes.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+> ---
+>  drivers/dma/qcom/bam_dma.c | 9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+> index cb860cb53c27..43d7b0a9713a 100644
+> --- a/drivers/dma/qcom/bam_dma.c
+> +++ b/drivers/dma/qcom/bam_dma.c
+> @@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
+>  #define BAM_DESC_FIFO_SIZE	SZ_32K
+>  #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+>  #define BAM_FIFO_SIZE	(SZ_32K - 8)
+> -#define IS_BUSY(chan)	(CIRC_SPACE(bchan->tail, bchan->head,\
+> -			 MAX_DESCRIPTORS + 1) == 0)
+> +#define IS_BUSY(chan)	(CIRC_SPACE(bchan->head, bchan->tail,\
+> +			 MAX_DESCRIPTORS) == 0)
+>  
+>  struct bam_chan {
+>  	struct virt_dma_chan vc;
+> @@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
+>  		offset /= sizeof(struct bam_desc_hw);
+>  
+>  		/* Number of bytes available to read */
+> -		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
+> +		avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
+>
+ one question, so MAX_DESCRIPTORS is already a mask,
+    #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+
+ CIRC_CNT/SPACE macros also does a size - 1, so would it not be a problem if we
+ just pass MAX_DESCRIPTORS ?
+
+Regards,
+ Sricharan
+  
+>  		list_for_each_entry_safe(async_desc, tmp,
+>  					 &bchan->desc_list, desc_node) {
+> @@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
+>  			bam_apply_new_config(bchan, async_desc->dir);
+>  
+>  		desc = async_desc->curr_desc;
+> -		avail = CIRC_SPACE(bchan->tail, bchan->head,
+> -				   MAX_DESCRIPTORS + 1);
+> +		avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
+>  
+>  		if (async_desc->num_desc > avail)
+>  			async_desc->xfer_len = avail;
+> 
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
