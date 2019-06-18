@@ -2,118 +2,112 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB1CC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7208C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA7F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTNwJZ2F"
+	by mail.kernel.org (Postfix) with ESMTP id 9CBB420665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfFRHB1 (ORCPT
+        id S1727523AbfFRHBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:01:27 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45023 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRHB1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:01:27 -0400
-Received: by mail-oi1-f193.google.com with SMTP id e189so8247529oib.11;
-        Tue, 18 Jun 2019 00:01:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=UZNDItw3ygfGYFSl3GXh76G5vlmPu1W37CyeAI/eeGI=;
-        b=GTNwJZ2FSemib4K2snzDqotHuHa1Xpn7HUigru0Lq3EGx8cnAkL5PGnVIO9elWsm0Q
-         IsCBWIUn5xf6aK1/3FinYcujxZJXZ5UGkeYJ9Nu3U/1hZXSeTAhxlHPhVZqdow7UcR7y
-         +cF7m8LcwXbEQUz5MEqmpvfu7v463N2xGeZkmpaNhJ9OUFRFJpneYhyr1JrSmA0UQeI7
-         jywN0ELJOwOhfZXyPh4YC9zcqWIwtkhLRRPIktA1BUD2HjKjjrf3cJvudy430DZSbipE
-         oARwDkQ14HvuDYNanmzrRN5HV8Y76IhkBspp1iNYJM4AlQ8vWzYjtAuWKjfz/xBdLVPj
-         X1Ew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=UZNDItw3ygfGYFSl3GXh76G5vlmPu1W37CyeAI/eeGI=;
-        b=YOu7y6afa5duv8iEPqHncghRYzCihEgeD60j3gebVQoAygn9LNdapd+4UjW++n6Rcb
-         VgqUNom2t5pUz4QOGCPugUo0kY7bvUDeKIG6JSMJYI0poXpVYkyKvDT29X7RI229Ox4X
-         PO3l74hbNiMwcvUdRJmCKYxo5mGaJLBrHquqMEIJZoFtPanVjouv8i+1A078BdcSKpgf
-         tU1wJ4q1AA5n384M+1T6kQM4vI5i4iO7hDpbdJ2UgnS9qOW0qkEH0uShrLSb7lFnmHT+
-         lAMVWdSJOjmFcyHT9puhuCOaU5E+HFL17R/5jIf3DwOXIUXeuosHf0XEoUCYNu0SRYtr
-         rBdg==
-X-Gm-Message-State: APjAAAVKtemmlQkFT2sPIv/Moz5/1zSKomw+41ah2+OkeQcifiuHGWCN
-        hSbdtho12mxuEFCJy3SS5wy5Ti59
-X-Google-Smtp-Source: APXvYqwlvpm0Vj0sTcQaWIuQeG85F6ipiTB1Q1iMn13WnvhwvU2qOSRBT5zqcHCBEIepyHYMf4wr2g==
-X-Received: by 2002:a65:64d6:: with SMTP id t22mr961807pgv.406.1560835324809;
-        Mon, 17 Jun 2019 22:22:04 -0700 (PDT)
-Received: from icarus ([2001:268:c0c9:ec1e:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id j23sm15654838pgb.63.2019.06.17.22.22.00
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 17 Jun 2019 22:22:03 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 14:21:46 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Richard Weinberger <richard@nod.at>
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-iio@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Kjeld Flarup <kfa@deif.com>,
-        Patrick Havelange <patrick.havelange@essensium.com>
-Subject: Re: [PATCH] counter: fix ftm-quaddec build error on UML
-Message-ID: <20190618052146.GA3656@icarus>
-References: <e33254e5-3e8e-fc86-de72-b3dd2f6c310c@infradead.org>
- <1644235064.95157.1560801285401.JavaMail.zimbra@nod.at>
+        Tue, 18 Jun 2019 03:01:41 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:53196 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725829AbfFRHBl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:01:41 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 97DBE610982C05AA1866;
+        Tue, 18 Jun 2019 15:01:38 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
+ 2019 15:01:37 +0800
+Subject: Re: [PATCH 4.19 034/118] f2fs: fix to avoid panic in
+ f2fs_inplace_write_data()
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <linux-kernel@vger.kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Sasha Levin" <sashal@kernel.org>
+References: <20190613075643.642092651@linuxfoundation.org>
+ <20190613075645.482628218@linuxfoundation.org> <20190616195430.GC6676@amd>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <73f254f6-c74d-fccb-2531-7b2951a2a418@huawei.com>
+Date:   Tue, 18 Jun 2019 15:01:36 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1644235064.95157.1560801285401.JavaMail.zimbra@nod.at>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <20190616195430.GC6676@amd>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 09:54:45PM +0200, Richard Weinberger wrote:
+Hi Pavel,
+
+On 2019/6/17 3:54, Pavel Machek wrote:
 > Hi!
 > 
-> ----- Ursprüngliche Mail -----
-> > Von: "Randy Dunlap" <rdunlap@infradead.org>
-> > An: "linux-kernel" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
-> > CC: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Kjeld Flarup" <kfa@deif.com>, "Patrick Havelange"
-> > <patrick.havelange@essensium.com>, "William Breathitt Gray" <vilhelm.gray@gmail.com>, "richard" <richard@nod.at>
-> > Gesendet: Montag, 17. Juni 2019 18:21:40
-> > Betreff: [PATCH] counter: fix ftm-quaddec build error on UML
+>> [ Upstream commit 05573d6ccf702df549a7bdeabef31e4753df1a90 ]
+>>
+>> As Jungyeon reported in bugzilla:
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=203239
+>>
+>> - Overview
+>> When mounting the attached crafted image and running program, following errors are reported.
+>> Additionally, it hangs on sync after running program.
+>>
+>> The image is intentionally fuzzed from a normal f2fs image for testing.
+>> Compile options for F2FS are as follows.
+>> CONFIG_F2FS_FS=y
+> ...
+>> The reason is f2fs_inplace_write_data() will trigger kernel panic due
+>> to data block locates in node type segment.
+>>
+>> To avoid panic, let's just return error code and set SBI_NEED_FSCK to
+>> give a hint to fsck for latter repairing.
 > 
-> > From: Randy Dunlap <rdunlap@infradead.org>
-> > 
-> > Fix build error on user-mode Linux, which does not set HAS_IOMEM,
-> > so devm_ioremap() is not available.  Fixes this build error:
-> > 
-> > ERROR: "devm_ioremap" [drivers/counter/ftm-quaddec.ko] undefined!
-> > 
-> > Fixes: a3b9a99980d9 ("counter: add FlexTimer Module Quadrature decoder counter
-> > driver")
-> > 
-> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+>> index 03fa2c4d3d79..8fc3edb6760c 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -3069,13 +3069,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+>>  {
+>>  	int err;
+>>  	struct f2fs_sb_info *sbi = fio->sbi;
+>> +	unsigned int segno;
+>>  
+>>  	fio->new_blkaddr = fio->old_blkaddr;
+>>  	/* i/o temperature is needed for passing down write hints */
+>>  	__get_segment_type(fio);
+>>  
+>> -	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
+>> -			GET_SEGNO(sbi, fio->new_blkaddr))->type));
+>> +	segno = GET_SEGNO(sbi, fio->new_blkaddr);
+>> +
+>> +	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
+>> +		set_sbi_flag(sbi, SBI_NEED_FSCK);
+>> +		return -EFAULT;
+>> +	}
+>>  
 > 
-> AFAICT Patrick fixed this already.
-> 
-> Thanks,
-> //richard
+> Would it make sense to print some kind of debug message, as we do in
+> the other error cases?
 
-Yes, commit 0c75376fa395 ("counter/ftm-quaddec: Add missing dependencies
-in Kconfig") in Greg KH's staging repository in the staging-linus
-branch should address this issue.
+Although it's corner case, I think it will be better to do that, let me add it
+in another patch.
 
-William Breathitt Gray
+Thanks for reminding. :)
+
+Thanks,
+
+> 
+> Best regards,
+> 									Pavel
+> 
