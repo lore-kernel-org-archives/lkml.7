@@ -2,90 +2,115 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F03BC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2448C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 734542070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="T1wUG2r/"
+	by mail.kernel.org (Postfix) with ESMTP id 9BD992070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:59:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560855582;
+	bh=os+XWUh88id7LR2lxt4HH84CeClCNN+gLcnwtnXdaMI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WLtng5TnEqsH1JZm7WBDEXL+Ny6jSbJFFU22OxXWy0SpfrBA9jEfsA4wqbqo2W+aZ
+	 y59XkW6hmFtvpDgOImE6J256IsrZApua6TJG7SDsBCBJp2BqPW9IgwwG+O/K0IPZDM
+	 Zr+WdZtP3YM3HWdQr8fP/0Jj5ZWoDYsjsqarUbyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729649AbfFRK7Z (ORCPT
+        id S1729663AbfFRK7l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:59:25 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33645 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfFRK7Y (ORCPT
+        Tue, 18 Jun 2019 06:59:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47608 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfFRK7k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:59:24 -0400
-Received: by mail-io1-f66.google.com with SMTP id u13so28822755iop.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:59:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wDeuVf27dsWWQyi/G9Z1cR/nnFqjHy2XRRgIkWDwa+w=;
-        b=T1wUG2r/CYW88UkEOUiQ7rn3R1tausZPc1kdqBEQIfxIQ9SSbgVOaTVYT/BDN6Z0Am
-         hYXDY1Zib0Da5pwz+bxOXhsIs1AC7/iyzbrD6oihoif/2Rnd+FaZFJQYpHF1VLgYpKXo
-         O6tD8pDILAHb9l68gGlzhLCUoZsRZY4jOGlPY/Rn2nMREMwL1N+U2BidEBPQUNfXWUYz
-         2NkneM3j9QBpX2/lr9Rzjo9cX1ohCBkXmbjI8Vb0X8uNy0cTN4e8NwQedi7v+OHHRoZL
-         4sBXCMpNc3bqtjIMZ22yHkjrRzfMvvcVrzyQc5JTtmBsGspb8vHTNwY1Yq5c0W7aSHhz
-         223Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wDeuVf27dsWWQyi/G9Z1cR/nnFqjHy2XRRgIkWDwa+w=;
-        b=kLWtU6pJGgmDzuQt7nBWK4gNRvIoLd/nxGBUcKx3oFLRpFwqb5PV66j3m//YiMFpOK
-         8K5vDAgyQLlpTvIas1sbVkszxpP2x8j04QSzIKlxRQtxPNIihpCu3yf2FZAT0x+/l10Z
-         L+x00vgwQOG5w+VuG4k0kiXYYjezXBe6YmVeebSCwVqwjXGsXenFpKPbV63WMrhTmDKh
-         pH9Ky5dUSpiPsLXY6+SFFkit4owO0DBSp2cFeEN4gIIl/I3Qn+mv0wNw9H05url2D8Zo
-         ShkPUC2e91guAhUZw5qHUVTHxZ7s9z7ZP+bT2i8hw+PBJG0lUvMdjPsnPue4dLD/3Qzq
-         YG6A==
-X-Gm-Message-State: APjAAAXO2oyXD8A3evRB13xFjVxy5p65AgnOClTD9eX1ITtpdT4dg8RE
-        Msai9OOnN++odNdBp2H+YlKr4dusGhF137uQR4waPQ==
-X-Google-Smtp-Source: APXvYqygUc9NtkUKqHAZsrJLDcE1z7TbO5n2M0BkA4Kg2xoRZpQqn8fUKR360iFU7smgRnci3PL6o8QOmteT2MwzdH8=
-X-Received: by 2002:a6b:9257:: with SMTP id u84mr2859483iod.278.1560855563794;
- Tue, 18 Jun 2019 03:59:23 -0700 (PDT)
+        Tue, 18 Jun 2019 06:59:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q2jJFJeqAvHW5xjduMI/BTDoLMuuZxXoXruOimW2zSI=; b=ZlTWG/CJBcnrLlZPmdiOAf3yG
+        TTqKHnwT2VevOiAAtguh0Qwc/04W2njZ37TI5hdm1YGsBa0qVrSs7qKTF1mayVxVTREfbMGtCPcUA
+        aVudYh0OL3vEna9c1pzwa80ChEldhHITnGE3lIP0JUchiMTtNU9Ul09f3agMhxEp2FrjQ=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hdBpw-0004vy-1d; Tue, 18 Jun 2019 10:59:36 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 7A4E2440046; Tue, 18 Jun 2019 11:59:35 +0100 (BST)
+Date:   Tue, 18 Jun 2019 11:59:35 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Nisha Kumari <nishakumari@codeaurora.org>
+Cc:     bjorn.andersson@linaro.org, robh+dt@kernel.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
+        david.brown@linaro.org, linux-kernel@vger.kernel.org,
+        kgunda@codeaurora.org, rnayak@codeaurora.org
+Subject: Re: [PATCH 3/4] regulator: Add labibb driver
+Message-ID: <20190618105935.GM5316@sirena.org.uk>
+References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
+ <1560337252-27193-4-git-send-email-nishakumari@codeaurora.org>
+ <20190613172518.GN5316@sirena.org.uk>
+ <577d6e90-0bed-ff2e-32dc-e64c3118458f@codeaurora.org>
 MIME-Version: 1.0
-References: <20190617123352.742876-1-arnd@arndb.de>
-In-Reply-To: <20190617123352.742876-1-arnd@arndb.de>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 18 Jun 2019 11:59:12 +0100
-Message-ID: <CAOesGMjEwQw05g7ARDddQNgfnuk9yUXkmVz7BTOEe8FKknSL4A@mail.gmail.com>
-Subject: Re: [PATCH] firmware: trusted_foundations: add ARMv7 dependency
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Thierry Reding <treding@nvidia.com>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="sbU44GGDGzBBUYp9"
+Content-Disposition: inline
+In-Reply-To: <577d6e90-0bed-ff2e-32dc-e64c3118458f@codeaurora.org>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 1:34 PM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> The "+sec" extension is invalid for older ARM architectures, but
-> the code can now be built on any ARM configuration:
->
-> /tmp/trusted_foundations-2d0882.s: Assembler messages:
-> /tmp/trusted_foundations-2d0882.s:194: Error: architectural extension `sec' is not allowed for the current base architecture
-> /tmp/trusted_foundations-2d0882.s:201: Error: selected processor does not support `smc #0' in ARM mode
-> /tmp/trusted_foundations-2d0882.s:213: Error: architectural extension `sec' is not allowed for the current base architecture
-> /tmp/trusted_foundations-2d0882.s:220: Error: selected processor does not support `smc #0' in ARM mode
->
-> Add a dependency on ARMv7 for the build.
->
-> Fixes: 4cb5d9eca143 ("firmware: Move Trusted Foundations support")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Applied to arm/fixes. Thanks!
+--sbU44GGDGzBBUYp9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jun 18, 2019 at 11:51:18AM +0530, Nisha Kumari wrote:
+> On 6/13/2019 10:55 PM, Mark Brown wrote:
 
--Olof
+> > > +	labibb->lab_vreg.vreg_enabled = 1;
+> > What function does this serve?  It never seems to be read.
+> Its used in next patch for handling interrupts
+
+It'd be better to move this code into the patch where it's used then.
+
+> > > +		if (val & IBB_STATUS1_VREG_OK_BIT) {
+> > > +			labibb->ibb_vreg.vreg_enabled = 1;
+> > > +			return 0;
+> > > +		}
+> > > +	}
+
+> > This is doing more than the other regulator was but it's not clear why -
+> > is it just that the delays are different for the two regulators?
+
+> LAB regulator comes up in first try, so we did not added much delay in that
+> like IBB. Planning to make equal no of retries for both in next patch so
+> that code can be reused.
+
+Is there actually a need for polling at all?
+
+--sbU44GGDGzBBUYp9
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0IxBYACgkQJNaLcl1U
+h9DGQQf9Fn7TqN/dXa0DWnKZiNKqKqQOQ0wKS8WelZLNW4v6/5KFIyrz+82a3s8p
+r7RFFxI24fxs2p8pztsKCXeh1izQCVTOW/FbP5rML9FGkMVoNeGw7YseKvmiIPpn
+vF9XsDTNRe9RIQ4UOMqwMNvauR5eHR9aPtLDtZ0tspewoj2fNtszc40LqZJsA+Kq
+pzf6Mk4JZr6ZcteH3fnBoGDsW9mNEYmc3Iq1ypR4nuxcLwOUpilFssOzYAziTt2D
+we0Cz/kP/ANEk7/f6YJLfDMKiKJMhddbI37MvIktRpMuLw7chcQJcS9buuvIHAiE
+wQNNKWGz/eyWI+Ke81ZfjeXzLO8Raw==
+=im0z
+-----END PGP SIGNATURE-----
+
+--sbU44GGDGzBBUYp9--
