@@ -2,102 +2,120 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBEFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:50:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36504C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B022084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:50:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OYFrrnNY"
+	by mail.kernel.org (Postfix) with ESMTP id 15D392147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbfFRQuJ (ORCPT
+        id S1730062AbfFRQuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:50:09 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42787 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729801AbfFRQuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:50:09 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x17so249448wrl.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=KSk4moREDVQrfaFvvaG4JNEpQO7UXRGLSRSH/qJ+Hf8=;
-        b=OYFrrnNYl9Boz+yv/ZqqkPtI+ZZCBmg3QVTr6t3T7Tujvs9N+iWArZa1sXtsu63+mK
-         yF1DPTBjzZTRCzoD6Ng5l8CBQ/jVwvhnuKdcCOfiAlVISTjPT2aid54erklkFX368Obz
-         E/86CpYRNLVyC7leuks6PBrNF/rrcZgs36GhhxRhcJHEmsnJKmBmjwbZnlP20WMd7dmn
-         vduei46eD42DJo5XxEPTdNvHtFvcYuLtRx54fnXx9a856TaMQhBtweQT7f9JW4mjvcip
-         mW9QIxEKmzROPOIzXTzmbVy2yQ2kVHktkRihmDSf8GUtbJ8gn9bA8zF/+aUnA15U2Uhs
-         OLWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=KSk4moREDVQrfaFvvaG4JNEpQO7UXRGLSRSH/qJ+Hf8=;
-        b=Cn6NlT9hgjNcwvFR69v2piMTBSk9Pxw0QVUPVucZfaW1wWNY/P1JPDaXo3nyjXKhvj
-         riBER/r6FIuQkdprpEF7IlDznzYpN5d/DciJuzRnPrX9KYE4jiQU39RWWJQMbB8F6zi6
-         0rIe1D7QFftGyrVtw+/SQ08c1U0GdoihsyxyOzxuLYVL+/ffIwpbf5tqJ9S7EZ//4qaA
-         ExPSS5roUlskPrMi1Pi7SYxG3VAiB9Z29iKdyVThlkpYn9X7agydciFkDuVLJirsh24h
-         6+am2cUv8IF8GQ7o82gGwhNcEf6hfhtr/xK8xEUQ4p2YN0MThhPIOgZqICukLF3MQGwP
-         AbRQ==
-X-Gm-Message-State: APjAAAUWF+tcYntLwpUUY7J0/QMQaQqcKvd3uYPpR2lt4orK025u4+d6
-        qYlMvW4LUQ3N74JsDgvot7cQFhOudQ6tXw==
-X-Google-Smtp-Source: APXvYqz02pp7jrNPiLtRBNsaULwRQxJ/0Ckr/N049AUpbNenDnGGjDoaGajTn9C+jKdSxnVaUXHD7Q==
-X-Received: by 2002:adf:e6c6:: with SMTP id y6mr20234263wrm.191.1560876607432;
-        Tue, 18 Jun 2019 09:50:07 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id l8sm41152736wrg.40.2019.06.18.09.50.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 09:50:06 -0700 (PDT)
-Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
- <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
- <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
- <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
- <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
- <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <31574ef2-d675-bb36-08d1-18b756ebd29e@linaro.org>
-Date:   Tue, 18 Jun 2019 17:50:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 18 Jun 2019 12:50:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:50042 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729327AbfFRQuf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:50:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2F57344;
+        Tue, 18 Jun 2019 09:50:33 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 56B6C3F246;
+        Tue, 18 Jun 2019 09:50:30 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 17:50:28 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Yu-cheng Yu <yu-cheng.yu@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+Message-ID: <20190618165027.GG2790@e103592.cambridge.arm.com>
+References: <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
+ <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
+ <20190618133223.GD2790@e103592.cambridge.arm.com>
+ <d54fe81be77b9edd8578a6d208c72cd7c0b8c1dd.camel@intel.com>
+ <87pnna7v1d.fsf@oldenburg2.str.redhat.com>
+ <1ca57aaae8a2121731f2dcb1a137b92eed39a0d2.camel@intel.com>
+ <87blyu7ubf.fsf@oldenburg2.str.redhat.com>
+ <b0491cb517ba377da6496fe91a98fdbfca4609a9.camel@intel.com>
+ <20190618162005.GF2790@e103592.cambridge.arm.com>
+ <8736k67tdc.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8736k67tdc.fsf@oldenburg2.str.redhat.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 18, 2019 at 06:25:51PM +0200, Florian Weimer wrote:
+> * Dave Martin:
+> 
+> > On Tue, Jun 18, 2019 at 09:00:35AM -0700, Yu-cheng Yu wrote:
+> >> On Tue, 2019-06-18 at 18:05 +0200, Florian Weimer wrote:
+> >> > * Yu-cheng Yu:
+> >> > 
+> >> > > > I assumed that it would also parse the main executable and make
+> >> > > > adjustments based on that.
+> >> > > 
+> >> > > Yes, Linux also looks at the main executable's header, but not its
+> >> > > NT_GNU_PROPERTY_TYPE_0 if there is a loader.
+> >> > > 
+> >> > > > 
+> >> > > > ld.so can certainly provide whatever the kernel needs.  We need to tweak
+> >> > > > the existing loader anyway.
+> >> > > > 
+> >> > > > No valid statically-linked binaries exist today, so this is not a
+> >> > > > consideration at this point.
+> >> > > 
+> >> > > So from kernel, we look at only PT_GNU_PROPERTY?
+> >> > 
+> >> > If you don't parse notes/segments in the executable for CET, then yes.
+> >> > We can put PT_GNU_PROPERTY into the loader.
+> >> 
+> >> Thanks!
+> >
+> > Would this require the kernel and ld.so to be updated in a particular
+> > order to avoid breakage?  I don't know enough about RHEL to know how
+> > controversial that might be.
+> 
+> There is no official ld.so that will work with the current userspace
+> interface (in this patch submission).  Upstream glibc needs to be
+> updated anyway, so yet another change isn't much of an issue.  This is
+> not a problem; we knew that something like this might happen.
+> 
+> Sure, people need a new binutils with backports for PT_GNU_PROPERTY, but
+> given that only very few people will build CET binaries with older
+> binutils, I think that's not a real issue either.
 
+OK, just wanted to check we weren't missing any requirement for x86.
 
-On 18/06/2019 17:27, Sricharan R wrote:
->   The Macro's expect that buffer size is power of 2. So we are infact passing the actual correct
->   size ( MAX_DESCRIPTORS + 1 = 4096)
-This will make the circular buffer macros happy but question is that do 
-we actually have that many descriptor buffers?
+This approach should satisfy the requirement for arm64 nicely.
 
-This is what is in the driver:
-
-#define BAM_DESC_FIFO_SIZE	SZ_32K
-#define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) 
-- 1)
-#define BAM_FIFO_SIZE	(SZ_32K - 8)
-
-Wouldn't having MAX_DESCRIPTORS + 1 = 4096  lead to overflow the actual 
-descriptor memory size of (SZ_32K - 8) ?
-
---srini
-
+Cheers
+---Dave
