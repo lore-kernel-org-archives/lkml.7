@@ -2,88 +2,150 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BBDC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:26:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409EEC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57F152080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:26:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03A4D2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:27:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Gb0J09Un";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ZOMzGEaG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726307AbfFRH0T (ORCPT
+        id S1728158AbfFRH07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:26:19 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:55869 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRH0T (ORCPT
+        Tue, 18 Jun 2019 03:26:59 -0400
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:5736 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRH07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:26:19 -0400
-Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hd6Wy-0004az-Q0 from Jiada_Wang@mentor.com ; Mon, 17 Jun 2019 22:19:40 -0700
-Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Mon, 17 Jun 2019 22:19:37 -0700
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <kuninori.morimoto.gx@renesas.com>
-CC:     <jiada_wang@mentor.com>, <sudipi@jp.adit-jv.com>,
-        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 1/1] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
-Date:   Tue, 18 Jun 2019 14:19:53 +0900
-Message-ID: <20190618051953.13419-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
+        Tue, 18 Jun 2019 03:26:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1560842818; x=1592378818;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=d+wG2Fjx0bOhYYZT7YsRsIrQMqCTL7+/VTTJL4X/Ksc=;
+  b=Gb0J09UnwD0iS9xfbqlsgyiN6dj5e1SwuRdWamMUcjrVDhW90ns3ewCq
+   ij2vCI3wsRZVYWAjxmGUqIKr0WtGTEan8p98AT1xfmuxKUCDZXxW4dIHN
+   A1Zu2H7J/H5HMzKg5yWQMDgUxmSSHDnFnMJzGChBlxAfOHKp7xECmbxAT
+   jBniRil4TNJHUQnSyDU7xhdIM5lCKsdrjcd0CrSYifsu7GO6y2Zr3K/pn
+   jHSdCzHy2CzHSwPQoaMZC8SSpa9XRR1L4hPzPbY/8kF5Drw5jacz+xAEK
+   Es4o3B+GHAOnkCLrxCdUZemdEbQwbif9vl/EPm4MWZ7ruojV7eFotHlAu
+   A==;
+X-IronPort-AV: E=Sophos;i="5.63,388,1557158400"; 
+   d="scan'208";a="112473576"
+Received: from mail-dm3nam05lp2050.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.50])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 14:04:23 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZmJFPMJq+tV8srk+lxwmuUSFY8ni9vRMTmfDiyJzrCQ=;
+ b=ZOMzGEaGnl1DBqj3pnLxZo9Ct9ewG0RfZI23EHWK5ww7byBTjE/UR+Abz/W2llAYfDSlrJOLCn5CkhVEHdN/CD44BViSaWblTCM0S2VzosUaEF+ahfe+eN1bhx1HUGybQJg2+QhqelSFXkEVDUj0zfpfuGThklFSq1R+gmtjX64=
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
+ SN6PR04MB4941.namprd04.prod.outlook.com (52.135.114.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Tue, 18 Jun 2019 06:04:21 +0000
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.1987.013; Tue, 18 Jun 2019
+ 06:04:21 +0000
+From:   Naohiro Aota <Naohiro.Aota@wdc.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 02/19] btrfs: Get zone information of zoned block devices
+Thread-Topic: [PATCH 02/19] btrfs: Get zone information of zoned block devices
+Thread-Index: AQHVHTJ/1FX3VZfOTkaSGAxvcc7+NQ==
+Date:   Tue, 18 Jun 2019 06:04:21 +0000
+Message-ID: <SN6PR04MB52315752FF4D8E3CFF8801B38CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-3-naohiro.aota@wdc.com>
+ <20190613135759.22siaadm7l4gz2ri@MacBook-Pro-91.local>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Naohiro.Aota@wdc.com; 
+x-originating-ip: [199.255.47.8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 4ff130cc-6e51-48c9-775c-08d6f3b2ce8b
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR04MB4941;
+x-ms-traffictypediagnostic: SN6PR04MB4941:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB4941C013C1C390B213378E9E8CEA0@SN6PR04MB4941.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(376002)(346002)(366004)(189003)(199004)(33656002)(7416002)(76116006)(99286004)(8936002)(74316002)(91956017)(7736002)(66476007)(66556008)(478600001)(68736007)(7696005)(66946007)(64756008)(8676002)(305945005)(73956011)(6506007)(102836004)(53546011)(53936002)(6916009)(229853002)(52536014)(81166006)(66446008)(2906002)(6246003)(81156014)(6116002)(6436002)(3846002)(54906003)(476003)(26005)(4326008)(186003)(71200400001)(71190400001)(66066001)(55016002)(446003)(486006)(5660300002)(86362001)(76176011)(14454004)(5024004)(9686003)(25786009)(72206003)(316002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4941;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tmzyWYcZUOjUjH2r75U4CtTwBmWbwrI6qsbEbRoyLAw4PwRXjiXLyEG9nU6sdqUmDLqn5UudaowCffjUcYUpytDaAyj5QUh69ZlCzd4gc6hD73y/2M16HfIsZs9HDJv5rxYkQ06A/k7poXszCLksvQpD1ab63kmzp+sjoPH2NXDl/92DOnVEWSKBDiYyIjW1825xDfumQAfRPZQxA9PEwpT6t14S5eXsOQp5HWXKed5EJoG3yOm35W12nF7Gh/4jJHxg44OeoWeoZmNPq8TpW2a7iEijnpGtYAviE6c2jXvG2U6XEGfhzJKpckHrEvGQQq833yE13i1uCfxjmzGtYkcc0lpLR0H+18AoSyRzWlC/EsBdgjbt6ZPgQS6xRTI24QQsn3PZqc49uXYSPxEMnE4p8AVzcOYQCzp9MJ7a8XA=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4ff130cc-6e51-48c9-775c-08d6f3b2ce8b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 06:04:21.2979
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4941
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-
-commit c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
-introduces rsnd_ctu_id which calcualates and gives
-the main Device id of the CTU by dividing the id by 4.
-rsnd_mod_id uses this interface to get the CTU main
-Device id. But this commit forgets to revert the main
-Device id calcution previously done in rsnd_ctu_probe_
-which also divides the id by 4. This path corrects the
-same to get the correct main Device id.
-
-The issue is observered when rsnd_ctu_probe_ is done for CTU1
-
-Fixes: c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
-
-Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
-v2: fixed commit id
-
-v1: initial version
----
- sound/soc/sh/rcar/ctu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sh/rcar/ctu.c b/sound/soc/sh/rcar/ctu.c
-index 8cb06dab234e..7647b3d4c0ba 100644
---- a/sound/soc/sh/rcar/ctu.c
-+++ b/sound/soc/sh/rcar/ctu.c
-@@ -108,7 +108,7 @@ static int rsnd_ctu_probe_(struct rsnd_mod *mod,
- 			   struct rsnd_dai_stream *io,
- 			   struct rsnd_priv *priv)
- {
--	return rsnd_cmd_attach(io, rsnd_mod_id(mod) / 4);
-+	return rsnd_cmd_attach(io, rsnd_mod_id(mod));
- }
- 
- static void rsnd_ctu_value_init(struct rsnd_dai_stream *io,
--- 
-2.19.2
-
+On 2019/06/13 22:58, Josef Bacik wrote:=0A=
+> On Fri, Jun 07, 2019 at 10:10:08PM +0900, Naohiro Aota wrote:=0A=
+>> If a zoned block device is found, get its zone information (number of zo=
+nes=0A=
+>> and zone size) using the new helper function btrfs_get_dev_zonetypes(). =
+ To=0A=
+>> avoid costly run-time zone report commands to test the device zones type=
+=0A=
+>> during block allocation, attach the seqzones bitmap to the device struct=
+ure=0A=
+>> to indicate if a zone is sequential or accept random writes.=0A=
+>>=0A=
+>> This patch also introduces the helper function btrfs_dev_is_sequential()=
+ to=0A=
+>> test if the zone storing a block is a sequential write required zone.=0A=
+>>=0A=
+>> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
+>> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>=0A=
+>> ---=0A=
+>>   fs/btrfs/volumes.c | 143 +++++++++++++++++++++++++++++++++++++++++++++=
+=0A=
+>>   fs/btrfs/volumes.h |  33 +++++++++++=0A=
+>>   2 files changed, 176 insertions(+)=0A=
+>>=0A=
+> =0A=
+> We have enough problems with giant files already, please just add a separ=
+ate=0A=
+> hmzoned.c or whatever and put all the zone specific code in there.  That'=
+ll save=0A=
+> me time when I go and break a bunch of stuff out.  Thanks,=0A=
+> =0A=
+> Josef=0A=
+> =0A=
+=0A=
+Thank you for the reviews.=0A=
+=0A=
+I'll add hmzoned.c and put the things (with more helpers/abstraction) there=
+ in the next version.=0A=
+=0A=
+Thanks.=0A=
