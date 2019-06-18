@@ -2,166 +2,194 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3418AC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B23C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C60220B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F4FA20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VfaIcfZJ"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="VE6Y+iEj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbfFRJ3F (ORCPT
+        id S1729490AbfFRJ3L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:29:05 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:35940 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729449AbfFRJ3C (ORCPT
+        Tue, 18 Jun 2019 05:29:11 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38678 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729364AbfFRJ3J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:29:02 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5I9SgaB040832;
-        Tue, 18 Jun 2019 04:28:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560850122;
-        bh=2TkX47PpEr2O84IMWZfOIOxTLKerptBo+sgP1esA6ak=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=VfaIcfZJcJfptwPq4CbiVRhYx3iEyyas55IjW3aj9O7xmoWbS49SepwPabq7rAiAf
-         eqVKnnmlBA5FisA6XkIWMl2k+OCTPDkLxjjHlpb5xvUdrySG1f9djfZZ4nzgIMFrJz
-         +gCaVcPK/LE2ZoQIeBgKqRISpOKWr7zrpgjGfV50=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5I9SgNt075159
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 04:28:42 -0500
-Received: from DFLE103.ent.ti.com (10.64.6.24) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 04:28:42 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 04:28:42 -0500
-Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5I9SJS1067156;
-        Tue, 18 Jun 2019 04:28:38 -0500
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-To:     Vignesh Raghavendra <vigneshr@ti.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-mtd@lists.infradead.org>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        <devicetree@vger.kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 4/5] dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory controller
-Date:   Tue, 18 Jun 2019 14:59:00 +0530
-Message-ID: <20190618092901.31764-5-vigneshr@ti.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190618092901.31764-1-vigneshr@ti.com>
-References: <20190618092901.31764-1-vigneshr@ti.com>
+        Tue, 18 Jun 2019 05:29:09 -0400
+Received: by mail-ed1-f68.google.com with SMTP id r12so18497713edo.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:29:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ygA4/btdGX30WaSq3l4uRN0XwEfMKYE5konUAh3dxDc=;
+        b=VE6Y+iEjOXsLgL/EtksINVNRZmPkDOeK6bS+UqFVtBRAUWaq+rtj/XwO3UT+afh5Gw
+         886EVzbjOo2QMSUL5DgmfyVOjAc2TvI6QoUabyEbBxydmovGBlHcqLbgrv5lbZUhC1B4
+         5AV6NGijxmsB7KWqI4QnaibBUNaCXOZlzaU40=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=ygA4/btdGX30WaSq3l4uRN0XwEfMKYE5konUAh3dxDc=;
+        b=HbfMXfcRMrUsr1gT8FkA4vBVk5NqYxp7bH+AKpvo0ChvUlJv9kwiPOMttfbzE08M7v
+         wodNUeK2dbi/mPO8JSdBbXH7Cb9dLCzt4ILKevZD/LyLfdpW7SmyOipfkrNR+mKdrJ6g
+         d5v/I9az1pckIT6KUA1lgiX2kP8PcOEV4mhQ6Pz2Ne0Oop/n3eglD3D+0zGPIZW4lNgN
+         ObigAMrz0lJN0FQ4ksUq3MRQ7RFQM+gpp+gT5YzZ/mOnz/2C4AZjNFjum1RyGYJg9yup
+         vJzBibbp2NAPoq5IH3eYO6JiabSPEzjgCwy4Mq4UuYtqbmqo1L1uhUMDooWEPzDwqJxF
+         txgg==
+X-Gm-Message-State: APjAAAX7AXar3hWrI5SldnfmNOCEnUm/APUkl9THtKT54ElxKOzXCuBG
+        yEqDq9wsgGc1f3dSXidWYs0cNg==
+X-Google-Smtp-Source: APXvYqyYrIlT1OnmP/pU/52IIO2CetQLJegQS/QZA9okb1cPanhH5ZCWwhMFpRkKXEp1CIMLo3GJ7w==
+X-Received: by 2002:a50:ba09:: with SMTP id g9mr106173551edc.172.1560850147318;
+        Tue, 18 Jun 2019 02:29:07 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id e33sm4596534eda.83.2019.06.18.02.29.06
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 02:29:06 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 11:29:04 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Cc:     Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 4/5] drm/vkms: Use index instead of 0 in possible crtc
+Message-ID: <20190618092904.GQ12905@phenom.ffwll.local>
+Mail-Followup-To: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>,
+        Brian Starkey <brian.starkey@arm.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Haneen Mohammed <hamohammed.sa@gmail.com>,
+        Simon Ser <contact@emersion.fr>, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1560820888.git.rodrigosiqueiramelo@gmail.com>
+ <971da2ede86d11357e6822409bef23cb03869f83.1560820888.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <971da2ede86d11357e6822409bef23cb03869f83.1560820888.git.rodrigosiqueiramelo@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add binding documentation for TI's HyperBus memory controller present on
-AM654 SoC.
+On Mon, Jun 17, 2019 at 11:45:29PM -0300, Rodrigo Siqueira wrote:
+> When vkms calls drm_universal_plane_init(), it sets 0 for the
+> possible_crtcs parameter which works well for a single encoder and
+> connector; however, this approach is not flexible and does not fit well
+> for vkms. This commit adds an index parameter for vkms_plane_init()
+> which makes code flexible and enables vkms to support other DRM features.
+> 
+> Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+> ---
+>  drivers/gpu/drm/vkms/vkms_drv.c    | 2 +-
+>  drivers/gpu/drm/vkms/vkms_drv.h    | 4 ++--
+>  drivers/gpu/drm/vkms/vkms_output.c | 6 +++---
+>  drivers/gpu/drm/vkms/vkms_plane.c  | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+> index cc53ef88a331..966b3d653189 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.c
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.c
+> @@ -127,7 +127,7 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
+>  	dev->mode_config.preferred_depth = 24;
+>  	dev->mode_config.helper_private = &vkms_mode_config_helpers;
+>  
+> -	return vkms_output_init(vkmsdev);
+> +	return vkms_output_init(vkmsdev, 0);
 
-Signed-off-by: Vignesh Raghavendra <vigneshr@ti.com>
----
-v6:
-Use generic names for bindings
+Having to hard-code the index because for the crtc you need the planes,
+but for the planes you need drm_crtc_index of their crtc is annoying, but
+not really a better way :-/
 
- .../devicetree/bindings/mtd/ti,am654-hbmc.txt | 51 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 52 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-diff --git a/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-new file mode 100644
-index 000000000000..c06038c136d8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
-@@ -0,0 +1,51 @@
-+Bindings for HyperBus Memory Controller (HBMC) on TI's K3 family of SoCs
-+
-+Required properties:
-+- compatible : "ti,am654-hbmc" for AM654 SoC
-+- reg : Two entries:
-+	First entry pointed to the register space of HBMC controller
-+	Second entry pointing to the memory map region dedicated for
-+	MMIO access to attached flash devices
-+- ranges : Address translation from offset within CS to allocated MMIO
-+	   space in SoC
-+
-+Optional properties:
-+- mux-controls : phandle to the multiplexer that controls selection of
-+		 HBMC vs OSPI inside Flash SubSystem (FSS). Default is OSPI,
-+		 if property is absent.
-+		 See Documentation/devicetree/bindings/mux/reg-mux.txt
-+		 for mmio-mux binding details
-+
-+Example:
-+
-+	fss: system-controller@47000000 {
-+		compatible = "syscon", "simple-mfd";
-+		reg = <0x0 0x47000000 0x0 0x100>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		hbmc_mux: multiplexer {
-+			compatible = "mmio-mux";
-+			#mux-control-cells = <1>;
-+			mux-reg-masks = <0x4 0x2>; /* 0: reg 0x4, bit 1 */
-+		};
-+
-+		hbmc: hyperbus@47034000 {
-+			compatible = "ti,am654-hbmc";
-+			reg = <0x0 0x47034000 0x0 0x100>,
-+				<0x5 0x00000000 0x1 0x0000000>;
-+			power-domains = <&k3_pds 55>;
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+			ranges = <0x0 0x0 0x5 0x00000000 0x4000000>, /* CS0 - 64MB */
-+				 <0x1 0x0 0x5 0x04000000 0x4000000>; /* CS1 - 64MB */
-+			mux-controls = <&hbmc_mux 0>;
-+
-+			/* Slave flash node */
-+			flash@0,0 {
-+				compatible = "cypress,hyperflash", "cfi-flash";
-+				reg = <0x0 0x0 0x4000000>;
-+			};
-+		};
-+	};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 58c6ad3dae66..0d5a8c36682d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7359,6 +7359,7 @@ S:	Supported
- F:	drivers/mtd/hyperbus/
- F:	include/linux/mtd/hyperbus.h
- F:	Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
-+F:	Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
- 
- HYPERVISOR VIRTUAL CONSOLE DRIVER
- L:	linuxppc-dev@lists.ozlabs.org
+>  }
+>  
+>  static int __init vkms_init(void)
+> diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+> index 8d628d18105e..ad63dbe5e994 100644
+> --- a/drivers/gpu/drm/vkms/vkms_drv.h
+> +++ b/drivers/gpu/drm/vkms/vkms_drv.h
+> @@ -115,10 +115,10 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+>  			       int *max_error, ktime_t *vblank_time,
+>  			       bool in_vblank_irq);
+>  
+> -int vkms_output_init(struct vkms_device *vkmsdev);
+> +int vkms_output_init(struct vkms_device *vkmsdev, int index);
+>  
+>  struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+> -				  enum drm_plane_type type);
+> +				  enum drm_plane_type type, int index);
+>  
+>  /* Gem stuff */
+>  struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+> diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
+> index 56fb5c2a2315..fb1941a6522c 100644
+> --- a/drivers/gpu/drm/vkms/vkms_output.c
+> +++ b/drivers/gpu/drm/vkms/vkms_output.c
+> @@ -35,7 +35,7 @@ static const struct drm_connector_helper_funcs vkms_conn_helper_funcs = {
+>  	.get_modes    = vkms_conn_get_modes,
+>  };
+>  
+> -int vkms_output_init(struct vkms_device *vkmsdev)
+> +int vkms_output_init(struct vkms_device *vkmsdev, int index)
+>  {
+>  	struct vkms_output *output = &vkmsdev->output;
+>  	struct drm_device *dev = &vkmsdev->drm;
+> @@ -45,12 +45,12 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+>  	struct drm_plane *primary, *cursor = NULL;
+>  	int ret;
+>  
+> -	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
+> +	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
+>  	if (IS_ERR(primary))
+>  		return PTR_ERR(primary);
+>  
+>  	if (enable_cursor) {
+> -		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
+> +		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
+>  		if (IS_ERR(cursor)) {
+>  			ret = PTR_ERR(cursor);
+>  			goto err_cursor;
+> diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
+> index 8cf40297cf56..3f8e8b53f3bb 100644
+> --- a/drivers/gpu/drm/vkms/vkms_plane.c
+> +++ b/drivers/gpu/drm/vkms/vkms_plane.c
+> @@ -176,7 +176,7 @@ static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
+>  };
+>  
+>  struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+> -				  enum drm_plane_type type)
+> +				  enum drm_plane_type type, int index)
+>  {
+>  	struct drm_device *dev = &vkmsdev->drm;
+>  	const struct drm_plane_helper_funcs *funcs;
+> @@ -198,7 +198,7 @@ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+>  		funcs = &vkms_primary_helper_funcs;
+>  	}
+>  
+> -	ret = drm_universal_plane_init(dev, plane, 0,
+> +	ret = drm_universal_plane_init(dev, plane, 1 << index,
+>  				       &vkms_plane_funcs,
+>  				       formats, nformats,
+>  				       NULL, type, NULL);
+> -- 
+> 2.21.0
+
 -- 
-2.21.0
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
