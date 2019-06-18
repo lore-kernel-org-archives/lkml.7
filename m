@@ -2,96 +2,104 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	UNWANTED_LANGUAGE_BODY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E975C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:38:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E023CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:44:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 738FC2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:38:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B412084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:44:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730738AbfFRWi5 (ORCPT
+        id S1730751AbfFRWoA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:38:57 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34309 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbfFRWi4 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:38:56 -0400
-Received: from 162-237-133-238.lightspeed.rcsntx.sbcglobal.net ([162.237.133.238] helo=lindsey)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <tyhicks@canonical.com>)
-        id 1hdMke-0004ks-Dk; Tue, 18 Jun 2019 22:38:52 +0000
-Date:   Tue, 18 Jun 2019 17:38:49 -0500
-From:   Tyler Hicks <tyhicks@canonical.com>
-To:     Jani Nikula <jani.nikula@linux.intel.com>
-Cc:     Gen Zhang <blackgod016574@gmail.com>, sean@poorly.run,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
-Subject: Re: [PATCH] drm_edid-load: Fix a missing-check bug in
- drivers/gpu/drm/drm_edid_load.c
-Message-ID: <20190618223848.GD6248@lindsey>
-References: <20190522123920.GB6772@zhanggen-UX430UQ>
- <87o93u7d3s.fsf@intel.com>
+        Tue, 18 Jun 2019 18:44:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58484 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730176AbfFRWoA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 18:44:00 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E361C308FC4E;
+        Tue, 18 Jun 2019 22:43:59 +0000 (UTC)
+Received: from mchristi.msp.csb (unknown [10.64.242.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6903D5C1B5;
+        Tue, 18 Jun 2019 22:43:58 +0000 (UTC)
+Reply-To: mchristi@redhat.com
+Subject: Re: [PATCH] scsi: tcmu: Simplify 'tcmu_update_uio_info()'
+To:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        martin.petersen@oracle.com
+Cc:     linux-scsi@vger.kernel.org, target-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+References: <20190616070220.24189-1-christophe.jaillet@wanadoo.fr>
+From:   Michael Christie <mchristi@redhat.com>
+Organization: Red Hat
+Message-ID: <2ffa1964-30b1-d8bd-a2e2-608fe4f06f45@redhat.com>
+Date:   Tue, 18 Jun 2019 17:43:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o93u7d3s.fsf@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190616070220.24189-1-christophe.jaillet@wanadoo.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 18 Jun 2019 22:44:00 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-05-22 17:55:35, Jani Nikula wrote:
-> On Wed, 22 May 2019, Gen Zhang <blackgod016574@gmail.com> wrote:
-> > In drm_load_edid_firmware(), fwstr is allocated by kstrdup(). And fwstr
-> > is dereferenced in the following codes. However, memory allocation 
-> > functions such as kstrdup() may fail and returns NULL. Dereferencing 
-> > this null pointer may cause the kernel go wrong. Thus we should check 
-> > this kstrdup() operation.
-> > Further, if kstrdup() returns NULL, we should return ERR_PTR(-ENOMEM) to
-> > the caller site.
+On 06/16/2019 02:02 AM, Christophe JAILLET wrote:
+> Use 'kasprintf()' instead of:
+>    - snprintf(NULL, 0...
+>    - kmalloc(...
+>    - snprintf(...
 > 
-> strsep() handles the NULL pointer just fine, so there won't be a NULL
-> dereference. However this patch seems like the right thing to do anyway.
-
-I came across this thread while triaging CVE-2019-12382. I agree that
-the code before was fine but more complex than necessary. There's no
-real security impact here since a NULL pointer dereference was not
-possible. I've requested that MITRE reject CVE-2019-12382.
-
-This change is a nice improvement, though.
-
-Tyler
-
+> This is less verbose and saves 7 bytes (i.e. the space for '/(null)') if
+> 'udev->dev_config' is NULL.
 > 
-> Reviewed-by: Jani Nikula <jani.nikula@intel.com>
+> Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+> ---
+>  drivers/target/target_core_user.c | 16 +++++++---------
+>  1 file changed, 7 insertions(+), 9 deletions(-)
 > 
-> >
-> > Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
-> >
-> > ---
-> > diff --git a/drivers/gpu/drm/drm_edid_load.c b/drivers/gpu/drm/drm_edid_load.c
-> > index a491509..a0e107a 100644
-> > --- a/drivers/gpu/drm/drm_edid_load.c
-> > +++ b/drivers/gpu/drm/drm_edid_load.c
-> > @@ -290,6 +290,8 @@ struct edid *drm_load_edid_firmware(struct drm_connector *connector)
-> >  	 * the last one found one as a fallback.
-> >  	 */
-> >  	fwstr = kstrdup(edid_firmware, GFP_KERNEL);
-> > +	if (!fwstr)
-> > +		return ERR_PTR(-ENOMEM);
-> >  	edidstr = fwstr;
-> >  
-> >  	while ((edidname = strsep(&edidstr, ","))) {
-> > ---
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> diff --git a/drivers/target/target_core_user.c b/drivers/target/target_core_user.c
+> index b43d6385a1a0..04eda111920e 100644
+> --- a/drivers/target/target_core_user.c
+> +++ b/drivers/target/target_core_user.c
+> @@ -1824,20 +1824,18 @@ static int tcmu_update_uio_info(struct tcmu_dev *udev)
+>  {
+>  	struct tcmu_hba *hba = udev->hba->hba_ptr;
+>  	struct uio_info *info;
+> -	size_t size, used;
+>  	char *str;
+>  
+>  	info = &udev->uio_info;
+> -	size = snprintf(NULL, 0, "tcm-user/%u/%s/%s", hba->host_id, udev->name,
+> -			udev->dev_config);
+> -	size += 1; /* for \0 */
+> -	str = kmalloc(size, GFP_KERNEL);
+> -	if (!str)
+> -		return -ENOMEM;
+>  
+> -	used = snprintf(str, size, "tcm-user/%u/%s", hba->host_id, udev->name);
+>  	if (udev->dev_config[0])
+> -		snprintf(str + used, size - used, "/%s", udev->dev_config);
+> +		str = kasprintf(GFP_KERNEL, "tcm-user/%u/%s/%s", hba->host_id,
+> +				udev->name, udev->dev_config);
+> +	else
+> +		str = kasprintf(GFP_KERNEL, "tcm-user/%u/%s", hba->host_id,
+> +				udev->name);
+> +	if (!str)
+> +		return -ENOMEM;
+>  
+>  	/* If the old string exists, free it */
+>  	kfree(info->name);
 > 
-> -- 
-> Jani Nikula, Intel Open Source Graphics Center
+
+Thanks.
+
+Acked-by: Mike Christie <mchristi@redhat.com>
