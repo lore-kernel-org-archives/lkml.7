@@ -2,91 +2,96 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1A2C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:10:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D23E0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:10:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3392085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:10:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560867028;
-	bh=+MaWx/yhErpFJc8IRp9wu8NUBg6hG3zsUCoiMKe9yZs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=e8marMTQ1EjhiOKVjjNoXEc4ELHMjwcP+Mdoj0fSEVJ5uF0Q7zUqUHFkFuFmp0ooM
-	 Im2TwEz2Uhgqgg1wIHF7ALxLaeJ/6oy5HSW2U7eznbtqTijkw2+2vssIDhcPCfrvhB
-	 rxvi1jOjM33OE1ddxkHmZR9kTi204S3EcmnPvX9Q=
+	by mail.kernel.org (Postfix) with ESMTP id A2FC02085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:10:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729614AbfFROK1 (ORCPT
+        id S1729648AbfFROKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:10:27 -0400
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:44719 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFROK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:10:26 -0400
-Received: by mail-qk1-f195.google.com with SMTP id p144so8593588qke.11;
-        Tue, 18 Jun 2019 07:10:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ymzVRv+HbWASk9IbK9IR5jfXe4p30txsWn7MI2aWfko=;
-        b=DOOWp3vW4HwawykDQ1Pi4PSzyzJfFkgUpAfvf3igvw4gXZF41Mzo4LPMBc/wFuOxyj
-         E/2KT3DTrrLJ+sEeEXDFA7EpBmwI5jBOS/TYM08CsTGFQmWSFxaTueKQlgqylOxWgWe3
-         Spj7JsDpBU3rvPrzEO93Nexo0Zc1GM34St7cdpKA9YwHEiFGhEclq3L9+GpgFxO+LKRu
-         svzvOg+fZ9PFaxV67ZYcGW2o7+SkUt9jyOy3GhjF8vt/X+2nhdSJuSizZyF4CXe5R2Bt
-         4kmgX36oU8/3yA9m3KUBn/M2PaLTWftzs/4MXiei4dNijc5WKT/ZAdYmmsUUmEjsEePq
-         dfbg==
-X-Gm-Message-State: APjAAAWncFOW1ieSn3+JMmOVhYFVZn6YzLJ0qtz2gPRxP3p2Pa/Z1d7Q
-        FWVUbVEXcn3EF5gZ/a4XtQ==
-X-Google-Smtp-Source: APXvYqzTd+SUScnI+raBK375orxhwOZtIjBl7LTQ+SrdOuzX+fB6KoQ7w06WVT6SBK2QaP+LwnqcBg==
-X-Received: by 2002:a37:9ece:: with SMTP id h197mr75339469qke.50.1560867025673;
-        Tue, 18 Jun 2019 07:10:25 -0700 (PDT)
-Received: from localhost ([64.188.179.192])
-        by smtp.gmail.com with ESMTPSA id s11sm9602685qte.49.2019.06.18.07.10.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 07:10:25 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 08:10:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Mark Rutland <mark.rutland@arm.com>, openbmc@lists.ozlabs.org,
-        openipmi-developer@lists.sourceforge.net,
-        devicetree@vger.kernel.org, linux-gpio@vger.kernel.org,
-        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: Re: [PATCH] dt-bindings: Add missing newline at end of file
-Message-ID: <20190618141023.GA20154@bogus>
-References: <20190617143322.4332-1-geert+renesas@glider.be>
+        Tue, 18 Jun 2019 10:10:50 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:18601 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725919AbfFROKu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:10:50 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 350FA9F6D931B838D743;
+        Tue, 18 Jun 2019 22:10:45 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Jun 2019
+ 22:10:43 +0800
+Date:   Tue, 18 Jun 2019 15:10:31 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 10/22] iommu: Fix compile error without IOMMU_API
+Message-ID: <20190618151031.00004bbd@huawei.com>
+In-Reply-To: <1560087862-57608-11-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1560087862-57608-11-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617143322.4332-1-geert+renesas@glider.be>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 16:33:22 +0200, Geert Uytterhoeven wrote:
-> "git diff" says:
+On Sun, 9 Jun 2019 06:44:10 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> struct page_response_msg needs to be defined outside CONFIG_IOMMU_API.
+
+What was the error? 
+
+If this is a fix for an earlier patch in this series role it in there
+(or put it before it). If more general we should add a fixes tag.
+
+Jonathan
 > 
->     \ No newline at end of file
-> 
-> after modifying the files.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->  Documentation/devicetree/bindings/ipmi/npcm7xx-kcs-bmc.txt      | 2 +-
->  .../devicetree/bindings/pinctrl/nuvoton,npcm7xx-pinctrl.txt     | 2 +-
->  Documentation/devicetree/bindings/regulator/pv88060.txt         | 2 +-
->  Documentation/devicetree/bindings/sound/cs42l73.txt             | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
+>  include/linux/iommu.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
 > 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 7a37336..8d766a8 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -189,8 +189,6 @@ struct iommu_sva_ops {
+>  	iommu_mm_exit_handler_t mm_exit;
+>  };
+>  
+> -#ifdef CONFIG_IOMMU_API
+> -
+>  /**
+>   * enum page_response_code - Return status of fault handlers, telling the IOMMU
+>   * driver how to proceed with the fault.
+> @@ -227,6 +225,7 @@ struct page_response_msg {
+>  	u64 iommu_data;
+>  };
+>  
+> +#ifdef CONFIG_IOMMU_API
+>  /**
+>   * struct iommu_ops - iommu ops and capabilities
+>   * @capable: check capability
 
-Applied, thanks.
 
-Rob
