@@ -2,202 +2,112 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA215C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:14:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E7A4C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:15:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8A4220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:14:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D8512085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:15:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726916AbfFRMOe (ORCPT
+        id S1728927AbfFRMO7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:14:34 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:45269 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725913AbfFRMOe (ORCPT
+        Tue, 18 Jun 2019 08:14:59 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:34639 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRMO7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:14:34 -0400
-X-UUID: 5ed4167e3f424974af35e92c0dcd0c96-20190618
-X-UUID: 5ed4167e3f424974af35e92c0dcd0c96-20190618
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1630706520; Tue, 18 Jun 2019 20:14:26 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 18 Jun
- 2019 20:14:25 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 18 Jun 2019 20:14:24 +0800
-Message-ID: <1560860064.9531.0.camel@mhfsdcap03>
-Subject: Re: [PATCH v2 08/12] drm/mediatek: Get rid of mtk_smi_larb_get/put
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     CK Hu <ck.hu@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Date:   Tue, 18 Jun 2019 20:14:24 +0800
-In-Reply-To: <1560839719.3736.0.camel@mtksdaap41>
-References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-         <1560171313-28299-9-git-send-email-yong.wu@mediatek.com>
-         <1560839719.3736.0.camel@mtksdaap41>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 18 Jun 2019 08:14:59 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MCayD-1hmruM030N-009keq; Tue, 18 Jun 2019 14:14:33 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     David Howells <dhowells@redhat.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Denis Kenzior <denkenz@gmail.com>,
+        James Morris <james.morris@microsoft.com>,
+        keyrings@vger.kernel.org, linux-crypto@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] crypto: asymmetric_keys - select CRYPTO_HASH where needed
+Date:   Tue, 18 Jun 2019 14:13:47 +0200
+Message-Id: <20190618121400.4016776-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:FdNmaZTGrGzDq5iXrgxkPwJziSsaX6wvGAloE87LV9MtQDdOYXc
+ A3JSH9MjAAV9AVPVTkgEg3wZiN++IzPZwFidXTmQjnffLTlpVEQktDnr6W00YY1L1/SZg6s
+ KuL2d8GXhB1u446diVQJ5V9W+fSQsRwWh6qOR+gy51zvLcbueux+r08i7qUIXrrozbQ3zhF
+ nZJuGoVzRXgPZQ8+1gVyA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:plixockunwQ=:XD/SdUpYN61LItUSwWLGyM
+ nZ9JlxNTFHA3vpsy6AIRTuM1083mhqgExjNPm6EB1VH2qZxBuaggtLv57LQMcCgEVbmGkJIkL
+ PVjZlpipfvmN19QL+uYZI3J8Ebk+nzyhTiSRM7vYtyAhwdK8QyQ4jQDNpUouwG60lJs1yIIk0
+ /ghNfhpO8L19bzX1C1EIJtfbLDZlAhx3eWo5PQRjKiHjtAVT9s2fA6HTHcFZ7P742/t6TqHXp
+ +T03CgCw5xs+itQoAdV3sHyhM44Cl6p+4cj/frHPa737y2H9WdriW6CwXbquFRgPiBiEFMt8n
+ YvDMkskHBjG2r8KKgSOMf3z1EilxxizY8ml3vayEgAncwM49ZFasDXITbRCrla9ch7bSiQixw
+ rlgKmh0zNi6GEAHdhAOlBhzH2Rz2xUcuawxn++2+Jaxm4LoCDKeoGaDnJb+bfWZD8vDsg4XiU
+ +JFQSKG1CBb+Ys/1o721HpHaSLjALWsFhSrO0mwdpiH0EhDkh3py18tFu0u56JsEHh/lmj8rj
+ mRCJ3N8CNzVMBQ+sT5ulAoHF5mDWiYp/DfVNohsGnhNb4gW/gMBHv3eeoh204cUmdj7lANo5G
+ WFlxG3ORxHRw7atPsTzk2UFbg5Nwjqlqnm4Q81z6nRjig5IwRm0Z4rtj+Cx0vgar1ye9wknp4
+ TZUhchcK2AQDcMyHNx2yK3+NWDmbYKXrJaVmtkNr3hFUlBV27TXO7sIMF4jzSQAJ34JX0LX/i
+ uG2AflvgH5hisO4KPt5V3ePfbRR4f2iQk1JXQg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-18 at 14:35 +0800, CK Hu wrote:
-> Hi, Yong:
-> 
-> On Mon, 2019-06-10 at 20:55 +0800, Yong Wu wrote:
-> > MediaTek IOMMU has already added the device_link between the consumer
-> > and smi-larb device. If the drm device call the pm_runtime_get_sync,
-> > the smi-larb's pm_runtime_get_sync also be called automatically.
-> > 
-> > CC: CK Hu <ck.hu@mediatek.com>
-> > CC: Philipp Zabel <p.zabel@pengutronix.de>
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > Reviewed-by: Evan Green <evgreen@chromium.org>
-> > ---
-> >  drivers/gpu/drm/mediatek/mtk_drm_crtc.c     | 11 -----------
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 26 --------------------------
-> >  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  1 -
-> >  3 files changed, 38 deletions(-)
-> > 
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > index acad088..3a21a48 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> > @@ -18,7 +18,6 @@
-> >  #include <drm/drm_probe_helper.h>
-> >  #include <linux/clk.h>
-> >  #include <linux/pm_runtime.h>
-> > -#include <soc/mediatek/smi.h>
-> >  
-> >  #include "mtk_drm_drv.h"
-> >  #include "mtk_drm_crtc.h"
-> > @@ -371,20 +370,12 @@ static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
-> >  				       struct drm_crtc_state *old_state)
-> >  {
-> >  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> > -	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> >  	int ret;
-> >  
-> >  	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
-> >  
-> > -	ret = mtk_smi_larb_get(comp->larb_dev);
-> > -	if (ret) {
-> > -		DRM_ERROR("Failed to get larb: %d\n", ret);
-> > -		return;
-> > -	}
-> > -
-> >  	ret = mtk_crtc_ddp_hw_init(mtk_crtc);
-> >  	if (ret) {
-> > -		mtk_smi_larb_put(comp->larb_dev);
-> >  		return;
-> >  	}
-> 
-> Remove {}.
+Build testing with some core crypto options disabled revealed
+a few modules that are missing CRYPTO_HASH:
 
-Thanks. I will fix in next version.
+crypto/asymmetric_keys/x509_public_key.o: In function `x509_get_sig_params':
+x509_public_key.c:(.text+0x4c7): undefined reference to `crypto_alloc_shash'
+x509_public_key.c:(.text+0x5e5): undefined reference to `crypto_shash_digest'
+crypto/asymmetric_keys/pkcs7_verify.o: In function `pkcs7_digest.isra.0':
+pkcs7_verify.c:(.text+0xab): undefined reference to `crypto_alloc_shash'
+pkcs7_verify.c:(.text+0x1b2): undefined reference to `crypto_shash_digest'
+pkcs7_verify.c:(.text+0x3c1): undefined reference to `crypto_shash_update'
+pkcs7_verify.c:(.text+0x411): undefined reference to `crypto_shash_finup'
 
-> 
-> Regards,
-> CK
-> 
-> >  
-> > @@ -396,7 +387,6 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
-> >  					struct drm_crtc_state *old_state)
-> >  {
-> >  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> > -	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> >  	int i;
-> >  
-> >  	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
-> > @@ -419,7 +409,6 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
-> >  
-> >  	drm_crtc_vblank_off(crtc);
-> >  	mtk_crtc_ddp_hw_fini(mtk_crtc);
-> > -	mtk_smi_larb_put(comp->larb_dev);
-> >  
-> >  	mtk_crtc->enabled = false;
-> >  }
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> > index 54ca794..ede15c9 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> > @@ -265,8 +265,6 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
-> >  		      const struct mtk_ddp_comp_funcs *funcs)
-> >  {
-> >  	enum mtk_ddp_comp_type type;
-> > -	struct device_node *larb_node;
-> > -	struct platform_device *larb_pdev;
-> >  
-> >  	if (comp_id < 0 || comp_id >= DDP_COMPONENT_ID_MAX)
-> >  		return -EINVAL;
-> > @@ -296,30 +294,6 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
-> >  	if (IS_ERR(comp->clk))
-> >  		return PTR_ERR(comp->clk);
-> >  
-> > -	/* Only DMA capable components need the LARB property */
-> > -	comp->larb_dev = NULL;
-> > -	if (type != MTK_DISP_OVL &&
-> > -	    type != MTK_DISP_RDMA &&
-> > -	    type != MTK_DISP_WDMA)
-> > -		return 0;
-> > -
-> > -	larb_node = of_parse_phandle(node, "mediatek,larb", 0);
-> > -	if (!larb_node) {
-> > -		dev_err(dev,
-> > -			"Missing mediadek,larb phandle in %pOF node\n", node);
-> > -		return -EINVAL;
-> > -	}
-> > -
-> > -	larb_pdev = of_find_device_by_node(larb_node);
-> > -	if (!larb_pdev) {
-> > -		dev_warn(dev, "Waiting for larb device %pOF\n", larb_node);
-> > -		of_node_put(larb_node);
-> > -		return -EPROBE_DEFER;
-> > -	}
-> > -	of_node_put(larb_node);
-> > -
-> > -	comp->larb_dev = &larb_pdev->dev;
-> > -
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> > index 8399229..b8dc17e 100644
-> > --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> > +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> > @@ -91,7 +91,6 @@ struct mtk_ddp_comp {
-> >  	struct clk *clk;
-> >  	void __iomem *regs;
-> >  	int irq;
-> > -	struct device *larb_dev;
-> >  	enum mtk_ddp_comp_id id;
-> >  	const struct mtk_ddp_comp_funcs *funcs;
-> >  };
-> 
-> 
+This normally doesn't show up in randconfig tests because there is
+a large number of other options that select CRYPTO_HASH.
 
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ crypto/asymmetric_keys/Kconfig | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/crypto/asymmetric_keys/Kconfig b/crypto/asymmetric_keys/Kconfig
+index be70ca6c85d3..1f1f004dc757 100644
+--- a/crypto/asymmetric_keys/Kconfig
++++ b/crypto/asymmetric_keys/Kconfig
+@@ -15,6 +15,7 @@ config ASYMMETRIC_PUBLIC_KEY_SUBTYPE
+ 	select MPILIB
+ 	select CRYPTO_HASH_INFO
+ 	select CRYPTO_AKCIPHER
++	select CRYPTO_HASH
+ 	help
+ 	  This option provides support for asymmetric public key type handling.
+ 	  If signature generation and/or verification are to be used,
+@@ -65,6 +66,7 @@ config TPM_KEY_PARSER
+ config PKCS7_MESSAGE_PARSER
+ 	tristate "PKCS#7 message parser"
+ 	depends on X509_CERTIFICATE_PARSER
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
+@@ -87,6 +89,7 @@ config SIGNED_PE_FILE_VERIFICATION
+ 	bool "Support for PE file signature verification"
+ 	depends on PKCS7_MESSAGE_PARSER=y
+ 	depends on SYSTEM_DATA_VERIFICATION
++	select CRYPTO_HASH
+ 	select ASN1
+ 	select OID_REGISTRY
+ 	help
+-- 
+2.20.0
 
