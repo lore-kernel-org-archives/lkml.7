@@ -2,189 +2,245 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8678FC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:51:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E25E5C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E91EA2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:51:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fjasle.eu header.i=@fjasle.eu header.b="5X3ssSVG"
+	by mail.kernel.org (Postfix) with ESMTP id A822A20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:53:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfFRHvb (ORCPT
+        id S1728633AbfFRHxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:51:31 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:38395 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRHvb (ORCPT
+        Tue, 18 Jun 2019 03:53:30 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:39650 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFRHxa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:51:31 -0400
-Received: from leknes.fjasle.eu ([92.116.119.3]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MplPf-1iOb3h2GVB-00qDy9; Tue, 18 Jun 2019 09:51:00 +0200
-Received: by leknes.fjasle.eu (Postfix, from userid 1000)
-        id C400D423D2; Tue, 18 Jun 2019 09:50:58 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fjasle.eu; s=mail;
-        t=1560844258; bh=JSr5FYsreTev5jm3vVvWViVsoZetQ5kuXV8VrQDPf00=;
-        h=From:To:Cc:Subject:Date:From;
-        b=5X3ssSVGmS0WCLjiQo0zJx46t2uoIzfkfWiHqwk7LeBTWHDIOMk7AeRvobcgnyD74
-         hlsSb1iC2uA5hyomF/STv7zFJCagIwItyDYdlp+hCcqs7Wc5+fdBVqqddiWRlgZ7nZ
-         vymfXz7o4Dv8XRR/uPTTE/3uq1G3Qi9boGk0iZgY=
-From:   Nicolas Schier <nicolas@fjasle.eu>
-To:     Miklos Szeredi <miklos@szeredi.hu>
-Cc:     Amir Goldstein <amir73il@gmail.com>,
-        Vivek Goyal <vgoyal@redhat.com>, linux-unionfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Nicolas Schier <n.schier@avm.de>
-Subject: [PATCH v2] ovl: fix typo in MODULE_PARM_DESC
-Date:   Tue, 18 Jun 2019 09:50:29 +0200
-Message-Id: <20190618075029.3996-1-nicolas@fjasle.eu>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Jun 2019 03:53:30 -0400
+Received: by mail-ed1-f67.google.com with SMTP id m10so20283832edv.6;
+        Tue, 18 Jun 2019 00:53:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0J/MexkclOSTdAkeUoYoJIrIiMyfAXFCNVHplhB1QO0=;
+        b=N7lFA3+DtaB6AGTvqJJvEwImAk0B98nRIIRBA6J7d2OLujHs9bG48Iwhpnb2ad5tW2
+         UBunluhqTHcuqSX3UkVzrDAC2+10eedrr5HssE/LvxvyLbgTJtUzBYRS7hZJrQcm8o3k
+         55u49dyn9/e/xGhQFVxKij2fQvuxx164yYwR4RJlfDF22fMxvrNkIY4UMEiaKKHdWuLI
+         WB6BtrfHuUOcB2pi9uErE+ybdVe4xjC66VcseKGcvPcn6P4ReHfnjWxs2cwrYle6c6q3
+         uIcQM7raHEjeonVYWurvucocMZ6EyCFNpv8Qp4evTgxJicaex3G/N6if8eDJO7iJt4Tl
+         258w==
+X-Gm-Message-State: APjAAAXpGIzjgxUGqUQklO+eE5+luRqx2qGFDfKQ4t6CgiE1FhakLCah
+        KeD3vbPiH0HJEWH6rTD1IvmE/UXwZ0c=
+X-Google-Smtp-Source: APXvYqyEtVHLva8IWUnpTjfO13Yd2RyDZfN74KKSQzuUxbxaMcfBX/qeS+xRkwOwNfVoPLiZJJZxRw==
+X-Received: by 2002:a17:906:76c8:: with SMTP id q8mr95507671ejn.229.1560844406640;
+        Tue, 18 Jun 2019 00:53:26 -0700 (PDT)
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com. [209.85.221.46])
+        by smtp.gmail.com with ESMTPSA id z12sm1802953edq.57.2019.06.18.00.53.25
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 00:53:26 -0700 (PDT)
+Received: by mail-wr1-f46.google.com with SMTP id n4so4699862wrs.3;
+        Tue, 18 Jun 2019 00:53:25 -0700 (PDT)
+X-Received: by 2002:adf:fc85:: with SMTP id g5mr80026097wrr.324.1560844405369;
+ Tue, 18 Jun 2019 00:53:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Q33Sp8kmOxGQnwqbLn5Hpm/t+PNaNrsb+Lrpw4Lu6tKJbEzggEv
- Ccu2nGj+wF33t3e0g34ig6E3/wdEtNWMkM/YpMv6NkWKvHXgWvcyjGWjNtprVdiz63jsNqx
- AeKhzlvTGcHwNdFEDiZjEpTEvSbnrYloZzp3oh+TaQrt/Jma/OSYrcVgocPj/iU5jRIEx1J
- mUuSMnfF4qxSyi61WniVA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:5ka3ClcJ244=:xT1SfDAQy4o+ojiXSPbYsu
- WCHzMq6i9OXaNqSXR6F2qWG3By8zmCBTxJeelhuxRjBl2zX4EyVsSFCo5sbQ3JzmTyefVmJlH
- yt7A+6rJm9Z1hZwPAIWcu3+dQZwH0sgXx7DcC2CnHMrYtqJX0Fa/OsXnAgQwqUa1RIovH82KV
- 9YZoL/0S0Ao1KqhB2C5qnn67gBdgP55AQixt1JgXlnPmbRFHKtoqalorCMJKzq3UHUJtPN3Vp
- fw/RMRLwvdt5hAe4jUApRusv89ST/weVAiVXo4dxv8KzYG+1Njxh9hZXKTkv29QNp4J2IW4pD
- KDR+Ni3jk7O0sfYoYlVIQYSBbRVadGZTZP42woza37jlHK9EOeYik3+lavoy5IfpbLoDBAcJ3
- OVoD3mSi7DTiEq/ZgVoSpJ5YxLgo4qTsoPJP4KY0SXOUGHV5NxJ4YZkqRcug3Av4ZocnGPgIp
- me5SGRPYujMemOio5eci6pO1Qzdm4M8dSWkjC5nR3M5aY3R1GhwI0FUIoxrnmoR9uqYWKSl5S
- Cx3Y5ESx8aQLu5kowg55VBGAF7eoZqCHALpuiLTCf840snmbF0GV3jdpa5xJqBx3MoGqEbqOK
- kkVdyjFqk0Wt2A2ioYFzvBlm7IaoeJJGDLMQ1WvtTtYVJk0mEG/ziHvUqgUgT+HH7ephhQ/6g
- N+Ki0g7Pd/FzcyVCNb7ebOhZaUAXhFfjwVsm+8V9CTW86Bc3hxmWxH4+kQUzgbStuWD6+i3PI
- xntuPTVOx7vZUW5yZgOdDlIzU9liKUB4llW7cQ==
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
+ <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
+ <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com> <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
+In-Reply-To: <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 18 Jun 2019 15:53:14 +0800
+X-Gmail-Original-Message-ID: <CAGb2v65YRVSv2mFfE2e=vqDOSu4Nie_oLQ-qpaDsTWKJwf-aeA@mail.gmail.com>
+Message-ID: <CAGb2v65YRVSv2mFfE2e=vqDOSu4Nie_oLQ-qpaDsTWKJwf-aeA@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
+ gates in probe
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Schier <n.schier@avm.de>
+On Tue, Jun 18, 2019 at 3:45 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens@csie.org> wrote:
+> > > >
+> > > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > > > >
+> > > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > > now these are register during bind call.
+> > > > >
+> > > > > Of which, dsi clock gate would required during DPHY probe
+> > > > > but same can miss to get since tcon top is not bound at
+> > > > > that time.
+> > > > >
+> > > > > To solve, this circular dependency move the clock gate
+> > > > > registration from bind to probe so-that DPHY can get the
+> > > > > dsi gate clock on time.
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > ---
+> > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
+> > > > >  1 file changed, 49 insertions(+), 45 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > index 465e9b0cdfee..a8978b3fe851 100644
+> > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
+> > > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
+> > > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
+> > > > >                                void *data)
+> > > > >  {
+> > > > > -       struct platform_device *pdev = to_platform_device(dev);
+> > > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
+> > > > > +       int ret;
+> > > > > +
+> > > > > +       ret = reset_control_deassert(tcon_top->rst);
+> > > > > +       if (ret) {
+> > > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
+> > > > > +               return ret;
+> > > > > +       }
+> > > > > +
+> > > > > +       ret = clk_prepare_enable(tcon_top->bus);
+> > > > > +       if (ret) {
+> > > > > +               dev_err(dev, "Could not enable bus clock\n");
+> > > > > +               goto err_assert_reset;
+> > > > > +       }
+> > > >
+> > > > You have to de-assert the reset control and enable the clock before the
+> > > > clocks it provides are registered. Otherwise a consumer may come in and
+> > > > ask for the provided clock to be enabled, but since the TCON TOP's own
+> > > > reset and clock are still disabled, you can't actually access the registers
+> > > > that controls the provided clock.
+> > >
+> > > These rst and bus are common reset and bus clocks not tcon top clocks
+> > > that are trying to register here. ie reason I have not moved it in
+> > > top.
+> >
+> > And you're sure that toggling bits in the TCON TOP block doesn't require
+> > the reset to be de-asserted and the bus clock enabled?
+> >
+> > Somehow I doubt that.
+> >
+> > Once the driver register the clocks it provides, they absolutely must work.
+> > They can't only work after the bind phase when the reset gets de-asserted
+> > and the bus clock enabled. Or you should provide proper error reporting
+> > in the clock ops. I doubt you want to go that way either.
+>
+> Why would they won't work after bind phase? unlike tcon top gates,
+> these reset, and bus are common like  what we have in other DE block
+> so enable them in bind won't be an issue as per as I understand. let
+> me know if you want me to check in other directions.
 
-Change first argument of MODULE_PARM_DESC() calls, such that each of
-them matches the actual module parameter name.  The patch results in
-changing (the 'parm' section from) the output of `modinfo overlay`:
+You misunderstood. When you moved the clock registering parts to the probe
+phase, but didn't move the clock enable and reset de-assert parts to go with,
+the clock ops will not work as expected between probe and bind time.
 
-    parm: ovl_check_copy_up:Obsolete; does nothing
-    parm: redirect_max:ushort
-    parm: ovl_redirect_max:Maximum length of absolute redirect xattr value
-    parm: redirect_dir:bool
-    parm: ovl_redirect_dir_def:Default to on or off for the redirect_ [...]
-    parm: redirect_always_follow:bool
-    parm: ovl_redirect_always_follow:Follow redirects even if [...]
-    parm: index:bool
-    parm: ovl_index_def:Default to on or off for the inodes index [...]
-    parm: nfs_export:bool
-    parm: ovl_nfs_export_def:Default to on or off for the NFS export [...]
-    parm: xino_auto:bool
-    parm: ovl_xino_auto_def:Auto enable xino feature
-    parm: metacopy:bool
-    parm: ovl_metacopy_def:Default to on or off for the metadata only [...]
+Simple way to verify it: Just use devmem to disable the TCON TOP bus gate
+and/or assert its reset control. Then try to toggle any of the bits in the
+TCON TOP block and see if it works, or if the bits stick.
 
-into:
+Whether another driver actually does so is not the question. It is just bad
+implementation.
 
-    parm: check_copy_up:Obsolete; does nothing
-    parm: redirect_max:Maximum length of absolute redirect xattr [...]
-    parm: redirect_dir:Default to on or off for the redirect_dir [...]
-    parm: redirect_always_follow:Follow redirects even if [...]
-    parm: index:Default to on or off for the inodes index feature [...]
-    parm: nfs_export:Default to on or off for the NFS export feature [...]
-    parm: xino_auto:Auto enable xino feature (bool)
-    parm: metacopy:Default to on or off for the metadata only copy up [...]
-
-Signed-off-by: Nicolas Schier <n.schier@avm.de>
----
-
-Changes since v1:
- - update/fix commit message wording (now completely checkpatch
-   compliant)
-
- fs/overlayfs/copy_up.c |  2 +-
- fs/overlayfs/dir.c     |  2 +-
- fs/overlayfs/super.c   | 12 ++++++------
- 3 files changed, 8 insertions(+), 8 deletions(-)
-
-diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-index 9e62dcf06fc4..e9cdc453f247 100644
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -37,7 +37,7 @@ static int ovl_ccup_get(char *buf, const struct kernel_param *param)
- }
- 
- module_param_call(check_copy_up, ovl_ccup_set, ovl_ccup_get, NULL, 0644);
--MODULE_PARM_DESC(ovl_check_copy_up, "Obsolete; does nothing");
-+MODULE_PARM_DESC(check_copy_up, "Obsolete; does nothing");
- 
- int ovl_copy_xattr(struct dentry *old, struct dentry *new)
- {
-diff --git a/fs/overlayfs/dir.c b/fs/overlayfs/dir.c
-index 82c129bfe58d..dbcb3ff588aa 100644
---- a/fs/overlayfs/dir.c
-+++ b/fs/overlayfs/dir.c
-@@ -21,7 +21,7 @@
- 
- static unsigned short ovl_redirect_max = 256;
- module_param_named(redirect_max, ovl_redirect_max, ushort, 0644);
--MODULE_PARM_DESC(ovl_redirect_max,
-+MODULE_PARM_DESC(redirect_max,
- 		 "Maximum length of absolute redirect xattr value");
- 
- static int ovl_set_redirect(struct dentry *dentry, bool samedir);
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 0116735cc321..eb32e68f1a83 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -31,29 +31,29 @@ struct ovl_dir_cache;
- 
- static bool ovl_redirect_dir_def = IS_ENABLED(CONFIG_OVERLAY_FS_REDIRECT_DIR);
- module_param_named(redirect_dir, ovl_redirect_dir_def, bool, 0644);
--MODULE_PARM_DESC(ovl_redirect_dir_def,
-+MODULE_PARM_DESC(redirect_dir,
- 		 "Default to on or off for the redirect_dir feature");
- 
- static bool ovl_redirect_always_follow =
- 	IS_ENABLED(CONFIG_OVERLAY_FS_REDIRECT_ALWAYS_FOLLOW);
- module_param_named(redirect_always_follow, ovl_redirect_always_follow,
- 		   bool, 0644);
--MODULE_PARM_DESC(ovl_redirect_always_follow,
-+MODULE_PARM_DESC(redirect_always_follow,
- 		 "Follow redirects even if redirect_dir feature is turned off");
- 
- static bool ovl_index_def = IS_ENABLED(CONFIG_OVERLAY_FS_INDEX);
- module_param_named(index, ovl_index_def, bool, 0644);
--MODULE_PARM_DESC(ovl_index_def,
-+MODULE_PARM_DESC(index,
- 		 "Default to on or off for the inodes index feature");
- 
- static bool ovl_nfs_export_def = IS_ENABLED(CONFIG_OVERLAY_FS_NFS_EXPORT);
- module_param_named(nfs_export, ovl_nfs_export_def, bool, 0644);
--MODULE_PARM_DESC(ovl_nfs_export_def,
-+MODULE_PARM_DESC(nfs_export,
- 		 "Default to on or off for the NFS export feature");
- 
- static bool ovl_xino_auto_def = IS_ENABLED(CONFIG_OVERLAY_FS_XINO_AUTO);
- module_param_named(xino_auto, ovl_xino_auto_def, bool, 0644);
--MODULE_PARM_DESC(ovl_xino_auto_def,
-+MODULE_PARM_DESC(xino_auto,
- 		 "Auto enable xino feature");
- 
- static void ovl_entry_stack_free(struct ovl_entry *oe)
-@@ -66,7 +66,7 @@ static void ovl_entry_stack_free(struct ovl_entry *oe)
- 
- static bool ovl_metacopy_def = IS_ENABLED(CONFIG_OVERLAY_FS_METACOPY);
- module_param_named(metacopy, ovl_metacopy_def, bool, 0644);
--MODULE_PARM_DESC(ovl_metacopy_def,
-+MODULE_PARM_DESC(metacopy,
- 		 "Default to on or off for the metadata only copy up feature");
- 
- static void ovl_dentry_release(struct dentry *dentry)
--- 
-2.20.1
-
+> Log:
+> [    1.381410] sun6i-mipi-dsi 1ca0000.dsi: Attached panel s070wv20-ct16-icn62
+> [    1.398405] sun4i-drm display-engine: bound 1100000.mixer (ops 0xc074ce64)
+> [    1.407134] sun4i-drm display-engine: bound 1200000.mixer (ops 0xc074ce64)
+> [    1.414043] sun4i-drm display-engine: bound 1c70000.tcon-top (ops 0xc0750e80)
+> [    1.421407] sun4i_dclk_recalc_rate: val = 1, rate = 297000000
+> [    1.427358] sun4i-drm display-engine: No panel or bridge found...
+> RGB output disabled
+> [    1.435217] sun4i-drm display-engine: bound 1c71000.lcd-controller
+> (ops 0xc0749594)
+> [    1.442891] 0.0 drm_connector_init
+> [    1.446294] 0. -1066106880-1-0 (null)
+> [    1.449965] 0.1 drm_connector_init
+> [    1.453368] 0.2 drm_connector_init
+> [    1.456768] 1. drm_connector_init
+> [    1.460094] 2. drm_connector_init
+> [    1.463413] drm_connector_init: connector name = DSI-1
+> [    1.468560] sun4i-drm display-engine: bound 1ca0000.dsi (ops 0xc074c0e4)
+> [    1.475272] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
+> [    1.481892] [drm] No driver support for vblank timestamp query.
+> [    1.488240] [drm] Initialized sun4i-drm 1.0.0 20150629 for
+> display-engine on minor 0
+> [    1.497996] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
+> [    1.498106] ideal = 1800000, rounded = 180000000
+> [    1.498111] sun4i_dclk_round_rate: div = 6 rate = 29700000
+> [    1.498116] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
+> [    1.498154] ideal = 1800000, rounded = 180000000
+> [    1.498158] sun4i_dclk_round_rate: div = 6 rate = 29700000
+> [    1.498217] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
+> [    1.498251] rate = 178200000
+> [    1.498253] parent_rate = 297000000
+> [    1.498256] reg = 0x80c00000
+> [    1.498259] _nkm.n = 3, nkm->n.offset = 0x1, nkm->n.shift = 8
+> [    1.498262] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
+> [    1.498265] _nkm.m = 10, nkm->m.offset = 0x1, nkm->m.shift = 0
+> [    1.499594] sun4i_dclk_set_rate div 6
+> [    1.499603] sun4i_dclk_recalc_rate: val = 6, rate = 29700000
+> [    1.499680] sun6i_dsi_get_video_start_delay: delay = 513
+> [    1.499687] sun6i_dsi_setup_inst_loop: delay = 49
+> [    1.499706] hsa = 134, hbp = 114, hfp = 114, hblk = 2630, vblk = 0
+> [    1.509103] mmc0: host does not support reading read-only switch,
+> assuming write-enable
+> [    1.512693] mmc0: new high speed SDHC card at address 4001
+> [    1.513723] mmcblk0: mmc0:4001 R04GS 3.71 GiB
+> [    1.515577]  mmcblk0: p1 p2
+> [    1.658838] mmc2: new DDR MMC card at address 0001
+> [    1.659934] mmcblk2: mmc2:0001 8WPD3R 7.28 GiB
+> [    1.660657] mmcblk2boot0: mmc2:0001 8WPD3R partition 1 4.00 MiB
+> [    1.661387] mmcblk2boot1: mmc2:0001 8WPD3R partition 2 4.00 MiB
+> [    1.819586] TYPE#0x23, BYTE0#0x7a00, BYTE1#0xc10000
+> [    1.849570] TYPE#0x23, BYTE0#0x2000, BYTE1#0x200000
+> [    1.879569] TYPE#0x23, BYTE0#0x2100, BYTE1#0xe00000
+> [    1.909580] TYPE#0x23, BYTE0#0x2200, BYTE1#0x130000
+> [    1.939569] TYPE#0x23, BYTE0#0x2300, BYTE1#0x280000
+> [    1.969569] TYPE#0x23, BYTE0#0x2400, BYTE1#0x300000
+> [    1.999569] TYPE#0x23, BYTE0#0x2500, BYTE1#0x280000
+> [    2.029569] TYPE#0x23, BYTE0#0x2600, BYTE1#0x0
+> [    2.059569] TYPE#0x23, BYTE0#0x2700, BYTE1#0xd0000
+> [    2.089598] TYPE#0x23, BYTE0#0x2800, BYTE1#0x30000
+> [    2.119579] TYPE#0x23, BYTE0#0x2900, BYTE1#0x1d0000
+> [    2.149569] TYPE#0x23, BYTE0#0x3400, BYTE1#0x800000
+> [    2.179569] TYPE#0x23, BYTE0#0x3600, BYTE1#0x280000
+> [    2.209569] TYPE#0x23, BYTE0#0xb500, BYTE1#0xa00000
+> [    2.239569] TYPE#0x23, BYTE0#0x5c00, BYTE1#0xff0000
+> [    2.269569] TYPE#0x23, BYTE0#0x2a00, BYTE1#0x10000
+> [    2.299569] TYPE#0x23, BYTE0#0x5600, BYTE1#0x920000
+> [    2.329578] TYPE#0x23, BYTE0#0x6b00, BYTE1#0x710000
+> [    2.359569] TYPE#0x23, BYTE0#0x6900, BYTE1#0x2b0000
+> [    2.389569] TYPE#0x23, BYTE0#0x1000, BYTE1#0x400000
+> [    2.419569] TYPE#0x23, BYTE0#0x1100, BYTE1#0x980000
+> [    2.449569] TYPE#0x23, BYTE0#0xb600, BYTE1#0x200000
+> [    2.479569] TYPE#0x23, BYTE0#0x5100, BYTE1#0x200000
+> [    2.509569] TYPE#0x23, BYTE0#0x900, BYTE1#0x100000
+> [    2.679570] TYPE#0x5, BYTE0#0x2900, BYTE1#0x940000
+> [    2.767213] Console: switching to colour frame buffer device 100x30
+> [    3.144604] sun4i-drm display-engine: fb0: sun4i-drmdrmfb frame buffer device
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> To view this discussion on the web, visit https://groups.google.com/d/msgid/linux-sunxi/CAMty3ZBUrGEi%2Be62sFe7GkXinK3q076sGLwpEVz67qeoV%2B1ZeA%40mail.gmail.com.
+> For more options, visit https://groups.google.com/d/optout.
