@@ -2,113 +2,131 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6FAAC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:44:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03B5FC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AAA2206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:44:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09B720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:44:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560847497;
+	bh=MdvAuRXdqT7hSfFBFMoISBnyC68IGv2mmD6bcrmUgvI=;
+	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
+	b=kIJcTlgcPAi+wWr48UYeJ6gLzxL9X51yVWNUBR3FYqToyEXXyl/3UIwIyLt3ctLuX
+	 pxaLaxN4IENNCI/Y+GpaHFklrXaBzZSI1v7UGQxK6FMeLy6Xn6j5VsmwApQtP1hhjF
+	 MG9xwPJDyY+etYpY6DvrEF88KrdL3uV8M1WYp9Uc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfFRIol (ORCPT
+        id S1729284AbfFRIo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:44:41 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:45356 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729180AbfFRIok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:44:40 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 740B877E6ECFBD1401EE;
-        Tue, 18 Jun 2019 16:44:38 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Jun 2019
- 16:44:30 +0800
-Subject: Re: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
- logical PIO range
-To:     Bjorn Helgaas <bhelgaas@google.com>
-References: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
- <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
- <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
- <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com>
- <CAErSpo5cqJCZjt6QqMNZ6_n=G-_WxFeERnsESOMxsdr1P-6JLg@mail.gmail.com>
- <9e8b6971-3189-9d4b-de9a-ff09f859f4f6@huawei.com>
- <CAErSpo4DemDWtnP2Gtram9tfQ0CaN9Na9_Gxk6Qk+nG5+JLuzA@mail.gmail.com>
-CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
-Date:   Tue, 18 Jun 2019 09:44:26 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Tue, 18 Jun 2019 04:44:56 -0400
+Received: from mga04.intel.com ([192.55.52.120]:56891 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfFRIoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:44:55 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 01:44:55 -0700
+X-ExtLoop1: 1
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by FMSMGA003.fm.intel.com with ESMTP; 18 Jun 2019 01:44:52 -0700
+From:   Felipe Balbi <balbi@kernel.org>
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
+        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
+        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
+        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [RESEND v4 0/4] I2C: DWC3 USB: Add support for ACPI based AArch64 Laptops
+In-Reply-To: <20190618080828.GJ16364@dell>
+References: <20190617125105.6186-1-lee.jones@linaro.org> <87lfy0gym0.fsf@linux.intel.com> <20190617132349.GI16364@dell> <87a7efgxw7.fsf@linux.intel.com> <20190618080828.GJ16364@dell>
+Date:   Tue, 18 Jun 2019 11:44:48 +0300
+Message-ID: <87wohjffjz.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CAErSpo4DemDWtnP2Gtram9tfQ0CaN9Na9_Gxk6Qk+nG5+JLuzA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->>
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-- zhichang personal mail
 
->> It's now on my todo list.
->>
->> I'll need advice on how to test this for hot-pluggable host bridges.
->>
->>>
->>> Could you just move the logic_pio_register_range() call farther down
->>> in hisi_lpc_probe()?  IIUC, once logic_pio_register_range() returns,
->>> an inb() with the right port number will try to access that port, so
->>> we should be prepared for that, i.e., maybe this in the wrong order to
->>> begin with?
->>
->> No, unfortunately we can't. The reason is that we need the logical PIO
->> base for that range before we enumerate the children of that host. We
->> need that base address for "translating" the child bus addresses to
->> logical PIO addresses.
+Hi,
+
+Lee Jones <lee.jones@linaro.org> writes:
+> On Tue, 18 Jun 2019, Felipe Balbi wrote:
+>> Lee Jones <lee.jones@linaro.org> writes:
+>> > On Mon, 17 Jun 2019, Felipe Balbi wrote:
+>> >
+>> >> Lee Jones <lee.jones@linaro.org> writes:
+>> >>=20
+>> >> > This patch-set ensures the kernel is bootable on the newly released
+>> >> > AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
+>> >> > changes have been accepted, leaving only I2C (keyboard, touchpad,
+>> >> > touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
+>> >> > camera, networking, etc) enablement.
+>> >> >
+>> >> > RESEND: Stripped I2C patches as they have also been merged into
+>> >> >         their respective subsystem.
+>> >> >
+>> >> > v4:
+>> >> >  * Collecting Acks
+>> >> >  * Adding Andy Gross' new email
+>> >> >  * Removing applied Pinctrl patches
+>> >> >
+>> >> > Lee Jones (4):
+>> >> >   soc: qcom: geni: Add support for ACPI
+>> >> >   usb: dwc3: qcom: Add support for booting with ACPI
+>> >> >   usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
+>> >> >   usb: dwc3: qcom: Improve error handling
+>> >>=20
+>> >> pushed to testing/next
+>> >
+>> > Sounds promising, thanks Felipe.
+>> >
+>> > OOI, what is your process?
+>> >
+>> > How does do the patches typically sit in there?
+>>=20
+>> I'll probably merge to my 'next' branch today. I leave them in
+>> testing/next for a couple days, usually, so 0-day can run its thing and
+>> I get a chance of at least boot testing on our machines in the lab here.
+>>=20
+>> Since this doesn't touch anything "generic", I don't _have_ to boot
+>> test, so I'll probably merge to 'next' today.
 >
+> You're a star.  Thanks Felipe.
 
-Hi Bjorn,
+it's in my 'next' now. Should be in tomorrow's linux next.
 
-> Ah, yeah, that makes sense.  I think.  We do assume that we know all
-> the MMIO and I/O port translations before enumerating devices.  It's
-> *conceivable* that could be changed someday since we don't actually
-> need the translations until a driver claims the device,
+=2D-=20
+balbi
 
-We actually need them before a driver claims the device.
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-The reason is that when we create that child platform device we set the 
-device's IORESOURCE_IO resources according to the translated logic PIO 
-addresses, and not the host bus address. This is what makes the host 
-transparent to the child device driver.
+-----BEGIN PGP SIGNATURE-----
 
-and it would
-> gain some flexibility if we didn't have to program the host bridge
-> windows until we know how much space is required.  But I don't see
-> that happening anytime soon.
->
-> Bjorn
->
-> .
->
-
-BTW, as you may have noticed, in v3 I said I would drop this patch and 
-fix it all properly.
-
-My problem is that I need to ensure that the new logical PIO unregister 
-function works ok for hot-pluggable host bridges. I need to get some way 
-to test this. Advice?
-
-Thanks,
-John
-
-
-
-
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0IpIAACgkQzL64meEa
+mQbfwxAAiJetJXp+PQT5+Erhw0RVJLt2IbC6/mEQKg82EfTN4MVOBIRu0W3HIl6O
+4dCCBxcDa2YvpSIZZTyxfx/2uyrxQo1qctq5GW2uXCutmMBndc6+c3ttvROphyO5
+GYwhzp2bey9uGAO0FsDxXLoeIhJ2wOt30/cgslh2E4a6ql4RHRbCGaTGqQAh+snG
+RT5cZeGCvFtwj0R7NEqutqIqDkXAjf3NmHR5vzeNATpaM9WruHUu1kElsMxpDUhb
+1lK7GS/4KnRqkKnR3SSTGHiAq4XrVl58BGzPFrj/v9Km/C+XYhClb5m3Tr6yQl07
+fIGMmi5oQ3ylEUStFu1aA7U2xWpotPVQak8skMBxTQPGPyZWW6CAOA2dNcYvtJPl
+1SV7PSWppLi66p8ienUDmZWhIa5kXW+p79p5kssnsU9yNy6aR7RCnUR9BInr+siq
+6vZszRKkdcvadUTYS+yTvMGtxDegzPgetX8SI3jnvWpcxwkMSyCh6Dqa8rtKu8fN
+QMzl8eaKXOWCxOPGf87r9irnC+KagFRlKIdpSLJKu2UEHZvLVHCjyEKwwINzyMMz
+f21PMcHPZ/WBsiVqgHiiOC3mV6ELT0wioOI1kSSLC0nvMS8zaIALtt19QonF88uW
+bg1mNfyOz4mqbwn3up4axpMwLnUUgGy+bvuVtWDP3dPcA/LE1TU=
+=iXuK
+-----END PGP SIGNATURE-----
+--=-=-=--
