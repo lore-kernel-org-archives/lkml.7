@@ -2,127 +2,79 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD27AC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:26:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFA4C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A69362085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:26:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="PHPN2gJT"
+	by mail.kernel.org (Postfix) with ESMTP id 0E03920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:29:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560871744;
+	bh=CF7FRkL2iwwVYjbCaQgrgRX+K2cxB9iPmG+x2eAyy9Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KbwHWD0fsdtjunhNH/ck17GAs7/KxPMdjE4T2RHJ1OfNLJi+cNuAxhAeorQFGMZtr
+	 ociO8OmQxv9LerExSXer3wjhIhYM9okFF5ZuligX2aJwNDY9JB3WHPeghKvfjBurXN
+	 7+P1/+H4Kvre26FB4SsEMdXdWvaH+COVbjWVA3Vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfFRP0I (ORCPT
+        id S1729589AbfFRP3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:26:08 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48970 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728982AbfFRP0H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:26:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
-        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=zDQuLvyPeQhgh7/ZzmUlpMUVHgADFhKIg7Jx10j8T5Y=; b=PHPN2gJTKxWUHzfd0/kg7rMWvA
-        Yj3i5FFGVoxgSjQttV4VLQROldiE+URTLhWKZONApFUFQZPSia/6BqSPcPFo1hHkvmDU+1zb/7KH8
-        iAfuTs7fL8c+u3T4C7a5k8A+vCStaGR7Rq866QEQuJgAAfPc/5Z6TwmPANQLLk+JTxtXZdeHvEbhi
-        x5ZWr4fkXLWhGIsf/tgQyShCfFSeWbXWjzoJvmqEgvksGpX0524r9XpMHLI03T/R3ZdqG1duoVouV
-        4/V9aXlXKwpWtE7Qty9AtdI5jjEhd3yIreXwmZgu7AvtuvokiWBkx+2gDLHn44ABf3u+mvkf4vZV7
-        MTxOG69Q==;
-Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdFzm-0000Kn-4u; Tue, 18 Jun 2019 15:26:02 +0000
-Subject: Re: [PATCH v4 2/2] fTPM: add documentation for ftpm driver
-To:     Sasha Levin <sashal@kernel.org>, peterhuewe@gmx.de,
-        jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com, tee-dev@lists.linaro.org
-References: <20190530152758.16628-1-sashal@kernel.org>
- <20190530152758.16628-3-sashal@kernel.org>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c1cf6154-7140-66c9-dff9-dc7a788df518@infradead.org>
-Date:   Tue, 18 Jun 2019 08:25:58 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 11:29:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbfFRP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:29:02 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 141962085A;
+        Tue, 18 Jun 2019 15:29:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560871741;
+        bh=CF7FRkL2iwwVYjbCaQgrgRX+K2cxB9iPmG+x2eAyy9Y=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C77rrrEvPFlhBrbHNBm+BOxFFDfKGdu0ap03ztelW4IIobTlRpUQCKcOizOc2xSEd
+         FOK4ir94zSoUkwYJkwmy7wF79J+29xNEmtFYBU7/cVJnNsI6NuAFJOfo9ai0sx90V7
+         rgrp6sa4HcF0ZT+TooI7Ihq4z8a4eA9ZtWklx9Rw=
+Date:   Tue, 18 Jun 2019 17:28:59 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Muchun Song <smuchun@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        zhaowuyun@wingtech.com
+Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
+ glue directory
+Message-ID: <20190618152859.GB1912@kroah.com>
+References: <20190516142342.28019-1-smuchun@gmail.com>
+ <20190524190443.GB29565@kroah.com>
+ <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+ <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190530152758.16628-3-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/30/19 8:27 AM, Sasha Levin wrote:
-> This patch adds basic documentation to describe the new fTPM driver.
-> 
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
-> ---
->  Documentation/security/tpm/index.rst        |  1 +
->  Documentation/security/tpm/tpm_ftpm_tee.rst | 31 +++++++++++++++++++++
->  2 files changed, 32 insertions(+)
->  create mode 100644 Documentation/security/tpm/tpm_ftpm_tee.rst
+On Tue, Jun 18, 2019 at 09:40:13PM +0800, Muchun Song wrote:
+> Ping guys ? I think this is worth fixing.
 
-Hi,
-Just some minor editing...
+That's great (no context here), but I need people to actually agree on
+what the correct fix should be.  I had two different patches that were
+saying they fixed the same issue, and that feels really wrong.
 
-> diff --git a/Documentation/security/tpm/tpm_ftpm_tee.rst b/Documentation/security/tpm/tpm_ftpm_tee.rst
-> new file mode 100644
-> index 0000000000000..29c2f8b5ed100
-> --- /dev/null
-> +++ b/Documentation/security/tpm/tpm_ftpm_tee.rst
-> @@ -0,0 +1,31 @@
-> +=============================================
-> +Firmware TPM Driver
-> +=============================================
-> +
-> +| Authors:
-> +| Thirupathaiah Annapureddy <thiruan@microsoft.com>
-> +| Sasha Levin <sashal@kernel.org>
-> +
-> +This document describes the firmware Trusted Platform Module (fTPM)
-> +device driver.
-> +
-> +Introduction
-> +============
-> +
-> +This driver is a shim for a firmware implemented in ARM's TrustZone
+So can everyone actually agree on one patch please?
 
-                         for firmware
+thanks,
 
-> +environment. The driver allows programs to interact with the TPM in the same
-> +way the would interact with a hardware TPM.
-
-       they
-
-> +
-> +Design
-> +======
-> +
-> +The driver acts as a thin layer that passes commands to and from a TPM
-> +implemented in firmware. The driver itself doesn't contain much logic and is
-> +used more like a dumb pipe between firmware and kernel/userspace.
-> +
-> +The firmware itself is based on the following paper:
-> +https://www.microsoft.com/en-us/research/wp-content/uploads/2017/06/ftpm1.pdf
-> +
-> +When the driver is loaded it will expose ``/dev/tpmX`` character devices to
-> +userspace which will enable userspace to communicate with the firmware tpm
-
-                                                                          TPM
-
-> +through this device.
-> 
-
-
--- 
-~Randy
+greg k-h
