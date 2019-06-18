@@ -2,95 +2,89 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7152C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:39:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4480C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:39:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3EEC20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:39:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560879551;
-	bh=PxrxA3UzfI7/MmrGvABpDnff3c4KY8ZcU8lFKr5WNAE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=m5McMXiZAKVusHJ8j4SO7Oqfralf0kxt6AWvIFBMlu4LUetoHXDNwTJK5f6/ZCYJv
-	 nRAX8zGwSfNZziDBC0QodbttGGzxxIxLP6UBeYM79ZBmTtUmgT36vzUXeBQx38B45A
-	 TgDND+Mi3fuOcNzuJooyda02yAMaA/TRhxjdzyCg=
+	by mail.kernel.org (Postfix) with ESMTP id BC3E120863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:39:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730218AbfFRRjK (ORCPT
+        id S1730222AbfFRRje (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:39:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33804 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 13:39:34 -0400
+Received: from foss.arm.com ([217.140.110.172]:52066 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729477AbfFRRjJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:39:09 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06B5320863;
-        Tue, 18 Jun 2019 17:39:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560879548;
-        bh=PxrxA3UzfI7/MmrGvABpDnff3c4KY8ZcU8lFKr5WNAE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=1vxm1WDqA9x8AORz+Qlp8wyGuc3mE1KUmC1hFVAK2SdkShmEMzRzLW5hJuY35m0gA
-         NQQ/1qsNgy3R6NydgzCcYgC2jMCEt4vBZh4/8irlxBc8hZh7m8nKCTLyIRCFNZvOam
-         FMHO8jzttjGxjMrpfBw2WOJherwAhYNR1lvRPpqQ=
-Date:   Tue, 18 Jun 2019 19:39:06 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc:     David Miller <davem@davemloft.net>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Fred Klassen <fklassen@appneta.com>
-Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
-Message-ID: <20190618173906.GB3649@kroah.com>
-References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
- <20190618161036.GA28190@kroah.com>
- <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
- <20190618.094759.539007481404905339.davem@davemloft.net>
- <20190618171516.GA17547@kroah.com>
- <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
+        id S1729477AbfFRRje (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:39:34 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3076F344;
+        Tue, 18 Jun 2019 10:39:33 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 10F3E3F738;
+        Tue, 18 Jun 2019 10:39:31 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 18:39:29 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Vivek Gautam <vgautam@qti.qualcomm.com>
+Subject: Re: [PATCH] iommu: io-pgtable: Support non-coherent page tables
+Message-ID: <20190618173929.GG4270@fuggles.cambridge.arm.com>
+References: <20190515233234.22990-1-bjorn.andersson@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190515233234.22990-1-bjorn.andersson@linaro.org>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 01:27:14PM -0400, Willem de Bruijn wrote:
-> On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
-> > > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > > Date: Tue, 18 Jun 2019 12:37:33 -0400
-> > >
-> > > > Specific to the above test, I can add a check command testing
-> > > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
-> > > > way to denote "skipped", so this would just return "pass". Sounds a
-> > > > bit fragile, passing success when a feature is absent.
-> > >
-> > > Especially since the feature might be absent because the 'config'
-> > > template forgot to include a necessary Kconfig option.
-> >
-> > That is what the "skip" response is for, don't return "pass" if the
-> > feature just isn't present.  That lets people run tests on systems
-> > without the config option enabled as you say, or on systems without the
-> > needed userspace tools present.
-> 
-> I was not aware that kselftest had this feature.
-> 
-> But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
-> I'll send a patch and will keep that in mind for future tests.
+Hi Bjorn,
 
-Wonderful, thanks for doing that!
+On Wed, May 15, 2019 at 04:32:34PM -0700, Bjorn Andersson wrote:
+> Describe the memory related to page table walks as non-cachable for iommu
+> instances that are not DMA coherent.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/iommu/io-pgtable-arm.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/io-pgtable-arm.c b/drivers/iommu/io-pgtable-arm.c
+> index 4e21efbc4459..68ff22ffd2cb 100644
+> --- a/drivers/iommu/io-pgtable-arm.c
+> +++ b/drivers/iommu/io-pgtable-arm.c
+> @@ -803,9 +803,15 @@ arm_64_lpae_alloc_pgtable_s1(struct io_pgtable_cfg *cfg, void *cookie)
+>  		return NULL;
+>  
+>  	/* TCR */
+> -	reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
+> -	      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
+> -	      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
+> +	if (cfg->quirks & IO_PGTABLE_QUIRK_NO_DMA) {
+> +		reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
+> +		      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_IRGN0_SHIFT) |
+> +		      (ARM_LPAE_TCR_RGN_WBWA << ARM_LPAE_TCR_ORGN0_SHIFT);
+> +	} else {
+> +		reg = (ARM_LPAE_TCR_SH_IS << ARM_LPAE_TCR_SH0_SHIFT) |
 
-greg k-h
+Nit: this should be outer-shareable (ARM_LPAE_TCR_SH_OS).
+
+> +		      (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_IRGN0_SHIFT) |
+> +		      (ARM_LPAE_TCR_RGN_NC << ARM_LPAE_TCR_ORGN0_SHIFT);
+> +	}
+
+Should we also be doing something similar for the short-descriptor code
+in io-pgtable-arm-v7s.c? Looks like you just need to use ARM_V7S_RGN_NC
+instead of ARM_V7S_RGN_WBWA when initialising ttbr0 for non-coherent
+SMMUs.
+
+Will
