@@ -2,146 +2,150 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A14D7C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:44:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DF5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:44:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70CFE20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:44:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 954C92084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:44:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="HBM18VPX"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R4uJclZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730424AbfFRToN (ORCPT
+        id S1730484AbfFRToS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:44:13 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43014 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfFRToM (ORCPT
+        Tue, 18 Jun 2019 15:44:18 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14507 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfFRToR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:44:12 -0400
-Received: by mail-ot1-f65.google.com with SMTP id i8so16683349oth.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 12:44:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lWeoQffD9ULTiTlyWHRUgEl3LLxJ/1SEB3UmhnFdNVc=;
-        b=HBM18VPXHIC97mbLA+LtY3CIlBwNWPFZh/XoVx5V3O56HGcLOwYjjgGO1PCDnbVpDc
-         WuU8ZDq2UjT5VxR4klcAB/lbVRwJ0Z9ei+7ASbtZTF9eoDvBooNqgG4Cn7b0fuW7CjTF
-         tjaPfRs8CiVIRv+lH1b32DeFE6GrR8lZUQVBLu7ROfno0v4YRmMIO57Ecxyn/H1ZBXWv
-         x5WqNsR4Y/xpS8+RU0wqIjPMvyzhezRAZFOBqwNX2yAIZCUzqW7J36ZwySrmdeosgciw
-         9qQOkEYFUoFGBQz/HfT+wqA9YYfTgjxDdiIQfwbk3QkFIUp0slBDktARnSOPSBIAzdUu
-         VMdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lWeoQffD9ULTiTlyWHRUgEl3LLxJ/1SEB3UmhnFdNVc=;
-        b=lvQkBzymERsGWGn58tK9/7XWzxZA9HsUNsAunD0FOCIE4DeK5XybOAepM4BMZSdmjQ
-         FOU9TzQr2BxUMb6gVQkYvAwTWyJI7gsU/az1KMsjeZRQn7lesqucmeM00zVjjQ0b3YaE
-         A8qfZkTvdmRHWbtylg8Sj5RW3tSGD4pyxU+NIPiNlmXGydu8WMzFBbpxwX0Isyyytqjw
-         PKnKlnFz3XUk6D3kwZZwiq3npCJl9w7/Rnp64P69I0paWktCLoOwJ8i7Rbtr7bo4yd45
-         CZDvgZAPJT5udvOI7jZkJt/IAVNN8bkr/3JUckOmlsEmiKVa6yG4bXtx+Jra6UJtKqdt
-         m5Ug==
-X-Gm-Message-State: APjAAAWXUZgHG5IluzfPzP2MwHIfp2WyW9MbPrApT+Z3Q46EbTHf+3qd
-        WG95T2WROXKO+UqpKf4F1zcwe94mdT/QjWw+jDc8Zw==
-X-Google-Smtp-Source: APXvYqzvEbAUxmiQsuBWOyCSPoJJ82/NJ4V945yWJ3d7PH0Xyc52nRxuIrMvp5YF3AqD0GfjC1CQKPjmX1N5IlCt5jk=
-X-Received: by 2002:a9d:7a8b:: with SMTP id l11mr817279otn.247.1560887051616;
- Tue, 18 Jun 2019 12:44:11 -0700 (PDT)
+        Tue, 18 Jun 2019 15:44:17 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d093f100000>; Tue, 18 Jun 2019 12:44:16 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 12:44:16 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 12:44:16 -0700
+Received: from [10.26.11.81] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 19:44:13 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
+ phylib logic
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+ <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
+ <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
+ <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
+ <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
+ <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
+Message-ID: <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
+Date:   Tue, 18 Jun 2019 20:44:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190617122733.22432-1-hch@lst.de> <20190617122733.22432-16-hch@lst.de>
-In-Reply-To: <20190617122733.22432-16-hch@lst.de>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 18 Jun 2019 12:43:59 -0700
-Message-ID: <CAPcyv4iwawKnG4jQtcNWNtXQeH3PYG6iWc6JV59DnyixmwDEcg@mail.gmail.com>
-Subject: Re: [PATCH 15/25] device-dax: use the dev_pagemap internal refcount
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000003f3c23058b9e5615"
+In-Reply-To: <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560887056; bh=PwZarqBwDAlCSx+BZ96mh7Tp8BKOluB88TjkXU/xKMw=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=R4uJclZHP4uqM8KUkkbfj3B9imly/wEhiSJ+rvRgRqF3AJa6y9N1BU6AXqkxxAAN1
+         mNyagoJzU6qaXcWda8VeAbmZLFnX75S6fAuQQHcvCk3gd2EShrvgg1Z+bjMMc4B8rG
+         FJu/aAOR/Exkzc6LDxCm9bJ8mUYHGeMtsrFgMASjIzGq+V35FV3nybMf5El3fm2l2c
+         a9IXt/mfbR5HkwAzEORHNYj/z0kXPVAYYDufwAP4cL4C61y+gIAHwH/PXO/UTUq1YL
+         0SH0j61GFIRBnjbVDvzrPYmzQexp/GLub91IIoZcWbLe8IdIUEPvNW+KAN/m6Wuzle
+         rvnwW7P2e7h7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003f3c23058b9e5615
-Content-Type: text/plain; charset="UTF-8"
 
-On Mon, Jun 17, 2019 at 5:28 AM Christoph Hellwig <hch@lst.de> wrote:
->
-> The functionality is identical to the one currently open coded in
-> device-dax.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  drivers/dax/dax-private.h |  4 ----
->  drivers/dax/device.c      | 43 ---------------------------------------
->  2 files changed, 47 deletions(-)
+On 18/06/2019 16:20, Jon Hunter wrote:
+> 
+> On 18/06/2019 11:18, Jon Hunter wrote:
+>>
+>> On 18/06/2019 10:46, Jose Abreu wrote:
+>>> From: Jon Hunter <jonathanh@nvidia.com>
+>>>
+>>>> I am not certain but I don't believe so. We are using a static IP address
+>>>> and mounting the root file-system via NFS when we see this ...
+>>>
+>>> Can you please add a call to napi_synchronize() before every 
+>>> napi_disable() calls, like this:
+>>>
+>>> if (queue < rx_queues_cnt) {
+>>> 	napi_synchronize(&ch->rx_napi);
+>>> 	napi_disable(&ch->rx_napi);
+>>> }
+>>>
+>>> if (queue < tx_queues_cnt) {
+>>> 	napi_synchronize(&ch->tx_napi);
+>>> 	napi_disable(&ch->tx_napi);
+>>> }
+>>>
+>>> [ I can send you a patch if you prefer ]
+>>
+>> Yes I can try this and for completeness you mean ...
+>>
+>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> index 4ca46289a742..d4a12cb64d8e 100644
+>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>> @@ -146,10 +146,15 @@ static void stmmac_disable_all_queues(struct stmmac_priv *priv)
+>>         for (queue = 0; queue < maxq; queue++) {
+>>                 struct stmmac_channel *ch = &priv->channel[queue];
+>>  
+>> -               if (queue < rx_queues_cnt)
+>> +               if (queue < rx_queues_cnt) {
+>> +                       napi_synchronize(&ch->rx_napi);
+>>                         napi_disable(&ch->rx_napi);
+>> -               if (queue < tx_queues_cnt)
+>> +               }
+>> +
+>> +               if (queue < tx_queues_cnt) {
+>> +                       napi_synchronize(&ch->tx_napi);
+>>                         napi_disable(&ch->tx_napi);
+>> +               }
+>>         }
+>>  }
+> 
+> So good news and bad news ...
+> 
+> The good news is that the above change does fix the initial crash
+> I am seeing. However, even with this change applied on top of
+> -next, it is still dying somewhere else and so there appears to
+> be a second issue. 
 
-This needs the mock devm_memremap_pages() to setup the common
-percpu_ref. Incremental patch attached:
+Further testing has shown that actually this does NOT resolve the issue
+and I am still seeing the crash. Sorry for the false-positive.
 
---0000000000003f3c23058b9e5615
-Content-Type: text/x-patch; charset="US-ASCII"; 
-	name="0001-tools-testing-nvdimm-Support-the-internal-ref-of-dev.patch"
-Content-Disposition: attachment; 
-	filename="0001-tools-testing-nvdimm-Support-the-internal-ref-of-dev.patch"
-Content-Transfer-Encoding: base64
-Content-ID: <f_jx27u7050>
-X-Attachment-Id: f_jx27u7050
+Jon
 
-RnJvbSA4NzVlNzE0ODljODQ4NTQ0OGE1YjdkZjJkOGE4YjJlZDc3ZDJiNTU1IE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBEYW4gV2lsbGlhbXMgPGRhbi5qLndpbGxpYW1zQGludGVsLmNv
-bT4KRGF0ZTogVHVlLCAxOCBKdW4gMjAxOSAxMTo1ODoyNCAtMDcwMApTdWJqZWN0OiBbUEFUQ0hd
-IHRvb2xzL3Rlc3RpbmcvbnZkaW1tOiBTdXBwb3J0IHRoZSAnaW50ZXJuYWwnIHJlZiBvZgogZGV2
-X3BhZ2VtYXAKCkZvciB1c2VycyBvZiB0aGUgY29tbW9uIHBlcmNwdS1yZWYgaW1wbGVtZW50YXRp
-b24sIGxpa2UgZGV2aWNlLWRheCwKYXJyYW5nZSBmb3IgbmZpdF90ZXN0IHRvIGluaXRpYWxpemUg
-dGhlIGNvbW1vbiBwYXJhbWV0ZXJzLgoKU2lnbmVkLW9mZi1ieTogRGFuIFdpbGxpYW1zIDxkYW4u
-ai53aWxsaWFtc0BpbnRlbC5jb20+Ci0tLQogdG9vbHMvdGVzdGluZy9udmRpbW0vdGVzdC9pb21h
-cC5jIHwgNDEgKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQs
-IDMyIGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvdG9vbHMvdGVz
-dGluZy9udmRpbW0vdGVzdC9pb21hcC5jIGIvdG9vbHMvdGVzdGluZy9udmRpbW0vdGVzdC9pb21h
-cC5jCmluZGV4IDNiYzFjMTZjNGVmOS4uOTAxOWRkOGFmYmMxIDEwMDY0NAotLS0gYS90b29scy90
-ZXN0aW5nL252ZGltbS90ZXN0L2lvbWFwLmMKKysrIGIvdG9vbHMvdGVzdGluZy9udmRpbW0vdGVz
-dC9pb21hcC5jCkBAIC0xMDgsOCArMTA4LDYgQEAgc3RhdGljIHZvaWQgbmZpdF90ZXN0X2tpbGwo
-dm9pZCAqX3BnbWFwKQogewogCXN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXAgPSBfcGdtYXA7CiAK
-LQlXQVJOX09OKCFwZ21hcCB8fCAhcGdtYXAtPnJlZik7Ci0KIAlpZiAocGdtYXAtPm9wcyAmJiBw
-Z21hcC0+b3BzLT5raWxsKQogCQlwZ21hcC0+b3BzLT5raWxsKHBnbWFwKTsKIAllbHNlCkBAIC0x
-MjMsMjAgKzEyMSw0NSBAQCBzdGF0aWMgdm9pZCBuZml0X3Rlc3Rfa2lsbCh2b2lkICpfcGdtYXAp
-CiAJfQogfQogCitzdGF0aWMgdm9pZCBkZXZfcGFnZW1hcF9wZXJjcHVfcmVsZWFzZShzdHJ1Y3Qg
-cGVyY3B1X3JlZiAqcmVmKQoreworCXN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXAgPQorCQljb250
-YWluZXJfb2YocmVmLCBzdHJ1Y3QgZGV2X3BhZ2VtYXAsIGludGVybmFsX3JlZik7CisKKwljb21w
-bGV0ZSgmcGdtYXAtPmRvbmUpOworfQorCiB2b2lkICpfX3dyYXBfZGV2bV9tZW1yZW1hcF9wYWdl
-cyhzdHJ1Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZfcGFnZW1hcCAqcGdtYXApCiB7CisJaW50
-IGVycm9yOwogCXJlc291cmNlX3NpemVfdCBvZmZzZXQgPSBwZ21hcC0+cmVzLnN0YXJ0OwogCXN0
-cnVjdCBuZml0X3Rlc3RfcmVzb3VyY2UgKm5maXRfcmVzID0gZ2V0X25maXRfcmVzKG9mZnNldCk7
-CiAKLQlpZiAobmZpdF9yZXMpIHsKLQkJaW50IHJjOworCWlmICghbmZpdF9yZXMpCisJCXJldHVy
-biBkZXZtX21lbXJlbWFwX3BhZ2VzKGRldiwgcGdtYXApOwogCi0JCXJjID0gZGV2bV9hZGRfYWN0
-aW9uX29yX3Jlc2V0KGRldiwgbmZpdF90ZXN0X2tpbGwsIHBnbWFwKTsKLQkJaWYgKHJjKQotCQkJ
-cmV0dXJuIEVSUl9QVFIocmMpOwotCQlyZXR1cm4gbmZpdF9yZXMtPmJ1ZiArIG9mZnNldCAtIG5m
-aXRfcmVzLT5yZXMuc3RhcnQ7CisJcGdtYXAtPmRldiA9IGRldjsKKwlpZiAoIXBnbWFwLT5yZWYp
-IHsKKwkJaWYgKHBnbWFwLT5vcHMgJiYgKHBnbWFwLT5vcHMtPmtpbGwgfHwgcGdtYXAtPm9wcy0+
-Y2xlYW51cCkpCisJCQlyZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsKKworCQlpbml0X2NvbXBsZXRp
-b24oJnBnbWFwLT5kb25lKTsKKwkJZXJyb3IgPSBwZXJjcHVfcmVmX2luaXQoJnBnbWFwLT5pbnRl
-cm5hbF9yZWYsCisJCQkJZGV2X3BhZ2VtYXBfcGVyY3B1X3JlbGVhc2UsIDAsIEdGUF9LRVJORUwp
-OworCQlpZiAoZXJyb3IpCisJCQlyZXR1cm4gRVJSX1BUUihlcnJvcik7CisJCXBnbWFwLT5yZWYg
-PSAmcGdtYXAtPmludGVybmFsX3JlZjsKKwl9IGVsc2UgeworCQlpZiAoIXBnbWFwLT5vcHMgfHwg
-IXBnbWFwLT5vcHMtPmtpbGwgfHwgIXBnbWFwLT5vcHMtPmNsZWFudXApIHsKKwkJCVdBUk4oMSwg
-Ik1pc3NpbmcgcmVmZXJlbmNlIGNvdW50IHRlYXJkb3duIGRlZmluaXRpb25cbiIpOworCQkJcmV0
-dXJuIEVSUl9QVFIoLUVJTlZBTCk7CisJCX0KIAl9Ci0JcmV0dXJuIGRldm1fbWVtcmVtYXBfcGFn
-ZXMoZGV2LCBwZ21hcCk7CisKKwllcnJvciA9IGRldm1fYWRkX2FjdGlvbl9vcl9yZXNldChkZXYs
-IG5maXRfdGVzdF9raWxsLCBwZ21hcCk7CisJaWYgKGVycm9yKQorCQlyZXR1cm4gRVJSX1BUUihl
-cnJvcik7CisJcmV0dXJuIG5maXRfcmVzLT5idWYgKyBvZmZzZXQgLSBuZml0X3Jlcy0+cmVzLnN0
-YXJ0OwogfQogRVhQT1JUX1NZTUJPTF9HUEwoX193cmFwX2Rldm1fbWVtcmVtYXBfcGFnZXMpOwog
-Ci0tIAoyLjIwLjEKCg==
---0000000000003f3c23058b9e5615--
+-- 
+nvpublic
