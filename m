@@ -2,87 +2,74 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A8F7C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:28:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B7E4C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBBE9208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0ACAC2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:31:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfFRM2Y (ORCPT
+        id S1726232AbfFRMbh convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:28:24 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36055 "EHLO ozlabs.org"
+        Tue, 18 Jun 2019 08:31:37 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42101 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRM2X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:28:23 -0400
+        id S1725913AbfFRMbh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:31:37 -0400
 Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
          key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45SnRn1qLNz9s9y;
-        Tue, 18 Jun 2019 22:28:21 +1000 (AEST)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45SnWN5bq5z9s9y;
+        Tue, 18 Jun 2019 22:31:28 +1000 (AEST)
 From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, peterz@infradead.org
-Cc:     jolsa@redhat.com, maddy@linux.vnet.ibm.com, acme@kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH v2] perf ioctl: Add check for the sample_period value
-In-Reply-To: <e1d0fcf5-d7f8-44a0-a3b8-339f2b79fb2c@linux.ibm.com>
-References: <87h89eq55e.fsf@concordia.ellerman.id.au> <20190604042953.914-1-ravi.bangoria@linux.ibm.com> <e1d0fcf5-d7f8-44a0-a3b8-339f2b79fb2c@linux.ibm.com>
-Date:   Tue, 18 Jun 2019 22:28:19 +1000
-Message-ID: <87k1djoz6k.fsf@concordia.ellerman.id.au>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>, erhard_f@mailbox.org
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] powerpc/32s: fix initial setup of segment registers on secondary CPU
+In-Reply-To: <b60946f5-dc70-61ce-e266-af91890cb702@c-s.fr>
+References: <be07403806abc56ec027f6d47468411876e18bb5.1560267983.git.christophe.leroy@c-s.fr> <b60946f5-dc70-61ce-e266-af91890cb702@c-s.fr>
+Date:   Tue, 18 Jun 2019 22:31:26 +1000
+Message-ID: <87h88noz1d.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ravi Bangoria <ravi.bangoria@linux.ibm.com> writes:
-> Peter / mpe,
+Christophe Leroy <christophe.leroy@c-s.fr> writes:
+> Le 11/06/2019 à 17:47, Christophe Leroy a écrit :
+>> The patch referenced below moved the loading of segment registers
+>> out of load_up_mmu() in order to do it earlier in the boot sequence.
+>> However, the secondary CPU still needs it to be done when loading up
+>> the MMU.
+>> 
+>> Reported-by: Erhard F. <erhard_f@mailbox.org>
+>> Fixes: 215b823707ce ("powerpc/32s: set up an early static hash table for KASAN")
 >
-> Is the v2 looks good? If so, can anyone of you please pick this up.
+> Cc: stable@vger.kernel.org
 
-I usually wouldn't take it, it's generic perf code. Unless
-peter/ingo/acme tell me otherwise.
-
-It's sort of a bug fix for 0819b2e30ccb, should it have a fixes and/or
-stable tag?
-
-  Fixes: 0819b2e30ccb ("perf: Limit perf_event_attr::sample_period to 63 bits")
-  Cc: stable@vger.kernel.org # v3.15+
+Sorry patchwork didn't pick that up and I missed it. The AUTOSEL bot
+will probably pick it up anyway though.
 
 cheers
 
-> On 6/4/19 9:59 AM, Ravi Bangoria wrote:
->> perf_event_open() limits the sample_period to 63 bits. See
->> commit 0819b2e30ccb ("perf: Limit perf_event_attr::sample_period
->> to 63 bits"). Make ioctl() consistent with it.
->> 
->> Also on powerpc, negative sample_period could cause a recursive
->> PMIs leading to a hang (reported when running perf-fuzzer).
->> 
->> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
->> ---
->>  kernel/events/core.c | 3 +++
->>  1 file changed, 3 insertions(+)
->> 
->> diff --git a/kernel/events/core.c b/kernel/events/core.c
->> index abbd4b3b96c2..e44c90378940 100644
->> --- a/kernel/events/core.c
->> +++ b/kernel/events/core.c
->> @@ -5005,6 +5005,9 @@ static int perf_event_period(struct perf_event *event, u64 __user *arg)
->>  	if (perf_event_check_period(event, value))
->>  		return -EINVAL;
->>  
->> +	if (!event->attr.freq && (value & (1ULL << 63)))
->> +		return -EINVAL;
->> +
->>  	event_function_call(event, __perf_event_period, &value);
->>  
->>  	return 0;
+>> diff --git a/arch/powerpc/kernel/head_32.S b/arch/powerpc/kernel/head_32.S
+>> index 1d5f1bd0dacd..f255e22184b4 100644
+>> --- a/arch/powerpc/kernel/head_32.S
+>> +++ b/arch/powerpc/kernel/head_32.S
+>> @@ -752,6 +752,7 @@ __secondary_start:
+>>   	stw	r0,0(r3)
+>>   
+>>   	/* load up the MMU */
+>> +	bl	load_segment_registers
+>>   	bl	load_up_mmu
+>>   
+>>   	/* ptr to phys current thread */
 >> 
