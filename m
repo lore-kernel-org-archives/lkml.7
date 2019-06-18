@@ -2,79 +2,69 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 890D8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:27:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72155C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:27:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E4FE2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:27:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47B1C2054F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:27:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IY/Id4HO"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="QSmzxcCL";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="NDg+fW5E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729986AbfFRQ1N (ORCPT
+        id S1729880AbfFRQ15 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:27:13 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36559 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbfFRQ1N (ORCPT
+        Tue, 18 Jun 2019 12:27:57 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56778 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729295AbfFRQ15 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:27:13 -0400
-Received: by mail-lf1-f67.google.com with SMTP id q26so9799498lfc.3;
-        Tue, 18 Jun 2019 09:27:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=REVlNnHgsxxtrnRVJcK1dH+P9nh4ar/FfEMg7w0Qpd0=;
-        b=IY/Id4HO7ampe58gGhhmNuUi6Lb+7e1swZEK3Mjh55ZXpTAeppucaBOWtMDGv+6/if
-         esex+rXKkSwK/ptGmnxnm4pnm90+lSVML7jZ9IqU/MT8SbbdN5EIduZ8exjcxijWVc6g
-         rUX9dHQI2kDfNt571LNXW1Slt23WZxMXWuxmmpH9eh1BskCMMGx63sg7D1oagSEUdQQ0
-         CLh4Gh+H7mBWVqx9y9Gs6uoXpOW4o1FdcAjWFU/XsMHq2XC8QQPZ2r8vTt8dAMKMpfb1
-         QowO7JV2kCwnJhsvmIpGgRrLa9E90hD1QuoPx984H8S0dhrVRJJSddAH1UFOX1wj1VQC
-         9/pQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=REVlNnHgsxxtrnRVJcK1dH+P9nh4ar/FfEMg7w0Qpd0=;
-        b=saknnV2NWVhbxNu1oWDzHep3IkOfJWetKtL1ZR3AmGHX8XVlqaV6SfjpQf1IGswMyY
-         +/gvCydLQ8N50d++Fm0340qQKO5nXSoSyj13uX6tWah6Zdcx14dJP3YLGRrhDOpJVrHQ
-         FJ7ZAfq/GbYftPf3WDWVxBbiFmXnncNtGsQU6QUArttyhVfLPCboaBii/XKQ69Skoo0g
-         uj2KLaItB8RQsed4v7ycqMQZ1XxGVMzLa1ZgYbbGFUD36dQzINlsD4S6vXZ1k6B33cgj
-         6+Zep8Spo0n8NM/KtNr9n5686dFZMDDLc150KPxIuxAI8FQFlfdmwTgtag5LAOU1Skrp
-         npDQ==
-X-Gm-Message-State: APjAAAWVNv1DAgSuPIjmxpQqFTm4KP6Ydpl2JrcsRM/zqebjvmRfUQ4P
-        uRX0BVVli4hCNla2qdD42lSfnJp1
-X-Google-Smtp-Source: APXvYqyDGAL4Pm+/zw3qJcxh6hhA6+zLJOo5w840grHNTulAvDw9l1c/oqnWP4xzeHiAFIY7AhVdyQ==
-X-Received: by 2002:ac2:46d5:: with SMTP id p21mr11745258lfo.133.1560875230790;
-        Tue, 18 Jun 2019 09:27:10 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id z12sm2287618lfe.2.2019.06.18.09.27.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 09:27:10 -0700 (PDT)
-Subject: Re: [PATCH v2 2/8] regulator: core: Parse max-spread value per
- regulator couple
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190603235904.19097-1-digetx@gmail.com>
- <20190603235904.19097-3-digetx@gmail.com>
- <20190617152514.GY5316@sirena.org.uk>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a3917cf4-6090-2c47-f8f6-c25db52662e0@gmail.com>
-Date:   Tue, 18 Jun 2019 19:27:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 18 Jun 2019 12:27:57 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0E56C6028D; Tue, 18 Jun 2019 16:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560875276;
+        bh=AZGWFNkJxbGoXKKAkuxIYIe9MRoN3IT0Racj+5YQtMI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=QSmzxcCLou2m8qnIksmWjuepW2C7BCTNiW75mvNWBrHRmttDyr3aFQ1T5yyEuJQ6K
+         joROgUtcscmgAhk5lP6gUL/6IZZ2b9VhfBdp7X6s/cLCY4RoEgjKT3jpon85VTXsdF
+         U88nXf+z4KNrw8wB/Zdc1A5/mAs9lQQ/xnAcKwjs=
+Received: from [192.168.1.5] (unknown [122.164.143.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F220602BC;
+        Tue, 18 Jun 2019 16:27:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560875275;
+        bh=AZGWFNkJxbGoXKKAkuxIYIe9MRoN3IT0Racj+5YQtMI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=NDg+fW5EB2QgBv/KAQ4L5YoyOcCI/KP0uNrDznsvlpPaepCMo+H3dyqeK9wKTIp9s
+         Gqj6v0qEGQZNkcUPb4tJTbRMndmC1vtTvujQRiyc+55REkPu8v9IYs+iG55nx8zW2X
+         ELuYbvW6D4ck6bv+3+YkCsgt9plraM5Gis3Ble5E=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F220602BC
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+ <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+ <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
+ <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
+ <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
+Date:   Tue, 18 Jun 2019 21:57:49 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190617152514.GY5316@sirena.org.uk>
+In-Reply-To: <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -83,22 +73,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-17.06.2019 18:25, Mark Brown пишет:
-> On Tue, Jun 04, 2019 at 02:58:58AM +0300, Dmitry Osipenko wrote:
+
+
+On 6/18/2019 8:42 PM, Srinivas Kandagatla wrote:
 > 
->> +#include <linux/regulator/driver.h>
->>  #include <linux/regulator/consumer.h>
->>  #include <linux/suspend.h>
->>  
->> @@ -156,7 +157,7 @@ struct regulation_constraints {
->>  	int system_load;
->>  
->>  	/* used for coupled regulators */
->> -	int max_spread;
->> +	int max_spread[MAX_COUPLED];
 > 
-> I'd rather move MAX_COUPLED into a separate header than include driver.h
-> so we've got a bit more compile time sepration.
+> On 18/06/2019 15:56, Sricharan R wrote:
+>>    So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
+>>    That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
+>>    when the Macros does a size - 1
+> Isn't that incorrect to do that, pretending to have more descriptors than we actually have?
 > 
 
-I'll address this in the next revision.
+ The Macro's expect that buffer size is power of 2. So we are infact passing the actual correct
+ size ( MAX_DESCRIPTORS + 1 = 4096)
+
+Regards,
+ Sricharan
+
+-- 
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
