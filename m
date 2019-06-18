@@ -2,223 +2,136 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3560CC46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:49:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAADC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:55:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E52020B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:49:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66E82085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:55:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h78QfXjC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BCgORY8f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfFREtZ (ORCPT
+        id S1728293AbfFREvW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 00:49:25 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10680 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFREtY (ORCPT
+        Tue, 18 Jun 2019 00:51:22 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37002 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFREvW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 00:49:24 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d086d530001>; Mon, 17 Jun 2019 21:49:23 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 21:49:22 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 21:49:22 -0700
-Received: from [10.24.47.153] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 04:49:17 +0000
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-From:   Vidya Sagar <vidyas@nvidia.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
-Date:   Tue, 18 Jun 2019 10:19:14 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 00:51:22 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 19so6903962pfa.4
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 21:51:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GcQlY8S/p+kxFAnMkubPgYwK7VdqjVATnBI9h9/SPA8=;
+        b=BCgORY8fG3p2oZw4qFVaCKNKF/8FqPeWfMM2TL82ob4r8YP15GX8hY1rRi6tjCHne0
+         6/p5Tp4P33PsKTtiG8glwrn63CWlEDeK7z//GlWuLn/bz9n8lpQ89oss+iskkNCc+O1A
+         A6ZA0M+jt149ybUbHdSlhJqSk+DlwugQxYeivu7pcDMa9h/ch4aDl9TNhG8OaRpUmWQ+
+         h60lxa2M9X4uvJcPIBqAGFnBitHlZTwuLhOhU8wLF0vuf1/DTgjV1/moZwpu0zOw6gts
+         YWBO7DzOOr7UnnWe6Injlrgx+BlIhdOAybooB7Y0IYCs4944Uw8OgNxX7Fl+8v6M9+WR
+         zKxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GcQlY8S/p+kxFAnMkubPgYwK7VdqjVATnBI9h9/SPA8=;
+        b=GAPgHwbRrl3GcghCgPtN1pjMW1dUIznto9iW/dOHVmbYdvbJ6fvGjZ14nAVuscQUI/
+         W3E7aGqp5jpC8UCDl70a0RTggCZPv6NcMdvh7YEOCV6hlyQqJWxBa1E7WtSfP27yLZJn
+         Zb7cGZZMx9agX81rbQQ7MFKpuPE+BzN/gQufN+Ju81p6/+CJc2jRL6YIxFQPglAUdZpk
+         4FQ8s/1U5jXGDbrWUYfWy3YcGu7kMxRU1kBBTpcr7QiLIscmkzC3qZlYXtSiQwNTV/OC
+         mOvFt64qiALic1YxSQlRqWrUA2G0+XWuOcbv8hPvRidszFjVUlmFIBb1kWgbDo/qjoBw
+         1Nuw==
+X-Gm-Message-State: APjAAAUISco5jIzPQfYOTCCXkGsEHWEVpy1JMZXqHNhF6zpcTotI5Awy
+        jlGqcsUTiCYYXRoj6UUOpnM=
+X-Google-Smtp-Source: APXvYqzEDDQ/Tq39/8bkhp/hHoPl7qt/cst7WCob3xQfRP8I7Bffo+94PULeO/aAJi0RBlFSAruRQQ==
+X-Received: by 2002:a17:90a:db44:: with SMTP id u4mr2965916pjx.52.1560833481851;
+        Mon, 17 Jun 2019 21:51:21 -0700 (PDT)
+Received: from localhost ([175.223.20.188])
+        by smtp.gmail.com with ESMTPSA id e184sm18115681pfa.169.2019.06.17.21.51.20
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 21:51:20 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 13:51:17 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     John Ogness <john.ogness@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer
+ implementation
+Message-ID: <20190618045117.GA7419@jagdpanzerIV>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <20190607162349.18199-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560833363; bh=D1am2I/bI2xZcHfLWVk+66IAFl8L+5WwQBu6d7+UR1s=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=h78QfXjCqiYr6ZqGHO0He7XVaGUh0p3KFnQQPoS8Oucj1YpGOhTF7ID6YV89BmmFk
-         omF1hS3JnBvqWt0SlPceuVKhMYF/VrFUUtuGYd9TEkG8q9Xl8BQIfuWW2CI5SIb+Ed
-         RMmult/WyyBTlHPbTFjb6rcSQsdiDJk9M8rc00I9jtLoeFUDNFlY0mKMq4xF+OSW9N
-         3qdBG0To4ips66FfD+VdUhe00B4/VIgnDynUhu4bSKeIgvsYSgkxGgW4ZrUCufVoPI
-         RdmpkRBoCUT9luDUSp8VWmxAkT7fkcx3nk9xrbhl7ja26vVeVjqG5tOcAqrmy3bODB
-         7QFD7CvBKxW5Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607162349.18199-2-john.ogness@linutronix.de>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/2019 11:54 PM, Vidya Sagar wrote:
-> On 6/7/2019 6:43 PM, Vidya Sagar wrote:
->> On 5/27/2019 4:39 PM, Vidya Sagar wrote:
->>> On 5/7/2019 12:25 PM, Vidya Sagar wrote:
->>>> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
->>>>> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
->>>>>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
->>>>>>> Add an API to group all the tasks to be done to de-initialize host =
-which
->>>>>>> can then be called by any DesignWare core based driver implementati=
-ons
->>>>>>> while adding .remove() support in their respective drivers.
->>>>>>>
->>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->>>>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
->>>>>>> ---
->>>>>>> Changes from v3:
->>>>>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) bef=
-ore calling
->>>>>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
->>>>>>>
->>>>>>> Changes from v2:
->>>>>>> * Rebased on top of linux-next top of the tree branch
->>>>>>>
->>>>>>> Changes from v1:
->>>>>>> * s/Designware/DesignWare
->>>>>>>
->>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++=
-++
->>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0 | 5 +++++
->>>>>>> =C2=A0 2 files changed, 13 insertions(+)
->>>>>>
->>>>>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
->>>>>> there is a dependency on pci/keystone, given the tight timeline
->>>>>> for the merge window, would you mind postponing it to v5.3 ?
->>>>>>
->>>>>> I do not think it is urgent, I am happy to create a branch
->>>>>> for it as soon as v5.2-rc1 is released.
->>>>> I rebased my changes on top of linux-next. I see that they have confl=
-icts
->>>>> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 =
-instead
->>>>> of linux-next?
->>>>> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes=
- are made on top of Jisheng's patches
->>>> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
->>>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.h=
-tml
->>>
->>> Hi Lorenzo,
->>> Now that v5.2-rc2 is also available, could you please pick up this seri=
-es?
->>>
->>> Thanks,
->>> Vidya Sagar
->>>
->> Hi Bjorn / Lorenzo,
->> Can you please pick up these two patches?
->>
->> Thanks,
->> Vidya Sagar
-> Apologies for pinging again. These two patches can be applied directly on=
- top of
-> v5.2-rc4. Please do let me know if there is anything required from my sid=
-e.
->=20
-> Thanks,
-> Vidya Sagar
->=20
-Sorry for pinging again. Please let me know if these patches need to be sen=
-t again.
+Hello John,
 
-Thanks,
-Vidya Sagar
+On (06/07/19 18:29), John Ogness wrote:
+[..]
+> +	struct prb_reserved_entry e;
+> +	char *s;
+> +
+> +	s = prb_reserve(&e, &rb, 32);
+> +	if (s) {
+> +		sprintf(s, "Hello, world!");
+> +		prb_commit(&e);
+> +	}
 
->=20
->>
->>>>
->>>>>
->>>>>>
->>>>>> Thanks,
->>>>>> Lorenzo
->>>>>>
->>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/dr=
-ivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> index 77db32529319..d069e4290180 100644
->>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
->>>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
->>>>>>> =C2=A0 }
->>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>>> +{
->>>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
->>>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
->>>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_ini=
-t)
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
->>>>>>> +}
->>>>>>> +
->>>>>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, s=
-truct pci_bus *bus,
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devf=
-n, int where, int size, u32 *val,
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool wri=
-te)
->>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers=
-/pci/controller/dwc/pcie-designware.h
->>>>>>> index deab426affd3..4f48ec78c7b9 100644
->>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
->>>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
->>>>>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
->>>>>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
->>>>>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
->>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
->>>>>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
->>>>>>> =C2=A0 #else
->>>>>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port=
- *pp)
->>>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pci=
-e_port *pp)
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>> =C2=A0 }
->>>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
->>>>>>> +{
->>>>>>> +}
->>>>>>> +
->>>>>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port =
-*pp)
->>>>>>> =C2=A0 {
->>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
->>>>>>> --=20
->>>>>>> 2.17.1
->>>>>>>
->>>>>
->>>>
->>>
->>
->=20
+A nit: snprintf().
 
+sprintf() is tricky, it may write "slightly more than was
+anticipated" bytes - all those string_nocheck(" disabled"),
+error_string("pK-error"), etc.
+
+[..]
+> +Sample reader code::
+> +
+> +	DECLARE_PRINTKRB_ENTRY(entry, 128);
+> +	DECLARE_PRINTKRB_ITER(iter, &test_rb, &entry);
+> +	u64 last_seq = 0;
+> +	int len;
+> +	char *s;
+> +
+> +	prb_for_each_entry(&iter, len) {
+> +		if (entry.seq - last_seq != 1) {
+> +			printf("LOST %llu ENTRIES\n",
+> +				entry.seq - (last_seq + 1));
+> +		}
+> +		last_seq = entry.seq;
+> +
+> +		s = (char *)&entry.buffer[0];
+> +		if (len >= 128)
+> +			s[128 - 1] = 0;
+> +		printf("data: %s\n", s);
+> +	}
+
+How are we going to handle pr_cont() loops?
+
+print_modules()
+ preempt_disable();
+ list_for_each_entry_rcu(mod, &modules, list) {
+  pr_cont(" %s%s", mod->name, module_flags(mod, buf));
+ }
+ preempt_enable();
+
+	-ss
