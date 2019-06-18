@@ -2,129 +2,177 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94403C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08AE2C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DCC62070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5A4E2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:51:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P7WaSuAE"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XwQw3hOv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729910AbfFRLvs (ORCPT
+        id S1729836AbfFRLvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:51:48 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:50254 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729660AbfFRLvq (ORCPT
+        Tue, 18 Jun 2019 07:51:37 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:39679 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729662AbfFRLvg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:51:46 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c66so2928867wmf.0;
-        Tue, 18 Jun 2019 04:51:44 -0700 (PDT)
+        Tue, 18 Jun 2019 07:51:36 -0400
+Received: by mail-lf1-f66.google.com with SMTP id p24so9035936lfo.6;
+        Tue, 18 Jun 2019 04:51:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q72kjHR6ejX7kBWUZvtnfZ1zZPaJRgM8xc5EcO/j9h4=;
-        b=P7WaSuAECKFZP2pYUsbnWmpVPVAwTMR4JEjfB1e7+eM3KsK1WVraw+eZOh5Wpms2pc
-         zDwfG5vABXw812ojC8hdK/XLc9WXjDt68JlxY2F7w1gzoc0gSCK4kdUm84RQF2yyUw9H
-         K9ESk1R/QwZODQqEUXhbPDI/QwMJAMPbl5URlnT1jwXu7guaTVY0drXCrn14YanesS3G
-         idMRaDF8UMNg8NdqvpuXIv2fiH5AcXH7edO3/Mg209vQec0CzgSVmmNNYvY0ZWGyx+bu
-         RmD4XDwA07IKm8PIwoGW8Z69vVDAL5+lQJuohZ0uuTJJBjxdUuWclefotusPqtMkeLYE
-         Jp+Q==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zpZnTmiFobuKU/2JfAFEVs7n9lSj0UZdJLNtCpW3WX4=;
+        b=XwQw3hOve6XBYc4/Iqrypk1r/tdsXiyIvS0Vwvelo++xpDTNelSdaurum8wqVwJ/Jm
+         vDT5EvbeOB6aalveng+13exox31Le1W1LG7Dza9D02AcOv4l8WxAmoiKRCZxBBcMbGHd
+         BrskdeRuDihLG7AhLcdgZ+lzTfoSAyZr8NlmOwJIpXzsr38nx8g3rBg0aFQbNoyXT6n1
+         U3li8ehgmX03aGAWzMzzKhO966tbH5vU/fL4uMd8tjMlb84dmOq6FGDz4fc+IpTVwVz5
+         Op4pn/I7TeOSyYYNFoX4LqnxrD61+0Cx2LkXmeU4PAsyH0VlP/gfhuSJjzxKrJRq/81T
+         8W7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q72kjHR6ejX7kBWUZvtnfZ1zZPaJRgM8xc5EcO/j9h4=;
-        b=LtoYRSJQ8CKPd7Y+wdmmqYrbSLdQmuL0q1zOtcQQZ4SwO5TlHXMVIw+xyolgKi2/wG
-         xESLz8/ekS1Amc8MFu0CEhbIkMHiNgjPfg0bvzTnEz5wG+1e35KFUBISskzhFpHteRWG
-         Ds7vgYca4gTikClsuGj7zxyxyKmTGdL+5bAylhgrr8GPT6e3/zNTAMaBv+rs/ON2gHD+
-         4Uw5C/xioB4fKs9reryUO7Br9rQ47xLW1r3H8Jt+mYQ31gaJ12GVWdAXm5JxmtUeIjkH
-         6nG9dAUBU+6SidM8dvZBvlL6NjlKRmqdFajJrvVR0prSavdn0/Nd3lCKTUwreGFsmZmy
-         h3uA==
-X-Gm-Message-State: APjAAAXFF6KVYT9Lb0e1gdwOcee+GkXcKLwWIfgOckQzrz/o/lNm44s8
-        AMb8gnFensefWZ9YYdsyRV0=
-X-Google-Smtp-Source: APXvYqzPKLvJ8/iB0VSF2erODHuimx0EiX2Lv2zrH5dtRcsXdLjGUNChbIvgNCmIKZe5nnQKrv4OgQ==
-X-Received: by 2002:a1c:9d48:: with SMTP id g69mr3468491wme.31.1560858704049;
-        Tue, 18 Jun 2019 04:51:44 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id x11sm2322798wmg.23.2019.06.18.04.51.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 04:51:43 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:51:42 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 09/17] clk: tegra: support for saving and restoring
- OSC clock context
-Message-ID: <20190618115142.GL28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-10-git-send-email-skomatineni@nvidia.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=zpZnTmiFobuKU/2JfAFEVs7n9lSj0UZdJLNtCpW3WX4=;
+        b=pd7kYU9xIpHzyZPPUDUmz9Yjvp0ygqx5Embwt7v7g8ObqUsIsT6DCfwNsUQrDqprg5
+         22hJIe7dvztyUzr4JbXJRohfzRzsAcyS5zT1nOs2mxzhv52TYCsUw/L2t5QnezxktAHu
+         zKyL9dXhof/qUUztAHbdk2SIfLzVvDXHLFQl8PNWLHkzz2rYEVVvIykksW0xMifPTQ9i
+         0rhGYt2h2GS3qy+CV/7ATI5oNrrmmlSeo6Y7h6ewyFxbjfT7yF9TPnAPZJvRe/DhCf05
+         d4a5lzxCw2gKQuQru5jDRtptnbBgWoMS67tTLG6AsLLivywo4KUE+NPDpWAvtxUsJAWY
+         ZAbg==
+X-Gm-Message-State: APjAAAVr/2T9iLzkTawSwp2WYJpQJd+c/qlz/+rlz15d+XGQWaZ8Qv05
+        Ee3Y6bva0FtonCmIrAQGqWvwjk5F
+X-Google-Smtp-Source: APXvYqyeEFt5PkWYBttPbqQ2wNvXaY9LOk479JqdCP/UPYEcpOZ6l5XVTEiZN0kdbiOumjmz0kW0cw==
+X-Received: by 2002:ac2:482d:: with SMTP id 13mr14528286lft.132.1560858694302;
+        Tue, 18 Jun 2019 04:51:34 -0700 (PDT)
+Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.gmail.com with ESMTPSA id l1sm2172154lfe.60.2019.06.18.04.51.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 04:51:33 -0700 (PDT)
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] dmaengine: tegra-apb: Support per-burst residue granularity
+Date:   Tue, 18 Jun 2019 14:50:35 +0300
+Message-Id: <20190618115035.29250-1-digetx@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="GU3/x65mZ6MFE8p3"
-Content-Disposition: inline
-In-Reply-To: <1560843991-24123-10-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Tegra's APB DMA engine updates words counter after each transferred burst
+of data, hence it can report transfer's residual with more fidelity which
+may be required in cases like audio playback. In particular this fixes
+audio stuttering during playback in a chromiuim web browser. The patch is
+based on the original work that was made by Ben Dooks. It was tested on
+Tegra20 and Tegra30 devices.
 
---GU3/x65mZ6MFE8p3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Link: https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+---
 
-On Tue, Jun 18, 2019 at 12:46:23AM -0700, Sowjanya Komatineni wrote:
-> This patch adds support for storing OSC clock frequency and the
-> drive-strength during OSC clock init and creates an API to restore
-> OSC control register value from the saved context.
->=20
-> This API is invoked by Tegra210 clock driver during system resume
-> to restore the  OSC clock settings.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-tegra-fixed.c | 14 ++++++++++++++
->  drivers/clk/tegra/clk.h             |  1 +
->  2 files changed, 15 insertions(+)
+Changelog:
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+v2:  Addressed review comments made by Jon Hunter to v1. We won't try
+     to get words count if dma_desc is on free list as it will result
+     in a NULL dereference because this case wasn't handled properly.
 
---GU3/x65mZ6MFE8p3
-Content-Type: application/pgp-signature; name="signature.asc"
+     The residual value is now updated properly, avoiding potential
+     integer overflow by adding the "bytes" to the "bytes_transferred"
+     instead of the subtraction.
 
------BEGIN PGP SIGNATURE-----
+ drivers/dma/tegra20-apb-dma.c | 33 ++++++++++++++++++++++++++-------
+ 1 file changed, 26 insertions(+), 7 deletions(-)
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I0E4ACgkQ3SOs138+
-s6GxLw/+OxIXQLuP5OvaapQAKg6vVmpGZhVjAP62Q6c66ykv24Ph+jLXsJo+vpm9
-jBeQhjpiEVGyPoc3ONfiOS0tvt4JvDNwChjxKw8YtVYShBYUDRi79JIgfrzhsZWX
-vKSozb0EHtrjrjbZNUVIXYq64iblgqKk4KsYi4wDsfqMCiqNeV3I3d7IjDA4mNTt
-qlGxvltMXgsrnUzJxGdLYW6GEag5eCuiF19nv/9+uq8Sb90Z1+CBo7NaAlO59545
-m1RBSLnRMQ/TVrnX6PyfygZlXNFwfXAVr1Oxp2JIgtdKQcNombhVFitTJwF5eKMe
-gf8silIq8AQrFxeZ9ojdh+A99GADYTg8WN81y6uFn1ZYyB557X9DGLRl4aYDeO6V
-mJUTrOc/O5E9W+fZLUYDTNkiZ9MVUi1AK+H+xEitePlC0zKxcf4WdT7uAm36qWnv
-EXhMxxebLGZGSbkS+iKGQ3PIT3ofPoQrn9We0Fu8vySuD+NOqP+MtfdsrbQ/PyYq
-Qs85AGlkg5tYbxW3HVy4oTTFu/mB/pJW184oNDeHqf6kRzLFcVnoGdUF1qCvnEru
-27OzodaP6Nv+af801lC6x7MaB2+RajmP4Ic5N83AtBEu+RVxyzd9zahR+uiCDPnC
-tdstFpewSTYtgufqZiHqJIUSodRppqaJzigx6XqCwoylsyTVsIc=
-=KKeu
------END PGP SIGNATURE-----
+diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+index 79e9593815f1..fed18bc46479 100644
+--- a/drivers/dma/tegra20-apb-dma.c
++++ b/drivers/dma/tegra20-apb-dma.c
+@@ -797,6 +797,28 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+ 	return 0;
+ }
+ 
++static unsigned int tegra_dma_sg_bytes_xferred(struct tegra_dma_channel *tdc,
++					       struct tegra_dma_sg_req *sg_req)
++{
++	unsigned long status, wcount = 0;
++
++	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
++		return 0;
++
++	if (tdc->tdma->chip_data->support_separate_wcount_reg)
++		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
++
++	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
++
++	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
++		wcount = status;
++
++	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
++		return sg_req->req_len;
++
++	return get_current_xferred_count(tdc, sg_req, wcount);
++}
++
+ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	dma_cookie_t cookie, struct dma_tx_state *txstate)
+ {
+@@ -806,6 +828,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	enum dma_status ret;
+ 	unsigned long flags;
+ 	unsigned int residual;
++	unsigned int bytes = 0;
+ 
+ 	ret = dma_cookie_status(dc, cookie, txstate);
+ 	if (ret == DMA_COMPLETE)
+@@ -825,6 +848,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ 	list_for_each_entry(sg_req, &tdc->pending_sg_req, node) {
+ 		dma_desc = sg_req->dma_desc;
+ 		if (dma_desc->txd.cookie == cookie) {
++			bytes = tegra_dma_sg_bytes_xferred(tdc, sg_req);
+ 			ret = dma_desc->dma_status;
+ 			goto found;
+ 		}
+@@ -836,7 +860,7 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+ found:
+ 	if (dma_desc && txstate) {
+ 		residual = dma_desc->bytes_requested -
+-			   (dma_desc->bytes_transferred %
++			   ((dma_desc->bytes_transferred + bytes) %
+ 			    dma_desc->bytes_requested);
+ 		dma_set_residue(txstate, residual);
+ 	}
+@@ -1441,12 +1465,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+ 		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+ 		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+ 	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+-	/*
+-	 * XXX The hardware appears to support
+-	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
+-	 * only used by this driver during tegra_dma_terminate_all()
+-	 */
+-	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
++	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 	tdma->dma_dev.device_config = tegra_dma_slave_config;
+ 	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
+ 	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
+-- 
+2.22.0
 
---GU3/x65mZ6MFE8p3--
