@@ -2,90 +2,137 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA403C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03C8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 898D52080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560882733;
-	bh=mx2GBaMPKIm/2tPzzP3cV12VlarSbBD4n4fTN+91FW0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DiLzXWGcKryOWJQPYL9Vw2uLO2l7Q68mwVXENvV8MfjPFt7TAFOBEykdnMLspDbdu
-	 Iq2BqLHOY6/Of7LCcCnHh4F+/zV8qlNV9S/X7jLaFpxkzVg32WtweBW7SCbI9/doPh
-	 m2y+oDNf5WcJSxgZq/mvZlkyMtMI8M/+1ActSvr4=
+	by mail.kernel.org (Postfix) with ESMTP id 8515220863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730219AbfFRScL (ORCPT
+        id S1730258AbfFRSci (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:32:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49448 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729922AbfFRScL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:32:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E7E15AF56;
-        Tue, 18 Jun 2019 18:32:09 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 20:32:08 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-api@vger.kernel.org
-Subject: Re: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
-Message-ID: <20190618183208.GK3318@dhcp22.suse.cz>
-References: <20190617142149.5245-1-longman@redhat.com>
- <20190617143842.GC1492@dhcp22.suse.cz>
- <9e165eae-e354-04c4-6362-0f80fe819469@redhat.com>
- <20190618123750.GG3318@dhcp22.suse.cz>
- <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
+        Tue, 18 Jun 2019 14:32:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729922AbfFRSch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:32:37 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01DB32084B;
+        Tue, 18 Jun 2019 18:32:35 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 14:32:34 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 5/7] powerpc/ftrace: Update ftrace_location() for
+ powerpc -mprofile-kernel
+Message-ID: <20190618143234.78539805@gandalf.local.home>
+In-Reply-To: <1560881840.vz9llflvnf.naveen@linux.ibm.com>
+References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        <186656540d3e6225abd98374e791a13d10d86fab.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        <20190618114509.5b1acbe5@gandalf.local.home>
+        <1560881411.p0i6a1dkwk.naveen@linux.ibm.com>
+        <1560881840.vz9llflvnf.naveen@linux.ibm.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 18-06-19 12:59:24, Waiman Long wrote:
-> On 6/18/19 8:37 AM, Michal Hocko wrote:
-[...]
-> > Is this useful enough to put into slabinfo? Doesn't this sound more like
-> > a debugfs kinda a thing?
-> 
-> I guess it is probably more on the debug side of things. I add it to
-> slabinfo as the data is readily available. It will be much more work if
-> we need to export the data via debugfs.
-> 
-> We are seeing the kmem_cache slab growing continuously overtime when
-> running a container-based workloads. Roman's kmem_cache reparenting
-> patch will hopefully solve a major part of the problem, but we still
-> need a way to confirm that by looking at how many memcg kmem_caches are
-> associated with each root kmem_cache.
+On Tue, 18 Jun 2019 23:53:11 +0530
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
 
-I am not disputing usefulness. Dead memcgs are showing up as a problem
-for a longer time and having a more debugging information is definitely
-useful. I am just not really sure that /proc/slabinfo is the proper
-vehicle for that information. It might be just easier to stick it there
-but that is not the best justification for adding something we will have
-to maintain for ever. Not to mention that the number of dead memcgs
-might not be enough to debug further when we can easily end up needing
-to provide more in something less "carved in stone" kinda interface like
-debugfs.
+> Naveen N. Rao wrote:
+> > Steven Rostedt wrote:  
+> >> On Tue, 18 Jun 2019 20:17:04 +0530
+> >> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+> >>   
+> >>> @@ -1551,7 +1551,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+> >>>  	key.flags = end;	/* overload flags, as it is unsigned long */
+> >>>  
+> >>>  	for (pg = ftrace_pages_start; pg; pg = pg->next) {
+> >>> -		if (end < pg->records[0].ip ||
+> >>> +		if (end <= pg->records[0].ip ||  
+> >> 
+> >> This breaks the algorithm. "end" is inclusive. That is, if you look for
+> >> a single byte, where "start" and "end" are the same, and it happens to
+> >> be the first ip on the pg page, it will be skipped, and not found.  
+> > 
+> > Thanks. It looks like I should be over-riding ftrace_location() instead.  
+> > I will update this patch.  
+> 
+> I think I will have ftrace own the two instruction range, regardless of 
+> whether the preceding instruction is a 'mflr r0' or not. This simplifies 
+> things and I don't see an issue with it as of now. I will do more 
+> testing to confirm.
+> 
+> - Naveen
+> 
+> 
+> --- a/arch/powerpc/kernel/trace/ftrace.c
+> +++ b/arch/powerpc/kernel/trace/ftrace.c
+> @@ -951,6 +951,16 @@ void arch_ftrace_update_code(int command)
+>  }
+>  
+>  #ifdef CONFIG_MPROFILE_KERNEL
+> +/*
+> + * We consider two instructions -- 'mflr r0', 'bl _mcount' -- to be part
+> + * of ftrace. When checking for the first instruction, we want to include
+> + * the next instruction in the range check.
+> + */
+> +unsigned long ftrace_location(unsigned long ip)
+> +{
+> +	return ftrace_location_range(ip, ip + MCOUNT_INSN_SIZE);
+> +}
+> +
+>  /* Returns 1 if we patched in the mflr */
+>  static int __ftrace_make_call_prep(struct dyn_ftrace *rec)
+>  {
+> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
+> index 21d8e201ee80..122e2bb4a739 100644
+> --- a/kernel/trace/ftrace.c
+> +++ b/kernel/trace/ftrace.c
+> @@ -1573,7 +1573,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
+>   * the function tracer. It checks the ftrace internal tables to
+>   * determine if the address belongs or not.
+>   */
+> -unsigned long ftrace_location(unsigned long ip)
+> +unsigned long __weak ftrace_location(unsigned long ip)
+>  {
+>  	return ftrace_location_range(ip, ip);
+>  }
 
--- 
-Michal Hocko
-SUSE Labs
+Actually, instead of making this a weak function, let's do this:
+
+
+In include/ftrace.h:
+
+#ifndef FTRACE_IP_EXTENSION
+# define FTRACE_IP_EXTENSION	0
+#endif
+
+
+In arch/powerpc/include/asm/ftrace.h
+
+#define FTRACE_IP_EXTENSION	MCOUNT_INSN_SIZE
+
+
+Then we can just have:
+
+unsigned long ftrace_location(unsigned long ip)
+{
+	return ftrace_location_range(ip, ip + FTRACE_IP_EXTENSION);
+}
+
+-- Steve
