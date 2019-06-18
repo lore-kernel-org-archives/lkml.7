@@ -2,79 +2,96 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA350C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F05CCC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:39:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA23F20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:39:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9AFA20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:39:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560865194;
+	bh=70c0tfx2NKpPi9Gpr2q7gCR4QPX5rIxB+dP6jDanaxw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Y4/fZLj6809poCtZLtSMFFRRX2ZO197sN1N+px/ncutL8fYOUtp1Mrh4+BMjPFO7a
+	 fvGJjv/CL0Qh1kElHhTSywgi5SOK4JhAzjMNJl078Sj+yIV7O7ZU+kpAYNXB4I51XK
+	 k8yE5phfomwip8AVfqqxcTUMRgcpBJXUJpVMvbg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfFRNjI (ORCPT
+        id S1729322AbfFRNjx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:39:08 -0400
-Received: from netsrv01.beckhoff.com ([62.159.14.10]:50160 "EHLO
-        Netsrv01.beckhoff.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFRNjH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:39:07 -0400
-X-Greylist: delayed 300 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Jun 2019 09:39:06 EDT
-Received: from std-ryzen.beckhoff.com (172.17.66.182) by
- NT-Mail02.beckhoff.com (10.1.0.27) with Microsoft SMTP Server (TLS) id
- 14.3.301.0; Tue, 18 Jun 2019 15:34:04 +0200
-From:   <linux-kernel-dev@beckhoff.com>
-CC:     Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        <platform-driver-x86@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH] platform/x86: pmc_atom: Add CB4063 Beckhoff Automation board to critclk_systems DMI table
-Date:   Tue, 18 Jun 2019 15:31:02 +0200
-Message-ID: <20190618133102.8083-1-linux-kernel-dev@beckhoff.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 18 Jun 2019 09:39:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfFRNjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:39:52 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EB40520823;
+        Tue, 18 Jun 2019 13:39:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560865191;
+        bh=70c0tfx2NKpPi9Gpr2q7gCR4QPX5rIxB+dP6jDanaxw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Jz1v+Fs9V1Xn8xJhqc+0MBMnEX0Tauy2tNQtP4QpgHbatyu2r3lUTxIXU3VlBa9Ay
+         PW4bMxlasbWVFCOeYJYmJfb3FG2Q67RhuuiSHeVrDv+TdKjwV4kK13Rc65ZCI+orMh
+         VQLAVkCAQGU0LwjFV56bsvPkuIJq8Rw6LCNc8H1M=
+Date:   Tue, 18 Jun 2019 15:39:48 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        linux-doc@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
+ x86-laptop-drivers.txt to reST
+Message-ID: <20190618133948.GB5416@kroah.com>
+References: <20190618053227.31678-1-puranjay12@gmail.com>
+ <20190618054158.GA3713@kroah.com>
+ <20190618071717.2132a1b7@lwn.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [172.17.66.182]
-X-OLX-Disclaimer: Done
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618071717.2132a1b7@lwn.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
+On Tue, Jun 18, 2019 at 07:17:17AM -0600, Jonathan Corbet wrote:
+> On Tue, 18 Jun 2019 07:41:58 +0200
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
+> > > This converts the plain text documentation to reStructuredText format.
+> > > No essential content change.
+> > > 
+> > > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> > > ---
+> > >  Documentation/platform/x86-laptop-drivers.rst | 23 +++++++++++++++++++
+> > >  Documentation/platform/x86-laptop-drivers.txt | 18 ---------------
+> > >  2 files changed, 23 insertions(+), 18 deletions(-)
+> > >  create mode 100644 Documentation/platform/x86-laptop-drivers.rst
+> > >  delete mode 100644 Documentation/platform/x86-laptop-drivers.txt  
+> > 
+> > Don't you also need to hook it up to the documentation build process
+> > when doing this?
+> 
+> Hooking it into the TOC tree is a good thing, but I think it's also good
+> to think about the exercise in general.  This is a document dropped into
+> place five years ago and never touched again.  It's a short list of
+> seemingly ancient laptops with no explanation of what it means.  So the
+> real question, IMO, is whether this document is useful to anybody and, if
+> not, whether it should just be deleted instead.
 
-The CB4063 board uses pmc_plt_clk* clocks for ethernet controllers. This
-adds it to the critclk_systems DMI table so the clocks are marked as
-CLK_CRITICAL and not turned off.
+I bet it should be deleted, but we should ask the platform driver
+maintainers first before we do that :)
 
-Fixes: 648e921888ad ("clk: x86: Stop marking clocks as CLK_IS_CRITICAL")
-Signed-off-by: Steffen Dirkwinkel <s.dirkwinkel@beckhoff.com>
----
- drivers/platform/x86/pmc_atom.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+thanks,
 
-diff --git a/drivers/platform/x86/pmc_atom.c b/drivers/platform/x86/pmc_atom.c
-index be802fd2182d..551ed44dd361 100644
---- a/drivers/platform/x86/pmc_atom.c
-+++ b/drivers/platform/x86/pmc_atom.c
-@@ -412,6 +412,14 @@ static const struct dmi_system_id critclk_systems[] = {
- 			DMI_MATCH(DMI_BOARD_NAME, "CB3163"),
- 		},
- 	},
-+	{
-+		/* pmc_plt_clk* - are used for ethernet controllers */
-+		.ident = "Beckhoff CB4063",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Beckhoff Automation"),
-+			DMI_MATCH(DMI_BOARD_NAME, "CB4063"),
-+		},
-+	},
- 	{
- 		/* pmc_plt_clk* - are used for ethernet controllers */
- 		.ident = "Beckhoff CB6263",
--- 
-2.22.0
+greg k-h
