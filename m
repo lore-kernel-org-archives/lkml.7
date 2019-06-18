@@ -2,91 +2,134 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA65C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A01C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F49121530
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA9C620673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:48:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729833AbfFRPrR (ORCPT
+        id S1729837AbfFRPsZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:47:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47316 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729209AbfFRPrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:47:16 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 18 Jun 2019 11:48:25 -0400
+Received: from avon.wwwdotorg.org ([104.237.132.123]:60274 "EHLO
+        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729209AbfFRPsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:48:23 -0400
+X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Jun 2019 11:48:22 EDT
+Received: from [10.20.204.51] (unknown [216.228.112.24])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 70AC530860AD;
-        Tue, 18 Jun 2019 15:47:16 +0000 (UTC)
-Received: from holly.tpb.lab.eng.brq.redhat.com (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC98B176BC;
-        Tue, 18 Jun 2019 15:47:14 +0000 (UTC)
-From:   Miroslav Lichvar <mlichvar@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     swkhack@gmail.com, Miroslav Lichvar <mlichvar@redhat.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Prarit Bhargava <prarit@redhat.com>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] ntp: Limit TAI-UTC offset
-Date:   Tue, 18 Jun 2019 17:47:13 +0200
-Message-Id: <20190618154713.20929-1-mlichvar@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 18 Jun 2019 15:47:16 +0000 (UTC)
+        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 95AB01C015A;
+        Tue, 18 Jun 2019 09:41:05 -0600 (MDT)
+X-Virus-Status: Clean
+X-Virus-Scanned: clamav-milter 0.100.3 at avon.wwwdotorg.org
+Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, marc.zyngier@arm.com,
+        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
+        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
+ <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
+ <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+From:   Stephen Warren <swarren@wwwdotorg.org>
+Message-ID: <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
+Date:   Tue, 18 Jun 2019 09:41:03 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Don't allow the TAI-UTC offset of the system clock to be set by
-adjtimex() to a value larger than 100000 seconds.
+On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
+> 18.06.2019 12:22, Dmitry Osipenko пишет:
+>> 18.06.2019 10:46, Sowjanya Komatineni пишет:
+>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>> and registers them to syscore so the pinmux settings are restored
+>>> before the devices resume.
+>>>
+>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>> ---
+>>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 62 ++++++++++++++++++++++++++++++++
+>>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  5 +++
+>>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
+>>>   drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
+>>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
+>>>   7 files changed, 84 insertions(+)
+>>>
+>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> index 34596b246578..ceced30d8bd1 100644
+>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>> @@ -20,11 +20,16 @@
+>>>   #include <linux/pinctrl/pinmux.h>
+>>>   #include <linux/pinctrl/pinconf.h>
+>>>   #include <linux/slab.h>
+>>> +#include <linux/syscore_ops.h>
+>>>   
+>>>   #include "../core.h"
+>>>   #include "../pinctrl-utils.h"
+>>>   #include "pinctrl-tegra.h"
+>>>   
+>>> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
+>>> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
+>>> +#define EMMC_DPD_PARKING			(0x1fff << 14)
+>>> +
+>>>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
+>>>   {
+>>>   	return readl(pmx->regs[bank] + reg);
+>>> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>   			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
+>>>   		}
+>>>   	}
+>>> +
+>>> +	if (pmx->soc->has_park_padcfg) {
+>>> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>> +		val &= ~EMMC_DPD_PARKING;
+>>> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
+>>> +
+>>> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>> +		val &= ~EMMC_DPD_PARKING;
+>>> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
+>>> +	}
+>>> +}
+>>
+>> Is there any reason why parked_bit can't be changed to parked_bitmask like I was
+>> asking in a comment to v2?
+>>
+>> I suppose that it's more preferable to keep pinctrl-tegra.c platform-agnostic for
+>> consistency when possible, hence adding platform specifics here should be discouraged.
+>> And then the parked_bitmask will also result in a proper hardware description in the code.
+>>
+> 
+> I'm now also vaguely recalling that Stephen Warren had some kind of a "code generator"
+> for the pinctrl drivers. So I guess all those tables were auto-generated initially.
+> 
+> Stephen, maybe you could adjust the generator to take into account the bitmask (of
+> course if that's a part of the generated code) and then re-gen it all for Sowjanya?
 
-This prevents an overflow in the conversion to int, prevents the
-CLOCK_TAI clock from getting too far ahead of the CLOCK_REALTIME clock,
-and it is still large enough to allow leap seconds to be inserted at the
-maximum rate currently supported by the kernel (once per day) for the
-next ~270 years, however unlikely it is that someone can survive a
-catastrophic event which slowed down the rotation of the Earth so much.
-
-Cc: John Stultz <john.stultz@linaro.org>
-Cc: Prarit Bhargava <prarit@redhat.com>
-Cc: Richard Cochran <richardcochran@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
----
- kernel/time/ntp.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-index 8de4f789dc1b..65eb796610dc 100644
---- a/kernel/time/ntp.c
-+++ b/kernel/time/ntp.c
-@@ -43,6 +43,7 @@ static u64			tick_length_base;
- #define MAX_TICKADJ		500LL		/* usecs */
- #define MAX_TICKADJ_SCALED \
- 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
-+#define MAX_TAI_OFFSET		100000
- 
- /*
-  * phase-lock loop variables
-@@ -691,7 +692,8 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
- 		time_constant = max(time_constant, 0l);
- 	}
- 
--	if (txc->modes & ADJ_TAI && txc->constant >= 0)
-+	if (txc->modes & ADJ_TAI &&
-+			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
- 		*time_tai = txc->constant;
- 
- 	if (txc->modes & ADJ_OFFSET)
--- 
-2.17.2
-
+https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that 
+generate tegra-pinctrlNNN.c. See  	soc-to-kernel-pinctrl-driver.py. 
+IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya is 
+welcome to send a patch to that repo if the code needs to be updated.
