@@ -2,216 +2,215 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 263B2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E691C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:26:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA74C2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1F192082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:26:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="YV0kfWLk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726554AbfFRBYX convert rfc822-to-8bit (ORCPT
+        id S1726776AbfFRB0P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:24:23 -0400
-Received: from twhmllg4.macronix.com ([211.75.127.132]:53341 "EHLO
-        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRBYX (ORCPT
+        Mon, 17 Jun 2019 21:26:15 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:44480 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRB0P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:24:23 -0400
-Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
-        by TWHMLLG4.macronix.com with ESMTP id x5I1OD5R094554;
-        Tue, 18 Jun 2019 09:24:14 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id CD86B7F724E890CDD5EA;
-        Tue, 18 Jun 2019 09:24:13 +0800 (CST)
-In-Reply-To: <20190617143510.4ded5728@xps13>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw> <20190617143510.4ded5728@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, paul.burton@mips.com, richard@nod.at,
-        robh+dt@kernel.org, stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
+        Mon, 17 Jun 2019 21:26:15 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I1Nws3065012;
+        Tue, 18 Jun 2019 01:25:22 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=fWOUwn/Kt303a7o48PM7Dksf/FnhFV6xPw9I+5mYDjI=;
+ b=YV0kfWLksx2B/Lz1rQFDs26aasbp91HiYbDU88eicgjG4X5c8Z+QNRCrVb0KG+cx8ErE
+ eW4n3QVRY1VBAsKCa4ufZbIdy92YWbKxIXaRjiqV8+pQsUlI3dV7Hp+8ut2z7QhjTbmh
+ IKqLPn7FxzfVTbV5/cKLOXye8tTBu1ZOPYiEK8niIAPozn/F1CDnEhkmN1V0cNvNRRx5
+ +MAnEfeWmJuEOd+yEGUCq9LP/uNeorzTgD7OMpOAeaCQ1ZOzEbf1gEdaO5PnPDSdGkPv
+ AwJCwqz/yGhzhEIZPK4KnwKLRcGUQ9gZWAxSsa4mnTLHAHQE0ofnzbC8F9r0s7uJM0Ih 7g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t4r3thedr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 01:25:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I1P5BC038997;
+        Tue, 18 Jun 2019 01:25:21 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2t5h5tf0b9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Jun 2019 01:25:21 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5I1PL1k039692;
+        Tue, 18 Jun 2019 01:25:21 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2t5h5tf0ax-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 01:25:21 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5I1PEXc020829;
+        Tue, 18 Jun 2019 01:25:15 GMT
+Received: from localhost (/10.159.211.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 18:25:13 -0700
+Date:   Mon, 17 Jun 2019 21:25:09 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, dtrace-devel@oss.oracle.com,
+        linux-kernel@vger.kernel.org, rostedt@goodmis.org,
+        mhiramat@kernel.org, acme@kernel.org, ast@kernel.org,
+        daniel@iogearbox.net, peterz@infradead.org
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190618012509.GF8794@oracle.com>
+References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
+ <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
+ <20190521184137.GH2422@oracle.com>
+ <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com>
+ <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com>
+ <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+ <20190523051608.GP2422@oracle.com>
+ <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
 MIME-Version: 1.0
-X-KeepSent: 1C1397B4:241DC339-4825841D:000482A2;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Tue, 18 Jun 2019 09:24:14 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/18 AM 09:24:13,
-        Serialize complete at 2019/06/18 AM 09:24:13
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-MAIL: TWHMLLG4.macronix.com x5I1OD5R094554
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906180008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, May 23, 2019 at 01:28:44PM -0700, Alexei Starovoitov wrote:
 
-Hi Miquel,
+<< stuff skipped because it is not relevant to the technical discussion... >>
 
-> 
-> > > > > > > > +static void mxic_nand_select_chip(struct nand_chip *chip, 
-int 
-> > 
-> > > > chipnr) 
-> > > > > > > 
-> > > > > > > _select_target() is preferred now 
-> > > > > > 
-> > > > > > Do you mean I implement mxic_nand_select_target() to control 
-#CS ?
-> > > > > > 
-> > > > > > If so, I need to call mxic_nand_select_target( ) to control 
-#CS ON
-> > > > > > and then #CS OFF in _exec_op() due to nand_select_target()<in  
-
-> > > > nand_base,c> 
-> > > > > > is still calling chip->legacy.select_chip ? 
-> > > > > 
-> > > > > You must forget about the ->select_chip() callback. Now it 
-should be
-> > > > > handled directly from the controller driver. Please have a look 
-at 
-> > the
-> > > > > commit pointed against the marvell_nand.c driver. 
-> > > > 
-> > > > I have no Marvell NFC datasheet and have one question.
-> > > > 
-> > > > In marvell_nand.c, there is no xxx_deselect_target() or 
-> > > > something like that doing #CS OFF.
-> > > > marvell_nfc_select_target() seems always to make one of chip or 
-die
-> > > > #CS keep low.
-> > > > 
-> > > > Is it right ? 
+> > > In particular you brought up a good point that there is a use case
+> > > for sharing a piece of bpf program between kprobe and tracepoint events.
+> > > The better way to do that is via bpf2bpf call.
+> > > Example:
+> > > void bpf_subprog(arbitrary args)
+> > > {
+> > > }
 > > > 
-> > > Yes, AFAIR there is no "de-assert" mechanism in this controller.
+> > > SEC("kprobe/__set_task_comm")
+> > > int bpf_prog_kprobe(struct pt_regs *ctx)
+> > > {
+> > >   bpf_subprog(...);
+> > > }
 > > > 
-> > > > 
-> > > > How to make all #CS keep high for NAND to enter 
-> > > > low-power standby mode if driver don't use "legacy.select_chip()" 
-? 
+> > > SEC("tracepoint/sched/sched_switch")
+> > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> > > {
+> > >   bpf_subprog(...);
+> > > }
 > > > 
-> > > See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip() 
-optional
-> > > when ->exec_op() is implemented") which states:
+> > > Such configuration is not supported by the verifier yet.
+> > > We've been discussing it for some time, but no work has started,
+> > > since there was no concrete use case.
+> > > If you can work on adding support for it everyone will benefit.
 > > > 
-> > >         "When [->select_chip() is] not implemented, the core is 
-assuming
-> > >    the CS line is automatically asserted/deasserted by the driver 
-> > >    ->exec_op() implementation." 
-> > > 
-> > > Of course, the above is right only when the controller driver 
-supports
-> > > the ->exec_op() interface. 
+> > > Could you please consider doing that as a step forward?
 > > 
-> > Currently, it seems that we will get the incorrect data and error
-> > operation due to CS in error toggling if CS line is controlled in 
-> > ->exec_op(). 
+> > This definitely looks to be an interesting addition and I am happy to look into
+> > that further.  I have a few questions that I hope you can shed light on...
+> > 
+> > 1. What context would bpf_subprog execute with?  If it can be called from
+> >    multiple different prog types, would it see whichever context the caller
+> >    is executing with?  Or would you envision bpf_subprog to not be allowed to
+> >    access the execution context because it cannot know which one is in use?
 > 
-> Most of the chips today are CS-don't-care, which chip are you using?
-
-I think CS-don't-care means read-write operation for NAND device to reside
-on the same memory bus as other Flash or SRAM devices. Other devices on 
-the 
-memory bus can then be accessed while the NAND Flash is busy with internal 
-
-operations. This capability is very important for designs that require 
-multiple
-NAND Flash devices on the same bus.
-
+> bpf_subprog() won't be able to access 'ctx' pointer _if_ it's ambiguous.
+> The verifier already smart enough to track all the data flow, so it's fine to
+> pass 'struct pt_regs *ctx' as long as it's accessed safely.
+> For example:
+> void bpf_subprog(int kind, struct pt_regs *ctx1, struct sched_switch_args *ctx2)
+> {
+>   if (kind == 1)
+>      bpf_printk("%d", ctx1->pc);
+>   if (kind == 2)
+>      bpf_printk("%d", ctx2->next_pid);
+> }
 > 
-> Is this behavior publicly documented?
+> SEC("kprobe/__set_task_comm")
+> int bpf_prog_kprobe(struct pt_regs *ctx)
+> {
+>   bpf_subprog(1, ctx, NULL);
+> }
 > 
-
-CS# pin goes High enter standby mode to reduce power consumption,
-i.e,. standby mode w/ CS# keep High, standby current: 10 uA (Typ for 3.3V 
-NAND)
-        otherwise, current is more than 1 mA.
-i.e,. page read current, 25 mA (Typ for 3.3V NAND)
- 
-
-> Is this LPM mode always activated?
+> SEC("tracepoint/sched/sched_switch")
+> int bpf_prog_tracepoint(struct sched_switch_args *ctx)
+> {
+>   bpf_subprog(2, NULL, ctx);
+> }
 > 
-> > i.e,. 
-> > 
-> > 1) In nand_onfi_detect() to call nand_exec_op() twice by 
-> > nand_read_param_page_op() and annd_read_data_op()
-> > 
-> > 2) In nand_write_page_xxx to call nand_exec_op() many times by
-> > nand_prog_page_begin_op(), nand_write_data_op() and 
-> > nand_prog_page_end_op().
-> > 
-> > 
-> > Should we consider to add a CS line controller in struct 
-nand_controller
-> > i.e,.
-> > 
-> > struct nand_controller {
-> >          struct mutex lock;
-> >          const struct nand_controller_ops *ops;
-> > +          void (*select_chip)(struct nand_chip *chip, int cs);
-> > };
-> > 
-> > to replace legacy.select_chip() ?
-> > 
+> The verifier should be able to prove that the above is correct.
+> It can do so already if s/ctx1/map_value1/, s/ctx2/map_value2/
+> What's missing is an ability to have more than one 'starting' or 'root caller'
+> program.
 > 
-> No, if really needed, we could add a "macro op done" flag in the nand
-> operation structure.
+> Now replace SEC("tracepoint/sched/sched_switch") with SEC("cgroup/ingress")
+> and it's becoming clear that BPF_PROG_TYPE_PROBE approach is not good enough, right?
+> Folks are already sharing the bpf progs between kprobe and networking.
+> Currently it's done via code duplication and actual sharing happens via maps.
+> That's not ideal, hence we've been discussing 'shared library' approach for
+> quite some time. We need a way to support common bpf functions that can be called
+> from networking and from tracing programs.
 > 
-
-Is this "macron op done" flag good for multiple NAND devices on
-the same bus ?
-
-Any other way to control CS# pin? if user application is really
-care of power consumption, i.e,. loT.
-
+> > 2. Given that BPF programs are loaded with a specification of the prog type, 
+> >    how would one load a code construct as the one you outline above?  How can
+> >    you load a BPF function and have it be used as subprog from programs that
+> >    are loaded separately?  I.e. in the sample above, if bpf_subprog is loaded
+> >    as part of loading bpf_prog_kprobe (prog type KPROBE), how can it be
+> >    referenced from bpf_prog_tracepoint (prog type TRACEPOINT) which would be
+> >    loaded separately?
 > 
-> Thanks,
-> Miquèl
+> The api to support shared libraries was discussed, but not yet implemented.
+> We've discussed 'FD + name' approach.
+> FD identifies a loaded program (which is root program + a set of subprogs)
+> and other programs can be loaded at any time later. The BPF_CALL instructions
+> in such later program would refer to older subprogs via FD + name.
+> Note that both tracing and networking progs can be part of single elf file.
+> libbpf has to be smart to load progs into kernel step by step
+> and reusing subprogs that are already loaded.
+> 
+> Note that libbpf work for such feature can begin _without_ kernel changes.
+> libbpf can pass bpf_prog_kprobe+bpf_subprog as a single program first,
+> then pass bpf_prog_tracepoint+bpf_subprog second (as a separate program).
+> The bpf_subprog will be duplicated and JITed twice, but sharing will happen
+> because data structures (maps, global and static data) will be shared.
+> This way the support for 'pseudo shared libraries' can begin.
+> (later accompanied by FD+name kernel support)
 
-thanks & best regards,
-Mason
+As far as I can determine, the current libbpd implementation is already able
+to do the duplication of the called function, even when the ELF object contains
+programs of differemt program types.  I.e. the example you give at the top
+of the email actually seems to work already.  Right?
 
-CONFIDENTIALITY NOTE:
+In that case, I am a bit unsure what more can be done on the side of libbpf
+without needing kernel changes?
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+> There are other things we discsused. Ideally the body of bpf_subprog()
+> wouldn't need to be kept around for future verification when this bpf
+> function is called by a different program. The idea was to
+> use BTF and similar mechanism to ongoing 'bounded loop' work.
+> So the verifier can analyze bpf_subprog() once and reuse that knowledge
+> for dynamic linking with progs that will be loaded later.
+> This is more long term work.
+> A simple short term would be to verify the full call chain every time
+> the subprog (bpf function) is reused.
