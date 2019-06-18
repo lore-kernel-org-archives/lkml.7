@@ -2,149 +2,126 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE78FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA8FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9723E206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:57:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560884250;
-	bh=LoWEnCUvmWoWMa7txdFu4c+Z+4gNxRdZ37FjATvmnKQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=B+Jtfab3fts2D3upBPpGwwBTZN7QrnY8WIzWXiG0N4a0H2gfhPQ+5ysMmw2UHDCXH
-	 BSbfOQIDA/TmSkncGhA2ZSnNld8VVvPwNU8fEt9b8GoRYHkA3QSY9aDLXXna0RF6Jj
-	 4wX/Gey5J5HNQ2DyEN+THRVNb2LdR7ito+MpYU4A=
+	by mail.kernel.org (Postfix) with ESMTP id D0D532147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:59:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajUxc5+W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730395AbfFRS53 (ORCPT
+        id S1730455AbfFRS7G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:57:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37492 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730142AbfFRS53 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:57:29 -0400
-Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93F632147A;
-        Tue, 18 Jun 2019 18:57:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560884247;
-        bh=LoWEnCUvmWoWMa7txdFu4c+Z+4gNxRdZ37FjATvmnKQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=grAWLsP6m4r9LqF3Z1j1nDbnuzWJTm/DFwWVJtbKTKMJTipQTZaYEi1ZSWptTKZea
-         GVp7nrB9b3CB0GUkwfBkiBWX2XDM8BxBUrIViJtDncHaQVWdYUpyr7JDNexWyiha9S
-         +QvqDwJhJNMf/03gGgbVIh3oTzkI6wZ1xxGVnRxU=
-Received: by mail-qt1-f176.google.com with SMTP id p15so16748373qtl.3;
-        Tue, 18 Jun 2019 11:57:27 -0700 (PDT)
-X-Gm-Message-State: APjAAAWktppb80ufURJ1+ZxNbvbh5ObKHhpXmkTSraB/hIdQ+4NETwRc
-        H5Pl5kl84a1y3ybJtg1YshA6Z1Tvd0kjeD7ZIg==
-X-Google-Smtp-Source: APXvYqy2SEPoa0fxv79dQlv7hTm9mW9AXRTHf1i7buiIA7q5nDwdLD5eiQBUBkiLJzwPvnlu2j3dMmZ685hhNSUAhg0=
-X-Received: by 2002:a0c:b786:: with SMTP id l6mr29154803qve.148.1560884246832;
- Tue, 18 Jun 2019 11:57:26 -0700 (PDT)
+        Tue, 18 Jun 2019 14:59:06 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:46188 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730196AbfFRS7F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:59:05 -0400
+Received: by mail-yw1-f66.google.com with SMTP id z197so6799547ywd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:59:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n2DDWkzfly8h++f2u7ETcCEDtyV1BipVpATFf3iGFj8=;
+        b=ajUxc5+WJTxSIoBZ8SzOIP0EH5Oo4BIYMnTAueKHonh90SwDslBsrBqH/p5BpVV1lE
+         bd8TeYNgekt+y1cFqWvfRhaaJktj/9HlmdRNP7O58u1L65J44e2TAoQ8mMwBrd2BehYY
+         obhYCp/B5KF22P/dc7ZBTYUlxM50LS5cqX29I4OO2r4135df2kSGUOrYLAFBYkCwCbo6
+         cqjc1a96YiF6gxE5t85rWZKUyG+cGcX32J5aHJGR0RYnFzCFaVXB0BKAWWinXwoZqMuA
+         SssoPo5k02S7ZyalbCbsr+FvpZ8E+vHGkIcj1lW+J8TKA/Kd79OAsr3tVxdiBndDDKUG
+         R+bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n2DDWkzfly8h++f2u7ETcCEDtyV1BipVpATFf3iGFj8=;
+        b=NPwjbR1NWwhEWf/Z+ho4VpMnE7r+9gFXqIvaDzKPBqmXF4EFKZLNDIm0BZrO/Vocdm
+         n4a2h7TFp2PY5+Ca6F5/NYHlDWiaWuHpJKz80ep9cNP8SQk8QAfpHuxgpi5gvvuSosqr
+         M4XWfx8QyN1uhYBtMJrsbStFQmcH5Mem0l/qV+695DmOrYMPmdFPoO85A+3JjvsfGeHw
+         wsjSsdTJi/aO+/iAbBQ+lm6od7mlZuNxlsN1vGIFOeLWmSUmEW0ytAhaVv4iD8jo3291
+         ql7rVfEwwjmkyP86HW1gGekcIBrCQcn/+Yif0v3PYx9C2igxbzfrffu0D+xk2R8FfTyQ
+         hD6w==
+X-Gm-Message-State: APjAAAWpCN6gnolXQBOL7tGoOh8QkTqBUuSQcXJUUFnTmRR0bHg8mh3i
+        shC8k5uxqlS7glWXLUaauYpzi/CB
+X-Google-Smtp-Source: APXvYqwSaGU924CyotFuOd8eUpGfotrSwHDDjRr7GsUdnVUoDEj6PbvmUvxEoB4sT+7gf8FoziMA6Q==
+X-Received: by 2002:a81:7096:: with SMTP id l144mr68848471ywc.294.1560884344071;
+        Tue, 18 Jun 2019 11:59:04 -0700 (PDT)
+Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com. [209.85.161.51])
+        by smtp.gmail.com with ESMTPSA id s8sm4700608ywl.58.2019.06.18.11.59.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 11:59:03 -0700 (PDT)
+Received: by mail-yw1-f51.google.com with SMTP id n21so7195113ywh.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:59:02 -0700 (PDT)
+X-Received: by 2002:a0d:c0c4:: with SMTP id b187mr41089130ywd.389.1560884342538;
+ Tue, 18 Jun 2019 11:59:02 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190523190820.29375-1-dmurphy@ti.com> <20190523190820.29375-3-dmurphy@ti.com>
- <20190614170011.GA3277@bogus> <c234361e-f5f7-f8d7-18c6-9cc8ef74ac99@ti.com>
- <CAL_JsqK7u1xXNmwtHjUd7Z5ewHd9_d51quH4zMXxEd63egd28w@mail.gmail.com> <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
-In-Reply-To: <afc7f11f-7f8d-7680-aef3-58c26e8b34fa@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 18 Jun 2019 12:57:14 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqKRLZmZ5uCKWh_tpaYu7eSdYatsymzy+L-D=sesd81w+Q@mail.gmail.com>
-Message-ID: <CAL_JsqKRLZmZ5uCKWh_tpaYu7eSdYatsymzy+L-D=sesd81w+Q@mail.gmail.com>
-Subject: Re: [PATCH v3 2/9] dt: bindings: Add multicolor class dt bindings documention
-To:     Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc:     Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>,
-        devicetree@vger.kernel.org,
-        Linux LED Subsystem <linux-leds@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
+ <20190618161036.GA28190@kroah.com> <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
+ <20190618.094759.539007481404905339.davem@davemloft.net> <20190618171516.GA17547@kroah.com>
+ <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com> <20190618173906.GB3649@kroah.com>
+In-Reply-To: <20190618173906.GB3649@kroah.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 18 Jun 2019 14:58:26 -0400
+X-Gmail-Original-Message-ID: <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
+Message-ID: <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
+Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+        David Miller <davem@davemloft.net>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Fred Klassen <fklassen@appneta.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:20 PM Jacek Anaszewski
-<jacek.anaszewski@gmail.com> wrote:
+On Tue, Jun 18, 2019 at 1:39 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> On 6/18/19 5:36 PM, Rob Herring wrote:
-> > On Fri, Jun 14, 2019 at 11:18 AM Dan Murphy <dmurphy@ti.com> wrote:
-> >>
-> >> Rob
-> >>
-> >> Thanks for the review
-> >>
-> >> On 6/14/19 12:00 PM, Rob Herring wrote:
-> >>> On Thu, May 23, 2019 at 02:08:13PM -0500, Dan Murphy wrote:
-> >>>> Add DT bindings for the LEDs multicolor class framework.
-> >>>>
-> >>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
-> >>>> ---
-> >>>>    .../bindings/leds/leds-class-multicolor.txt   | 97 +++++++++++++++++++
-> >>>>    1 file changed, 97 insertions(+)
-> >>>>    create mode 100644 Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> >>>>
-> >>>> diff --git a/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> >>>> new file mode 100644
-> >>>> index 000000000000..e2a2ce3279cb
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/bindings/leds/leds-class-multicolor.txt
-> >>>> @@ -0,0 +1,97 @@
-> >>>> +* Multicolor LED properties
-> >>>> +
-> >>>> +Multicolor LEDs can consist of a RGB, RGBW or a RGBA LED clusters.  These devices
-> >>>> +can be grouped together and also provide a modeling mechanism so that the
-> >>>> +cluster LEDs can vary in hue and intensity to produce a wide range of colors.
-> >>>> +
-> >>>> +The nodes and properties defined in this document are unique to the multicolor
-> >>>> +LED class.  Common LED nodes and properties are inherited from the common.txt
-> >>>> +within this documentation directory.
-> >>>> +
-> >>>> +Required LED Child properties:
-> >>>> +    - color : For multicolor LED support this property should be defined as
-> >>>> +              LED_COLOR_ID_MULTI and further definition can be found in
-> >>>> +              include/linux/leds/common.h.
-> >>>> +
-> >>>> +led-controller@30 {
-> >>>> +    #address-cells = <1>;
-> >>>> +    #size-cells = <0>;
-> >>>> +    compatible = "ti,lp5024";
-> >>>> +    reg = <0x29>;
-> >>>> +
-> >>>> +    multi-led@4 {
-> >>> Typically we sort by address order.
-> >>
-> >> These are not addresses these end up being the "module" number that the
-> >> LEDs below are associated to.
+> On Tue, Jun 18, 2019 at 01:27:14PM -0400, Willem de Bruijn wrote:
+> > On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >
+> > > On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
+> > > > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> > > > Date: Tue, 18 Jun 2019 12:37:33 -0400
+> > > >
+> > > > > Specific to the above test, I can add a check command testing
+> > > > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
+> > > > > way to denote "skipped", so this would just return "pass". Sounds a
+> > > > > bit fragile, passing success when a feature is absent.
+> > > >
+> > > > Especially since the feature might be absent because the 'config'
+> > > > template forgot to include a necessary Kconfig option.
+> > >
+> > > That is what the "skip" response is for, don't return "pass" if the
+> > > feature just isn't present.  That lets people run tests on systems
+> > > without the config option enabled as you say, or on systems without the
+> > > needed userspace tools present.
 > >
-> > 'reg' (and the unit-address) is an address in the sense that is how
-> > you identify a device or sub-device. It doesn't matter what type of
-> > 'address' it is, DT practice is to sort node in unit-address numerical
-> > order.
+> > I was not aware that kselftest had this feature.
 > >
-> > 'module' is a h/w thing, right? A bank or instance within the device?
-> > If not, using 'reg' here is not appropriate.
+> > But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
+> > I'll send a patch and will keep that in mind for future tests.
 >
-> In this case reg represents LEDn_BRIGHTNESS register which controls
-> a group of three LEDs. The thing is that those registers' addresses
-> start from 0x07, i.e. the formula for calculating the RGB LED module
-> address is: LEDn_BRIGHTNESS = 0x07 + n.
->
->  From the above it seems that we should have multi-led@7 and reg = 0x07
-> for LED0_BRIGHTNESS register governing the brightness of RGB LED
-> module 0, right?
+> Wonderful, thanks for doing that!
 
-Use whatever makes the most sense from a h/w perspective. If 'module
-N' is something that I'd read about in the datasheet, then I'd stick
-with 'N'.
+One complication: an exit code works for a single test, but here
+multiple test variants are run from a single shell script.
 
->
-> And regarding sorting by address order I think that Rob was asking for
-> placing whole multi-led@4 sub-node after multi-led@2 (here sticking to
-> the numeration from the patch).
+I see that in similar such cases that use the test harness
+(ksft_test_result_skip) the overall test returns success as long as
+all individual cases return either success or skip.
 
-Right.
-
-Rob
+I think it's preferable to return KSFT_SKIP if any of the cases did so
+(and none returned an error). I'll do that unless anyone objects.
