@@ -2,64 +2,102 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB02C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 944D8C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E778A2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D9792084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:02:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="juvZIEO1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727626AbfFRB7I (ORCPT
+        id S1726948AbfFRCCC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:59:08 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:37066 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfFRB7I (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:59:08 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hd3Om-0004se-Gu; Tue, 18 Jun 2019 01:59:00 +0000
-Date:   Tue, 18 Jun 2019 02:59:00 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        James Morris <jmorris@namei.org>,
-        David Howells <dhowells@redhat.com>,
-        stable <stable@vger.kernel.org>, Jose Bollo <jose.bollo@iot.bzh>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Smack: Restore the smackfsdef mount option and add
- missing prefixes
-Message-ID: <20190618015900.GZ17978@ZenIV.linux.org.uk>
-References: <155930001303.17253.2447519598157285098.stgit@warthog.procyon.org.uk>
- <17467.1559300202@warthog.procyon.org.uk>
- <alpine.LRH.2.21.1906040842110.13657@namei.org>
- <6cfd5113-8473-f962-dee7-e490e6f76f9c@schaufler-ca.com>
- <cb3749a6-e45b-3e07-27f9-841adf6f4640@schaufler-ca.com>
- <CAHk-=wj8VCxjwyd_BDgRtDigik5UdizCZP7PU4wUtj4vHsEWNw@mail.gmail.com>
+        Mon, 17 Jun 2019 22:02:02 -0400
+Received: from onstation.org ([52.200.56.107]:59492 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRCCC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 22:02:02 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 0C3023E916;
+        Tue, 18 Jun 2019 02:02:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1560823321;
+        bh=JAWG9OebQfPvktQPpG6CYIPS1YvD0jFqxngPc+1oXh0=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=juvZIEO1ymL2g7Jtys0xxTB1t19QT09rup43fCpXdYFr6bCbyJBitiaIrSHNDk8wR
+         CUzBw6eaEuGGrDDOPMGa2ye3ldmqNo69eYto/gQn+jYwizJuYyjjHIcmZcnhYOOUCn
+         zovvDMmI33/DtSu/zaNekWu9n62mDeu56yeiwzlg=
+Date:   Mon, 17 Jun 2019 22:02:00 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>, robdclark@gmail.com
+Cc:     agross@kernel.org, david.brown@linaro.org, sean@poorly.run,
+        robh+dt@kernel.org, airlied@linux.ie, daniel@ffwll.ch,
+        mark.rutland@arm.com, jonathan@marek.ca,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 5/6] soc: qcom: add OCMEM driver
+Message-ID: <20190618020200.GB22330@onstation.org>
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-6-masneyb@onstation.org>
+ <20190616174106.GO22737@tuxbook-pro>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAHk-=wj8VCxjwyd_BDgRtDigik5UdizCZP7PU4wUtj4vHsEWNw@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190616174106.GO22737@tuxbook-pro>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 02:24:09PM -1000, Linus Torvalds wrote:
-> On Fri, Jun 14, 2019 at 1:08 PM Casey Schaufler <casey@schaufler-ca.com> wrote:
-> >
-> > Al, are you going to take this, or should I find another way
-> > to get it in for 5.2?
-> 
-> I guess I can take it directly.
-> 
-> I was assuming it would come through either Al (which is how I got the
-> commit it fixes) or Casey (as smack maintainer), so I ignored the
-> patch.
+Hi Rob Clark,
 
-FWIW, (belated) ACK...
+On Sun, Jun 16, 2019 at 10:41:06AM -0700, Bjorn Andersson wrote:
+> > diff --git a/drivers/soc/qcom/ocmem.xml.h b/drivers/soc/qcom/ocmem.xml.h
+> 
+> I would prefer that these lived at the top of the c file, rather than
+> being generated.
+
+I think it would be nice to make this change as well.
+
+Rob C: Your original file ocmem.xml.h was licensed under the MIT
+license. I just wanted confirmation from you that it's OK to put
+the contents of that file into ocmem.c which has the GPL 2.0 only
+SPDX license tag. This will relicense the work. I imagine it's not
+an issue but I just wanted to get confirmation so there is no
+ambiguity regarding the licensing in the future.
+
+Brian
+
+
+> 
+> > new file mode 100644
+> > index 000000000000..b4bfb85d1e33
+> > --- /dev/null
+> > +++ b/drivers/soc/qcom/ocmem.xml.h
+> > @@ -0,0 +1,86 @@
+> > +/* SPDX-License-Identifier: MIT */
+> > +
+> > +#ifndef OCMEM_XML
+> > +#define OCMEM_XML
+> > +
+> > +/* Autogenerated file, DO NOT EDIT manually!
+> > +
+> > +This file was generated by the rules-ng-ng headergen tool in this git repository:
+> > +http://github.com/freedreno/envytools/
+> > +git clone https://github.com/freedreno/envytools.git
+> > +
+> > +The rules-ng-ng source files this header was generated from are:
+> > +- /home/robclark/src/freedreno/envytools/rnndb/adreno/ocmem.xml         (   1773 bytes, from 2015-09-24 17:30:00)
+> > +
+> > +Copyright (C) 2013-2015 by the following authors:
+> > +- Rob Clark <robdclark@gmail.com> (robclark)
+> > +*/
