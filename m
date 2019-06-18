@@ -2,223 +2,91 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44E9CC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA65C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14C91214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="zEO3Tjqb"
+	by mail.kernel.org (Postfix) with ESMTP id 6F49121530
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729823AbfFRPqz (ORCPT
+        id S1729833AbfFRPrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:46:55 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:25939 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729209AbfFRPqy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:46:54 -0400
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x5IFkfN4028453;
-        Wed, 19 Jun 2019 00:46:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5IFkfN4028453
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1560872802;
-        bh=386ZLEU3NwMBqho2YAfsvSOOObyOn03wy4ojBhvxK60=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=zEO3TjqbGOEvExBhKiAr+1HikWsmWFNgpCAfYBvqzvBYn3batDYk+Q30THkzzJVAi
-         AnDI2sDbURwJ6EawFc9+Ece35Tk04fStXcjIXDdGDhQWoL6w11dMbFama5grXT4j0R
-         V+OC4mb0Ws5539Va/vyrBmdYoQu8kXTFVWaH/UAZoxanZi0BUOfjT+zsRWLHNPFTye
-         piqVckY4JJ7yzRVgtKrHBVSo3c/c5FJA4qcI1V94YH5vl93xRVCn9rUzej4Ssem18q
-         v1tBySID2r88u+8+15EvkwHyxfo2CTpsQFe4gMd0Ab9Pv18fovHBho4ypB94zLM8Vd
-         /rVtx9E/pjG/g==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id 8so6428262uaz.11;
-        Tue, 18 Jun 2019 08:46:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAWR7k/6CtXPXCm6OxqQ6XZ9DQTZdUsAEw2DVDg9quBGyrNXTyF5
-        RXj9vCG7r/nNdVyIiCondC+vqOh1EPeGC5viJGU=
-X-Google-Smtp-Source: APXvYqxtLvDnMS0CFAbDTiZ+5ZRw6eQK7Tj+rcqL/cHf9e3ufopPnNNl1cknMI4hmuC4210dH4UbfTG8JkzKXgzkjhE=
-X-Received: by 2002:a67:7fcc:: with SMTP id a195mr44483545vsd.181.1560872800733;
- Tue, 18 Jun 2019 08:46:40 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 19 Jun 2019 00:46:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASv7WP+X2_oEEmp5tGqOxiv2VCj84CLuHhSsesF6AiD8A@mail.gmail.com>
-Message-ID: <CAK7LNASv7WP+X2_oEEmp5tGqOxiv2VCj84CLuHhSsesF6AiD8A@mail.gmail.com>
-Subject: Re: [PATCH 00/15] kbuild: refactor headers_install and support
- compile-test of UAPI headers
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-riscv@lists.infradead.org,
-        Vincent Chen <deanbo422@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Helge Deller <deller@gmx.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yonghong Song <yhs@fb.com>,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        linux-parisc@vger.kernel.org, Vineet Gupta <vgupta@synopsys.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>, bpf@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Martin KaFai Lau <kafai@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 18 Jun 2019 11:47:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47316 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729209AbfFRPrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:47:16 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 70AC530860AD;
+        Tue, 18 Jun 2019 15:47:16 +0000 (UTC)
+Received: from holly.tpb.lab.eng.brq.redhat.com (holly.tpb.lab.eng.brq.redhat.com [10.43.134.11])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC98B176BC;
+        Tue, 18 Jun 2019 15:47:14 +0000 (UTC)
+From:   Miroslav Lichvar <mlichvar@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     swkhack@gmail.com, Miroslav Lichvar <mlichvar@redhat.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Prarit Bhargava <prarit@redhat.com>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH] ntp: Limit TAI-UTC offset
+Date:   Tue, 18 Jun 2019 17:47:13 +0200
+Message-Id: <20190618154713.20929-1-mlichvar@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 18 Jun 2019 15:47:16 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 4, 2019 at 7:15 PM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
->
-> Multiple people have suggested to compile-test UAPI headers.
->
-> Currently, Kbuild provides simple sanity checks by headers_check
-> but they are not enough to catch bugs.
->
-> The most recent patch I know is David Howells' work:
-> https://patchwork.kernel.org/patch/10590203/
->
-> I agree that we need better tests for UAPI headers,
-> but I want to integrate it in a clean way.
->
-> The idea that has been in my mind is to compile each header
-> to make sure the selfcontainedness.
->
-> Recently, Jani Nikula proposed a new syntax 'header-test-y'.
-> https://patchwork.kernel.org/patch/10947005/
->
-> So, I implemented UAPI compile-testing on top of that.
->
-> When adding a new feature, cleaning the code first is a
-> good practice.
->
-> [1] Remove headers_install_all
->
-> This target installs UAPI headers of all architectures
-> in a single tree.
-> It does not make sense to compile test of headers from
-> multiple arches at the same time. Hence, removed.
->
-> [2] Split header installation into 'make headers' and 'make headers_install'
->
-> To compile-test UAPI headers, we need a work-directory somewhere
-> to save objects and .*.cmd files.
->
-> usr/include/ will be the work-directory.
->
-> Since we cannot pollute the final destination of headers_install,
->
-> I split the header installation into two stages.
->
-> 'make headers' will build up
-> the ready-to-install headers in usr/include,
-> which will be also used as a work-directory for the compile-test.
->
-> 'make headers_install' will copy headers
-> from usr/include to $(INSTALL_HDR_PATH)/include.
->
-> [3] Support compile-test of UAPI headers
->
-> This is implemented in usr/include/Makefile
->
->
-> Jani Nikula (1):
->   kbuild: add support for ensuring headers are self-contained
->
-> Masahiro Yamada (14):
->   kbuild: remove headers_{install,check}_all
->   kbuild: remove stale dependency between Documentation/ and
->     headers_install
->   kbuild: make gdb_script depend on prepare0 instead of prepare
->   kbuild: fix Kconfig prompt of CONFIG_HEADERS_CHECK
->   kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of
->     samples
->   kbuild: remove build_unifdef target in scripts/Makefile
->   kbuild: build all prerequisite of headers_install simultaneously
->   kbuild: add 'headers' target to build up ready-to-install uapi headers
->   kbuild: re-implement Makefile.headersinst without directory descending
->   kbuild: move hdr-inst shorthand to top Makefile
->   kbuild: simplify scripts/headers_install.sh
->   kbuild: deb-pkg: do not run headers_check
->   fixup: kbuild: add support for ensuring headers are self-contained
->   kbuild: compile test UAPI headers to ensure they are self-contained
+Don't allow the TAI-UTC offset of the system clock to be set by
+adjtimex() to a value larger than 100000 seconds.
 
-Series, applied to linux-kbuild.
+This prevents an overflow in the conversion to int, prevents the
+CLOCK_TAI clock from getting too far ahead of the CLOCK_REALTIME clock,
+and it is still large enough to allow leap seconds to be inserted at the
+maximum rate currently supported by the kernel (once per day) for the
+next ~270 years, however unlikely it is that someone can survive a
+catastrophic event which slowed down the rotation of the Earth so much.
 
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+---
+ kernel/time/ntp.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->  Documentation/kbuild/headers_install.txt |   7 --
->  Documentation/kbuild/makefiles.txt       |  13 ++-
->  Makefile                                 |  56 +++++-----
->  arch/arc/configs/tb10x_defconfig         |   1 +
->  arch/nds32/configs/defconfig             |   1 +
->  arch/parisc/configs/a500_defconfig       |   1 +
->  arch/parisc/configs/b180_defconfig       |   1 +
->  arch/parisc/configs/c3000_defconfig      |   1 +
->  arch/parisc/configs/default_defconfig    |   1 +
->  arch/powerpc/configs/ppc6xx_defconfig    |   1 +
->  arch/s390/configs/debug_defconfig        |   1 +
->  include/uapi/{linux => }/Kbuild          |   6 +-
->  init/Kconfig                             |  20 ++++
->  lib/Kconfig.debug                        |  25 +++--
->  samples/Kconfig                          |  14 ++-
->  samples/Makefile                         |   4 +-
->  scripts/Kbuild.include                   |   6 --
->  scripts/Makefile                         |   5 -
->  scripts/Makefile.build                   |   9 ++
->  scripts/Makefile.headersinst             | 132 ++++++++++-------------
->  scripts/Makefile.lib                     |   3 +
->  scripts/cc-system-headers.sh             |   8 ++
->  scripts/headers.sh                       |  29 -----
->  scripts/headers_install.sh               |  48 ++++-----
->  scripts/package/builddeb                 |   2 +-
->  usr/.gitignore                           |   1 -
->  usr/Makefile                             |   2 +
->  usr/include/.gitignore                   |   3 +
->  usr/include/Makefile                     | 132 +++++++++++++++++++++++
->  29 files changed, 329 insertions(+), 204 deletions(-)
->  rename include/uapi/{linux => }/Kbuild (77%)
->  create mode 100755 scripts/cc-system-headers.sh
->  delete mode 100755 scripts/headers.sh
->  create mode 100644 usr/include/.gitignore
->  create mode 100644 usr/include/Makefile
->
-> --
-> 2.17.1
->
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
-
-
-
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index 8de4f789dc1b..65eb796610dc 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -43,6 +43,7 @@ static u64			tick_length_base;
+ #define MAX_TICKADJ		500LL		/* usecs */
+ #define MAX_TICKADJ_SCALED \
+ 	(((MAX_TICKADJ * NSEC_PER_USEC) << NTP_SCALE_SHIFT) / NTP_INTERVAL_FREQ)
++#define MAX_TAI_OFFSET		100000
+ 
+ /*
+  * phase-lock loop variables
+@@ -691,7 +692,8 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
+ 		time_constant = max(time_constant, 0l);
+ 	}
+ 
+-	if (txc->modes & ADJ_TAI && txc->constant >= 0)
++	if (txc->modes & ADJ_TAI &&
++			txc->constant >= 0 && txc->constant <= MAX_TAI_OFFSET)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
-Best Regards
-Masahiro Yamada
+2.17.2
+
