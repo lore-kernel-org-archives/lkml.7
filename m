@@ -2,115 +2,108 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C4B5C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6797EC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:14:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F403C2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:14:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qILK04ee"
+	by mail.kernel.org (Postfix) with ESMTP id 33A022084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:14:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560849247;
+	bh=G5n7tQEA4D7IaVaj+n+intnIJiU7vvwx1xThRaNy7Nc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=VyVc44CVdbm58mbCo3n/lDs9koxEf+bOijjTuYdHdTIPcUqtFqI5UpcIFfgodp7LH
+	 L4GwyTgX2vEs0c1pIjaITKFoTUdrLD8TjGNOeaIOXOQkJ/Ng8CYhWAd4oOjnrI+0EH
+	 LomNwU5HPt/nXpwncGjpuHI+6P8cMlIla+hnnTX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729355AbfFRJN7 (ORCPT
+        id S1729373AbfFRJOG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:13:59 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:19235 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728385AbfFRJN7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:13:59 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d08ab560001>; Tue, 18 Jun 2019 02:13:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 02:13:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 02:13:58 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 09:13:56 +0000
-Subject: Re: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
-To:     Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <61c2dbcd-85f2-2094-7596-78ac01f55421@nvidia.com>
-Date:   Tue, 18 Jun 2019 10:13:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 05:14:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728385AbfFRJOF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:14:05 -0400
+Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5BB13206BA;
+        Tue, 18 Jun 2019 09:13:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560849244;
+        bh=G5n7tQEA4D7IaVaj+n+intnIJiU7vvwx1xThRaNy7Nc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1AE0dKeXOphrd0NEoeC0kvijNE5Z3yzzZaSZ+0GwZF/SIAzx9uT2NX9XnsXG3ogcj
+         fzvhWN9nY3ncNjYjwlBe42xt7Ro2jBIaXnuq2wX6uSretwiO9qwiZvVSRD/RhgOnNT
+         B0GLmfhS0LDLFiXbe1ARbwhGxQnwLiPB/9vzspXw=
+Date:   Tue, 18 Jun 2019 17:13:10 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Anson.Huang@nxp.com
+Cc:     s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        leonard.crestez@nxp.com, viresh.kumar@linaro.org,
+        abel.vesa@nxp.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, Linux-imx@nxp.com
+Subject: Re: [PATCH V2 1/2] soc: imx8: Fix potential kernel dump in error path
+Message-ID: <20190618091309.GL29881@dragon>
+References: <20190614080748.32997-1-Anson.Huang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560849238; bh=wILUXSk3M+mIm+w2CtNgTykFq01uFJEP4Obi9FpU5M0=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qILK04eeri8qQhFnL8rV1025VphF23Pt0ebqRmRec0O4R8TFSsRfzTy28jnfnvIj9
-         zMrBtEMPVNA+T1GMHLGrsKgYU+wm63D2+eF4XttWRnAwXav8R/A5Za1iNEi3k3+1JT
-         tn/+l9ahEz/TDk6bqTA5/g2vpV7w0zd4zvXxko0JXrrFl0PDz2OeAzPxUWSy9FVh/q
-         oJMaNWcgYHNJP8hsLT/40FEPG+5OFoJA7gRPMvWvAEpHYAGXIX/SADyTkstOlB/nrk
-         dLw+7Nx/VbJOnodrxgQ2VPh62IFMvvjEfmjO+feJ8lt9OcYInSyBHYcWvfJRwy4z9e
-         U6rw0SXSMoHQg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614080748.32997-1-Anson.Huang@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 18/06/2019 09:42, Bitan Biswas wrote:
-> tegra_i2c_xfer_msg initiates the I2C transfer in DMA
-> or PIO mode. It involves steps that need FIFO register
-> access, DMA API calls like dma_sync_single_for_device, etc.
-> Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
-> and in DMA/PIO mode writes different I2C registers including
-> I2C interrupt status. ISR cannot start processing
-> before the preparation step at tegra_i2c_xfer_msg is complete.
-> Hence, a synchronization between ISR and tegra_i2c_xfer_msg
-> is in place today using spinlock.
+On Fri, Jun 14, 2019 at 04:07:47PM +0800, Anson.Huang@nxp.com wrote:
+> From: Anson Huang <Anson.Huang@nxp.com>
 > 
-> Spinlock busy waits and can add avoidable delays.
+> When SoC's revision value is 0, SoC driver will print out
+> "unknown" in sysfs's revision node, this "unknown" is a
+> static string which can NOT be freed, this will caused below
+> kernel dump in later error path which calls kfree:
 > 
-> In this patch needed synchronization is achieved by disabling
-> I2C interrupt during preparation step and enabling interrupt
-> once preparation is over and spinlock is no longer needed.
-Sorry but I still don't understand the problem you are trying to solve.
-Yes spinlocks are busy waits but is this busy wait an actual problem? If
-so what is the problem with this?
+> kernel BUG at mm/slub.c:3942!
+> Internal error: Oops - BUG: 0 [#1] PREEMPT SMP
+> Modules linked in:
+> CPU: 2 PID: 1 Comm: swapper/0 Not tainted 5.2.0-rc4-next-20190611-00023-g705146c-dirty #2197
+> Hardware name: NXP i.MX8MQ EVK (DT)
+> pstate: 60000005 (nZCv daif -PAN -UAO)
+> pc : kfree+0x170/0x1b0
+> lr : imx8_soc_init+0xc0/0xe4
+> sp : ffff00001003bd10
+> x29: ffff00001003bd10 x28: ffff00001121e0a0
+> x27: ffff000011482000 x26: ffff00001117068c
+> x25: ffff00001121e100 x24: ffff000011482000
+> x23: ffff000010fe2b58 x22: ffff0000111b9ab0
+> x21: ffff8000bd9dfba0 x20: ffff0000111b9b70
+> x19: ffff7e000043f880 x18: 0000000000001000
+> x17: ffff000010d05fa0 x16: ffff0000122e0000
+> x15: 0140000000000000 x14: 0000000030360000
+> x13: ffff8000b94b5bb0 x12: 0000000000000038
+> x11: ffffffffffffffff x10: ffffffffffffffff
+> x9 : 0000000000000003 x8 : ffff8000b9488147
+> x7 : ffff00001003bc00 x6 : 0000000000000000
+> x5 : 0000000000000003 x4 : 0000000000000003
+> x3 : 0000000000000003 x2 : b8793acd604edf00
+> x1 : ffff7e000043f880 x0 : ffff7e000043f888
+> Call trace:
+>  kfree+0x170/0x1b0
+>  imx8_soc_init+0xc0/0xe4
+>  do_one_initcall+0x58/0x1b8
+>  kernel_init_freeable+0x1cc/0x288
+>  kernel_init+0x10/0x100
+>  ret_from_fork+0x10/0x18
+> 
+> This patch fixes this potential kernel dump when a chip's
+> revision is "unknown", it is done by checking whether the
+> revision space can be freed.
+> 
+> Fixes: a7e26f356ca1 ("soc: imx: Add generic i.MX8 SoC driver")
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-It appears that the spinlock was added to prevent error interrupts
-occurring until the transfer has started. If this is for error cases,
-then probably it is not often that the CPU is stuck busy waiting on the
-spinlock.
-
-Furthermore, in addition to the spinlock we also have calls to
-tegra_i2c_unmask_irq/tegra_i2c_mask_irq. Therefore, if we are going to
-change this it would seem like a good idea to consolidate the
-masking/unmasking of IRQs and the spinlock, if possible.
-
-Finally, I still see that we have a spinlock in the downstream kernels
-we are shipping and so I would prefer to see such a change also be
-tested in the downstream kernels we are releasing.
-
-Cheers
-Jon
-
--- 
-nvpublic
+Applied, thanks.
