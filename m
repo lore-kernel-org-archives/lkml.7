@@ -7,55 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB405C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B162C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A806720863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5230021479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560891315;
-	bh=fQgkpdbhCcLJTOWb0FfVdItXLxu5KlFF029wwi18S08=;
+	s=default; t=1560891319;
+	bh=R0QwjpCkRPykIHIhEX3lnlfnDS5C3THT6cPJlI8zVtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYA5qWST9LTth1A9y1Ch6ItpLBzFtKuRa8HQHrbcn31wzTxI5zqxLcdN+/wl7YwXL
-	 ZoNGAyd2mNpW1HClj7eIuzEFkCyrIl+Yih0NXWdV3f5+uYhG3vbkRPc9eV2n+cmgI9
-	 KWCwPi83RYUsRrorYREIwQ0eh1tnI0H/zDst5qY8=
+	b=D64cjEjZXFrS5VUOwwLjns/mgy3272izs1LUJUmGLHT6sFOx7TjFBI5eZByyjxJ8H
+	 eNaAvslvBCQcNT/wv95Ta8OILrythKCy3+gW3CyWssH9+4RFcMfwRhFC9EM1rZtGxc
+	 MTQivIXDbwJg9rprVBfEaW0q0QBA1KvdzGWpo4a4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfFRUx6 (ORCPT
+        id S1731024AbfFRUzR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:53:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50432 "EHLO
+        Tue, 18 Jun 2019 16:55:17 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50836 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730700AbfFRUxz (ORCPT
+        with ESMTP id S1730749AbfFRUx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:53:55 -0400
+        Tue, 18 Jun 2019 16:53:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=J1lCaH4BAVPUd4b+Wn9keMGvzLFd6qySHnI5N2gYXgk=; b=YVaOePEmMHK8V1K2p4V641hfl3
-        ++9eyOUFLCrURrPfJR8CnxmXKkWAHkZzE0TAyhfE7RpQs+K5vapvzsCcLYTmgcon7ptgQfntHaQHh
-        hBoAooXKFPaAciZNNi1u6MLF8xmPVhVfMTqPcH9XFUIbnluOU6gJRCzOYmWEUtpusVUpZssmoGQpD
-        jD+NqS1IIi9esOPzt0UHwYw5OWbK5+RiS8+ekWbGyq3fA8tG9cDWjpYyxrh4j9PbLikE9iKk0PuiM
-        rO8zhkfBflHPz4lc3TgAiBr1CciUJ4IQSfNaA+b44rRkq/04dIoz5vIYdrseNrPROYfjLtgimGSZ7
-        tgbz/vsQ==;
+        bh=lS4UliZzmoTMkcnLKM4dNvFw1mukTFSV4no+MKbahvQ=; b=Cv7B9ClMNS+1bWV9iwTIUUNykY
+        i5mQmHtJbkf4x5eEEkCChnCoiZx2AR0XvwejGX+wKFBbUH/eYjVqWbRO/YztYzrUhH4g2vrbtQd5Q
+        mPCatGIcsbwydENRbPbJ5A/0hbaF/fDBiXdtnPBo2aRzpoguqmuV8GpZnFcePdkgflcOy5Ri8k0Id
+        ZF1JTSoTMVpLiBjw0MJOXmk3lPsvdzTN64QuGP/OHSSfFbcoMBnGkZQoCjPLhJVnqLiHhWMVq/2zb
+        iX/OXDeSJEXpr2JJBMpdk3JvEiDnpP25Bbis0XfMDrNtjHc/RlGE4vPOQ9EnyxyXGciQbqZG+jMed
+        Ihyw420Q==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL73-0008NP-Up; Tue, 18 Jun 2019 20:53:54 +0000
+        id 1hdL77-0008RV-2i; Tue, 18 Jun 2019 20:53:57 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdL70-0001zp-25; Tue, 18 Jun 2019 17:53:50 -0300
+        id 1hdL70-0001zx-3e; Tue, 18 Jun 2019 17:53:50 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Kamil Debski <kamil@wypas.org>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH v2 15/29] docs: phy: convert samsung-usb2.txt to ReST format
-Date:   Tue, 18 Jun 2019 17:53:33 -0300
-Message-Id: <40e5746fd7107126240929130ce403f7cdc2b9e2.1560890800.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH v2 17/29] docs: DMA-API-HOWTO.txt: fix an unmarked code block
+Date:   Tue, 18 Jun 2019 17:53:35 -0300
+Message-Id: <9b83a9b1e815daf0266d49fcacfe713540276ff3.1560890800.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
 References: <cover.1560890800.git.mchehab+samsung@kernel.org>
@@ -66,175 +64,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In order to merge it into a Sphinx book, we need first to
-convert to ReST.
+When building with Sphinx, it would produce this warning:
 
-While this is not part of any book, mark it as :orphan:, in order
-to avoid build warnings.
+    docs/Documentation/DMA-API-HOWTO.rst:222: WARNING: Definition list ends without a blank line; unexpected unindent.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- .../{samsung-usb2.txt => samsung-usb2.rst}    | 62 ++++++++++---------
- MAINTAINERS                                   |  2 +-
- 2 files changed, 34 insertions(+), 30 deletions(-)
- rename Documentation/phy/{samsung-usb2.txt => samsung-usb2.rst} (77%)
+ Documentation/DMA-API-HOWTO.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/phy/samsung-usb2.txt b/Documentation/phy/samsung-usb2.rst
-similarity index 77%
-rename from Documentation/phy/samsung-usb2.txt
-rename to Documentation/phy/samsung-usb2.rst
-index ed12d437189d..98b5952fcb97 100644
---- a/Documentation/phy/samsung-usb2.txt
-+++ b/Documentation/phy/samsung-usb2.rst
-@@ -1,9 +1,11 @@
--.------------------------------------------------------------------------------+
--|			Samsung USB 2.0 PHY adaptation layer		       |
--+-----------------------------------------------------------------------------+'
-+:orphan:
+diff --git a/Documentation/DMA-API-HOWTO.txt b/Documentation/DMA-API-HOWTO.txt
+index cb712a02f59f..358d495456d1 100644
+--- a/Documentation/DMA-API-HOWTO.txt
++++ b/Documentation/DMA-API-HOWTO.txt
+@@ -212,7 +212,7 @@ The standard 64-bit addressing device would do something like this::
  
--| 1. Description
--+----------------
-+====================================
-+Samsung USB 2.0 PHY adaptation layer
-+====================================
-+
-+1. Description
-+--------------
+ If the device only supports 32-bit addressing for descriptors in the
+ coherent allocations, but supports full 64-bits for streaming mappings
+-it would look like this:
++it would look like this::
  
- The architecture of the USB 2.0 PHY module in Samsung SoCs is similar
- among many SoCs. In spite of the similarities it proved difficult to
-@@ -14,8 +16,8 @@ the PHY powering up process had to be altered. This adaptation layer is
- a compromise between having separate drivers and having a single driver
- with added support for many special cases.
- 
--| 2. Files description
--+----------------------
-+2. Files description
-+--------------------
- 
- - phy-samsung-usb2.c
-    This is the main file of the adaptation layer. This file contains
-@@ -32,44 +34,45 @@ with added support for many special cases.
-    driver. In addition it should contain extern declarations for
-    structures that describe particular SoCs.
- 
--| 3. Supporting SoCs
--+--------------------
-+3. Supporting SoCs
-+------------------
- 
- To support a new SoC a new file should be added to the drivers/phy
- directory. Each SoC's configuration is stored in an instance of the
--struct samsung_usb2_phy_config.
-+struct samsung_usb2_phy_config::
- 
--struct samsung_usb2_phy_config {
-+  struct samsung_usb2_phy_config {
- 	const struct samsung_usb2_common_phy *phys;
- 	int (*rate_to_clk)(unsigned long, u32 *);
- 	unsigned int num_phys;
- 	bool has_mode_switch;
--};
-+  };
- 
--The num_phys is the number of phys handled by the driver. *phys is an
-+The num_phys is the number of phys handled by the driver. `*phys` is an
- array that contains the configuration for each phy. The has_mode_switch
- property is a boolean flag that determines whether the SoC has USB host
- and device on a single pair of pins. If so, a special register has to
- be modified to change the internal routing of these pins between a USB
- device or host module.
- 
--For example the configuration for Exynos 4210 is following:
-+For example the configuration for Exynos 4210 is following::
- 
--const struct samsung_usb2_phy_config exynos4210_usb2_phy_config = {
-+  const struct samsung_usb2_phy_config exynos4210_usb2_phy_config = {
- 	.has_mode_switch        = 0,
- 	.num_phys		= EXYNOS4210_NUM_PHYS,
- 	.phys			= exynos4210_phys,
- 	.rate_to_clk		= exynos4210_rate_to_clk,
--}
-+  }
-+
-+- `int (*rate_to_clk)(unsigned long, u32 *)`
- 
--- int (*rate_to_clk)(unsigned long, u32 *)
- 	The rate_to_clk callback is to convert the rate of the clock
- 	used as the reference clock for the PHY module to the value
- 	that should be written in the hardware register.
- 
--The exynos4210_phys configuration array is as follows:
-+The exynos4210_phys configuration array is as follows::
- 
--static const struct samsung_usb2_common_phy exynos4210_phys[] = {
-+  static const struct samsung_usb2_common_phy exynos4210_phys[] = {
- 	{
- 		.label		= "device",
- 		.id		= EXYNOS4210_DEVICE,
-@@ -95,29 +98,30 @@ static const struct samsung_usb2_common_phy exynos4210_phys[] = {
- 		.power_off	= exynos4210_power_off,
- 	},
- 	{},
--};
-+  };
-+
-+- `int (*power_on)(struct samsung_usb2_phy_instance *);`
-+  `int (*power_off)(struct samsung_usb2_phy_instance *);`
- 
--- int (*power_on)(struct samsung_usb2_phy_instance *);
--- int (*power_off)(struct samsung_usb2_phy_instance *);
- 	These two callbacks are used to power on and power off the phy
- 	by modifying appropriate registers.
- 
- Final change to the driver is adding appropriate compatible value to the
- phy-samsung-usb2.c file. In case of Exynos 4210 the following lines were
--added to the struct of_device_id samsung_usb2_phy_of_match[] array:
-+added to the struct of_device_id samsung_usb2_phy_of_match[] array::
- 
--#ifdef CONFIG_PHY_EXYNOS4210_USB2
-+  #ifdef CONFIG_PHY_EXYNOS4210_USB2
- 	{
- 		.compatible = "samsung,exynos4210-usb2-phy",
- 		.data = &exynos4210_usb2_phy_config,
- 	},
--#endif
-+  #endif
- 
- To add further flexibility to the driver the Kconfig file enables to
- include support for selected SoCs in the compiled driver. The Kconfig
--entry for Exynos 4210 is following:
-+entry for Exynos 4210 is following::
- 
--config PHY_EXYNOS4210_USB2
-+  config PHY_EXYNOS4210_USB2
- 	bool "Support for Exynos 4210"
- 	depends on PHY_SAMSUNG_USB2
- 	depends on CPU_EXYNOS4210
-@@ -128,8 +132,8 @@ config PHY_EXYNOS4210_USB2
- 	  phys are available - device, host, HSCI0 and HSCI1.
- 
- The newly created file that supports the new SoC has to be also added to the
--Makefile. In case of Exynos 4210 the added line is following:
-+Makefile. In case of Exynos 4210 the added line is following::
- 
--obj-$(CONFIG_PHY_EXYNOS4210_USB2)       += phy-exynos4210-usb2.o
-+  obj-$(CONFIG_PHY_EXYNOS4210_USB2)       += phy-exynos4210-usb2.o
- 
- After completing these steps the support for the new SoC should be ready.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 9958d322e355..8941a73880e6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -13966,7 +13966,7 @@ M:	Sylwester Nawrocki <s.nawrocki@samsung.com>
- L:	linux-kernel@vger.kernel.org
- S:	Supported
- F:	Documentation/devicetree/bindings/phy/samsung-phy.txt
--F:	Documentation/phy/samsung-usb2.txt
-+F:	Documentation/phy/samsung-usb2.rst
- F:	drivers/phy/samsung/phy-exynos4210-usb2.c
- F:	drivers/phy/samsung/phy-exynos4x12-usb2.c
- F:	drivers/phy/samsung/phy-exynos5250-usb2.c
+ 	if (dma_set_mask(dev, DMA_BIT_MASK(64))) {
+ 		dev_warn(dev, "mydev: No suitable DMA available\n");
 -- 
 2.21.0
 
