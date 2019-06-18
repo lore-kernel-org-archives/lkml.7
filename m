@@ -2,87 +2,108 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9A8C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:09:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72F6C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:09:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8FC32147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:09:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560874169;
-	bh=luz2BG80Y7diNtNrxV0pl4BDT0sJKnNE1Rh6oQiOskc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZMWVIB7twZqrcmZVQt7+iMnbfinM4J5XlL2otIMyYCqQ8GKkOInCP74LpTG2jMDPX
-	 PlxU5pWsY13dwrwSLO/VtCKUbe2PZQjfaheHOFuZKquUfrCq8YwP7Nnunc30AjIsit
-	 UamiaBQx6Sdw13dC3R2idLetA9HK+hM0SQjElFn8=
+	by mail.kernel.org (Postfix) with ESMTP id 9EC1020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:09:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZD+cnENf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729928AbfFRQJ2 (ORCPT
+        id S1729942AbfFRQJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:09:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48822 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbfFRQJ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:09:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 922F420B1F;
-        Tue, 18 Jun 2019 16:09:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560874167;
-        bh=luz2BG80Y7diNtNrxV0pl4BDT0sJKnNE1Rh6oQiOskc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XHExTccndL3g9yvf1aFsUsmy6w937hKr4vVwO3iW/6NLN9+mNTLgmz0BbGA54nEDS
-         nTGu102GOSGmKjV9R2okDNlefYtveT9DJjkGpmrqjEV8rofrvxJaWLTtwJiJ1V5d0e
-         Cd4m9lnvu2JPwZt/tPRx/QThA8YFP2jBqGXYq3GU=
-Date:   Tue, 18 Jun 2019 18:09:24 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
-Message-ID: <20190618160924.GD27611@kroah.com>
-References: <20190617210759.929316339@linuxfoundation.org>
- <716d3e71-3ae0-709a-4705-db4c3c5ff3f9@kernel.org>
+        Tue, 18 Jun 2019 12:09:52 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44615 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729308AbfFRQJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:09:52 -0400
+Received: by mail-qk1-f196.google.com with SMTP id p144so8894189qke.11;
+        Tue, 18 Jun 2019 09:09:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=rQiuEFdt0fTstaA0/MpZUJTX6xtT8pMw4bAveIx8/K4=;
+        b=ZD+cnENfCyaSUCuacxA/KDm9k5lGVMefiwYAIxt5icjrii/c4T/W/bhRuEhsXzlWBJ
+         8/eHQFufyNiUZhZcjRRTWhZuDJemSumP1y2eVPUFyYeWo2ZQSpkUR8nbOTHsis5PNNm7
+         RutOpPq8gsWgSSWfot8Fs5P/G5hA4AKtsbpIQ9WmK2VwI5X5riIGijs4dKKaw1RL8i5W
+         L/V8qg1dvd5ruvkHJ1EOq7BuwYO63dqXjj/wzHAZSMZ05LpQCNVyIwRw2KsxlJHS98hw
+         cjzA4qDZj+826w0k/ua6s1HhaGdS1f+M2MSd2L7tMZQx+ZGa1xDIUcp6RqbK/Kjjs5F+
+         s5Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=rQiuEFdt0fTstaA0/MpZUJTX6xtT8pMw4bAveIx8/K4=;
+        b=fTpMwsIFa844eA3h5nMFllSx7dh+r/p+g3LA+61goQCDbzjZJwhbfpKe4/QlDVnpTk
+         7537i6DiOb5e50lVA/3vM0VK2MmTBzdwiIn6gctW6ff6Z/SY3iI87gn5NgiZfrtWlU3r
+         dqCDF7lImTgPXkihYSG1laOavBRVFTEHUvXt6tGrmZZDqFN6okVb/AXDsW7kPTO8DWJc
+         uL73LIQlyJCYi2Ln/pooUxe9c7JC8yJNdg8Z1o0AxfiRGR+71iY3YywFZmnIagEU7IEN
+         CzG14mhisSGUXAnqhiSrgn3UYJQhA0zkVZffhJ+6U2IGzp482rFuHsWpq21RKDpTaJnj
+         BaTg==
+X-Gm-Message-State: APjAAAXMA8+afaSn2TFTbf8SvIB5E26inoM9K0vx4/cdSwxAWEFRRKxs
+        CCqz/l8ZZQbXPJ4FHU/evEZylI/I76Pe/peZvn8=
+X-Google-Smtp-Source: APXvYqz8wlIOllfsr7z2UMNrFB+2AftBDZ0nWYL4xCEShU5vMFWhMOxf0XfeUZIjHXwjoB/Ao3/Vg2BqPeM2yb+sHeg=
+X-Received: by 2002:a37:9e4b:: with SMTP id h72mr92962125qke.297.1560874191287;
+ Tue, 18 Jun 2019 09:09:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <716d3e71-3ae0-709a-4705-db4c3c5ff3f9@kernel.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190516142342.28019-1-smuchun@gmail.com> <20190524190443.GB29565@kroah.com>
+ <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+ <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com> <20190618152859.GB1912@kroah.com>
+In-Reply-To: <20190618152859.GB1912@kroah.com>
+From:   Muchun Song <smuchun@gmail.com>
+Date:   Wed, 19 Jun 2019 00:09:40 +0800
+Message-ID: <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
+Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
+ glue directory
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        zhaowuyun@wingtech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 07:37:45AM -0600, shuah wrote:
-> On 6/17/19 3:08 PM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.1.12 release.
-> > There are 115 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
-> > 
-> > Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
-> > Anything received after that time might be too late.
-> > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.12-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
-> > 
-> 
-> Compiled and booted on my test system. No dmesg regressions.
+Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B46=E6=9C=8818=E6=
+=97=A5=E5=91=A8=E4=BA=8C =E4=B8=8B=E5=8D=8811:29=E5=86=99=E9=81=93=EF=BC=9A
+>
+> On Tue, Jun 18, 2019 at 09:40:13PM +0800, Muchun Song wrote:
+> > Ping guys ? I think this is worth fixing.
+>
+> That's great (no context here), but I need people to actually agree on
+> what the correct fix should be.  I had two different patches that were
+> saying they fixed the same issue, and that feels really wrong.
 
-Thanks for testing these and letting me know.
+Another patch:
+    Subject: [PATCH v3] drivers: core: Remove glue dirs early only
+when refcount is 1
 
-greg k-h
+My first v1 patch:
+    Subject: [PATCH] driver core: Fix use-after-free and double free
+on glue directory
+
+The above two patches are almost the same that fix is based on the refcount=
+.
+But why we change the solution from v1 to v4? Some discussion can
+refer to the mail:
+
+    Subject: [PATCH] driver core: Fix use-after-free and double free
+on glue directory
+
+Thanks.
+
+Yours,
+Muchun
