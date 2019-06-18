@@ -2,100 +2,163 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00A49C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17DB6C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:21:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C47FE2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:19:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560827995;
-	bh=cVwUgvpthCIfOlkvKKJ0rtxT+EtZpK0NgTGeSQI83jw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zJFxfkh6nTuTgmBhRzKBTmrhjkd5DmMacUE4ULz2pTTJHuuI+l/mcXNO57snun3Rs
-	 TgBCtdO9jxE27I3AeJH1NVYsHPzKSjFdYXnOqN0cSiA6zLgDfLtKxMBQ5QSmpX2lWG
-	 1iE2z+8jS+xvq1SF67xN3TraAlGXpVjKwO38K5KU=
+	by mail.kernel.org (Postfix) with ESMTP id E4A3A2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:21:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="FYOTl3p4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727337AbfFRDTy (ORCPT
+        id S1728524AbfFRDVI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 23:19:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36418 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRDTx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 23:19:53 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0EA82084B;
-        Tue, 18 Jun 2019 03:19:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560827992;
-        bh=cVwUgvpthCIfOlkvKKJ0rtxT+EtZpK0NgTGeSQI83jw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Xn/5ENu41WjIXlEdMNgtlz8x/UcPMWYZBFVrSZ1v6F2WUatIhnDocnRjh0fxeTztE
-         WjvED2rFL7hMo3+nXpAwC88KNK6eRxrpZYoQX5vtWXCLdVN1S2ZXQeuC4IJi8cqytv
-         5vaBwuiFCQAakXrgbLNXgu9EZHDHmaHreJDZ+S5c=
-Date:   Mon, 17 Jun 2019 20:19:51 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] crypto: serpent - mark __serpent_setkey_sbox noinline
-Message-ID: <20190618031951.GA2266@sol.localdomain>
-References: <20190617115927.3813471-1-arnd@arndb.de>
+        Mon, 17 Jun 2019 23:21:08 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:34956 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRDVI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 23:21:08 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I399uk137012;
+        Tue, 18 Jun 2019 03:20:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=O/i7AMMkUKKosjfAFp+SY89OApm68MO3nGMJOcuM8UY=;
+ b=FYOTl3p47yilQEAD2tOSXuRWh3gNFBayMh3bDKZ5lPjaRURvbbcEuz68TSWGsfFiXaUS
+ SA84AqA7I21wkzycLfTRKuwFe//sh0OuzkV8khR9BIigtRJMtITTLUI4hbnFiLxRKl5h
+ NPKtYuI/J2ovXQW97DEIYIqebwSfMg6SxLj7RUf1qRjsd3OWvpC7CiOs6G4kBqp4dbFS
+ AzRvyVjId6RuLbufF3V9kR+PhvPRo4CcOgl2g2GgcJ+1W2AX7vuGdjjItKX4d6Xq9UJV
+ lvHh4fVbZyL/omBrLiYv6/HOEN8toK/SlCH185oHS41f1Yn1fIW2ZSr5/uG9Mjc9hx04 0A== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2130.oracle.com with ESMTP id 2t4r3thqse-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 03:20:07 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I3JKFx046047;
+        Tue, 18 Jun 2019 03:20:07 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+        by userp3020.oracle.com with ESMTP id 2t5h5tg1qt-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Jun 2019 03:20:07 +0000
+Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5I3K667047272;
+        Tue, 18 Jun 2019 03:20:06 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2t5h5tg1qk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 03:20:06 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5I3K5nB021569;
+        Tue, 18 Jun 2019 03:20:05 GMT
+Received: from localhost (/10.159.211.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 17 Jun 2019 20:20:05 -0700
+Date:   Mon, 17 Jun 2019 23:19:59 -0400
+From:   Kris Van Hees <kris.van.hees@oracle.com>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Kris Van Hees <kris.van.hees@oracle.com>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, dtrace-devel@oss.oracle.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+Message-ID: <20190618031959.GI8794@oracle.com>
+References: <20190521213648.GK2422@oracle.com>
+ <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com>
+ <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+ <20190523051608.GP2422@oracle.com>
+ <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
+ <20190618012509.GF8794@oracle.com>
+ <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
+ <20190618015442.GG8794@oracle.com>
+ <CAADnVQ+zAwoH_mjJLhfEgXHHz+3WYkzhEm-mEObP0koLiSvknw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617115927.3813471-1-arnd@arndb.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAADnVQ+zAwoH_mjJLhfEgXHHz+3WYkzhEm-mEObP0koLiSvknw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=875 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906180024
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Mon, Jun 17, 2019 at 08:01:52PM -0700, Alexei Starovoitov wrote:
+> On Mon, Jun 17, 2019 at 6:54 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
+> >
+> > It is not hypothetical.  The folowing example works fine:
+> >
+> > static int noinline bpf_action(void *ctx, long fd, long buf, long count)
+> > {
+> >         int                     cpu = bpf_get_smp_processor_id();
+> >         struct data {
+> >                 u64     arg0;
+> >                 u64     arg1;
+> >                 u64     arg2;
+> >         }                       rec;
+> >
+> >         memset(&rec, 0, sizeof(rec));
+> >
+> >         rec.arg0 = fd;
+> >         rec.arg1 = buf;
+> >         rec.arg2 = count;
+> >
+> >         bpf_perf_event_output(ctx, &buffers, cpu, &rec, sizeof(rec));
+> >
+> >         return 0;
+> > }
+> >
+> > SEC("kprobe/ksys_write")
+> > int bpf_kprobe(struct pt_regs *ctx)
+> > {
+> >         return bpf_action(ctx, ctx->di, ctx->si, ctx->dx);
+> > }
+> >
+> > SEC("tracepoint/syscalls/sys_enter_write")
+> > int bpf_tp(struct syscalls_enter_write_args *ctx)
+> > {
+> >         return bpf_action(ctx, ctx->fd, ctx->buf, ctx->count);
+> > }
+> >
+> > char _license[] SEC("license") = "GPL";
+> > u32 _version SEC("version") = LINUX_VERSION_CODE;
+> 
+> Great. Then you're all set to proceed with user space dtrace tooling, right?
 
-On Mon, Jun 17, 2019 at 01:59:08PM +0200, Arnd Bergmann wrote:
-> The same bug that gcc hit in the past is apparently now showing
-> up with clang, which decides to inline __serpent_setkey_sbox:
-> 
-> crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
-> 
-> Marking it 'noinline' reduces the stack usage from 2112 bytes to
-> 192 and 96 bytes, respectively, and seems to generate more
-> useful object code.
-> 
-> Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  crypto/serpent_generic.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
-> index e57757904677..183661faf420 100644
-> --- a/crypto/serpent_generic.c
-> +++ b/crypto/serpent_generic.c
-> @@ -225,7 +225,7 @@
->  	x4 ^= x2;					\
->  	})
->  
-> -static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
-> +static void noinline __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
->  {
->  	k += 100;
->  	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
-> -- 
-> 2.20.0
-> 
+I can indeed proceed with the initial basics, yes, and have started.  I hope
+to have a first bare bones patch for review sometime next week.
 
-A few nits: 'static noinline void' seems to be the much more common order,
-presumably to match 'static inline void'.  Line breaking at 80 characters would
-also be nice.  Finally, a brief comment explaining the purpose of 'noinline'
-might be helpful for people working with this code later.
+> What you'll discover thought that it works only for simplest things
+> like above. libbpf assumes that everything in single elf will be used
+> and passes the whole thing to the kernel.
+> The verifer removes dead code only from single program.
+> It disallows unused functions. Hence libbpf needs to start doing
+> more "linker work" than it does today.
+> When it loads .o it needs to pass to the kernel only the functions
+> that are used by the program.
+> This work should be straightforward to implement.
+> Unfortunately no one had time to do it.
 
-- Eric
+Ah yes, I see what you mean.  I'll work on that next since I will definitely
+be needing that.
+
+> It's also going to be the first step to multi-elf support.
+> libbpf would need to do the same "linker work" across .o-s.
