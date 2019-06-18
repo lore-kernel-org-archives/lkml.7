@@ -2,92 +2,70 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E123C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:59:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E966C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C48620873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:59:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 493A420873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:00:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560873634;
+	bh=aeNXodnXi36O/klAfsttiGYiQgAFv2Vf36sQFe+u0eY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fZkZnj3qsvVG8W1I99WAW/PyL4zENbnLwgPM+FniZtjAu5Vw4eVtyCaDjIIg71UFQ
+	 S0jxs4eTfIqDhqfUQMen4a5TofdqEAqwpOI6meQRuS+Q3mivga9YU5fB6IbAn/6331
+	 Kgjg5x1ZoAGx8gN+7Hv+z8y3Jo/JQkf31veCb1OQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729770AbfFRP7k (ORCPT
+        id S1729619AbfFRQAd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:59:40 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:40246 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1729472AbfFRP7k (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:59:40 -0400
-Received: (qmail 5919 invoked by uid 2102); 18 Jun 2019 11:59:39 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 18 Jun 2019 11:59:39 -0400
-Date:   Tue, 18 Jun 2019 11:59:39 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Oliver Neukum <oneukum@suse.com>, Tejun Heo <tj@kernel.org>
-cc:     USB list <linux-usb@vger.kernel.org>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [RFC] deadlock with flush_work() in UAS
-In-Reply-To: <1560871774.3184.16.camel@suse.com>
-Message-ID: <Pine.LNX.4.44L0.1906181156370.1659-100000@iolanthe.rowland.org>
+        Tue, 18 Jun 2019 12:00:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42576 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729209AbfFRQAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:00:33 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D449D20873;
+        Tue, 18 Jun 2019 16:00:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560873632;
+        bh=aeNXodnXi36O/klAfsttiGYiQgAFv2Vf36sQFe+u0eY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=m5LIVr9M8OZSuB1bXNMzm+jfJiRw9O4tPWEMbbNrZUDDtLUCDyA1WhBgwHSoPtb40
+         PWcRmjVnAMHMv3AbtlL9s2QwunuNGqfJwSDkfL4RLbq9GA61UJuycuNv/91401cTb1
+         e020iCK0MRTinfdSnEbcS0MjrszGsZbbyN89UQZA=
+Date:   Tue, 18 Jun 2019 18:00:29 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/6] dma: amba-pl08x: no need to cast away call to
+ debugfs_create_file()
+Message-ID: <20190618160029.GA22218@kroah.com>
+References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
+ <20190614054613.GB2962@vkoul-mobl>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614054613.GB2962@vkoul-mobl>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Tejun and other workqueue maintainers:
-
-On Tue, 18 Jun 2019, Oliver Neukum wrote:
-
-> Am Dienstag, den 18.06.2019, 11:29 -0400 schrieb Alan Stern:
-> > On Tue, 18 Jun 2019, Oliver Neukum wrote:
-> > 
-> > > Hi,
-> > > 
-> > > looking at those deadlocks it looks to me like UAS can
-> > > deadlock on itself. What do you think?
-> > > 
-> > >       Regards
-> > >               Oliver
-> > > 
-> > > From 2d497f662e6c03fe9e0a75e05b64d52514e890b3 Mon Sep 17 00:00:00 2001
-> > > From: Oliver Neukum <oneukum@suse.com>
-> > > Date: Tue, 18 Jun 2019 15:03:56 +0200
-> > > Subject: [PATCH] UAS: fix deadlock in error handling and PM flushing work
-> > > 
-> > > A SCSI error handler and block runtime PM must not allocate
-> > > memory with GFP_KERNEL. Furthermore they must not wait for
-> > > tasks allocating memory with GFP_KERNEL.
-> > > That means that they cannot share a workqueue with arbitrary tasks.
-> > > 
-> > > Fix this for UAS using a private workqueue.
-> > 
-> > I'm not so sure that one long-running task in a workqueue will block 
-> > other tasks.  Workqueues have variable numbers of threads, added and 
-> > removed on demand.  (On the other hand, when new threads need to be 
-> > added the workqueue manager probably uses GFP_KERNEL.)
+On Fri, Jun 14, 2019 at 11:16:13AM +0530, Vinod Koul wrote:
+> On 12-06-19, 14:25, Greg Kroah-Hartman wrote:
+> > No need to check the return value of debugfs_create_file(), so no need
+> > to provide a fake "cast away" of the return value either.
 > 
-> Do we have a guarantee it will reschedule already scheduled works?
-> The deadlock would be something like
-> 
-> uas_pre_reset() -> uas_wait_for_pending_cmnds() ->
-> flush_work(&devinfo->work) -> kmalloc() -> DEADLOCK
-> 
-> You can also make this chain with uas_suspend()
-> 
-> > Even if you disagree, perhaps we should have a global workqueue with a
-> > permanently set noio flag.  It could be shared among multiple drivers
-> > such as uas and the hub driver for purposes like this.  (In fact, the 
-> > hub driver already has its own dedicated workqueue.)
-> 
-> That is a good idea. But does UAS need WQ_MEM_RECLAIM?
+> Applied all after fixing the subsystem tag (dmaengine), thanks
 
-These are good questions, and I don't have the answers.  Perhaps Tejun 
-or someone else on LKML can help.
+Oops, messed that up, sorry.  Thanks for applying them!
 
-Alan Stern
-
+greg k-h
