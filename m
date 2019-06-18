@@ -2,377 +2,123 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ADBFC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0087DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37BB20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C539520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:05:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jacuiXt3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0KpQEdS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730537AbfFRUFE (ORCPT
+        id S1730567AbfFRUFU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:05:04 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:18791 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfFRUFD (ORCPT
+        Tue, 18 Jun 2019 16:05:20 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44938 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfFRUFU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:05:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0943ec0002>; Tue, 18 Jun 2019 13:05:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 13:04:59 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 13:04:59 -0700
-Received: from [10.2.168.217] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 20:04:56 +0000
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Stephen Warren <swarren@wwwdotorg.org>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>,
-        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
- <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
- <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
- <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
- <cff9b6a2-dc33-d03b-9945-799b158deb07@nvidia.com>
- <232324b1-c0eb-ba1b-0fd0-31fcbd701e07@gmail.com>
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-Message-ID: <d10d6e04-5200-ad98-15ca-62d928ced275@nvidia.com>
-Date:   Tue, 18 Jun 2019 13:04:57 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 16:05:20 -0400
+Received: by mail-ed1-f66.google.com with SMTP id k8so23459731edr.11;
+        Tue, 18 Jun 2019 13:05:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KWnI481UmCPDjIZ0XrCY42jsxMovXIO86L/MeMLISRM=;
+        b=n0KpQEdSGQ5PKuTkB+/Z06u4nECf6mkQJz7Meo5OnYtsgDl9meBsiq2o00SAdXNvet
+         TTZnNi4aG81ep1rsOQ8bk27QDuNzIaEBHYHNCna/jJ3ZA0e/oihc+yT36MSr0WpbMkvm
+         GmmY4tcpSFcxjVLPzAmitdto6JN00+J3BuG+IOnATyFlzwZ++y9lQmnJYKiUHTDNfBOV
+         KEScEjf/R/o9RXWmtxuqWvS92gPK7Ifh/FzIPaSCgpt2iV87dA3DHuDM1FBKPfblIrTk
+         3/Cez3+C6gwBf/Uab6uUaVzjgf5mngEVZQNwRe4lGCKRWhdGXHe4R2v4IsOtz2fjpnWl
+         3gCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KWnI481UmCPDjIZ0XrCY42jsxMovXIO86L/MeMLISRM=;
+        b=In4HBfPtd4k9ssz2Xcy8uoAXmbGyq2t8VtVnpMGzOkdXudsnsnsra6h2LD1rNu9oFG
+         su1iPoJRNWOAdM9wC/U5GhD4GmggFVZB8SJzTgDIHr4E/icOkWONqLGMlhL4gzU/PkUv
+         NA9rNnJT4Nb01o5nKEgWDA9Gag5r+tAn3EwXs3hTd5En23F6Un0dV4EQbkZoZ7LgEcJf
+         dVaFj1jk/myu0PtqzaigRGmZXd8eWDbYrTXhL1uRqoWpvDV8O+TqPfAA4RUTZUoBI1Ut
+         HoLBIwauL+Ng4Kgz+9Ej22cwuOPQVFxZS5Ho4kSvSWhxwkbVVTsjnyKl3Qp9qrAgf7XX
+         HNmA==
+X-Gm-Message-State: APjAAAUjQzUx88/QGkEfgyipqQB0DjmTXSKnvKhTUWAY5PZtp9RGWmb9
+        uaRt4Su7HM4RxwbRQO4uVxisAckjQ2mEvNslq4w=
+X-Google-Smtp-Source: APXvYqzqoo0HXHFjoJtbtPpzDUDsVTfLgbc+FKH9YUlmQ4CiuTBdrnO5gZfvmnGS+KnlnynqpcJaiC2XfJXdmzWQW9I=
+X-Received: by 2002:a50:a53a:: with SMTP id y55mr110598370edb.147.1560888318156;
+ Tue, 18 Jun 2019 13:05:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <232324b1-c0eb-ba1b-0fd0-31fcbd701e07@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560888300; bh=wKTfZmw/xGL8bt+utHmPZZHVflnL5gT6PRBBCJ9fKFE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=jacuiXt3FljLffA0IpVdfXt+1RDIWKAVA21jep/KkLglM7mCTmyNqnUjpFqhbrDeT
-         5I1CKCqDEzESx/SWQLebyvG/loYEGlr7+ykjdgtG46VKYPiRwKLKgiUnKCeFm4YCXH
-         6ofnUyzOjqjIuhy3WidJP+CLwTtCVMkolktGRYdvzm5vLpaDSPyI2msuY3NG4IMMNc
-         WYx3BkHoHhOyPl/fRy5JOlZaxYSr5pIL8kI8cZCs7rCt7+jzbZ82vx8dYngFKsv9tJ
-         7w1TgtS6jqsHY/6pnddk7/Shi+Gy6o9RR0x4W6rkPnv0+37KYDm306578mobZVqI5W
-         DYob2E/qu/B6g==
+References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
+ <20190618161036.GA28190@kroah.com> <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
+ <20190618.094759.539007481404905339.davem@davemloft.net> <20190618171516.GA17547@kroah.com>
+ <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
+ <20190618173906.GB3649@kroah.com> <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
+In-Reply-To: <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 18 Jun 2019 16:04:42 -0400
+Message-ID: <CAF=yD-L8ZRwVJmp4WJcNW-B_1JdSAM9QmMHOQJ=x_nd24v5Qnw@mail.gmail.com>
+Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Fred Klassen <fklassen@appneta.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 18, 2019 at 2:59 PM Willem de Bruijn
+<willemdebruijn.kernel@gmail.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 1:39 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Jun 18, 2019 at 01:27:14PM -0400, Willem de Bruijn wrote:
+> > > On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
+> > > > > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> > > > > Date: Tue, 18 Jun 2019 12:37:33 -0400
+> > > > >
+> > > > > > Specific to the above test, I can add a check command testing
+> > > > > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
+> > > > > > way to denote "skipped", so this would just return "pass". Sounds a
+> > > > > > bit fragile, passing success when a feature is absent.
+> > > > >
+> > > > > Especially since the feature might be absent because the 'config'
+> > > > > template forgot to include a necessary Kconfig option.
+> > > >
+> > > > That is what the "skip" response is for, don't return "pass" if the
+> > > > feature just isn't present.  That lets people run tests on systems
+> > > > without the config option enabled as you say, or on systems without the
+> > > > needed userspace tools present.
+> > >
+> > > I was not aware that kselftest had this feature.
+> > >
+> > > But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
+> > > I'll send a patch and will keep that in mind for future tests.
+> >
+> > Wonderful, thanks for doing that!
+>
+> One complication: an exit code works for a single test, but here
+> multiple test variants are run from a single shell script.
+>
+> I see that in similar such cases that use the test harness
+> (ksft_test_result_skip) the overall test returns success as long as
+> all individual cases return either success or skip.
+>
+> I think it's preferable to return KSFT_SKIP if any of the cases did so
+> (and none returned an error). I'll do that unless anyone objects.
 
-On 6/18/19 1:00 PM, Dmitry Osipenko wrote:
-> 18.06.2019 20:34, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> On 6/18/19 9:50 AM, Sowjanya Komatineni wrote:
->>> On 6/18/19 8:41 AM, Stephen Warren wrote:
->>>> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
->>>>> 18.06.2019 12:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>>> 18.06.2019 10:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82=
-:
->>>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
->>>>>>> and registers them to syscore so the pinmux settings are restored
->>>>>>> before the devices resume.
->>>>>>>
->>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>> ---
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 6=
-2 ++++++++++++++++++++++++++++++++
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=
-=C2=A0 5 +++
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>>>>>>  =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
->>>>>>>  =C2=A0 7 files changed, 84 insertions(+)
->>>>>>>
->>>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> index 34596b246578..ceced30d8bd1 100644
->>>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>> @@ -20,11 +20,16 @@
->>>>>>>  =C2=A0 #include <linux/pinctrl/pinmux.h>
->>>>>>>  =C2=A0 #include <linux/pinctrl/pinconf.h>
->>>>>>>  =C2=A0 #include <linux/slab.h>
->>>>>>> +#include <linux/syscore_ops.h>
->>>>>>>  =C2=A0 =C2=A0 #include "../core.h"
->>>>>>>  =C2=A0 #include "../pinctrl-utils.h"
->>>>>>>  =C2=A0 #include "pinctrl-tegra.h"
->>>>>>>  =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
->>>>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
->>>>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
->>>>>>> +
->>>>>>>  =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank=
-, u32 reg)
->>>>>>>  =C2=A0 {
->>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg)=
-;
->>>>>>> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(st=
-ruct tegra_pmx *pmx)
->>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0 pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>>  =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, =
-0, EMMC2_PAD_CFGPADCTRL_0);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARK=
-ING;
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0,=
- EMMC2_PAD_CFGPADCTRL_0);
->>>>>>> +
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, =
-0, EMMC4_PAD_CFGPADCTRL_0);
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARK=
-ING;
->>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0,=
- EMMC4_PAD_CFGPADCTRL_0);
->>>>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>>>> +}
->>>>>> Is there any reason why parked_bit can't be changed to parked_bitmas=
-k like I was
->>>>>> asking in a comment to v2?
->>>>>>
->>>>>> I suppose that it's more preferable to keep pinctrl-tegra.c platform=
--agnostic for
->>>>>> consistency when possible, hence adding platform specifics here shou=
-ld be discouraged.
->>>>>> And then the parked_bitmask will also result in a proper hardware de=
-scription in the code.
->>>>>>
->>>>> I'm now also vaguely recalling that Stephen Warren had some kind of a=
- "code generator"
->>>>> for the pinctrl drivers. So I guess all those tables were auto-genera=
-ted initially.
->>>>>
->>>>> Stephen, maybe you could adjust the generator to take into account th=
-e bitmask (of
->>>>> course if that's a part of the generated code) and then re-gen it all=
- for Sowjanya?
->>>> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that =
-generate
->>>> tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py. IIRC, tegra-p=
-inctrl.c (the core
->>>> file) isn't auto-generated. Sowjanya is welcome to send a patch to tha=
-t repo if the code
->>>> needs to be updated.
->>>
->>> Hi Dmitry,
->>>
->>> Just want to be clear on my understanding of your request.
->>>
->>> "change parked_bit to parked_bitmask" are you requested to change parke=
-d_bit of PINGROUP
->>> and DRV_PINGROUP to use bitmask value rather than bit position inorder =
-to have parked bit
->>> configuration for EMMC PADs as well to happen by masking rather than ch=
-ecking for
->>> existence of parked_bit?
->>>
->>> Trying to understand the reason/benefit for changing parked_bit to park=
-ed_bitmask.
->> Also, Park bits in CFGPAD registers are not common for all CFGPAD regist=
-ers. Park bits are
->> available only for EMMC and also those bits are used for something else =
-on other CFGPAD
->> registers so bitmask can't be common and this also need an update to DRV=
-_PINGROUP macro args
->> just only to handle EMMC parked_bitmask. So not sure of the benefit in u=
-sing bitmask rather
-> Hi Sowjanya,
->
-> The main motivation is to describe hardware properly in the drivers. Why =
-to make a
-> hacky-looking workaround while you can make things properly? Especially i=
-f that doesn't take
-> much effort.
->
-> Stephen, thank you very much for the pointer to the script. Looks like it=
- should be easy to
-> modify the script accordingly to the required change.
->
-> Sowjanya, below is a draft of the change that I'm suggesting. I see this =
-as two separate
-> patches: first converts drivers to use parked_bitmask, second adds suspen=
-d-resume support.
->
-> Please note that in the end it's up to you and Tegra/PINCTRL maintainers =
-to decide if this
-> is a worthwhile change that I'm suggesting. In my opinion it is much bett=
-er to have a
-> generic solution rather than to have a special quirk solely for T210.
+http://patchwork.ozlabs.org/patch/1118309/
 
-OK I can change it. Just thought to find out the reason as I see other=20
-pinmux field also using as bits rather than bitmask.
-
-Got it now. Will update in next version.
-
->
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegr=
-a/pinctrl-tegra.c
-> index 34596b246578..4150da74bd44 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
-> @@ -613,9 +613,9 @@ static void tegra_pinctrl_clear_parked_bits(struct te=
-gra_pmx *pmx)
->
->   	for (i =3D 0; i < pmx->soc->ngroups; ++i) {
->   		g =3D &pmx->soc->groups[i];
-> -		if (g->parked_bit >=3D 0) {
-> +		if (g->parked_bitmask !=3D -1) {
->   			val =3D pmx_readl(pmx, g->mux_bank, g->mux_reg);
-> -			val &=3D ~(1 << g->parked_bit);
-> +			val &=3D ~g->parked_bitmask;
->   			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->   		}
->   	}
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegr=
-a/pinctrl-tegra.h
-> index 287702660783..875eb7a1d838 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
-> @@ -96,7 +96,7 @@ struct tegra_function {
->    * @tri_reg:		Tri-state register offset.
->    * @tri_bank:		Tri-state register bank.
->    * @tri_bit:		Tri-state register bit.
-> - * @parked_bit:		Parked register bit. -1 if unsupported.
-> + * @parked_bitmask:	Parked register bitmask. -1 if unsupported.
->    * @einput_bit:		Enable-input register bit.
->    * @odrain_bit:		Open-drain register bit.
->    * @lock_bit:		Lock register bit.
-> @@ -146,7 +146,7 @@ struct tegra_pingroup {
->   	s32 mux_bit:6;
->   	s32 pupd_bit:6;
->   	s32 tri_bit:6;
-> -	s32 parked_bit:6;
-> +	s32 parked_bitmask:26;
->   	s32 einput_bit:6;
->   	s32 odrain_bit:6;
->   	s32 lock_bit:6;
-> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/t=
-egra/pinctrl-tegra210.c
-> index 0b56ad5c9c1c..d2ba13466e06 100644
-> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
-> @@ -1302,7 +1302,7 @@ static struct tegra_function tegra210_functions[] =
-=3D {
->   		.lock_bit =3D 7,						\
->   		.ioreset_bit =3D -1,					\
->   		.rcv_sel_bit =3D PINGROUP_BIT_##e_io_hv(10),		\
-> -		.parked_bit =3D 5,					\
-> +		.parked_bitmask =3D BIT(5),				\
->   		.hsm_bit =3D PINGROUP_BIT_##hsm(9),			\
->   		.schmitt_bit =3D 12,					\
->   		.drvtype_bit =3D PINGROUP_BIT_##drvtype(13),		\
-> @@ -1320,7 +1320,7 @@ static struct tegra_function tegra210_functions[] =
-=3D {
->   	}
->
->   #define DRV_PINGROUP(pg_name, r, drvdn_b, drvdn_w, drvup_b, drvup_w,	\
-> -		     slwr_b, slwr_w, slwf_b, slwf_w)			\
-> +		     slwr_b, slwr_w, slwf_b, slwf_w, prk_mask)		\
->   	{								\
->   		.name =3D "drive_" #pg_name,				\
->   		.pins =3D drive_##pg_name##_pins,				\
-> @@ -1335,7 +1335,7 @@ static struct tegra_function tegra210_functions[] =
-=3D {
->   		.rcv_sel_bit =3D -1,					\
->   		.drv_reg =3D DRV_PINGROUP_REG(r),				\
->   		.drv_bank =3D 0,						\
-> -		.parked_bit =3D -1,					\
-> +		.parked_bitmask =3D prk_mask,				\
->   		.hsm_bit =3D -1,						\
->   		.schmitt_bit =3D -1,					\
->   		.lpmd_bit =3D -1,						\
-> @@ -1516,31 +1516,31 @@ static const struct tegra_pingroup tegra210_group=
-s[] =3D {
->   	PINGROUP(pz5,                  SOC,        RSVD1,  RSVD2, RSVD3, 0x329=
-0, N,   N,       N,
->       -1,    -1,      -1,      -1,      -1,      -1,     -1,     -1,     =
--1),
->
->   	/* pg_name, r, drvdn_b, drvdn_w, drvup_b, drvup_w, slwr_b, slwr_w, slw=
-f_b, slwf_w */
-> -	DRV_PINGROUP(pa6,    0x9c0, 12, 5,  20, 5,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pcc7,   0x9c4, 12, 5,  20, 5,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pe6,    0x9c8, 12, 5,  20, 5,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pe7,    0x9cc, 12, 5,  20, 5,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(ph6,    0x9d0, 12, 5,  20, 5,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pk0,    0x9d4, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk1,    0x9d8, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk2,    0x9dc, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk3,    0x9e0, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk4,    0x9e4, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk5,    0x9e8, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk6,    0x9ec, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pk7,    0x9f0, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pl0,    0x9f4, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pl1,    0x9f8, -1, -1, -1, -1, 28, 2,  30, 2),
-> -	DRV_PINGROUP(pz0,    0x9fc, 12, 7,  20, 7,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pz1,    0xa00, 12, 7,  20, 7,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pz2,    0xa04, 12, 7,  20, 7,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pz3,    0xa08, 12, 7,  20, 7,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pz4,    0xa0c, 12, 7,  20, 7,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(pz5,    0xa10, 12, 7,  20, 7,  -1, -1, -1, -1),
-> -	DRV_PINGROUP(sdmmc1, 0xa98, 12, 7,  20, 7,  28, 2,  30, 2),
-> -	DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
-> -	DRV_PINGROUP(sdmmc3, 0xab0, 12, 7,  20, 7,  28, 2,  30, 2),
-> -	DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
-> +	DRV_PINGROUP(pa6,    0x9c0, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pcc7,   0x9c4, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pe6,    0x9c8, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pe7,    0x9cc, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(ph6,    0x9d0, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pk0,    0x9d4, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk1,    0x9d8, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk2,    0x9dc, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk3,    0x9e0, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk4,    0x9e4, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk5,    0x9e8, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk6,    0x9ec, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pk7,    0x9f0, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pl0,    0x9f4, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pl1,    0x9f8, -1, -1, -1, -1, 28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(pz0,    0x9fc, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pz1,    0xa00, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pz2,    0xa04, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pz3,    0xa08, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pz4,    0xa0c, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(pz5,    0xa10, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
-> +	DRV_PINGROUP(sdmmc1, 0xa98, 12, 7,  20, 7,  28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2, 0x7ffc000),
-> +	DRV_PINGROUP(sdmmc3, 0xab0, 12, 7,  20, 7,  28, 2,  30, 2, -1),
-> +	DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2, 0x7ffc000),
->   };
->
->   static const struct tegra_pinctrl_soc_data tegra210_pinctrl =3D {
+The shell script scaffolding can perhaps be reused for other similar tests.
