@@ -2,110 +2,110 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5460EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CDBC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DCEF2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:17:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OqbFvTiP"
+	by mail.kernel.org (Postfix) with ESMTP id 1CB8720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbfFRQRA (ORCPT
+        id S1729950AbfFRQRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:17:00 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34258 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729496AbfFRQQe (ORCPT
+        Tue, 18 Jun 2019 12:17:50 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43911 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729423AbfFRQRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:16:34 -0400
-Received: by mail-lj1-f194.google.com with SMTP id p17so176367ljg.1;
-        Tue, 18 Jun 2019 09:16:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=fiDbgWSuMaVMjc324RSS41lxTRe5uMme7Lnt8EdVzLs=;
-        b=OqbFvTiP3qFRvTdrI+qWbkQB4HGZushXrOtI04RqNu3nkaUX/ziogPybWa/uaQ6jnx
-         hzGLSK4FI809qkO3bu+Kl48b5Cupwda0ypWaGgmsBoSitfD0pKKe435TiaXsj5zxg14Y
-         vAikyUoeop3BStqr4gB5HJ2MpYWZ3gYZuPF/66I3Fs1nsdR3EBqGxMmpqcDuXcRfjO+1
-         b6TfFHqrmwBY5cnBh7xajMzhZ6/lsQ7vb8BiB4IbqsQAIF5yhabKLr6v/nPLfMZML80e
-         hOI2nXeidbP+PiB+gZVk47PtuAEzSOMz4sk3to3btLHN+CEpbIlOzGMkctS7Umm79am0
-         6DYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=fiDbgWSuMaVMjc324RSS41lxTRe5uMme7Lnt8EdVzLs=;
-        b=X9XEnNIQrOC/VAB7Lcvaty8s/1DEAusUdN5fW/swzXtkmzJJccRNDud22x3buk3HXo
-         nhgyRgv70HO/95RY541hzth8eGZXIBToufbEw4DeL4tR6jbsY+yVpugBfwmfFz/VIf1a
-         3CXgT6wzDaKMe0uhdcKBlXQJX3riTGDzkc/32IsXRdm7kUR+J4KU/f1Z49Ec8sGgekAo
-         F+yNHrE5E3lqRpjbnQBH2To/1NBtnAfVGzkYcINNk6/YFZKt38cETfkkosoDkefAyyCm
-         CqZoW1l/I2RpRM10FpeqxF0Pczcnknj6C1KcCPHNY23TT/UWkS/1SUPUyXwg45refhfV
-         gRUg==
-X-Gm-Message-State: APjAAAUCGukJ3W9UZ4YikzA0ZEp1W6mfgAYMThtUX3QZ9DtdNsLYn5Ob
-        XYMa5c7vDsPz88gGvqCwEWg=
-X-Google-Smtp-Source: APXvYqz1g5qDjpXCaRuXHc43SAtsUCYLwQipqckqG2izu5e3CqXn9H0HQ88Sl5Ka3eu0crkgsNXsAA==
-X-Received: by 2002:a2e:9b48:: with SMTP id o8mr16355885ljj.122.1560874592102;
-        Tue, 18 Jun 2019 09:16:32 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id v15sm2273295lfd.53.2019.06.18.09.16.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 09:16:31 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] media: dt: bindings: tegra-vde: Document new optional IOMMU property
-Date:   Tue, 18 Jun 2019 19:14:54 +0300
-Message-Id: <20190618161458.20499-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190618161458.20499-1-digetx@gmail.com>
-References: <20190618161458.20499-1-digetx@gmail.com>
+        Tue, 18 Jun 2019 12:17:50 -0400
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hdGns-0000w4-7C; Tue, 18 Jun 2019 18:17:48 +0200
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1hdGnr-0008Mt-Ge; Tue, 18 Jun 2019 18:17:47 +0200
+Date:   Tue, 18 Jun 2019 18:17:47 +0200
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
+        linus.walleij@linaro.org, kernel@pengutronix.de,
+        linux-gpio@vger.kernel.org, t.scherer@eckelmann.de
+Subject: Re: [PATCH v2 1/2] include: linux: siox: more for declaring siox
+ drivers
+Message-ID: <20190618161747.65y52fqr6toavdtb@pengutronix.de>
+References: <1560854427-27537-1-git-send-email-info@metux.net>
+ <1560854427-27537-2-git-send-email-info@metux.net>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560854427-27537-2-git-send-email-info@metux.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All NVIDIA Tegra SoC generations provide IOMMU support for the video
-decoder engine. Document new optional device-tree property that connects
-VDE with the IOMMU provider.
+Hello,
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Cc: += Thorsten Scherer
 
-diff --git a/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt b/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-index 7302e949e662..602169b8aa19 100644
---- a/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-+++ b/Documentation/devicetree/bindings/media/nvidia,tegra-vde.txt
-@@ -35,6 +35,7 @@ Optional properties:
- - resets : Must contain an entry for each entry in reset-names.
- - reset-names : Must include the following entries:
-   - mc
-+- iommus: Must contain phandle to the IOMMU device node.
- 
- Example:
- 
-@@ -59,4 +60,5 @@ video-codec@6001a000 {
- 	clocks = <&tegra_car TEGRA20_CLK_VDE>;
- 	reset-names = "vde", "mc";
- 	resets = <&tegra_car 61>, <&mc TEGRA20_MC_RESET_VDE>;
-+	iommus = <&mc TEGRA_SWGROUP_VDE>;
- };
+On Tue, Jun 18, 2019 at 12:40:26PM +0200, Enrico Weigelt, metux IT consult wrote:
+> From: Enrico Weigelt <info@metux.net>
+> 
+> Add more helper macros for trivial driver init cases, similar to the
+> already existing module_platform_driver() or module_i2c_driver().
+> 
+> This helps to reduce driver init boilerplate.
+> 
+> Signed-off-by: Enrico Weigelt <info@metux.net>
+
+I like the change. Just noticed that the Subject line is a bit strange
+though. if "more for" is proper English then it's news to me. I'd write:
+
+	siox: add helper macro to simplify driver registration
+
+> ---
+>  include/linux/siox.h | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/include/linux/siox.h b/include/linux/siox.h
+> index d79624e..d53b2b2 100644
+> --- a/include/linux/siox.h
+> +++ b/include/linux/siox.h
+> @@ -75,3 +75,12 @@ static inline void siox_driver_unregister(struct siox_driver *sdriver)
+>  {
+>  	return driver_unregister(&sdriver->driver);
+>  }
+> +
+> +/* module_siox_driver() - Helper macro for drivers that don't do
+
+I'd prefer /* on a separate line as documented in
+Documentation/process/coding-style.rst (for non-net code).
+
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces module_init() and module_exit()
+> + */
+> +#define module_siox_driver(__siox_driver) \
+> +	module_driver(__siox_driver, siox_driver_register, \
+> +			siox_driver_unregister)
+> -- 
+
+Sorry I didn't notice these two things in the first round already.
+
+Best regards
+Uwe
+
 -- 
-2.22.0
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
