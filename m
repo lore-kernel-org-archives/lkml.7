@@ -2,96 +2,202 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8452CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2173AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6121021655
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB45A21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:35:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730406AbfFRT12 (ORCPT
+        id S1730433AbfFRTfT convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:27:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49344 "EHLO mx1.redhat.com"
+        Tue, 18 Jun 2019 15:35:19 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42658 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727553AbfFRT11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:27:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6938458E42;
-        Tue, 18 Jun 2019 19:27:27 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D4CA19C5B;
-        Tue, 18 Jun 2019 19:27:25 +0000 (UTC)
-Subject: Re: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Shakeel Butt <shakeelb@google.com>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        linux-api@vger.kernel.org
-References: <20190617142149.5245-1-longman@redhat.com>
- <20190617143842.GC1492@dhcp22.suse.cz>
- <9e165eae-e354-04c4-6362-0f80fe819469@redhat.com>
- <20190618123750.GG3318@dhcp22.suse.cz>
- <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
- <20190618183208.GK3318@dhcp22.suse.cz>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <681ed4dc-e8a5-afcf-98b6-c17544c6094d@redhat.com>
-Date:   Tue, 18 Jun 2019 15:27:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190618183208.GK3318@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+        id S1730189AbfFRTfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:35:18 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 12:35:18 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
+   d="scan'208";a="334966154"
+Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
+  by orsmga005.jf.intel.com with ESMTP; 18 Jun 2019 12:35:17 -0700
+Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
+ ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 18 Jun 2019 12:35:17 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.92]) by
+ ORSMSX122.amr.corp.intel.com ([169.254.11.7]) with mapi id 14.03.0439.000;
+ Tue, 18 Jun 2019 12:35:17 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Topic: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Index: AQHVIPn/qqDB5Bv4z0aSsleXlAnDw6abVhaAgAADpwD///G0sIAEkokAgACES6CAAT+dAIAANdnA
+Date:   Tue, 18 Jun 2019 19:35:16 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB032@ORSMSX110.amr.corp.intel.com>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+ <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B95F9EC6@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1906181030240.24846@fox.voss.local>
+In-Reply-To: <alpine.DEB.2.20.1906181030240.24846@fox.voss.local>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 18 Jun 2019 19:27:27 +0000 (UTC)
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWYzNDM4MzQtOGVmNS00ZTRiLWJkZTktZDExNTM1YTg5ZDk3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoialA3Y1d2Z3ZkMnZ2VUpzaXc3aDBTaWxGMFFmdEE4QUdvRCtYSHUrWWozN0g3cnRLckZMc1hwbEdXZkdmditHZiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 2:32 PM, Michal Hocko wrote:
-> On Tue 18-06-19 12:59:24, Waiman Long wrote:
->> On 6/18/19 8:37 AM, Michal Hocko wrote:
-> [...]
->>> Is this useful enough to put into slabinfo? Doesn't this sound more like
->>> a debugfs kinda a thing?
->> I guess it is probably more on the debug side of things. I add it to
->> slabinfo as the data is readily available. It will be much more work if
->> we need to export the data via debugfs.
->>
->> We are seeing the kmem_cache slab growing continuously overtime when
->> running a container-based workloads. Roman's kmem_cache reparenting
->> patch will hopefully solve a major part of the problem, but we still
->> need a way to confirm that by looking at how many memcg kmem_caches are
->> associated with each root kmem_cache.
-> I am not disputing usefulness. Dead memcgs are showing up as a problem
-> for a longer time and having a more debugging information is definitely
-> useful. I am just not really sure that /proc/slabinfo is the proper
-> vehicle for that information. It might be just easier to stick it there
-> but that is not the best justification for adding something we will have
-> to maintain for ever. Not to mention that the number of dead memcgs
-> might not be enough to debug further when we can easily end up needing
-> to provide more in something less "carved in stone" kinda interface like
-> debugfs.
->
-Fair enough.
+I'm looking at this. We've changed the initialization of objects in the namespace recently, so I'm checking this out.
 
-I will rework the patch and expose the information via debugfs then.
 
-Cheers,
-Longman
-
+> -----Original Message-----
+> From: Nikolaus Voss [mailto:nv@vosn.de]
+> Sent: Tuesday, June 18, 2019 2:22 AM
+> To: Moore, Robert <robert.moore@intel.com>
+> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
+> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
+> <erik.schmauss@intel.com>; Jacek Anaszewski
+> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
+> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel
+> Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT
+> ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org;
+> Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
+> <linux-kernel@vger.kernel.org>
+> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+> loads
+> 
+> On Mon, 17 Jun 2019, Moore, Robert wrote:
+> >> -----Original Message-----
+> >> From: Nikolaus Voss [mailto:nv@vosn.de]
+> >> Sent: Sunday, June 16, 2019 11:24 PM
+> >> To: Moore, Robert <robert.moore@intel.com>
+> >> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
+> >> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
+> >> <erik.schmauss@intel.com>; Jacek Anaszewski
+> >> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
+> >> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI
+> >> Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI
+> >> COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
+> >> linux-leds@vger.kernel.org; Linux PWM List
+> >> <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
+> >> <linux-kernel@vger.kernel.org>; nikolaus.voss@loewensteinmedical.de
+> >> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
+> >> table loads
+> >>
+> >> Bob,
+> >>
+> >> On Fri, 14 Jun 2019, Moore, Robert wrote:
+> >>>
+> >>>
+> >>> -----Original Message-----
+> >>> From: Nikolaus Voss [mailto:nv@vosn.de]
+> >>> Sent: Friday, June 14, 2019 2:26 AM
+> >>> To: Rafael J. Wysocki <rafael@kernel.org>
+> >>> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown
+> >>> <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>; Schmauss,
+> >>> Erik <erik.schmauss@intel.com>; Jacek Anaszewski
+> >>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
+> >>> Murphy <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>;
+> >>> ACPI Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI
+> >>> COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
+> >>> linux-leds@vger.kernel.org; Linux PWM List
+> >>> <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
+> >>> <linux-kernel@vger.kernel.org>
+> >>> Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
+> >>> table loads
+> >>>
+> >>> Hi Rafael,
+> >>>
+> >>> On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
+> >>>> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
+> >>>> <nikolaus.voss@loewensteinmedical.de> wrote:
+> >>>>>
+> >>>>> If an ACPI SSDT overlay is loaded after built-in tables have been
+> >>>>> loaded e.g. via configfs or efivar_ssdt_load() it is necessary to
+> >>>>> rewalk the namespace to resolve references. Without this, relative
+> >>>>> and absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not
+> >>>>> resolved correctly.
+> >>>>>
+> >>>>> Make configfs load use the same method as efivar_ssdt_load().
+> >>>>>
+> >>>>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
+> >>>>
+> >>>> This is fine by me, so
+> >>>>
+> >>>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> >>>>
+> >>>> Or if you want me to take this patch (without the other two in the
+> >>>> series), please let me know.
+> >>>
+> >>> thanks. I think it would be the best if you take up this patch as it
+> >>> is an independent topic. In retrospect it wasn't a good idea to put
+> >>> it into this series.
+> >>>
+> >>> Kind regards,
+> >>> Niko
+> >>>
+> >>> I would have to ask, why is additional code needed for package
+> >>> initialization/resolution? It already happens elsewhere in acpica.
+> >>> Bob
+> >>
+> >> for built-in tables loaded via acpi_ex_load_table_op() everything is
+> >> fine, because after acpi_tb_load_table() acpi_ns_walk_namespace() is
+> >> called to resolve references.
+> >>
+> >> My fix only affects tables loaded dynamically via either
+> >> acpi_configfs driver (for debugging purposes) or efivar_ssdt_load()
+> >> (to specify a table on the kernel's command line). They use
+> >> acpi_load_table() to load the table from a caller-owned buffer. To
+> >> resolve the references, it is again necessary to rewalk the
+> >> namespace, which was simply missing in acpi_load_table().
+> >>
+> > [Moore, Robert]
+> >
+> > Perhaps you should call AcpiInitializeObjects after the call to
+> > AcpiLoadTable, but I will check.
+> 
+> My usage of acpi_load_table() is to load a SSDT which is the intended
+> use of this method according to its description. And my expectation is
+> that the package objects of the loaded table are initialized when this
+> function successfully returns so it aligns with the behavior of
+> acpi_ex_load_table_op() for built-in SSDTs. Otherwise there would be no
+> point in having this function at all, because
+> acpi_tb_install_and_load_table() could be called directly without any
+> difference.
+> 
+> Niko
