@@ -2,85 +2,94 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D3EFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649A2C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:06:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1DE62063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:06:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BE74206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:06:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560881169;
-	bh=Mt7M1hiWtQFwHq/JT2TzGw7U6sxTiqsy7sABsh5xXvM=;
+	s=default; t=1560881188;
+	bh=ywTAzS6PnjPNgGXbrpsoPgcUIqAYyPOI5rdEt/0+45c=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zA/uvkNiu0DJsrH1OMWZtl+jMYh1I5jo9ETBEF/BAaf4FKD7wA79ZJeXJ2V3W9zez
-	 hhQuKrKHcb9hYohlAfgUEYxXPOaNOCEY+4xfr3JeB8RROg6aBvC25i7D0d8PpUvVS1
-	 JedTvOKC+AY3bYkEvwG+LDST2PSVbrUaiZSbdkB8=
+	b=bXV0dIl+x50Na4lepZbOwyH/dgUozPz2BbIVXizni9Vae+E42+XC1pUt658+lLbI7
+	 hQj/pxqc6UWiSRX4NF2Pa+IoitZ8LeJlrXGyIWp/KNtcd5GKcce/S/WQgrvm4PEt1X
+	 pa0vPAEu8yCcwI36ezauO5kcXtQfqMl+jZcj4HhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730099AbfFRSGH (ORCPT
+        id S1730234AbfFRSG1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:06:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46904 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 14:06:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46986 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727616AbfFRSGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:06:06 -0400
-Received: from gmail.com (unknown [104.132.1.77])
+        id S1729715AbfFRSG0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:06:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E282E2063F;
-        Tue, 18 Jun 2019 18:06:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2110B2063F;
+        Tue, 18 Jun 2019 18:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560881166;
-        bh=Mt7M1hiWtQFwHq/JT2TzGw7U6sxTiqsy7sABsh5xXvM=;
+        s=default; t=1560881185;
+        bh=ywTAzS6PnjPNgGXbrpsoPgcUIqAYyPOI5rdEt/0+45c=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=OltEX/WH5jdgnZK3v8w1kduvN71wI1G5FXhUIK4Mp90AycejE1S/M7hr+/fs+IHpC
-         pz9GJhoAKDcrJWBvYKw9jpdLNj4VQZqCdA0h0AzO/gX0BAv9l98u16IpqCd1iAwQcm
-         78yJHuQIuV5gGqpgnMMr2Gii5KtSc47SxNZqZ8KU=
-Date:   Tue, 18 Jun 2019 11:06:04 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Vitaly Chikunov <vt@altlinux.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/2] crypto: testmgr - dynamically allocate
- testvec_config
-Message-ID: <20190618180604.GH184520@gmail.com>
-References: <20190618092215.2790800-1-arnd@arndb.de>
+        b=RT/DMCHJLRJFLus4HeBNgutI1Q6kceJR4q3d+UdHNbI46kEbG49/Rf63ecJBPVlbl
+         C/uX63tbGnnJuoZOYtaPxznZP6PAvXyquHXiPySxL2EzSnfeFXqa+/L4XIsa4iCgFG
+         SVVHLdtURFxcvdJcZ/YZZe36AW1lgXvHUYJ/WjIM=
+Date:   Tue, 18 Jun 2019 20:06:23 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
+Message-ID: <20190618180623.GD31484@kroah.com>
+References: <20190617210759.929316339@linuxfoundation.org>
+ <CA+G9fYsUmFrTDHJfS=1vYVfv4BVRZ0AByEOHV6toidAxWuDqDg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190618092215.2790800-1-arnd@arndb.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsUmFrTDHJfS=1vYVfv4BVRZ0AByEOHV6toidAxWuDqDg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:21:52AM +0200, Arnd Bergmann wrote:
-> On arm32, we get warnings about high stack usage in some of the functions:
+On Tue, Jun 18, 2019 at 06:04:25PM +0530, Naresh Kamboju wrote:
+> On Tue, 18 Jun 2019 at 02:50, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.1.12 release.
+> > There are 115 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.12-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
 > 
-> crypto/testmgr.c:2269:12: error: stack frame size of 1032 bytes in function 'alg_test_aead' [-Werror,-Wframe-larger-than=]
-> static int alg_test_aead(const struct alg_test_desc *desc, const char *driver,
->            ^
-> crypto/testmgr.c:1693:12: error: stack frame size of 1312 bytes in function '__alg_test_hash' [-Werror,-Wframe-larger-than=]
-> static int __alg_test_hash(const struct hash_testvec *vecs,
->            ^
-> 
-> On of the larger objects on the stack here is struct testvec_config, so
-> change that to dynamic allocation.
-> 
-> Fixes: 40153b10d91c ("crypto: testmgr - fuzz AEADs against their generic implementation")
-> Fixes: d435e10e67be ("crypto: testmgr - fuzz skciphers against their generic implementation")
-> Fixes: 9a8a6b3f0950 ("crypto: testmgr - fuzz hashes against their generic implementation")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-Reviewed-by: Eric Biggers <ebiggers@kernel.org>
+Thanks for testing all of these and letting me know.
 
-- Eric
+greg k-h
