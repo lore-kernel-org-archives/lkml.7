@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 204A1C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D176C31E60
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8AA21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00DA821479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560891299;
-	bh=ZSd3kZosps3w+y5xT/+9xL1EL1aI/jrzlVJptq/Tzi4=;
+	s=default; t=1560891311;
+	bh=h7l+k/bcQEAMC3at0ERwHPd7g3z3MOmRUpHoIL/NX2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vktBeBMBBh1lCdYuh0wdbgq5biMGWjj4mKPRxuqsEIYoWDNULLe5K2sJguysL66dM
-	 b0763RiVFMogQOCxRPi6XrACnTxWE2hE+H33si2dlOKX2oqWA5MXtEsP2bbZLg4i2V
-	 f67swDCJmpHhapBmMNIGkHJc7vfLtGeSLGzoTBqA=
+	b=BplDKl6hk8ZJpEY2ABDfVhPQH+aICppr8P49tKDD2FDp3DnUy3r3EJHP54MYP3309
+	 hZmbdhiOOtZVFstatXVylEiqZZufoVz8SG8nGkKv7y11sU9DT5YajUYtEGCPsRnyWE
+	 0q3dmwFlpx6UXqZxHn3POCezQKhvIyyPsuAmQOr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730981AbfFRUy4 (ORCPT
+        id S1731018AbfFRUzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:54:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51010 "EHLO
+        Tue, 18 Jun 2019 16:55:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50828 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730783AbfFRUx7 (ORCPT
+        with ESMTP id S1730747AbfFRUx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:53:59 -0400
+        Tue, 18 Jun 2019 16:53:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8Y1nlnSVVHDrFk8myKIM30kznMDor9jOwj/L8T5CzXg=; b=QIjEpoeSOGdiCCPfo4Kl553GJA
-        s065+YLwVkDvnVkhUg28XcTtdwrjhb1WfwvsZ5AOHIpgZTx0XRVbnFnz77vtP9uwzF2rSsXkwRkNG
-        fQnwb2qEmrroho5gqklVKhOCjNfjvtEtEJ3YJNNGd2J93nz55WsjVvA0sjFtO/CbCE+H2t35ZVNqe
-        BtTEX+eqboJlHFJ2cdybspQ+1Gfaeo6ZEgq+zDo5XZ6xlF6cUb5lwYxyV3kdjy5hOEIzJiWwlUyoM
-        clNGIOuR+M8efrg5++kUGJY/7qb3f5rEpJ7ZRXtcuphyVXrdxu61pDXqMBJVQdMfEdZTX8gGmcw6w
-        nO/2U76w==;
+        bh=wrhHYkVqalJudClQ5Slfu9mOYqnzTc7imFqa6mcZE60=; b=Q6+ai+iRuLGB2hroOoxPV3+Rtt
+        nlHmS8h0o7DnUzaHjCgRUso6F3RpVD0fViiWJ0Y9AVwy0vjxuNZzFqFr7oaCp4jDWHYLGlSX0XRGT
+        RImr/cS9EgWMBSp8GXgQwnv6z7QVFKrQw5V7OXgQOPS9ahWsx8Ul0GH9EO+yXaQdxPZ1VK/6N4wDe
+        Wld+307vO8kEEUdKgO5cXCF3aqp5FjXp9QzU+up+0ecspNOixpxrNpHHKFrDWbdx71IBzwAG2oSAC
+        jsJKn1DGwjqOmGkQQW/WyxYRCHmVRLsBGl/X6eQ6W66Ogesd+6U0bpnN/6ILCl2bPbPJSDbzTVroC
+        N7on8EEg==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL78-0008TI-1B; Tue, 18 Jun 2019 20:53:58 +0000
+        id 1hdL77-0008RS-2H; Tue, 18 Jun 2019 20:53:57 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdL70-0001zt-2o; Tue, 18 Jun 2019 17:53:50 -0300
+        id 1hdL70-0001zh-0A; Tue, 18 Jun 2019 17:53:50 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 16/29] docs: rbtree.txt: fix Sphinx build warnings
-Date:   Tue, 18 Jun 2019 17:53:34 -0300
-Message-Id: <f5c25942548585e9765ab6681b40832243ed7d46.1560890800.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 13/29] docs: bus-devices: ti-gpmc.rst: convert it to ReST
+Date:   Tue, 18 Jun 2019 17:53:31 -0300
+Message-Id: <462f800be1a6f9a4cb223127c8900048414fe0ca.1560890800.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
 References: <cover.1560890800.git.mchehab+samsung@kernel.org>
@@ -64,48 +64,218 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ths file is already at ReST format. Yet, some recent changes
-made it to produce a few warnings when building it with
-Sphinx.
+In order to be able to add this file to a book, it needs
+first to be converted to ReST and renamed.
 
-Those are trivially fixed by marking some literal blocks.
-
-Fix them before adding it to the docs building system.
+While this is not part of any book, mark it as :orphan:, in order
+to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/rbtree.txt | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ .../bus-devices/{ti-gpmc.txt => ti-gpmc.rst}  | 159 ++++++++++++------
+ 1 file changed, 108 insertions(+), 51 deletions(-)
+ rename Documentation/bus-devices/{ti-gpmc.txt => ti-gpmc.rst} (58%)
 
-diff --git a/Documentation/rbtree.txt b/Documentation/rbtree.txt
-index c42a21b99046..523d54b60087 100644
---- a/Documentation/rbtree.txt
-+++ b/Documentation/rbtree.txt
-@@ -204,21 +204,21 @@ potentially expensive tree iterations. This is done at negligible runtime
- overhead for maintanence; albeit larger memory footprint.
+diff --git a/Documentation/bus-devices/ti-gpmc.txt b/Documentation/bus-devices/ti-gpmc.rst
+similarity index 58%
+rename from Documentation/bus-devices/ti-gpmc.txt
+rename to Documentation/bus-devices/ti-gpmc.rst
+index cc9ce57e0a26..87c366e418be 100644
+--- a/Documentation/bus-devices/ti-gpmc.txt
++++ b/Documentation/bus-devices/ti-gpmc.rst
+@@ -1,8 +1,12 @@
+-GPMC (General Purpose Memory Controller):
+-=========================================
++:orphan:
++
++========================================
++GPMC (General Purpose Memory Controller)
++========================================
  
- Similar to the rb_root structure, cached rbtrees are initialized to be
--empty via:
-+empty via::
+ GPMC is an unified memory controller dedicated to interfacing external
+ memory devices like
++
+  * Asynchronous SRAM like memories and application specific integrated
+    circuit devices.
+  * Asynchronous, synchronous, and page mode burst NOR flash devices
+@@ -48,75 +52,128 @@ most of the datasheets & hardware (to be exact none of those supported
+ in mainline having custom timing routine) and by simulation.
  
-   struct rb_root_cached mytree = RB_ROOT_CACHED;
+ gpmc timing dependency on peripheral timings:
++
+ [<gpmc_timing>: <peripheral timing1>, <peripheral timing2> ...]
  
- Cached rbtree is simply a regular rb_root with an extra pointer to cache the
- leftmost node. This allows rb_root_cached to exist wherever rb_root does,
- which permits augmented trees to be supported as well as only a few extra
--interfaces:
-+interfaces::
+ 1. common
+-cs_on: t_ceasu
+-adv_on: t_avdasu, t_ceavd
++
++cs_on:
++	t_ceasu
++adv_on:
++	t_avdasu, t_ceavd
  
-   struct rb_node *rb_first_cached(struct rb_root_cached *tree);
-   void rb_insert_color_cached(struct rb_node *, struct rb_root_cached *, bool);
-   void rb_erase_cached(struct rb_node *node, struct rb_root_cached *);
+ 2. sync common
+-sync_clk: clk
+-page_burst_access: t_bacc
+-clk_activation: t_ces, t_avds
++
++sync_clk:
++	clk
++page_burst_access:
++	t_bacc
++clk_activation:
++	t_ces, t_avds
  
- Both insert and erase calls have their respective counterpart of augmented
--trees:
-+trees::
+ 3. read async muxed
+-adv_rd_off: t_avdp_r
+-oe_on: t_oeasu, t_aavdh
+-access: t_iaa, t_oe, t_ce, t_aa
+-rd_cycle: t_rd_cycle, t_cez_r, t_oez
++
++adv_rd_off:
++	t_avdp_r
++oe_on:
++	t_oeasu, t_aavdh
++access:
++	t_iaa, t_oe, t_ce, t_aa
++rd_cycle:
++	t_rd_cycle, t_cez_r, t_oez
  
-   void rb_insert_augmented_cached(struct rb_node *node, struct rb_root_cached *,
- 				  bool, struct rb_augment_callbacks *);
+ 4. read async non-muxed
+-adv_rd_off: t_avdp_r
+-oe_on: t_oeasu
+-access: t_iaa, t_oe, t_ce, t_aa
+-rd_cycle: t_rd_cycle, t_cez_r, t_oez
++
++adv_rd_off:
++	t_avdp_r
++oe_on:
++	t_oeasu
++access:
++	t_iaa, t_oe, t_ce, t_aa
++rd_cycle:
++	t_rd_cycle, t_cez_r, t_oez
+ 
+ 5. read sync muxed
+-adv_rd_off: t_avdp_r, t_avdh
+-oe_on: t_oeasu, t_ach, cyc_aavdh_oe
+-access: t_iaa, cyc_iaa, cyc_oe
+-rd_cycle: t_cez_r, t_oez, t_ce_rdyz
++
++adv_rd_off:
++	t_avdp_r, t_avdh
++oe_on:
++	t_oeasu, t_ach, cyc_aavdh_oe
++access:
++	t_iaa, cyc_iaa, cyc_oe
++rd_cycle:
++	t_cez_r, t_oez, t_ce_rdyz
+ 
+ 6. read sync non-muxed
+-adv_rd_off: t_avdp_r
+-oe_on: t_oeasu
+-access: t_iaa, cyc_iaa, cyc_oe
+-rd_cycle: t_cez_r, t_oez, t_ce_rdyz
++
++adv_rd_off:
++	t_avdp_r
++oe_on:
++	t_oeasu
++access:
++	t_iaa, cyc_iaa, cyc_oe
++rd_cycle:
++	t_cez_r, t_oez, t_ce_rdyz
+ 
+ 7. write async muxed
+-adv_wr_off: t_avdp_w
+-we_on, wr_data_mux_bus: t_weasu, t_aavdh, cyc_aavhd_we
+-we_off: t_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_wr_cycle
++
++adv_wr_off:
++	t_avdp_w
++we_on, wr_data_mux_bus:
++	t_weasu, t_aavdh, cyc_aavhd_we
++we_off:
++	t_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_wr_cycle
+ 
+ 8. write async non-muxed
+-adv_wr_off: t_avdp_w
+-we_on, wr_data_mux_bus: t_weasu
+-we_off: t_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_wr_cycle
++
++adv_wr_off:
++	t_avdp_w
++we_on, wr_data_mux_bus:
++	t_weasu
++we_off:
++	t_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_wr_cycle
+ 
+ 9. write sync muxed
+-adv_wr_off: t_avdp_w, t_avdh
+-we_on, wr_data_mux_bus: t_weasu, t_rdyo, t_aavdh, cyc_aavhd_we
+-we_off: t_wpl, cyc_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_ce_rdyz
++
++adv_wr_off:
++	t_avdp_w, t_avdh
++we_on, wr_data_mux_bus:
++	t_weasu, t_rdyo, t_aavdh, cyc_aavhd_we
++we_off:
++	t_wpl, cyc_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_ce_rdyz
+ 
+ 10. write sync non-muxed
+-adv_wr_off: t_avdp_w
+-we_on, wr_data_mux_bus: t_weasu, t_rdyo
+-we_off: t_wpl, cyc_wpl
+-cs_wr_off: t_wph
+-wr_cycle: t_cez_w, t_ce_rdyz
+ 
++adv_wr_off:
++	t_avdp_w
++we_on, wr_data_mux_bus:
++	t_weasu, t_rdyo
++we_off:
++	t_wpl, cyc_wpl
++cs_wr_off:
++	t_wph
++wr_cycle:
++	t_cez_w, t_ce_rdyz
+ 
+-Note: Many of gpmc timings are dependent on other gpmc timings (a few
+-gpmc timings purely dependent on other gpmc timings, a reason that
+-some of the gpmc timings are missing above), and it will result in
+-indirect dependency of peripheral timings to gpmc timings other than
+-mentioned above, refer timing routine for more details. To know what
+-these peripheral timings correspond to, please see explanations in
+-struct gpmc_device_timings definition. And for gpmc timings refer
+-IP details (link above).
++
++Note:
++  Many of gpmc timings are dependent on other gpmc timings (a few
++  gpmc timings purely dependent on other gpmc timings, a reason that
++  some of the gpmc timings are missing above), and it will result in
++  indirect dependency of peripheral timings to gpmc timings other than
++  mentioned above, refer timing routine for more details. To know what
++  these peripheral timings correspond to, please see explanations in
++  struct gpmc_device_timings definition. And for gpmc timings refer
++  IP details (link above).
 -- 
 2.21.0
 
