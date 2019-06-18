@@ -2,121 +2,96 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59E91C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:06:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEC1FC31E5F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:06:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FC5120679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:06:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7F3620679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:06:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="E957Zdrl"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OzFHA/sk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726852AbfFRMGA (ORCPT
+        id S1728846AbfFRMGE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:06:00 -0400
-Received: from mail-eopbgr80075.outbound.protection.outlook.com ([40.107.8.75]:58519
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725934AbfFRMGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:06:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gcWx94Q5Uyanjwk94sd/nnI7jx4KAUy+b3+ehsY3k4Q=;
- b=E957Zdrl47Xy2d8/21jBLw0AoGcaRpypw9uoK2UYZY7K54Tp7SCKA5NE1/0ZOD0DzvzkDp3yPVLrp0jXvMFOHURpZt2uu6Qrp6XB8oEzqyPprDIKzHu8vS6xHJNWhBOa6ctXkObdt1XIiEASjFMdiwtSWEpEHQ+jXxMaspoPmPw=
-Received: from DB6PR0501MB2342.eurprd05.prod.outlook.com (10.168.56.21) by
- DB6PR0501MB2328.eurprd05.prod.outlook.com (10.168.56.27) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Tue, 18 Jun 2019 12:05:56 +0000
-Received: from DB6PR0501MB2342.eurprd05.prod.outlook.com
- ([fe80::ec3d:c810:e8d8:8aef]) by DB6PR0501MB2342.eurprd05.prod.outlook.com
- ([fe80::ec3d:c810:e8d8:8aef%9]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
- 12:05:56 +0000
-From:   Shalom Toledo <shalomt@mellanox.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>
-CC:     Petr Machata <petrm@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: arm32 build failure after
- 992aa864dca068554802a65a467a2640985cc213
-Thread-Topic: arm32 build failure after
- 992aa864dca068554802a65a467a2640985cc213
-Thread-Index: AQHVJXeaQJyu+P7LqEmJZmmYcFVfYqahUWoA
-Date:   Tue, 18 Jun 2019 12:05:56 +0000
-Message-ID: <60390608-aec3-503d-e4f2-2b4e93aeefaa@mellanox.com>
-References: <20190618014604.GA17174@archlinux-epyc>
-In-Reply-To: <20190618014604.GA17174@archlinux-epyc>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.1
-x-clientproxiedby: AM5PR0201CA0015.eurprd02.prod.outlook.com
- (2603:10a6:203:3d::25) To DB6PR0501MB2342.eurprd05.prod.outlook.com
- (2603:10a6:4:4c::21)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=shalomt@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.47.165.251]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0d7db394-8708-4c76-2692-08d6f3e55194
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2328;
-x-ms-traffictypediagnostic: DB6PR0501MB2328:
-x-microsoft-antispam-prvs: <DB6PR0501MB23288EBC24C169DBF5E3CA7EC5EA0@DB6PR0501MB2328.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1751;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(39860400002)(136003)(366004)(51914003)(189003)(199004)(53754006)(7736002)(86362001)(316002)(73956011)(58126008)(66476007)(110136005)(5660300002)(71190400001)(36756003)(256004)(31696002)(54906003)(6246003)(65826007)(66556008)(71200400001)(14444005)(486006)(2906002)(99286004)(26005)(11346002)(446003)(476003)(52116002)(76176011)(6506007)(386003)(53546011)(186003)(102836004)(2616005)(66946007)(25786009)(64126003)(3846002)(14454004)(81166006)(8936002)(68736007)(6486002)(6436002)(31686004)(229853002)(6636002)(53936002)(66066001)(64756008)(65806001)(65956001)(81156014)(66446008)(8676002)(4326008)(6116002)(478600001)(305945005)(6512007);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2328;H:DB6PR0501MB2342.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: JZqeNadyxCBG0pjfPIS/PUFi5/pT5/Ool9jbNQfGp4aRCGd6TNyCPkuaoisN/nqGOTni65IUOOQAoLrpzOLV/3pI5pWuTeuD3SSsgyMBphmu6Ik7SkTE3sgsJV7Fgrqlk1z4V1fVPn7emwQEbdxoZASrjuRM9YIMFHeooHgoTs134AUhYzch+1Pr3iwxF+fWwj55sgpJ//OyuoRnL+HL/XwAtXzZfbBEyrNLW7wjfSMOrnEvtm5tpK683b6VFCgZQyGAAe86aVR6FyO4PFxoi3mplxt5+6qG5YV2lvUltwkHRDVqCOMwNRZzc8yhXyswcdDjDDUpL4+XgVQMPzPn42f/PwXgYl8ENVIwa0qNM2Pkbl6dTTKaMdt1HwF1GRhuiBb7CO6T6SHVK+5/Jr47eKHQuP8DR5N1pWmMNK8EGBo=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <94E9B454FC28BD4A9154D89988536B10@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 18 Jun 2019 08:06:04 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34777 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfFRMGD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:06:03 -0400
+Received: by mail-lj1-f194.google.com with SMTP id p17so12872667ljg.1
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 05:06:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=eViPuB4mPRtq99GLUYp5aCnnWrpv2fPxaUrqbtshaow=;
+        b=OzFHA/skb+Cd3TvWb0I7U3fqoUbEdeAqdN4ud+HZoRnMK7mDQ/vDiz2gc8bfTm+QTg
+         oeqqo6aT01GA6E5/kqnmzskzYTF8tBSW8k17FIKLDlQS+5YI2eGyQfgYK29K3shxEUzz
+         O4ckLDcVheu7R0/1qdxRgcwXxvoWYbN+8p85sQbLGqoSIIh0MNmhHyWAWBZPZzLfwUvy
+         9FTigcgftBfssg9DERYI8X1JJc3SiGtqwT07bDp/iZb+I477c4fnrpgXrqyE1cC+jfoi
+         Qzx4J9FPnRKGo4YGVqFJWuhuuWPGdGa/lJlpLIzvJ9HUe+hapnsISe1qzXNxuasMRcaW
+         nZMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=eViPuB4mPRtq99GLUYp5aCnnWrpv2fPxaUrqbtshaow=;
+        b=UJ3aHey6OBv8MZCzBBcqu3z9DVQf/S1E2U24HWerg7QA11/v3ovebSbeuJxUEN4EGi
+         WMafGhhQu5P/H9dD8co5iTIQ09A6FVgyXu7iDJqLaE1C96bDykCrOTYKLFUw4biE6DPL
+         +56v1XovExxnKhCX4cO8oDIuBcfgwpAfQE6e7QAeBI9NYMUdIqlNylAYaK3CPOYcCH9C
+         7Z62p1zPXVjNtJsVHovNW1ksyV/SCz2EMCpI84hIp8/x4Zxn4elFXSMHWyNpNxF07lIy
+         oRdunEb9/zJiEiv4MghHLpjDMdiN/nW90cCmHR/tjyBs9f9Sf0d4yjQNx56lr+V/XyLE
+         jovw==
+X-Gm-Message-State: APjAAAUXulyPd8EX0WRcXKP6XCKpzUnjkZ3xbtnj0MH5XD+UGE5BW9Bp
+        N8LDGTxRFHhf62we/pWC0kfIJpF8/H8k4G5P+zeQLg==
+X-Google-Smtp-Source: APXvYqynedWWS6RMfN+pXeWLkf2H5DM5H4yMJ5FcjVlUXuJ+N1JPU/Ap4AsjrjX3+umUXW+mGzRZGfQvvOr3ws24C8w=
+X-Received: by 2002:a2e:8495:: with SMTP id b21mr21465480ljh.149.1560859561469;
+ Tue, 18 Jun 2019 05:06:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0d7db394-8708-4c76-2692-08d6f3e55194
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 12:05:56.6742
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: shalomt@mellanox.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2328
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 18 Jun 2019 17:35:50 +0530
+Message-ID: <CA+G9fYufHb5N_NMd4RQnr3jJjqQ8b4Nj1CZXecWvDQPohFUewA@mail.gmail.com>
+Subject: next: arm64: build error: implicit declaration of function '__cookie_v6_init_sequence'
+To:     Linux-Next Mailing List <linux-next@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>, bpf@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>, kuznet@ms2.inr.ac.ru,
+        yoshfuji@linux-ipv6.org, ast@kernel.org,
+        Daniel Borkmann <daniel@iogearbox.net>, kafai@fb.com,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTgvMDYvMjAxOSA0OjQ2LCBOYXRoYW4gQ2hhbmNlbGxvciB3cm90ZToNCj4gSGkgYWxsLA0K
-PiANCj4gQSAzMi1iaXQgQVJNIGFsbHllc2NvbmZpZyBmYWlscyB0byBsaW5rIGFmdGVyIGNvbW1p
-dCA5OTJhYTg2NGRjYTANCj4gKCJtbHhzdzogc3BlY3RydW1fcHRwOiBBZGQgaW1wbGVtZW50YXRp
-b24gZm9yIHBoeXNpY2FsIGhhcmR3YXJlIGNsb2NrDQo+IG9wZXJhdGlvbnMiKSBiZWNhdXNlIG9m
-IDY0LWJpdCBkaXZpc2lvbjoNCj4gDQo+IGFybS1saW51eC1nbnVlYWJpLWxkOg0KPiBkcml2ZXJz
-L25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHhzdy9zcGVjdHJ1bV9wdHAubzogaW4gZnVuY3Rpb24N
-Cj4gYG1seHN3X3NwMV9wdHBfcGhjX3NldHRpbWUnOg0KPiBzcGVjdHJ1bV9wdHAuYzooLnRleHQr
-MHgzOWMpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBfX2FlYWJpX3VsZGl2bW9kJw0KPiANCj4g
-VGhlIGZvbGxvd2luZyBkaWZmIGZpeGVzIGl0IGJ1dCBJIGhhdmUgbm8gaWRlYSBpZiBpdCBpcyBw
-cm9wZXIgb3Igbm90DQo+IChoZW5jZSByZWFjaGluZyBvdXQgYmVmb3JlIHNlbmRpbmcgaXQsIGlu
-IGNhc2Ugb25lIG9mIHlvdSBoYXMgYSBtb3JlDQo+IHByb3BlciBpZGVhKS4NCj4gDQo+IENoZWVy
-cywNCj4gTmF0aGFuDQo+IA0KPiAtLS0NCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9l
-dGhlcm5ldC9tZWxsYW5veC9tbHhzdy9zcGVjdHJ1bV9wdHAuYyBiL2RyaXZlcnMvbmV0L2V0aGVy
-bmV0L21lbGxhbm94L21seHN3L3NwZWN0cnVtX3B0cC5jDQo+IGluZGV4IDJhOWJiYzkwMjI1ZS4u
-NjU2ODZmMGI2ODM0IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5v
-eC9tbHhzdy9zcGVjdHJ1bV9wdHAuYw0KPiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxs
-YW5veC9tbHhzdy9zcGVjdHJ1bV9wdHAuYw0KPiBAQCAtODcsNyArODcsNyBAQCBtbHhzd19zcDFf
-cHRwX3BoY19zZXR0aW1lKHN0cnVjdCBtbHhzd19zcF9wdHBfY2xvY2sgKmNsb2NrLCB1NjQgbnNl
-YykNCj4gICAgICAgICB1MzIgbmV4dF9zZWM7DQo+ICAgICAgICAgaW50IGVycjsNCj4gIA0KPiAt
-ICAgICAgIG5leHRfc2VjID0gbnNlYyAvIE5TRUNfUEVSX1NFQyArIDE7DQo+ICsgICAgICAgbmV4
-dF9zZWMgPSAodTMyKWRpdjY0X3U2NChuc2VjLCBOU0VDX1BFUl9TRUMgKyAxKTsNCj4gICAgICAg
-ICBuZXh0X3NlY19pbl9uc2VjID0gbmV4dF9zZWMgKiBOU0VDX1BFUl9TRUM7DQo+ICANCj4gICAg
-ICAgICBzcGluX2xvY2soJmNsb2NrLT5sb2NrKTsNCj4gDQo+IA0KDQoNCg0KVGhhbmtzIGZvciB0
-aGUgcmVwb3J0LiBJIHdpbGwgc2VuZCBhIGZpeC4NCg==
+Linux -next build failed on arm64 and arm.
+
+In file included from net/ipv6/af_inet6.c:41:0:
+include/linux/netfilter_ipv6.h: In function 'nf_ipv6_cookie_init_sequence':
+include/linux/netfilter_ipv6.h:174:9: error: implicit declaration of
+function '__cookie_v6_init_sequence'; did you mean
+'cookie_init_sequence'? [-Werror=implicit-function-declaration]
+  return __cookie_v6_init_sequence(iph, th, mssp);
+         ^~~~~~~~~~~~~~~~~~~~~~~~~
+         cookie_init_sequence
+include/linux/netfilter_ipv6.h: In function 'nf_cookie_v6_check':
+include/linux/netfilter_ipv6.h:189:9: error: implicit declaration of
+function '__cookie_v6_check'; did you mean '__cookie_v4_check'?
+[-Werror=implicit-function-declaration]
+  return __cookie_v6_check(iph, th, cookie);
+         ^~~~~~~~~~~~~~~~~
+         __cookie_v4_check
+  CC      net/core/net-traces.o
+  CC      drivers/char/tpm/eventlog/acpi.o
+  CC      fs/proc/page.o
+cc1: some warnings being treated as errors
+scripts/Makefile.build:278: recipe for target 'net/ipv6/af_inet6.o' failed
+make[3]: *** [net/ipv6/af_inet6.o] Error 1
+scripts/Makefile.build:489: recipe for target 'net/ipv6' failed
+make[2]: *** [net/ipv6] Error 2
+
+Best regards
+Naresh Kamboju
