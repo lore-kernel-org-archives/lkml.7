@@ -2,81 +2,81 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E397C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F919C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:18:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73E272070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791C72070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:18:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560863915;
+	bh=1y2U8X12rJFersG6m+NAIREsnvkoVvu7YAOkiIfgHRA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bEXdpNmzlsThyQtQctDn96Qb9zQEbaeViUla9ITT2CeiFu2Wh3Tx5wx7nYLC8WDwz
+	 0WhNF3YelfEx0Xe1dH6n+IfMOJlpX/mKPWGY13GTtoROtEeZuvG0XToXgtF9ZrB+r8
+	 TPP9sFsdndztND8Yh2raDN2CJ6vvIhqtSZGTIwlw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729127AbfFRNRT (ORCPT
+        id S1729176AbfFRNSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:17:19 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50292 "EHLO ms.lwn.net"
+        Tue, 18 Jun 2019 09:18:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725988AbfFRNRT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:17:19 -0400
-Received: from localhost.localdomain (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725988AbfFRNSd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:18:33 -0400
+Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id D6F1E380;
-        Tue, 18 Jun 2019 13:17:18 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 07:17:17 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
- x86-laptop-drivers.txt to reST
-Message-ID: <20190618071717.2132a1b7@lwn.net>
-In-Reply-To: <20190618054158.GA3713@kroah.com>
-References: <20190618053227.31678-1-puranjay12@gmail.com>
-        <20190618054158.GA3713@kroah.com>
-Organization: LWN.net
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        by mail.kernel.org (Postfix) with ESMTPSA id E09062070B;
+        Tue, 18 Jun 2019 13:18:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560863912;
+        bh=1y2U8X12rJFersG6m+NAIREsnvkoVvu7YAOkiIfgHRA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qIDrUimvv+WuXK5JHBoSh4thayiimM4+9jNtbKpOgnZ8FIRECqs1pHTNFO1jnWPsT
+         E6aTpSySvalhFXfc6RtFSVD36Cx8X3HKNDkgjrvkhVx2RJGMfBUlK3Pr2CKZsFGA1E
+         RY/p686OEE/Aml8QM+TjxyU6YSl5NwXW0GjizaXo=
+Date:   Tue, 18 Jun 2019 21:17:35 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Dong Aisheng <aisheng.dong@nxp.com>,
+        Abel Vesa <abel.vesa@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        linux-kernel@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] clk: imx6q: fix section mismatch warning
+Message-ID: <20190618131734.GE1959@dragon>
+References: <20190617111159.2124152-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617111159.2124152-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 07:41:58 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
-> > This converts the plain text documentation to reStructuredText format.
-> > No essential content change.
-> > 
-> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> > ---
-> >  Documentation/platform/x86-laptop-drivers.rst | 23 +++++++++++++++++++
-> >  Documentation/platform/x86-laptop-drivers.txt | 18 ---------------
-> >  2 files changed, 23 insertions(+), 18 deletions(-)
-> >  create mode 100644 Documentation/platform/x86-laptop-drivers.rst
-> >  delete mode 100644 Documentation/platform/x86-laptop-drivers.txt  
+On Mon, Jun 17, 2019 at 01:11:35PM +0200, Arnd Bergmann wrote:
+> The imx6q_obtain_fixed_clk_hw lacks an __init marker, which
+> leads to this otherwise harmless warning:
 > 
-> Don't you also need to hook it up to the documentation build process
-> when doing this?
+> WARNING: vmlinux.o(.text+0x495358): Section mismatch in reference from the function imx6q_obtain_fixed_clk_hw() to the function .init.text:imx_obtain_fixed_clock_hw()
+> The function imx6q_obtain_fixed_clk_hw() references
+> the function __init imx_obtain_fixed_clock_hw().
+> This is often because imx6q_obtain_fixed_clk_hw lacks a __init
+> annotation or the annotation of imx_obtain_fixed_clock_hw is wrong.
+> 
+> Fixes: 992b703b5b38 ("clk: imx6q: Switch to clk_hw based API")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Hooking it into the TOC tree is a good thing, but I think it's also good
-to think about the exercise in general.  This is a document dropped into
-place five years ago and never touched again.  It's a short list of
-seemingly ancient laptops with no explanation of what it means.  So the
-real question, IMO, is whether this document is useful to anybody and, if
-not, whether it should just be deleted instead.
-
-Puranjay, thanks for working to improve the kernel docs!  Please don't be
-discouraged by this response - it's just a sign that kernel documentation
-has problems far beyond just formatting...
-
-Thanks,
-
-jon
+Applied, thanks.
