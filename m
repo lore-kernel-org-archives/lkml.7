@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F70DC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C84C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B682085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B6612085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gKs5jP2e"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gtQ81my6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729194AbfFRMIq (ORCPT
+        id S1729269AbfFRMIu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:08:46 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53738 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729135AbfFRMIp (ORCPT
+        Tue, 18 Jun 2019 08:08:50 -0400
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:53380 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729199AbfFRMIr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:08:45 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IC8UnA113879;
-        Tue, 18 Jun 2019 07:08:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560859710;
-        bh=ZR7ExBieDCbC/Ll+RuC+Fd2NF0nFKFip1MVtigD4OPs=;
-        h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gKs5jP2etSElyYRibkzhSxdarZIKbirp9SGIhEfdoiU8JLsfMMdoWzkifuZpo+JyP
-         HkWHYYiNIrp/ZhJ16Bxak3R3wJhrW1N3u2h0IW33PNZWxj1ReAZwvwfLUBXOEqQo2I
-         e5xvBbU6TaKk4a4lkvH/jxtHLGCcg+ZEL2H6X9uE=
-Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IC8ULM118681
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 07:08:30 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 07:08:29 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 07:08:29 -0500
-Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IC89Ge080327;
+        Tue, 18 Jun 2019 08:08:47 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IC8R1g077675;
         Tue, 18 Jun 2019 07:08:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1560859707;
+        bh=+JcQY1LG9gNG3F7q1r1Itpd36WhWjpw9sV8+qyxk/l4=;
+        h=From:To:CC:Subject:Date:In-Reply-To:References;
+        b=gtQ81my6PjsMMsQ1oL3pz2VY56VKMS6CaTsQjV6qgXXuvxxokS8ZYqKKGhbszV65e
+         f/62OQXxXkUo7igM9TS95ojNbAZeXzMrnD0ifexTNuExUUjyA+mS3w0PuXDEA9vBn6
+         QoBY/1Y7Xk/rK2a895/mIegiP6habZAgPeAQfITg=
+Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IC8Rnu044677
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 18 Jun 2019 07:08:27 -0500
+Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
+ (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
+ Jun 2019 07:08:26 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
+ (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 18 Jun 2019 07:08:26 -0500
+Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IC89Gd080327;
+        Tue, 18 Jun 2019 07:08:24 -0500
 From:   Keerthy <j-keerthy@ti.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
         <robh+dt@kernel.org>
@@ -55,9 +55,9 @@ CC:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
         <j-keerthy@ti.com>, <nm@ti.com>
-Subject: [PATCH 06/10] crypto: sa2ul: Add hmac(sha256)cbc(aes) AEAD Algo support
-Date:   Tue, 18 Jun 2019 17:38:39 +0530
-Message-ID: <20190618120843.18777-7-j-keerthy@ti.com>
+Subject: [PATCH 05/10] crypto: sha256_generic: Export the Transform function
+Date:   Tue, 18 Jun 2019 17:38:38 +0530
+Message-ID: <20190618120843.18777-6-j-keerthy@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190618120843.18777-1-j-keerthy@ti.com>
 References: <20190618120843.18777-1-j-keerthy@ti.com>
@@ -69,136 +69,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add aead support for hmac(sha256)cbc(aes) algorithm. Authenticated
-encryption (AE) and authenticated encryption with associated data
-(AEAD) is a form of encryption which simultaneously provides
-confidentiality, integrity, and authenticity assurances on the data.
-
-hmac(sha256) has a digest size of 32 bytes is used for authetication
-and AES in CBC mode is used in conjunction for encryption/decryption.
+The transform function can be used as is by other crypto
+drivers that need to transform the 256 bit key using cpu.
+Hence export it.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- drivers/crypto/sa2ul.c | 92 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 92 insertions(+)
+ crypto/sha256_generic.c | 3 ++-
+ include/crypto/sha.h    | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
-index 1a1bd882e0d2..9c9008e21867 100644
---- a/drivers/crypto/sa2ul.c
-+++ b/drivers/crypto/sa2ul.c
-@@ -271,6 +271,42 @@ void sa_hmac_sha1_get_pad(const u8 *key, u16 key_sz, u32 *ipad, u32 *opad)
- 		opad[i] = cpu_to_be32(opad[i]);
+diff --git a/crypto/sha256_generic.c b/crypto/sha256_generic.c
+index b7502a96a0d4..583a3c3b93e0 100644
+--- a/crypto/sha256_generic.c
++++ b/crypto/sha256_generic.c
+@@ -63,7 +63,7 @@ static inline void BLEND_OP(int I, u32 *W)
+ 	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
  }
  
-+void sha256_init(u32 *buf)
-+{
-+	buf[0] = SHA256_H0;
-+	buf[1] = SHA256_H1;
-+	buf[2] = SHA256_H2;
-+	buf[3] = SHA256_H3;
-+	buf[4] = SHA256_H4;
-+	buf[5] = SHA256_H5;
-+	buf[6] = SHA256_H6;
-+	buf[7] = SHA256_H7;
-+}
-+
-+static void sa_hmac_sha256_get_pad(const u8 *key, u16 key_sz, u32 *ipad,
-+				   u32 *opad)
-+{
-+	u8 k_ipad[SHA_MESSAGE_BYTES];
-+	u8 k_opad[SHA_MESSAGE_BYTES];
-+	int i;
-+
-+	prepare_kiopad(k_ipad, k_opad, key, key_sz);
-+
-+	/* SHA-256 on k_ipad */
-+	sha256_init(ipad);
-+	sha256_transform(ipad, k_ipad);
-+
-+	for (i = 0; i < SHA256_DIGEST_WORDS; i++)
-+		ipad[i] = cpu_to_be32(ipad[i]);
-+
-+	/* SHA-256 on k_opad */
-+	sha256_init(opad);
-+	sha256_transform(opad, k_opad);
-+
-+	for (i = 0; i < SHA256_DIGEST_WORDS; i++)
-+		opad[i] = cpu_to_be32(opad[i]);
-+}
-+
- /* Derive the inverse key used in AES-CBC decryption operation */
- static inline int sa_aes_inv_key(u8 *inv_key, const u8 *key, u16 key_sz)
+-static void sha256_transform(u32 *state, const u8 *input)
++void sha256_transform(u32 *state, const u8 *input)
  {
-@@ -1198,6 +1234,37 @@ static int sa_aead_cbc_sha1_setkey(struct crypto_aead *authenc,
- 	return sa_aead_setkey(authenc, key, keylen, ad);
+ 	u32 a, b, c, d, e, f, g, h, t1, t2;
+ 	u32 W[64];
+@@ -225,6 +225,7 @@ static void sha256_transform(u32 *state, const u8 *input)
+ 	a = b = c = d = e = f = g = h = t1 = t2 = 0;
+ 	memzero_explicit(W, 64 * sizeof(u32));
  }
++EXPORT_SYMBOL(sha256_transform);
  
-+static int sa_aead_cbc_sha256_setkey(struct crypto_aead *authenc,
-+				     const u8 *key, unsigned int keylen)
-+{
-+	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
-+	struct crypto_authenc_keys keys;
-+	int ret = 0, key_idx;
-+
-+	ret = crypto_authenc_extractkeys(&keys, key, keylen);
-+	if (ret)
-+		return ret;
-+
-+	/* Convert the key size (16/24/32) to the key size index (0/1/2) */
-+	key_idx = (keys.enckeylen >> 3) - 2;
-+
-+	ad->enc_eng.eng_id = SA_ENG_ID_EM1;
-+	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
-+	ad->auth_eng.eng_id = SA_ENG_ID_AM1;
-+	ad->auth_eng.sc_size = SA_CTX_AUTH_TYPE2_SZ;
-+	ad->mci_enc = mci_cbc_enc_array[key_idx];
-+	ad->mci_dec = mci_cbc_dec_array[key_idx];
-+	ad->inv_key = true;
-+	ad->keyed_mac = true;
-+	ad->ealg_id = SA_EALG_ID_AES_CBC;
-+	ad->aalg_id = SA_AALG_ID_HMAC_SHA2_256;
-+	ad->hash_size = SHA256_DIGEST_SIZE;
-+	ad->auth_ctrl = 0x4;
-+	ad->prep_iopad = sa_hmac_sha256_get_pad;
-+
-+	return sa_aead_setkey(authenc, key, keylen, ad);
-+}
-+
- static int sa_aead_run(struct aead_request *req, u8 *iv, int enc)
- {
- 	struct crypto_aead *tfm = crypto_aead_reqtfm(req);
-@@ -1418,6 +1485,31 @@ static struct sa_alg_tmpl sa_algs[] = {
- 			.decrypt = sa_aead_decrypt,
- 		}
- 	},
-+	{.type	= CRYPTO_ALG_TYPE_AEAD,
-+		.alg.aead = {
-+				.base = {
-+				.cra_name = "authenc(hmac(sha256),cbc(aes))",
-+				.cra_driver_name =
-+					"authenc(hmac(sha256),cbc(aes))-keystone-sa",
-+				.cra_blocksize = AES_BLOCK_SIZE,
-+				.cra_flags = CRYPTO_ALG_TYPE_AEAD |
-+					CRYPTO_ALG_KERN_DRIVER_ONLY |
-+					CRYPTO_ALG_ASYNC,
-+				.cra_ctxsize = sizeof(struct sa_tfm_ctx),
-+				.cra_module = THIS_MODULE,
-+				.cra_alignmask = 0,
-+				.cra_priority = 3000,
-+			},
-+			.ivsize = AES_BLOCK_SIZE,
-+			.maxauthsize = SHA256_DIGEST_SIZE,
-+
-+			.init = sa_cra_init_aead,
-+			.exit = sa_exit_tfm_aead,
-+			.setkey = sa_aead_cbc_sha256_setkey,
-+			.encrypt = sa_aead_encrypt,
-+			.decrypt = sa_aead_decrypt,
-+		}
-+	},
- };
+ static void sha256_generic_block_fn(struct sha256_state *sst, u8 const *src,
+ 				    int blocks)
+diff --git a/include/crypto/sha.h b/include/crypto/sha.h
+index 8a46202b1857..6e04f412b0c2 100644
+--- a/include/crypto/sha.h
++++ b/include/crypto/sha.h
+@@ -95,6 +95,7 @@ struct sha512_state {
  
- /* Register the algorithms in crypto framework */
+ struct shash_desc;
+ 
++extern void sha256_transform(u32 *state, const u8 *input);
+ extern int crypto_sha1_update(struct shash_desc *desc, const u8 *data,
+ 			      unsigned int len);
+ 
 -- 
 2.17.1
 
