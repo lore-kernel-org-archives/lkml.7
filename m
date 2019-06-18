@@ -2,150 +2,87 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 409EEC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:27:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F229AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:27:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A4D2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:27:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="Gb0J09Un";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="ZOMzGEaG"
+	by mail.kernel.org (Postfix) with ESMTP id BEC5F2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:27:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560842824;
+	bh=WXMMpkWgHtvIKrWn0u/ts00b6Lb6kQODjgea6xZRVcw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=qgIwMJxYx7dGxkB4AXIq6J68k7+PrhceETeVI6TvHtQXtOZOEwi9uXnzVcWH3syvN
+	 oREGgRD1SwLlqlyqFRmefFn3+0d7JLC6lGh1/dMgXYdHu0CyUjGI2l231YvsTNR5zK
+	 /UYlpLF5iYRgCQZunZaZjOFsnxc6Y/pxrf5PhFmc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728158AbfFRH07 (ORCPT
+        id S1728830AbfFRH1D (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:26:59 -0400
-Received: from esa6.hgst.iphmx.com ([216.71.154.45]:5736 "EHLO
-        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRH07 (ORCPT
+        Tue, 18 Jun 2019 03:27:03 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45953 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRH1C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:26:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1560842818; x=1592378818;
-  h=from:to:cc:subject:date:message-id:references:
-   content-transfer-encoding:mime-version;
-  bh=d+wG2Fjx0bOhYYZT7YsRsIrQMqCTL7+/VTTJL4X/Ksc=;
-  b=Gb0J09UnwD0iS9xfbqlsgyiN6dj5e1SwuRdWamMUcjrVDhW90ns3ewCq
-   ij2vCI3wsRZVYWAjxmGUqIKr0WtGTEan8p98AT1xfmuxKUCDZXxW4dIHN
-   A1Zu2H7J/H5HMzKg5yWQMDgUxmSSHDnFnMJzGChBlxAfOHKp7xECmbxAT
-   jBniRil4TNJHUQnSyDU7xhdIM5lCKsdrjcd0CrSYifsu7GO6y2Zr3K/pn
-   jHSdCzHy2CzHSwPQoaMZC8SSpa9XRR1L4hPzPbY/8kF5Drw5jacz+xAEK
-   Es4o3B+GHAOnkCLrxCdUZemdEbQwbif9vl/EPm4MWZ7ruojV7eFotHlAu
-   A==;
-X-IronPort-AV: E=Sophos;i="5.63,388,1557158400"; 
-   d="scan'208";a="112473576"
-Received: from mail-dm3nam05lp2050.outbound.protection.outlook.com (HELO NAM05-DM3-obe.outbound.protection.outlook.com) ([104.47.49.50])
-  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 14:04:23 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=ZmJFPMJq+tV8srk+lxwmuUSFY8ni9vRMTmfDiyJzrCQ=;
- b=ZOMzGEaGnl1DBqj3pnLxZo9Ct9ewG0RfZI23EHWK5ww7byBTjE/UR+Abz/W2llAYfDSlrJOLCn5CkhVEHdN/CD44BViSaWblTCM0S2VzosUaEF+ahfe+eN1bhx1HUGybQJg2+QhqelSFXkEVDUj0zfpfuGThklFSq1R+gmtjX64=
-Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
- SN6PR04MB4941.namprd04.prod.outlook.com (52.135.114.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Tue, 18 Jun 2019 06:04:21 +0000
-Received: from SN6PR04MB5231.namprd04.prod.outlook.com
- ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
- ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.1987.013; Tue, 18 Jun 2019
- 06:04:21 +0000
-From:   Naohiro Aota <Naohiro.Aota@wdc.com>
-To:     Josef Bacik <josef@toxicpanda.com>
-CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 02/19] btrfs: Get zone information of zoned block devices
-Thread-Topic: [PATCH 02/19] btrfs: Get zone information of zoned block devices
-Thread-Index: AQHVHTJ/1FX3VZfOTkaSGAxvcc7+NQ==
-Date:   Tue, 18 Jun 2019 06:04:21 +0000
-Message-ID: <SN6PR04MB52315752FF4D8E3CFF8801B38CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-3-naohiro.aota@wdc.com>
- <20190613135759.22siaadm7l4gz2ri@MacBook-Pro-91.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Naohiro.Aota@wdc.com; 
-x-originating-ip: [199.255.47.8]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 4ff130cc-6e51-48c9-775c-08d6f3b2ce8b
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:SN6PR04MB4941;
-x-ms-traffictypediagnostic: SN6PR04MB4941:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB4941C013C1C390B213378E9E8CEA0@SN6PR04MB4941.namprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(376002)(346002)(366004)(189003)(199004)(33656002)(7416002)(76116006)(99286004)(8936002)(74316002)(91956017)(7736002)(66476007)(66556008)(478600001)(68736007)(7696005)(66946007)(64756008)(8676002)(305945005)(73956011)(6506007)(102836004)(53546011)(53936002)(6916009)(229853002)(52536014)(81166006)(66446008)(2906002)(6246003)(81156014)(6116002)(6436002)(3846002)(54906003)(476003)(26005)(4326008)(186003)(71200400001)(71190400001)(66066001)(55016002)(446003)(486006)(5660300002)(86362001)(76176011)(14454004)(5024004)(9686003)(25786009)(72206003)(316002)(256004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4941;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: tmzyWYcZUOjUjH2r75U4CtTwBmWbwrI6qsbEbRoyLAw4PwRXjiXLyEG9nU6sdqUmDLqn5UudaowCffjUcYUpytDaAyj5QUh69ZlCzd4gc6hD73y/2M16HfIsZs9HDJv5rxYkQ06A/k7poXszCLksvQpD1ab63kmzp+sjoPH2NXDl/92DOnVEWSKBDiYyIjW1825xDfumQAfRPZQxA9PEwpT6t14S5eXsOQp5HWXKed5EJoG3yOm35W12nF7Gh/4jJHxg44OeoWeoZmNPq8TpW2a7iEijnpGtYAviE6c2jXvG2U6XEGfhzJKpckHrEvGQQq833yE13i1uCfxjmzGtYkcc0lpLR0H+18AoSyRzWlC/EsBdgjbt6ZPgQS6xRTI24QQsn3PZqc49uXYSPxEMnE4p8AVzcOYQCzp9MJ7a8XA=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 18 Jun 2019 03:27:02 -0400
+Received: by mail-ot1-f67.google.com with SMTP id x21so12875037otq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:27:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WXMMpkWgHtvIKrWn0u/ts00b6Lb6kQODjgea6xZRVcw=;
+        b=n5jTttpSsnSSG7S26mLiVp5ec3nC7Bt+bhUQyYdTmCUjLaZwGPWLz7fyZBNw7zeOaQ
+         sMo0qvQTegsDTriJ1ICI+19PLMnxshzOyaDNyBvTwO8HpR/iesnD8KX2n4TjyDdSY69I
+         i+u0yI5cdtXzXLRFxt8aVcgUsiPmCb2zC9yxTxRhVsEkApQEh2KBwj+HPYRfCnItBGAx
+         pBVOn/TkD5PicrxHK6a5ME1ldYsk2lWufUmKR6lfzoRh8jAQ9J8Mrl8+LKPap1nCE7us
+         ugBYqCm3en1TOprMdhILg93HVxQHnQRohrAgWnNy4oREGYqWZ62gEIkT53sJva9KnXow
+         dglQ==
+X-Gm-Message-State: APjAAAXnQYT+Q10dRen+EebSjMOw7aL+GNvPbNWMiTVmzTNYgbm7WvqI
+        1G7J5YZwlFIRdEHt63wjO8oo8P6XPcnixP1N05h9jg==
+X-Google-Smtp-Source: APXvYqwke2xjjx1AZHLnrRefbJOHRCLETEFTG3lTZNDnnJFIbMW80Fxo4vmtR84qlwuTR8+IB88zKsZ1Ila9DGVQJ4g=
+X-Received: by 2002:a9d:61c7:: with SMTP id h7mr5305782otk.357.1560842821877;
+ Tue, 18 Jun 2019 00:27:01 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 4ff130cc-6e51-48c9-775c-08d6f3b2ce8b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 06:04:21.2979
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4941
+References: <b477ac75a2b163048bdaeb37f57b4c3f04f75a31.1559631700.git.viresh.kumar@linaro.org>
+ <20190605091644.w3g7hc7r3eiscz4f@queper01-lin> <20190606025204.qe5v7j6fysjkgxc6@vireshk-i7>
+ <20190617150204.GG3436@hirez.programming.kicks-ass.net> <20190618031217.63md32da5pzydqia@vireshk-i7>
+In-Reply-To: <20190618031217.63md32da5pzydqia@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 18 Jun 2019 09:26:49 +0200
+Message-ID: <CAJZ5v0g4shiz+Hq+0fS1GQjQX7tK5EyLiX-SOpDoTm4xswV8bg@mail.gmail.com>
+Subject: Re: [PATCH] sched/fair: Introduce fits_capacity()
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/06/13 22:58, Josef Bacik wrote:=0A=
-> On Fri, Jun 07, 2019 at 10:10:08PM +0900, Naohiro Aota wrote:=0A=
->> If a zoned block device is found, get its zone information (number of zo=
-nes=0A=
->> and zone size) using the new helper function btrfs_get_dev_zonetypes(). =
- To=0A=
->> avoid costly run-time zone report commands to test the device zones type=
-=0A=
->> during block allocation, attach the seqzones bitmap to the device struct=
-ure=0A=
->> to indicate if a zone is sequential or accept random writes.=0A=
->>=0A=
->> This patch also introduces the helper function btrfs_dev_is_sequential()=
- to=0A=
->> test if the zone storing a block is a sequential write required zone.=0A=
->>=0A=
->> Signed-off-by: Damien Le Moal <damien.lemoal@wdc.com>=0A=
->> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>=0A=
->> ---=0A=
->>   fs/btrfs/volumes.c | 143 +++++++++++++++++++++++++++++++++++++++++++++=
-=0A=
->>   fs/btrfs/volumes.h |  33 +++++++++++=0A=
->>   2 files changed, 176 insertions(+)=0A=
->>=0A=
-> =0A=
-> We have enough problems with giant files already, please just add a separ=
-ate=0A=
-> hmzoned.c or whatever and put all the zone specific code in there.  That'=
-ll save=0A=
-> me time when I go and break a bunch of stuff out.  Thanks,=0A=
-> =0A=
-> Josef=0A=
-> =0A=
-=0A=
-Thank you for the reviews.=0A=
-=0A=
-I'll add hmzoned.c and put the things (with more helpers/abstraction) there=
- in the next version.=0A=
-=0A=
-Thanks.=0A=
+On Tue, Jun 18, 2019 at 5:12 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> +Rafael
+>
+> On 17-06-19, 17:02, Peter Zijlstra wrote:
+> > On Thu, Jun 06, 2019 at 08:22:04AM +0530, Viresh Kumar wrote:
+> > > Hmm, even if the values are same currently I am not sure if we want
+> > > the same for ever. I will write a patch for it though, if Peter/Rafael
+> > > feel the same as you.
+> >
+> > Is it really the same variable or just two numbers that happen to be the
+> > same?
+>
+> In both cases we are trying to keep the load under 80% of what can be supported.
+> But I am not sure of the answer to your question.
+>
+> Maybe Rafael knows :)
+
+Which variable?
