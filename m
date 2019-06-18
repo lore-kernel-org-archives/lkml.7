@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A0E0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F59C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:56:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2C220873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AAFA20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560891359;
-	bh=4EP0i71QCGkT60PFMZjnqQfjzvWfOVKjTFUDNd1BTGs=;
+	s=default; t=1560891361;
+	bh=MnVX7iQuZIgqPHdb+CCEwhDt53v8Xsm2o490cwgty30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qi9C0F5YdiF+8ZSBs4Xz+PYesv9zSC1vwNdXm/T2q65aa/8paS5Nl6aqWtqIysA5G
-	 gnTf3B8/ecWP56WNgSEcAEHGgjQ7dJp2pWvsVLoX8Xz+Bg9SzJT+Ja2kpIqGZbxjeA
-	 6Ynrvha2AE+qyKcyAK3zmRJuIwCZ3CI545XqRJfg=
+	b=FJQLhcVn3K+9aq574Lw1AgN5gShEawflbyYp8z2glGYKcw1tQ9lWmoleM6gO8OW84
+	 /7wQd5VF2LYpIIppb2bt9r60/e6v3opxdPtRQRD+NRHju8eLXBXh0KB3Vo+sOBOsE5
+	 FbRL3SiTUwsN+BgAKMWJWI3p2Fw1+42jdxkcUTuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731095AbfFRUz5 (ORCPT
+        id S1731102AbfFRU4A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:55:57 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50364 "EHLO
+        Tue, 18 Jun 2019 16:56:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50376 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730664AbfFRUxy (ORCPT
+        with ESMTP id S1730670AbfFRUxy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 16:53:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=XybHKlaRWzbSGlu8K7TS9Q7Y/OmFmTKD4x+hIonIz/Y=; b=AH1QL9su9j33iAlK1EfQgsnpDO
-        p5MhFn3lV3uPKIt7bUIcmXhpt70U0LraZ6PZEN6G4QlStjVuZULgkx3zc7twSFMNxAy/MA+1RI91/
-        x1/jKn1yizJn7+qwkhbPa3vZ48Cmm/QjpW2LGYp7uIzRNhcMjcYMpae8UPq5tsfwPQPOcNIjhrWs7
-        gMvDVY19d3e2wPLlcDnI3fkTef5eQ2hba6IzQ0ka/kW7Th/pHkVh1OtJ3D5SrIWEilm984JFpxru1
-        mqdaGRcOe7qKSu7N/DwNkFOnZuqCmHAvF5jCHgmJoDpQav9J4pTvFtAzfEfZxYlEW3AXkENI6y3gX
-        7aCdgbhg==;
+        bh=4cWjMp5PaXweLfT1aRxtKRWZepkzB8FeW0x9RJN+xzA=; b=jXf3ilEtuZOXAfWKdgNAuUijb5
+        tp8Wujfqk9HxA+5LuFVSfGD9DyCoyk9prc/EWQ1YIiwlZJEcHiaITjFk76rzEw843V6OJhm6QVHiH
+        eb+R0cmI8GFFbAkCa/31PH0k/l2qkFIS/2526WpukU1DFkQ5BgNAn1MTOzf8Be8BqWlI5PAS7k8J9
+        fT7nz+x7zN5HyRd7nNgVxKn/v1Nf8UZarz+I4SC1zNR5b2gLuWKci2Mdrr0/JLmupMxLu7W93Svli
+        VpVT3jjqh/8odFMj4mxHsmjT7JNE6QHdMcygteX5FgT0j6Ils5xWlG9z6EToBQ6Sf75fIFcFo9fMU
+        ZRWfjoBg==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL73-0008N1-Lr; Tue, 18 Jun 2019 20:53:53 +0000
+        id 1hdL73-0008Mk-HU; Tue, 18 Jun 2019 20:53:53 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdL70-00020L-92; Tue, 18 Jun 2019 17:53:50 -0300
+        id 1hdL6z-0001zZ-UB; Tue, 18 Jun 2019 17:53:49 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 23/29] docs: namespaces: convert to ReST
-Date:   Tue, 18 Jun 2019 17:53:41 -0300
-Message-Id: <0de1606d1bba4da4e555477b10217877a0c9b1d7.1560890801.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 11/29] docs: memory-devices: convert ti-emif.txt to ReST
+Date:   Tue, 18 Jun 2019 17:53:29 -0300
+Message-Id: <625735651da142ff1ded1711fdb0f01758b6a54b.1560890800.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
 References: <cover.1560890800.git.mchehab+samsung@kernel.org>
@@ -64,97 +64,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the namespaces documentation files to ReST, add an
-index for them and adjust in order to produce a nice html
-output via the Sphinx build system.
+Prepare this file to be moved to a kernel book by converting
+it to ReST format and renaming it to ti-emif.rst.
 
-There are two upper case file names. Rename them to
-lower case, as we're working to avoid upper case file
-names at Documentation.
-
-At its new index.rst, let's add a :orphan: while this is not linked to
-the main index.rst file, in order to avoid build warnings.
+While this is not part of any book, mark it as :orphan:, in order
+to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- ...{compatibility-list.txt => compatibility-list.rst} | 10 +++++++---
- Documentation/namespaces/index.rst                    | 11 +++++++++++
- .../{resource-control.txt => resource-control.rst}    |  4 ++++
- 3 files changed, 22 insertions(+), 3 deletions(-)
- rename Documentation/namespaces/{compatibility-list.txt => compatibility-list.rst} (86%)
- create mode 100644 Documentation/namespaces/index.rst
- rename Documentation/namespaces/{resource-control.txt => resource-control.rst} (89%)
+ .../{ti-emif.txt => ti-emif.rst}              | 27 ++++++++++++-------
+ 1 file changed, 17 insertions(+), 10 deletions(-)
+ rename Documentation/memory-devices/{ti-emif.txt => ti-emif.rst} (81%)
 
-diff --git a/Documentation/namespaces/compatibility-list.txt b/Documentation/namespaces/compatibility-list.rst
-similarity index 86%
-rename from Documentation/namespaces/compatibility-list.txt
-rename to Documentation/namespaces/compatibility-list.rst
-index defc5589bfcd..318800b2a943 100644
---- a/Documentation/namespaces/compatibility-list.txt
-+++ b/Documentation/namespaces/compatibility-list.rst
-@@ -1,4 +1,6 @@
--	Namespaces compatibility list
-+=============================
-+Namespaces compatibility list
-+=============================
- 
- This document contains the information about the problems user
- may have when creating tasks living in different namespaces.
-@@ -7,13 +9,16 @@ Here's the summary. This matrix shows the known problems, that
- occur when tasks share some namespace (the columns) while living
- in different other namespaces (the rows):
- 
--	UTS	IPC	VFS	PID	User	Net
-+====	===	===	===	===	====	===
-+-	UTS	IPC	VFS	PID	User	Net
-+====	===	===	===	===	====	===
- UTS	 X
- IPC		 X	 1
- VFS			 X
- PID		 1	 1	 X
- User		 2	 2		 X
- Net						 X
-+====	===	===	===	===	====	===
- 
- 1. Both the IPC and the PID namespaces provide IDs to address
-    object inside the kernel. E.g. semaphore with IPCID or
-@@ -36,4 +41,3 @@ Net						 X
-    even having equal UIDs.
- 
-    But currently this is not so.
--
-diff --git a/Documentation/namespaces/index.rst b/Documentation/namespaces/index.rst
-new file mode 100644
-index 000000000000..bf40625dd11a
---- /dev/null
-+++ b/Documentation/namespaces/index.rst
-@@ -0,0 +1,11 @@
+diff --git a/Documentation/memory-devices/ti-emif.txt b/Documentation/memory-devices/ti-emif.rst
+similarity index 81%
+rename from Documentation/memory-devices/ti-emif.txt
+rename to Documentation/memory-devices/ti-emif.rst
+index f4ad9a7d0f4b..c9242294e63c 100644
+--- a/Documentation/memory-devices/ti-emif.txt
++++ b/Documentation/memory-devices/ti-emif.rst
+@@ -1,20 +1,24 @@
+-TI EMIF SDRAM Controller Driver:
 +:orphan:
 +
-+==========
-+Namespaces
-+==========
++===============================
++TI EMIF SDRAM Controller Driver
++===============================
+ 
+ Author
+-========
++======
+ Aneesh V <aneesh@ti.com>
+ 
+ Location
+-============
++========
+ driver/memory/emif.c
+ 
+ Supported SoCs:
+-===================
++===============
+ TI OMAP44xx
+ TI OMAP54xx
+ 
+ Menuconfig option:
+-==========================
++==================
+ Device Drivers
+ 	Memory devices
+ 		Texas Instruments EMIF driver
+@@ -29,10 +33,11 @@ functions of the driver includes re-configuring AC timing
+ parameters and other settings during frequency, voltage and
+ temperature changes
+ 
+-Platform Data (see include/linux/platform_data/emif_plat.h):
+-=====================================================================
++Platform Data (see include/linux/platform_data/emif_plat.h)
++===========================================================
+ DDR device details and other board dependent and SoC dependent
+ information can be passed through platform data (struct emif_platform_data)
 +
-+.. toctree::
-+   :maxdepth: 1
+ - DDR device details: 'struct ddr_device_info'
+ - Device AC timings: 'struct lpddr2_timings' and 'struct lpddr2_min_tck'
+ - Custom configurations: customizable policy options through
+@@ -40,17 +45,19 @@ information can be passed through platform data (struct emif_platform_data)
+ - IP revision
+ - PHY type
+ 
+-Interface to the external world:
+-================================
++Interface to the external world
++===============================
+ EMIF driver registers notifiers for voltage and frequency changes
+ affecting EMIF and takes appropriate actions when these are invoked.
 +
-+   compatibility-list
-+   resource-control
-diff --git a/Documentation/namespaces/resource-control.txt b/Documentation/namespaces/resource-control.rst
-similarity index 89%
-rename from Documentation/namespaces/resource-control.txt
-rename to Documentation/namespaces/resource-control.rst
-index abc13c394738..369556e00f0c 100644
---- a/Documentation/namespaces/resource-control.txt
-+++ b/Documentation/namespaces/resource-control.rst
-@@ -1,3 +1,7 @@
-+===========================
-+Namespaces research control
-+===========================
+ - freq_pre_notify_handling()
+ - freq_post_notify_handling()
+ - volt_notify_handling()
+ 
+ Debugfs
+-========
++=======
+ The driver creates two debugfs entries per device.
 +
- There are a lot of kinds of objects in the kernel that don't have
- individual limits or that have limits that are ineffective when a set
- of processes is allowed to switch user ids.  With user namespaces
+ - regcache_dump : dump of register values calculated and saved for all
+   frequencies used so far.
+ - mr4 : last polled value of MR4 register in the LPDDR2 device. MR4
 -- 
 2.21.0
 
