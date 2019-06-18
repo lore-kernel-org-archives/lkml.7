@@ -2,177 +2,134 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AB260C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:34:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6978BC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:34:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67DF02085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:34:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="SGIjcRfj"
+	by mail.kernel.org (Postfix) with ESMTP id 3F6012085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:34:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560864850;
+	bh=erFTlmy5nQxgqcXtEVqIcP0tYPvjXikwn/ssM9sQC0Q=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=QhgAl3ltFiUlbyrIulesqqZ/6t0tjdD7tSA2T+cknLWNp7BHQ4eQd9acC/5xx77xI
+	 tk8z1HIy6MMRqfybskbJ7OtvObi/73QxMPwVxn8sDat+CmC5S4Cufn00cdvvsQXs4j
+	 N2HcRai2AgJ1rZX20EyVDFGtNWogxc1jPQAK8/es=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729229AbfFRNeD (ORCPT
+        id S1729326AbfFRNeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:34:03 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:41169 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728699AbfFRNeC (ORCPT
+        Tue, 18 Jun 2019 09:34:08 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42476 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfFRNeG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:34:02 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d17so10306014qtj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 06:34:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=uESHdIPMr1/2I8R4apfsQXdORt5EllcKdhz30TRq9+s=;
-        b=SGIjcRfjTQPUsAhNx90ES669WIHnpYBE7Vzbgcc9KMOW9MAywDsUZIv2G/R4LfV2M+
-         2LsnZzuYigyPY1J6gEHM3x8R4YtQnIUA9Vv7Sdk5AIbMc87ZHs3hnlosIk7SMRI/UQk+
-         0V7/Wubit590Sk0vWPTTGIKZV1X2CRsoNZseJh6vw6Vm7BCoSuJ7uUtowk+B3CRXipvv
-         gZ0Ggew6XDCbOm7saHGmt+g2SxPKCDPZFeXbJBHG2n71U1nI66ZTr8uYj2Dosb/IWtMY
-         T37WCxShSheVxEBWOAo7k9pOYBrLRW1afS52oyo5dybQmJTFWcAZOmvgEFCp+crZdI2+
-         wdwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=uESHdIPMr1/2I8R4apfsQXdORt5EllcKdhz30TRq9+s=;
-        b=ITs7SG91bLNNU6nIftpuPgirfYDE+WA0Yo4PwiTh5sIrVtuq8cQFSdCRD3Rt+/NUR1
-         Wz5155qy+eTas+ly2L7N0sW3wwnYzzlQiD5tWY+bYhLJGg+SjooJ4Mqg1kmrS8pDVXZL
-         Ve9KjVP/AnjClx1Bh7HLv59mGqHVdT4s3WnCfbRuoBYGR8DHxRpsqFMEF7OLgshaW3wC
-         wnrG57R/4iA5JLlzY9k+zjS9xSeUEJ6bz4FBDCDauHR0w7V+hNvZab2k6N9rwvbezImV
-         LlCqDgwyX5hu7mrmhV4N70aFKRNXyOm/UopYJW6dEJnkjzSZiVUPxGaKHWlj6cSe1Juf
-         pc0Q==
-X-Gm-Message-State: APjAAAV91yOREvogNXcxoyoEirkEbTLHfBKWmaGodM5EkOS36qJOuTjk
-        8TdaZ52kFXjhjJgImkn/0pwMIg==
-X-Google-Smtp-Source: APXvYqw/NY0+diPdp7TeJ0U/wX2Blgzw4e+gsafs2o0OprtgRoc1/dpCLwmQMVwIB+MyuV9LmnynGA==
-X-Received: by 2002:ac8:24f5:: with SMTP id t50mr96953830qtt.285.1560864841328;
-        Tue, 18 Jun 2019 06:34:01 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::a0ec])
-        by smtp.gmail.com with ESMTPSA id v9sm7627054qti.60.2019.06.18.06.34.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 06:34:00 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 09:33:59 -0400
-From:   Josef Bacik <josef@toxicpanda.com>
-To:     Damien Le Moal <Damien.LeMoal@wdc.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Naohiro Aota <Naohiro.Aota@wdc.com>,
-        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
-        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
-        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Subject: Re: [PATCH 11/19] btrfs: introduce submit buffer
-Message-ID: <20190618133357.l55hwc3x5cpycpji@MacBook-Pro-91.local>
-References: <20190607131025.31996-1-naohiro.aota@wdc.com>
- <20190607131025.31996-12-naohiro.aota@wdc.com>
- <20190613141457.jws5ca63wfgjf7da@MacBook-Pro-91.local>
- <BYAPR04MB5816E9FC012A289CA438E794E7EB0@BYAPR04MB5816.namprd04.prod.outlook.com>
+        Tue, 18 Jun 2019 09:34:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3pt+lvuNJTl0R7q+cDc7mElDC2SrbdpyQw7HovUZcjM=; b=B6VLnbVASmJOveAXuJlXWMBGF
+        cSjBXTuJTPybZr5q2iqqH16k8QN3sWX1eMGy5BwQ4lCWRMhZsV13dyWkcfxYVKKtF3G9QcWYi0lVg
+        tDoc3QPZ9bMIixzCfhriR7kObOttuGy6QFB1/BYdyYLTEkzGBS1ht7Npm/+6HGwWMl3VsTczEHrPt
+        3O4zLgvWja0VUNS6T2Vmovv1T0tbVpA6/cnI7iWw+gqpuBiLe50Xq39mlVx3HauhSewrto+ThH0C6
+        V2NLcWvLD6tw7b2Vaoy71tmCLHR00npK04ddP9L2StMkyKDlfYIczIU7Wz2iat3RYJgfttxfBsWVj
+        rFRhknlAg==;
+Received: from 179.186.105.91.dynamic.adsl.gvt.net.br ([179.186.105.91] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdEFP-0007CG-72; Tue, 18 Jun 2019 13:34:03 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hdEFM-00008f-4G; Tue, 18 Jun 2019 10:34:00 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Ajay Gupta <ajayg@nvidia.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org
+Subject: [PATCH] docs: fix some broken references due to txt->rst renames
+Date:   Tue, 18 Jun 2019 10:33:58 -0300
+Message-Id: <6f09587b7678f2fb378d736f45a02ffa9412cc99.1560864716.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <BYAPR04MB5816E9FC012A289CA438E794E7EB0@BYAPR04MB5816.namprd04.prod.outlook.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 03:16:05AM +0000, Damien Le Moal wrote:
-> Josef,
-> 
-> On 2019/06/13 23:15, Josef Bacik wrote:
-> > On Fri, Jun 07, 2019 at 10:10:17PM +0900, Naohiro Aota wrote:
-> >> Sequential allocation is not enough to maintain sequential delivery of
-> >> write IOs to the device. Various features (async compress, async checksum,
-> >> ...) of btrfs affect ordering of the IOs. This patch introduces submit
-> >> buffer to sort WRITE bios belonging to a block group and sort them out
-> >> sequentially in increasing block address to achieve sequential write
-> >> sequences with __btrfs_map_bio().
-> >>
-> >> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
-> > 
-> > I hate everything about this.  Can't we just use the plugging infrastructure for
-> > this and then make sure it re-orders the bios before submitting them?  Also
-> > what's to prevent the block layer scheduler from re-arranging these io's?
-> > Thanks,
-> 
-> The block I/O scheduler reorders requests in LBA order, but that happens for a
-> newly inserted request against pending requests. If there are no pending
-> requests because all requests were already issued, no ordering happen, and even
-> worse, if the drive queue is not full yet (e.g. there are free tags), then the
-> newly inserted request will be dispatched almost immediately, preventing
-> reordering with subsequent incoming write requests to happen.
-> 
+There are three left-overs from the recent file renames,
+probably due to some other conflicting patch.
 
-This sounds like we're depending on specific behavior from the ioscheduler,
-which means we're going to have a sad day at some point in the future.
+Fix them.
 
-> The other problem is that the mq-deadline scheduler does not track zone WP
-> position. Write request issuing is done regardless of the current WP value,
-> solely based on LBA ordering. This means that mq-deadline will not prevent
-> out-of-order, or rather, unaligned write requests. These will not be detected
-> and dispatched whenever possible. The reasons for this are that:
-> 1) the disk user (the FS) has to manage zone WP positions anyway. So duplicating
-> that management at the block IO scheduler level is inefficient.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
 
-I'm not saying it has to manage the WP pointer, and in fact I'm not saying the
-scheduler has to do anything at all.  We just need a more generic way to make
-sure that bio's submitted in order are kept in order.  So perhaps a hmzoned
-scheduler that does just that, and is pinned for these devices.
+This patch is against today's next-20190617 branch. Not sure if it
+will apply cleanly at -docs tree. If not,  Please let me know for me to
+split.
 
-> 2) Adding zone WP management at the block IO scheduler level would also need a
-> write error processing path to resync the WP value in case of failed writes. But
-> the user/FS also needs that anyway. Again duplicated functionalities.
+ Documentation/devicetree/bindings/arm/idle-states.txt | 2 +-
+ drivers/gpu/drm/i915/intel_runtime_pm.h               | 2 +-
+ drivers/i2c/busses/i2c-nvidia-gpu.c                   | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-Again, no not really.  My point is I want as little block layer knowledge in
-btrfs as possible.  I accept we should probably keep track of the WP, it just
-makes it easier on everybody if we allocate sequentially.  I'll even allow that
-we need to handle the write errors and adjust our WP stuff internally when
-things go wrong.
+diff --git a/Documentation/devicetree/bindings/arm/idle-states.txt b/Documentation/devicetree/bindings/arm/idle-states.txt
+index 3bdbe675b9e6..d8d9aa7167e8 100644
+--- a/Documentation/devicetree/bindings/arm/idle-states.txt
++++ b/Documentation/devicetree/bindings/arm/idle-states.txt
+@@ -703,4 +703,4 @@ cpus {
+     https://www.devicetree.org/specifications/
+ 
+ [6] ARM Linux Kernel documentation - Booting AArch64 Linux
+-    Documentation/arm64/booting.txt
++    Documentation/arm64/booting.rst
+diff --git a/drivers/gpu/drm/i915/intel_runtime_pm.h b/drivers/gpu/drm/i915/intel_runtime_pm.h
+index f2d6299a8161..3cb391cd81c1 100644
+--- a/drivers/gpu/drm/i915/intel_runtime_pm.h
++++ b/drivers/gpu/drm/i915/intel_runtime_pm.h
+@@ -44,7 +44,7 @@ enum i915_drm_suspend_mode {
+  * to be disabled. This shouldn't happen and we'll print some error messages in
+  * case it happens.
+  *
+- * For more, read the Documentation/power/runtime_pm.txt.
++ * For more, read the Documentation/power/runtime_pm.rst.
+  */
+ struct intel_runtime_pm {
+ 	atomic_t wakeref_count;
+diff --git a/drivers/i2c/busses/i2c-nvidia-gpu.c b/drivers/i2c/busses/i2c-nvidia-gpu.c
+index cfc76b5de726..5a1235fd86bb 100644
+--- a/drivers/i2c/busses/i2c-nvidia-gpu.c
++++ b/drivers/i2c/busses/i2c-nvidia-gpu.c
+@@ -364,7 +364,7 @@ static void gpu_i2c_remove(struct pci_dev *pdev)
+ /*
+  * We need gpu_i2c_suspend() even if it is stub, for runtime pm to work
+  * correctly. Without it, lspci shows runtime pm status as "D0" for the card.
+- * Documentation/power/pci.txt also insists for driver to provide this.
++ * Documentation/power/pci.rst also insists for driver to provide this.
+  */
+ static __maybe_unused int gpu_i2c_suspend(struct device *dev)
+ {
+-- 
+2.21.0
 
-What I'm having a hard time swallowing is having a io scheduler in btrfs proper.
-We just ripped out the old one we had because it broke cgroups.  It just adds
-extra complexity to an already complex mess.
 
-> 3) The block layer will need a timeout to force issue or cancel pending
-> unaligned write requests. This is necessary in case the drive user stops issuing
-> writes (for whatever reasons) or the scheduler is being switched. This would
-> unnecessarily cause write I/O errors or cause deadlocks if the request queue
-> quiesce mode is entered at the wrong time (and I do not see a good way to deal
-> with that).
-
-Again we could just pin the hmzoned scheduler to those devices so you can't
-switch them.  Or make a hmzoned blk plug and pin no scheduler to these devices.
-
-> 
-> blk-mq is already complicated enough. Adding this to the block IO scheduler will
-> unnecessarily complicate things further for no real benefits. I would like to
-> point out the dm-zoned device mapper and f2fs which are both already dealing
-> with write ordering and write error processing directly. Both are fairly
-> straightforward but completely different and each optimized for their own structure.
-> 
-
-So we're duplicating this effort in 2 places already and adding a 3rd place
-seems like a solid plan?  Device-mapper it makes sense, we're sitting squarely
-in the block layer so moving around bio's/requests is its very reason for
-existing.  I'm not sold on the file system needing to take up this behavior.
-This needs to be handled in a more generic way so that all file systems can
-share the same mechanism.
-
-I'd even go so far as to say that you could just require using a dm device with
-these hmzoned block devices and then handle all of that logic in there if you
-didn't feel like doing it generically.  We're already talking about esoteric
-devices that require special care to use, adding the extra requirement of
-needing to go through device-mapper to use it wouldn't be that big of a stretch.
-Thanks,
-
-Josef
