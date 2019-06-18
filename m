@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB547C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91F01C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B85B2187F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E4F621883
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731053AbfFRWvX (ORCPT
+        id S1731009AbfFRWvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:51:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48880 "EHLO mga07.intel.com"
+        Tue, 18 Jun 2019 18:51:16 -0400
+Received: from mga02.intel.com ([134.134.136.20]:2939 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730979AbfFRWvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:51:15 -0400
+        id S1730176AbfFRWvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 18:51:12 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 15:51:13 -0700
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 15:51:11 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
-   d="scan'208";a="358009395"
+   d="scan'208";a="358009355"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 15:51:13 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 15:51:11 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -47,9 +47,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v9 17/17] x86/split_lock: Warn on unaligned address in atomic bit operations
-Date:   Tue, 18 Jun 2019 15:41:19 -0700
-Message-Id: <1560897679-228028-18-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v9 05/17] x86/cpufeatures: Enumerate MSR_IA32_CORE_CAP
+Date:   Tue, 18 Jun 2019 15:41:07 -0700
+Message-Id: <1560897679-228028-6-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
 References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
@@ -58,112 +58,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An atomic bit operation operates one bit in a single unsigned long location
-in a bitmap. In 64-bit mode, the location is at:
-base address of the bitmap + (bit offset in the bitmap / 64) * 8
+MSR_IA32_CORE_CAP (0xcf) contains bits that enumerate some model
+specific features.
 
-If the base address is unaligned to unsigned long, each unsigned long
-location operated by the atomic operation will be unaligned to unsigned
-long and a split lock issue will happen if the unsigned long location
-crosses two cache lines.
+The MSR 0xcf itself is enumerated by CPUID.(EAX=0x7,ECX=0):EDX[30].
+When this CPUID bit is 1, the MSR 0xcf exists.
 
-So checking alignment of the base address can proactively audit potential
-split lock issues in the atomic bit operation. A real split lock issue
-may or may not happen depending on the bit offset.
+Detailed information on the CPUID bit and the MSR can be found in the
+latest Intel 64 and IA-32 Architectures Software Developer's Manual.
 
-Once analyzing the warning information, kernel developer can fix the
-potential split lock issue by aligning the base address to unsigned long
-instead of waiting for a real split lock issue happens.
-
-After applying this patch on 5.2-rc1, vmlinux size is increased by 0.2%
-and bzImage size is increased by 0.3% with allyesconfig.
-
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-FYI. After applying this patch, I haven't noticed any warning generated
-from this patch with booting and limited run time tests on a few platforms.
-
- arch/x86/include/asm/bitops.h | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
-
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 8e790ec219a5..44d7a353d6fd 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -14,6 +14,7 @@
- #endif
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 75f27ee2c263..c6e888688a13 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -351,6 +351,7 @@
+ #define X86_FEATURE_INTEL_STIBP		(18*32+27) /* "" Single Thread Indirect Branch Predictors */
+ #define X86_FEATURE_FLUSH_L1D		(18*32+28) /* Flush L1D cache */
+ #define X86_FEATURE_ARCH_CAPABILITIES	(18*32+29) /* IA32_ARCH_CAPABILITIES MSR (Intel) */
++#define X86_FEATURE_CORE_CAPABILITY	(18*32+30) /* "" IA32_CORE_CAPABILITY MSR */
+ #define X86_FEATURE_SPEC_CTRL_SSBD	(18*32+31) /* "" Speculative Store Bypass Disable */
  
- #include <linux/compiler.h>
-+#include <linux/bug.h>
- #include <asm/alternative.h>
- #include <asm/rmwcc.h>
- #include <asm/barrier.h>
-@@ -67,6 +68,8 @@
- static __always_inline void
- set_bit(long nr, volatile unsigned long *addr)
- {
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	if (IS_IMMEDIATE(nr)) {
- 		asm volatile(LOCK_PREFIX "orb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
-@@ -105,6 +108,8 @@ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
- static __always_inline void
- clear_bit(long nr, volatile unsigned long *addr)
- {
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	if (IS_IMMEDIATE(nr)) {
- 		asm volatile(LOCK_PREFIX "andb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
-@@ -137,6 +142,9 @@ static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
- static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
- {
- 	bool negative;
-+
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	asm volatile(LOCK_PREFIX "andb %2,%1"
- 		CC_SET(s)
- 		: CC_OUT(s) (negative), WBYTE_ADDR(addr)
-@@ -186,6 +194,8 @@ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
-  */
- static __always_inline void change_bit(long nr, volatile unsigned long *addr)
- {
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	if (IS_IMMEDIATE(nr)) {
- 		asm volatile(LOCK_PREFIX "xorb %1,%0"
- 			: CONST_MASK_ADDR(nr, addr)
-@@ -206,6 +216,8 @@ static __always_inline void change_bit(long nr, volatile unsigned long *addr)
-  */
- static __always_inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
- {
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
- }
- 
-@@ -252,6 +264,8 @@ static __always_inline bool __test_and_set_bit(long nr, volatile unsigned long *
-  */
- static __always_inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
- {
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btr), *addr, c, "Ir", nr);
- }
- 
-@@ -305,6 +319,8 @@ static __always_inline bool __test_and_change_bit(long nr, volatile unsigned lon
-  */
- static __always_inline bool test_and_change_bit(long nr, volatile unsigned long *addr)
- {
-+	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
-+
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
+ /*
 -- 
 2.19.1
 
