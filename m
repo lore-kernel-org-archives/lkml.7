@@ -2,319 +2,624 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E01DC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F72BC31E60
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C37F52084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RdV6clCz"
+	by mail.kernel.org (Postfix) with ESMTP id 51F0B2084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560892073;
+	bh=oJNa21dBlpuIE/YpYPdFLq2U31eah6H36PW4uni2IDw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=Ku7gZSzXmBiPyIOmheTxKlnr+xpa8dhyovku1cxPhq0IZNlWyTy+apLNQyPZzN7RR
+	 L4JtTvtnxcI1Y+6gAXCILWjI+nqQV6rLriYSRnu1lD/MCVOwLfD8Rz/jUECxxKJ8gz
+	 Povu9XN8wJ0nRZT7Nto6rmyVR1+oT/XwcXp7TsAk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731146AbfFRVHi (ORCPT
+        id S1731168AbfFRVHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:07:38 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38157 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730940AbfFRVHg (ORCPT
+        Tue, 18 Jun 2019 17:07:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34530 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730792AbfFRVFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 17:07:36 -0400
-Received: by mail-wr1-f68.google.com with SMTP id d18so1007012wrs.5;
-        Tue, 18 Jun 2019 14:07:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=dETPkxfMPcC0ta/lQ9fPdZDx/rgTJAUHsaSrmx4YzcA=;
-        b=RdV6clCznMrb+H+Bbd+ABhrl3YxSzMAxok0QHxrjDJXCmrx+9uC/b/Qz89LEdn1qrC
-         XgwmWlkMZJFot9yXWXNQmRCE2T43o82aHuUFHtBcqymFm6jCVYOIyBX6hg4fdg9y+AOl
-         a0whaz68LDDY3kq5PJ1FDgf3YdeYjyAj5d7152KwEP2XYKQwC/jygmAO80ujdBXLFYqA
-         LYWMpB8dnkcDXaEYRGMA+ooARsgsbQ1JYGmPimzcXmYRYbJBI4FTI5lzXt39Z4s+cphZ
-         Zoa89IGUxV94gtn+jD2t718xFF1PvhsKAhYv4aCKTiTrsnkHaLdhGocBiNpCj3qtqN1L
-         7xzA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=dETPkxfMPcC0ta/lQ9fPdZDx/rgTJAUHsaSrmx4YzcA=;
-        b=Xjjra2F5G2n+2hMsunpS26W49WfCfNcCIGvVtg9K+tM33WdZXbbNUAq5AZeb9whhJX
-         tz+/DzXUY2EUl0NKRK0x04RJ8ZObgjlIbUpFwuGCdrV2gJ+7ed5y3hXd31SLBDEjjhyY
-         Lp9ye7JNxAZ5cm+sVE5VBC928dIizUxOxtRYtId74qHso7+cbAn3Wx9agiksL4Fe7ugq
-         3v/xLeGwhpkf1u4LN+izSO1MNjnAPDaNYfZpRxtbkyWKKMZ6QnW5lHWj27rGpDOzDwig
-         4NbN+VR01di8mb2IAN4FRwyQU/mxj5f9qCI0j3CbDNtEQm6HDiT/r084xqN3nQ/tOLhm
-         CsxQ==
-X-Gm-Message-State: APjAAAWH463dUOlXfglYvldwZlMfeOXLWOfA6Zd3CqA8GY/eAaTfRsPB
-        s0db6/sH/95EgTEXGapzdjg=
-X-Google-Smtp-Source: APXvYqwBH0yccDnjRK66wWkiPc8anxxOmiCePMlEYScdpdMmI1jINIZM0m8gOFwmA1aCsERkIpWorA==
-X-Received: by 2002:adf:ea8b:: with SMTP id s11mr1278666wrm.100.1560892052920;
-        Tue, 18 Jun 2019 14:07:32 -0700 (PDT)
-Received: from ziggy.stardust ([95.169.230.25])
-        by smtp.gmail.com with ESMTPSA id j7sm16517215wru.54.2019.06.18.14.07.30
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 14:07:31 -0700 (PDT)
-Subject: Re: [PATCH v7 16/21] memory: mtk-smi: Add bus_sel for mt8183
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Tomasz Figa <tfiga@google.com>,
+        Tue, 18 Jun 2019 17:05:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=LlVQ5AgDnGeVreoNQv5wQOL6WOl9jGIbq69M3UI1xTA=; b=ZaZuy9l6/Ggb2QQVZs1T38/Jiv
+        CtntnfPNCLjMC3OvceIzJ9DrBsVXwc1XE3p+C/np1rrU265Okcg/ne/X4p46hD/Jw/rYeNgBZ73Pa
+        ZIm/HbtFDoz1x6v3K2O4lo9zWrgczxl+dfRqTlvVf1VQIAz9l0y13RhVE/itGt+mB0z6hwntGy0FK
+        4NaIs1AlYQBCaWq9AtnGuFQc13k05oXiA9XddnRY42yEI8HuzANN6Pr8nCZIyTYhskzt5T4BWiDjR
+        CJCl2jQqimjNcJw1sbb35YKu4vF9XR32EMe5h3gsCQFLhZae58cWzJJoHMhP/ayEmHRKAKSAc9+0E
+        cyJQTmEQ==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdLIc-0006zA-J3; Tue, 18 Jun 2019 21:05:51 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hdLIa-0002Cp-1p; Tue, 18 Jun 2019 18:05:48 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
         Will Deacon <will.deacon@arm.com>,
-        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com,
-        youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
-        anan.sun@mediatek.com, Matthias Kaehlcke <mka@chromium.org>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-17-git-send-email-yong.wu@mediatek.com>
- <0205e43a-8677-c194-d118-6c199c03306c@gmail.com>
- <1560859855.8082.24.camel@mhfsdcap03>
-From:   Matthias Brugger <matthias.bgg@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <f3e200af-499e-a4af-9e2f-5e22ea5d8ee3@gmail.com>
-Date:   Tue, 18 Jun 2019 23:07:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Peter Zijlstra <peterz@infradead.org>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-parisc@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: [PATCH v1 15/22] docs: driver-api: add a chapter for memory-related API
+Date:   Tue, 18 Jun 2019 18:05:39 -0300
+Message-Id: <5a67bbb44d92b4fb07e3eef5b291608524f72ff3.1560891322.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1560891322.git.mchehab+samsung@kernel.org>
+References: <cover.1560891322.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <1560859855.8082.24.camel@mhfsdcap03>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+There are some DMA files under the main dir. Move them to the
+new chapter and add an index file for them.
 
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/PCI/pci.rst                        |  6 +++---
+ Documentation/block/biodoc.rst                   |  2 +-
+ .../driver-api/bus-virt-phys-mapping.rst         |  2 +-
+ Documentation/driver-api/index.rst               |  2 ++
+ .../mm/dma-api-howto.rst}                        |  2 --
+ .../{DMA-API.rst => driver-api/mm/dma-api.rst}   |  8 +++-----
+ .../mm/dma-attributes.rst}                       |  2 --
+ .../mm/dma-isa-lpc.rst}                          |  4 +---
+ Documentation/driver-api/mm/index.rst            | 11 +++++++++++
+ Documentation/driver-api/usb/dma.rst             |  6 +++---
+ Documentation/memory-barriers.txt                |  6 +++---
+ .../translations/ko_KR/memory-barriers.txt       |  6 +++---
+ arch/ia64/hp/common/sba_iommu.c                  | 12 ++++++------
+ arch/ia64/sn/pci/pci_dma.c                       |  4 ++--
+ arch/parisc/kernel/pci-dma.c                     |  2 +-
+ arch/x86/include/asm/dma-mapping.h               |  4 ++--
+ arch/x86/kernel/amd_gart_64.c                    |  2 +-
+ drivers/parisc/sba_iommu.c                       | 16 ++++++++--------
+ include/linux/dma-mapping.h                      |  2 +-
+ include/media/videobuf-dma-sg.h                  |  2 +-
+ kernel/dma/debug.c                               |  2 +-
+ 21 files changed, 54 insertions(+), 49 deletions(-)
+ rename Documentation/{DMA-API-HOWTO.rst => driver-api/mm/dma-api-howto.rst} (99%)
+ rename Documentation/{DMA-API.rst => driver-api/mm/dma-api.rst} (99%)
+ rename Documentation/{DMA-attributes.rst => driver-api/mm/dma-attributes.rst} (99%)
+ rename Documentation/{DMA-ISA-LPC.rst => driver-api/mm/dma-isa-lpc.rst} (98%)
+ create mode 100644 Documentation/driver-api/mm/index.rst
 
-On 18/06/2019 14:10, Yong Wu wrote:
-> On Mon, 2019-06-17 at 18:23 +0200, Matthias Brugger wrote:
->>
->> On 10/06/2019 14:17, Yong Wu wrote:
->>> There are 2 mmu cells in a M4U HW. we could adjust some larbs entering
->>> mmu0 or mmu1 to balance the bandwidth via the smi-common register
->>> SMI_BUS_SEL(0x220)(Each larb occupy 2 bits).
->>>
->>> In mt8183, For better performance, we switch larb1/2/5/7 to enter
->>> mmu1 while the others still keep enter mmu0.
->>>
->>> In mt8173 and mt2712, we don't get the performance issue,
->>> Keep its default value(0x0), that means all the larbs enter mmu0.
->>>
->>> Note: smi gen1(mt2701/mt7623) don't have this bus_sel.
->>>
->>> And, the base of smi-common is completely different with smi_ao_base
->>> of gen1, thus I add new variable for that.
->>>
->>> CC: Matthias Brugger <matthias.bgg@gmail.com>
->>> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
->>> Reviewed-by: Evan Green <evgreen@chromium.org>
->>> ---
->>>  drivers/memory/mtk-smi.c | 22 ++++++++++++++++++++--
->>>  1 file changed, 20 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
->>> index 9790801..08cf40d 100644
->>> --- a/drivers/memory/mtk-smi.c
->>> +++ b/drivers/memory/mtk-smi.c
->>> @@ -49,6 +49,12 @@
->>>  #define SMI_LARB_NONSEC_CON(id)	(0x380 + ((id) * 4))
->>>  #define F_MMU_EN		BIT(0)
->>>  
->>> +/* SMI COMMON */
->>> +#define SMI_BUS_SEL			0x220
->>> +#define SMI_BUS_LARB_SHIFT(larbid)	((larbid) << 1)
->>> +/* All are MMU0 defaultly. Only specialize mmu1 here. */
->>> +#define F_MMU1_LARB(larbid)		(0x1 << SMI_BUS_LARB_SHIFT(larbid))
->>> +
->>>  enum mtk_smi_gen {
->>>  	MTK_SMI_GEN1,
->>>  	MTK_SMI_GEN2
->>> @@ -57,6 +63,7 @@ enum mtk_smi_gen {
->>>  struct mtk_smi_common_plat {
->>>  	enum mtk_smi_gen gen;
->>>  	bool             has_gals;
->>> +	u32              bus_sel; /* Balance some larbs to enter mmu0 or mmu1 */
->>>  };
->>>  
->>>  struct mtk_smi_larb_gen {
->>> @@ -72,8 +79,8 @@ struct mtk_smi {
->>>  	struct clk			*clk_apb, *clk_smi;
->>>  	struct clk			*clk_gals0, *clk_gals1;
->>>  	struct clk			*clk_async; /*only needed by mt2701*/
->>> -	void __iomem			*smi_ao_base;
->>> -
->>> +	void __iomem			*smi_ao_base; /* only for gen1 */
->>> +	void __iomem			*base;	      /* only for gen2 */
->>
->> union {} maybe?
-> 
-> Yes. Thanks.
-> 
-> I will add it.
-> 
->>
->>>  	const struct mtk_smi_common_plat *plat;
->>>  };
->>>  
->>> @@ -410,6 +417,8 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
->>>  static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
->>>  	.gen      = MTK_SMI_GEN2,
->>>  	.has_gals = true,
->>> +	.bus_sel  = F_MMU1_LARB(1) | F_MMU1_LARB(2) | F_MMU1_LARB(5) |
->>> +		    F_MMU1_LARB(7),
->>>  };
->>>  
->>>  static const struct of_device_id mtk_smi_common_of_ids[] = {
->>> @@ -482,6 +491,11 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
->>>  		ret = clk_prepare_enable(common->clk_async);
->>>  		if (ret)
->>>  			return ret;
->>> +	} else {
->>> +		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +		common->base = devm_ioremap_resource(dev, res);
->>> +		if (IS_ERR(common->base))
->>> +			return PTR_ERR(common->base);
->>
->> We must be backwards compatible with DT which does not have the base defined.
-> 
-> The smi-common node in the previous mt2712 and mt8173 also have the
-> "reg" property even though they didn't use this base, Thus, It looks ok
-> for all the cases.
-> 
+diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
+index 0f52d172c9ac..8665209eda40 100644
+--- a/Documentation/PCI/pci.rst
++++ b/Documentation/PCI/pci.rst
+@@ -265,7 +265,7 @@ Set the DMA mask size
+ ---------------------
+ .. note::
+    If anything below doesn't make sense, please refer to
+-   Documentation/DMA-API.rst. This section is just a reminder that
++   Documentation/driver-api/mm/dma-api.rst. This section is just a reminder that
+    drivers need to indicate DMA capabilities of the device and is not
+    an authoritative source for DMA interfaces.
+ 
+@@ -291,7 +291,7 @@ Many 64-bit "PCI" devices (before PCI-X) and some PCI-X devices are
+ Setup shared control data
+ -------------------------
+ Once the DMA masks are set, the driver can allocate "consistent" (a.k.a. shared)
+-memory.  See Documentation/DMA-API.rst for a full description of
++memory.  See Documentation/driver-api/mm/dma-api.rst for a full description of
+ the DMA APIs. This section is just a reminder that it needs to be done
+ before enabling DMA on the device.
+ 
+@@ -421,7 +421,7 @@ owners if there is one.
+ 
+ Then clean up "consistent" buffers which contain the control data.
+ 
+-See Documentation/DMA-API.rst for details on unmapping interfaces.
++See Documentation/driver-api/mm/dma-api.rst for details on unmapping interfaces.
+ 
+ 
+ Unregister from other subsystems
+diff --git a/Documentation/block/biodoc.rst b/Documentation/block/biodoc.rst
+index 59bd93bec8fc..2206c88e7dee 100644
+--- a/Documentation/block/biodoc.rst
++++ b/Documentation/block/biodoc.rst
+@@ -195,7 +195,7 @@ a virtual address mapping (unlike the earlier scheme of virtual address
+ do not have a corresponding kernel virtual address space mapping) and
+ low-memory pages.
+ 
+-Note: Please refer to Documentation/DMA-API-HOWTO.rst for a discussion
++Note: Please refer to Documentation/driver-api/mm/dma-api-howto.rst for a discussion
+ on PCI high mem DMA aspects and mapping of scatter gather lists, and support
+ for 64 bit PCI.
+ 
+diff --git a/Documentation/driver-api/bus-virt-phys-mapping.rst b/Documentation/driver-api/bus-virt-phys-mapping.rst
+index 80972916e88c..18b6fdf618d2 100644
+--- a/Documentation/driver-api/bus-virt-phys-mapping.rst
++++ b/Documentation/driver-api/bus-virt-phys-mapping.rst
+@@ -8,7 +8,7 @@ How to access I/O mapped memory from within device drivers
+ 
+ 	The virt_to_bus() and bus_to_virt() functions have been
+ 	superseded by the functionality provided by the PCI DMA interface
+-	(see Documentation/DMA-API-HOWTO.rst).  They continue
++	(see Documentation/driver-api/mm/dma-api-howto.rst).  They continue
+ 	to be documented below for historical purposes, but new code
+ 	must not use them. --davidm 00/12/12
+ 
+diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
+index bb2621b17212..492b96003af2 100644
+--- a/Documentation/driver-api/index.rst
++++ b/Documentation/driver-api/index.rst
+@@ -16,6 +16,7 @@ available subsections can be seen below.
+ 
+    basics
+    infrastructure
++   mm/index
+    pm/index
+    clk
+    device-io
+@@ -59,6 +60,7 @@ available subsections can be seen below.
+    fpga/index
+    acpi/index
+    generic-counter
++   mm/index
+ 
+    atomic_bitops
+    bt8xxgpio
+diff --git a/Documentation/DMA-API-HOWTO.rst b/Documentation/driver-api/mm/dma-api-howto.rst
+similarity index 99%
+rename from Documentation/DMA-API-HOWTO.rst
+rename to Documentation/driver-api/mm/dma-api-howto.rst
+index db9f8fcebe1f..358d495456d1 100644
+--- a/Documentation/DMA-API-HOWTO.rst
++++ b/Documentation/driver-api/mm/dma-api-howto.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ =========================
+ Dynamic DMA mapping Guide
+ =========================
+diff --git a/Documentation/DMA-API.rst b/Documentation/driver-api/mm/dma-api.rst
+similarity index 99%
+rename from Documentation/DMA-API.rst
+rename to Documentation/driver-api/mm/dma-api.rst
+index 2f26857f97ff..c2c4d0b456b1 100644
+--- a/Documentation/DMA-API.rst
++++ b/Documentation/driver-api/mm/dma-api.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ============================================
+ Dynamic DMA mapping using the generic device
+ ============================================
+@@ -7,7 +5,7 @@ Dynamic DMA mapping using the generic device
+ :Author: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
+ 
+ This document describes the DMA API.  For a more gentle introduction
+-of the API (and actual examples), see Documentation/DMA-API-HOWTO.rst.
++of the API (and actual examples), see Documentation/driver-api/mm/dma-api-howto.rst.
+ 
+ This API is split into two pieces.  Part I describes the basic API.
+ Part II describes extensions for supporting non-consistent memory
+@@ -465,7 +463,7 @@ without the _attrs suffixes, except that they pass an optional
+ dma_attrs.
+ 
+ The interpretation of DMA attributes is architecture-specific, and
+-each attribute should be documented in Documentation/DMA-attributes.rst.
++each attribute should be documented in Documentation/driver-api/mm/dma-attributes.rst.
+ 
+ If dma_attrs are 0, the semantics of each of these functions
+ is identical to those of the corresponding function
+@@ -478,7 +476,7 @@ for DMA::
+ 
+ 	#include <linux/dma-mapping.h>
+ 	/* DMA_ATTR_FOO should be defined in linux/dma-mapping.h and
+-	* documented in Documentation/DMA-attributes.rst */
++	* documented in Documentation/driver-api/mm/dma-attributes.rst */
+ 	...
+ 
+ 		unsigned long attr;
+diff --git a/Documentation/DMA-attributes.rst b/Documentation/driver-api/mm/dma-attributes.rst
+similarity index 99%
+rename from Documentation/DMA-attributes.rst
+rename to Documentation/driver-api/mm/dma-attributes.rst
+index 471c5c38f9d9..8f8d97f65d73 100644
+--- a/Documentation/DMA-attributes.rst
++++ b/Documentation/driver-api/mm/dma-attributes.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ==============
+ DMA attributes
+ ==============
+diff --git a/Documentation/DMA-ISA-LPC.rst b/Documentation/driver-api/mm/dma-isa-lpc.rst
+similarity index 98%
+rename from Documentation/DMA-ISA-LPC.rst
+rename to Documentation/driver-api/mm/dma-isa-lpc.rst
+index 205a379c2d62..6ae393d391cf 100644
+--- a/Documentation/DMA-ISA-LPC.rst
++++ b/Documentation/driver-api/mm/dma-isa-lpc.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ============================
+ DMA with ISA and LPC devices
+ ============================
+@@ -19,7 +17,7 @@ To do ISA style DMA you need to include two headers::
+ 	#include <asm/dma.h>
+ 
+ The first is the generic DMA API used to convert virtual addresses to
+-bus addresses (see Documentation/DMA-API.rst for details).
++bus addresses (see Documentation/driver-api/mm/dma-api.rst for details).
+ 
+ The second contains the routines specific to ISA DMA transfers. Since
+ this is not present on all platforms make sure you construct your
+diff --git a/Documentation/driver-api/mm/index.rst b/Documentation/driver-api/mm/index.rst
+new file mode 100644
+index 000000000000..e34c7ee4a4b9
+--- /dev/null
++++ b/Documentation/driver-api/mm/index.rst
+@@ -0,0 +1,11 @@
++==========================
++Memory Related Kernel APIs
++==========================
++
++.. toctree::
++   :maxdepth: 1
++
++   dma-api
++   dma-api-howto
++   dma-attributes
++   dma-isa-lpc
+diff --git a/Documentation/driver-api/usb/dma.rst b/Documentation/driver-api/usb/dma.rst
+index 12955a77c7fe..8ef36aa2278d 100644
+--- a/Documentation/driver-api/usb/dma.rst
++++ b/Documentation/driver-api/usb/dma.rst
+@@ -10,7 +10,7 @@ API overview
+ 
+ The big picture is that USB drivers can continue to ignore most DMA issues,
+ though they still must provide DMA-ready buffers (see
+-``Documentation/DMA-API-HOWTO.rst``).  That's how they've worked through
++``Documentation/driver-api/mm/dma-api-howto.rst``).  That's how they've worked through
+ the 2.4 (and earlier) kernels, or they can now be DMA-aware.
+ 
+ DMA-aware usb drivers:
+@@ -60,7 +60,7 @@ and effects like cache-trashing can impose subtle penalties.
+   force a consistent memory access ordering by using memory barriers.  It's
+   not using a streaming DMA mapping, so it's good for small transfers on
+   systems where the I/O would otherwise thrash an IOMMU mapping.  (See
+-  ``Documentation/DMA-API-HOWTO.rst`` for definitions of "coherent" and
++  ``Documentation/driver-api/mm/dma-api-howto.rst`` for definitions of "coherent" and
+   "streaming" DMA mappings.)
+ 
+   Asking for 1/Nth of a page (as well as asking for N pages) is reasonably
+@@ -91,7 +91,7 @@ Working with existing buffers
+ Existing buffers aren't usable for DMA without first being mapped into the
+ DMA address space of the device.  However, most buffers passed to your
+ driver can safely be used with such DMA mapping.  (See the first section
+-of Documentation/DMA-API-HOWTO.rst, titled "What memory is DMA-able?")
++of Documentation/driver-api/mm/dma-api-howto.rst, titled "What memory is DMA-able?")
+ 
+ - When you're using scatterlists, you can map everything at once.  On some
+   systems, this kicks in an IOMMU and turns the scatterlists into single
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 4a44f00478db..087b0d864a94 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -549,8 +549,8 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
+ 	[*] For information on bus mastering DMA and coherency please read:
+ 
+ 	    Documentation/PCI/pci.rst
+-	    Documentation/DMA-API-HOWTO.rst
+-	    Documentation/DMA-API.rst
++	    Documentation/driver-api/mm/dma-api-howto.rst
++	    Documentation/driver-api/mm/dma-api.rst
+ 
+ 
+ DATA DEPENDENCY BARRIERS (HISTORICAL)
+@@ -1933,7 +1933,7 @@ There are some more advanced barrier functions:
+      here.
+ 
+      See the subsection "Kernel I/O barrier effects" for more information on
+-     relaxed I/O accessors and the Documentation/DMA-API.rst file for more
++     relaxed I/O accessors and the Documentation/driver-api/mm/dma-api.rst file for more
+      information on consistent memory.
+ 
+ 
+diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
+index 03c06a7800c3..7b86ac9f15d2 100644
+--- a/Documentation/translations/ko_KR/memory-barriers.txt
++++ b/Documentation/translations/ko_KR/memory-barriers.txt
+@@ -570,8 +570,8 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE 
+ 	[*] 버스 마스터링 DMA 와 일관성에 대해서는 다음을 참고하시기 바랍니다:
+ 
+ 	    Documentation/PCI/pci.rst
+-	    Documentation/DMA-API-HOWTO.rst
+-	    Documentation/DMA-API.rst
++	    Documentation/driver-api/mm/dma-api-howto.rst
++	    Documentation/driver-api/mm/dma-api.rst
+ 
+ 
+ 데이터 의존성 배리어 (역사적)
+@@ -1904,7 +1904,7 @@ Mandatory 배리어들은 SMP 시스템에서도 UP 시스템에서도 SMP 효
+ 
+      writel_relaxed() 와 같은 완화된 I/O 접근자들에 대한 자세한 내용을 위해서는
+      "커널 I/O 배리어의 효과" 섹션을, consistent memory 에 대한 자세한 내용을
+-     위해선 Documentation/DMA-API.rst 문서를 참고하세요.
++     위해선 Documentation/driver-api/mm/dma-api.rst 문서를 참고하세요.
+ 
+ 
+ MMIO 쓰기 배리어
+diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
+index 8f97d42316e8..0b0b5084e6c8 100644
+--- a/arch/ia64/hp/common/sba_iommu.c
++++ b/arch/ia64/hp/common/sba_iommu.c
+@@ -912,7 +912,7 @@ sba_mark_invalid(struct ioc *ioc, dma_addr_t iova, size_t byte_cnt)
+  * @dir: dma direction
+  * @attrs: optional dma attributes
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static dma_addr_t sba_map_page(struct device *dev, struct page *page,
+ 			       unsigned long poff, size_t size,
+@@ -1033,7 +1033,7 @@ sba_mark_clean(struct ioc *ioc, dma_addr_t iova, size_t size)
+  * @dir:  R/W or both.
+  * @attrs: optional dma attributes
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
+ 			   enum dma_data_direction dir, unsigned long attrs)
+@@ -1110,7 +1110,7 @@ static void sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
+  * @size:  number of bytes mapped in driver buffer.
+  * @dma_handle:  IOVA of new buffer.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void *
+ sba_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_handle,
+@@ -1167,7 +1167,7 @@ sba_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_handle,
+  * @vaddr:  virtual address IOVA of "consistent" buffer.
+  * @dma_handler:  IO virtual address of "consistent" buffer.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void sba_free_coherent(struct device *dev, size_t size, void *vaddr,
+ 			      dma_addr_t dma_handle, unsigned long attrs)
+@@ -1430,7 +1430,7 @@ static void sba_unmap_sg_attrs(struct device *dev, struct scatterlist *sglist,
+  * @dir:  R/W or both.
+  * @attrs: optional dma attributes
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static int sba_map_sg_attrs(struct device *dev, struct scatterlist *sglist,
+ 			    int nents, enum dma_data_direction dir,
+@@ -1529,7 +1529,7 @@ static int sba_map_sg_attrs(struct device *dev, struct scatterlist *sglist,
+  * @dir:  R/W or both.
+  * @attrs: optional dma attributes
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void sba_unmap_sg_attrs(struct device *dev, struct scatterlist *sglist,
+ 			       int nents, enum dma_data_direction dir,
+diff --git a/arch/ia64/sn/pci/pci_dma.c b/arch/ia64/sn/pci/pci_dma.c
+index f475fccea152..a06ae52117f0 100644
+--- a/arch/ia64/sn/pci/pci_dma.c
++++ b/arch/ia64/sn/pci/pci_dma.c
+@@ -5,7 +5,7 @@
+  *
+  * Copyright (C) 2000,2002-2005 Silicon Graphics, Inc. All rights reserved.
+  *
+- * Routines for PCI DMA mapping.  See Documentation/DMA-API.rst for
++ * Routines for PCI DMA mapping.  See Documentation/driver-api/mm/dma-api.rst for
+  * a description of how these routines should be used.
+  */
+ 
+@@ -72,7 +72,7 @@ EXPORT_SYMBOL(sn_dma_set_mask);
+  * that @dma_handle will have the %PCIIO_DMA_CMD flag set.
+  *
+  * This interface is usually used for "command" streams (e.g. the command
+- * queue for a SCSI controller).  See Documentation/DMA-API.rst for
++ * queue for a SCSI controller).  See Documentation/driver-api/mm/dma-api.rst for
+  * more information.
+  */
+ static void *sn_dma_alloc_coherent(struct device *dev, size_t size,
+diff --git a/arch/parisc/kernel/pci-dma.c b/arch/parisc/kernel/pci-dma.c
+index 2bb63062f6c3..08e7ff08fa94 100644
+--- a/arch/parisc/kernel/pci-dma.c
++++ b/arch/parisc/kernel/pci-dma.c
+@@ -3,7 +3,7 @@
+ ** PARISC 1.1 Dynamic DMA mapping support.
+ ** This implementation is for PA-RISC platforms that do not support
+ ** I/O TLBs (aka DMA address translation hardware).
+-** See Documentation/DMA-API-HOWTO.rst for interface definitions.
++** See Documentation/driver-api/mm/dma-api-howto.rst for interface definitions.
+ **
+ **      (c) Copyright 1999,2000 Hewlett-Packard Company
+ **      (c) Copyright 2000 Grant Grundler
+diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
+index dfa443fe17c2..ff9ff85529fc 100644
+--- a/arch/x86/include/asm/dma-mapping.h
++++ b/arch/x86/include/asm/dma-mapping.h
+@@ -3,8 +3,8 @@
+ #define _ASM_X86_DMA_MAPPING_H
+ 
+ /*
+- * IOMMU interface. See Documentation/DMA-API-HOWTO.rst and
+- * Documentation/DMA-API.rst for documentation.
++ * IOMMU interface. See Documentation/driver-api/mm/dma-api-howto.rst and
++ * Documentation/driver-api/mm/dma-api.rst for documentation.
+  */
+ 
+ #include <linux/scatterlist.h>
+diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
+index 03108de30105..397c2cdd19d8 100644
+--- a/arch/x86/kernel/amd_gart_64.c
++++ b/arch/x86/kernel/amd_gart_64.c
+@@ -6,7 +6,7 @@
+  * This allows to use PCI devices that only support 32bit addresses on systems
+  * with more than 4GB.
+  *
+- * See Documentation/DMA-API-HOWTO.rst for the interface specification.
++ * See Documentation/driver-api/mm/dma-api-howto.rst for the interface specification.
+  *
+  * Copyright 2002 Andi Kleen, SuSE Labs.
+  */
+diff --git a/drivers/parisc/sba_iommu.c b/drivers/parisc/sba_iommu.c
+index 267ceb5f7838..349b4a2f21a1 100644
+--- a/drivers/parisc/sba_iommu.c
++++ b/drivers/parisc/sba_iommu.c
+@@ -666,7 +666,7 @@ sba_mark_invalid(struct ioc *ioc, dma_addr_t iova, size_t byte_cnt)
+  * @dev: instance of PCI owned by the driver that's asking
+  * @mask:  number of address bits this PCI device can handle
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static int sba_dma_supported( struct device *dev, u64 mask)
+ {
+@@ -678,7 +678,7 @@ static int sba_dma_supported( struct device *dev, u64 mask)
+ 		return(0);
+ 	}
+ 
+-	/* Documentation/DMA-API-HOWTO.rst tells drivers to try 64-bit
++	/* Documentation/driver-api/mm/dma-api-howto.rst tells drivers to try 64-bit
+ 	 * first, then fall back to 32-bit if that fails.
+ 	 * We are just "encouraging" 32-bit DMA masks here since we can
+ 	 * never allow IOMMU bypass unless we add special support for ZX1.
+@@ -706,7 +706,7 @@ static int sba_dma_supported( struct device *dev, u64 mask)
+  * @size:  number of bytes to map in driver buffer.
+  * @direction:  R/W or both.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static dma_addr_t
+ sba_map_single(struct device *dev, void *addr, size_t size,
+@@ -796,7 +796,7 @@ sba_map_page(struct device *dev, struct page *page, unsigned long offset,
+  * @size:  number of bytes mapped in driver buffer.
+  * @direction:  R/W or both.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void
+ sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
+@@ -875,7 +875,7 @@ sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
+  * @size:  number of bytes mapped in driver buffer.
+  * @dma_handle:  IOVA of new buffer.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void *sba_alloc(struct device *hwdev, size_t size, dma_addr_t *dma_handle,
+ 		gfp_t gfp, unsigned long attrs)
+@@ -906,7 +906,7 @@ static void *sba_alloc(struct device *hwdev, size_t size, dma_addr_t *dma_handle
+  * @vaddr:  virtual address IOVA of "consistent" buffer.
+  * @dma_handler:  IO virtual address of "consistent" buffer.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void
+ sba_free(struct device *hwdev, size_t size, void *vaddr,
+@@ -941,7 +941,7 @@ int dump_run_sg = 0;
+  * @nents:  number of entries in list
+  * @direction:  R/W or both.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static int
+ sba_map_sg(struct device *dev, struct scatterlist *sglist, int nents,
+@@ -1025,7 +1025,7 @@ sba_map_sg(struct device *dev, struct scatterlist *sglist, int nents,
+  * @nents:  number of entries in list
+  * @direction:  R/W or both.
+  *
+- * See Documentation/DMA-API-HOWTO.rst
++ * See Documentation/driver-api/mm/dma-api-howto.rst
+  */
+ static void 
+ sba_unmap_sg(struct device *dev, struct scatterlist *sglist, int nents,
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index 7ff3fcd73cec..eb234c3f466b 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -14,7 +14,7 @@
+ 
+ /**
+  * List of possible attributes associated with a DMA mapping. The semantics
+- * of each attribute should be defined in Documentation/DMA-attributes.rst.
++ * of each attribute should be defined in Documentation/driver-api/mm/dma-attributes.rst.
+  *
+  * DMA_ATTR_WRITE_BARRIER: DMA to a memory region with this attribute
+  * forces all pending DMA writes to complete.
+diff --git a/include/media/videobuf-dma-sg.h b/include/media/videobuf-dma-sg.h
+index 50a549e5b477..60f2df32bf39 100644
+--- a/include/media/videobuf-dma-sg.h
++++ b/include/media/videobuf-dma-sg.h
+@@ -34,7 +34,7 @@
+  *	does memory allocation too using vmalloc_32().
+  *
+  * videobuf_dma_*()
+- *	see Documentation/DMA-API-HOWTO.rst, these functions to
++ *	see Documentation/driver-api/mm/dma-api-howto.rst, these functions to
+  *	basically the same.  The map function does also build a
+  *	scatterlist for the buffer (and unmap frees it ...)
+  *
+diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
+index 616919c774a5..1d3f9b8de6df 100644
+--- a/kernel/dma/debug.c
++++ b/kernel/dma/debug.c
+@@ -1069,7 +1069,7 @@ static void check_unmap(struct dma_debug_entry *ref)
+ 	/*
+ 	 * Drivers should use dma_mapping_error() to check the returned
+ 	 * addresses of dma_map_single() and dma_map_page().
+-	 * If not, print this warning message. See Documentation/DMA-API.rst.
++	 * If not, print this warning message. See Documentation/driver-api/mm/dma-api.rst.
+ 	 */
+ 	if (entry->map_err_type == MAP_ERR_NOT_CHECKED) {
+ 		err_printk(ref->dev, entry,
+-- 
+2.21.0
 
-Correct, it is defined as a required property in the binding description so we
-are good.
-Sorry for the noise.
-
-With the union added you can add:
-Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-
->>
->> Regards,
->> Matthias
->>
->>>  	}
->>>  	pm_runtime_enable(dev);
->>>  	platform_set_drvdata(pdev, common);
->>> @@ -497,6 +511,7 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
->>>  static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->>>  {
->>>  	struct mtk_smi *common = dev_get_drvdata(dev);
->>> +	u32 bus_sel = common->plat->bus_sel;
->>>  	int ret;
->>>  
->>>  	ret = mtk_smi_clk_enable(common);
->>> @@ -504,6 +519,9 @@ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->>>  		dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
->>>  		return ret;
->>>  	}
->>> +
->>> +	if (common->plat->gen == MTK_SMI_GEN2 && bus_sel)
->>> +		writel(bus_sel, common->base + SMI_BUS_SEL);
->>>  	return 0;
->>>  }
->>>  
->>>
-> 
-> 
