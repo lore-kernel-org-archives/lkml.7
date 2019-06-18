@@ -2,831 +2,283 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97E9DC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A98EBC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:32:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EDBD208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63C152085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:32:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=neuling.org header.i=@neuling.org header.b="ldyXfBby"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729259AbfFRNaz (ORCPT
+        id S1729245AbfFRNcY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:30:55 -0400
-Received: from inva020.nxp.com ([92.121.34.13]:55064 "EHLO inva020.nxp.com"
+        Tue, 18 Jun 2019 09:32:24 -0400
+Received: from ozlabs.org ([203.11.71.1]:36851 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727097AbfFRNav (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:30:51 -0400
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id B1FE91A03B6;
-        Tue, 18 Jun 2019 15:30:47 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id A37301A03AB;
-        Tue, 18 Jun 2019 15:30:47 +0200 (CEST)
-Received: from fsr-ub1664-046.ea.freescale.net (fsr-ub1664-046.ea.freescale.net [10.171.96.34])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 85DDD20631;
-        Tue, 18 Jun 2019 15:30:47 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id 5CFF54D1D;
-        Tue, 18 Jun 2019 16:30:47 +0300 (EEST)
-Received: from fsr-ub1664-046.ea.freescale.net ([127.0.0.1])
-        by localhost (fsr-ub1664-046.ea.freescale.net [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 57jbAdtn7PdT; Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
-Received: from localhost (localhost [127.0.0.1])
-        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id A50A555B4;
-        Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
-X-Virus-Scanned: amavisd-new at ea.freescale.net
-Received: from fsr-ub1664-046.ea.freescale.net ([127.0.0.1])
-        by localhost (fsr-ub1664-046.ea.freescale.net [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id P8RW8U4MygpO; Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
-Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
-        by fsr-ub1664-046.ea.freescale.net (Postfix) with ESMTP id 6F4A055B2;
-        Tue, 18 Jun 2019 16:30:46 +0300 (EEST)
-From:   Robert Chiras <robert.chiras@nxp.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        Robert Chiras <robert.chiras@nxp.com>
-Subject: [PATCH v2 2/2] drm/panel: Add support for Raydium RM67191 panel driver
-Date:   Tue, 18 Jun 2019 16:30:46 +0300
-Message-Id: <1560864646-1468-3-git-send-email-robert.chiras@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com>
-References: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com>
+        id S1726088AbfFRNcY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:32:24 -0400
+Received: from neuling.org (localhost [127.0.0.1])
+        by ozlabs.org (Postfix) with ESMTP id 45Spsd6Msdz9s7h;
+        Tue, 18 Jun 2019 23:32:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=neuling.org;
+        s=201811; t=1560864742;
+        bh=fQzYQ/vuflfUUNAxzR7+ROE6ZXUaSKQy4rHVIV8oGxA=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=ldyXfBbyTU+UD8Q0MAcn6aH00wB+DRPZWFmnm7hOkgJMrDSOd69jTSYiMBlYF4bXY
+         rytO/7MUJBJMkzCGbAGxe0l+dDH+dXHe2p8cxCHvfW5iT30n77ul+sEAmPV4m8IRG+
+         KyBq5arPGAnFPq047r0oRtsANiDT/i5lL47T+Cy/R/haGaFVDujLsQiqYX6cRAEkeO
+         h6fJRXLYQjjJ3khdoCQsSpA3TQz1L/HgfB4NXTCHCL9QVqzvNLEd2OJ5ZAhXNXjBHX
+         viPNnQu3MRz9LenIgyMg+34l06MmZjP7kg9Qx/YX5UKPLb9ryYOZhIsQC4gABeDGAR
+         bVvrhJS0Pc6Fw==
+Received: by neuling.org (Postfix, from userid 1000)
+        id BDF5C2A2538; Tue, 18 Jun 2019 23:32:21 +1000 (AEST)
+Message-ID: <707bc0b664b8ebbb843a1541155fed219c216035.camel@neuling.org>
+Subject: Re: [PATCH 5/5] Powerpc/Watchpoint: Fix length calculation for
+ unaligned target
+From:   Michael Neuling <mikey@neuling.org>
+To:     Ravi Bangoria <ravi.bangoria@linux.ibm.com>, mpe@ellerman.id.au
+Cc:     benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, christophe.leroy@c-s.fr,
+        naveen.n.rao@linux.vnet.ibm.com
+Date:   Tue, 18 Jun 2019 23:32:21 +1000
+In-Reply-To: <20190618042732.5582-6-ravi.bangoria@linux.ibm.com>
+References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
+         <20190618042732.5582-6-ravi.bangoria@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds Raydium RM67191 TFT LCD panel driver (MIPI-DSI
-protocol).
+On Tue, 2019-06-18 at 09:57 +0530, Ravi Bangoria wrote:
+> Watchpoint match range is always doubleword(8 bytes) aligned on
+> powerpc. If the given range is crossing doubleword boundary, we
+> need to increase the length such that next doubleword also get
+> covered. Ex,
+>=20
+>           address   len =3D 6 bytes
+>                 |=3D=3D=3D=3D=3D=3D=3D=3D=3D.
+>    |------------v--|------v--------|
+>    | | | | | | | | | | | | | | | | |
+>    |---------------|---------------|
+>     <---8 bytes--->
+>=20
+> In such case, current code configures hw as:
+>   start_addr =3D address & ~HW_BREAKPOINT_ALIGN
+>   len =3D 8 bytes
+>=20
+> And thus read/write in last 4 bytes of the given range is ignored.
+> Fix this by including next doubleword in the length. Watchpoint
+> exception handler already ignores extraneous exceptions, so no
+> changes required for that.
 
-Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
----
- drivers/gpu/drm/panel/Kconfig                 |   9 +
- drivers/gpu/drm/panel/Makefile                |   1 +
- drivers/gpu/drm/panel/panel-raydium-rm67191.c | 709 ++++++++++++++++++++++++++
- 3 files changed, 719 insertions(+)
- create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+Nice catch. Thanks.
 
-diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
-index d9d931a..8be1ac1 100644
---- a/drivers/gpu/drm/panel/Kconfig
-+++ b/drivers/gpu/drm/panel/Kconfig
-@@ -159,6 +159,15 @@ config DRM_PANEL_RASPBERRYPI_TOUCHSCREEN
- 	  Pi 7" Touchscreen.  To compile this driver as a module,
- 	  choose M here.
- 
-+config DRM_PANEL_RAYDIUM_RM67191
-+	tristate "Raydium RM67191 FHD 1080x1920 DSI video mode panel"
-+	depends on OF
-+	depends on DRM_MIPI_DSI
-+	depends on BACKLIGHT_CLASS_DEVICE
-+	help
-+	  Say Y here if you want to enable support for Raydium RM67191 FHD
-+	  (1080x1920) DSI panel.
-+
- config DRM_PANEL_RAYDIUM_RM68200
- 	tristate "Raydium RM68200 720x1280 DSI video mode panel"
- 	depends on OF
-diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
-index fb0cb3a..1fc0f68 100644
---- a/drivers/gpu/drm/panel/Makefile
-+++ b/drivers/gpu/drm/panel/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
- obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
- obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
- obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
-+obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
- obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
- obj-$(CONFIG_DRM_PANEL_ROCKTECH_JH057N00900) += panel-rocktech-jh057n00900.o
- obj-$(CONFIG_DRM_PANEL_RONBO_RB070D30) += panel-ronbo-rb070d30.o
-diff --git a/drivers/gpu/drm/panel/panel-raydium-rm67191.c b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-new file mode 100644
-index 0000000..c0780c9
---- /dev/null
-+++ b/drivers/gpu/drm/panel/panel-raydium-rm67191.c
-@@ -0,0 +1,709 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * i.MX drm driver - Raydium MIPI-DSI panel driver
-+ *
-+ * Copyright 2019 NXP
-+ */
-+
-+#include <linux/backlight.h>
-+#include <linux/delay.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/regulator/consumer.h>
-+
-+#include <video/mipi_display.h>
-+#include <video/of_videomode.h>
-+#include <video/videomode.h>
-+
-+#include <drm/drm_crtc.h>
-+#include <drm/drm_mipi_dsi.h>
-+#include <drm/drm_panel.h>
-+#include <drm/drm_print.h>
-+
-+/* Write Manufacture Command Set Control */
-+#define WRMAUCCTR 0xFE
-+
-+#define COL_FMT_16BPP 0x55
-+#define COL_FMT_18BPP 0x66
-+#define COL_FMT_24BPP 0x77
-+
-+/* Manufacturer Command Set pages (CMD2) */
-+struct cmd_set_entry {
-+	u8 cmd;
-+	u8 param;
-+};
-+
-+/*
-+ * There is no description in the Reference Manual about these commands.
-+ * We received them from vendor, so just use them as is.
-+ */
-+static const struct cmd_set_entry manufacturer_cmd_set[] = {
-+	{0xFE, 0x0B},
-+	{0x28, 0x40},
-+	{0x29, 0x4F},
-+	{0xFE, 0x0E},
-+	{0x4B, 0x00},
-+	{0x4C, 0x0F},
-+	{0x4D, 0x20},
-+	{0x4E, 0x40},
-+	{0x4F, 0x60},
-+	{0x50, 0xA0},
-+	{0x51, 0xC0},
-+	{0x52, 0xE0},
-+	{0x53, 0xFF},
-+	{0xFE, 0x0D},
-+	{0x18, 0x08},
-+	{0x42, 0x00},
-+	{0x08, 0x41},
-+	{0x46, 0x02},
-+	{0x72, 0x09},
-+	{0xFE, 0x0A},
-+	{0x24, 0x17},
-+	{0x04, 0x07},
-+	{0x1A, 0x0C},
-+	{0x0F, 0x44},
-+	{0xFE, 0x04},
-+	{0x00, 0x0C},
-+	{0x05, 0x08},
-+	{0x06, 0x08},
-+	{0x08, 0x08},
-+	{0x09, 0x08},
-+	{0x0A, 0xE6},
-+	{0x0B, 0x8C},
-+	{0x1A, 0x12},
-+	{0x1E, 0xE0},
-+	{0x29, 0x93},
-+	{0x2A, 0x93},
-+	{0x2F, 0x02},
-+	{0x31, 0x02},
-+	{0x33, 0x05},
-+	{0x37, 0x2D},
-+	{0x38, 0x2D},
-+	{0x3A, 0x1E},
-+	{0x3B, 0x1E},
-+	{0x3D, 0x27},
-+	{0x3F, 0x80},
-+	{0x40, 0x40},
-+	{0x41, 0xE0},
-+	{0x4F, 0x2F},
-+	{0x50, 0x1E},
-+	{0xFE, 0x06},
-+	{0x00, 0xCC},
-+	{0x05, 0x05},
-+	{0x07, 0xA2},
-+	{0x08, 0xCC},
-+	{0x0D, 0x03},
-+	{0x0F, 0xA2},
-+	{0x32, 0xCC},
-+	{0x37, 0x05},
-+	{0x39, 0x83},
-+	{0x3A, 0xCC},
-+	{0x41, 0x04},
-+	{0x43, 0x83},
-+	{0x44, 0xCC},
-+	{0x49, 0x05},
-+	{0x4B, 0xA2},
-+	{0x4C, 0xCC},
-+	{0x51, 0x03},
-+	{0x53, 0xA2},
-+	{0x75, 0xCC},
-+	{0x7A, 0x03},
-+	{0x7C, 0x83},
-+	{0x7D, 0xCC},
-+	{0x82, 0x02},
-+	{0x84, 0x83},
-+	{0x85, 0xEC},
-+	{0x86, 0x0F},
-+	{0x87, 0xFF},
-+	{0x88, 0x00},
-+	{0x8A, 0x02},
-+	{0x8C, 0xA2},
-+	{0x8D, 0xEA},
-+	{0x8E, 0x01},
-+	{0x8F, 0xE8},
-+	{0xFE, 0x06},
-+	{0x90, 0x0A},
-+	{0x92, 0x06},
-+	{0x93, 0xA0},
-+	{0x94, 0xA8},
-+	{0x95, 0xEC},
-+	{0x96, 0x0F},
-+	{0x97, 0xFF},
-+	{0x98, 0x00},
-+	{0x9A, 0x02},
-+	{0x9C, 0xA2},
-+	{0xAC, 0x04},
-+	{0xFE, 0x06},
-+	{0xB1, 0x12},
-+	{0xB2, 0x17},
-+	{0xB3, 0x17},
-+	{0xB4, 0x17},
-+	{0xB5, 0x17},
-+	{0xB6, 0x11},
-+	{0xB7, 0x08},
-+	{0xB8, 0x09},
-+	{0xB9, 0x06},
-+	{0xBA, 0x07},
-+	{0xBB, 0x17},
-+	{0xBC, 0x17},
-+	{0xBD, 0x17},
-+	{0xBE, 0x17},
-+	{0xBF, 0x17},
-+	{0xC0, 0x17},
-+	{0xC1, 0x17},
-+	{0xC2, 0x17},
-+	{0xC3, 0x17},
-+	{0xC4, 0x0F},
-+	{0xC5, 0x0E},
-+	{0xC6, 0x00},
-+	{0xC7, 0x01},
-+	{0xC8, 0x10},
-+	{0xFE, 0x06},
-+	{0x95, 0xEC},
-+	{0x8D, 0xEE},
-+	{0x44, 0xEC},
-+	{0x4C, 0xEC},
-+	{0x32, 0xEC},
-+	{0x3A, 0xEC},
-+	{0x7D, 0xEC},
-+	{0x75, 0xEC},
-+	{0x00, 0xEC},
-+	{0x08, 0xEC},
-+	{0x85, 0xEC},
-+	{0xA6, 0x21},
-+	{0xA7, 0x05},
-+	{0xA9, 0x06},
-+	{0x82, 0x06},
-+	{0x41, 0x06},
-+	{0x7A, 0x07},
-+	{0x37, 0x07},
-+	{0x05, 0x06},
-+	{0x49, 0x06},
-+	{0x0D, 0x04},
-+	{0x51, 0x04},
-+};
-+
-+static const u32 rad_bus_formats[] = {
-+	MEDIA_BUS_FMT_RGB888_1X24,
-+	MEDIA_BUS_FMT_RGB666_1X18,
-+	MEDIA_BUS_FMT_RGB565_1X16,
-+};
-+
-+struct rad_panel {
-+	struct drm_panel panel;
-+	struct mipi_dsi_device *dsi;
-+
-+	struct gpio_desc *reset;
-+	struct backlight_device *backlight;
-+
-+	bool prepared;
-+	bool enabled;
-+
-+	struct videomode vm;
-+	u32 width_mm;
-+	u32 height_mm;
-+};
-+
-+static inline struct rad_panel *to_rad_panel(struct drm_panel *panel)
-+{
-+	return container_of(panel, struct rad_panel, panel);
-+}
-+
-+static int rad_panel_push_cmd_list(struct mipi_dsi_device *dsi)
-+{
-+	size_t i;
-+	size_t count = ARRAY_SIZE(manufacturer_cmd_set);
-+	int ret = 0;
-+
-+	for (i = 0; i < count; i++) {
-+		const struct cmd_set_entry *entry = &manufacturer_cmd_set[i];
-+		u8 buffer[2] = { entry->cmd, entry->param };
-+
-+		ret = mipi_dsi_generic_write(dsi, &buffer, sizeof(buffer));
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return ret;
-+};
-+
-+static int color_format_from_dsi_format(enum mipi_dsi_pixel_format format)
-+{
-+	switch (format) {
-+	case MIPI_DSI_FMT_RGB565:
-+		return COL_FMT_16BPP;
-+	case MIPI_DSI_FMT_RGB666:
-+	case MIPI_DSI_FMT_RGB666_PACKED:
-+		return COL_FMT_18BPP;
-+	case MIPI_DSI_FMT_RGB888:
-+		return COL_FMT_24BPP;
-+	default:
-+		return COL_FMT_24BPP; /* for backward compatibility */
-+	}
-+};
-+
-+static int rad_panel_prepare(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+
-+	if (rad->prepared)
-+		return 0;
-+
-+	if (rad->reset) {
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+		usleep_range(3000, 5000);
-+		gpiod_set_value_cansleep(rad->reset, 0);
-+		usleep_range(18000, 20000);
-+	}
-+
-+	rad->prepared = true;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_unprepare(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	if (rad->reset) {
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+		usleep_range(15000, 17000);
-+		gpiod_set_value_cansleep(rad->reset, 0);
-+	}
-+
-+	rad->prepared = false;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_enable(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct mipi_dsi_device *dsi = rad->dsi;
-+	struct device *dev = &dsi->dev;
-+	int color_format = color_format_from_dsi_format(dsi->format);
-+	int ret;
-+
-+	if (rad->enabled)
-+		return 0;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	ret = rad_panel_push_cmd_list(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to send MCS (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	/* Select User Command Set table (CMD1) */
-+	ret = mipi_dsi_generic_write(dsi, (u8[]){ WRMAUCCTR, 0x00 }, 2);
-+	if (ret < 0)
-+		goto fail;
-+
-+	/* Software reset */
-+	ret = mipi_dsi_dcs_soft_reset(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to do Software Reset (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	usleep_range(15000, 17000);
-+
-+	/* Set DSI mode */
-+	ret = mipi_dsi_generic_write(dsi, (u8[]){ 0xC2, 0x0B }, 2);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set DSI mode (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set tear ON */
-+	ret = mipi_dsi_dcs_set_tear_on(dsi, MIPI_DSI_DCS_TEAR_MODE_VBLANK);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set tear ON (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set tear scanline */
-+	ret = mipi_dsi_dcs_set_tear_scanline(dsi, 0x380);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set tear scanline (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Set pixel format */
-+	ret = mipi_dsi_dcs_set_pixel_format(dsi, color_format);
-+	DRM_DEV_DEBUG_DRIVER(dev, "Interface color format set to 0x%x\n",
-+			     color_format);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set pixel format (%d)\n", ret);
-+		goto fail;
-+	}
-+	/* Exit sleep mode */
-+	ret = mipi_dsi_dcs_exit_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to exit sleep mode (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	usleep_range(5000, 7000);
-+
-+	ret = mipi_dsi_dcs_set_display_on(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set display ON (%d)\n", ret);
-+		goto fail;
-+	}
-+
-+	backlight_enable(rad->backlight);
-+
-+	rad->enabled = true;
-+
-+	return 0;
-+
-+fail:
-+	if (rad->reset)
-+		gpiod_set_value_cansleep(rad->reset, 1);
-+
-+	return ret;
-+}
-+
-+static int rad_panel_disable(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct mipi_dsi_device *dsi = rad->dsi;
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	if (!rad->enabled)
-+		return 0;
-+
-+	dsi->mode_flags |= MIPI_DSI_MODE_LPM;
-+
-+	backlight_disable(rad->backlight);
-+
-+	usleep_range(10000, 12000);
-+
-+	ret = mipi_dsi_dcs_set_display_off(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to set display OFF (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	usleep_range(5000, 10000);
-+
-+	ret = mipi_dsi_dcs_enter_sleep_mode(dsi);
-+	if (ret < 0) {
-+		DRM_DEV_ERROR(dev, "Failed to enter sleep mode (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	rad->enabled = false;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_get_modes(struct drm_panel *panel)
-+{
-+	struct rad_panel *rad = to_rad_panel(panel);
-+	struct device *dev = &rad->dsi->dev;
-+	struct drm_connector *connector = panel->connector;
-+	struct drm_display_mode *mode;
-+	u32 *bus_flags = &connector->display_info.bus_flags;
-+	int ret;
-+
-+	mode = drm_mode_create(connector->dev);
-+	if (!mode) {
-+		DRM_DEV_ERROR(dev, "Failed to create display mode!\n");
-+		return 0;
-+	}
-+
-+	drm_display_mode_from_videomode(&rad->vm, mode);
-+	mode->width_mm = rad->width_mm;
-+	mode->height_mm = rad->height_mm;
-+	connector->display_info.width_mm = rad->width_mm;
-+	connector->display_info.height_mm = rad->height_mm;
-+	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
-+
-+	if (rad->vm.flags & DISPLAY_FLAGS_DE_HIGH)
-+		*bus_flags |= DRM_BUS_FLAG_DE_HIGH;
-+	if (rad->vm.flags & DISPLAY_FLAGS_DE_LOW)
-+		*bus_flags |= DRM_BUS_FLAG_DE_LOW;
-+	if (rad->vm.flags & DISPLAY_FLAGS_PIXDATA_NEGEDGE)
-+		*bus_flags |= DRM_BUS_FLAG_PIXDATA_NEGEDGE;
-+	if (rad->vm.flags & DISPLAY_FLAGS_PIXDATA_POSEDGE)
-+		*bus_flags |= DRM_BUS_FLAG_PIXDATA_POSEDGE;
-+
-+	ret = drm_display_info_set_bus_formats(&connector->display_info,
-+					       rad_bus_formats,
-+					       ARRAY_SIZE(rad_bus_formats));
-+	if (ret)
-+		return ret;
-+
-+	drm_mode_probed_add(panel->connector, mode);
-+
-+	return 1;
-+}
-+
-+static int rad_bl_get_brightness(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	u16 brightness;
-+	int ret;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "\n");
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_get_display_brightness(dsi, &brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	bl->props.brightness = brightness;
-+
-+	return brightness & 0xff;
-+}
-+
-+static int rad_bl_update_status(struct backlight_device *bl)
-+{
-+	struct mipi_dsi_device *dsi = bl_get_data(bl);
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	int ret = 0;
-+
-+	if (!rad->prepared)
-+		return 0;
-+
-+	DRM_DEV_DEBUG_DRIVER(dev, "New brightness: %d\n", bl->props.brightness);
-+
-+	dsi->mode_flags &= ~MIPI_DSI_MODE_LPM;
-+
-+	ret = mipi_dsi_dcs_set_display_brightness(dsi, bl->props.brightness);
-+	if (ret < 0)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static const struct backlight_ops rad_bl_ops = {
-+	.update_status = rad_bl_update_status,
-+	.get_brightness = rad_bl_get_brightness,
-+};
-+
-+static const struct drm_panel_funcs rad_panel_funcs = {
-+	.prepare = rad_panel_prepare,
-+	.unprepare = rad_panel_unprepare,
-+	.enable = rad_panel_enable,
-+	.disable = rad_panel_disable,
-+	.get_modes = rad_panel_get_modes,
-+};
-+
-+/*
-+ * The clock might range from 66MHz (30Hz refresh rate)
-+ * to 132MHz (60Hz refresh rate)
-+ */
-+static const struct display_timing rad_default_timing = {
-+	.pixelclock = { 66000000, 132000000, 132000000 },
-+	.hactive = { 1080, 1080, 1080 },
-+	.hfront_porch = { 20, 20, 20 },
-+	.hsync_len = { 2, 2, 2 },
-+	.hback_porch = { 34, 34, 34 },
-+	.vactive = { 1920, 1920, 1920 },
-+	.vfront_porch = { 10, 10, 10 },
-+	.vsync_len = { 2, 2, 2 },
-+	.vback_porch = { 4, 4, 4 },
-+	.flags = DISPLAY_FLAGS_HSYNC_LOW |
-+		 DISPLAY_FLAGS_VSYNC_LOW |
-+		 DISPLAY_FLAGS_DE_LOW |
-+		 DISPLAY_FLAGS_PIXDATA_NEGEDGE,
-+};
-+
-+static int rad_panel_probe(struct mipi_dsi_device *dsi)
-+{
-+	struct device *dev = &dsi->dev;
-+	struct device_node *np = dev->of_node;
-+	struct device_node *timings;
-+	struct rad_panel *panel;
-+	struct backlight_properties bl_props;
-+	int ret;
-+	u32 video_mode;
-+
-+	panel = devm_kzalloc(&dsi->dev, sizeof(*panel), GFP_KERNEL);
-+	if (!panel)
-+		return -ENOMEM;
-+
-+	mipi_dsi_set_drvdata(dsi, panel);
-+
-+	panel->dsi = dsi;
-+
-+	dsi->format = MIPI_DSI_FMT_RGB888;
-+	dsi->mode_flags =  MIPI_DSI_MODE_VIDEO_HSE | MIPI_DSI_MODE_VIDEO |
-+			   MIPI_DSI_CLOCK_NON_CONTINUOUS;
-+
-+	ret = of_property_read_u32(np, "video-mode", &video_mode);
-+	if (!ret) {
-+		switch (video_mode) {
-+		case 0:
-+			/* burst mode */
-+			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_BURST;
-+			break;
-+		case 1:
-+			/* non-burst mode with sync event */
-+			break;
-+		case 2:
-+			/* non-burst mode with sync pulse */
-+			dsi->mode_flags |= MIPI_DSI_MODE_VIDEO_SYNC_PULSE;
-+			break;
-+		default:
-+			dev_warn(dev, "invalid video mode %d\n", video_mode);
-+			break;
-+		}
-+	}
-+
-+	ret = of_property_read_u32(np, "dsi-lanes", &dsi->lanes);
-+	if (ret < 0) {
-+		dev_err(dev, "Failed to get dsi-lanes property (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	/*
-+	 * 'display-timings' is optional, so verify if the node is present
-+	 * before calling of_get_videomode so we won't get console error
-+	 * messages
-+	 */
-+	timings = of_get_child_by_name(np, "display-timings");
-+	if (timings) {
-+		of_node_put(timings);
-+		ret = of_get_videomode(np, &panel->vm, 0);
-+	} else {
-+		videomode_from_timing(&rad_default_timing, &panel->vm);
-+	}
-+	if (ret < 0)
-+		return ret;
-+
-+	of_property_read_u32(np, "width-mm", &panel->width_mm);
-+	of_property_read_u32(np, "height-mm", &panel->height_mm);
-+
-+	panel->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+
-+	if (IS_ERR(panel->reset))
-+		panel->reset = NULL;
-+	else
-+		gpiod_set_value_cansleep(panel->reset, 1);
-+
-+	memset(&bl_props, 0, sizeof(bl_props));
-+	bl_props.type = BACKLIGHT_RAW;
-+	bl_props.brightness = 255;
-+	bl_props.max_brightness = 255;
-+
-+	panel->backlight = devm_backlight_device_register(dev, dev_name(dev),
-+							  dev, dsi,
-+							  &rad_bl_ops,
-+							  &bl_props);
-+	if (IS_ERR(panel->backlight)) {
-+		ret = PTR_ERR(panel->backlight);
-+		dev_err(dev, "Failed to register backlight (%d)\n", ret);
-+		return ret;
-+	}
-+
-+	drm_panel_init(&panel->panel);
-+	panel->panel.funcs = &rad_panel_funcs;
-+	panel->panel.dev = dev;
-+	dev_set_drvdata(dev, panel);
-+
-+	ret = drm_panel_add(&panel->panel);
-+
-+	if (ret < 0)
-+		return ret;
-+
-+	ret = mipi_dsi_attach(dsi);
-+	if (ret < 0)
-+		drm_panel_remove(&panel->panel);
-+
-+	return ret;
-+}
-+
-+static int rad_panel_remove(struct mipi_dsi_device *dsi)
-+{
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+	struct device *dev = &dsi->dev;
-+	int ret;
-+
-+	ret = mipi_dsi_detach(dsi);
-+	if (ret < 0)
-+		DRM_DEV_ERROR(dev, "Failed to detach from host (%d)\n",
-+			      ret);
-+
-+	drm_panel_remove(&rad->panel);
-+
-+	return 0;
-+}
-+
-+static void rad_panel_shutdown(struct mipi_dsi_device *dsi)
-+{
-+	struct rad_panel *rad = mipi_dsi_get_drvdata(dsi);
-+
-+	rad_panel_disable(&rad->panel);
-+	rad_panel_unprepare(&rad->panel);
-+}
-+
-+#ifdef CONFIG_PM
-+static int rad_panel_suspend(struct device *dev)
-+{
-+	struct rad_panel *rad = dev_get_drvdata(dev);
-+
-+	if (!rad->reset)
-+		return 0;
-+
-+	devm_gpiod_put(dev, rad->reset);
-+	rad->reset = NULL;
-+
-+	return 0;
-+}
-+
-+static int rad_panel_resume(struct device *dev)
-+{
-+	struct rad_panel *rad = dev_get_drvdata(dev);
-+
-+	if (rad->reset)
-+		return 0;
-+
-+	rad->reset = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(rad->reset))
-+		rad->reset = NULL;
-+
-+	return PTR_ERR_OR_ZERO(rad->reset);
-+}
-+
-+#endif
-+
-+static const struct dev_pm_ops rad_pm_ops = {
-+	SET_RUNTIME_PM_OPS(rad_panel_suspend, rad_panel_resume, NULL)
-+	SET_SYSTEM_SLEEP_PM_OPS(rad_panel_suspend, rad_panel_resume)
-+};
-+
-+static const struct of_device_id rad_of_match[] = {
-+	{ .compatible = "raydium,rm67191", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rad_of_match);
-+
-+static struct mipi_dsi_driver rad_panel_driver = {
-+	.driver = {
-+		.name = "panel-raydium-rm67191",
-+		.of_match_table = rad_of_match,
-+		.pm	= &rad_pm_ops,
-+	},
-+	.probe = rad_panel_probe,
-+	.remove = rad_panel_remove,
-+	.shutdown = rad_panel_shutdown,
-+};
-+module_mipi_dsi_driver(rad_panel_driver);
-+
-+MODULE_AUTHOR("Robert Chiras <robert.chiras@nxp.com>");
-+MODULE_DESCRIPTION("DRM Driver for Raydium RM67191 MIPI DSI panel");
-+MODULE_LICENSE("GPL v2");
--- 
-2.7.4
+I assume this has been broken forever? Should we be CCing stable? If so, it
+would be nice to have this self contained (separate from the refactor) so w=
+e can
+more easily backport it.
+
+Also, can you update=20
+tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c to catch this issue=
+?
+
+A couple more comments below.
+
+>=20
+> Signed-off-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+> ---
+>  arch/powerpc/include/asm/hw_breakpoint.h |  7 ++--
+>  arch/powerpc/kernel/hw_breakpoint.c      | 44 +++++++++++++-----------
+>  arch/powerpc/kernel/process.c            | 34 ++++++++++++++++--
+>  3 files changed, 60 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/arch/powerpc/include/asm/hw_breakpoint.h
+> b/arch/powerpc/include/asm/hw_breakpoint.h
+> index 8acbbdd4a2d5..749a357164d5 100644
+> --- a/arch/powerpc/include/asm/hw_breakpoint.h
+> +++ b/arch/powerpc/include/asm/hw_breakpoint.h
+> @@ -34,6 +34,8 @@ struct arch_hw_breakpoint {
+>  #define HW_BRK_TYPE_PRIV_ALL	(HW_BRK_TYPE_USER | HW_BRK_TYPE_KERNEL | \
+>  				 HW_BRK_TYPE_HYP)
+> =20
+> +#define HW_BREAKPOINT_ALIGN 0x7
+> +
+>  #ifdef CONFIG_HAVE_HW_BREAKPOINT
+>  #include <linux/kdebug.h>
+>  #include <asm/reg.h>
+> @@ -45,8 +47,6 @@ struct pmu;
+>  struct perf_sample_data;
+>  struct task_struct;
+> =20
+> -#define HW_BREAKPOINT_ALIGN 0x7
+> -
+>  extern int hw_breakpoint_slots(int type);
+>  extern int arch_bp_generic_fields(int type, int *gen_bp_type);
+>  extern int arch_check_bp_in_kernelspace(struct arch_hw_breakpoint *hw);
+> @@ -76,7 +76,8 @@ static inline void hw_breakpoint_disable(void)
+>  }
+>  extern void thread_change_pc(struct task_struct *tsk, struct pt_regs *re=
+gs);
+>  int hw_breakpoint_handler(struct die_args *args);
+> -
+> +extern u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
+> +		unsigned long *start_addr, unsigned long *end_addr);
+>  extern int set_dawr(struct arch_hw_breakpoint *brk);
+>  extern bool dawr_force_enable;
+>  static inline bool dawr_enabled(void)
+> diff --git a/arch/powerpc/kernel/hw_breakpoint.c
+> b/arch/powerpc/kernel/hw_breakpoint.c
+> index 36bcf705df65..c122fd55aa44 100644
+> --- a/arch/powerpc/kernel/hw_breakpoint.c
+> +++ b/arch/powerpc/kernel/hw_breakpoint.c
+> @@ -126,6 +126,28 @@ int arch_bp_generic_fields(int type, int *gen_bp_typ=
+e)
+>  	return 0;
+>  }
+> =20
+> +/* Maximum len for DABR is 8 bytes and DAWR is 512 bytes */
+> +static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
+> +{
+> +	u16 length_max =3D 8;
+> +	u16 final_len;
+> +	unsigned long start_addr, end_addr;
+> +
+> +	final_len =3D hw_breakpoint_get_final_len(hw, &start_addr, &end_addr);
+> +
+> +	if (dawr_enabled()) {
+> +		length_max =3D 512;
+> +		/* DAWR region can't cross 512 bytes boundary */
+> +		if ((start_addr >> 9) !=3D (end_addr >> 9))
+> +			return -EINVAL;
+> +	}
+> +
+> +	if (final_len > length_max)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * Validate the arch-specific HW Breakpoint register settings
+>   */
+> @@ -133,12 +155,10 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  			     const struct perf_event_attr *attr,
+>  			     struct arch_hw_breakpoint *hw)
+>  {
+> -	int length_max;
+> -
+>  	if (!ppc_breakpoint_available())
+>  		return -ENODEV;
+> =20
+> -	if (!bp)
+> +	if (!bp || !attr->bp_len)
+>  		return -EINVAL;
+> =20
+>  	hw->type =3D HW_BRK_TYPE_TRANSLATE;
+> @@ -160,23 +180,7 @@ int hw_breakpoint_arch_parse(struct perf_event *bp,
+>  	hw->address =3D attr->bp_addr;
+>  	hw->len =3D attr->bp_len;
+> =20
+> -	length_max =3D 8; /* DABR */
+> -	if (dawr_enabled()) {
+> -		length_max =3D 512 ; /* 64 doublewords */
+> -		/* DAWR region can't cross 512 bytes boundary */
+> -		if ((hw->address >> 9) !=3D ((hw->address + hw->len - 1) >> 9))
+> -			return -EINVAL;
+> -	}
+> -
+> -	/*
+> -	 * Since breakpoint length can be a maximum of length_max and
+> -	 * breakpoint addresses are aligned to nearest double-word
+> -	 * HW_BREAKPOINT_ALIGN by rounding off to the lower address,
+> -	 * the 'symbolsize' should satisfy the check below.
+> -	 */
+> -	if (hw->len > (length_max - (hw->address & HW_BREAKPOINT_ALIGN)))
+> -		return -EINVAL;
+> -	return 0;
+> +	return hw_breakpoint_validate_len(hw);
+>  }
+> =20
+>  /*
+> diff --git a/arch/powerpc/kernel/process.c b/arch/powerpc/kernel/process.=
+c
+> index 265fac9fb3a4..159aaa70de46 100644
+> --- a/arch/powerpc/kernel/process.c
+> +++ b/arch/powerpc/kernel/process.c
+> @@ -802,9 +802,39 @@ static int disable_dawr(void)
+>  	return 0;
+>  }
+> =20
+> +/*
+> + * Watchpoint match range is always doubleword(8 bytes) aligned on
+> + * powerpc. If the given range is crossing doubleword boundary, we
+> + * need to increase the length such that next doubleword also get
+> + * covered. Ex,
+> + *
+> + *          address   len =3D 6 bytes
+> + *                |=3D=3D=3D=3D=3D=3D=3D=3D=3D.
+> + *   |------------v--|------v--------|
+> + *   | | | | | | | | | | | | | | | | |
+> + *   |---------------|---------------|
+> + *    <---8 bytes--->
+> + *
+> + * In this case, we should configure hw as:
+> + *   start_addr =3D address & ~HW_BREAKPOINT_ALIGN
+> + *   len =3D 16 bytes
+> + *
+> + * @start_addr and @end_addr are inclusive.
+> + */
+> +u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
+> +				unsigned long *start_addr,
+> +				unsigned long *end_addr)
+
+I don't really like this.  "final" is not a good name. Something like hardw=
+are
+would be better.
+
+Also, can you put the start_addr and end addr in the arch_hw_breakpoint rat=
+her
+than doing what you have above.  Call them hw_start_addr, hw_end_addr.
+
+We could even set these two new addresses where we set the set of
+arch_hw_breakpoint rather than having this late call.
+
+> +{
+> +	*start_addr =3D brk->address & ~HW_BREAKPOINT_ALIGN;
+> +	*end_addr =3D (brk->address + brk->len - 1) | HW_BREAKPOINT_ALIGN;
+> +	return *end_addr - *start_addr + 1;
+> +}
+> +
+>  int set_dawr(struct arch_hw_breakpoint *brk)
+>  {
+>  	unsigned long dawr, dawrx, mrd;
+> +	unsigned long start_addr, end_addr;
+> +	u16 final_len;
+> =20
+>  	if (brk->type =3D=3D HW_BRK_TYPE_DISABLE)
+>  		return disable_dawr();
+> @@ -815,8 +845,8 @@ int set_dawr(struct arch_hw_breakpoint *brk)
+>  	dawrx |=3D ((brk->type & HW_BRK_TYPE_TRANSLATE) >> 2) << (63 - 59);
+>  	dawrx |=3D (brk->type & HW_BRK_TYPE_PRIV_ALL) >> 3;
+> =20
+> -	/* brk->len is in bytes. */
+> -	mrd =3D ((brk->len + 7) >> 3) - 1;
+> +	final_len =3D hw_breakpoint_get_final_len(brk, &start_addr, &end_addr);
+
+Again, hardware length, or something other than "final"
+
+> +	mrd =3D ((final_len + 7) >> 3) - 1;
+>  	dawrx |=3D (mrd & 0x3f) << (63 - 53);
+> =20
+>  	if (ppc_md.set_dawr)
 
