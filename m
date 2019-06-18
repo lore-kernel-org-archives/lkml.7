@@ -2,79 +2,91 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FFA4C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4B2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E03920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:29:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560871744;
-	bh=CF7FRkL2iwwVYjbCaQgrgRX+K2cxB9iPmG+x2eAyy9Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KbwHWD0fsdtjunhNH/ck17GAs7/KxPMdjE4T2RHJ1OfNLJi+cNuAxhAeorQFGMZtr
-	 ociO8OmQxv9LerExSXer3wjhIhYM9okFF5ZuligX2aJwNDY9JB3WHPeghKvfjBurXN
-	 7+P1/+H4Kvre26FB4SsEMdXdWvaH+COVbjWVA3Vw=
+	by mail.kernel.org (Postfix) with ESMTP id 071C920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfFRP3C (ORCPT
+        id S1729626AbfFRPaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:29:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55472 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfFRP3C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:29:02 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 141962085A;
-        Tue, 18 Jun 2019 15:29:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560871741;
-        bh=CF7FRkL2iwwVYjbCaQgrgRX+K2cxB9iPmG+x2eAyy9Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=C77rrrEvPFlhBrbHNBm+BOxFFDfKGdu0ap03ztelW4IIobTlRpUQCKcOizOc2xSEd
-         FOK4ir94zSoUkwYJkwmy7wF79J+29xNEmtFYBU7/cVJnNsI6NuAFJOfo9ai0sx90V7
-         rgrp6sa4HcF0ZT+TooI7Ihq4z8a4eA9ZtWklx9Rw=
-Date:   Tue, 18 Jun 2019 17:28:59 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Muchun Song <smuchun@gmail.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Prateek Sood <prsood@codeaurora.org>,
-        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        zhaowuyun@wingtech.com
-Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
- glue directory
-Message-ID: <20190618152859.GB1912@kroah.com>
-References: <20190516142342.28019-1-smuchun@gmail.com>
- <20190524190443.GB29565@kroah.com>
- <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
- <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
+        Tue, 18 Jun 2019 11:30:35 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:40204 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729209AbfFRPaf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:30:35 -0400
+Received: (qmail 5734 invoked by uid 2102); 18 Jun 2019 11:30:34 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 18 Jun 2019 11:30:34 -0400
+Date:   Tue, 18 Jun 2019 11:30:34 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Suwan Kim <suwan.kim027@gmail.com>
+cc:     shuah@kernel.org, <valentina.manea.m@gmail.com>,
+        <gregkh@linuxfoundation.org>, <linux-usb@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usbip: Implement map_urb_for_dma function for vhci to
+ skip dma mapping
+In-Reply-To: <20190618142817.16844-1-suwan.kim027@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1906181129450.1659-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: TEXT/PLAIN; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 09:40:13PM +0800, Muchun Song wrote:
-> Ping guys ? I think this is worth fixing.
+On Tue, 18 Jun 2019, Suwan Kim wrote:
 
-That's great (no context here), but I need people to actually agree on
-what the correct fix should be.  I had two different patches that were
-saying they fixed the same issue, and that feels really wrong.
+> vhci doesn’t do dma for remote device. Actually, the real dma
+> operation is done by network card driver. So, vhci doesn’t use and
+> need dma address of transfer buffer of urb.
+> 
+> But hcd provides dma mapping function by defualt in usb_hcd_submit_urb()
+> and it causes unnecessary dma mapping which will be done again at
+> NIC driver and it wastes CPU cycles. So, implement map_urb_for_dma
+> function for vhci in order to skip the dma mapping procedure.
+> 
+> Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+> ---
+>  drivers/usb/usbip/vhci_hcd.c | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> index 667d9c0ec905..9df4d9e36788 100644
+> --- a/drivers/usb/usbip/vhci_hcd.c
+> +++ b/drivers/usb/usbip/vhci_hcd.c
+> @@ -1287,6 +1287,13 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
+>  	return 0;
+>  }
+>  
+> +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+> +			    gfp_t mem_flags)
+> +{
+> +	dev_dbg(hcd->self.controller, "vhci does not map urb for dma\n");
+> +	return 0;
+> +}
+> +
+>  static const struct hc_driver vhci_hc_driver = {
+>  	.description	= driver_name,
+>  	.product_desc	= driver_desc,
+> @@ -1302,6 +1309,7 @@ static const struct hc_driver vhci_hc_driver = {
+>  	.urb_dequeue	= vhci_urb_dequeue,
+>  
+>  	.get_frame_number = vhci_get_frame_number,
+> +	.map_urb_for_dma = vhci_map_urb_for_dma,
+>  
+>  	.hub_status_data = vhci_hub_status,
+>  	.hub_control    = vhci_hub_control,
 
-So can everyone actually agree on one patch please?
+If the goal is to avoid wasting CPU cycles, you probably should have a 
+vhci_unmap_urb_for_dma routine as well.
 
-thanks,
+Alan Stern
 
-greg k-h
