@@ -2,83 +2,88 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732F1C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78BBDC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:26:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F2512084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57F152080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:26:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbfFRHYN (ORCPT
+        id S1726307AbfFRH0T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:24:13 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:36853 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRHYN (ORCPT
+        Tue, 18 Jun 2019 03:26:19 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:55869 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRH0T (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:24:13 -0400
-Received: by mail-lj1-f196.google.com with SMTP id i21so12012720ljj.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:24:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vww4gF/9h7dDeufpKWDU6hTs9TyDrRL/grObKHzNy0Q=;
-        b=nudEp50eKPaOi0UxwETFyxOeUbDZU+lUIyqRZXWL4lYmaYkm3FHZzDSV1SLDzve25g
-         rXQaC1pO9c5P4trXwepzgMrtpUnC3f171id6yzn7Z7JhuDDx7GScxypS5Ln89ckhJxae
-         pU9emtrqGw2nVjuGFzQfrw/i42vhMdnZYnpC8jg7+qr4V706cgvRePCtI0seS2CxW0o4
-         RpnUKtbL6QbDPFUSrEF/8qFxtVicmZDsnoTxo9AfVudtNTjdssDb3LTxM6rDXz/RziS9
-         L8SwKSJUdHrOqNEWr6N6UvyoHNhb3XBbv8nG6gjz8I1Wd1uloDE32HEl9Rhsm7gwqbNC
-         xvvw==
-X-Gm-Message-State: APjAAAVdJfI/pieaH/eyNZ8Li5DCagY3ES8OWx6IDRtK7vHYEKCfxjX5
-        yNk9x8NzaQ/LreYHO4IPQRsqLCTkAqLBlz3mXPo=
-X-Google-Smtp-Source: APXvYqyhbIZwb3rY0t46VAbU/ee00LM6NJrGGTiQk8GC3qtaQCqHwgfE8FknXhKhY/vvUxzPbvE+4f9B6QySz3NFGNA=
-X-Received: by 2002:a2e:b0f0:: with SMTP id h16mr38257300ljl.21.1560842651347;
- Tue, 18 Jun 2019 00:24:11 -0700 (PDT)
+        Tue, 18 Jun 2019 03:26:19 -0400
+Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hd6Wy-0004az-Q0 from Jiada_Wang@mentor.com ; Mon, 17 Jun 2019 22:19:40 -0700
+Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
+ (TLS) id 15.0.1320.4; Mon, 17 Jun 2019 22:19:37 -0700
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <kuninori.morimoto.gx@renesas.com>
+CC:     <jiada_wang@mentor.com>, <sudipi@jp.adit-jv.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH v2 1/1] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
+Date:   Tue, 18 Jun 2019 14:19:53 +0900
+Message-ID: <20190618051953.13419-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.19.2
 MIME-Version: 1.0
-References: <20190617144048.5450-1-geert+renesas@glider.be> <20190617151335.GW5316@sirena.org.uk>
-In-Reply-To: <20190617151335.GW5316@sirena.org.uk>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 18 Jun 2019 09:23:58 +0200
-Message-ID: <CAMuHMdXqSL6h6uk15hm9nvG3PsODRvAxbqGJD_x=pBBhgNKYMw@mail.gmail.com>
-Subject: Re: [PATCH] ASoC: Add missing newline at end of file
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        ALSA Development Mailing List <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-ClientProxiedBy: svr-orw-mbx-04.mgc.mentorg.com (147.34.90.204) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mark,
+From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
 
-On Mon, Jun 17, 2019 at 5:13 PM Mark Brown <broonie@kernel.org> wrote:
-> On Mon, Jun 17, 2019 at 04:40:48PM +0200, Geert Uytterhoeven wrote:
->
-> >  sound/usb/bcd2000/Makefile         | 2 +-
->
-> This isn't ASoC but I'm just going to go ahead and apply it on the basis
+commit c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
+introduces rsnd_ctu_id which calcualates and gives
+the main Device id of the CTU by dividing the id by 4.
+rsnd_mod_id uses this interface to get the CTU main
+Device id. But this commit forgets to revert the main
+Device id calcution previously done in rsnd_ctu_probe_
+which also divides the id by 4. This path corrects the
+same to get the correct main Device id.
 
-You're right, sorry for missing that.
+The issue is observered when rsnd_ctu_probe_ is done for CTU1
 
-> that it's trivial and more trouble than it's worth to split or anything
-> like that.
+Fixes: c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
 
-Thanks!
+Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+v2: fixed commit id
 
-Gr{oetje,eeting}s,
+v1: initial version
+---
+ sound/soc/sh/rcar/ctu.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-                        Geert
-
+diff --git a/sound/soc/sh/rcar/ctu.c b/sound/soc/sh/rcar/ctu.c
+index 8cb06dab234e..7647b3d4c0ba 100644
+--- a/sound/soc/sh/rcar/ctu.c
++++ b/sound/soc/sh/rcar/ctu.c
+@@ -108,7 +108,7 @@ static int rsnd_ctu_probe_(struct rsnd_mod *mod,
+ 			   struct rsnd_dai_stream *io,
+ 			   struct rsnd_priv *priv)
+ {
+-	return rsnd_cmd_attach(io, rsnd_mod_id(mod) / 4);
++	return rsnd_cmd_attach(io, rsnd_mod_id(mod));
+ }
+ 
+ static void rsnd_ctu_value_init(struct rsnd_dai_stream *io,
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.19.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
