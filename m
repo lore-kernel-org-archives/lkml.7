@@ -2,262 +2,139 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51199C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:54:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96A7C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:56:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 173F02070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:54:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6772070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:56:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729536AbfFRKyw (ORCPT
+        id S1729574AbfFRK4W convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:54:52 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:44722 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFRKyw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:54:52 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k8so21026033edr.11;
-        Tue, 18 Jun 2019 03:54:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gPgMEOL4dHRWrvxMQ7ystpU+K87vLZf9P87ZKC49UHY=;
-        b=TGEU21phlj1ll7vV6DLQOGtZCFK5HP+PLVmgzR68iqZs5j1yZ3ywOgvqTC9tlI8MtP
-         ad2WQ1/0UokL8bwQtLSSq1vm4hmedZEWlGoq7NCBppwr3fggdpHD0lepZSs/5V8Gkq42
-         Im7w8RLGe2Ogsa9tr8lCwCUbdVNqgo6Al2HbzzmXXH8KBdzrFVFZi79+KTx8PQUOBTGs
-         DXCoE9jLiEE7Z69qqsVE5QdjEpH+bkEhfEHLH3F1ycigJ0zHUHjK0NsYof4tXEm6AsST
-         YM+3ATQkuozMi2EOd7TqvO4kOTJYtDivgg3Sv1Qb+YJYX4Z0AnpLlYE2xaWMQkYw17sz
-         UsuQ==
-X-Gm-Message-State: APjAAAUu3jYJiYFWc4/1zK+nnbhLJM078ut5BBo/OMQKqaLk5nbA5trq
-        4lcYt7L07fBwVzYPIzUfuhe9umCs6RY=
-X-Google-Smtp-Source: APXvYqzVkPg9bZelROVC75TFtGiItHa0smS4b7f4PCIJk3KSCLtPA/VruGkuV6fFZXFoWA+ZJZimeA==
-X-Received: by 2002:a05:6402:8cc:: with SMTP id d12mr66720370edz.60.1560855289696;
-        Tue, 18 Jun 2019 03:54:49 -0700 (PDT)
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com. [209.85.128.44])
-        by smtp.gmail.com with ESMTPSA id m31sm4676036edd.42.2019.06.18.03.54.48
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 03:54:48 -0700 (PDT)
-Received: by mail-wm1-f44.google.com with SMTP id u8so2736865wmm.1;
-        Tue, 18 Jun 2019 03:54:48 -0700 (PDT)
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr3096936wme.125.1560855288154;
- Tue, 18 Jun 2019 03:54:48 -0700 (PDT)
+        Tue, 18 Jun 2019 06:56:22 -0400
+Received: from mga07.intel.com ([134.134.136.100]:15500 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfFRK4V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 06:56:21 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 03:56:20 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,388,1557212400"; 
+   d="scan'208";a="161833962"
+Received: from xxx.igk.intel.com (HELO xxx) ([10.237.93.170])
+  by orsmga003.jf.intel.com with ESMTP; 18 Jun 2019 03:56:18 -0700
+Date:   Tue, 18 Jun 2019 13:00:15 +0200
+From:   Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
+        <amadeuszx.slawinski@linux.intel.com>
+To:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+Cc:     alsa-devel@alsa-project.org,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 09/11] ASoC: Intel: hdac_hdmi: Set ops
+ to NULL on remove
+Message-ID: <20190618130015.0fc388b4@xxx>
+In-Reply-To: <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
+References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
+ <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
+ <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
 MIME-Version: 1.0
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
- <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
- <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
- <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
- <CAGb2v65YRVSv2mFfE2e=vqDOSu4Nie_oLQ-qpaDsTWKJwf-aeA@mail.gmail.com> <CAMty3ZA+hV_X0-=b83M3rDUhX=+g5RNC6EU-DzAS_pbvwc54FA@mail.gmail.com>
-In-Reply-To: <CAMty3ZA+hV_X0-=b83M3rDUhX=+g5RNC6EU-DzAS_pbvwc54FA@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 18 Jun 2019 18:54:33 +0800
-X-Gmail-Original-Message-ID: <CAGb2v66onOEDPvXWLsLj7efxbReY0_z1HcQWkG78XUytLvMQ+g@mail.gmail.com>
-Message-ID: <CAGb2v66onOEDPvXWLsLj7efxbReY0_z1HcQWkG78XUytLvMQ+g@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
- gates in probe
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 6:34 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Tue, Jun 18, 2019 at 1:23 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Tue, Jun 18, 2019 at 3:45 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> > > >
-> > > > On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > >
-> > > > > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> > > > > >
-> > > > > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > > > > >
-> > > > > > > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > > > > > > now these are register during bind call.
-> > > > > > >
-> > > > > > > Of which, dsi clock gate would required during DPHY probe
-> > > > > > > but same can miss to get since tcon top is not bound at
-> > > > > > > that time.
-> > > > > > >
-> > > > > > > To solve, this circular dependency move the clock gate
-> > > > > > > registration from bind to probe so-that DPHY can get the
-> > > > > > > dsi gate clock on time.
-> > > > > > >
-> > > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > > ---
-> > > > > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
-> > > > > > >  1 file changed, 49 insertions(+), 45 deletions(-)
-> > > > > > >
-> > > > > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > > index 465e9b0cdfee..a8978b3fe851 100644
-> > > > > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
-> > > > > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> > > > > > >                                void *data)
-> > > > > > >  {
-> > > > > > > -       struct platform_device *pdev = to_platform_device(dev);
-> > > > > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> > > > > > > +       int ret;
-> > > > > > > +
-> > > > > > > +       ret = reset_control_deassert(tcon_top->rst);
-> > > > > > > +       if (ret) {
-> > > > > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
-> > > > > > > +               return ret;
-> > > > > > > +       }
-> > > > > > > +
-> > > > > > > +       ret = clk_prepare_enable(tcon_top->bus);
-> > > > > > > +       if (ret) {
-> > > > > > > +               dev_err(dev, "Could not enable bus clock\n");
-> > > > > > > +               goto err_assert_reset;
-> > > > > > > +       }
-> > > > > >
-> > > > > > You have to de-assert the reset control and enable the clock before the
-> > > > > > clocks it provides are registered. Otherwise a consumer may come in and
-> > > > > > ask for the provided clock to be enabled, but since the TCON TOP's own
-> > > > > > reset and clock are still disabled, you can't actually access the registers
-> > > > > > that controls the provided clock.
-> > > > >
-> > > > > These rst and bus are common reset and bus clocks not tcon top clocks
-> > > > > that are trying to register here. ie reason I have not moved it in
-> > > > > top.
-> > > >
-> > > > And you're sure that toggling bits in the TCON TOP block doesn't require
-> > > > the reset to be de-asserted and the bus clock enabled?
-> > > >
-> > > > Somehow I doubt that.
-> > > >
-> > > > Once the driver register the clocks it provides, they absolutely must work.
-> > > > They can't only work after the bind phase when the reset gets de-asserted
-> > > > and the bus clock enabled. Or you should provide proper error reporting
-> > > > in the clock ops. I doubt you want to go that way either.
-> > >
-> > > Why would they won't work after bind phase? unlike tcon top gates,
-> > > these reset, and bus are common like  what we have in other DE block
-> > > so enable them in bind won't be an issue as per as I understand. let
-> > > me know if you want me to check in other directions.
-> >
-> > You misunderstood. When you moved the clock registering parts to the probe
-> > phase, but didn't move the clock enable and reset de-assert parts to go with,
-> > the clock ops will not work as expected between probe and bind time.
->
-> If I understand correctly, I have moved tcon clock gates, not the bus
-> clock or the reset. Both have independent enablement phase, the bus
-> clock is enable in tcon top bind and the clock gate ("dsi") enable in
-> init call of phy_ops. is both bus clock and clock gates are same and
-> related that is what you are saying?
+On Mon, 17 Jun 2019 13:51:42 -0700
+Ranjani Sridharan <ranjani.sridharan@linux.intel.com> wrote:
 
-I am saying that you may need the tcon top bus gates and resets properly
-configured to be able to read/write the tcon top address range. That includes
-enabling/disabling the clocks that the tcon top driver registers.
+> On Mon, 2019-06-17 at 13:36 +0200, Amadeusz Sławiński wrote:
+> > When we unload Skylake driver we may end up calling
+> > hdac_component_master_unbind(), it uses acomp->audio_ops, which we
+> > set
+> > in hdmi_codec_probe(), so we need to set it to NULL in
+> > hdmi_codec_remove(),
+> > otherwise we will dereference no longer existing pointer.  
+> 
+> Hi Amadeusz,
+> 
+> It looks like the audio_ops should be deleted snd_hdac_acomp_exit().
+> Also, this doesnt seem to be the case with when the SOF driver is
+> removed.
+> Could you please give a bit more context on what error you see when
+> this happens?
 
-In other words, the TCON TOP's bus gate and reset control have everything to do
-with what you can do within the TCON TOP block or address range.
+Hi,
 
-> >
-> > Simple way to verify it: Just use devmem to disable the TCON TOP bus gate
-> > and/or assert its reset control. Then try to toggle any of the bits in the
-> > TCON TOP block and see if it works, or if the bits stick.
->
-> Yes I have verified "dsi" gate enablement before via devmem. Below is
-> the bus, reset disablement and re-enablement and result is similar for
-> the reset, bus clock in bind and even in probe.
->
-> 00. get the existing value
->
-> # devmem 0x1c70020
-> 0x00010000
-> # devmem 0x1c20064
-> 0x44021000
-> # devmem 0x1c202c4
-> 0x44021000
->
-> 01: disable bus, and assert reset
->
-> # devmem 0x1c20064 32 0x4021000
-> # devmem 0x1c202c4 32 0x4021000
-> # devmem 0x1c20064
-> 0x04021000
-> # devmem 0x1c202c4
-> 0x04021000
-> # devmem 0x1c70020
-> 0x00000000
+I get Oops. This is what happens with all other patches in this series and only this one reverted:
 
-See here. The value became 0 when it was still 0x10000 in the previous phase.
-Any guesses to why this happened, assuming you didn't touch it?
+root@APL:~# rmmod snd_soc_sst_bxt_rt298
+root@APL:~# rmmod snd_soc_hdac_hdmi
+root@APL:~# rmmod snd_soc_skl
+Killed
 
-Now if you keep the bus gate disabled and the reset control asserted, and
-try to write some non-zero value to 0x1c70020, and read it back, does the
-value stick?
+[   57.007783] BUG: unable to handle page fault for address: fffffbfff4067038
+[   57.007956] #PF: supervisor read access in kernel mode
+[   57.008065] #PF: error_code(0x0000) - not-present page
+[   57.008173] PGD 268266067 P4D 268266067 PUD 23809a067 PMD 22b545067 PTE 0
+[   57.008322] Oops: 0000 [#1] PREEMPT SMP DEBUG_PAGEALLOC KASAN PTI
+[   57.008453] CPU: 3 PID: 1045 Comm: rmmod Tainted: G                T 5.2.0-rc4-dev #824
+[   57.008617] Hardware name: Intel Corp. Broxton P/Apollolake RVP1C, BIOS APLKRVPA.X64.0151.B25.1609151411 09/15/2016
+[   57.008834] RIP: 0010:__asan_load8+0x39/0x90
+[   57.008931] Code: ff ff ff ff 7f ff ff 48 39 c3 76 40 48 8d 43 07 48 89 c2 83 e2 07 48 83 fa 07 75 19 48 ba 00 00 00 00 00 fc ff df 48 c1 e8 03 <0f> b6 04 10 84 c0 75 2c 5b 5d c3 48 be 00 00 00 00 00 f
+c ff df 48
+[   57.009299] RSP: 0018:ffff88822431fa68 EFLAGS: 00010203
+[   57.009411] RAX: 1ffffffff4067038 RBX: ffffffffa03381c0 RCX: ffffffffa01bd8a4
+[   57.009557] RDX: dffffc0000000000 RSI: dffffc0000000000 RDI: ffffffffa03381c0
+[   57.009704] RBP: ffff88822431fa70 R08: ffffed1046a6d8f3 R09: ffffed1046a6d8f3
+[   57.009851] R10: ffffed1046a6d8f3 R11: 0000000000000000 R12: ffff88823536c4b0
+[   57.009998] R13: ffffffffa03381a0 R14: ffffffffa01bd860 R15: ffff888223108538
+[   57.010147] FS:  00007fedb579f540(0000) GS:ffff888237780000(0000) knlGS:0000000000000000
+[   57.010312] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   57.010433] CR2: fffffbfff4067038 CR3: 000000022260a000 CR4: 00000000003406e0
+[   57.010580] Call Trace:
+[   57.010667]  hdac_component_master_unbind+0x44/0xb0 [snd_hda_core]
+[   57.010822]  ? snd_hdac_acomp_exit+0x130/0x130 [snd_hda_core]
+[   57.010949]  take_down_master+0x53/0x80
+[   57.011037]  component_master_del+0x76/0xa0
+[   57.011144]  snd_hdac_acomp_exit+0x97/0x130 [snd_hda_core]
+[   57.011275]  ? snd_hdac_display_power+0x12e/0x1d0 [snd_hda_core]
+[   57.011414]  skl_free+0xbf/0xd0 [snd_soc_skl]
+[   57.011519]  skl_remove+0xf1/0x110 [snd_soc_skl]
+[   57.011623]  pci_device_remove+0xd9/0x1f0
+[   57.011714]  ? pcibios_free_irq+0x10/0x10
+[   57.011806]  ? preempt_count_sub+0x18/0xd0
+[   57.011898]  ? _raw_spin_unlock_irqrestore+0x26/0x40
+[   57.012009]  device_release_driver_internal+0x140/0x270
+[   57.012124]  driver_detach+0x7a/0xe0
+[   57.012207]  bus_remove_driver+0x95/0x160
+[   57.012303]  driver_unregister+0x43/0x60
+[   57.012392]  pci_unregister_driver+0x29/0x110
+[   57.012501]  skl_driver_exit+0x10/0x1b [snd_soc_skl]
+[   57.012610]  __x64_sys_delete_module+0x235/0x3d0
+[   57.012712]  ? free_module+0x380/0x380
+[   57.012804]  do_syscall_64+0xcd/0x650
+[   57.012887]  ? syscall_return_slowpath+0x1e0/0x1e0
+[   57.012998]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+[   57.013107] RIP: 0033:0x7fedb52bc1b7
+[   57.013189] Code: 73 01 c3 48 8b 0d d1 8c 2c 00 f7 d8 64 89 01 48 83 c8 ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 b8 b0 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 8b 0d a1 8c 2c 00 f7 d8 64 89 01 48
+[   57.013556] RSP: 002b:00007ffcfc17ce18 EFLAGS: 00000206 ORIG_RAX: 00000000000000b0
+[   57.013712] RAX: ffffffffffffffda RBX: 00007ffcfc17ce78 RCX: 00007fedb52bc1b7
+[   57.013858] RDX: 000000000000000a RSI: 0000000000000800 RDI: 00005649a5309a98
+[   57.014004] RBP: 00005649a5309a30 R08: 00007ffcfc17bd91 R09: 0000000000000000
+[   57.014149] R10: 00007fedb5338cc0 R11: 0000000000000206 R12: 00007ffcfc17d040
+[   57.014294] R13: 00007ffcfc17e79b R14: 00005649a5309260 R15: 00005649a5309a30
+[   57.014446] Modules linked in: i2c_designware_platform i2c_designware_core snd_soc_dmic joydev x86_pkg_temp_thermal intel_powerclamp coretemp crc32c_intel serio_raw pwm_lpss_pci pwm_lpss intel_lpss_pci intel_lpss snd_soc_rt298 mei_me mei snd_soc_rt286 snd_soc_rl6347a snd_soc_skl(-) snd_soc_skl_ipc snd_soc_sst_ipc snd_soc_sst_dsp snd_hda_ext_core snd_hda_core snd_soc_acpi_intel_match snd_soc_acpi snd_soc_core snd_compress snd_pcm_dmaengine snd_pcm snd_timer parport_pc lp parport ip_tables x_tables igb dca pinctrl_broxton pinctrl_intel [last unloaded: snd_soc_hdac_hdmi]
+[   57.015477] CR2: fffffbfff4067038
+[   57.015556] ---[ end trace 794bf9fb0862965b ]---
 
-If you don't have the bus gate enabled and the reset control de-asserted,
-any operations you do to the TCON TOP is essentially not happening. Including
-bit operations that the clocks you registered are required to do.
-
-Get what I'm saying?
-
-You need to have the bus gate enabled and the reset control de-asserted
-BEFORE you register the clocks you are providing, or something is going
-to go very wrong.
-
-Worst case scenario: the reset control was left de-asserted by the bootloader
-but the bus gate was disabled. When you register the clocks, the CCF tries
-to read back the current status of the clocks, and the I/O stalls because
-the bus gate wasn't enabled. System stalls.
-
-Do I need to draw a time flow chart for you?
-
-Also see the very simple example:
-
-    https://elixir.bootlin.com/linux/latest/source/drivers/clk/sunxi-ng/ccu-sun9i-a80-usb.c#L113
-
-where the bus gate is enabled before registering the clocks. This hardware
-block doesn't have a reset control for it, but the same principle applies.
-
-> 02: enable bus, and dessert reset
->
-> # devmem 0x1c20064 32 0x44021000
-> # devmem 0x1c202c4 32 0x44021000
-> # devmem 0x1c20064
-> 0x44021000
-> # devmem 0x1c202c4
-> 0x44021000
-> # devmem 0x1c70020
-> 0x00000000
-
-And it's still zero here, meaning the reset control does have an effect
-on the TCON TOP registers.
-
-> 03: enable gate
->
-> # devmem 0x1c70020 32 0x00010000
-> # devmem 0x1c70020
-> 0x00010000
-
-This is irrelevant and not what I wanted you to try.
-
-> >
-> > Whether another driver actually does so is not the question. It is just bad
-> > implementation.
->
-> Not sure, I understand this.
+Amadeusz
