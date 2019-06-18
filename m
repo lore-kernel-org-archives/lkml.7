@@ -2,137 +2,147 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F91EC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 365C7C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:21:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C90B20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F401C20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:21:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="VpuN9r/8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jHaYMj1M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfFRMSg (ORCPT
+        id S1726723AbfFRMVO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:18:36 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.6]:43015 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725913AbfFRMSg (ORCPT
+        Tue, 18 Jun 2019 08:21:14 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40404 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRMVO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:18:36 -0400
-Received: from [85.158.142.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-6.bemta.az-a.eu-central-1.aws.symcld.net id D7/20-08182-896D80D5; Tue, 18 Jun 2019 12:18:32 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrIJsWRWlGSWpSXmKPExsWSoc9hrDvjGke
-  swa4FghZTHz5hs/g5aRqLxf2vRxktvl3pYLK4vGsOmwOrx85Zd9k9Nq3qZPO4c20Pm8ez24tY
-  PD5vkgtgjWLNzEvKr0hgzbjyqYupYApnxecHZ1kaGFs4uxi5OFgETjBLPDgzjQ3EERKYyCTxb
-  udTRgjnPqNE97UXLF2MnBxsAoYS8968ZwSxRQQyJP519IIVMQscYJSY1LWQHSQhLBAscfnAUq
-  iiEIlZnftYIWwniel/F7KB2CwCqhI7l/UBxTk4eAViJVZNDYJYdpdR4vi6/cwgNZwCcRJXL+1
-  kArEZBWQlvjSuBoszC4hL3HoyHywuISAgsWTPeWYIW1Ti5eN/rBD18RLt+9+yQ8R1JM5ef8II
-  YStJLLsxixXClpW4NL8bKu4rce/DfLD3JQRuMUrsX3UYqkhL4viabqhlORIf9rWwQNhqElc/H
-  YWyZSR6Dr1mhWjuZZOYfOQlWEJIIFniw9yzUFfISazqfcgCUXSBWaLh2FZ2kPeZBTQl1u/Sn8
-  CoNQvJc7MQMhBhRYkp3Q/ZQWxeAUGJkzOfsCxgZFnFaJlUlJmeUZKbmJmja2hgoGtoaKxroGt
-  kbKSXWKWbqJdaqpucmldSlAiU1UssL9YrrsxNzknRy0st2cQITFcphQwvdjA+PPJa7xCjJAeT
-  kihvUjR7rBBfUn5KZUZicUZ8UWlOavEhRhkODiUJ3rgrHLFCgkWp6akVaZk5wNQJk5bg4FES4
-  W0ASfMWFyTmFmemQ6ROMRpzTHg5dxEzx5G5SxcxC7Hk5eelSonzdoGUCoCUZpTmwQ2CpfRLjL
-  JSwryMDAwMQjwFqUW5mSWo8q8YxTkYlYR5M68CTeHJzCuB2/cK6BQmoFMeLWUDOaUkESEl1cA
-  0JeUk+90N0/ONbzM8KErIO32esfN/WF9878u0p1LH9C66iquas8yN742KWuyysb5h2mS/pi0M
-  /39/OrtS8bD+2ibXjxe/Zy7WPP7O9vvmxKR/p3d4K3zwWZMfvNz8Xvuy8923P9RsmLJxadrzg
-  7uVHj7Wn+ppwpjseldshVZgXknmsl1+kl18q1bHGM+56r7g37ZzHBeDkxTmrV13yu3blQN7BF
-  ffe/D+BVPs7po1d730+lk1uPZwWd7bfYnVPuBTocYy24P5M/VU6lz2OR8+JeS4tUzr60y3xbV
-  bdtVuOXPl/53q/2cNO0UnvJr/9ruOkohzTVRFZkbufTF9nb3WnKHBHg2Gm0/P4C49pvthtxJL
-  cUaioRZzUXEiAH5ikeBkBAAA
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-30.tower-229.messagelabs.com!1560860310!607507!1
-X-Originating-IP: [104.47.8.51]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 8966 invoked from network); 18 Jun 2019 12:18:32 -0000
-Received: from mail-am5eur03lp2051.outbound.protection.outlook.com (HELO EUR03-AM5-obe.outbound.protection.outlook.com) (104.47.8.51)
-  by server-30.tower-229.messagelabs.com with ECDHE-RSA-AES256-SHA384 encrypted SMTP; 18 Jun 2019 12:18:32 -0000
+        Tue, 18 Jun 2019 08:21:14 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so13748624wre.7;
+        Tue, 18 Jun 2019 05:21:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector2-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=q3gheQsNcOvfgT4FBoQCHjmyxHQvsnMwpbQkAbm3h7I=;
- b=VpuN9r/8vK4a9WuqY2CBytAuhCERhsBjPHvOnAYh580v4b09jB+GNXsBLnzlacSH07IfQwGw7VsMlbgikcEh/Xiy07pQDYDJYTkPPmynpv1naJcOXNNWdXX3jLftpdJL8SAWqtYLFJWQKn6VjxAZovOj+7t137W/S2sB57ZsWL8=
-Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM (20.177.113.222) by
- AM6PR10MB2407.EURPRD10.PROD.OUTLOOK.COM (20.177.116.80) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Tue, 18 Jun 2019 12:18:27 +0000
-Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::4561:9d63:48fa:a882]) by AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::4561:9d63:48fa:a882%7]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
- 12:18:27 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     Felix Riemann <Felix.Riemann@sma.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [PATCH] regulator: da9062: Adjust LDO voltage selection minimum
- value
-Thread-Topic: [PATCH] regulator: da9062: Adjust LDO voltage selection minimum
- value
-Thread-Index: AQHVIegnySQaEkg2rkmYypP32O58i6aZmuWwgAesEDCAABLgUA==
-Date:   Tue, 18 Jun 2019 12:18:27 +0000
-Message-ID: <AM6PR10MB2181F670129B7046DFECB378FEEA0@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190613130058.10480-1-felix.riemann@sma.de>
- <AM6PR10MB2181F17B2265BEE8EB80EC21FEEF0@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
- <AM0PR04MB54276B6CFB2F8188A5AAA10C88EA0@AM0PR04MB5427.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB54276B6CFB2F8188A5AAA10C88EA0@AM0PR04MB5427.eurprd04.prod.outlook.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 17af2388-3d9e-449f-385e-08d6f3e71150
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR10MB2407;
-x-ms-traffictypediagnostic: AM6PR10MB2407:
-x-microsoft-antispam-prvs: <AM6PR10MB2407108182F92238233FF84AF5EA0@AM6PR10MB2407.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(366004)(39860400002)(136003)(189003)(199004)(73956011)(3846002)(53936002)(55016002)(107886003)(7736002)(66066001)(2906002)(6436002)(4326008)(5660300002)(74316002)(305945005)(110136005)(54906003)(4744005)(71190400001)(2501003)(71200400001)(476003)(68736007)(8676002)(26005)(66446008)(6506007)(33656002)(316002)(64756008)(256004)(81166006)(81156014)(76176011)(11346002)(446003)(486006)(8936002)(52536014)(229853002)(53546011)(86362001)(66476007)(66556008)(102836004)(66946007)(186003)(7696005)(6116002)(14454004)(76116006)(6246003)(99286004)(478600001)(9686003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2407;H:AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: twQ5bSAGssBcxb6xoou9t7qxauDolf2S1UqvBCFQCE7ymjL3t658rJGSAUqpCmGOQsT80TJG568VkL/sQWxJ3G+xqjhgUjgOyj6xJPPdGYYb+XNVDXIBSo2Utg4Yugc2zIKKiF1tfUtjRkP83p4Epac0YOAj4soNqJF9nsvf9LELr/HD3b53Jb96xLdkiGWt7IxScBPCil46EaYBFuHiOsGcaYH+9wD8EyKAM/LIFiFs2SbTbtmMGtsbsYmR0pI2b+RFQfjKC/X8oNqc3IMXX4Jx+NHREbcFj+iOkok5EaX8ZwfEtNE56M/PIHg7N4JQoNzn442+naEFsmWhb5jUC2V33XxbJBpsw8KxrEr9sCuYfTebtZwx9lF77QBPcfmHO0iWFRyVR/oRtlTEPl++YE8y1gAQEv+RDL7HHA3NkNY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QOzO3vXe9mjQtVEE+7Hd0tbKU0ism9ijyqET3O81VSE=;
+        b=jHaYMj1Mos6eVknDtjGGsGJsINRMx9kgJqBgEd0J4QbMLp7hj11aecRZahOepzZWYd
+         ANPIe0RIQg7j6LXVk+qnPtDXSCgnRCD2RB0WWzwJko0UzVzU79ZiArGnHYEySlJ3q0KO
+         ZsK9yWaEMr95yH9k6Bvu+uWnVrYwILAnxK1xcAF6pdEMzR9ecT0CA1u0CfJ28MoJX7c2
+         4XBRMaWND0T4pyAWDrqeSpQ5ZpoE5zhA6cEgIrY+JZmZJyz2xZn6cGYmC7wvkt0ZzNKQ
+         7ZintUPAF1HVjh91KeUJWFsFuQ2Z0XK2UyMPfnBJSt/O+04IR0dJg1Ri99SnZhR0wnZb
+         uRIw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QOzO3vXe9mjQtVEE+7Hd0tbKU0ism9ijyqET3O81VSE=;
+        b=Sl2BG/Nech+y1eFt6O4tt/xSwL06LvplW+IlgAEAyUxopQv2R1a1VYvcvkiZh7ZaFM
+         A4JreSORl4K5TlqLr0LIyesod5vhD/Z5T4bicjLkjWxZ114w8MfiOCEddUeKFNY8WdiV
+         cEiZijzjLlPSV8I5JI4cQUQZkSoB9oC6nHBoXiQRIx5AZt2qXLiC+gvVdNF0ITgewuEn
+         7okJPctvc3X5tmRg4wqp3bgFprooWUO/YelgH2oNUzOQTUGZV0SjyrpVXon7LReB5mSA
+         HZHYGPaoAb/iJIesuzuWFdxDxyPOWGW+bC7oMBjlQ1JxgUY74Wbyy5b4FYabXA5XJ00u
+         hI4Q==
+X-Gm-Message-State: APjAAAWne35Ay1YFeLA38ZoWO4iWOwfrcjTyQ9VoXP3m5teFbwDuV0VD
+        qjCIOPAVGGSsCoDAgN/J3EI=
+X-Google-Smtp-Source: APXvYqzGfNVMzR1nsfggFLjk4ZAhEDEl8ZZ04tA2tEkmTWgrWn3aWy9z6G6LrVHkxBxQkPIYZnhFZg==
+X-Received: by 2002:adf:dd03:: with SMTP id a3mr27572224wrm.87.1560860471196;
+        Tue, 18 Jun 2019 05:21:11 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id g11sm12188587wru.24.2019.06.18.05.21.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 05:21:09 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 14:21:08 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Dmitry Osipenko <digetx@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Joseph Lo <josephl@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Prashant Gaikwad <pgaikwad@nvidia.com>,
+        devicetree@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 01/10] clk: tegra20/30: Add custom EMC clock
+ implementation
+Message-ID: <20190618122108.GO28892@ulmo>
+References: <20190616233551.6838-1-digetx@gmail.com>
+ <20190616233551.6838-2-digetx@gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 17af2388-3d9e-449f-385e-08d6f3e71150
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 12:18:27.0660
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: stephen.twiss@diasemi.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2407
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="1SVgZ+3xbDF9VW5n"
+Content-Disposition: inline
+In-Reply-To: <20190616233551.6838-2-digetx@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgRmVsaXgsDQoNCk9uIDE4IEp1bmUgMjAxOSAxMjowOCBGZWxpeCBSaWVtYW5uIHdyb3RlOg0K
-DQo+IFN1YmplY3Q6IEFXOiBbUEFUQ0hdIHJlZ3VsYXRvcjogZGE5MDYyOiBBZGp1c3QgTERPIHZv
-bHRhZ2Ugc2VsZWN0aW9uIG1pbmltdW0gdmFsdWUNCj4gDQo+IEhpIFN0ZXZlLA0KPiANCj4gQSBj
-b2xsZWFndWUgdG9sZCBtZSB0aGF0IGhlIHNhdyBvdXIgbWFpbCBzZXJ2ZXIgbWl4LXVwIHdoaXRl
-c3BhY2VzIGluIHRleHQgbWFpbHMNCj4gYmVmb3JlLCBhbHRob3VnaCB0aGUgY29weSB0aGF0IGdv
-dCByZWxheWVkIGJhY2sgdG8gbWUgbG9va3Mgb2theS4gSXMgdGhlIHBhdGNoDQo+IHVzYWJsZSBv
-ciBzaG91bGQgSSB0cnkgdG8gcmVzZW5kIGl0IHRocm91Z2ggYW5vdGhlciBzZXJ2ZXI/DQoNClll
-cyB0aGVyZSBpcyBhIGxpdHRsZSBiaXQgb2YgYSB3aGl0ZS1zcGFjZSBtaXgtdXAgaW4gYm90aCBw
-YXRjaGVzIC0tIGJ1dCBJIGNvdWxkIHNlZSB3aGF0DQp3YXMgc3VwcG9zZWQgdG8gaGFwcGVuLg0K
-DQpJIGZpeGVkIHRob3NlIHRoaXMgbW9ybmluZyBhbmQgSSd2ZSBtYWRlIGEgY291cGxlIG9mIHN1
-Z2dlc3Rpb25zLiBCdXQgYmVmb3JlIEkgc2VuZCB0aGUNCnBhdGNoIGJhY2sgKGZvciB5b3VyIGFw
-cHJvdmFsKSBJIGFtIGp1c3QgbWFraW5nIHNvbWUgY2hhbmdlcyB0byBteSB0ZXN0cyBzbyBpdCBw
-aWNrcyB1cA0KdGhpcyBjaGFuZ2UgaW4gZnV0dXJlLg0KDQpObyBuZWVkIHRvIHNlbmQgaXQgYWdh
-aW4sIHRoYW5rIHlvdS4NCk9uY2UgSSd2ZSBtYWRlIGNlcnRhaW4gaXQgZG9lcyB3aGF0IGl0IGlz
-IHN1cHBvc2VkIHRvIGRvLCBJIHdpbGwgc2VuZCBmb3IgeW91ciByZXZpZXcuDQoNClJlZ2FyZHMs
-DQpTdGV2ZQ0KDQo=
+
+--1SVgZ+3xbDF9VW5n
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jun 17, 2019 at 02:35:42AM +0300, Dmitry Osipenko wrote:
+> A proper External Memory Controller clock rounding and parent selection
+> functionality is required by the EMC drivers. It is not available using
+> the generic clock implementation, hence add a custom one. The clock rate
+> rounding shall be done by the EMC drivers because they have information
+> about available memory timings, so the drivers will have to register a
+> callback that will round the requested rate. EMC clock users won't be able
+> to request EMC clock by getting -EPROBE_DEFER until EMC driver is probed
+> and the callback is set up. The functionality is somewhat similar to the
+> clk-emc.c which serves Tegra124+ SoC's, the later HW generations support
+> more parent clock sources and the HW configuration and integration with
+> the EMC drivers differs a tad from the older gens, hence it's not really
+> worth to try to squash everything into a single source file.
+>=20
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/clk/tegra/Makefile          |   2 +
+>  drivers/clk/tegra/clk-tegra20-emc.c | 305 ++++++++++++++++++++++++++++
+>  drivers/clk/tegra/clk-tegra20.c     |  55 ++---
+>  drivers/clk/tegra/clk-tegra30.c     |  38 +++-
+>  drivers/clk/tegra/clk.h             |   6 +
+>  include/linux/clk/tegra.h           |  14 ++
+>  6 files changed, 368 insertions(+), 52 deletions(-)
+>  create mode 100644 drivers/clk/tegra/clk-tegra20-emc.c
+
+Hi Mike, Stephen,
+
+The remaining patches of this series have a build-time dependency on
+this clock driver patch. Would you mind if I pick this up into the Tegra
+tree, so that I can resolve the dependency there? I can send a pull
+request of the stable branch with this one patch if we need to resolve a
+conflict between the clk and Tegra trees.
+
+Thierry
+
+--1SVgZ+3xbDF9VW5n
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0I1zQACgkQ3SOs138+
+s6GmNxAAh2/FHVRpd1T/DtfRNWMm4FuJgUZNxY4iWXI2BBihdTriaHoryReZxM5J
+jbMpjbFEF7O8luXOxjT8N9msBIUKeIEGSMssD42yuz0YQ0qFAi5R8JJCk9ZEhP37
+S8Mucfsuc3W4y+E1k6TcYAyCANyVbnYVQKP2JW/cTsP8kTpg6kTwSOVC3zqSSiFM
+VwxqF/e3WFbvH/YjQFExotAB2JrTlgcdLOwwBEFI/pbgW6QwlHXNCQS59x10bqVa
+VqanvlQQusiu6F1CFJRQgy2VzJZHOIv1mtj0RjoM1WF+aNSFBrRr9FMlniQrFedj
+mvH72ES60Ely+A11pjdTL3h5n2ckubGHREU6d0q+Qd29G7IP+II1NRbHWXi0A6Gp
+p3m/SUHGdKLltA8mSH6si9trqXevmKfM3lz3lF3OUVzyVmwk7q2o3l4BoluVvOtE
+s41nMWBNqWhaVw7HWcyAeAXbjnTsUcM19ZuLpe+gJw0El/yPU5gJ95/KPFapEVxw
+1NVYt4F4mSgT2jqEdP06w2aoh9N+sW8lBY4vMaHoAxn10ysSR4UT3aPj3228SnXK
+gRZIq1XpQvruxfowMHuMuxllWjADW8HCTBw605/M9S+E0jArFo831tDm27tp3bv/
+b882fe4FQ96z/KNDIdRTm1URKHPWz6ZsBGjptfhBBj0cm9KNI4o=
+=XtZc
+-----END PGP SIGNATURE-----
+
+--1SVgZ+3xbDF9VW5n--
