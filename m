@@ -2,103 +2,84 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47213C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:47:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 158ABC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D30D2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:47:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560865670;
-	bh=ex6B0eU+nOg754XhdmfknhC2aHUm3CdLH/WdTm5Ma1E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mZM83gQyrHO8R1VoOkPv3aQtf72VMJsLX+HozQ1dXuBRD1qYix/4dug4sugNQnZ0X
-	 A41pW/YkaW+VuHyvVqmDmU9atvDkbhJRmkTSSiHXji2wEiypWA90o4b3tAgCMDFEiw
-	 Bz8WPcSZFEk/Vb9VXIlMup/PNrjk9mP7YiEwNhZM=
+	by mail.kernel.org (Postfix) with ESMTP id EBE35217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729434AbfFRNrs (ORCPT
+        id S1729474AbfFRNsD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:47:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33480 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfFRNrs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:47:48 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D462820873;
-        Tue, 18 Jun 2019 13:47:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560865667;
-        bh=ex6B0eU+nOg754XhdmfknhC2aHUm3CdLH/WdTm5Ma1E=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=2p4RIl0h+y7vm1MTexI6/8VCUL8s+z3hoP+M2WhA14d+oxlLLuYYTFCiAUaKm0yMQ
-         erii8rrepu5XirKNOuoS8JIJ7Zi4y6oSoV1b0DwHxlQFdKGqUGu+ELCjCyf4qOR/Gk
-         +E7MsKxLfOpYQFLG0XdEGwS/7MpZvor8R0QnhiPo=
-Date:   Tue, 18 Jun 2019 21:46:36 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Ding Xiang <dingxiang@cmss.chinamobile.com>,
-        Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc:     jun.nie@linaro.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] Arm: zx: remove redundant dev_err message
-Message-ID: <20190618134634.GL1959@dragon>
-References: <1560843541-11611-1-git-send-email-dingxiang@cmss.chinamobile.com>
+        Tue, 18 Jun 2019 09:48:03 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:39862 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726248AbfFRNsC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:48:02 -0400
+Received: (qmail 2328 invoked by uid 2102); 18 Jun 2019 09:48:01 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 18 Jun 2019 09:48:01 -0400
+Date:   Tue, 18 Jun 2019 09:48:01 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+cc:     Kernel development list <linux-kernel@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "open list:USB MASS STORAGE DRIVER" <linux-usb@vger.kernel.org>,
+        "open list:USB MASS STORAGE DRIVER" 
+        <usb-storage@lists.one-eyed-alien.net>
+Subject: Re: [PATCH 2/2] usb: storage: scsiglue: Do not skip VPD if try_vpd_pages
+ is set
+In-Reply-To: <20190618013146.21961-3-marcos.souza.org@gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1906180946160.1659-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560843541-11611-1-git-send-email-dingxiang@cmss.chinamobile.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 03:39:01PM +0800, Ding Xiang wrote:
-> devm_ioremap_resource already contains error message, so remove
-> the redundant dev_err message
+On Mon, 17 Jun 2019, Marcos Paulo de Souza wrote:
+
+> If BLIST_TRY_VPD_PAGES is set for a device, even for an USB, it should
+> be honored, so only set skip_vpd_pages is try_vpd_pages is not set.
 > 
-> Signed-off-by: Ding Xiang <dingxiang@cmss.chinamobile.com>
-
-Acked-by: Shawn Guo <shawnguo@kernel.org>
-
-Arnd, Olof,
-
-Can you please apply it to arm-soc tree?  Thanks.
-
-Shawn
-
+> Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
 > ---
->  arch/arm/mach-zx/zx296702-pm-domain.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  drivers/usb/storage/scsiglue.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/arm/mach-zx/zx296702-pm-domain.c b/arch/arm/mach-zx/zx296702-pm-domain.c
-> index 7a08bf9d..ac44ea8 100644
-> --- a/arch/arm/mach-zx/zx296702-pm-domain.c
-> +++ b/arch/arm/mach-zx/zx296702-pm-domain.c
-> @@ -169,10 +169,8 @@ static int zx296702_pd_probe(struct platform_device *pdev)
->  	}
+> diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
+> index 59190d88fa9f..0a9520780771 100644
+> --- a/drivers/usb/storage/scsiglue.c
+> +++ b/drivers/usb/storage/scsiglue.c
+> @@ -195,8 +195,11 @@ static int slave_configure(struct scsi_device *sdev)
+>  		 */
+>  		sdev->skip_ms_page_8 = 1;
 >  
->  	pcubase = devm_ioremap_resource(&pdev->dev, res);
-> -	if (IS_ERR(pcubase)) {
-> -		dev_err(&pdev->dev, "ioremap fail.\n");
-> +	if (IS_ERR(pcubase))
->  		return -EIO;
-> -	}
+> -		/* Some devices don't handle VPD pages correctly */
+> -		sdev->skip_vpd_pages = 1;
+> +		/*
+> +		 * Some devices don't handle VPD pages correctly, so skip vpd
+> +		 * pages if not forced by SCSI layer.
+> +		 */
+> +		sdev->skip_vpd_pages = sdev->try_vpd_pages == 0;
 >  
->  	for (i = 0; i < ARRAY_SIZE(zx296702_pm_domains); ++i)
->  		pm_genpd_init(zx296702_pm_domains[i], NULL, false);
-> -- 
-> 1.9.1
-> 
-> 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>  		/* Do not attempt to use REPORT SUPPORTED OPERATION CODES */
+>  		sdev->no_report_opcodes = 1;
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+Although I think it would be clearer to write:
+
+		sdev->skip_vpd_pages = !sdev->try_vpd_pages;
+
+But that's just personal preference.  This is okay as it is.
+
+Alan Stern
+
