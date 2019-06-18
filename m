@@ -2,134 +2,94 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A01C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9F9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:50:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA9C620673
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFB9C20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:50:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729837AbfFRPsZ (ORCPT
+        id S1729751AbfFRPuM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:48:25 -0400
-Received: from avon.wwwdotorg.org ([104.237.132.123]:60274 "EHLO
-        avon.wwwdotorg.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729209AbfFRPsX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:48:23 -0400
-X-Greylist: delayed 435 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Jun 2019 11:48:22 EDT
-Received: from [10.20.204.51] (unknown [216.228.112.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Tue, 18 Jun 2019 11:50:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54708 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729247AbfFRPuM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:50:12 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by avon.wwwdotorg.org (Postfix) with ESMTPSA id 95AB01C015A;
-        Tue, 18 Jun 2019 09:41:05 -0600 (MDT)
-X-Virus-Status: Clean
-X-Virus-Scanned: clamav-milter 0.100.3 at avon.wwwdotorg.org
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
-        jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
- <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
-From:   Stephen Warren <swarren@wwwdotorg.org>
-Message-ID: <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
-Date:   Tue, 18 Jun 2019 09:41:03 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by mx1.redhat.com (Postfix) with ESMTPS id 5D2F530C0DE3;
+        Tue, 18 Jun 2019 15:50:09 +0000 (UTC)
+Received: from oldenburg2.str.redhat.com (ovpn-116-87.ams2.redhat.com [10.36.116.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 15A245C2E4;
+        Tue, 18 Jun 2019 15:49:51 +0000 (UTC)
+From:   Florian Weimer <fweimer@redhat.com>
+To:     Yu-cheng Yu <yu-cheng.yu@intel.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an ELF file
+References: <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
+        <20190611114109.GN28398@e103592.cambridge.arm.com>
+        <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
+        <20190612093238.GQ28398@e103592.cambridge.arm.com>
+        <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
+        <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
+        <20190618091248.GB2790@e103592.cambridge.arm.com>
+        <20190618124122.GH3419@hirez.programming.kicks-ass.net>
+        <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
+        <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
+        <20190618133223.GD2790@e103592.cambridge.arm.com>
+        <d54fe81be77b9edd8578a6d208c72cd7c0b8c1dd.camel@intel.com>
+Date:   Tue, 18 Jun 2019 17:49:50 +0200
+Message-ID: <87pnna7v1d.fsf@oldenburg2.str.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 18 Jun 2019 15:50:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
-> 18.06.2019 12:22, Dmitry Osipenko пишет:
->> 18.06.2019 10:46, Sowjanya Komatineni пишет:
->>> This patch adds suspend and resume support for Tegra pinctrl driver
->>> and registers them to syscore so the pinmux settings are restored
->>> before the devices resume.
->>>
->>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>> ---
->>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 62 ++++++++++++++++++++++++++++++++
->>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  5 +++
->>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
->>>   drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
->>>   7 files changed, 84 insertions(+)
->>>
->>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> index 34596b246578..ceced30d8bd1 100644
->>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>> @@ -20,11 +20,16 @@
->>>   #include <linux/pinctrl/pinmux.h>
->>>   #include <linux/pinctrl/pinconf.h>
->>>   #include <linux/slab.h>
->>> +#include <linux/syscore_ops.h>
->>>   
->>>   #include "../core.h"
->>>   #include "../pinctrl-utils.h"
->>>   #include "pinctrl-tegra.h"
->>>   
->>> +#define EMMC2_PAD_CFGPADCTRL_0			0x1c8
->>> +#define EMMC4_PAD_CFGPADCTRL_0			0x1e0
->>> +#define EMMC_DPD_PARKING			(0x1fff << 14)
->>> +
->>>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
->>>   {
->>>   	return readl(pmx->regs[bank] + reg);
->>> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>   			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>>   		}
->>>   	}
->>> +
->>> +	if (pmx->soc->has_park_padcfg) {
->>> +		val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
->>> +		val &= ~EMMC_DPD_PARKING;
->>> +		pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
->>> +
->>> +		val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
->>> +		val &= ~EMMC_DPD_PARKING;
->>> +		pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
->>> +	}
->>> +}
->>
->> Is there any reason why parked_bit can't be changed to parked_bitmask like I was
->> asking in a comment to v2?
->>
->> I suppose that it's more preferable to keep pinctrl-tegra.c platform-agnostic for
->> consistency when possible, hence adding platform specifics here should be discouraged.
->> And then the parked_bitmask will also result in a proper hardware description in the code.
->>
-> 
-> I'm now also vaguely recalling that Stephen Warren had some kind of a "code generator"
-> for the pinctrl drivers. So I guess all those tables were auto-generated initially.
-> 
-> Stephen, maybe you could adjust the generator to take into account the bitmask (of
-> course if that's a part of the generated code) and then re-gen it all for Sowjanya?
+* Yu-cheng Yu:
 
-https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that 
-generate tegra-pinctrlNNN.c. See  	soc-to-kernel-pinctrl-driver.py. 
-IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya is 
-welcome to send a patch to that repo if the code needs to be updated.
+> The kernel looks at only ld-linux.  Other applications are loaded by ld-linux. 
+> So the issues are limited to three versions of ld-linux's.  Can we somehow
+> update those??
+
+I assumed that it would also parse the main executable and make
+adjustments based on that.
+
+ld.so can certainly provide whatever the kernel needs.  We need to tweak
+the existing loader anyway.
+
+No valid statically-linked binaries exist today, so this is not a
+consideration at this point.
+
+Thanks,
+Florian
