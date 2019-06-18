@@ -2,90 +2,103 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B26C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C1AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:29:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30A4A2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EECC920873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:29:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rKLR5yEu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kPpSj4/V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729699AbfFRL2e (ORCPT
+        id S1729707AbfFRL3k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:28:34 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34955 "EHLO
+        Tue, 18 Jun 2019 07:29:40 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46863 "EHLO
         mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729621AbfFRL2c (ORCPT
+        with ESMTP id S1729605AbfFRL3j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:28:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a25so8977245lfg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:28:30 -0700 (PDT)
+        Tue, 18 Jun 2019 07:29:39 -0400
+Received: by mail-lf1-f68.google.com with SMTP id z15so8947353lfh.13;
+        Tue, 18 Jun 2019 04:29:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8A+94DRBbgDTY/8o4HH+UKDZtOS5NTYGxRViSkeTwqw=;
-        b=rKLR5yEu4c+xuJ88AnMsPU1kuthSMYPhhJk6XSjIwM7GPAlmInFexlo7wcQdXtCWzm
-         SQ+nGgIzW76Qm21k6aAQ9CwSFsWdbYskJ0FtmqEiTtNpc7plMZsOV6NaAVDxVPBM2V1e
-         2WAn6Etm4VfYUwQaSa8FOnAiNOsszo6OZ8KWakKWFYjGeT/Yj/MKdwnCkQuQWd5lYS5n
-         Ax9a4YXJZSUS4Cz2NMopk2BI09DgqZCFGBAmTlJuG1ja/hNEquOSnGJhVYU8FKHy4+r3
-         pNpUZpLn9DimdeKlL1rUCEQknL3thkSDtPJMLXXBaVwL83kT+RalChw3QlIxetY63YIf
-         DVFg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wrEGOsVq0QU1LIKayJop8DhsfwbTjGNywhZ8KPlb/iQ=;
+        b=kPpSj4/VIRjoH0OsJpiTf8y2vvjy4WqTB/QT4f67I4xJKVF+/9WJKwiyHxdukyFRLb
+         J7uPtZb2XvbeLJH2U//p6ahDbPmCq7JjB5CuD+W8z+iL1Rp5C2KQd9b6Qjfrx52Ae1g7
+         gL+UBdmLaz2cKMwqfbbS7ekw18aZHdHGGZ8io5QmCeC4kzbNkD4GDAYA6qK/jG1xwUM6
+         vvnBuGTR25yhtZ7tPJPmP/6yRLoUTimC6+M4nARHJbsAT293kUIUmscOvUPJZm0H/q5I
+         ciY+1/zNeyNsRXsya3RYlP9fxkOsVj5rof+i0bIMZ6mQUtJPBC4prgiPrDLj9S9kmYnC
+         yk5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8A+94DRBbgDTY/8o4HH+UKDZtOS5NTYGxRViSkeTwqw=;
-        b=Lh9fUdBp6lFIB9hPkJ5snAwYZaIMTEClC2q1aWtKKm07rux9GNy4MPf28aXC+AhmGU
-         Jr+UUnE/4P4WqgTZvLqDE//nssuvabmNy8YsSolcK4YXPMopoobY2W9gVngsCO8IeNqO
-         QZouRdeX16Eqt09MesMMlOfvgsia+R1nX74XHatZ8C9BDssHbMx88rsH2UaMXCzhrhjE
-         zbPj4gF9hS+O92eIHblstlEmapd2IjyJwkJFtRnNrULVPGd76+LfkryccvPjTICqtEVX
-         uSJnDBCc+34OqElOdd5xJmVPYoCbBktcII2s7yIDGTjPg54MGESV0z0TBdLpVqeawgjt
-         ACkQ==
-X-Gm-Message-State: APjAAAUUWEgW4nkYuPNT7Qi+djPLERyNyixbgVag/QLQgAkYZkFf9EzJ
-        4DPjRguN8gImRrUsSlYRkRAmb1ixTobq55SEZIzZXw==
-X-Google-Smtp-Source: APXvYqzfH55pWpb+0QG4bqA57hHIGbGCe7c2Veh+QzoaOTlWpokHw0hiNLCigHMKGx/PGT8M/4FG3C65Vjdz5haT3Vo=
-X-Received: by 2002:ac2:50c4:: with SMTP id h4mr3490968lfm.61.1560857309967;
- Tue, 18 Jun 2019 04:28:29 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wrEGOsVq0QU1LIKayJop8DhsfwbTjGNywhZ8KPlb/iQ=;
+        b=mcjPolW2/7vYApJjjATzl+nt53xBdDC0sPZmA5vxbgBxFX1JTe45WLLt4QZgF6Twir
+         uxZPygfDQ0wCIRLrSnUxPMNn2qyHmmrwBrhkSh4bFFRWSCAs1zX+i2byNLjCTvLG7V2V
+         f9RnL10ne1z3NHzy7EFYg4+2Re3yGY1TOB76WGkOCn+Uv/1RzjbqK2ClBl5CVLnddUii
+         FSDtXrfBryYwxCCr+kBwZ9lNV6ffnYfiOLOPveJ5AnxPk/cXPBeRvCZtECRRdHKnjTR+
+         IWAtg14P3cZfhU9fgqC11FtTMoLEkIybAxXW06Z/Zw5h/uFxId1UO+LdjL4UHC0L5TBr
+         nOIA==
+X-Gm-Message-State: APjAAAU8+n63FIwz2iI6aGNwkaXHofpZDj0HfRkaXbgqKkgK5ZsODiGW
+        zoNFtc9tQd0a5tV5tvcQpRY=
+X-Google-Smtp-Source: APXvYqzG7PT5Lmpf+p5yw0ew9eWU/usDPYYl7hM4PQgFU6cHs9t18izXn8jKIKtC0pg4HSfI5ApJhw==
+X-Received: by 2002:ac2:50cd:: with SMTP id h13mr21844167lfm.36.1560857377619;
+        Tue, 18 Jun 2019 04:29:37 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id l15sm2848490ljh.0.2019.06.18.04.29.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 04:29:36 -0700 (PDT)
+Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <e1bf5aac-5528-3e54-0f41-5a1bbabce419@gmail.com>
+Date:   Tue, 18 Jun 2019 14:29:35 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190610171103.30903-1-grygorii.strashko@ti.com>
- <20190610171103.30903-21-grygorii.strashko@ti.com> <CACRpkda2FhYNYA2TkVANOF5GWd3hE9cqM7N_pFDFj9nh-fh=iA@mail.gmail.com>
- <0ab98094-f8b2-69a3-e73c-1dfdf812d627@ti.com>
-In-Reply-To: <0ab98094-f8b2-69a3-e73c-1dfdf812d627@ti.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 Jun 2019 13:28:18 +0200
-Message-ID: <CACRpkdarzvVAFz90xJQCoF2+8rDf4_-Dys490HaXV+wbQGGxGw@mail.gmail.com>
-Subject: Re: [PATCH-next 20/20] gpio: gpio-omap: clean up register access in omap2_set_gpio_debounce()
-To:     grygorii <grygorii.strashko@ti.com>
-Cc:     Russell King <rmk@arm.linux.org.uk>,
-        Tony Lindgren <tony@atomide.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux-OMAP <linux-omap@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 8:57 PM grygorii <grygorii.strashko@ti.com> wrote:
+18.06.2019 14:09, Bitan Biswas пишет:
+> The usage of BUG() macro is generally discouraged in kernel, unless
+> it's a problem that results in a physical damage or loss of data.
+> This patch removes unnecessary BUG() macros and replaces the rest
+> with warning.
+> 
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 47 +++++++++++++++++++++++++++++++++++-------
+>  1 file changed, 39 insertions(+), 8 deletions(-)
 
-> By the way, there seems no ABI for debounce cfg in gpio_dev interface.
-> (or i'm missing smth?)
+Thank you very much! Please keep applying all the advises that were given to you
+during the reviews in the future patches.
 
-No that is correct.
+I made a quick test and no problems spotted, all warning spots are silent.
 
-I tend to be conservative with exposing stuff to userspace, but if somone
-comes with a valid usecase for using debounce from userspace we will
-add it I suppose. It's pretty much on need-to-have basis since we can
-never change the userspace ABI.
-
-Yours,
-Linus Walleij
+Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
+Tested-by: Dmitry Osipenko <digetx@gmail.com>
