@@ -2,55 +2,53 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_DIGITS,
+	FROM_LOCAL_HEX,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A43AC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:47:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1883C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:47:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692A12080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:47:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B540C2080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:47:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbfFRKrM (ORCPT
+        id S1729611AbfFRKrQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:47:12 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:51217 "EHLO
+        Tue, 18 Jun 2019 06:47:16 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:46589 "EHLO
         mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729347AbfFRKrL (ORCPT
+        with ESMTP id S1729325AbfFRKrM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:47:11 -0400
-Received: by mail-io1-f72.google.com with SMTP id c5so15557359iom.18
+        Tue, 18 Jun 2019 06:47:12 -0400
+Received: by mail-io1-f72.google.com with SMTP id s83so15700189iod.13
         for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:47:11 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hoLr0UvVJh2R0CN6GGC4wDkNCoMgWtaDmFKyFu1Ktzc=;
-        b=rCrmuC6IHVoeBlvTJYKng5JPqpJkv7RZfcZz/YkUc8KAVmcXdMSTHvSH03iqufWC4r
-         YBSi9pKu1EZJuZVIx86t3VHu/W/K3fKBZXRRwTjgb9svyl9BqsNbzMdQEb6kP75AG+qd
-         NMnf6+ug1kScN/UyqSW8ZBNMMdxIeRY50MXnNkyZ7sFrJMUH2s3i4tiQdMPx5zpp4NWI
-         Jq3rhJZ1MfOBkNI5p7nsToYsi0vyFOs+JBSkKVg8T3j8n/tEQqdDxD05xzMejsO5OUmJ
-         2YTnFH+kCgtdhnQxla4vBzX3V4MEifXADw0SoxkGUFK61l4VhmzJRZjRphJMukeLiy5U
-         wNyA==
-X-Gm-Message-State: APjAAAWnukOcv9QaETRX6snkMT9pSe05fyqYtBgMeVNlNeuXuC2lLQAd
-        +Oe6BgwFXbc2NqD3Q0nyMNsl2lKV+mkHJoyGWn84VCJHd/sg
-X-Google-Smtp-Source: APXvYqx2Lh7Gl03zYLM35CvMUovtwJypF0pUIg1lbS9UVOrOZeGrk45uq8egfvxiQMh36+bl1pHBrqLwPL5/FlNGsX8sKEnmTOTp
+        bh=gHzykhLyURoFKT1pq/w3sNIfGq6/+4DcJMWUYaCquEY=;
+        b=Q73sZsbmSUKmmd+qUBAEm45Y1n63Me5JHTrTscBsmZFyw2mhQTCU77w0X0pfeF4bGf
+         O9CdDW0owsaKvkA3AtjCq3oPnaC1J4V9npTvfrVIj6q8DG1pwNE1ctI7jYDIVtQxWTJn
+         /pEQK9a8U0/M4N3lHbBySLnxuMflt2WXGu6xA0nxf4PhKeKKYrEf2NISXMX5AAinoojq
+         tLjlzWvfdrh9q/PJeZ/RJ7o1qWgdYrA5xDVGL6oKgXZiDiwQxf8kzvk5+mdFxhZP1RJG
+         Bm8TOHme5KF0R2ch2tfb9wTFHH5VkoJre4CYYZLwuYHB4ZHTxxqGoLkkYZ48p2K/D9Iz
+         iKMg==
+X-Gm-Message-State: APjAAAVvpZLdc3u/QNMGiKVbZOsPdY5xYP9ZCptkKs9Tn7DMUZeGtayK
+        EqFe3va8yHTtYCq3JvQrzfaW+aPjUt5CCapuXTz5uDoMIras
+X-Google-Smtp-Source: APXvYqxc2KOzp09IzjMJdteVZFwTlHKZGi30ar+Yo7vYWWu+3gc+SAZu47Fgd/o2HljMB+Ra6c3A2NzJeehtvN6lgwlAK5ljFyrz
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b593:: with SMTP id e141mr70560056iof.203.1560854830723;
+X-Received: by 2002:a02:3b62:: with SMTP id i34mr3028908jaf.91.1560854830426;
  Tue, 18 Jun 2019 03:47:10 -0700 (PDT)
 Date:   Tue, 18 Jun 2019 03:47:10 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bb362d058b96d54d@google.com>
-Subject: general protection fault in do_move_mount (2)
-From:   syzbot <syzbot+6004acbaa1893ad013f0@syzkaller.appspotmail.com>
-To:     arnd@arndb.de, axboe@kernel.dk, bp@alien8.de,
-        catalin.marinas@arm.com, christian@brauner.io, dhowells@redhat.com,
-        geert@linux-m68k.org, hare@suse.com, heiko.carstens@de.ibm.com,
-        hpa@zytor.com, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, mingo@redhat.com,
-        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
-        viro@zeniv.linux.org.uk, x86@kernel.org
+Message-ID: <000000000000b6b25b058b96d5c3@google.com>
+Subject: kernel BUG at drivers/android/binder_alloc.c:LINE! (4)
+From:   syzbot <syzbot+3ae18325f96190606754@syzkaller.appspotmail.com>
+To:     arve@android.com, christian@brauner.io, devel@driverdev.osuosl.org,
+        gregkh@linuxfoundation.org, joel@joelfernandes.org,
+        linux-kernel@vger.kernel.org, maco@android.com,
+        syzkaller-bugs@googlegroups.com, tkjos@android.com,
+        tkjos@google.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -63,79 +61,96 @@ syzbot found the following crash on:
 
 HEAD commit:    9e0babf2 Linux 5.2-rc5
 git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=138b310aa00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=159e6121a00000
 kernel config:  https://syzkaller.appspot.com/x/.config?x=d16883d6c7f0d717
-dashboard link: https://syzkaller.appspot.com/bug?extid=6004acbaa1893ad013f0
+dashboard link: https://syzkaller.appspot.com/bug?extid=3ae18325f96190606754
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=154e8c2aa00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1119e431a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=10f028c9a00000
 
 The bug was bisected to:
 
-commit 9c8ad7a2ff0bfe58f019ec0abc1fb965114dde7d
-Author: David Howells <dhowells@redhat.com>
-Date:   Thu May 16 11:52:27 2019 +0000
+commit bde4a19fc04f5f46298c86b1acb7a4af1d5f138d
+Author: Todd Kjos <tkjos@android.com>
+Date:   Fri Feb 8 18:35:20 2019 +0000
 
-     uapi, x86: Fix the syscall numbering of the mount API syscalls [ver #2]
+     binder: use userspace pointer as base of buffer space
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14fa8411a00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=16fa8411a00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=12fa8411a00000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=177250c9a00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14f250c9a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10f250c9a00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6004acbaa1893ad013f0@syzkaller.appspotmail.com
-Fixes: 9c8ad7a2ff0b ("uapi, x86: Fix the syscall numbering of the mount API  
-syscalls [ver #2]")
+Reported-by: syzbot+3ae18325f96190606754@syzkaller.appspotmail.com
+Fixes: bde4a19fc04f ("binder: use userspace pointer as base of buffer  
+space")
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9133 Comm: syz-executor.0 Not tainted 5.2.0-rc5 #1
+------------[ cut here ]------------
+kernel BUG at drivers/android/binder_alloc.c:1130!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 0 PID: 8920 Comm: syz-executor933 Not tainted 5.2.0-rc5 #54
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:do_move_mount.isra.0+0x5fe/0xe10 fs/namespace.c:2602
-Code: ff ff 00 0f 84 7a fb ff ff e8 de a4 b5 ff 48 8b 85 50 ff ff ff 48 8d  
-78 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 6d 07 00 00 48 8b 85 50 ff ff ff 31 ff 4c 8b 78
-RSP: 0018:ffff888097117d58 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff888097117ea8 RCX: 1ffff11015330137
-RDX: 0000000000000006 RSI: ffffffff81bb1c82 RDI: 0000000000000032
-RBP: ffff888097117e38 R08: ffff88808971c5c0 R09: ffffed1015d06be0
-R10: ffffed1015d06bdf R11: ffff8880ae835efb R12: ffff88809f377f00
-R13: ffff88821baa2420 R14: ffff888097117e90 R15: ffff8880a99809a0
-FS:  00007f0eb2bcd700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+RIP: 0010:binder_alloc_do_buffer_copy+0xd6/0x510  
+drivers/android/binder_alloc.c:1130
+Code: 02 00 0f 85 20 04 00 00 4d 8b 64 24 58 49 29 dc e8 bf 9d 1c fc 4c 89  
+e6 4c 89 ef e8 d4 9e 1c fc 4d 39 e5 76 07 e8 aa 9d 1c fc <0f> 0b e8 a3 9d  
+1c fc 4c 8b 75 d0 4d 29 ec 4c 89 e6 4c 89 f7 e8 b1
+RSP: 0018:ffff88808b91f4e0 EFLAGS: 00010293
+RAX: ffff88809296c200 RBX: 0000000020001000 RCX: ffffffff855423cf
+RDX: 0000000000000000 RSI: ffffffff855423b6 RDI: 0000000000000006
+RBP: ffff88808b91f560 R08: ffff88809296c200 R09: 0000000000000008
+R10: ffffed1011723f15 R11: ffff88808b91f8af R12: 0000000000000078
+R13: 0000000000000008 R14: 00000000000000e8 R15: 0000000000000000
+FS:  00005555556e5940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa3553c2000 CR3: 00000000a8a61000 CR4: 00000000001406f0
+CR2: 0000000000000000 CR3: 000000008bd57000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 Call Trace:
-  __do_sys_move_mount fs/namespace.c:3524 [inline]
-  __se_sys_move_mount fs/namespace.c:3483 [inline]
-  __x64_sys_move_mount+0x355/0x440 fs/namespace.c:3483
+  binder_alloc_copy_from_buffer+0x37/0x42 drivers/android/binder_alloc.c:1176
+  binder_validate_ptr+0xcc/0x1d0 drivers/android/binder.c:2124
+  binder_transaction+0x2c9c/0x6620 drivers/android/binder.c:3308
+  binder_thread_write+0x64a/0x2820 drivers/android/binder.c:3794
+  binder_ioctl_write_read drivers/android/binder.c:4827 [inline]
+  binder_ioctl+0x102f/0x1833 drivers/android/binder.c:5004
+  vfs_ioctl fs/ioctl.c:46 [inline]
+  file_ioctl fs/ioctl.c:509 [inline]
+  do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+  ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+  __do_sys_ioctl fs/ioctl.c:720 [inline]
+  __se_sys_ioctl fs/ioctl.c:718 [inline]
+  __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4592c9
-Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
+RIP: 0033:0x444a29
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f0eb2bccc78 EFLAGS: 00000246 ORIG_RAX: 00000000000001ad
-RAX: ffffffffffffffda RBX: 0000000000000005 RCX: 00000000004592c9
-RDX: ffffffffffffff9c RSI: 0000000020000040 RDI: 0000000000000003
-RBP: 000000000075c070 R08: 0000000000000066 R09: 0000000000000000
-R10: 0000000020000100 R11: 0000000000000246 R12: 00007f0eb2bcd6d4
-R13: 00000000004c5706 R14: 00000000004d9ba8 R15: 00000000ffffffff
+ff 0f 83 7b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffcbcd0fc28 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
+RAX: ffffffffffffffda RBX: 00007ffcbcd0fc30 RCX: 0000000000444a29
+RDX: 0000000020000440 RSI: 00000000c0306201 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000401310
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000402730
+R13: 00000000004027c0 R14: 0000000000000000 R15: 0000000000000000
 Modules linked in:
----[ end trace 9c2a9754ccc962c7 ]---
-RIP: 0010:do_move_mount.isra.0+0x5fe/0xe10 fs/namespace.c:2602
-Code: ff ff 00 0f 84 7a fb ff ff e8 de a4 b5 ff 48 8b 85 50 ff ff ff 48 8d  
-78 48 48 b8 00 00 00 00 00 fc ff df 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f  
-85 6d 07 00 00 48 8b 85 50 ff ff ff 31 ff 4c 8b 78
-RSP: 0018:ffff888097117d58 EFLAGS: 00010206
-RAX: dffffc0000000000 RBX: ffff888097117ea8 RCX: 1ffff11015330137
-RDX: 0000000000000006 RSI: ffffffff81bb1c82 RDI: 0000000000000032
-RBP: ffff888097117e38 R08: ffff88808971c5c0 R09: ffffed1015d06be0
-R10: ffffed1015d06bdf R11: ffff8880ae835efb R12: ffff88809f377f00
-R13: ffff88821baa2420 R14: ffff888097117e90 R15: ffff8880a99809a0
-FS:  00007f0eb2bcd700(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+---[ end trace 3626e6aef2ad2274 ]---
+RIP: 0010:binder_alloc_do_buffer_copy+0xd6/0x510  
+drivers/android/binder_alloc.c:1130
+Code: 02 00 0f 85 20 04 00 00 4d 8b 64 24 58 49 29 dc e8 bf 9d 1c fc 4c 89  
+e6 4c 89 ef e8 d4 9e 1c fc 4d 39 e5 76 07 e8 aa 9d 1c fc <0f> 0b e8 a3 9d  
+1c fc 4c 8b 75 d0 4d 29 ec 4c 89 e6 4c 89 f7 e8 b1
+RSP: 0018:ffff88808b91f4e0 EFLAGS: 00010293
+RAX: ffff88809296c200 RBX: 0000000020001000 RCX: ffffffff855423cf
+RDX: 0000000000000000 RSI: ffffffff855423b6 RDI: 0000000000000006
+RBP: ffff88808b91f560 R08: ffff88809296c200 R09: 0000000000000008
+R10: ffffed1011723f15 R11: ffff88808b91f8af R12: 0000000000000078
+R13: 0000000000000008 R14: 00000000000000e8 R15: 0000000000000000
+FS:  00005555556e5940(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
 CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fa3553c2000 CR3: 00000000a8a61000 CR4: 00000000001406f0
+CR2: 0000000000000000 CR3: 000000008bd57000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
 ---
