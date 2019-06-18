@@ -2,191 +2,179 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A419C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:29:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E7C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:36:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC552085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:29:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hlj4MWPU"
+	by mail.kernel.org (Postfix) with ESMTP id 779D72084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:36:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560832581;
+	bh=7DK7St8yo1ypiv4tqUpICOKagXK4Hf7U9ykGeUYau8M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mCPyOCmf9wC4kpcSOuE7ecSJ1N/jKnLihinDFYpQV7+q7BZploZ7rqZ5KnN+piLio
+	 tnPx0g0whaqwxPv3gvJ6l5/F7RVMJjRHlZmF9RuQWRVB56ZgQn3Me80f1sPEEDeWYg
+	 nnmR0rOtRCXRcAjzZK3tpwD14D2hg+i9811Xappg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727731AbfFRE3y (ORCPT
+        id S1726955AbfFREgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 00:29:54 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19557 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRE3y (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 00:29:54 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0868c00001>; Mon, 17 Jun 2019 21:29:52 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 17 Jun 2019 21:29:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 17 Jun 2019 21:29:53 -0700
-Received: from HQMAIL102.nvidia.com (172.18.146.10) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 04:29:52 +0000
-Received: from HQMAIL105.nvidia.com (172.20.187.12) by HQMAIL102.nvidia.com
- (172.18.146.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 04:29:52 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL105.nvidia.com
- (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 18 Jun 2019 04:29:52 +0000
-Received: from dhcp-10-19-65-14.client.nvidia.com (Not Verified[10.19.65.14]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0868bd0002>; Mon, 17 Jun 2019 21:29:52 -0700
-From:   Bitan Biswas <bbiswas@nvidia.com>
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        "Bitan Biswas" <bbiswas@nvidia.com>
-Subject: [PATCH V8] i2c: tegra: remove BUG() macro
-Date:   Mon, 17 Jun 2019 21:29:45 -0700
-Message-ID: <1560832186-17001-1-git-send-email-bbiswas@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-X-NVConfidentiality: public
+        Tue, 18 Jun 2019 00:36:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36500 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbfFREgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 00:36:19 -0400
+Received: from localhost (unknown [122.178.226.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3861F2084D;
+        Tue, 18 Jun 2019 04:36:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560832578;
+        bh=7DK7St8yo1ypiv4tqUpICOKagXK4Hf7U9ykGeUYau8M=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=iMgC3M9p/QdU+1pPJsminSez8cTmLX0rBGMacXHGrn8oj6a38xC2nj64P3QEM5XCb
+         kYVO+pAQnhjWZz9Sp+eTRSViUYELzbqYDpOKSC+IZ77kte/+t997Ix9NQk+U/QyFjd
+         QerauUVNADHfaF2dvtDmmHFg2xlEsadvwFbfZlfg=
+Date:   Tue, 18 Jun 2019 10:03:08 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Sameer Pujar <spujar@nvidia.com>
+Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
+        mkumard@nvidia.com
+Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
+Message-ID: <20190618043308.GJ2962@vkoul-mobl>
+References: <20190502060446.GI3845@vkoul-mobl.Dlink>
+ <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
+ <20190502122506.GP3845@vkoul-mobl.Dlink>
+ <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
+ <20190504102304.GZ3845@vkoul-mobl.Dlink>
+ <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
+ <20190506155046.GH3845@vkoul-mobl.Dlink>
+ <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
+ <20190613044352.GC9160@vkoul-mobl.Dlink>
+ <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560832193; bh=LNX4mUvxRDqPABzr8Kuwd0X8X0sezQ+Py3Qmzev6Wh8=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         X-NVConfidentiality:MIME-Version:Content-Type;
-        b=hlj4MWPUK9U5cPzh4dO2OnqEgfa2VabZhQLlIO0HX7koXzBnUI5LIP5fUNcGN8c6r
-         9nlWCAByn9F+5lyeealO6pvsyUxh0KPOZ8cax/yeE1GrZhmMZqfgXut63maMLRoRDn
-         ZDWfIunjifPMOLHxTSqPi7Zz57v+XOlWkohxn/Ay3rUNFGK+9BW3nVesvA2LyYPxui
-         Spzb/3Rtm7yEo5VxNpmcUL50c5STMgewVJbP1sq15zKIDIPobqCegRqiAGZTuykVDU
-         qbalHzlFn18kaGkswFVYe52KUVne6LfE8vvWMBvvPR7CBTkKzg0DPBOjvxUx/zRcUg
-         C7Ec6mQOy4sRg==
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of BUG() macro is generally discouraged in kernel, unless
-it's a problem that results in a physical damage or loss of data.
-This patch removes unnecessary BUG() macros and replaces the rest
-with warning.
+On 17-06-19, 12:37, Sameer Pujar wrote:
+> 
+> On 6/13/2019 10:13 AM, Vinod Koul wrote:
+> > On 06-06-19, 09:19, Sameer Pujar wrote:
+> > 
+> > > > you are really going other way around about the whole picture. FWIW that
+> > > > is how *other* folks do audio with dmaengine!
+> > > I discussed this internally with HW folks and below is the reason why DMA
+> > > needs
+> > > to know FIFO size.
+> > > 
+> > > - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface to
+> > > the audio sub-system.
+> > > - ADMAIF has multiple channels and share FIFO buffer for individual
+> > > operations. There is a provision
+> > >    to allocate specific fifo size for each individual ADMAIF channel from the
+> > > shared buffer.
+> > > - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
+> > > engines, which you described earlier.
+> > > - The flow control logic is placed inside ADMA. Slave peripheral
+> > > device(ADMAIF) signals ADMA whenever a
+> > >    read or write happens on the FIFO(per WORD basis). Please note that the
+> > > signaling is per channel. There is
+> > >    no other signaling present from ADMAIF to ADMA.
+> > > - ADMA keeps a counter related to above signaling. Whenever a sufficient
+> > when is signal triggered? When there is space available or some
+> > threshold of space is reached?
+> Signal is triggered when FIFO read/write happens on the peripheral side. In
+> other words
+> this happens when data is pushed/popped out of ADMAIF from/to one of the
+> AHUB modules (I2S
+> for example) This is on peripheral side and ADMAIF signals ADMA per WORD
+> basis.
+> ADMA <---(1. DMA transfers)---> ADMAIF <------ (2. FIFO read/write) ------>
+> I2S
+> To be more clear ADMAIF signals ADMA when [2] happens.
 
-Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
----
- drivers/i2c/busses/i2c-tegra.c | 49 +++++++++++++++++++++++++++++++++++-------
- 1 file changed, 41 insertions(+), 8 deletions(-)
+That is on every word read/write?
 
-diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-index 4dfb4c1..6fb545e 100644
---- a/drivers/i2c/busses/i2c-tegra.c
-+++ b/drivers/i2c/busses/i2c-tegra.c
-@@ -73,6 +73,7 @@
- #define I2C_ERR_NO_ACK				BIT(0)
- #define I2C_ERR_ARBITRATION_LOST		BIT(1)
- #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-+#define I2C_ERR_RX_BUFFER_OVERFLOW		BIT(3)
- 
- #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
- #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-@@ -489,6 +490,13 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	size_t buf_remaining = i2c_dev->msg_buf_remaining;
- 	int words_to_transfer;
- 
-+	/*
-+	 * Catch overflow due to message fully sent before
-+	 * check for RX FIFO availability.
-+	 */
-+	if (WARN_ON_ONCE(!(i2c_dev->msg_buf_remaining)))
-+		return -EINVAL;
-+
- 	if (i2c_dev->hw->has_mst_fifo) {
- 		val = i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
- 		rx_fifo_avail = (val & I2C_MST_FIFO_STATUS_RX_MASK) >>
-@@ -515,7 +523,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * prevent overwriting past the end of buf
- 	 */
- 	if (rx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
-+		/*
-+		 * buf_remaining > 3 check not needed as rx_fifo_avail == 0
-+		 * when (words_to_transfer was > rx_fifo_avail) earlier
-+		 * in this function.
-+		 */
- 		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
- 		val = cpu_to_le32(val);
- 		memcpy(buf, &val, buf_remaining);
-@@ -523,7 +535,12 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
- 		rx_fifo_avail--;
- 	}
- 
--	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
-+	/*
-+	 * RX FIFO must be drained in Overflow case.
-+	 */
-+	if (WARN_ON_ONCE(rx_fifo_avail))
-+		return -EINVAL;
-+
- 	i2c_dev->msg_buf_remaining = buf_remaining;
- 	i2c_dev->msg_buf = buf;
- 
-@@ -581,7 +598,11 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
- 	 * boundary and fault.
- 	 */
- 	if (tx_fifo_avail > 0 && buf_remaining > 0) {
--		BUG_ON(buf_remaining > 3);
-+		/*
-+		 * buf_remaining > 3 check not needed as tx_fifo_avail == 0
-+		 * when (words_to_transfer was > tx_fifo_avail) earlier
-+		 * in this function for non-zero words_to_transfer.
-+		 */
- 		memcpy(&val, buf, buf_remaining);
- 		val = le32_to_cpu(val);
- 
-@@ -847,10 +868,15 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 
- 	if (!i2c_dev->is_curr_dma_xfer) {
- 		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
--			if (i2c_dev->msg_buf_remaining)
--				tegra_i2c_empty_rx_fifo(i2c_dev);
--			else
--				BUG();
-+			if (tegra_i2c_empty_rx_fifo(i2c_dev)) {
-+				/*
-+				 * Overflow error condition: message fully sent,
-+				 * with no XFER_COMPLETE interrupt but hardware
-+				 * asks to transfer more.
-+				 */
-+				i2c_dev->msg_err |= I2C_ERR_RX_BUFFER_OVERFLOW;
-+				goto err;
-+			}
- 		}
- 
- 		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-@@ -876,7 +902,14 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
- 	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
- 		if (i2c_dev->is_curr_dma_xfer)
- 			i2c_dev->msg_buf_remaining = 0;
--		BUG_ON(i2c_dev->msg_buf_remaining);
-+		/*
-+		 * Underflow error condition: XFER_COMPLETE before message
-+		 * fully sent.
-+		 */
-+		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
-+			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-+			goto err;
-+		}
- 		complete(&i2c_dev->msg_complete);
- 	}
- 	goto done;
+> FIFO_THRESHOLD field in ADMAIF is just to indicate when can ADMAIF do
+> operation [2].
+> Also please note FIFO_THRESHOLD field is present only for memory---->AHUB
+> path (playback path)
+> and there is no such threshold concept for AHUB----> memory path (capture
+> path)
+
+That is sane and common. For memory you dont have a constraint so you
+transfer at full throttle.
+
+> > > space is available, it initiates a transfer.
+> > >    But the question is, how does it know when to transfer. This is the
+> > > reason, why ADMA has to be aware of FIFO
+> > >    depth of ADMAIF channel. Depending on the counters and FIFO depth, it
+> > > knows exactly when a free space is available
+> > >    in the context of a specific channel. On ADMA, FIFO_SIZE is just a value
+> > > which should match to actual FIFO_DEPTH/SIZE
+> > >    of ADMAIF channel.
+> > That doesn't sound too different from typical dmaengine. To give an
+> > example of a platform (and general DMAengine principles as well) I worked
+> > on the FIFO was 16 word deep. DMA didn't knew!
+> > 
+> > Peripheral driver would signal to DMA when a threshold is reached and
+> No, In our case ADMAIF does not do any threshold based signalling to ADMA.
+> > DMA would send a burst controlled by src/dst_burst_size. For example if
+> > you have a FIFO with 16 words depth, typical burst_size would be 8 words
+> > and peripheral will configure signalling for FIFO having 8 words, so
+> > signal from peripheral will make dma transfer 8 words.
+> The scenario is different in ADMA case, as ADMAIF cannot configure the
+> signalling based on FIFO_THRESHOLD settings.
+> > 
+> > Here the peripheral driver FIFO is important, but the driver
+> > configures it and sets burst_size accordingly.
+> > 
+> > So can you explain me what is the difference here that the peripheral
+> > cannot configure and use burst size with passing fifo depth?
+> Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as 8
+> WORDS.
+> ADMAIF does not push data to AHUB(operation [2]) till threshold of 16 WORDS
+> is
+> reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the
+> threshold.
+> As mentioned earlier, threshold here is to just indicate when data transfer
+> can happen
+> to AHUB modules.
+
+So we have ADMA and AHUB and peripheral. You are talking to AHUB and that
+is _not_ peripheral and if I have guess right the fifo depth is for AHUB
+right?
+
+> Once the data is popped from ADMAIF FIFO, ADMAIF signals ADMA. ADMA is the
+> master
+> and it keeps track of the buffer occupancy by knowing the FIFO_DEPTH and the
+> signalling.
+> Then finally it decides when to do next burst transfer depending on the free
+> space
+> available in ADMAIF.
+> > > - Now consider two cases based on above logic,
+> > >    * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
+> > >      In this case, ADMA thinks that there is enough space available for
+> > > transfer, when actually the FIFO data
+> > >      on slave is not consumed yet. It would result in OVERRUN.
+> > >    * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
+> > >      This is case where ADMA won’t transfer, even though sufficient space is
+> > > available, resulting in UNDERRUN.
+> > > - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =
+> > > SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
+> > >    way to communicate fifo size info to ADMA.
+
 -- 
-2.7.4
-
+~Vinod
