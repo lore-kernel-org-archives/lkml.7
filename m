@@ -2,118 +2,133 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B96C9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F52C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EFD6213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X/uim5G3"
+	by mail.kernel.org (Postfix) with ESMTP id 392F2213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729359AbfFRO2t (ORCPT
+        id S1729546AbfFRO3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:28:49 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46744 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFRO2t (ORCPT
+        Tue, 18 Jun 2019 10:29:08 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50480 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729377AbfFRO3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:28:49 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v9so7772154pgr.13;
-        Tue, 18 Jun 2019 07:28:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E1/I1Ufg34C1B6zIIvwm9i0iJRfJjNFEn+RuFULwkks=;
-        b=X/uim5G3SmB9Xn2yHbi9R3F9S7lYpaRSc3ObBExc0ZSS7XysMJ6XJP/zBscub2V7k4
-         NN3zK4x8BkffqHiiYqCfVpo4BZ28/fmHjG9iE5M4czIysaZaYINWD51MA46HmTC5nOv5
-         HA0J0+S+vp+onfN4Lmk02VrBmgW2/tLbejUoUGFUfGM6A3OGCOOax2HYIM6FNl4K0Cfm
-         S0n/PCUYXsOu8u2kcA5nWKVstg1LtBss7WkBBdXLpiu2QGrMxQKW7r9ajuO0wDZ5NBtX
-         EM0nVm/iwtgpxHL5hjjcEJCY5vuKjQAMrJccyI8K0l2HcsTGgGra4K4P/lHLQj03nkQH
-         u7nQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=E1/I1Ufg34C1B6zIIvwm9i0iJRfJjNFEn+RuFULwkks=;
-        b=mJeYEM1mSTnMOng5Eue3OPp3o6HEQ81lPznfyGJEvi9aRvfQsFH1YV1hx3cl81k/dK
-         T8JKx4KtEdSiMLF93NLE9DdEfw8LmH7VbSG+WowYS0K0Bg5ImT/uJlLjRKREmwMSxuka
-         Sq5DXBEh83ftxnzv/xazKCiuSIOVPuQjx8dp5rL4y5UBN6N3Vta3BPAV7RO02Q2YFEGi
-         9PyLwxUMs0FST/QuGpFwkkqqQ/akgyWDeUsItHjVH3+j6gDJPaaHVkmn7aAMZSIYwlOf
-         7WxIUiqAztRvGZBPKQpBPg77eIJtqdIyLwmErOXwHyBaVjsOc/sVSqCONK3xHUtkKWSE
-         HSng==
-X-Gm-Message-State: APjAAAXBLHCXcKO144k08ztliCuJLA+aqkjHcSDmdOm0qiM27zEVZq14
-        GFXuz8NyeG2GBX0DIg2EJqQKjs8s
-X-Google-Smtp-Source: APXvYqxZIh1souW32CVhRK4cZknFCWaDje8FAbLxO+CiAtzHtj7ky872ihEDRNnp9vkukaxZ6O0gxA==
-X-Received: by 2002:a63:fe51:: with SMTP id x17mr3106520pgj.61.1560868128219;
-        Tue, 18 Jun 2019 07:28:48 -0700 (PDT)
-Received: from localhost.localdomain ([125.142.23.13])
-        by smtp.googlemail.com with ESMTPSA id d6sm13902340pgf.55.2019.06.18.07.28.46
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 07:28:47 -0700 (PDT)
-From:   Suwan Kim <suwan.kim027@gmail.com>
-To:     shuah@kernel.org, valentina.manea.m@gmail.com,
-        gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Suwan Kim <suwan.kim027@gmail.com>
-Subject: [PATCH] usbip: Implement map_urb_for_dma function for vhci to skip dma mapping
-Date:   Tue, 18 Jun 2019 23:28:17 +0900
-Message-Id: <20190618142817.16844-1-suwan.kim027@gmail.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+        Tue, 18 Jun 2019 10:29:06 -0400
+Received: from [167.98.27.226] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hdF6e-0007nE-6M; Tue, 18 Jun 2019 15:29:04 +0100
+Received: from ben by deadeye with local (Exim 4.92)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1hdF6d-0000HZ-HL; Tue, 18 Jun 2019 15:29:03 +0100
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Sriram Rajagopalan" <sriramr@arista.com>,
+        "Theodore Ts'o" <tytso@mit.edu>
+Date:   Tue, 18 Jun 2019 15:28:02 +0100
+Message-ID: <lsq.1560868082.824384310@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 05/10] ext4: zero out the unused memory region in the
+ extent tree block
+In-Reply-To: <lsq.1560868079.359853905@decadent.org.uk>
+X-SA-Exim-Connect-IP: 167.98.27.226
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-vhci doesn’t do dma for remote device. Actually, the real dma
-operation is done by network card driver. So, vhci doesn’t use and
-need dma address of transfer buffer of urb.
+3.16.69-rc1 review patch.  If anyone has any objections, please let me know.
 
-But hcd provides dma mapping function by defualt in usb_hcd_submit_urb()
-and it causes unnecessary dma mapping which will be done again at
-NIC driver and it wastes CPU cycles. So, implement map_urb_for_dma
-function for vhci in order to skip the dma mapping procedure.
+------------------
 
-Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+From: Sriram Rajagopalan <sriramr@arista.com>
+
+commit 592acbf16821288ecdc4192c47e3774a4c48bb64 upstream.
+
+This commit zeroes out the unused memory region in the buffer_head
+corresponding to the extent metablock after writing the extent header
+and the corresponding extent node entries.
+
+This is done to prevent random uninitialized data from getting into
+the filesystem when the extent block is synced.
+
+This fixes CVE-2019-11833.
+
+Signed-off-by: Sriram Rajagopalan <sriramr@arista.com>
+Signed-off-by: Theodore Ts'o <tytso@mit.edu>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- drivers/usb/usbip/vhci_hcd.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/ext4/extents.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
-index 667d9c0ec905..9df4d9e36788 100644
---- a/drivers/usb/usbip/vhci_hcd.c
-+++ b/drivers/usb/usbip/vhci_hcd.c
-@@ -1287,6 +1287,13 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
- 	return 0;
- }
+--- a/fs/ext4/extents.c
++++ b/fs/ext4/extents.c
+@@ -1016,6 +1016,7 @@ static int ext4_ext_split(handle_t *hand
+ 	__le32 border;
+ 	ext4_fsblk_t *ablocks = NULL; /* array of allocated blocks */
+ 	int err = 0;
++	size_t ext_size = 0;
  
-+static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
-+			    gfp_t mem_flags)
-+{
-+	dev_dbg(hcd->self.controller, "vhci does not map urb for dma\n");
-+	return 0;
-+}
-+
- static const struct hc_driver vhci_hc_driver = {
- 	.description	= driver_name,
- 	.product_desc	= driver_desc,
-@@ -1302,6 +1309,7 @@ static const struct hc_driver vhci_hc_driver = {
- 	.urb_dequeue	= vhci_urb_dequeue,
+ 	/* make decision: where to split? */
+ 	/* FIXME: now decision is simplest: at current extent */
+@@ -1107,6 +1108,10 @@ static int ext4_ext_split(handle_t *hand
+ 		le16_add_cpu(&neh->eh_entries, m);
+ 	}
  
- 	.get_frame_number = vhci_get_frame_number,
-+	.map_urb_for_dma = vhci_map_urb_for_dma,
++	/* zero out unused area in the extent block */
++	ext_size = sizeof(struct ext4_extent_header) +
++		sizeof(struct ext4_extent) * le16_to_cpu(neh->eh_entries);
++	memset(bh->b_data + ext_size, 0, inode->i_sb->s_blocksize - ext_size);
+ 	ext4_extent_block_csum_set(inode, neh);
+ 	set_buffer_uptodate(bh);
+ 	unlock_buffer(bh);
+@@ -1186,6 +1191,11 @@ static int ext4_ext_split(handle_t *hand
+ 				sizeof(struct ext4_extent_idx) * m);
+ 			le16_add_cpu(&neh->eh_entries, m);
+ 		}
++		/* zero out unused area in the extent block */
++		ext_size = sizeof(struct ext4_extent_header) +
++		   (sizeof(struct ext4_extent) * le16_to_cpu(neh->eh_entries));
++		memset(bh->b_data + ext_size, 0,
++			inode->i_sb->s_blocksize - ext_size);
+ 		ext4_extent_block_csum_set(inode, neh);
+ 		set_buffer_uptodate(bh);
+ 		unlock_buffer(bh);
+@@ -1251,6 +1261,7 @@ static int ext4_ext_grow_indepth(handle_
+ 	struct buffer_head *bh;
+ 	ext4_fsblk_t newblock;
+ 	int err = 0;
++	size_t ext_size = 0;
  
- 	.hub_status_data = vhci_hub_status,
- 	.hub_control    = vhci_hub_control,
--- 
-2.20.1
+ 	newblock = ext4_ext_new_meta_block(handle, inode, NULL,
+ 		newext, &err, flags);
+@@ -1268,9 +1279,11 @@ static int ext4_ext_grow_indepth(handle_
+ 		goto out;
+ 	}
+ 
++	ext_size = sizeof(EXT4_I(inode)->i_data);
+ 	/* move top-level index/leaf into new block */
+-	memmove(bh->b_data, EXT4_I(inode)->i_data,
+-		sizeof(EXT4_I(inode)->i_data));
++	memmove(bh->b_data, EXT4_I(inode)->i_data, ext_size);
++	/* zero out unused area in the extent block */
++	memset(bh->b_data + ext_size, 0, inode->i_sb->s_blocksize - ext_size);
+ 
+ 	/* set size of new block */
+ 	neh = ext_block_hdr(bh);
 
