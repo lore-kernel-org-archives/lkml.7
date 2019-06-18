@@ -2,139 +2,113 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40132C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81F5C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235F92080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:45:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8E8B52080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="KoP3nBVt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfFRJpg (ORCPT
+        id S1729580AbfFRJqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:45:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:11801 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729230AbfFRJpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:45:36 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 02:45:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,388,1557212400"; 
-   d="scan'208";a="181352968"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 18 Jun 2019 02:45:32 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 18 Jun 2019 12:45:32 +0300
-Date:   Tue, 18 Jun 2019 12:45:31 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Lukas Wunner <lukas@wunner.de>,
-        Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>
-Subject: Re: [PATCH] PCI/PME: Fix race on PME polling
-Message-ID: <20190618094531.GJ2640@lahna.fi.intel.com>
-References: <0113014581dbe2d1f938813f1783905bd81b79db.1560079442.git.lukas@wunner.de>
- <1957149.eOSnrBRbHu@kreacher>
- <20190617143510.GT2640@lahna.fi.intel.com>
- <2521908.csJO6TsRBn@kreacher>
+        Tue, 18 Jun 2019 05:46:05 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39021 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729325AbfFRJqF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:46:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id v18so12430301ljh.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:46:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dFNO/LKvYXvmFansFhyqwV2emff3osiWobNFjm+LOZY=;
+        b=KoP3nBVtEN46bstqiMPFdsUTbbPqY93iN7frcTYWr8sCkKcBebn35gCjj5jqcvfKhd
+         fAuG3oSUIsxzueLCci8XKFWf5vyJEcjs8vc/tenn/7tedfBJnIjkrUS2emDtyh1XcVKN
+         oJDo3aSm0I9kNs8kSqe8S7BpxGPY/S1XIGyrpqJwXiVoAjJ21EkDkul6gD/j+g2k7chV
+         1q8IYd1jAabrLTjzTFW+sNKXtfxKxoVVe4Tv2xbq9ilJGzSX2Xwu1c6FkoVxQK/B9d7O
+         5xswsVa1q7duPRYnUKJhxEn70tEaolrLmQiQYoN4UFh8A5Cuug+J++VyRPd/hcvZEWkl
+         4ciw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dFNO/LKvYXvmFansFhyqwV2emff3osiWobNFjm+LOZY=;
+        b=tuM3mcKIBdRsj0oyb+jA4LHjPpp/lR0KLIfPcMpq+VzeAhmQzAPOpooQs96TStF9KC
+         4dt10SoXtzHUT46Ju5ApFu0wyCuXqqmcGwkBnHOZLTWQgp1UD7GUjPtQCKgZ8hi4QMor
+         cWPVXTAhnAKw/Sb/5jL+Mrg9o94J3Tj2Y3bCRv6jHsfqnUqTKOqrVBwtcdeal1/T/57j
+         Zy0xPO1m/DZ46X0FHzKgnF6DAJyipy7OkP4LVRaMy4xldXCUTCto9lV4O5dhNmBAbJVM
+         CC8UALTI+Ca08D1ZPygZvFjwD1yCDKKDxj32PINVUG+Q3VaLyPj1Uv7X8FR5eI3xYJHW
+         e6Vw==
+X-Gm-Message-State: APjAAAUGtQ4ywyiwVch66Cee0WUnEWhQxs+aatQQS3cnj7r+iSr5Cax7
+        Q6p5WYsqN8a3TkrTAPCehckXkRLu/9XM2JTxzLg73Q==
+X-Google-Smtp-Source: APXvYqwLdmo7/UQzJICTwX7MmW1II8rP/12ROJHu2fbSKBjfNIwSirb55B1kWr5B7bMLEWjTiNO044PrL3t15XUYJ7U=
+X-Received: by 2002:a2e:1290:: with SMTP id 16mr43089752ljs.88.1560851163194;
+ Tue, 18 Jun 2019 02:46:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2521908.csJO6TsRBn@kreacher>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <1560783617-5827-1-git-send-email-vincent.guittot@linaro.org>
+ <c8030f30-0899-070b-df3c-3839ec7e1909@arm.com> <20190618093453.GN3436@hirez.programming.kicks-ass.net>
+In-Reply-To: <20190618093453.GN3436@hirez.programming.kicks-ass.net>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Tue, 18 Jun 2019 11:45:52 +0200
+Message-ID: <CAKfTPtAcV-CS_6hibJa0N6U925KASw1Eg7OSDcBt-Hw_frQkXw@mail.gmail.com>
+Subject: Re: [PATCH] sched/topology: remove unused sd param from arch_scale_cpu_capacity()
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Valentin Schneider <valentin.schneider@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        LAK <linux-arm-kernel@lists.infradead.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        viresh kumar <viresh.kumar@linaro.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Quentin Perret <quentin.perret@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:41:01AM +0200, Rafael J. Wysocki wrote:
-> On Monday, June 17, 2019 4:35:10 PM CEST Mika Westerberg wrote:
-> > On Mon, Jun 17, 2019 at 12:37:06PM +0200, Rafael J. Wysocki wrote:
-> > > On Sunday, June 9, 2019 1:29:33 PM CEST Lukas Wunner wrote:
-> > > > Since commit df17e62e5bff ("PCI: Add support for polling PME state on
-> > > > suspended legacy PCI devices"), the work item pci_pme_list_scan() polls
-> > > > the PME status flag of devices and wakes them up if the bit is set.
-> > > > 
-> > > > The function performs a check whether a device's upstream bridge is in
-> > > > D0 for otherwise the device is inaccessible, rendering PME polling
-> > > > impossible.  However the check is racy because it is performed before
-> > > > polling the device.  If the upstream bridge runtime suspends to D3hot
-> > > > after pci_pme_list_scan() checks its power state and before it invokes
-> > > > pci_pme_wakeup(), the latter will read the PMCSR as "all ones" and
-> > > > mistake it for a set PME status flag.  I am seeing this race play out as
-> > > > a Thunderbolt controller going to D3cold and occasionally immediately
-> > > > going to D0 again because PM polling was performed at just the wrong
-> > > > time.
-> > > > 
-> > > > Avoid by checking for an "all ones" PMCSR in pci_check_pme_status().
-> > > > 
-> > > > Fixes: 58ff463396ad ("PCI PM: Add function for checking PME status of devices")
-> > > > Tested-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> > > > Signed-off-by: Lukas Wunner <lukas@wunner.de>
-> > > > Cc: stable@vger.kernel.org # v2.6.34+
-> > > > Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> > > > ---
-> > > >  drivers/pci/pci.c | 2 ++
-> > > >  1 file changed, 2 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> > > > index 8abc843b1615..eed5db9f152f 100644
-> > > > --- a/drivers/pci/pci.c
-> > > > +++ b/drivers/pci/pci.c
-> > > > @@ -1989,6 +1989,8 @@ bool pci_check_pme_status(struct pci_dev *dev)
-> > > >  	pci_read_config_word(dev, pmcsr_pos, &pmcsr);
-> > > >  	if (!(pmcsr & PCI_PM_CTRL_PME_STATUS))
-> > > >  		return false;
-> > > > +	if (pmcsr == 0xffff)
-> > > > +		return false;
-> > > >  
-> > > >  	/* Clear PME status. */
-> > > >  	pmcsr |= PCI_PM_CTRL_PME_STATUS;
-> > > > 
-> > > 
-> > > Added to my 5.3 queue, thanks!
-> > 
-> > Today when doing some PM testing I noticed that this patch actually
-> > reveals an issue in our native PME handling. Problem is in
-> > pcie_pme_handle_request() where we first convert req_id to struct
-> > pci_dev and then call pci_check_pme_status() for it. Now, when a device
-> > triggers wake the link is first brought up and then the PME is sent to
-> > root complex with req_id matching the originating device. However, if
-> > there are PCIe ports in the middle they may still be in D3 which means
-> > that pci_check_pme_status() returns 0xffff for the device below so there
-> > are lots of
-> > 
-> > 	Spurious native interrupt"
-> > 
-> > messages in the dmesg but the actual PME is never handled.
-> > 
-> > It has been working because pci_check_pme_status() returned true in case
-> > of 0xffff as well and we went and runtime resumed to originating device.
-> 
-> In this case 0xffff is as good as PME Status set, that is the device needs to be
-> resumed.
-> 
-> This is a regression in the $subject patch, not a bug in the PME code.
+On Tue, 18 Jun 2019 at 11:34, Peter Zijlstra <peterz@infradead.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 06:07:29PM +0100, Valentin Schneider wrote:
+> > Hi,
+> >
+> > On 17/06/2019 16:00, Vincent Guittot wrote:
+> > > struct sched_domain *sd parameter is not used anymore in
+> > > arch_scale_cpu_capacity() so we can remove it.
+> > >
+> >
+> > I think it can't hurt to give a bit of background. The *sd parameter used
+> > to be there for smt_gain, which got snipped out by:
+> >
+> >   765d0af19f5f ("sched/topology: Remove the ::smt_gain field from 'struct sched_domain'")
+> >
+> > I'd appreciate having that commit mentioned in the log.
+> >
+> > > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+> >
+> > Other than that, the changes look fine to me.
+> >
+> > Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+>
+> The commit log now reads:
+>
+> ---
+> The 'struct sched_domain *sd' argument to arch_scale_cpu_capacity() is
+> unused since commit:
+>
+>   765d0af19f5f ("sched/topology: Remove the ::smt_gain field from 'struct sched_domain'")
+>
+> remove it.
+> ---
 
-OK, thanks for explanation.
-
-> > I think the correct way to handle this is actually drop the call to
-> > pci_check_pme_status() in pcie_pme_handle_request() because the whole
-> > idea of req_id in PME message is to allow the root complex and SW to
-> > identify the device without need to poll for the PME status bit.
-> 
-> Not really, because if there is a PCIe-to-PCI bridge below the port, it is
-> expected to use the req_id of the bridge for all of the devices below it.
-
-Right, I forgot about that so indeed we need to check for the PME status
-in that case to find out the correct device.
+Thanks
