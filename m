@@ -2,143 +2,120 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 227D2C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:20:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E732DC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:20:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE5382080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAACC2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:20:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JkcgKMLT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728935AbfFRHT7 (ORCPT
+        id S1728967AbfFRHUZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:19:59 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43060 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfFRHT6 (ORCPT
+        Tue, 18 Jun 2019 03:20:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43483 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFRHUZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:19:58 -0400
-Received: by mail-ed1-f68.google.com with SMTP id e3so20067246edr.10;
-        Tue, 18 Jun 2019 00:19:57 -0700 (PDT)
+        Tue, 18 Jun 2019 03:20:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id f25so7162382pgv.10;
+        Tue, 18 Jun 2019 00:20:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:thread-topic:thread-index:date:message-id
+         :references:in-reply-to:accept-language:content-language
+         :content-transfer-encoding:mime-version;
+        bh=CslQ849M1Db5mIkFJ5eazlY+Ewel3BYfmjuNnmrj/MI=;
+        b=JkcgKMLTMU+vFlyJCX1IAHOQVfTUgSvxB/uXYZ+Fzf8u5b18vf5TD943h7ewSaaXEV
+         uoUShHPyNYhT627H/qDUtc0F3u096CARV5Bfu7Be5z+qGWwCac/+zExkU8+ZcW4nfTxm
+         fbIpMHXog4vGxizzJPc3nV5Iy7Gby9gvD6qWQJwhsOk3awqCoF+tb7BAlaCTr8So6yRR
+         9FlD/Ej7afPkPZEEjaerBLcR3sBoEdYSlU/e2w7uz0hs+FeLiMl/hfup9RXca/auwpOF
+         mb1vkLl6ruUUFFP39/zhkFDtAq8yAL+FLgIAgsJ7jDZwpL+JCVoaNJD2AZUT4iiZGDNU
+         aDAg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lGRhkqGQodehH6nOoVQY2z539WKIaQS1uhzFQI2YTfU=;
-        b=WzKsDHIEFHczbq/J2T/YOkqRNTa36biQLm6LHr/8Jwt+JTl5zG66QuilQfQdV9TqiT
-         VG7eVTaaaXk1BM/XLK6oif4DoJ+LqW5GXJ+YUiwNdHHLDXp19EnLNHdi8jHGGS6FlSLb
-         ULn+dLPxqFDS3KggbLqMyvPMM2CGju/CJidJNDb1o4jq/8FfZE2siDMrLMa3BMp2HMhk
-         EUrTHaRGOQkR6ddUaOd9ldBkGqMKOlkI0Oz0eJ3Ela14yu9F7KYoR0Fbdq88vUzT+MiF
-         CFDACafRCF8RHbyMrqu/QmJHLDKBMFmVcb4xTYcfS1UT/a4OdFeKvATMmWOiiU7D1khL
-         Y9XQ==
-X-Gm-Message-State: APjAAAUgsiK4su2d4/VwIdUwLc+3+l0i8UKDWt2IDZwHPVvOVIj/bqBT
-        yhfjm6CrKWjC4mUGMnOMzy4MoC/C40s=
-X-Google-Smtp-Source: APXvYqzcG3APtYOZnBeiAD13Yn7O3Vg7wtLwG5Gu4gHTUzOTigqxXsownapKhFF24hrU8g0psCUEOQ==
-X-Received: by 2002:a50:cac1:: with SMTP id f1mr121475009edi.97.1560842396545;
-        Tue, 18 Jun 2019 00:19:56 -0700 (PDT)
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com. [209.85.221.54])
-        by smtp.gmail.com with ESMTPSA id a9sm4608267edc.44.2019.06.18.00.19.55
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 00:19:55 -0700 (PDT)
-Received: by mail-wr1-f54.google.com with SMTP id k11so12700785wrl.1;
-        Tue, 18 Jun 2019 00:19:55 -0700 (PDT)
-X-Received: by 2002:adf:fc85:: with SMTP id g5mr79869381wrr.324.1560842394887;
- Tue, 18 Jun 2019 00:19:54 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:thread-topic:thread-index
+         :date:message-id:references:in-reply-to:accept-language
+         :content-language:content-transfer-encoding:mime-version;
+        bh=CslQ849M1Db5mIkFJ5eazlY+Ewel3BYfmjuNnmrj/MI=;
+        b=D7blKfpxFHs8EUh9sPFDwOydomoYN32C0GGbfOoFYdW8g0zPmgJIaA+cdMcPzQs91D
+         mqd8j7E6FQCHPH3E0G/9ChsELRnpNNBcLmgNYglNsS2oSevXWUVCto2ruu26n6rpsh7O
+         abEBDts1mAammtUbE3+8Lj1tMauaOr2yQhNc06HgEFEnV+vMIkRht+S1hqvNtJ+0Ghps
+         HhfgVFZnVlzjHzQ9CyFAt1GVdL08XFtLFyS9YP2xeGPEALOcxKnJoeraYZJ7NstT9+xp
+         IbGoyrpIUW9gkD3GsNW95rC+4yRCtha9sPMF1n/NoN5I4o+OFmClfMbEcbKV4L5Mje7d
+         hMXw==
+X-Gm-Message-State: APjAAAUugAANKgKKcHcIS/Rc3YGOw/Exc1nBAFZLK7nH3jwQ00Vw+44U
+        6OjK8+gZzyPBSMF2Lup+1dGpFJqe
+X-Google-Smtp-Source: APXvYqwnbdU5BnubJLJ+WVxXv1g0uES3n9SY7KAofvwe3MkKrQE7902pC5oMAwymmXxHNasC8jVJsQ==
+X-Received: by 2002:aa7:9254:: with SMTP id 20mr1688580pfp.212.1560838420984;
+        Mon, 17 Jun 2019 23:13:40 -0700 (PDT)
+Received: from PSXP216MB0662.KORP216.PROD.OUTLOOK.COM ([40.100.44.181])
+        by smtp.gmail.com with ESMTPSA id 196sm10334598pfy.167.2019.06.17.23.13.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 23:13:40 -0700 (PDT)
+From:   Jingoo Han <jingoohan1@gmail.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     Han Jingoo <jingoohan1@gmail.com>
+Subject: Re: [PATCH 1/3] video: fbdev: s3c-fb: return -ENOMEM on
+ framebuffer_alloc() failure
+Thread-Topic: [PATCH 1/3] video: fbdev: s3c-fb: return -ENOMEM on
+ framebuffer_alloc() failure
+Thread-Index: AWZkMnA0HIwkbu1fGnDQIvP1wx9CWGYwZDNj2lFR4qc=
+X-MS-Exchange-MessageSentRepresentingType: 1
+Date:   Tue, 18 Jun 2019 06:13:29 +0000
+Message-ID: <PSXP216MB066270BD6566CA5CDCEB1C7AAAEA0@PSXP216MB0662.KORP216.PROD.OUTLOOK.COM>
+References: <CGME20190614144735eucas1p2f71313b752ae4ea841ddd4ea502fd79f@eucas1p2.samsung.com>
+ <bbf32fbc-b4bc-39fc-e8dd-db9f0cd0d83f@samsung.com>
+In-Reply-To: <bbf32fbc-b4bc-39fc-e8dd-db9f0cd0d83f@samsung.com>
+Accept-Language: ko-KR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-Exchange-Organization-SCL: -1
+X-MS-TNEF-Correlator: 
+X-MS-Exchange-Organization-RecordReviewCfmType: 0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
- <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
-In-Reply-To: <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com>
-From:   Chen-Yu Tsai <wens@csie.org>
-Date:   Tue, 18 Jun 2019 15:19:43 +0800
-X-Gmail-Original-Message-ID: <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
-Message-ID: <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
- gates in probe
-To:     Jagan Teki <jagan@amarulasolutions.com>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+On 6/14/19, 11:47 PM, Bartlomiej Zolnierkiewicz wrote:
+>=20
+> Fix error code from -ENOENT to -ENOMEM.
 >
-> On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > > now these are register during bind call.
-> > >
-> > > Of which, dsi clock gate would required during DPHY probe
-> > > but same can miss to get since tcon top is not bound at
-> > > that time.
-> > >
-> > > To solve, this circular dependency move the clock gate
-> > > registration from bind to probe so-that DPHY can get the
-> > > dsi gate clock on time.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
-> > >  1 file changed, 49 insertions(+), 45 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > index 465e9b0cdfee..a8978b3fe851 100644
-> > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
-> > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> > >                                void *data)
-> > >  {
-> > > -       struct platform_device *pdev = to_platform_device(dev);
-> > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> > > +       int ret;
-> > > +
-> > > +       ret = reset_control_deassert(tcon_top->rst);
-> > > +       if (ret) {
-> > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
-> > > +               return ret;
-> > > +       }
-> > > +
-> > > +       ret = clk_prepare_enable(tcon_top->bus);
-> > > +       if (ret) {
-> > > +               dev_err(dev, "Could not enable bus clock\n");
-> > > +               goto err_assert_reset;
-> > > +       }
-> >
-> > You have to de-assert the reset control and enable the clock before the
-> > clocks it provides are registered. Otherwise a consumer may come in and
-> > ask for the provided clock to be enabled, but since the TCON TOP's own
-> > reset and clock are still disabled, you can't actually access the registers
-> > that controls the provided clock.
+> Cc: Jingoo Han <jingoohan1@gmail.com>
+Acked-by: Jingoo Han <jingoohan1@gmail.com>
+
+Best regards,
+Jingoo Han
+
+> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+> ---
+>  drivers/video/fbdev/s3c-fb.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> These rst and bus are common reset and bus clocks not tcon top clocks
-> that are trying to register here. ie reason I have not moved it in
-> top.
-
-And you're sure that toggling bits in the TCON TOP block doesn't require
-the reset to be de-asserted and the bus clock enabled?
-
-Somehow I doubt that.
-
-Once the driver register the clocks it provides, they absolutely must work.
-They can't only work after the bind phase when the reset gets de-asserted
-and the bus clock enabled. Or you should provide proper error reporting
-in the clock ops. I doubt you want to go that way either.
-
-ChenYu
+> Index: b/drivers/video/fbdev/s3c-fb.c
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- a/drivers/video/fbdev/s3c-fb.c
+> +++ b/drivers/video/fbdev/s3c-fb.c
+> @@ -1191,7 +1191,7 @@ static int s3c_fb_probe_win(struct s3c_f
+>  				   palette_size * sizeof(u32), sfb->dev);
+>  	if (!fbinfo) {
+>  		dev_err(sfb->dev, "failed to allocate framebuffer\n");
+> -		return -ENOENT;
+> +		return -ENOMEM;
+>  	}
+> =20
+>  	windata =3D sfb->pdata->win[win_no];
