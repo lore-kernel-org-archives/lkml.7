@@ -2,76 +2,91 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6A83C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C86BDC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:53:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A71922082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A668B20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:53:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfFRUtm (ORCPT
+        id S1730591AbfFRUxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:49:42 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:52184 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730171AbfFRUtl (ORCPT
+        Tue, 18 Jun 2019 16:53:46 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:35576 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730181AbfFRUxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:49:41 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL2r-0003xC-HG; Tue, 18 Jun 2019 20:49:33 +0000
-Date:   Tue, 18 Jun 2019 21:49:33 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
-Cc:     linux-fsdevel@vger.kernel.org,
-        syzbot <syzbot+0341f6a4d729d4e0acf1@syzkaller.appspotmail.com>,
-        jmorris@namei.org, linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, serge@hallyn.com,
-        syzkaller-bugs@googlegroups.com, takedakn@nttdata.co.jp,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] tomoyo: Don't check open/getattr permission on sockets.
-Message-ID: <20190618204933.GE17978@ZenIV.linux.org.uk>
-References: <0000000000004f43fa058a97f4d3@google.com>
- <201906060520.x565Kd8j017983@www262.sakura.ne.jp>
- <1b5722cc-adbc-035d-5ca1-9aa56e70d312@I-love.SAKURA.ne.jp>
- <a4ed1778-8b73-49d1-0ff0-59d9c6ac0af8@I-love.SAKURA.ne.jp>
+        Tue, 18 Jun 2019 16:53:46 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: gtucker)
+        with ESMTPSA id F3C85260A33
+Subject: Re: next/master boot bisection: next-20190617 on
+ sun8i-h2-plus-orangepi-zero
+To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        tomeu.vizoso@collabora.com, mgalka@collabora.com,
+        broonie@kernel.org, matthew.hart@linaro.org,
+        enric.balletbo@collabora.com, Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org
+References: <5d089fb6.1c69fb81.4f92.9134@mx.google.com>
+ <7hr27qdedo.fsf@baylibre.com>
+ <CAFBinCCrpQNU_JtL0SwEGbwWZ2Qy-b2m5rdjuE0__nDRORGTiQ@mail.gmail.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <7d0a9da1-0b42-d4e9-0690-32d58a6d27de@collabora.com>
+Date:   Tue, 18 Jun 2019 21:53:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a4ed1778-8b73-49d1-0ff0-59d9c6ac0af8@I-love.SAKURA.ne.jp>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAFBinCCrpQNU_JtL0SwEGbwWZ2Qy-b2m5rdjuE0__nDRORGTiQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 03:49:00PM +0900, Tetsuo Handa wrote:
-> Hello, Al.
+On 18/06/2019 21:42, Martin Blumenstingl wrote:
+> On Tue, Jun 18, 2019 at 6:53 PM Kevin Hilman <khilman@baylibre.com> wrote:
+> [...]
+>> This seems to have broken on several sunxi SoCs, but also a MIPS SoC
+>> (pistachio_marduk):
+>>
+>> https://storage.kernelci.org/next/master/next-20190618/mips/pistachio_defconfig/gcc-8/lab-baylibre-seattle/boot-pistachio_marduk.html
+> today I learned why initializing arrays on the stack is important
+> too bad gcc didn't warn that I was about to shoot myself (or someone
+> else) in the foot :/
 > 
-> Q1: Do you agree that we should fix TOMOYO side rather than SOCKET_I()->sk
->     management.
+> I just sent a fix: [0]
+> 
+> sorry for this issue and thanks to Kernel CI for even pointing out the
+> offending commit (this makes things a lot easier than just yelling
+> that "something is broken")
 
-You do realize that sockets are not unique in that respect, right?
-All kinds of interesting stuff can be accessed via /proc/*/fd/*, and
-it _can_ be closed under you.  So I'd suggest checking how your code
-copes with similar for pipes, FIFOs, epoll, etc., accessed that way...
+Glad that helped :)
 
-We are _not_ going to be checking that in fs/open.c - the stuff found
-via /proc/*/fd/* can have the associated file closed by the time
-we get to calling ->open() and we won't know that until said call.
+If you would be so kind as to credit our robot friend in your
+patch, it'll be forever grateful:
 
-> Q2: Do you see any problem with using f->f_path.dentry->d_inode ?
->     Do we need to use d_backing_inode() or d_inode() ?
+  Reported-by: "kernelci.org bot" <bot@kernelci.org>
 
-Huh?  What's wrong with file_inode(f), in the first place?  And
-just when can that be NULL, while we are at it?
+Thanks,
+Guillaume
 
-> >  static int tomoyo_inode_getattr(const struct path *path)
-> >  {
-> > +	/* It is not safe to call tomoyo_get_socket_name(). */
-> > +	if (path->dentry->d_inode && S_ISSOCK(path->dentry->d_inode->i_mode))
-> > +		return 0;
+> Martin
+> 
+> 
+> [0] https://patchwork.ozlabs.org/patch/1118313/
+> 
 
-Can that be called for a negative?
