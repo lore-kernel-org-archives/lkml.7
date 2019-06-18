@@ -2,61 +2,95 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2ACCC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2466BC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:17:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B308A2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 077F020665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:17:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729017AbfFRMQ3 (ORCPT
+        id S1728801AbfFRMRZ convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:16:29 -0400
-Received: from foss.arm.com ([217.140.110.172]:38082 "EHLO foss.arm.com"
+        Tue, 18 Jun 2019 08:17:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:56151 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRMQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:16:29 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8C4DA2B;
-        Tue, 18 Jun 2019 05:16:28 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D8FF83F246;
-        Tue, 18 Jun 2019 05:16:27 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:16:25 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Michael Forney <mforney@mforney.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] locking/atomics: Use sed(1) instead of non-standard
- head(1) option
-Message-ID: <20190618121625.GC31041@fuggles.cambridge.arm.com>
-References: <20190618053306.730-1-mforney@mforney.org>
+        id S1725913AbfFRMRZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:17:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45SnC6001Qz9s3l;
+        Tue, 18 Jun 2019 22:17:21 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@oracle.com>,
+        linux-acpi@vger.kernel.org, Baoquan He <bhe@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, Wei Yang <richard.weiyang@gmail.com>,
+        linux-mm@kvack.org, Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1 1/6] mm: Section numbers use the type "unsigned long"
+In-Reply-To: <20190617185757.b57402b465caff0cf6f85320@linux-foundation.org>
+References: <20190614100114.311-1-david@redhat.com> <20190614100114.311-2-david@redhat.com> <20190614120036.00ae392e3f210e7bc9ec6960@linux-foundation.org> <701e8feb-cbf8-04c1-758c-046da9394ac1@c-s.fr> <20190617185757.b57402b465caff0cf6f85320@linux-foundation.org>
+Date:   Tue, 18 Jun 2019 22:17:19 +1000
+Message-ID: <87pnnbozow.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618053306.730-1-mforney@mforney.org>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:33:06PM -0700, Michael Forney wrote:
-> POSIX says the -n option must be a positive decimal integer. Not all
-> implementations of head(1) support negative numbers meaning offset from
-> the end of the file.
-> 
-> Instead, the sed expression '$d' has the same effect of removing the
-> last line of the file.
-> 
-> Signed-off-by: Michael Forney <mforney@mforney.org>
-> ---
->  scripts/atomic/check-atomics.sh | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Andrew Morton <akpm@linux-foundation.org> writes:
+> On Sat, 15 Jun 2019 10:06:54 +0200 Christophe Leroy <christophe.leroy@c-s.fr> wrote:
+>> Le 14/06/2019 à 21:00, Andrew Morton a écrit :
+>> > On Fri, 14 Jun 2019 12:01:09 +0200 David Hildenbrand <david@redhat.com> wrote:
+>> > 
+>> >> We are using a mixture of "int" and "unsigned long". Let's make this
+>> >> consistent by using "unsigned long" everywhere. We'll do the same with
+>> >> memory block ids next.
+>> >>
+>> >> ...
+>> >>
+>> >> -	int i, ret, section_count = 0;
+>> >> +	unsigned long i;
+>> >>
+>> >> ...
+>> >>
+>> >> -	unsigned int i;
+>> >> +	unsigned long i;
+>> > 
+>> > Maybe I did too much fortran back in the day, but I think the
+>> > expectation is that a variable called "i" has type "int".
+...
+>> Codying style says the following, which makes full sense in my opinion:
+>> 
+>> LOCAL variable names should be short, and to the point.  If you have
+>> some random integer loop counter, it should probably be called ``i``.
+>> Calling it ``loop_counter`` is non-productive, if there is no chance of it
+>> being mis-understood.
+>
+> Well.  It did say "integer".  Calling an unsigned long `i' is flat out
+> misleading.
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+I always thought `i` was for loop `index` not `integer`.
 
-Will
+But I've never written any Fortran :)
+
+cheers
