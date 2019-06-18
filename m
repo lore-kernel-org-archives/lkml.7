@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F72BC31E60
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 077FAC31E63
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 51F0B2084A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD7CE2084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560892073;
-	bh=oJNa21dBlpuIE/YpYPdFLq2U31eah6H36PW4uni2IDw=;
+	s=default; t=1560892065;
+	bh=YqNcBA7gN6Feebp2NEIAgvwyzXeDJnBGrmVoUKLVbFY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ku7gZSzXmBiPyIOmheTxKlnr+xpa8dhyovku1cxPhq0IZNlWyTy+apLNQyPZzN7RR
-	 L4JtTvtnxcI1Y+6gAXCILWjI+nqQV6rLriYSRnu1lD/MCVOwLfD8Rz/jUECxxKJ8gz
-	 Povu9XN8wJ0nRZT7Nto6rmyVR1+oT/XwcXp7TsAk=
+	b=lOFur0kwGP8quSJov5BiG0kdMJWLqS87iIidHmTnjyjYv+YxxiJvfs6J4pcxVTJIB
+	 oqtAZ6NFa6hME1T4JOE6DfVjjnRlvZL4R5k18vw0JkFxfRo0yiek6fwYgqjU6+SWwP
+	 FPysbUZyAueRT89D15BghTuupkx8c8PKEH4lfgYY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731168AbfFRVHw (ORCPT
+        id S1730854AbfFRVHZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:07:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34530 "EHLO
+        Tue, 18 Jun 2019 17:07:25 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34552 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730792AbfFRVFx (ORCPT
+        with ESMTP id S1730794AbfFRVFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 17:05:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,51 +34,31 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=LlVQ5AgDnGeVreoNQv5wQOL6WOl9jGIbq69M3UI1xTA=; b=ZaZuy9l6/Ggb2QQVZs1T38/Jiv
-        CtntnfPNCLjMC3OvceIzJ9DrBsVXwc1XE3p+C/np1rrU265Okcg/ne/X4p46hD/Jw/rYeNgBZ73Pa
-        ZIm/HbtFDoz1x6v3K2O4lo9zWrgczxl+dfRqTlvVf1VQIAz9l0y13RhVE/itGt+mB0z6hwntGy0FK
-        4NaIs1AlYQBCaWq9AtnGuFQc13k05oXiA9XddnRY42yEI8HuzANN6Pr8nCZIyTYhskzt5T4BWiDjR
-        CJCl2jQqimjNcJw1sbb35YKu4vF9XR32EMe5h3gsCQFLhZae58cWzJJoHMhP/ayEmHRKAKSAc9+0E
-        cyJQTmEQ==;
+        bh=GLOJfUe7O2qNzcZxk3X9fsBcVbWHK6eh9IKD9yhm290=; b=VfYGOv3Qp12DS15Z/62Bf/LY+W
+        6GAmvcalMCOMCkC8np5L3ej0aOX8oeGc2SV622milaA65lHuYJvNo/ryChDXCe0M89YnDvhumrrh8
+        +fRsPqpiLajzbgdl48nP8PfnUyKesLocR0OgeK6v7bfrQm2KgwRe4j84YRigEUOAlcsQv2oENOMn0
+        q4dT8oBDbrE0w0sNCMcGzdtZYIGwCy77ccYb45tjOdDjVj0SU0/PdAelaLkU2mnFncp5gCWGnAElD
+        TTxUk6eEBd8XUdVNTmbwfOBXKTwYf8oLh58kQnKlBexhLKsj4heYRKnPpU1z+sOYZnMwwkbznbjM3
+        /8Jb00YQ==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdLIc-0006zA-J3; Tue, 18 Jun 2019 21:05:51 +0000
+        id 1hdLIb-0006yQ-UL; Tue, 18 Jun 2019 21:05:50 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdLIa-0002Cp-1p; Tue, 18 Jun 2019 18:05:48 -0300
+        id 1hdLIZ-0002Bn-Ln; Tue, 18 Jun 2019 18:05:47 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-parisc@vger.kernel.org, iommu@lists.linux-foundation.org
-Subject: [PATCH v1 15/22] docs: driver-api: add a chapter for memory-related API
-Date:   Tue, 18 Jun 2019 18:05:39 -0300
-Message-Id: <5a67bbb44d92b4fb07e3eef5b291608524f72ff3.1560891322.git.mchehab+samsung@kernel.org>
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: [PATCH v1 02/22] docs: ioctl-number.txt: convert it to ReST format
+Date:   Tue, 18 Jun 2019 18:05:26 -0300
+Message-Id: <e8f1c925c5d118717eb38455e8f9dacf340cc35e.1560891322.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560891322.git.mchehab+samsung@kernel.org>
 References: <cover.1560891322.git.mchehab+samsung@kernel.org>
@@ -90,536 +70,708 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some DMA files under the main dir. Move them to the
-new chapter and add an index file for them.
+The conversion itself is simple: add a markup for the
+title of this file and add markups for both tables.
+
+Yet, the big table here with IOCTL numbers is badly formatted:
+on several lines, the "Include File" column has some values that
+are bigger than the reserved space there.
+
+Also, on several places, a comment was misplaced at the "Include
+File" space.
+
+So, most of the work here is to actually ensure that each field
+will be properly fixed.
+
+Also worth to mention that some URLs have the asterisk character
+on it. Well, Sphinx has an issue with asterisks in the middle
+of an string. As this is URL, use the alternate format: %2A.
+
+As a side effect of this patch, it is now a lot easier to see that
+some reserved ioctl numbers are missing the include files
+where it is supposed to be used.
+
+PS.: While this is part of a subdir, I opted to convert this
+single file alone, as this file has a potential of conflicts,
+as most subsystem maintainers touch it.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/PCI/pci.rst                        |  6 +++---
- Documentation/block/biodoc.rst                   |  2 +-
- .../driver-api/bus-virt-phys-mapping.rst         |  2 +-
- Documentation/driver-api/index.rst               |  2 ++
- .../mm/dma-api-howto.rst}                        |  2 --
- .../{DMA-API.rst => driver-api/mm/dma-api.rst}   |  8 +++-----
- .../mm/dma-attributes.rst}                       |  2 --
- .../mm/dma-isa-lpc.rst}                          |  4 +---
- Documentation/driver-api/mm/index.rst            | 11 +++++++++++
- Documentation/driver-api/usb/dma.rst             |  6 +++---
- Documentation/memory-barriers.txt                |  6 +++---
- .../translations/ko_KR/memory-barriers.txt       |  6 +++---
- arch/ia64/hp/common/sba_iommu.c                  | 12 ++++++------
- arch/ia64/sn/pci/pci_dma.c                       |  4 ++--
- arch/parisc/kernel/pci-dma.c                     |  2 +-
- arch/x86/include/asm/dma-mapping.h               |  4 ++--
- arch/x86/kernel/amd_gart_64.c                    |  2 +-
- drivers/parisc/sba_iommu.c                       | 16 ++++++++--------
- include/linux/dma-mapping.h                      |  2 +-
- include/media/videobuf-dma-sg.h                  |  2 +-
- kernel/dma/debug.c                               |  2 +-
- 21 files changed, 54 insertions(+), 49 deletions(-)
- rename Documentation/{DMA-API-HOWTO.rst => driver-api/mm/dma-api-howto.rst} (99%)
- rename Documentation/{DMA-API.rst => driver-api/mm/dma-api.rst} (99%)
- rename Documentation/{DMA-attributes.rst => driver-api/mm/dma-attributes.rst} (99%)
- rename Documentation/{DMA-ISA-LPC.rst => driver-api/mm/dma-isa-lpc.rst} (98%)
- create mode 100644 Documentation/driver-api/mm/index.rst
+ .../{ioctl-number.txt => ioctl-number.rst}    | 588 +++++++++---------
+ Documentation/process/submit-checklist.rst    |   2 +-
+ .../it_IT/process/submit-checklist.rst        |   2 +-
+ .../zh_CN/process/submit-checklist.rst        |   2 +-
+ include/uapi/rdma/rdma_user_ioctl_cmds.h      |   2 +-
+ 5 files changed, 304 insertions(+), 292 deletions(-)
+ rename Documentation/ioctl/{ioctl-number.txt => ioctl-number.rst} (11%)
 
-diff --git a/Documentation/PCI/pci.rst b/Documentation/PCI/pci.rst
-index 0f52d172c9ac..8665209eda40 100644
---- a/Documentation/PCI/pci.rst
-+++ b/Documentation/PCI/pci.rst
-@@ -265,7 +265,7 @@ Set the DMA mask size
- ---------------------
- .. note::
-    If anything below doesn't make sense, please refer to
--   Documentation/DMA-API.rst. This section is just a reminder that
-+   Documentation/driver-api/mm/dma-api.rst. This section is just a reminder that
-    drivers need to indicate DMA capabilities of the device and is not
-    an authoritative source for DMA interfaces.
- 
-@@ -291,7 +291,7 @@ Many 64-bit "PCI" devices (before PCI-X) and some PCI-X devices are
- Setup shared control data
- -------------------------
- Once the DMA masks are set, the driver can allocate "consistent" (a.k.a. shared)
--memory.  See Documentation/DMA-API.rst for a full description of
-+memory.  See Documentation/driver-api/mm/dma-api.rst for a full description of
- the DMA APIs. This section is just a reminder that it needs to be done
- before enabling DMA on the device.
- 
-@@ -421,7 +421,7 @@ owners if there is one.
- 
- Then clean up "consistent" buffers which contain the control data.
- 
--See Documentation/DMA-API.rst for details on unmapping interfaces.
-+See Documentation/driver-api/mm/dma-api.rst for details on unmapping interfaces.
- 
- 
- Unregister from other subsystems
-diff --git a/Documentation/block/biodoc.rst b/Documentation/block/biodoc.rst
-index 59bd93bec8fc..2206c88e7dee 100644
---- a/Documentation/block/biodoc.rst
-+++ b/Documentation/block/biodoc.rst
-@@ -195,7 +195,7 @@ a virtual address mapping (unlike the earlier scheme of virtual address
- do not have a corresponding kernel virtual address space mapping) and
- low-memory pages.
- 
--Note: Please refer to Documentation/DMA-API-HOWTO.rst for a discussion
-+Note: Please refer to Documentation/driver-api/mm/dma-api-howto.rst for a discussion
- on PCI high mem DMA aspects and mapping of scatter gather lists, and support
- for 64 bit PCI.
- 
-diff --git a/Documentation/driver-api/bus-virt-phys-mapping.rst b/Documentation/driver-api/bus-virt-phys-mapping.rst
-index 80972916e88c..18b6fdf618d2 100644
---- a/Documentation/driver-api/bus-virt-phys-mapping.rst
-+++ b/Documentation/driver-api/bus-virt-phys-mapping.rst
-@@ -8,7 +8,7 @@ How to access I/O mapped memory from within device drivers
- 
- 	The virt_to_bus() and bus_to_virt() functions have been
- 	superseded by the functionality provided by the PCI DMA interface
--	(see Documentation/DMA-API-HOWTO.rst).  They continue
-+	(see Documentation/driver-api/mm/dma-api-howto.rst).  They continue
- 	to be documented below for historical purposes, but new code
- 	must not use them. --davidm 00/12/12
- 
-diff --git a/Documentation/driver-api/index.rst b/Documentation/driver-api/index.rst
-index bb2621b17212..492b96003af2 100644
---- a/Documentation/driver-api/index.rst
-+++ b/Documentation/driver-api/index.rst
-@@ -16,6 +16,7 @@ available subsections can be seen below.
- 
-    basics
-    infrastructure
-+   mm/index
-    pm/index
-    clk
-    device-io
-@@ -59,6 +60,7 @@ available subsections can be seen below.
-    fpga/index
-    acpi/index
-    generic-counter
-+   mm/index
- 
-    atomic_bitops
-    bt8xxgpio
-diff --git a/Documentation/DMA-API-HOWTO.rst b/Documentation/driver-api/mm/dma-api-howto.rst
-similarity index 99%
-rename from Documentation/DMA-API-HOWTO.rst
-rename to Documentation/driver-api/mm/dma-api-howto.rst
-index db9f8fcebe1f..358d495456d1 100644
---- a/Documentation/DMA-API-HOWTO.rst
-+++ b/Documentation/driver-api/mm/dma-api-howto.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- =========================
- Dynamic DMA mapping Guide
- =========================
-diff --git a/Documentation/DMA-API.rst b/Documentation/driver-api/mm/dma-api.rst
-similarity index 99%
-rename from Documentation/DMA-API.rst
-rename to Documentation/driver-api/mm/dma-api.rst
-index 2f26857f97ff..c2c4d0b456b1 100644
---- a/Documentation/DMA-API.rst
-+++ b/Documentation/driver-api/mm/dma-api.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ============================================
- Dynamic DMA mapping using the generic device
- ============================================
-@@ -7,7 +5,7 @@ Dynamic DMA mapping using the generic device
- :Author: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
- 
- This document describes the DMA API.  For a more gentle introduction
--of the API (and actual examples), see Documentation/DMA-API-HOWTO.rst.
-+of the API (and actual examples), see Documentation/driver-api/mm/dma-api-howto.rst.
- 
- This API is split into two pieces.  Part I describes the basic API.
- Part II describes extensions for supporting non-consistent memory
-@@ -465,7 +463,7 @@ without the _attrs suffixes, except that they pass an optional
- dma_attrs.
- 
- The interpretation of DMA attributes is architecture-specific, and
--each attribute should be documented in Documentation/DMA-attributes.rst.
-+each attribute should be documented in Documentation/driver-api/mm/dma-attributes.rst.
- 
- If dma_attrs are 0, the semantics of each of these functions
- is identical to those of the corresponding function
-@@ -478,7 +476,7 @@ for DMA::
- 
- 	#include <linux/dma-mapping.h>
- 	/* DMA_ATTR_FOO should be defined in linux/dma-mapping.h and
--	* documented in Documentation/DMA-attributes.rst */
-+	* documented in Documentation/driver-api/mm/dma-attributes.rst */
- 	...
- 
- 		unsigned long attr;
-diff --git a/Documentation/DMA-attributes.rst b/Documentation/driver-api/mm/dma-attributes.rst
-similarity index 99%
-rename from Documentation/DMA-attributes.rst
-rename to Documentation/driver-api/mm/dma-attributes.rst
-index 471c5c38f9d9..8f8d97f65d73 100644
---- a/Documentation/DMA-attributes.rst
-+++ b/Documentation/driver-api/mm/dma-attributes.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ==============
- DMA attributes
- ==============
-diff --git a/Documentation/DMA-ISA-LPC.rst b/Documentation/driver-api/mm/dma-isa-lpc.rst
-similarity index 98%
-rename from Documentation/DMA-ISA-LPC.rst
-rename to Documentation/driver-api/mm/dma-isa-lpc.rst
-index 205a379c2d62..6ae393d391cf 100644
---- a/Documentation/DMA-ISA-LPC.rst
-+++ b/Documentation/driver-api/mm/dma-isa-lpc.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ============================
- DMA with ISA and LPC devices
- ============================
-@@ -19,7 +17,7 @@ To do ISA style DMA you need to include two headers::
- 	#include <asm/dma.h>
- 
- The first is the generic DMA API used to convert virtual addresses to
--bus addresses (see Documentation/DMA-API.rst for details).
-+bus addresses (see Documentation/driver-api/mm/dma-api.rst for details).
- 
- The second contains the routines specific to ISA DMA transfers. Since
- this is not present on all platforms make sure you construct your
-diff --git a/Documentation/driver-api/mm/index.rst b/Documentation/driver-api/mm/index.rst
-new file mode 100644
-index 000000000000..e34c7ee4a4b9
---- /dev/null
-+++ b/Documentation/driver-api/mm/index.rst
-@@ -0,0 +1,11 @@
-+==========================
-+Memory Related Kernel APIs
-+==========================
+diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.rst
+similarity index 11%
+rename from Documentation/ioctl/ioctl-number.txt
+rename to Documentation/ioctl/ioctl-number.rst
+index c9558146ac58..e6d07badafb1 100644
+--- a/Documentation/ioctl/ioctl-number.txt
++++ b/Documentation/ioctl/ioctl-number.rst
+@@ -1,15 +1,23 @@
++:orphan:
 +
-+.. toctree::
-+   :maxdepth: 1
++=============
+ Ioctl Numbers
++=============
 +
-+   dma-api
-+   dma-api-howto
-+   dma-attributes
-+   dma-isa-lpc
-diff --git a/Documentation/driver-api/usb/dma.rst b/Documentation/driver-api/usb/dma.rst
-index 12955a77c7fe..8ef36aa2278d 100644
---- a/Documentation/driver-api/usb/dma.rst
-+++ b/Documentation/driver-api/usb/dma.rst
-@@ -10,7 +10,7 @@ API overview
+ 19 October 1999
++
+ Michael Elizabeth Chastain
+ <mec@shout.net>
  
- The big picture is that USB drivers can continue to ignore most DMA issues,
- though they still must provide DMA-ready buffers (see
--``Documentation/DMA-API-HOWTO.rst``).  That's how they've worked through
-+``Documentation/driver-api/mm/dma-api-howto.rst``).  That's how they've worked through
- the 2.4 (and earlier) kernels, or they can now be DMA-aware.
+ If you are adding new ioctl's to the kernel, you should use the _IO
+ macros defined in <linux/ioctl.h>:
  
- DMA-aware usb drivers:
-@@ -60,7 +60,7 @@ and effects like cache-trashing can impose subtle penalties.
-   force a consistent memory access ordering by using memory barriers.  It's
-   not using a streaming DMA mapping, so it's good for small transfers on
-   systems where the I/O would otherwise thrash an IOMMU mapping.  (See
--  ``Documentation/DMA-API-HOWTO.rst`` for definitions of "coherent" and
-+  ``Documentation/driver-api/mm/dma-api-howto.rst`` for definitions of "coherent" and
-   "streaming" DMA mappings.)
++    ====== == ============================================
+     _IO    an ioctl with no parameters
+     _IOW   an ioctl with write parameters (copy_from_user)
+     _IOR   an ioctl with read parameters  (copy_to_user)
+     _IOWR  an ioctl with both write and read parameters.
++    ====== == ============================================
  
-   Asking for 1/Nth of a page (as well as asking for N pages) is reasonably
-@@ -91,7 +91,7 @@ Working with existing buffers
- Existing buffers aren't usable for DMA without first being mapped into the
- DMA address space of the device.  However, most buffers passed to your
- driver can safely be used with such DMA mapping.  (See the first section
--of Documentation/DMA-API-HOWTO.rst, titled "What memory is DMA-able?")
-+of Documentation/driver-api/mm/dma-api-howto.rst, titled "What memory is DMA-able?")
+ 'Write' and 'read' are from the user's point of view, just like the
+ system calls 'write' and 'read'.  For example, a SET_FOO ioctl would
+@@ -60,291 +68,295 @@ This table lists ioctls visible from user land for Linux/x86.  It contains
+ most drivers up to 2.6.31, but I know I am missing some.  There has been
+ no attempt to list non-X86 architectures or ioctls from drivers/staging/.
  
- - When you're using scatterlists, you can map everything at once.  On some
-   systems, this kicks in an IOMMU and turns the scatterlists into single
-diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
-index 4a44f00478db..087b0d864a94 100644
---- a/Documentation/memory-barriers.txt
-+++ b/Documentation/memory-barriers.txt
-@@ -549,8 +549,8 @@ There are certain things that the Linux kernel memory barriers do not guarantee:
- 	[*] For information on bus mastering DMA and coherency please read:
+-Code  Seq#(hex)	Include File		Comments
+-========================================================
+-0x00	00-1F	linux/fs.h		conflict!
+-0x00	00-1F	scsi/scsi_ioctl.h	conflict!
+-0x00	00-1F	linux/fb.h		conflict!
+-0x00	00-1F	linux/wavefront.h	conflict!
+-0x02	all	linux/fd.h
+-0x03	all	linux/hdreg.h
+-0x04	D2-DC	linux/umsdos_fs.h	Dead since 2.6.11, but don't reuse these.
+-0x06	all	linux/lp.h
+-0x09	all	linux/raid/md_u.h
+-0x10	00-0F	drivers/char/s390/vmcp.h
+-0x10	10-1F	arch/s390/include/uapi/sclp_ctl.h
+-0x10	20-2F	arch/s390/include/uapi/asm/hypfs.h
+-0x12	all	linux/fs.h
+-		linux/blkpg.h
+-0x1b	all	InfiniBand Subsystem	<http://infiniband.sourceforge.net/>
+-0x20	all	drivers/cdrom/cm206.h
+-0x22	all	scsi/sg.h
+-'!'	00-1F	uapi/linux/seccomp.h
+-'#'	00-3F	IEEE 1394 Subsystem	Block for the entire subsystem
+-'$'	00-0F	linux/perf_counter.h, linux/perf_event.h
+-'%'	00-0F	include/uapi/linux/stm.h
+-					System Trace Module subsystem
+-					<mailto:alexander.shishkin@linux.intel.com>
+-'&'	00-07	drivers/firewire/nosy-user.h
+-'1'	00-1F	<linux/timepps.h>	PPS kit from Ulrich Windl
+-					<ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
+-'2'	01-04	linux/i2o.h
+-'3'	00-0F	drivers/s390/char/raw3270.h	conflict!
+-'3'	00-1F	linux/suspend_ioctls.h	conflict!
+-		and kernel/power/user.c
+-'8'	all				SNP8023 advanced NIC card
+-					<mailto:mcr@solidum.com>
+-';'	64-7F	linux/vfio.h
+-'@'	00-0F	linux/radeonfb.h	conflict!
+-'@'	00-0F	drivers/video/aty/aty128fb.c	conflict!
+-'A'	00-1F	linux/apm_bios.h	conflict!
+-'A'	00-0F	linux/agpgart.h		conflict!
+-		and drivers/char/agp/compat_ioctl.h
+-'A'	00-7F	sound/asound.h		conflict!
+-'B'	00-1F	linux/cciss_ioctl.h	conflict!
+-'B'	00-0F	include/linux/pmu.h	conflict!
+-'B'	C0-FF				advanced bbus
+-					<mailto:maassen@uni-freiburg.de>
+-'C'	all	linux/soundcard.h	conflict!
+-'C'	01-2F	linux/capi.h		conflict!
+-'C'	F0-FF	drivers/net/wan/cosa.h	conflict!
+-'D'	all	arch/s390/include/asm/dasd.h
+-'D'	40-5F	drivers/scsi/dpt/dtpi_ioctl.h
+-'D'	05	drivers/scsi/pmcraid.h
+-'E'	all	linux/input.h		conflict!
+-'E'	00-0F	xen/evtchn.h		conflict!
+-'F'	all	linux/fb.h		conflict!
+-'F'	01-02	drivers/scsi/pmcraid.h	conflict!
+-'F'	20	drivers/video/fsl-diu-fb.h	conflict!
+-'F'	20	drivers/video/intelfb/intelfb.h	conflict!
+-'F'	20	linux/ivtvfb.h		conflict!
+-'F'	20	linux/matroxfb.h	conflict!
+-'F'	20	drivers/video/aty/atyfb_base.c	conflict!
+-'F'	00-0F	video/da8xx-fb.h	conflict!
+-'F'	80-8F	linux/arcfb.h		conflict!
+-'F'	DD	video/sstfb.h		conflict!
+-'G'	00-3F	drivers/misc/sgi-gru/grulib.h	conflict!
+-'G'	00-0F	linux/gigaset_dev.h	conflict!
+-'H'	00-7F	linux/hiddev.h		conflict!
+-'H'	00-0F	linux/hidraw.h		conflict!
+-'H'	01	linux/mei.h		conflict!
+-'H'	02	linux/mei.h		conflict!
+-'H'	03	linux/mei.h		conflict!
+-'H'	00-0F	sound/asound.h		conflict!
+-'H'	20-40	sound/asound_fm.h	conflict!
+-'H'	80-8F	sound/sfnt_info.h	conflict!
+-'H'	10-8F	sound/emu10k1.h		conflict!
+-'H'	10-1F	sound/sb16_csp.h	conflict!
+-'H'	10-1F	sound/hda_hwdep.h	conflict!
+-'H'	40-4F	sound/hdspm.h		conflict!
+-'H'	40-4F	sound/hdsp.h		conflict!
+-'H'	90	sound/usb/usx2y/usb_stream.h
+-'H'	A0	uapi/linux/usb/cdc-wdm.h
+-'H'	C0-F0	net/bluetooth/hci.h	conflict!
+-'H'	C0-DF	net/bluetooth/hidp/hidp.h	conflict!
+-'H'	C0-DF	net/bluetooth/cmtp/cmtp.h	conflict!
+-'H'	C0-DF	net/bluetooth/bnep/bnep.h	conflict!
+-'H'	F1	linux/hid-roccat.h	<mailto:erazor_de@users.sourceforge.net>
+-'H'	F8-FA	sound/firewire.h
+-'I'	all	linux/isdn.h		conflict!
+-'I'	00-0F	drivers/isdn/divert/isdn_divert.h	conflict!
+-'I'	40-4F	linux/mISDNif.h		conflict!
+-'J'	00-1F	drivers/scsi/gdth_ioctl.h
+-'K'	all	linux/kd.h
+-'L'	00-1F	linux/loop.h		conflict!
+-'L'	10-1F	drivers/scsi/mpt3sas/mpt3sas_ctl.h	conflict!
+-'L'	20-2F	linux/lightnvm.h
+-'L'	E0-FF	linux/ppdd.h		encrypted disk device driver
+-					<http://linux01.gwdg.de/~alatham/ppdd.html>
+-'M'	all	linux/soundcard.h	conflict!
+-'M'	01-16	mtd/mtd-abi.h		conflict!
+-		and drivers/mtd/mtdchar.c
+-'M'	01-03	drivers/scsi/megaraid/megaraid_sas.h
+-'M'	00-0F	drivers/video/fsl-diu-fb.h	conflict!
+-'N'	00-1F	drivers/usb/scanner.h
+-'N'	40-7F	drivers/block/nvme.c
+-'O'     00-06   mtd/ubi-user.h		UBI
+-'P'	all	linux/soundcard.h	conflict!
+-'P'	60-6F	sound/sscape_ioctl.h	conflict!
+-'P'	00-0F	drivers/usb/class/usblp.c	conflict!
+-'P'	01-09	drivers/misc/pci_endpoint_test.c	conflict!
+-'Q'	all	linux/soundcard.h
+-'R'	00-1F	linux/random.h		conflict!
+-'R'	01	linux/rfkill.h		conflict!
+-'R'	C0-DF	net/bluetooth/rfcomm.h
+-'S'	all	linux/cdrom.h		conflict!
+-'S'	80-81	scsi/scsi_ioctl.h	conflict!
+-'S'	82-FF	scsi/scsi.h		conflict!
+-'S'	00-7F	sound/asequencer.h	conflict!
+-'T'	all	linux/soundcard.h	conflict!
+-'T'	00-AF	sound/asound.h		conflict!
+-'T'	all	arch/x86/include/asm/ioctls.h	conflict!
+-'T'	C0-DF	linux/if_tun.h		conflict!
+-'U'	all	sound/asound.h		conflict!
+-'U'	00-CF	linux/uinput.h		conflict!
+-'U'	00-EF	linux/usbdevice_fs.h
+-'U'	C0-CF	drivers/bluetooth/hci_uart.h
+-'V'	all	linux/vt.h		conflict!
+-'V'	all	linux/videodev2.h	conflict!
+-'V'	C0	linux/ivtvfb.h		conflict!
+-'V'	C0	linux/ivtv.h		conflict!
+-'V'	C0	media/davinci/vpfe_capture.h	conflict!
+-'V'	C0	media/si4713.h		conflict!
+-'W'	00-1F	linux/watchdog.h	conflict!
+-'W'	00-1F	linux/wanrouter.h	conflict!		(pre 3.9)
+-'W'	00-3F	sound/asound.h		conflict!
+-'W'	40-5F   drivers/pci/switch/switchtec.c
+-'X'	all	fs/xfs/xfs_fs.h		conflict!
+-		and fs/xfs/linux-2.6/xfs_ioctl32.h
+-		and include/linux/falloc.h
+-		and linux/fs.h
+-'X'	all	fs/ocfs2/ocfs_fs.h	conflict!
+-'X'	01	linux/pktcdvd.h		conflict!
+-'Y'	all	linux/cyclades.h
+-'Z'	14-15	drivers/message/fusion/mptctl.h
+-'['	00-3F	linux/usb/tmc.h		USB Test and Measurement Devices
+-					<mailto:gregkh@linuxfoundation.org>
+-'a'	all	linux/atm*.h, linux/sonet.h	ATM on linux
+-					<http://lrcwww.epfl.ch/>
+-'a'	00-0F	drivers/crypto/qat/qat_common/adf_cfg_common.h	conflict! qat driver
+-'b'	00-FF				conflict! bit3 vme host bridge
+-					<mailto:natalia@nikhefk.nikhef.nl>
+-'c'	all	linux/cm4000_cs.h	conflict!
+-'c'	00-7F	linux/comstats.h	conflict!
+-'c'	00-7F	linux/coda.h		conflict!
+-'c'	00-1F	linux/chio.h		conflict!
+-'c'	80-9F	arch/s390/include/asm/chsc.h	conflict!
+-'c'	A0-AF   arch/x86/include/asm/msr.h	conflict!
+-'d'	00-FF	linux/char/drm/drm.h	conflict!
+-'d'	02-40	pcmcia/ds.h		conflict!
+-'d'	F0-FF	linux/digi1.h
+-'e'	all	linux/digi1.h		conflict!
+-'f'	00-1F	linux/ext2_fs.h		conflict!
+-'f'	00-1F	linux/ext3_fs.h		conflict!
+-'f'	00-0F	fs/jfs/jfs_dinode.h	conflict!
+-'f'	00-0F	fs/ext4/ext4.h		conflict!
+-'f'	00-0F	linux/fs.h		conflict!
+-'f'	00-0F	fs/ocfs2/ocfs2_fs.h	conflict!
+-'g'	00-0F	linux/usb/gadgetfs.h
+-'g'	20-2F	linux/usb/g_printer.h
+-'h'	00-7F				conflict! Charon filesystem
+-					<mailto:zapman@interlan.net>
+-'h'	00-1F	linux/hpet.h		conflict!
+-'h'	80-8F	fs/hfsplus/ioctl.c
+-'i'	00-3F	linux/i2o-dev.h		conflict!
+-'i'	0B-1F	linux/ipmi.h		conflict!
+-'i'	80-8F	linux/i8k.h
+-'j'	00-3F	linux/joystick.h
+-'k'	00-0F	linux/spi/spidev.h	conflict!
+-'k'	00-05	video/kyro.h		conflict!
+-'k'	10-17	linux/hsi/hsi_char.h	HSI character device
+-'l'	00-3F	linux/tcfs_fs.h		transparent cryptographic file system
+-					<http://web.archive.org/web/*/http://mikonos.dia.unisa.it/tcfs>
+-'l'	40-7F	linux/udf_fs_i.h	in development:
+-					<http://sourceforge.net/projects/linux-udf/>
+-'m'	00-09	linux/mmtimer.h		conflict!
+-'m'	all	linux/mtio.h		conflict!
+-'m'	all	linux/soundcard.h	conflict!
+-'m'	all	linux/synclink.h	conflict!
+-'m'	00-19	drivers/message/fusion/mptctl.h	conflict!
+-'m'	00	drivers/scsi/megaraid/megaraid_ioctl.h	conflict!
+-'n'	00-7F	linux/ncp_fs.h and fs/ncpfs/ioctl.c
+-'n'	80-8F	uapi/linux/nilfs2_api.h	NILFS2
+-'n'	E0-FF	linux/matroxfb.h	matroxfb
+-'o'	00-1F	fs/ocfs2/ocfs2_fs.h	OCFS2
+-'o'     00-03   mtd/ubi-user.h		conflict! (OCFS2 and UBI overlaps)
+-'o'     40-41   mtd/ubi-user.h		UBI
+-'o'     01-A1   linux/dvb/*.h		DVB
+-'p'	00-0F	linux/phantom.h		conflict! (OpenHaptics needs this)
+-'p'	00-1F	linux/rtc.h		conflict!
+-'p'	00-3F	linux/mc146818rtc.h	conflict!
+-'p'	40-7F	linux/nvram.h
+-'p'	80-9F	linux/ppdev.h		user-space parport
+-					<mailto:tim@cyberelk.net>
+-'p'	A1-A5	linux/pps.h		LinuxPPS
+-					<mailto:giometti@linux.it>
+-'q'	00-1F	linux/serio.h
+-'q'	80-FF	linux/telephony.h	Internet PhoneJACK, Internet LineJACK
+-		linux/ixjuser.h		<http://web.archive.org/web/*/http://www.quicknet.net>
+-'r'	00-1F	linux/msdos_fs.h and fs/fat/dir.c
+-'s'	all	linux/cdk.h
+-'t'	00-7F	linux/ppp-ioctl.h
+-'t'	80-8F	linux/isdn_ppp.h
+-'t'	90-91	linux/toshiba.h		toshiba and toshiba_acpi SMM
+-'u'	00-1F	linux/smb_fs.h		gone
+-'u'	20-3F	linux/uvcvideo.h	USB video class host driver
+-'u'	40-4f	linux/udmabuf.h		userspace dma-buf misc device
+-'v'	00-1F	linux/ext2_fs.h		conflict!
+-'v'	00-1F	linux/fs.h		conflict!
+-'v'	00-0F	linux/sonypi.h		conflict!
+-'v'	00-0F	media/v4l2-subdev.h	conflict!
+-'v'	C0-FF	linux/meye.h		conflict!
+-'w'	all				CERN SCI driver
+-'y'	00-1F				packet based user level communications
+-					<mailto:zapman@interlan.net>
+-'z'	00-3F				CAN bus card	conflict!
+-					<mailto:hdstich@connectu.ulm.circular.de>
+-'z'	40-7F				CAN bus card	conflict!
+-					<mailto:oe@port.de>
+-'z'	10-4F	drivers/s390/crypto/zcrypt_api.h	conflict!
+-'|'	00-7F	linux/media.h
+-0x80	00-1F	linux/fb.h
+-0x89	00-06	arch/x86/include/asm/sockios.h
+-0x89	0B-DF	linux/sockios.h
+-0x89	E0-EF	linux/sockios.h		SIOCPROTOPRIVATE range
+-0x89	E0-EF	linux/dn.h		PROTOPRIVATE range
+-0x89	F0-FF	linux/sockios.h		SIOCDEVPRIVATE range
+-0x8B	all	linux/wireless.h
+-0x8C	00-3F				WiNRADiO driver
+-					<http://www.winradio.com.au/>
+-0x90	00	drivers/cdrom/sbpcd.h
+-0x92	00-0F	drivers/usb/mon/mon_bin.c
+-0x93	60-7F	linux/auto_fs.h
+-0x94	all	fs/btrfs/ioctl.h	Btrfs filesystem
+-		and linux/fs.h		some lifted to vfs/generic
+-0x97	00-7F	fs/ceph/ioctl.h		Ceph file system
+-0x99	00-0F				537-Addinboard driver
+-					<mailto:buk@buks.ipn.de>
+-0xA0	all	linux/sdp/sdp.h		Industrial Device Project
+-					<mailto:kenji@bitgate.com>
+-0xA1	0	linux/vtpm_proxy.h	TPM Emulator Proxy Driver
+-0xA3	80-8F	Port ACL		in development:
+-					<mailto:tlewis@mindspring.com>
+-0xA3	90-9F	linux/dtlk.h
+-0xA4	00-1F	uapi/linux/tee.h	Generic TEE subsystem
+-0xAA	00-3F	linux/uapi/linux/userfaultfd.h
+-0xAB	00-1F	linux/nbd.h
+-0xAC	00-1F	linux/raw.h
+-0xAD	00	Netfilter device	in development:
+-					<mailto:rusty@rustcorp.com.au>
+-0xAE	all	linux/kvm.h		Kernel-based Virtual Machine
+-					<mailto:kvm@vger.kernel.org>
+-0xAF	00-1F	linux/fsl_hypervisor.h	Freescale hypervisor
+-0xB0	all	RATIO devices		in development:
+-					<mailto:vgo@ratio.de>
+-0xB1	00-1F	PPPoX			<mailto:mostrows@styx.uwaterloo.ca>
+-0xB3	00	linux/mmc/ioctl.h
+-0xB4	00-0F	linux/gpio.h		<mailto:linux-gpio@vger.kernel.org>
+-0xB5	00-0F	uapi/linux/rpmsg.h	<mailto:linux-remoteproc@vger.kernel.org>
+-0xB6	all	linux/fpga-dfl.h
+-0xC0	00-0F	linux/usb/iowarrior.h
+-0xCA	00-0F	uapi/misc/cxl.h
+-0xCA	10-2F	uapi/misc/ocxl.h
+-0xCA	80-BF	uapi/scsi/cxlflash_ioctl.h
+-0xCB	00-1F	CBM serial IEC bus	in development:
+-					<mailto:michael.klein@puffin.lb.shuttle.de>
+-0xCC	00-0F	drivers/misc/ibmvmc.h    pseries VMC driver
+-0xCD	01	linux/reiserfs_fs.h
+-0xCF	02	fs/cifs/ioctl.c
+-0xDB	00-0F	drivers/char/mwave/mwavepub.h
+-0xDD	00-3F	ZFCP device driver	see drivers/s390/scsi/
+-					<mailto:aherrman@de.ibm.com>
+-0xE5	00-3F	linux/fuse.h
+-0xEC	00-01	drivers/platform/chrome/cros_ec_dev.h	ChromeOS EC driver
+-0xF3	00-3F	drivers/usb/misc/sisusbvga/sisusb.h	sisfb (in development)
+-					<mailto:thomas@winischhofer.net>
+-0xF4	00-1F	video/mbxfb.h		mbxfb
+-					<mailto:raph@8d.com>
+-0xF6	all	LTTng			Linux Trace Toolkit Next Generation
+-					<mailto:mathieu.desnoyers@efficios.com>
+-0xFD	all	linux/dm-ioctl.h
++====  =====  ======================================================= ================================================================
++Code  Seq#    Include File                                           Comments
++      (hex)
++====  =====  ======================================================= ================================================================
++0x00  00-1F  linux/fs.h                                              conflict!
++0x00  00-1F  scsi/scsi_ioctl.h                                       conflict!
++0x00  00-1F  linux/fb.h                                              conflict!
++0x00  00-1F  linux/wavefront.h                                       conflict!
++0x02  all    linux/fd.h
++0x03  all    linux/hdreg.h
++0x04  D2-DC  linux/umsdos_fs.h                                       Dead since 2.6.11, but don't reuse these.
++0x06  all    linux/lp.h
++0x09  all    linux/raid/md_u.h
++0x10  00-0F  drivers/char/s390/vmcp.h
++0x10  10-1F  arch/s390/include/uapi/sclp_ctl.h
++0x10  20-2F  arch/s390/include/uapi/asm/hypfs.h
++0x12  all    linux/fs.h
++             linux/blkpg.h
++0x1b  all                                                            InfiniBand Subsystem
++                                                                     <http://infiniband.sourceforge.net/>
++0x20  all    drivers/cdrom/cm206.h
++0x22  all    scsi/sg.h
++'!'   00-1F  uapi/linux/seccomp.h
++'#'   00-3F                                                          IEEE 1394 Subsystem
++                                                                     Block for the entire subsystem
++'$'   00-0F  linux/perf_counter.h, linux/perf_event.h
++'%'   00-0F  include/uapi/linux/stm.h                                System Trace Module subsystem
++                                                                     <mailto:alexander.shishkin@linux.intel.com>
++'&'   00-07  drivers/firewire/nosy-user.h
++'1'   00-1F  linux/timepps.h                                         PPS kit from Ulrich Windl
++                                                                     <ftp://ftp.de.kernel.org/pub/linux/daemons/ntp/PPS/>
++'2'   01-04  linux/i2o.h
++'3'   00-0F  drivers/s390/char/raw3270.h                             conflict!
++'3'   00-1F  linux/suspend_ioctls.h,                                 conflict!
++             kernel/power/user.c
++'8'   all                                                            SNP8023 advanced NIC card
++                                                                     <mailto:mcr@solidum.com>
++';'   64-7F  linux/vfio.h
++'@'   00-0F  linux/radeonfb.h                                        conflict!
++'@'   00-0F  drivers/video/aty/aty128fb.c                            conflict!
++'A'   00-1F  linux/apm_bios.h                                        conflict!
++'A'   00-0F  linux/agpgart.h,                                        conflict!
++             drivers/char/agp/compat_ioctl.h
++'A'   00-7F  sound/asound.h                                          conflict!
++'B'   00-1F  linux/cciss_ioctl.h                                     conflict!
++'B'   00-0F  include/linux/pmu.h                                     conflict!
++'B'   C0-FF  advanced bbus                                           <mailto:maassen@uni-freiburg.de>
++'C'   all    linux/soundcard.h                                       conflict!
++'C'   01-2F  linux/capi.h                                            conflict!
++'C'   F0-FF  drivers/net/wan/cosa.h                                  conflict!
++'D'   all    arch/s390/include/asm/dasd.h
++'D'   40-5F  drivers/scsi/dpt/dtpi_ioctl.h
++'D'   05     drivers/scsi/pmcraid.h
++'E'   all    linux/input.h                                           conflict!
++'E'   00-0F  xen/evtchn.h                                            conflict!
++'F'   all    linux/fb.h                                              conflict!
++'F'   01-02  drivers/scsi/pmcraid.h                                  conflict!
++'F'   20     drivers/video/fsl-diu-fb.h                              conflict!
++'F'   20     drivers/video/intelfb/intelfb.h                         conflict!
++'F'   20     linux/ivtvfb.h                                          conflict!
++'F'   20     linux/matroxfb.h                                        conflict!
++'F'   20     drivers/video/aty/atyfb_base.c                          conflict!
++'F'   00-0F  video/da8xx-fb.h                                        conflict!
++'F'   80-8F  linux/arcfb.h                                           conflict!
++'F'   DD     video/sstfb.h                                           conflict!
++'G'   00-3F  drivers/misc/sgi-gru/grulib.h                           conflict!
++'G'   00-0F  linux/gigaset_dev.h                                     conflict!
++'H'   00-7F  linux/hiddev.h                                          conflict!
++'H'   00-0F  linux/hidraw.h                                          conflict!
++'H'   01     linux/mei.h                                             conflict!
++'H'   02     linux/mei.h                                             conflict!
++'H'   03     linux/mei.h                                             conflict!
++'H'   00-0F  sound/asound.h                                          conflict!
++'H'   20-40  sound/asound_fm.h                                       conflict!
++'H'   80-8F  sound/sfnt_info.h                                       conflict!
++'H'   10-8F  sound/emu10k1.h                                         conflict!
++'H'   10-1F  sound/sb16_csp.h                                        conflict!
++'H'   10-1F  sound/hda_hwdep.h                                       conflict!
++'H'   40-4F  sound/hdspm.h                                           conflict!
++'H'   40-4F  sound/hdsp.h                                            conflict!
++'H'   90     sound/usb/usx2y/usb_stream.h
++'H'   A0     uapi/linux/usb/cdc-wdm.h
++'H'   C0-F0  net/bluetooth/hci.h                                     conflict!
++'H'   C0-DF  net/bluetooth/hidp/hidp.h                               conflict!
++'H'   C0-DF  net/bluetooth/cmtp/cmtp.h                               conflict!
++'H'   C0-DF  net/bluetooth/bnep/bnep.h                               conflict!
++'H'   F1     linux/hid-roccat.h                                      <mailto:erazor_de@users.sourceforge.net>
++'H'   F8-FA  sound/firewire.h
++'I'   all    linux/isdn.h                                            conflict!
++'I'   00-0F  drivers/isdn/divert/isdn_divert.h                       conflict!
++'I'   40-4F  linux/mISDNif.h                                         conflict!
++'J'   00-1F  drivers/scsi/gdth_ioctl.h
++'K'   all    linux/kd.h
++'L'   00-1F  linux/loop.h                                            conflict!
++'L'   10-1F  drivers/scsi/mpt3sas/mpt3sas_ctl.h                      conflict!
++'L'   20-2F  linux/lightnvm.h
++'L'   E0-FF  linux/ppdd.h                                            encrypted disk device driver
++                                                                     <http://linux01.gwdg.de/~alatham/ppdd.html>
++'M'   all    linux/soundcard.h                                       conflict!
++'M'   01-16  mtd/mtd-abi.h                                           conflict!
++      and    drivers/mtd/mtdchar.c
++'M'   01-03  drivers/scsi/megaraid/megaraid_sas.h
++'M'   00-0F  drivers/video/fsl-diu-fb.h                              conflict!
++'N'   00-1F  drivers/usb/scanner.h
++'N'   40-7F  drivers/block/nvme.c
++'O'   00-06  mtd/ubi-user.h                                          UBI
++'P'   all    linux/soundcard.h                                       conflict!
++'P'   60-6F  sound/sscape_ioctl.h                                    conflict!
++'P'   00-0F  drivers/usb/class/usblp.c                               conflict!
++'P'   01-09  drivers/misc/pci_endpoint_test.c                        conflict!
++'Q'   all    linux/soundcard.h
++'R'   00-1F  linux/random.h                                          conflict!
++'R'   01     linux/rfkill.h                                          conflict!
++'R'   C0-DF  net/bluetooth/rfcomm.h
++'S'   all    linux/cdrom.h                                           conflict!
++'S'   80-81  scsi/scsi_ioctl.h                                       conflict!
++'S'   82-FF  scsi/scsi.h                                             conflict!
++'S'   00-7F  sound/asequencer.h                                      conflict!
++'T'   all    linux/soundcard.h                                       conflict!
++'T'   00-AF  sound/asound.h                                          conflict!
++'T'   all    arch/x86/include/asm/ioctls.h                           conflict!
++'T'   C0-DF  linux/if_tun.h                                          conflict!
++'U'   all    sound/asound.h                                          conflict!
++'U'   00-CF  linux/uinput.h                                          conflict!
++'U'   00-EF  linux/usbdevice_fs.h
++'U'   C0-CF  drivers/bluetooth/hci_uart.h
++'V'   all    linux/vt.h                                              conflict!
++'V'   all    linux/videodev2.h                                       conflict!
++'V'   C0     linux/ivtvfb.h                                          conflict!
++'V'   C0     linux/ivtv.h                                            conflict!
++'V'   C0     media/davinci/vpfe_capture.h                            conflict!
++'V'   C0     media/si4713.h                                          conflict!
++'W'   00-1F  linux/watchdog.h                                        conflict!
++'W'   00-1F  linux/wanrouter.h                                       conflict! (pre 3.9)
++'W'   00-3F  sound/asound.h                                          conflict!
++'W'   40-5F  drivers/pci/switch/switchtec.c
++'X'   all    fs/xfs/xfs_fs.h,                                        conflict!
++             fs/xfs/linux-2.6/xfs_ioctl32.h,
++             include/linux/falloc.h,
++             linux/fs.h,
++'X'   all    fs/ocfs2/ocfs_fs.h                                      conflict!
++'X'   01     linux/pktcdvd.h                                         conflict!
++'Y'   all    linux/cyclades.h
++'Z'   14-15  drivers/message/fusion/mptctl.h
++'['   00-3F  linux/usb/tmc.h                                         USB Test and Measurement Devices
++                                                                     <mailto:gregkh@linuxfoundation.org>
++'a'   all    linux/atm*.h, linux/sonet.h                             ATM on linux
++                                                                     <http://lrcwww.epfl.ch/>
++'a'   00-0F  drivers/crypto/qat/qat_common/adf_cfg_common.h          conflict! qat driver
++'b'   00-FF                                                          conflict! bit3 vme host bridge
++                                                                     <mailto:natalia@nikhefk.nikhef.nl>
++'c'   all    linux/cm4000_cs.h                                       conflict!
++'c'   00-7F  linux/comstats.h                                        conflict!
++'c'   00-7F  linux/coda.h                                            conflict!
++'c'   00-1F  linux/chio.h                                            conflict!
++'c'   80-9F  arch/s390/include/asm/chsc.h                            conflict!
++'c'   A0-AF  arch/x86/include/asm/msr.h conflict!
++'d'   00-FF  linux/char/drm/drm.h                                    conflict!
++'d'   02-40  pcmcia/ds.h                                             conflict!
++'d'   F0-FF  linux/digi1.h
++'e'   all    linux/digi1.h                                           conflict!
++'f'   00-1F  linux/ext2_fs.h                                         conflict!
++'f'   00-1F  linux/ext3_fs.h                                         conflict!
++'f'   00-0F  fs/jfs/jfs_dinode.h                                     conflict!
++'f'   00-0F  fs/ext4/ext4.h                                          conflict!
++'f'   00-0F  linux/fs.h                                              conflict!
++'f'   00-0F  fs/ocfs2/ocfs2_fs.h                                     conflict!
++'g'   00-0F  linux/usb/gadgetfs.h
++'g'   20-2F  linux/usb/g_printer.h
++'h'   00-7F                                                          conflict! Charon filesystem
++                                                                     <mailto:zapman@interlan.net>
++'h'   00-1F  linux/hpet.h                                            conflict!
++'h'   80-8F  fs/hfsplus/ioctl.c
++'i'   00-3F  linux/i2o-dev.h                                         conflict!
++'i'   0B-1F  linux/ipmi.h                                            conflict!
++'i'   80-8F  linux/i8k.h
++'j'   00-3F  linux/joystick.h
++'k'   00-0F  linux/spi/spidev.h                                      conflict!
++'k'   00-05  video/kyro.h                                            conflict!
++'k'   10-17  linux/hsi/hsi_char.h                                    HSI character device
++'l'   00-3F  linux/tcfs_fs.h                                         transparent cryptographic file system
++                                                                     <http://web.archive.org/web/%2A/http://mikonos.dia.unisa.it/tcfs>
++'l'   40-7F  linux/udf_fs_i.h                                        in development:
++                                                                     <http://sourceforge.net/projects/linux-udf/>
++'m'   00-09  linux/mmtimer.h                                         conflict!
++'m'   all    linux/mtio.h                                            conflict!
++'m'   all    linux/soundcard.h                                       conflict!
++'m'   all    linux/synclink.h                                        conflict!
++'m'   00-19  drivers/message/fusion/mptctl.h                         conflict!
++'m'   00     drivers/scsi/megaraid/megaraid_ioctl.h                  conflict!
++'n'   00-7F  linux/ncp_fs.h and fs/ncpfs/ioctl.c
++'n'   80-8F  uapi/linux/nilfs2_api.h                                 NILFS2
++'n'   E0-FF  linux/matroxfb.h                                        matroxfb
++'o'   00-1F  fs/ocfs2/ocfs2_fs.h                                     OCFS2
++'o'   00-03  mtd/ubi-user.h                                          conflict! (OCFS2 and UBI overlaps)
++'o'   40-41  mtd/ubi-user.h                                          UBI
++'o'   01-A1  `linux/dvb/*.h`                                         DVB
++'p'   00-0F  linux/phantom.h                                         conflict! (OpenHaptics needs this)
++'p'   00-1F  linux/rtc.h                                             conflict!
++'p'   00-3F  linux/mc146818rtc.h                                     conflict!
++'p'   40-7F  linux/nvram.h
++'p'   80-9F  linux/ppdev.h                                           user-space parport
++                                                                     <mailto:tim@cyberelk.net>
++'p'   A1-A5  linux/pps.h                                             LinuxPPS
++                                                                     <mailto:giometti@linux.it>
++'q'   00-1F  linux/serio.h
++'q'   80-FF  linux/telephony.h                                       Internet PhoneJACK, Internet LineJACK
++             linux/ixjuser.h                                         <http://web.archive.org/web/%2A/http://www.quicknet.net>
++'r'   00-1F  linux/msdos_fs.h and fs/fat/dir.c
++'s'   all    linux/cdk.h
++'t'   00-7F  linux/ppp-ioctl.h
++'t'   80-8F  linux/isdn_ppp.h
++'t'   90-91  linux/toshiba.h                                         toshiba and toshiba_acpi SMM
++'u'   00-1F  linux/smb_fs.h                                          gone
++'u'   20-3F  linux/uvcvideo.h                                        USB video class host driver
++'u'   40-4f  linux/udmabuf.h                                         userspace dma-buf misc device
++'v'   00-1F  linux/ext2_fs.h                                         conflict!
++'v'   00-1F  linux/fs.h                                              conflict!
++'v'   00-0F  linux/sonypi.h                                          conflict!
++'v'   00-0F  media/v4l2-subdev.h                                     conflict!
++'v'   C0-FF  linux/meye.h                                            conflict!
++'w'   all                                                            CERN SCI driver
++'y'   00-1F                                                          packet based user level communications
++                                                                     <mailto:zapman@interlan.net>
++'z'   00-3F                                                          CAN bus card conflict!
++                                                                     <mailto:hdstich@connectu.ulm.circular.de>
++'z'   40-7F                                                          CAN bus card conflict!
++                                                                     <mailto:oe@port.de>
++'z'   10-4F  drivers/s390/crypto/zcrypt_api.h                        conflict!
++'|'   00-7F  linux/media.h
++0x80  00-1F  linux/fb.h
++0x89  00-06  arch/x86/include/asm/sockios.h
++0x89  0B-DF  linux/sockios.h
++0x89  E0-EF  linux/sockios.h                                         SIOCPROTOPRIVATE range
++0x89  E0-EF  linux/dn.h                                              PROTOPRIVATE range
++0x89  F0-FF  linux/sockios.h                                         SIOCDEVPRIVATE range
++0x8B  all    linux/wireless.h
++0x8C  00-3F                                                          WiNRADiO driver
++                                                                     <http://www.winradio.com.au/>
++0x90  00     drivers/cdrom/sbpcd.h
++0x92  00-0F  drivers/usb/mon/mon_bin.c
++0x93  60-7F  linux/auto_fs.h
++0x94  all    fs/btrfs/ioctl.h                                        Btrfs filesystem
++             and linux/fs.h                                          some lifted to vfs/generic
++0x97  00-7F  fs/ceph/ioctl.h                                         Ceph file system
++0x99  00-0F                                                          537-Addinboard driver
++                                                                     <mailto:buk@buks.ipn.de>
++0xA0  all    linux/sdp/sdp.h                                         Industrial Device Project
++                                                                     <mailto:kenji@bitgate.com>
++0xA1  0      linux/vtpm_proxy.h                                      TPM Emulator Proxy Driver
++0xA3  80-8F                                                          Port ACL  in development:
++                                                                     <mailto:tlewis@mindspring.com>
++0xA3  90-9F  linux/dtlk.h
++0xA4  00-1F  uapi/linux/tee.h                                        Generic TEE subsystem
++0xAA  00-3F  linux/uapi/linux/userfaultfd.h
++0xAB  00-1F  linux/nbd.h
++0xAC  00-1F  linux/raw.h
++0xAD  00                                                             Netfilter device in development:
++                                                                     <mailto:rusty@rustcorp.com.au>
++0xAE  all    linux/kvm.h                                             Kernel-based Virtual Machine
++                                                                     <mailto:kvm@vger.kernel.org>
++0xAF  00-1F  linux/fsl_hypervisor.h                                  Freescale hypervisor
++0xB0  all                                                            RATIO devices in development:
++                                                                     <mailto:vgo@ratio.de>
++0xB1  00-1F                                                          PPPoX
++                                                                     <mailto:mostrows@styx.uwaterloo.ca>
++0xB3  00     linux/mmc/ioctl.h
++0xB4  00-0F  linux/gpio.h                                            <mailto:linux-gpio@vger.kernel.org>
++0xB5  00-0F  uapi/linux/rpmsg.h                                      <mailto:linux-remoteproc@vger.kernel.org>
++0xB6  all    linux/fpga-dfl.h
++0xC0  00-0F  linux/usb/iowarrior.h
++0xCA  00-0F  uapi/misc/cxl.h
++0xCA  10-2F  uapi/misc/ocxl.h
++0xCA  80-BF  uapi/scsi/cxlflash_ioctl.h
++0xCB  00-1F                                                          CBM serial IEC bus in development:
++                                                                     <mailto:michael.klein@puffin.lb.shuttle.de>
++0xCC  00-0F  drivers/misc/ibmvmc.h                                   pseries VMC driver
++0xCD  01     linux/reiserfs_fs.h
++0xCF  02     fs/cifs/ioctl.c
++0xDB  00-0F  drivers/char/mwave/mwavepub.h
++0xDD  00-3F                                                          ZFCP device driver see drivers/s390/scsi/
++                                                                     <mailto:aherrman@de.ibm.com>
++0xE5  00-3F  linux/fuse.h
++0xEC  00-01  drivers/platform/chrome/cros_ec_dev.h                   ChromeOS EC driver
++0xF3  00-3F  drivers/usb/misc/sisusbvga/sisusb.h                     sisfb (in development)
++                                                                     <mailto:thomas@winischhofer.net>
++0xF4  00-1F  video/mbxfb.h                                           mbxfb
++                                                                     <mailto:raph@8d.com>
++0xF6  all                                                            LTTng Linux Trace Toolkit Next Generation
++                                                                     <mailto:mathieu.desnoyers@efficios.com>
++0xFD  all    linux/dm-ioctl.h
++====  =====  ======================================================= ================================================================
+diff --git a/Documentation/process/submit-checklist.rst b/Documentation/process/submit-checklist.rst
+index 365efc9e4aa8..8e56337d422d 100644
+--- a/Documentation/process/submit-checklist.rst
++++ b/Documentation/process/submit-checklist.rst
+@@ -107,7 +107,7 @@ and elsewhere regarding submitting Linux kernel patches.
+     and why.
  
- 	    Documentation/PCI/pci.rst
--	    Documentation/DMA-API-HOWTO.rst
--	    Documentation/DMA-API.rst
-+	    Documentation/driver-api/mm/dma-api-howto.rst
-+	    Documentation/driver-api/mm/dma-api.rst
+ 26) If any ioctl's are added by the patch, then also update
+-    ``Documentation/ioctl/ioctl-number.txt``.
++    ``Documentation/ioctl/ioctl-number.rst``.
  
+ 27) If your modified source code depends on or uses any of the kernel
+     APIs or features that are related to the following ``Kconfig`` symbols,
+diff --git a/Documentation/translations/it_IT/process/submit-checklist.rst b/Documentation/translations/it_IT/process/submit-checklist.rst
+index ea74cae958d7..995ee69fab11 100644
+--- a/Documentation/translations/it_IT/process/submit-checklist.rst
++++ b/Documentation/translations/it_IT/process/submit-checklist.rst
+@@ -117,7 +117,7 @@ sottomissione delle patch, in particolare
+     sorgenti che ne spieghi la logica: cosa fanno e perché.
  
- DATA DEPENDENCY BARRIERS (HISTORICAL)
-@@ -1933,7 +1933,7 @@ There are some more advanced barrier functions:
-      here.
+ 25) Se la patch aggiunge nuove chiamate ioctl, allora aggiornate
+-    ``Documentation/ioctl/ioctl-number.txt``.
++    ``Documentation/ioctl/ioctl-number.rst``.
  
-      See the subsection "Kernel I/O barrier effects" for more information on
--     relaxed I/O accessors and the Documentation/DMA-API.rst file for more
-+     relaxed I/O accessors and the Documentation/driver-api/mm/dma-api.rst file for more
-      information on consistent memory.
+ 26) Se il codice che avete modificato dipende o usa una qualsiasi interfaccia o
+     funzionalità del kernel che è associata a uno dei seguenti simboli
+diff --git a/Documentation/translations/zh_CN/process/submit-checklist.rst b/Documentation/translations/zh_CN/process/submit-checklist.rst
+index f4785d2b0491..8738c55e42a2 100644
+--- a/Documentation/translations/zh_CN/process/submit-checklist.rst
++++ b/Documentation/translations/zh_CN/process/submit-checklist.rst
+@@ -97,7 +97,7 @@ Linux内核补丁提交清单
+ 24) 所有内存屏障例如 ``barrier()``, ``rmb()``, ``wmb()`` 都需要源代码中的注
+     释来解释它们正在执行的操作及其原因的逻辑。
  
+-25) 如果补丁添加了任何ioctl，那么也要更新 ``Documentation/ioctl/ioctl-number.txt``
++25) 如果补丁添加了任何ioctl，那么也要更新 ``Documentation/ioctl/ioctl-number.rst``
  
-diff --git a/Documentation/translations/ko_KR/memory-barriers.txt b/Documentation/translations/ko_KR/memory-barriers.txt
-index 03c06a7800c3..7b86ac9f15d2 100644
---- a/Documentation/translations/ko_KR/memory-barriers.txt
-+++ b/Documentation/translations/ko_KR/memory-barriers.txt
-@@ -570,8 +570,8 @@ ACQUIRE 는 해당 오퍼레이션의 로드 부분에만 적용되고 RELEASE 
- 	[*] 버스 마스터링 DMA 와 일관성에 대해서는 다음을 참고하시기 바랍니다:
+ 26) 如果修改后的源代码依赖或使用与以下 ``Kconfig`` 符号相关的任何内核API或
+     功能，则在禁用相关 ``Kconfig`` 符号和/或 ``=m`` （如果该选项可用）的情况
+diff --git a/include/uapi/rdma/rdma_user_ioctl_cmds.h b/include/uapi/rdma/rdma_user_ioctl_cmds.h
+index 26213f49f5c8..54e16a589472 100644
+--- a/include/uapi/rdma/rdma_user_ioctl_cmds.h
++++ b/include/uapi/rdma/rdma_user_ioctl_cmds.h
+@@ -36,7 +36,7 @@
+ #include <linux/types.h>
+ #include <linux/ioctl.h>
  
- 	    Documentation/PCI/pci.rst
--	    Documentation/DMA-API-HOWTO.rst
--	    Documentation/DMA-API.rst
-+	    Documentation/driver-api/mm/dma-api-howto.rst
-+	    Documentation/driver-api/mm/dma-api.rst
- 
- 
- 데이터 의존성 배리어 (역사적)
-@@ -1904,7 +1904,7 @@ Mandatory 배리어들은 SMP 시스템에서도 UP 시스템에서도 SMP 효
- 
-      writel_relaxed() 와 같은 완화된 I/O 접근자들에 대한 자세한 내용을 위해서는
-      "커널 I/O 배리어의 효과" 섹션을, consistent memory 에 대한 자세한 내용을
--     위해선 Documentation/DMA-API.rst 문서를 참고하세요.
-+     위해선 Documentation/driver-api/mm/dma-api.rst 문서를 참고하세요.
- 
- 
- MMIO 쓰기 배리어
-diff --git a/arch/ia64/hp/common/sba_iommu.c b/arch/ia64/hp/common/sba_iommu.c
-index 8f97d42316e8..0b0b5084e6c8 100644
---- a/arch/ia64/hp/common/sba_iommu.c
-+++ b/arch/ia64/hp/common/sba_iommu.c
-@@ -912,7 +912,7 @@ sba_mark_invalid(struct ioc *ioc, dma_addr_t iova, size_t byte_cnt)
-  * @dir: dma direction
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static dma_addr_t sba_map_page(struct device *dev, struct page *page,
- 			       unsigned long poff, size_t size,
-@@ -1033,7 +1033,7 @@ sba_mark_clean(struct ioc *ioc, dma_addr_t iova, size_t size)
-  * @dir:  R/W or both.
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
- 			   enum dma_data_direction dir, unsigned long attrs)
-@@ -1110,7 +1110,7 @@ static void sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
-  * @size:  number of bytes mapped in driver buffer.
-  * @dma_handle:  IOVA of new buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void *
- sba_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_handle,
-@@ -1167,7 +1167,7 @@ sba_alloc_coherent(struct device *dev, size_t size, dma_addr_t *dma_handle,
-  * @vaddr:  virtual address IOVA of "consistent" buffer.
-  * @dma_handler:  IO virtual address of "consistent" buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void sba_free_coherent(struct device *dev, size_t size, void *vaddr,
- 			      dma_addr_t dma_handle, unsigned long attrs)
-@@ -1430,7 +1430,7 @@ static void sba_unmap_sg_attrs(struct device *dev, struct scatterlist *sglist,
-  * @dir:  R/W or both.
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static int sba_map_sg_attrs(struct device *dev, struct scatterlist *sglist,
- 			    int nents, enum dma_data_direction dir,
-@@ -1529,7 +1529,7 @@ static int sba_map_sg_attrs(struct device *dev, struct scatterlist *sglist,
-  * @dir:  R/W or both.
-  * @attrs: optional dma attributes
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void sba_unmap_sg_attrs(struct device *dev, struct scatterlist *sglist,
- 			       int nents, enum dma_data_direction dir,
-diff --git a/arch/ia64/sn/pci/pci_dma.c b/arch/ia64/sn/pci/pci_dma.c
-index f475fccea152..a06ae52117f0 100644
---- a/arch/ia64/sn/pci/pci_dma.c
-+++ b/arch/ia64/sn/pci/pci_dma.c
-@@ -5,7 +5,7 @@
-  *
-  * Copyright (C) 2000,2002-2005 Silicon Graphics, Inc. All rights reserved.
-  *
-- * Routines for PCI DMA mapping.  See Documentation/DMA-API.rst for
-+ * Routines for PCI DMA mapping.  See Documentation/driver-api/mm/dma-api.rst for
-  * a description of how these routines should be used.
-  */
- 
-@@ -72,7 +72,7 @@ EXPORT_SYMBOL(sn_dma_set_mask);
-  * that @dma_handle will have the %PCIIO_DMA_CMD flag set.
-  *
-  * This interface is usually used for "command" streams (e.g. the command
-- * queue for a SCSI controller).  See Documentation/DMA-API.rst for
-+ * queue for a SCSI controller).  See Documentation/driver-api/mm/dma-api.rst for
-  * more information.
-  */
- static void *sn_dma_alloc_coherent(struct device *dev, size_t size,
-diff --git a/arch/parisc/kernel/pci-dma.c b/arch/parisc/kernel/pci-dma.c
-index 2bb63062f6c3..08e7ff08fa94 100644
---- a/arch/parisc/kernel/pci-dma.c
-+++ b/arch/parisc/kernel/pci-dma.c
-@@ -3,7 +3,7 @@
- ** PARISC 1.1 Dynamic DMA mapping support.
- ** This implementation is for PA-RISC platforms that do not support
- ** I/O TLBs (aka DMA address translation hardware).
--** See Documentation/DMA-API-HOWTO.rst for interface definitions.
-+** See Documentation/driver-api/mm/dma-api-howto.rst for interface definitions.
- **
- **      (c) Copyright 1999,2000 Hewlett-Packard Company
- **      (c) Copyright 2000 Grant Grundler
-diff --git a/arch/x86/include/asm/dma-mapping.h b/arch/x86/include/asm/dma-mapping.h
-index dfa443fe17c2..ff9ff85529fc 100644
---- a/arch/x86/include/asm/dma-mapping.h
-+++ b/arch/x86/include/asm/dma-mapping.h
-@@ -3,8 +3,8 @@
- #define _ASM_X86_DMA_MAPPING_H
- 
- /*
-- * IOMMU interface. See Documentation/DMA-API-HOWTO.rst and
-- * Documentation/DMA-API.rst for documentation.
-+ * IOMMU interface. See Documentation/driver-api/mm/dma-api-howto.rst and
-+ * Documentation/driver-api/mm/dma-api.rst for documentation.
-  */
- 
- #include <linux/scatterlist.h>
-diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-index 03108de30105..397c2cdd19d8 100644
---- a/arch/x86/kernel/amd_gart_64.c
-+++ b/arch/x86/kernel/amd_gart_64.c
-@@ -6,7 +6,7 @@
-  * This allows to use PCI devices that only support 32bit addresses on systems
-  * with more than 4GB.
-  *
-- * See Documentation/DMA-API-HOWTO.rst for the interface specification.
-+ * See Documentation/driver-api/mm/dma-api-howto.rst for the interface specification.
-  *
-  * Copyright 2002 Andi Kleen, SuSE Labs.
-  */
-diff --git a/drivers/parisc/sba_iommu.c b/drivers/parisc/sba_iommu.c
-index 267ceb5f7838..349b4a2f21a1 100644
---- a/drivers/parisc/sba_iommu.c
-+++ b/drivers/parisc/sba_iommu.c
-@@ -666,7 +666,7 @@ sba_mark_invalid(struct ioc *ioc, dma_addr_t iova, size_t byte_cnt)
-  * @dev: instance of PCI owned by the driver that's asking
-  * @mask:  number of address bits this PCI device can handle
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static int sba_dma_supported( struct device *dev, u64 mask)
- {
-@@ -678,7 +678,7 @@ static int sba_dma_supported( struct device *dev, u64 mask)
- 		return(0);
- 	}
- 
--	/* Documentation/DMA-API-HOWTO.rst tells drivers to try 64-bit
-+	/* Documentation/driver-api/mm/dma-api-howto.rst tells drivers to try 64-bit
- 	 * first, then fall back to 32-bit if that fails.
- 	 * We are just "encouraging" 32-bit DMA masks here since we can
- 	 * never allow IOMMU bypass unless we add special support for ZX1.
-@@ -706,7 +706,7 @@ static int sba_dma_supported( struct device *dev, u64 mask)
-  * @size:  number of bytes to map in driver buffer.
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static dma_addr_t
- sba_map_single(struct device *dev, void *addr, size_t size,
-@@ -796,7 +796,7 @@ sba_map_page(struct device *dev, struct page *page, unsigned long offset,
-  * @size:  number of bytes mapped in driver buffer.
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void
- sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
-@@ -875,7 +875,7 @@ sba_unmap_page(struct device *dev, dma_addr_t iova, size_t size,
-  * @size:  number of bytes mapped in driver buffer.
-  * @dma_handle:  IOVA of new buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void *sba_alloc(struct device *hwdev, size_t size, dma_addr_t *dma_handle,
- 		gfp_t gfp, unsigned long attrs)
-@@ -906,7 +906,7 @@ static void *sba_alloc(struct device *hwdev, size_t size, dma_addr_t *dma_handle
-  * @vaddr:  virtual address IOVA of "consistent" buffer.
-  * @dma_handler:  IO virtual address of "consistent" buffer.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void
- sba_free(struct device *hwdev, size_t size, void *vaddr,
-@@ -941,7 +941,7 @@ int dump_run_sg = 0;
-  * @nents:  number of entries in list
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static int
- sba_map_sg(struct device *dev, struct scatterlist *sglist, int nents,
-@@ -1025,7 +1025,7 @@ sba_map_sg(struct device *dev, struct scatterlist *sglist, int nents,
-  * @nents:  number of entries in list
-  * @direction:  R/W or both.
-  *
-- * See Documentation/DMA-API-HOWTO.rst
-+ * See Documentation/driver-api/mm/dma-api-howto.rst
-  */
- static void 
- sba_unmap_sg(struct device *dev, struct scatterlist *sglist, int nents,
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index 7ff3fcd73cec..eb234c3f466b 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -14,7 +14,7 @@
- 
- /**
-  * List of possible attributes associated with a DMA mapping. The semantics
-- * of each attribute should be defined in Documentation/DMA-attributes.rst.
-+ * of each attribute should be defined in Documentation/driver-api/mm/dma-attributes.rst.
-  *
-  * DMA_ATTR_WRITE_BARRIER: DMA to a memory region with this attribute
-  * forces all pending DMA writes to complete.
-diff --git a/include/media/videobuf-dma-sg.h b/include/media/videobuf-dma-sg.h
-index 50a549e5b477..60f2df32bf39 100644
---- a/include/media/videobuf-dma-sg.h
-+++ b/include/media/videobuf-dma-sg.h
-@@ -34,7 +34,7 @@
-  *	does memory allocation too using vmalloc_32().
-  *
-  * videobuf_dma_*()
-- *	see Documentation/DMA-API-HOWTO.rst, these functions to
-+ *	see Documentation/driver-api/mm/dma-api-howto.rst, these functions to
-  *	basically the same.  The map function does also build a
-  *	scatterlist for the buffer (and unmap frees it ...)
-  *
-diff --git a/kernel/dma/debug.c b/kernel/dma/debug.c
-index 616919c774a5..1d3f9b8de6df 100644
---- a/kernel/dma/debug.c
-+++ b/kernel/dma/debug.c
-@@ -1069,7 +1069,7 @@ static void check_unmap(struct dma_debug_entry *ref)
- 	/*
- 	 * Drivers should use dma_mapping_error() to check the returned
- 	 * addresses of dma_map_single() and dma_map_page().
--	 * If not, print this warning message. See Documentation/DMA-API.rst.
-+	 * If not, print this warning message. See Documentation/driver-api/mm/dma-api.rst.
- 	 */
- 	if (entry->map_err_type == MAP_ERR_NOT_CHECKED) {
- 		err_printk(ref->dev, entry,
+-/* Documentation/ioctl/ioctl-number.txt */
++/* Documentation/ioctl/ioctl-number.rst */
+ #define RDMA_IOCTL_MAGIC	0x1b
+ #define RDMA_VERBS_IOCTL \
+ 	_IOWR(RDMA_IOCTL_MAGIC, 1, struct ib_uverbs_ioctl_hdr)
 -- 
 2.21.0
 
