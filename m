@@ -2,141 +2,92 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DADCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:36:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0034EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:37:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A6A520873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:36:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C973720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:37:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7n4C160"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726696AbfFRAf6 (ORCPT
+        id S1726733AbfFRAhw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:35:58 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:43846 "EHLO smtp.infotech.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRAf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:35:58 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id C41612041CB;
-        Tue, 18 Jun 2019 02:35:55 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id 4O3UQmvajfYm; Tue, 18 Jun 2019 02:35:53 +0200 (CEST)
-Received: from [192.168.48.23] (host-45-58-224-183.dyn.295.ca [45.58.224.183])
-        by smtp.infotech.no (Postfix) with ESMTPA id B3A1220418A;
-        Tue, 18 Jun 2019 02:35:52 +0200 (CEST)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
-To:     Bart Van Assche <bvanassche@acm.org>,
-        Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>
-Cc:     SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
- <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
-Date:   Mon, 17 Jun 2019 20:35:50 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 20:37:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35838 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRAhw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 20:37:52 -0400
+Received: by mail-oi1-f193.google.com with SMTP id a127so7303991oii.2;
+        Mon, 17 Jun 2019 17:37:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=5Takjj4UXDH5g7gkdnJEF39H7z1yDSn328Wi1BxBDgk=;
+        b=o7n4C160kNuzX2/5bOgd191XA4uZ4oiLKyXd3s3voEBnI7NwW6N/Qvoxbze1Dq4mjd
+         qqB21Z5dWWwiuGpw8YyJR6E0xkZSEdrPpds31lN/PigSjhLH+OY9rAvXgxvNLFSTUaYc
+         J/dSn8/Ol5M99oGIdPB8/0DO3PoqbCoq4x1cq1YhFLrv0QvW2bT+9vYaQ5fhY6aT+ylP
+         VoSd4477xh22NFBxteLYvDVscT8dd4HyFiDXupShNOaLgsgao04h3BkSCyYF/314onve
+         PtmQM+QWojP3uqVEtZDQW5w948Iz6hkh79ypX5zHLX6wVuqvJ0ch0JccgGmKQvAskbBJ
+         n9fA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=5Takjj4UXDH5g7gkdnJEF39H7z1yDSn328Wi1BxBDgk=;
+        b=OaPuSHr0I9GDhzicApXhDVMM0kekqvysYZzqIVYrRK/+TPqAoTXC7MNaYC+1OZwRr5
+         JQy46WZc37dXKiH9rJisXacMuke4DZ+sVYMTNfCp+FGEjabNz8aGvoPuCr+9Txm+oiF2
+         bPNxlMONyDmC9ZrFbw36ErlFNk7lnO/JRo10L77SfVBsDb+rT+mA9lJ4zvSjSdW8g5Do
+         Y1HBbi9Uf3kkrRUXX2urgLG6O/MIocKVhyaef4uNh28QwMNHDyV+UDYlxvWUXxvX1wAy
+         YznfHFQVJxZJjICH9YdDVlZDYf+9z5xf8rfontGalhA8ImfWcmN3TKYcwvNPwHr/jpPw
+         c5pA==
+X-Gm-Message-State: APjAAAUzujAH5NnTqode6u63PVViZHYOYCjlmvq7/jIX98ghnabejO6W
+        99mSMOzuATlelZJ/eij60d2hSzH3MqSL0eHpoG/q+w==
+X-Google-Smtp-Source: APXvYqwalpX2hav6iyql1PtTj+MHb8OCAx7by7N49NBs9MRMMe2y1LGdrFdg+LXaKfOjllbt+MdCL+p1jT6CyAlZe14=
+X-Received: by 2002:aca:51ce:: with SMTP id f197mr312283oib.33.1560818271775;
+ Mon, 17 Jun 2019 17:37:51 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 8bit
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-2-git-send-email-wanpengli@tencent.com> <20190617114850.GC30983@xz-x1>
+In-Reply-To: <20190617114850.GC30983@xz-x1>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 18 Jun 2019 08:38:27 +0800
+Message-ID: <CANRm+CxytwzfgpkGqN9DJp09oMNovdpc=A=0-uNX6AO8TbsNHA@mail.gmail.com>
+Subject: Re: [PATCH v4 1/5] KVM: LAPIC: Make lapic timer unpinned
+To:     Peter Xu <peterx@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-17 5:11 p.m., Bart Van Assche wrote:
-> On 6/12/19 6:59 AM, Marc Gonzalez wrote:
->> According to the option's help message, SCSI_PROC_FS has been
->> superseded for ~15 years. Don't select it by default anymore.
->>
->> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->> ---
->>   drivers/scsi/Kconfig | 3 ---
->>   1 file changed, 3 deletions(-)
->>
->> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
->> index 73bce9b6d037..8c95e9ad6470 100644
->> --- a/drivers/scsi/Kconfig
->> +++ b/drivers/scsi/Kconfig
->> @@ -54,14 +54,11 @@ config SCSI_NETLINK
->>   config SCSI_PROC_FS
->>       bool "legacy /proc/scsi/ support"
->>       depends on SCSI && PROC_FS
->> -    default y
->>       ---help---
->>         This option enables support for the various files in
->>         /proc/scsi.  In Linux 2.6 this has been superseded by
->>         files in sysfs but many legacy applications rely on this.
->> -      If unsure say Y.
->> -
->>   comment "SCSI support type (disk, tape, CD-ROM)"
->>       depends on SCSI
-> 
-> Hi Doug,
-> 
-> If I run grep "/proc/scsi" over the sg3_utils source code then grep reports 38 
-> matches for that string. Does sg3_utils break with SCSI_PROC_FS=n?
+On Mon, 17 Jun 2019 at 19:48, Peter Xu <peterx@redhat.com> wrote:
+>
+> On Mon, Jun 17, 2019 at 07:24:43PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Make lapic timer unpinned when timer is injected by posted-interrupt,
+>
+> It has nothing to do with PI, yet?
+>
+> And, how about mentioning 61abdbe0bc and telling that this could be
+> another solution for that problem (but will be used in follow up
+> patches)?
+>
+> > the emulated timer can be offload to the housekeeping cpus, kick after
+> > setting the pending timer request as alternative to commit 61abdbe0bcc.
 
-First, the sg driver. If placing
-#undef CONFIG_SCSI_PROC_FS
+Yeah, the patch description needs to rework. Thank you.
 
-prior to the includes in sg.c is a valid way to test that then the
-answer is no. Ah, but you are talking about sg3_utils .
-
-Or are you? For sg3_utils:
-
-$ find . -name '*.c' -exec grep "/proc/scsi" {} \; -print
-static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-./src/sg_read.c
-static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-./src/sgp_dd.c
-static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-./src/sgm_dd.c
-static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-./src/sg_dd.c
-                 "'echo 1 > /proc/scsi/sg/allow_dio'\n", q_len, dirio_count);
-./testing/sg_tst_bidi.c
-static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-./examples/sgq_dd.c
-
-
-That is 6 (not 38) by my count. Those 6 are all for direct IO
-(see below) which is off by default. I suspect old scanning
-utilities like sg_scan and sg_map might also use /proc/scsi/* .
-That is one reason why I wrote lsscsi. However I can't force folks
-to use lsscsi. As a related example, I still get bug reports for
-sginfo which I inherited from Eric Youngdale.
-
-If I was asked to debug a problem with the sg driver in a
-system without CONFIG_SCSI_PROC_FS defined, I would decline.
-
-The absence of /proc/scsi/sg/debug would be my issue. Can this
-be set up to do the same thing:
-     cat /sys/class/scsi_generic/debug
-? Is that breaking any sysfs rules?
-
-
-Also folks who rely on this to work:
-    cat /proc/scsi/sg/devices
-0	0	0	0	0	1	255	0	1
-0	0	0	1	0	1	255	0	1
-0	0	0	2	0	1	255	0	1
-
-would be disappointed. Further I note that setting allow_dio via
-/proc/scsi/sg/allow_dio can also be done via /sys/module/sg/allow_dio .
-So that would be an interface breakage, but with an alternative.
-
-Doug Gilbert
-
-
+Regards,
+Wanpeng Li
