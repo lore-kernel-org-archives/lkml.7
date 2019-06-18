@@ -2,107 +2,160 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A952AC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:19:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9BFBC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:20:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840AD2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:19:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 989732080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:20:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=telus.net header.i=@telus.net header.b="IrGQrcLK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728897AbfFRITe (ORCPT
+        id S1729067AbfFRIUK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:19:34 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43648 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfFRITd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:19:33 -0400
-Received: from [125.35.49.90] (helo=[10.0.0.24])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <hui.wang@canonical.com>)
-        id 1hd9Kw-0001Eh-DH; Tue, 18 Jun 2019 08:19:26 +0000
-Subject: =?UTF-8?B?UmU6IOetlOWkjTog562U5aSNOiDnrZTlpI06IOetlOWkjTogW1BBVENI?=
- =?UTF-8?Q?=5d_input=3a_alps-fix_the_issue_alps_cs19_trackstick_do_not_work?=
- =?UTF-8?Q?=2e?=
-To:     =?UTF-8?Q?Pali_Roh=c3=a1r?= <pali.rohar@gmail.com>,
-        Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>
-Cc:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>,
-        XiaoXiao Liu <sliuuxiaonxiao@gmail.com>,
-        "peter.hutterer@who-t.net" <peter.hutterer@who-t.net>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Xiaojian Cao <xiaojian.cao@cn.alps.com>,
-        "zhangfp1@lenovo.com" <zhangfp1@lenovo.com>,
-        Naoki Saito <naoki.saito@alpsalpine.com>,
-        Hideo Kawase <hideo.kawase@alpsalpine.com>
-References: <20190610104310.qa5snt7jpcljodfv@pali>
- <OSBPR01MB485504868362073ED434F82FDAED0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <ed65f8af-fefb-3c40-e7b1-dde3605f30e3@canonical.com>
- <5587ddb9-fb5f-03db-ac11-a696c85c5f2f@canonical.com>
- <20190611072333.nd4va4q2m5epmukc@pali> <20190611170707.GA143729@dtor-ws>
- <20190611171707.tydk7rsmtzmjohky@pali> <20190611173228.GD143729@dtor-ws>
- <20190611173856.jjwoagud6doxvpy3@pali>
- <OSBPR01MB4855BD8471A591BD75BDECA0DAEB0@OSBPR01MB4855.jpnprd01.prod.outlook.com>
- <20190617074902.bg2emodbmjkkfldd@pali>
-From:   Hui Wang <hui.wang@canonical.com>
-Message-ID: <953ee9de-bb94-1311-8130-cd991949a069@canonical.com>
-Date:   Tue, 18 Jun 2019 16:19:12 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 04:20:10 -0400
+Received: from cmta16.telus.net ([209.171.16.89]:45659 "EHLO cmta16.telus.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726359AbfFRIUJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:20:09 -0400
+Received: from dougxps ([173.180.45.4])
+        by cmsmtp with SMTP
+        id d9LXhkQAbJEJsd9LYhWqCu; Tue, 18 Jun 2019 02:20:07 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=telus.net; s=neo;
+        t=1560846007; bh=4oPnwPccYRR1HWBEOAYMNKpBGHqaXPUaoIs8esJCsdM=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date;
+        b=IrGQrcLKhPSDSu46s/k6Lyp+VUXzrlo9EPuihEk1wwWzRhRDj/ki/fBn9SlO0fPpO
+         pafZDfVx3n890ibEY0W1Hz74vvuUah0aE1kBLpBWHTk5aTo/I+LYFXBROk14+xBr1e
+         I/5zs4ol9ETMuzEsHL3amNg0VDDEFvfWP+NlKdLZsIsQeOCq5JVDKxsCsW0uHJsNQG
+         Q/YPDSqt+k5oNfkR1rgqQajvmXS3+iOqHcu76+jsX9zsR6zRD9FxV4fjhaCiuY/JMe
+         4WI8PVGsRuf8stWB76IQUslsqTmuyZ06wSyAjq6GuIopDN6mgQRjKwBxQXo8eaI4va
+         YGjS31uxOcnUQ==
+X-Telus-Authed: none
+X-Authority-Analysis: v=2.3 cv=S/CnP7kP c=1 sm=1 tr=0
+ a=zJWegnE7BH9C0Gl4FFgQyA==:117 a=zJWegnE7BH9C0Gl4FFgQyA==:17
+ a=Pyq9K9CWowscuQLKlpiwfMBGOR0=:19 a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19
+ a=IkcTkHD0fZMA:10 a=QS1IdDQa8Ckz10EETwYA:9 a=QEXdDO2ut3YA:10
+From:   "Doug Smythies" <dsmythies@telus.net>
+To:     "'Rafael J. Wysocki'" <rafael@kernel.org>,
+        "'Pavel Machek'" <pavel@ucw.cz>
+Cc:     "'kernel list'" <linux-kernel@vger.kernel.org>,
+        "'ACPI Devel Maling List'" <linux-acpi@vger.kernel.org>,
+        "'Zhang, Rui'" <rui.zhang@intel.com>,
+        "'Rafael J. Wysocki'" <rjw@rjwysocki.net>,
+        "'Viresh Kumar'" <viresh.kumar@linaro.org>,
+        "'Linux PM'" <linux-pm@vger.kernel.org>,
+        "'Thomas Gleixner'" <tglx@linutronix.de>,
+        "'Ingo Molnar'" <mingo@redhat.com>,
+        "'Borislav Petkov'" <bp@alien8.de>,
+        "'H. Peter Anvin'" <hpa@zytor.com>,
+        "'the arch/x86 maintainers'" <x86@kernel.org>
+References: <20190609111732.GA2885@amd> <007701d520c7$c397bda0$4ac738e0$@net> <CAJZ5v0j2pb2WxSA+S44Mr-6bpOx-P9A_T2-sDG3CiWSqLMg3sA@mail.gmail.com> <008f01d52178$07b3be70$171b3b50$@net> <CAJZ5v0gRaDe6Fajdx3wqaLz9LQr6Z6iD+2yrrZeXJV+3HiAOZg@mail.gmail.com>
+In-Reply-To: <CAJZ5v0gRaDe6Fajdx3wqaLz9LQr6Z6iD+2yrrZeXJV+3HiAOZg@mail.gmail.com>
+Subject: RE: 5.2-rc2: low framerate in flightgear, cpu not running at full speed, thermal related?
+Date:   Tue, 18 Jun 2019 01:20:01 -0700
+Message-ID: <002601d525ae$a2c00c90$e84025b0$@net>
 MIME-Version: 1.0
-In-Reply-To: <20190617074902.bg2emodbmjkkfldd@pali>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain;
+        charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Office Outlook 12.0
+Content-Language: en-ca
+Thread-Index: AdUhxW5L2+X8gHmoRpu1acL6KWj0kQD3alWQ
+X-CMAE-Envelope: MS4wfPt4TjqDa3lkNrtkLRJ7l+GxZI+64X6DIAhzIQwktquJuXetmXtzUvUbr4bCJRZTm036DHxCc2Br6CpS8LwPxIbb54bgeXuTdmwHTFkaqfWwt63393OL
+ HfOjyCwZtWXemveAXMSx05U1okSBlMTh+Eny4poX52zkMNkKn150DXUYCKHMx1hVFXz4v7WK+AhAkio+r2qpEuINYVIdZ5bCur6skf+Brqy6BsMSCLgsOGv9
+ l/HziNxXTfXl7D/WikS51LvRsyV6xVvsmWxdxDD8oM1StHJbyITLsyVEEIDt7iicz9zzOjeGFFAc5oP8SBE3IXs2/TQFeYcIZZZQtOZZKZuVY0jZrGdagXdV
+ BIIFDiwXqz3bMu2p/cX8QOp8QpJ6wLO1ERDSYGzf9ZyB9piRSATjVjvddH7vuW9EL0A++UldJuJ1JeCKW7PdVloQe4oMBXKsU6sWoVnsGc/S7lP9zuYnHfrg
+ IIcp6S+pBWE0xjaZ3iYIW7aUD6aeSDoQ8jn/9MK6h7f5XaOWTNwDG5p16VM=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019.06.13 01:53 Rafael J. Wysocki wrote:
 
-On 2019/6/17 下午3:49, Pali Rohár wrote:
-> On Monday 17 June 2019 01:29:17 Xiaoxiao Liu wrote:
->> Hi Pali,
->>
->> Since design architecture change of CS19, input device connection has been changed to below architecture,
->> Touchpad has been moved to I2C connection.
->>
->>    kernel/host  <--PS/2-->  EC  <--PS/2-->  external PS/2 mouse
->>             |                 |
->>             |                <--PS/2-->  trackstick
->>                 |
->>                  <--I2C-->  Touchpad
-> Hi, thank you for explanation!
+> I personally doubt that any thermal throttling is involved here.
+
+In earlier e-mails on this thread, Pavel showed his core and package
+temperatures as 97 and 98 degrees. If thermal throttling is not
+involved, it should be. The description of the observed CPU
+frequencies also matched my experiences with thermal throttling
+for the intel-pstate/powersave example. Myself, I can not determine
+if throttling is involved for the acpi-cpufreq/ondemand
+case, just from the clock frequencies, because,
+at least on my system, it uses the kidle_inject method
+instead of the pstate method.
+
+I continued doing experiments, enabling thermald (normally
+disabled on my system) and forcing thermal throttling on
+my test server. My system never gets hot enough, so I used
+a low trip point of 55 degrees.
+
+The intel_pstate/powersave and intel_cpufreq/ondemand,
+which both used the pstate method, outperformed the
+acpi-cpufreq/ondemand by 30%, in a constant thermal
+throttling mode. This seems the opposite of Pavel's
+results, if indeed his system is thermal throttling.
+(I can write these experiments up in more detail
+if desired.)
+
+On 2019.06.13 Pavel Machek wrote:
+
+> But it seems that your assumptions are incorrect for my workload.
+
+Fair enough. I don't have the appropriate hardware for this, and
+am trying to guess at a similar workflow for testing.
+Perhaps, just mudding things here rather than helping.
+
 >
-> So in our case, ALPS device should not be put into passthrough mode as
-> there is no device after it.
->
->> In the past TrackPoint does not show in the device list because of TrackPoint was hidden device of Touchpad.
->> But from CS19, TrackPoint is directly connecting with PS2 port,
->> 3 bytes packet does not need to take affect by other vendors Touchpad format.
->> So alps.c is no need for CS19 device.
-> So if trackpoint.c driver is working fine with this configuration, it is
-> just needed to instruct alps.c to not take this device.
+> flightgear is single-threaded, and in my configuration saturates the
+> CPU, because it would like to achieve higher framerate than my system
+> is capable of.
 
-Hello Pali,
+Are you sure? Use turbostat and observe.
+Example 1:
+intel_cpufreq/ondemand, kernel 5.2-rc3, two 100% loads:
 
-When you have time, could you take a look at the patch of v4? It is 
-implemented according to our discussion.
+doug@s15:~$ sudo turbostat --quiet --hide IRQ,Avg_MHz,SMI,\
+> GFXMHz,TSC_MHz,CorWatt,CoreTmp,GFX%rc6,Pkg%pc2,Pkg%pc3,\
+> Pkg%pc6,POLL,C1,C1E,C3,C6,C1%,C1E%,C3%,C6% \
+> --interval 5
+Core    CPU     Busy%   Bzy_MHz POLL%   CPU%c1  CPU%c3  CPU%c6  CPU%c7  PkgTmp  PkgWatt GFXWatt
+-       -       25.24   2780    0.00    25.70   0.01    49.05   0.00    56      23.82   0.12
+0       0       1.62    2781    0.00    1.90    0.02    96.46   0.00    56      23.82   0.12
+0       4       0.05    2833    0.00    3.47
+1       1       100.00  2780    0.00    0.00    0.00    0.00    0.00
+1       5       0.03    2893    0.00    99.97
+2       2       0.03    2906    0.00    99.97   0.00    0.00    0.00
+2       6       100.00  2780    0.00    0.00
+3       3       0.07    2797    0.00    0.18    0.01    99.74   0.00
+3       7       0.10    2834    0.00    0.14
 
-Thanks,
+Example 2:
+acpi_cpufreq/ondemand, kernel 5.2-rc3, two 100% loads:
 
-Hui.
+doug@s15:~$ sudo turbostat --quiet --hide IRQ,Avg_MHz,SMI,\
+> GFXMHz,TSC_MHz,CorWatt,CoreTmp,GFX%rc6,Pkg%pc2,Pkg%pc3,\
+> Pkg%pc6,POLL,C1,C1E,C3,C6,C1%,C1E%,C3%,C6% \
+> --interval 5
+Core    CPU     Busy%   Bzy_MHz POLL%   CPU%c1  CPU%c3  CPU%c6  CPU%c7  PkgTmp  PkgWatt GFXWatt
+-       -       18.06   3069    0.00    18.45   0.01    63.47   0.00    55      21.50   0.12
+0       0       15.55   3049    0.00    1.31    0.02    83.12   0.00    55      21.50   0.12
+0       4       0.64    2651    0.00    16.22
+1       1       62.43   3075    0.00    8.15    0.00    29.43   0.00
+1       5       7.71    3068    0.00    62.81
+2       2       50.56   3091    0.00    0.78    0.00    48.66   0.00
+2       6       0.44    2346    0.00    50.89
+3       3       2.30    2901    0.00    5.00    0.01    92.69   0.00
+3       7       4.79    3016    0.00    2.49
+
+With the additional C6 % coming from the kidle_inj tasks.
+Observation 1: The loaded CPUs migrate much more often in this scenario.
+Observation 2: While the package watts are different by over 2 watts,
+the long term (done over many hours) average was the same for all methods.
+
+... Doug
 
 
->> Best Regards
->> Shona
->> -----邮件原件-----
->> 发件人: Pali Rohár <pali.rohar@gmail.com>
->> 发送时间: Wednesday, June 12, 2019 1:39 AM
->> 收件人: dmitry.torokhov@gmail.com
->> 抄送: Hui Wang <hui.wang@canonical.com>; 劉 曉曉 Xiaoxiao Liu <xiaoxiao.liu-1@cn.alps.com>; XiaoXiao Liu <sliuuxiaonxiao@gmail.com>; peter.hutterer@who-t.net; linux-input@vger.kernel.org; linux-kernel@vger.kernel.org; 曹 曉建 Xiaojian Cao <xiaojian.cao@cn.alps.com>; zhangfp1@lenovo.com; 斉藤 直樹 Naoki Saito <naoki.saito@alpsalpine.com>; 川瀬 英夫 Hideo Kawase <hideo.kawase@alpsalpine.com>
->
