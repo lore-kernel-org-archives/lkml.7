@@ -2,71 +2,103 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A6CC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D9D4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:13:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 359682147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D2E3213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560874425;
+	bh=bVVkiFHLJaXqthJlNED1JjG6SMoMKVmDToBpACNCwTk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qwiikyUEiQCpu5j2iSxpG/vRJvtzfagnVdlSOGlVTBQsaYoEZC21/ZN7ElsB9bLaU
+	 rRDTYmXq0k+msSEzelf9Yz8SWE5DwW/l3bPKxgaTh1TiZP/U1iaQ0D/XY7u7qSXgPG
+	 Xs4XuCxBMIX2W2J8F6mn345XQFoSE7O+OPnaY+aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfFRQNE (ORCPT
+        id S1729714AbfFRQNn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:13:04 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:52475 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729249AbfFRQNE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:13:04 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hdGjG-0000Qh-SE; Tue, 18 Jun 2019 18:13:02 +0200
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1hdGjG-0008F9-4m; Tue, 18 Jun 2019 18:13:02 +0200
-Date:   Tue, 18 Jun 2019 18:13:02 +0200
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, bgolaszewski@baylibre.com,
-        linus.walleij@linaro.org, kernel@pengutronix.de,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] drivers: gpio: siox: use module_siox_driver()
-Message-ID: <20190618161302.hjo5tn3h5eki2q3c@pengutronix.de>
-References: <1560854427-27537-1-git-send-email-info@metux.net>
- <1560854427-27537-3-git-send-email-info@metux.net>
+        Tue, 18 Jun 2019 12:13:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51042 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729249AbfFRQNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:13:43 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF82B20B1F;
+        Tue, 18 Jun 2019 16:13:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560874422;
+        bh=bVVkiFHLJaXqthJlNED1JjG6SMoMKVmDToBpACNCwTk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Io7Qr15/LSttBNs/+tDG05cnvzqIJHScRK0PKh95Q99XXk382mpxo6LJrg8l60WfV
+         dQjYT/H5KwKYQ4I8sNpBxBrMN4OBGMBy49X1IVQaeu0Y408AZxdMZh3QR3I5KVHFde
+         8MMYh/hPHE6ckWA7dt0Ezplj2twor1JAXb9YHWfo=
+Date:   Tue, 18 Jun 2019 18:13:40 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Muchun Song <smuchun@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        zhaowuyun@wingtech.com
+Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
+ glue directory
+Message-ID: <20190618161340.GA13983@kroah.com>
+References: <20190516142342.28019-1-smuchun@gmail.com>
+ <20190524190443.GB29565@kroah.com>
+ <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+ <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
+ <20190618152859.GB1912@kroah.com>
+ <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560854427-27537-3-git-send-email-info@metux.net>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CAPSr9jFMKb1bQAbCFLqP2+fb60kcbyJ+cDspkL5FH28CNKFz3A@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:40:27PM +0200, Enrico Weigelt, metux IT consult wrote:
-> From: Enrico Weigelt <info@metux.net>
+On Wed, Jun 19, 2019 at 12:09:40AM +0800, Muchun Song wrote:
+> Greg KH <gregkh@linuxfoundation.org> 于2019年6月18日周二 下午11:29写道：
+> >
+> > On Tue, Jun 18, 2019 at 09:40:13PM +0800, Muchun Song wrote:
+> > > Ping guys ? I think this is worth fixing.
+> >
+> > That's great (no context here), but I need people to actually agree on
+> > what the correct fix should be.  I had two different patches that were
+> > saying they fixed the same issue, and that feels really wrong.
 > 
-> Reduce driver init boilerplate by using the new
-> module_siox_driver() macro.
+> Another patch:
+>     Subject: [PATCH v3] drivers: core: Remove glue dirs early only
+> when refcount is 1
 > 
-> Signed-off-by: Enrico Weigelt <info@metux.net>
-Acked-by: Uwe Kleine-K�nig <u.kleine-koenig@pengutronix.de>
+> My first v1 patch:
+>     Subject: [PATCH] driver core: Fix use-after-free and double free
+> on glue directory
+> 
+> The above two patches are almost the same that fix is based on the refcount.
+> But why we change the solution from v1 to v4? Some discussion can
+> refer to the mail:
+> 
+>     Subject: [PATCH] driver core: Fix use-after-free and double free
+> on glue directory
 
-Thanks,
-Uwe
+Again, I am totally confused and do not see a patch in an email that I
+can apply...
 
+Someone needs to get people to agree here...
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-K�nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+thanks,
+
+greg k-h
