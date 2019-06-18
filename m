@@ -2,135 +2,106 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F741C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:19:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92543C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2F02085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63B712085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:22:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="IsghBDLD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="2EuYfMDS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729140AbfFRKTC (ORCPT
+        id S1729233AbfFRKWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:19:02 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:3961 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfFRKTB (ORCPT
+        Tue, 18 Jun 2019 06:22:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:42790 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfFRKWI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:19:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d08ba940000>; Tue, 18 Jun 2019 03:19:00 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 03:19:00 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 03:19:00 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 10:18:55 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
- phylib logic
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
- <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
- <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
-Date:   Tue, 18 Jun 2019 11:18:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 06:22:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IAAHFj088122;
+        Tue, 18 Jun 2019 10:21:47 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=OyEc+wp0PaiaO9MnV6Dj7bsKOR2sVurZum4Hf+fQdN0=;
+ b=2EuYfMDSXbiG5sNOa9IBlt+Z9EOpdnjzm7aDMd7xGqXrtRLIRi0UWzr3at/s/QMzFyLy
+ 5I3Dfh8XJdqSxu/MSrYij0HNyBhB5ceDtzXbcaGdJv7dcovx6xKDHvHh6d0q+QQ1Yhxy
+ pIcyYdHLJNtzfS63o1dZOnrYunYmHQbQnxOhfLc5owXuVOptMqygXgP5J2JsVcAaxAYW
+ RWPOXv35zFPZycmTPaPt4I029POGlDl26WqThxgBswd2uN1g+mxDYnTtPezNJJecMT8a
+ l7yB/4egYvTOemT8RZJQf0XBTz7B/tOxPzMWMjxFcm1WjfrZQZFQd7rDTEeEJyTef+hq IA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t4saqbgah-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 10:21:47 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IALE5P072049;
+        Tue, 18 Jun 2019 10:21:46 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t5cpdyddq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 10:21:46 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5IALXQe024611;
+        Tue, 18 Jun 2019 10:21:33 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 03:21:32 -0700
+Date:   Tue, 18 Jun 2019 13:21:15 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+Subject: Re: drivers: Inline code in devm_platform_ioremap_resource() from
+ two functions
+Message-ID: <20190618102115.GK28859@kadam>
+References: <20190406061112.31620-1-himanshujha199640@gmail.com>
+ <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de>
+ <alpine.DEB.2.21.1906081925090.2543@hadrien>
+ <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de>
+ <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
+ <032e347f-e575-c89c-fa62-473d52232735@web.de>
+ <910a5806-9a08-adf4-4fba-d5ec2f5807ff@metux.net>
+ <efc38197-f846-142d-fbaf-93327c2669c9@web.de>
+ <714a38fe-a733-7264-bb06-d94bd58a245a@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560853140; bh=c8UwikRvDDyA/O40zAYZCjzIgqKqCU4r3za0BT5rFTA=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=IsghBDLD+HugcVDANvNXIEr2nq0Ib1u64NXqu+Ay16gh1k9ojVjTsu4x4bdXfe1g/
-         VmU2CT8xtjRftJV+sWZSHorPeT4jtD+y1jjn+sNYXQtGVyifGo1md9pPYu+uGjrXN2
-         b6mJg+22AUQ5lwNIalMN+aIAK2ISzNJc9biAA5QioZDxKV3NBPe9PB52X2jRVUQn2c
-         eSssvwvCsRvUp2Tl0Il8cczvjvKXObfwzq5SWoqoPQtSSGe/eJKl4t+1DJPWw/60TC
-         5YbexGEtqWZ5KbB3jT+VQpnPVoEfwrkn8vMuO+qlYFAACjfKdpBP+pNe3PcaRA6nHb
-         PB5cN7ElL+k9w==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <714a38fe-a733-7264-bb06-d94bd58a245a@metux.net>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=910
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906180085
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=960 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906180085
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Greg already commented on this thread.  No need to discuss it further.
 
-On 18/06/2019 10:46, Jose Abreu wrote:
-> From: Jon Hunter <jonathanh@nvidia.com>
-> 
->> I am not certain but I don't believe so. We are using a static IP address
->> and mounting the root file-system via NFS when we see this ...
-> 
-> Can you please add a call to napi_synchronize() before every 
-> napi_disable() calls, like this:
-> 
-> if (queue < rx_queues_cnt) {
-> 	napi_synchronize(&ch->rx_napi);
-> 	napi_disable(&ch->rx_napi);
-> }
-> 
-> if (queue < tx_queues_cnt) {
-> 	napi_synchronize(&ch->tx_napi);
-> 	napi_disable(&ch->tx_napi);
-> }
-> 
-> [ I can send you a patch if you prefer ]
-
-Yes I can try this and for completeness you mean ...
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 4ca46289a742..d4a12cb64d8e 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -146,10 +146,15 @@ static void stmmac_disable_all_queues(struct stmmac_priv *priv)
-        for (queue = 0; queue < maxq; queue++) {
-                struct stmmac_channel *ch = &priv->channel[queue];
- 
--               if (queue < rx_queues_cnt)
-+               if (queue < rx_queues_cnt) {
-+                       napi_synchronize(&ch->rx_napi);
-                        napi_disable(&ch->rx_napi);
--               if (queue < tx_queues_cnt)
-+               }
-+
-+               if (queue < tx_queues_cnt) {
-+                       napi_synchronize(&ch->tx_napi);
-                        napi_disable(&ch->tx_napi);
-+               }
-        }
- }
-
-Cheers
-Jon
-
--- 
-nvpublic
+regards,
+dan carpenter
