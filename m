@@ -2,152 +2,170 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7DEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:56:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA8BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA03120833
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:56:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71642206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NAIs7vmQ"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="jvSabEdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726819AbfFRA4k (ORCPT
+        id S1727189AbfFRA5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:56:40 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:38277 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRA4k (ORCPT
+        Mon, 17 Jun 2019 20:57:33 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:35430 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRA5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:56:40 -0400
-Received: by mail-ot1-f65.google.com with SMTP id d17so11836051oth.5;
-        Mon, 17 Jun 2019 17:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=LAof2iPuEsmEYY4js8fXji44icMGLEIkpZjnqdzAtFI=;
-        b=NAIs7vmQcsIIa8lS+vTvC5bC1yt5vtdlN596xVfEf8KBK7ly+kPIH49W5sZweA/Ar5
-         PA4/gqSU3x5eUZ0EtsBshtI91HVoJKNqtK6Ou+yQB7Gjsm7MZm4cqPjgpzW7RlbVFSN6
-         YhnqPmRSGWE8NntPKcZ7CCpEftrq4oNhfZgDPcSVKNyBk4zxI+veE9QHenHLTUzhnipp
-         bbtUbg36mT3JQA7Wl9g2HSRNGKbn+tMG/JW+aNYQ79yVEzzhX2bpOcGEBtQz8/JiIjHC
-         CDmw6qkhEzYvCzD5tjXQocYSqYRGCH72DeLaqI2NIS2py8OQegBrJOaMTbMUjTyAVbey
-         K1tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=LAof2iPuEsmEYY4js8fXji44icMGLEIkpZjnqdzAtFI=;
-        b=KNPyi8GGgDO7fT4XB7t0G9psPPDhBDiCMwmMSNSzMbdLq567rkhbaj0aoU/Zxb1PId
-         ee4RY2CVUCNNCVM2QklmTbLdxXzgbkkUnArQl6ylQt1Hg+OJu4ZqbVjmdTX2TGLJ+njz
-         +L7S+GkB0/7rMMZz7HLr2tCsWXZnhVAJXlI5TWDi8xfBcMqghLEYZujFUFtdfc0q/U5z
-         53U+gmjllhFNVSCgjUKojeMcXBR3ZzXl+ODJWcP1Ww/XqM75iLzrbUFTBWgFPmsjC4Wd
-         am9kYMq644kTmJzCNXIQ24jaE3/BhCJ3MmNQgX4nVf3A92EuuurMHNI2eIxpxEVjLDkv
-         CZuA==
-X-Gm-Message-State: APjAAAVuUbMkdq+LRIWD0kazYKj15BbtxUYwqGGNqkdfaGWl/lRCXkNn
-        xYpUNdy6QGqWYDfQZui4Zp03jnxxrkPuLuUxBpy78HfS
-X-Google-Smtp-Source: APXvYqxStP/pRcAOqf4HKAwAeLrfDpYbv22OnkQz8YMUT/lESO9FbeQpHSXEliXQuDp75dLIJfSM1BhMkWzVmdHmgDU=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr45374362otk.56.1560819399619;
- Mon, 17 Jun 2019 17:56:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-6-git-send-email-wanpengli@tencent.com> <20190617213201.GA26346@flask>
- <CANRm+Cxrn51mJUvjH7df+U-HpPPLJJzsRf+BMebxDogSabex3g@mail.gmail.com>
-In-Reply-To: <CANRm+Cxrn51mJUvjH7df+U-HpPPLJJzsRf+BMebxDogSabex3g@mail.gmail.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Tue, 18 Jun 2019 08:57:15 +0800
-Message-ID: <CANRm+CwBY3xku7uE5fHRNBoHEctc1k-AS0DSny8jKKDsOUZs=g@mail.gmail.com>
-Subject: Re: [PATCH v4 5/5] KVM: LAPIC: add advance timer support to pi_inject_timer
-To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
+        Mon, 17 Jun 2019 20:57:33 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 2797C2DC0096;
+        Mon, 17 Jun 2019 20:57:31 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1560819452;
+        bh=u7VpYNn8JpTLdyHPUljh2Z7wehVtDH+n9nHQNgN6N2A=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=jvSabEdrNHOl7NlBGL5YcdZQfi+fpB9BO+GaqBWlR/PP+V/1JX3MOC/vdfprE+d4q
+         W0UTx/depws8/q6fCe4qsmxzaHqtVkUa+v+Mp2PYjaUrKq1XeKLKJ3TPmwKDKYb7Ix
+         tm9Ggg2c204E7SWf1Kzm3b7UURvQRUF+YtE1qaFXWb7M1bSsECs2dxPGyAy4TwdTwu
+         YrzjrIAdGWVZDKXuSQHyDOqmmePgS4sV2lw+tlA9IZJRT1DXVvYEFcSGBy5FTId/0l
+         fqkDcrBYmDhMWn+3CZbnwx7qgnLFWM0LDHsbAyxHAnRZtM+pOmK0XpTf0aiYcsAURz
+         JAHTKkLHxAgXWfC3qIJOHW9mN0wLp5AYzfNmMC3C5ks7bZYsWq3PGnPXMMgDkMzyop
+         xeuPVBo2+37GGuWiHd1PVStu6wl0eKfSBJgyWJvhXbnAdDsbuqzYFH9Boz+O6C1oWT
+         2Stkwa1MvSezs7en91awfFUNUzrvwbjOv/IZIK0ZFoGni+dz4kIbQSJzdLLHGKQkgV
+         TVlkQn6TAJU90DRRiC92kuMldKfElutBjDwzhohJifPcEvF9T9IrE1SS4Zaz3ft2Rz
+         ho6zF2/9j+ouJCRd5AcHglBo4L8CMDItufZhI5pCGZ7PhbKy0bPXekMmqRlgelk8er
+         vDFIJF20+9ye5cMw79l/tHxg=
+Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5I0v17n063106
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Tue, 18 Jun 2019 10:57:17 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+Message-ID: <b2651117ca8a55d94b7e14e273d25199515039c3.camel@d-silva.org>
+Subject: Re: [PATCH v3 2/7] lib/hexdump.c: Relax rowsize checks in
+ hex_dump_to_buffer
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Date:   Tue, 18 Jun 2019 10:57:00 +1000
+In-Reply-To: <94413756-c927-a4ca-dd59-47e3cc87d58d@infradead.org>
+References: <20190617020430.8708-1-alastair@au1.ibm.com>
+         <20190617020430.8708-3-alastair@au1.ibm.com>
+         <94413756-c927-a4ca-dd59-47e3cc87d58d@infradead.org>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Tue, 18 Jun 2019 10:57:27 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 at 08:44, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> On Tue, 18 Jun 2019 at 05:32, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat=
-.com> wrote:
-> >
-> > 2019-06-17 19:24+0800, Wanpeng Li:
-> > > From: Wanpeng Li <wanpengli@tencent.com>
-> > >
-> > > Wait before calling posted-interrupt deliver function directly to add
-> > > advance timer support to pi_inject_timer.
-> > >
-> > > Cc: Paolo Bonzini <pbonzini@redhat.com>
-> > > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
-> > > Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> > > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> > > ---
-> >
-> > Please merge this patch with [2/5], so bisection doesn't break.
->
-> Agreed.
->
-> >
-> > >  arch/x86/kvm/lapic.c   | 6 ++++--
-> > >  arch/x86/kvm/lapic.h   | 2 +-
-> > >  arch/x86/kvm/svm.c     | 2 +-
-> > >  arch/x86/kvm/vmx/vmx.c | 2 +-
-> > >  4 files changed, 7 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> > > index 1a31389..1a31ba5 100644
-> > > --- a/arch/x86/kvm/lapic.c
-> > > +++ b/arch/x86/kvm/lapic.c
-> > > @@ -1462,6 +1462,8 @@ static void apic_timer_expired(struct kvm_lapic=
- *apic, bool can_pi_inject)
-> > >               return;
-> > >
-> > >       if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu))=
- {
-> > > +             if (apic->lapic_timer.timer_advance_ns)
-> > > +                     kvm_wait_lapic_expire(vcpu, true);
-> >
-> > From where does kvm_wait_lapic_expire() take
-> > apic->lapic_timer.expired_tscdeadline?
->
-> Sorry, I failed to understand this.
-> https://git.kernel.org/pub/scm/virt/kvm/kvm.git/tree/arch/x86/kvm/lapic.c=
-?h=3Dqueue#n1541
-> We can get apic->lapic_timer.expired_tscdeadline in
-> kvm_wait_lapic_expire() directly.
+On Mon, 2019-06-17 at 15:47 -0700, Randy Dunlap wrote:
+> Hi,
+> Just a comment style nit below...
+> 
+> On 6/16/19 7:04 PM, Alastair D'Silva wrote:
+> > From: Alastair D'Silva <alastair@d-silva.org>
+> > 
+> > This patch removes the hardcoded row limits and allows for
+> > other lengths. These lengths must still be a multiple of
+> > groupsize.
+> > 
+> > This allows structs that are not 16/32 bytes to display on
+> > a single line.
+> > 
+> > This patch also expands the self-tests to test row sizes
+> > up to 64 bytes (though they can now be arbitrarily long).
+> > 
+> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > ---
+> >  lib/hexdump.c      | 48 ++++++++++++++++++++++++++++--------------
+> >  lib/test_hexdump.c | 52 ++++++++++++++++++++++++++++++++++++++--
+> > ------
+> >  2 files changed, 75 insertions(+), 25 deletions(-)
+> > 
+> > diff --git a/lib/hexdump.c b/lib/hexdump.c
+> > index 81b70ed37209..3943507bc0e9 100644
+> > --- a/lib/hexdump.c
+> > +++ b/lib/hexdump.c
+> > @@ -246,17 +248,29 @@ void print_hex_dump(const char *level, const
+> > char *prefix_str, int prefix_type,
+> >  {
+> >  	const u8 *ptr = buf;
+> >  	int i, linelen, remaining = len;
+> > -	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
+> > +	unsigned char *linebuf;
+> > +	unsigned int linebuf_len;
+> >  
+> > -	if (rowsize != 16 && rowsize != 32)
+> > -		rowsize = 16;
+> > +	if (rowsize % groupsize)
+> > +		rowsize -= rowsize % groupsize;
+> > +
+> > +	/* Worst case line length:
+> > +	 * 2 hex chars + space per byte in, 2 spaces, 1 char per byte
+> > in, NULL
+> > +	 */
+> 
+> According to Documentation/process/coding-style.rst:
+> 
+> The preferred style for long (multi-line) comments is:
+> 
+> .. code-block:: c
+> 
+> 	/*
+> 	 * This is the preferred style for multi-line
+> 	 * comments in the Linux kernel source code.
+> 	 * Please use it consistently.
+> 	 *
+> 	 * Description:  A column of asterisks on the left side,
+> 	 * with beginning and ending almost-blank lines.
+> 	 */
+> 
 
-Oh, miss the latest expired_tscdeadline, how about something like below?
+Thanks Randy, I'll address this.
 
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index 1a31ba5..7cd95ea 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1461,6 +1461,9 @@ static void apic_timer_expired(struct kvm_lapic
-*apic, bool can_pi_inject)
-     if (atomic_read(&apic->lapic_timer.pending))
-         return;
 
-+    if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
-+        ktimer->expired_tscdeadline =3D ktimer->tscdeadline;
-+
-     if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
-         if (apic->lapic_timer.timer_advance_ns)
-             kvm_wait_lapic_expire(vcpu, true);
-@@ -1477,9 +1480,6 @@ static void apic_timer_expired(struct kvm_lapic
-*apic, bool can_pi_inject)
-      */
-     if (swait_active(q))
-         swake_up_one(q);
--
--    if (apic_lvtt_tscdeadline(apic) || ktimer->hv_timer_in_use)
--        ktimer->expired_tscdeadline =3D ktimer->tscdeadline;
- }
+-- 
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva    
+Twitter: @EvilDeece
+blog: http://alastair.d-silva.org
 
- /*
+
