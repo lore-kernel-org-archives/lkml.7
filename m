@@ -2,257 +2,180 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8193C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8722C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFD82080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:55:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Uul2SZpr"
+	by mail.kernel.org (Postfix) with ESMTP id B787D2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727087AbfFRBzu (ORCPT
+        id S1727765AbfFRB4r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:55:50 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:33342 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726088AbfFRBzt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:55:49 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I1s71a196012;
-        Tue, 18 Jun 2019 01:54:51 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=eE542OKo6D9dJ8OdHYUoOzoLNeU+roC70rOF9ID3jus=;
- b=Uul2SZprobH89p7Kqpx0O/HDXfODfGzcZhaZpvjveLJ3MuF+dUiDV3TuWwHW4HccvqLZ
- uQEm0ReAKopnHtpdZhD+BXXXIkN1UymXLv5ZmPjD3JU7A8R/Oe2tbd35uKl3Y8ucUBx0
- 9fzVz/EEVzE3OSIJYaWBMacOUHYLyQnMOUI3uzSIX1IugeaigQMjM19NLLtGv72hbf+1
- 6h1I82z3zKDPP+nLFWoQdPtnBylmpcR/2UvjLMDjxc70lTVVNgeFDA3CUXjNcqFJ4KP+
- uMX1Mwtttp4ErPJ6LaZb8B5MRweyPR6GalEx38seavTlEMJprV6v6bf4oRHYEO23MkqD Qw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2t4rmp1eak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 01:54:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5I1rLAF158501;
-        Tue, 18 Jun 2019 01:54:50 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3030.oracle.com with ESMTP id 2t5cpds8em-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 01:54:50 +0000
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5I1soWg160304;
-        Tue, 18 Jun 2019 01:54:50 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2t5cpds8eg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 01:54:50 +0000
-Received: from abhmp0011.oracle.com (abhmp0011.oracle.com [141.146.116.17])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5I1skT4027573;
-        Tue, 18 Jun 2019 01:54:47 GMT
-Received: from localhost (/10.159.211.102)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 17 Jun 2019 18:54:46 -0700
-Date:   Mon, 17 Jun 2019 21:54:42 -0400
-From:   Kris Van Hees <kris.van.hees@oracle.com>
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Kris Van Hees <kris.van.hees@oracle.com>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, dtrace-devel@oss.oracle.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-Message-ID: <20190618015442.GG8794@oracle.com>
-References: <20190521184137.GH2422@oracle.com>
- <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521213648.GK2422@oracle.com>
- <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
- <20190522041253.GM2422@oracle.com>
- <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
- <20190523051608.GP2422@oracle.com>
- <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
- <20190618012509.GF8794@oracle.com>
- <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
+        Mon, 17 Jun 2019 21:56:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726656AbfFRB4r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:56:47 -0400
+Received: from oasis.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A8462080C;
+        Tue, 18 Jun 2019 01:56:45 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 21:56:43 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Subject: Re: [PATCH 10/21] tracing/probe: Split trace_event related data
+ from trace_probe
+Message-ID: <20190617215643.05a33541@oasis.local.home>
+In-Reply-To: <155931589667.28323.6107724588059072406.stgit@devnote2>
+References: <155931578555.28323.16360245959211149678.stgit@devnote2>
+        <155931589667.28323.6107724588059072406.stgit@devnote2>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906180013
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 06:32:22PM -0700, Alexei Starovoitov wrote:
-> On Mon, Jun 17, 2019 at 6:25 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
-> >
-> > On Thu, May 23, 2019 at 01:28:44PM -0700, Alexei Starovoitov wrote:
-> >
-> > << stuff skipped because it is not relevant to the technical discussion... >>
-> >
-> > > > > In particular you brought up a good point that there is a use case
-> > > > > for sharing a piece of bpf program between kprobe and tracepoint events.
-> > > > > The better way to do that is via bpf2bpf call.
-> > > > > Example:
-> > > > > void bpf_subprog(arbitrary args)
-> > > > > {
-> > > > > }
-> > > > >
-> > > > > SEC("kprobe/__set_task_comm")
-> > > > > int bpf_prog_kprobe(struct pt_regs *ctx)
-> > > > > {
-> > > > >   bpf_subprog(...);
-> > > > > }
-> > > > >
-> > > > > SEC("tracepoint/sched/sched_switch")
-> > > > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
-> > > > > {
-> > > > >   bpf_subprog(...);
-> > > > > }
-> > > > >
-> > > > > Such configuration is not supported by the verifier yet.
-> > > > > We've been discussing it for some time, but no work has started,
-> > > > > since there was no concrete use case.
-> > > > > If you can work on adding support for it everyone will benefit.
-> > > > >
-> > > > > Could you please consider doing that as a step forward?
-> > > >
-> > > > This definitely looks to be an interesting addition and I am happy to look into
-> > > > that further.  I have a few questions that I hope you can shed light on...
-> > > >
-> > > > 1. What context would bpf_subprog execute with?  If it can be called from
-> > > >    multiple different prog types, would it see whichever context the caller
-> > > >    is executing with?  Or would you envision bpf_subprog to not be allowed to
-> > > >    access the execution context because it cannot know which one is in use?
-> > >
-> > > bpf_subprog() won't be able to access 'ctx' pointer _if_ it's ambiguous.
-> > > The verifier already smart enough to track all the data flow, so it's fine to
-> > > pass 'struct pt_regs *ctx' as long as it's accessed safely.
-> > > For example:
-> > > void bpf_subprog(int kind, struct pt_regs *ctx1, struct sched_switch_args *ctx2)
-> > > {
-> > >   if (kind == 1)
-> > >      bpf_printk("%d", ctx1->pc);
-> > >   if (kind == 2)
-> > >      bpf_printk("%d", ctx2->next_pid);
-> > > }
-> > >
-> > > SEC("kprobe/__set_task_comm")
-> > > int bpf_prog_kprobe(struct pt_regs *ctx)
-> > > {
-> > >   bpf_subprog(1, ctx, NULL);
-> > > }
-> > >
-> > > SEC("tracepoint/sched/sched_switch")
-> > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
-> > > {
-> > >   bpf_subprog(2, NULL, ctx);
-> > > }
-> > >
-> > > The verifier should be able to prove that the above is correct.
-> > > It can do so already if s/ctx1/map_value1/, s/ctx2/map_value2/
-> > > What's missing is an ability to have more than one 'starting' or 'root caller'
-> > > program.
-> > >
-> > > Now replace SEC("tracepoint/sched/sched_switch") with SEC("cgroup/ingress")
-> > > and it's becoming clear that BPF_PROG_TYPE_PROBE approach is not good enough, right?
-> > > Folks are already sharing the bpf progs between kprobe and networking.
-> > > Currently it's done via code duplication and actual sharing happens via maps.
-> > > That's not ideal, hence we've been discussing 'shared library' approach for
-> > > quite some time. We need a way to support common bpf functions that can be called
-> > > from networking and from tracing programs.
-> > >
-> > > > 2. Given that BPF programs are loaded with a specification of the prog type,
-> > > >    how would one load a code construct as the one you outline above?  How can
-> > > >    you load a BPF function and have it be used as subprog from programs that
-> > > >    are loaded separately?  I.e. in the sample above, if bpf_subprog is loaded
-> > > >    as part of loading bpf_prog_kprobe (prog type KPROBE), how can it be
-> > > >    referenced from bpf_prog_tracepoint (prog type TRACEPOINT) which would be
-> > > >    loaded separately?
-> > >
-> > > The api to support shared libraries was discussed, but not yet implemented.
-> > > We've discussed 'FD + name' approach.
-> > > FD identifies a loaded program (which is root program + a set of subprogs)
-> > > and other programs can be loaded at any time later. The BPF_CALL instructions
-> > > in such later program would refer to older subprogs via FD + name.
-> > > Note that both tracing and networking progs can be part of single elf file.
-> > > libbpf has to be smart to load progs into kernel step by step
-> > > and reusing subprogs that are already loaded.
-> > >
-> > > Note that libbpf work for such feature can begin _without_ kernel changes.
-> > > libbpf can pass bpf_prog_kprobe+bpf_subprog as a single program first,
-> > > then pass bpf_prog_tracepoint+bpf_subprog second (as a separate program).
-> > > The bpf_subprog will be duplicated and JITed twice, but sharing will happen
-> > > because data structures (maps, global and static data) will be shared.
-> > > This way the support for 'pseudo shared libraries' can begin.
-> > > (later accompanied by FD+name kernel support)
-> >
-> > As far as I can determine, the current libbpd implementation is already able
-> > to do the duplication of the called function, even when the ELF object contains
-> > programs of differemt program types.  I.e. the example you give at the top
-> > of the email actually seems to work already.  Right?
+On Sat,  1 Jun 2019 00:18:16 +0900
+Masami Hiramatsu <mhiramat@kernel.org> wrote:
+
+> Split the trace_event related data from trace_probe data structure
+> and introduce trace_probe_event data structure for its folder.
+> This trace_probe_event data structure can have multiple trace_probe.
 > 
-> Have you tried it?
-
-Yes, of course.  I wouldn't want to make an unfounded claim.
-
-> > In that case, I am a bit unsure what more can be done on the side of libbpf
-> > without needing kernel changes?
+> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
+> ---
+>  kernel/trace/trace_kprobe.c |   99 ++++++++++++++++++++++-------------
+>  kernel/trace/trace_probe.c  |   53 +++++++++++++------
+>  kernel/trace/trace_probe.h  |   48 +++++++++++++----
+>  kernel/trace/trace_uprobe.c |  123 +++++++++++++++++++++++++++++--------------
+>  4 files changed, 221 insertions(+), 102 deletions(-)
 > 
-> it's a bit weird to discuss hypothetical kernel changes when the first step
-> of changing libbpf wasn't even attempted.
+> diff --git a/kernel/trace/trace_kprobe.c b/kernel/trace/trace_kprobe.c
+> index 9d483ad9bb6c..633edb88cd0e 100644
+> --- a/kernel/trace/trace_kprobe.c
+> +++ b/kernel/trace/trace_kprobe.c
+> @@ -180,9 +180,17 @@ unsigned long trace_kprobe_address(struct trace_kprobe *tk)
+>  	return addr;
+>  }
+>  
+> +static nokprobe_inline struct trace_kprobe *
+> +trace_kprobe_primary_from_call(struct trace_event_call *call)
+> +{
+> +	struct trace_probe *tp = trace_probe_primary_from_call(call);
+> +
+> +	return container_of(tp, struct trace_kprobe, tp);
 
-It is not hypothetical.  The folowing example works fine:
 
-static int noinline bpf_action(void *ctx, long fd, long buf, long count)
-{
-        int                     cpu = bpf_get_smp_processor_id();
-        struct data {
-                u64     arg0;
-                u64     arg1;
-                u64     arg2;
-        }                       rec;
+Hmm, is there a possibility that trace_probe_primary_from_call() may
+not have a primary?
 
-        memset(&rec, 0, sizeof(rec));
 
-        rec.arg0 = fd;
-        rec.arg1 = buf;
-        rec.arg2 = count;
+> +}
+> +
+>  bool trace_kprobe_on_func_entry(struct trace_event_call *call)
+>  {
+> -	struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
+> +	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
+>  
+>  	return kprobe_on_func_entry(tk->rp.kp.addr,
+>  			tk->rp.kp.addr ? NULL : tk->rp.kp.symbol_name,
+> @@ -191,7 +199,7 @@ bool trace_kprobe_on_func_entry(struct trace_event_call *call)
+>  
+>  bool trace_kprobe_error_injectable(struct trace_event_call *call)
+>  {
+> -	struct trace_kprobe *tk = (struct trace_kprobe *)call->data;
+> +	struct trace_kprobe *tk = trace_kprobe_primary_from_call(call);
+>  
+>  	return within_error_injection_list(trace_kprobe_address(tk));
+>  }
+> @@ -295,28 +303,40 @@ static inline int __enable_trace_kprobe(struct trace_kprobe *tk)
+>   * Enable trace_probe
+>   * if the file is NULL, enable "perf" handler, or enable "trace" handler.
+>   */
+> -static int
+> -enable_trace_kprobe(struct trace_kprobe *tk, struct trace_event_file *file)
+> +static int enable_trace_kprobe(struct trace_event_call *call,
+> +				struct trace_event_file *file)
+>  {
+> -	bool enabled = trace_probe_is_enabled(&tk->tp);
+> -	int ret = 0;
+> +	struct trace_probe *pos, *tp = trace_probe_primary_from_call(call);
+> +	struct trace_kprobe *tk;
+> +	bool enabled = trace_probe_is_enabled(tp);
+> +	int ret = 0, ecode;
+>  
+>  	if (file) {
+> -		ret = trace_probe_add_file(&tk->tp, file);
+> +		ret = trace_probe_add_file(tp, file);
+>  		if (ret)
+>  			return ret;
+>  	} else
+> -		trace_probe_set_flag(&tk->tp, TP_FLAG_PROFILE);
+> +		trace_probe_set_flag(tp, TP_FLAG_PROFILE);
+>  
+>  	if (enabled)
+>  		return 0;
+>  
+> -	ret = __enable_trace_kprobe(tk);
+> -	if (ret) {
+> +	enabled = false;
+> +	list_for_each_entry(pos, trace_probe_probe_list(tp), list) {
+> +		tk = container_of(pos, struct trace_kprobe, tp);
+> +		ecode = __enable_trace_kprobe(tk);
+> +		if (ecode)
+> +			ret = ecode;	/* Save the last error code */
+> +		else
+> +			enabled = true;
 
-        bpf_perf_event_output(ctx, &buffers, cpu, &rec, sizeof(rec));
+So, if we have some enabled but return an error code, what should a
+caller think of that? Wouldn't it be an inconsistent state?
 
-        return 0;
-}
+-- Steve
 
-SEC("kprobe/ksys_write")
-int bpf_kprobe(struct pt_regs *ctx)
-{
-        return bpf_action(ctx, ctx->di, ctx->si, ctx->dx);
-}
 
-SEC("tracepoint/syscalls/sys_enter_write")
-int bpf_tp(struct syscalls_enter_write_args *ctx)
-{
-        return bpf_action(ctx, ctx->fd, ctx->buf, ctx->count);
-}
+> +	}
+> +
+> +	if (!enabled) {
+> +		/* No probe is enabled. Roll back */
+>  		if (file)
+> -			trace_probe_remove_file(&tk->tp, file);
+> +			trace_probe_remove_file(tp, file);
+>  		else
+> -			trace_probe_clear_flag(&tk->tp, TP_FLAG_PROFILE);
+> +			trace_probe_clear_flag(tp, TP_FLAG_PROFILE);
+>  	}
+>  
+>
 
-char _license[] SEC("license") = "GPL";
-u32 _version SEC("version") = LINUX_VERSION_CODE;
+
+> +static inline struct trace_probe_event *
+> +trace_probe_event_from_call(struct trace_event_call *event_call)
+> +{
+> +	return container_of(event_call, struct trace_probe_event, call);
+> +}
+> +
+> +static inline struct trace_probe *
+> +trace_probe_primary_from_call(struct trace_event_call *call)
+> +{
+> +	struct trace_probe_event *tpe = trace_probe_event_from_call(call);
+> +
+> +	return list_first_entry(&tpe->probes, struct trace_probe, list);
+> +}
+> +
+> +static inline struct list_head *trace_probe_probe_list(struct trace_probe *tp)
+> +{
+> +	return &tp->event->probes;
+>  }
+>  
