@@ -2,38 +2,48 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D968EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA7C7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:18:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C0120861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F73A20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:18:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728677AbfFRAQa (ORCPT
+        id S1728761AbfFRASy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:16:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55040 "EHLO mail.kernel.org"
+        Mon, 17 Jun 2019 20:18:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56116 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726568AbfFRAQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:16:30 -0400
+        id S1726568AbfFRASx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 20:18:53 -0400
 Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F013920861;
-        Tue, 18 Jun 2019 00:16:28 +0000 (UTC)
-Date:   Mon, 17 Jun 2019 20:16:27 -0400
+        by mail.kernel.org (Postfix) with ESMTPSA id 9602B20861;
+        Tue, 18 Jun 2019 00:18:51 +0000 (UTC)
+Date:   Mon, 17 Jun 2019 20:18:50 -0400
 From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Thomas Preisner <linux@tpreisner.de>
-Cc:     asdf@asdf.de, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ftrace: add simple oneshot function tracer
-Message-ID: <20190617201627.647547c7@gandalf.local.home>
-In-Reply-To: <20190612212935.4xq6dyua5d5vrrvj@stud.informatik.uni-erlangen.de>
-References: <20190529104552.146fa97c@oasis.local.home>
-        <20190612212935.4xq6dyua5d5vrrvj@stud.informatik.uni-erlangen.de>
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Matt Mullins <mmullins@fb.com>, Song Liu <songliubraving@fb.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "daniel@iogearbox.net" <daniel@iogearbox.net>,
+        "bpf@vger.kernel.org" <bpf@vger.kernel.org>,
+        "ast@kernel.org" <ast@kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        Martin Lau <kafai@fb.com>, Yonghong Song <yhs@fb.com>,
+        "arnd@arndb.de" <arnd@arndb.de>, Andrii Nakryiko <andriin@fb.com>
+Subject: Re: [PATCH] bpf: hide do_bpf_send_signal when unused
+Message-ID: <20190617201850.010a4cf6@gandalf.local.home>
+In-Reply-To: <CAADnVQKCeHrq+bf4DceH7+ihpq+q-V+bFOiF-TpYjekH7dPA0w@mail.gmail.com>
+References: <20190617125724.1616165-1-arnd@arndb.de>
+        <CAADnVQ+LzuNHFyLae0vUAudZpOFQ4cA02OC0zu3ypis+gqnjew@mail.gmail.com>
+        <20190617190920.71c21a6c@gandalf.local.home>
+        <75e9ff40e1002ad9c82716dfd77966a3721022b6.camel@fb.com>
+        <CAADnVQKCeHrq+bf4DceH7+ihpq+q-V+bFOiF-TpYjekH7dPA0w@mail.gmail.com>
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -43,54 +53,21 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 12 Jun 2019 23:29:35 +0200
-Thomas Preisner <linux@tpreisner.de> wrote:
+On Mon, 17 Jun 2019 16:27:33 -0700
+Alexei Starovoitov <alexei.starovoitov@gmail.com> wrote:
 
-Hi Thomas,
+> On Mon, Jun 17, 2019 at 4:13 PM Matt Mullins <mmullins@fb.com> wrote:
+> > >
+> > > The bug (really just a warning) reported is exactly here.  
+> >
+> > I don't think bpf_send_signal is tied to modules at all;
+> > send_signal_irq_work_init and the corresponding initcall should be
+> > moved outside that #ifdef.  
+> 
+> right. I guess send_signal_irq_work_init was accidentally placed
+> after bpf_event_init and happened to be within that ifdef.
+> Should definitely be outside.
 
-BTW, what email client do you use, because your replies seem to confuse
-my email client (claws-mail) and it doesn't thread them at all.
-Although they do look fine on mutt (when I view my LKML folder). Looks
-like it doesn't create a "References:" header.
-
-> On Tue, 11 Jun 2019 17:52:37 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > What do you mean? The function profile has its own file to enable it:
-> > 
-> >  echo 1 > /sys/kernel/tracing/function_profile_enabled
-> >  
-> >  And disable it:
-> >  
-> >   echo 0 > /sys/kernel/tracing/function_profile_enabled
-> >   
-> >   -- Steve  
-> 
-> Yes, I am aware of the function profiler providing a file operation for
-> enabling and disabling itself. However, my oneshot profiler as of [PATCH
-> v2] is a separate tracer/profiler without this file operation.
-> 
-> As this oneshot profiler is intended to be used for coverage/usage
-> reports I want it to be able to record functions as soon as possible
-> during bootup. Therefore, I just permanently activated the oneshot
-> profiler since as of now there is no means to activate it or the
-> function profiler via kernel commandline just like the normal tracers.
-> 
-> Still, if you want to I can add the file operation for
-> enabling/disabling this new profiler together with a new kernel
-> commandline argument for this profiler?
-> 
-> Or what would be your prefered way?
-> 
-
-Hmm, I guess I still need to think about exactly what this is for.
-Perhaps we could add a "oneshot" option to the function tracer, and
-when set it will only trace a function once? Is there a strong reason
-to add a new event type "oneshot_entry"? It may be useful to record the
-parent of the function that triggered the first instance as well.
-
-I'm still trying to get a grip around exactly what use cases this would
-be good for. Especially when adding new functionality like this.
+So Arnd did find a bug. Just the wrong solution ;-)
 
 -- Steve
-
