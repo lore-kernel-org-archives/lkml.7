@@ -2,99 +2,108 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FAFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:27:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F8BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF8E205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:27:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE118205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:33:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPuEEaeR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nP9AQBSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbfFRR1x (ORCPT
+        id S1729963AbfFRRdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:27:53 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:34201 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729455AbfFRR1w (ORCPT
+        Tue, 18 Jun 2019 13:33:12 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41983 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfFRRdM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:27:52 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so22915966edb.1;
-        Tue, 18 Jun 2019 10:27:51 -0700 (PDT)
+        Tue, 18 Jun 2019 13:33:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 83so8050290pgg.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:33:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Bs24QD6yJ48wIr2D5TDhpx73Ym4NDSPa09Z8FwUIQvE=;
-        b=NPuEEaeRQXUM2LwJ6yO6Q6m9UffoQUEjfXVZT6RecHHaB4Bu4W2ixljoGBA2PK3pJT
-         83AN5mDJvX2A7Uy3UfxmeA1XaLuBXSTJxvzwWDjQdQZDmw45UE++XbDqk5brNWDRsf2r
-         DPwhdNwiDjvfm4vhjSk4gcQQo//h7dRkVH0S6LixKlGprCQS1NRcV5v8s3KegJHB3ZPg
-         gX3NGNlxq7OcOvQW8RGq7qnHIrjDpu2BPEAodbNWDnSVXaeepFwd+UStt3js+B9Z6Aqh
-         xkjvaOd+T6XrWbUn6aTp0f8VnONTITm1UEmMmX/eNHbCrFPg0PaRmDPm+g75Qxuj7Y3D
-         G70w==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+2YaykVn++bx3Y+KHfNzRgksUkYd1b1acyBCPmK1ESg=;
+        b=nP9AQBSFgnWkiOmTl5JuSjlUIjru21cKetedkVCknU4uibtUwP8x3JBiF+KIaUmF9i
+         MWD6RVEFFdb5jDE+htDOk8e6og5Zmse54tZaqA8IHb4BFz3VlJoFyi0tzcaU2my3XO4D
+         Gfu4u3ZklbxntrED5I0pvVQYoARSj3MScZpEQre325s9DLcXh8SUSy16XAn9rvKRTABh
+         m4cElPAUa+T0t5p4uMGhErlTMBjHfgVBt/BR5tOQKiTFW+WcvZQHy1LtaUwUZcfnpEPi
+         THeUpF3Eelz+9+3p7Mp76VSdJ3fdhTLBJccKS+bHNy8upBr+MOJZHKLr+pyMyafTO/Ak
+         r6ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Bs24QD6yJ48wIr2D5TDhpx73Ym4NDSPa09Z8FwUIQvE=;
-        b=NKDb5Z8MK+0eIUxBlPb8Y8uFhlYumZ6BPcKCGzXnCw8eeUEkIPFBKu7WkWBf2NuXzh
-         PGgZn6xrZORwGo1l/ktMDRsAQLIv4Fo6P6FvnjHm64DXWR9BJOTxB02WlEunZgHnjqIT
-         P+feLeJuyw10kRHAxdDLd/V5CJXb/mRp1YMtKuKpE8WcbbFjqECGSztUkpHBaZmErT4z
-         PRVqdJP+WU7oUuwXftRSkSa62+sAvQf5auqp/US8v18ayIt0RlJk+3guxEEh5EdN7gsN
-         GEwjYRO1nGeZUWUsQzW3KnAyU5cwlMoTIMyL9YeR+CClBif43EhJ8yI58ztRh8mkymx8
-         UsLw==
-X-Gm-Message-State: APjAAAWtP0Bc+S62eQNBpqk82P2ECfUpj/5ijjY/tUVsSOVWyN0bsHFL
-        BsV5fBYubcf4UtnRGvVTzJhiPWP0oHImq/I1h2Y=
-X-Google-Smtp-Source: APXvYqy+vHPlxGTx8RjvjaFMbvXUSFFZSS8pgii3Bqo2LWopkCRdmxrsa32MOi905yoaHU9HmsN91HWR3FyE0VgaWxY=
-X-Received: by 2002:a17:906:cd1f:: with SMTP id oz31mr15684183ejb.226.1560878870625;
- Tue, 18 Jun 2019 10:27:50 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+2YaykVn++bx3Y+KHfNzRgksUkYd1b1acyBCPmK1ESg=;
+        b=ucflYMxl3Vh5Vt6Vd0JBejkrkgMV6kIY0wNWrf9rYIwQ7h4J6HU+vj03IHlQxr4pVJ
+         VVHotsxXNrlZY4ScGy1EThs2urUCYHoE3qevT6jgw2H2kGzfVs+c7lFOUcgKc0ctvDJ6
+         /FgyawltW2/VdCdBa06WDadBLG5hlRxIrrvIqt8rgPFyPJeeq9U3ZKmtECDJCTMjh1Jw
+         zVD1WzHkIfiu1KhvPz2jdjat24bx7ykG8lnMAcH9hxijZFqEzHaS/hcRpXlJXDhqZNWL
+         iowgeg+pfjcAK7XT4wAgxZndNIOAyF/vCR7ZJaesQZdNEh4qZ8Nj9uuynALv68PlZ1LK
+         oQQQ==
+X-Gm-Message-State: APjAAAWhcnOUQdOkAwrVy0kjCu05oxofGfMWmQDkQbsAsARewK4tv4Qe
+        NE2lCWREIWvbE7DIBJ68+Cg=
+X-Google-Smtp-Source: APXvYqyBsqmtBMnp7Z7YAXsHQY8QimuRAZp2vUDpUXc0RAHt+cIJtpblpYxaO3236O5oZKHs9zp0yA==
+X-Received: by 2002:a62:8643:: with SMTP id x64mr87048095pfd.7.1560879191390;
+        Tue, 18 Jun 2019 10:33:11 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id 14sm17529219pfj.36.2019.06.18.10.33.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 10:33:10 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 23:03:05 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Larry Finger <Larry.Finger@lwfinger.net>,
+        Florian Schilhabel <florian.c.schilhabel@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Julia Lawall <julia.lawall@lip6.fr>,
+        Michael Straube <straube.linux@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8712: rtl87x_io : make use of kzalloc
+Message-ID: <20190618173305.GA4776@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
- <20190618161036.GA28190@kroah.com> <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
- <20190618.094759.539007481404905339.davem@davemloft.net> <20190618171516.GA17547@kroah.com>
-In-Reply-To: <20190618171516.GA17547@kroah.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 18 Jun 2019 13:27:14 -0400
-Message-ID: <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
-Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     David Miller <davem@davemloft.net>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Fred Klassen <fklassen@appneta.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
-> > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > Date: Tue, 18 Jun 2019 12:37:33 -0400
-> >
-> > > Specific to the above test, I can add a check command testing
-> > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
-> > > way to denote "skipped", so this would just return "pass". Sounds a
-> > > bit fragile, passing success when a feature is absent.
-> >
-> > Especially since the feature might be absent because the 'config'
-> > template forgot to include a necessary Kconfig option.
->
-> That is what the "skip" response is for, don't return "pass" if the
-> feature just isn't present.  That lets people run tests on systems
-> without the config option enabled as you say, or on systems without the
-> needed userspace tools present.
+kmalloc followed by memset can be replaced with kzalloc.
 
-I was not aware that kselftest had this feature.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8712/rtl871x_io.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
-I'll send a patch and will keep that in mind for future tests.
+diff --git a/drivers/staging/rtl8712/rtl871x_io.c b/drivers/staging/rtl8712/rtl871x_io.c
+index 17dafef..87024d6 100644
+--- a/drivers/staging/rtl8712/rtl871x_io.c
++++ b/drivers/staging/rtl8712/rtl871x_io.c
+@@ -107,13 +107,11 @@ uint r8712_alloc_io_queue(struct _adapter *adapter)
+ 	INIT_LIST_HEAD(&pio_queue->processing);
+ 	INIT_LIST_HEAD(&pio_queue->pending);
+ 	spin_lock_init(&pio_queue->lock);
+-	pio_queue->pallocated_free_ioreqs_buf = kmalloc(NUM_IOREQ *
++	pio_queue->pallocated_free_ioreqs_buf = kzalloc(NUM_IOREQ *
+ 						(sizeof(struct io_req)) + 4,
+ 						GFP_ATOMIC);
+ 	if ((pio_queue->pallocated_free_ioreqs_buf) == NULL)
+ 		goto alloc_io_queue_fail;
+-	memset(pio_queue->pallocated_free_ioreqs_buf, 0,
+-			(NUM_IOREQ * (sizeof(struct io_req)) + 4));
+ 	pio_queue->free_ioreqs_buf = pio_queue->pallocated_free_ioreqs_buf + 4
+ 			- ((addr_t)(pio_queue->pallocated_free_ioreqs_buf)
+ 			& 3);
+-- 
+2.7.4
+
