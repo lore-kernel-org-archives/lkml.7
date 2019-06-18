@@ -2,119 +2,258 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98B19C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:07:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF73C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EDBC2063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:07:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74F7220679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730295AbfFRSHF (ORCPT
+        id S1730091AbfFRSHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:07:05 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:36680 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729319AbfFRSHE (ORCPT
+        Tue, 18 Jun 2019 14:07:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29986 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729554AbfFRSHs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:07:04 -0400
-Received: by mail-qt1-f193.google.com with SMTP id p15so16535085qtl.3;
-        Tue, 18 Jun 2019 11:07:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tc5SveGAk5xUuqd8TE/eo44xuPz3szmJWnQMQ7ceihc=;
-        b=fLOYIz2AWOld4qC6XnjvF+f+iyBqcLmCpjL8suMPryo8VrIp9031kkF2mnEjDreb4j
-         afAXc0tYVyVTNdy1HOjYGwSz9UElYR+4gPnFTL1TD9ZuBf8RDRtE8OQvgXETXmxO+cw2
-         3s76eZvGUyzS755evBhVr/T+y2uuZnW5fBcRimLtHRkGGGMd8IGn9E1pHQ6jdwL0yjSU
-         UNFXNX2owQmF/b/i4rg9XPVEfPjFClbBNQ3ikPJpBT77K1hEX3N6R+DB3ofZTjIB3V1Z
-         1qm4n9us1LeTxEJVcY3SXaDaHgn/NdOTjJl/zaAeg+U6nYB9LOyuDSELBE5fRz6w84x8
-         dHiw==
-X-Gm-Message-State: APjAAAWarKsSXaZDGOTUv5CyJqHenbz1mSog5WKegEkeE/8FxssxBsji
-        2Jt6DHvRPS0UAbBMAu+fXz3DiWZ+YU/n4e3TUPk=
-X-Google-Smtp-Source: APXvYqxZap79tJRc+geEbzJzShPPIrQc8XHYJtp7zMygG22X1MJgBEecbGk1pYegoT0Ow/kbm8aHMpqcn2Zo5zMZc2Y=
-X-Received: by 2002:ac8:8dd:: with SMTP id y29mr35512555qth.304.1560881223019;
- Tue, 18 Jun 2019 11:07:03 -0700 (PDT)
+        Tue, 18 Jun 2019 14:07:48 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5II6jLJ071621
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:07:46 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t74981yws-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:07:46 -0400
+Received: from localhost
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Tue, 18 Jun 2019 19:07:45 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Jun 2019 19:07:42 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5II7fba38207806
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 18:07:41 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4100BB2068;
+        Tue, 18 Jun 2019 18:07:41 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1C819B2066;
+        Tue, 18 Jun 2019 18:07:41 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Jun 2019 18:07:41 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 744D916C3421; Tue, 18 Jun 2019 11:07:42 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 11:07:42 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     mingo@kernel.org
+Cc:     rcu@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bigeasy@linutronix.de, joel@joelfernandes.org,
+        benbjiang@tencent.com, zhenzhong.duan@oracle.com,
+        neeraju@codeaurora.org, longman@redhat.com,
+        andrea.parri@amarulasolutions.com, oleg@redhat.com
+Subject: [GIT PULL rcu/next] RCU commits for 5.3
+Reply-To: paulmck@linux.ibm.com
 MIME-Version: 1.0
-References: <20190617115838.2397872-1-arnd@arndb.de> <1560786951.4072.103.camel@linux.ibm.com>
- <1560794826.4072.169.camel@linux.ibm.com> <CAK8P3a1Q2JG3KBYNYgWg0_XtGUufNc6zuqcUBqiGSaBRp+au-w@mail.gmail.com>
- <1560861878.9530.17.camel@linux.ibm.com>
-In-Reply-To: <1560861878.9530.17.camel@linux.ibm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 20:06:46 +0200
-Message-ID: <CAK8P3a0_7ocqJZHA5Zbkd4yvhQnczKJxiSrBjOUDCmzO4gAb2Q@mail.gmail.com>
-Subject: Re: [PATCH] ima: dynamically allocate shash_desc
-To:     Mimi Zohar <zohar@linux.ibm.com>
-Cc:     Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Stefan Berger <stefanb@linux.vnet.ibm.com>,
-        linux-integrity@vger.kernel.org,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19061818-2213-0000-0000-000003A088CF
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011286; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01219846; UDB=6.00641661; IPR=6.01000987;
+ MB=3.00027363; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-18 18:07:44
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061818-2214-0000-0000-00005EE74E11
+Message-Id: <20190618180742.GA8043@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906180145
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 3:55 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
->
-> On Mon, 2019-06-17 at 22:08 +0200, Arnd Bergmann wrote:
-> > On Mon, Jun 17, 2019 at 8:08 PM Mimi Zohar <zohar@linux.ibm.com> wrote:
-> > >
-> > > On Mon, 2019-06-17 at 11:55 -0400, Mimi Zohar wrote:
-> > > > On Mon, 2019-06-17 at 13:20 +0200, Arnd Bergmann wrote:
-> > > > > On 32-bit ARM, we get a warning about excessive stack usage when
-> > > > > building with clang.
-> > > > >
-> > > > > security/integrity/ima/ima_crypto.c:504:5: error: stack frame size
-> > > > > of 1152 bytes in function 'ima_calc_field_array_hash' [-Werror,-
-> > > > > Wframe-larger-than=]
-> > > >
-> > > > I'm definitely not seeing this.  Is this problem a result of non
-> > > > upstreamed patches?  For sha1, currently the only possible hash
-> > > > algorithm, I'm seeing 664.
-> >
-> > You won't see it with gcc, only with clang in some randconfig builds,
-> > I suppose only when KASAN is enabled.
-> >
-> > > Every time a measurement is added to the measurement list, the memory
-> > > would be allocated/freed.  The frequency of new measurements is policy
-> > > dependent.  For performance reasons, I'd prefer if the allocation
-> > > remains on the stack.
-> >
-> > Is there a way to preallocate the shash_desc instead? That would
-> > avoid the overhead.
->
-> There are 3 other SHASH_DESC_ON_STACK definitions in just
-> ima_crypto.c, with a total of ~55 other places in the kernel.  Before
-> fixing this particular function, I'd like to know if the "excessive
-> stack usage" warning is limited to ima_calc_field_array_hash_tfm().
->  If so, what is so special about its usage of SHASH_DESC_ON_STACK?
+Hello, Ingo,
 
-SHASH_DESC_ON_STACK() uses at least 512 bytes of stack
-everywhere, which is half of the warning limit for a function on
-32 bit kernels.
+This pull request contains the following changes:
 
-With KASAN, a small redzone is put around it so we can detect out
-of bounds access to a variable that is passed by reference.
-clang makes that buffer larger than gcc, so we end up with something
-like 768 bytes for each instance of SHASH_DESC_ON_STACK().
+1.	Yet another round of flavor-consolidation cleanups.
 
-Most other users still stay below the 1024 byte warning level though,
-because typical functions only use a few bytes of stack space.
-In case of ima_calc_field_array_hash_tfm(), the is also the buffer[]
-array of 255 bytes that gets another large redzone.
+	http://lkml.kernel.org/r/20190530145204.GA28526@linux.ibm.com
 
-I fixed up all the (randconfig) warnings I get for arm32, arm64 and
-x86 kernels, and I think there were four to five that were because of
-SHASH_DESC_ON_STACK(). It might make sense to convert all
-three instances in ima to preallocate the descriptor if we do it for
-one of them, even when it's not actually needed.
+2.	Documentation updates.
 
-     Arnd
+	http://lkml.kernel.org/r/20190530145504.GA29820@linux.ibm.com
+
+3.	Miscellaneous fixes.
+
+	http://lkml.kernel.org/r/20190530145942.GA30318@linux.ibm.com
+
+4.	SRCU updates.
+
+	http://lkml.kernel.org/r/20190530150347.GA31311@linux.ibm.com
+
+5.	RCU-sync updates.
+
+	http://lkml.kernel.org/r/20190530150816.GA32130@linux.ibm.com
+
+6.	Torture-test updates.
+
+	http://lkml.kernel.org/r/20190530151650.GA422@linux.ibm.com
+
+This pull request does not contain LKMM updates, which will be the
+subject of a later pull request.  (Apologies for the hassle, but there
+is still work in progress on handling plain assignment statements.)
+
+All of these changes have been subjected to 0day Test Robot and -next
+testing, and are available in the Git repository at:
+
+	git://git.kernel.org/pub/scm/linux/kernel/git/paulmck/linux-rcu.git for-mingo
+
+for you to fetch changes up to 8bec773060bd068bddc1014d25a7d16ac84c4fd4:
+
+  Merge branches 'consolidate.2019.05.28a', 'doc.2019.05.28a', 'fixes.2019.06.13a', 'fixes.2019.05.28a', 'srcu.2019.05.28a', 'sync.2019.05.28a' and 'torture.2019.05.28a' into HEAD (2019-06-13 15:39:55 -0700)
+
+----------------------------------------------------------------
+Andrea Parri (2):
+      rcu: Don't return a value from rcu_assign_pointer()
+      rcu: Don't return a value from rcu_assign_pointer()
+
+Jiang Biao (2):
+      rcu: Remove unused rdp local from synchronize_rcu_expedited()
+      rcu: Make __call_srcu static
+
+Joel Fernandes (Google) (7):
+      lockdep: Add assertion to check if in an interrupt
+      rcu: Add checks for dynticks counters in rcu_is_cpu_rrupt_from_idle()
+      doc/rcuref: Document real world examples in kernel
+      srcu: Remove unused vmlinux srcu linker entries
+      module: Make srcu_struct ptr array as read-only
+      rcutorture: Select from only online CPUs
+      rcutorture: Add cpu0 to the set of CPUs to add jitter
+
+Neeraj Upadhyay (2):
+      rcu: Dump specified number of blocked tasks
+      rcu: Correctly unlock root node in rcu_check_gp_start_stall()
+
+Oleg Nesterov (4):
+      rcu/sync: Kill rcu_sync_type/gp_type
+      uprobes: Use DEFINE_STATIC_PERCPU_RWSEM() to initialize dup_mmap_sem
+      locking/percpu-rwsem: Add DEFINE_PERCPU_RWSEM(), use it to initialize cgroup_threadgroup_rwsem
+      rcu/sync: Simplify the state machine
+
+Paul E. McKenney (35):
+      rcu: Check for wakeup-safe conditions in rcu_read_unlock_special()
+      rcu: Only do rcu_read_unlock_special() wakeups if expedited
+      rcu: Allow rcu_read_unlock_special() to raise_softirq() if in_irq()
+      rcu: Use irq_work to get scheduler's attention in clean context
+      rcu: Inline invoke_rcu_callbacks() into its sole remaining caller
+      rcu: Avoid self-IPI in sync_rcu_exp_select_node_cpus()
+      rcu: Avoid self-IPI in sync_sched_exp_online_cleanup()
+      rcu: Rename rcu_data's ->deferred_qs to ->exp_deferred_qs
+      rcu: Upgrade sync_exp_work_done() to smp_mb()
+      rcu: Make kfree_rcu() ignore NULL pointers
+      rcu: Fix irritating whitespace error in rcu_assign_pointer()
+      rcu: Set a maximum limit for back-to-back callback invocation
+      doc: Remove ".vnet" from paulmck email addresses
+      srcu: Allocate per-CPU data for DEFINE_SRCU() in modules
+      rcutorture: Add cond_resched() to forward-progress free-up loop
+      rcutorture: Fix stutter_wait() return value and freelist checks
+      torture: Allow inter-stutter interval to be specified
+      torture: Make kvm-find-errors.sh and kvm-recheck.sh provide exit status
+      rcutorture: Provide rudimentary Makefile
+      rcutorture: Exempt tasks RCU from timely draining of grace periods
+      rcutorture: Exempt TREE01 from forward-progress testing
+      rcutorture: Give the scheduler a chance on PREEMPT && NO_HZ_FULL kernels
+      rcutorture: Halt forward-progress checks at end of run
+      rcutorture: Add trivial RCU implementation
+      torture: Capture qemu output
+      torture: Add function graph-tracing cheat sheet
+      torture: Run kernel build in source directory
+      torture: Make --cpus override idleness calculations
+      torture: Add --trust-make to suppress "make clean"
+      rcutorture: Dump trace buffer for callback pipe drain failures
+      torture: Suppress propagating trace_printk() warning
+      rcutorture: Upper case solves the case of the vanishing NULL pointer
+      rcu: Upgrade sync_exp_work_done() to smp_mb()
+      rcu: Fix irritating whitespace error in rcu_assign_pointer()
+      Merge branches 'consolidate.2019.05.28a', 'doc.2019.05.28a', 'fixes.2019.06.13a', 'fixes.2019.05.28a', 'srcu.2019.05.28a', 'sync.2019.05.28a' and 'torture.2019.05.28a' into HEAD
+
+Sebastian Andrzej Siewior (2):
+      rcu: Enable elimination of Tree-RCU softirq processing
+      rcutorture: Tweak kvm options
+
+Waiman Long (2):
+      rcu: Force inlining of rcu_read_lock()
+      rcu: Force inlining of rcu_read_lock()
+
+Zhenzhong Duan (1):
+      doc: Fixup definition of rcupdate.rcu_task_stall_timeout
+
+ Documentation/RCU/rcuref.txt                       |  21 +-
+ Documentation/RCU/stallwarn.txt                    |   2 +-
+ Documentation/RCU/whatisRCU.txt                    |   8 +-
+ Documentation/admin-guide/kernel-parameters.txt    |   6 +
+ Documentation/core-api/circular-buffers.rst        |   2 +-
+ Documentation/memory-barriers.txt                  |   2 +-
+ .../translations/ko_KR/memory-barriers.txt         |   2 +-
+ include/linux/lockdep.h                            |   7 +
+ include/linux/module.h                             |   5 +
+ include/linux/percpu-rwsem.h                       |  10 +-
+ include/linux/rcu_sync.h                           |  40 ++--
+ include/linux/rcupdate.h                           |  21 +-
+ include/linux/sched.h                              |   2 +-
+ include/linux/srcutree.h                           |  14 +-
+ include/linux/torture.h                            |   2 +-
+ kernel/cgroup/cgroup.c                             |   3 +-
+ kernel/events/uprobes.c                            |   4 +-
+ kernel/locking/locktorture.c                       |   2 +-
+ kernel/locking/percpu-rwsem.c                      |   2 +-
+ kernel/module.c                                    |   5 +
+ kernel/rcu/rcu.h                                   |   5 +
+ kernel/rcu/rcutorture.c                            |  96 +++++++--
+ kernel/rcu/srcutree.c                              |  69 ++++++-
+ kernel/rcu/sync.c                                  | 214 ++++++++++-----------
+ kernel/rcu/tree.c                                  | 164 +++++++++++++---
+ kernel/rcu/tree.h                                  |   6 +-
+ kernel/rcu/tree_exp.h                              |  53 +++--
+ kernel/rcu/tree_plugin.h                           | 195 ++++++-------------
+ kernel/rcu/tree_stall.h                            |   4 +-
+ kernel/rcu/update.c                                |  13 ++
+ kernel/torture.c                                   |  23 ++-
+ tools/include/linux/rcu.h                          |   4 +-
+ tools/testing/radix-tree/linux/rcupdate.h          |   2 +-
+ tools/testing/selftests/rcutorture/Makefile        |   3 +
+ .../testing/selftests/rcutorture/bin/configinit.sh |  39 ++--
+ tools/testing/selftests/rcutorture/bin/cpus2use.sh |   5 +
+ .../testing/selftests/rcutorture/bin/functions.sh  |  13 +-
+ tools/testing/selftests/rcutorture/bin/jitter.sh   |  13 +-
+ .../testing/selftests/rcutorture/bin/kvm-build.sh  |   9 +-
+ .../selftests/rcutorture/bin/kvm-find-errors.sh    |   3 +
+ .../selftests/rcutorture/bin/kvm-recheck.sh        |  13 +-
+ .../selftests/rcutorture/bin/kvm-test-1-run.sh     |  23 +--
+ tools/testing/selftests/rcutorture/bin/kvm.sh      |  14 +-
+ .../selftests/rcutorture/bin/parse-build.sh        |   2 +-
+ .../selftests/rcutorture/bin/parse-console.sh      |   1 +
+ .../selftests/rcutorture/configs/rcu/CFcommon      |   3 +
+ .../selftests/rcutorture/configs/rcu/TREE01.boot   |   1 +
+ .../selftests/rcutorture/configs/rcu/TRIVIAL       |  14 ++
+ .../selftests/rcutorture/configs/rcu/TRIVIAL.boot  |   3 +
+ 49 files changed, 736 insertions(+), 431 deletions(-)
+ create mode 100644 tools/testing/selftests/rcutorture/Makefile
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRIVIAL
+ create mode 100644 tools/testing/selftests/rcutorture/configs/rcu/TRIVIAL.boot
+
