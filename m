@@ -2,95 +2,154 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B453C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF29AC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:22:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 664132082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9CF20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:22:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730804AbfFRWSt (ORCPT
+        id S1730695AbfFRWW6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:18:49 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:48950 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729982AbfFRWSs (ORCPT
+        Tue, 18 Jun 2019 18:22:58 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:55121 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730176AbfFRWW5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:18:48 -0400
-Received: from localhost ([127.0.0.1] helo=vostro.local)
-        by Galois.linutronix.de with esmtp (Exim 4.80)
-        (envelope-from <john.ogness@linutronix.de>)
-        id 1hdMQk-00067m-3p; Wed, 19 Jun 2019 00:18:18 +0200
-From:   John Ogness <john.ogness@linutronix.de>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
-References: <20190607162349.18199-1-john.ogness@linutronix.de>
-        <20190607162349.18199-2-john.ogness@linutronix.de>
-        <20190618111215.GO3436@hirez.programming.kicks-ass.net>
-Date:   Wed, 19 Jun 2019 00:18:16 +0200
-In-Reply-To: <20190618111215.GO3436@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Tue, 18 Jun 2019 13:12:15 +0200")
-Message-ID: <87ef3qbkrb.fsf@linutronix.de>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
+        Tue, 18 Jun 2019 18:22:57 -0400
+Received: from business-176-094-080-062.static.arcor-ip.net ([176.94.80.62] helo=[172.29.8.33])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hdMVC-0006RF-LJ; Tue, 18 Jun 2019 23:22:54 +0100
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+Date:   Tue, 18 Jun 2019 23:22:53 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20190613210849.10382-1-digetx@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-18, Peter Zijlstra <peterz@infradead.org> wrote:
->> +/**
->> + * struct prb_descr - A descriptor representing an entry in the ringbuffer.
->> + * @seq: The sequence number of the entry.
->> + * @id: The descriptor id.
->> + *      The location of the descriptor within the descriptor array can be 
->> + *      determined from this value.
->> + * @data: The logical position of the data for this entry.
->> + *        The location of the beginning of the data within the data array
->> + *        can be determined from this value.
->> + * @data_next: The logical position of the data next to this entry.
->> + *             This is used to determine the length of the data as well as
->> + *             identify where the next data begins.
->> + * @next: The id of the next (newer) descriptor in the linked list.
->> + *        A value of EOL means it is the last descriptor in the list.
->> + *
->
-> For the entire patch; can you please vertically align those
-> descriptions? This is unreadable. Also, add some whitespace, to aid with
-> reading, something like do:
->
->  * struct prb_descr - A descriptor representing an entry in the ringbuffer.
->  *
->  * @seq:       The sequence number of the entry.
->  *
->  * @id:        The descriptor id.
->  *             The location of the descriptor within the descriptor
->  *             array can be determined from this value.
->  *
->  * @data:      The logical position of the data for this entry.  The
->  *             location of the beginning of the data within the data
->  *             array can be determined from this value.
->  *
->  * @data_next: The logical position of the data next to this entry.
->  *             This is used to determine the length of the data as well as
->  *             identify where the next data begins.
->  *
->  * @next:      The id of the next (newer) descriptor in the linked list.
->  *             A value of EOL means it is the last descriptor in the
->  *             list.
+On 13/06/2019 22:08, Dmitry Osipenko wrote:
+> Tegra's APB DMA engine updates words counter after each transferred burst
+> of data, hence it can report transfer's residual with more fidelity which
+> may be required in cases like audio playback. In particular this fixes
+> audio stuttering during playback in a chromiuim web browser. The patch is
+> based on the original work that was made by Ben Dooks [1]. It was tested
+> on Tegra20 and Tegra30 devices.
+> 
+> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+> 
+> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>   1 file changed, 28 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+> index 79e9593815f1..c5af8f703548 100644
+> --- a/drivers/dma/tegra20-apb-dma.c
+> +++ b/drivers/dma/tegra20-apb-dma.c
+> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>   	return 0;
+>   }
+>   
+> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+> +					      struct tegra_dma_sg_req *sg_req,
+> +					      struct tegra_dma_desc *dma_desc,
+> +					      unsigned int residual)
+> +{
+> +	unsigned long status, wcount = 0;
+> +
+> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+> +		return residual;
+> +
+> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+> +
+> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+> +
+> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+> +		wcount = status;
+> +
+> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+> +		return residual - sg_req->req_len;
+> +
+> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
+> +}
 
-OK. Thanks for taking the time to format an example.
+I am unfortunately nowhere near my notes, so can't completely
+review this. I think the complexity of my patch series is due
+to an issue with the count being updated before the EOC IRQ
+is actually flagged (and most definetly before it gets to the
+CPU IRQ handler).
 
-John Ogness
+The test system I was using, which i've not really got any
+access to at the moment would show these internal inconsistent
+states every few hours, however it was moving 48kHz 8ch 16bit
+TDM data.
+
+Thanks for looking into this, I am not sure if I am going to
+get any time to look into this within the next couple of
+months.
+
+>   static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>   	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>   {
+>   	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+> +	struct tegra_dma_sg_req *sg_req = NULL;
+>   	struct tegra_dma_desc *dma_desc;
+> -	struct tegra_dma_sg_req *sg_req;
+>   	enum dma_status ret;
+>   	unsigned long flags;
+>   	unsigned int residual;
+> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>   		residual = dma_desc->bytes_requested -
+>   			   (dma_desc->bytes_transferred %
+>   			    dma_desc->bytes_requested);
+> +		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc,
+> +						     residual);
+>   		dma_set_residue(txstate, residual);
+>   	}
+>   
+> @@ -1441,12 +1467,7 @@ static int tegra_dma_probe(struct platform_device *pdev)
+>   		BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) |
+>   		BIT(DMA_SLAVE_BUSWIDTH_8_BYTES);
+>   	tdma->dma_dev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> -	/*
+> -	 * XXX The hardware appears to support
+> -	 * DMA_RESIDUE_GRANULARITY_BURST-level reporting, but it's
+> -	 * only used by this driver during tegra_dma_terminate_all()
+> -	 */
+> -	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> +	tdma->dma_dev.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+>   	tdma->dma_dev.device_config = tegra_dma_slave_config;
+>   	tdma->dma_dev.device_terminate_all = tegra_dma_terminate_all;
+>   	tdma->dma_dev.device_tx_status = tegra_dma_tx_status;
+> 
+
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+
+https://www.codethink.co.uk/privacy.html
