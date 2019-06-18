@@ -2,253 +2,147 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F4F9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:08:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 092A5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BECE2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8E42084A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:13:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="mbMHRGKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfFRRIX (ORCPT
+        id S1729594AbfFRRNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:08:23 -0400
-Received: from mx.allycomm.com ([138.68.30.55]:29570 "EHLO mx.allycomm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729491AbfFRRIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:08:22 -0400
-Received: from allycomm.com (unknown [IPv6:2601:647:5401:2210::49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.allycomm.com (Postfix) with ESMTPSA id 050ED26F4B;
-        Tue, 18 Jun 2019 10:08:20 -0700 (PDT)
-From:   Jeff Kletsky <lede@allycomm.com>
-To:     Schrempf Frieder <frieder.schrempf@kontron.de>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     Jeff Kletsky <git-commits@allycomm.com>,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org
-Subject: [PATCH v2] mtd: spinand: Add initial support for Paragon PN26G0xA
-Date:   Tue, 18 Jun 2019 10:08:05 -0700
-Message-Id: <20190618170805.7187-1-lede@allycomm.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Jun 2019 13:13:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43430 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729209AbfFRRNA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:13:00 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so8022229pgv.10
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:13:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=8dfHJTcLRV8CC1mU6B4Yjhb5Vh1wRhQVUvut0lc2uNw=;
+        b=mbMHRGKIlQDxbHcba0Ej6Fw/3WXDqNBISRpyYauUMAwFrj9x3zRQ0crkJLJBmtD9SC
+         e/XpkcddKgQfCxNWz9pWl3k0vJxjwAqWKq1Mxm7Gh+NM4U5Hcxp17f/sMWkxYTkPwgUv
+         p9lUUjvxkAqHt/oYiRNGpEhGsjurbAYxwyG3I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=8dfHJTcLRV8CC1mU6B4Yjhb5Vh1wRhQVUvut0lc2uNw=;
+        b=MOhml2p8GEgy5cMRxBbt337Bu1KS2Lzz8usPHZzH8jnNMyWtzbDg44OYsVNxOYH2Ul
+         nzh6VewzSJongD7B3q4a4892Mox75uQrGmUL4Ji7yiMfUK67Jm9oJU/A1C8UvFvM3QYA
+         DF+P/UhtVau4oP+T99BbXUN4Ij2tasK+tAd0LA4PnMyF792R0yznoeUI7JceJJOR7+ft
+         qgcRGgmkptpq3wxeZHPvvNclI1f0bkECpsSjw/av++2djyZrOgFIr+X0+DzFZYO7MfL2
+         6/ui++sobOotRZYOoM5CSfcTgqhEm7AubMNo1Lz1cmYxK43/QM7LIqDeqv2PLSlkYqd8
+         HPDg==
+X-Gm-Message-State: APjAAAXXsaQJBynSBul1njFKeCVKY0fDZQ1Uu7R+OuqytH0ndokpLwq1
+        hX9fKQYT6Cc8prY9CISyEdns7g==
+X-Google-Smtp-Source: APXvYqxV8NKnUFLTcZUcTOBY3j1D9IobFFuP7NnutOUhZzEvenssp4iBrpo3lTyuwqKyPxfqoDBojg==
+X-Received: by 2002:a17:90a:aa0d:: with SMTP id k13mr5949863pjq.53.1560877980386;
+        Tue, 18 Jun 2019 10:13:00 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id d6sm2734002pjo.32.2019.06.18.10.12.59
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Jun 2019 10:12:59 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 10:12:58 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Jann Horn <jannh@google.com>, Thomas Gleixner <tglx@linutronix.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>
+Subject: Re: [PATCH v3 3/3] x86/asm: Pin sensitive CR0 bits
+Message-ID: <201906181010.922CE96EC@keescook>
+References: <20190618045503.39105-1-keescook@chromium.org>
+ <20190618045503.39105-4-keescook@chromium.org>
+ <CAG48ez37iY3pfTWn4wiqdt7zdkSPpOcvz3gtwjTWAYz9qKbBNA@mail.gmail.com>
+ <20190618122430.GF3419@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618122430.GF3419@hirez.programming.kicks-ass.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeff Kletsky <git-commits@allycomm.com>
+On Tue, Jun 18, 2019 at 02:24:30PM +0200, Peter Zijlstra wrote:
+> On Tue, Jun 18, 2019 at 11:38:02AM +0200, Jann Horn wrote:
+> > On Tue, Jun 18, 2019 at 6:55 AM Kees Cook <keescook@chromium.org> wrote:
+> > > With sensitive CR4 bits pinned now, it's possible that the WP bit for
+> > > CR0 might become a target as well. Following the same reasoning for
+> > > the CR4 pinning, this pins CR0's WP bit (but this can be done with a
+> > > static value).
+> > >
+> > > Suggested-by: Peter Zijlstra <peterz@infradead.org>
+> > > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > > ---
+> > >  arch/x86/include/asm/special_insns.h | 15 ++++++++++++++-
+> > >  1 file changed, 14 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/arch/x86/include/asm/special_insns.h b/arch/x86/include/asm/special_insns.h
+> > > index c8c8143ab27b..b2e84d113f2a 100644
+> > > --- a/arch/x86/include/asm/special_insns.h
+> > > +++ b/arch/x86/include/asm/special_insns.h
+> > > @@ -31,7 +31,20 @@ static inline unsigned long native_read_cr0(void)
+> > >
+> > >  static inline void native_write_cr0(unsigned long val)
+> > >  {
+> > 
+> > So, assuming a legitimate call to native_write_cr0(), we come in here...
+> > 
+> > > -       asm volatile("mov %0,%%cr0": : "r" (val), "m" (__force_order));
+> > > +       unsigned long bits_missing = 0;
+> 
+> ^^^
+> 
+> > > +
+> > > +set_register:
+> > > +       asm volatile("mov %0,%%cr0": "+r" (val), "+m" (__force_order));
+> > 
+> > ... here we've updated CR0...
+> > 
+> > > +       if (static_branch_likely(&cr_pinning)) {
+> > 
+> > ... this branch is taken, since cr_pinning is set to true after boot...
+> > 
+> > > +               if (unlikely((val & X86_CR0_WP) != X86_CR0_WP)) {
+> > 
+> > ... this branch isn't taken, because a legitimate update preserves the WP bit...
+> > 
+> > > +                       bits_missing = X86_CR0_WP;
+> 
+> ^^^
+> 
+> > > +                       val |= bits_missing;
+> > > +                       goto set_register;
+> > > +               }
+> > > +               /* Warn after we've set the missing bits. */
+> > > +               WARN_ONCE(bits_missing, "CR0 WP bit went missing!?\n");
+> > 
+> > ... and we reach this WARN_ONCE()? Am I missing something, or does
+> > every legitimate CR0 write after early boot now trigger a warning?
+> 
+> bits_missing will be 0 and WARN will not be issued.
+> 
+> > > +       }
+> > >  }
 
-Add initial support for Paragon Technology
-PN26G01Axxxxx and PN26G02Axxxxx SPI NAND
+Yup, as Peter points out, bits_missing is only non-zero when bits went
+missing. The normal case will skip the WARN_ONCE() (which is also
+internally wrapped in unlikely()). And I would have noticed the very
+loud WARN at every boot if this wasn't true. ;)
 
-Datasheets available at
-http://www.xtxtech.com/upfile/2016082517274590.pdf
-http://www.xtxtech.com/upfile/2016082517282329.pdf
-
-Signed-off-by: Jeff Kletsky <git-commits@allycomm.com>
----
- drivers/mtd/nand/spi/Makefile  |   2 +-
- drivers/mtd/nand/spi/core.c    |   1 +
- drivers/mtd/nand/spi/paragon.c | 147 +++++++++++++++++++++++++++++++++
- include/linux/mtd/spinand.h    |   1 +
- 4 files changed, 150 insertions(+), 1 deletion(-)
- create mode 100644 drivers/mtd/nand/spi/paragon.c
-
-diff --git a/drivers/mtd/nand/spi/Makefile b/drivers/mtd/nand/spi/Makefile
-index 753125082640..9662b9c1d5a9 100644
---- a/drivers/mtd/nand/spi/Makefile
-+++ b/drivers/mtd/nand/spi/Makefile
-@@ -1,3 +1,3 @@
- # SPDX-License-Identifier: GPL-2.0
--spinand-objs := core.o gigadevice.o macronix.o micron.o toshiba.o winbond.o
-+spinand-objs := core.o gigadevice.o macronix.o micron.o paragon.o toshiba.o winbond.o
- obj-$(CONFIG_MTD_SPI_NAND) += spinand.o
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 556bfdb34455..f0f3528aab8f 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -757,6 +757,7 @@ static const struct spinand_manufacturer *spinand_manufacturers[] = {
- 	&gigadevice_spinand_manufacturer,
- 	&macronix_spinand_manufacturer,
- 	&micron_spinand_manufacturer,
-+	&paragon_spinand_manufacturer,
- 	&toshiba_spinand_manufacturer,
- 	&winbond_spinand_manufacturer,
- };
-diff --git a/drivers/mtd/nand/spi/paragon.c b/drivers/mtd/nand/spi/paragon.c
-new file mode 100644
-index 000000000000..52307681cbd0
---- /dev/null
-+++ b/drivers/mtd/nand/spi/paragon.c
-@@ -0,0 +1,147 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Jeff Kletsky
-+ *
-+ * Author: Jeff Kletsky <git-commits@allycomm.com>
-+ */
-+
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/mtd/spinand.h>
-+
-+
-+#define SPINAND_MFR_PARAGON	0xa1
-+
-+
-+#define PN26G0XA_STATUS_ECC_BITMASK		(3 << 4)
-+
-+#define PN26G0XA_STATUS_ECC_NONE_DETECTED	(0 << 4)
-+#define PN26G0XA_STATUS_ECC_1_7_CORRECTED	(1 << 4)
-+#define PN26G0XA_STATUS_ECC_ERRORED		(2 << 4)
-+#define PN26G0XA_STATUS_ECC_8_CORRECTED		(3 << 4)
-+
-+
-+static SPINAND_OP_VARIANTS(read_cache_variants,
-+		SPINAND_PAGE_READ_FROM_CACHE_QUADIO_OP(0, 2, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X4_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_DUALIO_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_X2_OP(0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(true, 0, 1, NULL, 0),
-+		SPINAND_PAGE_READ_FROM_CACHE_OP(false, 0, 1, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(write_cache_variants,
-+		SPINAND_PROG_LOAD_X4(true, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(true, 0, NULL, 0));
-+
-+static SPINAND_OP_VARIANTS(update_cache_variants,
-+		SPINAND_PROG_LOAD_X4(false, 0, NULL, 0),
-+		SPINAND_PROG_LOAD(false, 0, NULL, 0));
-+
-+
-+static int pn26g0xa_ooblayout_ecc(struct mtd_info *mtd, int section,
-+				   struct mtd_oob_region *region)
-+{
-+	if (section > 3)
-+		return -ERANGE;
-+
-+	region->offset = 6 + (15 * section); /* 4 BBM + 2 user bytes */
-+	region->length = 13;
-+
-+	return 0;
-+}
-+
-+static int pn26g0xa_ooblayout_free(struct mtd_info *mtd, int section,
-+				   struct mtd_oob_region *region)
-+{
-+	if (section > 4)
-+		return -ERANGE;
-+
-+	if (section == 4) {
-+		region->offset = 64;
-+		region->length = 64;
-+	} else {
-+		region->offset = 4 + (15 * section);
-+		region->length = 2;
-+	}
-+
-+	return 0;
-+}
-+
-+static int pn26g0xa_ecc_get_status(struct spinand_device *spinand,
-+				   u8 status)
-+{
-+	switch (status & PN26G0XA_STATUS_ECC_BITMASK) {
-+	case PN26G0XA_STATUS_ECC_NONE_DETECTED:
-+		return 0;
-+
-+	case PN26G0XA_STATUS_ECC_1_7_CORRECTED:
-+		return 7;	/* Return upper limit by convention */
-+
-+	case PN26G0XA_STATUS_ECC_8_CORRECTED:
-+		return 8;
-+
-+	case PN26G0XA_STATUS_ECC_ERRORED:
-+		return -EBADMSG;
-+
-+	default:
-+		break;
-+	}
-+
-+	return -EINVAL;
-+}
-+
-+static const struct mtd_ooblayout_ops pn26g0xa_ooblayout = {
-+	.ecc = pn26g0xa_ooblayout_ecc,
-+	.free = pn26g0xa_ooblayout_free,
-+};
-+
-+
-+static const struct spinand_info paragon_spinand_table[] = {
-+	SPINAND_INFO("PN26G01A", 0xe1,
-+		     NAND_MEMORG(1, 2048, 128, 64, 1024, 21, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&pn26g0xa_ooblayout,
-+				     pn26g0xa_ecc_get_status)),
-+	SPINAND_INFO("PN26G02A", 0xe2,
-+		     NAND_MEMORG(1, 2048, 128, 64, 2048, 41, 1, 1, 1),
-+		     NAND_ECCREQ(8, 512),
-+		     SPINAND_INFO_OP_VARIANTS(&read_cache_variants,
-+					      &write_cache_variants,
-+					      &update_cache_variants),
-+		     0,
-+		     SPINAND_ECCINFO(&pn26g0xa_ooblayout,
-+				     pn26g0xa_ecc_get_status)),
-+};
-+
-+static int paragon_spinand_detect(struct spinand_device *spinand)
-+{
-+	u8 *id = spinand->id.data;
-+	int ret;
-+
-+	/* Read ID returns [0][MID][DID] */
-+
-+	if (id[1] != SPINAND_MFR_PARAGON)
-+		return 0;
-+
-+	ret = spinand_match_and_init(spinand, paragon_spinand_table,
-+				     ARRAY_SIZE(paragon_spinand_table),
-+				     id[2]);
-+	if (ret)
-+		return ret;
-+
-+	return 1;
-+}
-+
-+static const struct spinand_manufacturer_ops paragon_spinand_manuf_ops = {
-+	.detect = paragon_spinand_detect,
-+};
-+
-+const struct spinand_manufacturer paragon_spinand_manufacturer = {
-+	.id = SPINAND_MFR_PARAGON,
-+	.name = "Paragon",
-+	.ops = &paragon_spinand_manuf_ops,
-+};
-diff --git a/include/linux/mtd/spinand.h b/include/linux/mtd/spinand.h
-index fbc0423bb4ae..4ea558bd3c46 100644
---- a/include/linux/mtd/spinand.h
-+++ b/include/linux/mtd/spinand.h
-@@ -227,6 +227,7 @@ struct spinand_manufacturer {
- extern const struct spinand_manufacturer gigadevice_spinand_manufacturer;
- extern const struct spinand_manufacturer macronix_spinand_manufacturer;
- extern const struct spinand_manufacturer micron_spinand_manufacturer;
-+extern const struct spinand_manufacturer paragon_spinand_manufacturer;
- extern const struct spinand_manufacturer toshiba_spinand_manufacturer;
- extern const struct spinand_manufacturer winbond_spinand_manufacturer;
- 
 -- 
-2.20.1
-
+Kees Cook
