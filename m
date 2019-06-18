@@ -2,98 +2,61 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FDD2C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6CAC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2048C21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B1DB2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729704AbfFROBF (ORCPT
+        id S1729724AbfFROBr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:01:05 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:43806 "EHLO ns.iliad.fr"
+        Tue, 18 Jun 2019 10:01:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46190 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729389AbfFROBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:01:04 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id D14A91FF57;
-        Tue, 18 Jun 2019 16:01:01 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id B991A1FF13;
-        Tue, 18 Jun 2019 16:01:01 +0200 (CEST)
-Subject: Re: [PATCH v2] ARM: dts: qcom: ipq4019: fix high resolution timer
-To:     Christian Lamparter <chunkeey@gmail.com>
-Cc:     Abhishek Sahu <absahu@codeaurora.org>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Pavel Kubelun <be.dissent@gmail.com>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190615162918.29120-1-chunkeey@gmail.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <91de77a5-c823-3e90-989e-8459c91abed9@free.fr>
-Date:   Tue, 18 Jun 2019 16:01:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729163AbfFROBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:01:47 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5A2D830C1205;
+        Tue, 18 Jun 2019 14:01:42 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE17E7D933;
+        Tue, 18 Jun 2019 14:01:37 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <d88b3276-a81a-d5a6-76d6-1a01376aa31c@gmail.com>
+References: <d88b3276-a81a-d5a6-76d6-1a01376aa31c@gmail.com> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905647369.1662.10806818386998503329.stgit@warthog.procyon.org.uk>
+To:     Alan Jenkins <alan.christopher.jenkins@gmail.com>
+Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mszeredi@redhat.com
+Subject: Re: [PATCH 25/25] fsinfo: Add API documentation [ver #13]
 MIME-Version: 1.0
-In-Reply-To: <20190615162918.29120-1-chunkeey@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Tue Jun 18 16:01:01 2019 +0200 (CEST)
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <18934.1560866496.1@warthog.procyon.org.uk>
+Date:   Tue, 18 Jun 2019 15:01:36 +0100
+Message-ID: <18935.1560866496@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 18 Jun 2019 14:01:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/06/2019 18:29, Christian Lamparter wrote:
+Alan Jenkins <alan.christopher.jenkins@gmail.com> wrote:
 
-> From: Abhishek Sahu <absahu@codeaurora.org>
+> > +    eleemnts in the FSINFO_ATTR_MOUNT_CHROOT list.
 > 
-> 
+> FSINFO_ATTR_MOUNT_CHROOT -> FSINFO_ATTR_MOUNT_CHILDREN
 
-Isn't there a spurious newline there?
+I've applied your changes.
 
-> Cherry-picked from CAF QSDK repo with Change-Id
-> I7c00b3c74d97c2a30ac9f05e18b511a0550fd459.
-
-Do we really care about the downstream change-id?
-Is this publicly available somewhere?
-
-> Original commit message:
-
-Not sure this introduction brings any info.
-
-> The kernel is failing in switching the timer for high resolution
-> mode and clock source operates in 10ms resolution. The always-on
-> property needs to be given for timer device tree node to make
-> clock source working in 1ns resolution.
-> 
-> Signed-off-by: Abhishek Sahu <absahu@codeaurora.org>
-> Signed-off-by: Pavel Kubelun <be.dissent@gmail.com>
-> Signed-off-by: Christian Lamparter <chunkeey@gmail.com>
-> ---
-> 
-> v2: fixed subject [Abhishek Sahu is bouncing]
-> ---
->  arch/arm/boot/dts/qcom-ipq4019.dtsi | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-> index bbcb7db810f7..0e3e79442c50 100644
-> --- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-> +++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-> @@ -169,6 +169,7 @@
->  			     <1 4 0xf08>,
->  			     <1 1 0xf08>;
->  		clock-frequency = <48000000>;
-> +		always-on;
->  	};
->  
->  	soc {
-> 
+David
