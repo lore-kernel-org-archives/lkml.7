@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDA25C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC62C31E60
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9231921479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3EB4214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560891263;
-	bh=6hWCXccZfaSsbUWzVC0OKlLah4pXQdi91y3PPQS4KMA=;
+	s=default; t=1560891265;
+	bh=RXI0I3RiBJvUIeMwuh1gFuo3S8O6r456MdzTC6Obw4w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=joqJBtv4R75iMtWr9C0HDma6MwTHQZQYSlFJkHVPpE1gBxIj0NLsL/cF2d8mhwMRd
-	 rcOs3tNaw139Cz2yDKKVlMe/n6QhUIMxwxsfRXE3PQKColwsCKL0eqGZoFY/vZ5dYP
-	 V+12WnoRE0gZYFpJVAAyJb5wbYNH7FeeSEwnvadc=
+	b=WAuDvaEBF507SYfvK2QJ6VggzpB5xkEOcr3qIYDNCwLSh/v0LLuq0MLuoIxXIHWSv
+	 8rWtybTOrNtcDLwhFzO1EdHdTZnSdAMAT0xCgn0X4uEQSiLG1HaL3MHiVXvuQ4KX1u
+	 Rpvsl9QPEN4hfvcy3qcPzUs9ZqX4YY80a3GryC84=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbfFRUyD (ORCPT
+        id S1730817AbfFRUyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 18 Jun 2019 16:54:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50806 "EHLO
+Received: from bombadil.infradead.org ([198.137.202.133]:50812 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730741AbfFRUx6 (ORCPT
+        with ESMTP id S1730742AbfFRUx6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 16:53:58 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=kIG3TqTXNYXrXjWMuxoIyxE0UnlHCYqdcFqGb4s7JWQ=; b=u14KIP9UpsMsR6YHgFh1ndftdI
-        BoHxMECTD8VdvGDeAbcOCBvyNXu/b6C0Jn22A4p/sQC9OuYB2bOaMNojYRD+aTPQ2JbcwN675jBZV
-        F/rl4pU2gcnnvOAmAD7bUXpYsuLydPCC/oxh+m9vtT3ERPFOAxTwbrsSaEDE0n2R1eRjXvPKb1GWJ
-        pSJt/1o9IiAWY+CPOeDGeX0tSPQHqEJP6A7G+Nzbxk692wGZ4jY9SFbLeZHnepvtOXMvsziqsQH9f
-        ut7RK+8v+D7KoGNEy4VyTrNCikILAc7QuEEj53kWPcSsGzoDCKP+Wwj/gOTqWPY9++ExNxoYcdcIW
-        p9P5HQZg==;
+        bh=A2e3twB+4rjm1JBun22GZTEDrNTolWfsSR8lN10YJY4=; b=bwzyDOc54aiEVEOy69k9oibYI1
+        L+Alwk3UnqYyKSfQI9eRWSHYm6rA8FLb3PMpqrM0mpO8OM6AmWW7SD2nkXHdR3C/qPjjbYEewaHGJ
+        K9qFOvr78PkdoJYhNAoWaazk/wt+HaicYxPSeBCiDck4XlfbeRA9RPJ3+0c+y7ldMQcq8yPcMeyDk
+        kXp/Us4FZFUs4spBBnPSQ0Aqa6L+4VQHXcwmoKyidc9Kz9WAE5115Bddw89mQVMTjMVMa5LFEEo0A
+        ysBcwNilvCqYyLLybSbwDbxGT2odokivRx1D5biHhz41Ko0nO44EpXbdeBF94yODn4Ubwzc9z45/u
+        GATOTfEw==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdL77-0008RX-4y; Tue, 18 Jun 2019 20:53:57 +0000
+        id 1hdL77-0008Rb-Ak; Tue, 18 Jun 2019 20:53:57 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdL6z-0001zA-Nh; Tue, 18 Jun 2019 17:53:49 -0300
+        id 1hdL6z-0001yy-LD; Tue, 18 Jun 2019 17:53:49 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 05/29] docs: cma/debugfs.txt: convert docs to ReST and rename to *.rst
-Date:   Tue, 18 Jun 2019 17:53:23 -0300
-Message-Id: <286440d2a7e728c2f8488a278d6474146e71aeca.1560890800.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 02/29] docs: lcd-panel-cgram.txt: convert docs to ReST and rename to *.rst
+Date:   Tue, 18 Jun 2019 17:53:20 -0300
+Message-Id: <3da3e0379da562d703e6896ded6a7839d1272494.1560890800.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1560890800.git.mchehab+samsung@kernel.org>
 References: <cover.1560890800.git.mchehab+samsung@kernel.org>
@@ -64,50 +64,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The debugfs interface for CMA should be there together with other
-mm-related documents.
+This small text file describes the usage of parallel port LCD
+displays from userspace PoV. So, a good candidate for the
+admin guide.
 
-Convert this small file to ReST and move it to its rightful place.
-
-The conversion is actually quite simple: just add a title for the
-document. In order to make it to look better for the audience,
-also mark the "echo" command as a literal block.
-
-While this is not part of any book, mark it as :orphan:,
-in order to avoid build warnings.
+While this is not part of the admin-guide book, mark it as
+:orphan:, in order to avoid build warnings.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/cma/{debugfs.txt => debugfs.rst} | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
- rename Documentation/cma/{debugfs.txt => debugfs.rst} (91%)
+ .../{lcd-panel-cgram.txt => lcd-panel-cgram.rst}         | 9 +++++++--
+ MAINTAINERS                                              | 2 +-
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+ rename Documentation/auxdisplay/{lcd-panel-cgram.txt => lcd-panel-cgram.rst} (88%)
 
-diff --git a/Documentation/cma/debugfs.txt b/Documentation/cma/debugfs.rst
-similarity index 91%
-rename from Documentation/cma/debugfs.txt
-rename to Documentation/cma/debugfs.rst
-index 6cef20a8cedc..518fe401b5ee 100644
---- a/Documentation/cma/debugfs.txt
-+++ b/Documentation/cma/debugfs.rst
+diff --git a/Documentation/auxdisplay/lcd-panel-cgram.txt b/Documentation/auxdisplay/lcd-panel-cgram.rst
+similarity index 88%
+rename from Documentation/auxdisplay/lcd-panel-cgram.txt
+rename to Documentation/auxdisplay/lcd-panel-cgram.rst
+index 7f82c905763d..dfef50286018 100644
+--- a/Documentation/auxdisplay/lcd-panel-cgram.txt
++++ b/Documentation/auxdisplay/lcd-panel-cgram.rst
 @@ -1,3 +1,9 @@
 +:orphan:
 +
-+=====================
-+CMA Debugfs Interface
-+=====================
++======================================
++Parallel port LCD/Keypad Panel support
++======================================
 +
- The CMA debugfs interface is useful to retrieve basic information out of the
- different CMA areas and to test allocation/release in each of the areas.
+ Some LCDs allow you to define up to 8 characters, mapped to ASCII
+ characters 0 to 7. The escape code to define a new character is
+ '\e[LG' followed by one digit from 0 to 7, representing the character
+@@ -7,7 +13,7 @@ illuminated pixel with LSB on the right. Lines are numbered from the
+ top of the character to the bottom. On a 5x7 matrix, only the 5 lower
+ bits of the 7 first bytes are used for each character. If the string
+ is incomplete, only complete lines will be redefined. Here are some
+-examples :
++examples::
  
-@@ -12,7 +18,7 @@ The structure of the files created under that directory is as follows:
-  - [RO] count: Amount of memory in the CMA area.
-  - [RO] order_per_bit: Order of pages represented by one bit.
-  - [RO] bitmap: The bitmap of page states in the zone.
-- - [WO] alloc: Allocate N pages from that CMA area. For example:
-+ - [WO] alloc: Allocate N pages from that CMA area. For example::
+   printf "\e[LG0010101050D1F0C04;"  => 0 = [enter]
+   printf "\e[LG1040E1F0000000000;"  => 1 = [up]
+@@ -21,4 +27,3 @@ examples :
+   printf "\e[LG00002061E1E060200;"  => small speaker
  
- 	echo 5 > <debugfs>/cma/cma-2/alloc
+ Willy
+-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index e20a1762ec0b..d64d8bb46323 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -11935,7 +11935,7 @@ PARALLEL LCD/KEYPAD PANEL DRIVER
+ M:	Willy Tarreau <willy@haproxy.com>
+ M:	Ksenija Stanojevic <ksenija.stanojevic@gmail.com>
+ S:	Odd Fixes
+-F:	Documentation/auxdisplay/lcd-panel-cgram.txt
++F:	Documentation/auxdisplay/lcd-panel-cgram.rst
+ F:	drivers/auxdisplay/panel.c
  
+ PARALLEL PORT SUBSYSTEM
 -- 
 2.21.0
 
