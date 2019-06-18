@@ -7,95 +7,91 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23A8AC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:51:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4647BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:51:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0039021479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:51:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2460621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560883893;
-	bh=UToVhpxv2B3cRBjZ2Ta6zwgEzTJxQAz69kDWtudfj1k=;
+	s=default; t=1560883895;
+	bh=I14JMvGn+h8CLeXoQ8x+xrC4Aq82f5IUq+A2GNFj6eM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vTvcXR7+2Gn1I/ZNmlbrIxUvaiV+vg+pcMQ54RWfDDshXr5tDDlgQUMSI88ef8VqF
-	 1XsScgIOMI9ERYCl+fQuwZfwOqv63LHoW0EzZXqHTrKt07Z9xmeAyRm4rc288kW2nB
-	 yBxnrxkUSSGV4FGcbGl5510IW2toCB0JfJtsuCOQ=
+	b=H4UWlTi00RarIodXbUkKatYB3fwRvLz42pe/N2kehwH9qzGp2PGQaCc3L+WBJkW2R
+	 +PbhUIAifA8uciOawOuYWeds8K//eK0fcAnfDvwG5PD+/tWp5y77b5L3+2M9fpxXu9
+	 PFqThGRkPVz5rWerCiTwkOONgoxBekQvxl9RKhFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730383AbfFRSvb (ORCPT
+        id S1730413AbfFRSvd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:51:31 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51852 "EHLO
+        Tue, 18 Jun 2019 14:51:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51856 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730232AbfFRSv3 (ORCPT
+        with ESMTP id S1730250AbfFRSv3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 14:51:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=d0EmehjDEcPvjTqcuyADKrAIO42zpO1/X9qF5qqS+x0=; b=GuL+f1a4TZRQrA4Qhfph4m6U0L
-        I+y1AJoGcCHH+KWW/e8A4LCnl+E6J4/RJqw2eyqLykimGPlSc7ywUnvPr4aSDREuCSd7OBLgj+Yw3
-        2hDGENHdND/vQJaiV43Lbs4KVomhjLe8TKtNYKwHDt0A5w/z4getVLEWtpUh6v1gTMBfwqktXX5zL
-        xTUKeDRKVov9YOqieoYBF/J6kYWXZJnZGZXgB1rBDzX46UsmDXVg3KYYuEGlT0gdii18oKTrBIK1d
-        LOodwleO047qiiU0Ps1AApMRVG6TPa9/pC1j3pxO+CiDWHYweaWMz6e0PciI99Xr5fvPlbKvAuf32
-        bt3uuHrA==;
+        bh=NMu/v002NyjPb7lxcrvrsfcxSTZZB6mI258wHNga6OY=; b=OIYHcuvqvF9aSOOtDW51r0eIcY
+        bdBdAaHiU1UFIryE7bSm6GEhsyIzqf9MunrdVluutv5YhwWK5xaFwPCpdrAGxjJNEUrYLfs1220bU
+        D4+9S2P1kM1eroDbvIMM37BAsAnHsst/f7wlX91liK7C4Ko4xjNWdElUgZZeFy/2P2rLKGqBJB7pt
+        CIlffXz7KsFXKNEiHz7VHWu2Zuk86LOOR0vHN6P3UwXZCX5haGUHC02RsWi+TbbkE1LbiZXNn4jmu
+        r7Q2cke5tPgRQweU5EUlm7/NcIYRRH6+T/IY9edaY2qmR7ed7tQIpv5+M+aBKEaFOy+BLgVj8Cw2g
+        07rPADxw==;
 Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdJCa-0006RH-6Z; Tue, 18 Jun 2019 18:51:28 +0000
+        id 1hdJCa-0006RM-0s; Tue, 18 Jun 2019 18:51:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hdJCW-0006UJ-CP; Tue, 18 Jun 2019 15:51:24 -0300
+        id 1hdJCW-0006UN-DZ; Tue, 18 Jun 2019 15:51:24 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 4/6] time: hrtimer: use a bullet for the returns bullet list
-Date:   Tue, 18 Jun 2019 15:51:20 -0300
-Message-Id: <a4cab6020e0475e7a4afc65dc5854756dd1bfbe9.1560883872.git.mchehab+samsung@kernel.org>
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Oleg Nesterov <oleg@redhat.com>, Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Roman Gushchin <guro@fb.com>
+Subject: [PATCH 5/6] docs: signal: fix a kernel-doc markup
+Date:   Tue, 18 Jun 2019 15:51:21 -0300
+Message-Id: <bcc2015820536766a8a57097c2b9eaaaff1686c8.1560883872.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <a83ea390bc28784518fce772b4c961ea1c976f14.1560883872.git.mchehab+samsung@kernel.org>
 References: <a83ea390bc28784518fce772b4c961ea1c976f14.1560883872.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-That gets rid of this warning:
-
-	./kernel/time/hrtimer.c:1119: WARNING: Block quote ends without a blank line; unexpected unindent.
-
-and displays nicely both at the source code and at the produced
-documentation.
+The kernel-doc parser doesn't handle expressions with %foo*.
+Instead, when an asterisk should be part of a constant, it
+uses an alternative notation: `foo*`.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- kernel/time/hrtimer.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ kernel/signal.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index edb230aba3d1..49f78453892f 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -1114,9 +1114,10 @@ EXPORT_SYMBOL_GPL(hrtimer_start_range_ns);
-  * @timer:	hrtimer to stop
+diff --git a/kernel/signal.c b/kernel/signal.c
+index 91b789dd6e72..10a826855b59 100644
+--- a/kernel/signal.c
++++ b/kernel/signal.c
+@@ -349,7 +349,7 @@ void task_clear_jobctl_pending(struct task_struct *task, unsigned long mask)
+  * @task has %JOBCTL_STOP_PENDING set and is participating in a group stop.
+  * Group stop states are cleared and the group stop count is consumed if
+  * %JOBCTL_STOP_CONSUME was set.  If the consumption completes the group
+- * stop, the appropriate %SIGNAL_* flags are set.
++ * stop, the appropriate `SIGNAL_*` flags are set.
   *
-  * Returns:
-- *  0 when the timer was not active
-- *  1 when the timer was active
-- * -1 when the timer is currently executing the callback function and
-+ *
-+ *  •  0 when the timer was not active
-+ *  •  1 when the timer was active
-+ *  • -1 when the timer is currently executing the callback function and
-  *    cannot be stopped
-  */
- int hrtimer_try_to_cancel(struct hrtimer *timer)
+  * CONTEXT:
+  * Must be called with @task->sighand->siglock held.
 -- 
 2.21.0
 
