@@ -2,333 +2,318 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1ADEC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:08:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D038C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:09:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E6A206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:08:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4392B206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:09:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="smx/tb15"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="TJ+q2TXb";
+	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="BHfL1jyd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729448AbfFRJIZ (ORCPT
+        id S1729262AbfFRJJj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:08:25 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:33478 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729432AbfFRJIX (ORCPT
+        Tue, 18 Jun 2019 05:09:39 -0400
+Received: from esa5.hgst.iphmx.com ([216.71.153.144]:16667 "EHLO
+        esa5.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729095AbfFRJJj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:08:23 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5I984Zb035352;
-        Tue, 18 Jun 2019 04:08:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560848884;
-        bh=abtG7KfkcUMHnnFWN6H/vrDUdzm1W5X7zfbJG/5wh98=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=smx/tb15A64vVOzIi4eLnANif3D1PJYzquMYOKYyLagBzE2jXAEb4s2oa67Fbrq6i
-         D1b83YmYsGrJe9OPETyqn0KYQpC+AY3MXOqZTB2SOCMu7MqwhWfIXZN34vDpmgT0+u
-         3gGQtdxROSfrA45fg2prinaPA2O+kNW3tcpS/1yE=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5I983DY109742
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 04:08:03 -0500
-Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 04:08:03 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 04:08:03 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5I97wXE095650;
-        Tue, 18 Jun 2019 04:07:59 -0500
-Subject: Re: [RFC PATCH 2/2] soc: ti: Add Support for the TI Page-based
- Address Translator (PAT)
-To:     "Andrew F. Davis" <afd@ti.com>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, William Mills <wmills@ti.com>,
-        Tomi Valkeinen <tomi.valkeinen@ti.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        John Stultz <john.stultz@linaro.org>
-CC:     <devicetree@vger.kernel.org>, <dri-devel@lists.freedesktop.org>,
-        <iommu@lists.linux-foundation.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-media@vger.kernel.org>, <linaro-mm-sig@lists.linaro.org>,
-        <linux-kernel@vger.kernel.org>
-References: <20190607193523.25700-1-afd@ti.com>
- <20190607193523.25700-3-afd@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <28dea95d-8ae6-431c-ca88-149972d26502@ti.com>
-Date:   Tue, 18 Jun 2019 12:07:58 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190607193523.25700-3-afd@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
+        Tue, 18 Jun 2019 05:09:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1560848978; x=1592384978;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=Cdg4TJFxFpW/G/zXgdRUlUuTFYoGRU0I/YFoY+ZHhCo=;
+  b=TJ+q2TXbHEQuZLqGP/Gbz4XQ0NvfbqDuiMBOt0DFM+ehdNncc5w5zIOy
+   yGd1e1W6UlFSYLxNQr56ctPLgLnONu0ZT8w0pVmgMPPA6JIG/jf9+3VJE
+   +o2ZEKXivUhgdogZ+VYjSCbb+Qb+bk8QsyYM8d1+Z5k1pZKa8WSDrZ4Dv
+   Ss9MvdmaIA1FKt+J6/RP+UaYl4izrWmpRM9/tp+OzbSikM8G+esNrQWSR
+   W5X2GGCU5naBDUaIfyKfAXpNA3rcuvAc7YQe7W6MSSqqY/Q3S++3Kdkml
+   oN1Cr6b8rQM6lkD7gyU0TASAD90BlTKe0zBsF0wyuSl226ncVLB8DtLW9
+   Q==;
+X-IronPort-AV: E=Sophos;i="5.63,388,1557158400"; 
+   d="scan'208";a="112087022"
+Received: from mail-bn3nam01lp2059.outbound.protection.outlook.com (HELO NAM01-BN3-obe.outbound.protection.outlook.com) ([104.47.33.59])
+  by ob1.hgst.iphmx.com with ESMTP; 18 Jun 2019 17:09:37 +0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=p8iXbvz5Lk6pFlvxfa6EHkV42Dgdp6Y+oDvRZa8IYvs=;
+ b=BHfL1jyd88OrU3c1xGoVDV/okYtWrS3Nz9CWinKelxzni4hoY477U7GSbr1qDNsA/yuqNyTAQGv6tASDgdSZkNWCAahSmqRcLhsMSYrx5LN+xmS8jf/ELgCEiowcvur7Ll4rAHhdriSQE2nsWGKnlgmoKO7xdYYxy8n5/u8aHSA=
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com (20.177.254.85) by
+ SN6PR04MB5118.namprd04.prod.outlook.com (52.135.116.160) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Tue, 18 Jun 2019 09:09:34 +0000
+Received: from SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088]) by SN6PR04MB5231.namprd04.prod.outlook.com
+ ([fe80::5005:99a1:65aa:f088%6]) with mapi id 15.20.1987.013; Tue, 18 Jun 2019
+ 09:09:34 +0000
+From:   Naohiro Aota <Naohiro.Aota@wdc.com>
+To:     Josef Bacik <josef@toxicpanda.com>
+CC:     "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Damien Le Moal <Damien.LeMoal@wdc.com>,
+        =?iso-8859-1?Q?Matias_Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 14/19] btrfs: redirty released extent buffers in
+ sequential BGs
+Thread-Topic: [PATCH 14/19] btrfs: redirty released extent buffers in
+ sequential BGs
+Thread-Index: AQHVHTKP/a9sOH6tTEWoQyojzmYTGQ==
+Date:   Tue, 18 Jun 2019 09:09:34 +0000
+Message-ID: <SN6PR04MB523180783547B7CEC55285968CEA0@SN6PR04MB5231.namprd04.prod.outlook.com>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-15-naohiro.aota@wdc.com>
+ <20190613142408.p3ra5urczrzgqr2q@MacBook-Pro-91.local>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Naohiro.Aota@wdc.com; 
+x-originating-ip: [199.255.47.8]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c104ad92-f80d-46dc-f8b0-08d6f3ccaea4
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB5118;
+x-ms-traffictypediagnostic: SN6PR04MB5118:
+wdcipoutbound: EOP-TRUE
+x-microsoft-antispam-prvs: <SN6PR04MB511874A77D550FA5E245B7B08CEA0@SN6PR04MB5118.namprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(39860400002)(136003)(396003)(346002)(366004)(189003)(199004)(305945005)(91956017)(66446008)(66946007)(52536014)(76116006)(66556008)(64756008)(2906002)(66476007)(73956011)(5660300002)(25786009)(6246003)(4326008)(6916009)(6116002)(14454004)(3846002)(478600001)(55016002)(71190400001)(71200400001)(68736007)(9686003)(72206003)(53936002)(6436002)(86362001)(54906003)(316002)(256004)(33656002)(229853002)(8676002)(102836004)(14444005)(76176011)(81166006)(81156014)(66066001)(6506007)(8936002)(446003)(53546011)(7416002)(7696005)(486006)(74316002)(476003)(7736002)(26005)(186003)(99286004);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB5118;H:SN6PR04MB5231.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: dvE6lxM6XoAuJyCxsXGCPuc+OWWV6BSxMLD5OQ0kYoS0hT7BrIufeCApjXH0fZJOJMMNI6AN8A6pFA9iGTNwTZKe1he9InQSI9oAAAwdzybIKY8CUX2LksLAM37OXs22OcyIQAZU1nk+Vr8xSbpokbkeFMB1iVSWk2e9OrLZ/LMhgWr32cMGPM+8Zxpt2GR6d1qJeurm3Pl5tcThTTW/cFYNOkuGUJ5+I8nEr3SrmmCTsNHFjNZt7RyqgWOUcvF2uAhGzgbFRgUNCuVxZtQ5m7VeNxQGLieNeuETqniZJXsQt1lEVgmpqzgty+BAbiLSGijXd2ZPCXyL0o9KZjzLrKC4nwsWg8PUnkufeX6+AY6T0qNhUbnGeVlI7U0Vk9GxusG03jYkAFGFyrKxlg4Eph381Cu3tZCfaiGyr5Egw/Q=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: c104ad92-f80d-46dc-f8b0-08d6f3ccaea4
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 09:09:34.7469
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Naohiro.Aota1@wdc.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB5118
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 07/06/2019 22:35, Andrew F. Davis wrote:
-> This patch adds a driver for the Page-based Address Translator (PAT)
-> present on various TI SoCs. A PAT device performs address translation
-> using tables stored in an internal SRAM. Each PAT supports a set number
-> of pages, each occupying a programmable 4KB, 16KB, 64KB, or 1MB of
-> addresses in a window for which an incoming transaction will be
-> translated.
-> 
-> Signed-off-by: Andrew F. Davis <afd@ti.com>
-> ---
->   drivers/soc/ti/Kconfig      |   9 +
->   drivers/soc/ti/Makefile     |   1 +
->   drivers/soc/ti/ti-pat.c     | 569 ++++++++++++++++++++++++++++++++++++
->   include/uapi/linux/ti-pat.h |  44 +++
->   4 files changed, 623 insertions(+)
->   create mode 100644 drivers/soc/ti/ti-pat.c
->   create mode 100644 include/uapi/linux/ti-pat.h
-> 
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index f0be35d3dcba..b838ae74d01f 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -86,4 +86,13 @@ config TI_SCI_INTA_MSI_DOMAIN
->   	help
->   	  Driver to enable Interrupt Aggregator specific MSI Domain.
->   
-> +config TI_PAT
-> +	tristate "TI PAT DMA-BUF exporter"
-> +	select REGMAP
-
-What is the reasoning for using regmap for internal register access? Why 
-not just use direct readl/writel for everything? To me it seems this is 
-only used during probe time also...
-
-> +	help
-> +	  Driver for TI Page-based Address Translator (PAT). This driver
-> +	  provides the an API allowing the remapping of a non-contiguous
-> +	  DMA-BUF into a contiguous one that is sutable for devices needing
-> +	  coniguous memory.
-
-Minor typo: contiguous.
-
-> +
->   endif # SOC_TI
-> diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-> index b3868d392d4f..1369642b40c3 100644
-> --- a/drivers/soc/ti/Makefile
-> +++ b/drivers/soc/ti/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
->   obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
->   obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
->   obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
-> +obj-$(CONFIG_TI_PAT)			+= ti-pat.o
-> diff --git a/drivers/soc/ti/ti-pat.c b/drivers/soc/ti/ti-pat.c
-> new file mode 100644
-> index 000000000000..7359ea0f7ccf
-> --- /dev/null
-> +++ b/drivers/soc/ti/ti-pat.c
-> @@ -0,0 +1,569 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * TI PAT mapped DMA-BUF memory re-exporter
-> + *
-> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-> + *	Andrew F. Davis <afd@ti.com>
-> + */
-> +
-> +#include <linux/fs.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/mod_devicetable.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/miscdevice.h>
-> +#include <linux/regmap.h>
-> +#include <linux/dma-buf.h>
-> +#include <linux/genalloc.h>
-> +#include <linux/vmalloc.h>
-> +#include <linux/slab.h>
-> +
-> +#include <linux/ti-pat.h>
-> +
-> +#define TI_PAT_DRIVER_NAME	"ti-pat"
-
-Why do you have a define for this seeing it is only used in single location?
-
-> +
-> +/* TI PAT MMRS registers */
-> +#define TI_PAT_MMRS_PID		0x0 /* Revision Register */
-> +#define TI_PAT_MMRS_CONFIG	0x4 /* Config Register */
-> +#define TI_PAT_MMRS_CONTROL	0x10 /* Control Register */
-> +
-> +/* TI PAT CONTROL register field values */
-> +#define TI_PAT_CONTROL_ARB_MODE_UF	0x0 /* Updates first */
-> +#define TI_PAT_CONTROL_ARB_MODE_RR	0x2 /* Round-robin */
-> +
-> +#define TI_PAT_CONTROL_PAGE_SIZE_4KB	0x0
-> +#define TI_PAT_CONTROL_PAGE_SIZE_16KB	0x1
-> +#define TI_PAT_CONTROL_PAGE_SIZE_64KB	0x2
-> +#define TI_PAT_CONTROL_PAGE_SIZE_1MB	0x3
-> +
-> +static unsigned int ti_pat_page_sizes[] = {
-> +	[TI_PAT_CONTROL_PAGE_SIZE_4KB]  = 4 * 1024,
-> +	[TI_PAT_CONTROL_PAGE_SIZE_16KB] = 16 * 1024,
-> +	[TI_PAT_CONTROL_PAGE_SIZE_64KB] = 64 * 1024,
-> +	[TI_PAT_CONTROL_PAGE_SIZE_1MB]  = 1024 * 1024,
-> +};
-> +
-> +enum ti_pat_mmrs_fields {
-> +	/* Revision */
-> +	F_PID_MAJOR,
-> +	F_PID_MINOR,
-> +
-> +	/* Controls */
-> +	F_CONTROL_ARB_MODE,
-> +	F_CONTROL_PAGE_SIZE,
-> +	F_CONTROL_REPLACE_OID_EN,
-> +	F_CONTROL_EN,
-> +
-> +	/* sentinel */
-> +	F_MAX_FIELDS
-> +};
-> +
-> +static const struct reg_field ti_pat_mmrs_reg_fields[] = {
-> +	/* Revision */
-> +	[F_PID_MAJOR]			= REG_FIELD(TI_PAT_MMRS_PID, 8, 10),
-> +	[F_PID_MINOR]			= REG_FIELD(TI_PAT_MMRS_PID, 0, 5),
-> +	/* Controls */
-> +	[F_CONTROL_ARB_MODE]		= REG_FIELD(TI_PAT_MMRS_CONTROL, 6, 7),
-> +	[F_CONTROL_PAGE_SIZE]		= REG_FIELD(TI_PAT_MMRS_CONTROL, 4, 5),
-> +	[F_CONTROL_REPLACE_OID_EN]	= REG_FIELD(TI_PAT_MMRS_CONTROL, 1, 1),
-> +	[F_CONTROL_EN]			= REG_FIELD(TI_PAT_MMRS_CONTROL, 0, 0),
-> +};
-> +
-> +/**
-> + * struct ti_pat_data - PAT device instance data
-> + * @dev: PAT device structure
-> + * @mdev: misc device
-> + * @mmrs_map: Register map of MMRS region
-> + * @table_base: Base address of TABLE region
-
-Please add kerneldoc comments for all fields.
-
-> + */
-> +struct ti_pat_data {
-> +	struct device *dev;
-> +	struct miscdevice mdev;
-> +	struct regmap *mmrs_map;
-> +	struct regmap_field *mmrs_fields[F_MAX_FIELDS];
-> +	void __iomem *table_base;
-> +	unsigned int page_count;
-> +	unsigned int page_size;
-> +	phys_addr_t window_base;
-> +	struct gen_pool *pool;
-> +};
-> +
-
-Kerneldoc comments for below structs would be also useful, especially 
-for ti_pat_buffer.
-
-> +struct ti_pat_dma_buf_attachment {
-> +	struct device *dev;
-> +	struct sg_table *table;
-> +	struct ti_pat_buffer *buffer;
-> +	struct list_head list;
-> +};
-> +
-> +struct ti_pat_buffer {
-> +	struct ti_pat_data *pat;
-> +	struct dma_buf *i_dma_buf;
-> +	size_t size;
-> +	unsigned long offset;
-> +	struct dma_buf *e_dma_buf;
-> +
-> +	struct dma_buf_attachment *attachment;
-> +	struct sg_table *sgt;
-> +
-> +	struct list_head attachments;
-> +	int map_count;
-> +
-> +	struct mutex lock;
-> +};
-> +
-> +static const struct regmap_config ti_pat_regmap_config = {
-> +	.reg_bits = 32,
-> +	.val_bits = 32,
-> +	.reg_stride = 4,
-> +};
-> +
-> +static int ti_pat_dma_buf_attach(struct dma_buf *dmabuf,
-> +				 struct dma_buf_attachment *attachment)
-> +{
-> +	struct ti_pat_dma_buf_attachment *a;
-> +	struct ti_pat_buffer *buffer = dmabuf->priv;
-> +
-> +	a = kzalloc(sizeof(*a), GFP_KERNEL);
-> +	if (!a)
-> +		return -ENOMEM;
-> +
-> +	a->dev = attachment->dev;
-> +	a->buffer = buffer;
-> +	INIT_LIST_HEAD(&a->list);
-> +
-> +	a->table = kzalloc(sizeof(*a->table), GFP_KERNEL);
-> +	if (!a->table) {
-> +		kfree(a);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	if (sg_alloc_table(a->table, 1, GFP_KERNEL)) {
-> +		kfree(a->table);
-> +		kfree(a);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	sg_set_page(a->table->sgl, pfn_to_page(PFN_DOWN(buffer->offset)), buffer->size, 0);
-> +
-> +	attachment->priv = a;
-> +
-> +	mutex_lock(&buffer->lock);
-> +	/* First time attachment we attach to parent */
-> +	if (list_empty(&buffer->attachments)) {
-> +		buffer->attachment = dma_buf_attach(buffer->i_dma_buf, buffer->pat->dev);
-> +		if (IS_ERR(buffer->attachment)) {
-> +			dev_err(buffer->pat->dev, "Unable to attach to parent DMA-BUF\n");
-> +			mutex_unlock(&buffer->lock);
-> +			kfree(a->table);
-> +			kfree(a);
-> +			return PTR_ERR(buffer->attachment);
-> +		}
-> +	}
-> +	list_add(&a->list, &buffer->attachments);
-> +	mutex_unlock(&buffer->lock);
-> +
-> +	return 0;
-> +}
-> +
-> +static void ti_pat_dma_buf_detatch(struct dma_buf *dmabuf,
-> +				   struct dma_buf_attachment *attachment)
-
-Func name should be ti_pat_dma_buf_detach instead?
-
-Other than that, I can't see anything obvious with my limited experience 
-with dma_buf. Is there a simple way to test this driver btw?
-
--Tero
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+On 2019/06/13 23:24, Josef Bacik wrote:=0A=
+> On Fri, Jun 07, 2019 at 10:10:20PM +0900, Naohiro Aota wrote:=0A=
+>> Tree manipulating operations like merging nodes often release=0A=
+>> once-allocated tree nodes. Btrfs cleans such nodes so that pages in the=
+=0A=
+>> node are not uselessly written out. On HMZONED drives, however, such=0A=
+>> optimization blocks the following IOs as the cancellation of the write o=
+ut=0A=
+>> of the freed blocks breaks the sequential write sequence expected by the=
+=0A=
+>> device.=0A=
+>>=0A=
+>> This patch introduces a list of clean extent buffers that have been=0A=
+>> released in a transaction. Btrfs consult the list before writing out and=
+=0A=
+>> waiting for the IOs, and it redirties a buffer if 1) it's in sequential =
+BG,=0A=
+>> 2) it's in un-submit range, and 3) it's not under IO. Thus, such buffers=
+=0A=
+>> are marked for IO in btrfs_write_and_wait_transaction() to send proper b=
+ios=0A=
+>> to the disk.=0A=
+>>=0A=
+>> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>=0A=
+>> ---=0A=
+>>   fs/btrfs/disk-io.c     | 27 ++++++++++++++++++++++++---=0A=
+>>   fs/btrfs/extent_io.c   |  1 +=0A=
+>>   fs/btrfs/extent_io.h   |  2 ++=0A=
+>>   fs/btrfs/transaction.c | 35 +++++++++++++++++++++++++++++++++++=0A=
+>>   fs/btrfs/transaction.h |  3 +++=0A=
+>>   5 files changed, 65 insertions(+), 3 deletions(-)=0A=
+>>=0A=
+>> diff --git a/fs/btrfs/disk-io.c b/fs/btrfs/disk-io.c=0A=
+>> index 6651986da470..c6147fce648f 100644=0A=
+>> --- a/fs/btrfs/disk-io.c=0A=
+>> +++ b/fs/btrfs/disk-io.c=0A=
+>> @@ -535,7 +535,9 @@ static int csum_dirty_buffer(struct btrfs_fs_info *f=
+s_info, struct page *page)=0A=
+>>   	if (csum_tree_block(eb, result))=0A=
+>>   		return -EINVAL;=0A=
+>>   =0A=
+>> -	if (btrfs_header_level(eb))=0A=
+>> +	if (test_bit(EXTENT_BUFFER_NO_CHECK, &eb->bflags))=0A=
+>> +		ret =3D 0;=0A=
+>> +	else if (btrfs_header_level(eb))=0A=
+>>   		ret =3D btrfs_check_node(eb);=0A=
+>>   	else=0A=
+>>   		ret =3D btrfs_check_leaf_full(eb);=0A=
+>> @@ -1115,10 +1117,20 @@ struct extent_buffer *read_tree_block(struct btr=
+fs_fs_info *fs_info, u64 bytenr,=0A=
+>>   void btrfs_clean_tree_block(struct extent_buffer *buf)=0A=
+>>   {=0A=
+>>   	struct btrfs_fs_info *fs_info =3D buf->fs_info;=0A=
+>> -	if (btrfs_header_generation(buf) =3D=3D=0A=
+>> -	    fs_info->running_transaction->transid) {=0A=
+>> +	struct btrfs_transaction *cur_trans =3D fs_info->running_transaction;=
+=0A=
+>> +=0A=
+>> +	if (btrfs_header_generation(buf) =3D=3D cur_trans->transid) {=0A=
+>>   		btrfs_assert_tree_locked(buf);=0A=
+>>   =0A=
+>> +		if (btrfs_fs_incompat(fs_info, HMZONED) &&=0A=
+>> +		    list_empty(&buf->release_list)) {=0A=
+>> +			atomic_inc(&buf->refs);=0A=
+>> +			spin_lock(&cur_trans->releasing_ebs_lock);=0A=
+>> +			list_add_tail(&buf->release_list,=0A=
+>> +				      &cur_trans->releasing_ebs);=0A=
+>> +			spin_unlock(&cur_trans->releasing_ebs_lock);=0A=
+>> +		}=0A=
+>> +=0A=
+>>   		if (test_and_clear_bit(EXTENT_BUFFER_DIRTY, &buf->bflags)) {=0A=
+>>   			percpu_counter_add_batch(&fs_info->dirty_metadata_bytes,=0A=
+>>   						 -buf->len,=0A=
+>> @@ -4533,6 +4545,15 @@ void btrfs_cleanup_one_transaction(struct btrfs_t=
+ransaction *cur_trans,=0A=
+>>   	btrfs_destroy_pinned_extent(fs_info,=0A=
+>>   				    fs_info->pinned_extents);=0A=
+>>   =0A=
+>> +	while (!list_empty(&cur_trans->releasing_ebs)) {=0A=
+>> +		struct extent_buffer *eb;=0A=
+>> +=0A=
+>> +		eb =3D list_first_entry(&cur_trans->releasing_ebs,=0A=
+>> +				      struct extent_buffer, release_list);=0A=
+>> +		list_del_init(&eb->release_list);=0A=
+>> +		free_extent_buffer(eb);=0A=
+>> +	}=0A=
+>> +=0A=
+>>   	cur_trans->state =3DTRANS_STATE_COMPLETED;=0A=
+>>   	wake_up(&cur_trans->commit_wait);=0A=
+>>   }=0A=
+>> diff --git a/fs/btrfs/extent_io.c b/fs/btrfs/extent_io.c=0A=
+>> index 13fca7bfc1f2..c73c69e2bef4 100644=0A=
+>> --- a/fs/btrfs/extent_io.c=0A=
+>> +++ b/fs/btrfs/extent_io.c=0A=
+>> @@ -4816,6 +4816,7 @@ __alloc_extent_buffer(struct btrfs_fs_info *fs_inf=
+o, u64 start,=0A=
+>>   	init_waitqueue_head(&eb->read_lock_wq);=0A=
+>>   =0A=
+>>   	btrfs_leak_debug_add(&eb->leak_list, &buffers);=0A=
+>> +	INIT_LIST_HEAD(&eb->release_list);=0A=
+>>   =0A=
+>>   	spin_lock_init(&eb->refs_lock);=0A=
+>>   	atomic_set(&eb->refs, 1);=0A=
+>> diff --git a/fs/btrfs/extent_io.h b/fs/btrfs/extent_io.h=0A=
+>> index aa18a16a6ed7..2987a01f84f9 100644=0A=
+>> --- a/fs/btrfs/extent_io.h=0A=
+>> +++ b/fs/btrfs/extent_io.h=0A=
+>> @@ -58,6 +58,7 @@ enum {=0A=
+>>   	EXTENT_BUFFER_IN_TREE,=0A=
+>>   	/* write IO error */=0A=
+>>   	EXTENT_BUFFER_WRITE_ERR,=0A=
+>> +	EXTENT_BUFFER_NO_CHECK,=0A=
+>>   };=0A=
+>>   =0A=
+>>   /* these are flags for __process_pages_contig */=0A=
+>> @@ -186,6 +187,7 @@ struct extent_buffer {=0A=
+>>   	 */=0A=
+>>   	wait_queue_head_t read_lock_wq;=0A=
+>>   	struct page *pages[INLINE_EXTENT_BUFFER_PAGES];=0A=
+>> +	struct list_head release_list;=0A=
+>>   #ifdef CONFIG_BTRFS_DEBUG=0A=
+>>   	atomic_t spinning_writers;=0A=
+>>   	atomic_t spinning_readers;=0A=
+>> diff --git a/fs/btrfs/transaction.c b/fs/btrfs/transaction.c=0A=
+>> index 3f6811cdf803..ded40ad75419 100644=0A=
+>> --- a/fs/btrfs/transaction.c=0A=
+>> +++ b/fs/btrfs/transaction.c=0A=
+>> @@ -236,6 +236,8 @@ static noinline int join_transaction(struct btrfs_fs=
+_info *fs_info,=0A=
+>>   	spin_lock_init(&cur_trans->dirty_bgs_lock);=0A=
+>>   	INIT_LIST_HEAD(&cur_trans->deleted_bgs);=0A=
+>>   	spin_lock_init(&cur_trans->dropped_roots_lock);=0A=
+>> +	INIT_LIST_HEAD(&cur_trans->releasing_ebs);=0A=
+>> +	spin_lock_init(&cur_trans->releasing_ebs_lock);=0A=
+>>   	list_add_tail(&cur_trans->list, &fs_info->trans_list);=0A=
+>>   	extent_io_tree_init(fs_info, &cur_trans->dirty_pages,=0A=
+>>   			IO_TREE_TRANS_DIRTY_PAGES, fs_info->btree_inode);=0A=
+>> @@ -2219,7 +2221,31 @@ int btrfs_commit_transaction(struct btrfs_trans_h=
+andle *trans)=0A=
+>>   =0A=
+>>   	wake_up(&fs_info->transaction_wait);=0A=
+>>   =0A=
+>> +	if (btrfs_fs_incompat(fs_info, HMZONED)) {=0A=
+>> +		struct extent_buffer *eb;=0A=
+>> +=0A=
+>> +		list_for_each_entry(eb, &cur_trans->releasing_ebs,=0A=
+>> +				    release_list) {=0A=
+>> +			struct btrfs_block_group_cache *cache;=0A=
+>> +=0A=
+>> +			cache =3D btrfs_lookup_block_group(fs_info, eb->start);=0A=
+>> +			if (!cache)=0A=
+>> +				continue;=0A=
+>> +			mutex_lock(&cache->submit_lock);=0A=
+>> +			if (cache->alloc_type =3D=3D BTRFS_ALLOC_SEQ &&=0A=
+>> +			    cache->submit_offset <=3D eb->start &&=0A=
+>> +			    !extent_buffer_under_io(eb)) {=0A=
+>> +				set_extent_buffer_dirty(eb);=0A=
+>> +				cache->space_info->bytes_readonly +=3D eb->len;=0A=
+> =0A=
+> Huh?=0A=
+> =0A=
+=0A=
+I'm tracking once allocated then freed region in "space_info->bytes_readonl=
+y".=0A=
+As I wrote in the other reply, I can add and use "space_info->bytes_zone_un=
+available" instead.=0A=
+=0A=
+>> +				set_bit(EXTENT_BUFFER_NO_CHECK, &eb->bflags);=0A=
+>> +			}=0A=
+>> +			mutex_unlock(&cache->submit_lock);=0A=
+>> +			btrfs_put_block_group(cache);=0A=
+>> +		}=0A=
+>> +	}=0A=
+>> +=0A=
+> =0A=
+> Helper here please.=0A=
+>>   	ret =3D btrfs_write_and_wait_transaction(trans);=0A=
+>> +=0A=
+>>   	if (ret) {=0A=
+>>   		btrfs_handle_fs_error(fs_info, ret,=0A=
+>>   				      "Error while writing out transaction");=0A=
+>> @@ -2227,6 +2253,15 @@ int btrfs_commit_transaction(struct btrfs_trans_h=
+andle *trans)=0A=
+>>   		goto scrub_continue;=0A=
+>>   	}=0A=
+>>   =0A=
+>> +	while (!list_empty(&cur_trans->releasing_ebs)) {=0A=
+>> +		struct extent_buffer *eb;=0A=
+>> +=0A=
+>> +		eb =3D list_first_entry(&cur_trans->releasing_ebs,=0A=
+>> +				      struct extent_buffer, release_list);=0A=
+>> +		list_del_init(&eb->release_list);=0A=
+>> +		free_extent_buffer(eb);=0A=
+>> +	}=0A=
+>> +=0A=
+> =0A=
+> Another helper, and also can't we release eb's above that we didn't need =
+to=0A=
+> re-mark dirty?  Thanks,=0A=
+> =0A=
+> Josef=0A=
+> =0A=
+=0A=
+hm, we can do so. I'll change the code in the next version.=0A=
+Thanks,=0A=
