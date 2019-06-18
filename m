@@ -2,107 +2,112 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C39C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4F9C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:18:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DD132084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnxmFqcY"
+	by mail.kernel.org (Postfix) with ESMTP id 7A61E2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:18:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729409AbfFRJRv (ORCPT
+        id S1729424AbfFRJSU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:17:51 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33090 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfFRJRu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:17:50 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k187so7354049pga.0;
-        Tue, 18 Jun 2019 02:17:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=T8iho8zB2EI5q4Vs8qH35kthzunfwFzXsVq/N63fSg8=;
-        b=DnxmFqcYaL4E0yzWf4Ny5XU9Lmr/iNvLlEKA5tvmoA4m4tj3jhKkImeaeUHgor7hzs
-         kcKgPn51oQkNGADmzyWj8AzIZoR5a6pXcfGzQ2FijHCV/BvmCCeZI7YOSp4NJdKcrR+V
-         GK8iJkCzAO0Ath3MeQwKo/aBK+hEqkYugd7mGs5ejJCr1QKHQLQlCA2YXspN5D+Z/xaU
-         AAyTECbtdH59r1Skk0PiabZiNtSBPOhQQl8O769/sk0dGao+xhdvYN0FdMwVbc99giAr
-         BunOzlcA6JOZi0hd0AGcULuhbdOFSkAwOMprauXIYES3otB3MFPejHFeo5wO/AARyE9Q
-         oskA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=T8iho8zB2EI5q4Vs8qH35kthzunfwFzXsVq/N63fSg8=;
-        b=UqwNFLERpueOe7pFKnIVejAqy77G2sLLVy1C8xgqA8hdkyG1BxX0CpI/bd3XCWawbM
-         I1rfg6PTDaITq95+BTi25v/SHmV/CILK2z5NiN3iQFKgrQlEu3IHfBb7GuC1Ior4bQip
-         2AFqBLplMlqSl+ayf41tasLbefs2kjrOYs+74JIACYLSB9p1uOxeRbuCREPGJ/vpw0YZ
-         7JNgTZY7n4i0oblkqxXP72edw0v3pZGJnd9LjJzUykkawi0C9bsk0U5jWUlUfP+gh1sT
-         Pox4h9T0BSUlkZH6RtDeQbWCpfcn2h4fwI78O9Bhlj8PjZF32GFeU8XgrmN9oxak5cd/
-         OXSw==
-X-Gm-Message-State: APjAAAVQJZTaqVdgAGbU33xtblA6EKVYaaS3MmmMnGRSN/E24JhNunJP
-        4J/A3f+Hy/Spz6h+/JzI6aw=
-X-Google-Smtp-Source: APXvYqznfc4oBivpsKSj5zEbVhuvELVe7pEx+mqDBog7fgwcN7DeBJo8RqY39olEqs5lV86NOwGOkA==
-X-Received: by 2002:a63:4d0f:: with SMTP id a15mr1779210pgb.101.1560849469025;
-        Tue, 18 Jun 2019 02:17:49 -0700 (PDT)
-Received: from icarus ([2001:268:c0c9:ec1e:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id i127sm14163574pfc.91.2019.06.18.02.17.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2019 02:17:48 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 18:17:31 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Patrick Havelange <patrick.havelange@essensium.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH 1/1] counter/ftm-quaddec: Add missing '>' in MODULE_AUTHOR
-Message-ID: <20190618091731.GA8257@icarus>
-References: <20190618090542.13885-1-patrick.havelange@essensium.com>
+        Tue, 18 Jun 2019 05:18:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:58798 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729137AbfFRJSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:18:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D19DC344;
+        Tue, 18 Jun 2019 02:18:18 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BBBB3F246;
+        Tue, 18 Jun 2019 02:18:14 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 10:18:12 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        dri-devel@lists.freedesktop.org,
+        Kostya Serebryany <kcc@google.com>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Lee Smith <Lee.Smith@arm.com>, linux-kselftest@vger.kernel.org,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        linux-media@vger.kernel.org,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        linux-kernel@vger.kernel.org,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
+Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control
+ the tagged user addresses ABI
+Message-ID: <20190618091811.GC2790@e103592.cambridge.arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
+ <20190613110235.GW28398@e103592.cambridge.arm.com>
+ <20190613152632.GT28951@C02TF0J2HF1T.local>
+ <201906132209.FC65A3C771@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190618090542.13885-1-patrick.havelange@essensium.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+In-Reply-To: <201906132209.FC65A3C771@keescook>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:05:41AM +0200, Patrick Havelange wrote:
-> The last '>' chars were missing in the MODULE_AUTHOR entries.
+On Thu, Jun 13, 2019 at 10:13:54PM -0700, Kees Cook wrote:
+> On Thu, Jun 13, 2019 at 04:26:32PM +0100, Catalin Marinas wrote:
+> > On Thu, Jun 13, 2019 at 12:02:35PM +0100, Dave P Martin wrote:
+> > > On Wed, Jun 12, 2019 at 01:43:20PM +0200, Andrey Konovalov wrote:
+> > > > +static int zero;
+> > > > +static int one = 1;
+> > > 
+> > > !!!
+> > > 
+> > > And these can't even be const without a cast.  Yuk.
+> > > 
+> > > (Not your fault though, but it would be nice to have a proc_dobool() to
+> > > avoid this.)
+> > 
+> > I had the same reaction. Maybe for another patch sanitising this pattern
+> > across the kernel.
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: a3b9a99980d9 ("counter: add FlexTimer Module Quadrature decoder counter driver")
-> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
-> ---
->  drivers/counter/ftm-quaddec.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> That's actually already happening (via -mm tree last I looked). tl;dr:
+> it ends up using a cast hidden in a macro. It's in linux-next already
+> along with a checkpatch.pl addition to yell about doing what's being
+> done here. ;)
 > 
-> diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
-> index c83c8875bf82..68a9b7393457 100644
-> --- a/drivers/counter/ftm-quaddec.c
-> +++ b/drivers/counter/ftm-quaddec.c
-> @@ -352,5 +352,5 @@ static struct platform_driver ftm_quaddec_driver = {
->  module_platform_driver(ftm_quaddec_driver);
->  
->  MODULE_LICENSE("GPL");
-> -MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com");
-> -MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com");
-> +MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com>");
-> +MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com>");
-> -- 
-> 2.19.1
+> https://lore.kernel.org/lkml/20190430180111.10688-1-mcroce@redhat.com/#r
 
-Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+Hmmm, that is marginally less bad.
 
-Jonathan, please pick up this fix as well.
+Ideally we'd have a union in there, not just a bunch of void *.  I may
+look at that someday...
 
-William Breathit Gray
+Cheers
+---Dave
