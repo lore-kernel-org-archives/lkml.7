@@ -2,132 +2,158 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 354DCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:14:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D8ECC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:15:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04970204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:14:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA388204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:15:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y+YmXflR"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IVOJN7iw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="TOVI6NUY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730768AbfFRVOp (ORCPT
+        id S1730798AbfFRVPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:14:45 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45552 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730181AbfFRVOp (ORCPT
+        Tue, 18 Jun 2019 17:15:48 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55442 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730350AbfFRVPs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 17:14:45 -0400
-Received: by mail-pg1-f195.google.com with SMTP id s21so8330760pga.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FS2xe3EqWjVa2osnhJcZdNg83PN4WkVvVWlHL7l/qqk=;
-        b=Y+YmXflRcgQfURiuGJArsK6o25FGeuUUOwK3W1AuGqsrOnUiyasENIxuR4JhNsKkED
-         4mCaNhDAap9VjNHruD4pZhaK1UdTznr8A/O1td3EepAB4lLWkN/jhwn6QbokpmvkAYMe
-         eFwVw/QB1uhc/MjklhcZpgppWojGGLihJy92c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FS2xe3EqWjVa2osnhJcZdNg83PN4WkVvVWlHL7l/qqk=;
-        b=jW+wAxz8YrEq/qn4OercavyNvxgTNpVbxGETD+obLbZh6YG2CN5vQH6QwC07YLqkvH
-         LHn8G+yssIqeptclPgCTud7YDhO7fKvqV5vQT+3vsGfXy2r5htbka5QwNREH0vIx0cHN
-         JjuojKAmN+PD7gLrCpST49CXckETssghBokaVy0UnPl02NVVsAw6WLgKiv0r5NXgqjh/
-         UOKJ947KQDhycicODc3+oiqnWWEc9AyIq5WQaTx3nclR9c9Fdy2gzLp5Nzi5T1vXOjPy
-         BgWXqnP6a14I3ZNuGRLSgvBGj3iiFBD9sheA51A7MH7SarVlBl0DhbeRFtFimhNu7aFq
-         E/5A==
-X-Gm-Message-State: APjAAAUxWv56nQMTNBUYsPWn3uIZ+AZfDFCPFtusjEyQqI2PmtQCVrWP
-        H8/voNwSajc/Gr4Ma4FaBKDYmQ==
-X-Google-Smtp-Source: APXvYqyf9L4vnVsrhqP4UkUwW/isWrJmFSn/+x+Z9ZC4m0lvANqoqpOnMKhw7IbwN4Gl6KS1bXKNmA==
-X-Received: by 2002:a17:90a:7146:: with SMTP id g6mr7275143pjs.45.1560892484762;
-        Tue, 18 Jun 2019 14:14:44 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id c10sm3168946pjq.14.2019.06.18.14.14.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 14:14:44 -0700 (PDT)
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     "David S . Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Alexander Duyck <alexander.h.duyck@redhat.com>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Douglas Anderson <dianders@chromium.org>,
-        Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] net/ipv4: fib_trie: Avoid cryptic ternary expressions
-Date:   Tue, 18 Jun 2019 14:14:40 -0700
-Message-Id: <20190618211440.54179-1-mka@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Tue, 18 Jun 2019 17:15:48 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id A466560FED; Tue, 18 Jun 2019 21:15:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560892546;
+        bh=YZxqpwNwj9xP1mVakWl4GnRWhuxU+h/l52kLOjkWX3Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=IVOJN7iw7SLfamnGPFOAHWKxlR24qZGI+fJflD1GHP+Oo/BkYwgUJIRH8PyDeOjIX
+         yWdNc+O9P4dYI5N0wCG8AHfCVvLmPw/X/UKLIfyjXkZNDQzm9mCb+/zEFpUXJLPOBP
+         01BzNaRPwCzmRCWihbrOMK4u18fWzfMXFHFzCzHg=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 3E048608BA;
+        Tue, 18 Jun 2019 21:15:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560892544;
+        bh=YZxqpwNwj9xP1mVakWl4GnRWhuxU+h/l52kLOjkWX3Y=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=TOVI6NUYG8I82CcnESxWEYgB0kYG+0CZ96pkTfQAcneB00XUWHiCLDk9M8clfZqdU
+         enPHMCLJDTDCNtKey6d8+AOJmN1NmXdJC6F943mG9WsGQugpIFqi8+l8PUVpxBt6uk
+         U7rdCNWQ7xeD9PerfSVkAPcLATq9szGad+VzOXQU=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 18 Jun 2019 15:15:42 -0600
+From:   Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Johannes Berg <johannes@sipsolutions.net>,
+        Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
+        Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        Dan Williams <dcbw@redhat.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+In-Reply-To: <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+ <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
+ <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+ <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
+ <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
+ <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
+Message-ID: <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
+X-Sender: subashab@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-empty_child_inc/dec() use the ternary operator for conditional
-operations. The conditions involve the post/pre in/decrement
-operator and the operation is only performed when the condition
-is *not* true. This is hard to parse for humans, use a regular
-'if' construct instead and perform the in/decrement separately.
+On 2019-06-18 14:55, Arnd Bergmann wrote:
+> On Tue, Jun 18, 2019 at 10:36 PM Johannes Berg
+> <johannes@sipsolutions.net> wrote:
+>> 
+>> On Tue, 2019-06-18 at 21:59 +0200, Arnd Bergmann wrote:
+>> >
+>> > From my understanding, the ioctl interface would create the lower
+>> > netdev after talking to the firmware, and then user space would use
+>> > the rmnet interface to create a matching upper-level device for that.
+>> > This is an artifact of the strong separation of ipa and rmnet in the
+>> > code.
+>> 
+>> Huh. But if rmnet has muxing, and IPA supports that, why would you 
+>> ever
+>> need multiple lower netdevs?
+> 
+> From my reading of the code, there is always exactly a 1:1 relationship
+> between an rmnet netdev an an ipa netdev. rmnet does the encapsulation/
+> decapsulation of the qmap data and forwards it to the ipa netdev,
+> which then just passes data through between a hardware queue and
+> its netdevice.
+> 
 
-This also fixes two warnings that are emitted about the value
-of the ternary expression being unused, when building the kernel
-with clang + "kbuild: Remove unnecessary -Wno-unused-value"
-(https://lore.kernel.org/patchwork/patch/1089869/):
+There is a n:1 relationship between rmnet and IPA.
+rmnet does the de-muxing to multiple netdevs based on the mux id
+in the MAP header for RX packets and vice versa.
 
-CC      net/ipv4/fib_trie.o
-net/ipv4/fib_trie.c:351:2: error: expression result unused [-Werror,-Wunused-value]
-        ++tn_info(n)->empty_children ? : ++tn_info(n)->full_children;
+> [side note: on top of that, rmnet also does "aggregation", which may
+>  be a confusing term that only means transferring multiple frames
+>  at once]
+> 
+>> > ipa definitely has multiple hardware queues, and the Alex'
+>> > driver does implement  the data path on those, just not the
+>> > configuration to enable them.
+>> 
+>> OK, but perhaps you don't actually have enough to use one for each
+>> session?
+> 
+> I'm lacking the terminology here, but what I understood was that
+> the netdev and queue again map to a session.
+> 
+>> > Guessing once more, I suspect the the XON/XOFF flow control
+>> > was a workaround for the fact that rmnet and ipa have separate
+>> > queues. The hardware channel on IPA may fill up, but user space
+>> > talks to rmnet and still add more frames to it because it doesn't
+>> > know IPA is busy.
+>> >
+>> > Another possible explanation would be that this is actually
+>> > forwarding state from the base station to tell the driver to
+>> > stop sending data over the air.
+>> 
+>> Yeah, but if you actually have a hardware queue per upper netdev then
+>> you don't really need this - you just stop the netdev queue when the
+>> hardware queue is full, and you have flow control automatically.
+>> 
+>> So I really don't see any reason to have these messages going back and
+>> forth unless you plan to have multiple sessions muxed on a single
+>> hardware queue.
+> 
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
-I have no good understanding of the fib_trie code, but the
-disentangled code looks wrong, and it should be equivalent to the
-cryptic version, unless I messed it up. In empty_child_inc()
-'full_children' is only incremented when 'empty_children' is -1. I
-suspect a bug in the cryptic code, but am surprised why it hasn't
-blown up yet. Or is it intended behavior that is just
-super-counterintuitive?
+Hardware may flow control specific PDNs (rmnet interfaces) based on QoS 
+-
+not necessarily only in case of hardware queue full.
 
-For now I'm leaving it at disentangling the cryptic expressions,
-if there is a bug we can discuss what action to take.
----
- net/ipv4/fib_trie.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+> Sure, I definitely understand what you mean, and I agree that would
+> be the right way to do it. All I said is that this is not how it was 
+> done
+> in rmnet (this was again my main concern about the rmnet design
+> after I learned it was required for ipa) ;-)
+> 
+>      Arnd
 
-diff --git a/net/ipv4/fib_trie.c b/net/ipv4/fib_trie.c
-index 868c74771fa9..cf7788e336b7 100644
---- a/net/ipv4/fib_trie.c
-+++ b/net/ipv4/fib_trie.c
-@@ -338,12 +338,18 @@ static struct tnode *tnode_alloc(int bits)
- 
- static inline void empty_child_inc(struct key_vector *n)
- {
--	++tn_info(n)->empty_children ? : ++tn_info(n)->full_children;
-+	tn_info(n)->empty_children++;
-+
-+	if (!tn_info(n)->empty_children)
-+		tn_info(n)->full_children++;
- }
- 
- static inline void empty_child_dec(struct key_vector *n)
- {
--	tn_info(n)->empty_children-- ? : tn_info(n)->full_children--;
-+	if (!tn_info(n)->empty_children)
-+		tn_info(n)->full_children--;
-+
-+	tn_info(n)->empty_children--;
- }
- 
- static struct key_vector *leaf_new(t_key key, struct fib_alias *fa)
 -- 
-2.22.0.410.gd8fdbe21b5-goog
-
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
