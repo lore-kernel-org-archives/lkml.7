@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3DC2C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 681B6C31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:45:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA4422089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F0B820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:45:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="X91k3au1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jIFUNwNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727479AbfFRCpL (ORCPT
+        id S1728040AbfFRCpf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:45:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:42532 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRCpL (ORCPT
+        Mon, 17 Jun 2019 22:45:35 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:39048 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRCpf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:45:11 -0400
-Received: by mail-qt1-f196.google.com with SMTP id s15so13455545qtk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:45:10 -0700 (PDT)
+        Mon, 17 Jun 2019 22:45:35 -0400
+Received: by mail-qt1-f193.google.com with SMTP id i34so8188884qta.6
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:45:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=Dz+adBAPcE8qvI07dIqlmwVAtO9T/l0uCjfq3X+Fk/0=;
-        b=X91k3au1269cF7ErYx0NeCBvM6Ah0m0bDU7zwKjf9avUFYCLESFuLlk50/D/RXeMrq
-         /2JqZMG6vphcLLXpmpj7NL/cqGdkqb7iW2BegoVcKGGBxeKZOJ2pLa4JyEQ4H6hjgvAS
-         cWsSgShoCGCRcVYm427tx+zNjoUEmqLGNSd3f47ki00cNIFvKAWXIVT+2sh3PNYFh2et
-         +PMWhmS9gW5l9hhQVWyysSWGBAUBxlrWv6babpojIUT2dcJeG1lsuTiPtmZ/zX0tH0yy
-         2K73o0BPF08IiR5PgonZfbavnNvLw7lwvbqe0RWKbLEw21tt6mO2fyIv/jguuwBxWGNf
-         2jwg==
+        bh=8KPbeBe1Izb/oXnubNpoebguldEg1IGhY2Zsm9jUIkc=;
+        b=jIFUNwNOQDgYQ+LupPGr48TtotyUTjpb9+gsc7h4cEidc+lFsVhBVavMi2fttyL6WP
+         DhlEaZjRsstTTIy5yBGjHeOCYwTJ00hChejyepsRC62T+97ppWDMd82ovALdPSWhspQZ
+         dN5zOURRRWDX/bR2dJgk9XcQk/lmme5KMkfF+M6mNIqTcT2QGxOZWCNKyOVhl5vkjBk/
+         VEtFeuF7NabIwp29c+dvSP+T3tCc8S3tt8l4WH8mOS7hkv5ccyXXTbT/5FD7H1NWSFS3
+         19XD6SZyefb/WdclBRaO8rHi/pTalTXZBMJpqaieCp8iFjmTrn0oY/43ufre+HGdId0C
+         XEWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Dz+adBAPcE8qvI07dIqlmwVAtO9T/l0uCjfq3X+Fk/0=;
-        b=WGemw/6NhDNd+GZP8MGD0qjSXMbEGV3ohZMSjYNEnwgczL7956Jt5Nl4ZYPgJMJxLC
-         J8J8WAi6E9OlaWNr4/ALoJkV13LEXRJfYKTy/ItBma9eB/w25cAn5hG27uBVMj+ofYhk
-         DHaaey/RQKZdB64lv7OWCHTwQliwf8OPQegBg3HFb2csxfAq3jV9sgcL4xEHGpwKqMn6
-         8yhMKuB4pr+ftrdwOgQAEVzn/mb2IzqQ+o9FXTGqpRk6umEDltRr5zEBvXTDQsfaNOqH
-         RYiXTOKbBRMc4E+I7kzV0QyiNrD1MHzjx3C4iXFl9D4EZptmLZluxaGrCPh+zL/8jbUi
-         la7g==
-X-Gm-Message-State: APjAAAVrKdaV19qqGDvZnfuvnDnHaf11elAEjo0XJt6m/aCR4x3OLwbu
-        Pu7Z9dGR8CE/RSuLAWVCf9E=
-X-Google-Smtp-Source: APXvYqzmE+SzilO07+hRB3nGbI8Xd8fV9brHpP1GekfSwiVKCc/8Z3fUrjCU/xxXQkeq3u3A+VAEuA==
-X-Received: by 2002:ad4:5426:: with SMTP id g6mr24791223qvt.132.1560825909669;
-        Mon, 17 Jun 2019 19:45:09 -0700 (PDT)
+        bh=8KPbeBe1Izb/oXnubNpoebguldEg1IGhY2Zsm9jUIkc=;
+        b=gC7XDEgWut4VYDpG5GZ8wca1dgf0uGIyzEA28mPK1jbe1bGfQoCqfBreXUiCQibi6M
+         3booLWmxXbNG2jJIuDf13oYopkKFC65rj7ePlRHeQRxbspqnOHURFqqoDC/9LkPUuOhY
+         a4D3PYpUWRYSC1aqx6d6tbCnDYVb67X8x5VxK00ljlyBKYQ6A2Mcugx/jLU8yG1gmI/p
+         7sU96G8+DXhtL6/Xp2nXKoWXoxNbL6u5asVZO/J6PreB3EARJuhA0jT9AYZwipBeHs5W
+         gpknzcyq6zxBolWQcke8ul2WWfELOikfSn6Z5TWkGUNmWVGnuKl5knxNYMZIDAZ231Vq
+         J/1Q==
+X-Gm-Message-State: APjAAAUuL9C6InNzpIeBKsvUIguQFpxGKm2Mq1rqFPGmfBgkKUAX874J
+        mQHEGXLOD9uYNe8hf0cLsZs=
+X-Google-Smtp-Source: APXvYqyjb9meqRuihmeZFMzBK6sW+mj5SPJgPZKeAR4jCHZ6vjWkicT6mbIE3vqb/ZHfyqiL5cb5Yw==
+X-Received: by 2002:ac8:4442:: with SMTP id m2mr17809198qtn.107.1560825933887;
+        Mon, 17 Jun 2019 19:45:33 -0700 (PDT)
 Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id f68sm8133745qtb.83.2019.06.17.19.45.06
+        by smtp.gmail.com with ESMTPSA id s64sm7140356qkb.56.2019.06.17.19.45.31
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 19:45:09 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 23:45:04 -0300
+        Mon, 17 Jun 2019 19:45:33 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 23:45:29 -0300
 From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 To:     Brian Starkey <brian.starkey@arm.com>,
         Liviu Dudau <liviu.dudau@arm.com>,
@@ -65,8 +65,8 @@ To:     Brian Starkey <brian.starkey@arm.com>,
         Haneen Mohammed <hamohammed.sa@gmail.com>,
         Simon Ser <contact@emersion.fr>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 3/5] drm/vkms: Rename vkms_crc_data to vkms_data
-Message-ID: <0de57ac2d1eedf412d579796a2efedab26af7bf0.1560820888.git.rodrigosiqueiramelo@gmail.com>
+Subject: [PATCH V2 4/5] drm/vkms: Use index instead of 0 in possible crtc
+Message-ID: <971da2ede86d11357e6822409bef23cb03869f83.1560820888.git.rodrigosiqueiramelo@gmail.com>
 References: <cover.1560820888.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -78,215 +78,99 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rename the struct vkms_crc_data to vkms_data and also remove the CRC
-prefix from variables that use this struct.
+When vkms calls drm_universal_plane_init(), it sets 0 for the
+possible_crtcs parameter which works well for a single encoder and
+connector; however, this approach is not flexible and does not fit well
+for vkms. This commit adds an index parameter for vkms_plane_init()
+which makes code flexible and enables vkms to support other DRM features.
 
 Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 ---
- drivers/gpu/drm/vkms/vkms_composer.c |  8 +++----
- drivers/gpu/drm/vkms/vkms_composer.h |  8 +++----
- drivers/gpu/drm/vkms/vkms_crc.c      | 14 +++++------
- drivers/gpu/drm/vkms/vkms_drv.h      |  6 ++---
- drivers/gpu/drm/vkms/vkms_plane.c    | 36 ++++++++++++++--------------
- 5 files changed, 36 insertions(+), 36 deletions(-)
+ drivers/gpu/drm/vkms/vkms_drv.c    | 2 +-
+ drivers/gpu/drm/vkms/vkms_drv.h    | 4 ++--
+ drivers/gpu/drm/vkms/vkms_output.c | 6 +++---
+ drivers/gpu/drm/vkms/vkms_plane.c  | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-index 3d7c5e316d6e..c636dc672430 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.c
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -19,8 +19,8 @@
-  * Todo: Use the alpha value to blend vaddr_src with vaddr_dst
-  *	 instead of overwriting it.
-  */
--void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
--	   struct vkms_crc_data *src)
-+void blend(void *vaddr_dst, void *vaddr_src, struct vkms_data *dest,
-+	   struct vkms_data *src)
- {
- 	int i, j, j_dst, i_dst;
- 	int offset_src, offset_dst;
-@@ -52,8 +52,8 @@ void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
- 	}
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.c b/drivers/gpu/drm/vkms/vkms_drv.c
+index cc53ef88a331..966b3d653189 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.c
++++ b/drivers/gpu/drm/vkms/vkms_drv.c
+@@ -127,7 +127,7 @@ static int vkms_modeset_init(struct vkms_device *vkmsdev)
+ 	dev->mode_config.preferred_depth = 24;
+ 	dev->mode_config.helper_private = &vkms_mode_config_helpers;
+ 
+-	return vkms_output_init(vkmsdev);
++	return vkms_output_init(vkmsdev, 0);
  }
  
--void compose_cursor(struct vkms_crc_data *cursor,
--		    struct vkms_crc_data *primary, void *vaddr_out)
-+void compose_cursor(struct vkms_data *cursor, struct vkms_data *primary,
-+		    void *vaddr_out)
- {
- 	struct drm_gem_object *cursor_obj;
- 	struct vkms_gem_object *cursor_vkms_obj;
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.h b/drivers/gpu/drm/vkms/vkms_composer.h
-index 53fdee17a632..93842b4b2eed 100644
---- a/drivers/gpu/drm/vkms/vkms_composer.h
-+++ b/drivers/gpu/drm/vkms/vkms_composer.h
-@@ -3,10 +3,10 @@
- #ifndef _VKMS_COMPOSER_H_
- #define _VKMS_COMPOSER_H_
- 
--void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
--	   struct vkms_crc_data *src);
-+void blend(void *vaddr_dst, void *vaddr_src, struct vkms_data *dest,
-+	   struct vkms_data *src);
- 
--void compose_cursor(struct vkms_crc_data *cursor,
--		    struct vkms_crc_data *primary, void *vaddr_out);
-+void compose_cursor(struct vkms_data *cursor, struct vkms_data *primary,
-+		    void *vaddr_out);
- 
- #endif /* _VKMS_COMPOSER_H_ */
-diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
-index 8b215677581f..69d0decf14af 100644
---- a/drivers/gpu/drm/vkms/vkms_crc.c
-+++ b/drivers/gpu/drm/vkms/vkms_crc.c
-@@ -16,7 +16,7 @@
-  * returns CRC value computed using crc32 on the visible portion of
-  * the final framebuffer at vaddr_out
-  */
--static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
-+static uint32_t compute_crc(void *vaddr_out, struct vkms_data *crc_out)
- {
- 	int i, j, src_offset;
- 	int x_src = crc_out->src.x1 >> 16;
-@@ -40,8 +40,8 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
- 	return crc;
- }
- 
--static uint32_t _vkms_get_crc(struct vkms_crc_data *primary_crc,
--			      struct vkms_crc_data *cursor_crc)
-+static uint32_t _vkms_get_crc(struct vkms_data *primary_crc,
-+			      struct vkms_data *cursor_crc)
- {
- 	struct drm_framebuffer *fb = &primary_crc->fb;
- 	struct drm_gem_object *gem_obj = drm_gem_fb_get_obj(fb, 0);
-@@ -87,8 +87,8 @@ void vkms_crc_work_handle(struct work_struct *work)
- 						crc_work);
- 	struct drm_crtc *crtc = crtc_state->base.crtc;
- 	struct vkms_output *out = drm_crtc_to_vkms_output(crtc);
--	struct vkms_crc_data *primary_crc = NULL;
--	struct vkms_crc_data *cursor_crc = NULL;
-+	struct vkms_data *primary_crc = NULL;
-+	struct vkms_data *cursor_crc = NULL;
- 	u32 crc32 = 0;
- 	u64 frame_start, frame_end;
- 	bool crc_pending;
-@@ -110,10 +110,10 @@ void vkms_crc_work_handle(struct work_struct *work)
- 		return;
- 
- 	if (crtc_state->num_active_planes >= 1)
--		primary_crc = crtc_state->active_planes[0]->crc_data;
-+		primary_crc = crtc_state->active_planes[0]->data;
- 
- 	if (crtc_state->num_active_planes == 2)
--		cursor_crc = crtc_state->active_planes[1]->crc_data;
-+		cursor_crc = crtc_state->active_planes[1]->data;
- 
- 	if (primary_crc)
- 		crc32 = _vkms_get_crc(primary_crc, cursor_crc);
+ static int __init vkms_init(void)
 diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
-index a887c05ff70e..8d628d18105e 100644
+index 8d628d18105e..ad63dbe5e994 100644
 --- a/drivers/gpu/drm/vkms/vkms_drv.h
 +++ b/drivers/gpu/drm/vkms/vkms_drv.h
-@@ -20,7 +20,7 @@
+@@ -115,10 +115,10 @@ bool vkms_get_vblank_timestamp(struct drm_device *dev, unsigned int pipe,
+ 			       int *max_error, ktime_t *vblank_time,
+ 			       bool in_vblank_irq);
  
- extern bool enable_cursor;
+-int vkms_output_init(struct vkms_device *vkmsdev);
++int vkms_output_init(struct vkms_device *vkmsdev, int index);
  
--struct vkms_crc_data {
-+struct vkms_data {
- 	struct drm_framebuffer fb;
- 	struct drm_rect src, dst;
- 	unsigned int offset;
-@@ -31,11 +31,11 @@ struct vkms_crc_data {
- /**
-  * vkms_plane_state - Driver specific plane state
-  * @base: base plane state
-- * @crc_data: data required for CRC computation
-+ * @data: data required for compose computation
-  */
- struct vkms_plane_state {
- 	struct drm_plane_state base;
--	struct vkms_crc_data *crc_data;
-+	struct vkms_data *data;
+ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+-				  enum drm_plane_type type);
++				  enum drm_plane_type type, int index);
+ 
+ /* Gem stuff */
+ struct drm_gem_object *vkms_gem_create(struct drm_device *dev,
+diff --git a/drivers/gpu/drm/vkms/vkms_output.c b/drivers/gpu/drm/vkms/vkms_output.c
+index 56fb5c2a2315..fb1941a6522c 100644
+--- a/drivers/gpu/drm/vkms/vkms_output.c
++++ b/drivers/gpu/drm/vkms/vkms_output.c
+@@ -35,7 +35,7 @@ static const struct drm_connector_helper_funcs vkms_conn_helper_funcs = {
+ 	.get_modes    = vkms_conn_get_modes,
  };
  
- /**
+-int vkms_output_init(struct vkms_device *vkmsdev)
++int vkms_output_init(struct vkms_device *vkmsdev, int index)
+ {
+ 	struct vkms_output *output = &vkmsdev->output;
+ 	struct drm_device *dev = &vkmsdev->drm;
+@@ -45,12 +45,12 @@ int vkms_output_init(struct vkms_device *vkmsdev)
+ 	struct drm_plane *primary, *cursor = NULL;
+ 	int ret;
+ 
+-	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY);
++	primary = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_PRIMARY, index);
+ 	if (IS_ERR(primary))
+ 		return PTR_ERR(primary);
+ 
+ 	if (enable_cursor) {
+-		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR);
++		cursor = vkms_plane_init(vkmsdev, DRM_PLANE_TYPE_CURSOR, index);
+ 		if (IS_ERR(cursor)) {
+ 			ret = PTR_ERR(cursor);
+ 			goto err_cursor;
 diff --git a/drivers/gpu/drm/vkms/vkms_plane.c b/drivers/gpu/drm/vkms/vkms_plane.c
-index 0fceb6258422..8cf40297cf56 100644
+index 8cf40297cf56..3f8e8b53f3bb 100644
 --- a/drivers/gpu/drm/vkms/vkms_plane.c
 +++ b/drivers/gpu/drm/vkms/vkms_plane.c
-@@ -18,20 +18,20 @@ static struct drm_plane_state *
- vkms_plane_duplicate_state(struct drm_plane *plane)
+@@ -176,7 +176,7 @@ static const struct drm_plane_helper_funcs vkms_primary_helper_funcs = {
+ };
+ 
+ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+-				  enum drm_plane_type type)
++				  enum drm_plane_type type, int index)
  {
- 	struct vkms_plane_state *vkms_state;
--	struct vkms_crc_data *crc_data;
-+	struct vkms_data *data;
- 
- 	vkms_state = kzalloc(sizeof(*vkms_state), GFP_KERNEL);
- 	if (!vkms_state)
- 		return NULL;
- 
--	crc_data = kzalloc(sizeof(*crc_data), GFP_KERNEL);
--	if (!crc_data) {
--		DRM_DEBUG_KMS("Couldn't allocate crc_data\n");
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		DRM_DEBUG_KMS("Couldn't allocate vkms_data\n");
- 		kfree(vkms_state);
- 		return NULL;
+ 	struct drm_device *dev = &vkmsdev->drm;
+ 	const struct drm_plane_helper_funcs *funcs;
+@@ -198,7 +198,7 @@ struct drm_plane *vkms_plane_init(struct vkms_device *vkmsdev,
+ 		funcs = &vkms_primary_helper_funcs;
  	}
  
--	vkms_state->crc_data = crc_data;
-+	vkms_state->data = data;
- 
- 	__drm_atomic_helper_plane_duplicate_state(plane,
- 						  &vkms_state->base);
-@@ -49,12 +49,12 @@ static void vkms_plane_destroy_state(struct drm_plane *plane,
- 		/* dropping the reference we acquired in
- 		 * vkms_primary_plane_update()
- 		 */
--		if (drm_framebuffer_read_refcount(&vkms_state->crc_data->fb))
--			drm_framebuffer_put(&vkms_state->crc_data->fb);
-+		if (drm_framebuffer_read_refcount(&vkms_state->data->fb))
-+			drm_framebuffer_put(&vkms_state->data->fb);
- 	}
- 
--	kfree(vkms_state->crc_data);
--	vkms_state->crc_data = NULL;
-+	kfree(vkms_state->data);
-+	vkms_state->data = NULL;
- 
- 	__drm_atomic_helper_plane_destroy_state(old_state);
- 	kfree(vkms_state);
-@@ -91,21 +91,21 @@ static void vkms_plane_atomic_update(struct drm_plane *plane,
- {
- 	struct vkms_plane_state *vkms_plane_state;
- 	struct drm_framebuffer *fb = plane->state->fb;
--	struct vkms_crc_data *crc_data;
-+	struct vkms_data *data;
- 
- 	if (!plane->state->crtc || !fb)
- 		return;
- 
- 	vkms_plane_state = to_vkms_plane_state(plane->state);
- 
--	crc_data = vkms_plane_state->crc_data;
--	memcpy(&crc_data->src, &plane->state->src, sizeof(struct drm_rect));
--	memcpy(&crc_data->dst, &plane->state->dst, sizeof(struct drm_rect));
--	memcpy(&crc_data->fb, fb, sizeof(struct drm_framebuffer));
--	drm_framebuffer_get(&crc_data->fb);
--	crc_data->offset = fb->offsets[0];
--	crc_data->pitch = fb->pitches[0];
--	crc_data->cpp = fb->format->cpp[0];
-+	data = vkms_plane_state->data;
-+	memcpy(&data->src, &plane->state->src, sizeof(struct drm_rect));
-+	memcpy(&data->dst, &plane->state->dst, sizeof(struct drm_rect));
-+	memcpy(&data->fb, fb, sizeof(struct drm_framebuffer));
-+	drm_framebuffer_get(&data->fb);
-+	data->offset = fb->offsets[0];
-+	data->pitch = fb->pitches[0];
-+	data->cpp = fb->format->cpp[0];
- }
- 
- static int vkms_plane_atomic_check(struct drm_plane *plane,
+-	ret = drm_universal_plane_init(dev, plane, 0,
++	ret = drm_universal_plane_init(dev, plane, 1 << index,
+ 				       &vkms_plane_funcs,
+ 				       formats, nformats,
+ 				       NULL, type, NULL);
 -- 
 2.21.0
