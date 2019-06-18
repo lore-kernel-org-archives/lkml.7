@@ -2,155 +2,133 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0EBAC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCBAC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:49:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CA82084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D481213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:49:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hqS5I/Cp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbfFRQss (ORCPT
+        id S1730001AbfFRQtz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:48:48 -0400
-Received: from mga18.intel.com ([134.134.136.126]:59410 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729327AbfFRQsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:48:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 09:48:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
-   d="scan'208";a="243045278"
-Received: from oamaslek-mobl.amr.corp.intel.com (HELO [10.251.9.224]) ([10.251.9.224])
-  by orsmga001.jf.intel.com with ESMTP; 18 Jun 2019 09:48:46 -0700
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for
- MKTME
-To:     Andy Lutomirski <luto@amacapital.net>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
- <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
- <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
- <1560816342.5187.63.camel@linux.intel.com>
- <CALCETrVcrPYUUVdgnPZojhJLgEhKv5gNqnT6u2nFVBAZprcs5g@mail.gmail.com>
- <1560821746.5187.82.camel@linux.intel.com>
- <CALCETrUrFTFGhRMuNLxD9G9=GsR6U-THWn4AtminR_HU-nBj+Q@mail.gmail.com>
- <1560824611.5187.100.camel@linux.intel.com>
- <20190618091246.GM3436@hirez.programming.kicks-ass.net>
- <2ec26c05-7c57-d0e0-a628-94d581b96b63@intel.com>
- <20190618161502.jiuqhvs3wvnac5ow@box.shutemov.name>
- <f701f859-0990-9f02-baa2-451dd6c8b3c4@intel.com>
- <8FDB1E33-21BC-400D-9051-7BE61400ACD2@amacapital.net>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <7e001776-a8f8-9109-a536-90398de81d53@intel.com>
-Date:   Tue, 18 Jun 2019 09:48:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <8FDB1E33-21BC-400D-9051-7BE61400ACD2@amacapital.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Jun 2019 12:49:55 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:33132 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729859AbfFRQtz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:49:55 -0400
+Received: by mail-io1-f66.google.com with SMTP id u13so31519190iop.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=J5nux9DmROYeE56s/BQAf6HcvIGxMJ51i9fQdjtJRGo=;
+        b=hqS5I/CprE/DXrjhB2RtBrF+oejKGdk3zNCPfvhEilNd8g6oS+9FCyeX5xoWyR95Pv
+         QXfQpUrDVSyyPbwMEGtN/Anc7PQkgQch9Ion+L5uVbaRRsodXcJAWiAUSSTp5br1+rqC
+         Nob53UB4jzbHqZydh8I42+TynMH/npouE7S2Z4PEOQ+I9MAAdV002tFiTkmYHOab8byS
+         jhMHwalM8OjU3wLxgs3gZ4IwWYogLkZl4yUaunnYG6H9SmzH9RHYFHwmJYqs59Dx7kzn
+         QlOSOVrA6U7UdmnKfYIHqVc7p0uQD/EUtAdDuexdd4hLamN0a9q8EEJCyuLh6ELLJcYO
+         G+oA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=J5nux9DmROYeE56s/BQAf6HcvIGxMJ51i9fQdjtJRGo=;
+        b=iTJ6UCuufdgSAV0jHP9xTEXxw6jXq1ZE0XmD1AvVl/119ttpMpyBiFKy0tnzhUj7Dd
+         UpK5WfhgNe9GtVz+F+VeXXIC0E0HDO3xCl7Rzozy60e8gtSk4jY2SCi2itJx5AqUGyB8
+         wZCdgiwSfbQZu/0I7cOHhAt4xXjuXB1JqyG4fQRHI2tjtrh5Ys7xC8OVLL5e+TVelEPw
+         EP8/bpyxvVQkLtyZC2yCgQVtnuIHo30/MROXH7F3pyN9k4vTgkW09LDbxEIxUUzq9qfO
+         emR6lLMm7iBvVzk9XWVN/IVS/hNEBjN4gHP0iGdiug8uPRAzzjJD0QLzb1koZgXWycL3
+         AaWA==
+X-Gm-Message-State: APjAAAVb5MPqW903DSwuPADUCQo1gpvJKsYiX1evNem4IJT9H32OarXB
+        9ooHcEoXMAV4E/5q4PCMk7CtWg==
+X-Google-Smtp-Source: APXvYqyQiMRJSW+WsgFrJq67pivLuHVMSleBEdiKqkJFj7YjDFmJQLp16dpykNpYQIUlonlZMP6LSA==
+X-Received: by 2002:a5d:9291:: with SMTP id s17mr3521902iom.10.1560876593344;
+        Tue, 18 Jun 2019 09:49:53 -0700 (PDT)
+Received: from [192.168.1.196] ([216.160.37.230])
+        by smtp.gmail.com with ESMTPSA id b6sm11518234iok.71.2019.06.18.09.49.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 09:49:52 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
+From:   Troy Benjegerdes <troy.benjegerdes@sifive.com>
+In-Reply-To: <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
+Date:   Tue, 18 Jun 2019 11:49:51 -0500
+Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
+        "palmer@sifive.com" <palmer@sifive.com>,
+        Alistair Francis <Alistair.Francis@wdc.com>,
+        "jamez@wit.com" <jamez@wit.com>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "schwab@suse.de" <schwab@suse.de>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
+        "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "ynezz@true.cz" <ynezz@true.cz>,
+        "yash.shah@sifive.com" <yash.shah@sifive.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Atish Patra <atish.patra@wdc.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Lukas Auer <lukas.auer@aisec.fraunhofer.de>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <946B2B53-7A16-4B8D-8CB9-34EFFB9E84D6@sifive.com>
+References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
+ <mvmtvco62k9.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
+ <mvmpnnc5y49.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
+ <mvmh88o5xi5.fsf@suse.de>
+ <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
+ <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
+ <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
+ <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
+ <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
+To:     Anup Patel <anup@brainfault.org>
+X-Mailer: Apple Mail (2.3445.9.1)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 9:36 AM, Andy Lutomirski wrote:
-> Should MKTME+DAX encrypt the entire volume or should it encrypt individual files?  Or both?
 
-Our current thought is that there should be two modes: One for entire
-DAX namespaces and one for filesystem DAX that would allow it to be at
-the file level.  More likely, we would mirror fscrypt and do it at the
-directory level.
 
-> If it encrypts individual files, should the fs be involved at all?
-> Should there be metadata that can check whether a given key is the
-> correct key?
-FWIW, this is a question for the fs guys.  Their guidance so far has
-been "do what fscrypt does", and fscrypt does not protect against
-incorrect keys being specified.  See:
+> On Jun 18, 2019, at 4:32 AM, Anup Patel <anup@brainfault.org> wrote:
+>=20
+>> =
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
+?id=3D72296bde4f4207566872ee355950a59cbc29f852
 
-	https://www.kernel.org/doc/html/v5.1/filesystems/fscrypt.html
+I added your patches, along with two of mine, and rebased them
+to the latest U-boot master, and put them on the =E2=80=98to-upstream=E2=80=
+=99 branch
+at https://github.com/sifive/u-boot/tree/to-upstream
 
-Which says:
+I am most interested in review of the patch that adds the DTS files
+from Linux to U-boot, along with a =E2=80=98-u-boot.dtsi=E2=80=99 file =
+which includes
+several extra things, most notably an ethernet entry [1] which does
+not match the new proposed changes for the MacB driver that Yash
+is working on.
 
-> Currently, fscrypt does not prevent a user from maliciously providing
-> an incorrect key for another user’s existing encrypted files. A
-> protection against this is planned.
+How close are we to consensus on the new =E2=80=9Csifive,fu540-macb=E2=80=9D=
 
-> If it encrypts individual files, is it even conceptually possible to
-> avoid corruption if the fs is not involved?  After all, many
-> filesystems think that they can move data blocks, compute checksums,
-> journal data, etc.
+device tree entry format? Is this something that is stable enough to
+start basing some work in M-mode U-boot on yet, or do we expect
+more changes?
 
-Yes, exactly.  Thankfully, fscrypt has thought about this already and
-has infrastructure for this.  For instance:
-
-> Online defragmentation of encrypted files is not supported. The
-> EXT4_IOC_MOVE_EXT and F2FS_IOC_MOVE_RANGE ioctls will fail with
-> EOPNOTSUPP.
-
+[1] =
+https://github.com/sifive/u-boot/commit/35e4168e36139722f30143a0ca0aa8637d=
+d3ee04#diff-27d2d375ddac52f1bca71594075e1be4R93=
