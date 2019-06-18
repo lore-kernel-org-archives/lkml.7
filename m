@@ -2,103 +2,90 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-10.3 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60157C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED1B8C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:50:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E91213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB32D213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfFRNsx (ORCPT
+        id S1729062AbfFRNuv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:48:53 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35096 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfFRNsw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:48:52 -0400
-Received: by mail-qt1-f194.google.com with SMTP id d23so15363849qto.2;
-        Tue, 18 Jun 2019 06:48:52 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=adlKPrwpF847OzhxpvAIaUJHnKpv+DcgWsB6FU5ma+M=;
-        b=g28SISNBz50q7A99LjE5M18cWIZlm6vRN+3UCA7OqcaxUDZecvAOeTl4512khAESXt
-         hjq7Qecf9LP2QhYgLS85/oIlUTSm+bX68dGrmSfkbxjPqdY2pGgf9zCh0b7IAaKvpHW/
-         GPmBIyABkND63KP/u0j82NJmz3+qRBSA+hrjdyPNlXWWKBsnsdGQFUuFI7STv2LnMOqj
-         M7Sd4K8HVmboM532kxixvZ6WwT13c69N9+/gQ3Wx9DSdwuzC2KsG6Z2/pTOYL2cXSrFv
-         588HvWsbm7sgBzZ4gb0C29CUCFIK3vTrq8qYhzO33ypusWtuSveFB0tciOQeM6HdYjGI
-         SzRg==
-X-Gm-Message-State: APjAAAX8OaYUjEQMYD6xHb5nzFLkvi8w2xK0ii6NUDdLYyJPGATzt47B
-        t0lJXcmekMcFCQStj0HX/tPMdEi0gTxhXBLXYYNUWsMrYz0=
-X-Google-Smtp-Source: APXvYqwe5peIXb0dsyQ2lB/6iiVZYwjfA6+1m0/GVEMvpLamKwpY6BkfJDyFTbULruc/oWfp/h23fC2OdT9a520+YBw=
-X-Received: by 2002:a0c:8b49:: with SMTP id d9mr26718089qvc.63.1560865731462;
- Tue, 18 Jun 2019 06:48:51 -0700 (PDT)
+        Tue, 18 Jun 2019 09:50:51 -0400
+Received: from foss.arm.com ([217.140.110.172]:42176 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726248AbfFRNuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:50:50 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CC7CD2B;
+        Tue, 18 Jun 2019 06:50:49 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 412343F718;
+        Tue, 18 Jun 2019 06:50:48 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 14:50:46 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Anisse Astier <aastier@freebox.fr>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Richard Henderson <richard.henderson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-kernel@vger.kernel.org, Rich Felker <dalias@aerifal.cx>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Ricardo Salveti <ricardo@foundries.io>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH v3 2/2] arm64/sve: <uapi/asm/ptrace.h> should not depend
+ on <uapi/linux/prctl.h>
+Message-ID: <20190618135046.GH31041@fuggles.cambridge.arm.com>
+References: <20190617084545.GA38959@anisse-station>
+ <20190617132222.32182-1-aastier@freebox.fr>
+ <20190617132222.32182-2-aastier@freebox.fr>
 MIME-Version: 1.0
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net> <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
-In-Reply-To: <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 15:48:32 +0200
-Message-ID: <CAK8P3a0sL+nPmduZd=DNSsntq62e+o3upYsWg=iPNwzvgBp+Mg@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Alex Elder <elder@linaro.org>
-Cc:     Johannes Berg <johannes@sipsolutions.net>, abhishek.esse@gmail.com,
-        Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        Dan Williams <dcbw@redhat.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        syadagir@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617132222.32182-2-aastier@freebox.fr>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 3:16 PM Alex Elder <elder@linaro.org> wrote:
-> On 6/17/19 6:28 AM, Johannes Berg wrote:
-> > On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
->
-> I'm probably missing something, but I think the checksum
-> offload could be handled by the IPA driver rather than
-> rmnet.  It seems to be an add-on that is completely
-> independent of the multiplexing and aggregation capabilities
-> that QMAP provides.
+On Mon, Jun 17, 2019 at 03:22:22PM +0200, Anisse Astier wrote:
+> Otherwise this will create userspace build issues for any program
+> (strace, qemu) that includes both <sys/prctl.h> (with musl libc) and
+> <linux/ptrace.h> (which then includes <asm/ptrace.h>), like this:
+> 
+> 	error: redefinition of 'struct prctl_mm_map'
+> 	 struct prctl_mm_map {
+> 
+> See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
+> for a public example of people working around this issue.
+> 
+> Copying the defines is a bit imperfect here, but better than creating a
+> whole other header for just two defines that would never change, as part
+> of the kernel ABI.
+> 
+> This patch depends on patch "arm64: ssbd: explicitly depend on
+> <linux/prctl.h>" for kernel >= 4.18
+> 
+> Fixes: 43d4da2c45b2 ("arm64/sve: ptrace and ELF coredump support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Anisse Astier <aastier@freebox.fr>
+> ---
+>  arch/arm64/include/uapi/asm/ptrace.h | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
 
-My best guess is that it is part of rmnet simply because this can
-be done in a generic way for any qmap based back-end, and rmnet
-was intended as the abstraction for qmap.
+I've pushed these two out to the arm64 fixes branch [1], with Dave's Ack
+on this one. Note that I reworked the commit messages a bit to explain
+better what's going on.
 
-A better implementation of the checksumming might be to split
-it out into a library that is in turn used by qmap drivers. Since this
-should be transparent to the user interface, it can be moved
-there later.
+Cheers,
 
-> >>> If true though, then I think this would be the killer argument *in
-> >>> favour* of *not* merging this - because that would mean we *don't* have
-> >>> to actually keep the rmnet API around for all foreseeable future.
->
-> This is because it's a user space API?  If so I now understand
-> what you mean.
+Will
 
-Yes, I think agreeing on the general user interface is (as usual) the
-one thing that has to be done as a prerequisite. I had originally
-hoped that by removing the ioctl interface portion of the driver,
-this could be avoided, but that was before I had any idea on the
-upper layers.
-
-     Arnd
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/fixes
