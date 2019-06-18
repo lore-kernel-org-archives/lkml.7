@@ -2,46 +2,48 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E691DC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9ABEC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:36:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C430520863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:35:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98FEF20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:36:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729129AbfFRIfo (ORCPT
+        id S1729149AbfFRIgM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:35:44 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:59762 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFRIfn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:35:43 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 423C427E950
-Subject: Re: [RFC PATCH chrome-platform-linux] platform/chrome:
- cros_ec_debugfs: cros_ec_uptime_fops can be static
-To:     kbuild test robot <lkp@intel.com>,
-        Tim Wawrzynczak <twawrzynczak@chromium.org>
-Cc:     kbuild-all@01.org, Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org
-References: <201906151827.DYouSmoA%lkp@intel.com>
- <20190615105512.GA152427@lkp-kbuild11>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <bd518a39-8aa4-d22f-0fad-6cd24697b218@collabora.com>
-Date:   Tue, 18 Jun 2019 10:35:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 18 Jun 2019 04:36:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18635 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725913AbfFRIgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:36:11 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 93B4A53BE9FF0D970C0F;
+        Tue, 18 Jun 2019 16:36:02 +0800 (CST)
+Received: from [127.0.0.1] (10.133.217.137) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Jun 2019
+ 16:35:55 +0800
+Subject: Re: [PATCH] irqchip/mbigen: stop printing kernel addresses
+To:     Marc Zyngier <marc.zyngier@arm.com>
+CC:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        <linux-kernel@vger.kernel.org>, <guohanjun@huawei.com>
+References: <20190618032202.11087-1-wangkefeng.wang@huawei.com>
+ <86h88npc47.wl-marc.zyngier@arm.com>
+From:   Kefeng Wang <wangkefeng.wang@huawei.com>
+Message-ID: <d529faf2-9edd-8362-c208-fd1902d539e7@huawei.com>
+Date:   Tue, 18 Jun 2019 16:35:53 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <20190615105512.GA152427@lkp-kbuild11>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
+In-Reply-To: <86h88npc47.wl-marc.zyngier@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.217.137]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -49,27 +51,60 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 15/6/19 12:55, kbuild test robot wrote:
+On 2019/6/18 15:48, Marc Zyngier wrote:
+> Hi Kefeng,
 > 
-> Fixes: 909447f683b3 ("platform/chrome: cros_ec_debugfs: Add debugfs entry to retrieve EC uptime")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
->  cros_ec_debugfs.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> On Tue, 18 Jun 2019 04:22:02 +0100,
+> Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>>
+>> After commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
+>> it will print "____ptrval____" instead of actual addresses when mbigen
+>> create domain fails,
+>>
+>>   Hisilicon MBIGEN-V2 HISI0152:00: Failed to create mbi-gen@(____ptrval____) irqdomain
+>>   Hisilicon MBIGEN-V2: probe of HISI0152:00 failed with error -12
+>>
+>> Instead of changing the print to "%px", and leaking kernel addresses,
+>> just remove the print completely.
+>>
+>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>> ---
+>>  drivers/irqchip/irq-mbigen.c | 3 +--
+>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+>> index 98b6e1d4b1a6..d0cf596c801b 100644
+>> --- a/drivers/irqchip/irq-mbigen.c
+>> +++ b/drivers/irqchip/irq-mbigen.c
+>> @@ -355,8 +355,7 @@ static int mbigen_device_probe(struct platform_device *pdev)
+>>  		err = -EINVAL;
+>>  
+>>  	if (err) {
+>> -		dev_err(&pdev->dev, "Failed to create mbi-gen@%p irqdomain",
+>> -			mgn_chip->base);
+>> +		dev_err(&pdev->dev, "Failed to create mbi-gen irqdomain");
 > 
-> diff --git a/drivers/platform/chrome/cros_ec_debugfs.c b/drivers/platform/chrome/cros_ec_debugfs.c
-> index 970ba13d..d40902e 100644
-> --- a/drivers/platform/chrome/cros_ec_debugfs.c
-> +++ b/drivers/platform/chrome/cros_ec_debugfs.c
-> @@ -285,7 +285,7 @@ static const struct file_operations cros_ec_pdinfo_fops = {
->  	.llseek = default_llseek,
->  };
->  
-> -const struct file_operations cros_ec_uptime_fops = {
-> +static const struct file_operations cros_ec_uptime_fops = {
->  	.owner = THIS_MODULE,
->  	.open = simple_open,
->  	.read = cros_ec_uptime_read,
+> The alternative would be to print res as a resource, which would still
+> help identifying the offending device by printing its physical
+> layout, and still not reveal much.
+
+It's better to print res to show the physical layout, and add missing "\n",
+will resend v2.
+
+Thanks.
+
+> 
+> Just let me know what you prefer.
+> 
+> Thanks,
+> 
+> 	M.
+> 
+>>  		return err;
+>>  	}
+>>  
+>> -- 
+>> 2.20.1
+>>
 > 
 
-applied for chrome-platform-5.3
