@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7193C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95315C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840A820B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7257220B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731115AbfFRWvu (ORCPT
+        id S1730952AbfFRWvN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:51:50 -0400
-Received: from mga05.intel.com ([192.55.52.43]:51708 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730947AbfFRWvN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 18:51:13 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48876 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730845AbfFRWvM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 18:51:12 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 15:51:12 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 15:51:11 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
-   d="scan'208";a="358009389"
+   d="scan'208";a="358009342"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 15:51:12 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 15:51:10 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -47,9 +47,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v9 15/17] x86/split_lock: Add documentation for split lock detection interface
-Date:   Tue, 18 Jun 2019 15:41:17 -0700
-Message-Id: <1560897679-228028-16-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v9 02/17] drivers/net/b44: Align pwol_mask to unsigned long for better performance
+Date:   Tue, 18 Jun 2019 15:41:04 -0700
+Message-Id: <1560897679-228028-3-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
 References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
@@ -58,46 +58,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is useful for development and debugging to document the new debugfs
-interface /sys/kernel/debug/x86/split_lock_detect.
+From: Peter Zijlstra <peterz@infradead.org>
 
-A new debugfs documentation is created to describe the split lock detection
-interface. In the future, more entries may be added in the documentation to
-describe other interfaces under /sys/kernel/debug/x86 directory.
+A bit in pwol_mask is set in b44_magic_pattern() by atomic set_bit().
+But since pwol_mask is local and never exposed to concurrency, there is
+no need to set bit in pwol_mask atomically.
 
+set_bit() sets the bit in a single unsigned long location. Because
+pwol_mask may not be aligned to unsigned long, the location may cross two
+cache lines. On x86, accessing two cache lines in locked instruction in
+set_bit() is called split locked access and can cause overall performance
+degradation.
+
+So use non atomic __set_bit() to set pwol_mask bits. __set_bit() won't hit
+split lock issue on x86.
+
+Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- Documentation/ABI/testing/debugfs-x86 | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/ABI/testing/debugfs-x86
+ drivers/net/ethernet/broadcom/b44.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/ABI/testing/debugfs-x86 b/Documentation/ABI/testing/debugfs-x86
-new file mode 100644
-index 000000000000..17a1e9ed6712
---- /dev/null
-+++ b/Documentation/ABI/testing/debugfs-x86
-@@ -0,0 +1,21 @@
-+What:		/sys/kernel/debugfs/x86/split_lock_detect
-+Date:		May 2019
-+Contact:	Linux kernel mailing list <linux-kernel@vger.kernel.org>
-+Description:	(RW) Control split lock detection on Intel Tremont and
-+		future CPUs
-+
-+		Reads return split lock detection status:
-+			0: disabled
-+			1: enabled
-+
-+		Writes enable or disable split lock detection:
-+			The first character is one of 'Nn0' or [oO][fF] for off
-+			disables the feature.
-+			The first character is one of 'Yy1' or [oO][nN] for on
-+			enables the feature.
-+
-+		Please note the interface only shows or controls global setting.
-+		During run time, split lock detection on one CPU may be
-+		disabled if split lock operation in kernel code happens on
-+		the CPU. The interface doesn't show or control split lock
-+		detection on individual CPU.
+diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
+index 97ab0dd25552..5738ab963dfb 100644
+--- a/drivers/net/ethernet/broadcom/b44.c
++++ b/drivers/net/ethernet/broadcom/b44.c
+@@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 
+ 	memset(ppattern + offset, 0xff, magicsync);
+ 	for (j = 0; j < magicsync; j++)
+-		set_bit(len++, (unsigned long *) pmask);
++		__set_bit(len++, (unsigned long *)pmask);
+ 
+ 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
+ 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
+@@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+ 		for (k = 0; k< ethaddr_bytes; k++) {
+ 			ppattern[offset + magicsync +
+ 				(j * ETH_ALEN) + k] = macaddr[k];
+-			set_bit(len++, (unsigned long *) pmask);
++			__set_bit(len++, (unsigned long *)pmask);
+ 		}
+ 	}
+ 	return len - 1;
 -- 
 2.19.1
 
