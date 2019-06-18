@@ -2,176 +2,179 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47BFBC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:20:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD435C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:22:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D2321479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:20:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A68DA20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:22:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HhgTn3B5"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="S0baOBWq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729764AbfFRPUo (ORCPT
+        id S1729465AbfFRPWV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:20:44 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34453 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729395AbfFRPUm (ORCPT
+        Tue, 18 Jun 2019 11:22:21 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:33703 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729038AbfFRPWU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:20:42 -0400
-Received: by mail-io1-f67.google.com with SMTP id k8so575171iot.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 08:20:41 -0700 (PDT)
+        Tue, 18 Jun 2019 11:22:20 -0400
+Received: by mail-ed1-f67.google.com with SMTP id i11so22351557edq.0
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 08:22:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Gm6zrt3+jyOk79FjVLjqIif+2ZGmPF1/TjoosYPa/aY=;
-        b=HhgTn3B5frcZ87brr7+01lN2WHNxic6G3R1o8OJlYQqfp1hc1M3WllIY/XNiGPHaCI
-         Y49KrIQF61r5gxzA3PSinDixPJnXEsEXx6srKhi+lH5frsHNq772xLo9rU0uJRQ0ebi3
-         3w56DiGhe4EdCPahcmsF3c9JTDGkepUtjqCViyswiVcC0HxhoXjc78KopLoqO0ENMWUL
-         AWvZTUtqNEkFjvosSqLLdX6t7RDLdskTguOS4heP41b4rfNadXsjMO1ltzxQBUjRiV9x
-         3lNj2/XsHUqF5UiCjHgOaLMMf59YVbkgLlt7NZqFdjvl3iv8Wi3VgT4dH65UXvzeg9f7
-         8obg==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=E/qk0N+cIbM6HKj1qhjne1NfpocVmMqaX5q+/tL+ueI=;
+        b=S0baOBWqecd8R9Fv9S0yBSLlPx0B4vYX0TvI7oaRAzSf4d2jvMU2DZNwb2RG3dYdoB
+         4+rZlzI6OA2RQxSWsdDqUVmzxXcyYpc2/nLIKI8MXqYfLfBjl7BetsvlRKqBiD5NuAUg
+         AXHEz2PEzrj8GeuDgxkf0L8t0EXnxlWwtpkRw=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Gm6zrt3+jyOk79FjVLjqIif+2ZGmPF1/TjoosYPa/aY=;
-        b=WUnq3838wHvpzgGtQb+x2auuG03hgfio5+hIjSZc7r/O1WaZ5P2pNDaQXhFdePG0R8
-         frRo3uujLRqXTCaV0SBlvhcycweagdu92L0cjEgxQ9YKi1wu0Vz/G7CnQHI3hs7JSPXJ
-         uKkGa88+ew5WZE7VtyBy4oT4VmtSOjUcYfThJrETj0TZjPEx8QQAH0qasQBa3ggx0Vc5
-         XNX3m2jRzU8Qm6+JAerBpiAxdimEjO+Q1zWNdKEV0kEAGoSNyrSf+We5Vp2bANrCq26A
-         0l9XppKYKz5QT50g2lzFPV1jpoT2mAxA3X6K5fgae99GH+50oRCrco4NxCmfMu12OnVt
-         iZNQ==
-X-Gm-Message-State: APjAAAUjnFzWqnqHhPPX99KyHuV+mSyxgdnWc9bEbn4pFq/a1TvajoD5
-        H0GjpXG8cvqfPo9hvbio2GUk0w==
-X-Google-Smtp-Source: APXvYqzN+CqWZh0iUp59ZmRZ1rXHigzZ346x42zx/+UeRjEIKpJjL/46ZcKoAoNJbjiPleDHtpFqWg==
-X-Received: by 2002:a5d:9d90:: with SMTP id 16mr1935330ion.132.1560871241374;
-        Tue, 18 Jun 2019 08:20:41 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id h18sm12796116iob.80.2019.06.18.08.20.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 08:20:40 -0700 (PDT)
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Johannes Berg <johannes@sipsolutions.net>,
-        Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>
-Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
- <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <850eed1d-0fec-c396-6e91-b5f1f8440ded@linaro.org>
-Date:   Tue, 18 Jun 2019 10:20:39 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=E/qk0N+cIbM6HKj1qhjne1NfpocVmMqaX5q+/tL+ueI=;
+        b=m4gk/MaJRWhNr0/+SidV6kK9bJQuR2phu2i8irkKu9btjo6vu3vvEDoYdhRctBTwDN
+         1nqHyw3TDvuKDkdg1HoNekESKOaC+rIyebPdXB4LLS1knd6R5aTF4VagVbuARuHxhXQe
+         MnE4sqSpVbsC9J0ecCk5DG6vDUEuJmk8QvDcHOGCdWdZ20CyiUTJrflACB3Me3RnE52B
+         RVTJjQfHTuhgq86UVvyPoUbyFceZb6dA9VFkVBdc1jQd4ObLuIdvPz75yck5CxYo45q/
+         WV3l4xi2yGy1AIBe2RbmimWgLGRTZ645J5dTw6Vr/z9DOBhesl4fFVkKLADVMddaHrnK
+         A2qg==
+X-Gm-Message-State: APjAAAWaNmgg9Gm2Icv8rqwUI9n5Q8YGV4wIzJClxstEkuH7Wp/jjbRh
+        hqwT27s4nqOWxCDPAneHZHe5qoVSQ2s=
+X-Google-Smtp-Source: APXvYqwy35fNeHyWQSb1sdW5IH38w+mc35q9rAaNur5D3Zl1Sv5PQx84zYiDMSvgBUjPLKdZDrkeAA==
+X-Received: by 2002:a50:8825:: with SMTP id b34mr48288557edb.22.1560871338412;
+        Tue, 18 Jun 2019 08:22:18 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id 9sm1439769ejg.49.2019.06.18.08.22.16
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 08:22:17 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 17:22:15 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Michal Hocko <mhocko@suse.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux MM <linux-mm@kvack.org>,
+        David Rientjes <rientjes@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+Subject: Re: [PATCH 1/4] mm: Check if mmu notifier callbacks are allowed to
+ fail
+Message-ID: <20190618152215.GG12905@phenom.ffwll.local>
+Mail-Followup-To: Jerome Glisse <jglisse@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux MM <linux-mm@kvack.org>, David Rientjes <rientjes@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>
+References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+ <20190521154411.GD3836@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <e6ba8a9063e63506c0b88a70418d74ca4efe85cd.camel@sipsolutions.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190521154411.GD3836@redhat.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 7:25 AM, Johannes Berg wrote:
-> On Mon, 2019-06-17 at 13:42 +0200, Johannes Berg wrote:
+On Tue, May 21, 2019 at 11:44:11AM -0400, Jerome Glisse wrote:
+> On Mon, May 20, 2019 at 11:39:42PM +0200, Daniel Vetter wrote:
+> > Just a bit of paranoia, since if we start pushing this deep into
+> > callchains it's hard to spot all places where an mmu notifier
+> > implementation might fail when it's not allowed to.
+> > 
+> > Inspired by some confusion we had discussing i915 mmu notifiers and
+> > whether we could use the newly-introduced return value to handle some
+> > corner cases. Until we realized that these are only for when a task
+> > has been killed by the oom reaper.
+> > 
+> > An alternative approach would be to split the callback into two
+> > versions, one with the int return value, and the other with void
+> > return value like in older kernels. But that's a lot more churn for
+> > fairly little gain I think.
+> > 
+> > Summary from the m-l discussion on why we want something at warning
+> > level: This allows automated tooling in CI to catch bugs without
+> > humans having to look at everything. If we just upgrade the existing
+> > pr_info to a pr_warn, then we'll have false positives. And as-is, no
+> > one will ever spot the problem since it's lost in the massive amounts
+> > of overall dmesg noise.
+> > 
+> > v2: Drop the full WARN_ON backtrace in favour of just a pr_warn for
+> > the problematic case (Michal Hocko).
+> > 
+> > v3: Rebase on top of Glisse's arg rework.
+> > 
+> > v4: More rebase on top of Glisse reworking everything.
+> > 
+> > Cc: Andrew Morton <akpm@linux-foundation.org>
+> > Cc: Michal Hocko <mhocko@suse.com>
+> > Cc: "Christian König" <christian.koenig@amd.com>
+> > Cc: David Rientjes <rientjes@google.com>
+> > Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > Cc: "Jérôme Glisse" <jglisse@redhat.com>
+> > Cc: linux-mm@kvack.org
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Reviewed-by: Christian König <christian.koenig@amd.com>
+> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
 > 
->> But anyway, as I alluded to above, I had something like this in mind:
+> Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+
+-mm folks, is this (entire series of 4 patches) planned to land in the 5.3
+merge window? Or do you want more reviews/testing/polish?
+
+I think with all the hmm rework going on, a bit more validation and checks
+in this tricky area would help.
+
+Thanks, Daniel
+
 > 
-> I forgot to state this here, but this was *heavily* influenced by
-> discussions with Dan - many thanks to him.
+> > ---
+> >  mm/mmu_notifier.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/mm/mmu_notifier.c b/mm/mmu_notifier.c
+> > index ee36068077b6..c05e406a7cd7 100644
+> > --- a/mm/mmu_notifier.c
+> > +++ b/mm/mmu_notifier.c
+> > @@ -181,6 +181,9 @@ int __mmu_notifier_invalidate_range_start(struct mmu_notifier_range *range)
+> >  				pr_info("%pS callback failed with %d in %sblockable context.\n",
+> >  					mn->ops->invalidate_range_start, _ret,
+> >  					!mmu_notifier_range_blockable(range) ? "non-" : "");
+> > +				if (!mmu_notifier_range_blockable(range))
+> > +					pr_warn("%pS callback failure not allowed\n",
+> > +						mn->ops->invalidate_range_start);
+> >  				ret = _ret;
+> >  			}
+> >  		}
+> > -- 
+> > 2.20.1
+> > 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Thanks for getting even more concrete with this.  Code is the
-most concise way of describing things, once the general ideas
-seem to be coming together.
-
-I'm not going to comment on the specific code bits, but I have
-some more general questions and comments on the design.  Some
-of these are simply due to my lack of knowledge of how WWAN/modem
-interactions normally work.
-
-First, a few terms (correct or improve as you like):
-- WWAN device is a hardware device (like IPA) that presents a
-  connection between AP and modem, and presents an interface
-  that allows the use of that connection to be managed.
-- WWAN netdevice represents a Linux network interface, with its
-  operations and queues, etc., but implements a standardized
-  set of WWAN-specific operations.  It represents a logical
-' channel whose data is multiplexed over the WWAN device.
-- WWAN channel is a user space abstraction that corresponds
-  with a WWAN netdevice (but I'm not clear on all the ways
-  they differ or interact).
-- The WWAN core is kernel code that presents abstractions
-  for WWAN devices and netdevices, so they can be managed
-  in a generic way.  It is for configuration and communication
-  and is not at all involved in the data path.
-
-You're saying that the WWAN driver space calls wwan_add()
-to register itself as a new WWAN device.
-
-You're also saying that a WWAN device "attaches" a WWAN
-netdevice, which is basically notifying the WWAN core
-that the new netdev/channel is available for use.
-- I trust that a "tentative" attachement is necessary.  But
-  I'm not sure what makes it transition into becoming a
-  "real" one, or how that event gets communicated.
-
-Some questions:
-- What causes a new channel to be created?  Is it initiated
-  by the WWAN device driver?  Does the modem request that
-  it get created?  User space?  Both?
-- What causes a created channel to be removed?
-- You distinguish between attaching a netdevice and (what
-  I'll call) activating it.  What causes activation?
-- How are the attributes of a WWAN device or channel set,
-  or communicated?
-- Are there any attributes that are only optionally supported,
-  and if so, how are the supported ones communicated?
-- Which WWAN channel attributes must be set *before* the
-  channel is activated, and can't be changed?  Are there any
-  that can be changed dynamically?
-
-And while the whole point of this is to make things generic,
-it might be nice to have a way to implement a new feature
-before it can be "standardized".
-
-Thanks.
-
-					-Alex
-
-PS  I don't want to exclude anybody but we could probably start
-    a different mail chain on this topic...
-
->> driver_dev
->>   struct device *dev (USB, PCI, ...)
->>   net_device NA
->>   net_device NB
->>   tty TA
->>  ...
->>
-
-. . .
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
