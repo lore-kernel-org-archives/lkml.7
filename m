@@ -2,127 +2,117 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85AC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:42:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAC33C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:44:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9F2720679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:42:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUWu615y"
+	by mail.kernel.org (Postfix) with ESMTP id 8D66A208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:44:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727964AbfFRMl7 (ORCPT
+        id S1726359AbfFRMoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:41:59 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:46610 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFRMl7 (ORCPT
+        Tue, 18 Jun 2019 08:44:01 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:48633 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRMoA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:41:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=tU+uoH636LnLs6tWofoR44x7rXbC9eLZS1/AxRoae2A=; b=dUWu615yd4Eq0frSeVJMzBQnr
-        c7NZoCsnZO11ofhGx28MfjNFgfdgnq+WNL46xVo1bkwml4T7hWh1kog4kNWUyrbd75WdvkK7nZmlH
-        J54e4GW7oZGuunIRilDjhExoD/2oYz/DadDxTnEu4uU7iPv+gZNirnpq1VXc8bgoCxhxmpnNSt96x
-        z4GHkSRBLpcc4tRATSGSTlAkXuJJVcLR0OV1zeyBLu9QDskQswnG7ZKZg07d+Xd3D5el6+FGgGOvz
-        dla09z4BqHqHrFOoAq5S+/i++Fi390VrVCyimBkasZRwofWz+sZ0y7uEmCfgeodjXhMJN9SKCvJlx
-        FXmFJ4xdg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdDQR-0007Pf-Bh; Tue, 18 Jun 2019 12:41:23 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 22F1F209C88F8; Tue, 18 Jun 2019 14:41:22 +0200 (CEST)
-Date:   Tue, 18 Jun 2019 14:41:22 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-Message-ID: <20190618124122.GH3419@hirez.programming.kicks-ass.net>
-References: <20190606200646.3951-23-yu-cheng.yu@intel.com>
- <20190607180115.GJ28398@e103592.cambridge.arm.com>
- <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
- <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
- <20190611114109.GN28398@e103592.cambridge.arm.com>
- <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
- <20190612093238.GQ28398@e103592.cambridge.arm.com>
- <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
- <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
- <20190618091248.GB2790@e103592.cambridge.arm.com>
+        Tue, 18 Jun 2019 08:44:00 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hdDSr-000408-4h; Tue, 18 Jun 2019 12:43:53 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>, linux-mm@kvack.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] mm: idle-page: fix oops because end_pfn is larger than max_pfn
+Date:   Tue, 18 Jun 2019 13:43:52 +0100
+Message-Id: <20190618124352.28307-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618091248.GB2790@e103592.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:12:50AM +0100, Dave Martin wrote:
-> On Mon, Jun 17, 2019 at 02:20:40PM +0200, Thomas Gleixner wrote:
-> > On Mon, 17 Jun 2019, Florian Weimer wrote:
-> > > * Dave Martin:
-> > > > On Tue, Jun 11, 2019 at 12:31:34PM -0700, Yu-cheng Yu wrote:
-> > > >> We can probably check PT_GNU_PROPERTY first, and fallback (based on ld-linux
-> > > >> version?) to PT_NOTE scanning?
-> > > >
-> > > > For arm64, we can check for PT_GNU_PROPERTY and then give up
-> > > > unconditionally.
-> > > >
-> > > > For x86, we would fall back to PT_NOTE scanning, but this will add a bit
-> > > > of cost to binaries that don't have NT_GNU_PROPERTY_TYPE_0.  The ld.so
-> > > > version doesn't tell you what ELF ABI a given executable conforms to.
-> > > >
-> > > > Since this sounds like it's largely a distro-specific issue, maybe there
-> > > > could be a Kconfig option to turn the fallback PT_NOTE scanning on?
-> > > 
-> > > I'm worried that this causes interop issues similarly to what we see
-> > > with VSYSCALL today.  If we need both and a way to disable it, it should
-> > > be something like a personality flag which can be configured for each
-> > > process tree separately.  Ideally, we'd settle on one correct approach
-> > > (i.e., either always process both, or only process PT_GNU_PROPERTY) and
-> > > enforce that.
-> > 
-> > Chose one and only the one which makes technically sense and is not some
-> > horrible vehicle.
-> > 
-> > Everytime we did those 'oh we need to make x fly workarounds' we regretted
-> > it sooner than later.
-> 
-> So I guess that points to keeping PT_NOTE scanning always available as a
-> fallback on x86.  This sucks a bit, but if there are binaries already in
-> the wild that rely on this, I don't think we have much choice...
+From: Colin Ian King <colin.king@canonical.com>
 
-I'm not sure I read Thomas' comment like that. In my reading keeping the
-PT_NOTE fallback is exactly one of those 'fly workarounds'. By not
-supporting PT_NOTE only the 'fine' people already shit^Hpping this out
-of tree are affected, and we don't have to care about them at all.
+Currently the calcuation of end_pfn can round up the pfn number to
+more than the actual maximum number of pfns, causing an Oops. Fix
+this by ensuring end_pfn is never more than max_pfn.
+
+This can be easily triggered when on systems where the end_pfn gets
+rounded up to more than max_pfn using the idle-page stress-ng
+stress test:
+
+sudo stress-ng --idle-page 0
+
+[ 3812.222790] BUG: unable to handle kernel paging request at 00000000000020d8
+[ 3812.224341] #PF error: [normal kernel read fault]
+[ 3812.225144] PGD 0 P4D 0
+[ 3812.225626] Oops: 0000 [#1] SMP PTI
+[ 3812.226264] CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
+[ 3812.227643] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[ 3812.229286] RIP: 0010:page_idle_get_page+0xc8/0x1a0
+[ 3812.230173] Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
+[ 3812.234641] RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
+[ 3812.235792] RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
+[ 3812.237739] RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
+[ 3812.239225] RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
+[ 3812.241027] R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
+[ 3812.242555] R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
+[ 3812.244073] FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
+[ 3812.245968] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3812.247162] CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
+[ 3812.249045] Call Trace:
+[ 3812.249625] page_idle_bitmap_write+0x8c/0x140
+[ 3812.250567] sysfs_kf_bin_write+0x5c/0x70
+[ 3812.251406] kernfs_fop_write+0x12e/0x1b0
+[ 3812.252282] __vfs_write+0x1b/0x40
+[ 3812.253002] vfs_write+0xab/0x1b0
+[ 3812.253941] ksys_write+0x55/0xc0
+[ 3812.254660] __x64_sys_write+0x1a/0x20
+[ 3812.255446] do_syscall_64+0x5a/0x110
+[ 3812.256254] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+Fixes: 33c3fc71c8cf ("mm: introduce idle page tracking")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ mm/page_idle.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/page_idle.c b/mm/page_idle.c
+index 0b39ec0c945c..295512465065 100644
+--- a/mm/page_idle.c
++++ b/mm/page_idle.c
+@@ -136,7 +136,7 @@ static ssize_t page_idle_bitmap_read(struct file *file, struct kobject *kobj,
+ 
+ 	end_pfn = pfn + count * BITS_PER_BYTE;
+ 	if (end_pfn > max_pfn)
+-		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
++		end_pfn = max_pfn;
+ 
+ 	for (; pfn < end_pfn; pfn++) {
+ 		bit = pfn % BITMAP_CHUNK_BITS;
+@@ -181,7 +181,7 @@ static ssize_t page_idle_bitmap_write(struct file *file, struct kobject *kobj,
+ 
+ 	end_pfn = pfn + count * BITS_PER_BYTE;
+ 	if (end_pfn > max_pfn)
+-		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
++		end_pfn = max_pfn;
+ 
+ 	for (; pfn < end_pfn; pfn++) {
+ 		bit = pfn % BITMAP_CHUNK_BITS;
+-- 
+2.20.1
+
