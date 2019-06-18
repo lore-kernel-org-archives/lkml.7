@@ -2,116 +2,165 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EDF3C46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DEB1C31E5F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68522214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u73BmwL+"
+	by mail.kernel.org (Postfix) with ESMTP id E634F214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729763AbfFROFI (ORCPT
+        id S1729784AbfFROFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 18 Jun 2019 10:05:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:42860 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729161AbfFROFI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 10:05:08 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46994 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729308AbfFROEk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:04:40 -0400
-Received: by mail-lf1-f67.google.com with SMTP id z15so9354290lfh.13;
-        Tue, 18 Jun 2019 07:04:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5sDx0TIkIdgU++tFYOdzDBd1TkEZ4EvtendbdVPaP5I=;
-        b=u73BmwL+yUCKRQVATtRS0baorED7GOtey9tCPMU6dZouIB8hVA/pD6WTJOaTwmZ20W
-         jwLiQJzU3nTFDvKB53i7a22JaBK9mWpC6tXLY4AIkwg7Cs144yBoMzHvJJB4SDoJdxgE
-         7EaekPQFikicPtV0SzLJc4zRUATVJ6KEhvRH53/cgECUPOjcxmJtUJ0FeDy1S5V8RQXO
-         Gn1KxSY2ByrSLCQ2bSXi4271HL6LBg41PXtprxJw993pfk+nqIh0B1NrVI2kShI8sEM0
-         CJCHN2lD3/HTZL2l0Fv9v6j5NsSIcz7t8u22SJZ31VKSSrws6xJS/vI0i5HdXE6AzboI
-         Jl2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=5sDx0TIkIdgU++tFYOdzDBd1TkEZ4EvtendbdVPaP5I=;
-        b=SgvEcjvmMH8QKb0ru/to4v3rM0SqDPlm2ClGp/f5XHd5kLIXjPz3N7FP4XzI4pSqGN
-         rcGwJsQsHla1EyV3U0LtQTc5KXuoaApv87k+pwzA2zulInclfIJxppI9xrgf7zDV8M/c
-         oFNBL50Q88+5UtnJ3giF7NFF3yblFnMg7MjR6bXS2UCatMlkW3XWSSdKpzCCOcqcdI0o
-         T6IOh4rnE1J7CebyTAY5B2cJklitAA8CJJFvPNvaddySnMEnSWgdqSsL6gSta+h7g4Ac
-         8pwSfGrhBIpRcWUr+kBkk5cJONinXmTuF2Br6jM7y1mGgMNLeTpuur7stGfHK28r3QrH
-         8wGw==
-X-Gm-Message-State: APjAAAWJaX4j5PV/1S3c98LgzzR0+SVaNVudjtHu5jFIb79gO/D+MGAz
-        wTaq2yi1Cn9gJedO8/mriL6RVGJo
-X-Google-Smtp-Source: APXvYqx6BOKM1JAtSIUSdX0uTODX3quVH0Dn332OewG+w7hTe67Tufum+pgUTKfqL6kcAZ1jaqf5nQ==
-X-Received: by 2002:ac2:41d3:: with SMTP id d19mr30401737lfi.127.1560866678578;
-        Tue, 18 Jun 2019 07:04:38 -0700 (PDT)
-Received: from localhost.localdomain (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.gmail.com with ESMTPSA id q6sm2650538lji.70.2019.06.18.07.04.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 07:04:38 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 3/8] clocksource/drivers/tegra: Set and use timer's period
-Date:   Tue, 18 Jun 2019 17:03:53 +0300
-Message-Id: <20190618140358.13148-4-digetx@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190618140358.13148-1-digetx@gmail.com>
-References: <20190618140358.13148-1-digetx@gmail.com>
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A69A2B;
+        Tue, 18 Jun 2019 07:05:07 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8AA0E3F718;
+        Tue, 18 Jun 2019 07:05:05 -0700 (PDT)
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vincent Stehle <Vincent.Stehle@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-27-eric.auger@redhat.com>
+ <20190603163139.70fe8839@x1.home>
+ <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+ <20190605154553.0d00ad8d@jacob-builder>
+ <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+ <20190606132903.064f7ac4@jacob-builder>
+ <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
+ <20190607104301.6b1bbd74@jacob-builder>
+ <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
+ <20190610143134.7bff96e9@jacob-builder>
+ <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
+ <20190612115358.0d90b322@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
+Date:   Tue, 18 Jun 2019 15:04:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612115358.0d90b322@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The of_clk structure has a period field that is set up initially by
-timer_of_clk_init(), that period value need to be adjusted for a case of
-TIMER1-9 that are running at a fixed rate that doesn't match the clock's
-rate. Note that the period value is currently used only by some of the
-clocksource drivers internally and hence this is just a minor cleanup
-change that doesn't fix anything.
+On 12/06/2019 19:53, Jacob Pan wrote:
+>>> You are right, the worst case of the spurious PS is to terminate the
+>>> group prematurely. Need to know the scope of the HW damage in case
+>>> of mdev where group IDs can be shared among mdevs belong to the
+>>> same PF.  
+>>
+>> But from the IOMMU fault API point of view, the full page request is
+>> identified by both PRGI and PASID. Given that each mdev has its own
+>> set of PASIDs, it should be easy to isolate page responses per mdev.
+>>
+> On Intel platform, devices sending page request with private data must
+> receive page response with matching private data. If we solely depend
+> on PRGI and PASID, we may send stale private data to the device in
+> those incorrect page response. Since private data may represent PF
+> device wide contexts, the consequence of sending page response with
+> wrong private data may affect other mdev/PASID.
+> 
+> One solution we are thinking to do is to inject the sequence #(e.g.
+> ktime raw mono clock) as vIOMMU private data into to the guest. Guest
+> would return this fake private data in page response, then host will
+> send page response back to the device that matches PRG1 and PASID and
+> private_data.
+> 
+> This solution does not expose HW context related private data to the
+> guest but need to extend page response in iommu uapi.
+> 
+> /**
+>  * struct iommu_page_response - Generic page response information
+>  * @version: API version of this structure
+>  * @flags: encodes whether the corresponding fields are valid
+>  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
+>  * @pasid: Process Address Space ID
+>  * @grpid: Page Request Group Index
+>  * @code: response code from &enum iommu_page_response_code
+>  * @private_data: private data for the matching page request
+>  */
+> struct iommu_page_response {
+> #define IOMMU_PAGE_RESP_VERSION_1	1
+> 	__u32	version;
+> #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
+> #define IOMMU_PAGE_RESP_PRIVATE_DATA	(1 << 1)
+> 	__u32	flags;
+> 	__u32	pasid;
+> 	__u32	grpid;
+> 	__u32	code;
+> 	__u32	padding;
+> 	__u64	private_data[2];
+> };
+> 
+> There is also the change needed for separating storage for the real and
+> fake private data.
+> 
+> Sorry for the last minute change, did not realize the HW implications.
+> 
+> I see this as a future extension due to limited testing, 
 
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/clocksource/timer-tegra.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+I'm wondering how we deal with:
+(1) old userspace that won't fill the new private_data field in
+page_response. A new kernel still has to support it.
+(2) old kernel that won't recognize the new PRIVATE_DATA flag. Currently
+iommu_page_response() rejects page responses with unknown flags.
 
-diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-index ff5a4ccb5d52..e6221e070499 100644
---- a/drivers/clocksource/timer-tegra.c
-+++ b/drivers/clocksource/timer-tegra.c
-@@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_device *evt)
- static int tegra_timer_set_periodic(struct clock_event_device *evt)
- {
- 	void __iomem *reg_base = timer_of_base(to_timer_of(evt));
-+	unsigned long period = timer_of_period(to_timer_of(evt));
- 
--	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
--		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
-+	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
- 		       reg_base + TIMER_PTV);
- 
- 	return 0;
-@@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
- 		cpu_to->clkevt.rating = rating;
- 		cpu_to->clkevt.cpumask = cpumask_of(cpu);
- 		cpu_to->of_base.base = timer_reg_base + base;
-+		cpu_to->of_clk.period = rate / HZ;
- 		cpu_to->of_clk.rate = rate;
- 
- 		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
--- 
-2.22.0
+I guess we'll need a two-way negotiation, where userspace queries
+whether the kernel supports the flag (2), and the kernel learns whether
+it should expect the private data to come back (1).
 
+> perhaps for
+> now, can you add paddings similar to page request? Make it 64B as well.
+
+I don't think padding is necessary, because iommu_page_response is sent
+by userspace to the kernel, unlike iommu_fault which is allocated by
+userspace and filled by the kernel.
+
+Page response looks a lot more like existing VFIO mechanisms, so I
+suppose we'll wrap the iommu_page_response structure and include an
+argsz parameter at the top:
+
+	struct vfio_iommu_page_response {
+		u32 argsz;
+		struct iommu_page_response pr;
+	};
+
+	struct vfio_iommu_page_response vpr = {
+		.argsz = sizeof(vpr),
+		.pr = ...
+		...
+	};
+
+	ioctl(devfd, VFIO_IOMMU_PAGE_RESPONSE, &vpr);
+
+In that case supporting private data can be done by simply appending a
+field at the end (plus the negotiation above).
+
+Thanks,
+Jean
