@@ -2,231 +2,332 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.3 required=3.0 tests=DATE_IN_PAST_24_48,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB646C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDB55C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:31:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950232177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C16AF2173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:31:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729494AbfFSQa2 (ORCPT
+        id S1729877AbfFSQb1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:30:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41332 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726246AbfFSQa2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:30:28 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JGSQVq015913
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 12:30:27 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7qcecnpw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 12:30:26 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <aneesh.kumar@linux.ibm.com>;
-        Wed, 19 Jun 2019 17:30:24 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 17:30:22 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JGULFb59965666
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 16:30:21 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14CA6A4067;
-        Wed, 19 Jun 2019 16:30:21 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 97E78A405C;
-        Wed, 19 Jun 2019 16:30:19 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.85.91.144])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 16:30:19 +0000 (GMT)
-X-Mailer: emacs 26.2 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, linux-nvdimm@lists.01.org
-Subject: Re: [PATCH v10 12/13] libnvdimm/pfn: Fix fsdax-mode namespace info-block zero-fields
-In-Reply-To: <156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com> <156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com>
-Date:   Wed, 19 Jun 2019 22:00:18 +0530
+        Wed, 19 Jun 2019 12:31:27 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19042 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725899AbfFSQb1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:31:27 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 2C9DE10BDBC801D2AD92;
+        Thu, 20 Jun 2019 00:31:24 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Jun 2019
+ 00:31:02 +0800
+Date:   Tue, 18 Jun 2019 16:41:58 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 03/22] iommu: Introduce device fault report API
+Message-ID: <20190618164158.0000489c@huawei.com>
+In-Reply-To: <1560087862-57608-4-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1560087862-57608-4-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19061916-0008-0000-0000-000002F53C2B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061916-0009-0000-0000-0000226258B9
-Message-Id: <877e9hk06d.fsf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190133
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dan Williams <dan.j.williams@intel.com> writes:
+On Sun, 9 Jun 2019 06:44:03 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-> At namespace creation time there is the potential for the "expected to
-> be zero" fields of a 'pfn' info-block to be filled with indeterminate
-> data. While the kernel buffer is zeroed on allocation it is immediately
-> overwritten by nd_pfn_validate() filling it with the current contents of
-> the on-media info-block location. For fields like, 'flags' and the
-> 'padding' it potentially means that future implementations can not rely
-> on those fields being zero.
->
-> In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-> section alignment, arrange for fields that are not explicitly
-> initialized to be guaranteed zero. Bump the minor version to indicate it
-> is safe to assume the 'padding' and 'flags' are zero. Otherwise, this
-> corruption is expected to benign since all other critical fields are
-> explicitly initialized.
->
-> Note The cc: stable is about spreading this new policy to as many
-> kernels as possible not fixing an issue in those kernels. It is not
-> until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
-> section alignment" where this improper initialization becomes a problem.
-> So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
-> namespaces to section alignment" (which is not tagged for stable), make
-> sure this pre-requisite is flagged.
+> Traditionally, device specific faults are detected and handled within
+> their own device drivers. When IOMMU is enabled, faults such as DMA
+> related transactions are detected by IOMMU. There is no generic
+> reporting mechanism to report faults back to the in-kernel device
+> driver or the guest OS in case of assigned devices.
+> 
+> This patch introduces a registration API for device specific fault
+> handlers. This differs from the existing iommu_set_fault_handler/
+> report_iommu_fault infrastructures in several ways:
+> - it allows to report more sophisticated fault events (both
+>   unrecoverable faults and page request faults) due to the nature
+>   of the iommu_fault struct
+> - it is device specific and not domain specific.
+> 
+> The current iommu_report_device_fault() implementation only handles
+> the "shoot and forget" unrecoverable fault case. Handling of page
+> request faults or stalled faults will come later.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
-Don't we need a change like below in this patch?
+A few nitpicks and minor suggestions inline.
 
-modified   drivers/nvdimm/pfn_devs.c
-@@ -452,10 +452,11 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
- 	if (memcmp(pfn_sb->parent_uuid, parent_uuid, 16) != 0)
- 		return -ENODEV;
- 
--	if (__le16_to_cpu(pfn_sb->version_minor) < 1) {
--		pfn_sb->start_pad = 0;
--		pfn_sb->end_trunc = 0;
--	}
-+	if ((__le16_to_cpu(pfn_sb->version_minor) < 1) ||
-+	    (__le16_to_cpu(pfn_sb->version_minor) >= 3)) {
-+			pfn_sb->start_pad = 0;
-+			pfn_sb->end_trunc = 0;
-+		}
-
-
-IIUC we want to force the start_pad and end_truc to zero if the pfn_sb
-minor version number >= 3. So once we have this patch backported and
-older kernel finds a pfn_sb with minor version 3, it will ignore the
-start_pad read from the nvdimm and overwrite that with zero here.
-This patch doesn't enforce that right? After the next patch we can have
-values other than 0 in pfn_sb->start_pad?
-
-
->
-> Fixes: 32ab0a3f5170 ("libnvdimm, pmem: 'struct page' for pmem")
-> Cc: <stable@vger.kernel.org>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 > ---
->  drivers/nvdimm/dax_devs.c |    2 +-
->  drivers/nvdimm/pfn.h      |    1 +
->  drivers/nvdimm/pfn_devs.c |   18 +++++++++++++++---
->  3 files changed, 17 insertions(+), 4 deletions(-)
->
-> diff --git a/drivers/nvdimm/dax_devs.c b/drivers/nvdimm/dax_devs.c
-> index 49fc18ee0565..6d22b0f83b3b 100644
-> --- a/drivers/nvdimm/dax_devs.c
-> +++ b/drivers/nvdimm/dax_devs.c
-> @@ -118,7 +118,7 @@ int nd_dax_probe(struct device *dev, struct nd_namespace_common *ndns)
->  	nvdimm_bus_unlock(&ndns->dev);
->  	if (!dax_dev)
->  		return -ENOMEM;
-> -	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-> +	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
->  	nd_pfn->pfn_sb = pfn_sb;
->  	rc = nd_pfn_validate(nd_pfn, DAX_SIG);
->  	dev_dbg(dev, "dax: %s\n", rc == 0 ? dev_name(dax_dev) : "<none>");
-> diff --git a/drivers/nvdimm/pfn.h b/drivers/nvdimm/pfn.h
-> index f58b849e455b..dfb2bcda8f5a 100644
-> --- a/drivers/nvdimm/pfn.h
-> +++ b/drivers/nvdimm/pfn.h
-> @@ -28,6 +28,7 @@ struct nd_pfn_sb {
->  	__le32 end_trunc;
->  	/* minor-version-2 record the base alignment of the mapping */
->  	__le32 align;
-> +	/* minor-version-3 guarantee the padding and flags are zero */
->  	u8 padding[4000];
->  	__le64 checksum;
+>  drivers/iommu/iommu.c | 127 +++++++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/iommu.h |  33 ++++++++++++-
+>  2 files changed, 157 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 67ee662..7955184 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -644,6 +644,13 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
+>  		goto err_free_name;
+>  	}
+>  
+> +	dev->iommu_param = kzalloc(sizeof(*dev->iommu_param), GFP_KERNEL);
+> +	if (!dev->iommu_param) {
+> +		ret = -ENOMEM;
+> +		goto err_free_name;
+> +	}
+> +	mutex_init(&dev->iommu_param->lock);
+> +
+>  	kobject_get(group->devices_kobj);
+>  
+>  	dev->iommu_group = group;
+> @@ -674,6 +681,7 @@ int iommu_group_add_device(struct iommu_group *group, struct device *dev)
+>  	mutex_unlock(&group->mutex);
+>  	dev->iommu_group = NULL;
+>  	kobject_put(group->devices_kobj);
+> +	kfree(dev->iommu_param);
+>  err_free_name:
+>  	kfree(device->name);
+>  err_remove_link:
+> @@ -720,7 +728,7 @@ void iommu_group_remove_device(struct device *dev)
+>  	sysfs_remove_link(&dev->kobj, "iommu_group");
+>  
+>  	trace_remove_device_from_group(group->id, dev);
+> -
+> +	kfree(dev->iommu_param);
+>  	kfree(device->name);
+>  	kfree(device);
+>  	dev->iommu_group = NULL;
+> @@ -855,6 +863,123 @@ int iommu_group_unregister_notifier(struct iommu_group *group,
+>  EXPORT_SYMBOL_GPL(iommu_group_unregister_notifier);
+>  
+>  /**
+> + * iommu_register_device_fault_handler() - Register a device fault handler
+> + * @dev: the device
+> + * @handler: the fault handler
+> + * @data: private data passed as argument to the handler
+> + *
+> + * When an IOMMU fault event is received, this handler gets called with the
+> + * fault event and data as argument.
+> + *
+> + * Return 0 if the fault handler was installed successfully, or an error.
+> + */
+> +int iommu_register_device_fault_handler(struct device *dev,
+> +					iommu_dev_fault_handler_t handler,
+> +					void *data)
+> +{
+> +	struct iommu_param *param = dev->iommu_param;
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * Device iommu_param should have been allocated when device is
+> +	 * added to its iommu_group.
+> +	 */
+> +	if (!param)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&param->lock);
+> +	/* Only allow one fault handler registered for each device */
+> +	if (param->fault_param) {
+> +		ret = -EBUSY;
+> +		goto done_unlock;
+> +	}
+> +
+> +	get_device(dev);
+> +	param->fault_param =
+> +		kzalloc(sizeof(struct iommu_fault_param), GFP_KERNEL);
+> +	if (!param->fault_param) {
+> +		put_device(dev);
+> +		ret = -ENOMEM;
+> +		goto done_unlock;
+> +	}
+> +	param->fault_param->handler = handler;
+> +	param->fault_param->data = data;
+> +
+> +done_unlock:
+> +	mutex_unlock(&param->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_register_device_fault_handler);
+> +
+> +/**
+> + * iommu_unregister_device_fault_handler() - Unregister the device fault handler
+> + * @dev: the device
+> + *
+> + * Remove the device fault handler installed with
+> + * iommu_register_device_fault_handler().
+> + *
+> + * Return 0 on success, or an error.
+> + */
+> +int iommu_unregister_device_fault_handler(struct device *dev)
+> +{
+> +	struct iommu_param *param = dev->iommu_param;
+> +	int ret = 0;
+> +
+> +	if (!param)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&param->lock);
+> +
+> +	if (!param->fault_param)
+> +		goto unlock;
+> +
+> +	kfree(param->fault_param);
+> +	param->fault_param = NULL;
+> +	put_device(dev);
+> +unlock:
+> +	mutex_unlock(&param->lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_unregister_device_fault_handler);
+> +
+
+One blank line probably enough.. (my personal favourite
+stylistic nitpick ;)
+
+> +
+> +/**
+> + * iommu_report_device_fault() - Report fault event to device
+> + * @dev: the device
+> + * @evt: fault event data
+> + *
+> + * Called by IOMMU drivers when a fault is detected, typically in a threaded IRQ
+> + * handler.
+
+What constraints does that put on it?  We probably don't care about the
+fact it is in a threaded irq as such, rather something that is true as
+a result of that?
+
+> + *
+> + * Return 0 on success, or an error.
+> + */
+> +int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
+> +{
+> +	struct iommu_param *param = dev->iommu_param;
+> +	struct iommu_fault_param *fparam;
+> +	int ret = 0;
+> +
+> +	/* iommu_param is allocated when device is added to group */
+> +	if (!param || !evt)
+> +		return -EINVAL;
+> +
+> +	/* we only report device fault if there is a handler registered */
+> +	mutex_lock(&param->lock);
+> +	fparam = param->fault_param;
+> +	if (!fparam || !fparam->handler) {
+> +		ret = -EINVAL;
+> +		goto done_unlock;
+> +	}
+> +	ret = fparam->handler(evt, fparam->data);
+> +done_unlock:
+> +	mutex_unlock(&param->lock);
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_report_device_fault);
+> +
+> +/**
+>   * iommu_group_id - Return ID for a group
+>   * @group: the group to ID
+>   *
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index 7890a92..b87b74c 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -322,9 +322,9 @@ struct iommu_fault_event {
+>  
+>  /**
+>   * struct iommu_fault_param - per-device IOMMU fault data
+> - * @dev_fault_handler: Callback function to handle IOMMU faults at device level
+> - * @data: handler private data
+>   *
+> + * @handler: Callback function to handle IOMMU faults at device level
+
+This should be in the previous patch, not this one.
+
+> + * @data: handler private data
+>   */
+>  struct iommu_fault_param {
+>  	iommu_dev_fault_handler_t handler;
+> @@ -341,6 +341,7 @@ struct iommu_fault_param {
+>   *	struct iommu_fwspec	*iommu_fwspec;
+>   */
+>  struct iommu_param {
+> +	struct mutex lock;
+
+Structure has kernel doc so this should be added to that.
+
+>  	struct iommu_fault_param *fault_param;
 >  };
-> diff --git a/drivers/nvdimm/pfn_devs.c b/drivers/nvdimm/pfn_devs.c
-> index 0f81fc56bbfd..4977424693b0 100644
-> --- a/drivers/nvdimm/pfn_devs.c
-> +++ b/drivers/nvdimm/pfn_devs.c
-> @@ -412,6 +412,15 @@ static int nd_pfn_clear_memmap_errors(struct nd_pfn *nd_pfn)
+>  
+> @@ -433,6 +434,15 @@ extern int iommu_group_register_notifier(struct iommu_group *group,
+>  					 struct notifier_block *nb);
+>  extern int iommu_group_unregister_notifier(struct iommu_group *group,
+>  					   struct notifier_block *nb);
+> +extern int iommu_register_device_fault_handler(struct device *dev,
+> +					iommu_dev_fault_handler_t handler,
+> +					void *data);
+> +
+> +extern int iommu_unregister_device_fault_handler(struct device *dev);
+> +
+> +extern int iommu_report_device_fault(struct device *dev,
+> +				     struct iommu_fault_event *evt);
+> +
+>  extern int iommu_group_id(struct iommu_group *group);
+>  extern struct iommu_group *iommu_group_get_for_dev(struct device *dev);
+>  extern struct iommu_domain *iommu_group_default_domain(struct iommu_group *);
+> @@ -741,6 +751,25 @@ static inline int iommu_group_unregister_notifier(struct iommu_group *group,
 >  	return 0;
 >  }
 >  
-> +/**
-> + * nd_pfn_validate - read and validate info-block
-> + * @nd_pfn: fsdax namespace runtime state / properties
-> + * @sig: 'devdax' or 'fsdax' signature
-> + *
-> + * Upon return the info-block buffer contents (->pfn_sb) are
-> + * indeterminate when validation fails, and a coherent info-block
-> + * otherwise.
-> + */
->  int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
+> +static inline
+> +int iommu_register_device_fault_handler(struct device *dev,
+> +					iommu_dev_fault_handler_t handler,
+> +					void *data)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+> +static inline int iommu_unregister_device_fault_handler(struct device *dev)
+> +{
+> +	return 0;
+> +}
+> +
+> +static inline
+> +int iommu_report_device_fault(struct device *dev, struct iommu_fault_event *evt)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>  static inline int iommu_group_id(struct iommu_group *group)
 >  {
->  	u64 checksum, offset;
-> @@ -557,7 +566,7 @@ int nd_pfn_probe(struct device *dev, struct nd_namespace_common *ndns)
->  	nvdimm_bus_unlock(&ndns->dev);
->  	if (!pfn_dev)
->  		return -ENOMEM;
-> -	pfn_sb = devm_kzalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
-> +	pfn_sb = devm_kmalloc(dev, sizeof(*pfn_sb), GFP_KERNEL);
->  	nd_pfn = to_nd_pfn(pfn_dev);
->  	nd_pfn->pfn_sb = pfn_sb;
->  	rc = nd_pfn_validate(nd_pfn, PFN_SIG);
-> @@ -694,7 +703,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  	u64 checksum;
->  	int rc;
->  
-> -	pfn_sb = devm_kzalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
-> +	pfn_sb = devm_kmalloc(&nd_pfn->dev, sizeof(*pfn_sb), GFP_KERNEL);
->  	if (!pfn_sb)
->  		return -ENOMEM;
->  
-> @@ -703,11 +712,14 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  		sig = DAX_SIG;
->  	else
->  		sig = PFN_SIG;
-> +
->  	rc = nd_pfn_validate(nd_pfn, sig);
->  	if (rc != -ENODEV)
->  		return rc;
->  
->  	/* no info block, do init */;
-> +	memset(pfn_sb, 0, sizeof(*pfn_sb));
-> +
->  	nd_region = to_nd_region(nd_pfn->dev.parent);
->  	if (nd_region->ro) {
->  		dev_info(&nd_pfn->dev,
-> @@ -760,7 +772,7 @@ static int nd_pfn_init(struct nd_pfn *nd_pfn)
->  	memcpy(pfn_sb->uuid, nd_pfn->uuid, 16);
->  	memcpy(pfn_sb->parent_uuid, nd_dev_to_uuid(&ndns->dev), 16);
->  	pfn_sb->version_major = cpu_to_le16(1);
-> -	pfn_sb->version_minor = cpu_to_le16(2);
-> +	pfn_sb->version_minor = cpu_to_le16(3);
->  	pfn_sb->start_pad = cpu_to_le32(start_pad);
->  	pfn_sb->end_trunc = cpu_to_le32(end_trunc);
->  	pfn_sb->align = cpu_to_le32(nd_pfn->align);
->
-> _______________________________________________
-> Linux-nvdimm mailing list
-> Linux-nvdimm@lists.01.org
-> https://lists.01.org/mailman/listinfo/linux-nvdimm
+>  	return -ENODEV;
+
 
