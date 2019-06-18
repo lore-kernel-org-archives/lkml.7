@@ -2,110 +2,66 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.3 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6192C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:03:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21DD6C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A949F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:03:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE50F208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:07:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560863266;
+	bh=VE0S7GCn+EbKWsC3UJVmk1yL5T1BYtNXt8mSBrOsjTM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WhepIQzXNOiS5rZlgBiqODug9BeGEHEbkwDfTgPzwHGT+tSRyZpdJmCh6OaadGzKm
+	 uSTCTx/aLY4f3eAwJ70en7H5MmZrOEGFgaEb6MznhgGAHm2sw6EbytTINSMgnsOgeA
+	 +C3Z4uwlANkkI/0hV8nIevhQ+vy9ihzzKkqlshXg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728990AbfFRNDQ (ORCPT
+        id S1728941AbfFRNHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:03:16 -0400
-Received: from foss.arm.com ([217.140.110.172]:39962 "EHLO foss.arm.com"
+        Tue, 18 Jun 2019 09:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRNDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:03:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 130192B;
-        Tue, 18 Jun 2019 06:03:15 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EDAE3F246;
-        Tue, 18 Jun 2019 06:03:13 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 14:03:08 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Bharat Kumar Gogada <bharatku@xilinx.com>
-Cc:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "marc.zyngier@arm.com" <marc.zyngier@arm.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Ravikiran Gummaluri <rgummal@xilinx.com>
-Subject: Re: [PATCH v4] PCI: xilinx-nwl: Fix Multi MSI data programming
-Message-ID: <20190618130308.GA9002@e121166-lin.cambridge.arm.com>
-References: <1560334679-9206-1-git-send-email-bharat.kumar.gogada@xilinx.com>
- <20190617092108.GA18020@e121166-lin.cambridge.arm.com>
- <CH2PR02MB6453032A01A540F5E9C58402A5EA0@CH2PR02MB6453.namprd02.prod.outlook.com>
+        id S1725913AbfFRNHn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:07:43 -0400
+Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 70BC12084D;
+        Tue, 18 Jun 2019 13:07:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560863262;
+        bh=VE0S7GCn+EbKWsC3UJVmk1yL5T1BYtNXt8mSBrOsjTM=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Z9bZq/JS3pwdAUtsp5oTPoUmzKUchwKyZg1vrEy+xOf3mOKf4mfP/9SvqEhaw6FoU
+         I5H170T2bQGUl9j3fkhLb7VmSnoFzEuHASNL0r2EhTQhyJe1EEQZ2UhKsHKPfGdZnJ
+         O0Hr2N9D9pevumRJhlHXpaKu4y4s58hSmnSJKPOo=
+Date:   Tue, 18 Jun 2019 21:06:50 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Peng Ma <peng.ma@nxp.com>
+Cc:     vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        leoyang.li@nxp.com, dan.j.williams@intel.com,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/4] arm64: dts: fsl: ls1028a: Add qDMA node
+Message-ID: <20190618130634.GA1959@dragon>
+References: <20190506090344.37784-1-peng.ma@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CH2PR02MB6453032A01A540F5E9C58402A5EA0@CH2PR02MB6453.namprd02.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190506090344.37784-1-peng.ma@nxp.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:28:02PM +0000, Bharat Kumar Gogada wrote:
+On Mon, May 06, 2019 at 09:03:41AM +0000, Peng Ma wrote:
+> Add the qDMA device tree nodes for LS1028A devices
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
 
-[...]
-
-> > Applied to pci/xilinx for v5.3, please have a look and check if the commit log
-> > I wrote provides a clear description of the issue.
-> > 
-> > Lorenzo
-> Thanks Lorenzo and Marc.
-> Lorenzo, can you please point to link for above commit.
-
-I did already.
-
-Anyway:
-
-https://git.kernel.org/pub/scm/linux/kernel/git/lpieralisi/pci.git/commit/?h=pci/xilinx&id=46c1bfcfcd873f8754f733e4258121748bcae3a3
-
-> Regards,
-> Bharat
-> > > diff --git a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > index 81538d7..a9e07b8 100644
-> > > --- a/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > +++ b/drivers/pci/controller/pcie-xilinx-nwl.c
-> > > @@ -483,15 +483,13 @@ static int nwl_irq_domain_alloc(struct
-> > irq_domain *domain, unsigned int virq,
-> > >  	int i;
-> > >
-> > >  	mutex_lock(&msi->lock);
-> > > -	bit = bitmap_find_next_zero_area(msi->bitmap, INT_PCI_MSI_NR, 0,
-> > > -					 nr_irqs, 0);
-> > > -	if (bit >= INT_PCI_MSI_NR) {
-> > > +	bit = bitmap_find_free_region(msi->bitmap, INT_PCI_MSI_NR,
-> > > +				      get_count_order(nr_irqs));
-> > > +	if (bit < 0) {
-> > >  		mutex_unlock(&msi->lock);
-> > >  		return -ENOSPC;
-> > >  	}
-> > >
-> > > -	bitmap_set(msi->bitmap, bit, nr_irqs);
-> > > -
-> > >  	for (i = 0; i < nr_irqs; i++) {
-> > >  		irq_domain_set_info(domain, virq + i, bit + i, &nwl_irq_chip,
-> > >  				domain->host_data, handle_simple_irq, @@
-> > -509,7 +507,8 @@ static
-> > > void nwl_irq_domain_free(struct irq_domain *domain, unsigned int virq,
-> > >  	struct nwl_msi *msi = &pcie->msi;
-> > >
-> > >  	mutex_lock(&msi->lock);
-> > > -	bitmap_clear(msi->bitmap, data->hwirq, nr_irqs);
-> > > +	bitmap_release_region(msi->bitmap, data->hwirq,
-> > > +			      get_count_order(nr_irqs));
-> > >  	mutex_unlock(&msi->lock);
-> > >  }
-> > >
-> > > --
-> > > 2.7.4
-> > >
+Applied, thanks.
