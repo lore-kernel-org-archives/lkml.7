@@ -2,102 +2,80 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCBAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:49:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FBEFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:50:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D481213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:49:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B022084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:50:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hqS5I/Cp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OYFrrnNY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730001AbfFRQtz (ORCPT
+        id S1730031AbfFRQuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:49:55 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:33132 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729859AbfFRQtz (ORCPT
+        Tue, 18 Jun 2019 12:50:09 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:42787 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729801AbfFRQuJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:49:55 -0400
-Received: by mail-io1-f66.google.com with SMTP id u13so31519190iop.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:49:55 -0700 (PDT)
+        Tue, 18 Jun 2019 12:50:09 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x17so249448wrl.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:50:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=J5nux9DmROYeE56s/BQAf6HcvIGxMJ51i9fQdjtJRGo=;
-        b=hqS5I/CprE/DXrjhB2RtBrF+oejKGdk3zNCPfvhEilNd8g6oS+9FCyeX5xoWyR95Pv
-         QXfQpUrDVSyyPbwMEGtN/Anc7PQkgQch9Ion+L5uVbaRRsodXcJAWiAUSSTp5br1+rqC
-         Nob53UB4jzbHqZydh8I42+TynMH/npouE7S2Z4PEOQ+I9MAAdV002tFiTkmYHOab8byS
-         jhMHwalM8OjU3wLxgs3gZ4IwWYogLkZl4yUaunnYG6H9SmzH9RHYFHwmJYqs59Dx7kzn
-         QlOSOVrA6U7UdmnKfYIHqVc7p0uQD/EUtAdDuexdd4hLamN0a9q8EEJCyuLh6ELLJcYO
-         G+oA==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=KSk4moREDVQrfaFvvaG4JNEpQO7UXRGLSRSH/qJ+Hf8=;
+        b=OYFrrnNYl9Boz+yv/ZqqkPtI+ZZCBmg3QVTr6t3T7Tujvs9N+iWArZa1sXtsu63+mK
+         yF1DPTBjzZTRCzoD6Ng5l8CBQ/jVwvhnuKdcCOfiAlVISTjPT2aid54erklkFX368Obz
+         E/86CpYRNLVyC7leuks6PBrNF/rrcZgs36GhhxRhcJHEmsnJKmBmjwbZnlP20WMd7dmn
+         vduei46eD42DJo5XxEPTdNvHtFvcYuLtRx54fnXx9a856TaMQhBtweQT7f9JW4mjvcip
+         mW9QIxEKmzROPOIzXTzmbVy2yQ2kVHktkRihmDSf8GUtbJ8gn9bA8zF/+aUnA15U2Uhs
+         OLWg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=J5nux9DmROYeE56s/BQAf6HcvIGxMJ51i9fQdjtJRGo=;
-        b=iTJ6UCuufdgSAV0jHP9xTEXxw6jXq1ZE0XmD1AvVl/119ttpMpyBiFKy0tnzhUj7Dd
-         UpK5WfhgNe9GtVz+F+VeXXIC0E0HDO3xCl7Rzozy60e8gtSk4jY2SCi2itJx5AqUGyB8
-         wZCdgiwSfbQZu/0I7cOHhAt4xXjuXB1JqyG4fQRHI2tjtrh5Ys7xC8OVLL5e+TVelEPw
-         EP8/bpyxvVQkLtyZC2yCgQVtnuIHo30/MROXH7F3pyN9k4vTgkW09LDbxEIxUUzq9qfO
-         emR6lLMm7iBvVzk9XWVN/IVS/hNEBjN4gHP0iGdiug8uPRAzzjJD0QLzb1koZgXWycL3
-         AaWA==
-X-Gm-Message-State: APjAAAVb5MPqW903DSwuPADUCQo1gpvJKsYiX1evNem4IJT9H32OarXB
-        9ooHcEoXMAV4E/5q4PCMk7CtWg==
-X-Google-Smtp-Source: APXvYqyQiMRJSW+WsgFrJq67pivLuHVMSleBEdiKqkJFj7YjDFmJQLp16dpykNpYQIUlonlZMP6LSA==
-X-Received: by 2002:a5d:9291:: with SMTP id s17mr3521902iom.10.1560876593344;
-        Tue, 18 Jun 2019 09:49:53 -0700 (PDT)
-Received: from [192.168.1.196] ([216.160.37.230])
-        by smtp.gmail.com with ESMTPSA id b6sm11518234iok.71.2019.06.18.09.49.52
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=KSk4moREDVQrfaFvvaG4JNEpQO7UXRGLSRSH/qJ+Hf8=;
+        b=Cn6NlT9hgjNcwvFR69v2piMTBSk9Pxw0QVUPVucZfaW1wWNY/P1JPDaXo3nyjXKhvj
+         riBER/r6FIuQkdprpEF7IlDznzYpN5d/DciJuzRnPrX9KYE4jiQU39RWWJQMbB8F6zi6
+         0rIe1D7QFftGyrVtw+/SQ08c1U0GdoihsyxyOzxuLYVL+/ffIwpbf5tqJ9S7EZ//4qaA
+         ExPSS5roUlskPrMi1Pi7SYxG3VAiB9Z29iKdyVThlkpYn9X7agydciFkDuVLJirsh24h
+         6+am2cUv8IF8GQ7o82gGwhNcEf6hfhtr/xK8xEUQ4p2YN0MThhPIOgZqICukLF3MQGwP
+         AbRQ==
+X-Gm-Message-State: APjAAAUWF+tcYntLwpUUY7J0/QMQaQqcKvd3uYPpR2lt4orK025u4+d6
+        qYlMvW4LUQ3N74JsDgvot7cQFhOudQ6tXw==
+X-Google-Smtp-Source: APXvYqz02pp7jrNPiLtRBNsaULwRQxJ/0Ckr/N049AUpbNenDnGGjDoaGajTn9C+jKdSxnVaUXHD7Q==
+X-Received: by 2002:adf:e6c6:: with SMTP id y6mr20234263wrm.191.1560876607432;
+        Tue, 18 Jun 2019 09:50:07 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id l8sm41152736wrg.40.2019.06.18.09.50.06
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 09:49:52 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v2 0/2] Add macb support for SiFive FU540-C000
-From:   Troy Benjegerdes <troy.benjegerdes@sifive.com>
-In-Reply-To: <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
-Date:   Tue, 18 Jun 2019 11:49:51 -0500
-Cc:     Paul Walmsley <paul.walmsley@sifive.com>,
-        "palmer@sifive.com" <palmer@sifive.com>,
-        Alistair Francis <Alistair.Francis@wdc.com>,
-        "jamez@wit.com" <jamez@wit.com>,
-        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "schwab@suse.de" <schwab@suse.de>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "aou@eecs.berkeley.edu" <aou@eecs.berkeley.edu>,
-        "sachin.ghadi@sifive.com" <sachin.ghadi@sifive.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "ynezz@true.cz" <ynezz@true.cz>,
-        "yash.shah@sifive.com" <yash.shah@sifive.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Atish Patra <atish.patra@wdc.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Lukas Auer <lukas.auer@aisec.fraunhofer.de>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <946B2B53-7A16-4B8D-8CB9-34EFFB9E84D6@sifive.com>
-References: <1560745167-9866-1-git-send-email-yash.shah@sifive.com>
- <mvmtvco62k9.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170252410.19994@viisi.sifive.com>
- <mvmpnnc5y49.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170305020.19994@viisi.sifive.com>
- <mvmh88o5xi5.fsf@suse.de>
- <alpine.DEB.2.21.9999.1906170419010.19994@viisi.sifive.com>
- <F48A4F7F-0B0D-4191-91AD-DC51686D1E78@sifive.com>
- <d2836a90b92f3522a398d57ab8555d08956a0d1f.camel@wdc.com>
- <alpine.DEB.2.21.9999.1906172019040.15057@viisi.sifive.com>
- <CAAhSdy3zODw=JFaN=2F4K5-umihJDivLO8J8LBdkFkuZgzu41Q@mail.gmail.com>
-To:     Anup Patel <anup@brainfault.org>
-X-Mailer: Apple Mail (2.3445.9.1)
+        Tue, 18 Jun 2019 09:50:06 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+ <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+ <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
+ <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
+ <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
+ <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <31574ef2-d675-bb36-08d1-18b756ebd29e@linaro.org>
+Date:   Tue, 18 Jun 2019 17:50:06 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <a50066ac-be85-6706-e7f3-f1069fd0dd0b@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -105,30 +83,21 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-> On Jun 18, 2019, at 4:32 AM, Anup Patel <anup@brainfault.org> wrote:
->=20
->> =
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/=
-?id=3D72296bde4f4207566872ee355950a59cbc29f852
+On 18/06/2019 17:27, Sricharan R wrote:
+>   The Macro's expect that buffer size is power of 2. So we are infact passing the actual correct
+>   size ( MAX_DESCRIPTORS + 1 = 4096)
+This will make the circular buffer macros happy but question is that do 
+we actually have that many descriptor buffers?
 
-I added your patches, along with two of mine, and rebased them
-to the latest U-boot master, and put them on the =E2=80=98to-upstream=E2=80=
-=99 branch
-at https://github.com/sifive/u-boot/tree/to-upstream
+This is what is in the driver:
 
-I am most interested in review of the patch that adds the DTS files
-from Linux to U-boot, along with a =E2=80=98-u-boot.dtsi=E2=80=99 file =
-which includes
-several extra things, most notably an ethernet entry [1] which does
-not match the new proposed changes for the MacB driver that Yash
-is working on.
+#define BAM_DESC_FIFO_SIZE	SZ_32K
+#define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) 
+- 1)
+#define BAM_FIFO_SIZE	(SZ_32K - 8)
 
-How close are we to consensus on the new =E2=80=9Csifive,fu540-macb=E2=80=9D=
+Wouldn't having MAX_DESCRIPTORS + 1 = 4096  lead to overflow the actual 
+descriptor memory size of (SZ_32K - 8) ?
 
-device tree entry format? Is this something that is stable enough to
-start basing some work in M-mode U-boot on yet, or do we expect
-more changes?
+--srini
 
-[1] =
-https://github.com/sifive/u-boot/commit/35e4168e36139722f30143a0ca0aa8637d=
-d3ee04#diff-27d2d375ddac52f1bca71594075e1be4R93=
