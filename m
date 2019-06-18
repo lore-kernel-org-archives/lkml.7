@@ -2,96 +2,113 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2EB3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:11:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E56C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:20:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F3220861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:11:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B742520861
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:20:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nsUwJUj/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbHv0ugu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726608AbfFRBL3 (ORCPT
+        id S1726357AbfFRBUM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:11:29 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:33798 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRBL3 (ORCPT
+        Mon, 17 Jun 2019 21:20:12 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:38785 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRBUM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:11:29 -0400
-Received: by mail-ed1-f67.google.com with SMTP id s49so19009172edb.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:11:28 -0700 (PDT)
+        Mon, 17 Jun 2019 21:20:12 -0400
+Received: by mail-pl1-f195.google.com with SMTP id f97so4968266plb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:20:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+        h=date:from:to:subject:message-id:mime-version:content-disposition
          :user-agent;
-        bh=qkCiUVj0VugFone9Q9W6ljAve1bW+OW0QjoILb3tipw=;
-        b=nsUwJUj/lnoFntRkDnKVwnq/d9FeGFWNDPrx740De1flmr61SPj8PnVj9Lai/iUZe+
-         akX+bwe46jgvXe5eiSMOmY3eg6w4zRb4auJSbTpbgnJxzJ7BxCrqcwXEt66oI4EcFz9c
-         aYOVWfuAEy0tnnSTZrOIJxC0ZUII/ATh1YqPRmvx2Mu1ffBpJDNgt4BKSqk5G4OuL/ep
-         K1ERuFDRzRuPx/Z2ENWDMPsWGzSUQwFD7nbjnfSpUSBbeHyTXX99UtMf7U/G0o1gJ9k3
-         Pixz5m/1o7PUAvKEZQXtVNem0tnvAMLGiMfHrG3115k9TkDOXV6QrEy1l0W6ciLVW3Ef
-         mruw==
+        bh=AuHccIdSxPbt86ZJkXZzP91IaZ8/7FsD2wmDGIVu61M=;
+        b=gbHv0ugum9zXI3n7MsAdeKtL3MTfXanNJBbnNSGb+cUVrX9fJmnj2pKhTm1F2nsD9d
+         a5EAtPuIZCywAG1YhzX/PBFeCqnKlbHe+e0cALtBivbUz3WO13WyEUv1Wxxy7hOb+5Z8
+         m8CKot7KkocPxV5DaCPWnWGhlZo9FLGDSMpNO98qXEiOXMuWkPJq/GfWIDxourXzRjWE
+         ETXRRAv/+E8m65I5r+eTblPVFJ/RbDY9F7xSPWVJj3/xjZ66G7N53NFLE1M/MkQz3fn+
+         yYKNoazoG5Mh5DztKJXb5Ia02uaDQDHImDQlSFGvRW5TpFvvgCXAzCC60PrvqLS9d8SK
+         eg2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
          :content-disposition:user-agent;
-        bh=qkCiUVj0VugFone9Q9W6ljAve1bW+OW0QjoILb3tipw=;
-        b=BJCh4sJM4TiWFS6H/aQkx6TjVmSfTZ9WtkTGrKffURD28BcleX3VQpj1oKntn7cY2G
-         0aUUX0PXc5vafD1Wgdmddzq/OXPJljO51mKiUsj5qWLm65JRyz2ZRLQNYQ9g0Dp2T6Ow
-         Ww8enS7Nx9ptXl4QaU1uzwppPO50xi9VqFnFX9wrc3yo6UgXDePDNh95n0eGhUrxuNLm
-         MhqioDwK82Mkm6/OrFdrMQARTfv0ek9O/9Mn+hqfdIksFzZx9s3ptF7tHIJOEZhFYt5f
-         AXm9CCD/OyMPATfd+p72yRA/DJkImL+7HwNp58bEorITDDc2s4MxSprQjFHTCYUUCbZ0
-         Mbqw==
-X-Gm-Message-State: APjAAAUdCH/cpNGbd4QVoU4poKbKfC/b+jGDZv0ubtZsb4jV2EgRydf6
-        qqJxztAh65c1vQX78UZcGlo=
-X-Google-Smtp-Source: APXvYqx9ccbJtoSHa26LPIc3BFE0FBLwxaIr/ZcAkWyuy0BkRFQO8MmPJEMmdpQ66+pUqnLE8HpP4A==
-X-Received: by 2002:a50:b0e3:: with SMTP id j90mr2980661edd.26.1560820287270;
-        Mon, 17 Jun 2019 18:11:27 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id p37sm4185558edc.14.2019.06.17.18.11.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 18:11:26 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 18:11:24 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Anthony Koo <Anthony.Koo@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>
-Cc:     Jun Lei <Jun.Lei@amd.com>,
-        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
-        Harry Wentland <harry.wentland@amd.com>,
-        Leo Li <sunpeng.li@amd.com>,
-        Christian =?iso-8859-1?Q?K=F6nig?= <christian.koenig@amd.com>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Subject: arm32 build failure after abe882a39a9c ("drm/amd/display: fix issue
- with eDP not detected on driver load")
-Message-ID: <20190618011124.GA67760@archlinux-epyc>
+        bh=AuHccIdSxPbt86ZJkXZzP91IaZ8/7FsD2wmDGIVu61M=;
+        b=loPZGAGeNPS4eqH+v7Pidr1sI39JwAyzpicjkPgitquYSjV55WrIz/meKpZvW6qIl/
+         314LX4cqx39udyDlVpLWXVLX/t93atVXenDcicHggqnM2K239kvEvhIcBgd0RvaX+fxN
+         /79lnIwRNMIjXIMmhF6jACDwToWcphVwo3E4g8ZXLKi343T6ejM9A1qDkPO0HCbxJS5E
+         g0PFXnZIRPBZL9Hs4QcGpyAWfgsyV3P/fmfwlKulbAF2erIuynHqjPYlKUUrQpBvPrwO
+         t5O6M+YA+XBWZ/ZGqy8pGPl/MOSX8z/9NDp2S8kBq5eOjopinDfKCethsp1Edcji3333
+         RZNw==
+X-Gm-Message-State: APjAAAVPMkKx4BrqpBCb6/OVgbAWQmpyDFNPv9tsjazJe+zpWpD4etPJ
+        FkNG4rbVQXnyKOhkPzLjd24=
+X-Google-Smtp-Source: APXvYqwyQ1urEoas4pLxiFnN/OcxePRhS51EIPNamFdJr3m1TCl0OnaXoJfEWuhuzFCUaOHkzluMmA==
+X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr74671190pld.16.1560820811540;
+        Mon, 17 Jun 2019 18:20:11 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id a3sm11674246pff.122.2019.06.17.18.20.09
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 18:20:11 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 06:50:07 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: hal: rtl8723b_rf6052: fix spaces
+ preferred around unary operator
+Message-ID: <20190618012007.GA7871@hari-Inspiron-1545>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+ERROR: spaces required around that '<<' (ctx:VxV)
 
-After commit abe882a39a9c ("drm/amd/display: fix issue with eDP not
-detected on driver load") in -next, arm32 allyesconfig builds start
-failing at link time:
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-arm-linux-gnueabi-ld: drivers/gpu/drm/amd/display/dc/core/dc_link.o: in
-function `dc_link_detect':
-dc_link.c:(.text+0x260c): undefined reference to `__bad_udelay'
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
+index aa45a84..c205345 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723b_rf6052.c
+@@ -114,12 +114,12 @@ static int phy_RF6052_Config_ParaFile(struct adapter *Adapter)
+ 			break;
+ 		case RF_PATH_B:
+ 		case RF_PATH_D:
+-			u4RegValue = PHY_QueryBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV<<16);
++			u4RegValue = PHY_QueryBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV << 16);
+ 			break;
+ 		}
+ 
+ 		/*----Set RF_ENV enable----*/
+-		PHY_SetBBReg(Adapter, pPhyReg->rfintfe, bRFSI_RFENV<<16, 0x1);
++		PHY_SetBBReg(Adapter, pPhyReg->rfintfe, bRFSI_RFENV << 16, 0x1);
+ 		udelay(1);/* PlatformStallExecution(1); */
+ 
+ 		/*----Set RF_ENV output high----*/
+@@ -163,7 +163,7 @@ static int phy_RF6052_Config_ParaFile(struct adapter *Adapter)
+ 			break;
+ 		case RF_PATH_B:
+ 		case RF_PATH_D:
+-			PHY_SetBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV<<16, u4RegValue);
++			PHY_SetBBReg(Adapter, pPhyReg->rfintfs, bRFSI_RFENV << 16, u4RegValue);
+ 			break;
+ 		}
+ 
+-- 
+2.7.4
 
-arm32 only allows a udelay value of up to 2000, see
-arch/arm/include/asm/delay.h for more info.
-
-Please look into this when you have a chance!
-Nathan
