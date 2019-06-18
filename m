@@ -2,190 +2,72 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC2EEC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:31:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C636C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:32:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00E620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:31:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D0292085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:32:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729788AbfFRPb5 (ORCPT
+        id S1729812AbfFRPcC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:31:57 -0400
-Received: from smtp.infotech.no ([82.134.31.41]:46540 "EHLO smtp.infotech.no"
+        Tue, 18 Jun 2019 11:32:02 -0400
+Received: from ms.lwn.net ([45.79.88.28]:50818 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbfFRPb4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:31:56 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by smtp.infotech.no (Postfix) with ESMTP id 9EDDE2041C0;
-        Tue, 18 Jun 2019 17:31:53 +0200 (CEST)
-X-Virus-Scanned: by amavisd-new-2.6.6 (20110518) (Debian) at infotech.no
-Received: from smtp.infotech.no ([127.0.0.1])
-        by localhost (smtp.infotech.no [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id pL-vL3TFSVtp; Tue, 18 Jun 2019 17:31:46 +0200 (CEST)
-Received: from [192.168.48.23] (host-45-58-224-183.dyn.295.ca [45.58.224.183])
-        by smtp.infotech.no (Postfix) with ESMTPA id B8CE4204150;
-        Tue, 18 Jun 2019 17:31:44 +0200 (CEST)
-Reply-To: dgilbert@interlog.com
-Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        Finn Thain <fthain@telegraphics.com.au>
-Cc:     Bart Van Assche <bvanassche@acm.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
- <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
- <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
- <alpine.LNX.2.21.1906181107240.287@nippy.intranet>
- <017cf3cf-ecd8-19c2-3bbd-7e7c28042c3c@free.fr>
-From:   Douglas Gilbert <dgilbert@interlog.com>
-Message-ID: <f8339103-5b45-b72d-9f87-fd4dd7b3081e@interlog.com>
-Date:   Tue, 18 Jun 2019 11:31:42 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1729189AbfFRPcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:32:01 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id EFDC94FA;
+        Tue, 18 Jun 2019 15:32:00 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 09:31:59 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [PATCH] docs/vm: hwpoison.rst: Fix quote formatting
+Message-ID: <20190618093159.26352aed@lwn.net>
+In-Reply-To: <20190618145605.21208-1-valentin.schneider@arm.com>
+References: <20190618145605.21208-1-valentin.schneider@arm.com>
+Organization: LWN.net
 MIME-Version: 1.0
-In-Reply-To: <017cf3cf-ecd8-19c2-3bbd-7e7c28042c3c@free.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-06-18 3:29 a.m., Marc Gonzalez wrote:
-> On 18/06/2019 03:08, Finn Thain wrote:
+On Tue, 18 Jun 2019 15:56:05 +0100
+Valentin Schneider <valentin.schneider@arm.com> wrote:
+
+> The asterisks prepended to the quoted text currently get translated to
+> bullet points, which gets increasingly confusing the smaller your
+> screen is (when viewing the sphinx output, that is).
 > 
->> On Mon, 17 Jun 2019, Douglas Gilbert wrote:
->>
->>> On 2019-06-17 5:11 p.m., Bart Van Assche wrote:
->>>
->>>> On 6/12/19 6:59 AM, Marc Gonzalez wrote:
->>>>
->>>>> According to the option's help message, SCSI_PROC_FS has been
->>>>> superseded for ~15 years. Don't select it by default anymore.
->>>>>
->>>>> Signed-off-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
->>>>> ---
->>>>>    drivers/scsi/Kconfig | 3 ---
->>>>>    1 file changed, 3 deletions(-)
->>>>>
->>>>> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
->>>>> index 73bce9b6d037..8c95e9ad6470 100644
->>>>> --- a/drivers/scsi/Kconfig
->>>>> +++ b/drivers/scsi/Kconfig
->>>>> @@ -54,14 +54,11 @@ config SCSI_NETLINK
->>>>>    config SCSI_PROC_FS
->>>>>        bool "legacy /proc/scsi/ support"
->>>>>        depends on SCSI && PROC_FS
->>>>> -    default y
->>>>>        ---help---
->>>>>          This option enables support for the various files in
->>>>>          /proc/scsi.  In Linux 2.6 this has been superseded by
->>>>>          files in sysfs but many legacy applications rely on this.
->>>>> -      If unsure say Y.
->>>>> -
->>>>>    comment "SCSI support type (disk, tape, CD-ROM)"
->>>>>        depends on SCSI
->>>>
->>>> Hi Doug,
->>>>
->>>> If I run grep "/proc/scsi" over the sg3_utils source code then grep reports
->>>> 38 matches for that string. Does sg3_utils break with SCSI_PROC_FS=n?
->>>
->>> First, the sg driver. If placing
->>> #undef CONFIG_SCSI_PROC_FS
->>>
->>> prior to the includes in sg.c is a valid way to test that then the
->>> answer is no. Ah, but you are talking about sg3_utils .
->>>
->>> Or are you? For sg3_utils:
->>>
->>> $ find . -name '*.c' -exec grep "/proc/scsi" {} \; -print
->>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
->>> ./src/sg_read.c
->>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
->>> ./src/sgp_dd.c
->>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
->>> ./src/sgm_dd.c
->>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
->>> ./src/sg_dd.c
->>>                  "'echo 1 > /proc/scsi/sg/allow_dio'\n", q_len, dirio_count);
->>> ./testing/sg_tst_bidi.c
->>> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
->>> ./examples/sgq_dd.c
->>>
->>>
->>> That is 6 (not 38) by my count. Those 6 are all for direct IO
->>> (see below) which is off by default. I suspect old scanning
->>> utilities like sg_scan and sg_map might also use /proc/scsi/* .
->>> That is one reason why I wrote lsscsi. However I can't force folks
->>> to use lsscsi. As a related example, I still get bug reports for
->>> sginfo which I inherited from Eric Youngdale.
->>>
->>> If I was asked to debug a problem with the sg driver in a
->>> system without CONFIG_SCSI_PROC_FS defined, I would decline.
->>>
->>> The absence of /proc/scsi/sg/debug would be my issue. Can this
->>> be set up to do the same thing:
->>>      cat /sys/class/scsi_generic/debug
->>>    Is that breaking any sysfs rules?
->>>
->>>
->>> Also folks who rely on this to work:
->>>     cat /proc/scsi/sg/devices
->>> 0	0	0	0	0	1	255	0	1
->>> 0	0	0	1	0	1	255	0	1
->>> 0	0	0	2	0	1	255	0	1
->>>
->>> would be disappointed. Further I note that setting allow_dio via
->>> /proc/scsi/sg/allow_dio can also be done via /sys/module/sg/allow_dio .
->>> So that would be an interface breakage, but with an alternative.
->>
->> You can grep for /proc/scsi/ across all Debian packages:
->> https://codesearch.debian.net/
->>
->> This reveals that /proc/scsi/sg/ appears in smartmontools and other
->> packages, for example.
+> Convert the whole quote to a literal block.
 > 
-> Hello everyone,
-> 
-> Please note that I am _in no way_ suggesting that we remove any code.
-> 
-> I just think it might be time to stop forcing CONFIG_SCSI_PROC_FS into
-> every config, and instead require one to explicitly request the aging
-> feature (which makes CONFIG_SCSI_PROC_FS show up in a defconfig).
-> 
-> Maybe we could add CONFIG_SCSI_PROC_FS to arch/x86/configs/foo ?
-> (For which foo? In a separate patch or squashed with this one?)
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 
-Marc,
-Since current sg driver usage seems to depend more on SCSI_PROC_FS
-being "y" than other parts of the SCSI subsystem then if
-SCSI_PROC_FS is to default to "n" in the future then a new
-CONFIG_SG_PROC_FS variable could be added.
+That definitely seems worth fixing, and I can apply this.  But a few
+things to ponder first...
 
-If CONFIG_CHR_DEV_SG is "*" or "m" then default CONFIG_SG_PROC_FS
-to "y"; if CONFIG_SCSI_PROC_FS is "y" then default CONFIG_SG_PROC_FS
-to "y"; else default CONFIG_SG_PROC_FS to "n". Obviously the
-sg driver would need to be changed to use CONFIG_SG_PROC_FS instead
-of CONFIG_SCSI_PROC_FS .
+ - If you convert it to a literal block, the asterisks can remain, making
+   for a less intrusive patch.
 
+ - I was wondering if we should just use a kernel-doc directive to pull
+   the comment directly from the source, but investigation quickly showed
+   that the "overview comment" doesn't actually exist in anything close to
+   the quoted form.  See mm/memory-failure.c.
 
-Does that defeat the whole purpose of your proposal or could it be
-seen as a partial step in that direction? What is the motivation
-for this proposal?
+Given that, and things like references to support in "upcoming Intel
+CPUs", I suspect that this document is pretty seriously out of date and
+needs some more in-depth attention.  If you're playing in this area and
+feel like it, updating the document for real would be much appreciated...:)
 
-Doug Gilbert
+Thanks,
 
-
-BTW We still have the non-sg related 'cat /proc/scsi/scsi' usage
-and 'cat /proc/scsi/device_info'. And I believe the latter one is
-writable even though its permissions say otherwise.
-
+jon
