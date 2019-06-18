@@ -2,122 +2,118 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3407C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92553C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F6F20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="A0VwO1r5"
+	by mail.kernel.org (Postfix) with ESMTP id 7388F20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:37:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbfFRWgr (ORCPT
+        id S1730837AbfFRWhK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:36:47 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:36874 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729982AbfFRWgr (ORCPT
+        Tue, 18 Jun 2019 18:37:10 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:48787 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730412AbfFRWhJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:36:47 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IMXaDi107210;
-        Tue, 18 Jun 2019 22:36:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=8RgNe7nRFwWepfnFBvzlDwjlM6F4o/z+i9rBVj0AheY=;
- b=A0VwO1r5pE6mC+nS1A1UwVsONWNMBZXsvrUWujPaT313Y8i7U/7/Oaz4Y/agtktiLE3p
- a4gFWMnZxK3WuAkqnk6Phfx5KA9/OU+P2dLdvrAKAjbGIXGCHnam68R2Z8ahWW5OHduH
- 3Un8Xtv0GNCMdJh//nkyD5jYkuANE3u8p5QW4kvKRJ7Wmjan3Q+LlC+NmNpY/c+Jg7z4
- bt/mBgdlPBbuzEbsMWwgk0xXBw8Svhf+LNk5HzBgFNRrpK1vvlbtJ7CJEdj4Ei7iKFXB
- yCHN+KuGO7uyw6jnI4qZmpgiuFE+eJuaYajXXBEctKoam36TpBpEkuqV96TNNmqeaz06 RQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t780985ah-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 22:36:31 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IMaR37045061;
-        Tue, 18 Jun 2019 22:36:30 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t77yngmys-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 22:36:30 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5IMaTUt005813;
-        Tue, 18 Jun 2019 22:36:29 GMT
-Received: from [10.30.3.14] (/213.57.127.2)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 15:36:28 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v2] KVM: x86: Modify struct kvm_nested_state to have
- explicit fields for data
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <1560875046-26279-1-git-send-email-pbonzini@redhat.com>
-Date:   Wed, 19 Jun 2019 01:36:25 +0300
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <D2867F96-6B8D-4A1D-9F6F-CF0F171614BC@oracle.com>
-References: <1560875046-26279-1-git-send-email-pbonzini@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=958
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906180181
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906180181
+        Tue, 18 Jun 2019 18:37:09 -0400
+Received: by mail-io1-f71.google.com with SMTP id z19so17934023ioi.15
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 15:37:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=5Z9WFP7V56BODtQ5UPOd/al4TrzSmswoyoPkjw+h188=;
+        b=NPZx7kMzVZ25nDWAAXlbD2DRAlG3FbDxRmCQMSaVzyge71iDAdF9af6XsBWLBLxrPH
+         /03oIlWYxERp2FkGP7IdKw+RhcGtVABTTNDTnOnBeT9VIHO00y5ojB/M1oUN1BgjBZU6
+         v0tSeU8ruDKoDMT5LFbDTU+jgdswTHpxh5c54Cqu+2emy4zQljI/AlMWyVaoTb+NGG+t
+         vvas2mHIrYmnph3sz80ksalCkTh/9oXkWXAq4fAKfgdPxLfG99RQGp8fQOGJv4ebJabZ
+         cMsG6wZM/++baOqK2lK7PX8A6I0roG8EaY1PX6oDPJGu1VIIO6yPg1j6Jg3CxQ/rZy2w
+         rY0A==
+X-Gm-Message-State: APjAAAUML9QPvvb2TEMtSuGSBnYmF9qas8WS2JM2Qg7DLJMiXLyDIwBX
+        /nfUUn/1/FdoD30C8216vLIgIvhnV3P/KkNMOiGN47Wn6I6F
+X-Google-Smtp-Source: APXvYqxsUJJOKCWaPTd9Fq0B/2WwT4QJvL7Zcwv/ZJMc1ARDihT7NgaySKG/S93W/iYTgFuMV1PFh2BGWVmLMHvAB1OmeySLqKf+
+MIME-Version: 1.0
+X-Received: by 2002:a05:6638:149:: with SMTP id y9mr66822563jao.76.1560897428867;
+ Tue, 18 Jun 2019 15:37:08 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 15:37:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000c75fb7058ba0c0e4@google.com>
+Subject: memory leak in bio_copy_user_iov
+From:   syzbot <syzbot+03e5c8ebd22cc6c3a8cb@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    0011572c Merge branch 'for-5.2-fixes' of git://git.kernel...
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15193256a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=cb38d33cd06d8d48
+dashboard link: https://syzkaller.appspot.com/bug?extid=03e5c8ebd22cc6c3a8cb
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13244221a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=117b2432a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+03e5c8ebd22cc6c3a8cb@syzkaller.appspotmail.com
+
+ram
+executing program
+BUG: memory leak
+unreferenced object 0xffff8881204d7800 (size 2048):
+   comm "syz-executor855", pid 6936, jiffies 4294941958 (age 26.780s)
+   hex dump (first 32 bytes):
+     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+     20 00 00 00 02 01 00 00 00 00 00 00 08 00 00 00   ...............
+   backtrace:
+     [<00000000c5e27070>] kmemleak_alloc_recursive  
+include/linux/kmemleak.h:43 [inline]
+     [<00000000c5e27070>] slab_post_alloc_hook mm/slab.h:439 [inline]
+     [<00000000c5e27070>] slab_alloc mm/slab.c:3326 [inline]
+     [<00000000c5e27070>] __do_kmalloc mm/slab.c:3658 [inline]
+     [<00000000c5e27070>] __kmalloc+0x161/0x2c0 mm/slab.c:3669
+     [<000000004415e750>] kmalloc include/linux/slab.h:552 [inline]
+     [<000000004415e750>] bio_alloc_bioset+0x1b8/0x2c0 block/bio.c:439
+     [<000000002da58d1d>] bio_kmalloc include/linux/bio.h:391 [inline]
+     [<000000002da58d1d>] bio_copy_user_iov+0x113/0x4a0 block/bio.c:1275
+     [<00000000b4b23d95>] __blk_rq_map_user_iov block/blk-map.c:67 [inline]
+     [<00000000b4b23d95>] blk_rq_map_user_iov+0xc6/0x2b0 block/blk-map.c:136
+     [<00000000edad5f7e>] blk_rq_map_user+0x71/0xb0 block/blk-map.c:166
+     [<00000000c94723b5>] sg_start_req drivers/scsi/sg.c:1813 [inline]
+     [<00000000c94723b5>] sg_common_write.isra.0+0x619/0xa10  
+drivers/scsi/sg.c:809
+     [<00000000b11f3605>] sg_write.part.0+0x325/0x570 drivers/scsi/sg.c:709
+     [<00000000aba41953>] sg_write+0x44/0x64 drivers/scsi/sg.c:617
+     [<00000000afecd177>] __vfs_write+0x43/0xa0 fs/read_write.c:494
+     [<00000000de690898>] vfs_write fs/read_write.c:558 [inline]
+     [<00000000de690898>] vfs_write+0xee/0x210 fs/read_write.c:542
+     [<00000000705a35b0>] ksys_write+0x7c/0x130 fs/read_write.c:611
+     [<000000009efb9e6c>] __do_sys_write fs/read_write.c:623 [inline]
+     [<000000009efb9e6c>] __se_sys_write fs/read_write.c:620 [inline]
+     [<000000009efb9e6c>] __x64_sys_write+0x1e/0x30 fs/read_write.c:620
+     [<00000000f9e48771>] do_syscall_64+0x76/0x1a0  
+arch/x86/entry/common.c:301
+     [<00000000d5cff9fc>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
 
-> On 18 Jun 2019, at 19:24, Paolo Bonzini <pbonzini@redhat.com> wrote:
->=20
-> From: Liran Alon <liran.alon@oracle.com>
->=20
-> Improve the KVM_{GET,SET}_NESTED_STATE structs by detailing the format
-> of VMX nested state data in a struct.
->=20
-> In order to avoid changing the ioctl values of
-> KVM_{GET,SET}_NESTED_STATE, there is a need to preserve
-> sizeof(struct kvm_nested_state). This is done by defining the data
-> struct as "data.vmx[0]". It was the most elegant way I found to
-> preserve struct size while still keeping struct readable and easy to
-> maintain. It does have a misfortunate side-effect that now it has to =
-be
-> accessed as "data.vmx[0]" rather than just "data.vmx".
->=20
-> Because we are already modifying these structs, I also modified the
-> following:
-> * Define the "format" field values as macros.
-> * Rename vmcs_pa to vmcs12_pa for better readability.
->=20
-> Signed-off-by: Liran Alon <liran.alon@oracle.com>
-> [Remove SVM stubs, add KVM_STATE_NESTED_VMX_VMCS12_SIZE. - Paolo]
 
-1) Why should we remove SVM stubs? I think it makes the interface =
-intention more clear.
-Do you see any disadvantage of having them?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-2) What is the advantage of defining a separate =
-KVM_STATE_NESTED_VMX_VMCS12_SIZE
-rather than just moving VMCS12_SIZE to userspace header?
-
--Liran
-
-> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-> ---
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
