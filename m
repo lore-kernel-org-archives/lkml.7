@@ -2,128 +2,66 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB98C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82C13C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:33:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F89420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:28:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E4B02082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:33:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="OJaBJ2dA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbfFRV2e (ORCPT
+        id S1730462AbfFRVdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:28:34 -0400
-Received: from foss.arm.com ([217.140.110.172]:33068 "EHLO foss.arm.com"
+        Tue, 18 Jun 2019 17:33:09 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38500 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730368AbfFRV2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 17:28:33 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DAFCE360;
-        Tue, 18 Jun 2019 14:28:32 -0700 (PDT)
-Received: from [192.168.122.164] (u201426.austin.arm.com [10.118.28.29])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C84843F718;
-        Tue, 18 Jun 2019 14:28:32 -0700 (PDT)
-Subject: Re: [PATCH v2 1/2] ACPI/PPTT: Add support for ACPI 6.3 thread flag
-To:     John Garry <john.garry@huawei.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, will.deacon@arm.com, rjw@rjwysocki.net,
-        sudeep.holla@arm.com, lenb@kernel.org
-References: <20190614223158.49575-1-jeremy.linton@arm.com>
- <20190614223158.49575-2-jeremy.linton@arm.com>
- <667f95c0-5aa9-f460-a49a-e6dfefc027d8@arm.com>
- <2d1b547f-f9ee-391c-c4f3-0232a08a86bc@arm.com>
- <718438d0-8648-897a-83e8-801146a0af86@arm.com>
- <f6f7f9bb-547d-3fd3-f3f8-1d55181f63d7@huawei.com>
-From:   Jeremy Linton <jeremy.linton@arm.com>
-Message-ID: <11fb712f-b3c2-5491-89ee-ea7efb18ddd8@arm.com>
-Date:   Tue, 18 Jun 2019 16:28:32 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1729196AbfFRVdJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 17:33:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=HFlUGfwI29OnXEJ+MFr4KVMqjeFlOdA1xe8uQe9XuvY=; b=OJaBJ2dA3JnZLzHBuTprMuMBgq
+        FagHrrCnx3j473aG+UCapG0Vgf1R6cNscK3HcKYXW9+sZFh25xTez8tsV5BSaL8Oi0kXOurWUa95N
+        29XVHWxr1xD2I+7qjodqhuPRbSlXXRXnXCkBG4+OUwwdV6hnrBpSKRhJcX1Q6UHfgr+8=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hdLiu-00043l-0w; Tue, 18 Jun 2019 23:33:00 +0200
+Date:   Tue, 18 Jun 2019 23:32:59 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Parshuram Thombare <pthombar@cadence.com>
+Cc:     nicolas.ferre@microchip.com, davem@davemloft.net,
+        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
+        linux-kernel@vger.kernel.org, rafalc@cadence.com,
+        aniljoy@cadence.com, piotrs@cadence.com,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: Re: [PATCH v2 1/6] net: macb: add phylink support
+Message-ID: <20190618213259.GB18352@lunn.ch>
+References: <1560642367-26425-1-git-send-email-pthombar@cadence.com>
+ <1560883265-6057-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <f6f7f9bb-547d-3fd3-f3f8-1d55181f63d7@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560883265-6057-1-git-send-email-pthombar@cadence.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, Jun 18, 2019 at 07:41:05PM +0100, Parshuram Thombare wrote:
+> This patch replace phylib API's by phylink API's.
 
-On 6/18/19 12:23 PM, John Garry wrote:
-> On 18/06/2019 15:40, Valentin Schneider wrote:
->> On 18/06/2019 15:21, Jeremy Linton wrote:
->> [...]
->>>>> + * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be 
->>>>> found or
->>>>> + *       the table revision isn't new enough.
->>>>> + * Otherwise returns flag value
->>>>> + */
->>>>
->>>> Nit: strictly speaking we're not returning the flag value but its mask
->>>> applied to the flags field. I don't think anyone will care about 
->>>> getting
->>>> the actual flag value, but it should be made obvious in the doc:
->>>
->>> Or I clarify the code to actually do what the comments says. Maybe 
->>> that is what John G was also pointing out too?
->>>
-> 
-> No, I was just saying that the kernel topology can be broken without 
-> this series.
-> 
->>
->> Mmm I didn't find any reply from John regarding this in v1, but I 
->> wouldn't
->> mind either way, as long as the doc & code are aligned.
->>
-> 
-> BTW, to me, function acpi_pptt_cpu_is_thread() seems to try to do too 
-> much, i.e. check if the PPTT is new enough to support the thread flag 
-> and also check if it is set for a specific cpu. I'd consider separate 
-> functions here.
+Hi Parshuram
 
-? Your suggesting replacing the
+When you repost as a proper threaded patchset, please Cc: Russell
+King, the phylink maintainer.
 
-
-if (table->revision >= rev)
-	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
-
-check with
-
-if (revision_check(table, rev))
-	cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
-
-
-and a function like
-
-static int revision_check(acpixxxx *table, int rev)
-{
-	return (table->revision >= rev);
-}
-
-Although, frankly if one were to do this, it should probably be a macro 
-with the table type, and used in the dozen or so other places I found 
-doing similar checks (spcr, iort, etc).
-
-Or something else?
-
-
-
-
-> 
-> thanks,
-> John
-> 
->> [...]
->>
->> .
->>
-> 
-> 
-
+      Thanks
+	Andrew
