@@ -2,294 +2,89 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF836C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0F70C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6A46213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD4AC21530
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="cacfGXld"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729500AbfFRNsK (ORCPT
+        id S1729534AbfFRNsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:48:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50120 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729061AbfFRNsK (ORCPT
+        Tue, 18 Jun 2019 09:48:24 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:38931 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfFRNsX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:48:10 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hdET1-0001np-WD; Tue, 18 Jun 2019 13:48:08 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] scripts/spelling.txt: add more spellings to spelling.txt
-Date:   Tue, 18 Jun 2019 14:48:07 +0100
-Message-Id: <20190618134807.9729-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Jun 2019 09:48:23 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so9344595lfo.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 06:48:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=iJmKAKxXNY/eDxKA8zSNselgrq1E+cvwinlMdmVZAj0=;
+        b=cacfGXldfdERA2D7/w1ynW2VQsTn1b7qk3uj0WDFrM0xboK5HuBE6GGyV+UDRf8kby
+         isgNXremPdDITxn9XQ/vhZh9Qv43SxXMctARDoJqV+BLdixewV8O+zlRT3BSODYIZ6DE
+         nd86ZP5rZkLGJ2m9+2yJZJ0SeZpVE61F9L1k1NTHBbeIrCnyg9Y4z9TxD3ZWoAzY0Q4o
+         uwRB2fzVH7UoX7H8L8iiEJPEtnDJk8VfvwHd9Nz1FXFYGb76d4kEUOQ7hzuz3FAlOk2d
+         y35hrhm6+qp063fseqIsJmWv1CEwQz0+XFX0WlSYV7eu2meM0FBw1PzTiHUUfNJRkHr+
+         zVfA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iJmKAKxXNY/eDxKA8zSNselgrq1E+cvwinlMdmVZAj0=;
+        b=p3eUHjpwSHeXNJLdGMloQFteriI9rBtaDDhXeD5U6YHldtEm07WeqXakICZtbtGDmi
+         5Kz9jgDhNSaZXe/v5UZRWFNi3TT0o5ys4RYh2HlEtwjkDQmbvEzx17A5aFc3ZsYlTEty
+         dM15ITquRU7ifMfNnpzUM10NcTxYyejCCMn0NFhT6i6XpAaXqWDPf8IMDSV/qSUPBrVs
+         STfMCOR/wReLysdn0rS7S2Lh2gWNBPCNiN3E2cxtdZ8MWDBemTppc2zlJJ78TZf159uw
+         BW48vSQc4mlSQFUZr+IlemX8GVJlGNWAvTDYOZ11/I1EDH7XkrkNDMu/pGqgjetkojk8
+         IWPQ==
+X-Gm-Message-State: APjAAAWkDcQM146GJDHgRmXS2B13Qt8M7YX0MAlzojC/PnMuAqbeSCAW
+        WAQRxaB7N6HKNTFFZGfnSuBKMA==
+X-Google-Smtp-Source: APXvYqy5gTlGzzNc80V9pWkczYKQWK9Gi90EqAnxJCcIf/zlrnAT5z4Bdsksw3HQh5Y4IX5L/DHOZA==
+X-Received: by 2002:ac2:495e:: with SMTP id o30mr59137674lfi.140.1560865701929;
+        Tue, 18 Jun 2019 06:48:21 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id t21sm2211126lfl.17.2019.06.18.06.48.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Jun 2019 06:48:20 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 06:48:11 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     arm@kernel.org, Krzysztof Halasa <khalasa@piap.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] soc: ixp4xx: npe: Fix an IS_ERR() vs NULL check in probe
+Message-ID: <20190618134811.bfs5lxazaw66ubb7@localhost>
+References: <CACRpkdaX66=g7dG7SFkgr5Dwmop-p4qe7ELkn0KERtqVvp0vNA@mail.gmail.com>
+ <20190618115410.GE18776@kadam>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618115410.GE18776@kadam>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Jun 18, 2019 at 02:54:10PM +0300, Dan Carpenter wrote:
+> The devm_ioremap_resource() function doesn't return NULL, it returns
+> error pointers.
+> 
+> Fixes: 0b458d7b10f8 ("soc: ixp4xx: npe: Pass addresses as resources")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-Here are even of the more common spelling mistakes and typos that I've
-found while fixing up spelling mistakes in the kernel over the past few
-months. Developers keep on coming up with more inventive ways to spell
-words.
+Applied, thanks!
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- scripts/spelling.txt | 33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
 
-diff --git a/scripts/spelling.txt b/scripts/spelling.txt
-index 99f82a2a5b54..de75b9feaaed 100644
---- a/scripts/spelling.txt
-+++ b/scripts/spelling.txt
-@@ -41,6 +41,7 @@ accquired||acquired
- accross||across
- acessable||accessible
- acess||access
-+acessing||accessing
- achitecture||architecture
- acient||ancient
- acitions||actions
-@@ -54,6 +55,7 @@ activete||activate
- actived||activated
- actualy||actually
- acumulating||accumulating
-+acumulative||accumulative
- acumulator||accumulator
- adapater||adapter
- addional||additional
-@@ -103,6 +105,7 @@ alogrithm||algorithm
- alot||a lot
- alow||allow
- alows||allows
-+alredy||already
- altough||although
- alue||value
- ambigious||ambiguous
-@@ -223,6 +226,7 @@ boardcast||broadcast
- borad||board
- boundry||boundary
- brievely||briefly
-+brigde||bridge
- broadcase||broadcast
- broadcat||broadcast
- bufufer||buffer
-@@ -239,6 +243,7 @@ calulate||calculate
- cancelation||cancellation
- cancle||cancel
- capabilites||capabilities
-+capabilties||capabilities
- capabilty||capability
- capabitilies||capabilities
- capablity||capability
-@@ -325,6 +330,7 @@ conector||connector
- connecetd||connected
- configuartion||configuration
- configuation||configuration
-+configued||configured
- configuratoin||configuration
- configuraton||configuration
- configuretion||configuration
-@@ -407,6 +413,7 @@ depreacte||deprecate
- desactivate||deactivate
- desciptor||descriptor
- desciptors||descriptors
-+descripto||descriptor
- descripton||description
- descrition||description
- descritptor||descriptor
-@@ -432,6 +439,7 @@ deveolpment||development
- devided||divided
- deviece||device
- diable||disable
-+dicline||decline
- dictionnary||dictionary
- didnt||didn't
- diferent||different
-@@ -461,6 +469,7 @@ disharge||discharge
- disnabled||disabled
- dispertion||dispersion
- dissapears||disappears
-+dissconect||disconnect
- distiction||distinction
- divisable||divisible
- divsiors||divisors
-@@ -469,11 +478,14 @@ documantation||documentation
- documentaion||documentation
- documment||document
- doesnt||doesn't
-+donwload||download
-+donwloading||downloading
- dorp||drop
- dosen||doesn
- downlad||download
- downlads||downloads
- droped||dropped
-+droput||dropout
- druing||during
- dynmaic||dynamic
- eanable||enable
-@@ -482,6 +494,7 @@ ecspecially||especially
- edditable||editable
- editting||editing
- efective||effective
-+effectivness||effectiveness
- efficently||efficiently
- ehther||ether
- eigth||eight
-@@ -543,6 +556,7 @@ extensability||extensibility
- extention||extension
- extenstion||extension
- extracter||extractor
-+faied||failed
- faield||failed
- falied||failed
- faild||failed
-@@ -567,6 +581,7 @@ fetaures||features
- fileystem||filesystem
- fimware||firmware
- firmare||firmware
-+firmaware||firmware
- firware||firmware
- finanize||finalize
- findn||find
-@@ -601,6 +616,8 @@ funtions||functions
- furthur||further
- futhermore||furthermore
- futrue||future
-+gatable||gateable
-+gateing||gating
- gauage||gauge
- gaurenteed||guaranteed
- generiously||generously
-@@ -641,9 +658,11 @@ iomaped||iomapped
- imblance||imbalance
- immeadiately||immediately
- immedaite||immediate
-+immedate||immediate
- immediatelly||immediately
- immediatly||immediately
- immidiate||immediate
-+immutible||immutable
- impelentation||implementation
- impementated||implemented
- implemantation||implementation
-@@ -661,10 +680,12 @@ incative||inactive
- incomming||incoming
- incompatabilities||incompatibilities
- incompatable||incompatible
-+incompatble||incompatible
- inconsistant||inconsistent
- increas||increase
- incremeted||incremented
- incrment||increment
-+inculde||include
- indendation||indentation
- indended||intended
- independant||independent
-@@ -778,6 +799,7 @@ libary||library
- librairies||libraries
- libraris||libraries
- licenceing||licencing
-+logaritmic||logarithmic
- loggging||logging
- loggin||login
- logile||logfile
-@@ -832,6 +854,7 @@ mispelled||misspelled
- mispelt||misspelt
- mising||missing
- mismactch||mismatch
-+missign||missing
- missmanaged||mismanaged
- missmatch||mismatch
- miximum||maximum
-@@ -848,6 +871,7 @@ mopdule||module
- mroe||more
- mulitplied||multiplied
- multidimensionnal||multidimensional
-+multipe||multiple
- multple||multiple
- mumber||number
- muticast||multicast
-@@ -870,7 +894,9 @@ nescessary||necessary
- nessessary||necessary
- noticable||noticeable
- notications||notifications
-+notifcations||notifications
- notifed||notified
-+notity||notify
- numebr||number
- numner||number
- obtaion||obtain
-@@ -887,6 +913,7 @@ occuring||occurring
- offser||offset
- offet||offset
- offloded||offloaded
-+offseting||offsetting
- omited||omitted
- omiting||omitting
- omitt||omit
-@@ -1025,6 +1052,7 @@ prosess||process
- protable||portable
- protcol||protocol
- protecion||protection
-+protedcted||protected
- protocoll||protocol
- promixity||proximity
- psudo||pseudo
-@@ -1039,6 +1067,7 @@ reasearcher||researcher
- reasearchers||researchers
- reasearch||research
- recepient||recipient
-+recevied||received
- receving||receiving
- recieved||received
- recieve||receive
-@@ -1112,6 +1141,7 @@ retreived||retrieved
- retreive||retrieve
- retreiving||retrieving
- retrive||retrieve
-+retrived||retrieved
- retuned||returned
- reudce||reduce
- reuest||request
-@@ -1178,6 +1208,7 @@ singaled||signaled
- singal||signal
- singed||signed
- sleeped||slept
-+sliped||slipped
- softwares||software
- speach||speech
- specfic||specific
-@@ -1284,6 +1315,7 @@ threds||threads
- threshhold||threshold
- thresold||threshold
- throught||through
-+trackling||tracking
- troughput||throughput
- thses||these
- tiggers||triggers
-@@ -1410,5 +1442,6 @@ wnat||want
- workarould||workaround
- writeing||writing
- writting||writing
-+wtih||with
- zombe||zombie
- zomebie||zombie
--- 
-2.20.1
+-Olof
 
