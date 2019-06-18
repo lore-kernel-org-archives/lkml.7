@@ -2,173 +2,134 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0351C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:12:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80252C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915FB2080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:12:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A1ED2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:12:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PVJPsoCs";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PVRx87wJ"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="iaB9nIVl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726672AbfFRHMO (ORCPT
+        id S1728817AbfFRHMg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:12:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38480 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfFRHMO (ORCPT
+        Tue, 18 Jun 2019 03:12:36 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40989 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725919AbfFRHMg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:12:14 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id F2B3160867; Tue, 18 Jun 2019 05:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560837174;
-        bh=PQiidX3rlEJZDQPRPGrV2WaiptWcCY0MMTVz1XTm+Vw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PVJPsoCsmC9KX5WBAGB9i4Nto6OzQsYk7G4k7nMDJ2UVULDUwqWg0r9ZlZZp2dWjb
-         u4biZnH3LJamg+gw6LxFuQBPz4ZpdI9dWmEZmUbh3R6VLsn8oBe1khQ94vav0UPaTA
-         wOK3Zxa9nn6Up0cYEQK7IdrF0BQcau276c1mzvUQ=
-Received: from [192.168.43.187] (unknown [223.227.13.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: nishakumari@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1B41E60850;
-        Tue, 18 Jun 2019 05:52:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560837173;
-        bh=PQiidX3rlEJZDQPRPGrV2WaiptWcCY0MMTVz1XTm+Vw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=PVRx87wJ6CrV7mjmO4a8/JvzMLLpAm9s/pFBTc0ujgud0QmtFZX6XxJu4ubhD8x4M
-         a3tcSL8Xmh9Uo8WneLLGFNazwOELBQOBJ4i1z/nTAKlhh0i/hwYBPUwVhKYJtykJW/
-         ReOET0L3XV7kYgs/2ai4pIpqfgA3u//1jy34yi/o=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1B41E60850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=nishakumari@codeaurora.org
-Subject: Re: [PATCH 1/4] dt-bindings: regulator: Add labibb regulator
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     broonie@kernel.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        agross@kernel.org, lgirdwood@gmail.com, mark.rutland@arm.com,
-        david.brown@linaro.org, linux-kernel@vger.kernel.org,
-        kgunda@codeaurora.org, rnayak@codeaurora.org
-References: <1560337252-27193-1-git-send-email-nishakumari@codeaurora.org>
- <1560337252-27193-2-git-send-email-nishakumari@codeaurora.org>
- <20190613162808.GG22737@tuxbook-pro>
-From:   Nisha Kumari <nishakumari@codeaurora.org>
-Message-ID: <ed756c36-2b0d-b48e-b4fd-32e2d60aa38a@codeaurora.org>
-Date:   Tue, 18 Jun 2019 11:22:45 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 18 Jun 2019 03:12:36 -0400
+Received: by mail-io1-f68.google.com with SMTP id w25so27321540ioc.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:12:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=HmL++hI8lQoZaDbMBXIiWF1lw21O/uzMRwn2y/O0Xwk=;
+        b=iaB9nIVlWH6LV1DMIrnPdNE4Ys6DzvdzS2TdZXtSSCE+E+q//N61iRLXcbqzVqDJaM
+         QqF1qJCQwPEafzabEz0t6xWOChZQsyc3weFjZWETylgOH5RD2KFWKbMKG4bLlXxFg9OX
+         dq6AUnd4hFcU4o+A0TnJag+k3HkoKHdrN5hKs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=HmL++hI8lQoZaDbMBXIiWF1lw21O/uzMRwn2y/O0Xwk=;
+        b=dmWner3g8YfnCm9sXkB5gq6SwUpFsVf7zoU94jzjqBp1bd6ifXrz9bPOEUW52HGe6V
+         VXvvmSzKGvSQMFvc4TzaNndC+jad0ayF2vWapd+UrYcZPKfT5dbz/Xsqzw7jS0I84Rqh
+         yQvYTa1usv6jEBrLaB35b+eYar4y1sqtiYLuxKYqOi56BPp7whWEBUVxVwp/FXlzxlE0
+         iD8F5sZES3xkwkXLYPmpCOmlw3Bf+Rr0/PwSO/wS30vLI+KBQ+BAk8DPVWpMKZzlMpP6
+         rzpacFHucJlPKGEivyc6bxXmWXAQlKkGynDNXVb1AbcsWm8tz5sK9wj3KV1PDzHm3bTY
+         3Yqg==
+X-Gm-Message-State: APjAAAVeZ3fUG7dCQTu6wjZXJPn7YhQbXyh5XFaD20arFlUxjqMchFvx
+        PBGbs7OeDvKZ/ErisX1dBizLMVbUc0VFmGwQLckHsg==
+X-Google-Smtp-Source: APXvYqzNRlDJxCxF6O+3RbQgMZ8Vz5JWFmeOF5YnAqT2HmdW9eHgtOSbGNu6hfDOSRSNCnLlinOQTSXbS6Nte7phh2s=
+X-Received: by 2002:a6b:6b14:: with SMTP id g20mr6191396ioc.28.1560841955317;
+ Tue, 18 Jun 2019 00:12:35 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190613162808.GG22737@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <20190617114503.pclqsf6bo3ih47nt@flea>
+ <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com>
+In-Reply-To: <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 18 Jun 2019 12:42:23 +0530
+Message-ID: <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
+ clock gates in probe
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 6:31 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Mon, Jun 17, 2019 at 7:45 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
+> > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > now these are register during bind call.
+> > >
+> > > Of which, dsi clock gate would required during DPHY probe
+> > > but same can miss to get since tcon top is not bound at
+> > > that time.
+> > >
+> > > To solve, this circular dependency move the clock gate
+> > > registration from bind to probe so-that DPHY can get the
+> > > dsi gate clock on time.
+> >
+> > It's not really clear to me what the circular dependency is?
+> >
+> > if you have a chain that is:
+> >
+> > tcon-top +-> DSI
+> >          +-> D-PHY
+> >
+> > There's no loop, right?
+>
+> Looking at how the DTSI patch structures things (without going into
+> whether it is correct or accurate):
+>
+> The D-PHY is not part of the component graph. However it requests
+> the DSI gate clock from the TCON-TOP.
+>
+> The TCON-TOP driver, in its current form, only registers the clocks
+> it provides at component bind time. Thus the D-PHY can't successfully
+> probe until the TCON-TOP has been bound.
+>
+> The DSI interface requires the D-PHY to bind. It will return -EPROBE_DEFER
+> if it cannot request it. This in turn goes into the error path of
+> component_bind_all, which unbinds all previous components.
+>
+> So it's actually
+>
+>     D-PHY -> TCON-TOP -> DSI
+>       ^                   |
+>       |--------------------
+>
+> I've not checked, but I suspect there's no possibility of having other
+> drivers probe (to deal with deferred probing) within component_bind_all.
+> Otherwise we shouldn't run into this weird circular dependency issue.
+>
+> So the question for Jagan is that is this indeed the case? Does this
+> patch solve it, or at least work around it.
 
-On 6/13/2019 9:58 PM, Bjorn Andersson wrote:
-> On Wed 12 Jun 04:00 PDT 2019, Nisha Kumari wrote:
->
->> Adding the devicetree binding for labibb regulator.
->>
->> Signed-off-by: Nisha Kumari <nishakumari@codeaurora.org>
->> ---
->>   .../bindings/regulator/qcom-labibb-regulator.txt   | 57 ++++++++++++++++++++++
->>   1 file changed, 57 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
->>
->> diff --git a/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
->> new file mode 100644
->> index 0000000..79aad6f4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/regulator/qcom-labibb-regulator.txt
->> @@ -0,0 +1,57 @@
->> +Qualcomm's LAB(LCD AMOLED Boost)/IBB(Inverting Buck Boost) Regulator
->> +
->> +LAB can be used as a positive boost power supply and IBB can be used as a negative
->> +boost power supply for display panels.
->> +
->> +Main node required properties:
->> +
->> +- compatible:			Must be:
->> +				"qcom,lab-ibb-regulator"
-> In order to handle variations in future LABIBB implementations, make
-> this "qcom,pmi8998-lab-ibb";
-Sure, i will do that.
->
->> +- #address-cells:		Must be 1
->> +- #size-cells:			Must be 0
->> +
->> +LAB subnode required properties:
->> +
->> +- reg:				Specifies the SPMI address and size for this peripheral.
->> +- regulator-name:		A string used to describe the regulator.
->> +- interrupts:			Specify the interrupts as per the interrupt
->> +				encoding.
->> +- interrupt-names:		Interrupt names to match up 1-to-1 with
->> +				the interrupts specified in 'interrupts'
->> +				property.
->> +
->> +IBB subnode required properties:
->> +
->> +- reg:				Specifies the SPMI address and size for this peripheral.
->> +- regulator-name:		A string used to describe the regulator.
->> +- interrupts:			Specify the interrupts as per the interrupt
->> +				encoding.
->> +- interrupt-names:		Interrupt names to match up 1-to-1 with
->> +				the interrupts specified in 'interrupts'
->> +				property.
->> +
->> +Example:
->> +	pmi8998_lsid1: pmic@3 {
->> +		qcom-labibb-regulator {
-> We typically want to use generic names here, but as the spmi regulator
-> binding suggest the use of "regulators" without a unit address that
-> wouldn't work.
->
-> But you can shorten this to either "labibb" or at least
-> "labibb-regulator".
-Sure, i will do that.
->> +			compatible = "qcom,lab-ibb-regulator";
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			lab_regulator: qcom,lab@de00 {
-> Don't use "qcom," in the node names.
-ok
->
->> +				reg = <0xde00>;
-> Please follow the spmi-regulator and hide these in the driver.
-ok
->> +				regulator-name = "lab_reg";
-> We know it's a regulator, so no need for _reg, which means that if you
-> drop "qcom," from the node name and use the node name as the default
-> regulator name you don't need this.
-Sure, i will do that.
->
->> +
->> +				interrupts = <0x3 0xde 0x0 IRQ_TYPE_EDGE_RISING>;
->> +				interrupt-names = "lab-sc-err";
->> +			};
->> +
->> +			ibb_regulator: qcom,ibb@dc00 {
->> +				reg = <0xdc00>;
->> +				regulator-name = "ibb_reg";
->> +
->> +				interrupts = <0x3 0xdc 0x2 IRQ_TYPE_EDGE_RISING>;
->> +				interrupt-names = "ibb-sc-err";
->> +			};
->> +
->> +		};
->> +	};
-> Regards,
-> Bjorn
+Yes, this is what I was mentioned in initial version, since the "dsi"
+gate in tcon top is registering during bind, the dphy of dsi
+controller won't get the associated clock for "mod" so it is keep on
+returning -EPROBE_DEFER. By moving the clock gate registration to
+probe, everything bound as expected.
