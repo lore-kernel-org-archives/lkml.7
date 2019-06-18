@@ -2,72 +2,119 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1572FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:34:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30F22C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:36:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA85F2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 125A420863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:36:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730702AbfFRUei (ORCPT
+        id S1730636AbfFRUgy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:34:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:37346 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730176AbfFRUeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:34:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6FCE0ABE3;
-        Tue, 18 Jun 2019 20:34:36 +0000 (UTC)
-From:   Takashi Iwai <tiwai@suse.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH RFC 0/3] Automatically choose a bigger font for high resolution screens
-Date:   Tue, 18 Jun 2019 22:34:22 +0200
-Message-Id: <20190618203425.10723-1-tiwai@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Tue, 18 Jun 2019 16:36:54 -0400
+Received: from s3.sipsolutions.net ([144.76.43.62]:47786 "EHLO
+        sipsolutions.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729961AbfFRUgy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 16:36:54 -0400
+Received: by sipsolutions.net with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <johannes@sipsolutions.net>)
+        id 1hdKqN-0006ry-3T; Tue, 18 Jun 2019 22:36:39 +0200
+Message-ID: <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Johannes Berg <johannes@sipsolutions.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
+        Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        Dan Williams <dcbw@redhat.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        syadagir@codeaurora.org
+Date:   Tue, 18 Jun 2019 22:36:35 +0200
+In-Reply-To: <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com> (sfid-20190618_215938_912601_E3CB8D3C)
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
+         <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
+         <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
+         <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
+         (sfid-20190618_215938_912601_E3CB8D3C)
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5 (3.28.5-2.fc28) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Tue, 2019-06-18 at 21:59 +0200, Arnd Bergmann wrote:
+> 
+> From my understanding, the ioctl interface would create the lower
+> netdev after talking to the firmware, and then user space would use
+> the rmnet interface to create a matching upper-level device for that.
+> This is an artifact of the strong separation of ipa and rmnet in the
+> code.
 
-this is an RFC patch for automatically selecting a bigger font for
-high resolution monitors if available.  Although we recently got a
-16x32 sized font support in the kernel, using it still requires some
-extra kernel option.  This patch reduces this and the kernel will pick
-up a bigger font.
+Huh. But if rmnet has muxing, and IPA supports that, why would you ever
+need multiple lower netdevs?
 
-The logic is simply checking the text screen size.  If it's over a
-threshold, the penalty is given to the function that chooses the
-default font.
+> > > > The software bridging [...]
+> 
+> My understanding for this was that the idea is to use it for
+> connecting bridging between distinct hardware devices behind
+> ipa: if IPA drives both a USB-ether gadget and the 5G modem,
+> you can use to talk to Linux running rmnet, but you can also
+> use rmnet to provide fast usb tethering to 5g and bypass the
+> rest of the network stack. That again may have been a wrong
+> guess on my part.
 
-The threshold was chosen so that the normal display up to Full HD
-won't be affected.
+Hmm. Interesting. It didn't really look to me like that, but I'm really
+getting lost in the code. Anyway, it seems weird, because then you'd
+just bridge the upper netdev with the other ethernet and don't need
+special logic? And I don't see how the ethernet headers would work with
+this now.
 
-There are two preliminary patches and they are merely cleanups.  They
-can be applied no matter whether to take the last patch or not.
+> ipa definitely has multiple hardware queues, and the Alex'
+> driver does implement  the data path on those, just not the
+> configuration to enable them.
 
+OK, but perhaps you don't actually have enough to use one for each
+session?
 
-thanks,
+> Guessing once more, I suspect the the XON/XOFF flow control
+> was a workaround for the fact that rmnet and ipa have separate
+> queues. The hardware channel on IPA may fill up, but user space
+> talks to rmnet and still add more frames to it because it doesn't
+> know IPA is busy.
+> 
+> Another possible explanation would be that this is actually
+> forwarding state from the base station to tell the driver to
+> stop sending data over the air.
 
-Takashi
+Yeah, but if you actually have a hardware queue per upper netdev then
+you don't really need this - you just stop the netdev queue when the
+hardware queue is full, and you have flow control automatically.
 
-===
+So I really don't see any reason to have these messages going back and
+forth unless you plan to have multiple sessions muxed on a single
+hardware queue.
 
-Takashi Iwai (3):
-  fonts: Fix coding style
-  fonts: Use BUILD_BUG_ON() for checking empty font table
-  fonts: Prefer a bigger font for high resolution screens
+And really, if you don't mux multiple sessions onto a single hardware
+queue, you don't need a mux header either, so it all adds up :-)
 
- lib/fonts/fonts.c | 103 ++++++++++++++++++++++++------------------------------
- 1 file changed, 46 insertions(+), 57 deletions(-)
-
--- 
-2.16.4
+johannes
 
