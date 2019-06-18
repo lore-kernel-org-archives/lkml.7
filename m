@@ -2,137 +2,127 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 603BDC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:39:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB85AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:42:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FA0920679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:39:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9F2720679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:42:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dUWu615y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728792AbfFRMjk (ORCPT
+        id S1727964AbfFRMl7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:39:40 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:44139 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRMjk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:39:40 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Snhl0Bsrz9sCJ;
-        Tue, 18 Jun 2019 22:39:34 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Linas Vepstas <linasvepstas@gmail.com>,
-        Russell Currey <ruscur@russell.cc>,
-        Sam Bobroff <sbobroff@linux.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        "Manoj N. Kumar" <manoj@linux.ibm.com>,
-        "Matthew R. Ochs" <mrochs@linux.ibm.com>,
-        Uma Krishnan <ukrishn@linux.ibm.com>,
-        Qiang Zhao <qiang.zhao@nxp.com>, Li Yang <leoyang.li@nxp.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-pci@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-scsi@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Subject: Re: [PATCH v4 19/28] docs: powerpc: convert docs to ReST and rename to *.rst
-In-Reply-To: <20190614143635.3aff154d@lwn.net>
-References: <cover.1560361364.git.mchehab+samsung@kernel.org> <63560c1ee7174952e148a353840a17969fe0be2d.1560361364.git.mchehab+samsung@kernel.org> <20190614143635.3aff154d@lwn.net>
-Date:   Tue, 18 Jun 2019 22:39:32 +1000
-Message-ID: <87blyvoynv.fsf@concordia.ellerman.id.au>
+        Tue, 18 Jun 2019 08:41:59 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46610 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRMl7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:41:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=tU+uoH636LnLs6tWofoR44x7rXbC9eLZS1/AxRoae2A=; b=dUWu615yd4Eq0frSeVJMzBQnr
+        c7NZoCsnZO11ofhGx28MfjNFgfdgnq+WNL46xVo1bkwml4T7hWh1kog4kNWUyrbd75WdvkK7nZmlH
+        J54e4GW7oZGuunIRilDjhExoD/2oYz/DadDxTnEu4uU7iPv+gZNirnpq1VXc8bgoCxhxmpnNSt96x
+        z4GHkSRBLpcc4tRATSGSTlAkXuJJVcLR0OV1zeyBLu9QDskQswnG7ZKZg07d+Xd3D5el6+FGgGOvz
+        dla09z4BqHqHrFOoAq5S+/i++Fi390VrVCyimBkasZRwofWz+sZ0y7uEmCfgeodjXhMJN9SKCvJlx
+        FXmFJ4xdg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdDQR-0007Pf-Bh; Tue, 18 Jun 2019 12:41:23 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 22F1F209C88F8; Tue, 18 Jun 2019 14:41:22 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 14:41:22 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Florian Weimer <fweimer@redhat.com>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+Message-ID: <20190618124122.GH3419@hirez.programming.kicks-ass.net>
+References: <20190606200646.3951-23-yu-cheng.yu@intel.com>
+ <20190607180115.GJ28398@e103592.cambridge.arm.com>
+ <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
+ <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
+ <20190611114109.GN28398@e103592.cambridge.arm.com>
+ <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
+ <20190612093238.GQ28398@e103592.cambridge.arm.com>
+ <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
+ <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
+ <20190618091248.GB2790@e103592.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618091248.GB2790@e103592.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jonathan Corbet <corbet@lwn.net> writes:
-> On Wed, 12 Jun 2019 14:52:55 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
->
->> Convert docs to ReST and add them to the arch-specific
->> book.
->> 
->> The conversion here was trivial, as almost every file there
->> was already using an elegant format close to ReST standard.
->> 
->> The changes were mostly to mark literal blocks and add a few
->> missing section title identifiers.
->> 
->> One note with regards to "--": on Sphinx, this can't be used
->> to identify a list, as it will format it badly. This can be
->> used, however, to identify a long hyphen - and "---" is an
->> even longer one.
->> 
->> At its new index.rst, let's add a :orphan: while this is not linked to
->> the main index.rst file, in order to avoid build warnings.
->> 
->> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
->> Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com> # cxl
->
-> This one fails to apply because ...
->
-> [...]
->
->> diff --git a/Documentation/PCI/pci-error-recovery.rst b/Documentation/PCI/pci-error-recovery.rst
->> index 83db42092935..acc21ecca322 100644
->> --- a/Documentation/PCI/pci-error-recovery.rst
->> +++ b/Documentation/PCI/pci-error-recovery.rst
->> @@ -422,3 +422,24 @@ That is, the recovery API only requires that:
->>     - drivers/net/cxgb3
->>     - drivers/net/s2io.c
->>     - drivers/net/qlge
->> +
->> +>>> As of this writing, there is a growing list of device drivers with
->> +>>> patches implementing error recovery. Not all of these patches are in
->> +>>> mainline yet. These may be used as "examples":
->> +>>>
->> +>>> drivers/scsi/ipr
->> +>>> drivers/scsi/sym53c8xx_2
->> +>>> drivers/scsi/qla2xxx
->> +>>> drivers/scsi/lpfc
->> +>>> drivers/next/bnx2.c
->> +>>> drivers/next/e100.c
->> +>>> drivers/net/e1000
->> +>>> drivers/net/e1000e
->> +>>> drivers/net/ixgb
->> +>>> drivers/net/ixgbe
->> +>>> drivers/net/cxgb3
->> +>>> drivers/net/s2io.c
->> +>>> drivers/net/qlge  
->
-> ...of this, which has the look of a set of conflict markers that managed
-> to get committed...?
+On Tue, Jun 18, 2019 at 10:12:50AM +0100, Dave Martin wrote:
+> On Mon, Jun 17, 2019 at 02:20:40PM +0200, Thomas Gleixner wrote:
+> > On Mon, 17 Jun 2019, Florian Weimer wrote:
+> > > * Dave Martin:
+> > > > On Tue, Jun 11, 2019 at 12:31:34PM -0700, Yu-cheng Yu wrote:
+> > > >> We can probably check PT_GNU_PROPERTY first, and fallback (based on ld-linux
+> > > >> version?) to PT_NOTE scanning?
+> > > >
+> > > > For arm64, we can check for PT_GNU_PROPERTY and then give up
+> > > > unconditionally.
+> > > >
+> > > > For x86, we would fall back to PT_NOTE scanning, but this will add a bit
+> > > > of cost to binaries that don't have NT_GNU_PROPERTY_TYPE_0.  The ld.so
+> > > > version doesn't tell you what ELF ABI a given executable conforms to.
+> > > >
+> > > > Since this sounds like it's largely a distro-specific issue, maybe there
+> > > > could be a Kconfig option to turn the fallback PT_NOTE scanning on?
+> > > 
+> > > I'm worried that this causes interop issues similarly to what we see
+> > > with VSYSCALL today.  If we need both and a way to disable it, it should
+> > > be something like a personality flag which can be configured for each
+> > > process tree separately.  Ideally, we'd settle on one correct approach
+> > > (i.e., either always process both, or only process PT_GNU_PROPERTY) and
+> > > enforce that.
+> > 
+> > Chose one and only the one which makes technically sense and is not some
+> > horrible vehicle.
+> > 
+> > Everytime we did those 'oh we need to make x fly workarounds' we regretted
+> > it sooner than later.
+> 
+> So I guess that points to keeping PT_NOTE scanning always available as a
+> fallback on x86.  This sucks a bit, but if there are binaries already in
+> the wild that rely on this, I don't think we have much choice...
 
-I don't think so.
-
-There's some other uses of >>> in that file, eg about line 162:
-
-  >>> The current powerpc implementation assumes that a device driver will
-  >>> *not* schedule or semaphore in this routine; the current powerpc
-  >>> implementation uses one kernel thread to notify all devices;
-  >>> thus, if one device sleeps/schedules, all devices are affected.
-  >>> Doing better requires complex multi-threaded logic in the error
-  >>> recovery implementation (e.g. waiting for all notification threads
-  >>> to "join" before proceeding with recovery.)  This seems excessively
-  >>> complex and not worth implementing.
-
-
-So it's just an odd choice of emphasis device I think.
-
-cheers
+I'm not sure I read Thomas' comment like that. In my reading keeping the
+PT_NOTE fallback is exactly one of those 'fly workarounds'. By not
+supporting PT_NOTE only the 'fine' people already shit^Hpping this out
+of tree are affected, and we don't have to care about them at all.
