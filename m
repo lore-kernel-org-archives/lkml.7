@@ -2,170 +2,184 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA8BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:57:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE6A1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71642206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:57:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="jvSabEdr"
+	by mail.kernel.org (Postfix) with ESMTP id 9CA42206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727189AbfFRA5d (ORCPT
+        id S1726286AbfFRBER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:57:33 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:35430 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRA5d (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:57:33 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 2797C2DC0096;
-        Mon, 17 Jun 2019 20:57:31 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1560819452;
-        bh=u7VpYNn8JpTLdyHPUljh2Z7wehVtDH+n9nHQNgN6N2A=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=jvSabEdrNHOl7NlBGL5YcdZQfi+fpB9BO+GaqBWlR/PP+V/1JX3MOC/vdfprE+d4q
-         W0UTx/depws8/q6fCe4qsmxzaHqtVkUa+v+Mp2PYjaUrKq1XeKLKJ3TPmwKDKYb7Ix
-         tm9Ggg2c204E7SWf1Kzm3b7UURvQRUF+YtE1qaFXWb7M1bSsECs2dxPGyAy4TwdTwu
-         YrzjrIAdGWVZDKXuSQHyDOqmmePgS4sV2lw+tlA9IZJRT1DXVvYEFcSGBy5FTId/0l
-         fqkDcrBYmDhMWn+3CZbnwx7qgnLFWM0LDHsbAyxHAnRZtM+pOmK0XpTf0aiYcsAURz
-         JAHTKkLHxAgXWfC3qIJOHW9mN0wLp5AYzfNmMC3C5ks7bZYsWq3PGnPXMMgDkMzyop
-         xeuPVBo2+37GGuWiHd1PVStu6wl0eKfSBJgyWJvhXbnAdDsbuqzYFH9Boz+O6C1oWT
-         2Stkwa1MvSezs7en91awfFUNUzrvwbjOv/IZIK0ZFoGni+dz4kIbQSJzdLLHGKQkgV
-         TVlkQn6TAJU90DRRiC92kuMldKfElutBjDwzhohJifPcEvF9T9IrE1SS4Zaz3ft2Rz
-         ho6zF2/9j+ouJCRd5AcHglBo4L8CMDItufZhI5pCGZ7PhbKy0bPXekMmqRlgelk8er
-         vDFIJF20+9ye5cMw79l/tHxg=
-Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5I0v17n063106
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 18 Jun 2019 10:57:17 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-Message-ID: <b2651117ca8a55d94b7e14e273d25199515039c3.camel@d-silva.org>
-Subject: Re: [PATCH v3 2/7] lib/hexdump.c: Relax rowsize checks in
- hex_dump_to_buffer
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     Randy Dunlap <rdunlap@infradead.org>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
+        Mon, 17 Jun 2019 21:04:17 -0400
+Received: from mga02.intel.com ([134.134.136.20]:5766 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRBER (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:04:17 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 18:04:16 -0700
+X-ExtLoop1: 1
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by FMSMGA003.fm.intel.com with ESMTP; 17 Jun 2019 18:04:14 -0700
+Date:   Tue, 18 Jun 2019 09:03:51 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Wei Yang <richard.weiyang@gmail.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Date:   Tue, 18 Jun 2019 10:57:00 +1000
-In-Reply-To: <94413756-c927-a4ca-dd59-47e3cc87d58d@infradead.org>
-References: <20190617020430.8708-1-alastair@au1.ibm.com>
-         <20190617020430.8708-3-alastair@au1.ibm.com>
-         <94413756-c927-a4ca-dd59-47e3cc87d58d@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v9 02/12] mm/sparsemem: Add helpers track active portions
+ of a section at boot
+Message-ID: <20190618010351.GC18161@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155977187919.2443951.8925592545929008845.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190617222156.v6eaujbdrmkz35wr@master>
+ <CAPcyv4hdsvNL0QfA2ACHAaGZE+21RmAnfKYfrZsKGKUxu3eKRQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Tue, 18 Jun 2019 10:57:27 +1000 (AEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hdsvNL0QfA2ACHAaGZE+21RmAnfKYfrZsKGKUxu3eKRQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 15:47 -0700, Randy Dunlap wrote:
-> Hi,
-> Just a comment style nit below...
-> 
-> On 6/16/19 7:04 PM, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > This patch removes the hardcoded row limits and allows for
-> > other lengths. These lengths must still be a multiple of
-> > groupsize.
-> > 
-> > This allows structs that are not 16/32 bytes to display on
-> > a single line.
-> > 
-> > This patch also expands the self-tests to test row sizes
-> > up to 64 bytes (though they can now be arbitrarily long).
-> > 
-> > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> > ---
-> >  lib/hexdump.c      | 48 ++++++++++++++++++++++++++++--------------
-> >  lib/test_hexdump.c | 52 ++++++++++++++++++++++++++++++++++++++--
-> > ------
-> >  2 files changed, 75 insertions(+), 25 deletions(-)
-> > 
-> > diff --git a/lib/hexdump.c b/lib/hexdump.c
-> > index 81b70ed37209..3943507bc0e9 100644
-> > --- a/lib/hexdump.c
-> > +++ b/lib/hexdump.c
-> > @@ -246,17 +248,29 @@ void print_hex_dump(const char *level, const
-> > char *prefix_str, int prefix_type,
-> >  {
-> >  	const u8 *ptr = buf;
-> >  	int i, linelen, remaining = len;
-> > -	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
-> > +	unsigned char *linebuf;
-> > +	unsigned int linebuf_len;
-> >  
-> > -	if (rowsize != 16 && rowsize != 32)
-> > -		rowsize = 16;
-> > +	if (rowsize % groupsize)
-> > +		rowsize -= rowsize % groupsize;
-> > +
-> > +	/* Worst case line length:
-> > +	 * 2 hex chars + space per byte in, 2 spaces, 1 char per byte
-> > in, NULL
-> > +	 */
-> 
-> According to Documentation/process/coding-style.rst:
-> 
-> The preferred style for long (multi-line) comments is:
-> 
-> .. code-block:: c
-> 
-> 	/*
-> 	 * This is the preferred style for multi-line
-> 	 * comments in the Linux kernel source code.
-> 	 * Please use it consistently.
-> 	 *
-> 	 * Description:  A column of asterisks on the left side,
-> 	 * with beginning and ending almost-blank lines.
-> 	 */
-> 
+On Mon, Jun 17, 2019 at 03:32:45PM -0700, Dan Williams wrote:
+>On Mon, Jun 17, 2019 at 3:22 PM Wei Yang <richard.weiyang@gmail.com> wrote:
+>>
+>> On Wed, Jun 05, 2019 at 02:57:59PM -0700, Dan Williams wrote:
+>> >Prepare for hot{plug,remove} of sub-ranges of a section by tracking a
+>> >sub-section active bitmask, each bit representing a PMD_SIZE span of the
+>> >architecture's memory hotplug section size.
+>> >
+>> >The implications of a partially populated section is that pfn_valid()
+>> >needs to go beyond a valid_section() check and read the sub-section
+>> >active ranges from the bitmask. The expectation is that the bitmask
+>> >(subsection_map) fits in the same cacheline as the valid_section() data,
+>> >so the incremental performance overhead to pfn_valid() should be
+>> >negligible.
+>> >
+>> >Cc: Michal Hocko <mhocko@suse.com>
+>> >Cc: Vlastimil Babka <vbabka@suse.cz>
+>> >Cc: Logan Gunthorpe <logang@deltatee.com>
+>> >Cc: Oscar Salvador <osalvador@suse.de>
+>> >Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> >Tested-by: Jane Chu <jane.chu@oracle.com>
+>> >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+>> >---
+>> > include/linux/mmzone.h |   29 ++++++++++++++++++++++++++++-
+>> > mm/page_alloc.c        |    4 +++-
+>> > mm/sparse.c            |   35 +++++++++++++++++++++++++++++++++++
+>> > 3 files changed, 66 insertions(+), 2 deletions(-)
+>> >
+>> >diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>> >index ac163f2f274f..6dd52d544857 100644
+>> >--- a/include/linux/mmzone.h
+>> >+++ b/include/linux/mmzone.h
+>> >@@ -1199,6 +1199,8 @@ struct mem_section_usage {
+>> >       unsigned long pageblock_flags[0];
+>> > };
+>> >
+>> >+void subsection_map_init(unsigned long pfn, unsigned long nr_pages);
+>> >+
+>> > struct page;
+>> > struct page_ext;
+>> > struct mem_section {
+>> >@@ -1336,12 +1338,36 @@ static inline struct mem_section *__pfn_to_section(unsigned long pfn)
+>> >
+>> > extern int __highest_present_section_nr;
+>> >
+>> >+static inline int subsection_map_index(unsigned long pfn)
+>> >+{
+>> >+      return (pfn & ~(PAGE_SECTION_MASK)) / PAGES_PER_SUBSECTION;
+>> >+}
+>> >+
+>> >+#ifdef CONFIG_SPARSEMEM_VMEMMAP
+>> >+static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+>> >+{
+>> >+      int idx = subsection_map_index(pfn);
+>> >+
+>> >+      return test_bit(idx, ms->usage->subsection_map);
+>> >+}
+>> >+#else
+>> >+static inline int pfn_section_valid(struct mem_section *ms, unsigned long pfn)
+>> >+{
+>> >+      return 1;
+>> >+}
+>> >+#endif
+>> >+
+>> > #ifndef CONFIG_HAVE_ARCH_PFN_VALID
+>> > static inline int pfn_valid(unsigned long pfn)
+>> > {
+>> >+      struct mem_section *ms;
+>> >+
+>> >       if (pfn_to_section_nr(pfn) >= NR_MEM_SECTIONS)
+>> >               return 0;
+>> >-      return valid_section(__nr_to_section(pfn_to_section_nr(pfn)));
+>> >+      ms = __nr_to_section(pfn_to_section_nr(pfn));
+>> >+      if (!valid_section(ms))
+>> >+              return 0;
+>> >+      return pfn_section_valid(ms, pfn);
+>> > }
+>> > #endif
+>> >
+>> >@@ -1373,6 +1399,7 @@ void sparse_init(void);
+>> > #define sparse_init() do {} while (0)
+>> > #define sparse_index_init(_sec, _nid)  do {} while (0)
+>> > #define pfn_present pfn_valid
+>> >+#define subsection_map_init(_pfn, _nr_pages) do {} while (0)
+>> > #endif /* CONFIG_SPARSEMEM */
+>> >
+>> > /*
+>> >diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>> >index c6d8224d792e..bd773efe5b82 100644
+>> >--- a/mm/page_alloc.c
+>> >+++ b/mm/page_alloc.c
+>> >@@ -7292,10 +7292,12 @@ void __init free_area_init_nodes(unsigned long *max_zone_pfn)
+>> >
+>> >       /* Print out the early node map */
+>> >       pr_info("Early memory node ranges\n");
+>> >-      for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid)
+>> >+      for_each_mem_pfn_range(i, MAX_NUMNODES, &start_pfn, &end_pfn, &nid) {
+>> >               pr_info("  node %3d: [mem %#018Lx-%#018Lx]\n", nid,
+>> >                       (u64)start_pfn << PAGE_SHIFT,
+>> >                       ((u64)end_pfn << PAGE_SHIFT) - 1);
+>> >+              subsection_map_init(start_pfn, end_pfn - start_pfn);
+>> >+      }
+>>
+>> Just curious about why we set subsection here?
+>>
+>> Function free_area_init_nodes() mostly handles pgdat, if I am correct. Setup
+>> subsection here looks like touching some lower level system data structure.
+>
+>Correct, I'm not sure how it ended up there, but it was the source of
+>a bug that was fixed with this change:
+>
+>https://lore.kernel.org/lkml/CAPcyv4hjvBPDYKpp2Gns3-cc2AQ0AVS1nLk-K3fwXeRUvvzQLg@mail.gmail.com/
 
-Thanks Randy, I'll address this.
+So this one is moved to sparse_init_nid().
 
+The bug is strange, while the code now is more reasonable to me.
+
+Thanks :-)
+
+>_______________________________________________
+>Linux-nvdimm mailing list
+>Linux-nvdimm@lists.01.org
+>https://lists.01.org/mailman/listinfo/linux-nvdimm
 
 -- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva    
-Twitter: @EvilDeece
-blog: http://alastair.d-silva.org
-
-
+Wei Yang
+Help you, Help me
