@@ -2,82 +2,105 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9295DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:07:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A1BC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763672147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB906213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:09:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTSpVpVP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729545AbfFRPG7 (ORCPT
+        id S1729389AbfFRPJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:06:59 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34324 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfFRPG6 (ORCPT
+        Tue, 18 Jun 2019 11:09:15 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:42341 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfFRPJO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:06:58 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m29so15745984qtu.1;
-        Tue, 18 Jun 2019 08:06:58 -0700 (PDT)
+        Tue, 18 Jun 2019 11:09:14 -0400
+Received: by mail-lf1-f65.google.com with SMTP id y13so9557981lfh.9;
+        Tue, 18 Jun 2019 08:09:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E3z4ooMqqLKD/hzgGGQWs+ev7PXuSayk0SXXm5Gk74A=;
+        b=YTSpVpVP1wJifrXotuGKFrWnUobbeYF1bpGOYnUcWWtAlAkm2yyUzaOJzEYmwd1Fvx
+         XdYJgqrEkXfQ8QzUmfgvcBHfLVvr0/pCQtDtxWgxSqN2McdLMMNETqTqJTB5blwFdYJg
+         ZLCvexoMxK0ZpFP7cM9LySFPJNeEmNXbObOtGxkKTWbiwBJDOAnGC1VA80A9Wa2sQDf1
+         sQrNGbuvvMWEJDsV84Q1W/FMyzLrvPiweWXCiJ6h+5yam95dDNslkMn13w5tcTz5tqYY
+         XUkrUaIRCu8bA9lgl9/qDkIBrNobZCY2R66bHhBKiiFRZke5qijXoZGxYiwD8fr8tPrV
+         1icg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=NSTbZII6CFZgYZ4ha7ois9c79JsFHc6lXj+oBGA25dE=;
-        b=Z1v+XDsapzwmyzZpyvkCT3Ed1WrCWHMoDPUhazDasHcyWLLUof9RZlQe9kJVx+i6+I
-         h+jphI4o8EgoxzB4OKzd7or1fpBCeQteUCTcAeiNncptmlWedE9SsEqCACHFWb1bOMDV
-         zqRxdAyEZHM8/rbuWNUHQJqTLeXe5XaqwyDOTb8b7cjAPnh9TGQw7im/KUfEsyMp3YbY
-         sH6omHdJeCrkzkjFAxN2y7ScZZVueVuMwOqnkT7ZYOj2dk4/6kpphaJCA1rGeXbJbHFY
-         hvcECK/blg4qU/R5JVo91T/HIi9g1yyLhBdd2Sp0cv42jdT5jexp159dQDc3jKPJYVdD
-         JuuA==
-X-Gm-Message-State: APjAAAVHOd9++2kvd6VALzN8M7UevNjn8xdho6ccBuW4Q6PCk9f0usDj
-        rtDBseO1RrhIAdklzi1dGmny3CM3ECoRmRBuWD4=
-X-Google-Smtp-Source: APXvYqyxk5sbuVIhdcXdtak1JiLgBG3rOdIY72VJKoe4UEXZFDi2s9WaEZrSOm8hY+p6d/NV3S9io+PUKYur4PHTigY=
-X-Received: by 2002:a0c:87ab:: with SMTP id 40mr26958568qvj.93.1560870417626;
- Tue, 18 Jun 2019 08:06:57 -0700 (PDT)
+        bh=E3z4ooMqqLKD/hzgGGQWs+ev7PXuSayk0SXXm5Gk74A=;
+        b=FzAVB6HQYkUYD0HvRWoj5J8yz7Ot33wMD5d+hb+JtMcOMYi/ZYCdI1pV8Vbls8/Fg+
+         ZA5THXSWHAa3XT6ZjVW9jbIlTg+wGyFdLHYnSrbqAXUTJhGCEKZbirbL+semUFmL5Vbc
+         d83qzaNMFLQ0jxdn2qyoC2eDrVdv7TnRl7WYktBsDR4daUFEBggAFoGaRc2uQsnM22st
+         xHgEN0SGSkOUu7tq/KzKDSscrSmSssiUJVqC2dIKOepf5ek0Cao3HYfLYeNj7Fs+zOog
+         nq8fbQHxx9w/nYP3jfT7LDFYqleBsJhgOO9x+mst4tyt/rI7rVwHbrweAeB7dBRD7oVO
+         ltNg==
+X-Gm-Message-State: APjAAAXRk/3MKpLe3wiIkFuV6Qq3rMBZGjg2bYdC9j6G9KwyDyBah8KQ
+        G4Ip/mMFV33cabn+THLL91MT11MWeF35M+LNdtM=
+X-Google-Smtp-Source: APXvYqwxRVNdPswQrYbmP28S6ZDttANal0lK2TpOrbDM3rh2zMCAKn/QlFl23W8/UMawrYywzOnHNSt2tnbomQmGAOU=
+X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr16092246lfn.12.1560870552439;
+ Tue, 18 Jun 2019 08:09:12 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617123109.667090-1-arnd@arndb.de> <20190617140210.GB3436@hirez.programming.kicks-ass.net>
- <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
- <fc10bc69-0628-59eb-c243-9cd1dd3b47a4@virtuozzo.com> <20190618135911.GR3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190618135911.GR3436@hirez.programming.kicks-ass.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 17:06:39 +0200
-Message-ID: <CAK8P3a1ZgSYMuD0Xy_fxTqzPhg=U6rqG2Lcfc+3Bni=ZijiE3A@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com> <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+In-Reply-To: <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 18 Jun 2019 12:09:23 -0300
+Message-ID: <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Pintu Agarwal <pintu.ping@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 3:59 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> On Tue, Jun 18, 2019 at 04:27:45PM +0300, Andrey Ryabinin wrote:
-> > On 6/18/19 3:56 PM, Arnd Bergmann wrote:
-> > > On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Jun 18, 2019 at 11:46 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
 
-> > I guess this:
-> > ccflags-y += $(DISABLE_STACKLEAK_PLUGIN)
->
-> Or more specifically this, I guess:
->
-> CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
->
-> we'd not want to exclude all of lib/ from stackleak I figure.
->
-> Of these two options, I think I prefer the latter, because a smaller
-> whitelist is a better whitelist and since we already disable
-> stack protector, it is only consistent to also disable stack leak.
+> Thank you so much for your reply.
+> Yes, I already checked the latest mainline kernel changes until 5.2-**.
+> I see that there are many cleanup related changes, but still I see
+> that suspend/resume functions are missing in dw_hdmi-imx driver.
 
-Ok, sounds good to me. Can you send that upstream then, or should
-I write it up as a proper patch?
+Please see this recently submitted patch:
+https://lore.kernel.org/patchwork/patch/1084057/
 
-       Arnd
+> So, I am trying to implement myself.
+> Also, I see that suspend/resume is missing even in :
+> drivers/gpu/drm/imx/ipuv3-crtc.c
+> I am trying this also (not sure if we need this as well).
+>
+> Can you point out some specific patches which can be helpful ?
+>
+> Currently, what I observed is that hdmi bind() functions are not getting called.
+> Not sure who is responsible for triggering this bind function.
+> Or, irq remains disabled after resume, and we need to enable it back
+> again (but how ?)
+> Or, we may need to enable vblank events and thus irqs can be enabled.
+>
+> So, I am exploring many possibilities.
+> If you have any suggestions please let me know.
+
+The suggestion I have is to try to use latest mainline kernel. If you
+see any issues with it, please report.
+
+The combination you mentioned in a prior thread (kernel 3.10 +
+backported drm patches 4.9) is not really something the community can
+help you.
