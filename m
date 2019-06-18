@@ -2,102 +2,153 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 055F9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:27:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CC4C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0BE120863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:27:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91F8120863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:27:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JcSOX8Mu"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Kui+rX/6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728575AbfFRX1F (ORCPT
+        id S1729135AbfFRX12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 19:27:05 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39742 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFRX1E (ORCPT
+        Tue, 18 Jun 2019 19:27:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:34217 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRX11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 19:27:04 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so14407421otq.6;
-        Tue, 18 Jun 2019 16:27:04 -0700 (PDT)
+        Tue, 18 Jun 2019 19:27:27 -0400
+Received: by mail-wr1-f68.google.com with SMTP id k11so1313367wrl.1;
+        Tue, 18 Jun 2019 16:27:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=q4kPRWYHYHjdTHQi+BuH9rZBEiPrjwElzrl/VSKZd5g=;
-        b=JcSOX8Mu7ozpTDACthKmo/MuHf8h+d3xAEf5HhYucienONi5b2kT4TQM/AcGGP1Y4g
-         tl+MGizAOHSsOI/i7JcnlgOempZmIZ2+SZRz+HkzxyypK13PH7tNjayIK9UUfieNAOz5
-         5GaJ014pWE22gQbd+lEJr2m+Ip408UUGuVQeX+FXevXQiqDrX1i3wi+nm1W3Xdqo5Y0s
-         7wg45jM2WaT3ZugHCtihThem50VXgG9ycBwD6+hwLKAMX2+4ZEvL2BGf8WiaWUY+UUUd
-         fZGZeq2CbxWz4ISBj2eNcGgwy13Po6lLyP+ZKVjsdEXn+ChllacNhIHDTJc1tZsk+spL
-         31sA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=g2iclNRm6nOMmZXFGD4OtiWDNdKbrsf3t1qVWTSiVUM=;
+        b=Kui+rX/6e7ebcrgx9MsYhrQj/u3swgQ6QAAaFjAE4SWWBiFe9VlOyWD/AJNOKnMInH
+         GHFmjN6619Wxj+Ru+LHHjol6RWKlI9WYEjKqaI3DsBgMyZ2Vs56Zr/sJxb2nTNiRqvwF
+         AZdDD1piEuNGSe+tyfrZaBXq2nVVf1cPOdNoa0TLs2x3yEuDnHwzfWKLFMFqSrRO4Nn9
+         nUTm2YwPc6MKxvnsAwA0bHZ6JOL9trwFLkYseMdiyCs6TSjRfW0S5zQnmhVtZoqiYm5F
+         1pi3SPWpeyMjwOAPRm2X9Enr4P5ZuT2CeotPSbbjgHkfa0DTRWSnqumZXP/apunzq9uP
+         dmug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=q4kPRWYHYHjdTHQi+BuH9rZBEiPrjwElzrl/VSKZd5g=;
-        b=Pyx+ApFAipDT1sZ3n5x5V8LWCEJG4YqJnE9C+5PEqeS64txDjkYctRQuojK9Veq7zB
-         Os+t3n/fzOc3FLeowYpYCIOkpquNoACVfKTUoTKspqkzt3j8BTA16k9zjjXWRdnNCVck
-         GiEErksOqM5UaHKMAaHO7cmd4KHSZYi/sYR0RcvjbdnPcxsY3ufgLEHx6IBiQxngfySK
-         tAE58ZVxiRpo/wR0T4qH8RFc9mdVXw/yEQ7+41SIY/qm8GMZLoZiCr1wl3Re301N8knQ
-         JX1uiAM1KJicY5/GQ1GvtkI8rjIcKGAGKFeYU2I+FdBuG+mN5i8a80Z0sgjsDJwhKpdj
-         X+Yw==
-X-Gm-Message-State: APjAAAX+oVv5AmJ+6518wn+h6hD2tFw48N+2gHMEbt4w9wGsyrIkomvO
-        89Ndgm38r1WodX8lMLXDFLYJh8p3
-X-Google-Smtp-Source: APXvYqxs37AWfZmn7zIye9xgRom2dzsvir883Gz+cJz1yCzg7qB1etyrACrRBsNOBmG5mbUQn/fhvQ==
-X-Received: by 2002:a9d:eab:: with SMTP id 40mr28068647otj.316.1560900424067;
-        Tue, 18 Jun 2019 16:27:04 -0700 (PDT)
-Received: from rYz3n ([2600:1700:210:3790::48])
-        by smtp.gmail.com with ESMTPSA id y7sm6106378oix.47.2019.06.18.16.27.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 16:27:03 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 18:27:02 -0500
-From:   Jiunn Chang <c0d1n61at3@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
-Message-ID: <20190618232701.uqjdck5fzaggk3r5@rYz3n>
-References: <20190617210759.929316339@linuxfoundation.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=g2iclNRm6nOMmZXFGD4OtiWDNdKbrsf3t1qVWTSiVUM=;
+        b=X/uq+LipXQJImvFyusRAerYctZWEfudNNHZTT7stYuzHbMtvf9C5C2LBhLDKdCzI2s
+         koV7QiwgEnTx86mCJLr0nhqlaoiR01qrhNXlys9KdUlADiRuNnSrll3qlr4wVl0icC7O
+         ResVGlWBfvoBgyVOn0xLT+jSsv7xnSrLI5CV1+1oj4rqRPOmOzb8p9Boxk6xC2/SpK/y
+         CRyZ6TzP15zNleTo0X7zDKYHVSg8oJLfK5rxv506phtJl3UdTnQLe7HAm/LsMHIx6UV7
+         5phtaf8zNxntc80gZnL6yENFUyCdAEjosvj3JS1GeCU6QXN6v7DbCmp4ieLzMfuFvKsB
+         C9dg==
+X-Gm-Message-State: APjAAAWRshnhK/zW31J37iUHz7TaqMk6pUtOd9XJ1zH3HCM++nRAQnl8
+        vQURTUCGasK6LD1P+u1RRk6QwXox
+X-Google-Smtp-Source: APXvYqzV7LbifgtgWOxEqVifLCW2MPR/Z8RSbTw5Vs6aqu0hg5TE5aQuqKSDg0Y+5wsLBFzxqY0csg==
+X-Received: by 2002:a5d:6443:: with SMTP id d3mr2469511wrw.279.1560900445101;
+        Tue, 18 Jun 2019 16:27:25 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id x8sm3625627wmc.5.2019.06.18.16.27.23
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 16:27:24 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
+Date:   Wed, 19 Jun 2019 02:27:22 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:08:20PM +0200, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.1.12 release.
-> There are 115 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+19.06.2019 1:22, Ben Dooks пишет:
+> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>> Tegra's APB DMA engine updates words counter after each transferred burst
+>> of data, hence it can report transfer's residual with more fidelity which
+>> may be required in cases like audio playback. In particular this fixes
+>> audio stuttering during playback in a chromiuim web browser. The patch is
+>> based on the original work that was made by Ben Dooks [1]. It was tested
+>> on Tegra20 and Tegra30 devices.
+>>
+>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>
+>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>   1 file changed, 28 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>> index 79e9593815f1..c5af8f703548 100644
+>> --- a/drivers/dma/tegra20-apb-dma.c
+>> +++ b/drivers/dma/tegra20-apb-dma.c
+>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>       return 0;
+>>   }
+>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>> +                          struct tegra_dma_sg_req *sg_req,
+>> +                          struct tegra_dma_desc *dma_desc,
+>> +                          unsigned int residual)
+>> +{
+>> +    unsigned long status, wcount = 0;
+>> +
+>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>> +        return residual;
+>> +
+>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>> +
+>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>> +
+>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>> +        wcount = status;
+>> +
+>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>> +        return residual - sg_req->req_len;
+>> +
+>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>> +}
 > 
-> Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
-> Anything received after that time might be too late.
+> I am unfortunately nowhere near my notes, so can't completely
+> review this. I think the complexity of my patch series is due
+> to an issue with the count being updated before the EOC IRQ
+> is actually flagged (and most definetly before it gets to the
+> CPU IRQ handler).
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.12-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
-> and the diffstat can be found below.
+> The test system I was using, which i've not really got any
+> access to at the moment would show these internal inconsistent
+> states every few hours, however it was moving 48kHz 8ch 16bit
+> TDM data.
 > 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
+> Thanks for looking into this, I am not sure if I am going to
+> get any time to look into this within the next couple of
+> months.
 
-Compiled and booted.  No regressions x86_64.
+I'll try to add some debug checks to try to catch the case where count is updated before EOC
+is set. Thank you very much for the clarification of the problem. So far I haven't spotted
+anything going wrong.
 
-THX
+Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
+vs EOC? Assuming the cyclic transfer mode.
