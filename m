@@ -2,114 +2,158 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 091C1C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD8C1C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:44:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3D3A2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:44:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cvIcsaei"
+	by mail.kernel.org (Postfix) with ESMTP id BE2322084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:44:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730863AbfFRWoh (ORCPT
+        id S1730887AbfFRWos (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:44:37 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:34713 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbfFRWoh (ORCPT
+        Tue, 18 Jun 2019 18:44:48 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:57310 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730176AbfFRWos (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:44:37 -0400
-Received: by mail-qt1-f196.google.com with SMTP id m29so17584742qtu.1;
-        Tue, 18 Jun 2019 15:44:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0BVmvPW35Mw0cJWlTd6mw6l7DnZz2vUZHG/J0CRIjHQ=;
-        b=cvIcsaeiKUzbcfaGva95KMAj7ZKwxcQGcK8yFd1IeSzx9zkPlvW2uIUNN49WPKSzW3
-         c+lmR0ZZdzWkolrovxzxDqhqkcLj9vH6s2OGrFX23fTDu5qvy71vMLtx0KrjxC6LK6tK
-         i0cD4jLakIQSZJyncfZ+6Bv4QdAeACcmWSG+43ppW6Ej81ECdAKlJAMoXDbPw9IF3wQl
-         ML3vn7dFQtQ+KxdX87FPiLBTOMi9l/ZjRyTXARAhpoESUlkMxZi5ofB8fZKrGPTECrww
-         aJTo9FVEOLwqd7q1x0QTmViz8FkBtTMz99vK3Z7AJoMETrApf7VrngXcZY7wMWqjVCTh
-         8sTA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=0BVmvPW35Mw0cJWlTd6mw6l7DnZz2vUZHG/J0CRIjHQ=;
-        b=JafvOkyg28KQP5iUXyU/SbqkR3n2zdtcWqbwb/tzn7lYQrmLnprtcpxDY2nOKNMNEd
-         jshsdUuNE3pXtHmoOIOzkHVVjtBxgw9zZK27sILwhYTiMsWUgZc1pMjwgNmKPsxMbsdy
-         1ss9ZdwzK+TkG4Pt2U4AnyEU6gSFSRWiKeg0qnCUnlvS5sAkmO/R9Ihg/VI/1JgIg+jc
-         GGDHfVlrRxaH3efjzspHuOM/MuKhScKi2vFNpKf+XBVsQAg7BlZZqSKqTMmtJ95ZLdxp
-         yCoC/FqdPbqih8wWZuTUwZzWyUAVXq+iuA2KahtR8cx/8Kzaarf7aJTT/W2gpjppuUey
-         5Bbw==
-X-Gm-Message-State: APjAAAVstsSVjSay5Shogl6HT/YMO/d56hHYQXBGNVVM84b3ida8qjkJ
-        gpKP+AyzjMKi9JMuCVlueX89iMWk+Wo=
-X-Google-Smtp-Source: APXvYqxu9Nw3DYYcNdnkoGLTHOX7MQiBbtah5NxLUciuz6IWhR9c1X2+yhnwN4osEngqhZmQl2hB7w==
-X-Received: by 2002:a0c:81e7:: with SMTP id 36mr30015897qve.5.1560897875848;
-        Tue, 18 Jun 2019 15:44:35 -0700 (PDT)
-Received: from localhost.localdomain ([186.212.50.252])
-        by smtp.gmail.com with ESMTPSA id n5sm10254879qta.29.2019.06.18.15.44.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 15:44:34 -0700 (PDT)
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
+        Tue, 18 Jun 2019 18:44:48 -0400
+Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id a04ace6452f9df28; Wed, 19 Jun 2019 00:44:44 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Ran Wang <ran.wang_1@nxp.com>
+Cc:     Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org (open list:USB MASS STORAGE DRIVER),
-        usb-storage@lists.one-eyed-alien.net (open list:USB MASS STORAGE DRIVER)
-Subject: [PATCH v2] usb: storage: scsiglue: Do not skip VPD if try_vpd_pages is set
-Date:   Tue, 18 Jun 2019 19:44:54 -0300
-Message-Id: <20190618224454.16595-1-marcos.souza.org@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        linuxppc-dev@lists.ozlabs.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v4 1/3] PM: wakeup: Add routine to help fetch wakeup source object.
+Date:   Wed, 19 Jun 2019 00:44:44 +0200
+Message-ID: <3448272.3g8bHhgBA9@kreacher>
+In-Reply-To: <20190520095238.29210-1-ran.wang_1@nxp.com>
+References: <20190520095238.29210-1-ran.wang_1@nxp.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If BLIST_TRY_VPD_PAGES is set for a device, even for an USB, it should
-be honored, so only set skip_vpd_pages is try_vpd_pages is not set.
+On Monday, May 20, 2019 11:52:36 AM CEST Ran Wang wrote:
+> Some user might want to go through all registered wakeup sources
+> and doing things accordingly. For example, SoC PM driver might need to
+> do HW programming to prevent powering down specific IP which wakeup
+> source depending on. And is user's responsibility to identify if this
+> wakeup source he is interested in.
 
-Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
----
+I guess the idea here is that you need to walk wakeup devices and you noticed
+that there was a wakeup source object for each of them and those wakeup
+source objects were on a list, so you could walk wakeup devices by walking
+the list of wakeup source objects.
 
- Changes from v1:
- changed the check of try_vpd_pages from:
- 	sdev->try_vpd_pages == 0;
- to:
- 	!sdev->try_vpd_pages;
- (as suggested by Alan Stern)
-
- drivers/usb/storage/scsiglue.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/storage/scsiglue.c b/drivers/usb/storage/scsiglue.c
-index 59190d88fa9f..30790240aec6 100644
---- a/drivers/usb/storage/scsiglue.c
-+++ b/drivers/usb/storage/scsiglue.c
-@@ -195,8 +195,11 @@ static int slave_configure(struct scsi_device *sdev)
- 		 */
- 		sdev->skip_ms_page_8 = 1;
+That is fair enough, but the changelog above doesn't even talk about that.
  
--		/* Some devices don't handle VPD pages correctly */
--		sdev->skip_vpd_pages = 1;
-+		/*
-+		 * Some devices don't handle VPD pages correctly, so skip vpd
-+		 * pages if not forced by SCSI layer.
-+		 */
-+		sdev->skip_vpd_pages = !sdev->try_vpd_pages;
- 
- 		/* Do not attempt to use REPORT SUPPORTED OPERATION CODES */
- 		sdev->no_report_opcodes = 1;
--- 
-2.21.0
+> Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> ---
+> Change in v4:
+> 	- None.
+> 
+> Change in v3:
+> 	- Adjust indentation of *attached_dev;.
+> 
+> Change in v2:
+> 	- None.
+> 
+>  drivers/base/power/wakeup.c |   18 ++++++++++++++++++
+>  include/linux/pm_wakeup.h   |    3 +++
+>  2 files changed, 21 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
+> index 5b2b6a0..6904485 100644
+> --- a/drivers/base/power/wakeup.c
+> +++ b/drivers/base/power/wakeup.c
+> @@ -14,6 +14,7 @@
+>  #include <linux/suspend.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/debugfs.h>
+> +#include <linux/of_device.h>
+>  #include <linux/pm_wakeirq.h>
+>  #include <trace/events/power.h>
+>  
+> @@ -226,6 +227,22 @@ void wakeup_source_unregister(struct wakeup_source *ws)
+>  	}
+>  }
+>  EXPORT_SYMBOL_GPL(wakeup_source_unregister);
+> +/**
+> + * wakeup_source_get_next - Get next wakeup source from the list
+> + * @ws: Previous wakeup source object, null means caller want first one.
+> + */
+> +struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws)
+> +{
+> +	struct list_head *ws_head = &wakeup_sources;
+> +
+> +	if (ws)
+> +		return list_next_or_null_rcu(ws_head, &ws->entry,
+> +				struct wakeup_source, entry);
+> +	else
+> +		return list_entry_rcu(ws_head->next,
+> +				struct wakeup_source, entry);
+> +}
+> +EXPORT_SYMBOL_GPL(wakeup_source_get_next);
+
+This needs to be arranged along the lines of wakeup_sources_stats_seq_start/next/stop()
+because of the SRCU protection of the list.
+
+>  
+>  /**
+>   * device_wakeup_attach - Attach a wakeup source object to a device object.
+> @@ -242,6 +259,7 @@ static int device_wakeup_attach(struct device *dev, struct wakeup_source *ws)
+>  		return -EEXIST;
+>  	}
+>  	dev->power.wakeup = ws;
+> +	ws->attached_dev = dev;
+>  	if (dev->power.wakeirq)
+>  		device_wakeup_attach_irq(dev, dev->power.wakeirq);
+>  	spin_unlock_irq(&dev->power.lock);
+> diff --git a/include/linux/pm_wakeup.h b/include/linux/pm_wakeup.h
+> index 0ff134d..913b2fb 100644
+> --- a/include/linux/pm_wakeup.h
+> +++ b/include/linux/pm_wakeup.h
+> @@ -50,6 +50,7 @@
+>   * @wakeup_count: Number of times the wakeup source might abort suspend.
+>   * @active: Status of the wakeup source.
+>   * @has_timeout: The wakeup source has been activated with a timeout.
+> + * @attached_dev: The device it attached to
+>   */
+>  struct wakeup_source {
+>  	const char 		*name;
+> @@ -70,6 +71,7 @@ struct wakeup_source {
+>  	unsigned long		wakeup_count;
+>  	bool			active:1;
+>  	bool			autosleep_enabled:1;
+> +	struct device		*attached_dev;
+
+Please (a) call it just dev and (b) move it up (before wakeirq, say).
+
+>  };
+>  
+>  #ifdef CONFIG_PM_SLEEP
+> @@ -101,6 +103,7 @@ static inline void device_set_wakeup_path(struct device *dev)
+>  extern void wakeup_source_remove(struct wakeup_source *ws);
+>  extern struct wakeup_source *wakeup_source_register(const char *name);
+>  extern void wakeup_source_unregister(struct wakeup_source *ws);
+> +extern struct wakeup_source *wakeup_source_get_next(struct wakeup_source *ws);
+>  extern int device_wakeup_enable(struct device *dev);
+>  extern int device_wakeup_disable(struct device *dev);
+>  extern void device_set_wakeup_capable(struct device *dev, bool capable);
+> 
+
+
+
 
