@@ -2,183 +2,140 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01FACC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3133C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB952214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:28:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560868099;
-	bh=K8jpfV7ojLj4+EhfkRyCOqo/Exafa/fzNPC2Xu6goFc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eQCaDWw1iH7sZ+0jBt1Ftaa61GO5DZXt2jpCTOzyXJdIV5DxqaBLID+wxgB0zNMDA
-	 zbwsN9SlfkEefvjifs3KaPBWGrcUGd/b5iaw6Wz1ZteEotwQGKScUBFQz2+mPWGwFW
-	 D6NMiVKCcaDdGubiaasi14IhYuzyqtd5ygPSEk0M=
+	by mail.kernel.org (Postfix) with ESMTP id B3D12214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729175AbfFRO2S (ORCPT
+        id S1729279AbfFRO20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:28:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50718 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 10:28:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:43888 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfFRO2S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:28:18 -0400
-Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9721B21479;
-        Tue, 18 Jun 2019 14:28:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560868096;
-        bh=K8jpfV7ojLj4+EhfkRyCOqo/Exafa/fzNPC2Xu6goFc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=JO+f4LgVrI5PHnCRPKtGcUXvsEcrOgZNP+IkmE08Hp5ur+aDoEF5eQvnfHs/zZmpT
-         MyQDAP+YWNFlMI3+5t4ecfIqGdpevVpk0X71OQXXWG+fZNaMMAgK32O/UiD1HQ1ACa
-         L4v4gWZ7rcWaRXfve1J5lvcHKF04t+2Hw+RlQjI8=
-Date:   Tue, 18 Jun 2019 16:28:12 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Yang Yingliang <yangyingliang@huawei.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "cj.chengjian@huawei.com" <cj.chengjian@huawei.com>,
-        Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH] modules: fix BUG when load module with rodata=n
-Message-ID: <20190618142812.GB25124@linux-8ccs>
-References: <1560754797-40683-1-git-send-email-yangyingliang@huawei.com>
- <55BF5B29-880D-4489-A93D-E8CEE5C09045@vmware.com>
+        id S1725919AbfFRO2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:28:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A2EB2B;
+        Tue, 18 Jun 2019 07:28:25 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C29C43F718;
+        Tue, 18 Jun 2019 07:28:23 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 15:28:21 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
+        thierry.reding@gmail.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kthota@nvidia.com,
+        mmaddireddy@nvidia.com, sagar.tv@gmail.com, kishon@ti.com
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+Message-ID: <20190618142821.GC9002@e121166-lin.cambridge.arm.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
+ <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+ <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
+ <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
+ <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
+ <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
+ <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
+ <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
+ <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
+ <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <55BF5B29-880D-4489-A93D-E8CEE5C09045@vmware.com>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Nadav Amit [18/06/19 05:59 +0000]:
->> On Jun 16, 2019, at 11:59 PM, Yang Yingliang <yangyingliang@huawei.com> wrote:
->>
->> When loading a module with rodata=n, it causes an executing
->> NX-protected page BUG.
->>
->> [   32.379191] kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
->> [   32.382917] BUG: unable to handle page fault for address: ffffffffc0005000
->> [   32.385947] #PF: supervisor instruction fetch in kernel mode
->> [   32.387662] #PF: error_code(0x0011) - permissions violation
->> [   32.389352] PGD 240c067 P4D 240c067 PUD 240e067 PMD 421a52067 PTE 8000000421a53063
->> [   32.391396] Oops: 0011 [#1] SMP PTI
->> [   32.392478] CPU: 7 PID: 2697 Comm: insmod Tainted: G           O      5.2.0-rc5+ #202
->> [   32.394588] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
->> [   32.398157] RIP: 0010:ko_test_init+0x0/0x1000 [ko_test]
->> [   32.399662] Code: Bad RIP value.
->> [   32.400621] RSP: 0018:ffffc900029f3ca8 EFLAGS: 00010246
->> [   32.402171] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
->> [   32.404332] RDX: 00000000000004c7 RSI: 0000000000000cc0 RDI: ffffffffc0005000
->> [   32.406347] RBP: ffffffffc0005000 R08: ffff88842fbebc40 R09: ffffffff810ede4a
->> [   32.408392] R10: ffffea00108e3480 R11: 0000000000000000 R12: ffff88842bee21a0
->> [   32.410472] R13: 0000000000000001 R14: 0000000000000001 R15: ffffc900029f3e78
->> [   32.412609] FS:  00007fb4f0c0a700(0000) GS:ffff88842fbc0000(0000) knlGS:0000000000000000
->> [   32.414722] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
->> [   32.416290] CR2: ffffffffc0004fd6 CR3: 0000000421a90004 CR4: 0000000000020ee0
->> [   32.418471] Call Trace:
->> [   32.419136]  do_one_initcall+0x41/0x1df
->> [   32.420199]  ? _cond_resched+0x10/0x40
->> [   32.421433]  ? kmem_cache_alloc_trace+0x36/0x160
->> [   32.422827]  do_init_module+0x56/0x1f7
->> [   32.423946]  load_module+0x1e67/0x2580
->> [   32.424947]  ? __alloc_pages_nodemask+0x150/0x2c0
->> [   32.426413]  ? map_vm_area+0x2d/0x40
->> [   32.427530]  ? __vmalloc_node_range+0x1ef/0x260
->> [   32.428850]  ? __do_sys_init_module+0x135/0x170
->> [   32.430060]  ? _cond_resched+0x10/0x40
->> [   32.431249]  __do_sys_init_module+0x135/0x170
->> [   32.432547]  do_syscall_64+0x43/0x120
->> [   32.433853]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> Because if rodata=n, set_memory_x() cann't be called, fix this by
->> calling set_memory_x in complete_formation();
->>
->> Fixes: f2c65fb3221a ("x86/modules: Avoid breaking W^X while loading modules")
->> Suggested-by: Jian Cheng <cj.chengjian@huawei.com>
->> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
->> ---
->> kernel/module.c | 9 +++++++--
->> 1 file changed, 7 insertions(+), 2 deletions(-)
->>
->> diff --git a/kernel/module.c b/kernel/module.c
->> index 80c7c09584cf..1a5d879573c3 100644
->> --- a/kernel/module.c
->> +++ b/kernel/module.c
->> @@ -1949,12 +1949,10 @@ void module_enable_ro(const struct module *mod, bool after_init)
->> 	set_vm_flush_reset_perms(mod->core_layout.base);
->> 	set_vm_flush_reset_perms(mod->init_layout.base);
->> 	frob_text(&mod->core_layout, set_memory_ro);
->> -	frob_text(&mod->core_layout, set_memory_x);
->>
->> 	frob_rodata(&mod->core_layout, set_memory_ro);
->>
->> 	frob_text(&mod->init_layout, set_memory_ro);
->> -	frob_text(&mod->init_layout, set_memory_x);
->>
->> 	frob_rodata(&mod->init_layout, set_memory_ro);
->>
->> @@ -2018,6 +2016,12 @@ void set_all_modules_text_ro(void)
->> static void module_enable_nx(const struct module *mod) { }
->> #endif
->>
->> +static void module_enable_x(const struct module *mod)
->> +{
->> +	frob_text(&mod->core_layout, set_memory_x);
->> +	frob_text(&mod->init_layout, set_memory_x);
->> +}
->> +
->> #ifdef CONFIG_LIVEPATCH
->> /*
->>  * Persist Elf information about a module. Copy the Elf header,
->> @@ -3616,6 +3620,7 @@ static int complete_formation(struct module *mod, struct load_info *info)
->>
->> 	module_enable_ro(mod, false);
->> 	module_enable_nx(mod);
->> +	module_enable_x(mod);
->>
->> 	/* Mark state as coming so strong_try_module_get() ignores us,
->> 	 * but kallsyms etc. can see us. */
->> --
->> 2.17.1
->
->It does seem that I screwed up (thanks for fixing it!).
->
->Makes me wonder why module_enable_ro() is needed to be called twice
->(excluding the write-protecting of the core_layout). I wonder since this
->patch would eliminate some calls to set_memory_x(), which indeed do not seem
->necessary.
->
->Skimming 444d13ff10fb1 ("modules: add ro_after_init supportâ€), I could
->not understand why.
->
->Anyhow,
->
->Reviewed-by: Nadav Amit <namit@vmware.com>
+On Tue, Jun 18, 2019 at 04:21:17PM +0530, Vidya Sagar wrote:
 
-Indeed, you're right that the second module_enable_ro() call is mostly
-redundant. It is for adding RO protection to the ro_after_init
-section, but I believe the reason for redundancy was that we wanted to
-re-use the function for livepatching, as livepatch calls
-module_disable_ro() and module_enable_ro() to apply relocations.
-Since module_enable_ro() was being called outside of the module
-loader, we needed to make sure all RO protections were applied again,
-including the ro_after_init section. I'll have to think about this
-more to see if we can remove the redundancy without making the
-module_enable_ro()/module_disable_ro() api too messy..
+[...]
 
-Thanks,
+> > 2) It is not related to this patch but I fail to see the reasoning
+> >     behind the __ in __dw_pci_read_dbi(), there is no no-underscore
+> >     equivalent so its definition is somewhat questionable, maybe
+> >     we should clean-it up (for dbi2 alike).
+> Separate no-underscore versions are present in pcie-designware.h for
+> each width (i.e. l/w/b) as inline and are calling __ versions passing
+> size as argument.
 
-Jessica
+I understand - the __ prologue was added in b50b2db266d8 maybe
+Kishon can help us understand the __ rationale.
+
+I am happy to merge it as is, I was just curious about the
+__ annotation (not related to this patch).
+
+Lorenzo
+
+> > Lorenzo
+> > 
+> > > Thanks,
+> > > Vidya Sagar
+> > > 
+> > > > 
+> > > > > 
+> > > > > > > 
+> > > > > > > > 
+> > > > > > > > > 
+> > > > > > > > > Thanks,
+> > > > > > > > > Lorenzo
+> > > > > > > > > 
+> > > > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > > > index 77db32529319..d069e4290180 100644
+> > > > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> > > > > > > > > > @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+> > > > > > > > > >        return ret;
+> > > > > > > > > >    }
+> > > > > > > > > > +void dw_pcie_host_deinit(struct pcie_port *pp)
+> > > > > > > > > > +{
+> > > > > > > > > > +    pci_stop_root_bus(pp->root_bus);
+> > > > > > > > > > +    pci_remove_root_bus(pp->root_bus);
+> > > > > > > > > > +    if (pci_msi_enabled() && !pp->ops->msi_host_init)
+> > > > > > > > > > +        dw_pcie_free_msi(pp);
+> > > > > > > > > > +}
+> > > > > > > > > > +
+> > > > > > > > > >    static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
+> > > > > > > > > >                         u32 devfn, int where, int size, u32 *val,
+> > > > > > > > > >                         bool write)
+> > > > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > > > > > > index deab426affd3..4f48ec78c7b9 100644
+> > > > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
+> > > > > > > > > > @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+> > > > > > > > > >    void dw_pcie_free_msi(struct pcie_port *pp);
+> > > > > > > > > >    void dw_pcie_setup_rc(struct pcie_port *pp);
+> > > > > > > > > >    int dw_pcie_host_init(struct pcie_port *pp);
+> > > > > > > > > > +void dw_pcie_host_deinit(struct pcie_port *pp);
+> > > > > > > > > >    int dw_pcie_allocate_domains(struct pcie_port *pp);
+> > > > > > > > > >    #else
+> > > > > > > > > >    static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
+> > > > > > > > > > @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
+> > > > > > > > > >        return 0;
+> > > > > > > > > >    }
+> > > > > > > > > > +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+> > > > > > > > > > +{
+> > > > > > > > > > +}
+> > > > > > > > > > +
+> > > > > > > > > >    static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
+> > > > > > > > > >    {
+> > > > > > > > > >        return 0;
+> > > > > > > > > > -- 
+> > > > > > > > > > 2.17.1
+> > > > > > > > > > 
+> > > > > > > > 
+> > > > > > > 
+> > > > > > 
+> > > > > 
+> > > > 
+> > > 
+> 
