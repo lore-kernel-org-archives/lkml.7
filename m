@@ -2,109 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B255C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A04C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F12F20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE68720665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:57:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NFww7+43"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728815AbfFRM4Z (ORCPT
+        id S1728993AbfFRM5A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:56:25 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:40057 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFRM4Z (ORCPT
+        Tue, 18 Jun 2019 08:57:00 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48236 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFRM5A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:56:25 -0400
-Received: by mail-qt1-f196.google.com with SMTP id a15so15085108qtn.7;
-        Tue, 18 Jun 2019 05:56:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fCf5iHrLfN/sCDfBuv4fsEiVMo3wKaNoIwbeEHLt/rc=;
-        b=PT6Pa5D4n6l9kyKzExM2NFZe3+YbP5u3ymXhF58YTPTEVzVyC/cQUq3I5UyRs9e9KK
-         IIU4AFvTFcxwSibJk2iTDRd1rq7aVptJFfBkTesyFFl4gAREmkyBm8qnrAjhdEK7Rc9X
-         nJe0+HsA92fEOapnYSxVu/JyGrtucL0KzpFMclthtIdLG6JSqx4st/wdGSVaPU+mZwhy
-         oqvbaIDKDWpRZwIIVLeWcgK6aZ6fts0ScOgi3JLe/PN4vF7YvtbDCar/X/TWK64IL5Eg
-         jX+FYdK9XHSHYh5Dm7zb3kB64Y/kBv3ZooIEq+bIsQYA2B8lsuMa1UG+sviCNBX2BGs0
-         ymxg==
-X-Gm-Message-State: APjAAAXU3TDFruLNvyVp2nCCVH8eUshP8qtra7ZmSC1iI9f4SEtLahCQ
-        dS1gmURlintfCcrRSjjpfifbYmE2EG2lq/Sg9eshoyPkBUY=
-X-Google-Smtp-Source: APXvYqwCVpXxqSfg0MzgdN3t4njvASb5EphGuU2IedZxTHyAW5Lc4aDC1ZXBq7xmQcAheuz7YuaPjxEgHvyJiCiNl9E=
-X-Received: by 2002:a0c:b758:: with SMTP id q24mr27130440qve.45.1560862584288;
- Tue, 18 Jun 2019 05:56:24 -0700 (PDT)
+        Tue, 18 Jun 2019 08:57:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PYbrunDp8avnP39gEYH1AHS83LwzriBAbK/nP8h6WlU=; b=NFww7+43UaA1stlBZehQjCp02
+        Y7PtLUydx/okAC0L065bNSF4kxrjfybpYCytKhBCt/18SskmlAZk54VtmxcTdjaV6l1FMFthC5b0i
+        g9LFyUYpap0oM0WUfvOC+uNl0RB8e9btq4wFuWLqtjMG8DydgEMXYlnpOjjh5PK3JwigOIcp8y1qA
+        XFJOPsNh/gPO5nCfvM+zPvS4/0w5arjT21lzZ1nIwVKocPkNGOuTqKfPxDJTast1+Si3zME1zgiU5
+        V4a5T1WO4eAk1zwJCyZ9GHLBiN9Dqu3GL3wCSnYDNDs1SQpeh8dJAPay0ARexe8rwh5RbgmCRJM2l
+        qYBjy0PXQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdDdr-0002GP-Ll; Tue, 18 Jun 2019 12:55:16 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 15A3D209C8915; Tue, 18 Jun 2019 14:55:12 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 14:55:12 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     Dave Martin <Dave.Martin@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-mm@kvack.org, linux-arch@vger.kernel.org,
+        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Balbir Singh <bsingharora@gmail.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Cyrill Gorcunov <gorcunov@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Nadav Amit <nadav.amit@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
+Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
+ ELF file
+Message-ID: <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
+References: <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
+ <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
+ <20190611114109.GN28398@e103592.cambridge.arm.com>
+ <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
+ <20190612093238.GQ28398@e103592.cambridge.arm.com>
+ <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
+ <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
+ <20190618091248.GB2790@e103592.cambridge.arm.com>
+ <20190618124122.GH3419@hirez.programming.kicks-ass.net>
+ <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-References: <20190617123109.667090-1-arnd@arndb.de> <20190617140210.GB3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190617140210.GB3436@hirez.programming.kicks-ass.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 14:56:07 +0200
-Message-ID: <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
-Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
+On Tue, Jun 18, 2019 at 02:47:00PM +0200, Florian Weimer wrote:
+> * Peter Zijlstra:
+> 
+> > I'm not sure I read Thomas' comment like that. In my reading keeping the
+> > PT_NOTE fallback is exactly one of those 'fly workarounds'. By not
+> > supporting PT_NOTE only the 'fine' people already shit^Hpping this out
+> > of tree are affected, and we don't have to care about them at all.
+> 
+> Just to be clear here: There was an ABI document that required PT_NOTE
+> parsing.
+
+URGH.
+
+> The Linux kernel does *not* define the x86-64 ABI, it only
+> implements it.  The authoritative source should be the ABI document.
 >
-> On Mon, Jun 17, 2019 at 02:31:09PM +0200, Arnd Bergmann wrote:
-> > objtool points out a condition that it does not like:
-> >
-> > lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-> > lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
-> >
-> > I guess this is related to the call ubsan_type_mismatch_common()
-> > not being inline before it calls user_access_restore(), though
-> > I don't fully understand why that is a problem.
->
-> The rules are that when AC is set, one is not allowed to CALL schedule,
-> because scheduling does not save/restore AC.  Preemption, through the
-> exceptions is fine, because the exceptions do save/restore AC.
->
-> And while most functions do not appear to call into schedule, function
-> trace ensures that every single call does in fact call into schedule.
-> Therefore any CALL (with AC set) is invalid.
+> In this particularly case, so far anyone implementing this ABI extension
+> tried to provide value by changing it, sometimes successfully.  Which
+> makes me wonder why we even bother to mainatain ABI documentation.  The
+> kernel is just very late to the party.
 
-I see that stackleak_track_stack is already marked 'notrace',
-since we must ensure we don't recurse when calling into it from
-any of the function trace logic.
-
-Does that mean we could just mark it as another safe call?
-
---- a/tools/objtool/check.c
-+++ b/tools/objtool/check.c
-@@ -486,6 +486,7 @@ static const char *uaccess_safe_builtin[] = {
-        "__ubsan_handle_type_mismatch",
-        "__ubsan_handle_type_mismatch_v1",
-        /* misc */
-+       "stackleak_track_stack",
-        "csum_partial_copy_generic",
-        "__memcpy_mcsafe",
-        "ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
-
-
-> Maybe we should disable stackleak when building ubsan instead? We
-> already disable stack-protector when building ubsan.
-
-I couldn't find out how that is done.
-
-> > Fixes: 42440c1f9911 ("lib/ubsan: add type mismatch handler for new GCC/Clang")
->
-> I don't think this is quite right, because back then there wasn't any
-> uaccess validation.
-
-Right.
-
-       Arnd
+How can the kernel be late to the party if all of this is spinning
+wheels without kernel support?
