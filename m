@@ -2,134 +2,77 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BD39C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:37:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EC41C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:37:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F800206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:37:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E66D2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:37:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IBtIjL4U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729475AbfFRJhH (ORCPT
+        id S1729515AbfFRJhk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:37:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:59814 "EHLO foss.arm.com"
+        Tue, 18 Jun 2019 05:37:40 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:37238 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729113AbfFRJhH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:37:07 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47B87344;
-        Tue, 18 Jun 2019 02:37:04 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA7E23F246;
-        Tue, 18 Jun 2019 02:37:02 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 10:36:57 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
-        bhelgaas@google.com, Jisheng.Zhang@synaptics.com,
-        thierry.reding@gmail.com, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kthota@nvidia.com,
-        mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-Message-ID: <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
- <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
+        id S1729263AbfFRJhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:37:39 -0400
+Received: from zn.tnic (p200300EC2F07D6004142CF2FAC564D4B.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:d600:4142:cf2f:ac56:4d4b])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 8C39E1EC0249;
+        Tue, 18 Jun 2019 11:37:38 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560850658;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=KR5XOgtOR1Y9OY2GsmPtNNKKqA765DvHq6Cuv1heUKI=;
+        b=IBtIjL4UroCJLdiy8aNoxV39Vr7ZRkpkZfMr84zCuFNj1r8iG362RypuUNNwmRON7lv4iI
+        S8EDTEdbTQTTsoN0PnizPRPyQ2D6J/pCGsg6/dfU1T9untAbT325t3Y7VMwo0FfZRuwdWL
+        46ZfbyE0QAtIsu7CM+2ThTu6xWdXnII=
+Date:   Tue, 18 Jun 2019 11:37:30 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Baoquan He <bhe@redhat.com>, Lianbo Jiang <lijiang@redhat.com>
+Subject: Re: [PATCH v2 1/2] x86/mm: Identify the end of the kernel area to be
+ reserved
+Message-ID: <20190618093730.GA5629@zn.tnic>
+References: <cover.1560546537.git.thomas.lendacky@amd.com>
+ <284d3650e2dae50d5645310a8b49664398fe5223.1560546537.git.thomas.lendacky@amd.com>
+ <20190617104740.GG27127@zn.tnic>
+ <7a35c79d-370e-5595-234e-0aafc527331b@amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <7a35c79d-370e-5595-234e-0aafc527331b@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:19:14AM +0530, Vidya Sagar wrote:
+On Tue, Jun 18, 2019 at 01:43:00AM +0000, Lendacky, Thomas wrote:
+> Yes and no...  it doesn't say how it is done, namely through the use of
+> memblock_reserve() calls and when and where those occur.
 
-[...]
+Ah ok, so you found that out and documented it now. Good.
 
-> Sorry for pinging again. Please let me know if these patches need to
-> be sent again.
+:-)
 
-No problem. We can merge the code as-is even though I have a couple
-of questions.
+-- 
+Regards/Gruss,
+    Boris.
 
-1) What about dbi2 interfaces (what an horrible name it is :() ? It
-   is true that it is probably best to export just what we need.
-2) It is not related to this patch but I fail to see the reasoning
-   behind the __ in __dw_pci_read_dbi(), there is no no-underscore
-   equivalent so its definition is somewhat questionable, maybe
-   we should clean-it up (for dbi2 alike).
-
-Lorenzo
-
-> Thanks,
-> Vidya Sagar
-> 
-> > 
-> > > 
-> > > > > 
-> > > > > > 
-> > > > > > > 
-> > > > > > > Thanks,
-> > > > > > > Lorenzo
-> > > > > > > 
-> > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > > > index 77db32529319..d069e4290180 100644
-> > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
-> > > > > > > > @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
-> > > > > > > >       return ret;
-> > > > > > > >   }
-> > > > > > > > +void dw_pcie_host_deinit(struct pcie_port *pp)
-> > > > > > > > +{
-> > > > > > > > +    pci_stop_root_bus(pp->root_bus);
-> > > > > > > > +    pci_remove_root_bus(pp->root_bus);
-> > > > > > > > +    if (pci_msi_enabled() && !pp->ops->msi_host_init)
-> > > > > > > > +        dw_pcie_free_msi(pp);
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > >   static int dw_pcie_access_other_conf(struct pcie_port *pp, struct pci_bus *bus,
-> > > > > > > >                        u32 devfn, int where, int size, u32 *val,
-> > > > > > > >                        bool write)
-> > > > > > > > diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > > > > index deab426affd3..4f48ec78c7b9 100644
-> > > > > > > > --- a/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > > > > +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> > > > > > > > @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
-> > > > > > > >   void dw_pcie_free_msi(struct pcie_port *pp);
-> > > > > > > >   void dw_pcie_setup_rc(struct pcie_port *pp);
-> > > > > > > >   int dw_pcie_host_init(struct pcie_port *pp);
-> > > > > > > > +void dw_pcie_host_deinit(struct pcie_port *pp);
-> > > > > > > >   int dw_pcie_allocate_domains(struct pcie_port *pp);
-> > > > > > > >   #else
-> > > > > > > >   static inline irqreturn_t dw_handle_msi_irq(struct pcie_port *pp)
-> > > > > > > > @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pcie_port *pp)
-> > > > > > > >       return 0;
-> > > > > > > >   }
-> > > > > > > > +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
-> > > > > > > > +{
-> > > > > > > > +}
-> > > > > > > > +
-> > > > > > > >   static inline int dw_pcie_allocate_domains(struct pcie_port *pp)
-> > > > > > > >   {
-> > > > > > > >       return 0;
-> > > > > > > > -- 
-> > > > > > > > 2.17.1
-> > > > > > > > 
-> > > > > > 
-> > > > > 
-> > > > 
-> > > 
-> > 
-> 
+Good mailing practices for 400: avoid top-posting and trim the reply.
