@@ -2,128 +2,177 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B579C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:32:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB260C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:34:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AEC120873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:32:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67DF02085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:34:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="SGIjcRfj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729286AbfFRNcc (ORCPT
+        id S1729229AbfFRNeD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:32:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:41266 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726088AbfFRNcc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:32:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2CBDA2B;
-        Tue, 18 Jun 2019 06:32:31 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 956973F718;
-        Tue, 18 Jun 2019 06:32:27 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 14:32:25 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-Message-ID: <20190618133223.GD2790@e103592.cambridge.arm.com>
-References: <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
- <20190611114109.GN28398@e103592.cambridge.arm.com>
- <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
- <20190612093238.GQ28398@e103592.cambridge.arm.com>
- <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
- <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
- <20190618091248.GB2790@e103592.cambridge.arm.com>
- <20190618124122.GH3419@hirez.programming.kicks-ass.net>
- <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
- <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
+        Tue, 18 Jun 2019 09:34:03 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41169 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728699AbfFRNeC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:34:02 -0400
+Received: by mail-qt1-f193.google.com with SMTP id d17so10306014qtj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 06:34:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=uESHdIPMr1/2I8R4apfsQXdORt5EllcKdhz30TRq9+s=;
+        b=SGIjcRfjTQPUsAhNx90ES669WIHnpYBE7Vzbgcc9KMOW9MAywDsUZIv2G/R4LfV2M+
+         2LsnZzuYigyPY1J6gEHM3x8R4YtQnIUA9Vv7Sdk5AIbMc87ZHs3hnlosIk7SMRI/UQk+
+         0V7/Wubit590Sk0vWPTTGIKZV1X2CRsoNZseJh6vw6Vm7BCoSuJ7uUtowk+B3CRXipvv
+         gZ0Ggew6XDCbOm7saHGmt+g2SxPKCDPZFeXbJBHG2n71U1nI66ZTr8uYj2Dosb/IWtMY
+         T37WCxShSheVxEBWOAo7k9pOYBrLRW1afS52oyo5dybQmJTFWcAZOmvgEFCp+crZdI2+
+         wdwQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=uESHdIPMr1/2I8R4apfsQXdORt5EllcKdhz30TRq9+s=;
+        b=ITs7SG91bLNNU6nIftpuPgirfYDE+WA0Yo4PwiTh5sIrVtuq8cQFSdCRD3Rt+/NUR1
+         Wz5155qy+eTas+ly2L7N0sW3wwnYzzlQiD5tWY+bYhLJGg+SjooJ4Mqg1kmrS8pDVXZL
+         Ve9KjVP/AnjClx1Bh7HLv59mGqHVdT4s3WnCfbRuoBYGR8DHxRpsqFMEF7OLgshaW3wC
+         wnrG57R/4iA5JLlzY9k+zjS9xSeUEJ6bz4FBDCDauHR0w7V+hNvZab2k6N9rwvbezImV
+         LlCqDgwyX5hu7mrmhV4N70aFKRNXyOm/UopYJW6dEJnkjzSZiVUPxGaKHWlj6cSe1Juf
+         pc0Q==
+X-Gm-Message-State: APjAAAV91yOREvogNXcxoyoEirkEbTLHfBKWmaGodM5EkOS36qJOuTjk
+        8TdaZ52kFXjhjJgImkn/0pwMIg==
+X-Google-Smtp-Source: APXvYqw/NY0+diPdp7TeJ0U/wX2Blgzw4e+gsafs2o0OprtgRoc1/dpCLwmQMVwIB+MyuV9LmnynGA==
+X-Received: by 2002:ac8:24f5:: with SMTP id t50mr96953830qtt.285.1560864841328;
+        Tue, 18 Jun 2019 06:34:01 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:480::a0ec])
+        by smtp.gmail.com with ESMTPSA id v9sm7627054qti.60.2019.06.18.06.34.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 06:34:00 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 09:33:59 -0400
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Matias =?utf-8?B?QmrDuHJsaW5n?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 11/19] btrfs: introduce submit buffer
+Message-ID: <20190618133357.l55hwc3x5cpycpji@MacBook-Pro-91.local>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-12-naohiro.aota@wdc.com>
+ <20190613141457.jws5ca63wfgjf7da@MacBook-Pro-91.local>
+ <BYAPR04MB5816E9FC012A289CA438E794E7EB0@BYAPR04MB5816.namprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190618125512.GJ3419@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <BYAPR04MB5816E9FC012A289CA438E794E7EB0@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 02:55:12PM +0200, Peter Zijlstra wrote:
-> On Tue, Jun 18, 2019 at 02:47:00PM +0200, Florian Weimer wrote:
-> > * Peter Zijlstra:
+On Mon, Jun 17, 2019 at 03:16:05AM +0000, Damien Le Moal wrote:
+> Josef,
+> 
+> On 2019/06/13 23:15, Josef Bacik wrote:
+> > On Fri, Jun 07, 2019 at 10:10:17PM +0900, Naohiro Aota wrote:
+> >> Sequential allocation is not enough to maintain sequential delivery of
+> >> write IOs to the device. Various features (async compress, async checksum,
+> >> ...) of btrfs affect ordering of the IOs. This patch introduces submit
+> >> buffer to sort WRITE bios belonging to a block group and sort them out
+> >> sequentially in increasing block address to achieve sequential write
+> >> sequences with __btrfs_map_bio().
+> >>
+> >> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
 > > 
-> > > I'm not sure I read Thomas' comment like that. In my reading keeping the
-> > > PT_NOTE fallback is exactly one of those 'fly workarounds'. By not
-> > > supporting PT_NOTE only the 'fine' people already shit^Hpping this out
-> > > of tree are affected, and we don't have to care about them at all.
-> > 
-> > Just to be clear here: There was an ABI document that required PT_NOTE
-> > parsing.
+> > I hate everything about this.  Can't we just use the plugging infrastructure for
+> > this and then make sure it re-orders the bios before submitting them?  Also
+> > what's to prevent the block layer scheduler from re-arranging these io's?
+> > Thanks,
 > 
-> URGH.
+> The block I/O scheduler reorders requests in LBA order, but that happens for a
+> newly inserted request against pending requests. If there are no pending
+> requests because all requests were already issued, no ordering happen, and even
+> worse, if the drive queue is not full yet (e.g. there are free tags), then the
+> newly inserted request will be dispatched almost immediately, preventing
+> reordering with subsequent incoming write requests to happen.
 > 
-> > The Linux kernel does *not* define the x86-64 ABI, it only
-> > implements it.  The authoritative source should be the ABI document.
-> >
-> > In this particularly case, so far anyone implementing this ABI extension
-> > tried to provide value by changing it, sometimes successfully.  Which
-> > makes me wonder why we even bother to mainatain ABI documentation.  The
-> > kernel is just very late to the party.
+
+This sounds like we're depending on specific behavior from the ioscheduler,
+which means we're going to have a sad day at some point in the future.
+
+> The other problem is that the mq-deadline scheduler does not track zone WP
+> position. Write request issuing is done regardless of the current WP value,
+> solely based on LBA ordering. This means that mq-deadline will not prevent
+> out-of-order, or rather, unaligned write requests. These will not be detected
+> and dispatched whenever possible. The reasons for this are that:
+> 1) the disk user (the FS) has to manage zone WP positions anyway. So duplicating
+> that management at the block IO scheduler level is inefficient.
+
+I'm not saying it has to manage the WP pointer, and in fact I'm not saying the
+scheduler has to do anything at all.  We just need a more generic way to make
+sure that bio's submitted in order are kept in order.  So perhaps a hmzoned
+scheduler that does just that, and is pinned for these devices.
+
+> 2) Adding zone WP management at the block IO scheduler level would also need a
+> write error processing path to resync the WP value in case of failed writes. But
+> the user/FS also needs that anyway. Again duplicated functionalities.
+
+Again, no not really.  My point is I want as little block layer knowledge in
+btrfs as possible.  I accept we should probably keep track of the WP, it just
+makes it easier on everybody if we allocate sequentially.  I'll even allow that
+we need to handle the write errors and adjust our WP stuff internally when
+things go wrong.
+
+What I'm having a hard time swallowing is having a io scheduler in btrfs proper.
+We just ripped out the old one we had because it broke cgroups.  It just adds
+extra complexity to an already complex mess.
+
+> 3) The block layer will need a timeout to force issue or cancel pending
+> unaligned write requests. This is necessary in case the drive user stops issuing
+> writes (for whatever reasons) or the scheduler is being switched. This would
+> unnecessarily cause write I/O errors or cause deadlocks if the request queue
+> quiesce mode is entered at the wrong time (and I do not see a good way to deal
+> with that).
+
+Again we could just pin the hmzoned scheduler to those devices so you can't
+switch them.  Or make a hmzoned blk plug and pin no scheduler to these devices.
+
 > 
-> How can the kernel be late to the party if all of this is spinning
-> wheels without kernel support?
+> blk-mq is already complicated enough. Adding this to the block IO scheduler will
+> unnecessarily complicate things further for no real benefits. I would like to
+> point out the dm-zoned device mapper and f2fs which are both already dealing
+> with write ordering and write error processing directly. Both are fairly
+> straightforward but completely different and each optimized for their own structure.
+> 
 
-PT_GNU_PROPERTY is mentioned and allocated a p_type value in hjl's
-spec [1], but otherwise seems underspecified.
+So we're duplicating this effort in 2 places already and adding a 3rd place
+seems like a solid plan?  Device-mapper it makes sense, we're sitting squarely
+in the block layer so moving around bio's/requests is its very reason for
+existing.  I'm not sold on the file system needing to take up this behavior.
+This needs to be handled in a more generic way so that all file systems can
+share the same mechanism.
 
-In particular, it's not clear whether a PT_GNU_PROPERTY phdr _must_ be
-emitted for NT_GNU_PROPERTY_TYPE_0.  While it seems a no-brainer to emit
-it, RHEL's linker already doesn't IIUC, and there are binaries in the
-wild.
+I'd even go so far as to say that you could just require using a dm device with
+these hmzoned block devices and then handle all of that logic in there if you
+didn't feel like doing it generically.  We're already talking about esoteric
+devices that require special care to use, adding the extra requirement of
+needing to go through device-mapper to use it wouldn't be that big of a stretch.
+Thanks,
 
-Maybe this phdr type is a late addition -- I haven't attempted to dig
-through the history.
-
-
-For arm64 we don't have this out-of-tree legacy to support, so we can
-avoid exhausitvely searching for the note: no PT_GNU_PROPERTY ->
-no note.
-
-So, can we do the same for x86, forcing RHEL to carry some code out of
-tree to support their legacy binaries?  Or do we accept that there is
-already a de facto ABI and try to be compatible with it?
-
-
-From my side, I want to avoid duplication between x86 and arm64, and
-keep unneeded complexity out of the ELF loader where possible.
-
-Cheers
----Dave
-
-
-[1] https://github.com/hjl-tools/linux-abi/wiki/Linux-Extensions-to-gABI
+Josef
