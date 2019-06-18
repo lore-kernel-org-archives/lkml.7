@@ -2,155 +2,208 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20374C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70BCC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:35:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC54B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:34:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC995214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:35:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zx2c4.com header.i=@zx2c4.com header.b="xFUka6W1"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kwGAzBsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730053AbfFRRei (ORCPT
+        id S1730107AbfFRRfE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:34:38 -0400
-Received: from frisell.zx2c4.com ([192.95.5.64]:59741 "EHLO frisell.zx2c4.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729477AbfFRRei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:34:38 -0400
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTP id dc3a0052
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 18 Jun 2019 17:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=zx2c4.com; h=mime-version
-        :references:in-reply-to:from:date:message-id:subject:to:cc
-        :content-type; s=mail; bh=CRsWCAgoSojlFaaV/iJ0W+G6JQ0=; b=xFUka6
-        W1ocvTxiqRgpv6WFRyfZDG4I269hBbjfN0UoQWRjR+Lkb86Wv/yrfwbfMSQDTb8P
-        8urWGi++8gFY/fTm9G+2xSgIFMNAFzVtlUC33pFx1S8T0BI0OLCAEYj5dHVLxV/+
-        i6GyCw25pzL6CEwhBu+1jc1QL+v+n/5R/aRCTB6CmcZoAvArUoTKslNQIqaFk1zR
-        nNXcOtCZifVkjZEj738/dYy3XvB+AC2rO0daNATxYts7t5g8zYCteMu3rm/EAsTe
-        dAfzKZjRguMD2byFrHhVwyXPquXkLTB/624p5CFk4e5jCl3QRgGU2jpWSl2dKgjB
-        TBTGP+1CSjvqQgPg==
-Received: by frisell.zx2c4.com (ZX2C4 Mail Server) with ESMTPSA id e61c639a (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256:NO)
-        for <linux-kernel@vger.kernel.org>;
-        Tue, 18 Jun 2019 17:01:34 +0000 (UTC)
-Received: by mail-ot1-f46.google.com with SMTP id r6so16098099oti.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:34:35 -0700 (PDT)
-X-Gm-Message-State: APjAAAUOEntq+MDMGNUTL/VQW+aP2FkF8N4Chn6dkzAJGBRsovLNGrk7
-        g1PaNY3KGVv3C74lCAyY0WvdTQR9fvQCFCdB5VQ=
-X-Google-Smtp-Source: APXvYqxi72+7BrxQDq+XhOhsqy6yiDIKS8cT9yCkQ7K6T49DqCwH+SLeB+cm7CZGpCIwkwvH2PfoQWqNVuAAch22eI8=
-X-Received: by 2002:a9d:67d5:: with SMTP id c21mr9745045otn.243.1560879275230;
- Tue, 18 Jun 2019 10:34:35 -0700 (PDT)
+        Tue, 18 Jun 2019 13:35:04 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10677 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729586AbfFRRfD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:35:03 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0920c60002>; Tue, 18 Jun 2019 10:35:02 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 10:35:01 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 10:35:01 -0700
+Received: from [10.2.168.217] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 17:34:58 +0000
+Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     Stephen Warren <swarren@wwwdotorg.org>,
+        Dmitry Osipenko <digetx@gmail.com>
+CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>,
+        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <devicetree@vger.kernel.org>
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
+ <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
+ <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
+ <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
+ <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
+Message-ID: <cff9b6a2-dc33-d03b-9945-799b158deb07@nvidia.com>
+Date:   Tue, 18 Jun 2019 10:34:59 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAHmME9qBDtO1vJrA2Ch3SQigsu435wR7Q3vTm_3R=u=BE49S-Q@mail.gmail.com>
- <alpine.DEB.2.21.1906112257120.2214@nanos.tec.linutronix.de>
- <20190612090257.GF3436@hirez.programming.kicks-ass.net> <CAHmME9obwzZ5x=p3twDfNYux+kg0h4QAGe0ePAkZ2KqvguBK3g@mail.gmail.com>
- <20190612122843.GJ3436@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190612122843.GJ3436@hirez.programming.kicks-ass.net>
-From:   "Jason A. Donenfeld" <Jason@zx2c4.com>
-Date:   Tue, 18 Jun 2019 19:34:23 +0200
-X-Gmail-Original-Message-ID: <CAHmME9pZpJj3zL3nEmz6CSouZs8pmt4D1VO26Zv8imVEPuJFeA@mail.gmail.com>
-Message-ID: <CAHmME9pZpJj3zL3nEmz6CSouZs8pmt4D1VO26Zv8imVEPuJFeA@mail.gmail.com>
-Subject: Re: infinite loop in read_hpet from ktime_get_boot_fast_ns
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Sultan Alsawaf <sultan@kerneltoast.com>,
-        Waiman Long <longman@redhat.com>, X86 ML <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Content-Language: en-US
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560879302; bh=EtLjwWpiDtqSfPhNA/8G8Clz5OAG+A5COmGeaCrkKVg=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
+         Content-Language;
+        b=kwGAzBsQ1yoTWwKlo2/UOXv2gkDJ8firGCWiN14gqHzMxIIzL+NJZ9lpPELHx7++8
+         C93tekf3G0sFEXan2CyLBApX5uH4osQ5xuNl+ata+wnHZmNVrOtlPPhO6hhKsV/Juf
+         bZZ27nnu7W7H0ZnSISHtqcoPE+/xNqqhYTqKlosqswoYZXizfVaeos2MrmAZ08rpAS
+         yLrxRqjT/pGG5gMZ13xiR+i9Huo6g16m5gpObtCMD/6v8RkLqVDaMmayD+7Pe8lziR
+         FxzKA/nr4019w/Sj8inE7uex06rlPkDCg+nyeUgJDyr2rcvucvqnbVPNXZILdkVwtR
+         xtp0jurZ5tT0Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
 
-On Wed, Jun 12, 2019 at 2:29 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > and the comment at the top mentions explicit sleep hooks. I wasn't
-> > sure which function to use from here, though.
+On 6/18/19 9:50 AM, Sowjanya Komatineni wrote:
 >
-> Either local_clock() or cpu_clock(cpu). The sleep hooks are not
-> something the consumer has to worry about.
-
-I'm not sure whether this is another bug or just a misunderstanding on
-what we meant about sleep, but I observed the following behavior,
-below, with local_clock(). Notably, local_clock() isn't advanced
-during sleep in the way that the other mechanisms are.
-
-Regards,
-Jason
-
-[50865.699714] wireguard: local_clock: 1, jiffies: 1,
-jiffies_monotoany: 1, ktime_boot: 1, ktime_boot_coarse: 1
-[50866.723923] wireguard: local_clock: 2, jiffies: 2,
-jiffies_monotoany: 2, ktime_boot: 2, ktime_boot_coarse: 2
-[50867.747896] wireguard: local_clock: 3, jiffies: 3,
-jiffies_monotoany: 3, ktime_boot: 3, ktime_boot_coarse: 3
-[50868.772297] wireguard: local_clock: 4, jiffies: 4,
-jiffies_monotoany: 4, ktime_boot: 4, ktime_boot_coarse: 4
-[50869.796419] wireguard: local_clock: 5, jiffies: 5,
-jiffies_monotoany: 5, ktime_boot: 5, ktime_boot_coarse: 5
-[50870.820719] wireguard: local_clock: 6, jiffies: 6,
-jiffies_monotoany: 6, ktime_boot: 6, ktime_boot_coarse: 6
-[50871.834768] wireguard: local_clock: 7, jiffies: 7,
-jiffies_monotoany: 10, ktime_boot: 10, ktime_boot_coarse: 10
-[50869.918760] PM: suspend entry (deep)
-[50872.846134] PM: suspend exit
-[50872.874955] wireguard: local_clock: 8, jiffies: 8,
-jiffies_monotoany: 11, ktime_boot: 11, ktime_boot_coarse: 11
-[50873.899142] wireguard: local_clock: 9, jiffies: 9,
-jiffies_monotoany: 12, ktime_boot: 12, ktime_boot_coarse: 12
-[50874.923368] wireguard: local_clock: 10, jiffies: 10,
-jiffies_monotoany: 13, ktime_boot: 13, ktime_boot_coarse: 13
-[50875.947641] wireguard: local_clock: 11, jiffies: 11,
-jiffies_monotoany: 14, ktime_boot: 14, ktime_boot_coarse: 14
-[50876.971833] wireguard: local_clock: 12, jiffies: 12,
-jiffies_monotoany: 15, ktime_boot: 15, ktime_boot_coarse: 15
-[50877.995969] wireguard: local_clock: 13, jiffies: 13,
-jiffies_monotoany: 16, ktime_boot: 16, ktime_boot_coarse: 16
-[50879.020220] wireguard: local_clock: 14, jiffies: 14,
-jiffies_monotoany: 17, ktime_boot: 17, ktime_boot_coarse: 17
-[50880.044395] wireguard: local_clock: 15, jiffies: 15,
-jiffies_monotoany: 18, ktime_boot: 18, ktime_boot_coarse: 18
-
-static void ugh(struct work_struct *w)
-{
-  int i;
-  u64 start_localclock = local_clock(), end_localclock;
-  u64 start_jiffies = jiffies64_to_nsecs(get_jiffies_64()), end_jiffies;
-  u64 start_jiffiesmonotoany =
-ktime_to_ns(ktime_mono_to_any(ns_to_ktime(jiffies64_to_nsecs(get_jiffies_64())),
-TK_OFFS_BOOT)), end_jiffiesmonotoany;
-  u64 start_ktimeboot = ktime_get_boot_ns(), end_ktimeboot;
-  u64 start_ktimebootcoarse =
-ktime_to_ns(ktime_get_coarse_boottime()), end_ktimebootcoarse;
-
-  for (i = 0; i < 15; ++i) {
-    msleep(1000);
-    end_localclock = local_clock();
-    end_jiffies = jiffies64_to_nsecs(get_jiffies_64());
-    end_jiffiesmonotoany =
-ktime_to_ns(ktime_mono_to_any(ns_to_ktime(jiffies64_to_nsecs(get_jiffies_64())),
-TK_OFFS_BOOT));
-    end_ktimeboot = ktime_get_boot_ns();
-    end_ktimebootcoarse = ktime_to_ns(ktime_get_coarse_boottime());
-    pr_err("local_clock: %llu, jiffies: %llu, jiffies_monotoany: %llu,
-ktime_boot: %llu, ktime_boot_coarse: %llu\n",
-           (end_localclock - start_localclock) / NSEC_PER_SEC,
-           (end_jiffies - start_jiffies) / NSEC_PER_SEC,
-           (end_jiffiesmonotoany - start_jiffiesmonotoany) / NSEC_PER_SEC,
-           (end_ktimeboot - start_ktimeboot) / NSEC_PER_SEC,
-           (end_ktimebootcoarse - start_ktimebootcoarse) / NSEC_PER_SEC);
-  }
-}
-
-static DECLARE_WORK(blah, ugh);
-
-static int __init mod_init(void)
-{
-  schedule_work(&blah);
-  return 0;
-}
+> On 6/18/19 8:41 AM, Stephen Warren wrote:
+>> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
+>>> 18.06.2019 12:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>> 18.06.2019 10:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
+>>>>> and registers them to syscore so the pinmux settings are restored
+>>>>> before the devices resume.
+>>>>>
+>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>>>>> ---
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 62=20
+>>>>> ++++++++++++++++++++++++++++++++
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=C2=
+=A0 5 +++
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
+>>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
+>>>>> =C2=A0 7 files changed, 84 insertions(+)
+>>>>>
+>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c=20
+>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> index 34596b246578..ceced30d8bd1 100644
+>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+>>>>> @@ -20,11 +20,16 @@
+>>>>> =C2=A0 #include <linux/pinctrl/pinmux.h>
+>>>>> =C2=A0 #include <linux/pinctrl/pinconf.h>
+>>>>> =C2=A0 #include <linux/slab.h>
+>>>>> +#include <linux/syscore_ops.h>
+>>>>> =C2=A0 =C2=A0 #include "../core.h"
+>>>>> =C2=A0 #include "../pinctrl-utils.h"
+>>>>> =C2=A0 #include "pinctrl-tegra.h"
+>>>>> =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
+>>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
+>>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
+>>>>> +
+>>>>> =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u=
+32=20
+>>>>> reg)
+>>>>> =C2=A0 {
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg);
+>>>>> @@ -619,6 +624,48 @@ static void=20
+>>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
+=A0=C2=A0 pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
+ EMMC2_PAD_CFGPADCTRL_0);
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
+G;
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
+MMC2_PAD_CFGPADCTRL_0);
+>>>>> +
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
+ EMMC4_PAD_CFGPADCTRL_0);
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
+G;
+>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
+MMC4_PAD_CFGPADCTRL_0);
+>>>>> +=C2=A0=C2=A0=C2=A0 }
+>>>>> +}
+>>>>
+>>>> Is there any reason why parked_bit can't be changed to=20
+>>>> parked_bitmask like I was
+>>>> asking in a comment to v2?
+>>>>
+>>>> I suppose that it's more preferable to keep pinctrl-tegra.c=20
+>>>> platform-agnostic for
+>>>> consistency when possible, hence adding platform specifics here=20
+>>>> should be discouraged.
+>>>> And then the parked_bitmask will also result in a proper hardware=20
+>>>> description in the code.
+>>>>
+>>>
+>>> I'm now also vaguely recalling that Stephen Warren had some kind of=20
+>>> a "code generator"
+>>> for the pinctrl drivers. So I guess all those tables were=20
+>>> auto-generated initially.
+>>>
+>>> Stephen, maybe you could adjust the generator to take into account=20
+>>> the bitmask (of
+>>> course if that's a part of the generated code) and then re-gen it=20
+>>> all for Sowjanya?
+>>
+>> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that=20
+>> generate tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py.=20
+>> IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya=20
+>> is welcome to send a patch to that repo if the code needs to be updated.
+>
+>
+> Hi Dmitry,
+>
+> Just want to be clear on my understanding of your request.
+>
+> "change parked_bit to parked_bitmask" are you requested to change=20
+> parked_bit of PINGROUP and DRV_PINGROUP to use bitmask value rather=20
+> than bit position inorder to have parked bit configuration for EMMC=20
+> PADs as well to happen by masking rather than checking for existence=20
+> of parked_bit?
+>
+> Trying to understand the reason/benefit for changing parked_bit to=20
+> parked_bitmask.
+Also, Park bits in CFGPAD registers are not common for all CFGPAD=20
+registers. Park bits are available only for EMMC and also those bits are=20
+used for something else on other CFGPAD registers so bitmask can't be=20
+common and this also need an update to DRV_PINGROUP macro args just only=20
+to handle EMMC parked_bitmask. So not sure of the benefit in using=20
+bitmask rather than parked_bit
+>
+> thanks
+>
+> Sowjanya
+>
