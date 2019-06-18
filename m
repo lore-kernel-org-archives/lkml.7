@@ -2,120 +2,63 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 641C5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D99C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43E602085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:23:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A662085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:25:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfFRPX2 (ORCPT
+        id S1729347AbfFRPZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:23:28 -0400
-Received: from gateway34.websitewelcome.com ([192.185.148.200]:23456 "EHLO
-        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728982AbfFRPX2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:23:28 -0400
-Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
-        by gateway34.websitewelcome.com (Postfix) with ESMTP id 7602E55535
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:23:27 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id dFxHhazNDYTGMdFxHhWmtj; Tue, 18 Jun 2019 10:23:27 -0500
-X-Authority-Reason: nr=8
-Received: from cablelink149-185.telefonia.intercable.net ([201.172.149.185]:43462 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hdFxG-001trq-D2; Tue, 18 Jun 2019 10:23:26 -0500
-Date:   Tue, 18 Jun 2019 10:23:25 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] Input: gpio_keys - use struct_size() in devm_kzalloc()
-Message-ID: <20190618152325.GA21504@embeddedor>
+        Tue, 18 Jun 2019 11:25:21 -0400
+Received: from 8bytes.org ([81.169.241.247]:59816 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728982AbfFRPZV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:25:21 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 188C34B5; Tue, 18 Jun 2019 17:25:19 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 17:25:17 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Srinath Mannam <srinath.mannam@broadcom.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Oza Pawandeep <poza@codeaurora.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Eric Auger <eric.auger@redhat.com>,
+        Julien Grall <julien.grall@arm.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu: fix integer truncation
+Message-ID: <20190618152517.GB21128@8bytes.org>
+References: <20190617133101.2817807-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 201.172.149.185
-X-Source-L: No
-X-Exim-ID: 1hdFxG-001trq-D2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: cablelink149-185.telefonia.intercable.net (embeddedor) [201.172.149.185]:43462
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20190617133101.2817807-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-One of the more common cases of allocation size calculations is finding
-the size of a structure that has a zero-sized array at the end, along
-with memory for some number of elements for that array. For example:
+On Mon, Jun 17, 2019 at 03:30:54PM +0200, Arnd Bergmann wrote:
+> On 32-bit architectures, phys_addr_t may be different from dma_add_t,
+> both smaller and bigger. This can lead to an overflow during an assignment
+> that clang warns about:
+> 
+> drivers/iommu/dma-iommu.c:230:10: error: implicit conversion from 'dma_addr_t' (aka 'unsigned long long') to
+>       'phys_addr_t' (aka 'unsigned int') changes value from 18446744073709551615 to 4294967295 [-Werror,-Wconstant-conversion]
+> 
+> Use phys_addr_t here because that is the type that the variable was
+> declared as.
+> 
+> Fixes: aadad097cd46 ("iommu/dma: Reserve IOVA for PCIe inaccessible DMA address")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-struct gpio_keys_drvdata {
-	...
-        struct gpio_button_data data[0];
-};
-
-
-size = sizeof(struct gpio_keys_drvdata) + count * sizeof(struct gpio_button_data);
-instance = devm_kzalloc(dev, size, GFP_KERNEL);
-
-Instead of leaving these open-coded and prone to type mistakes, we can
-now use the new struct_size() helper:
-
-instance = devm_kzalloc(dev, struct_size(instance, data, count), GFP_KERNEL);
-
-Notice that, in this case, variable size is not necessary, hence it
-is removed.
-
-This code was detected with the help of Coccinelle.
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- drivers/input/keyboard/gpio_keys.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/input/keyboard/gpio_keys.c b/drivers/input/keyboard/gpio_keys.c
-index 6cd199e8a370..c186c2552b04 100644
---- a/drivers/input/keyboard/gpio_keys.c
-+++ b/drivers/input/keyboard/gpio_keys.c
-@@ -774,7 +774,6 @@ static int gpio_keys_probe(struct platform_device *pdev)
- 	struct fwnode_handle *child = NULL;
- 	struct gpio_keys_drvdata *ddata;
- 	struct input_dev *input;
--	size_t size;
- 	int i, error;
- 	int wakeup = 0;
- 
-@@ -784,9 +783,8 @@ static int gpio_keys_probe(struct platform_device *pdev)
- 			return PTR_ERR(pdata);
- 	}
- 
--	size = sizeof(struct gpio_keys_drvdata) +
--			pdata->nbuttons * sizeof(struct gpio_button_data);
--	ddata = devm_kzalloc(dev, size, GFP_KERNEL);
-+	ddata = devm_kzalloc(dev, struct_size(ddata, data, pdata->nbuttons),
-+			     GFP_KERNEL);
- 	if (!ddata) {
- 		dev_err(dev, "failed to allocate state\n");
- 		return -ENOMEM;
--- 
-2.21.0
-
+Applied, thanks.
