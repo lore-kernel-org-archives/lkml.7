@@ -2,601 +2,182 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C11FBC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:44:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DFFC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78CC72070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:44:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2AC2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:44:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="XpN3Krpm"
+	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="rr5duNX2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729772AbfFRLoW (ORCPT
+        id S1729791AbfFRLoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:44:22 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:45929 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729701AbfFRLoW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:44:22 -0400
-Received: by mail-ua1-f65.google.com with SMTP id v18so5546020uad.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:44:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uO77Wlk/0HBoeX8HqDSjYVX9t8FK2+nYK95GylOOjAc=;
-        b=XpN3KrpmyTxOByYPs7efXemtZJubx2D16BAqeZZ22gSka20LIYoXZBxdd3PIPjzRgA
-         fnHRcIkwNLeZDAXe+9Z535Wj1jdvy9HnyOPVXEcRBwNP4OgTCdyUJc+6Q25dCKgE7Lhs
-         3mAR/zPbEszvM9KaHk12qwdvxeJVK9nNEIm0+kAXsgE0yu5bbaTR0kTHQi6VOljZ2JeB
-         rnZe3KrEl7cIedYRW0IUaHHG6KqMTMM8J/A5OsmxMoT90/2bw4dp0P2Z9tWUQeljivz1
-         9iBSlghG7cN4YIgBGs7mxdiDu3t+eKnqvmxRWK3SCkhfICSN8cMEMQvsG3SJ29hBQyQ9
-         zaZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uO77Wlk/0HBoeX8HqDSjYVX9t8FK2+nYK95GylOOjAc=;
-        b=SSKxFsIxCQB5Az3i8lki4Y8kfx4w+tb1a3zGjsxWtfSBBpA/5Oiw16aoeh1bsLQEj4
-         bpSNPZ1AY6+ymy0SUC2GAUcai2N5ldOrD9R/cpqd3xRrC/FPUFnf6GVqE9DEZFJJ0p4A
-         kM5BRhIRxlrVgFhIBqfAmrvK6Zq+2GEe4KkGzGICvcPw0wEW/M8zcoNP50CxJ5bEOqF+
-         cAyTv+dWFyO8PLaLPV15BfBksoQaB28C3bhGaLfHBatViCLI7c0ZiUutORxEuceQbT8e
-         nbvo320TSCzkTxzEjGychT/Sc8hWJdq08LSGtGO65nOX62cy5M44b1dT8kXStrHJjX6f
-         BXag==
-X-Gm-Message-State: APjAAAVSR3hS1r27JPJU6hxLMQW7N6dWbnOTldCap4NwpY6fCqLC8JB3
-        ftuwn2V1Ios7NK1QgYldOsoVnStS8/zXCtt9S0M8aQ==
-X-Google-Smtp-Source: APXvYqwd8yUpmp5woqcBP39vZ+uM/oc2ZAi9Dw2tBxRrGimfGpREW3ApwKMolkGpRUUDfL0bZyHSIlfBZ4wmMtHOjS8=
-X-Received: by 2002:a67:7346:: with SMTP id o67mr40253011vsc.92.1560858260449;
- Tue, 18 Jun 2019 04:44:20 -0700 (PDT)
+        Tue, 18 Jun 2019 07:44:46 -0400
+Received: from mout.web.de ([212.227.15.4]:55881 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729681AbfFRLop (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 07:44:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1560858269;
+        bh=f365Vkn6sWr/poFBuZ54QTT4vy6mHZdUcafudWe19zE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=rr5duNX2k08ma2Mlbolao+FG6mPUqmJCPgOHG59aQ6G4tx7IQIUT7t989mtUdhaFt
+         cIe4NRkb5CK4ix3PdHC5hnpb7F+Ds1Pun3r9yif+RgsOG8DfeO+dwFVm4f7TOgBzci
+         8y4OQ41jjz6dJet6DldDHL3/qodquNA1NRXsvKAw=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([93.133.86.175]) by smtp.web.de (mrweb003
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0Lh6PP-1iRQnS0Vwl-00oXml; Tue, 18
+ Jun 2019 13:44:29 +0200
+Subject: Re: drivers: Inline code in devm_platform_ioremap_resource() from two
+ functions
+To:     Enrico Weigelt <lkml@metux.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+References: <20190406061112.31620-1-himanshujha199640@gmail.com>
+ <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de>
+ <alpine.DEB.2.21.1906081925090.2543@hadrien>
+ <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de>
+ <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
+ <032e347f-e575-c89c-fa62-473d52232735@web.de>
+ <910a5806-9a08-adf4-4fba-d5ec2f5807ff@metux.net>
+ <efc38197-f846-142d-fbaf-93327c2669c9@web.de>
+ <714a38fe-a733-7264-bb06-d94bd58a245a@metux.net>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <8ae16eae-7bb9-3a82-000f-52e16aa1eee0@web.de>
+Date:   Tue, 18 Jun 2019 13:44:11 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
- <1560336476-31763-4-git-send-email-sagar.kadam@sifive.com> <4edef1e8-1cd3-11a2-e4de-eda70eaf8642@ti.com>
-In-Reply-To: <4edef1e8-1cd3-11a2-e4de-eda70eaf8642@ti.com>
-From:   Sagar Kadam <sagar.kadam@sifive.com>
-Date:   Tue, 18 Jun 2019 17:14:09 +0530
-Message-ID: <CAARK3H=QRv9ODbEUcCRyYmtdS9D-GLQDkPSiNZxQSQWssPji_w@mail.gmail.com>
-Subject: Re: [PATCH v5 3/3] mtd: spi-nor: add locking support for is25xxxxx device
-To:     Vignesh Raghavendra <vigneshr@ti.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        dwmw2@infradead.org, computersforpeace@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-riscv@lists.infradead.org,
-        Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Wesley Terpstra <wesley@sifive.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <714a38fe-a733-7264-bb06-d94bd58a245a@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:KkA7Ndb2dGDW6kXHq6nLkPVqT6Y4OfPLeEcJ3O3mdz/hOPHVW9l
+ iipikgoSNcxDNs1f8nmsa7f2N2POZe1LhguOjIKjaCoR4AMm5+3+q/yJX92hiu2UZvRkCAj
+ uehq14PLu396jeH/0ijDHXzqrS9cptHkLPiAgq5Rtw0iSFs+JPF65YvGiQD8xojiXtNzEtY
+ VaAQ5EN+XAeq2yF9tgnJw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:n+3DWs4yqzg=:QzABxMMMY/1KDjcOHg9SwO
+ UjJTutFwwwMXcO8mD4zSz0HWUluxsN0nFCRYzK46M9mbI0T6xx2EG1Qeb/7cBI7EqeTnDD8aN
+ T9sv9H11dN07LbNM+2LSGpn5Qwmh/gOe/jXqpn6uXPpEZnMNd4HF8LRWY0rL2Kd21THm0FPDr
+ wRR8U5eSsf8NAShIgFkxh8Pt9DiAkGqKLIZY8wqTrwXyhmy53qvaNtAuvM2OWRpf1uRJjJajV
+ 7YGrJBul4mQ+dlDyuX1bo2C6yiuYJjXS700Rg0JcVVyJsaz/i0NVyUMk5kn5HQBpNwBWpz0qN
+ LoReS+leNFNAOBZLz3FTbekS+0Pl/EEqMjyCf0yvapUSs4xzWWqU/DXbJ4jgX0ZzYXbVcvLO5
+ bKeyCsjV4oulwgUn4AHPRcAowBW1rwhhGnCuNJpAEDu2XHI+J9e0fGDE/eaut8hfot4V9bk0Q
+ HN5p3VbXoocK+pNh9Z96j+MJa3KMioCTSf/gUv9dOWVGO7Tm73o0dMEaNm2hXmNrWgux4K5+j
+ +LH3XeY7USyvBVRhp3kJCPcqnbQkvDc39BXxXuCROVqX5m1HKaV+Jlwa4NIyQT2EwVWXtXP9A
+ VpsYytNXxfzX7xQChbhHnG0mhi7NSuLh0JgeCudsHyrETIGb6as2EIyInqaV6NcXbBC7ODh1h
+ sBNFXsoy1uEy1C4+x0jIj+JFZwUT4wyEz88OtvJvO3EBOykSd3w64+zbWdBzQhwIGLvjsGKzX
+ TC3BhLrjozLNEyaqEeB2dkBv70ZFwueRZ+2ywANj7sV0wIeXS5TEy0KH2RPelNqBh1S/uf/Fb
+ 4bI02G+E/FXlXnp6NU8KVS3kNvQ9u6iBHVzyT9D1sOd5YUprQAAtxSidaV8ZaK484yDWbJnVB
+ nCFZmcDp2KFI+eqL0RiTUypRgQLxE5YiOkHE4vgr01vXAE2BYY2cSjX8qi5YjWNYw0rtb9q39
+ Isq67EO1glVgHcY1sVjrWEgqVUGUbx2e+QoUiD40FxzsQBYu25KmO
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Vignesh,
+>> Would you like to check the software circumstances once more
+>> for the generation of a similar code structure by a C compiler
+>> (or optimiser)?
+>
+> As said: unfortunately, I don't have the time to do that
 
-On Tue, Jun 18, 2019 at 9:55 AM Vignesh Raghavendra <vigneshr@ti.com> wrote:
->
-> +Uwe who had interest in 4bit block protection support
->
-> On 12-Jun-19 4:17 PM, Sagar Shrikant Kadam wrote:
-> > Implement a locking scheme for ISSI devices based on stm_lock mechanism.
-> > The is25xxxxx  devices have 4 bits for selecting the range of blocks to
-> > be locked/protected from erase/write operations and function register
-> > gives feasibility to select TOP / Bottom area for protection.
-> > Added opcodes to read and write function registers.
-> >
-> > The current implementation enables block protection as per the table
-> > defined into datasheet for is25wp256 device having erase size of 0x1000.
-> > ISSI and stm devices differ in terms of TBS (Top/Bottom area protection)
-> > bits. In case of issi this is in Function register and is OTP memory, so
-> > once FR bits are programmed  cannot be modified.
-> >
->
-> I am not a fan of modifying/setting OTP bits are they are irreversible
-> and change the expectation of other SWs in the system such as
-> bootloader. See comments further down the patch....
->
-> > Some common code from stm_lock/unlock implementation is extracted so that
-> > it can be re-used for issi devices. The locking scheme has been tested on
-> > HiFive Unleashed board, having is25wp256 flash memory.
-> >
->
-> Have you tested lock/unlock on non ISSI device with this series?
->
-Sorry, I haven't tested this series on non ISSI devices.
+I became curious if you would like to adjust your software development
+attention a bit more also in this area.
 
-> > Signed-off-by: Sagar Shrikant Kadam <sagar.kadam@sifive.com>
-> > ---
-> >  drivers/mtd/spi-nor/spi-nor.c | 291 ++++++++++++++++++++++++++++++++++--------
-> >  include/linux/mtd/spi-nor.h   |   5 +
-> >  2 files changed, 245 insertions(+), 51 deletions(-)
-> >
-> > diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> > index b7c6261..9281ec0 100644
-> > --- a/drivers/mtd/spi-nor/spi-nor.c
-> > +++ b/drivers/mtd/spi-nor/spi-nor.c
-> > @@ -288,6 +288,45 @@ struct flash_info {
-> >
-> >  #define JEDEC_MFR(info)      ((info)->id[0])
-> >
-> > +/**
-> > + * read_fr() -read function register
-> > + * @nor: pointer to a 'struct spi_nor'.
-> > + *
-> > + * ISSI devices have top/bottom area protection bits selection into function
-> > + * reg.The bits in FR are OTP.So once it's written, it cannot be changed.
-> > + *
-> > + * Return: Value in function register or Negative if error.
-> > + */
-> > +static int read_fr(struct spi_nor *nor)
->
-> Please prefix spi_nor_ (spi_nor_read_fr()) to all generic functions that
-> you are adding in this patch
->
-Ok. Can do as suggested in v6.
 
-> > +{
-> > +     int ret;
-> > +     u8 val;
-> > +
-> > +     ret = nor->read_reg(nor, SPINOR_OP_RDFR, &val, 1);
-> > +     if (ret < 0) {
-> > +             pr_err("error %d reading FR\n", (int) ret);
->
-> dev_err() and no need to cast 'ret' to int
->
-> > +             return ret;
-> > +     }
-> > +
-> > +     return val;
-> > +}
-> > +
-> > +/**
-> > + * write_fr() -Write function register
-> > + * @nor: pointer to a 'struct spi_nor'.
-> > + *
-> > + * ISSI devices have top/bottom area selection protection bits into function
-> > + * reg whereas other devices have the TBS bit into Status Register.
-> s/into/in
->
-> > + * The bits in FR are OTP.So once it's written, it cannot be changed.
-> > + *
-> > + * Return: Negative if error
-> > + */
-> > +static int write_fr(struct spi_nor *nor, u8 val)
-> > +{
-> > +     nor->cmd_buf[0] = val;
-> > +     return nor->write_reg(nor, SPINOR_OP_WRFR, nor->cmd_buf, 1);
-> > +}
-> > +
-> >  /*
-> >   * Read the status register, returning its value in the location
-> >   * Return the status register value.
-> > @@ -1088,10 +1127,17 @@ static void stm_get_locked_range(struct spi_nor *nor, u8 sr, loff_t *ofs,
-> >                                uint64_t *len)
-> >  {
-> >       struct mtd_info *mtd = &nor->mtd;
-> > -     u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
-> > -     int shift = ffs(mask) - 1;
-> > +     u8 mask = 0;
-> > +     int shift = 0;
-> >       int pow;
-> >
-> > +     if (JEDEC_MFR(nor->info) == SNOR_MFR_ISSI)
-> > +             mask = SR_BP3 | SR_BP2 | SR_BP1 | SR_BP0;
->
-> Does all ISSI flashes support SR_BP3?
+> - you'd have to tell us, what exactly you've got in mind.
 
-Yes, I have checked a range of ISSI flash devices
-and they do support the fourth block protect bit (BP3).
+I try to point possibilities out to improve the combination of
+two functions.
 
-> Irrespective of that this isn't generic enough. There are non ISSI
-> flashes with BP3. Please add a flag or field to flash_info struct to
-> identify flashes with BP3 bit and then use combination of the flag and
-> MFR ID to select suitable lock/unlock mechanism
->
-Ok. To make it more generic I will also introduce a macro into flash_info struct
-to indicate that a flash has BP3 bit and then use it accordingly.
 
->
-> > +     else
-> > +             mask = SR_BP2 | SR_BP1 | SR_BP0;
-> > +
-> > +     shift = ffs(mask) - 1;
-> > +
-> >       if (!(sr & mask)) {
-> >               /* No protection */
-> >               *ofs = 0;
-> > @@ -1099,10 +1145,19 @@ static void stm_get_locked_range(struct spi_nor *nor, u8 sr, loff_t *ofs,
-> >       } else {
-> >               pow = ((sr & mask) ^ mask) >> shift;
-> >               *len = mtd->size >> pow;
-> > -             if (nor->flags & SNOR_F_HAS_SR_TB && sr & SR_TB)
-> > -                     *ofs = 0;
-> > -             else
-> > -                     *ofs = mtd->size - *len;
-> > +
-> > +             if (JEDEC_MFR(nor->info) == SNOR_MFR_ISSI) {
-> > +                     if (nor->flags & SNOR_F_HAS_SR_TB &&
-> > +                                     (read_fsr(nor) & FR_TB))
-> > +                             *ofs = 0;
-> > +                     else
-> > +                             *ofs = mtd->size - *len;
-> > +             } else {
-> > +                     if (nor->flags & SNOR_F_HAS_SR_TB && sr & SR_TB)
-> > +                             *ofs = 0;
-> > +                     else
-> > +                             *ofs = mtd->size - *len;
-> > +             }
-> >       }
-> >  }
-> >
-> > @@ -1129,18 +1184,108 @@ static int stm_check_lock_status_sr(struct spi_nor *nor, loff_t ofs, uint64_t le
-> >               return (ofs >= lock_offs + lock_len) || (ofs + len <= lock_offs);
-> >  }
-> >
-> > -static int stm_is_locked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
-> > +/*
-> > + * check if memory region is locked
-> > + *
-> > + * Returns false if region is locked 0 otherwise.
-> > + */
-> > +static int fl_is_locked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
-> >                           u8 sr)
-> >  {
-> >       return stm_check_lock_status_sr(nor, ofs, len, sr, true);
-> >  }
-> >
-> > -static int stm_is_unlocked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
-> > +/*
-> > + * check if memory region is unlocked
-> > + *
-> > + * Returns false if region is locked 0 otherwise.
-> > + */
-> > +static int fl_is_unlocked_sr(struct spi_nor *nor, loff_t ofs, uint64_t len,
-> >                             u8 sr)
-> >  {
-> >       return stm_check_lock_status_sr(nor, ofs, len, sr, false);
-> >  }
-> >
-> > +/**
-> > + * flash_select_zone() - Select TOP area or bottom area to lock/unlock
-> > + * @nor: pointer to a 'struct spi_nor'.
-> > + * @ofs: offset from which to lock memory.
-> > + * @len: number of bytes to unlock.
-> > + * @sr: status register
-> > + * @tb: pointer to top/bottom bool used in caller function
-> > + * @op: zone selection is for lock/unlock operation. 1: lock 0:unlock
-> > + *
-> > + * Select the top area / bottom area paattern to protect memory blocks.
->
-> s/paattern/pattern
->
-Ok
+> If it's just about some error checks which happen to be redundant in a
+> particular case, you'll have to show that this case is a *really* hot
+> path (eg. irq, syscall, scheduling, etc) - but I don't see that here.
 
-> > + *
-> > + * Returns negative on errors, 0 on success.
-> > + */
-> > +static int fl_select_zone(struct spi_nor *nor, loff_t ofs, uint64_t len,
-> > +                             u8 sr, bool *tb, bool op)
-> > +{
-> > +     int retval;
-> > +     bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
-> > +
-> > +     if (op) {
-> > +             /* Select for lock zone operation */
-> > +
-> > +             /*
-> > +              * If nothing in our range is unlocked, we don't need
-> > +              * to do anything.
-> > +              */
-> > +             if (fl_is_locked_sr(nor, ofs, len, sr))
-> > +                     return 0;
-> > +
-> > +             /*
-> > +              * If anything below us is unlocked, we can't use 'bottom'
-> > +              * protection.
-> > +              */
-> > +             if (!fl_is_locked_sr(nor, 0, ofs, sr))
-> > +                     can_be_bottom = false;
-> > +
-> > +             /*
-> > +              * If anything above us is unlocked, we can't use 'top'
-> > +              * protection.
-> > +              */
-> > +             if (!fl_is_locked_sr(nor, ofs + len,
-> > +                                     nor->mtd.size - (ofs + len), sr))
-> > +                     can_be_top = false;
-> > +     } else {
-> > +             /* Select unlock zone */
-> > +
-> > +             /*
-> > +              * If nothing in our range is locked, we don't need to
-> > +              * do anything.
-> > +              */
-> > +             if (fl_is_unlocked_sr(nor, ofs, len, sr))
-> > +                     return 0;
-> > +
-> > +             /*
-> > +              * If anything below us is locked, we can't use 'top'
-> > +              * protection
-> > +              */
-> > +             if (!fl_is_unlocked_sr(nor, 0, ofs, sr))
-> > +                     can_be_top = false;
-> > +
-> > +             /*
-> > +              * If anything above us is locked, we can't use 'bottom'
-> > +              * protection
-> > +              */
-> > +             if (!fl_is_unlocked_sr(nor, ofs + len,
-> > +                                     nor->mtd.size - (ofs + len), sr))
-> > +                     can_be_bottom = false;
-> > +     }
-> > +
-> > +     if (!can_be_bottom && !can_be_top)
-> > +             retval = -EINVAL;
-> > +     else {
-> > +             /* Prefer top, if both are valid */
-> > +             *tb = can_be_top;
-> > +             retval = 1;
-> > +     }
-> > +
-> > +     return retval;
-> > +}
-> > +
-> >  /*
-> >   * Lock a region of the flash. Compatible with ST Micro and similar flash.
-> >   * Supports the block protection bits BP{0,1,2} in the status register
-> > @@ -1178,33 +1323,19 @@ static int stm_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> >       struct mtd_info *mtd = &nor->mtd;
-> >       int status_old, status_new;
-> >       u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
-> > -     u8 shift = ffs(mask) - 1, pow, val;
-> > +     u8 shift = ffs(mask) - 1, pow, val, ret;
-> >       loff_t lock_len;
-> > -     bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
-> >       bool use_top;
-> >
-> >       status_old = read_sr(nor);
-> >       if (status_old < 0)
-> >               return status_old;
-> >
-> > -     /* If nothing in our range is unlocked, we don't need to do anything */
-> > -     if (stm_is_locked_sr(nor, ofs, len, status_old))
-> > +     ret = fl_select_zone(nor, ofs, len, status_old, &use_top, 1);
-> > +     if (!ret)
-> >               return 0;
-> > -
-> > -     /* If anything below us is unlocked, we can't use 'bottom' protection */
-> > -     if (!stm_is_locked_sr(nor, 0, ofs, status_old))
-> > -             can_be_bottom = false;
-> > -
-> > -     /* If anything above us is unlocked, we can't use 'top' protection */
-> > -     if (!stm_is_locked_sr(nor, ofs + len, mtd->size - (ofs + len),
-> > -                             status_old))
-> > -             can_be_top = false;
-> > -
-> > -     if (!can_be_bottom && !can_be_top)
-> > -             return -EINVAL;
-> > -
-> > -     /* Prefer top, if both are valid */
-> > -     use_top = can_be_top;
-> > +     else if (ret < 0)
-> > +             return ret;
-> >
-> >       /* lock_len: length of region that should end up locked */
-> >       if (use_top)
-> > @@ -1258,35 +1389,21 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> >       struct mtd_info *mtd = &nor->mtd;
-> >       int status_old, status_new;
-> >       u8 mask = SR_BP2 | SR_BP1 | SR_BP0;
-> > -     u8 shift = ffs(mask) - 1, pow, val;
-> > +     u8 shift = ffs(mask) - 1, pow, val, ret;
-> >       loff_t lock_len;
-> > -     bool can_be_top = true, can_be_bottom = nor->flags & SNOR_F_HAS_SR_TB;
-> >       bool use_top;
-> >
-> >       status_old = read_sr(nor);
-> >       if (status_old < 0)
-> >               return status_old;
-> >
-> > -     /* If nothing in our range is locked, we don't need to do anything */
-> > -     if (stm_is_unlocked_sr(nor, ofs, len, status_old))
-> > +     ret = fl_select_zone(nor, ofs, len, status_old, &use_top, 0);
-> > +     if (!ret)
-> >               return 0;
-> > +     else if (ret < 0)
-> > +             return ret;
-> >
-> > -     /* If anything below us is locked, we can't use 'top' protection */
-> > -     if (!stm_is_unlocked_sr(nor, 0, ofs, status_old))
-> > -             can_be_top = false;
-> > -
-> > -     /* If anything above us is locked, we can't use 'bottom' protection */
-> > -     if (!stm_is_unlocked_sr(nor, ofs + len, mtd->size - (ofs + len),
-> > -                             status_old))
-> > -             can_be_bottom = false;
-> > -
-> > -     if (!can_be_bottom && !can_be_top)
-> > -             return -EINVAL;
-> > -
-> > -     /* Prefer top, if both are valid */
-> > -     use_top = can_be_top;
-> > -
-> > -     /* lock_len: length of region that should remain locked */
-> > +     /* lock_len: length of region that should end up locked */
-> >       if (use_top)
-> >               lock_len = mtd->size - (ofs + len);
-> >       else
-> > @@ -1338,7 +1455,7 @@ static int stm_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> >   * Returns 1 if entire region is locked, 0 if any portion is unlocked, and
-> >   * negative on errors.
-> >   */
-> > -static int stm_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> > +static int fl_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> >  {
-> >       int status;
-> >
-> > @@ -1346,7 +1463,7 @@ static int stm_is_locked(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> >       if (status < 0)
-> >               return status;
-> >
-> > -     return stm_is_locked_sr(nor, ofs, len, status);
-> > +     return fl_is_locked_sr(nor, ofs, len, status);
-> >  }
-> >
-> >  static int spi_nor_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
-> > @@ -1461,6 +1578,77 @@ static int macronix_quad_enable(struct spi_nor *nor)
-> >  }
-> >
-> >  /**
-> > + * issi_lock() - set BP[0123] write-protection.
-> > + * @nor: pointer to a 'struct spi_nor'.
-> > + * @ofs: offset from which to lock memory.
-> > + * @len: number of bytes to unlock.
-> > + *
-> > + * Lock a region of the flash.Implementation is based on stm_lock
-> > + * Supports the block protection bits BP{0,1,2,3} in the status register
-> > + *
-> > + * Return: 0 on success, -errno otherwise.
-> > + */
-> > +static int issi_lock(struct spi_nor *nor, loff_t ofs, uint64_t len)
-> > +{
-> > +     int status_old, status_new, blk_prot;
-> > +     u8 mask = SR_BP3 | SR_BP2 | SR_BP1 | SR_BP0;
-> > +     u8 shift = ffs(mask) - 1;
-> > +     u8 pow, ret, func_reg;
-> > +     bool use_top;
-> > +     loff_t lock_len;
-> > +
-> > +     status_old = read_sr(nor);
-> > +
-> > +     /* if status reg is Write protected don't update bit protection */
-> > +     if (status_old & SR_SRWD) {
-> > +             dev_err(nor->dev,
-> > +                     "SR is Write Protected,can't update BP bits...\n");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     ret = fl_select_zone(nor, ofs, len, status_old, &use_top, 1);
-> > +     if (!ret)
-> > +             /* Older protected blocks include the new requested block's */
-> > +             return 0;
-> > +     else if (ret < 0)
-> > +             return ret;
-> > +
-> > +     func_reg = read_fr(nor);
-> > +     /* lock_len: length of region that should end up locked */
-> > +     if (use_top) {
-> > +             /* Update Function register to use TOP area */
-> > +             if ((func_reg >> 1) & 0x1) {
-> > +                     /* Currently bootom selected change to top */
-> > +                     func_reg ^= FR_TB;
-> > +                     write_fr(nor, func_reg);
-> > +             }
->
-> IIUC, since this FR_TB OTP bit is initially 0 and now reads 1, implies
-> that OTP bit has already been programmed once. So is clearing the bit
-> possible?
->
-> I think this lock/unlock mechanism needs a bit more thought.
-> One solution would be to not modify OTP bit and return error in all
-> cases when locking a region requested by user is not possible (for a
-> default scheme).
+1. May the check =E2=80=9Cresource_type(res) =3D=3D IORESOURCE_MEM=E2=80=
+=9D be performed
+   in a local loop?
 
-I do agree here, writing the OTP will refrain the user from changing
-the lock direction
-once it's set. So better not update the OTP bits.
-I will redo the approach and submit a v6 for this.
-Thanks for your valuable feedback.
+2. How hot do you find the null pointer check for the device
+   input parameter of the function =E2=80=9Cdevm_ioremap_resource=E2=80=9D=
+?
 
-> Regards
-> Vignesh
->
+
+> Any actual measurements on how your patch improves that ?
+
+Not yet. - Which benchmarks would you trust here?
+
+
+> Look, I understand that you'd like to squeeze out maximum performance,
+
+I hope so.
+
+
+> but this has to be practically maintainable.
+
+This can be achieved if more contributors would find proposed
+adjustments helpful for another software transformation.
 
 Regards,
-Sagar Kadam
-
-> > +             lock_len = nor->mtd.size - ofs;
-> > +     } else {
-> > +
-> > +             /* Update Function register to use bottom area */
-> > +             if (!((func_reg >> 1) & 0x1)) {
-> > +                     /*Currently top is selected, change to bottom */
-> > +                     func_reg ^= FR_TB;
-> > +                     write_fr(nor, func_reg);
-> > +             }
-> > +             lock_len = ofs + len;
-> > +     }
-> > +
-> > +     pow = order_base_2(lock_len);
-> > +     blk_prot = mask & (((pow+1) & 0xf)<<shift);
-> > +     if (lock_len <= 0) {
-> > +             dev_err(nor->dev, "invalid Length to protect");
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     status_new = status_old | blk_prot;
-> > +     if (status_old == status_new)
-> > +             return 0;
-> > +
-> > +     return write_sr_and_check(nor, status_new, mask);
-> > +}
-> > +
-> > +/**
-> >   * issi_unlock() - clear BP[0123] write-protection.
-> >   * @nor: pointer to a 'struct spi_nor'.
-> >   * @ofs: offset from which to unlock memory.
-> > @@ -1879,7 +2067,7 @@ static int sr2_bit7_quad_enable(struct spi_nor *nor)
-> >                       SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ) },
-> >       { "is25wp256", INFO(0x9d7019, 0, 64 * 1024, 1024,
-> >                       SECT_4K | SPI_NOR_DUAL_READ | SPI_NOR_QUAD_READ |
-> > -                     SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK)
-> > +                     SPI_NOR_4B_OPCODES | SPI_NOR_HAS_LOCK | SPI_NOR_HAS_TB)
-> >       },
-> >
-> >       /* Macronix */
-> > @@ -4120,12 +4308,13 @@ int spi_nor_scan(struct spi_nor *nor, const char *name,
-> >           info->flags & SPI_NOR_HAS_LOCK) {
-> >               nor->flash_lock = stm_lock;
-> >               nor->flash_unlock = stm_unlock;
-> > -             nor->flash_is_locked = stm_is_locked;
-> > +             nor->flash_is_locked = fl_is_locked;
-> >       }
-> >
-> >       /* NOR protection support for ISSI chips */
-> >       if (JEDEC_MFR(info) == SNOR_MFR_ISSI ||
-> >           info->flags & SPI_NOR_HAS_LOCK) {
-> > +             nor->flash_lock = issi_lock;
-> >               nor->flash_unlock = issi_unlock;
-> >
-> >       }
-> > diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> > index 9a7d719..a15d012 100644
-> > --- a/include/linux/mtd/spi-nor.h
-> > +++ b/include/linux/mtd/spi-nor.h
-> > @@ -40,6 +40,8 @@
-> >  #define SPINOR_OP_RDSR               0x05    /* Read status register */
-> >  #define SPINOR_OP_WRSR               0x01    /* Write status register 1 byte */
-> >  #define SPINOR_OP_RDSR2              0x3f    /* Read status register 2 */
-> > +#define SPINOR_OP_RDFR               0x48    /* Read Function register */
-> > +#define SPINOR_OP_WRFR               0x42    /* Write Function register 1 byte */
-> >  #define SPINOR_OP_WRSR2              0x3e    /* Write status register 2 */
-> >  #define SPINOR_OP_READ               0x03    /* Read data bytes (low frequency) */
-> >  #define SPINOR_OP_READ_FAST  0x0b    /* Read data bytes (high frequency) */
-> > @@ -139,6 +141,9 @@
-> >  /* Enhanced Volatile Configuration Register bits */
-> >  #define EVCR_QUAD_EN_MICRON  BIT(7)  /* Micron Quad I/O */
-> >
-> > +/*Function register bit */
-> > +#define FR_TB                        BIT(1)  /*ISSI: Top/Bottom protect */
-> > +
-> >  /* Flag Status Register bits */
-> >  #define FSR_READY            BIT(7)  /* Device status, 0 = Busy, 1 = Ready */
-> >  #define FSR_E_ERR            BIT(5)  /* Erase operation status */
-> >
+Markus
