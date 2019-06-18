@@ -2,82 +2,91 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9A7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D1FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6AD20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC1EF20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:14:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NDMCCdze"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728719AbfFRXOK (ORCPT
+        id S1729093AbfFRXOq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 19:14:10 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:49068 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFRXOK (ORCPT
+        Tue, 18 Jun 2019 19:14:46 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43745 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFRXOp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 19:14:10 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hdNIW-0008CH-Mg; Wed, 19 Jun 2019 01:13:52 +0200
-Date:   Wed, 19 Jun 2019 01:13:45 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
-cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
-        Stephane Eranian <eranian@google.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Tony Luck <tony.luck@intel.com>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: Re: [RFC PATCH v4 03/21] x86/hpet: Calculate ticks-per-second in a
- separate function
-In-Reply-To: <20190618224800.GD30488@ranerica-svr.sc.intel.com>
-Message-ID: <alpine.DEB.2.21.1906190111510.1765@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-4-git-send-email-ricardo.neri-calderon@linux.intel.com> <alpine.DEB.2.21.1906141749330.1722@nanos.tec.linutronix.de>
- <20190618224800.GD30488@ranerica-svr.sc.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 18 Jun 2019 19:14:45 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so9726907qka.10;
+        Tue, 18 Jun 2019 16:14:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nUJyTOBr07ElnYs2HQoC3oZAyTFmNy4t0+c6Ubqs298=;
+        b=NDMCCdze0gFOkQ60x6zFr65ftnyxHP33PrJH+KcRfyDqDK1NhEtmoPb8lJuutFUYvl
+         JbLtXi5+ff7ep3ucukea2w82+34X6EEbzww/SshiNmQFc3SwPMBkG1kml0752KTYpVM1
+         qXjD4jO1e9x/Il3JHMAtXmnd3xYsXdegCCT0ffkegX5FQx23pdVcyJs6SRBe11T4MS95
+         mCprD6JYyYjATvrnOm8/yiUpqvMlBgq9vikdc9Aff/0ENcD/gcFiq+0Q0eTcV8htPew7
+         jqPSeyvnFYKc7+fSBzUXxsnWnZc/lnZxbDMfgs58tfo98L46ZDVeYrJPCBMbKMixmeQq
+         DpiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nUJyTOBr07ElnYs2HQoC3oZAyTFmNy4t0+c6Ubqs298=;
+        b=TO1J29ckOrPxbFmxjTQB1768PbVKp0kLFL2KEZDKVBBtJ2y64QxVLSvDdludhlLMJx
+         1CbVk/YWY4LQr83vTcomsw6K0kqVfp+kyT7NKXwu7x0+vxYwvFxnw0zVmbOv8hOaJWMo
+         hOzxHCCH9J9+L3oVGbdFOurECDbKc75D/tFLj24ym14Wirki42OOH9ZEtlTr7JrG4W9H
+         apM+IXxWSH4ivqeH37i8P3kKXISJ8FOzF4P4fusb7jh9yPJZMgAX8YjiDSBHCguyWjFx
+         yeoxrPH5L4ClqhkqoGGxDlp2J81wrXE4G6mnJVOBfaivQzVEj1uivX7h7gBGnBKdemNA
+         UXHw==
+X-Gm-Message-State: APjAAAVTkZ0w4ubqzXbwpGxIr+5DK3AyYLSfJL7Dg5zrwxVAFEGk1mV/
+        3gI5pnFuyA2uW6rHB1H8Y28BiuYVe9c4ALLs/rQ=
+X-Google-Smtp-Source: APXvYqz14D0hxIO4S8XyjBXRe9lvqOakozyAV4Q4rcpuW9Rv3Jp7+06zY+zcOZuTR5LJMHuEJYxfthyS7uEuA7kNlGw=
+X-Received: by 2002:a05:620a:147:: with SMTP id e7mr95845692qkn.247.1560899684493;
+ Tue, 18 Jun 2019 16:14:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190618181338.24145-1-mrostecki@opensuse.org>
+In-Reply-To: <20190618181338.24145-1-mrostecki@opensuse.org>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Tue, 18 Jun 2019 16:14:33 -0700
+Message-ID: <CAEf4BzYbo2_mTUzBRETecvuofwbDTX-48OEB96OzRMDghrA_6g@mail.gmail.com>
+Subject: Re: [PATCH bpf-next] samples: bpf: Remove bpf_debug macro in favor of bpf_printk
+To:     Michal Rostecki <mrostecki@opensuse.org>
+Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-rdma@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019, Ricardo Neri wrote:
-> On Fri, Jun 14, 2019 at 05:54:05PM +0200, Thomas Gleixner wrote:
-> > 
-> > So we already have ticks per second, aka frequency, right? So why do we
-> > need yet another function instead of using the value which is computed
-> > once? The frequency of the HPET channels has to be identical no matter
-> > what. If it's not HPET is broken beyond repair.
-> 
-> I don't think it needs to be recomputed again. I missed the fact that
-> the frequency was already computed here.
-> 
-> Also, the hpet char driver has its own frequency computation. Perhaps it
-> could also obtain it from here, right?
+On Tue, Jun 18, 2019 at 11:13 AM Michal Rostecki <mrostecki@opensuse.org> wrote:
+>
+> ibumad example was implementing the bpf_debug macro which is exactly the
+> same as the bpf_printk macro available in bpf_helpers.h. This change
+> makes use of bpf_printk instead of bpf_debug.
+>
+> Signed-off-by: Michal Rostecki <mrostecki@opensuse.org>
+> ---
 
-No. It's separate on purpose. Hint: IA64, aka Itanic
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Thanks,
+>  samples/bpf/ibumad_kern.c | 18 ++++++------------
+>  1 file changed, 6 insertions(+), 12 deletions(-)
+>
 
-	tglx
+<snip>
