@@ -2,105 +2,90 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1A1BC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C0FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB906213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C88CC213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:12:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YTSpVpVP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="RzFJ/8d2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729389AbfFRPJP (ORCPT
+        id S1729483AbfFRPME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:09:15 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42341 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727097AbfFRPJO (ORCPT
+        Tue, 18 Jun 2019 11:12:04 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46183 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfFRPMD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:09:14 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y13so9557981lfh.9;
-        Tue, 18 Jun 2019 08:09:13 -0700 (PDT)
+        Tue, 18 Jun 2019 11:12:03 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so14380662wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 08:12:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E3z4ooMqqLKD/hzgGGQWs+ev7PXuSayk0SXXm5Gk74A=;
-        b=YTSpVpVP1wJifrXotuGKFrWnUobbeYF1bpGOYnUcWWtAlAkm2yyUzaOJzEYmwd1Fvx
-         XdYJgqrEkXfQ8QzUmfgvcBHfLVvr0/pCQtDtxWgxSqN2McdLMMNETqTqJTB5blwFdYJg
-         ZLCvexoMxK0ZpFP7cM9LySFPJNeEmNXbObOtGxkKTWbiwBJDOAnGC1VA80A9Wa2sQDf1
-         sQrNGbuvvMWEJDsV84Q1W/FMyzLrvPiweWXCiJ6h+5yam95dDNslkMn13w5tcTz5tqYY
-         XUkrUaIRCu8bA9lgl9/qDkIBrNobZCY2R66bHhBKiiFRZke5qijXoZGxYiwD8fr8tPrV
-         1icg==
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=XMfa9NJpDXh8dDL9yFLkdc/RmjSvoaHVSjRiYPgy7AU=;
+        b=RzFJ/8d2DQVpdpSN66TgWH5FYsc9Os+fcsszwdEdRiHoXMgA1PIV3bLurXKkC7Yfm2
+         WouFAm13XKYXcw2na3YdFMwyVTomRiE8GcJt7T0UkpCALOrQqSInLzUwFkKfsM2JiAKW
+         axUHeuXw1lVc5yE9i0Nno/wdZI8oyrbEgvtmwDzTRYtZcIp30ff4W0yvUt2j7xoA/gTZ
+         wyC+bN6bQhAd750oPFey+eCSuBBvM3yTCzeAeBlUC83k4E7dzSdV5lcDYAFUBwa1CSOt
+         KlTXHV8Lm/JLy7emfb3OUwFyo8Y3WlHJhQTy+jrci8gAf78nCdsOuN2ZG2JIv2gv7chT
+         pr/g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E3z4ooMqqLKD/hzgGGQWs+ev7PXuSayk0SXXm5Gk74A=;
-        b=FzAVB6HQYkUYD0HvRWoj5J8yz7Ot33wMD5d+hb+JtMcOMYi/ZYCdI1pV8Vbls8/Fg+
-         ZA5THXSWHAa3XT6ZjVW9jbIlTg+wGyFdLHYnSrbqAXUTJhGCEKZbirbL+semUFmL5Vbc
-         d83qzaNMFLQ0jxdn2qyoC2eDrVdv7TnRl7WYktBsDR4daUFEBggAFoGaRc2uQsnM22st
-         xHgEN0SGSkOUu7tq/KzKDSscrSmSssiUJVqC2dIKOepf5ek0Cao3HYfLYeNj7Fs+zOog
-         nq8fbQHxx9w/nYP3jfT7LDFYqleBsJhgOO9x+mst4tyt/rI7rVwHbrweAeB7dBRD7oVO
-         ltNg==
-X-Gm-Message-State: APjAAAXRk/3MKpLe3wiIkFuV6Qq3rMBZGjg2bYdC9j6G9KwyDyBah8KQ
-        G4Ip/mMFV33cabn+THLL91MT11MWeF35M+LNdtM=
-X-Google-Smtp-Source: APXvYqwxRVNdPswQrYbmP28S6ZDttANal0lK2TpOrbDM3rh2zMCAKn/QlFl23W8/UMawrYywzOnHNSt2tnbomQmGAOU=
-X-Received: by 2002:ac2:5a5e:: with SMTP id r30mr16092246lfn.12.1560870552439;
- Tue, 18 Jun 2019 08:09:12 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=XMfa9NJpDXh8dDL9yFLkdc/RmjSvoaHVSjRiYPgy7AU=;
+        b=uDUKNPPu5JymNIrhzN6zPf6u1GkwPNOXxJtxN9Wq5kt2UNbBz0i9frce5Yp2LgtqqN
+         cyovvHTfUCfTHasDytzmlcOpcNcksFQjWMI1K/RQaHmjp5L3fTo1dbEbmewgdLHuKZA+
+         u5vpRf8wP+Te4gF+op1xC5Jz+5A9pJIZneOlmCd4yA5/GHPdh21Y4sqTMzfNPTA4RzaL
+         zIYF+MjYeWZd+ag0sUQH3qvDU+HBhaPvfsw1q3Lius40MptWLjWdB2sAQPHWvpazHsw/
+         gpD2iV8WNIrO+ZrO+29M0DRLSnnBzP5nBVUoLDuJokw5ol5cGe9OOqjXf0Fx2BxrEzFR
+         kwmQ==
+X-Gm-Message-State: APjAAAVNvhjQfWEywyYJTtRHv3y6q3ipGpmyaBW6tvPTE3cW4rphzcgP
+        ghBOaNo8BeUTRmcIMUYEENPPJA==
+X-Google-Smtp-Source: APXvYqyrqTtNMWynSOgiXHoVZjhnncDqEEw1XV2KrhXPMaVDno3t7MXb5Vtc1ZRd/MUwl+UmMXGINA==
+X-Received: by 2002:a5d:488b:: with SMTP id g11mr5139572wrq.72.1560870722429;
+        Tue, 18 Jun 2019 08:12:02 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id x83sm2964625wmb.42.2019.06.18.08.12.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 08:12:01 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+ <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+ <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
+ <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <544851f6-58b8-2506-01ce-5c4d1f93fb3c@linaro.org>
+Date:   Tue, 18 Jun 2019 16:12:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
- <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com> <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
-In-Reply-To: <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Tue, 18 Jun 2019 12:09:23 -0300
-Message-ID: <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-To:     Pintu Agarwal <pintu.ping@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:46 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
 
-> Thank you so much for your reply.
-> Yes, I already checked the latest mainline kernel changes until 5.2-**.
-> I see that there are many cleanup related changes, but still I see
-> that suspend/resume functions are missing in dw_hdmi-imx driver.
 
-Please see this recently submitted patch:
-https://lore.kernel.org/patchwork/patch/1084057/
+On 18/06/2019 15:56, Sricharan R wrote:
+>    So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
+>    That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
+>    when the Macros does a size - 1
+Isn't that incorrect to do that, pretending to have more descriptors 
+than we actually have?
 
-> So, I am trying to implement myself.
-> Also, I see that suspend/resume is missing even in :
-> drivers/gpu/drm/imx/ipuv3-crtc.c
-> I am trying this also (not sure if we need this as well).
->
-> Can you point out some specific patches which can be helpful ?
->
-> Currently, what I observed is that hdmi bind() functions are not getting called.
-> Not sure who is responsible for triggering this bind function.
-> Or, irq remains disabled after resume, and we need to enable it back
-> again (but how ?)
-> Or, we may need to enable vblank events and thus irqs can be enabled.
->
-> So, I am exploring many possibilities.
-> If you have any suggestions please let me know.
-
-The suggestion I have is to try to use latest mainline kernel. If you
-see any issues with it, please report.
-
-The combination you mentioned in a prior thread (kernel 3.10 +
-backported drm patches 4.9) is not really something the community can
-help you.
+--srini
