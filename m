@@ -2,112 +2,94 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.0 required=3.0 tests=DATE_IN_PAST_06_12,
-	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39832C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:28:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD413C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:31:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8C8206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:28:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560889691;
-	bh=8AsfAVyMpUySxxE6es1/fgTRGbzK+dTQ5xCz94DqBW0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dSl+jWJwTZayo7fcEPQ4EQMcTsaqAn/eHelfgZZtSNJElnUHotmn4moJutn0Qpboy
-	 yH5/SbaYw6Z0CH52J3UM2UJrOw4rY9rkDiVwaT8QJS31qi2bGH1x/WtVuGEz8rCp2N
-	 C9W+8Ro4Fv/KEmoasYh5FpIkfE4HEP3YjdXGBIcg=
+	by mail.kernel.org (Postfix) with ESMTP id 8E4232182B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:31:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730666AbfFRU2J (ORCPT
+        id S1730589AbfFRUbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:28:09 -0400
-Received: from casper.infradead.org ([85.118.1.10]:52652 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbfFRU2J (ORCPT
+        Tue, 18 Jun 2019 16:31:48 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:48706 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729961AbfFRUbs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:28:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/yuq+528Ge2GyeWg6aQYCOiRFdbu/e3xfN3FdxpcEzY=; b=aB7KTV5ZzmCoj1Qxm3dVaqBytG
-        6+FKmt7R881qAHMbcleBouaKC3kmFz2LA9Gvif95NyyHzZYpT55h4RDehfIKQQY69CVa8wVC9pTSV
-        lM5saykAhFfav4/jsmfkmbjCMOcfAFWTC4XcOhZRfq2M8BexwvZFvq+n1RO+Q6bUZMKIXOAKqgS/z
-        Z0xhg86h0mjM6gWv9dljQS4maac4BmrXdCgsk5P5Rrbmx/H/nT9JqF0GEKhiNMUUO+RcYwIj4hQKr
-        S+oRAMGCViKI189iZwgPRWHso0mZugDsGCk+ehRnbRbif4s1O9+a3pZMmiNVfSY4BbgNtTHNIW9P3
-        VhKuGzng==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdKi3-0001wm-Jm; Tue, 18 Jun 2019 20:28:04 +0000
-Date:   Tue, 18 Jun 2019 11:14:47 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org
-Subject: Re: [PATCH v4 00/28] Convert files to ReST - part 1
-Message-ID: <20190618111122.64cdeb59@coco.lan>
-In-Reply-To: <20190614143640.40ee353a@lwn.net>
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
-        <20190614143640.40ee353a@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 18 Jun 2019 16:31:48 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hdKld-0002Cf-QM; Tue, 18 Jun 2019 22:31:45 +0200
+Date:   Tue, 18 Jun 2019 22:31:40 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+cc:     x86@kernel.org, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH] x86/microcode: Fix the microcode load on CPU hotplug for
+ real
+Message-ID: <alpine.DEB.2.21.1906182228350.1766@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, 14 Jun 2019 14:36:40 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+A recent change moved the microcode loader hotplug callback into the early
+startup phase, which is running with interrupts disabled. It missed that
+the callbacks invoke sysfs functions which might sleep causing nice 'might
+sleep' splats with proper debugging enabled.
 
-> On Wed, 12 Jun 2019 14:52:36 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
-> 
-> > This is mostly a rebase of the /33 series v3 I sent, on the top of the latest
-> > linux-next  (next-20190612).
-> > 
-> > Changes from v3:
-> > 
-> > - dropped cpufreq conversion - documents are too outdated;
-> > - infiniband patch is not here anymore - as it should be merged via RDMA;
-> > - s390 patches were already merged;
-> > - Dropped Geert as Maintainer from fb/framebuffer.rst, as per his request;
-> > - Did a minor editorial change at popwerpc/cxl.rst per Andrew Donellan
-> >   request;
-> > - Added acks/reviews;
-> > - trivial rebase fixups.  
-> 
-> So I had to pull docs-next forward to -rc4, but then I was able to apply
-> this set except for parts 5, 6, 14, 18, and 19.  
+Split the callbacks and only load the microcode in the early startup phase
+and move the sysfs handling back into the later threaded and preemptible
+bringup phase where it was before.
 
-Patch 5 went via Cgroups tree;
-Patch 18 went via power tree;
-Patch 6 is obsolete, as the cgroups-v1 CBQ chapter was removed;
+Fixes: 78f4e932f776 ("x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback")
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: stable@vger.kernel.org
+---
+ arch/x86/kernel/cpu/microcode/core.c |   15 ++++++++++-----
+ 1 file changed, 10 insertions(+), 5 deletions(-)
 
-So, what's left from this series are patches 14 and 19.
-
-I have a rebased version of them on the top of linux-next
-on my working tree. Perhaps we should try to push those two late
-during the merge window.
-
-> Some progress made, but
-> this is somewhat painful work...
-
-Yeah, a change like that is not easy.
-
-Thanks,
-Mauro
+--- a/arch/x86/kernel/cpu/microcode/core.c
++++ b/arch/x86/kernel/cpu/microcode/core.c
+@@ -789,13 +789,16 @@ static struct syscore_ops mc_syscore_ops
+ 	.resume			= mc_bp_resume,
+ };
+ 
+-static int mc_cpu_online(unsigned int cpu)
++static int mc_cpu_starting(unsigned int cpu)
+ {
+-	struct device *dev;
+-
+-	dev = get_cpu_device(cpu);
+ 	microcode_update_cpu(cpu);
+ 	pr_debug("CPU%d added\n", cpu);
++	return 0;
++}
++
++static int mc_cpu_online(unsigned int cpu)
++{
++	struct device *dev = get_cpu_device(cpu);
+ 
+ 	if (sysfs_create_group(&dev->kobj, &mc_attr_group))
+ 		pr_err("Failed to create group for CPU%d\n", cpu);
+@@ -872,7 +875,9 @@ int __init microcode_init(void)
+ 		goto out_ucode_group;
+ 
+ 	register_syscore_ops(&mc_syscore_ops);
+-	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:online",
++	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:starting",
++				  mc_cpu_starting, NULL);
++	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/microcode:online",
+ 				  mc_cpu_online, mc_cpu_down_prep);
+ 
+ 	pr_info("Microcode Update Driver: v%s.", DRIVER_VERSION);
