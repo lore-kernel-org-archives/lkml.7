@@ -2,227 +2,157 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF078C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:45:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66E8CC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:46:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAF782084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:45:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B29F21655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:46:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="MfDgk6et"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="c2n0y9rs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728504AbfFRHpS (ORCPT
+        id S1726685AbfFRHqi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:45:18 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:42600 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725963AbfFRHpS (ORCPT
+        Tue, 18 Jun 2019 03:46:38 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:19625 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRHqi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:45:18 -0400
-Received: by mail-io1-f66.google.com with SMTP id u19so27504733ior.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:45:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dQqEptmFMn730dBdlfdZE5hfmCUjibyWj8InCcloaNs=;
-        b=MfDgk6etw4chByCnzSmLfZ7llzAeulK2GpSmW+7DA2IBZjUuWL2ufVTiTaV7NYpOd+
-         jMxvYFrND5tmQ3xXeCWVUhXj025QeiE51+OQzoSc1p1OkNqarPpM4AOdbRiqF10PB6ff
-         8VzpF3OKMVy6H/S/JeuqRH4f5bgYOY7lucqiQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dQqEptmFMn730dBdlfdZE5hfmCUjibyWj8InCcloaNs=;
-        b=NbmzwUOgSY2UU+BLxx0VbKc3xfCUsDIXQlwfXPXadaMZA4rH7pQg71lRJLAGVsgJ1v
-         9w3gCKFBcdXRe0Ddbjj8gDQSc1ZGB7twbLYGbct+I47jAU9Z5N9XinX44DRsEulWBvIA
-         Y0nEMKwRP0jhedeVWRklLxfl77CSeiZQZmDRvOpAof2mlNU2HuSYjmD8GEhfG6C8rOgm
-         /eVm1HKwBHnlJqNNJNuY1vE6gqeEv7dxEYFkM2BS2Wgf8Ky77CUjWeljVSznF+6VoNu4
-         L/yNsCwIhZqr7vmfgpl280Cunzmu0oJIx7A28Gij56et5KTQG8GWbZ8qiQcxWrG6jYq2
-         EVBA==
-X-Gm-Message-State: APjAAAU6zuFbeHKYYP1NhCFpzyRkYHsX3aF7qYF8dcg5UVoC52seSm/g
-        iWYtBK6rSyJ1hZdfhaxACHH7VK2yNfTnIw6E0q3DWg==
-X-Google-Smtp-Source: APXvYqyvktP/j2ktRs2L7A7DqzWRVBY7ntZAc1VkFuycTLk+XHuqq0XrUBKdNC6vWDRQ6yfhZtCyg1RT6Svxk9v73DA=
-X-Received: by 2002:a02:bb08:: with SMTP id y8mr29064230jan.51.1560843916539;
- Tue, 18 Jun 2019 00:45:16 -0700 (PDT)
+        Tue, 18 Jun 2019 03:46:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0896dc0000>; Tue, 18 Jun 2019 00:46:36 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 00:46:35 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 00:46:35 -0700
+Received: from HQMAIL104.nvidia.com (172.18.146.11) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 07:46:35 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 18 Jun 2019 07:46:35 +0000
+Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.217]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d0896d90001>; Tue, 18 Jun 2019 00:46:35 -0700
+From:   Sowjanya Komatineni <skomatineni@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <tglx@linutronix.de>, <jason@lakedaemon.net>,
+        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
+        <stefan@agner.ch>, <mark.rutland@arm.com>
+CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
+        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
+        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
+        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
+        <digetx@gmail.com>, <devicetree@vger.kernel.org>
+Subject: [PATCH V3 00/17] SC7 entry and exit support for Tegra210
+Date:   Tue, 18 Jun 2019 00:46:14 -0700
+Message-ID: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-References: <20190614164324.9427-1-jagan@amarulasolutions.com>
- <20190614164324.9427-6-jagan@amarulasolutions.com> <CAGb2v669MprYgy2wc_a7Kz8VpzzNGZxDxsj0z_Ujx5bV25+AWQ@mail.gmail.com>
- <CAMty3ZDRYBPKrGQxAZoB+trFiDLJ5BxDfNUOnPzgd+UWcpwCoQ@mail.gmail.com> <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
-In-Reply-To: <CAGb2v67uNhie9mb2-m04FGEi4Z7q7TYChOogGj2HgmSmEo4Arg@mail.gmail.com>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 18 Jun 2019 13:15:05 +0530
-Message-ID: <CAMty3ZBUrGEi+e62sFe7GkXinK3q076sGLwpEVz67qeoV+1ZeA@mail.gmail.com>
-Subject: Re: [linux-sunxi] [PATCH v2 5/9] drm/sun4i: tcon_top: Register clock
- gates in probe
-To:     Chen-Yu Tsai <wens@csie.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560843996; bh=MwvRLxgw/Ex+WgwWlRPTWg792Ydrvex5zgIQoYyWuCY=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=c2n0y9rs3Lp6RAkxbHP0NVsS9Afbf0+QNHDjBb03WEfZzNWMX3bKkUcBDfVVpRgFp
+         N2bSO+vMXIZb4dbTW9InLYUJ/TbzuWqfGzkd/+35dyzTqKBj+ZzirF5Xql52PBwsee
+         SwRczKxMd/gPnI+yYP8ciwJ0EZNt1fcAdlPJ1e6MfrrxzH0IRN6Ow+JjCfUjZwYoSF
+         gHOWe3WxdJjL+SkdZ7ozWLr7HZhYnq47X7+YmTaCkbhjsX7G14j2T4g6gUnL4uSxwa
+         zjJuOeehwbpW4cfYUlM7DZRavE1oT5GGWN8ZGs+PvPKlBLYXmHqToryZUZMrDViuzZ
+         XzmzOjltYAEDw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:49 PM Chen-Yu Tsai <wens@csie.org> wrote:
->
-> On Mon, Jun 17, 2019 at 6:30 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > On Sun, Jun 16, 2019 at 11:01 AM Chen-Yu Tsai <wens@csie.org> wrote:
-> > >
-> > > On Sat, Jun 15, 2019 at 12:44 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > > >
-> > > > TCON TOP have clock gates for TV0, TV1, dsi and right
-> > > > now these are register during bind call.
-> > > >
-> > > > Of which, dsi clock gate would required during DPHY probe
-> > > > but same can miss to get since tcon top is not bound at
-> > > > that time.
-> > > >
-> > > > To solve, this circular dependency move the clock gate
-> > > > registration from bind to probe so-that DPHY can get the
-> > > > dsi gate clock on time.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  drivers/gpu/drm/sun4i/sun8i_tcon_top.c | 94 ++++++++++++++------------
-> > > >  1 file changed, 49 insertions(+), 45 deletions(-)
-> > > >
-> > > > diff --git a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > index 465e9b0cdfee..a8978b3fe851 100644
-> > > > --- a/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > +++ b/drivers/gpu/drm/sun4i/sun8i_tcon_top.c
-> > > > @@ -124,7 +124,53 @@ static struct clk_hw *sun8i_tcon_top_register_gate(struct device *dev,
-> > > >  static int sun8i_tcon_top_bind(struct device *dev, struct device *master,
-> > > >                                void *data)
-> > > >  {
-> > > > -       struct platform_device *pdev = to_platform_device(dev);
-> > > > +       struct sun8i_tcon_top *tcon_top = dev_get_drvdata(dev);
-> > > > +       int ret;
-> > > > +
-> > > > +       ret = reset_control_deassert(tcon_top->rst);
-> > > > +       if (ret) {
-> > > > +               dev_err(dev, "Could not deassert ctrl reset control\n");
-> > > > +               return ret;
-> > > > +       }
-> > > > +
-> > > > +       ret = clk_prepare_enable(tcon_top->bus);
-> > > > +       if (ret) {
-> > > > +               dev_err(dev, "Could not enable bus clock\n");
-> > > > +               goto err_assert_reset;
-> > > > +       }
-> > >
-> > > You have to de-assert the reset control and enable the clock before the
-> > > clocks it provides are registered. Otherwise a consumer may come in and
-> > > ask for the provided clock to be enabled, but since the TCON TOP's own
-> > > reset and clock are still disabled, you can't actually access the registers
-> > > that controls the provided clock.
-> >
-> > These rst and bus are common reset and bus clocks not tcon top clocks
-> > that are trying to register here. ie reason I have not moved it in
-> > top.
->
-> And you're sure that toggling bits in the TCON TOP block doesn't require
-> the reset to be de-asserted and the bus clock enabled?
->
-> Somehow I doubt that.
->
-> Once the driver register the clocks it provides, they absolutely must work.
-> They can't only work after the bind phase when the reset gets de-asserted
-> and the bus clock enabled. Or you should provide proper error reporting
-> in the clock ops. I doubt you want to go that way either.
+This patch series includes Tegra210 deepsleep support with RTC alarm
+wake event.
 
-Why would they won't work after bind phase? unlike tcon top gates,
-these reset, and bus are common like  what we have in other DE block
-so enable them in bind won't be an issue as per as I understand. let
-me know if you want me to check in other directions.
+This series also includes save and restore of PLLs, clocks, OSC contexts
+for deepsleep exit to normal operation.
 
-Log:
-[    1.381410] sun6i-mipi-dsi 1ca0000.dsi: Attached panel s070wv20-ct16-icn62
-[    1.398405] sun4i-drm display-engine: bound 1100000.mixer (ops 0xc074ce64)
-[    1.407134] sun4i-drm display-engine: bound 1200000.mixer (ops 0xc074ce64)
-[    1.414043] sun4i-drm display-engine: bound 1c70000.tcon-top (ops 0xc0750e80)
-[    1.421407] sun4i_dclk_recalc_rate: val = 1, rate = 297000000
-[    1.427358] sun4i-drm display-engine: No panel or bridge found...
-RGB output disabled
-[    1.435217] sun4i-drm display-engine: bound 1c71000.lcd-controller
-(ops 0xc0749594)
-[    1.442891] 0.0 drm_connector_init
-[    1.446294] 0. -1066106880-1-0 (null)
-[    1.449965] 0.1 drm_connector_init
-[    1.453368] 0.2 drm_connector_init
-[    1.456768] 1. drm_connector_init
-[    1.460094] 2. drm_connector_init
-[    1.463413] drm_connector_init: connector name = DSI-1
-[    1.468560] sun4i-drm display-engine: bound 1ca0000.dsi (ops 0xc074c0e4)
-[    1.475272] [drm] Supports vblank timestamp caching Rev 2 (21.10.2013).
-[    1.481892] [drm] No driver support for vblank timestamp query.
-[    1.488240] [drm] Initialized sun4i-drm 1.0.0 20150629 for
-display-engine on minor 0
-[    1.497996] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
-[    1.498106] ideal = 1800000, rounded = 180000000
-[    1.498111] sun4i_dclk_round_rate: div = 6 rate = 29700000
-[    1.498116] sun4i_dclk_round_rate: min_div = 6 max_div = 6, rate = 30000000
-[    1.498154] ideal = 1800000, rounded = 180000000
-[    1.498158] sun4i_dclk_round_rate: div = 6 rate = 29700000
-[    1.498217] sun4i_dclk_recalc_rate: val = 1, rate = 178200000
-[    1.498251] rate = 178200000
-[    1.498253] parent_rate = 297000000
-[    1.498256] reg = 0x80c00000
-[    1.498259] _nkm.n = 3, nkm->n.offset = 0x1, nkm->n.shift = 8
-[    1.498262] _nkm.k = 2, nkm->k.offset = 0x1, nkm->k.shift = 4
-[    1.498265] _nkm.m = 10, nkm->m.offset = 0x1, nkm->m.shift = 0
-[    1.499594] sun4i_dclk_set_rate div 6
-[    1.499603] sun4i_dclk_recalc_rate: val = 6, rate = 29700000
-[    1.499680] sun6i_dsi_get_video_start_delay: delay = 513
-[    1.499687] sun6i_dsi_setup_inst_loop: delay = 49
-[    1.499706] hsa = 134, hbp = 114, hfp = 114, hblk = 2630, vblk = 0
-[    1.509103] mmc0: host does not support reading read-only switch,
-assuming write-enable
-[    1.512693] mmc0: new high speed SDHC card at address 4001
-[    1.513723] mmcblk0: mmc0:4001 R04GS 3.71 GiB
-[    1.515577]  mmcblk0: p1 p2
-[    1.658838] mmc2: new DDR MMC card at address 0001
-[    1.659934] mmcblk2: mmc2:0001 8WPD3R 7.28 GiB
-[    1.660657] mmcblk2boot0: mmc2:0001 8WPD3R partition 1 4.00 MiB
-[    1.661387] mmcblk2boot1: mmc2:0001 8WPD3R partition 2 4.00 MiB
-[    1.819586] TYPE#0x23, BYTE0#0x7a00, BYTE1#0xc10000
-[    1.849570] TYPE#0x23, BYTE0#0x2000, BYTE1#0x200000
-[    1.879569] TYPE#0x23, BYTE0#0x2100, BYTE1#0xe00000
-[    1.909580] TYPE#0x23, BYTE0#0x2200, BYTE1#0x130000
-[    1.939569] TYPE#0x23, BYTE0#0x2300, BYTE1#0x280000
-[    1.969569] TYPE#0x23, BYTE0#0x2400, BYTE1#0x300000
-[    1.999569] TYPE#0x23, BYTE0#0x2500, BYTE1#0x280000
-[    2.029569] TYPE#0x23, BYTE0#0x2600, BYTE1#0x0
-[    2.059569] TYPE#0x23, BYTE0#0x2700, BYTE1#0xd0000
-[    2.089598] TYPE#0x23, BYTE0#0x2800, BYTE1#0x30000
-[    2.119579] TYPE#0x23, BYTE0#0x2900, BYTE1#0x1d0000
-[    2.149569] TYPE#0x23, BYTE0#0x3400, BYTE1#0x800000
-[    2.179569] TYPE#0x23, BYTE0#0x3600, BYTE1#0x280000
-[    2.209569] TYPE#0x23, BYTE0#0xb500, BYTE1#0xa00000
-[    2.239569] TYPE#0x23, BYTE0#0x5c00, BYTE1#0xff0000
-[    2.269569] TYPE#0x23, BYTE0#0x2a00, BYTE1#0x10000
-[    2.299569] TYPE#0x23, BYTE0#0x5600, BYTE1#0x920000
-[    2.329578] TYPE#0x23, BYTE0#0x6b00, BYTE1#0x710000
-[    2.359569] TYPE#0x23, BYTE0#0x6900, BYTE1#0x2b0000
-[    2.389569] TYPE#0x23, BYTE0#0x1000, BYTE1#0x400000
-[    2.419569] TYPE#0x23, BYTE0#0x1100, BYTE1#0x980000
-[    2.449569] TYPE#0x23, BYTE0#0xb600, BYTE1#0x200000
-[    2.479569] TYPE#0x23, BYTE0#0x5100, BYTE1#0x200000
-[    2.509569] TYPE#0x23, BYTE0#0x900, BYTE1#0x100000
-[    2.679570] TYPE#0x5, BYTE0#0x2900, BYTE1#0x940000
-[    2.767213] Console: switching to colour frame buffer device 100x30
-[    3.144604] sun4i-drm display-engine: fb0: sun4i-drmdrmfb frame buffer device
+This patch series doesn't support 100% suspend/resume to allow fully
+functional state upon resume and we are working on some more drivers suspend
+and resume implementations.
+
+[V3]: Changes between V2 & V3 are
+	- V2 feedback fixes
+	- GPIO restore should happen prior to Pinctrl restore to prevent
+	  glitch on GPIO lines. So using resume_noirq for gpio tegra to allow
+	  gpio resume prior to pinctrl resume.
+	- Implemented save_context and restore_context callbacks for clock
+	  plls, pll outs and dividers in corresponding drivers.
+	  Note: Peripheral clocks and clock enable and reset need to be in
+	  Tegra210 clock suspend/resume as they need to be in proper sequence
+	  w.r.t DFLL resume for restoring CPU clock.
+	- Removed gpio-tegra changes for hierarchical support to have PMC as
+	  parent to GPIOs for GPIO wake event support. Thierry is working on
+	  gpiolib for some cleanup before adding hierarchical support. So
+	  holding on to GPIO wake support for now.
+
+[V2] : V1 feedback fixes
+	Patch 0002: This version still using syscore. Thierry suggest not to
+	use syscore and waiting on suggestion from Linux Walleij for any better
+	way of storing current state of pins before suspend entry and restoring
+	them on resume at very early stage. So left this the same way as V1 and
+	will address once I get more feedback on this.
+	Also need to findout and implement proper way of forcing resume order
+	between pinctrl and gpio driver.
+
+[V1]:	Tegra210 SC7 entry and exit thru RTC wake and Power button GPIO wake
+	using hierarchical IRQ with PMC as parent to GPIO.
+
+
+Sowjanya Komatineni (17):
+  irqchip: tegra: do not disable COP IRQ during suspend
+  pinctrl: tegra: add suspend and resume support
+  gpio: tegra: use resume_noirq for tegra gpio resume
+  clk: tegra: save and restore divider rate
+  clk: tegra: pllout: save and restore pllout context
+  clk: tegra: pll: save and restore pll context
+  clk: tegra: save and restore CPU and System clocks context
+  clk: tegra: add support for peripheral clock suspend and resume
+  clk: tegra: support for saving and restoring OSC clock context
+  clk: tegra: add suspend resume support for DFLL
+  clk: tegra210: support for Tegra210 clocks suspend and resume
+  soc/tegra: pmc: allow support for more tegra wake
+  soc/tegra: pmc: add pmc wake support for tegra210
+  arm64: tegra: enable wake from deep sleep on RTC alarm.
+  soc/tegra: pmc: configure core power request polarity
+  soc/tegra: pmc: configure deep sleep control settings
+  arm64: dts: tegra210-p2180: Jetson TX1 SC7 timings
+
+ arch/arm64/boot/dts/nvidia/tegra210-p2180.dtsi |   7 +
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi       |   5 +-
+ drivers/clk/tegra/clk-dfll.c                   |  78 +++++++++
+ drivers/clk/tegra/clk-dfll.h                   |   2 +
+ drivers/clk/tegra/clk-divider.c                |  23 +++
+ drivers/clk/tegra/clk-pll-out.c                |  28 ++++
+ drivers/clk/tegra/clk-pll.c                    | 115 +++++++++----
+ drivers/clk/tegra/clk-tegra-fixed.c            |  14 ++
+ drivers/clk/tegra/clk-tegra-super-gen4.c       |   4 -
+ drivers/clk/tegra/clk-tegra210.c               | 218 ++++++++++++++++++++++++-
+ drivers/clk/tegra/clk.c                        | 150 ++++++++++++++++-
+ drivers/clk/tegra/clk.h                        |  29 +++-
+ drivers/gpio/gpio-tegra.c                      |  17 +-
+ drivers/irqchip/irq-tegra.c                    |  21 ++-
+ drivers/pinctrl/tegra/pinctrl-tegra.c          |  62 +++++++
+ drivers/pinctrl/tegra/pinctrl-tegra.h          |   5 +
+ drivers/pinctrl/tegra/pinctrl-tegra114.c       |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra124.c       |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra20.c        |   1 +
+ drivers/pinctrl/tegra/pinctrl-tegra210.c       |  13 ++
+ drivers/pinctrl/tegra/pinctrl-tegra30.c        |   1 +
+ drivers/soc/tegra/pmc.c                        | 143 +++++++++++++++-
+ 22 files changed, 880 insertions(+), 58 deletions(-)
+
+-- 
+2.7.4
+
