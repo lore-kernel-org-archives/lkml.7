@@ -8,113 +8,125 @@ X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05C98C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B51C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9DCD2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:57:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A08AC2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hg2UJ6zY"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TNe/IM6E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729616AbfFRK5F (ORCPT
+        id S1729629AbfFRK6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:57:05 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35568 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729507AbfFRK5E (ORCPT
+        Tue, 18 Jun 2019 06:58:02 -0400
+Received: from mail-wr1-f42.google.com ([209.85.221.42]:44613 "EHLO
+        mail-wr1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729491AbfFRK6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:57:04 -0400
-Received: by mail-qt1-f193.google.com with SMTP id d23so14682214qto.2;
-        Tue, 18 Jun 2019 03:57:04 -0700 (PDT)
+        Tue, 18 Jun 2019 06:58:01 -0400
+Received: by mail-wr1-f42.google.com with SMTP id r16so13421727wrl.11;
+        Tue, 18 Jun 2019 03:57:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=iNtD4nqgdcjPq+QbDW9ufam1Yl9j9a7cFfLokrIpxow=;
-        b=Hg2UJ6zYatddEJUePiDtn1leIbAiQveIqQogq/ccMmVFikaKELdmz0Nj7Us3EywoE3
-         cxRfBgJkvpxi+ol73OHAMeMF6jnw4ppS5HPJpzhv7Tvq4RKXVSSL2gG9Mxtyu1hiWupk
-         mlqWXC+vNKf3v8JlAcfGSV5HLefd5W9hJq6+diAmmDba3ktN5hMWyD3paNr2jVUbgW2l
-         GrMnxTW4g7mr4QcAR39XhYqD0sgotTWC9ZECcQiFT9t01kEdzVy8zIw1Kc2XiAOfQYNV
-         zSzaDgTKKVb0gCjG4ulsKx8fekLbBZbsNrRRwr9MazmF2Ds2wodDjbbbjViAgHx/qlCs
-         LGbg==
+        bh=XQvVKHxeSgcqLnyzzTyNxjA3usGAS6zCVGXO0R/QfL0=;
+        b=TNe/IM6EQ6FqbHKU2iUx8oEi1YKRTXlW1c+mTu0csxW+y5kmr92lTKKS1Y0ki6zois
+         GF5j0p6hCICQcxKHwYiiu3LHJYrIHv4SSDyA8LUH3O0cX3bP4LFgpJeGC9WllYCmirzI
+         C2nETkBD//rAzimUughJuku57cu2Xj5QGS6BnVSxaRtyf2qMfg/Csrm3Rjnp/vzZO9Js
+         r6o4GPYBjQcKpiO5tQQPaPqiCZYBd8wCrraxmz6cSqd62LQSM5qNDCZ66fUsAxnQ7IJB
+         O+RBhjUoRtAAruAps5HPBAG2hRJCB0bgkXflCwXOAiWTfzWd3y5pbQ8y6BnsR9rJnZ6t
+         pPng==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iNtD4nqgdcjPq+QbDW9ufam1Yl9j9a7cFfLokrIpxow=;
-        b=U0KGFqtRy469MRo4NWUZNtM9x+6xdCPcCfArmGoIS7pr5tzEbTGpBIVyvO6xzviz6m
-         b0Rt5zZ12sb1uvSBiVEY5Vcmy3aRCdkgP3D7EmMYHUrIW9D0ALFGvoikV7fpmCcJJryv
-         HansbobJP2mFASiE9f0dqiZgToMyILXsytDJSkC1B61/+lod88afKlH+BpgA8Vwxn+J7
-         QPAEX0KejUgQtLBnYyUYWUWFHK3WT1tIDlgnbQp2K897zqOyloZ8lrgLUEzHTi4IcvPV
-         bagqQwoDa71/OEpnjKWOqVHGDWXKtozLVTDNlRtmN4zVZgxFG03nSJWB93QWNWoAEHIU
-         tpUA==
-X-Gm-Message-State: APjAAAVLIYT3iwaRRJRYVfWXXEUJ9nIP20NZB3Q6tdtnclkD7fl9ZF/7
-        T2ZP1+m0dB9z/syuXh9QYcXShAToyIM=
-X-Google-Smtp-Source: APXvYqz133Gc8bVKrmUTYrRI8fbiciUcJ6gGBNxtrfY0FrDsAY5v8xnU1h1yCQ+jJVHjCdNqa0ZyjA==
-X-Received: by 2002:aed:39e7:: with SMTP id m94mr19891860qte.0.1560855423728;
-        Tue, 18 Jun 2019 03:57:03 -0700 (PDT)
-Received: from geeko ([186.212.50.252])
-        by smtp.gmail.com with ESMTPSA id g35sm2874993qtg.92.2019.06.18.03.56.43
+        bh=XQvVKHxeSgcqLnyzzTyNxjA3usGAS6zCVGXO0R/QfL0=;
+        b=J+DcPhNGIHBeOEFOylkIgN3n/+B1uhLPLyXmHjL9+R/HCZ00q0YBKQapovk1gOxnyq
+         J3V8T5wS6VzdIwe9Ch0sC32Yeox7Vx4zymsex5/s3vC0TQj9iU56Geqb3Dwqak74xGld
+         ZtAMa9FbAZuRD6D7X8lICKZclgpaXi3/JPEWMpKtXQESNvxMQZRFjWknDLofmi95P2kO
+         +WFcqR4g/HJLvLQbG7LWyk0gQVCHCJ8Jhafi8/Z7UMI+5i6cEyrfXm3UTO+NtKjYw0iM
+         6NNvhyA2AU+fYAI/h7CDLyY/RWBjwO++FV/zDbGs6Bvg+4Z2ZfoGw32sB2OkbPe4+f5f
+         HBOQ==
+X-Gm-Message-State: APjAAAXP1npaEwabtWbPpbKebx762Ewm2t81mblDOLX2MVXzLJHHX9Nx
+        HfbBmuUKu66lJgzdAg7C8nQ=
+X-Google-Smtp-Source: APXvYqw9hI/mxhmRW42S1eiDNlGbtjcBgBwMHiE+PtZr+RNSXVRedsfSoM3aW+bG9o7NCoR64LBtVQ==
+X-Received: by 2002:a5d:494d:: with SMTP id r13mr28758585wrs.152.1560855478819;
+        Tue, 18 Jun 2019 03:57:58 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id j7sm14584049wru.54.2019.06.18.03.57.57
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 03:57:03 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 07:56:33 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "open list:USB MASS STORAGE DRIVER" <linux-usb@vger.kernel.org>,
-        "open list:USB MASS STORAGE DRIVER" 
-        <usb-storage@lists.one-eyed-alien.net>
-Subject: Re: [PATCH 2/2] usb: storage: scsiglue: Do not skip VPD if
- try_vpd_pages is set
-Message-ID: <20190618105631.GB9372@geeko>
-References: <20190618013146.21961-1-marcos.souza.org@gmail.com>
- <20190618013146.21961-3-marcos.souza.org@gmail.com>
- <20190618064947.GB22457@kroah.com>
- <20190618103001.GA9372@geeko>
- <20190618105203.GA18349@kroah.com>
+        Tue, 18 Jun 2019 03:57:57 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 12:57:56 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, jonathanh@nvidia.com,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: tegra: Add INA3221 channel info for Jetson TX2
+Message-ID: <20190618105756.GC28892@ulmo>
+References: <20190617221659.25366-1-nicoleotsuka@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
 Content-Disposition: inline
-In-Reply-To: <20190618105203.GA18349@kroah.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190617221659.25366-1-nicoleotsuka@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 12:52:03PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Jun 18, 2019 at 07:30:04AM -0300, Marcos Paulo de Souza wrote:
-> > On Tue, Jun 18, 2019 at 08:49:47AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, Jun 17, 2019 at 10:31:46PM -0300, Marcos Paulo de Souza wrote:
-> > > > If BLIST_TRY_VPD_PAGES is set for a device, even for an USB, it should
-> > > > be honored, so only set skip_vpd_pages is try_vpd_pages is not set.
-> > > > 
-> > > > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> > > > ---
-> > > >  drivers/usb/storage/scsiglue.c | 7 +++++--
-> > > >  1 file changed, 5 insertions(+), 2 deletions(-)
-> > > 
-> > > Where is patch 1/2 of this series?
-> > 
-> > You can find it here:
-> > https://lore.kernel.org/lkml/20190618013146.21961-2-marcos.souza.org@gmail.com/
-> 
-> So is this 2/2 patch independant of 1/2 and can go throught the USB
-> tree, or do they both need to be together?
 
-I think it is, since we are not dealing with something specific to a device in
-this patch.
+--xesSdrSSBC0PokLI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> 
-> As it is, I have no idea what to do with this patch :(
-Sorry, I relied in get_maintainer.pl only, so you weren't CCed in both patches.
-But feel free to grab this patch in your tree.
-> 
-> thanks,
-> 
-> greg k-h
+On Mon, Jun 17, 2019 at 03:16:59PM -0700, Nicolin Chen wrote:
+> There are four INA3221 chips on the Jetson TX2 (p3310 + p2771).
+> And each INA3221 chip has three input channels to monitor power.
+>=20
+> So this patch adds these 12 channels to the DT of Jetson TX2, by
+> following the DT binding of INA3221 and official documents from
+> https://developer.nvidia.com/embedded/downloads
+>=20
+> tegra186-p3310:
+> https://developer.nvidia.com/embedded/dlc/jetson-tx2-series-modules-oem-p=
+roduct-design-guide
+>=20
+> tegra186-p2771-0000:
+> http://developer.nvidia.com/embedded/dlc/jetson-tx1-tx2-developer-kit-car=
+rier-board-spec-20180618
+>=20
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>  .../boot/dts/nvidia/tegra186-p2771-0000.dts   | 40 +++++++++++++++++++
+>  .../arm64/boot/dts/nvidia/tegra186-p3310.dtsi | 40 +++++++++++++++++++
+>  2 files changed, 80 insertions(+)
 
--- 
-Thanks,
-Marcos
+Applied, thanks.
+
+Thierry
+
+--xesSdrSSBC0PokLI
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0Iw7QACgkQ3SOs138+
+s6EXmQ/9GZLFKQR0NGbOGAN7fcKrt2ibZoOvzKBBoHjDUnPERTfkFJFPZpr1QiI1
+s2lG+C4nzxfhh2VMLBjAB/T4S7icF66zo7azRRhOeWZYYt7yfjv61wn48TOEV0vo
+BKWR9NF9f4CUc4bAbMwkD9rGc3FLkvrh63rxPzPCqboY0k0tjz/rss3+DoSYaSY3
+C6yu4gej37N/Bj9jFx6l0RKIsiLVErLrnHupqzgKsqNjbaZOIwQgJPvVQFxt7QnA
+9ckz2JTV2AEYjsD2EG2rUw3Sy/CeyD7OgpLhWaQ0yaw5XQyyVpuZJvGTYrjgxn1b
+lAW+MlmxGBxhrYmOzRhh11FAZwTAtObaLdjGk1jaR25hnw5DYk1ESL8mlTaxUTWA
+3ISZU9ADj5x7BHF0M5f/YH0FRg8BdBS0BgDGGiMJNcNk+HNrhODhrEY66vLcTjDZ
+Tg7TL9sPnAgeRumKc/xnV4sa1CJ3HLR6GdxxUMgD64OzRH0xKEeSBhzadGenCzyp
+x6EYsHAETEc0CER1WzDDgsGEsqxHPegpe8e+eI299Qf7yhBzLA4D43eI7GeCRgQo
+Z3yMBrxH8GW6co9v2VTHbDiFuBLjPtiwOSvWw4jHr1HpguVA/6S/wzYAD2tgjPk7
+9838K6HJj7rOiC0Ojzn6fGi7XS0nnDWIGnjMpaTuXjKWi++mc/g=
+=sXFk
+-----END PGP SIGNATURE-----
+
+--xesSdrSSBC0PokLI--
