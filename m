@@ -2,135 +2,209 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEEDC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:02:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D8BFC31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:05:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6822220833
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:02:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJ1Y2+NW"
+	by mail.kernel.org (Postfix) with ESMTP id EE8DF20833
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:05:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfFRDCI (ORCPT
+        id S1727711AbfFRDE7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 23:02:08 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:40646 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRDCH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 23:02:07 -0400
-Received: by mail-lj1-f193.google.com with SMTP id a21so11442410ljh.7;
-        Mon, 17 Jun 2019 20:02:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yDn5xMPXHFGcl2badmhD83jM1IwEhBvIcXU77fl289c=;
-        b=MJ1Y2+NWKGyn6timkXov6EhCzRib6XdPLQu8GC/Rf6kduQ+hdMmJBYngWGn5aYHnEu
-         8szaMsw0Sce6ZVj78znJ2YYgItgW9drLGDYuM2EmFU0r/4dtPWkbUYcDfQtL6/OPLNeK
-         dmP/2WE6spq40riFAVzBdy6hnpqB8qA51f55iSrOaBe5t8bZ1wRP2dj3K3Ss5jdAKWc8
-         J39Z2/NgAIte0QsfIzYmwwhHdJh5F5ORlPbCypNJVMcvQl4gEae/aePDk0/9Cg3ShC9h
-         4fXoZNxflMcMewmlu2rdIjdm2ZnBRxTzIh02Zmzxe9n4aiFuWbCJgXShgJinWDyz6EcO
-         WjbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yDn5xMPXHFGcl2badmhD83jM1IwEhBvIcXU77fl289c=;
-        b=TKnw0KCDcC6hTUe939qQ9DjUcvVQ1oC8gSHnjZsw6bN5/3wCzDIOrKxSTGYAgRrTnw
-         jx5P32K2VU22T33KfWoKkRHA4N1YHjuCFSLUKnZICeAa7jExlPNn7qzbRYt5TcJ+ROf6
-         FZY+6KAfzgs8lTjbZxk2m5FA2q/8GNUUvW2FxukUuiyJGmxFU5v3f17cCXKiifUlIbLI
-         8Rf+yD/nbheNxmCLHLLqMITpACdY1l6JEBLHmHCcpXr5+h7tujgnHo5a89mz9ZA0wzZM
-         Uoi04L26MrSFrNGrM9tMty3hrjwzdi08TSvQvKbp1gQPJ64CnKbWFshf+CACLT8wQSBv
-         aFOQ==
-X-Gm-Message-State: APjAAAX8GFkt81OG0UyHANsctL+MYzqlcnTotOvpav/UPfT98f1zPwqh
-        mgMlHhIMJv14l2v6C2n80kEi5S/564EAQaJEyuc=
-X-Google-Smtp-Source: APXvYqykxYn2h7BHvGt5WniRN1+QJUJk2wsHHao2z8XHcHmk3SK91BvK7PTtwsNleuGyGFRsmF2KDgEttifH5igEyAo=
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr29785188ljj.17.1560826925180;
- Mon, 17 Jun 2019 20:02:05 -0700 (PDT)
+        Mon, 17 Jun 2019 23:04:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:60266 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRDE7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 23:04:59 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 20:04:58 -0700
+X-ExtLoop1: 1
+Received: from txu2-mobl.ccr.corp.intel.com (HELO [10.239.196.224]) ([10.239.196.224])
+  by orsmga003.jf.intel.com with ESMTP; 17 Jun 2019 20:04:55 -0700
+Subject: Re: [PATCH RESEND v3 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+To:     Xiaoyao Li <xiaoyao.li@intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com, fenghua.yu@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jingqi.liu@intel.com
+References: <20190616095555.20978-1-tao3.xu@intel.com>
+ <20190616095555.20978-3-tao3.xu@intel.com>
+ <d99b2ae1-38fc-0b71-2613-8131decc923a@intel.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <3468075c-9289-b2b5-8310-e1f39524a8e9@intel.com>
+Date:   Tue, 18 Jun 2019 11:04:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190521184137.GH2422@oracle.com> <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521213648.GK2422@oracle.com> <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
- <20190522041253.GM2422@oracle.com> <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
- <20190523051608.GP2422@oracle.com> <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
- <20190618012509.GF8794@oracle.com> <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
- <20190618015442.GG8794@oracle.com>
-In-Reply-To: <20190618015442.GG8794@oracle.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 17 Jun 2019 20:01:52 -0700
-Message-ID: <CAADnVQ+zAwoH_mjJLhfEgXHHz+3WYkzhEm-mEObP0koLiSvknw@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, dtrace-devel@oss.oracle.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d99b2ae1-38fc-0b71-2613-8131decc923a@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:54 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
->
-> It is not hypothetical.  The folowing example works fine:
->
-> static int noinline bpf_action(void *ctx, long fd, long buf, long count)
-> {
->         int                     cpu = bpf_get_smp_processor_id();
->         struct data {
->                 u64     arg0;
->                 u64     arg1;
->                 u64     arg2;
->         }                       rec;
->
->         memset(&rec, 0, sizeof(rec));
->
->         rec.arg0 = fd;
->         rec.arg1 = buf;
->         rec.arg2 = count;
->
->         bpf_perf_event_output(ctx, &buffers, cpu, &rec, sizeof(rec));
->
->         return 0;
-> }
->
-> SEC("kprobe/ksys_write")
-> int bpf_kprobe(struct pt_regs *ctx)
-> {
->         return bpf_action(ctx, ctx->di, ctx->si, ctx->dx);
-> }
->
-> SEC("tracepoint/syscalls/sys_enter_write")
-> int bpf_tp(struct syscalls_enter_write_args *ctx)
-> {
->         return bpf_action(ctx, ctx->fd, ctx->buf, ctx->count);
-> }
->
-> char _license[] SEC("license") = "GPL";
-> u32 _version SEC("version") = LINUX_VERSION_CODE;
+On 6/17/2019 11:32 AM, Xiaoyao Li wrote:
+> 
+> 
+> On 6/16/2019 5:55 PM, Tao Xu wrote:
+>> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
+>> to determines the maximum time in TSC-quanta that the processor can 
+>> reside
+>> in either C0.1 or C0.2.
+>>
+>> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
+>> IA32_UMWAIT_CONTROL between host and guest. The variable
+>> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
+>> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
+>>
+>> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
+>> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
+>> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+>> ---
+>>   arch/x86/kvm/vmx/vmx.c  | 36 ++++++++++++++++++++++++++++++++++++
+>>   arch/x86/kvm/vmx/vmx.h  |  3 +++
+>>   arch/x86/power/umwait.c |  3 ++-
+>>   3 files changed, 41 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+>> index b35bfac30a34..f33a25e82cb8 100644
+>> --- a/arch/x86/kvm/vmx/vmx.c
+>> +++ b/arch/x86/kvm/vmx/vmx.c
+>> @@ -1679,6 +1679,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, 
+>> struct msr_data *msr_info)
+>>   #endif
+>>       case MSR_EFER:
+>>           return kvm_get_msr_common(vcpu, msr_info);
+>> +    case MSR_IA32_UMWAIT_CONTROL:
+>> +        if (!vmx_waitpkg_supported())
+>> +            return 1;
+>> +
+>> +        msr_info->data = vmx->msr_ia32_umwait_control;
+>> +        break;
+>>       case MSR_IA32_SPEC_CTRL:
+>>           if (!msr_info->host_initiated &&
+>>               !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+>> @@ -1841,6 +1847,15 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, 
+>> struct msr_data *msr_info)
+>>               return 1;
+>>           vmcs_write64(GUEST_BNDCFGS, data);
+>>           break;
+>> +    case MSR_IA32_UMWAIT_CONTROL:
+>> +        if (!vmx_waitpkg_supported())
+>> +            return 1;
+>> +
+>> +        if (!data)
+>> +            break;
+>> +
+> 
+> Why cannot clear it to zero?
+> 
 
-Great. Then you're all set to proceed with user space dtrace tooling, right?
+After read the kernel code of umwait again and test it again, host can 
+set it to 0, when we set sys max_time to 0. So I am wondering to remove 
+the "if (!data)" and set the value of msr value to 0x186a0(maxtime = 
+100000) when KVM initialization.
 
-What you'll discover thought that it works only for simplest things
-like above. libbpf assumes that everything in single elf will be used
-and passes the whole thing to the kernel.
-The verifer removes dead code only from single program.
-It disallows unused functions. Hence libbpf needs to start doing
-more "linker work" than it does today.
-When it loads .o it needs to pass to the kernel only the functions
-that are used by the program.
-This work should be straightforward to implement.
-Unfortunately no one had time to do it.
-It's also going to be the first step to multi-elf support.
-libbpf would need to do the same "linker work" across .o-s.
+And considering we use "-overcommit cpu-pm=on" to use umwait in QEMU 
+side. It means guest can over-commit the host CPU, so set to 0 make sense.
+
+>> +        vmx->msr_ia32_umwait_control = data;
+>> +        break;
+>>       case MSR_IA32_SPEC_CTRL:
+>>           if (!msr_info->host_initiated &&
+>>               !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
+>> @@ -4126,6 +4141,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu 
+>> *vcpu, bool init_event)
+>>       vmx->rmode.vm86_active = 0;
+>>       vmx->spec_ctrl = 0;
+>> +    vmx->msr_ia32_umwait_control = 0;
+>> +
+>>       vcpu->arch.microcode_version = 0x100000000ULL;
+>>       vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
+>>       kvm_set_cr8(vcpu, 0);
+>> @@ -6339,6 +6356,23 @@ static void atomic_switch_perf_msrs(struct 
+>> vcpu_vmx *vmx)
+>>                       msrs[i].host, false);
+>>   }
+>> +static void atomic_switch_ia32_umwait_control(struct vcpu_vmx *vmx)
+>> +{
+>> +    u64 host_umwait_control;
+>> +
+>> +    if (!vmx_waitpkg_supported())
+>> +        return;
+>> +
+>> +    host_umwait_control = umwait_control_cached;
+>> +
+> 
+> It's redundant to define host_umwait_control and this line, we can just 
+> use umwait_control_cached.
+
+Thanks for reminding.
+> 
+>> +    if (vmx->msr_ia32_umwait_control != host_umwait_control)
+>> +        add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
+>> +                      vmx->msr_ia32_umwait_control,
+>> +                      host_umwait_control, false);
+> 
+> The bit 1 is reserved, at least, we need to do below to ensure not 
+> modifying the reserved bit:
+> 
+>      guest_val = (vmx->msr_ia32_umwait_control & ~BIT_ULL(1)) |
+>              (host_val & BIT_ULL(1))
+> 
+>> +    else
+>> +        clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
+>> +}
+>> +
+>>   static void vmx_arm_hv_timer(struct vcpu_vmx *vmx, u32 val)
+>>   {
+>>       vmcs_write32(VMX_PREEMPTION_TIMER_VALUE, val);
+>> @@ -6447,6 +6481,8 @@ static void vmx_vcpu_run(struct kvm_vcpu *vcpu)
+>>       atomic_switch_perf_msrs(vmx);
+>> +    atomic_switch_ia32_umwait_control(vmx);
+>> +
+>>       vmx_update_hv_timer(vcpu);
+>>       /*
+>> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+>> index 61128b48c503..8485bec7c38a 100644
+>> --- a/arch/x86/kvm/vmx/vmx.h
+>> +++ b/arch/x86/kvm/vmx/vmx.h
+>> @@ -14,6 +14,8 @@
+>>   extern const u32 vmx_msr_index[];
+>>   extern u64 host_efer;
+>> +extern u32 umwait_control_cached;
+>> +
+>>   #define MSR_TYPE_R    1
+>>   #define MSR_TYPE_W    2
+>>   #define MSR_TYPE_RW    3
+>> @@ -194,6 +196,7 @@ struct vcpu_vmx {
+>>   #endif
+>>       u64              spec_ctrl;
+>> +    u64              msr_ia32_umwait_control;
+>>       u32 vm_entry_controls_shadow;
+>>       u32 vm_exit_controls_shadow;
+>> diff --git a/arch/x86/power/umwait.c b/arch/x86/power/umwait.c
+>> index 7fa381e3fd4e..2e6ce4cbccb3 100644
+>> --- a/arch/x86/power/umwait.c
+>> +++ b/arch/x86/power/umwait.c
+>> @@ -9,7 +9,8 @@
+>>    * MSR value. By default, umwait max time is 100000 in TSC-quanta 
+>> and C0.2
+>>    * is enabled
+>>    */
+>> -static u32 umwait_control_cached = 100000;
+>> +u32 umwait_control_cached = 100000;
+>> +EXPORT_SYMBOL_GPL(umwait_control_cached);
+>>   /*
+>>    * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL 
+>> MSR
+>>
+
