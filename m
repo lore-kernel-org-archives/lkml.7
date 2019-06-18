@@ -2,75 +2,134 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45232C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04489C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1643F20679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560842043;
-	bh=XbYebSig6WgWAtotCNmZuL+LePL+/ODdq6WIe8myLKI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tfcebUEbH2tHT1riAsRz3Dl2hL2dBGhLsC15GJD/errcRvBEJPaSd0YHHitkWXkr0
-	 6wZIiteLPQlxctT8BVnz6FQVCRoNNBEGauW/XKfLKTGvziUNhYqc2f6SEBeQzviScE
-	 fksAqlMAPIOsY98utVJo+rrNj+2BLgMeNRmkSJ9E=
+	by mail.kernel.org (Postfix) with ESMTP id D5B3720863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728994AbfFRHOB (ORCPT
+        id S1729013AbfFRHOK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:14:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38964 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfFRHOB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:14:01 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7548E20679;
-        Tue, 18 Jun 2019 07:14:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560842040;
-        bh=XbYebSig6WgWAtotCNmZuL+LePL+/ODdq6WIe8myLKI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yS+Sr4+kgzHWVTQdk4Yg2022E1Cxe8r9DJ5qt79cG4vX8txvzNi3C8nTevsPbe3NZ
-         +hqyUiwuOnkXbodTya4U9PfZq/9F85nZIE4JKxLS8emNvRohsedk3JvS6fHLcmcfQj
-         0YvKKQYhudmLHdcLtslOLl5DTaSCpks8MZx4tO9U=
-Date:   Tue, 18 Jun 2019 09:13:58 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Takashi Iwai <tiwai@suse.de>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Shuah Khan <shuah@kernel.org>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH v2.5 0/3] firmware: Add support for loading compressed
- files
-Message-ID: <20190618071358.GA14474@kroah.com>
-References: <20190611122626.28059-1-tiwai@suse.de>
+        Tue, 18 Jun 2019 03:14:10 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:33706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726181AbfFRHOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:14:09 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 57A751F306E6E079F216;
+        Tue, 18 Jun 2019 15:14:06 +0800 (CST)
+Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
+ 2019 15:13:58 +0800
+Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
+        <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
+        <linux-fsdevel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>
+References: <20190614181619.64905-1-gaoxiang25@huawei.com>
+ <20190617203609.GA22034@kroah.com>
+ <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
+ <20190618054709.GA4271@kroah.com>
+ <df18d7f9-f65a-5697-c7c4-edb1ad846c3e@huawei.com>
+ <20190618064523.GA6015@kroah.com>
+ <2a6abbf9-20a9-c1dd-0091-d8e3009037eb@huawei.com>
+ <20190618070503.GB9160@kroah.com>
+From:   Gao Xiang <gaoxiang25@huawei.com>
+Message-ID: <08079e72-3ab5-fc9e-d229-13540badf199@huawei.com>
+Date:   Tue, 18 Jun 2019 15:13:51 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190611122626.28059-1-tiwai@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190618070503.GB9160@kroah.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.151.23.176]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 02:26:23PM +0200, Takashi Iwai wrote:
-> [resubmitted with the missing patch]
-> 
-> Hi,
-> 
-> here are the rest and the main part of patches to add the support for
-> loading the compressed firmware files.  The patch was slightly
-> refactored for more easily enhancing for other compression formats (if
-> anyone wants).  Also the selftest patch is included.  The
-> functionality doesn't change from the previous patchset.
 
-Looks great, thanks for doing this.  All now queued up.
 
-greg k-h
+On 2019/6/18 15:05, Greg Kroah-Hartman wrote:
+> On Tue, Jun 18, 2019 at 02:52:21PM +0800, Gao Xiang wrote:
+>>
+>>
+>> On 2019/6/18 14:45, Greg Kroah-Hartman wrote:
+>>> On Tue, Jun 18, 2019 at 02:18:00PM +0800, Gao Xiang wrote:
+>>>>
+>>>>
+>>>> On 2019/6/18 13:47, Greg Kroah-Hartman wrote:
+>>>>> On Tue, Jun 18, 2019 at 09:47:08AM +0800, Gao Xiang wrote:
+>>>>>>
+>>>>>>
+>>>>>> On 2019/6/18 4:36, Greg Kroah-Hartman wrote:
+>>>>>>> On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
+>>>>>>>> At last, this is RFC patch v1, which means it is not suitable for
+>>>>>>>> merging soon... I'm still working on it, testing its stability
+>>>>>>>> these days and hope these patches get merged for 5.3 LTS
+>>>>>>>> (if 5.3 is a LTS version).
+>>>>>>>
+>>>>>>> Why would 5.3 be a LTS kernel?
+>>>>>>>
+>>>>>>> curious as to how you came up with that :)
+>>>>>>
+>>>>>> My personal thought is about one LTS kernel one year...
+>>>>>> Usually 5 versions after the previous kernel...(4.4 -> 4.9 -> 4.14 -> 4.19),
+>>>>>> which is not suitable for all historical LTSs...just prepare for 5.3...
+>>>>>
+>>>>> I try to pick the "last" kernel that is released each year, which
+>>>>> sometimes is 5 kernels, sometimes 4, sometimes 6, depending on the
+>>>>> release cycle.
+>>>>>
+>>>>> So odds are it will be 5.4 for the next LTS kernel, but we will not know
+>>>>> more until it gets closer to release time.
+>>>>
+>>>> Thanks for kindly explanation :)
+>>>>
+>>>> Anyway, I will test these patches, land to our commerical products and try the best
+>>>> efforts on making it more stable for Linux upstream to merge.
+>>>
+>>> Sounds great.
+>>>
+>>> But why do you need to add compression to get this code out of staging?
+>>> Why not move it out now and then add compression and other new features
+>>> to it then?
+>>
+>> Move out of staging could be over several linux versions since I'd like to get
+>> majority fs people agreed to this.
+> 
+> You never know until you try :)
+
+Thanks for your encouragement :)
+Actually, I personally gave a brief talk on this year LSF/MM 2019 but since I cannot speak
+English well so the entire effect is not good enough :(...
+
+I will personally contact with important people ... to get their agreements on this file
+system soon.
+
+> 
+>> Decompression inplace is an important part of erofs to show its performance
+>> benefits over existed compress filesystems and I tend to merge it in advance.
+> 
+> There is no requirement to show benefits over other filesystems in order
+> to get it merged, but I understand the feeling.  That's fine, we can
+> wait, we are not going anywhere...
+
+Thanks again. I am just proving that the erofs solution may be one of the best compression
+solutions in performance first scenerio :)
+
+Thanks,
+Gao Xiang
+
+> 
+> thanks,
+> 
+> greg k-h
+> 
