@@ -2,85 +2,135 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2C8C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:57:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEEDC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:02:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1185C2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6822220833
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:02:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MJ1Y2+NW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726378AbfFRC5o (ORCPT
+        id S1727409AbfFRDCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:57:44 -0400
-Received: from relay1.mentorg.com ([192.94.38.131]:47913 "EHLO
-        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRC5o (ORCPT
+        Mon, 17 Jun 2019 23:02:08 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:40646 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRDCH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:57:44 -0400
-Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
-        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
-        id 1hd4JV-00015V-SO from Jiada_Wang@mentor.com ; Mon, 17 Jun 2019 19:57:37 -0700
-Received: from jiwang-OptiPlex-980.tokyo.mentorg.com (147.34.91.1) by
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203) with Microsoft SMTP Server
- (TLS) id 15.0.1320.4; Mon, 17 Jun 2019 19:57:34 -0700
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
-        <tiwai@suse.com>, <kuninori.morimoto.gx@renesas.com>
-CC:     <jiada_wang@mentor.com>, <anilkanth@jp.adit-jv.com>,
-        <sudipi@jp.adit-jv.com>, <alsa-devel@alsa-project.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH v1 1/1] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
-Date:   Tue, 18 Jun 2019 11:57:49 +0900
-Message-ID: <20190618025749.12505-1-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.19.2
+        Mon, 17 Jun 2019 23:02:07 -0400
+Received: by mail-lj1-f193.google.com with SMTP id a21so11442410ljh.7;
+        Mon, 17 Jun 2019 20:02:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yDn5xMPXHFGcl2badmhD83jM1IwEhBvIcXU77fl289c=;
+        b=MJ1Y2+NWKGyn6timkXov6EhCzRib6XdPLQu8GC/Rf6kduQ+hdMmJBYngWGn5aYHnEu
+         8szaMsw0Sce6ZVj78znJ2YYgItgW9drLGDYuM2EmFU0r/4dtPWkbUYcDfQtL6/OPLNeK
+         dmP/2WE6spq40riFAVzBdy6hnpqB8qA51f55iSrOaBe5t8bZ1wRP2dj3K3Ss5jdAKWc8
+         J39Z2/NgAIte0QsfIzYmwwhHdJh5F5ORlPbCypNJVMcvQl4gEae/aePDk0/9Cg3ShC9h
+         4fXoZNxflMcMewmlu2rdIjdm2ZnBRxTzIh02Zmzxe9n4aiFuWbCJgXShgJinWDyz6EcO
+         WjbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yDn5xMPXHFGcl2badmhD83jM1IwEhBvIcXU77fl289c=;
+        b=TKnw0KCDcC6hTUe939qQ9DjUcvVQ1oC8gSHnjZsw6bN5/3wCzDIOrKxSTGYAgRrTnw
+         jx5P32K2VU22T33KfWoKkRHA4N1YHjuCFSLUKnZICeAa7jExlPNn7qzbRYt5TcJ+ROf6
+         FZY+6KAfzgs8lTjbZxk2m5FA2q/8GNUUvW2FxukUuiyJGmxFU5v3f17cCXKiifUlIbLI
+         8Rf+yD/nbheNxmCLHLLqMITpACdY1l6JEBLHmHCcpXr5+h7tujgnHo5a89mz9ZA0wzZM
+         Uoi04L26MrSFrNGrM9tMty3hrjwzdi08TSvQvKbp1gQPJ64CnKbWFshf+CACLT8wQSBv
+         aFOQ==
+X-Gm-Message-State: APjAAAX8GFkt81OG0UyHANsctL+MYzqlcnTotOvpav/UPfT98f1zPwqh
+        mgMlHhIMJv14l2v6C2n80kEi5S/564EAQaJEyuc=
+X-Google-Smtp-Source: APXvYqykxYn2h7BHvGt5WniRN1+QJUJk2wsHHao2z8XHcHmk3SK91BvK7PTtwsNleuGyGFRsmF2KDgEttifH5igEyAo=
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr29785188ljj.17.1560826925180;
+ Mon, 17 Jun 2019 20:02:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-ClientProxiedBy: SVR-ORW-MBX-09.mgc.mentorg.com (147.34.90.209) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+References: <20190521184137.GH2422@oracle.com> <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
+ <20190521213648.GK2422@oracle.com> <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
+ <20190522041253.GM2422@oracle.com> <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
+ <20190523051608.GP2422@oracle.com> <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
+ <20190618012509.GF8794@oracle.com> <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
+ <20190618015442.GG8794@oracle.com>
+In-Reply-To: <20190618015442.GG8794@oracle.com>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Mon, 17 Jun 2019 20:01:52 -0700
+Message-ID: <CAADnVQ+zAwoH_mjJLhfEgXHHz+3WYkzhEm-mEObP0koLiSvknw@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
+ implementation and sample use
+To:     Kris Van Hees <kris.van.hees@oracle.com>
+Cc:     Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, dtrace-devel@oss.oracle.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Peter Zijlstra <peterz@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+On Mon, Jun 17, 2019 at 6:54 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
+>
+> It is not hypothetical.  The folowing example works fine:
+>
+> static int noinline bpf_action(void *ctx, long fd, long buf, long count)
+> {
+>         int                     cpu = bpf_get_smp_processor_id();
+>         struct data {
+>                 u64     arg0;
+>                 u64     arg1;
+>                 u64     arg2;
+>         }                       rec;
+>
+>         memset(&rec, 0, sizeof(rec));
+>
+>         rec.arg0 = fd;
+>         rec.arg1 = buf;
+>         rec.arg2 = count;
+>
+>         bpf_perf_event_output(ctx, &buffers, cpu, &rec, sizeof(rec));
+>
+>         return 0;
+> }
+>
+> SEC("kprobe/ksys_write")
+> int bpf_kprobe(struct pt_regs *ctx)
+> {
+>         return bpf_action(ctx, ctx->di, ctx->si, ctx->dx);
+> }
+>
+> SEC("tracepoint/syscalls/sys_enter_write")
+> int bpf_tp(struct syscalls_enter_write_args *ctx)
+> {
+>         return bpf_action(ctx, ctx->fd, ctx->buf, ctx->count);
+> }
+>
+> char _license[] SEC("license") = "GPL";
+> u32 _version SEC("version") = LINUX_VERSION_CODE;
 
-commit 7e4f3419ebfe ("ASoC: rsnd: add .get_id/.get_id_sub")
-introduces rsnd_ctu_id which calcualates and gives
-the main Device id of the CTU by dividing the id by 4.
-rsnd_mod_id uses this interface to get the CTU main
-Device id. But this commit forgets to revert the main
-Device id calcution previously done in rsnd_ctu_probe_
-which also divides the id by 4. This path corrects the
-same to get the correct main Device id.
+Great. Then you're all set to proceed with user space dtrace tooling, right?
 
-The issue is observered when rsnd_ctu_probe_ is done for CTU1
-
-Fixes: 7e4f3419ebfe ("ASoC: rsnd: add .get_id/.get_id_sub")
-
-Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
-Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- sound/soc/sh/rcar/ctu.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/sound/soc/sh/rcar/ctu.c b/sound/soc/sh/rcar/ctu.c
-index 8cb06dab234e..7647b3d4c0ba 100644
---- a/sound/soc/sh/rcar/ctu.c
-+++ b/sound/soc/sh/rcar/ctu.c
-@@ -108,7 +108,7 @@ static int rsnd_ctu_probe_(struct rsnd_mod *mod,
- 			   struct rsnd_dai_stream *io,
- 			   struct rsnd_priv *priv)
- {
--	return rsnd_cmd_attach(io, rsnd_mod_id(mod) / 4);
-+	return rsnd_cmd_attach(io, rsnd_mod_id(mod));
- }
- 
- static void rsnd_ctu_value_init(struct rsnd_dai_stream *io,
--- 
-2.19.2
-
+What you'll discover thought that it works only for simplest things
+like above. libbpf assumes that everything in single elf will be used
+and passes the whole thing to the kernel.
+The verifer removes dead code only from single program.
+It disallows unused functions. Hence libbpf needs to start doing
+more "linker work" than it does today.
+When it loads .o it needs to pass to the kernel only the functions
+that are used by the program.
+This work should be straightforward to implement.
+Unfortunately no one had time to do it.
+It's also going to be the first step to multi-elf support.
+libbpf would need to do the same "linker work" across .o-s.
