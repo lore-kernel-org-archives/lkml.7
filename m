@@ -2,179 +2,223 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA2E7C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:36:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3560CC46477
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:49:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 779D72084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:36:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560832581;
-	bh=7DK7St8yo1ypiv4tqUpICOKagXK4Hf7U9ykGeUYau8M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mCPyOCmf9wC4kpcSOuE7ecSJ1N/jKnLihinDFYpQV7+q7BZploZ7rqZ5KnN+piLio
-	 tnPx0g0whaqwxPv3gvJ6l5/F7RVMJjRHlZmF9RuQWRVB56ZgQn3Me80f1sPEEDeWYg
-	 nnmR0rOtRCXRcAjzZK3tpwD14D2hg+i9811Xappg=
+	by mail.kernel.org (Postfix) with ESMTP id 0E52020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:49:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="h78QfXjC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726955AbfFREgU (ORCPT
+        id S1726946AbfFREtZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 00:36:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36500 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfFREgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 00:36:19 -0400
-Received: from localhost (unknown [122.178.226.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3861F2084D;
-        Tue, 18 Jun 2019 04:36:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560832578;
-        bh=7DK7St8yo1ypiv4tqUpICOKagXK4Hf7U9ykGeUYau8M=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=iMgC3M9p/QdU+1pPJsminSez8cTmLX0rBGMacXHGrn8oj6a38xC2nj64P3QEM5XCb
-         kYVO+pAQnhjWZz9Sp+eTRSViUYELzbqYDpOKSC+IZ77kte/+t997Ix9NQk+U/QyFjd
-         QerauUVNADHfaF2dvtDmmHFg2xlEsadvwFbfZlfg=
-Date:   Tue, 18 Jun 2019 10:03:08 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Sameer Pujar <spujar@nvidia.com>
-Cc:     dan.j.williams@intel.com, tiwai@suse.com, jonathanh@nvidia.com,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sharadg@nvidia.com, rlokhande@nvidia.com, dramesh@nvidia.com,
-        mkumard@nvidia.com
-Subject: Re: [PATCH] [RFC] dmaengine: add fifo_size member
-Message-ID: <20190618043308.GJ2962@vkoul-mobl>
-References: <20190502060446.GI3845@vkoul-mobl.Dlink>
- <e852d576-9cc2-ed42-1a1a-d696112c88bf@nvidia.com>
- <20190502122506.GP3845@vkoul-mobl.Dlink>
- <3368d1e1-0d7f-f602-5b96-a978fcf4d91b@nvidia.com>
- <20190504102304.GZ3845@vkoul-mobl.Dlink>
- <ce0e9c0b-b909-54ae-9086-a1f0f6be903c@nvidia.com>
- <20190506155046.GH3845@vkoul-mobl.Dlink>
- <b7e28e73-7214-f1dc-866f-102410c88323@nvidia.com>
- <20190613044352.GC9160@vkoul-mobl.Dlink>
- <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
+        Tue, 18 Jun 2019 00:49:25 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:10680 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFREtY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 00:49:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d086d530001>; Mon, 17 Jun 2019 21:49:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 17 Jun 2019 21:49:22 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 17 Jun 2019 21:49:22 -0700
+Received: from [10.24.47.153] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 04:49:17 +0000
+Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
+        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <20190502170426.28688-1-vidyas@nvidia.com>
+ <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
+ <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
+ <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
+ <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
+ <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
+ <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
+Date:   Tue, 18 Jun 2019 10:19:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <09929edf-ddec-b70e-965e-cbc9ba4ffe6a@nvidia.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560833363; bh=D1am2I/bI2xZcHfLWVk+66IAFl8L+5WwQBu6d7+UR1s=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=h78QfXjCqiYr6ZqGHO0He7XVaGUh0p3KFnQQPoS8Oucj1YpGOhTF7ID6YV89BmmFk
+         omF1hS3JnBvqWt0SlPceuVKhMYF/VrFUUtuGYd9TEkG8q9Xl8BQIfuWW2CI5SIb+Ed
+         RMmult/WyyBTlHPbTFjb6rcSQsdiDJk9M8rc00I9jtLoeFUDNFlY0mKMq4xF+OSW9N
+         3qdBG0To4ips66FfD+VdUhe00B4/VIgnDynUhu4bSKeIgvsYSgkxGgW4ZrUCufVoPI
+         RdmpkRBoCUT9luDUSp8VWmxAkT7fkcx3nk9xrbhl7ja26vVeVjqG5tOcAqrmy3bODB
+         7QFD7CvBKxW5Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-06-19, 12:37, Sameer Pujar wrote:
-> 
-> On 6/13/2019 10:13 AM, Vinod Koul wrote:
-> > On 06-06-19, 09:19, Sameer Pujar wrote:
-> > 
-> > > > you are really going other way around about the whole picture. FWIW that
-> > > > is how *other* folks do audio with dmaengine!
-> > > I discussed this internally with HW folks and below is the reason why DMA
-> > > needs
-> > > to know FIFO size.
-> > > 
-> > > - FIFOs reside in peripheral device(ADMAIF), which is the ADMA interface to
-> > > the audio sub-system.
-> > > - ADMAIF has multiple channels and share FIFO buffer for individual
-> > > operations. There is a provision
-> > >    to allocate specific fifo size for each individual ADMAIF channel from the
-> > > shared buffer.
-> > > - Tegra Audio DMA(ADMA) architecture is different from the usual DMA
-> > > engines, which you described earlier.
-> > > - The flow control logic is placed inside ADMA. Slave peripheral
-> > > device(ADMAIF) signals ADMA whenever a
-> > >    read or write happens on the FIFO(per WORD basis). Please note that the
-> > > signaling is per channel. There is
-> > >    no other signaling present from ADMAIF to ADMA.
-> > > - ADMA keeps a counter related to above signaling. Whenever a sufficient
-> > when is signal triggered? When there is space available or some
-> > threshold of space is reached?
-> Signal is triggered when FIFO read/write happens on the peripheral side. In
-> other words
-> this happens when data is pushed/popped out of ADMAIF from/to one of the
-> AHUB modules (I2S
-> for example) This is on peripheral side and ADMAIF signals ADMA per WORD
-> basis.
-> ADMA <---(1. DMA transfers)---> ADMAIF <------ (2. FIFO read/write) ------>
-> I2S
-> To be more clear ADMAIF signals ADMA when [2] happens.
+On 6/13/2019 11:54 PM, Vidya Sagar wrote:
+> On 6/7/2019 6:43 PM, Vidya Sagar wrote:
+>> On 5/27/2019 4:39 PM, Vidya Sagar wrote:
+>>> On 5/7/2019 12:25 PM, Vidya Sagar wrote:
+>>>> On 5/7/2019 11:19 AM, Vidya Sagar wrote:
+>>>>> On 5/3/2019 4:53 PM, Lorenzo Pieralisi wrote:
+>>>>>> On Thu, May 02, 2019 at 10:34:25PM +0530, Vidya Sagar wrote:
+>>>>>>> Add an API to group all the tasks to be done to de-initialize host =
+which
+>>>>>>> can then be called by any DesignWare core based driver implementati=
+ons
+>>>>>>> while adding .remove() support in their respective drivers.
+>>>>>>>
+>>>>>>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>>>>>>> Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+>>>>>>> ---
+>>>>>>> Changes from v3:
+>>>>>>> * Added check if (pci_msi_enabled() && !pp->ops->msi_host_init) bef=
+ore calling
+>>>>>>> =C2=A0=C2=A0 dw_pcie_free_msi() API to mimic init path
+>>>>>>>
+>>>>>>> Changes from v2:
+>>>>>>> * Rebased on top of linux-next top of the tree branch
+>>>>>>>
+>>>>>>> Changes from v1:
+>>>>>>> * s/Designware/DesignWare
+>>>>>>>
+>>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware-host.c | 8 ++++++=
+++
+>>>>>>> =C2=A0 drivers/pci/controller/dwc/pcie-designware.h=C2=A0=C2=A0=C2=
+=A0=C2=A0=C2=A0 | 5 +++++
+>>>>>>> =C2=A0 2 files changed, 13 insertions(+)
+>>>>>>
+>>>>>> Series doesn't apply to v5.1-rc1, what's based on ? I suspect
+>>>>>> there is a dependency on pci/keystone, given the tight timeline
+>>>>>> for the merge window, would you mind postponing it to v5.3 ?
+>>>>>>
+>>>>>> I do not think it is urgent, I am happy to create a branch
+>>>>>> for it as soon as v5.2-rc1 is released.
+>>>>> I rebased my changes on top of linux-next. I see that they have confl=
+icts
+>>>>> on top of v5.1-rc1. Do you want me to rebase them on top of v5.1-rc1 =
+instead
+>>>>> of linux-next?
+>>>>> I'm fine with v5.2-rc1 as well.I forgot to mention that these changes=
+ are made on top of Jisheng's patches
+>>>> FWIW, Jisheng's patches are approved and applied to pci/dwc for v5.2
+>>>> https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1968324.h=
+tml
+>>>
+>>> Hi Lorenzo,
+>>> Now that v5.2-rc2 is also available, could you please pick up this seri=
+es?
+>>>
+>>> Thanks,
+>>> Vidya Sagar
+>>>
+>> Hi Bjorn / Lorenzo,
+>> Can you please pick up these two patches?
+>>
+>> Thanks,
+>> Vidya Sagar
+> Apologies for pinging again. These two patches can be applied directly on=
+ top of
+> v5.2-rc4. Please do let me know if there is anything required from my sid=
+e.
+>=20
+> Thanks,
+> Vidya Sagar
+>=20
+Sorry for pinging again. Please let me know if these patches need to be sen=
+t again.
 
-That is on every word read/write?
+Thanks,
+Vidya Sagar
 
-> FIFO_THRESHOLD field in ADMAIF is just to indicate when can ADMAIF do
-> operation [2].
-> Also please note FIFO_THRESHOLD field is present only for memory---->AHUB
-> path (playback path)
-> and there is no such threshold concept for AHUB----> memory path (capture
-> path)
+>=20
+>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>> Lorenzo
+>>>>>>
+>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/dr=
+ivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> index 77db32529319..d069e4290180 100644
+>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+>>>>>>> @@ -496,6 +496,14 @@ int dw_pcie_host_init(struct pcie_port *pp)
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return ret;
+>>>>>>> =C2=A0 }
+>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>>>>> +{
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_stop_root_bus(pp->root_bus);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 pci_remove_root_bus(pp->root_bus);
+>>>>>>> +=C2=A0=C2=A0=C2=A0 if (pci_msi_enabled() && !pp->ops->msi_host_ini=
+t)
+>>>>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dw_pcie_free_msi(pp);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> =C2=A0 static int dw_pcie_access_other_conf(struct pcie_port *pp, s=
+truct pci_bus *bus,
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 u32 devf=
+n, int where, int size, u32 *val,
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 bool wri=
+te)
+>>>>>>> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers=
+/pci/controller/dwc/pcie-designware.h
+>>>>>>> index deab426affd3..4f48ec78c7b9 100644
+>>>>>>> --- a/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>> +++ b/drivers/pci/controller/dwc/pcie-designware.h
+>>>>>>> @@ -348,6 +348,7 @@ void dw_pcie_msi_init(struct pcie_port *pp);
+>>>>>>> =C2=A0 void dw_pcie_free_msi(struct pcie_port *pp);
+>>>>>>> =C2=A0 void dw_pcie_setup_rc(struct pcie_port *pp);
+>>>>>>> =C2=A0 int dw_pcie_host_init(struct pcie_port *pp);
+>>>>>>> +void dw_pcie_host_deinit(struct pcie_port *pp);
+>>>>>>> =C2=A0 int dw_pcie_allocate_domains(struct pcie_port *pp);
+>>>>>>> =C2=A0 #else
+>>>>>>> =C2=A0 static inline irqreturn_t dw_handle_msi_irq(struct pcie_port=
+ *pp)
+>>>>>>> @@ -372,6 +373,10 @@ static inline int dw_pcie_host_init(struct pci=
+e_port *pp)
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> =C2=A0 }
+>>>>>>> +static inline void dw_pcie_host_deinit(struct pcie_port *pp)
+>>>>>>> +{
+>>>>>>> +}
+>>>>>>> +
+>>>>>>> =C2=A0 static inline int dw_pcie_allocate_domains(struct pcie_port =
+*pp)
+>>>>>>> =C2=A0 {
+>>>>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return 0;
+>>>>>>> --=20
+>>>>>>> 2.17.1
+>>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+>=20
 
-That is sane and common. For memory you dont have a constraint so you
-transfer at full throttle.
-
-> > > space is available, it initiates a transfer.
-> > >    But the question is, how does it know when to transfer. This is the
-> > > reason, why ADMA has to be aware of FIFO
-> > >    depth of ADMAIF channel. Depending on the counters and FIFO depth, it
-> > > knows exactly when a free space is available
-> > >    in the context of a specific channel. On ADMA, FIFO_SIZE is just a value
-> > > which should match to actual FIFO_DEPTH/SIZE
-> > >    of ADMAIF channel.
-> > That doesn't sound too different from typical dmaengine. To give an
-> > example of a platform (and general DMAengine principles as well) I worked
-> > on the FIFO was 16 word deep. DMA didn't knew!
-> > 
-> > Peripheral driver would signal to DMA when a threshold is reached and
-> No, In our case ADMAIF does not do any threshold based signalling to ADMA.
-> > DMA would send a burst controlled by src/dst_burst_size. For example if
-> > you have a FIFO with 16 words depth, typical burst_size would be 8 words
-> > and peripheral will configure signalling for FIFO having 8 words, so
-> > signal from peripheral will make dma transfer 8 words.
-> The scenario is different in ADMA case, as ADMAIF cannot configure the
-> signalling based on FIFO_THRESHOLD settings.
-> > 
-> > Here the peripheral driver FIFO is important, but the driver
-> > configures it and sets burst_size accordingly.
-> > 
-> > So can you explain me what is the difference here that the peripheral
-> > cannot configure and use burst size with passing fifo depth?
-> Say for example FIFO_THRESHOLD is programmed as 16 WORDS, BURST_SIZE as 8
-> WORDS.
-> ADMAIF does not push data to AHUB(operation [2]) till threshold of 16 WORDS
-> is
-> reached in ADMAIF FIFO. Hence 2 burst transfers are needed to reach the
-> threshold.
-> As mentioned earlier, threshold here is to just indicate when data transfer
-> can happen
-> to AHUB modules.
-
-So we have ADMA and AHUB and peripheral. You are talking to AHUB and that
-is _not_ peripheral and if I have guess right the fifo depth is for AHUB
-right?
-
-> Once the data is popped from ADMAIF FIFO, ADMAIF signals ADMA. ADMA is the
-> master
-> and it keeps track of the buffer occupancy by knowing the FIFO_DEPTH and the
-> signalling.
-> Then finally it decides when to do next burst transfer depending on the free
-> space
-> available in ADMAIF.
-> > > - Now consider two cases based on above logic,
-> > >    * Case 1: when DMA_FIFO_SIZE > SLAVE_FIFO_SIZE
-> > >      In this case, ADMA thinks that there is enough space available for
-> > > transfer, when actually the FIFO data
-> > >      on slave is not consumed yet. It would result in OVERRUN.
-> > >    * Case 2: when DMA_FIFO_SIZE < SLAVE_FIFO_SIZE
-> > >      This is case where ADMA won’t transfer, even though sufficient space is
-> > > available, resulting in UNDERRUN.
-> > > - The guideline is to program, DMA_FIFO_SIZE(on ADMA side) =
-> > > SLAVE_FIFO_SIZE(on ADMAIF side) and hence we need a
-> > >    way to communicate fifo size info to ADMA.
-
--- 
-~Vinod
