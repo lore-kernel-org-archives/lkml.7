@@ -2,146 +2,119 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAD1C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:23:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7908AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:23:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1405D2080A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:23:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B8632080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:23:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbfFRSXV convert rfc822-to-8bit (ORCPT
+        id S1730336AbfFRSXZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:23:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58426 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730245AbfFRSXV (ORCPT
+        Tue, 18 Jun 2019 14:23:25 -0400
+Received: from smtprelay0153.hostedemail.com ([216.40.44.153]:42518 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730200AbfFRSXW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:23:21 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5IIMi1c141721
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:23:20 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t731bp2e5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:23:20 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Tue, 18 Jun 2019 19:23:17 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Jun 2019 19:23:14 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5IINDrb52691166
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 18:23:13 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5554111C05B;
-        Tue, 18 Jun 2019 18:23:13 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E438611C050;
-        Tue, 18 Jun 2019 18:23:12 +0000 (GMT)
-Received: from localhost (unknown [9.85.74.6])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Jun 2019 18:23:12 +0000 (GMT)
-Date:   Tue, 18 Jun 2019 23:53:11 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH 5/7] powerpc/ftrace: Update ftrace_location() for powerpc
- -mprofile-kernel
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <186656540d3e6225abd98374e791a13d10d86fab.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <20190618114509.5b1acbe5@gandalf.local.home>
-        <1560881411.p0i6a1dkwk.naveen@linux.ibm.com>
-In-Reply-To: <1560881411.p0i6a1dkwk.naveen@linux.ibm.com>
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+        Tue, 18 Jun 2019 14:23:22 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay05.hostedemail.com (Postfix) with ESMTP id 6E24F18020016;
+        Tue, 18 Jun 2019 18:23:20 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: soda34_1c6b15c9e8444
+X-Filterd-Recvd-Size: 3982
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 18 Jun 2019 18:23:15 +0000 (UTC)
+Message-ID: <26cd63896d6930385b4f770e305f0782a455a688.camel@perches.com>
+Subject: Re: [PATCH v2 1/4] staging: media: tegra-vde: Remove BIT() macro
+ from UAPI header
+From:   Joe Perches <joe@perches.com>
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     linux-media@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Johannes Berg <johannes@sipsolutions.net>,
+        Jamal Hadi Salim <jhs@mojatatu.com>,
+        Cong Wang <xiyou.wangcong@gmail.com>,
+        Jiri Pirko <jiri@resnulli.us>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Jesper Dangaard Brouer <hawk@kernel.org>,
+        John Fastabend <john.fastabend@gmail.com>
+Date:   Tue, 18 Jun 2019 11:23:13 -0700
+In-Reply-To: <20190618161458.20499-5-digetx@gmail.com>
+References: <20190618161458.20499-1-digetx@gmail.com>
+         <20190618161458.20499-5-digetx@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19061818-0016-0000-0000-0000028A2FFF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061818-0017-0000-0000-000032E7827C
-Message-Id: <1560881840.vz9llflvnf.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906180146
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Naveen N. Rao wrote:
-> Steven Rostedt wrote:
->> On Tue, 18 Jun 2019 20:17:04 +0530
->> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
->> 
->>> @@ -1551,7 +1551,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
->>>  	key.flags = end;	/* overload flags, as it is unsigned long */
->>>  
->>>  	for (pg = ftrace_pages_start; pg; pg = pg->next) {
->>> -		if (end < pg->records[0].ip ||
->>> +		if (end <= pg->records[0].ip ||
->> 
->> This breaks the algorithm. "end" is inclusive. That is, if you look for
->> a single byte, where "start" and "end" are the same, and it happens to
->> be the first ip on the pg page, it will be skipped, and not found.
+On Tue, 2019-06-18 at 19:14 +0300, Dmitry Osipenko wrote:
+> The BIT macro isn't available in userspace. Checkpatch complains about
+> shifts being used instead of the macro and people are starting to send
+> patches without realizing that it's a UAPI header file. Hence let's
+> replace the BIT macro with a hex values to make everyone happy.
 > 
-> Thanks. It looks like I should be over-riding ftrace_location() instead.  
-> I will update this patch.
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/staging/media/tegra-vde/uapi.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/staging/media/tegra-vde/uapi.h b/drivers/staging/media/tegra-vde/uapi.h
+> index a0dad1ed94ef..dd3e4a8c9f7e 100644
+> --- a/drivers/staging/media/tegra-vde/uapi.h
+> +++ b/drivers/staging/media/tegra-vde/uapi.h
+> @@ -6,8 +6,8 @@
+>  #include <linux/types.h>
+>  #include <asm/ioctl.h>
+>  
+> -#define FLAG_B_FRAME		BIT(0)
+> -#define FLAG_REFERENCE		BIT(1)
+> +#define FLAG_B_FRAME		0x1
+> +#define FLAG_REFERENCE		0x2
+>  
+>  struct tegra_vde_h264_frame {
+>  	__s32 y_fd;
 
-I think I will have ftrace own the two instruction range, regardless of 
-whether the preceding instruction is a 'mflr r0' or not. This simplifies 
-things and I don't see an issue with it as of now. I will do more 
-testing to confirm.
+The BIT macro is already used quite a bit in uapi headers.
+I imagine all those need fixup...
 
-- Naveen
-
-
---- a/arch/powerpc/kernel/trace/ftrace.c
-+++ b/arch/powerpc/kernel/trace/ftrace.c
-@@ -951,6 +951,16 @@ void arch_ftrace_update_code(int command)
- }
- 
- #ifdef CONFIG_MPROFILE_KERNEL
-+/*
-+ * We consider two instructions -- 'mflr r0', 'bl _mcount' -- to be part
-+ * of ftrace. When checking for the first instruction, we want to include
-+ * the next instruction in the range check.
-+ */
-+unsigned long ftrace_location(unsigned long ip)
-+{
-+	return ftrace_location_range(ip, ip + MCOUNT_INSN_SIZE);
-+}
-+
- /* Returns 1 if we patched in the mflr */
- static int __ftrace_make_call_prep(struct dyn_ftrace *rec)
- {
-diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-index 21d8e201ee80..122e2bb4a739 100644
---- a/kernel/trace/ftrace.c
-+++ b/kernel/trace/ftrace.c
-@@ -1573,7 +1573,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-  * the function tracer. It checks the ftrace internal tables to
-  * determine if the address belongs or not.
-  */
--unsigned long ftrace_location(unsigned long ip)
-+unsigned long __weak ftrace_location(unsigned long ip)
- {
- 	return ftrace_location_range(ip, ip);
- }
+$ git grep -P '\bBIT\s*\(' include/uapi
+include/uapi/linux/bpf.h:#define BPF_FIB_LOOKUP_DIRECT  BIT(0)
+include/uapi/linux/bpf.h:#define BPF_FIB_LOOKUP_OUTPUT  BIT(1)
+include/uapi/linux/coresight-stm.h:#define STM_FLAG_TIMESTAMPED   BIT(3)
+include/uapi/linux/coresight-stm.h:#define STM_FLAG_GUARANTEED    BIT(7)
+include/uapi/linux/nl80211.h: * bitmask of BIT(NL80211_BAND_*) as described in %enum
+include/uapi/linux/pkt_sched.h:#define TC_ETF_DEADLINE_MODE_ON  BIT(0)
+include/uapi/linux/pkt_sched.h:#define TC_ETF_OFFLOAD_ON        BIT(1)
+include/uapi/linux/psci.h:#define PSCI_1_0_OS_INITIATED                 BIT(0)
+include/uapi/linux/serio.h:#define SERIO_TIMEOUT        BIT(0)
+include/uapi/linux/serio.h:#define SERIO_PARITY BIT(1)
+include/uapi/linux/serio.h:#define SERIO_FRAME  BIT(2)
+include/uapi/linux/serio.h:#define SERIO_OOB_DATA       BIT(3)
+include/uapi/linux/tc_act/tc_ctinfo.h:  CTINFO_MODE_DSCP        = BIT(0),
+include/uapi/linux/tc_act/tc_ctinfo.h:  CTINFO_MODE_CPMARK      = BIT(1)
 
 
