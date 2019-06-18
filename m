@@ -2,108 +2,88 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF841C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB111C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:30:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B333F2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:29:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99001206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:30:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729530AbfFRJ3v (ORCPT
+        id S1729538AbfFRJal (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:29:51 -0400
-Received: from foss.arm.com ([217.140.110.172]:59424 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729207AbfFRJ3u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:29:50 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 613AA344;
-        Tue, 18 Jun 2019 02:29:50 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 764523F246;
-        Tue, 18 Jun 2019 02:29:49 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 10:29:47 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com, ard.biesheuvel@linaro.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] arm64: Allow user selection of ARM64_MODULE_PLTS
-Message-ID: <20190618092947.GB30899@fuggles.cambridge.arm.com>
-References: <20190617223000.11403-1-f.fainelli@gmail.com>
+        Tue, 18 Jun 2019 05:30:41 -0400
+Received: from smtprelay0132.hostedemail.com ([216.40.44.132]:36303 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726330AbfFRJaj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:30:39 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id F029D837F24D;
+        Tue, 18 Jun 2019 09:30:37 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: form78_227b3de72b623
+X-Filterd-Recvd-Size: 2187
+Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf09.hostedemail.com (Postfix) with ESMTPA;
+        Tue, 18 Jun 2019 09:30:36 +0000 (UTC)
+Message-ID: <3499a5a2058c246d48f8eb96682ce371833563b2.camel@perches.com>
+Subject: Re: [PATCH] Use fall-through attribute rather than magic comments
+From:   Joe Perches <joe@perches.com>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Shawn Landden <shawn@git.icu>, linux-kernel@vger.kernel.org,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Andy Whitcroft <apw@canonical.com>
+Date:   Tue, 18 Jun 2019 02:30:35 -0700
+In-Reply-To: <20190618073407.GA786@amd>
+References: <20190316033841.7659-1-shawn@git.icu>
+         <20190617155643.GA32544@amd>
+         <45e070039e66b1cb1490a78d4805bc73cc09f571.camel@perches.com>
+         <20190618073407.GA786@amd>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617223000.11403-1-f.fainelli@gmail.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 03:29:59PM -0700, Florian Fainelli wrote:
-> Make ARM64_MODULE_PLTS a selectable Kconfig symbol, since some people
-> might have very big modules spilling out of the dedicated module area
-> into vmalloc. Help text is copied from the ARM 32-bit counterpart and
-> modified to a mention of KASLR and specific ARM errata workaround(s).
+On Tue, 2019-06-18 at 09:34 +0200, Pavel Machek wrote:
+> On Mon 2019-06-17 09:25:56, Joe Perches wrote:
+> > On Mon, 2019-06-17 at 17:56 +0200, Pavel Machek wrote:
+> > > Hi!
+> > > 
+> > > > +/*
+> > > > + *   gcc: https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html#index-Wimplicit-fallthrough
+> > > > + *   gcc: https://developers.redhat.com/blog/2017/03/10/wimplicit-fallthrough-in-gcc-7/
+> > > > + */
+> > > > +#if __has_attribute(__fallthrough__)
+> > > > +# define __fallthrough                    __attribute__((__fallthrough__))
+> > > > +#else
+> > > > +# define __fallthrough
+> > > > +#endif
+> > > 
+> > > Is it good idea to add the __'s ? They look kind of ugly. 
+> > 
+> > Dunno.
+> > 
+> > I agree it's kind of ugly, but it should always work.
+> > 
+> > I think the generic problem is introducing a new unprefixed
+> > reserved identifier.  Underscored identifiers are reserved.
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
-> Changes in v3:
-> - take out the part about "The modules will use slightly more memory, but after
->   rounding up to page size, the actual memory footprint is usually the same.
-> - take out the "If unusure say Y", since we would really prefer this to
->   be off by default for maximum performance
-> 
-> Changes in v2:
-> 
-> - added Ard's paragraph about KASLR
-> - added a paragraph about specific workarounds also requiring
->   ARM64_MODULE_PLTS
-> 
->  arch/arm64/Kconfig | 20 +++++++++++++++++++-
->  1 file changed, 19 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 697ea0510729..9206feaeff07 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -1418,8 +1418,26 @@ config ARM64_SVE
->  	  KVM in the same kernel image.
->  
->  config ARM64_MODULE_PLTS
-> -	bool
-> +	bool "Use PLTs to allow module memory to spill over into vmalloc area"
->  	select HAVE_MOD_ARCH_SPECIFIC
-> +	help
-> +	  Allocate PLTs when loading modules so that jumps and calls whose
-> +	  targets are too far away for their relative offsets to be encoded
-> +	  in the instructions themselves can be bounced via veneers in the
-> +	  module's PLT. This allows modules to be allocated in the generic
-> +	  vmalloc area after the dedicated module memory area has been
-> +	  exhausted.
-> +
-> +	  When running with address space randomization (KASLR), the module
-> +	  region itself may be too far away for ordinary relative jumps and
-> +	  calls, and so in that case, module PLTs are required and cannot be
-> +	  disabled.
-> +
-> +	  Specific errata workaround(s) might also force module PLTs to be
-> +	  enabled (ARM64_ERRATUM_843419).
-> +
-> +	  Disabling this is usually safe for small single-platform
-> +	  configurations.
+> We are not userland, and we control whole codebase. These rules don't
+> apply.
 
-I think I'd still drop this last sentence, because labelling a kernel
-"usually safe" without this option is a bit OTT. We'll just reject large
-modules, nothing unsafe about that.
+except include/uapi where some static inline switch might
 
-Assuming Catalin can do that when he applies, so:
+> We can use unprefixed identifier and fix up any problems... I don't
+> expect too many.
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+but there aren't any existing uses there.
 
-Will
+
