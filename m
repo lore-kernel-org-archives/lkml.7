@@ -2,138 +2,109 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21742C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD63DC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED20D20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADF1B20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pp21Rn8p"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l4aW6nnP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XtLSKjLW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729364AbfFRNkW (ORCPT
+        id S1729380AbfFRNkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:40:22 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:42466 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfFRNkW (ORCPT
+        Tue, 18 Jun 2019 09:40:33 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53392 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727584AbfFRNkc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:40:22 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so15277294qtk.9;
-        Tue, 18 Jun 2019 06:40:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sip8yqMGL5HYkSNzPjSutbtzx9pAVqlJddD+spZ1ESY=;
-        b=pp21Rn8pPivLH1E0kWFM/2lZm6bAb6etwe8om3ogOsCmNAdAZr/20x0WkVbcH+Ts8i
-         Gy/sKFAitaG1OGtu7+E9oy0LRLWKIfDm6sdI0ppIyu5x0DwTvHcM5MbWY2Y8H2nUHoW8
-         vs/KIMEB5EIrydlsRkjo7HuxXD1zFkfSIgrzCdSVd6BxZ6j+UvWTwBxL7qS0UbEwxj7l
-         U8Vu4joCvZcx85u86932CARZXbVX8cFH2eZ3gZ30vDx3rHxNLgS/MYPvNS1ocLhfkBbP
-         yvxey/ZWIq4Mvh4TIIz4olDxKv7cIwLtFkjI5L0sXh3RNlbuWS2+nwR64rI2Zhca/DXR
-         /QhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sip8yqMGL5HYkSNzPjSutbtzx9pAVqlJddD+spZ1ESY=;
-        b=YoyxoTklf6QckrWr4lukK3kiiUvHXz4zTRapfnIOz4KBwY1U16T53V2+gvBQ6e2mRK
-         KGZF29Yarx+w0/YcCD1wB7ULmmi6MHsEuw/031K05LoYKH5la6waVQrYsN+1ehByf9+I
-         0wIPMMT0kc6YFVqDbBGF8r1unowVVMos7T4s9MKE112dKIf1gKTm4K6PeI1UhyVsGqMk
-         1aHNjp/HgDQIPcM7y4ZgcbmI53K+2ATTkBVm3CjAmUTct+/R8tOSzQNA+TjI9ehawFhU
-         9fxTyCQqzQYc3ihBujliOrrobmpYr2mgMfq3+FnyjdWtPfoU2jyYFHPlAMbs7n54LXDz
-         YPaA==
-X-Gm-Message-State: APjAAAVR5U7EYIZebCuYBjvUY/Wu2Tw3vihABJCV9VDXEtDp2GnTgw/Y
-        kp6Akoz0xEGk9rPqAp6CmpFFgjrvhgMe8FAUIwk=
-X-Google-Smtp-Source: APXvYqwTfW9SHCCil6M0GXO+K/MKJJdO+3TnQJ+aCdN91TMQKTLKOVFZggy0oZ+qNvBcOUNJoMdhkSoLWnhSiYaDxL0=
-X-Received: by 2002:a0c:b159:: with SMTP id r25mr26932527qvc.219.1560865221304;
- Tue, 18 Jun 2019 06:40:21 -0700 (PDT)
+        Tue, 18 Jun 2019 09:40:32 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 9A48F60A00; Tue, 18 Jun 2019 13:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560865231;
+        bh=3S920kb9n9ahqKRzh5GewJNZfwKu57RH7nMn5VmTegs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=l4aW6nnPwElZx+0tcypQKi7XbSu6KOxNtbIfky2jofdFgmEUfQqXjEwvRwQR24N7J
+         +FEhGWq3Q+zdbl68+wCqqK8k5nNx3LJnItZEW2JDY6MmXoljFxjsq/A8ZJBuipwLlL
+         XjLxPCa66cilnVCEN43ACwh0BSd2qbDkpY8KBZr8=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64D4060A00;
+        Tue, 18 Jun 2019 13:40:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560865227;
+        bh=3S920kb9n9ahqKRzh5GewJNZfwKu57RH7nMn5VmTegs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=XtLSKjLWrLutIGH8KwFxjxolWP6E5fuG4T9J870AB6WdXIVg5pfxa4gyAyTQ7WTWp
+         ahuSaYp9ihiEQVDisIqsmz0CUG6ePwoq2ECYZ/+o99JdQLHEuFKc1AI8/d/mLGOEDX
+         hz8H/kQZWGOxB9+59FW14lzmDNMvtUPvvRDKcZ0I=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64D4060A00
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH V4] perf: event preserve and create across cpu hotplug
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org,
+        Raghavendra Rao Ananta <rananta@codeaurora.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>
+References: <1560337045-13298-1-git-send-email-mojha@codeaurora.org>
+ <1560848091-15694-1-git-send-email-mojha@codeaurora.org>
+ <20190618122329.GE3419@hirez.programming.kicks-ass.net>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <cc01dc2b-8992-cd95-e181-3400fc1ce82f@codeaurora.org>
+Date:   Tue, 18 Jun 2019 19:10:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190516142342.28019-1-smuchun@gmail.com> <20190524190443.GB29565@kroah.com>
- <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
-In-Reply-To: <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
-From:   Muchun Song <smuchun@gmail.com>
-Date:   Tue, 18 Jun 2019 21:40:13 +0800
-Message-ID: <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
-Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
- glue directory
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Prateek Sood <prsood@codeaurora.org>,
-        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        zhaowuyun@wingtech.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190618122329.GE3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ping guys ? I think this is worth fixing.
 
-Muchun Song <smuchun@gmail.com> =E4=BA=8E2019=E5=B9=B45=E6=9C=8825=E6=97=A5=
-=E5=91=A8=E5=85=AD =E4=B8=8B=E5=8D=888:15=E5=86=99=E9=81=93=EF=BC=9A
+On 6/18/2019 5:53 PM, Peter Zijlstra wrote:
+> On Tue, Jun 18, 2019 at 02:24:51PM +0530, Mukesh Ojha wrote:
+>> Perf framework doesn't allow preserving CPU events across
+>> CPU hotplugs. The events are scheduled out as and when the
+>> CPU walks offline. Moreover, the framework also doesn't
+>> allow the clients to create events on an offline CPU. As
+>> a result, the clients have to keep on monitoring the CPU
+>> state until it comes back online.
+>>
+>> Therefore,
+> That's not a therefore. There's a distinct lack of rationale here. Why
+> do you want this?
 
->
-> Hi greg k-h,
->
-> Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B45=E6=9C=8825=
-=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=883:04=E5=86=99=E9=81=93=EF=BC=
-=9A
-> >
-> > On Thu, May 16, 2019 at 10:23:42PM +0800, Muchun Song wrote:
-> > > There is a race condition between removing glue directory and adding =
-a new
-> > > device under the glue directory. It can be reproduced in following te=
-st:
-> >
-> > <snip>
-> >
-> > Is this related to:
-> >         Subject: [PATCH v3] drivers: core: Remove glue dirs early only =
-when refcount is 1
-> >
-> > ?
-> >
-> > If so, why is the solution so different?
->
-> In the v1 patch, the solution is that remove glue dirs early only when
-> refcount is 1. So
-> the v1 patch like below:
->
-> @@ -1825,7 +1825,7 @@ static void cleanup_glue_dir(struct device *dev,
-> struct kobject *glue_dir)
->                 return;
->
->         mutex_lock(&gdp_mutex);
-> -       if (!kobject_has_children(glue_dir))
-> +       if (!kobject_has_children(glue_dir) && kref_read(&glue_dir->kref)=
- =3D=3D 1)
->                 kobject_del(glue_dir);
->         kobject_put(glue_dir);
->         mutex_unlock(&gdp_mutex);
-> -----------------------------------------------------------------------
->
-> But from Ben's suggestion as below:
->
-> I find relying on the object count for such decisions rather fragile as
-> it could be taken temporarily for other reasons, couldn't it ? In which
-> case we would just fail...
->
-> Ideally, the looking up of the glue dir and creation of its child
-> should be protected by the same lock instance (the gdp_mutex in that
-> case).
-> -----------------------------------------------------------------------
->
-> So another solution is used from Ben's suggestion in the v2 patch. But
-> I forgot to update the commit message until the v4 patch. Thanks.
->
-> Yours,
-> Muchun
+Thanks Peter for coming back on this.
+
+Missed to send the coverletter,
+https://lkml.org/lkml/2019/5/31/438
+Will resend this with coverletter.
+
+Btw,  This patch
+
+is based on suggestion given by you on this
+https://lkml.org/lkml/2018/2/16/763
+
+
+Thanks.
+Mukesh
+
+
+Thanks.
+Mukesh
+
