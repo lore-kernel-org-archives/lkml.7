@@ -2,231 +2,233 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E97B2C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE11AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271C5208E4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739FB2070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="J8aRALCt"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="U8UNpGAJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbfFRLCp (ORCPT
+        id S1729700AbfFRLCy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:02:45 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:39689 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfFRLCp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:02:45 -0400
-Received: by mail-io1-f67.google.com with SMTP id r185so22759516iod.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:02:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amarulasolutions.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6dPd3RrQAaJmSlxbXCrrYAeV5BgA8baQituPrW6T8q4=;
-        b=J8aRALCtZ5+q665nCDGHGWdB9L4KUtXUTr2aYEOhkvFYvSzSxjEZBnxAx8jq4+CIrG
-         kfZQ7h7AOkWGNUkPJQKvtrs7G8vA4tHYQkZSL8IOo8hSzMlRmFi5A4yNE+cQCaBXDkSS
-         Fw9gA1Q+2KAjPhGWQTXJpHt0jL6CbnzUxhC7k=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6dPd3RrQAaJmSlxbXCrrYAeV5BgA8baQituPrW6T8q4=;
-        b=avASHnFA+oZThnhXNCJ4ef+JWv+B9TYU+xParOdy0ZBYdDs3iIXdL8m2I53sDekp0Y
-         ria1cyWz+TPFwVoHYjQTB04Ta5rBWkuW9Thh99CAAiH3gaEVUGbwU3GSg9tPcVtFhQix
-         xrDWftxu/7OlLiJQC17uPnx1mMfG6LnnI4AkH4F5l3d4kopEt4P9NvQxwU7a54i6eNDx
-         8NhhxxLaQADxEEzIuZG9D3M744armZvSZsjUKsMD4QkQRm7jZXuGgNoDwTkk8j7Zffh9
-         tfYdps63F6/E16JBLNtsMWA6W7l8OvTyGHxCm3oboFmHZ8is4GHTYZ7eTq5tNjrOkP59
-         8C6w==
-X-Gm-Message-State: APjAAAXOoOnnwHYXyT+dBgVGBQsaFjhshZJ29FPK43TKU5brxftpJgOE
-        ecDupgQbvLh5GUuRmvrKxYICPriFwgWkveo0/tL+QkSb
-X-Google-Smtp-Source: APXvYqx+1RXVIiXwJWvpnbgzk7DSvApiqXAee1b+tNWJ3+b7tOzqL9eacxMiiOpVam4G5g3AOCkWwGZPw6G4S5b385c=
-X-Received: by 2002:a5e:8618:: with SMTP id z24mr5045183ioj.174.1560855763973;
- Tue, 18 Jun 2019 04:02:43 -0700 (PDT)
+        Tue, 18 Jun 2019 07:02:54 -0400
+Received: from mail-eopbgr40040.outbound.protection.outlook.com ([40.107.4.40]:22598
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729635AbfFRLCx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 07:02:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=IW/hBqkNFFXTJDBiCVNfBU3Jrfa8uXWKit8npAvY+5E=;
+ b=U8UNpGAJONO3/qtwOdS5pYGNsqrf7tNShycQMjhQMuZHakwu/XRjx0iEuDR6bulx5jMErrQaaYbSFw/GGT30xCPaf06Bpu/jkJK2ggJX0ZnLOgnCvQnjOsiAna1USeE2x/0pPdc085XXBuJD1HaRI1wcgLcrFyj7dKzO1Cj9nfI=
+Received: from AM5PR0801MB1763.eurprd08.prod.outlook.com (10.169.247.17) by
+ AM5PR0801MB1921.eurprd08.prod.outlook.com (10.168.154.142) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Tue, 18 Jun 2019 11:02:48 +0000
+Received: from AM5PR0801MB1763.eurprd08.prod.outlook.com
+ ([fe80::9987:96a6:6dd9:f4a2]) by AM5PR0801MB1763.eurprd08.prod.outlook.com
+ ([fe80::9987:96a6:6dd9:f4a2%4]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
+ 11:02:48 +0000
+From:   Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+To:     Vincenzo Frascino <Vincenzo.Frascino@arm.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     nd <nd@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH v5 1/2] arm64: Define
+ Documentation/arm64/tagged-address-abi.txt
+Thread-Topic: [PATCH v5 1/2] arm64: Define
+ Documentation/arm64/tagged-address-abi.txt
+Thread-Index: AQHVIgFS0u0DCr9uG0KMva1a4RDbs6ahRrUA
+Date:   Tue, 18 Jun 2019 11:02:48 +0000
+Message-ID: <397f0460-9ecf-f8f9-a8ea-42959be580ae@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <20190613155137.47675-1-vincenzo.frascino@arm.com>
+ <20190613155137.47675-2-vincenzo.frascino@arm.com>
+In-Reply-To: <20190613155137.47675-2-vincenzo.frascino@arm.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-originating-ip: [217.140.106.49]
+x-clientproxiedby: LO2P265CA0333.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:a4::33) To AM5PR0801MB1763.eurprd08.prod.outlook.com
+ (2603:10a6:203:3b::17)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Szabolcs.Nagy@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d27c8fd1-1fbf-44f1-b7fa-08d6f3dc7fa8
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM5PR0801MB1921;
+x-ms-traffictypediagnostic: AM5PR0801MB1921:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <AM5PR0801MB1921F1F814B4B375FFBE950EEDEA0@AM5PR0801MB1921.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(366004)(376002)(346002)(136003)(39860400002)(189003)(199004)(71200400001)(25786009)(53546011)(81166006)(66066001)(14454004)(31696002)(6506007)(478600001)(65806001)(81156014)(65956001)(66476007)(2616005)(66556008)(386003)(66446008)(66946007)(73956011)(6512007)(8936002)(44832011)(476003)(36756003)(486006)(446003)(6116002)(2501003)(110136005)(186003)(102836004)(68736007)(65826007)(58126008)(72206003)(64756008)(86362001)(5660300002)(8676002)(6486002)(76176011)(2201001)(3846002)(6246003)(11346002)(64126003)(53936002)(7736002)(229853002)(6436002)(316002)(31686004)(256004)(52116002)(305945005)(4326008)(2906002)(14444005)(99286004)(26005)(54906003)(71190400001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR0801MB1921;H:AM5PR0801MB1763.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: mHLRPAHRCg++ux05SV7CY/o/UJTVt74r8g9OxgVMRAi6GM/+kLXS+kU47HmLfpUHnjSKrOx4YIEq8FzrIoq8eet+qBj0K+gJWkSujOoM62cV5/eenatmfSHTbIRWWfMYGnjqvTXKuYfeLeuI1Y4p8+XzBB3jBTFsYYHHy1qv5CgR7zggJUEMiJybLJG1rtWjOw26yilNUcVoUsrSdutmBnB4eSmaLhG1eOEpcPhyFFvJxNOdvofRMcJud6T/9LJpdhvRdHwtkcjBhiV83kUvl4erpsA6doo2GLolKVpF1CMvezrfcXocZTeSBm5Ip9ekxjFS81cPyqOUE+oSmK5fuEmkxtTPvP0EXZQw7LrgwWXRqN3vVYygKYIT5xzJ2WsWkQjnK1vmzfHtGafZq5p6Lz1Vrm0WkzzKptJYzyR4mRk=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <003D0C41A93AA241BE8BCFC79F9E2FB8@eurprd08.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190520090318.27570-1-jagan@amarulasolutions.com>
- <20190520090318.27570-3-jagan@amarulasolutions.com> <20190523203754.2lhi37veeh4rwiy3@flea>
- <CAMty3ZBvJ-7Ndq7NSfNMSFX=8hjYVhYsdA=nfyw5mMxOf6vW1Q@mail.gmail.com>
- <20190530104242.d6ktwv7lip27vc3x@flea> <CAMty3ZCwS4BS5Lig4O8G3dE3RbJu6m1Ux3-ZS4rT-cPEAjXSFw@mail.gmail.com>
- <20190614142810.hbdaikbk7immwzc3@flea>
-In-Reply-To: <20190614142810.hbdaikbk7immwzc3@flea>
-From:   Jagan Teki <jagan@amarulasolutions.com>
-Date:   Tue, 18 Jun 2019 16:32:32 +0530
-Message-ID: <CAMty3ZBmTTKk29EDxPLP1vYPg6ZvBQibRsB=7cfSUCXtML95qA@mail.gmail.com>
-Subject: Re: [PATCH v10 02/11] drm/sun4i: dsi: Update start value in video
- start delay
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Chen-Yu Tsai <wens@csie.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Bhushan Shah <bshah@mykolab.com>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        linux-amarula <linux-amarula@amarulasolutions.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d27c8fd1-1fbf-44f1-b7fa-08d6f3dc7fa8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 11:02:48.5146
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Szabolcs.Nagy@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR0801MB1921
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 7:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Jun 13, 2019 at 01:34:04PM +0530, Jagan Teki wrote:
-> > On Fri, May 31, 2019 at 12:23 AM Maxime Ripard
-> > <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Fri, May 24, 2019 at 03:55:42PM +0530, Jagan Teki wrote:
-> > > > On Fri, May 24, 2019 at 2:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > On Mon, May 20, 2019 at 02:33:09PM +0530, Jagan Teki wrote:
-> > > > > > start value in video start delay computation done in below commit
-> > > > > > is as per the legacy bsp drivers/video/sunxi/legacy..
-> > > > > > "drm/sun4i: dsi: Change the start delay calculation"
-> > > > > > (sha1: da676c6aa6413d59ab0a80c97bbc273025e640b2)
-> > > > > >
-> > > > > > This existing start delay computation gives start value of 35,
-> > > > > > for "bananapi,s070wv20-ct16" panel timings which indeed trigger
-> > > > > > panel flip_done timed out as:
-> > > > > >
-> > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
-> > > > > >  [CRTC:46:crtc-0] vblank wait timed out
-> > > > > >  Modules linked in:
-> > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Tainted: G        W         5.1.0-next-20190514-00025-gf928bc7cc146 #15
-> > > > > >  Hardware name: Allwinner sun8i Family
-> > > > > >  Workqueue: events deferred_probe_work_func
-> > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
-> > > > > >  [<c010b76c>] (show_stack) from [<c0688c90>] (dump_stack+0x84/0x98)
-> > > > > >  [<c0688c90>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
-> > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
-> > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
-> > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
-> > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
-> > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
-> > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
-> > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c0411cb0>] (drm_fb_helper_pan_display+0xac/0x1d0)
-> > > > > >  [<c0411cb0>] (drm_fb_helper_pan_display) from [<c03a4e84>] (fb_pan_display+0xcc/0x134)
-> > > > > >  [<c03a4e84>] (fb_pan_display) from [<c03b1214>] (bit_update_start+0x14/0x30)
-> > > > > >  [<c03b1214>] (bit_update_start) from [<c03afe94>] (fbcon_switch+0x3d8/0x4e0)
-> > > > > >  [<c03afe94>] (fbcon_switch) from [<c03ec930>] (redraw_screen+0x174/0x238)
-> > > > > >  [<c03ec930>] (redraw_screen) from [<c03aceb4>] (fbcon_prepare_logo+0x3c4/0x400)
-> > > > > >  [<c03aceb4>] (fbcon_prepare_logo) from [<c03ad2b8>] (fbcon_init+0x3c8/0x5ac)
-> > > > > >  [<c03ad2b8>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
-> > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
-> > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
-> > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
-> > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
-> > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
-> > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
-> > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
-> > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
-> > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
-> > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
-> > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
-> > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b5b0>] (try_to_bring_up_master+0x164/0x1a0)
-> > > > > >  [<c044b5b0>] (try_to_bring_up_master) from [<c044b680>] (__component_add+0x94/0x140)
-> > > > > >  [<c044b680>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
-> > > > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452f0c>] (platform_drv_probe+0x48/0x9c)
-> > > > > >  [<c0452f0c>] (platform_drv_probe) from [<c04512e4>] (really_probe+0x1dc/0x2c8)
-> > > > > >  [<c04512e4>] (really_probe) from [<c0451530>] (driver_probe_device+0x60/0x160)
-> > > > > >  [<c0451530>] (driver_probe_device) from [<c044f7bc>] (bus_for_each_drv+0x74/0xb8)
-> > > > > >  [<c044f7bc>] (bus_for_each_drv) from [<c0451094>] (__device_attach+0xd0/0x13c)
-> > > > > >  [<c0451094>] (__device_attach) from [<c045048c>] (bus_probe_device+0x84/0x8c)
-> > > > > >  [<c045048c>] (bus_probe_device) from [<c0450918>] (deferred_probe_work_func+0x64/0x90)
-> > > > > >  [<c0450918>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
-> > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
-> > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
-> > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
-> > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
-> > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
-> > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > > > > >  ---[ end trace 755e10f62b83f396 ]---
-> > > > > >  Console: switching to colour frame buffer device 100x30
-> > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
-> > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
-> > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
-> > > > > >
-> > > > > > But the expected start delay value is 1 which is confirmed from
-> > > > > > new bsp [2].
-> > > > >
-> > > > > If you're saying that the "legacy" link (second one) is the new BSP.
-> > > >
-> > > > Will update, thanks.
-> > > >
-> > > > >
-> > > > > > The important and unclear note on legacy and new bsp codes [1] [2]
-> > > > > > is both use similar start computation initially but it later reassign
-> > > > > > it to 1 in new bsp.
-> > > > >
-> > > > > Then start_delay is never reassigned to 1 in that link, and is clamped
-> > > > > between 8 and 100 as the code that you are removing is doing.
-> > > >
-> > > > Please see the link one more please
-> > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
-> > > >
-> > > > >
-> > > > > > Unfortunately we don't have any evidence or documentation for this
-> > > > > > reassignment to 1 in new bsp, but it is working with all supported
-> > > > > > panels in A33, A64.
-> > > > >
-> > > > > No, it's not. That was added to fix a panel that is supported today.
-> > > >
-> > > > No, I have see this in A33, A64. and these are controller drivers
-> > > > right, if it panel fix and it should be part of panel driver isn't
-> > > > it?
-> > >
-> > > I'm not sure to follow that argument. You're submitting that fix to
-> > > allow other panels to work, right? So surely, some issues that can be
-> > > found using a given panel might not be solely fixed in the panel driver.
-> >
-> > I'm not sure I understand this. I have been verifying different panels
-> > to check across. and this change literally in BSP and the BSP code is
-> > using this based on the logs confirmation. all the logs and working
-> > conditions shows that the fix would required in dsi.
->
-> You were saying that your fix was working with all supported panels in
-> A33, A64. That's simply not true, since at least one of mine will be
-> broken by this.
->
-> You can say that it fixes all the panels *you* have, but it's
-> certainly not all of them.
-
-The panels I have are running A33, A64 AW BSP and there are not using
-legacy drivers. better you can use what AW BSP's are using, if
-something not working with AW bsp then there can be an issue on the
-panel init sequence or timings.
-
->
-> > > > We can even see the same in pin64 longsleep kernel and others.
-> > > >
-> > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
-> > > > https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L730
-> > >
-> > > Yeah, and both of these have the legacy driver part with the clamping
-> > > too.
-> >
-> > Yes, both legacy has clamping, but not using.
->
-> See the links above, they are being used.
->
-> > they used it in new version driver which I'm referring above.
->
-> I'm sorry, but I just don't get what you're saying. The links
-> mentionned above are clearly showing that it's being used, while the
-> other, !legacy, driver doesn't have them anymore. So it seems to be
-> exactly the opposite of what you're saying.
-
-legacy drivers have the clamping of what the current code has, I agree
-that point. but the new version BSP driver which is running on right
-now, don't have clamping instead they do have a change what this patch
-has.
+T24gMTMvMDYvMjAxOSAxNjo1MSwgVmluY2Vuem8gRnJhc2Npbm8gd3JvdGU6DQo+IE9uIGFybTY0
+IHRoZSBUQ1JfRUwxLlRCSTAgYml0IGhhcyBiZWVuIGFsd2F5cyBlbmFibGVkIGhlbmNlDQo+IHRo
+ZSB1c2Vyc3BhY2UgKEVMMCkgaXMgYWxsb3dlZCB0byBzZXQgYSBub24temVybyB2YWx1ZSBpbiB0
+aGUNCj4gdG9wIGJ5dGUgYnV0IHRoZSByZXN1bHRpbmcgcG9pbnRlcnMgYXJlIG5vdCBhbGxvd2Vk
+IGF0IHRoZQ0KPiB1c2VyLWtlcm5lbCBzeXNjYWxsIEFCSSBib3VuZGFyeS4NCj4gDQo+IFdpdGgg
+dGhlIHJlbGF4ZWQgQUJJIHByb3Bvc2VkIHRocm91Z2ggdGhpcyBkb2N1bWVudCwgaXQgaXMgbm93
+IHBvc3NpYmxlDQo+IHRvIHBhc3MgdGFnZ2VkIHBvaW50ZXJzIHRvIHRoZSBzeXNjYWxscywgd2hl
+biB0aGVzZSBwb2ludGVycyBhcmUgaW4NCj4gbWVtb3J5IHJhbmdlcyBvYnRhaW5lZCBieSBhbiBh
+bm9ueW1vdXMgKE1BUF9BTk9OWU1PVVMpIG1tYXAoKS4NCj4gDQo+IFRoaXMgY2hhbmdlIGluIHRo
+ZSBBQkkgcmVxdWlyZXMgYSBtZWNoYW5pc20gdG8gcmVxdWlyZXMgdGhlIHVzZXJzcGFjZQ0KPiB0
+byBvcHQtaW4gdG8gc3VjaCBhbiBvcHRpb24uDQo+IA0KPiBTcGVjaWZ5IGFuZCBkb2N1bWVudCB0
+aGUgd2F5IGluIHdoaWNoIHN5c2N0bCBhbmQgcHJjdGwoKSBjYW4gYmUgdXNlZA0KPiBpbiBjb21i
+aW5hdGlvbiB0byBhbGxvdyB0aGUgdXNlcnNwYWNlIHRvIG9wdC1pbiB0aGlzIGZlYXR1cmUuDQo+
+IA0KPiBDYzogQ2F0YWxpbiBNYXJpbmFzIDxjYXRhbGluLm1hcmluYXNAYXJtLmNvbT4NCj4gQ2M6
+IFdpbGwgRGVhY29uIDx3aWxsLmRlYWNvbkBhcm0uY29tPg0KPiBDQzogQW5kcmV5IEtvbm92YWxv
+diA8YW5kcmV5a252bEBnb29nbGUuY29tPg0KPiBTaWduZWQtb2ZmLWJ5OiBWaW5jZW56byBGcmFz
+Y2lubyA8dmluY2Vuem8uZnJhc2Npbm9AYXJtLmNvbT4NCg0KQWNrZWQtYnk6IFN6YWJvbGNzIE5h
+Z3kgPHN6YWJvbGNzLm5hZ3lAYXJtLmNvbT4NCg0KPiAtLS0NCj4gIERvY3VtZW50YXRpb24vYXJt
+NjQvdGFnZ2VkLWFkZHJlc3MtYWJpLnR4dCB8IDEzNCArKysrKysrKysrKysrKysrKysrKysNCj4g
+IDEgZmlsZSBjaGFuZ2VkLCAxMzQgaW5zZXJ0aW9ucygrKQ0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vYXJtNjQvdGFnZ2VkLWFkZHJlc3MtYWJpLnR4dA0KPiANCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vYXJtNjQvdGFnZ2VkLWFkZHJlc3MtYWJpLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vYXJtNjQvdGFnZ2VkLWFkZHJlc3MtYWJpLnR4dA0KPiBuZXcgZmlsZSBtb2RlIDEw
+MDY0NA0KPiBpbmRleCAwMDAwMDAwMDAwMDAuLjBhZTkwMGQ0YmIyZA0KPiAtLS0gL2Rldi9udWxs
+DQo+ICsrKyBiL0RvY3VtZW50YXRpb24vYXJtNjQvdGFnZ2VkLWFkZHJlc3MtYWJpLnR4dA0KPiBA
+QCAtMCwwICsxLDEzNCBAQA0KPiArQVJNNjQgVEFHR0VEIEFERFJFU1MgQUJJDQo+ICs9PT09PT09
+PT09PT09PT09PT09PT09PT0NCj4gKw0KPiArVGhpcyBkb2N1bWVudCBkZXNjcmliZXMgdGhlIHVz
+YWdlIGFuZCBzZW1hbnRpY3Mgb2YgdGhlIFRhZ2dlZCBBZGRyZXNzDQo+ICtBQkkgb24gYXJtNjQu
+DQo+ICsNCj4gKzEuIEludHJvZHVjdGlvbg0KPiArLS0tLS0tLS0tLS0tLS0tDQo+ICsNCj4gK09u
+IGFybTY0IHRoZSBUQ1JfRUwxLlRCSTAgYml0IGhhcyBiZWVuIGFsd2F5cyBlbmFibGVkIG9uIHRo
+ZSBrZXJuZWwsIGhlbmNlDQo+ICt0aGUgdXNlcnNwYWNlIChFTDApIGlzIGVudGl0bGVkIHRvIHBl
+cmZvcm0gYSB1c2VyIG1lbW9yeSBhY2Nlc3MgdGhyb3VnaCBhDQo+ICs2NC1iaXQgcG9pbnRlciB3
+aXRoIGEgbm9uLXplcm8gdG9wIGJ5dGUgYnV0IHRoZSByZXN1bHRpbmcgcG9pbnRlcnMgYXJlIG5v
+dA0KPiArYWxsb3dlZCBhdCB0aGUgdXNlci1rZXJuZWwgc3lzY2FsbCBBQkkgYm91bmRhcnkuDQo+
+ICsNCj4gK1RoaXMgZG9jdW1lbnQgZGVzY3JpYmVzIGEgcmVsYXhhdGlvbiBvZiB0aGUgQUJJIHRo
+YXQgbWFrZXMgaXQgcG9zc2libGUgdG8NCj4gK3RvIHBhc3MgdGFnZ2VkIHBvaW50ZXJzIHRvIHRo
+ZSBzeXNjYWxscywgd2hlbiB0aGVzZSBwb2ludGVycyBhcmUgaW4gbWVtb3J5DQo+ICtyYW5nZXMg
+b2J0YWluZWQgYXMgZGVzY3JpYmVkIGluIHNlY3Rpb24gMi4NCj4gKw0KPiArU2luY2UgaXQgaXMg
+bm90IGRlc2lyYWJsZSB0byByZWxheCB0aGUgQUJJIHRvIGFsbG93IHRhZ2dlZCB1c2VyIGFkZHJl
+c3Nlcw0KPiAraW50byB0aGUga2VybmVsIGluZGlzY3JpbWluYXRlbHksIGFybTY0IHByb3ZpZGVz
+IGEgbmV3IHN5c2N0bCBpbnRlcmZhY2UNCj4gKygvcHJvYy9zeXMvYWJpL3RhZ2dlZF9hZGRyKSB0
+aGF0IGlzIHVzZWQgdG8gcHJldmVudCB0aGUgYXBwbGljYXRpb25zIGZyb20NCj4gK2VuYWJsaW5n
+IHRoZSByZWxheGVkIEFCSSBhbmQgYSBuZXcgcHJjdGwoKSBpbnRlcmZhY2UgdGhhdCBjYW4gYmUg
+dXNlZCB0bw0KPiArZW5hYmxlIG9yIGRpc2FibGUgdGhlIHJlbGF4ZWQgQUJJLg0KPiArQSBkZXRh
+aWxlZCBkZXNjcmlwdGlvbiBvZiB0aGUgbmV3bHkgaW50cm9kdWNlZCBtZWNoYW5pc21zIHdpbGwg
+YmUgcHJvdmlkZWQNCj4gK2luIHNlY3Rpb24gMi4NCj4gKw0KPiArMi4gQVJNNjQgVGFnZ2VkIEFk
+ZHJlc3MgQUJJDQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0KPiArRnJvbSB0
+aGUga2VybmVsIHN5c2NhbGwgaW50ZXJmYWNlIHBlcnNwZWN0aXZlLCB3ZSBkZWZpbmUsIGZvciB0
+aGUgcHVycG9zZXMNCj4gK29mIHRoaXMgZG9jdW1lbnQsIGEgInZhbGlkIHRhZ2dlZCBwb2ludGVy
+IiBhcyBhIHBvaW50ZXIgdGhhdCBlaXRoZXIgaGFzIGENCj4gK3plcm8gdmFsdWUgc2V0IGluIHRo
+ZSB0b3AgYnl0ZSBvciBoYXMgYSBub24temVybyB2YWx1ZSwgaXQgaXMgaW4gbWVtb3J5DQo+ICty
+YW5nZXMgcHJpdmF0ZWx5IG93bmVkIGJ5IGEgdXNlcnNwYWNlIHByb2Nlc3MgYW5kIGl0IGlzIG9i
+dGFpbmVkIGluIG9uZSBvZg0KPiArdGhlIGZvbGxvd2luZyB3YXlzOg0KPiArICAtIG1tYXAoKSBk
+b25lIGJ5IHRoZSBwcm9jZXNzIGl0c2VsZiwgd2hlcmUgZWl0aGVyOg0KPiArICAgICogZmxhZ3Mg
+aGF2ZSBNQVBfUFJJVkFURSBhbmQgTUFQX0FOT05ZTU9VUw0KPiArICAgICogZmxhZ3MgaGF2ZSBN
+QVBfUFJJVkFURSBhbmQgdGhlIGZpbGUgZGVzY3JpcHRvciByZWZlcnMgdG8gYSByZWd1bGFyDQo+
+ICsgICAgICBmaWxlIG9yICIvZGV2L3plcm8iDQo+ICsgIC0gYnJrKCkgc3lzdGVtIGNhbGwgZG9u
+ZSBieSB0aGUgcHJvY2VzcyBpdHNlbGYgKGkuZS4gdGhlIGhlYXAgYXJlYSBiZXR3ZWVuDQo+ICsg
+ICAgdGhlIGluaXRpYWwgbG9jYXRpb24gb2YgdGhlIHByb2dyYW0gYnJlYWsgYXQgcHJvY2VzcyBj
+cmVhdGlvbiBhbmQgaXRzDQo+ICsgICAgY3VycmVudCBsb2NhdGlvbikuDQo+ICsgIC0gYW55IG1l
+bW9yeSBtYXBwZWQgYnkgdGhlIGtlcm5lbCBpbiB0aGUgcHJvY2VzcydzIGFkZHJlc3Mgc3BhY2Ug
+ZHVyaW5nDQo+ICsgICAgY3JlYXRpb24gYW5kIGZvbGxvd2luZyB0aGUgcmVzdHJpY3Rpb25zIHBy
+ZXNlbnRlZCBhYm92ZSAoaS5lLiBkYXRhLCBic3MsDQo+ICsgICAgc3RhY2spLg0KPiArDQo+ICtU
+aGUgQVJNNjQgVGFnZ2VkIEFkZHJlc3MgQUJJIGlzIGFuIG9wdC1pbiBmZWF0dXJlLCBhbmQgYW4g
+YXBwbGljYXRpb24gY2FuDQo+ICtjb250cm9sIGl0IHVzaW5nIHRoZSBmb2xsb3dpbmc6DQo+ICsg
+LSAvcHJvYy9zeXMvYWJpL3RhZ2dlZF9hZGRyOiBhIG5ldyBzeXNjdGwgaW50ZXJmYWNlIHRoYXQg
+Y2FuIGJlIHVzZWQgdG8NCj4gKyAgICAgICAgcHJldmVudCB0aGUgYXBwbGljYXRpb25zIGZyb20g
+ZW5hYmxpbmcgdGhlIHJlbGF4ZWQgQUJJLg0KPiArICAgICAgICBUaGUgc3lzY3RsIGlzIG1lYW50
+IGFsc28gZm9yIHRlc3RpbmcgcHVycG9zZXMgaW4gb3JkZXIgdG8gcHJvdmlkZSBhDQo+ICsgICAg
+ICAgIHNpbXBsZSB3YXkgZm9yIHRoZSB1c2Vyc3BhY2UgdG8gdmVyaWZ5IHRoZSByZXR1cm4gZXJy
+b3IgY2hlY2tpbmcgb2YNCj4gKyAgICAgICAgdGhlIHByY3RsKCkgY29tbWFuZHMgd2l0aG91dCBo
+YXZpbmcgdG8gcmVjb25maWd1cmUgdGhlIGtlcm5lbC4NCj4gKyAgICAgICAgVGhlIHN5c2N0bCBz
+dXBwb3J0cyB0aGUgZm9sbG93aW5nIGNvbmZpZ3VyYXRpb24gb3B0aW9uczoNCj4gKyAgICAgICAg
+IC0gMDogRGlzYWJsZSBBUk02NCBUYWdnZWQgQWRkcmVzcyBBQkkgZm9yIGFsbCB0aGUgYXBwbGlj
+YXRpb25zLg0KPiArICAgICAgICAgLSAxIChEZWZhdWx0KTogRW5hYmxlIEFSTTY0IFRhZ2dlZCBB
+ZGRyZXNzIEFCSSBmb3IgYWxsIHRoZQ0KPiArICAgICAgICAgICAgICAgICAgICAgICAgYXBwbGlj
+YXRpb25zLg0KPiArICAgICAgICBJZiB0aGUgQVJNNjQgVGFnZ2VkIEFkZHJlc3MgQUJJIGlzIGRp
+c2FibGVkIGF0IGEgY2VydGFpbiBwb2ludCBpbg0KPiArICAgICAgICB0aW1lLCBhbGwgdGhlIGFw
+cGxpY2F0aW9ucyB0aGF0IHdlcmUgdXNpbmcgdGFnZ2luZyBiZWZvcmUgdGhpcyBldmVudA0KPiAr
+ICAgICAgICBvY2N1cnMsIHdpbGwgY29udGludWUgdG8gdXNlIHRhZ2dpbmcuDQo+ICsNCj4gKyAt
+IHByY3RsKClzOg0KPiArICAtIFBSX1NFVF9UQUdHRURfQUREUl9DVFJMOiBjYW4gYmUgdXNlZCB0
+byBlbmFibGUgb3IgZGlzYWJsZSB0aGUgVGFnZ2VkDQo+ICsgICAgICAgIEFkZHJlc3MgQUJJLg0K
+PiArICAgICAgICBUaGUgKHVuc2lnbmVkIGludCkgYXJnMiBhcmd1bWVudCBpcyBhIGJpdCBtYXNr
+IGRlc2NyaWJpbmcgdGhlDQo+ICsgICAgICAgIGNvbnRyb2wgbW9kZSB1c2VkOg0KPiArICAgICAg
+ICAgIC0gUFJfVEFHR0VEX0FERFJfRU5BQkxFOiBFbmFibGUgQVJNNjQgVGFnZ2VkIEFkZHJlc3Mg
+QUJJLg0KPiArICAgICAgICBUaGUgYXJndW1lbnRzIGFyZzMsIGFyZzQsIGFuZCBhcmc1IGFyZSBp
+Z25vcmVkLg0KPiArDQo+ICsgIC0gUFJfR0VUX1RBR0dFRF9BRERSX0NUUkw6IGNhbiBiZSB1c2Vk
+IHRvIGNoZWNrIHRoZSBzdGF0dXMgb2YgdGhlIFRhZ2dlZA0KPiArICAgICAgICBBZGRyZXNzIEFC
+SS4NCj4gKyAgICAgICAgVGhlIGFyZ3VtZW50cyBhcmcyLCBhcmczLCBhcmc0LCBhbmQgYXJnNSBh
+cmUgaWdub3JlZC4NCj4gKw0KPiArVGhlIEFCSSBwcm9wZXJ0aWVzIHNldCBieSB0aGUgbWVjaGFu
+aXNtcyBkZXNjcmliZWQgYWJvdmUgYXJlIGluaGVyaXRlZCBieSB0aHJlYWRzDQo+ICtvZiB0aGUg
+c2FtZSBhcHBsaWNhdGlvbiBhbmQgZm9yaygpJ2VkIGNoaWxkcmVuIGJ1dCBjbGVhcmVkIGJ5IGV4
+ZWN2ZSgpLg0KPiArDQo+ICtBcyBhIGNvbnNlcXVlbmNlIG9mIGludm9raW5nIFBSX1NFVF9UQUdH
+RURfQUREUl9DVFJMIHByY3RsKCkgYnkgYW4gYXBwbGljYXRpb25zLA0KPiArdGhlIEFCSSBndWFy
+YW50ZWVzIHRoZSBmb2xsb3dpbmcgYmVoYXZpb3VyczoNCj4gKw0KPiArICAtIEV2ZXJ5IGN1cnJl
+bnQgb3IgbmV3bHkgaW50cm9kdWNlZCBzeXNjYWxsIGNhbiBhY2NlcHQgYW55IHZhbGlkIHRhZ2dl
+ZA0KPiArICAgIHBvaW50ZXJzLg0KPiArDQo+ICsgIC0gSWYgYSBub24gdmFsaWQgdGFnZ2VkIHBv
+aW50ZXIgaXMgcGFzc2VkIHRvIGEgc3lzY2FsbCB0aGVuIHRoZSBiZWhhdmlvdXINCj4gKyAgICBp
+cyB1bmRlZmluZWQuDQo+ICsNCj4gKyAgLSBFdmVyeSB2YWxpZCB0YWdnZWQgcG9pbnRlciBpcyBl
+eHBlY3RlZCB0byB3b3JrIGFzIGFuIHVudGFnZ2VkIG9uZS4NCj4gKw0KPiArICAtIFRoZSBrZXJu
+ZWwgcHJlc2VydmVzIGFueSB2YWxpZCB0YWdnZWQgcG9pbnRlcnMgYW5kIHJldHVybnMgdGhlbSB0
+byB0aGUNCj4gKyAgICB1c2Vyc3BhY2UgdW5jaGFuZ2VkIChpLmUuIG9uIHN5c2NhbGwgcmV0dXJu
+KSBpbiBhbGwgdGhlIGNhc2VzIGV4Y2VwdCB0aGUNCj4gKyAgICBvbmVzIGRvY3VtZW50ZWQgaW4g
+dGhlICJQcmVzZXJ2aW5nIHRhZ3MiIHNlY3Rpb24gb2YgdGFnZ2VkLXBvaW50ZXJzLnR4dC4NCj4g
+Kw0KPiArQSBkZWZpbml0aW9uIG9mIHRoZSBtZWFuaW5nIG9mIHRhZ2dlZCBwb2ludGVycyBvbiBh
+cm02NCBjYW4gYmUgZm91bmQgaW46DQo+ICtEb2N1bWVudGF0aW9uL2FybTY0L3RhZ2dlZC1wb2lu
+dGVycy50eHQuDQo+ICsNCj4gKzMuIEFSTTY0IFRhZ2dlZCBBZGRyZXNzIEFCSSBFeGNlcHRpb25z
+DQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPiArDQo+ICtUaGUg
+YmVoYXZpb3VycyBkZXNjcmliZWQgaW4gc2VjdGlvbiAyLCB3aXRoIHBhcnRpY3VsYXIgcmVmZXJl
+bmNlIHRvIHRoZQ0KPiArYWNjZXB0YW5jZSBieSB0aGUgc3lzY2FsbHMgb2YgYW55IHZhbGlkIHRh
+Z2dlZCBwb2ludGVyIGFyZSBub3QgYXBwbGljYWJsZQ0KPiArdG8gdGhlIGZvbGxvd2luZyBjYXNl
+czoNCj4gKyAgLSBtbWFwKCkgYWRkciBwYXJhbWV0ZXIuDQo+ICsgIC0gbXJlbWFwKCkgbmV3X2Fk
+ZHJlc3MgcGFyYW1ldGVyLg0KPiArICAtIHByY3RsX3NldF9tbSgpIHN0cnVjdCBwcmN0bF9tYXAg
+ZmllbGRzLg0KPiArICAtIHByY3RsX3NldF9tbV9tYXAoKSBzdHJ1Y3QgcHJjdGxfbWFwIGZpZWxk
+cy4NCj4gKw0KPiArQW55IGF0dGVtcHQgdG8gdXNlIG5vbi16ZXJvIHRhZ2dlZCBwb2ludGVycyB3
+aWxsIGxlYWQgdG8gdW5kZWZpbmVkIGJlaGF2aW91ci4NCj4gKw0KPiArNC4gRXhhbXBsZSBvZiBj
+b3JyZWN0IHVzYWdlDQo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gKw0KPiArdm9p
+ZCBtYWluKHZvaWQpDQo+ICt7DQo+ICsJc3RhdGljIGludCB0YmlfZW5hYmxlZCA9IDA7DQo+ICsJ
+dW5zaWduZWQgbG9uZyB0YWcgPSAwOw0KPiArDQo+ICsJY2hhciAqcHRyID0gbW1hcChOVUxMLCBQ
+QUdFX1NJWkUsIFBST1RfUkVBRCB8IFBST1RfV1JJVEUsDQo+ICsJCQkgTUFQX0FOT05ZTU9VUywg
+LTEsIDApOw0KPiArDQo+ICsJaWYgKHByY3RsKFBSX1NFVF9UQUdHRURfQUREUl9DVFJMLCBQUl9U
+QUdHRURfQUREUl9FTkFCTEUsDQo+ICsJCSAgMCwgMCwgMCkgPT0gMCkNCj4gKwkJdGJpX2VuYWJs
+ZWQgPSAxOw0KPiArDQo+ICsJaWYgKHB0ciA9PSAodm9pZCAqKS0xKSAvKiBNQVBfRkFJTEVEICov
+DQo+ICsJCXJldHVybiAtMTsNCj4gKw0KPiArCWlmICh0YmlfZW5hYmxlZCkNCj4gKwkJdGFnID0g
+cmFuZCgpICYgMHhmZjsNCj4gKw0KPiArCXB0ciA9IChjaGFyICopKCh1bnNpZ25lZCBsb25nKXB0
+ciB8ICh0YWcgPDwgVEFHX1NISUZUKSk7DQo+ICsNCj4gKwkqcHRyID0gJ2EnOw0KPiArDQo+ICsJ
+Li4uDQo+ICt9DQo+ICsNCj4gDQoNCg==
