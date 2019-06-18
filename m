@@ -2,112 +2,118 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F973C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:00:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AB1CC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FE220673
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:00:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560841224;
-	bh=zyoTbA/X8DjK3gQ0rzJxs92dPQZZnv6PtxgiKe9KUbI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=gXMRBdBaYefZpUVcHEBQ35AZODeO9uw4SjGb4RWYpATVNlDTmR0zKi8NceFYMJfGv
-	 zMqP6X96HpdoQEYWb/GqvCSPFG3ymBoAvZ//SJNqr4qD6eb+hC2febPrI0hlx5Gye8
-	 3ARhN4n+QdFIYR+QsxgUGRnZHhNbvfQClIDzc2UE=
+	by mail.kernel.org (Postfix) with ESMTP id 3FA7F20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GTNwJZ2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726292AbfFRHAW (ORCPT
+        id S1726687AbfFRHB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:00:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRHAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:00:22 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEB1B20665;
-        Tue, 18 Jun 2019 07:00:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560841221;
-        bh=zyoTbA/X8DjK3gQ0rzJxs92dPQZZnv6PtxgiKe9KUbI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=UMqfrvGmoZKS6fDsGggwuNfWr0M4aOYHDvAEomPqWZK5kBsXiByGfxwWulvle/eGL
-         3LajHF7zPGnjoHdAURTpA3CkD7zeNLMjXhLy8BqsaD6Wc6FjS6D/GvkM5OK9eD003v
-         xIr81+VyroIKqPGMUuUJCVv7+hRFJ7xaWonj4rGc=
-Date:   Tue, 18 Jun 2019 09:00:19 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
-Cc:     Joe Perches <joe@perches.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
-        Bastien Nocera <hadess@hadess.net>,
-        Larry Finger <Larry.Finger@lwfinger.net>
-Subject: Re: [PATCH v3 1/3] staging: rtl8723bs: Resolve checkpatch error
- "that open brace { should be on the previous line" in the rtl8723 driver
-Message-ID: <20190618070019.GA20601@kroah.com>
-References: <cover.1560701271.git.shobhitkukreti@gmail.com>
- <387734fb053e04eb44a0813ab3531a1f4344fdb2.1560701271.git.shobhitkukreti@gmail.com>
+        Tue, 18 Jun 2019 03:01:27 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45023 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRHB1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:01:27 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e189so8247529oib.11;
+        Tue, 18 Jun 2019 00:01:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UZNDItw3ygfGYFSl3GXh76G5vlmPu1W37CyeAI/eeGI=;
+        b=GTNwJZ2FSemib4K2snzDqotHuHa1Xpn7HUigru0Lq3EGx8cnAkL5PGnVIO9elWsm0Q
+         IsCBWIUn5xf6aK1/3FinYcujxZJXZ5UGkeYJ9Nu3U/1hZXSeTAhxlHPhVZqdow7UcR7y
+         +cF7m8LcwXbEQUz5MEqmpvfu7v463N2xGeZkmpaNhJ9OUFRFJpneYhyr1JrSmA0UQeI7
+         jywN0ELJOwOhfZXyPh4YC9zcqWIwtkhLRRPIktA1BUD2HjKjjrf3cJvudy430DZSbipE
+         oARwDkQ14HvuDYNanmzrRN5HV8Y76IhkBspp1iNYJM4AlQ8vWzYjtAuWKjfz/xBdLVPj
+         X1Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UZNDItw3ygfGYFSl3GXh76G5vlmPu1W37CyeAI/eeGI=;
+        b=YOu7y6afa5duv8iEPqHncghRYzCihEgeD60j3gebVQoAygn9LNdapd+4UjW++n6Rcb
+         VgqUNom2t5pUz4QOGCPugUo0kY7bvUDeKIG6JSMJYI0poXpVYkyKvDT29X7RI229Ox4X
+         PO3l74hbNiMwcvUdRJmCKYxo5mGaJLBrHquqMEIJZoFtPanVjouv8i+1A078BdcSKpgf
+         tU1wJ4q1AA5n384M+1T6kQM4vI5i4iO7hDpbdJ2UgnS9qOW0qkEH0uShrLSb7lFnmHT+
+         lAMVWdSJOjmFcyHT9puhuCOaU5E+HFL17R/5jIf3DwOXIUXeuosHf0XEoUCYNu0SRYtr
+         rBdg==
+X-Gm-Message-State: APjAAAVKtemmlQkFT2sPIv/Moz5/1zSKomw+41ah2+OkeQcifiuHGWCN
+        hSbdtho12mxuEFCJy3SS5wy5Ti59
+X-Google-Smtp-Source: APXvYqwlvpm0Vj0sTcQaWIuQeG85F6ipiTB1Q1iMn13WnvhwvU2qOSRBT5zqcHCBEIepyHYMf4wr2g==
+X-Received: by 2002:a65:64d6:: with SMTP id t22mr961807pgv.406.1560835324809;
+        Mon, 17 Jun 2019 22:22:04 -0700 (PDT)
+Received: from icarus ([2001:268:c0c9:ec1e:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id j23sm15654838pgb.63.2019.06.17.22.22.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 17 Jun 2019 22:22:03 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 14:21:46 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Richard Weinberger <richard@nod.at>
+Cc:     Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-iio@vger.kernel.org,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kjeld Flarup <kfa@deif.com>,
+        Patrick Havelange <patrick.havelange@essensium.com>
+Subject: Re: [PATCH] counter: fix ftm-quaddec build error on UML
+Message-ID: <20190618052146.GA3656@icarus>
+References: <e33254e5-3e8e-fc86-de72-b3dd2f6c310c@infradead.org>
+ <1644235064.95157.1560801285401.JavaMail.zimbra@nod.at>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <387734fb053e04eb44a0813ab3531a1f4344fdb2.1560701271.git.shobhitkukreti@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1644235064.95157.1560801285401.JavaMail.zimbra@nod.at>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 09:19:49AM -0700, Shobhit Kukreti wrote:
-> Cleaned up the code from the following files to get rid of
-> check patch error "that open brace { should be on the previous line"
+On Mon, Jun 17, 2019 at 09:54:45PM +0200, Richard Weinberger wrote:
+> Hi!
 > 
-> drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> drivers/staging/rtl8723bs/os_dep/recv_linux.c
-> drivers/staging/rtl8723bs/os_dep/rtw_proc.c
-> drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-> drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
+> ----- Ursprüngliche Mail -----
+> > Von: "Randy Dunlap" <rdunlap@infradead.org>
+> > An: "linux-kernel" <linux-kernel@vger.kernel.org>, linux-iio@vger.kernel.org
+> > CC: "Geert Uytterhoeven" <geert@linux-m68k.org>, "Kjeld Flarup" <kfa@deif.com>, "Patrick Havelange"
+> > <patrick.havelange@essensium.com>, "William Breathitt Gray" <vilhelm.gray@gmail.com>, "richard" <richard@nod.at>
+> > Gesendet: Montag, 17. Juni 2019 18:21:40
+> > Betreff: [PATCH] counter: fix ftm-quaddec build error on UML
 > 
-> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
-> ---
->  drivers/staging/rtl8723bs/os_dep/mlme_linux.c     | 15 +++--
->  drivers/staging/rtl8723bs/os_dep/recv_linux.c     | 77 ++++++++---------------
->  drivers/staging/rtl8723bs/os_dep/rtw_proc.c       |  6 +-
->  drivers/staging/rtl8723bs/os_dep/sdio_intf.c      | 15 ++---
->  drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c | 24 +++----
->  5 files changed, 49 insertions(+), 88 deletions(-)
+> > From: Randy Dunlap <rdunlap@infradead.org>
+> > 
+> > Fix build error on user-mode Linux, which does not set HAS_IOMEM,
+> > so devm_ioremap() is not available.  Fixes this build error:
+> > 
+> > ERROR: "devm_ioremap" [drivers/counter/ftm-quaddec.ko] undefined!
+> > 
+> > Fixes: a3b9a99980d9 ("counter: add FlexTimer Module Quadrature decoder counter
+> > driver")
+> > 
+> > Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> > Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
 > 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> index aa2499f..4631b68 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
-> @@ -46,8 +46,7 @@ void rtw_os_indicate_connect(struct adapter *adapter)
->  	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
->  
->  	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == true) ||
-> -		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true))
-> -	{
-> +		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true)) {
->  		rtw_cfg80211_ibss_indicate_connect(adapter);
->  	}
->  	else
-> @@ -77,8 +76,8 @@ void rtw_reset_securitypriv(struct adapter *adapter)
->  
->  	spin_lock_bh(&adapter->security_key_mutex);
->  
-> -	if (adapter->securitypriv.dot11AuthAlgrthm == dot11AuthAlgrthm_8021X)/* 802.1x */
-> -	{
-> +	if (adapter->securitypriv.dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) { /* 802.1x */
-> +
+> AFAICT Patrick fixed this already.
+> 
+> Thanks,
+> //richard
 
-Why the blank line?
+Yes, commit 0c75376fa395 ("counter/ftm-quaddec: Add missing dependencies
+in Kconfig") in Greg KH's staging repository in the staging-linus
+branch should address this issue.
 
-And don't keep the comment on the right side, that's just a pain to work
-with.
-
-thanks,
-
-greg k-h
+William Breathitt Gray
