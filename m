@@ -2,69 +2,104 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBF4DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:05:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97917C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1B22063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:05:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E9FA214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:05:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560881111;
-	bh=QYuhefQ+JrfaKl735jjxAXSNAG9+JGVvJJYIcDXoH3Q=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=aShP340js7M7Jdo+Vx6TrWsqXeIRXdtrOKbGNocPlatPLjPeH42ii8NaGgzZTEbRl
-	 xIEsU6dYSal7r+knla7fPuSPpDeCgqogp70enbC2cR05fersgBdYVh5YIRBN56yU3D
-	 SozO5sQLKcCYc5048Cp/tjLJ7uRzmJEXxFfr82qc=
+	s=default; t=1560881131;
+	bh=zu49cMGWCOZqm0jpO1OSpCXjUzgW/CvCCjRK1XcoiR8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KV9+FU5vwmB+53ecdpgQOHrXQiakzIunPs+z5EOhLYg5657+nABQTEvzbyJzq6YJ/
+	 mxE+u5KfcGmv0aa5FaE9FCj+ovbiBzRFqzKSQVQ1mOme1042fho8p3yTFWEe+2M42w
+	 LkT2hMc7ebRRC4gHPqiBF/rDOIt9NLEM433XdPyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730207AbfFRSFG (ORCPT
+        id S1730263AbfFRSF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:05:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 14:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729337AbfFRSFF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:05:05 -0400
-Subject: Re: [GIT PULL] meminit fix for v5.2-rc6
+        id S1727616AbfFRSF3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:05:29 -0400
+Received: from gmail.com (unknown [104.132.1.77])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 528FF2063F;
+        Tue, 18 Jun 2019 18:05:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560881104;
-        bh=QYuhefQ+JrfaKl735jjxAXSNAG9+JGVvJJYIcDXoH3Q=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=n30nmmCHmOcdnBNFgB0NNyivuTJHgFZboDPcAJ8eH4n74zfL7N8KUif5dWucg+WuP
-         8sPByWSPAAVLFXNN3yrBdJjnP3J1Udt9se/Kk1L7lB+c9NFbMjRr+ktqlPuJmvBacY
-         FHdi5typyoR0ikegvj5SBL47nqqd1WvbMJUEcL3U=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <201906172056.CDD757E@keescook>
-References: <201906172056.CDD757E@keescook>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <201906172056.CDD757E@keescook>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git
- tags/meminit-v5.2-rc6
-X-PR-Tracked-Commit-Id: 8c30d32b1a326bb120635a8b4836ec61cba454fa
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 915ed9320cba9ddb5da3f3ee49a8ceeed85fb5cc
-Message-Id: <156088110470.27164.8783777065993800077.pr-tracker-bot@kernel.org>
-Date:   Tue, 18 Jun 2019 18:05:04 +0000
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+        s=default; t=1560881128;
+        bh=zu49cMGWCOZqm0jpO1OSpCXjUzgW/CvCCjRK1XcoiR8=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=sqRhM9Jh9Uh6QscYb8TgS+av5lV+aMfdWA0J0VppbG+QcEprlSiuFMuPF7wfyu0z9
+         DVQcfigeAfDvPkATHsenQEIfg2hPlwZzPZXmHyx/Wi1yTXp5j4rkwur81GaVh9A+ni
+         ivBZtiDqof0stlo5uAyIUQbXEvc4rOEM6pzU3PU4=
+Date:   Tue, 18 Jun 2019 11:05:26 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] [v2] crypto: serpent - mark __serpent_setkey_sbox
+ noinline
+Message-ID: <20190618180526.GG184520@gmail.com>
+References: <20190618111953.3183723-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618111953.3183723-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Mon, 17 Jun 2019 21:00:28 -0700:
+On Tue, Jun 18, 2019 at 01:19:42PM +0200, Arnd Bergmann wrote:
+> The same bug that gcc hit in the past is apparently now showing
+> up with clang, which decides to inline __serpent_setkey_sbox:
+> 
+> crypto/serpent_generic.c:268:5: error: stack frame size of 2112 bytes in function '__serpent_setkey' [-Werror,-Wframe-larger-than=]
+> 
+> Marking it 'noinline' reduces the stack usage from 2112 bytes to
+> 192 and 96 bytes, respectively, and seems to generate more
+> useful object code.
+> 
+> Fixes: c871c10e4ea7 ("crypto: serpent - improve __serpent_setkey with UBSAN")
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+> v2: style improvements suggested by Eric Biggers
+> ---
+>  crypto/serpent_generic.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/crypto/serpent_generic.c b/crypto/serpent_generic.c
+> index e57757904677..56fa665a4f01 100644
+> --- a/crypto/serpent_generic.c
+> +++ b/crypto/serpent_generic.c
+> @@ -225,7 +225,13 @@
+>  	x4 ^= x2;					\
+>  	})
+>  
+> -static void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2, u32 r3, u32 r4, u32 *k)
+> +/*
+> + * both gcc and clang have misoptimized this function in the past,
+> + * producing horrible object code from spilling temporary variables
+> + * on the stack. Forcing this part out of line avoids that.
+> + */
+> +static noinline void __serpent_setkey_sbox(u32 r0, u32 r1, u32 r2,
+> +					   u32 r3, u32 r4, u32 *k)
+>  {
+>  	k += 100;
+>  	S3(r3, r4, r0, r1, r2); store_and_load_keys(r1, r2, r4, r3, 28, 24);
+> -- 
+> 2.20.0
+> 
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kees/linux.git tags/meminit-v5.2-rc6
+Reviewed-by: Eric Biggers <ebiggers@kernel.org>
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/915ed9320cba9ddb5da3f3ee49a8ceeed85fb5cc
-
-Thank you!
-
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+- Eric
