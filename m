@@ -2,143 +2,204 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36091C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:45:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECD40C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:45:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 003D32070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:45:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6EA72085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:45:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="heJV77Sz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LbgR6szI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729353AbfFRJpU (ORCPT
+        id S1729495AbfFRJp0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:45:20 -0400
-Received: from mail-eopbgr30066.outbound.protection.outlook.com ([40.107.3.66]:11673
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729230AbfFRJpU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:45:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0H89k2AoZhrV0TSzPJzRfK3OJx5SjnZPRp/rdgl1/Bc=;
- b=heJV77SzxSJRtj0PwvnaesafTc27dHk4+QscRgZF2nU6hjLVng1DM29iMvENdR0XaQLaORdX5UifOZ8bEyfAibTwNKboL/vTk1R9iAUQfGudE6l9rd09/zgGqyXtoZkQjJdlrkv2p7MS2XgNk7FT6a6kHVw/9r+ixWc5ukTnVcA=
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com (52.134.72.18) by
- DB3PR0402MB3641.eurprd04.prod.outlook.com (52.134.69.140) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Tue, 18 Jun 2019 09:44:35 +0000
-Received: from DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec]) by DB3PR0402MB3916.eurprd04.prod.outlook.com
- ([fe80::5835:e874:bd94:fec%5]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
- 09:44:35 +0000
-From:   Anson Huang <anson.huang@nxp.com>
-To:     Shawn Guo <shawnguo@kernel.org>
-CC:     "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>,
-        Abel Vesa <abel.vesa@nxp.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH V2 2/2] soc: imx8: Use existing of_root directly
-Thread-Topic: [PATCH V2 2/2] soc: imx8: Use existing of_root directly
-Thread-Index: AQHVIogDK1yz8od2k06kc5I/LWM47qahJ3qAgAAHn0A=
-Date:   Tue, 18 Jun 2019 09:44:35 +0000
-Message-ID: <DB3PR0402MB3916AF21E4C4199E083790A1F5EA0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <20190614080748.32997-1-Anson.Huang@nxp.com>
- <20190614080748.32997-2-Anson.Huang@nxp.com> <20190618091442.GM29881@dragon>
-In-Reply-To: <20190618091442.GM29881@dragon>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=anson.huang@nxp.com; 
-x-originating-ip: [119.31.174.68]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 95f21d7a-63bf-4292-ee75-08d6f3d192f3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB3PR0402MB3641;
-x-ms-traffictypediagnostic: DB3PR0402MB3641:
-x-microsoft-antispam-prvs: <DB3PR0402MB36411B7D585F53306811BBF7F5EA0@DB3PR0402MB3641.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6108;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(39860400002)(346002)(366004)(13464003)(189003)(199004)(476003)(446003)(11346002)(5660300002)(9686003)(53936002)(55016002)(6246003)(3846002)(53546011)(54906003)(76176011)(44832011)(33656002)(486006)(66556008)(66946007)(7736002)(6506007)(6916009)(8936002)(305945005)(74316002)(25786009)(102836004)(73956011)(6436002)(4326008)(8676002)(81166006)(76116006)(7696005)(256004)(99286004)(66066001)(66476007)(6116002)(64756008)(186003)(66446008)(26005)(71200400001)(52536014)(68736007)(316002)(229853002)(71190400001)(2906002)(478600001)(14454004)(81156014)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB3PR0402MB3641;H:DB3PR0402MB3916.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: EU8P6xdtiXe+znPd2l12sbjJWCizeywZR/ZZAASl/yPLqaHAOAat45i8C9g25Sotv8BvEbxFiN1YCUPV237ly4bEcyOu59/BQoUgyl8EFNyIYGCJHLV4Dq7/RCV+MamuFyyqy1qD+jzeqCnLg6NJJTH2MSUapyf92CezHXf2Z5E2CZt5dAyZuENnv9OQt6ppePmcbuu99c0kbAM6P2574XvE6EXUqetwe+Ukzf5hX3rj0T9PAwrQvj9ZhYPiT7jnAT1Iwv8cdJRfHPpqPj2CPJgPlg5mE/UkuBO0Kjejmh4++WiPbPEj5tCmMQ7lyQo8ImXIF5cTxpDYleB6fWcqz9iuWclXpuGvB/yuHsdf3ADm2Vgk3bKrlFk0ewWGH8TBTt+7QDjKHVFQnoDxNGoRpJaQUNJ9Ri5Xbko9akDsctA=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Tue, 18 Jun 2019 05:45:26 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43287 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729230AbfFRJpZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:45:25 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j29so8738431lfk.10;
+        Tue, 18 Jun 2019 02:45:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3qfnEcP7spmKcXBjGoV/MSfMy8bpQgF8xb+RRvaokWY=;
+        b=LbgR6szItH3+L/+j0swAZicCIBXbGEezKhgRZsIcbD3BqTtana90AAz2VbkYWimOoy
+         6UCqAZFHCo8LBcwtXmpCmQoD4I0FTGqg8s730A0yPs3Czywylm82tYvlQDdh5weEDsUh
+         m2Sg+2bsi0zz44ps+MW/elejMt4wCwlhsu74rf/A8sN/v60L8AT+cmVIJWHUDQSBUsp1
+         ain/Gr/Q4ZPHt7KVxJ8IH/D+fM6K1cROMpdD1rVELdQg2fXOOQDL5RzOQTnHofqQWXgT
+         iqxPD9hYmr8jJBWlJ/t29xDSYNQb108La78juH/KVMAxbVPUErtuAjRJ2zLEyQQCdHwx
+         SEUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3qfnEcP7spmKcXBjGoV/MSfMy8bpQgF8xb+RRvaokWY=;
+        b=OSpRP7oj4Wvyq0RtJ2fgvqOJJARHzvTe7N0bCo4uvex5uyVnNOa1Xs6GuD9pVxl16/
+         lRRj1E8O0n9hfm2VMRWvBIizrToBXx67BleuAQuRx4CyhD66CpR4YQ8bHUJob3gQ6e3T
+         D3aI0blvh9/DH6Qna/2IdOS+VRwgT6XJABvY8o1RFCrbEHRQ8oYtjYyYg3kYFwpzGmVu
+         L7a2nH8cJCXwhJLaYhltBnm7O88FxacDba36a+6auyk+deXKUQaqhzVhhfCmp1mLsSMT
+         TOGSK5C9ZETCC2GpiyZDS1bfnH2ueGeUmvm4D6a5kDZIyB7D4UU1IteDYPhSv/J0dcrm
+         rA9A==
+X-Gm-Message-State: APjAAAW7+utkhiUM+CSL9ip/uSnV+VunkN53yzR+6ugDaxDhMhUzxYb7
+        yli40s1aOjZkRGxbDeS28+MDQwLy
+X-Google-Smtp-Source: APXvYqwUF/vvc55rv/eIOk9NJ17YGA3PysCsnAaoBAB1gS70rpNJLe2VKJsn/ctYZSE8FsUYkvW2gg==
+X-Received: by 2002:ac2:5922:: with SMTP id v2mr57535446lfi.180.1560851122071;
+        Tue, 18 Jun 2019 02:45:22 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id d2sm2075090lfh.1.2019.06.18.02.45.21
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 02:45:21 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
+ <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
+ <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
+ <d34c100d-e82a-bb00-22c6-c5f2f6cdb03a@nvidia.com>
+ <b47b7b89-e830-0b3e-026d-c6c7d67d3324@gmail.com>
+ <255f92e8-df61-5e9c-ba4f-e52a0bd11451@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <69cb064c-2a8e-9421-35b0-4a2273f62365@gmail.com>
+Date:   Tue, 18 Jun 2019 12:45:20 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 95f21d7a-63bf-4292-ee75-08d6f3d192f3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 09:44:35.6909
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: anson.huang@nxp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB3PR0402MB3641
+In-Reply-To: <255f92e8-df61-5e9c-ba4f-e52a0bd11451@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFNoYXduDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24g
-R3VvIDxzaGF3bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiBUdWVzZGF5LCBKdW5lIDE4LCAyMDE5
-IDU6MTUgUE0NCj4gVG86IEFuc29uIEh1YW5nIDxhbnNvbi5odWFuZ0BueHAuY29tPg0KPiBDYzog
-cy5oYXVlckBwZW5ndXRyb25peC5kZTsga2VybmVsQHBlbmd1dHJvbml4LmRlOyBmZXN0ZXZhbUBn
-bWFpbC5jb207DQo+IExlb25hcmQgQ3Jlc3RleiA8bGVvbmFyZC5jcmVzdGV6QG54cC5jb20+OyB2
-aXJlc2gua3VtYXJAbGluYXJvLm9yZzsNCj4gQWJlbCBWZXNhIDxhYmVsLnZlc2FAbnhwLmNvbT47
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZzsgZGwtbGludXgtaW14IDxsaW51eC1pbXhAbnhwLmNvbT4NCj4gU3ViamVj
-dDogUmU6IFtQQVRDSCBWMiAyLzJdIHNvYzogaW14ODogVXNlIGV4aXN0aW5nIG9mX3Jvb3QgZGly
-ZWN0bHkNCj4gDQo+IE9uIEZyaSwgSnVuIDE0LCAyMDE5IGF0IDA0OjA3OjQ4UE0gKzA4MDAsIEFu
-c29uLkh1YW5nQG54cC5jb20gd3JvdGU6DQo+ID4gRnJvbTogQW5zb24gSHVhbmcgPEFuc29uLkh1
-YW5nQG54cC5jb20+DQo+ID4NCj4gPiBUaGVyZSBpcyBjb21tb24gb2Zfcm9vdCBmb3IgcmVmZXJl
-bmNlLCBubyBuZWVkIHRvIGZpbmQgaXQgZnJvbSBEVA0KPiA+IGFnYWluLCB1c2Ugb2Zfcm9vdCBk
-aXJlY3RseSB0byBtYWtlIGRyaXZlciBzaW1wbGUuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBB
-bnNvbiBIdWFuZyA8QW5zb24uSHVhbmdAbnhwLmNvbT4NCj4gPiBSZXZpZXdlZC1ieTogRG9uZyBB
-aXNoZW5nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gDQo+IEl0IGNhbm5vdCBiZSBhcHBsaWVk
-LiAgUGxlYXNlIHJlc2VuZCBieSBiYXNpbmcgb24gbXkgaW14L2RyaXZlcnMgYnJhbmNoLg0KDQpP
-SywganVzdCByZXNlbnQsIHRoZXJlIGlzIGEgc29jIGRyaXZlciBwYXRjaCBpbiBsaW51eC1uZXh0
-LCBwcmV2aW91c2x5IEkgZGlkIGl0IGJhc2VkIG9uIGl0Lg0KTm93IEkgY2hhbmdlIGl0IHRvIHlv
-dXIgZ2l0IHJlcG8sIHlvdSBjb3VsZCBtZWV0IGNvbmZsaWN0IGR1cmluZyBtZXJnZS4NCg0KVGhh
-bmtzLA0KQW5zb24NCg0KPiANCj4gU2hhd24NCj4gDQo+ID4gLS0tDQo+ID4gTm8gY2hhbmdlcy4N
-Cj4gPiAtLS0NCj4gPiAgZHJpdmVycy9zb2MvaW14L3NvYy1pbXg4LmMgfCA5ICsrLS0tLS0tLQ0K
-PiA+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQ0KPiA+
-DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvc29jL2lteC9zb2MtaW14OC5jIGIvZHJpdmVycy9z
-b2MvaW14L3NvYy1pbXg4LmMNCj4gPiBpbmRleCA1YzdmMzMwLi5iNDU5YmYyIDEwMDY0NA0KPiA+
-IC0tLSBhL2RyaXZlcnMvc29jL2lteC9zb2MtaW14OC5jDQo+ID4gKysrIGIvZHJpdmVycy9zb2Mv
-aW14L3NvYy1pbXg4LmMNCj4gPiBAQCAtMTA1LDcgKzEwNSw2IEBAIHN0YXRpYyBpbnQgX19pbml0
-IGlteDhfc29jX2luaXQodm9pZCkgIHsNCj4gPiAgCXN0cnVjdCBzb2NfZGV2aWNlX2F0dHJpYnV0
-ZSAqc29jX2Rldl9hdHRyOw0KPiA+ICAJc3RydWN0IHNvY19kZXZpY2UgKnNvY19kZXY7DQo+ID4g
-LQlzdHJ1Y3QgZGV2aWNlX25vZGUgKnJvb3Q7DQo+ID4gIAljb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
-X2lkICppZDsNCj4gPiAgCXUzMiBzb2NfcmV2ID0gMDsNCj4gPiAgCWNvbnN0IHN0cnVjdCBpbXg4
-X3NvY19kYXRhICpkYXRhOw0KPiA+IEBAIC0xMTcsMTIgKzExNiwxMSBAQCBzdGF0aWMgaW50IF9f
-aW5pdCBpbXg4X3NvY19pbml0KHZvaWQpDQo+ID4NCj4gPiAgCXNvY19kZXZfYXR0ci0+ZmFtaWx5
-ID0gIkZyZWVzY2FsZSBpLk1YIjsNCj4gPg0KPiA+IC0Jcm9vdCA9IG9mX2ZpbmRfbm9kZV9ieV9w
-YXRoKCIvIik7DQo+ID4gLQlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3N0cmluZyhyb290LCAibW9k
-ZWwiLCAmc29jX2Rldl9hdHRyLQ0KPiA+bWFjaGluZSk7DQo+ID4gKwlyZXQgPSBvZl9wcm9wZXJ0
-eV9yZWFkX3N0cmluZyhvZl9yb290LCAibW9kZWwiLA0KPiA+ICsmc29jX2Rldl9hdHRyLT5tYWNo
-aW5lKTsNCj4gPiAgCWlmIChyZXQpDQo+ID4gIAkJZ290byBmcmVlX3NvYzsNCj4gPg0KPiA+IC0J
-aWQgPSBvZl9tYXRjaF9ub2RlKGlteDhfc29jX21hdGNoLCByb290KTsNCj4gPiArCWlkID0gb2Zf
-bWF0Y2hfbm9kZShpbXg4X3NvY19tYXRjaCwgb2Zfcm9vdCk7DQo+ID4gIAlpZiAoIWlkKSB7DQo+
-ID4gIAkJcmV0ID0gLUVOT0RFVjsNCj4gPiAgCQlnb3RvIGZyZWVfc29jOw0KPiA+IEBAIC0xNDcs
-OCArMTQ1LDYgQEAgc3RhdGljIGludCBfX2luaXQgaW14OF9zb2NfaW5pdCh2b2lkKQ0KPiA+ICAJ
-CWdvdG8gZnJlZV9yZXY7DQo+ID4gIAl9DQo+ID4NCj4gPiAtCW9mX25vZGVfcHV0KHJvb3QpOw0K
-PiA+IC0NCj4gPiAgCWlmIChJU19FTkFCTEVEKENPTkZJR19BUk1fSU1YX0NQVUZSRVFfRFQpKQ0K
-PiA+ICAJCXBsYXRmb3JtX2RldmljZV9yZWdpc3Rlcl9zaW1wbGUoImlteC1jcHVmcmVxLWR0Iiwg
-LTEsIE5VTEwsDQo+IDApOw0KPiA+DQo+ID4gQEAgLTE1OSw3ICsxNTUsNiBAQCBzdGF0aWMgaW50
-IF9faW5pdCBpbXg4X3NvY19pbml0KHZvaWQpDQo+ID4gIAkJa2ZyZWUoc29jX2Rldl9hdHRyLT5y
-ZXZpc2lvbik7DQo+ID4gIGZyZWVfc29jOg0KPiA+ICAJa2ZyZWUoc29jX2Rldl9hdHRyKTsNCj4g
-PiAtCW9mX25vZGVfcHV0KHJvb3QpOw0KPiA+ICAJcmV0dXJuIHJldDsNCj4gPiAgfQ0KPiA+ICBk
-ZXZpY2VfaW5pdGNhbGwoaW14OF9zb2NfaW5pdCk7DQo+ID4gLS0NCj4gPiAyLjcuNA0KPiA+DQo=
+18.06.2019 11:47, Jon Hunter пишет:
+> 
+> On 17/06/2019 13:41, Dmitry Osipenko wrote:
+>> 17.06.2019 13:57, Jon Hunter пишет:
+>>>
+>>> On 14/06/2019 17:44, Dmitry Osipenko wrote:
+>>>> 14.06.2019 18:24, Jon Hunter пишет:
+>>>>>
+>>>>> On 14/06/2019 16:21, Jon Hunter wrote:
+>>>>>>
+>>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>>>>>> of data, hence it can report transfer's residual with more fidelity which
+>>>>>>> may be required in cases like audio playback. In particular this fixes
+>>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
+>>>>>>> on Tegra20 and Tegra30 devices.
+>>>>>>>
+>>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>>>>>>
+>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>> ---
+>>>>>>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>>>>>>  1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>>>>> index 79e9593815f1..c5af8f703548 100644
+>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>>>>>  	return 0;
+>>>>>>>  }
+>>>>>>>  
+>>>>>>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>>>>>>> +					      struct tegra_dma_sg_req *sg_req,
+>>>>>>> +					      struct tegra_dma_desc *dma_desc,
+>>>>>>> +					      unsigned int residual)
+>>>>>>> +{
+>>>>>>> +	unsigned long status, wcount = 0;
+>>>>>>> +
+>>>>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>>> +		return residual;
+>>>>>>> +
+>>>>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +		wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>>> +
+>>>>>>> +	status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>>> +
+>>>>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +		wcount = status;
+>>>>>>> +
+>>>>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>>> +		return residual - sg_req->req_len;
+>>>>>>> +
+>>>>>>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>>> +}
+>>>>>>> +
+>>>>>>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>>>>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>>>>>>>  {
+>>>>>>>  	struct tegra_dma_channel *tdc = to_tegra_dma_chan(dc);
+>>>>>>> +	struct tegra_dma_sg_req *sg_req = NULL;
+>>>>>>>  	struct tegra_dma_desc *dma_desc;
+>>>>>>> -	struct tegra_dma_sg_req *sg_req;
+>>>>>>>  	enum dma_status ret;
+>>>>>>>  	unsigned long flags;
+>>>>>>>  	unsigned int residual;
+>>>>>>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>>>>>  		residual = dma_desc->bytes_requested -
+>>>>>>>  			   (dma_desc->bytes_transferred %
+>>>>>>>  			    dma_desc->bytes_requested);
+>>>>>>> +		residual = tegra_dma_update_residual(tdc, sg_req, dma_desc,
+>>>>>>> +						     residual);
+>>>>>>
+>>>>>> I had a quick look at this, I am not sure that we want to call
+>>>>>> tegra_dma_update_residual() here for cases where the dma_desc is on the
+>>>>>> free_dma_desc list. In fact, couldn't this be simplified a bit for case
+>>>>>> where the dma_desc is on the free list? In that case I believe that the
+>>>>>> residual should always be 0.
+>>>>>
+>>>>> Actually, no, it could be non-zero in the case the transfer is aborted.
+>>>>
+>>>> Looks like everything should be fine as-is.
+>>>
+>>> I am still not sure we want to call this for the case where dma_desc is
+>>> on the free list.
+>>
+>> You're right! It's a bug there! The sg_req=NULL if dma_desc is on the free list, hence
+>> it will result in a NULL dereference. I'll fix it in v2 and will avoid the offending
+>> call, like you're suggesting.
+>>
+>>>> BTW, it's a bit hard to believe that there is any real benefit from the
+>>>> free_dma_desc list at all, maybe worth to just remove it?
+>>>
+>>> I think you need to elaborate a bit more here. I am not a massive fan of
+>>> this driver, but I am also not in the mood for changing unless there is
+>>> a good reason.
+>>
+>> It looks like the whole point of the free list is to have a cache of preallocated
+>> dma_desc's, but dma_desc allocation and initialization doesn't cost anything in
+>> comparison to the free list because memory is allocated from a SLAB cache and then the
+>> initialization will happen on CPU's cache.
+>>
+>> So the free list is quite pointless in terms of optimization. Moreover what if driver
+>> allocates a lot of dma_desc's and uses them just once? Looks like it will be quite a
+>> lot of wasted memory on the free list.
+> 
+> Yes indeed and for the ADMA we allocate and free on-demand as you are
+> suggesting. I don't know why it was done like this, but to make the
+> change it would be good to get some data about how much memory it is
+> consuming to see if it is actually worth it.
+
+Yeah, that's something to check in the future.
