@@ -2,196 +2,121 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21F6CC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 733A2C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:45:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAA8C20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:45:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BCE92080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:45:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADV+E6Np"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfFRGpe (ORCPT
+        id S1728922AbfFRGpd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:45:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:49698 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726403AbfFRGpc (ORCPT
+        Tue, 18 Jun 2019 02:45:33 -0400
+Received: from mail-vk1-f196.google.com ([209.85.221.196]:44122 "EHLO
+        mail-vk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726158AbfFRGpb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:45:32 -0400
-X-UUID: c955ef6297754fd299307ade39fb6010-20190618
-X-UUID: c955ef6297754fd299307ade39fb6010-20190618
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 442174043; Tue, 18 Jun 2019 14:35:20 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs07n2.mediatek.inc (172.21.101.141) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 18 Jun 2019 14:35:19 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 18 Jun 2019 14:35:19 +0800
-Message-ID: <1560839719.3736.0.camel@mtksdaap41>
-Subject: Re: [PATCH v2 08/12] drm/mediatek: Get rid of mtk_smi_larb_get/put
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Yong Wu <yong.wu@mediatek.com>
-CC:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Tomasz Figa <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>
-Date:   Tue, 18 Jun 2019 14:35:19 +0800
-In-Reply-To: <1560171313-28299-9-git-send-email-yong.wu@mediatek.com>
-References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
-         <1560171313-28299-9-git-send-email-yong.wu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 18 Jun 2019 02:45:31 -0400
+Received: by mail-vk1-f196.google.com with SMTP id w186so2571389vkd.11;
+        Mon, 17 Jun 2019 23:45:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ReyzkEJ0mqgLcwXEOt1orApmxGBjw7txCjk9AIkHxWA=;
+        b=ADV+E6NpxQ50gJHp6hd6dI8C+jQrTYyObZBldrnzIVa2WLszDwucTA6CiLBcDnQN8X
+         frAmZ+MA9IHvI6SgjVQ2/FWtdzYAIe694fBaqFbSgJVFAntiKq+9xDjM7s7YJB/6NYy8
+         cwu/oggvpOHjdlFzfMvswb8dkQp4bEUN49s9uhxnhIu5+st3CiIlBvfi5v/36zNgVnAm
+         Ju4rLyYDS9/RXQa1+R/Qy+v/HMgA4mmtdqXvBUKFj58eprQ8q6GqLAqc8hGd70x8RIc4
+         hfqGJ0zshAxEBeH0exILboBmbeo/1cE14rKdd3TYx6ioCx+QVF0G9fqq819K9D0L5Py7
+         YOjA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ReyzkEJ0mqgLcwXEOt1orApmxGBjw7txCjk9AIkHxWA=;
+        b=PBC9pdiUUlXEfP0n1f0RVRvp5KgFqYNg59alKMpldhkwfPNbH/d+K97yjPQIAct0H1
+         vF8nuGm/vpsNtaOxIv2PHWEVbmHR34NmDjcsW5XSBupjfYW4OIC+9mTAZTGmPJEbphgq
+         JUau1MjmcoDzz2hIIFC/B+1kJ+/8h3NKYfHwJPC4iVdrZUPpdSUXF6qV8iPahhvvhb/F
+         OP23TbczqLK1YgXL7vbTrs4kyf9innKz7BYF4FOlFVRjUkA75Qt9Vn//4piJppwQ1Flw
+         wS/SZbzMQyIyUTD2pTLZem2Fa5WXmQ0sc3DX/rStyQsk8YIqdsVPBhiPxPXWnv8mB7O3
+         7VJQ==
+X-Gm-Message-State: APjAAAWhwNdKLCj91WudWf+2KNKwf+D2v6EnS3x6+lRCtws79gIieY/7
+        jxhQQsZVfqcsuclopvatG/1UZRVuFHk=
+X-Google-Smtp-Source: APXvYqwlkXGD+qYFV6HV681y30CFFECs91e5IG9gbYhPtEYIiiGhdfnV9MsIND0ZgcRhLhSp6r4tDQ==
+X-Received: by 2002:a63:e649:: with SMTP id p9mr1109979pgj.276.1560838389298;
+        Mon, 17 Jun 2019 23:13:09 -0700 (PDT)
+Received: from maya190131 ([13.66.160.195])
+        by smtp.gmail.com with ESMTPSA id z74sm6415835pgz.41.2019.06.17.23.13.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 23:13:09 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 06:13:08 +0000
+From:   Maya Nakamura <m.maya.nakamura@gmail.com>
+To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
+        sthemmin@microsoft.com, sashal@kernel.org
+Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3 2/5] x86: hv: hv_init.c: Add functions to
+ allocate/deallocate page for Hyper-V
+Message-ID: <d19c28cda88bf1706baff883380dfd321da30a68.1560837096.git.m.maya.nakamura@gmail.com>
+References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1560837096.git.m.maya.nakamura@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yong:
+Introduce two new functions, hv_alloc_hyperv_page() and
+hv_free_hyperv_page(), to allocate/deallocate memory with the size and
+alignment that Hyper-V expects as a page. Although currently they are
+not used, they are ready to be used to allocate/deallocate memory on x86
+when their ARM64 counterparts are implemented, keeping symmetry between
+architectures with potentially different guest page sizes.
 
-On Mon, 2019-06-10 at 20:55 +0800, Yong Wu wrote:
-> MediaTek IOMMU has already added the device_link between the consumer
-> and smi-larb device. If the drm device call the pm_runtime_get_sync,
-> the smi-larb's pm_runtime_get_sync also be called automatically.
-> 
-> CC: CK Hu <ck.hu@mediatek.com>
-> CC: Philipp Zabel <p.zabel@pengutronix.de>
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> Reviewed-by: Evan Green <evgreen@chromium.org>
-> ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c     | 11 -----------
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c | 26 --------------------------
->  drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h |  1 -
->  3 files changed, 38 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index acad088..3a21a48 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -18,7 +18,6 @@
->  #include <drm/drm_probe_helper.h>
->  #include <linux/clk.h>
->  #include <linux/pm_runtime.h>
-> -#include <soc/mediatek/smi.h>
->  
->  #include "mtk_drm_drv.h"
->  #include "mtk_drm_crtc.h"
-> @@ -371,20 +370,12 @@ static void mtk_drm_crtc_atomic_enable(struct drm_crtc *crtc,
->  				       struct drm_crtc_state *old_state)
->  {
->  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> -	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	int ret;
->  
->  	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
->  
-> -	ret = mtk_smi_larb_get(comp->larb_dev);
-> -	if (ret) {
-> -		DRM_ERROR("Failed to get larb: %d\n", ret);
-> -		return;
-> -	}
-> -
->  	ret = mtk_crtc_ddp_hw_init(mtk_crtc);
->  	if (ret) {
-> -		mtk_smi_larb_put(comp->larb_dev);
->  		return;
->  	}
+Link: https://lore.kernel.org/lkml/87muindr9c.fsf@vitty.brq.redhat.com/
+Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
+Reviewed-by: Michael Kelley <mikelley@microsoft.com>
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/hyperv/hv_init.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-Remove {}.
-
-Regards,
-CK
-
->  
-> @@ -396,7 +387,6 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
->  					struct drm_crtc_state *old_state)
->  {
->  	struct mtk_drm_crtc *mtk_crtc = to_mtk_crtc(crtc);
-> -	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	int i;
->  
->  	DRM_DEBUG_DRIVER("%s %d\n", __func__, crtc->base.id);
-> @@ -419,7 +409,6 @@ static void mtk_drm_crtc_atomic_disable(struct drm_crtc *crtc,
->  
->  	drm_crtc_vblank_off(crtc);
->  	mtk_crtc_ddp_hw_fini(mtk_crtc);
-> -	mtk_smi_larb_put(comp->larb_dev);
->  
->  	mtk_crtc->enabled = false;
->  }
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> index 54ca794..ede15c9 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.c
-> @@ -265,8 +265,6 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
->  		      const struct mtk_ddp_comp_funcs *funcs)
->  {
->  	enum mtk_ddp_comp_type type;
-> -	struct device_node *larb_node;
-> -	struct platform_device *larb_pdev;
->  
->  	if (comp_id < 0 || comp_id >= DDP_COMPONENT_ID_MAX)
->  		return -EINVAL;
-> @@ -296,30 +294,6 @@ int mtk_ddp_comp_init(struct device *dev, struct device_node *node,
->  	if (IS_ERR(comp->clk))
->  		return PTR_ERR(comp->clk);
->  
-> -	/* Only DMA capable components need the LARB property */
-> -	comp->larb_dev = NULL;
-> -	if (type != MTK_DISP_OVL &&
-> -	    type != MTK_DISP_RDMA &&
-> -	    type != MTK_DISP_WDMA)
-> -		return 0;
-> -
-> -	larb_node = of_parse_phandle(node, "mediatek,larb", 0);
-> -	if (!larb_node) {
-> -		dev_err(dev,
-> -			"Missing mediadek,larb phandle in %pOF node\n", node);
-> -		return -EINVAL;
-> -	}
-> -
-> -	larb_pdev = of_find_device_by_node(larb_node);
-> -	if (!larb_pdev) {
-> -		dev_warn(dev, "Waiting for larb device %pOF\n", larb_node);
-> -		of_node_put(larb_node);
-> -		return -EPROBE_DEFER;
-> -	}
-> -	of_node_put(larb_node);
-> -
-> -	comp->larb_dev = &larb_pdev->dev;
-> -
->  	return 0;
->  }
->  
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> index 8399229..b8dc17e 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_ddp_comp.h
-> @@ -91,7 +91,6 @@ struct mtk_ddp_comp {
->  	struct clk *clk;
->  	void __iomem *regs;
->  	int irq;
-> -	struct device *larb_dev;
->  	enum mtk_ddp_comp_id id;
->  	const struct mtk_ddp_comp_funcs *funcs;
->  };
-
+diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+index 0e033ef11a9f..e8960a83add7 100644
+--- a/arch/x86/hyperv/hv_init.c
++++ b/arch/x86/hyperv/hv_init.c
+@@ -37,6 +37,20 @@ EXPORT_SYMBOL_GPL(hyperv_pcpu_input_arg);
+ u32 hv_max_vp_index;
+ EXPORT_SYMBOL_GPL(hv_max_vp_index);
+ 
++void *hv_alloc_hyperv_page(void)
++{
++	BUILD_BUG_ON(PAGE_SIZE != HV_HYP_PAGE_SIZE);
++
++	return (void *)__get_free_page(GFP_KERNEL);
++}
++EXPORT_SYMBOL_GPL(hv_alloc_hyperv_page);
++
++void hv_free_hyperv_page(unsigned long addr)
++{
++	free_page(addr);
++}
++EXPORT_SYMBOL_GPL(hv_free_hyperv_page);
++
+ static int hv_cpu_init(unsigned int cpu)
+ {
+ 	u64 msr_vp_index;
+-- 
+2.17.1
 
