@@ -2,96 +2,145 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0FDBC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:47:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300D3C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:50:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B098820679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:47:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12DC020679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728018AbfFRMrS (ORCPT
+        id S1726589AbfFRMu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:47:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:63683 "EHLO mx1.redhat.com"
+        Tue, 18 Jun 2019 08:50:56 -0400
+Received: from mga11.intel.com ([192.55.52.93]:45248 "EHLO mga11.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725913AbfFRMrS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:47:18 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 468E8C05B1CA;
-        Tue, 18 Jun 2019 12:47:17 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-180.str.redhat.com [10.33.192.180])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CFB6F36FA;
-        Tue, 18 Jun 2019 12:47:01 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Dave Martin <Dave.Martin@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an ELF file
-References: <20190606200646.3951-23-yu-cheng.yu@intel.com>
-        <20190607180115.GJ28398@e103592.cambridge.arm.com>
-        <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
-        <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
-        <20190611114109.GN28398@e103592.cambridge.arm.com>
-        <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
-        <20190612093238.GQ28398@e103592.cambridge.arm.com>
-        <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
-        <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
-        <20190618091248.GB2790@e103592.cambridge.arm.com>
-        <20190618124122.GH3419@hirez.programming.kicks-ass.net>
-Date:   Tue, 18 Jun 2019 14:47:00 +0200
-In-Reply-To: <20190618124122.GH3419@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Tue, 18 Jun 2019 14:41:22 +0200")
-Message-ID: <87ef3r9i2j.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        id S1725988AbfFRMuz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 08:50:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 05:50:55 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
+   d="scan'208";a="161736527"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 18 Jun 2019 05:50:52 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1001)
+        id 6AD4C179; Tue, 18 Jun 2019 15:50:51 +0300 (EEST)
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Frederick Lawler <fred@fredlawl.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        "Gustavo A . R . Silva" <gustavo@embeddedor.com>,
+        Sinan Kaya <okaya@kernel.org>,
+        Kai Heng Feng <kai.heng.feng@canonical.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] PCI: pciehp: Do not disable interrupt twice on suspend
+Date:   Tue, 18 Jun 2019 15:50:50 +0300
+Message-Id: <20190618125051.2382-1-mika.westerberg@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 18 Jun 2019 12:47:17 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Peter Zijlstra:
+We try to keep PCIe hotplug ports runtime suspended when entering system
+suspend. Due to the fact that the PCIe portdrv sets NEVER_SKIP driver PM
+flag the PM core always calls system suspend/resume hooks even if the
+device is left runtime suspended. Since PCIe hotplug driver re-uses the
+same function for both it ends up disabling hotplug interrupt twice and
+the second time following is printed:
 
-> I'm not sure I read Thomas' comment like that. In my reading keeping the
-> PT_NOTE fallback is exactly one of those 'fly workarounds'. By not
-> supporting PT_NOTE only the 'fine' people already shit^Hpping this out
-> of tree are affected, and we don't have to care about them at all.
+  pciehp 0000:03:01.0:pcie204: pcie_do_write_cmd: no response from device
 
-Just to be clear here: There was an ABI document that required PT_NOTE
-parsing.  The Linux kernel does *not* define the x86-64 ABI, it only
-implements it.  The authoritative source should be the ABI document.
+Prevent this from happening by checking whether the device is already
+runtime suspended when system suspend hook is called.
 
-In this particularly case, so far anyone implementing this ABI extension
-tried to provide value by changing it, sometimes successfully.  Which
-makes me wonder why we even bother to mainatain ABI documentation.  The
-kernel is just very late to the party.
+Fixes: 9c62f0bfb832 ("PCI: pciehp: Implement runtime PM callbacks")
+Reported-by: Kai Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+---
+ drivers/pci/hotplug/pciehp_core.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-Thanks,
-Florian
+diff --git a/drivers/pci/hotplug/pciehp_core.c b/drivers/pci/hotplug/pciehp_core.c
+index 6ad0d86762cb..3f8c13ddb3e8 100644
+--- a/drivers/pci/hotplug/pciehp_core.c
++++ b/drivers/pci/hotplug/pciehp_core.c
+@@ -248,7 +248,7 @@ static bool pme_is_native(struct pcie_device *dev)
+ 	return pcie_ports_native || host->native_pme;
+ }
+ 
+-static int pciehp_suspend(struct pcie_device *dev)
++static void pciehp_disable_interrupt(struct pcie_device *dev)
+ {
+ 	/*
+ 	 * Disable hotplug interrupt so that it does not trigger
+@@ -256,7 +256,19 @@ static int pciehp_suspend(struct pcie_device *dev)
+ 	 */
+ 	if (pme_is_native(dev))
+ 		pcie_disable_interrupt(get_service_data(dev));
++}
+ 
++#ifdef CONFIG_PM_SLEEP
++static int pciehp_suspend(struct pcie_device *dev)
++{
++	/*
++	 * If the port is already runtime suspended we can keep it that
++	 * way.
++	 */
++	if (dev_pm_smart_suspend_and_suspended(&dev->port->dev))
++		return 0;
++
++	pciehp_disable_interrupt(dev);
+ 	return 0;
+ }
+ 
+@@ -274,6 +286,7 @@ static int pciehp_resume_noirq(struct pcie_device *dev)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static int pciehp_resume(struct pcie_device *dev)
+ {
+@@ -287,6 +300,12 @@ static int pciehp_resume(struct pcie_device *dev)
+ 	return 0;
+ }
+ 
++static int pciehp_runtime_suspend(struct pcie_device *dev)
++{
++	pciehp_disable_interrupt(dev);
++	return 0;
++}
++
+ static int pciehp_runtime_resume(struct pcie_device *dev)
+ {
+ 	struct controller *ctrl = get_service_data(dev);
+@@ -313,10 +332,12 @@ static struct pcie_port_service_driver hpdriver_portdrv = {
+ 	.remove		= pciehp_remove,
+ 
+ #ifdef	CONFIG_PM
++#ifdef	CONFIG_PM_SLEEP
+ 	.suspend	= pciehp_suspend,
+ 	.resume_noirq	= pciehp_resume_noirq,
++#endif
+ 	.resume		= pciehp_resume,
+-	.runtime_suspend = pciehp_suspend,
++	.runtime_suspend = pciehp_runtime_suspend,
+ 	.runtime_resume	= pciehp_runtime_resume,
+ #endif	/* PM */
+ };
+-- 
+2.20.1
+
