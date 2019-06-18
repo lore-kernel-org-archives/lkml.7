@@ -2,88 +2,63 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 146D5C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:15:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D799C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:15:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7A4520679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:15:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CF5820679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:15:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728529AbfFRHPg (ORCPT
+        id S1728920AbfFRHP4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:15:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:40343 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbfFRHPf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:15:35 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M4384-1hd8Kv47Ga-0006FN; Tue, 18 Jun 2019 09:15:22 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Steffen Klassert <steffen.klassert@secunet.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Florian Westphal <fw@strlen.de>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ipsec: select CRYPTO_HASH for xfrm_algo
-Date:   Tue, 18 Jun 2019 09:14:51 +0200
-Message-Id: <20190618071514.2222319-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 18 Jun 2019 03:15:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50732 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725955AbfFRHPz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:15:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 534B7AE91;
+        Tue, 18 Jun 2019 07:15:54 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 09:15:53 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     John Ogness <john.ogness@linutronix.de>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 0/2] printk: new ringbuffer implementation
+Message-ID: <20190618071553.tkxw6gvh6bfwdhec@pathway.suse.cz>
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+ <alpine.DEB.2.21.1906172309170.1963@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:u3psbrxat/GLqgS5cJ3IaOBxrFJa4MkaDmkx8Unot6fN0EKdDMx
- y3EvyY4XwZeNwCGB7zwuONa0vqHfcJgX0a0YzA1DQxv2snq+zMtTTeUZ4fVDsp/TLnmtZS2
- QISAHpulpONQ/r+eEqK+S+G9A+y/pze7OjmCn3mmE//syAcwak444UsX43iugg0ExoKd063
- Da9wl3RqOOjIgYUhe4ZIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vpVSPrVCFpY=:gklKkq23m6xWr7LcD0e3DV
- kPvzYTDTt1UybQ2J+7E5RZaFv5W7UIcw8ieP/RtfP0PhJspeHb8/oBr8FZCC5Q0xf/yZPWCVe
- MSGKO45HjS2Q8kg09Sa15Hf7mHXXyCFAcp9KkyOUGcb3kmQmqgw9qhLXNfiODPDNLJq4NjSkz
- TuH0bOoLbiczIImcf69ZA00Vz9Iyy5IMvyI2s/IgjvoGc+1od3TW07N1CNxCAYKejBBZ/UErt
- cgm4rrXnG4PYe1C9b+yDHCCJiGX2VRTFBA4n0W4Mk1MAQd9+9rXECTuDwqK6PAUFv+BNeirxl
- 4mZiVWt3AFoZNWu+Bk3t1gqSpx/JPs4eAIJTxJm5TJ4dmGpIXT/llCdVMhUkwZgfPkFhOHug2
- gVj+VWy6w9GH3RSC/GkeeWaOBp4yVvw/FI0PL/Ew+Xoy2/pH2t+1aS0pIaQO4ps8AXJZjV/9c
- lFthLRRE2IBoYdKcnMZ7opmq47Cp133TKbESaF6acf+93Z87Y8La9a/YnouaalsxoHSIhGPGi
- IX8632Q2KuxlXs4rvYn9/vthJvvzAykis291z7HtvMOI0qdzicCLwAeIAwGjw/HuzXL0C/7ZW
- /C5NUKaer/JeTwl4J81/c67okRR4fcITbseyFU2Obxe6t6zXKz57/ddRWsBYukdHxjN5TiscS
- qakAvyqmSUEyKawXH5CxYm9coFZE/flygLitNsUsEgjP2WAMDgAPdoSNMO7L44333VqdJzewA
- wVMhpKcQJx1VMqmTqmYGVwVccbgwcACh/7hTHg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906172309170.1963@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernelci.org reports failed builds on arc because of what looks
-like an old missed 'select' statement:
+On Mon 2019-06-17 23:09:32, Thomas Gleixner wrote:
+> On Fri, 7 Jun 2019, John Ogness wrote:
+> 
+> Polite ping ....
 
-net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
-xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
+I have started looking at the patchset yesterday. I informed John
+that I was busy last week via a personal mail.
 
-I don't see this in randconfig builds on other architectures, but
-it's fairly clear we want to select the hash code for it, like we
-do for all its other users.
+My first impression is very good. But I still have to dive much more
+into the code.
 
-Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- net/xfrm/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/net/xfrm/Kconfig b/net/xfrm/Kconfig
-index c967fc3c38c8..a5c967efe5f4 100644
---- a/net/xfrm/Kconfig
-+++ b/net/xfrm/Kconfig
-@@ -15,6 +15,7 @@ config XFRM_ALGO
- 	tristate
- 	select XFRM
- 	select CRYPTO
-+	select CRYPTO_HASH
- 
- if INET
- config XFRM_USER
--- 
-2.20.0
-
+Best Regards,
+Petr
