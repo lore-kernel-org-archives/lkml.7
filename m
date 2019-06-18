@@ -2,119 +2,99 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C5EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:52:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3E4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:55:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D46852085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:52:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62258205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:55:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="La1MNho7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4Iz1IGy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730205AbfFRRwj (ORCPT
+        id S1729997AbfFRRzV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:52:39 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:8237 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729774AbfFRRwi (ORCPT
+        Tue, 18 Jun 2019 13:55:21 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35371 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfFRRzV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:52:38 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0924e50000>; Tue, 18 Jun 2019 10:52:37 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 10:52:37 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 10:52:37 -0700
-Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 17:52:36 +0000
-Subject: Re: [PATCH v3 8/8] clocksource/drivers/tegra: Set up maximum-ticks
- limit properly
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "Peter De Schrijver" <pdeschrijver@nvidia.com>
-CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20190618140358.13148-1-digetx@gmail.com>
- <20190618140358.13148-9-digetx@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <d7886053-ea59-b431-32ef-ff274c36adb5@nvidia.com>
-Date:   Tue, 18 Jun 2019 18:52:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 13:55:21 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so8108822pgl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:55:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=sZQNDbvRCX1/xmAgz48y9nkM0uP28/QjVvVkkR3CQOA=;
+        b=C4Iz1IGyiHO+KxnxVZJMXrvK0VMpgE0VV8M58ezWEBhGaMJqGoxNPncfAY9jQXro1a
+         q2Dzr43f5dlfHfhfUcftvrpCzA/BC3JWfBqDig80Yi+GH7GTGVcyEBvjlU4h93NUMTU2
+         +Vklf+mbjyEb6tgJFqATVI5ElgnQ8aZb5U95w6io2EoG9i6QBhq77xIblzZdHUys2JRy
+         0LBU6WNQ2ZZsau9C761+3HwY60Nx2/yUBgCKfAonztX4KVHD1vomR22vIfTmFOCMSPqV
+         q6Gl2llLemRxkoD0x8cQq0zZfmEQmxMSNapLKLrpIX0CTkoiBtCm7l+1eaHX3ykn+one
+         WwpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=sZQNDbvRCX1/xmAgz48y9nkM0uP28/QjVvVkkR3CQOA=;
+        b=JeilnJL+XHr+xAsdDy5Er7eZcuXh2BMyhchCCJNHdfvQkSPE1t8JIeDsTcoOpFfd1n
+         H0oQ6BL5vsi+IjoorrQhdDts4KYpiXcDtYoQEvbDP77fMb94KU5G+cKZrz6M9LhptPyv
+         SU7aBT5ymQnhIxE2e1vDFXsVwlS3tQYU4pjN7M2dlSC7415LirHyg952y+SfYH0s+/UE
+         TYE/XdvyzCWjk3rtDZOYNymhJ97vVgRXzJDuFGsZcK2Jd8QUdlItTs6SKWSDhyVMBBdd
+         3MwQOYmneKGDCpwPL0rsh/O6mEQwYfqJNwRCIpv6TqDfuShZibrqj0Pxz66DLd/azo+p
+         PpsQ==
+X-Gm-Message-State: APjAAAWu7zd8S329jvYCgscJjwnRDeO4da77TdfB99fcVdB4P0fsK0+3
+        aatugqAtcRBo5WkL8wJikNQ=
+X-Google-Smtp-Source: APXvYqx96I5XvE7xRAPdGzOeTmm+5O+cLVaDcbbg2VIuBv+nd9XhInsanHzz00TGwE4M8MslR6ab5w==
+X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr6347869pjz.140.1560880520698;
+        Tue, 18 Jun 2019 10:55:20 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id c18sm17498763pfc.180.2019.06.18.10.55.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 10:55:20 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 23:25:16 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Whitmore <johnfwhitmore@gmail.com>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Puranjay Mohan <puranjay12@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8192u: ieee80211: Remove redundant memset
+Message-ID: <20190618175516.GA6518@hari-Inspiron-1545>
 MIME-Version: 1.0
-In-Reply-To: <20190618140358.13148-9-digetx@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560880357; bh=ApieX7VXDwCOrZQ81Jbq9eZuL60Vh2ruYmDXsMnL8Ow=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=La1MNho78M+DAYF1CayGQe/pOXM6zLTzsxz5k6HYOt+MwUY6PpzbOFJpdCW/bBDNA
-         fCSJVuVTBSILd4XSuOpydWJK+SbVm8YLfT1ijWoo7YJ3t4SgajQzfoVufLQ/Xrzxex
-         xmPlieBfF+VltCnHmuBqK8B92MLsxng5sarU6dxXl8hoaT4TP6h8WsUy8XcxrMbv6R
-         WWGxgaQOst6c6gbZeyBnKo8pwugPAGTI9x8pvP0mkBn2yOfcwJjLCyrUu1q1RVZ3It
-         6d5FvA+TzIoO5U7I0+8X0y5fiE0RudOhhA5ws19/2z+4f9/Tb8sCrJjPGRz+W97T5J
-         oqCgiCKJIGsJg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+alloc_etherdev function internally calls kvzalloc . So we may not need
+explicit memset after this call.
 
-On 18/06/2019 15:03, Dmitry Osipenko wrote:
-> Tegra's timer has 29 bits for the counter and for the "load" register
-> which sets counter to a load-value. The counter's value is lower than
-> the actual value by 1 because it starts to decrement after one tick,
-> hence the maximum number of ticks that hardware can handle equals to
-> 29 bits + 1.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/clocksource/timer-tegra.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
-> index b84324288749..355b29ff6362 100644
-> --- a/drivers/clocksource/timer-tegra.c
-> +++ b/drivers/clocksource/timer-tegra.c
-> @@ -137,9 +137,17 @@ static int tegra_timer_setup(unsigned int cpu)
->  	irq_force_affinity(to->clkevt.irq, cpumask_of(cpu));
->  	enable_irq(to->clkevt.irq);
->  
-> +	/*
-> +	 * Tegra's timer uses n+1 scheme for the counter, i.e. timer will
-> +	 * fire after one tick if 0 is loaded and thus minimum number of
-> +	 * ticks is 1. In result both of the clocksource's tick limits are
-> +	 * higher than a minimum and maximum that hardware register can
-> +	 * take by 1, this is then taken into account by set_next_event
-> +	 * callback.
-> +	 */
->  	clockevents_config_and_register(&to->clkevt, timer_of_rate(to),
->  					1, /* min */
-> -					0x1fffffff); /* 29 bits */
-> +					0x1fffffff + 1); /* max 29 bits + 1 */
->  
->  	return 0;
->  }
-> 
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8192u/ieee80211/ieee80211_module.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
-
-Cheers
-Jon
-
+diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c
+index 3532ea9..4a6c3f6 100644
+--- a/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c
++++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c
+@@ -109,7 +109,6 @@ struct net_device *alloc_ieee80211(int sizeof_priv)
+ 	}
+ 
+ 	ieee = netdev_priv(dev);
+-	memset(ieee, 0, sizeof(struct ieee80211_device) + sizeof_priv);
+ 	ieee->dev = dev;
+ 
+ 	err = ieee80211_networks_allocate(ieee);
 -- 
-nvpublic
+2.7.4
+
