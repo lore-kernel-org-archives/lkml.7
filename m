@@ -2,122 +2,273 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4E4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:39:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DE43C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D58B21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:39:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1335F206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:42:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="kX4JD+1d"
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="Z0iwbsTW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730722AbfFRUjm (ORCPT
+        id S1730627AbfFRUmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:39:42 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40793 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730621AbfFRUjl (ORCPT
+        Tue, 18 Jun 2019 16:42:05 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:44709 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730341AbfFRUmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:39:41 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p11so915257wre.7;
-        Tue, 18 Jun 2019 13:39:39 -0700 (PDT)
+        Tue, 18 Jun 2019 16:42:05 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x47so17113417qtk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 13:42:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NqLJBpTFEaLyH94sYy+DvxdzXV+8za6jehbuul9HSrg=;
-        b=kX4JD+1dVBQmI+3sx/kfhyEstODcRRW67o8XCyqJ1G8i4Bo6Mui7qTzjtQE3Y1Va+l
-         67EVtNzmXpNDu+r1DXQuOxpgjrjmOJ7PDsf9qEFqUCDMjL2qunv5UpLeOAURNi+Ghk89
-         Fq7GdyNSv4pBiKPib6z40rJdzrJd9o2ryDg8qj3trFEOUXcBjcz/FpoP0xqehmgaxMSC
-         TFvTJfYKDOL0HDsU5JKjbZ1EY6rEWfNKGLtev7WSIANb8V2tfl+UGFUZGciNwRXRSNaJ
-         o533TtRBmOnb95/UWRVvG40hSuyZxKZKHBRZ97RDNGDBazH/d/p4WLKLQ3EmZcvFetjm
-         pHbg==
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sIyXF/EzZipTYqrIluZkq/5+UTS8byL1khSMDYNgjl0=;
+        b=Z0iwbsTWYrYJl7fKykmsYH4TK1f6rLcLerOklZtHs1BMCUQd12tIkE5PnTFzM4n7pi
+         crG+hbmqoSCM+QNJHlAkGWa7zxUJCzQM+SDlUbSJaqUcVBeZgRTxk5vUzPLF5UoyWa3P
+         aL0Kh9ji0ML4btsWj+JuIo0Vw5uaA5WGu8yM9vTgMDpYUj9JD29qyk0OpAMRdP/nfJ4I
+         zrccJrHyfN1+BZE/xEs8xCjMgLk7Qgv3hnf5Ge+jShrcb2+OeJl8l2f+lQZ4iR0jwLsN
+         gaUa5oFUkCKE/dv9K38yeujMGf6Vzed0U9TC8mlX1nS+dgWyiqHDp2b8fn3NhCUYnkF4
+         WXnw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=NqLJBpTFEaLyH94sYy+DvxdzXV+8za6jehbuul9HSrg=;
-        b=PT8Wu0GEaKoK7fxl9ijcVZVFhz/2W7lxL1+8xzjPVvc9FSyuhHMy+cYTjI3CmyovTf
-         phf02qCRew4HpgK+ge6bXAye0uDThzU41nmmw2dp4f7I8kjybIZQh69sJlGp4qzNIc5A
-         2ipgEIGv4NyAaGpwc8FoRTm4A0WWlSVuCs2WjzBG/6L2ApFXM/cEVRSpO3Ix7mCARyYE
-         v9bAwGQ5TJorBzO7x6JbzDHXAWr3HIJ9oN1484KHBle0Fzaq/X/osAb0TufMsKKuxvGz
-         J8L/ASiK7avmnw6sGUTAYcHK7vKgOK99BfL8Brdvkr7ZoRWXrJB4jGEp+NrNeGE/0Nl1
-         txRQ==
-X-Gm-Message-State: APjAAAWpPhGbZvlEJz4iJ19zpDHTaiNS9Xl+j4Z0d1J16ovJofNSiJc5
-        2dICV+0uOsPb5+gEvW4MGrciB5Wr
-X-Google-Smtp-Source: APXvYqwHa7M7aKZdKxzjVqMVS6s7vB6hrd5drDzNXzzXcW0wGcX4o3k2zagiAqmKg9izcam8n76//Q==
-X-Received: by 2002:a5d:61cd:: with SMTP id q13mr10131804wrv.114.1560890378190;
-        Tue, 18 Jun 2019 13:39:38 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C20E0008BE4A1C4AD46470.dip0.t-ipconnect.de. [2003:f1:33c2:e00:8be:4a1c:4ad4:6470])
-        by smtp.googlemail.com with ESMTPSA id c4sm19694372wrb.68.2019.06.18.13.39.36
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sIyXF/EzZipTYqrIluZkq/5+UTS8byL1khSMDYNgjl0=;
+        b=F8AjVEz0q8XUgYfa0M2qXoNN4CFoM/NLLwt+VmdsLL/5wF+AeIX45AWcVnGKaOezPL
+         KVMf4+V5fEXdRpdz149wRngPUB4/fpAvg5X4aqVhd5dfuKBjHplfPegEzVoNLXx2umP2
+         8jRDMjb+zvyPudLrOqc/udVdBtubee+cfLwbUoEBqI73SE8QJfDi8wxopH20A/HkVByA
+         HLw41WDUMnhomqe2RRv+e1HByVPmx4YDZCZ4r51bpXLJlfp19k9jx3xQyGLge5gY/Ym+
+         GD7wdlx96QEZPIVEzZInYJJOweJk2p+njguDy1jVr27epHSdV5arKrseYDkF69rz2jUv
+         pZOg==
+X-Gm-Message-State: APjAAAXA0nfolbjk6Df+P03KM2oZkCANUzib+otCxfIRUlPqQU0v5XPv
+        mwDwFoA11RH7KSiA1JxvgYv8vw==
+X-Google-Smtp-Source: APXvYqzG4FV1GER3TEOBclI2H7u38D8xfKStoBg533TdSJHWwbLjRPAwjz1iX+pTjoEUZr9jurx6Xg==
+X-Received: by 2002:aed:3fc5:: with SMTP id w5mr85910114qth.317.1560890523926;
+        Tue, 18 Jun 2019 13:42:03 -0700 (PDT)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id g10sm8262045qki.37.2019.06.18.13.42.02
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 13:39:37 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     netdev@vger.kernel.org, davem@davemloft.net
-Cc:     linux-kernel@vger.kernel.org, joabreu@synopsys.com,
-        alexandre.torgue@st.com, peppe.cavallaro@st.com,
-        khilman@baylibre.com,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: [PATCH net-next v1] net: stmmac: initialize the reset delay array
-Date:   Tue, 18 Jun 2019 22:39:27 +0200
-Message-Id: <20190618203927.5862-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
+        Tue, 18 Jun 2019 13:42:03 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 16:42:02 -0400
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org,
+        Sean Paul <seanpaul@chromium.org>,
+        Georgi Djakov <georgi.djakov@linaro.org>,
+        Jayant Shekhar <jshekhar@codeaurora.org>,
+        Sravanthi Kollukuduru <skolluku@codeaurora.org>,
+        Rob Clark <robdclark@chromium.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Abhinav Kumar <abhinavk@codeaurora.org>,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] drm/msm/dpu: Integrate interconnect API in MDSS
+Message-ID: <20190618204202.GE25413@art_vandelay>
+References: <20190618202425.15259-1-robdclark@gmail.com>
+ <20190618202425.15259-3-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618202425.15259-3-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit ce4ab73ab0c27c ("net: stmmac: drop the reset delays from struct
-stmmac_mdio_bus_data") moved the reset delay array from struct
-stmmac_mdio_bus_data to a stack variable.
-The values from the array inside struct stmmac_mdio_bus_data were
-previously initialized to 0 because the struct was allocated using
-devm_kzalloc(). The array on the stack has to be initialized
-explicitly, else we might be reading garbage values.
+On Tue, Jun 18, 2019 at 01:24:10PM -0700, Rob Clark wrote:
+> From: Jayant Shekhar <jshekhar@codeaurora.org>
+> 
+> The interconnect framework is designed to provide a
+> standard kernel interface to control the settings of
+> the interconnects on a SoC.
+> 
+> The interconnect API uses a consumer/provider-based model,
+> where the providers are the interconnect buses and the
+> consumers could be various drivers.
+> 
+> MDSS is one of the interconnect consumers which uses the
+> interconnect APIs to get the path between endpoints and
+> set its bandwidth requirement for the given interconnected
+> path.
+> 
+> Changes in v2:
+> 	- Remove error log and unnecessary check (Jordan Crouse)
+> 
+> Changes in v3:
+> 	- Code clean involving variable name change, removal
+> 	  of extra paranthesis and variables (Matthias Kaehlcke)
+> 
+> Changes in v4:
+> 	- Add comments, spacings, tabs, proper port name
+> 	  and icc macro (Georgi Djakov)
+> 
+> Changes in v5:
+> 	- Commit text and parenthesis alignment (Georgi Djakov)
+> 
+> Changes in v6:
+> 	- Change to new icc_set API's (Doug Anderson)
+> 
+> Changes in v7:
+> 	- Fixed a typo
+> 
+> Changes in v8:
+> 	- Handle the of_icc_get() returning NULL case.  In practice
+> 	  icc_set_bw() will gracefully handle the case of a NULL path,
+> 	  but it's probably best for clarity to keep num_paths=0 in
+> 	  this case.
+> 
+> Signed-off-by: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> Acked-by: Georgi Djakov <georgi.djakov@linaro.org>
 
-Initialize all reset delays to 0 to ensure that the values are 0 if the
-"snps,reset-delays-us" property is not defined.
-This fixes booting at least two boards (MIPS pistachio marduk and ARM
-sun8i H2+ Orange Pi Zero). These are hanging during boot when
-initializing the stmmac Ethernet controller (as found by Kernel CI).
-Both have in common that they don't define the "snps,reset-delays-us"
-property.
+Reviewed-by: Sean Paul <sean@poorly.run>
 
-Fixes: ce4ab73ab0c27c ("net: stmmac: drop the reset delays from struct stmmac_mdio_bus_data")
-Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
----
-On my Amlogic boards the delay values are 0 even without this patch.
-I may have been lucky with my kernel build that I'm not triggering
-the same fault as Kernel CI found on the two boards mentioned here: [0]
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 49 ++++++++++++++++++++++--
+>  1 file changed, 45 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+> index 7316b4ab1b85..b1d0437ac7b6 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
+> @@ -4,11 +4,15 @@
+>   */
+>  
+>  #include "dpu_kms.h"
+> +#include <linux/interconnect.h>
+>  
+>  #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
+>  
+>  #define HW_INTR_STATUS			0x0010
+>  
+> +/* Max BW defined in KBps */
+> +#define MAX_BW				6800000
+> +
+>  struct dpu_irq_controller {
+>  	unsigned long enabled_mask;
+>  	struct irq_domain *domain;
+> @@ -21,8 +25,30 @@ struct dpu_mdss {
+>  	u32 hwversion;
+>  	struct dss_module_power mp;
+>  	struct dpu_irq_controller irq_controller;
+> +	struct icc_path *path[2];
+> +	u32 num_paths;
+>  };
+>  
+> +static int dpu_mdss_parse_data_bus_icc_path(struct drm_device *dev,
+> +						struct dpu_mdss *dpu_mdss)
+> +{
+> +	struct icc_path *path0 = of_icc_get(dev->dev, "mdp0-mem");
+> +	struct icc_path *path1 = of_icc_get(dev->dev, "mdp1-mem");
+> +
+> +	if (IS_ERR_OR_NULL(path0))
+> +		return PTR_ERR_OR_ZERO(path0);
+> +
+> +	dpu_mdss->path[0] = path0;
+> +	dpu_mdss->num_paths = 1;
+> +
+> +	if (!IS_ERR_OR_NULL(path1)) {
+> +		dpu_mdss->path[1] = path1;
+> +		dpu_mdss->num_paths++;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  static void dpu_mdss_irq(struct irq_desc *desc)
+>  {
+>  	struct dpu_mdss *dpu_mdss = irq_desc_get_handler_data(desc);
+> @@ -134,7 +160,11 @@ static int dpu_mdss_enable(struct msm_mdss *mdss)
+>  {
+>  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
+>  	struct dss_module_power *mp = &dpu_mdss->mp;
+> -	int ret;
+> +	int ret, i;
+> +	u64 avg_bw = dpu_mdss->num_paths ? MAX_BW / dpu_mdss->num_paths : 0;
+> +
+> +	for (i = 0; i < dpu_mdss->num_paths; i++)
+> +		icc_set_bw(dpu_mdss->path[i], avg_bw, kBps_to_icc(MAX_BW));
+>  
+>  	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
+>  	if (ret)
+> @@ -147,12 +177,15 @@ static int dpu_mdss_disable(struct msm_mdss *mdss)
+>  {
+>  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
+>  	struct dss_module_power *mp = &dpu_mdss->mp;
+> -	int ret;
+> +	int ret, i;
+>  
+>  	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
+>  	if (ret)
+>  		DPU_ERROR("clock disable failed, ret:%d\n", ret);
+>  
+> +	for (i = 0; i < dpu_mdss->num_paths; i++)
+> +		icc_set_bw(dpu_mdss->path[i], 0, 0);
+> +
+>  	return ret;
+>  }
+>  
+> @@ -163,6 +196,7 @@ static void dpu_mdss_destroy(struct drm_device *dev)
+>  	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
+>  	struct dss_module_power *mp = &dpu_mdss->mp;
+>  	int irq;
+> +	int i;
+>  
+>  	pm_runtime_suspend(dev->dev);
+>  	pm_runtime_disable(dev->dev);
+> @@ -172,6 +206,9 @@ static void dpu_mdss_destroy(struct drm_device *dev)
+>  	msm_dss_put_clk(mp->clk_config, mp->num_clk);
+>  	devm_kfree(&pdev->dev, mp->clk_config);
+>  
+> +	for (i = 0; i < dpu_mdss->num_paths; i++)
+> +		icc_put(dpu_mdss->path[i]);
+> +
+>  	if (dpu_mdss->mmio)
+>  		devm_iounmap(&pdev->dev, dpu_mdss->mmio);
+>  	dpu_mdss->mmio = NULL;
+> @@ -211,6 +248,10 @@ int dpu_mdss_init(struct drm_device *dev)
+>  	}
+>  	dpu_mdss->mmio_len = resource_size(res);
+>  
+> +	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
+> +	if (ret)
+> +		return ret;
+> +
+>  	mp = &dpu_mdss->mp;
+>  	ret = msm_dss_parse_clock(pdev, mp);
+>  	if (ret) {
+> @@ -232,14 +273,14 @@ int dpu_mdss_init(struct drm_device *dev)
+>  	irq_set_chained_handler_and_data(irq, dpu_mdss_irq,
+>  					 dpu_mdss);
+>  
+> +	priv->mdss = &dpu_mdss->base;
+> +
+>  	pm_runtime_enable(dev->dev);
+>  
+>  	pm_runtime_get_sync(dev->dev);
+>  	dpu_mdss->hwversion = readl_relaxed(dpu_mdss->mmio);
+>  	pm_runtime_put_sync(dev->dev);
+>  
+> -	priv->mdss = &dpu_mdss->base;
+> -
+>  	return ret;
+>  
+>  irq_error:
+> -- 
+> 2.20.1
+> 
 
-Please feel free to squash this into net-next commit ce4ab73ab0c27c.
-
-[0] https://lore.kernel.org/netdev/7hr27qdedo.fsf@baylibre.com/T/#u
-
-
- drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-index da310de06bf6..18cadf0b0d66 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_mdio.c
-@@ -241,7 +241,7 @@ int stmmac_mdio_reset(struct mii_bus *bus)
- #ifdef CONFIG_OF
- 	if (priv->device->of_node) {
- 		struct gpio_desc *reset_gpio;
--		u32 delays[3];
-+		u32 delays[3] = { 0, 0, 0 };
- 
- 		reset_gpio = devm_gpiod_get_optional(priv->device,
- 						     "snps,reset",
 -- 
-2.22.0
-
+Sean Paul, Software Engineer, Google / Chromium OS
