@@ -2,137 +2,110 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C98C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDF2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F28132147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:16:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02F5820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:19:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="OaDtkN5H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gzC4HxOL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730167AbfFRRQc (ORCPT
+        id S1729743AbfFRRTJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:16:32 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43983 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbfFRRQc (ORCPT
+        Tue, 18 Jun 2019 13:19:09 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:37015 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfFRRTJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:16:32 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w17so9889854qto.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:16:31 -0700 (PDT)
+        Tue, 18 Jun 2019 13:19:09 -0400
+Received: by mail-lf1-f68.google.com with SMTP id d11so9911106lfb.4;
+        Tue, 18 Jun 2019 10:19:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=poorly.run; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=5HdOkeGTOimtUzxYuQ63HUqEs40RoAuiCtdWAjPZDM0=;
-        b=OaDtkN5HFpjGr/oGrGRtE6pafVhMmdq/+VJSFcdz1WobXMuZUUKApbaDiA9vnXK2j3
-         M1ZG9xkYjtUHKnUSxIWDICD7d9IOcd3cpxqHPwMwqOnwjKwahWRc8XwbX0PJfKH98415
-         37Tsyp4Yhxud4rCL+Rw1GCax0qVqIuAdhttJfj9MfV0epKELmBAAIwOXbAonPiJugOsp
-         EhKXuX5lRWnE12UtILOB1cW4SFsisYFxR1LSJ3zLUupulctUeP/CFusTIdpSZD8JLC4E
-         dlPL2W1HH03olfJL/RXjzT2piEGtlzgdSpRKJfjApX6sjAnrlenIcMgVNTGyGbpx++rF
-         yzsg==
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=FtHDj9Tfcen/+u/bZK7GRRsh71fKJ+0OXIcYDtNSl6s=;
+        b=gzC4HxOLPhizo5fmOnj3WKbpXxtLUwhx0SLOGzL3XIfIc+Cu0JzMbgpJMAdbbZ7uXP
+         beZl2uyuctH6nvT+fRMHx1CxTEmISEyCIxpoKAzvK4iUIXDOlGNTwBVbycdXWFicy1eq
+         739hygZNBTEJIg7XMn+yDmnNlnqfWX4cxyA7jz0autdYa/kh50ow2KggJqSqVPUCcFA0
+         NpM6702A9WqVJfCsl72iu0VtnB3zWyp32t4R4I4NgAtfe93oMpNVD/JwrQRe+6cIazx/
+         Mc0fuTZvwiVL5ynmn1X8CX03Z28wxkVuXpRldpQF+IIE8KtB9nxJyce4B9mLLGT3IBtO
+         RP7A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5HdOkeGTOimtUzxYuQ63HUqEs40RoAuiCtdWAjPZDM0=;
-        b=CasmBIQSJa3VLxZHylyjYpKtegMdDGiCtNPR3930xUo9ypNMOmKDc6hq04it7DlPeX
-         9+CdkXCwf5ftM8ZUeNpufk8c0fXL7QN/SHoEC3qOfMMxumsxoli2/mbLurcokjPHXmzT
-         whgaTrVA39RNa9Mj/dAV26iLvDuxCQxXTtd818vqFNBqrbH4EkFLMuTgv2NoMFdV3ac1
-         boBFT8tv6u48zvmJi7FVX3uy3iN1DfyB/BLSa4u9XyNCN6PZ2bTxaPM2KeI4cY0CdCYJ
-         VxwutpWfVLrDTbYGu3W98prLrG0ujxgNDW+hVtSQKmR6YINj1zuJJU9ZZo0s8ZBosDdo
-         z1Gg==
-X-Gm-Message-State: APjAAAWkwcA/Pot+MGhVMRIz6rMmCq2gyA1xtZ6zv5X7RWXuf4Yk3q27
-        muugMr/nRvrv6+CNf9/a4wQoVg==
-X-Google-Smtp-Source: APXvYqxHpvdIJ3r1rR8PFVV6pBLc7jwq+5ZT5DwQvMXjzrBn2Est5EPpbCwUxoMEH+iz1jdelPvGnA==
-X-Received: by 2002:ac8:2bb3:: with SMTP id m48mr98945689qtm.218.1560878191074;
-        Tue, 18 Jun 2019 10:16:31 -0700 (PDT)
-Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
-        by smtp.gmail.com with ESMTPSA id o71sm8278024qke.18.2019.06.18.10.16.30
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 10:16:30 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:16:29 -0400
-From:   Sean Paul <sean@poorly.run>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH v2] drm: return -EFAULT if copy_to_user() fails
-Message-ID: <20190618171629.GB25413@art_vandelay>
-References: <20190618125623.GA24896@mwanda>
- <20190618131843.GA29463@mwanda>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=FtHDj9Tfcen/+u/bZK7GRRsh71fKJ+0OXIcYDtNSl6s=;
+        b=PhMBHALYzHGTFRUcVuQMtwoV0HmjFugXN2TAhgG4VvTSEIZSlD8eTaSHCcSZ3PVi7h
+         nPyawsukcVKfYPA7YauX7cv1PbcRA4m7gYDVvLuISvH/AWgu1Eo+uFhs3eTYybLM8mea
+         tNxFSh2YEmGxADGJNgx+sC8PBHoOvyCQpuH7LQsn9YVTzgnrTB1zJMzkBUfzKxk436m5
+         /k9L1m5RHounv+wLwJ3V8KYZccrqx3e3AKaOuOGdJ+9t8KIS8epKfKLxaVKCXRPBAZ8B
+         CrD4ZNeCpSLBYhU5t/9aWaG1s/AktaJBEBLxYTwdZZ2Xc3INRFCfG/5asUd5Xb+GTn3U
+         Ay1Q==
+X-Gm-Message-State: APjAAAX1WZffdjr1c0pyivMnvlFwgnOtL6Kqtc7nAwJy17pn1gTabEqc
+        aSgCjnGZbu/xUVckoWJ/eqtdzj8x
+X-Google-Smtp-Source: APXvYqwBvTr5CNyY7fy4r40iUI1XUZv1qTlgGyNEdwQU4eqRPLmyGGPIAKeOFd1PtHBbKFmCo35zew==
+X-Received: by 2002:ac2:5212:: with SMTP id a18mr52325935lfl.50.1560878346452;
+        Tue, 18 Jun 2019 10:19:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id e12sm2274715lfb.66.2019.06.18.10.19.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 10:19:05 -0700 (PDT)
+Subject: Re: [PATCH v2 7/8] soc/tegra: regulators: Add regulators coupler for
+ Tegra20
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190603235904.19097-1-digetx@gmail.com>
+ <20190603235904.19097-8-digetx@gmail.com>
+ <20190617154632.GB5316@sirena.org.uk>
+ <2308e5da-a8fd-a0e6-f98c-0931a30baf14@gmail.com>
+ <20190618171453.GO5316@sirena.org.uk>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <bb84db4c-4d11-3199-ce96-3cd7c70ba911@gmail.com>
+Date:   Tue, 18 Jun 2019 20:19:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618131843.GA29463@mwanda>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190618171453.GO5316@sirena.org.uk>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 04:18:43PM +0300, Dan Carpenter wrote:
-> The copy_from_user() function returns the number of bytes remaining
-> to be copied but we want to return a negative error code.  Otherwise
-> the callers treat it as a successful copy.
+18.06.2019 20:14, Mark Brown пишет:
+> On Tue, Jun 18, 2019 at 07:52:06PM +0300, Dmitry Osipenko wrote:
+>> 17.06.2019 18:46, Mark Brown пишет:
 > 
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-
-Thanks Dan, I've applied this to drm-misc-fixes.
-
-Sean
-
-> ---
-> v2: The first version was missing a chunk
+>>>> +// SPDX-License-Identifier: GPL-2.0+
+>>>> +/*
+>>>> + * Voltage regulators coupling resolver for NVIDIA Tegra20
+>>>> + *
+>>>> + * Copyright (C) 2019 GRATE-DRIVER project
 > 
->  drivers/gpu/drm/drm_bufs.c  | 5 ++++-
->  drivers/gpu/drm/drm_ioc32.c | 5 ++++-
->  2 files changed, 8 insertions(+), 2 deletions(-)
+>>> Please make the entire comment a C++ one so things look more
+>>> intentional.
 > 
-> diff --git a/drivers/gpu/drm/drm_bufs.c b/drivers/gpu/drm/drm_bufs.c
-> index 68dacf8422c6..8ce9d73fab4f 100644
-> --- a/drivers/gpu/drm/drm_bufs.c
-> +++ b/drivers/gpu/drm/drm_bufs.c
-> @@ -1351,7 +1351,10 @@ static int copy_one_buf(void *data, int count, struct drm_buf_entry *from)
->  				 .size = from->buf_size,
->  				 .low_mark = from->low_mark,
->  				 .high_mark = from->high_mark};
-> -	return copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags));
-> +
-> +	if (copy_to_user(to, &v, offsetof(struct drm_buf_desc, flags)))
-> +		return -EFAULT;
-> +	return 0;
->  }
->  
->  int drm_legacy_infobufs(struct drm_device *dev, void *data,
-> diff --git a/drivers/gpu/drm/drm_ioc32.c b/drivers/gpu/drm/drm_ioc32.c
-> index 586aa28024c5..a16b6dc2fa47 100644
-> --- a/drivers/gpu/drm/drm_ioc32.c
-> +++ b/drivers/gpu/drm/drm_ioc32.c
-> @@ -378,7 +378,10 @@ static int copy_one_buf32(void *data, int count, struct drm_buf_entry *from)
->  			      .size = from->buf_size,
->  			      .low_mark = from->low_mark,
->  			      .high_mark = from->high_mark};
-> -	return copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags));
-> +
-> +	if (copy_to_user(to + count, &v, offsetof(drm_buf_desc32_t, flags)))
-> +		return -EFAULT;
-> +	return 0;
->  }
->  
->  static int drm_legacy_infobufs32(struct drm_device *dev, void *data,
-> -- 
-> 2.20.1
+>> This is actually a correct SPDX comment style for the source files, accordingly to
+>> checkpatch. While the C++ style should be used for header files only. I'm not
+>> following the SPDX effort much, don't know from where these SPDX-style rules are
+>> coming from.
+> 
+> The SPDX bit is fine, what I'm saying is make the rest of the comment
+> also be a C++ comment.
 > 
 
--- 
-Sean Paul, Software Engineer, Google / Chromium OS
+Ah, I just realized that the "// " is the C++ comment style and not C. I can turn it
+all into the C++, no problems.
