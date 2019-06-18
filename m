@@ -2,96 +2,138 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F05CCC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21742C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9AFA20823
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:39:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560865194;
-	bh=70c0tfx2NKpPi9Gpr2q7gCR4QPX5rIxB+dP6jDanaxw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Y4/fZLj6809poCtZLtSMFFRRX2ZO197sN1N+px/ncutL8fYOUtp1Mrh4+BMjPFO7a
-	 fvGJjv/CL0Qh1kElHhTSywgi5SOK4JhAzjMNJl078Sj+yIV7O7ZU+kpAYNXB4I51XK
-	 k8yE5phfomwip8AVfqqxcTUMRgcpBJXUJpVMvbg8=
+	by mail.kernel.org (Postfix) with ESMTP id ED20D20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pp21Rn8p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729322AbfFRNjx (ORCPT
+        id S1729364AbfFRNkW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:39:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55960 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfFRNjw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:39:52 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EB40520823;
-        Tue, 18 Jun 2019 13:39:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560865191;
-        bh=70c0tfx2NKpPi9Gpr2q7gCR4QPX5rIxB+dP6jDanaxw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Jz1v+Fs9V1Xn8xJhqc+0MBMnEX0Tauy2tNQtP4QpgHbatyu2r3lUTxIXU3VlBa9Ay
-         PW4bMxlasbWVFCOeYJYmJfb3FG2Q67RhuuiSHeVrDv+TdKjwV4kK13Rc65ZCI+orMh
-         VQLAVkCAQGU0LwjFV56bsvPkuIJq8Rw6LCNc8H1M=
-Date:   Tue, 18 Jun 2019 15:39:48 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        linux-doc@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: platform: convert
- x86-laptop-drivers.txt to reST
-Message-ID: <20190618133948.GB5416@kroah.com>
-References: <20190618053227.31678-1-puranjay12@gmail.com>
- <20190618054158.GA3713@kroah.com>
- <20190618071717.2132a1b7@lwn.net>
+        Tue, 18 Jun 2019 09:40:22 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:42466 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728575AbfFRNkW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:40:22 -0400
+Received: by mail-qt1-f195.google.com with SMTP id s15so15277294qtk.9;
+        Tue, 18 Jun 2019 06:40:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sip8yqMGL5HYkSNzPjSutbtzx9pAVqlJddD+spZ1ESY=;
+        b=pp21Rn8pPivLH1E0kWFM/2lZm6bAb6etwe8om3ogOsCmNAdAZr/20x0WkVbcH+Ts8i
+         Gy/sKFAitaG1OGtu7+E9oy0LRLWKIfDm6sdI0ppIyu5x0DwTvHcM5MbWY2Y8H2nUHoW8
+         vs/KIMEB5EIrydlsRkjo7HuxXD1zFkfSIgrzCdSVd6BxZ6j+UvWTwBxL7qS0UbEwxj7l
+         U8Vu4joCvZcx85u86932CARZXbVX8cFH2eZ3gZ30vDx3rHxNLgS/MYPvNS1ocLhfkBbP
+         yvxey/ZWIq4Mvh4TIIz4olDxKv7cIwLtFkjI5L0sXh3RNlbuWS2+nwR64rI2Zhca/DXR
+         /QhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sip8yqMGL5HYkSNzPjSutbtzx9pAVqlJddD+spZ1ESY=;
+        b=YoyxoTklf6QckrWr4lukK3kiiUvHXz4zTRapfnIOz4KBwY1U16T53V2+gvBQ6e2mRK
+         KGZF29Yarx+w0/YcCD1wB7ULmmi6MHsEuw/031K05LoYKH5la6waVQrYsN+1ehByf9+I
+         0wIPMMT0kc6YFVqDbBGF8r1unowVVMos7T4s9MKE112dKIf1gKTm4K6PeI1UhyVsGqMk
+         1aHNjp/HgDQIPcM7y4ZgcbmI53K+2ATTkBVm3CjAmUTct+/R8tOSzQNA+TjI9ehawFhU
+         9fxTyCQqzQYc3ihBujliOrrobmpYr2mgMfq3+FnyjdWtPfoU2jyYFHPlAMbs7n54LXDz
+         YPaA==
+X-Gm-Message-State: APjAAAVR5U7EYIZebCuYBjvUY/Wu2Tw3vihABJCV9VDXEtDp2GnTgw/Y
+        kp6Akoz0xEGk9rPqAp6CmpFFgjrvhgMe8FAUIwk=
+X-Google-Smtp-Source: APXvYqwTfW9SHCCil6M0GXO+K/MKJJdO+3TnQJ+aCdN91TMQKTLKOVFZggy0oZ+qNvBcOUNJoMdhkSoLWnhSiYaDxL0=
+X-Received: by 2002:a0c:b159:: with SMTP id r25mr26932527qvc.219.1560865221304;
+ Tue, 18 Jun 2019 06:40:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618071717.2132a1b7@lwn.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190516142342.28019-1-smuchun@gmail.com> <20190524190443.GB29565@kroah.com>
+ <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+In-Reply-To: <CAPSr9jH3sowszuNtBaTM1Wdi9vW+iakYX1G3arj+2_r5r7bYwQ@mail.gmail.com>
+From:   Muchun Song <smuchun@gmail.com>
+Date:   Tue, 18 Jun 2019 21:40:13 +0800
+Message-ID: <CAPSr9jFG17YnQC3UZrTZjqytB5wpTMeqqqOcJ7Sf6gAr8o5Uhg@mail.gmail.com>
+Subject: Re: [PATCH v4] driver core: Fix use-after-free and double free on
+ glue directory
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Prateek Sood <prsood@codeaurora.org>,
+        Mukesh Ojha <mojha@codeaurora.org>, gkohli@codeaurora.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        zhaowuyun@wingtech.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 07:17:17AM -0600, Jonathan Corbet wrote:
-> On Tue, 18 Jun 2019 07:41:58 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
-> 
-> > On Tue, Jun 18, 2019 at 11:02:27AM +0530, Puranjay Mohan wrote:
-> > > This converts the plain text documentation to reStructuredText format.
-> > > No essential content change.
-> > > 
-> > > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> > > ---
-> > >  Documentation/platform/x86-laptop-drivers.rst | 23 +++++++++++++++++++
-> > >  Documentation/platform/x86-laptop-drivers.txt | 18 ---------------
-> > >  2 files changed, 23 insertions(+), 18 deletions(-)
-> > >  create mode 100644 Documentation/platform/x86-laptop-drivers.rst
-> > >  delete mode 100644 Documentation/platform/x86-laptop-drivers.txt  
-> > 
-> > Don't you also need to hook it up to the documentation build process
-> > when doing this?
-> 
-> Hooking it into the TOC tree is a good thing, but I think it's also good
-> to think about the exercise in general.  This is a document dropped into
-> place five years ago and never touched again.  It's a short list of
-> seemingly ancient laptops with no explanation of what it means.  So the
-> real question, IMO, is whether this document is useful to anybody and, if
-> not, whether it should just be deleted instead.
+Ping guys ? I think this is worth fixing.
 
-I bet it should be deleted, but we should ask the platform driver
-maintainers first before we do that :)
+Muchun Song <smuchun@gmail.com> =E4=BA=8E2019=E5=B9=B45=E6=9C=8825=E6=97=A5=
+=E5=91=A8=E5=85=AD =E4=B8=8B=E5=8D=888:15=E5=86=99=E9=81=93=EF=BC=9A
 
-thanks,
-
-greg k-h
+>
+> Hi greg k-h,
+>
+> Greg KH <gregkh@linuxfoundation.org> =E4=BA=8E2019=E5=B9=B45=E6=9C=8825=
+=E6=97=A5=E5=91=A8=E5=85=AD =E4=B8=8A=E5=8D=883:04=E5=86=99=E9=81=93=EF=BC=
+=9A
+> >
+> > On Thu, May 16, 2019 at 10:23:42PM +0800, Muchun Song wrote:
+> > > There is a race condition between removing glue directory and adding =
+a new
+> > > device under the glue directory. It can be reproduced in following te=
+st:
+> >
+> > <snip>
+> >
+> > Is this related to:
+> >         Subject: [PATCH v3] drivers: core: Remove glue dirs early only =
+when refcount is 1
+> >
+> > ?
+> >
+> > If so, why is the solution so different?
+>
+> In the v1 patch, the solution is that remove glue dirs early only when
+> refcount is 1. So
+> the v1 patch like below:
+>
+> @@ -1825,7 +1825,7 @@ static void cleanup_glue_dir(struct device *dev,
+> struct kobject *glue_dir)
+>                 return;
+>
+>         mutex_lock(&gdp_mutex);
+> -       if (!kobject_has_children(glue_dir))
+> +       if (!kobject_has_children(glue_dir) && kref_read(&glue_dir->kref)=
+ =3D=3D 1)
+>                 kobject_del(glue_dir);
+>         kobject_put(glue_dir);
+>         mutex_unlock(&gdp_mutex);
+> -----------------------------------------------------------------------
+>
+> But from Ben's suggestion as below:
+>
+> I find relying on the object count for such decisions rather fragile as
+> it could be taken temporarily for other reasons, couldn't it ? In which
+> case we would just fail...
+>
+> Ideally, the looking up of the glue dir and creation of its child
+> should be protected by the same lock instance (the gdp_mutex in that
+> case).
+> -----------------------------------------------------------------------
+>
+> So another solution is used from Ben's suggestion in the v2 patch. But
+> I forgot to update the commit message until the v4 patch. Thanks.
+>
+> Yours,
+> Muchun
