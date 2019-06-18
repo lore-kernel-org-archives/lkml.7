@@ -2,109 +2,118 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD63DC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 617F2C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADF1B20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="l4aW6nnP";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XtLSKjLW"
+	by mail.kernel.org (Postfix) with ESMTP id 42CFF208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfFRNkd (ORCPT
+        id S1729408AbfFRNkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 18 Jun 2019 09:40:35 -0400
+Received: from foss.arm.com ([217.140.110.172]:41698 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728572AbfFRNkd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 18 Jun 2019 09:40:33 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53392 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbfFRNkc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:40:32 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9A48F60A00; Tue, 18 Jun 2019 13:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560865231;
-        bh=3S920kb9n9ahqKRzh5GewJNZfwKu57RH7nMn5VmTegs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=l4aW6nnPwElZx+0tcypQKi7XbSu6KOxNtbIfky2jofdFgmEUfQqXjEwvRwQR24N7J
-         +FEhGWq3Q+zdbl68+wCqqK8k5nNx3LJnItZEW2JDY6MmXoljFxjsq/A8ZJBuipwLlL
-         XjLxPCa66cilnVCEN43ACwh0BSd2qbDkpY8KBZr8=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 64D4060A00;
-        Tue, 18 Jun 2019 13:40:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560865227;
-        bh=3S920kb9n9ahqKRzh5GewJNZfwKu57RH7nMn5VmTegs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XtLSKjLWrLutIGH8KwFxjxolWP6E5fuG4T9J870AB6WdXIVg5pfxa4gyAyTQ7WTWp
-         ahuSaYp9ihiEQVDisIqsmz0CUG6ePwoq2ECYZ/+o99JdQLHEuFKc1AI8/d/mLGOEDX
-         hz8H/kQZWGOxB9+59FW14lzmDNMvtUPvvRDKcZ0I=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 64D4060A00
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH V4] perf: event preserve and create across cpu hotplug
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Raghavendra Rao Ananta <rananta@codeaurora.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Alexei Starovoitov <ast@kernel.org>
-References: <1560337045-13298-1-git-send-email-mojha@codeaurora.org>
- <1560848091-15694-1-git-send-email-mojha@codeaurora.org>
- <20190618122329.GE3419@hirez.programming.kicks-ass.net>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <cc01dc2b-8992-cd95-e181-3400fc1ce82f@codeaurora.org>
-Date:   Tue, 18 Jun 2019 19:10:13 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E46682B;
+        Tue, 18 Jun 2019 06:40:32 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 726B63F718;
+        Tue, 18 Jun 2019 06:40:31 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 14:40:29 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Anisse Astier <aastier@freebox.fr>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Rich Felker <dalias@aerifal.cx>, linux-kernel@vger.kernel.org,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        "Dmitry V . Levin" <ldv@altlinux.org>,
+        Ricardo Salveti <ricardo@foundries.io>,
+        Richard Henderson <richard.henderson@linaro.org>
+Subject: Re: [PATCH v2] arm64/sve: <uapi/asm/ptrace.h> should not depend on
+ <uapi/linux/prctl.h>
+Message-ID: <20190618134029.GE2790@e103592.cambridge.arm.com>
+References: <20190613163801.21949-1-aastier@freebox.fr>
+ <20190614164600.36966-1-aastier@freebox.fr>
 MIME-Version: 1.0
-In-Reply-To: <20190618122329.GE3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614164600.36966-1-aastier@freebox.fr>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 06:46:00PM +0200, Anisse Astier wrote:
+> Otherwise this will create userspace build issues for any program
+> (strace, qemu) that includes both <sys/prctl.h> (with musl libc) and
+> <linux/ptrace.h> (which then includes <asm/ptrace.h>), like this:
+> 
+> 	error: redefinition of 'struct prctl_mm_map'
+> 	 struct prctl_mm_map {
+> 
+> See https://github.com/foundriesio/meta-lmp/commit/6d4a106e191b5d79c41b9ac78fd321316d3013c0
+> for a public example of people working around this issue.
+> 
+> Copying the defines is a bit imperfect here, but better than creating a
+> whole other header for just two defines that would never change, as part
+> of the kernel ABI.
+> 
+> Fixes: 43d4da2c45b2 ("arm64/sve: ptrace and ELF coredump support")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Anisse Astier <aastier@freebox.fr>
+> ---
+> Changes since v1:
+>  - made a bit more explicit that we copied defined symbols, in commit
+>    and code.
+>  - Use Fixes: tag in commit message
+> 
+> Thanks to Dave Martin and Will Deacon for the review.
+> 
+> ---
+>  arch/arm64/include/uapi/asm/ptrace.h | 8 +++-----
+>  1 file changed, 3 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/arm64/include/uapi/asm/ptrace.h b/arch/arm64/include/uapi/asm/ptrace.h
+> index d78623acb649..438759e7e8a7 100644
+> --- a/arch/arm64/include/uapi/asm/ptrace.h
+> +++ b/arch/arm64/include/uapi/asm/ptrace.h
+> @@ -65,8 +65,6 @@
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> -#include <linux/prctl.h>
+> -
+>  /*
+>   * User structures for general purpose, floating point and debug registers.
+>   */
+> @@ -113,10 +111,10 @@ struct user_sve_header {
+>  
+>  /*
+>   * Common SVE_PT_* flags:
+> - * These must be kept in sync with prctl interface in <linux/ptrace.h>
+> + * These must be kept in sync with prctl interface in <linux/prctl.h>
+>   */
+> -#define SVE_PT_VL_INHERIT		(PR_SVE_VL_INHERIT >> 16)
+> -#define SVE_PT_VL_ONEXEC		(PR_SVE_SET_VL_ONEXEC >> 16)
+> +#define SVE_PT_VL_INHERIT		((1 << 17) /* PR_SVE_VL_INHERIT */ >> 16)
+> +#define SVE_PT_VL_ONEXEC		((1 << 18) /* PR_SVE_SET_VL_ONEXEC */ >> 16)
 
-On 6/18/2019 5:53 PM, Peter Zijlstra wrote:
-> On Tue, Jun 18, 2019 at 02:24:51PM +0530, Mukesh Ojha wrote:
->> Perf framework doesn't allow preserving CPU events across
->> CPU hotplugs. The events are scheduled out as and when the
->> CPU walks offline. Moreover, the framework also doesn't
->> allow the clients to create events on an offline CPU. As
->> a result, the clients have to keep on monitoring the CPU
->> state until it comes back online.
->>
->> Therefore,
-> That's not a therefore. There's a distinct lack of rationale here. Why
-> do you want this?
+FWIW,
+Acked-by: Dave Martin <Dave.Martin@arm.com>
 
-Thanks Peter for coming back on this.
+Ideally we would create a common <uapi/asm/prctl.h> that arm64 could
+specialise as appropriate, but since x86 already has a similar header
+shadowing this, it may be more trouble than it's worth to generalise it.
 
-Missed to send the coverletter,
-https://lkml.org/lkml/2019/5/31/438
-Will resend this with coverletter.
-
-Btw,  This patch
-
-is based on suggestion given by you on this
-https://lkml.org/lkml/2018/2/16/763
-
-
-Thanks.
-Mukesh
-
-
-Thanks.
-Mukesh
-
+Cheers
+---Dave
