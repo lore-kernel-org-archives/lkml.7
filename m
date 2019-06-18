@@ -2,113 +2,97 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9325CC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:12:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0676C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 704D82084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:12:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82FB9206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:13:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729236AbfFRJM5 (ORCPT
+        id S1729282AbfFRJNJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:12:57 -0400
-Received: from foss.arm.com ([217.140.110.172]:58496 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728385AbfFRJM4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:12:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0D7DD344;
-        Tue, 18 Jun 2019 02:12:56 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6F3EB3F246;
-        Tue, 18 Jun 2019 02:12:52 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 10:12:50 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Florian Weimer <fweimer@redhat.com>,
-        Yu-cheng Yu <yu-cheng.yu@intel.com>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-mm@kvack.org, linux-arch@vger.kernel.org,
-        linux-api@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Cyrill Gorcunov <gorcunov@gmail.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Eugene Syromiatnikov <esyr@redhat.com>,
-        "H.J. Lu" <hjl.tools@gmail.com>, Jann Horn <jannh@google.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Nadav Amit <nadav.amit@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>, Pavel Machek <pavel@ucw.cz>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Vedvyas Shanbhogue <vedvyas.shanbhogue@intel.com>
-Subject: Re: [PATCH v7 22/27] binfmt_elf: Extract .note.gnu.property from an
- ELF file
-Message-ID: <20190618091248.GB2790@e103592.cambridge.arm.com>
-References: <20190606200646.3951-1-yu-cheng.yu@intel.com>
- <20190606200646.3951-23-yu-cheng.yu@intel.com>
- <20190607180115.GJ28398@e103592.cambridge.arm.com>
- <94b9c55b3b874825fda485af40ab2a6bc3dad171.camel@intel.com>
- <87lfy9cq04.fsf@oldenburg2.str.redhat.com>
- <20190611114109.GN28398@e103592.cambridge.arm.com>
- <031bc55d8dcdcf4f031e6ff27c33fd52c61d33a5.camel@intel.com>
- <20190612093238.GQ28398@e103592.cambridge.arm.com>
- <87imt4jwpt.fsf@oldenburg2.str.redhat.com>
- <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
+        Tue, 18 Jun 2019 05:13:09 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:35689 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728385AbfFRJNJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:13:09 -0400
+X-Originating-IP: 90.88.23.150
+Received: from aptenodytes (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 08404E001C;
+        Tue, 18 Jun 2019 09:13:00 +0000 (UTC)
+Message-ID: <dd632e5d4cc25a75ee78e688297ed793eae84819.camel@bootlin.com>
+Subject: Re: [PATCH] media: Clarify the meaning of file descriptors in
+ VIDIOC_DQBUF
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Tomasz Figa <tfiga@chromium.org>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Hirokazu Honda <hiroh@chromium.org>
+Date:   Tue, 18 Jun 2019 11:13:00 +0200
+In-Reply-To: <20190612093648.47412-1-tfiga@chromium.org>
+References: <20190612093648.47412-1-tfiga@chromium.org>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906171418220.1854@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 02:20:40PM +0200, Thomas Gleixner wrote:
-> On Mon, 17 Jun 2019, Florian Weimer wrote:
-> > * Dave Martin:
-> > > On Tue, Jun 11, 2019 at 12:31:34PM -0700, Yu-cheng Yu wrote:
-> > >> We can probably check PT_GNU_PROPERTY first, and fallback (based on ld-linux
-> > >> version?) to PT_NOTE scanning?
-> > >
-> > > For arm64, we can check for PT_GNU_PROPERTY and then give up
-> > > unconditionally.
-> > >
-> > > For x86, we would fall back to PT_NOTE scanning, but this will add a bit
-> > > of cost to binaries that don't have NT_GNU_PROPERTY_TYPE_0.  The ld.so
-> > > version doesn't tell you what ELF ABI a given executable conforms to.
-> > >
-> > > Since this sounds like it's largely a distro-specific issue, maybe there
-> > > could be a Kconfig option to turn the fallback PT_NOTE scanning on?
-> > 
-> > I'm worried that this causes interop issues similarly to what we see
-> > with VSYSCALL today.  If we need both and a way to disable it, it should
-> > be something like a personality flag which can be configured for each
-> > process tree separately.  Ideally, we'd settle on one correct approach
-> > (i.e., either always process both, or only process PT_GNU_PROPERTY) and
-> > enforce that.
+Hi,
+
+On Wed, 2019-06-12 at 18:36 +0900, Tomasz Figa wrote:
+> When the application calls VIDIOC_DQBUF with the DMABUF memory type, the
+> v4l2_buffer structure (or v4l2_plane structures) are filled with DMA-buf
+> file descriptors. However, the current documentation does not explain
+> whether those are new file descriptors referring to the same DMA-bufs or
+> just the same integers as passed to VIDIOC_QBUF back in time. Clarify
+> the documentation that it's the latter.
+
+LGTM,
+
+Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+
+Cheers,
+
+Paul
+
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+> ---
+>  Documentation/media/uapi/v4l/vidioc-qbuf.rst | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> Chose one and only the one which makes technically sense and is not some
-> horrible vehicle.
-> 
-> Everytime we did those 'oh we need to make x fly workarounds' we regretted
-> it sooner than later.
+> diff --git a/Documentation/media/uapi/v4l/vidioc-qbuf.rst b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
+> index dbf7b445a27b..407302d80684 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-qbuf.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
+> @@ -139,6 +139,14 @@ may continue as normal, but should be aware that data in the dequeued
+>  buffer might be corrupted. When using the multi-planar API, the planes
+>  array must be passed in as well.
+>  
+> +If the application sets the ``memory`` field to ``V4L2_MEMORY_DMABUF`` to
+> +dequeue a :ref:`DMABUF <dmabuf>` buffer, the driver fills the ``m.fd`` field
+> +with a file descriptor numerically the same as the one given to ``VIDIOC_QBUF``
+> +when the buffer was enqueued. No new file descriptor is created at dequeue time
+> +and the value is only for the application convenience. When the multi-planar
+> +API is used the ``m.fd`` fields of the passed array of struct
+> +:c:type:`v4l2_plane` are filled instead.
+> +
+>  By default ``VIDIOC_DQBUF`` blocks when no buffer is in the outgoing
+>  queue. When the ``O_NONBLOCK`` flag was given to the
+>  :ref:`open() <func-open>` function, ``VIDIOC_DQBUF`` returns
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
 
-So I guess that points to keeping PT_NOTE scanning always available as a
-fallback on x86.  This sucks a bit, but if there are binaries already in
-the wild that rely on this, I don't think we have much choice...
-
-I'd still favour a Kconfig option to allow this support to be suppressed
-by arches that don't have a similar legacy to be compatible with.
-
-Cheers
----Dave
