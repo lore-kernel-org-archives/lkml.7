@@ -2,102 +2,112 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.0 required=3.0 tests=DATE_IN_PAST_06_12,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7409AC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39832C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:28:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54DE620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C8C8206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:28:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560889691;
+	bh=8AsfAVyMpUySxxE6es1/fgTRGbzK+dTQ5xCz94DqBW0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=dSl+jWJwTZayo7fcEPQ4EQMcTsaqAn/eHelfgZZtSNJElnUHotmn4moJutn0Qpboy
+	 yH5/SbaYw6Z0CH52J3UM2UJrOw4rY9rkDiVwaT8QJS31qi2bGH1x/WtVuGEz8rCp2N
+	 C9W+8Ro4Fv/KEmoasYh5FpIkfE4HEP3YjdXGBIcg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730635AbfFRU12 (ORCPT
+        id S1730666AbfFRU2J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:27:28 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:51764 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730607AbfFRU11 (ORCPT
+        Tue, 18 Jun 2019 16:28:09 -0400
+Received: from casper.infradead.org ([85.118.1.10]:52652 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730176AbfFRU2J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:27:27 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdKhN-0003PQ-66; Tue, 18 Jun 2019 20:27:21 +0000
-Date:   Tue, 18 Jun 2019 21:27:21 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Sami Tolvanen <samitolvanen@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/4] jffs2: pass the correct prototype to read_cache_page
-Message-ID: <20190618202721.GD17978@ZenIV.linux.org.uk>
-References: <20190520055731.24538-1-hch@lst.de>
- <20190520055731.24538-4-hch@lst.de>
+        Tue, 18 Jun 2019 16:28:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/yuq+528Ge2GyeWg6aQYCOiRFdbu/e3xfN3FdxpcEzY=; b=aB7KTV5ZzmCoj1Qxm3dVaqBytG
+        6+FKmt7R881qAHMbcleBouaKC3kmFz2LA9Gvif95NyyHzZYpT55h4RDehfIKQQY69CVa8wVC9pTSV
+        lM5saykAhFfav4/jsmfkmbjCMOcfAFWTC4XcOhZRfq2M8BexwvZFvq+n1RO+Q6bUZMKIXOAKqgS/z
+        Z0xhg86h0mjM6gWv9dljQS4maac4BmrXdCgsk5P5Rrbmx/H/nT9JqF0GEKhiNMUUO+RcYwIj4hQKr
+        S+oRAMGCViKI189iZwgPRWHso0mZugDsGCk+ehRnbRbif4s1O9+a3pZMmiNVfSY4BbgNtTHNIW9P3
+        VhKuGzng==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdKi3-0001wm-Jm; Tue, 18 Jun 2019 20:28:04 +0000
+Date:   Tue, 18 Jun 2019 11:14:47 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        linux-riscv@lists.infradead.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Subject: Re: [PATCH v4 00/28] Convert files to ReST - part 1
+Message-ID: <20190618111122.64cdeb59@coco.lan>
+In-Reply-To: <20190614143640.40ee353a@lwn.net>
+References: <cover.1560361364.git.mchehab+samsung@kernel.org>
+        <20190614143640.40ee353a@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190520055731.24538-4-hch@lst.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, May 20, 2019 at 07:57:30AM +0200, Christoph Hellwig wrote:
-> Fix the callback jffs2 passes to read_cache_page to actually have the
-> proper type expected.  Casting around function pointers can easily
-> hide typing bugs, and defeats control flow protection.
+Em Fri, 14 Jun 2019 14:36:40 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-FWIW, this
-unsigned char *jffs2_gc_fetch_page(struct jffs2_sb_info *c,
-                                   struct jffs2_inode_info *f,
-                                   unsigned long offset,
-                                   unsigned long *priv)
-{
-        struct inode *inode = OFNI_EDONI_2SFFJ(f);
-        struct page *pg;
+> On Wed, 12 Jun 2019 14:52:36 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > This is mostly a rebase of the /33 series v3 I sent, on the top of the latest
+> > linux-next  (next-20190612).
+> > 
+> > Changes from v3:
+> > 
+> > - dropped cpufreq conversion - documents are too outdated;
+> > - infiniband patch is not here anymore - as it should be merged via RDMA;
+> > - s390 patches were already merged;
+> > - Dropped Geert as Maintainer from fb/framebuffer.rst, as per his request;
+> > - Did a minor editorial change at popwerpc/cxl.rst per Andrew Donellan
+> >   request;
+> > - Added acks/reviews;
+> > - trivial rebase fixups.  
+> 
+> So I had to pull docs-next forward to -rc4, but then I was able to apply
+> this set except for parts 5, 6, 14, 18, and 19.  
 
-        pg = read_cache_page(inode->i_mapping, offset >> PAGE_SHIFT,
-                             (void *)jffs2_do_readpage_unlock, inode);
-        if (IS_ERR(pg))
-                return (void *)pg;
+Patch 5 went via Cgroups tree;
+Patch 18 went via power tree;
+Patch 6 is obsolete, as the cgroups-v1 CBQ chapter was removed;
 
-        *priv = (unsigned long)pg;
-        return kmap(pg);
-}
-looks like crap.  And so does this:
-void jffs2_gc_release_page(struct jffs2_sb_info *c,
-                           unsigned char *ptr,
-                           unsigned long *priv)
-{
-        struct page *pg = (void *)*priv;
+So, what's left from this series are patches 14 and 19.
 
-        kunmap(pg);
-        put_page(pg);
-}
+I have a rebased version of them on the top of linux-next
+on my working tree. Perhaps we should try to push those two late
+during the merge window.
 
-	First of all, there's only one caller for each of those, and both
-are direct calls.  So passing struct page * around that way is ridiculous.
-What's more, there is no reason not to do kmap() in caller (i.e. in
-jffs2_garbage_collect_dnode()).  That way jffs2_gc_fetch_page() would
-simply be return read_cache_page(....), and in the caller we'd have
+> Some progress made, but
+> this is somewhat painful work...
 
-        struct page *pg;
-        unsigned char *pg_ptr;
-...
-        mutex_unlock(&f->sem);
-        pg = jffs2_gc_fetch_page(c, f, start);
-        if (IS_ERR(pg)) {
-		mutex_lock(&f->sem);
-                pr_warn("read_cache_page() returned error: %ld\n", PTR_ERR(pg));
-                return PTR_ERR(pg);
-        }
-	pg_ptr = kmap(pg);
-	mutex_lock(&f->sem);
-...
-	kunmap(pg);
-	put_page(pg);
+Yeah, a change like that is not easy.
 
-and that's it, preserving the current locking and with saner types...
+Thanks,
+Mauro
