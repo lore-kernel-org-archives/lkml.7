@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42C84C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49E86C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B6612085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9A7208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 12:08:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gtQ81my6"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="sd172sM+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729269AbfFRMIu (ORCPT
+        id S1729305AbfFRMIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 08:08:50 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:53380 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729199AbfFRMIr (ORCPT
+        Tue, 18 Jun 2019 08:08:54 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:37890 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729264AbfFRMIw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 08:08:47 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IC8R1g077675;
-        Tue, 18 Jun 2019 07:08:27 -0500
+        Tue, 18 Jun 2019 08:08:52 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IC8X3D030702;
+        Tue, 18 Jun 2019 07:08:33 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560859707;
-        bh=+JcQY1LG9gNG3F7q1r1Itpd36WhWjpw9sV8+qyxk/l4=;
+        s=ti-com-17Q1; t=1560859713;
+        bh=DSA/ZAIZgUYuQAI7wUCealzIjACaDYkjfETlnAsTImY=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=gtQ81my6PjsMMsQ1oL3pz2VY56VKMS6CaTsQjV6qgXXuvxxokS8ZYqKKGhbszV65e
-         f/62OQXxXkUo7igM9TS95ojNbAZeXzMrnD0ifexTNuExUUjyA+mS3w0PuXDEA9vBn6
-         QoBY/1Y7Xk/rK2a895/mIegiP6habZAgPeAQfITg=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IC8Rnu044677
+        b=sd172sM+q7w/isCTNzrhnXC1zsvy9G6lPCLU7aYUhCIcz4bC+cbo3MzyufxVUihWx
+         amh68nDDvrAJ3Jineb+LxYI8BIVh49169omzy2afr/j0OWRAdz4xPWt03kktbMDXp6
+         bYeriqkssvuyni+QVKrzdNlOHdUtNXNwOffXZgDA=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IC8X4r118720
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 07:08:27 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
+        Tue, 18 Jun 2019 07:08:33 -0500
+Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 07:08:26 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ Jun 2019 07:08:32 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 07:08:26 -0500
+ Frontend Transport; Tue, 18 Jun 2019 07:08:32 -0500
 Received: from a0393675ula.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IC89Gd080327;
-        Tue, 18 Jun 2019 07:08:24 -0500
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IC89Gf080327;
+        Tue, 18 Jun 2019 07:08:30 -0500
 From:   Keerthy <j-keerthy@ti.com>
 To:     <herbert@gondor.apana.org.au>, <davem@davemloft.net>,
         <robh+dt@kernel.org>
@@ -55,9 +55,9 @@ CC:     <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <devicetree@vger.kernel.org>, <t-kristo@ti.com>,
         <j-keerthy@ti.com>, <nm@ti.com>
-Subject: [PATCH 05/10] crypto: sha256_generic: Export the Transform function
-Date:   Tue, 18 Jun 2019 17:38:38 +0530
-Message-ID: <20190618120843.18777-6-j-keerthy@ti.com>
+Subject: [PATCH 07/10] crypto: sa2ul: Add hmac(sha1) HMAC algorithm support
+Date:   Tue, 18 Jun 2019 17:38:40 +0530
+Message-ID: <20190618120843.18777-8-j-keerthy@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190618120843.18777-1-j-keerthy@ti.com>
 References: <20190618120843.18777-1-j-keerthy@ti.com>
@@ -69,49 +69,397 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The transform function can be used as is by other crypto
-drivers that need to transform the 256 bit key using cpu.
-Hence export it.
+HMAC hash-based message authentication code) is a specific type of
+message authentication code (MAC) involving a cryptographic hash
+function and a secret cryptographic key. It may be used to
+simultaneously verify both the data integrity and the authentication
+of a message, as with any MAC. Add hmac(sha1) HMAC algorithm support
+and the message digest size is 20 bytes.
 
 Signed-off-by: Keerthy <j-keerthy@ti.com>
 ---
- crypto/sha256_generic.c | 3 ++-
- include/crypto/sha.h    | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ drivers/crypto/sa2ul.c | 347 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 347 insertions(+)
 
-diff --git a/crypto/sha256_generic.c b/crypto/sha256_generic.c
-index b7502a96a0d4..583a3c3b93e0 100644
---- a/crypto/sha256_generic.c
-+++ b/crypto/sha256_generic.c
-@@ -63,7 +63,7 @@ static inline void BLEND_OP(int I, u32 *W)
- 	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
+diff --git a/drivers/crypto/sa2ul.c b/drivers/crypto/sa2ul.c
+index 9c9008e21867..e3a1321f0666 100644
+--- a/drivers/crypto/sa2ul.c
++++ b/drivers/crypto/sa2ul.c
+@@ -1408,6 +1408,307 @@ static int sa_aead_decrypt(struct aead_request *req)
+ 	return sa_aead_run(req, req->iv, 0);
  }
  
--static void sha256_transform(u32 *state, const u8 *input)
-+void sha256_transform(u32 *state, const u8 *input)
++static int sa_sham_cra_init_alg(struct crypto_tfm *tfm, const char *alg_base)
++{
++	struct sa_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
++	struct crypto_alg *alg = tfm->__crt_alg;
++	struct sa_crypto_data *data = dev_get_drvdata(sa_k3_dev);
++	int ret;
++
++	if ((alg->cra_flags & CRYPTO_ALG_TYPE_MASK) ==
++	    CRYPTO_ALG_TYPE_AHASH) {
++		memset(ctx, 0, sizeof(*ctx));
++		ctx->dev_data = data;
++		ret = sa_init_ctx_info(&ctx->enc, data);
++		if (ret)
++			return ret;
++	}
++
++	if (alg_base) {
++		ctx->shash = crypto_alloc_shash(alg_base, 0,
++						CRYPTO_ALG_NEED_FALLBACK);
++		if (IS_ERR(ctx->shash)) {
++			pr_err("base driver %s couldn't be loaded\n", alg_base);
++			return PTR_ERR(ctx->shash);
++		}
++	}
++
++	dev_dbg(sa_k3_dev, "%s(0x%p) sc-ids(0x%x(0x%pad), 0x%x(0x%pad))\n",
++		__func__, tfm, ctx->enc.sc_id, &ctx->enc.sc_phys,
++		ctx->dec.sc_id, &ctx->dec.sc_phys);
++
++	crypto_ahash_set_reqsize(__crypto_ahash_cast(tfm),
++				 sizeof(struct sa_dma_req_ctx) +
++				 SHA512_BLOCK_SIZE);
++
++	return 0;
++}
++
++static void sa_sham_dma_in_callback(void *data)
++{
++	struct sa_rx_data *rxd = (struct sa_rx_data *)data;
++	struct ahash_request *req = (struct ahash_request *)rxd->req;
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++	unsigned int authsize = crypto_ahash_digestsize(tfm);
++	int i, sg_nents;
++	size_t ml, pl;
++	u32 *mdptr, *result;
++
++	mdptr = (u32 *)dmaengine_desc_get_metadata_ptr(rxd->tx_in, &pl, &ml);
++	result = (u32 *)req->result;
++
++	kfree(rxd);
++
++	for (i = 0; i < (authsize / 4); i++)
++		result[i] = htonl(mdptr[i + 4]);
++
++	sg_nents = sg_nents_for_len(req->src, req->nbytes);
++	dma_unmap_sg(rxd->ddev, req->src, sg_nents, DMA_FROM_DEVICE);
++
++	ahash_request_complete(req, 0);
++
++	kfree(rxd);
++}
++
++static int sa_sham_digest(struct ahash_request *req)
++{
++	struct sa_tfm_ctx *ctx = crypto_ahash_ctx(crypto_ahash_reqtfm(req));
++	struct sa_ctx_info *sa_ctx = &ctx->enc;
++	struct dma_async_tx_descriptor *tx_in, *tx_out;
++	struct sa_crypto_data *pdata = dev_get_drvdata(sa_k3_dev);
++	struct sa_dma_req_ctx req_ctx;
++	struct sa_rx_data *rxd;
++	u8 enc_offset;
++	int sg_nents;
++	int psdata_offset;
++	u8 auth_offset = 0;
++	u8 *auth_iv = NULL;
++	u8 *aad = NULL;
++	u8 aad_len = 0;
++	u16 enc_len;
++	u16 auth_len = 0;
++	u32 req_type;
++	u32 *mdptr;
++	struct dma_chan *dma_rx;
++	gfp_t flags;
++	size_t pl, ml;
++	struct device *ddev;
++
++	flags = req->base.flags & CRYPTO_TFM_REQ_MAY_SLEEP ?
++			GFP_KERNEL : GFP_ATOMIC;
++	enc_len = 0;
++	auth_len = req->nbytes;
++	enc_offset = 0;
++
++	if (enc_len > 256)
++		dma_rx = pdata->dma_rx2;
++	else
++		dma_rx = pdata->dma_rx1;
++
++	ddev = dma_rx->device->dev;
++	/* Allocate descriptor & submit packet */
++	sg_nents = sg_nents_for_len(req->src, req->nbytes);
++
++	memcpy(req_ctx.cmdl, sa_ctx->cmdl, sa_ctx->cmdl_size);
++	/* Update Command Label */
++	sa_update_cmdl(sa_k3_dev, enc_offset, enc_len,
++		       NULL, auth_offset, auth_len,
++		       auth_iv, aad_len, aad,
++		       &sa_ctx->cmdl_upd_info, req_ctx.cmdl);
++
++	/*
++	 * Last 2 words in PSDATA will have the crypto alg type &
++	 * crypto request pointer
++	 */
++	req_type = CRYPTO_ALG_TYPE_AHASH;
++
++	psdata_offset = sa_ctx->cmdl_size / sizeof(u32);
++	req_ctx.cmdl[psdata_offset++] = req_type;
++
++	/* map the packet */
++	req_ctx.src = req->src;
++	req_ctx.src_nents = dma_map_sg(ddev, req->src, sg_nents, DMA_TO_DEVICE);
++
++	if (unlikely(req_ctx.src_nents != sg_nents)) {
++		dev_warn_ratelimited(sa_k3_dev, "failed to map tx pkt\n");
++		return -EIO;
++	}
++
++	req_ctx.dev_data = pdata;
++	req_ctx.pkt = true;
++
++	dma_sync_sg_for_device(pdata->dev, req->src, req_ctx.src_nents,
++			       DMA_TO_DEVICE);
++
++	tx_in = dmaengine_prep_slave_sg(dma_rx, req->src, req_ctx.src_nents,
++					DMA_DEV_TO_MEM,
++					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++	if (!tx_in) {
++		dev_err(pdata->dev, "IN prep_slave_sg() failed\n");
++		return -EINVAL;
++	}
++
++	rxd = kzalloc(sizeof(*rxd), GFP_KERNEL);
++	rxd->req = (void *)req;
++	rxd->tx_in = tx_in;
++	rxd->ddev = ddev;
++	tx_in->callback = sa_sham_dma_in_callback;
++	tx_in->callback_param = rxd;
++
++	tx_out = dmaengine_prep_slave_sg(pdata->dma_tx, req->src,
++					 req_ctx.src_nents, DMA_MEM_TO_DEV,
++					 DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
++	if (!tx_out) {
++		dev_err(pdata->dev, "OUT prep_slave_sg() failed\n");
++		return -EINVAL;
++	}
++
++	mdptr = (u32 *)dmaengine_desc_get_metadata_ptr(tx_out, &pl, &ml);
++	sa_prepare_tx_desc(mdptr, (sa_ctx->cmdl_size + (SA_PSDATA_CTX_WORDS *
++			   sizeof(u32))), req_ctx.cmdl,
++			   sizeof(sa_ctx->epib), sa_ctx->epib);
++
++	dmaengine_desc_set_metadata_len(tx_out, 28);
++
++	dmaengine_submit(tx_out);
++	dmaengine_submit(tx_in);
++
++	dma_async_issue_pending(dma_rx);
++	dma_async_issue_pending(pdata->dma_tx);
++
++	return -EINPROGRESS;
++}
++
++static int sa_sham_init(struct ahash_request *req)
++{
++	struct crypto_ahash *tfm = crypto_ahash_reqtfm(req);
++
++	dev_dbg(sa_k3_dev, "init: digest size: %d\n",
++		crypto_ahash_digestsize(tfm));
++
++	return 0;
++}
++
++static int sa_sham_shash_digest(struct crypto_shash *tfm, u32 flags,
++				const u8 *data, unsigned int len, u8 *out)
++{
++	SHASH_DESC_ON_STACK(shash, tfm);
++
++	shash->tfm = tfm;
++
++	return crypto_shash_digest(shash, data, len, out);
++}
++
++static int sa_sham_setkey(struct crypto_ahash *tfm, const u8 *key,
++			  unsigned int keylen, struct  algo_data *ad)
++{
++	struct sa_tfm_ctx *ctx = crypto_ahash_ctx(tfm);
++	int bs = crypto_shash_blocksize(ctx->shash);
++	int ds = crypto_shash_digestsize(ctx->shash);
++	int cmdl_len;
++	struct sa_cmdl_cfg cfg;
++	int err;
++
++	if (keylen > bs) {
++		err = sa_sham_shash_digest(ctx->shash,
++					   crypto_shash_get_flags(ctx->shash),
++					   key, keylen, ctx->authkey);
++		if (err)
++			return err;
++		keylen = ds;
++	} else {
++		memcpy(ctx->authkey, key, keylen);
++	}
++
++	memset(ctx->authkey + keylen, 0, bs - keylen);
++	memset(&cfg, 0, sizeof(cfg));
++	cfg.enc1st = 0;
++	cfg.aalg = ad->aalg_id;
++	cfg.enc_eng_id = ad->enc_eng.eng_id;
++	cfg.auth_eng_id = ad->auth_eng.eng_id;
++	cfg.iv_size = 0;
++	cfg.akey = ctx->authkey;
++	cfg.akey_len = keylen;
++
++	/* Setup Encryption Security Context & Command label template */
++	if (sa_init_sc(&ctx->enc, NULL, 0, ctx->authkey, keylen, ad, 0,
++		       &ctx->enc.epib[1], true))
++		goto badkey;
++
++	cmdl_len = sa_format_cmdl_gen(&cfg,
++				      (u8 *)ctx->enc.cmdl,
++				      &ctx->enc.cmdl_upd_info);
++	if (cmdl_len <= 0 || (cmdl_len > SA_MAX_CMDL_WORDS * sizeof(u32)))
++		goto badkey;
++
++	ctx->enc.cmdl_size = cmdl_len;
++
++	kfree(ad);
++
++	return 0;
++badkey:
++	dev_err(sa_k3_dev, "%s: badkey\n", __func__);
++	return -EINVAL;
++}
++
++static int sa_sham_sha1_setkey(struct crypto_ahash *tfm, const u8 *key,
++			       unsigned int keylen)
++{
++	struct algo_data *ad = kzalloc(sizeof(*ad), GFP_KERNEL);
++
++	ad->enc_eng.eng_id = SA_ENG_ID_NONE;
++	ad->enc_eng.sc_size = SA_CTX_ENC_TYPE1_SZ;
++	ad->auth_eng.eng_id = SA_ENG_ID_AM1;
++	ad->auth_eng.sc_size = SA_CTX_AUTH_TYPE2_SZ;
++	ad->mci_enc = NULL;
++	ad->mci_dec = NULL;
++	ad->inv_key = false;
++	ad->keyed_mac = true;
++	ad->ealg_id = SA_EALG_ID_NONE;
++	ad->aalg_id = SA_AALG_ID_HMAC_SHA1;
++	ad->hash_size = SHA1_DIGEST_SIZE;
++	ad->auth_ctrl = 0x2;
++	ad->prep_iopad = sa_hmac_sha1_get_pad;
++
++	return sa_sham_setkey(tfm, key, keylen, ad);
++}
++
++static int sa_sham_cra_sha1_init(struct crypto_tfm *tfm)
++{
++	return sa_sham_cra_init_alg(tfm, "sha1");
++}
++
++static void sa_sham_cra_exit(struct crypto_tfm *tfm)
++{
++	struct crypto_alg *alg = tfm->__crt_alg;
++	struct sa_tfm_ctx *ctx = crypto_tfm_ctx(tfm);
++	struct sa_crypto_data *data = dev_get_drvdata(sa_k3_dev);
++
++	dev_dbg(sa_k3_dev, "%s(0x%p) sc-ids(0x%x(0x%pad), 0x%x(0x%pad))\n",
++		__func__, tfm, ctx->enc.sc_id, &ctx->enc.sc_phys,
++		ctx->dec.sc_id, &ctx->dec.sc_phys);
++
++	if ((alg->cra_flags & CRYPTO_ALG_TYPE_AHASH)
++	    == CRYPTO_ALG_TYPE_AHASH) {
++		sa_free_ctx_info(&ctx->enc, data);
++	}
++}
++
++static int sa_sham_update(struct ahash_request *req)
++{
++	return -ENOTSUPP;
++}
++
++static int sa_sham_final(struct ahash_request *req)
++{
++	return sa_sham_digest(req);
++}
++
++static int sa_sham_finup(struct ahash_request *req)
++{
++	return sa_sham_digest(req);
++}
++
+ static struct sa_alg_tmpl sa_algs[] = {
+ 	{.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
+ 	 .alg.crypto = {
+@@ -1512,6 +1813,34 @@ static struct sa_alg_tmpl sa_algs[] = {
+ 	},
+ };
+ 
++static struct ahash_alg algs_sha[] = {
++{
++	.init		= sa_sham_init,
++	.update		= sa_sham_update,
++	.final		= sa_sham_final,
++	.finup		= sa_sham_finup,
++	.digest		= sa_sham_digest,
++	.setkey		= sa_sham_sha1_setkey,
++	.halg.digestsize	= SHA1_DIGEST_SIZE,
++	.halg.statesize		= 128,
++	.halg.base	= {
++		.cra_name		= "hmac(sha1)",
++		.cra_driver_name	= "sa-hmac-sha1",
++		.cra_priority		= 400,
++		.cra_flags		= CRYPTO_ALG_TYPE_AHASH |
++						CRYPTO_ALG_ASYNC |
++						CRYPTO_ALG_KERN_DRIVER_ONLY |
++						CRYPTO_ALG_NEED_FALLBACK,
++		.cra_blocksize		= SHA1_BLOCK_SIZE,
++		.cra_ctxsize		= sizeof(struct sa_tfm_ctx),
++		.cra_alignmask		= SA_ALIGN_MASK,
++		.cra_module		= THIS_MODULE,
++		.cra_init		= sa_sham_cra_sha1_init,
++		.cra_exit		= sa_sham_cra_exit,
++	}
++},
++};
++
+ /* Register the algorithms in crypto framework */
+ void sa_register_algos(const struct device *dev)
  {
- 	u32 a, b, c, d, e, f, g, h, t1, t2;
- 	u32 W[64];
-@@ -225,6 +225,7 @@ static void sha256_transform(u32 *state, const u8 *input)
- 	a = b = c = d = e = f = g = h = t1 = t2 = 0;
- 	memzero_explicit(W, 64 * sizeof(u32));
+@@ -1539,6 +1868,15 @@ void sa_register_algos(const struct device *dev)
+ 		else
+ 			sa_algs[i].registered = 1;
+ 	}
++
++	num_algs = ARRAY_SIZE(algs_sha);
++	for (i = 0; i < num_algs; i++) {
++		alg_name =  algs_sha[i].halg.base.cra_name;
++		err = crypto_register_ahash(&algs_sha[i]);
++		if (err)
++			dev_err(dev, "Failed to register '%s'\n",
++				alg_name);
++	}
  }
-+EXPORT_SYMBOL(sha256_transform);
  
- static void sha256_generic_block_fn(struct sha256_state *sst, u8 const *src,
- 				    int blocks)
-diff --git a/include/crypto/sha.h b/include/crypto/sha.h
-index 8a46202b1857..6e04f412b0c2 100644
---- a/include/crypto/sha.h
-+++ b/include/crypto/sha.h
-@@ -95,6 +95,7 @@ struct sha512_state {
+ /* Unregister the algorithms in crypto framework */
+@@ -1560,6 +1898,15 @@ void sa_unregister_algos(const struct device *dev)
  
- struct shash_desc;
+ 		sa_algs[i].registered = 0;
+ 	}
++
++	num_algs = ARRAY_SIZE(algs_sha);
++	for (i = 0; i < num_algs; i++) {
++		alg_name =  algs_sha[i].halg.base.cra_name;
++		err = crypto_unregister_ahash(&algs_sha[i]);
++		if (err)
++			dev_err(dev, "Failed to register '%s'\n",
++				alg_name);
++	}
+ }
  
-+extern void sha256_transform(u32 *state, const u8 *input);
- extern int crypto_sha1_update(struct shash_desc *desc, const u8 *data,
- 			      unsigned int len);
- 
+ static int sa_init_mem(struct sa_crypto_data *dev_data)
 -- 
 2.17.1
 
