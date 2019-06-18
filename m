@@ -2,127 +2,97 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99DDDC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4901AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:41:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72CB8213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:40:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="QooPXmn9"
+	by mail.kernel.org (Postfix) with ESMTP id 264F920823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:41:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729438AbfFRNkl (ORCPT
+        id S1729425AbfFRNle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:40:41 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34598 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbfFRNkk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:40:40 -0400
-Received: by mail-qk1-f194.google.com with SMTP id t8so8569074qkt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 06:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZI5wHdiFgtuzsQeLY+E22h5PJMnK0tB2yGyNBxZfSqI=;
-        b=QooPXmn9aHah5NAlG4PfOfya5KeBRPEo/cvd64QxdYAB2AkodS68j+GjfPi84y88a8
-         DuB0moLc60pdiekoXOCOsAxtghv/tzyS0Zmk+0MTZYsCOMvXwdivw9V7wUKoLv6q4Axg
-         5s6bDCqaOyBCLr0QLrvUxRJ36c87CczbZqr7489CDIbk5w73LorhbzV6/p+ILdWmi3EO
-         QBo9JXpFB/Ht4FqcBxvorRa1+QvlOIMjcuwGXXSs2RW1sMA4cGX4JDaIo7BcsPKhNArX
-         7PXLzk7LUCtr49cSwuHKA+oMLhBIasoWAkwIyRCAeENSKRYKtox2kQoezDn3ZK5Mwul7
-         Q7yw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZI5wHdiFgtuzsQeLY+E22h5PJMnK0tB2yGyNBxZfSqI=;
-        b=iGqRE13xAKQhYLuPV1EqgRcrYp9V4eWdIqBitFMmV1NUedOjsRg/Ez2aBm1Utx48dq
-         fkyKV48lgLJtxazso8QbsAjM7LRp8EWsg2EucCazlyViPZ9rEIGm+WyCrCD4UwH53f+q
-         aU/ZmH9WMiz50CG9EvuEg5IHcELYKYpCLwDI+9c7u62ZPqL+HJ7iKXRhh/3kRL0zGb7P
-         xhq0uS7PbAGAZrMNEBuVfnCtzIcpQJZhCbJ4XvU+9LDjCn8Lmo0l9fAYehGKlHBEMAP5
-         5UJjcS6RsnWzPHtJlaTwvYbnpVidSy83sbHx/abSx8hpR95KxLcF46ECFfavykGo9Zmg
-         dufw==
-X-Gm-Message-State: APjAAAWav3Vopoynh1NWbOUtlP6opQRWgbeAF9tYffU6L1fvp2BJdRux
-        XK3vx2utWQ4mR6LLZCFQhEZnY5MZvjrWg4IBPmmcBA==
-X-Google-Smtp-Source: APXvYqydIfBeJNwoqU7hLKDek16QVNj311nTvALhVsaWemQl/rKnPG8IXP59Ccqe5Lnh87RqflvTK1whFaMyh7g4f+8=
-X-Received: by 2002:a37:696:: with SMTP id 144mr91098200qkg.250.1560865239273;
- Tue, 18 Jun 2019 06:40:39 -0700 (PDT)
+        Tue, 18 Jun 2019 09:41:34 -0400
+Received: from sauhun.de ([88.99.104.3]:40424 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728905AbfFRNle (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:41:34 -0400
+Received: from localhost (p5486CE06.dip0.t-ipconnect.de [84.134.206.6])
+        by pokefinder.org (Postfix) with ESMTPSA id 95E122C047A;
+        Tue, 18 Jun 2019 15:41:30 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 15:41:30 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, Ajay Gupta <ajayg@nvidia.com>,
+        Amit Kucheria <amit.kucheria@linaro.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Li Yang <leoyang.li@nxp.com>,
+        Will Deacon <will.deacon@arm.com>, devicetree@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-i2c@vger.kernel.org
+Subject: Re: [PATCH] docs: fix some broken references due to txt->rst renames
+Message-ID: <20190618134130.GA4516@kunai>
+References: <6f09587b7678f2fb378d736f45a02ffa9412cc99.1560864716.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <20190618092650.2943749-1-arnd@arndb.de>
-In-Reply-To: <20190618092650.2943749-1-arnd@arndb.de>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Tue, 18 Jun 2019 09:40:28 -0400
-Message-ID: <CAJWu+oqzd8MJqusRV0LAK=Xnm7VSRSu3QbNZ-j5h9_MbzcFhhg@mail.gmail.com>
-Subject: Re: [PATCH] mm/vmalloc: avoid bogus -Wmaybe-uninitialized warning
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Roman Penyaev <rpenyaev@suse.de>,
-        Uladzislau Rezki <urezki@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Garnier <thgarnie@google.com>,
-        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Disposition: inline
+In-Reply-To: <6f09587b7678f2fb378d736f45a02ffa9412cc99.1560864716.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 5:27 AM Arnd Bergmann <arnd@arndb.de> wrote:
->
-> gcc gets confused in pcpu_get_vm_areas() because there are too many
-> branches that affect whether 'lva' was initialized before it gets
-> used:
->
-> mm/vmalloc.c: In function 'pcpu_get_vm_areas':
-> mm/vmalloc.c:991:4: error: 'lva' may be used uninitialized in this function [-Werror=maybe-uninitialized]
->     insert_vmap_area_augment(lva, &va->rb_node,
->     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->      &free_vmap_area_root, &free_vmap_area_list);
->      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> mm/vmalloc.c:916:20: note: 'lva' was declared here
->   struct vmap_area *lva;
->                     ^~~
->
-> Add an intialization to NULL, and check whether this has changed
-> before the first use.
->
-> Fixes: 68ad4a330433 ("mm/vmalloc.c: keep track of free blocks for vmap allocation")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  mm/vmalloc.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index a9213fc3802d..42a6f795c3ee 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -913,7 +913,12 @@ adjust_va_to_fit_type(struct vmap_area *va,
->         unsigned long nva_start_addr, unsigned long size,
->         enum fit_type type)
->  {
-> -       struct vmap_area *lva;
-> +       /*
-> +        * GCC cannot always keep track of whether this variable
-> +        * was initialized across many branches, therefore set
-> +        * it NULL here to avoid a warning.
-> +        */
-> +       struct vmap_area *lva = NULL;
 
-Fair enough, but is this 5-line comment really needed here?
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Joel
+On Tue, Jun 18, 2019 at 10:33:58AM -0300, Mauro Carvalho Chehab wrote:
+> There are three left-overs from the recent file renames,
+> probably due to some other conflicting patch.
+>=20
+> Fix them.
+>=20
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+Thanks!
+
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+
+
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl0I6gIACgkQFA3kzBSg
+KbYPmw//S9ererLqN6V1mN1Ixbn0CfKZGd1MAB4a/0PZiXPpCngdRfAog04KBXjI
+xYSX76wEzxv0+SiwU8kElhD15w/9Vjm9vZ8SCYRv2xBSE7W3xd+fv2gDAQf+pb2p
+bHJ5pTs8PRCqJcVLmZirsJ2vvOA1C6NYmb9Sjb4hH4u4+i9fqc0RKjOrO2OZCHx2
+3T6xcu0INuJm1RNX0gHHk06mGjfMUm6unYYHJkOMeup4HTUqDmYvX4U1g/3sIAIy
+kOPwW1ggkEJDebdxyc1uNft0yZKznjx7iOkP/p6wacCUI56jmCMniAt36f76OV8L
+C9Bks/dr9tp4M3z0Jbxa9oJWhc+e8KA/WNgXXnyCCDVg1idhaGgWkW59S05Spu0H
+PgprhEo5QYdT1GvEO28eP+kuFKi7HN5VvOJy794jFkjOPH0A9HK/f1CXmjp9cv3V
+nZhMOzohbh18AXwOG3T4eF9gL3u0WsPK2EH35oFjxH7ty6tmV5CkpVBgzWH1EBxq
+K44uWCs6H6SX3e0Cq5FRgGdvjlpFwQZT4Hbf3IfmukTzurdCi9YSPI228IdLmCPa
+uncvdbThBK4o/O6ndCqx04bEmPEUJdzcYuBlqi38lTonwzN4jvOyabM65Mt/HhW7
+4sy6hg/cLkPuX8tBpKWJoT13jqVTjRvjnxemkSq06yAmOznSxs4=
+=lZcZ
+-----END PGP SIGNATURE-----
+
+--d6Gm4EdcadzBjdND--
