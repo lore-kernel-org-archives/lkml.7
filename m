@@ -2,143 +2,81 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AD3CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19B99C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3609E20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:34:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0582214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:34:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="h8ccuIFH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbfFRUeI (ORCPT
+        id S1730679AbfFRUeZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:34:08 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41594 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729961AbfFRUeH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:34:07 -0400
-Received: by mail-qt1-f196.google.com with SMTP id d17so12158316qtj.8;
-        Tue, 18 Jun 2019 13:34:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5YjeFcRK5lrzE+kd/ertjFC7LBI5f/r5droqcuVoNO0=;
-        b=X6u9Cla4eospTpI0AgTH0Iz9jjSAsqP2/Rb8dm5Wd+JKtR+owr4wSlHToCKHAgCKJs
-         nWqVMO4ssJzcbJd13hh7BtV7QT/nrUYuIcrUuz/R5LzM1XE0p6VvkKdbbsqqhNbyZjiP
-         Qw/41Ir6RtNYnQHhHWrddC9bSIy+dIG/FXwNiI+CVO+o9ChIsmFn0MGOnUSoy+TPSAsw
-         d2dAQRNhTG/WndtmR4ABW0WxqWmreRaWy5MnxZQ46QhjrXkPViz3UEmJVVv66grFJd+J
-         RISZ8ir3NUUddBLaLw4GPVeovS7ec4vU8Eu5qhF/epsLIIB1vas/7Ki+2Pt4mUxfjC5P
-         ccuQ==
-X-Gm-Message-State: APjAAAW8KiSZRAYGOst8WGqwUo+33jy2+JncAaPtdaDrwmnChurbjRp8
-        kTp8QegZX7OyWjQEwsMaxuJJKcWGvTWx7sKvYjI=
-X-Google-Smtp-Source: APXvYqyx3A8l+upotWCAoMsF3+240GZJGHix9ZiK9UNJtQoPnDFrGEJ658xuvFWtFuLSLTPnk9ZSgTgW6IKjkrTq/SU=
-X-Received: by 2002:aed:2bc1:: with SMTP id e59mr81820103qtd.7.1560890046044;
- Tue, 18 Jun 2019 13:34:06 -0700 (PDT)
+        Tue, 18 Jun 2019 16:34:25 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:49168 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730176AbfFRUeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 16:34:25 -0400
+Received: from zn.tnic (p200300EC2F07D6009033472370AB0B0E.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:d600:9033:4723:70ab:b0e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 01E671EC08BF;
+        Tue, 18 Jun 2019 22:34:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560890064;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3Me18gZ4G0D32oI7Ykod1+DIQFZ1PZOVqgmun10TTO4=;
+        b=h8ccuIFHDMdBvsVgdC3shdMPiM/G+BF2nYA51jFJrWXa3KRnbVTm+wmNvSNraqFXzXoyXJ
+        DDpsOrrFvWWHmb1rCIx7/T98nKWT40nqBPI6Zlv1xDmJPkyPfAbpP8TGXRd03yCFWrjeez
+        2bdRNSJ4uraw8Zs5HBVKxBUc9M4nooQ=
+Date:   Tue, 18 Jun 2019 22:34:16 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
+Subject: Re: [PATCH] x86/microcode: Fix the microcode load on CPU hotplug for
+ real
+Message-ID: <20190618203348.GA16699@zn.tnic>
+References: <alpine.DEB.2.21.1906182228350.1766@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
- <36bca57c999f611353fd9741c55bb2a7@codeaurora.org> <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
- <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
- <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
- <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
- <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
- <d533b708-c97a-710d-1138-3ae79107f209@linaro.org> <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
- <CAK8P3a3ksrFTo2+dLB+doLeY+kPP7rYxv2O7BwvjYgK2cwCTuQ@mail.gmail.com> <97cbfb3723607c95d78e25785262ae7b0acdb11c.camel@sipsolutions.net>
-In-Reply-To: <97cbfb3723607c95d78e25785262ae7b0acdb11c.camel@sipsolutions.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 18 Jun 2019 22:33:48 +0200
-Message-ID: <CAK8P3a29+JKbDdS9ikhgaKa-AJ1qd1sDMTAfzivGh5wN4VL88A@mail.gmail.com>
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-To:     Johannes Berg <johannes@sipsolutions.net>
-Cc:     Alex Elder <elder@linaro.org>, Dan Williams <dcbw@redhat.com>,
-        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
-        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1906182228350.1766@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:15 PM Johannes Berg
-<johannes@sipsolutions.net> wrote:
-> On Tue, 2019-06-18 at 22:09 +0200, Arnd Bergmann wrote:
-> > > One is the whole multi-function device, where a single WWAN device is
-> > > composed of channels offered by actually different drivers, e.g. for a
-> > > typical USB device you might have something like cdc_ether and the
-> > > usb_wwan TTY driver. In this way, we need to "compose" the WWAN device
-> > > similarly, e.g. by using the underlying USB device "struct device"
-> > > pointer to tie it together.
-> > >
-> > > The other is something like IPA or the Intel modem driver, where the
-> > > device is actually a single (e.g. PCIe) device and just has a single
-> > > driver, but that single driver offers different channels.
-> >
-> > I would hope we can simplify this to expect only the second model,
-> > where you have a 'struct device' corresponding to hardware and the
-> > driver for it creates one wwan_device that user space talks to.
->
-> I'm not sure.
->
-> Fundamentally, we have drivers in Linux for the ethernet part, for the
-> TTY part, and for whatever other part might be in a given USB multi-
-> function device.
->
-> > Clearly the multi-function device hardware has to be handled somehow,
-> > but it would seem much cleaner in the long run to do that using
-> > a special workaround rather than putting this into the core interface.
->
-> I don't think it really makes the core interface much more complex or
-> difficult though, and it feels easier than writing a completely
-> different USB driver yet again for all these devices?
->
-> As far as I understand from Dan, sometimes they really are no different
-> from a generic USB TTY and a generic USB ethernet, except you know that
-> if those show up together it's a modem.
->
-> > E.g. have a driver that lets you create a wwan_device by passing
-> > netdev and a tty chardev into a configuration interface, and from that
-> > point on use the generic wwan abstraction.
->
-> Yeah, but where do you hang that driver? Maybe the TTY function is
-> actually a WWAN specific USB driver, but the ethernet is something
-> generic that can also work with pure ethernet USB devices, and it's
-> difficult to figure out how to tie those together. The modules could
-> load in completely different order, or even the ethernet module could
-> load but the TTY one doesn't because it's not configured, or vice versa.
+On Tue, Jun 18, 2019 at 10:31:40PM +0200, Thomas Gleixner wrote:
+> A recent change moved the microcode loader hotplug callback into the early
+> startup phase, which is running with interrupts disabled. It missed that
+> the callbacks invoke sysfs functions which might sleep causing nice 'might
+> sleep' splats with proper debugging enabled.
+> 
+> Split the callbacks and only load the microcode in the early startup phase
+> and move the sysfs handling back into the later threaded and preemptible
+> bringup phase where it was before.
+> 
+> Fixes: 78f4e932f776 ("x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback")
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> Cc: stable@vger.kernel.org
+> ---
+>  arch/x86/kernel/cpu/microcode/core.c |   15 ++++++++++-----
+>  1 file changed, 10 insertions(+), 5 deletions(-)
 
-That was more or less my point: The current drivers exist, but don't
-lean themselves to fitting into a new framework, so maybe the best
-answer is not to try fitting them.
+Acked-by: Borislav Petkov <bp@suse.de>
 
-To clarify: I'm not suggesting to write new USB drivers for these at all,
-but instead keep three parts that are completely unaware of each other
-a)  a regular netdevice driver
-b)  a regular tty driver
-c)  the new wwan subsystem that expects a device to be created
-    from a hardware driver but knows nothing of a) and b)
+Thanks for fixing that!
 
-To connect these together, we need one glue driver that implements
-the wwan_device and talks to a) and b) as the hardware. There are
-many ways to do that. One way would be to add a tty ldisc driver.
-A small user space helper opens the chardev, sets the ldisc
-and then uses an ldisc specific ioctl command to create a wwan
-device by passing an identifier of the netdevice and then exits.
-From that point on, you have a wwan device like any other.
+-- 
+Regards/Gruss,
+    Boris.
 
-       Arnd
+Good mailing practices for 400: avoid top-posting and trim the reply.
