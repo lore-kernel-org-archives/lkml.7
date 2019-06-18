@@ -2,205 +2,124 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE92FC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F369C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A17C42070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146362070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DbVcJjtj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fo+3Je70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729762AbfFRLlP (ORCPT
+        id S1729778AbfFRLlY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:41:15 -0400
-Received: from mail-vk1-f194.google.com ([209.85.221.194]:39985 "EHLO
-        mail-vk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729660AbfFRLlO (ORCPT
+        Tue, 18 Jun 2019 07:41:24 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:41823 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729744AbfFRLlX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:41:14 -0400
-Received: by mail-vk1-f194.google.com with SMTP id s16so2734408vke.7
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:41:13 -0700 (PDT)
+        Tue, 18 Jun 2019 07:41:23 -0400
+Received: by mail-ua1-f68.google.com with SMTP id 34so5588924uar.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:41:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=aXKWHfiW2fK/oNHPaHV17m2/kXsIPSmEkP6INcYYU9o=;
-        b=DbVcJjtjVOUaGpNKJ/DvdYK1FZNzvJnwIpOr3/kA2dreAHCj5DcjBfjZnEnYIrIL9Q
-         gq7+EeNVE7nyL4th2fgWCodJu4sRMGXCIaIuRnP5IfcYW4NiepE4lr7gs5enJz5tCw7h
-         TtYwfBPaT23F4mPYlUpktE1WjGcT41EhSwpTjDsKDZs9r5rQu8WyDZgBYo1DAdw2a3dR
-         Nksam9I88iVRBmH9PNaflQd7Fj28V2t/rj80Z2I9WIYVyxbBH3N22NG6Cv7visa5uDhj
-         UZ1yOk9v4J+/L/pEamjjXplcvuLmdPFTyfd9tkHBax7Y6B0OBcNQlPc+nFSUEoGFDVY1
-         JKRw==
+        bh=tQoQXU36/dw2ELM3Q6zDyetx272SKVny+29nLzscHfI=;
+        b=fo+3Je70K5KaadBZSBfgPBjco8zkz6lNCCXu0v8MYisdAiYne9FCCx+1hyH/63ZAjx
+         Px2bIH9dUgyX+wduVZaFmqhqWT830epz23vSHr6/FrC+sz7yfscC9Is7QXIoVtXYX7Qi
+         nSnjjInjPpmmM5ugWm2Akp7gSnaG4E4lK6i2yrVmHI8hOgTJgzj56pj9jPis3ZI3jFXY
+         cL28CW7ah3Da+WvSvEbUrZg5eTEpomAYxrXlsgT/y7kR/NIKAuSsq6WDZsybp/YGwnTF
+         Yijrq+smWwBHd/CEUtJMeME/5dTkN1KdYZ4cq1hO2+XWAUL1PwzhrwJRcmRurS3rG4hN
+         xpMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=aXKWHfiW2fK/oNHPaHV17m2/kXsIPSmEkP6INcYYU9o=;
-        b=MXTdCN7ca5nHZ7IuZ1pq4ag92YtwJMjCPIyuFFlpQqY4WOJII/6aInMtZT8I5FoWm/
-         McNEq3AF/8EXfU9UKPVmwmBPTz+rP1D+VaiZEn6/lRR9i9vTGh3G1XPeyXAVr9epqSLC
-         Dk5VGi1sYG9qmSTCu38aYkX5+P3zVMrFqtdY6gB/peEQ3QvX2lv2sKYlqLMi4G5rrriY
-         wUVq8YJwnPaVmcoFwlUR06JwZ0A3/YBCA5S3Sgy0pA59E/pgQbqV7LOoFScXuorxznaJ
-         C5FFiyVwAeRTSBSitiCu1yXVpN05jlknBHttnwf2qURUTohv6kfAJeUPJhcIUz1V1J5P
-         C0Iw==
-X-Gm-Message-State: APjAAAXkSEiUaAe59pkxN1DjGBJ9+2FSpf1CNUuuD68EEu4TuqBq3m2h
-        aUz8NWND4KQFHEuYTlVf8VCGR5CPKoa09eJ7fYc0IQ==
-X-Google-Smtp-Source: APXvYqzAl7wJEEH+9xHNdBIPLlWcQNm3f6xV2K4I/CyVeso07z7k2+LL7fMznGVsUFSpo4IawQFtCpaHljxygG765/Q=
-X-Received: by 2002:a1f:ab04:: with SMTP id u4mr26393129vke.40.1560858072830;
- Tue, 18 Jun 2019 04:41:12 -0700 (PDT)
+        bh=tQoQXU36/dw2ELM3Q6zDyetx272SKVny+29nLzscHfI=;
+        b=KuECtqeDLvRousHx2UwCKU/ikd0ElqjpEypl1cNLdq88Mbqx+0gD/CFQSpoZ5Ye6cn
+         AOyrvu7JA/FWy1YT8Imb4CyOmufE9ly5RWc5o7gK/5O1BdspFwSGDmVargpzKE9kuiKr
+         ruuqcPrZ7RGpfMNndaNHKZ3fLuFYkKcjuy5txc1MKifIep110/nmcDrvpw2/yjqjQ85x
+         smitnRmzlf8uYUjD7sMBhT/zP4Ng8Z1hTQnQjNlwwNiGKdnvFCPk6DRfiCY4FNag3NR7
+         YzTjPRpvMsvnT50kan0h6sKm0XeUcosdXABejVzpHxZxYrd/ZZOm6diI7+KfIuHA6T6/
+         fFvg==
+X-Gm-Message-State: APjAAAVtIZCrVE280PU+v54xEEaKO4xG95EpdUeN1gE2Q2AWrMco8uNg
+        Fu9wJnDPtBRxwdV0ZYvnPCnOBgYBGBUTEKUPBrcPhA==
+X-Google-Smtp-Source: APXvYqzdHEQdTiTLv3Glm+LbKbv3D3N4+YwdHnM3jpqtUai2CvBDqzladjw7HId0sYMpKBpd18UbKVX7h7FGVFIoEMQ=
+X-Received: by 2002:a67:7a90:: with SMTP id v138mr14804703vsc.200.1560858082474;
+ Tue, 18 Jun 2019 04:41:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617175653.21756-1-dianders@chromium.org> <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
- <87v9x39mxf.fsf@kamboji.qca.qualcomm.com>
-In-Reply-To: <87v9x39mxf.fsf@kamboji.qca.qualcomm.com>
+References: <20190617201014.84503-1-rrangel@chromium.org>
+In-Reply-To: <20190617201014.84503-1-rrangel@chromium.org>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 18 Jun 2019 13:40:36 +0200
-Message-ID: <CAPDyKFqGtui4+shA0TENF=h6Zk0_tgQaJTNSP1xakw7Nb12irg@mail.gmail.com>
-Subject: Re: [PATCH v5 0/5] brcmfmac: sdio: Deal better w/ transmission errors
- related to idle
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
+Date:   Tue, 18 Jun 2019 13:40:45 +0200
+Message-ID: <CAPDyKFom1q33iOmxHp1pbzcDuE3FxYAoBXWupAe97RwUx0BBXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus
+ width when tuning
+To:     Raul E Rangel <rrangel@chromium.org>
+Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        "ernest.zhang" <ernest.zhang@bayhubtech.com>,
+        Daniel Kurtz <djkurtz@chromium.org>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 at 13:02, Kalle Valo <kvalo@codeaurora.org> wrote:
+On Mon, 17 Jun 2019 at 22:10, Raul E Rangel <rrangel@chromium.org> wrote:
 >
-> Ulf Hansson <ulf.hansson@linaro.org> writes:
+> The O2Micro controller only supports tuning at 4-bits. So the host driver
+> needs to change the bus width while tuning and then set it back when done.
 >
-> > On Mon, 17 Jun 2019 at 19:57, Douglas Anderson <dianders@chromium.org> wrote:
-> >>
-> >> This series attempts to deal better with the expected transmission
-> >> errors related to the idle states (handled by the Always-On-Subsystem
-> >> or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
-> >> rk3288-veyron-speedy, and rk3288-veyron-mickey.
-> >>
-> >> Some details about those errors can be found in
-> >> <https://crbug.com/960222>, but to summarize it here: if we try to
-> >> send the wakeup command to the WiFi card at the same time it has
-> >> decided to wake up itself then it will behave badly on the SDIO bus.
-> >> This can cause timeouts or CRC errors.
-> >>
-> >> When I tested on 4.19 and 4.20 these CRC errors can be seen to cause
-> >> re-tuning.  Since I am currently developing on 4.19 this was the
-> >> original problem I attempted to solve.
-> >>
-> >> On mainline it turns out that you don't see the retuning errors but
-> >> you see tons of spam about timeouts trying to wakeup from sleep.  I
-> >> tracked down the commit that was causing that and have partially
-> >> reverted it here.  I have no real knowledge about Broadcom WiFi, but
-> >> the commit that was causing problems sounds (from the descriptioin) to
-> >> be a hack commit penalizing all Broadcom WiFi users because of a bug
-> >> in a Cypress SD controller.  I will let others comment if this is
-> >> truly the case and, if so, what the right solution should be.
-> >>
-> >> For v3 of this series I have added 2 patches to the end of the series
-> >> to address errors that would show up on systems with these same SDIO
-> >> WiFi cards when used on controllers that do periodic retuning.  These
-> >> systems need an extra fix to prevent the retuning from happening when
-> >> the card is asleep.
-> >>
-> >> I believe v5 of this series is all ready to go assuming Kalle Valo is
-> >> good with it.  I've added after-the-cut notes to patches awaiting his
-> >> Ack and have added other tags collected so far.
-> >>
-> >> Changes in v5:
-> >> - Add missing sdio_retune_crc_enable() in comments (Ulf).
-> >> - /s/reneable/re-enable (Ulf).
-> >> - Remove leftover prototypes: mmc_expect_errors_begin() / end() (Ulf).
-> >> - Rewording of "sleep command" in commit message (Arend).
-> >>
-> >> Changes in v4:
-> >> - Moved to SDIO API only (Adrian, Ulf).
-> >> - Renamed to make it less generic, now retune_crc_disable (Ulf).
-> >> - Function header makes it clear host must be claimed (Ulf).
-> >> - No more WARN_ON (Ulf).
-> >> - Adjust to API rename (Adrian, Ulf).
-> >> - Moved retune hold/release to SDIO API (Adrian).
-> >> - Adjust to API rename (Adrian).
-> >>
-> >> Changes in v3:
-> >> - Took out the spinlock since I believe this is all in one context.
-> >> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
-> >> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
-> >> - ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
-> >>
-> >> Changes in v2:
-> >> - A full revert, not just a partial one (Arend).  ...with explicit Cc.
-> >> - Updated commit message to clarify based on discussion of v1.
-> >>
-> >> Douglas Anderson (5):
-> >>   Revert "brcmfmac: disable command decode in sdio_aos"
-> >>   mmc: core: API to temporarily disable retuning for SDIO CRC errors
-> >>   brcmfmac: sdio: Disable auto-tuning around commands expected to fail
-> >>   mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
-> >>   brcmfmac: sdio: Don't tune while the card is off
-> >>
-> >>  drivers/mmc/core/core.c                       |  5 +-
-> >>  drivers/mmc/core/sdio_io.c                    | 77 +++++++++++++++++++
-> >>  .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 ++--
-> >>  include/linux/mmc/host.h                      |  1 +
-> >>  include/linux/mmc/sdio_func.h                 |  6 ++
-> >>  5 files changed, 99 insertions(+), 7 deletions(-)
-> >>
-> >> --
-> >> 2.22.0.410.gd8fdbe21b5-goog
-> >>
-> >
-> > Applied for fixes, thanks!
-> >
-> > Some minor changes:
-> > 1) Dropped the a few "commit notes", that was more related to version
-> > and practical information about the series.
-> > 2) Dropped fixes tags for patch 2->5, but instead put a stable tag
-> > targeted for v4.18+.
-> >
-> > Awaiting an ack from Kalle before sending the PR to Linus.
-> >
-> > Kalle, perhaps you prefer to pick patch 1, as it could go separate.
-> > Then please tell - and/or if there is anything else you want me to
-> > change.
+> There was a bug in the original implementation in that mmc->ios.bus_width
+> also wasn't updated. Thus setting the incorrect blocksize in
+> sdhci_send_tuning which results in a tuning failure.
 >
-> TBH I haven't followed the thread (or patches) that closely :) So feel
-> free to take them and push them to Linus.
->
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> Fixes: 0086fc217d5d7 ("mmc: sdhci: Add support for O2 hardware tuning")
+> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-I take that as an ack and will add your tag for it, thanks!
+Applied for fixes and by adding a stable tag, thanks!
 
 Kind regards
 Uffe
+
+
+> ---
+>
+>  drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
+> index b29bf4e7dcb48..dd21315922c87 100644
+> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
+> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
+> @@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>          */
+>         if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
+>                 current_bus_width = mmc->ios.bus_width;
+> +               mmc->ios.bus_width = MMC_BUS_WIDTH_4;
+>                 sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
+>         }
+>
+> @@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
+>
+>         sdhci_end_tuning(host);
+>
+> -       if (current_bus_width == MMC_BUS_WIDTH_8)
+> +       if (current_bus_width == MMC_BUS_WIDTH_8) {
+> +               mmc->ios.bus_width = MMC_BUS_WIDTH_8;
+>                 sdhci_set_bus_width(host, current_bus_width);
+> +       }
+>
+>         host->flags &= ~SDHCI_HS400_TUNING;
+>         return 0;
+> --
+> 2.22.0.410.gd8fdbe21b5-goog
+>
