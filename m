@@ -2,93 +2,150 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D634FC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BED1C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC4422133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7511B20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YKASZiZL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DCfVfJ+4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729585AbfFROAy (ORCPT
+        id S1729644AbfFROBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:00:54 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:34230 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729466AbfFROAx (ORCPT
+        Tue, 18 Jun 2019 10:01:01 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:46577 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729466AbfFROBA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:00:53 -0400
-Received: by mail-lf1-f67.google.com with SMTP id y198so9393723lfa.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:00:51 -0700 (PDT)
+        Tue, 18 Jun 2019 10:01:00 -0400
+Received: by mail-io1-f68.google.com with SMTP id i10so29913427iol.13
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:00:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=HdUV7CzfBMqln17zR8zkIO3XNGBpw5OXNtAwnyi4zUU=;
-        b=YKASZiZLPnCBby55M8HxvQ3P6hVicwek4YaqtAI8cITJMo4iBFAWa3Yij9dIdVNJQH
-         DG1Y36EZ8g1RlQ36fuSZZlWJEos08p8a8NGCJ4ePwoJ/iuXCxhpGJk/5ImxWt9stwQa3
-         yzSilSFRMmJXjChN9LX5EyZvKJu7NVi+g7+QVmSVxVxmE9hUq/fjv8eT20WOZ2CX6Gy1
-         k+gKh2jDh1GJYeEQ804FDN2kPBVAKd0Ajibuja7XLyFwf9lbnePWZmNBToWcISiz5mD+
-         aKQGxa3de+sSqrZXCcZkixnJCx3Go6nC+1fUrTBqDcbfKELH20imaBLJDuj2IuYSDZwJ
-         9DLA==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=T08//zG45sCSOuqyl+ULwBSrl0f1cak1EG68a6PEKJ8=;
+        b=DCfVfJ+4RhCLmqXG1I+bfNn3kR7BJa6paHvS14hZvfHAQIpw8sApKrLm4OOwt55yRX
+         pUar7QENZ5rVi3vx5xBpoFxAeP7AAkq93rBdji27/dyohyKc32Ip9YAXESCu0LZLO+U+
+         QNLBbnsHtVHcCKHo465UicQL3IhBbM1bwr713lG8frsOCsMS9C1QyL5GZ16MgqszmYrZ
+         Ag/3p1Kqo7TzdO6dBp14GtnIgZA0QhDBM7NfUSf1RZGe1gAl4i0TtLlhUXiXblQHoR5o
+         dlI9cWo5/AWnl4H4pUUbTDN3/cZY2D9M3uCuUQZGsKY2bqlmwj2g8YJMDzWpESxnTyeN
+         yrGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HdUV7CzfBMqln17zR8zkIO3XNGBpw5OXNtAwnyi4zUU=;
-        b=V4ln1AWgT8MgM7sEPZwRKnGTi6AOkMIIv7J6IKqOLMaZYzt8jCP6aHJzrH4hD7zuES
-         +8ZYIcOEzfhiCZGY8bYKdgN5W797NfYwHC5Tg4EaDL6ihne6MuTTGlEYvwDSTrISZzwG
-         X938xN7p772+v3wAdy2WMciAeKQF+3tL08UtLryGGz+A4Ispour3vVSzt2D7USiMAAMd
-         IFRfT5IY4Lj4JH1oX5y+r8NvIE+OC81uz3covGQpl5l73QCu+487VCaW3HR0El9mRM59
-         wJXVMElqCzHCb0BjLuCgSitl/EkD2V8MRQPwHadGAIZMaGoljzTJWe7Ttr9brGOJzmZq
-         VfMw==
-X-Gm-Message-State: APjAAAVjjOxKcn+jd4VBq60CVWsmPvxFQ2JaEugBAv1n8G3gCNffYYr0
-        DiImJdkZniLjChY/I0yLIxfK82eZ6PCMck6Sj3/BeQ==
-X-Google-Smtp-Source: APXvYqxZtj/5LSylMWRwAm5XoxiotJGXmZeOzoZYzvkHtOk3c+tM2Kf0qCRtTO0+6PRAgESjaawSeSGiHoL4zjd1R1U=
-X-Received: by 2002:ac2:5382:: with SMTP id g2mr2936130lfh.92.1560866450515;
- Tue, 18 Jun 2019 07:00:50 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190615100932.27101-1-martin.blumenstingl@googlemail.com> <20190615100932.27101-4-martin.blumenstingl@googlemail.com>
-In-Reply-To: <20190615100932.27101-4-martin.blumenstingl@googlemail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 18 Jun 2019 16:00:39 +0200
-Message-ID: <CACRpkdZ8vY918mzaJyX38gENJtoA_KJq3RLGxVObdQjLKXULSQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v1 3/5] net: stmmac: drop the reset GPIO from
- struct stmmac_mdio_bus_data
-To:     Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc:     netdev <netdev@vger.kernel.org>,
-        Giuseppe CAVALLARO <peppe.cavallaro@st.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Andrew Lunn <andrew@lunn.ch>,
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=T08//zG45sCSOuqyl+ULwBSrl0f1cak1EG68a6PEKJ8=;
+        b=i+CTzZkAscgj6aw2b+hZUY+uL3TKyRkuRY2QDOmydI0pFT9edlckSBIAeJBSWQPvtX
+         L0znyTjt0fCeMJa7alx/7JAHjG1xM7ZKvpp20d8s/+tCAYYhoLXbJmDoHHgsHluHMLF1
+         94jVNajiRhJ2GzVmb4TjtvfzTlLVne3tR4UbY9LNebM+JjXgCDrw1Um58oFqCIgde92s
+         YrREQ2x2lGqB73l2NF8/A8vEkaSPBGP//KzHJBqGHjnNOu1E17tdX61xmibzQVkDKPXc
+         RhuZY0qqGlsMyJK2LYD3Ye3MGfgHLJHXU2Xi22YBiloYWzRmEiefh99K//vBdhkg/PIp
+         P7Gw==
+X-Gm-Message-State: APjAAAU7sVGsOynuTdb57zep44aQvUp5XDgqEmBPbYmxwDJ99lCPRejv
+        nThhVdX+9gfUQVu86k7RPLBhrg==
+X-Google-Smtp-Source: APXvYqyeM5LvRvVxTEQ8tVA4GnMVkdsL650S6irQ2mz0DzREgjKLrfiwAVj0tKHMvYligiNiFkETlQ==
+X-Received: by 2002:a02:9143:: with SMTP id b3mr2339682jag.12.1560866459394;
+        Tue, 18 Jun 2019 07:00:59 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id x22sm14207341iob.84.2019.06.18.07.00.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 07:00:58 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        Dan Williams <dcbw@redhat.com>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
         Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        syadagir@codeaurora.org
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <583907409fad854bd3c18be688ec2724ad7a60e9.camel@sipsolutions.net>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <31c2c94c-c6d3-595b-c138-faa54d0bfc00@linaro.org>
+Date:   Tue, 18 Jun 2019 09:00:57 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <583907409fad854bd3c18be688ec2724ad7a60e9.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 12:09 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
+On 6/17/19 7:14 AM, Johannes Berg wrote:
+> On Tue, 2019-06-11 at 13:56 +0200, Arnd Bergmann wrote:
+> 
+> [...]
+> 
+> Looking at the flags again,
 
-> No platform uses the "reset_gpio" field from stmmac_mdio_bus_data
-> anymore. Drop it so we don't get any new consumers either.
->
-> Plain GPIO numbers are being deprecated in favor of GPIO descriptors. If
-> needed any new non-OF platform can add a GPIO descriptor lookup table.
-> devm_gpiod_get_optional() will find the GPIO in that case.
->
-> Suggested-by: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+I sort of talked about this in my message a little earlier, but I
+now see I was partially mistaken.  I thought these flags were
+used in messages but they're real device ("port") configuration
+flags.
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+>> #define RMNET_FLAGS_INGRESS_DEAGGREGATION         (1U << 0)
+> 
+> This one I'm not sure I understand - seems weird to have such a
+> fundamental thing as a *configuration* on the channel.
 
-Yours,
-Linus Walleij
+Let me use the term "connection" to refer to the single pathway
+that carries data between the AP and modem.  And "channel" to
+refer to one of several multiplexed data streams carried over
+that connection.  (If there's better terminology, please say
+so; I just want to be clear in what I'm talking about.)
+
+Deaggregation is a connection property, not a channel property.
+And it looks like that's exactly how it's used in the rmnet
+driver.  The hardware is capable of aggregating QMAP packets
+arriving on a connection into a single buffer, so this provides
+a way of requesting it do that.
+
+>> #define RMNET_FLAGS_INGRESS_MAP_COMMANDS          (1U << 1)
+> 
+> Similar here? If you have flow control you probably want to use it?
+
+I agree with that, though perhaps there are cases where it
+is pointless, or can't be supported, so one might want to
+simply *not* implement/advertise the feature.  I don't know.
+
+>> #define RMNET_FLAGS_INGRESS_MAP_CKSUMV4           (1U << 2)
+> 
+> This again looks like a hardware specific feature (ipv4 checksum)? Not
+> sure why this is set by userspace.
+> 
+>> #define RMNET_FLAGS_EGRESS_MAP_CKSUMV4            (1U << 3)
+> 
+> This could be set with ethtool instead, I suppose.
+
+As I said in my earlier message, I think I concur about this.
+I think the IPA driver could easily hide the checksum offload
+capability, and if it can truly be controlled as needed
+using existing methods there's no need to encumber the
+WWAN framework with it.
+
+					-Alex
+
+
+> johannes
+> 
+
