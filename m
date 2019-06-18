@@ -2,124 +2,178 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB68DC46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:51:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E53C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5B6120657
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:51:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560822661;
-	bh=9pADkGP6B9XPZnoSXHTdilPdPV8psk9Fh8iUhTu3lCw=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=FhIj+bnGKe21a73KGnA3zy+FNjJbEMRrkfHFRu3axRVWNwotzGrY6Hu+6u+hgSwGZ
-	 d6VUxrHY6SrNWOwzBUpir1cu+hDdh8eFE1iKKK3PciFabL6YQkYVfH2UdmcEjXyH8B
-	 vLeAq5bC3j8g3r3Y7gDB7T/SSp5hL5YWxiTr0bes=
+	by mail.kernel.org (Postfix) with ESMTP id 985CB20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:51:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfFRBvA (ORCPT
+        id S1727661AbfFRBvJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:51:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59764 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726023AbfFRBvA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:51:00 -0400
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 17 Jun 2019 21:51:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11906 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726851AbfFRBvI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:51:08 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5I1kuXd068015
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 21:51:07 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t6k29xauc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 21:51:06 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Tue, 18 Jun 2019 02:51:05 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 18 Jun 2019 02:51:03 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5I1p2Ed59572338
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 01:51:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EF55A4053;
+        Tue, 18 Jun 2019 01:51:02 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C66F6A4051;
+        Tue, 18 Jun 2019 01:51:01 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 18 Jun 2019 01:51:01 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DB96208E4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 01:50:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560822658;
-        bh=9pADkGP6B9XPZnoSXHTdilPdPV8psk9Fh8iUhTu3lCw=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aO3C7gusUpRN/F1U4OsRkHAd5bWRjQMfpkle66mvj1CdvoqtH8xKaAKZisXNpFECZ
-         QOlRO1ZyOcvCR5lcG2FzLXrziVwwb7nFPBKZOO+serlPcj/7WLJ2HliilezLLDjCa7
-         qcRrhJb8zqZ5haKe+GxoCxdEy5Z5yvR95St+9PVQ=
-Received: by mail-wm1-f48.google.com with SMTP id s15so1349225wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:50:58 -0700 (PDT)
-X-Gm-Message-State: APjAAAUpk+KJWuIL0QUCsQbq7+hL9HJ6y3NUiqsXQqEqd32LQYwks2sa
-        Cxx07fcdbGDjxiDpRkgTsMm+XUK6UvWmL0g20mltwA==
-X-Google-Smtp-Source: APXvYqwk/SrJSofnVqjpWG+yfZVhTrDqxfKgaT84Q/TstEFvioa01Y7VXX7BoP++q9pm0LhijDOAe1YMxOBvn+LL0vg=
-X-Received: by 2002:a7b:cd84:: with SMTP id y4mr951107wmj.79.1560822657085;
- Mon, 17 Jun 2019 18:50:57 -0700 (PDT)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id AA010A0207;
+        Tue, 18 Jun 2019 11:51:00 +1000 (AEST)
+Subject: Re: [PATCH] ocxl: Allow contexts to be attached with a NULL mm
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190617044152.13707-1-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Tue, 18 Jun 2019 11:50:59 +1000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-46-kirill.shutemov@linux.intel.com> <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
- <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com> <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
- <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com> <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
- <d599b1d7-9455-3012-0115-96ddbad31833@intel.com> <1560818931.5187.70.camel@linux.intel.com>
-In-Reply-To: <1560818931.5187.70.camel@linux.intel.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 18:50:46 -0700
-X-Gmail-Original-Message-ID: <CALCETrXNCmSnrTwGiwuF9=wLu797WBPZ0gt92D-CyU+V3sq7hA@mail.gmail.com>
-Message-ID: <CALCETrXNCmSnrTwGiwuF9=wLu797WBPZ0gt92D-CyU+V3sq7hA@mail.gmail.com>
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
-To:     Kai Huang <kai.huang@linux.intel.com>
-Cc:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190617044152.13707-1-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061801-0028-0000-0000-0000037B29CB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061801-0029-0000-0000-0000243B3100
+Message-Id: <81f8951e-a095-3e13-4229-6475f6a8d4a5@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=961 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906180012
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 5:48 PM Kai Huang <kai.huang@linux.intel.com> wrote:
->
->
-> >
-> > > And another silly argument: if we had /dev/mktme, then we could
-> > > possibly get away with avoiding all the keyring stuff entirely.
-> > > Instead, you open /dev/mktme and you get your own key under the hook.
-> > > If you want two keys, you open /dev/mktme twice.  If you want some
-> > > other program to be able to see your memory, you pass it the fd.
-> >
-> > We still like the keyring because it's one-stop-shopping as the place
-> > that *owns* the hardware KeyID slots.  Those are global resources and
-> > scream for a single global place to allocate and manage them.  The
-> > hardware slots also need to be shared between any anonymous and
-> > file-based users, no matter what the APIs for the anonymous side.
->
-> MKTME driver (who creates /dev/mktme) can also be the one-stop-shopping. I think whether to choose
-> keyring to manage MKTME key should be based on whether we need/should take advantage of existing key
-> retention service functionalities. For example, with key retention service we can
-> revoke/invalidate/set expiry for a key (not sure whether MKTME needs those although), and we have
-> several keyrings -- thread specific keyring, process specific keyring, user specific keyring, etc,
-> thus we can control who can/cannot find the key, etc. I think managing MKTME key in MKTME driver
-> doesn't have those advantages.
->
+On 17/6/19 2:41 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> If an OpenCAPI context is to be used directly by a kernel driver, there
+> may not be a suitable mm to use.
+> 
+> The patch makes the mm parameter to ocxl_context_attach optional.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
-Trying to evaluate this with the current proposed code is a bit odd, I
-think.  Suppose you create a thread-specific key and then fork().  The
-child can presumably still use the key regardless of whether the child
-can nominally access the key in the keyring because the PTEs are still
-there.
+The one issue I can see here is that using mm == NULL bypasses our 
+method of enabling/disabling global TLBIs in mm_context_add_copro().
 
-More fundamentally, in some sense, the current code has no semantics.
-Associating a key with memory and "encrypting" it doesn't actually do
-anything unless you are attacking the memory bus but you haven't
-compromised the kernel.  There's no protection against a guest that
-can corrupt its EPT tables, there's no protection against kernel bugs
-(*especially* if the duplicate direct map design stays), and there
-isn't even any fd or other object around by which you can only access
-the data if you can see the key.
+Discussing this privately with Alastair and Fred - this should be fine, 
+but perhaps we should document that.
 
-I'm also wondering whether the kernel will always be able to be a
-one-stop shop for key allocation -- if the MKTME hardware gains
-interesting new uses down the road, who knows how key allocation will
-work?
+> ---
+>   drivers/misc/ocxl/context.c |  9 ++++++---
+>   drivers/misc/ocxl/link.c    | 12 ++++++++----
+>   2 files changed, 14 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+> index bab9c9364184..994563a078eb 100644
+> --- a/drivers/misc/ocxl/context.c
+> +++ b/drivers/misc/ocxl/context.c
+> @@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
+>   int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
+>   {
+>   	int rc;
+> +	unsigned long pidr = 0;
+>   
+>   	// Locks both status & tidr
+>   	mutex_lock(&ctx->status_mutex);
+> @@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
+>   		goto out;
+>   	}
+>   
+> -	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
+> -			mm->context.id, ctx->tidr, amr, mm,
+> -			xsl_fault_error, ctx);
+> +	if (mm)
+> +		pidr = mm->context.id;
+> +
+> +	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, ctx->tidr,
+> +			      amr, mm, xsl_fault_error, ctx);
+>   	if (rc)
+>   		goto out;
+>   
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index cce5b0d64505..43542f124807 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -523,7 +523,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   	pe->amr = cpu_to_be64(amr);
+>   	pe->software_state = cpu_to_be32(SPA_PE_VALID);
+>   
+> -	mm_context_add_copro(mm);
+> +	if (mm)
+> +		mm_context_add_copro(mm);
+>   	/*
+>   	 * Barrier is to make sure PE is visible in the SPA before it
+>   	 * is used by the device. It also helps with the global TLBI
+> @@ -546,7 +547,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   	 * have a reference on mm_users. Incrementing mm_count solves
+>   	 * the problem.
+>   	 */
+> -	mmgrab(mm);
+> +	if (mm)
+> +		mmgrab(mm);
+>   	trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, tidr);
+>   unlock:
+>   	mutex_unlock(&spa->spa_lock);
+> @@ -652,8 +654,10 @@ int ocxl_link_remove_pe(void *link_handle, int pasid)
+>   	if (!pe_data) {
+>   		WARN(1, "Couldn't find pe data when removing PE\n");
+>   	} else {
+> -		mm_context_remove_copro(pe_data->mm);
+> -		mmdrop(pe_data->mm);
+> +		if (pe_data->mm) {
+> +			mm_context_remove_copro(pe_data->mm);
+> +			mmdrop(pe_data->mm);
+> +		}
+>   		kfree_rcu(pe_data, rcu);
+>   	}
+>   unlock:
+> 
+
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
+
