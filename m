@@ -7,59 +7,58 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F369C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7D9C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146362070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 889A62070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:41:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fo+3Je70"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oj0Jvcy1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729778AbfFRLlY (ORCPT
+        id S1729795AbfFRLl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:41:24 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:41823 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729744AbfFRLlX (ORCPT
+        Tue, 18 Jun 2019 07:41:28 -0400
+Received: from mail-ua1-f66.google.com ([209.85.222.66]:41826 "EHLO
+        mail-ua1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729744AbfFRLl0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:41:23 -0400
-Received: by mail-ua1-f68.google.com with SMTP id 34so5588924uar.8
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:41:22 -0700 (PDT)
+        Tue, 18 Jun 2019 07:41:26 -0400
+Received: by mail-ua1-f66.google.com with SMTP id 34so5589080uar.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:41:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=tQoQXU36/dw2ELM3Q6zDyetx272SKVny+29nLzscHfI=;
-        b=fo+3Je70K5KaadBZSBfgPBjco8zkz6lNCCXu0v8MYisdAiYne9FCCx+1hyH/63ZAjx
-         Px2bIH9dUgyX+wduVZaFmqhqWT830epz23vSHr6/FrC+sz7yfscC9Is7QXIoVtXYX7Qi
-         nSnjjInjPpmmM5ugWm2Akp7gSnaG4E4lK6i2yrVmHI8hOgTJgzj56pj9jPis3ZI3jFXY
-         cL28CW7ah3Da+WvSvEbUrZg5eTEpomAYxrXlsgT/y7kR/NIKAuSsq6WDZsybp/YGwnTF
-         Yijrq+smWwBHd/CEUtJMeME/5dTkN1KdYZ4cq1hO2+XWAUL1PwzhrwJRcmRurS3rG4hN
-         xpMg==
+        bh=+KJ/mbtjWxEj5MP1XyOb+hi3sJFxAYeTiBlH7+rKjBw=;
+        b=Oj0Jvcy1EjGWCZ2drPqpV8MC8IWxyJsJ5yrszqB5G7ypZWX6xjHSPhq+EmnSEMmBkA
+         W5btJYDAus5uYs9mvsazJDQJOn8LtaXdDRedfiVsOErIC86HYpZJ7XMyS63dNkbaCTsW
+         D43J3fDMekgVPFtPMmHKqXfhNYXhGtiuFzLoO5LmAf8jsPkZhWiSRzeQ38ooW7v0ssUW
+         Grf0qoymC+PLqxcPSr0GIJT2qaJJMRUqKkNNFPl5kJ2Y3tT4NIRVbbZa0GML9zezCcSk
+         u9cafd9vWLCZ0faMJi9qoIc+TzTJ9134f/5fM+2j7wFRzf1zIKhVlDTMcVqySMG6/jYm
+         JmAw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=tQoQXU36/dw2ELM3Q6zDyetx272SKVny+29nLzscHfI=;
-        b=KuECtqeDLvRousHx2UwCKU/ikd0ElqjpEypl1cNLdq88Mbqx+0gD/CFQSpoZ5Ye6cn
-         AOyrvu7JA/FWy1YT8Imb4CyOmufE9ly5RWc5o7gK/5O1BdspFwSGDmVargpzKE9kuiKr
-         ruuqcPrZ7RGpfMNndaNHKZ3fLuFYkKcjuy5txc1MKifIep110/nmcDrvpw2/yjqjQ85x
-         smitnRmzlf8uYUjD7sMBhT/zP4Ng8Z1hTQnQjNlwwNiGKdnvFCPk6DRfiCY4FNag3NR7
-         YzTjPRpvMsvnT50kan0h6sKm0XeUcosdXABejVzpHxZxYrd/ZZOm6diI7+KfIuHA6T6/
-         fFvg==
-X-Gm-Message-State: APjAAAVtIZCrVE280PU+v54xEEaKO4xG95EpdUeN1gE2Q2AWrMco8uNg
-        Fu9wJnDPtBRxwdV0ZYvnPCnOBgYBGBUTEKUPBrcPhA==
-X-Google-Smtp-Source: APXvYqzdHEQdTiTLv3Glm+LbKbv3D3N4+YwdHnM3jpqtUai2CvBDqzladjw7HId0sYMpKBpd18UbKVX7h7FGVFIoEMQ=
-X-Received: by 2002:a67:7a90:: with SMTP id v138mr14804703vsc.200.1560858082474;
- Tue, 18 Jun 2019 04:41:22 -0700 (PDT)
+        bh=+KJ/mbtjWxEj5MP1XyOb+hi3sJFxAYeTiBlH7+rKjBw=;
+        b=jnP+gbXlZS85lMv8qup1ZhRDTG7xRUg7vKR6OAj6tqVRXr3zJy4PBtKCokcCypnB2a
+         QucwhTtWPdF0+BSUYy+O+stoVZA/rVdUQNPTeUR+p0wV4Fr1fFcVrHHS+zXf1fGjoJuM
+         ZbZlL8xKPROK04sgzD1qlB1FnJD5xFijLmtsd/9fisaVROiCR7u+TDixHmwQ/UdyCYgz
+         qVGf9J/4+3hbFmyhbl9tXrpl5idnrno6BpQmOhT2G/ZDi+ITMBR6sYjRuJu7BNv4Ccr1
+         bK7/4ZTYpA7ZPLI6nHr8ebhtKC7jvp0CTobl1l66Lf8BDHoJYQDPWva2n+hPAAEksES3
+         AIYw==
+X-Gm-Message-State: APjAAAXcb3wV5KeKAQILr59rIrb+E3NkAa8YVa6nMDBbPZNjpmU+Y9v4
+        GUVQuGCXAwRwir4j1VqyJTUtJQvKNuTyDKnkdf3H3g==
+X-Google-Smtp-Source: APXvYqw6KNkfm7vjNQTJr9tp7fXdM5vH/0wbCaE4rKVXICQx5xxkwwB3IAGJWH/0TtMEK2287zIeLRjxmgLRyElBJrU=
+X-Received: by 2002:a67:ed8b:: with SMTP id d11mr63582057vsp.35.1560858085439;
+ Tue, 18 Jun 2019 04:41:25 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617201014.84503-1-rrangel@chromium.org>
-In-Reply-To: <20190617201014.84503-1-rrangel@chromium.org>
+References: <20190617201014.84503-1-rrangel@chromium.org> <20190617201014.84503-3-rrangel@chromium.org>
+In-Reply-To: <20190617201014.84503-3-rrangel@chromium.org>
 From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Tue, 18 Jun 2019 13:40:45 +0200
-Message-ID: <CAPDyKFom1q33iOmxHp1pbzcDuE3FxYAoBXWupAe97RwUx0BBXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/3] mmc: sdhci: sdhci-pci-o2micro: Correctly set bus
- width when tuning
+Date:   Tue, 18 Jun 2019 13:40:49 +0200
+Message-ID: <CAPDyKFr8=W9PYEYB7DuKisBVZ4nTF5ibJN5_OqoEPPbRURTWtA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] mmc: sdhci: Fix indenting on SDHCI_CTRL_8BITBUS
 To:     Raul E Rangel <rrangel@chromium.org>
 Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
         "ernest.zhang" <ernest.zhang@bayhubtech.com>,
@@ -74,18 +73,13 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Mon, 17 Jun 2019 at 22:10, Raul E Rangel <rrangel@chromium.org> wrote:
 >
-> The O2Micro controller only supports tuning at 4-bits. So the host driver
-> needs to change the bus width while tuning and then set it back when done.
->
-> There was a bug in the original implementation in that mmc->ios.bus_width
-> also wasn't updated. Thus setting the incorrect blocksize in
-> sdhci_send_tuning which results in a tuning failure.
+> Remove whitespace in front of SDHCI_CTRL_8BITBUS. The value is not part
+> of SDHCI_CTRL_DMA_MASK.
 >
 > Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> Fixes: 0086fc217d5d7 ("mmc: sdhci: Add support for O2 hardware tuning")
 > Acked-by: Adrian Hunter <adrian.hunter@intel.com>
 
-Applied for fixes and by adding a stable tag, thanks!
+Applied for next, thanks!
 
 Kind regards
 Uffe
@@ -93,33 +87,22 @@ Uffe
 
 > ---
 >
->  drivers/mmc/host/sdhci-pci-o2micro.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
+>  drivers/mmc/host/sdhci.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/drivers/mmc/host/sdhci-pci-o2micro.c b/drivers/mmc/host/sdhci-pci-o2micro.c
-> index b29bf4e7dcb48..dd21315922c87 100644
-> --- a/drivers/mmc/host/sdhci-pci-o2micro.c
-> +++ b/drivers/mmc/host/sdhci-pci-o2micro.c
-> @@ -115,6 +115,7 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->          */
->         if (mmc->ios.bus_width == MMC_BUS_WIDTH_8) {
->                 current_bus_width = mmc->ios.bus_width;
-> +               mmc->ios.bus_width = MMC_BUS_WIDTH_4;
->                 sdhci_set_bus_width(host, MMC_BUS_WIDTH_4);
->         }
+> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> index 199712e7adbb3..89fd96596a1f7 100644
+> --- a/drivers/mmc/host/sdhci.h
+> +++ b/drivers/mmc/host/sdhci.h
+> @@ -89,7 +89,7 @@
+>  #define   SDHCI_CTRL_ADMA32    0x10
+>  #define   SDHCI_CTRL_ADMA64    0x18
+>  #define   SDHCI_CTRL_ADMA3     0x18
+> -#define   SDHCI_CTRL_8BITBUS   0x20
+> +#define  SDHCI_CTRL_8BITBUS    0x20
+>  #define  SDHCI_CTRL_CDTEST_INS 0x40
+>  #define  SDHCI_CTRL_CDTEST_EN  0x80
 >
-> @@ -126,8 +127,10 @@ static int sdhci_o2_execute_tuning(struct mmc_host *mmc, u32 opcode)
->
->         sdhci_end_tuning(host);
->
-> -       if (current_bus_width == MMC_BUS_WIDTH_8)
-> +       if (current_bus_width == MMC_BUS_WIDTH_8) {
-> +               mmc->ios.bus_width = MMC_BUS_WIDTH_8;
->                 sdhci_set_bus_width(host, current_bus_width);
-> +       }
->
->         host->flags &= ~SDHCI_HS400_TUNING;
->         return 0;
 > --
 > 2.22.0.410.gd8fdbe21b5-goog
 >
