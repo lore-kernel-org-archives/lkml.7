@@ -2,128 +2,218 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6821C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D8EC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BF2A206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:45:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560847537;
-	bh=WmgpBieHSkxsaMS3Y22VhOIhpsw+Zh5JsSb+CdXH8U8=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=19itiUjAVvXuNO7l1ip4SZsSIpv91LlVfJRY9b3EANFuEvuxRCOt6dbMVdZprwlXE
-	 mj9qKPaS4lT7EfuDzKmmx3RFRlZuJ65ufVjIno9JOiWR99ZaQjpS1T8t5cmNqdL0Pf
-	 eECyUDdeaDQ+FLyTX0n2QJjqqvCpk5STU4qnXvC4=
+	by mail.kernel.org (Postfix) with ESMTP id 229B520B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:47:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="DXGD8S6M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfFRIpg (ORCPT
+        id S1729226AbfFRIrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:45:36 -0400
-Received: from mga09.intel.com ([134.134.136.24]:36491 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728991AbfFRIpg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:45:36 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 01:45:35 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga008.jf.intel.com with ESMTP; 18 Jun 2019 01:45:33 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        James Grant <james.grant@jci.com>, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] usb: gadget: udc: lpc32xx: allocate descriptor with GFP_ATOMIC
-In-Reply-To: <20190618074633.GC23549@piout.net>
-References: <20190510124248.2430-1-alexandre.belloni@bootlin.com> <87zhmffiui.fsf@linux.intel.com> <20190618074633.GC23549@piout.net>
-Date:   Tue, 18 Jun 2019 11:45:29 +0300
-Message-ID: <87tvcnffiu.fsf@linux.intel.com>
+        Tue, 18 Jun 2019 04:47:06 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:3755 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728991AbfFRIrG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:47:06 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d08a5080004>; Tue, 18 Jun 2019 01:47:04 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 01:47:03 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 01:47:03 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 08:47:01 +0000
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>
+CC:     <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <5fbe4374-cc9a-8212-017e-05f4dee64443@nvidia.com>
+ <7ab96aa5-0be2-dc01-d187-eb718093eb99@nvidia.com>
+ <840fcf60-8e24-ff44-a816-ef63a5f18652@gmail.com>
+ <d34c100d-e82a-bb00-22c6-c5f2f6cdb03a@nvidia.com>
+ <b47b7b89-e830-0b3e-026d-c6c7d67d3324@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <255f92e8-df61-5e9c-ba4f-e52a0bd11451@nvidia.com>
+Date:   Tue, 18 Jun 2019 09:47:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+In-Reply-To: <b47b7b89-e830-0b3e-026d-c6c7d67d3324@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560847624; bh=BNRft4nxFu1I3+WbPSbDRRtVP9WPLPJr58b0fEhrxuM=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=DXGD8S6MGzRl3AaY07KR6OLdT5RgypGeKvkXN/xSZhARGP50485xUNB5QvZSkjaqr
+         uXpMa6O9YkrKR/axQq26pCUlJ/OAWSEH+PVG/OM3iLKISZVVvouSzXggCQ2+EazWHz
+         KVZEPRv6VruXBKkwzKDXbA9PmYcy0Kkq/BxTR+NoHLD+r4Wm+n0ZB8GluhkY1Rwq4X
+         XHbdu0zqvLP4QIIW0othuw2I6U41H4YPCFGUOhSC/QjBnetGPftqLRmUmvaVUBnFvL
+         boWfieIxYJul9serVduN5XbSd/S3T4/dKmdsIGA2G0ozAUxhyXIQ82xz1Yp5qzzYkR
+         nKOc9kNqBbuMA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
 
+On 17/06/2019 13:41, Dmitry Osipenko wrote:
+> 17.06.2019 13:57, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>
+>> On 14/06/2019 17:44, Dmitry Osipenko wrote:
+>>> 14.06.2019 18:24, Jon Hunter =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+>>>>
+>>>> On 14/06/2019 16:21, Jon Hunter wrote:
+>>>>>
+>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>>>> Tegra's APB DMA engine updates words counter after each transferred =
+burst
+>>>>>> of data, hence it can report transfer's residual with more fidelity =
+which
+>>>>>> may be required in cases like audio playback. In particular this fix=
+es
+>>>>>> audio stuttering during playback in a chromiuim web browser. The pat=
+ch is
+>>>>>> based on the original work that was made by Ben Dooks [1]. It was te=
+sted
+>>>>>> on Tegra20 and Tegra30 devices.
+>>>>>>
+>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@co=
+dethink.co.uk/
+>>>>>>
+>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>>>>  drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++----=
+---
+>>>>>>  1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb=
+-dma.c
+>>>>>> index 79e9593815f1..c5af8f703548 100644
+>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_=
+chan *dc)
+>>>>>>  	return 0;
+>>>>>>  }
+>>>>>> =20
+>>>>>> +static unsigned int tegra_dma_update_residual(struct tegra_dma_chan=
+nel *tdc,
+>>>>>> +					      struct tegra_dma_sg_req *sg_req,
+>>>>>> +					      struct tegra_dma_desc *dma_desc,
+>>>>>> +					      unsigned int residual)
+>>>>>> +{
+>>>>>> +	unsigned long status, wcount =3D 0;
+>>>>>> +
+>>>>>> +	if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>> +		return residual;
+>>>>>> +
+>>>>>> +	if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>> +		wcount =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>> +
+>>>>>> +	status =3D tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>> +
+>>>>>> +	if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>> +		wcount =3D status;
+>>>>>> +
+>>>>>> +	if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>> +		return residual - sg_req->req_len;
+>>>>>> +
+>>>>>> +	return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>> +}
+>>>>>> +
+>>>>>>  static enum dma_status tegra_dma_tx_status(struct dma_chan *dc,
+>>>>>>  	dma_cookie_t cookie, struct dma_tx_state *txstate)
+>>>>>>  {
+>>>>>>  	struct tegra_dma_channel *tdc =3D to_tegra_dma_chan(dc);
+>>>>>> +	struct tegra_dma_sg_req *sg_req =3D NULL;
+>>>>>>  	struct tegra_dma_desc *dma_desc;
+>>>>>> -	struct tegra_dma_sg_req *sg_req;
+>>>>>>  	enum dma_status ret;
+>>>>>>  	unsigned long flags;
+>>>>>>  	unsigned int residual;
+>>>>>> @@ -838,6 +862,8 @@ static enum dma_status tegra_dma_tx_status(struc=
+t dma_chan *dc,
+>>>>>>  		residual =3D dma_desc->bytes_requested -
+>>>>>>  			   (dma_desc->bytes_transferred %
+>>>>>>  			    dma_desc->bytes_requested);
+>>>>>> +		residual =3D tegra_dma_update_residual(tdc, sg_req, dma_desc,
+>>>>>> +						     residual);
+>>>>>
+>>>>> I had a quick look at this, I am not sure that we want to call
+>>>>> tegra_dma_update_residual() here for cases where the dma_desc is on t=
+he
+>>>>> free_dma_desc list. In fact, couldn't this be simplified a bit for ca=
+se
+>>>>> where the dma_desc is on the free list? In that case I believe that t=
+he
+>>>>> residual should always be 0.
+>>>>
+>>>> Actually, no, it could be non-zero in the case the transfer is aborted=
+.
+>>>
+>>> Looks like everything should be fine as-is.
+>>
+>> I am still not sure we want to call this for the case where dma_desc is
+>> on the free list.
+>=20
+> You're right! It's a bug there! The sg_req=3DNULL if dma_desc is on the f=
+ree list, hence
+> it will result in a NULL dereference. I'll fix it in v2 and will avoid th=
+e offending
+> call, like you're suggesting.
+>=20
+>>> BTW, it's a bit hard to believe that there is any real benefit from the
+>>> free_dma_desc list at all, maybe worth to just remove it?
+>>
+>> I think you need to elaborate a bit more here. I am not a massive fan of
+>> this driver, but I am also not in the mood for changing unless there is
+>> a good reason.
+>=20
+> It looks like the whole point of the free list is to have a cache of prea=
+llocated
+> dma_desc's, but dma_desc allocation and initialization doesn't cost anyth=
+ing in
+> comparison to the free list because memory is allocated from a SLAB cache=
+ and then the
+> initialization will happen on CPU's cache.
+>=20
+> So the free list is quite pointless in terms of optimization. Moreover wh=
+at if driver
+> allocates a lot of dma_desc's and uses them just once? Looks like it will=
+ be quite a
+> lot of wasted memory on the free list.
 
-Hi,
+Yes indeed and for the ADMA we allocate and free on-demand as you are
+suggesting. I don't know why it was done like this, but to make the
+change it would be good to get some data about how much memory it is
+consuming to see if it is actually worth it.
 
-Alexandre Belloni <alexandre.belloni@bootlin.com> writes:
-> Hi,
->
-> On 18/06/2019 10:33:41+0300, Felipe Balbi wrote:
->> Alexandre Belloni <alexandre.belloni@bootlin.com> writes:
->>=20
->> > Gadget drivers may queue request in interrupt context. This would lead=
- to
->> > a descriptor allocation in that context. In that case we would hit
->> > BUG_ON(in_interrupt()) in __get_vm_area_node.
->> >
->> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->> > ---
->> >  drivers/usb/gadget/udc/lpc32xx_udc.c | 2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > diff --git a/drivers/usb/gadget/udc/lpc32xx_udc.c b/drivers/usb/gadget=
-/udc/lpc32xx_udc.c
->> > index d8f1c60793ed..b706d9c85a35 100644
->> > --- a/drivers/usb/gadget/udc/lpc32xx_udc.c
->> > +++ b/drivers/usb/gadget/udc/lpc32xx_udc.c
->> > @@ -938,7 +938,7 @@ static struct lpc32xx_usbd_dd_gad *udc_dd_alloc(st=
-ruct lpc32xx_udc *udc)
->> >  	struct lpc32xx_usbd_dd_gad	*dd;
->> >=20=20
->> >  	dd =3D (struct lpc32xx_usbd_dd_gad *) dma_pool_alloc(
->> > -			udc->dd_cache, (GFP_KERNEL | GFP_DMA), &dma);
->> > +			udc->dd_cache, (GFP_ATOMIC | GFP_DMA), &dma);
->>=20
->> doesn't apply:
->>=20
->> checking file drivers/usb/gadget/udc/lpc32xx_udc.c
->> Hunk #1 FAILED at 938.
->>=20
->
-> You already applied it for v5.2-rc5
+Cheers
+Jon
 
-d'oh!
-
-Guess I haven't looked at my inbox in a while :-p
-
-thanks
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0IpKkACgkQzL64meEa
-mQYO4RAAitET6cBuDxzFobV4YHrYjjF73rGS7yNKbAtd+M+GXQ8pNAoxCtlGal7l
-q4b49b11QVDgEKuXse4fKPkywviIDJdjkpzt0nO4/MLiMj3+3KRHlgazy5fMdJa2
-Z9qkf8mSXR6VA2jrSbQRDwl1TcVZYj8cGivfsXGoX4PkNyplprXnphPpnaMEIfwq
-97SEYUb7XnoUeMLcvxqGdCJRsuC5qaTuwmfjVeO4g7MHw2t6qc+ApAmLw4D2MfHj
-td6eDfgyzhFDfm+qVQ74G/wYAVghNx5x7+MpUhDKCUX/VmcpWE9jodOQCzBTJEgM
-BINzvBgdN/X/lu9S6aKkmEboRERbMUyub6JB5kZIWJF6wM8RfOA9izTb20eNkB+4
-2koU6Pjl3C044HM0WR/MFK+TlMSOm+bGdXASCgMt2VwqsSqP3KPhLDwnKMVRyJyA
-8y5xM3H/Tn5rxHqWIWzwX/hTo2bA+WyL5SM21K+BEXaJE4gbCiR8oUJG8ZHkbgi9
-b/Ptky/Ss37Jbsjq5Sn2srSmDV3SGH4YNGoiZIfxrGgyRY4UqJgmgs1Y0KnJP0YA
-BixOhFb1Vnub7jkhgNtQ7iilO2gpY6hptmrdbV/LRQqkSfKgzh9dtFp2IecZ34Zf
-oL3TsbxVuhm/Wmf3sujdRsScVH0CjjKwpl2iV4Hr3k4mXTqGjNU=
-=KroP
------END PGP SIGNATURE-----
---=-=-=--
+--=20
+nvpublic
