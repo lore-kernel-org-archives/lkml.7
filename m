@@ -2,202 +2,109 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2173AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AB18DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:35:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB45A21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8206A21479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:35:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="buNrCnmO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbfFRTfT convert rfc822-to-8bit (ORCPT
+        id S1730480AbfFRTfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:35:19 -0400
-Received: from mga05.intel.com ([192.55.52.43]:42658 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730189AbfFRTfS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:35:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 12:35:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
-   d="scan'208";a="334966154"
-Received: from orsmsx106.amr.corp.intel.com ([10.22.225.133])
-  by orsmga005.jf.intel.com with ESMTP; 18 Jun 2019 12:35:17 -0700
-Received: from orsmsx122.amr.corp.intel.com (10.22.225.227) by
- ORSMSX106.amr.corp.intel.com (10.22.225.133) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 18 Jun 2019 12:35:17 -0700
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.92]) by
- ORSMSX122.amr.corp.intel.com ([169.254.11.7]) with mapi id 14.03.0439.000;
- Tue, 18 Jun 2019 12:35:17 -0700
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Nikolaus Voss <nv@vosn.de>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-Thread-Topic: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-Thread-Index: AQHVIPn/qqDB5Bv4z0aSsleXlAnDw6abVhaAgAADpwD///G0sIAEkokAgACES6CAAT+dAIAANdnA
-Date:   Tue, 18 Jun 2019 19:35:16 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB032@ORSMSX110.amr.corp.intel.com>
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de>
- <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
- <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
- <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B95F9EC6@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1906181030240.24846@fox.voss.local>
-In-Reply-To: <alpine.DEB.2.20.1906181030240.24846@fox.voss.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWYzNDM4MzQtOGVmNS00ZTRiLWJkZTktZDExNTM1YTg5ZDk3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoialA3Y1d2Z3ZkMnZ2VUpzaXc3aDBTaWxGMFFmdEE4QUdvRCtYSHUrWWozN0g3cnRLckZMc1hwbEdXZkdmditHZiJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.140]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 18 Jun 2019 15:35:43 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45858 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730189AbfFRTfm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:35:42 -0400
+Received: by mail-yw1-f68.google.com with SMTP id m16so7205977ywh.12;
+        Tue, 18 Jun 2019 12:35:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=HvAlKbZbthljEj9Bm0P4V0wg057kcVpH5Gmt0eKeElg=;
+        b=buNrCnmOnWF/vLcHkE1GpZMXLD2A5UlUAPBqlUf7w5q2/wefEZvDdCD8yeT83hthXv
+         /55FKlOfCMMmB5bSMHWx0VPuqBqUaibrFDzQiHMuoVTa7n5+PJ/yX18EazSr+XG+iZel
+         aJJHJ/JjmBdjXoV3WsByjE3mJ37WeMvC2LD40Z7l2T+Jvrae9MZg3NieaTULHC3j0yQc
+         IBGPsW39YXeldJngQGOjFVFQkNUThbrdDxbVqSXqLBH2ymlgNhzsIdR+b2HOvIDa3TW2
+         WgvwN4hwaXcAvmfrazlz+50RC9F+VOWzU5Lg9V56XgynZkF4JWwvBANXhT4LziAJ08Ox
+         /34A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=HvAlKbZbthljEj9Bm0P4V0wg057kcVpH5Gmt0eKeElg=;
+        b=tOHLxRFeT9DJubBg1ZIKO9dwJ0w2hjvka3uQZwu7Esf6G0m1Dsb8q6lem4S5KlDGN6
+         mvlVGEyToNaTONcFISi7fGS6iTrIrzDY56IGQa8oN/KyZm0agNWs9cw74R64BqPzyvjg
+         Tg/WRQdx7UdmEjZJnAbNjfMo49IucY91n2KwSZCG/OkYps0a+l1OAxodLrNTIIeMRFIc
+         k+ziCSR7O4t9wMo7Lv+bjR4vT6IaPaJTQ5bnw8h1YNn2I2mUtjyu3qpAbFoIfGo7IuAg
+         cEY2UPqF7VQ5RTNYLMgPOEIcAYnqkplIb+U9KhFprojaSrB8i6ws7FpTZ6kKpda6UuNt
+         xPcQ==
+X-Gm-Message-State: APjAAAVXmsi/mg3fOZyFfUyoQZ8mAY1sDzxoiRRJ/sx9+2EuyO75HqdW
+        qEmpUIKQoMQ98mG1BsakVaxrhRzGo6Zc1dkgzBwmJFPo
+X-Google-Smtp-Source: APXvYqwjK1U8YQPQcUnPpcbwzhDgtAhYLUw4HEluprGNc7HiOoBlL396q5Vx72UloQuB5/nFqqq+0DVHa2ud470V4nw=
+X-Received: by 2002:a81:92d3:: with SMTP id j202mr223539ywg.427.1560886541819;
+ Tue, 18 Jun 2019 12:35:41 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190613180824.6ajwjelzr5fmjnie@debie> <20190618073853.GA25598@kroah.com>
+In-Reply-To: <20190618073853.GA25598@kroah.com>
+From:   Charles Oliveira <18oliveira.charles@gmail.com>
+Date:   Tue, 18 Jun 2019 16:35:30 -0300
+Message-ID: <CAD17tR9-xss+AkeBMv6XLTxQ=Hx13wYuRYEmoRauNVxFLqh27A@mail.gmail.com>
+Subject: Re: [PATCH] serial: sh-sci: fix uninitialized variable warning
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm looking at this. We've changed the initialization of objects in the namespace recently, so I'm checking this out.
-
-
-> -----Original Message-----
-> From: Nikolaus Voss [mailto:nv@vosn.de]
-> Sent: Tuesday, June 18, 2019 2:22 AM
-> To: Moore, Robert <robert.moore@intel.com>
-> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
-> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
-> <erik.schmauss@intel.com>; Jacek Anaszewski
-> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
-> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel
-> Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT
-> ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org;
-> Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
-> <linux-kernel@vger.kernel.org>
-> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
-> loads
-> 
-> On Mon, 17 Jun 2019, Moore, Robert wrote:
-> >> -----Original Message-----
-> >> From: Nikolaus Voss [mailto:nv@vosn.de]
-> >> Sent: Sunday, June 16, 2019 11:24 PM
-> >> To: Moore, Robert <robert.moore@intel.com>
-> >> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
-> >> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
-> >> <erik.schmauss@intel.com>; Jacek Anaszewski
-> >> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
-> >> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI
-> >> Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI
-> >> COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
-> >> linux-leds@vger.kernel.org; Linux PWM List
-> >> <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
-> >> <linux-kernel@vger.kernel.org>; nikolaus.voss@loewensteinmedical.de
-> >> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
-> >> table loads
-> >>
-> >> Bob,
-> >>
-> >> On Fri, 14 Jun 2019, Moore, Robert wrote:
-> >>>
-> >>>
-> >>> -----Original Message-----
-> >>> From: Nikolaus Voss [mailto:nv@vosn.de]
-> >>> Sent: Friday, June 14, 2019 2:26 AM
-> >>> To: Rafael J. Wysocki <rafael@kernel.org>
-> >>> Cc: Rafael J. Wysocki <rjw@rjwysocki.net>; Len Brown
-> >>> <lenb@kernel.org>; Moore, Robert <robert.moore@intel.com>; Schmauss,
-> >>> Erik <erik.schmauss@intel.com>; Jacek Anaszewski
-> >>> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan
-> >>> Murphy <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>;
-> >>> ACPI Devel Maling List <linux-acpi@vger.kernel.org>; open list:ACPI
-> >>> COMPONENT ARCHITECTURE (ACPICA) <devel@acpica.org>;
-> >>> linux-leds@vger.kernel.org; Linux PWM List
-> >>> <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
-> >>> <linux-kernel@vger.kernel.org>
-> >>> Subject: Re: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
-> >>> table loads
-> >>>
-> >>> Hi Rafael,
-> >>>
-> >>> On Fri, 14 Jun 2019, Rafael J. Wysocki wrote:
-> >>>> On Wed, Jun 12, 2019 at 10:36 AM Nikolaus Voss
-> >>>> <nikolaus.voss@loewensteinmedical.de> wrote:
-> >>>>>
-> >>>>> If an ACPI SSDT overlay is loaded after built-in tables have been
-> >>>>> loaded e.g. via configfs or efivar_ssdt_load() it is necessary to
-> >>>>> rewalk the namespace to resolve references. Without this, relative
-> >>>>> and absolute paths like ^PCI0.SBUS or \_SB.PCI0.SBUS are not
-> >>>>> resolved correctly.
-> >>>>>
-> >>>>> Make configfs load use the same method as efivar_ssdt_load().
-> >>>>>
-> >>>>> Signed-off-by: Nikolaus Voss <nikolaus.voss@loewensteinmedical.de>
-> >>>>
-> >>>> This is fine by me, so
-> >>>>
-> >>>> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> >>>>
-> >>>> Or if you want me to take this patch (without the other two in the
-> >>>> series), please let me know.
-> >>>
-> >>> thanks. I think it would be the best if you take up this patch as it
-> >>> is an independent topic. In retrospect it wasn't a good idea to put
-> >>> it into this series.
-> >>>
-> >>> Kind regards,
-> >>> Niko
-> >>>
-> >>> I would have to ask, why is additional code needed for package
-> >>> initialization/resolution? It already happens elsewhere in acpica.
-> >>> Bob
-> >>
-> >> for built-in tables loaded via acpi_ex_load_table_op() everything is
-> >> fine, because after acpi_tb_load_table() acpi_ns_walk_namespace() is
-> >> called to resolve references.
-> >>
-> >> My fix only affects tables loaded dynamically via either
-> >> acpi_configfs driver (for debugging purposes) or efivar_ssdt_load()
-> >> (to specify a table on the kernel's command line). They use
-> >> acpi_load_table() to load the table from a caller-owned buffer. To
-> >> resolve the references, it is again necessary to rewalk the
-> >> namespace, which was simply missing in acpi_load_table().
-> >>
-> > [Moore, Robert]
+On Tue, Jun 18, 2019 at 4:38 AM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Thu, Jun 13, 2019 at 03:08:24PM -0300, Charles wrote:
+> > Avoid following compiler warning on uninitialized variable
 > >
-> > Perhaps you should call AcpiInitializeObjects after the call to
-> > AcpiLoadTable, but I will check.
-> 
-> My usage of acpi_load_table() is to load a SSDT which is the intended
-> use of this method according to its description. And my expectation is
-> that the package objects of the loaded table are initialized when this
-> function successfully returns so it aligns with the behavior of
-> acpi_ex_load_table_op() for built-in SSDTs. Otherwise there would be no
-> point in having this function at all, because
-> acpi_tb_install_and_load_table() could be called directly without any
-> difference.
-> 
-> Niko
+> > In file included from ./include/linux/rwsem.h:16:0,
+> >                  from ./include/linux/notifier.h:15,
+> >                  from ./include/linux/clk.h:17,
+> >                  from drivers/tty/serial/sh-sci.c:24:
+> > drivers/tty/serial/sh-sci.c: In function =E2=80=98sci_dma_rx_submit=E2=
+=80=99:
+> > ./include/linux/spinlock.h:288:3: warning: =E2=80=98flags=E2=80=99 may =
+be used
+> > uninitialized in this function [-Wmaybe-uninitialized]
+> >    _raw_spin_unlock_irqrestore(lock, flags); \
+> >    ^~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > drivers/tty/serial/sh-sci.c:1353:16: note: =E2=80=98flags=E2=80=99 was =
+declared here
+> >   unsigned long flags;
+> >                 ^~~~~
+>
+> What version of gcc is doing this?  It should be smarter than that,
+> perhaps you should just upgrade.
+
+Yep, worked like a charm. I was running gcc 6.3.0, just updated to 8.3.0
+and got rid of that warning.
+
+Thanks, Greg
+>
+> thanks,
+>
+> greg k-h
+
+
+
+--=20
+Charles
