@@ -2,136 +2,101 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 216B1C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11D3EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:57:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF51E206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D84A920679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:57:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="bg323twP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LRLHdT3Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730023AbfFRQxJ (ORCPT
+        id S1729952AbfFRQ51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:53:09 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39062 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729541AbfFRQxJ (ORCPT
+        Tue, 18 Jun 2019 12:57:27 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:38053 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729472AbfFRQ50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:53:09 -0400
-Received: by mail-pf1-f196.google.com with SMTP id j2so7995034pfe.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:53:09 -0700 (PDT)
+        Tue, 18 Jun 2019 12:57:26 -0400
+Received: by mail-io1-f68.google.com with SMTP id j6so1835404ioa.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:57:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=IqqtXsFGosoxNpPkm5wyCgfinoqyhByKBZjMuz4MB0I=;
-        b=bg323twPxByid8peFGN7CaP7DYTzxD48CEFt6vzKFLuZr27ZPVeYR9aqapgK/NZyMX
-         VwWDxuPluBaWMti4Db1jhMO8vU/6BpjUYDcDWPDqPIvC8V72JIX4y5qjBmafMOwLeDC+
-         ex3OfhlOOmJs9zSa/1f/dp42YA8jMBbipGqeaijIyJMFO3zPZKzEYTlm6JJQaYMvayp0
-         YcOwru57r9aSI06mvYdo4y0QlmqTtTz7ltIdOozdK1wEgu14p/fq2LSvG9qOBut3BD8o
-         fU4dXkm9gaS6lKhpmdzsnMcIDNm+U2NyMlAqoMSX6bh2OonBDJ48eTnIkbyGgA+1Ugg+
-         5hAA==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xrJsxZ/IfKMP1AFfySPNnocTESP3c3IM1WrlKO+7sJo=;
+        b=LRLHdT3Zc0vxsuSpsMh7E6xAiPxdYfHeiWb7tew+JOx8kBFp0kWayPKaQFnGUTr2UR
+         sQ4zZxKO4lf17j7Et3Er6szcshZ8xZvpJ/dubyd9UwN5nuTqgZJ+Oe+aDOwpResrEs5I
+         X20R0Ukbi7TYIax2IcOCn7p5yLF+xhCssXWp0wNLuIJl7Blfzqtk+31WT0glFpzcaEhw
+         rcRwWIIzWVpqCK5iOguSh4ruorGDmM/YWwIWQIacgaqTPbDxiOLExFEQIWangupFPsKW
+         AdqiOKnMzmcDPhRqqHFH7XI/nyX2LflNeH6119EsYU+BPfEjGjlEYDyP0npDFxH76fRC
+         VS6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=IqqtXsFGosoxNpPkm5wyCgfinoqyhByKBZjMuz4MB0I=;
-        b=X5n7vizYnYfIk8coqZcrAZgNqgVpLpkcEz8afBHu/JivgXDb6zSEK9K2DWiCHfcrfb
-         19Qht7P3lu7K0h+brmNItb+QtH0xeOVKrLiQxtfiuGEcu8cX94K9PT1j+J/HsCmlhoPZ
-         5ITg1QsdocFGxgVD/6jcb1vBJd269KXbfo1nvODxUEdD4ET663810gA6dCYlq6ZIMRvk
-         KbUCeHANfJu6CDUWBWeXRhQlKPu3+yesMcv+d8iPQ+hZ0rsTGbClfitBMl7kNQ99osfG
-         nL7M+3iDNe6maBY95gwhU6PpaA2WGSFOR1IZYs0/GMpi/zcAkBN1IT1JGD6BXkVzsJS1
-         Xq2Q==
-X-Gm-Message-State: APjAAAXUFw8EZCrhv4anRQvjne3x4kOsM3QQKhhfARNGuEJiHvBHd0Vs
-        TK3iO6U/WgrKNJjI+8TgAV+rxg==
-X-Google-Smtp-Source: APXvYqza2rYN7tr43Lk9Mo1yoxZIdHHve48RruCrOAFPMAW78pCSNW6feYT0xc+hh4kEhI6LzewVVA==
-X-Received: by 2002:a63:4a1f:: with SMTP id x31mr3594318pga.150.1560876788415;
-        Tue, 18 Jun 2019 09:53:08 -0700 (PDT)
-Received: from localhost (c-71-197-186-152.hsd1.wa.comcast.net. [71.197.186.152])
-        by smtp.googlemail.com with ESMTPSA id a11sm15966693pff.128.2019.06.18.09.53.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2019 09:53:07 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     "kernelci.org bot" <bot@kernelci.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
-        enric.balletbo@collabora.com
-Cc:     Jose Abreu <joabreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        "kernelci.org bot" <bot@kernelci.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: next/master boot bisection: next-20190617 on sun8i-h2-plus-orangepi-zero
-In-Reply-To: <5d089fb6.1c69fb81.4f92.9134@mx.google.com>
-References: <5d089fb6.1c69fb81.4f92.9134@mx.google.com>
-Date:   Tue, 18 Jun 2019 09:53:07 -0700
-Message-ID: <7hr27qdedo.fsf@baylibre.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xrJsxZ/IfKMP1AFfySPNnocTESP3c3IM1WrlKO+7sJo=;
+        b=WZiBbylhqUIFz/cD9EV+kGMvaMBwM+ddaF3v5BjoS+BwnA+5UEwVkcoqw43Jh4k/sH
+         9rRR8UMVAo8MdDk3xMhx+6yupUFd7jFAehFPnDKoDJbglmGAv+aKL52onhBR4Fbxn0Pa
+         SKqXJpr6Niyj4sDLBFYUaFkfkxRdldqe+0CD4m9LmhVkBUjSDuA6Yssbxw1wXOzzWH7C
+         JFqd36uBwah248iu6WkGADlp9ht06ZpBTM5bToDytNch2uSy2Z5oRqtRwUvHAJrPetXi
+         VQQ7oTcgHYNtZEivtUOv4F4fhf1rs54vYgbndOdLRKmPo2CyoKkAYfuVqQIIHCzZ5aNB
+         72Xg==
+X-Gm-Message-State: APjAAAVyBFxDJbzBPVhQblzKsEdc4CjynqpfX33R9vPF8IvyxPHMCqL3
+        b6pvQihraLcTmgIfFK7mk6l3aK6/DhMSZq2y7n+GXw==
+X-Google-Smtp-Source: APXvYqyMZYgvkSgpjFYOYSD97Cjv1smwGOaNuCjsiFCWLy9P3EJDPKS7jGPSryG4ENqREkBd2GGzHG5tw909R8LYTNI=
+X-Received: by 2002:a02:7642:: with SMTP id z63mr3888157jab.36.1560877046081;
+ Tue, 18 Jun 2019 09:57:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190615104440.94149-1-weiyongjun1@huawei.com> <20190617092253.167231-1-weiyongjun1@huawei.com>
+In-Reply-To: <20190617092253.167231-1-weiyongjun1@huawei.com>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 18 Jun 2019 10:57:14 -0600
+Message-ID: <CANLsYkyQMB5q9kavLLBwGjhq7sXLNBPPpWaaEip+6DnRahA4oQ@mail.gmail.com>
+Subject: Re: [PATCH -next v2] coresight: replicator: Add terminate entry for
+ acpi_device_id tables
+To:     Wei Yongjun <weiyongjun1@huawei.com>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"kernelci.org bot" <bot@kernelci.org> writes:
+On Mon, 17 Jun 2019 at 03:15, Wei Yongjun <weiyongjun1@huawei.com> wrote:
+>
+> Make sure acpi_device_id tables have terminate entry.
+>
+> Fixes: fe446287ec9f ("coresight: acpi: Support for platform devices")
+> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>  drivers/hwtracing/coresight/coresight-replicator.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+> index 542952759941..b7d6d59d56db 100644
+> --- a/drivers/hwtracing/coresight/coresight-replicator.c
+> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
+> @@ -300,6 +300,7 @@ static const struct of_device_id static_replicator_match[] = {
+>  #ifdef CONFIG_ACPI
+>  static const struct acpi_device_id static_replicator_acpi_ids[] = {
+>         {"ARMHC985", 0}, /* ARM CoreSight Static Replicator */
+> +       {}
 
-> next/master boot bisection: next-20190617 on sun8i-h2-plus-orangepi-zero
->
-> Summary:
->   Start:      a125097c8410 Add linux-next specific files for 20190617
->   Details:    https://kernelci.org/boot/id/5d07987659b51412add51503
->   Plain log:  https://storage.kernelci.org//next/master/next-20190617/arm/multi_v7_defconfig/gcc-8/lab-baylibre/boot-sun8i-h2-plus-orangepi-zero.txt
->   HTML log:   https://storage.kernelci.org//next/master/next-20190617/arm/multi_v7_defconfig/gcc-8/lab-baylibre/boot-sun8i-h2-plus-orangepi-zero.html
->   Result:     ce4ab73ab0c2 net: stmmac: drop the reset delays from struct stmmac_mdio_bus_data
->
-> Checks:
->   revert:     PASS
->   verify:     PASS
->
-> Parameters:
->   Tree:       next
->   URL:        git://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
->   Branch:     master
->   Target:     sun8i-h2-plus-orangepi-zero
->   CPU arch:   arm
->   Lab:        lab-baylibre
->   Compiler:   gcc-8
->   Config:     multi_v7_defconfig
->   Test suite: boot
->
-> Breaking commit found:
->
-> -------------------------------------------------------------------------------
-> commit ce4ab73ab0c27c6a3853695aa8ec0f453c6329cd
-> Author: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Date:   Sat Jun 15 12:09:31 2019 +0200
->
->     net: stmmac: drop the reset delays from struct stmmac_mdio_bus_data
->     
->     Only OF platforms use the reset delays and these delays are only read in
->     stmmac_mdio_reset(). Move them from struct stmmac_mdio_bus_data to a
->     stack variable inside stmmac_mdio_reset() because that's the only usage
->     of these delays.
->     
->     Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->     Signed-off-by: David S. Miller <davem@davemloft.net>
+Applied - thanks
 
-This seems to have broken on several sunxi SoCs, but also a MIPS SoC
-(pistachio_marduk):
-
-https://storage.kernelci.org/next/master/next-20190618/mips/pistachio_defconfig/gcc-8/lab-baylibre-seattle/boot-pistachio_marduk.html
-
-Kevin
+>  };
+>  #endif
+>
+>
+>
