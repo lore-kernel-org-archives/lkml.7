@@ -2,145 +2,116 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C8B8C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:05:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03CEBC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:10:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16DBD2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:05:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D228220861
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:10:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="cEembCbJ"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="CaWsqiT7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfFRCFi (ORCPT
+        id S1727813AbfFRCKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:05:38 -0400
-Received: from mail-eopbgr150085.outbound.protection.outlook.com ([40.107.15.85]:40038
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbfFRCFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:05:38 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector2-armh-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kg2kvnqT0VjSojJg+YRo1O9WIFi6KUcTt8LWGNg7nDc=;
- b=cEembCbJiNme+wGioPsdTCVzDyFC1DyA2U+lV6geOLavLrsMt7dEX6fHyawkJB+VO0TlnuAeNX/Du/+laneueMba/RdqEG5fGGvwNxEQ3SIxFvmQP33OkMETu8sT9jNraYfeeM5D892hrTO68uTKca8HQ0ga0NHKjqvMrBI01DA=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB4688.eurprd08.prod.outlook.com (10.255.115.77) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.15; Tue, 18 Jun 2019 02:05:35 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
- 02:05:35 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-CC:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nd <nd@arm.com>
-Subject: Re: [PATCH] drm/komeda: fix 32-bit komeda_crtc_update_clock_ratio
-Thread-Topic: [PATCH] drm/komeda: fix 32-bit komeda_crtc_update_clock_ratio
-Thread-Index: AQHVJXpNE3N21cdpKkuGT3soJLEwQQ==
-Date:   Tue, 18 Jun 2019 02:05:35 +0000
-Message-ID: <20190618020529.GB32081@james-ThinkStation-P300>
-References: <20190617125121.1414507-1-arnd@arndb.de>
-In-Reply-To: <20190617125121.1414507-1-arnd@arndb.de>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.9.4 (2018-02-28)
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK2PR02CA0160.apcprd02.prod.outlook.com
- (2603:1096:201:1f::20) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 8bd65035-c28a-4f80-d7c9-08d6f3917371
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4688;
-x-ms-traffictypediagnostic: VE1PR08MB4688:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB4688F748B2409842670F1D6BB3EA0@VE1PR08MB4688.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 007271867D
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(7916004)(396003)(39860400002)(346002)(376002)(366004)(136003)(199004)(189003)(76176011)(25786009)(33716001)(478600001)(6246003)(99286004)(52116002)(256004)(58126008)(476003)(316002)(54906003)(229853002)(6486002)(11346002)(486006)(33656002)(1076003)(6436002)(14444005)(446003)(4326008)(6506007)(26005)(5660300002)(66066001)(6512007)(9686003)(66476007)(66446008)(66556008)(64756008)(81166006)(53936002)(71200400001)(71190400001)(8936002)(81156014)(3846002)(6116002)(386003)(86362001)(55236004)(186003)(8676002)(102836004)(66946007)(68736007)(14454004)(6916009)(2906002)(305945005)(73956011)(7736002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4688;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: y04z68eaMDTgREEPP+neA+e8LM/Xh9ECuJHSo3zcKDewmgaV7iHGG71Jue5c1iwzMyIGI8q8POjzUXWlaxc1J4FlVyEtQ9WR3t4jaFvaxd3KJCdVBzJ/wQtoR6fzgk3gII0+L/5RYOnyix5pA5oP/9+wVFRaNJQHW8VxB2YwmuSmGcQ0hTivRv60oiRuTsLRspa/z94UP0ZtjUw+e3PCyhOahZdqw+8jt5djppLXe12qWLGqhjLBr6/7znabufSA20GxyZ5RTKCumImTfxLxMzk2D8CzsiWXjW307Sm6Zr5NDcC1iE8+MOqLkr5mODRFlH4bvdkaE145die8rpIjeCVFPYWyfyRykQcUOKeTIOlc9vDP31oO4LMJ6QtwYk0ctJV/8Mf6eQWUuC9U5qix8ThC5/xxPHemBgSQXV3C7AM=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <E41A22522EF64C458E76260D8DFE5E21@eurprd08.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 17 Jun 2019 22:10:50 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:33119 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726151AbfFRCKu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 22:10:50 -0400
+Received: by mail-wm1-f66.google.com with SMTP id h19so1194535wme.0
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:10:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=0HepCJwDYsm0Shu2CNf2eE/kc71TZil5tCl+GGac7oY=;
+        b=CaWsqiT77lYoVb2YmjxPGR9bLi51Nci0UQlYM4j+6FQoLfrPwBGT9lSvvqx6eOExks
+         AnwSaKTUCC9IDF2jQQv6O1mSUdLJQxvOjL/myL1auL5zaAYpfJ5FuG+qjKU2LVeGJKLg
+         UOZlahxTHXkad+uhc8pKSgBRytoEPeL5sieBqdZYLzcywRwDyQo9zOWsqMg+8vEF7W43
+         eELaJ43T4IXHt6JbkFOoMT2emdDGuepnvGlEctySvBJbwC3mO2YmBrMHtKA1aVs/VBSm
+         gxLKCyxnpEz0tt7UqaMM6t+Ixii/c3qQXWSCK2OpmFoBoEXlFMYlFA63o75v849Q/Q7h
+         8L7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=0HepCJwDYsm0Shu2CNf2eE/kc71TZil5tCl+GGac7oY=;
+        b=jVB2CoRucNx7wVLlGeKUe2iivQtbKBgzJYcrcUWfYqd6j1XMTs+Oaw1do+Ck4Cnhfp
+         lUzg+frLCiAazMdbX3iZZE5On1mzkgiZ4ghKQmkd1HIgafKi5wOg4dmVJozjzHixJpC0
+         VuS9URdjWUmn6yYC6PBCmTj8euCMDpliw3ODd/4MzGUJFUaLHIFSH82BPAi7K0tTQWIi
+         DlBt0VjPqNidHoDRP2wPun4UKJSGE4aOQJK8JknY4o2pEo2z8yXeBGJIHW/PCvRcDKXN
+         VcLRFj+cs5FCSN9sw7MSupuf1PAIbhbRa4qkHcfzhqhbCZoKPO0iDP6RWaDLei2FHJSS
+         S3kQ==
+X-Gm-Message-State: APjAAAW/GrnxCWtiHEq0qch6eYVXBIuZuafioLlQ4NgNB+NumoyAvhA/
+        Wp32gqQ8zKG6II5wPheYQVVxXA==
+X-Google-Smtp-Source: APXvYqw5KWO9F2tqT4j5MXJXPkE+RxobAqq3NxEovZBmdx84DNP/3sOe6Sezfwz18rKp7Za0hcGBtw==
+X-Received: by 2002:a1c:10f:: with SMTP id 15mr1031058wmb.142.1560823848282;
+        Mon, 17 Jun 2019 19:10:48 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id z6sm14894808wrw.2.2019.06.17.19.10.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 19:10:47 -0700 (PDT)
+Message-ID: <5d084827.1c69fb81.2aabf.ffec@mx.google.com>
+Date:   Mon, 17 Jun 2019 19:10:47 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8bd65035-c28a-4f80-d7c9-08d6f3917371
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 02:05:35.4910
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4688
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.19.52-76-ge7db76b325b2
+X-Kernelci-Branch: linux-4.19.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190617210752.799453599@linuxfoundation.org>
+References: <20190617210752.799453599@linuxfoundation.org>
+Subject: Re: [PATCH 4.19 00/75] 4.19.53-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 02:51:04PM +0200, Arnd Bergmann wrote:
-> clang points out a bug in the clock calculation on 32-bit, that leads
-> to the clock_ratio always being zero:
->=20
-> drivers/gpu/drm/arm/display/komeda/komeda_crtc.c:31:36: error: shift coun=
-t >=3D width of type [-Werror,-Wshift-count-overflow]
->         aclk =3D komeda_calc_aclk(kcrtc_st) << 32;
->=20
-> Move the shift into the division to make it apply on a 64-bit
-> variable. Also use the more expensive div64_u64() instead of div_u64()
-> to account for pxlclk being a 64-bit integer.
->=20
-> Fixes: a962091227ed ("drm/komeda: Add engine clock requirement check for =
-the downscaling")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/g=
-pu/drm/arm/display/komeda/komeda_crtc.c
-> index cafb4457e187..3f222f464eb2 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
-> @@ -28,10 +28,9 @@ static void komeda_crtc_update_clock_ratio(struct kome=
-da_crtc_state *kcrtc_st)
->  	}
-> =20
->  	pxlclk =3D kcrtc_st->base.adjusted_mode.clock * 1000;
-> -	aclk =3D komeda_calc_aclk(kcrtc_st) << 32;
-> +	aclk =3D komeda_calc_aclk(kcrtc_st);
-> =20
-> -	do_div(aclk, pxlclk);
-> -	kcrtc_st->clock_ratio =3D aclk;
-> +	kcrtc_st->clock_ratio =3D div64_u64(aclk << 32, pxlclk);
->  }
-> =20
->  /**
-> --=20
-> 2.20.0
+stable-rc/linux-4.19.y boot: 110 boots: 1 failed, 109 passed (v4.19.52-76-g=
+e7db76b325b2)
 
-Hi Arnd:
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.19.y/kernel/v4.19.52-76-ge7db76b325b2/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
+y/kernel/v4.19.52-76-ge7db76b325b2/
 
-Thank you for the patch.
+Tree: stable-rc
+Branch: linux-4.19.y
+Git Describe: v4.19.52-76-ge7db76b325b2
+Git Commit: e7db76b325b2967d1db43452cac4b11c0a37bcbf
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 64 unique boards, 24 SoC families, 15 builds out of 206
 
-Reviewed-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.co=
-m>
+Boot Regressions Detected:
+
+arm64:
+
+    defconfig:
+        gcc-8:
+          meson-gxm-khadas-vim2:
+              lab-baylibre: new failure (last pass: v4.19.52)
+
+Boot Failure Detected:
+
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxm-khadas-vim2: 1 failed lab
+
+---
+For more info write to <info@kernelci.org>
