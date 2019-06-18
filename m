@@ -6,41 +6,39 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 552BFC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D36C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:32:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2417C2133F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 565DE20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:32:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729136AbfFRIcK (ORCPT
+        id S1729055AbfFRIcI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:32:10 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:40292 "EHLO mx2.mailbox.org"
+        Tue, 18 Jun 2019 04:32:08 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:21018 "EHLO mx1.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726916AbfFRIcJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:32:09 -0400
+        id S1726091AbfFRIcH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:32:07 -0400
 Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
         (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id 5535DA1A3B;
-        Tue, 18 Jun 2019 10:32:06 +0200 (CEST)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 6503C51319;
+        Tue, 18 Jun 2019 10:32:05 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at heinlein-support.de
 Received: from smtp1.mailbox.org ([80.241.60.240])
         by spamfilter01.heinlein-hosting.de (spamfilter01.heinlein-hosting.de [80.241.56.115]) (amavisd-new, port 10030)
-        with ESMTP id Y1Tmh09B-2FO; Tue, 18 Jun 2019 10:32:02 +0200 (CEST)
+        with ESMTP id CGbYZOAwNtNM; Tue, 18 Jun 2019 10:32:01 +0200 (CEST)
 From:   Stefan Roese <sr@denx.de>
 To:     linux-serial@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org,
-        Yegor Yefremov <yegorslists@googlemail.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Giulio Benetti <giulio.benetti@micronovasrl.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3/3 v8] tty/serial/8250: use mctrl_gpio helpers
-Date:   Tue, 18 Jun 2019 10:32:00 +0200
-Message-Id: <20190618083200.30234-3-sr@denx.de>
-In-Reply-To: <20190618083200.30234-1-sr@denx.de>
-References: <20190618083200.30234-1-sr@denx.de>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Giulio Benetti <giulio.benetti@micronovasrl.com>
+Subject: [PATCH 1/3 v8] serial: mctrl_gpio: Check if GPIO property exisits before requesting it
+Date:   Tue, 18 Jun 2019 10:31:58 +0200
+Message-Id: <20190618083200.30234-1-sr@denx.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -48,322 +46,129 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yegor Yefremov <yegorslists@googlemail.com>
+This patch adds a check for the GPIOs property existence, before the
+GPIO is requested. This fixes an issue seen when the 8250 mctrl_gpio
+support is added (2nd patch in this patch series) on x86 platforms using
+ACPI.
 
-This patch permits the usage for GPIOs to control
-the CTS/RTS/DTR/DSR/DCD/RI signals.
+Here Mika's comments from 2016-08-09:
 
-Changed by Stefan:
-Only call mctrl_gpio_init(), if the device has no ACPI companion device
-to not break existing ACPI based systems. Also only use the mctrl_gpio_
-functions when "gpios" is available.
+"
+I noticed that with v4.8-rc1 serial console of some of our Broxton
+systems does not work properly anymore. I'm able to see output but input
+does not work.
 
-Use MSR / MCR <-> TIOCM wrapper functions.
+I bisected it down to commit 4ef03d328769eddbfeca1f1c958fdb181a69c341
+("tty/serial/8250: use mctrl_gpio helpers").
 
-Signed-off-by: Yegor Yefremov <yegorslists@googlemail.com>
+The reason why it fails is that in ACPI we do not have names for GPIOs
+(except when _DSD is used) so we use the "idx" to index into _CRS GPIO
+resources. Now mctrl_gpio_init_noauto() goes through a list of GPIOs
+calling devm_gpiod_get_index_optional() passing "idx" of 0 for each. The
+UART device in Broxton has following (simplified) ACPI description:
+
+    Device (URT4)
+    {
+        ...
+        Name (_CRS, ResourceTemplate () {
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003A
+            }
+            GpioIo (Exclusive, PullDefault, 0x0000, 0x0000, IoRestrictionOutputOnly,
+                    "\\_SB.GPO0", 0x00, ResourceConsumer)
+            {
+                0x003D
+            }
+        })
+
+In this case it finds the first GPIO (0x003A which happens to be RX pin
+for that UART), turns it into GPIO which then breaks input for the UART
+device. This also breaks systems with bluetooth connected to UART (those
+typically have some GPIOs in their _CRS).
+
+Any ideas how to fix this?
+
+We cannot just drop the _CRS index lookup fallback because that would
+break many existing machines out there so maybe we can limit this to
+only DT enabled machines. Or alternatively probe if the property first
+exists before trying to acquire the GPIOs (using
+device_property_present()).
+"
+
+This patch implements the fix suggested by Mika in his statement above.
+
 Signed-off-by: Stefan Roese <sr@denx.de>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Tested-by: Yegor Yefremov <yegorslists@googlemail.com>
 Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
 Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
 Cc: Yegor Yefremov <yegorslists@googlemail.com>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Giulio Benetti <giulio.benetti@micronovasrl.com>
 ---
 v8:
 - Rebased on top of "tty-next"
 
 v7:
-- Change serial8250_do_get_mctrl() so that systems with a "mixed setup"
-  (i.e. CTS controlled by UART but other status pins controlled by GPIO)
-  are also supported again (Yegor)
+- Include <linux/property.h> to fix compile breakage on OMAP
 
 v6:
-- Use newly introduced TIOCM <-> MCR/MSR wrapper functions
-- serial8250_in_MCR(): Don't save the already read MCR bits in TIOCM
-  format but "or" them later to the GPIO MCR value
-- Correctly use "!up->gpios" (Andy)
-- Removed Mika's reviewed by tag (because of changes)
+- No change
 
 v5:
-- Dropped a few "if (up->gpios)" checks, as the mctrl_gpio_foo() API
-  handles gpios == NULL (return)
-- 8250_omap: Changed "IS_ERR_OR_NULL(mctrl_gpio_to_gpiod(up->gpios, ...))"
-  to "up->gpios == NULL", as mctrl_gpio_to_gpiod() does not handle
-  gpios == NULL correctly.
+- Simplified the code a bit (Andy)
+- Added gpio_str == NULL handling (Andy)
 
 v4:
+- Add missing free() calls (Johan)
 - Added Mika's reviewed by tag
 - Added Johan to Cc
 
 v3:
-- Only call mctrl_gpio_init(), if the device has no ACPI companion device
-  to not break existing ACPI based systems, as suggested by Andy
-
-v2:
 - No change
 
-Please note that this patch was already applied before [1]. And later
-reverted [2] because it introduced problems on some x86 based boards
-(ACPI GPIO related). Here a detailed description of the issue at that
-time:
+v2:
+- Include the problem description and analysis from Mika into the commit
+  text, as suggested by Greg.
 
-https://lkml.org/lkml/2016/8/9/357
-http://www.spinics.net/lists/linux-serial/msg23071.html
+ drivers/tty/serial/serial_mctrl_gpio.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-This is a re-send of the original patch that was applied at that time.
-With patch 1/2 from this series this issue should be fixed now (please
-note that I can't test it on such an x86 platform causing these
-problems).
-
-Andy (or Mika), perhaps it would be possible for you to test this
-patch again, now with patch 1/2 of this series applied as well?
-That would be really helpful.
-
-Thanks,
-Stefan
-
-[1] 4ef03d328769 ("tty/serial/8250: use mctrl_gpio helpers")
-[2] 5db4f7f80d16 ("Revert "tty/serial/8250: use mctrl_gpio helpers"")
-
- .../devicetree/bindings/serial/8250.txt       | 19 ++++++++++++
- drivers/tty/serial/8250/8250.h                | 18 +++++++++++-
- drivers/tty/serial/8250/8250_core.c           | 17 +++++++++++
- drivers/tty/serial/8250/8250_omap.c           | 29 ++++++++++---------
- drivers/tty/serial/8250/8250_port.c           | 11 ++++++-
- drivers/tty/serial/8250/Kconfig               |  1 +
- include/linux/serial_8250.h                   |  1 +
- 7 files changed, 81 insertions(+), 15 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/serial/8250.txt b/Documentation/devicetree/bindings/serial/8250.txt
-index 3cba12f855b7..20d351f268ef 100644
---- a/Documentation/devicetree/bindings/serial/8250.txt
-+++ b/Documentation/devicetree/bindings/serial/8250.txt
-@@ -53,6 +53,9 @@ Optional properties:
-   programmable TX FIFO thresholds.
- - resets : phandle + reset specifier pairs
- - overrun-throttle-ms : how long to pause uart rx when input overrun is encountered.
-+- {rts,cts,dtr,dsr,rng,dcd}-gpios: specify a GPIO for RTS/CTS/DTR/DSR/RI/DCD
-+  line respectively. It will use specified GPIO instead of the peripheral
-+  function pin for the UART feature. If unsure, don't specify this property.
- 
- Note:
- * fsl,ns16550:
-@@ -74,3 +77,19 @@ Example:
- 		interrupts = <10>;
- 		reg-shift = <2>;
- 	};
-+
-+Example for OMAP UART using GPIO-based modem control signals:
-+
-+	uart4: serial@49042000 {
-+		compatible = "ti,omap3-uart";
-+		reg = <0x49042000 0x400>;
-+		interrupts = <80>;
-+		ti,hwmods = "uart4";
-+		clock-frequency = <48000000>;
-+		cts-gpios = <&gpio3 5 GPIO_ACTIVE_LOW>;
-+		rts-gpios = <&gpio3 6 GPIO_ACTIVE_LOW>;
-+		dtr-gpios = <&gpio1 12 GPIO_ACTIVE_LOW>;
-+		dsr-gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
-+		dcd-gpios = <&gpio1 14 GPIO_ACTIVE_LOW>;
-+		rng-gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
-+	};
-diff --git a/drivers/tty/serial/8250/8250.h b/drivers/tty/serial/8250/8250.h
-index 793da2e510e0..75c7c5449461 100644
---- a/drivers/tty/serial/8250/8250.h
-+++ b/drivers/tty/serial/8250/8250.h
-@@ -11,6 +11,8 @@
- #include <linux/serial_reg.h>
- #include <linux/dmaengine.h>
- 
-+#include "../serial_mctrl_gpio.h"
-+
- struct uart_8250_dma {
- 	int (*tx_dma)(struct uart_8250_port *p);
- 	int (*rx_dma)(struct uart_8250_port *p);
-@@ -196,11 +198,25 @@ static inline int serial8250_MSR_to_TIOCM(int msr)
- static inline void serial8250_out_MCR(struct uart_8250_port *up, int value)
- {
- 	serial_out(up, UART_MCR, value);
-+
-+	if (up->gpios)
-+		mctrl_gpio_set(up->gpios, serial8250_MCR_to_TIOCM(value));
- }
- 
- static inline int serial8250_in_MCR(struct uart_8250_port *up)
- {
--	return serial_in(up, UART_MCR);
-+	int mctrl;
-+
-+	mctrl = serial_in(up, UART_MCR);
-+
-+	if (up->gpios) {
-+		unsigned int mctrl_gpio = 0;
-+
-+		mctrl_gpio = mctrl_gpio_get_outputs(up->gpios, &mctrl_gpio);
-+		mctrl |= serial8250_TIOCM_to_MCR(mctrl_gpio);
-+	}
-+
-+	return mctrl;
- }
- 
- #if defined(__alpha__) && !defined(CONFIG_PCI)
-diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
-index e441221e04b9..a4470771005f 100644
---- a/drivers/tty/serial/8250/8250_core.c
-+++ b/drivers/tty/serial/8250/8250_core.c
-@@ -14,6 +14,7 @@
-  *	      serial8250_register_8250_port() ports
-  */
- 
-+#include <linux/acpi.h>
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 39ed56214cd3..2b400189be91 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -12,6 +12,7 @@
+ #include <linux/termios.h>
+ #include <linux/serial_core.h>
  #include <linux/module.h>
- #include <linux/moduleparam.h>
- #include <linux/ioport.h>
-@@ -982,6 +983,8 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
++#include <linux/property.h>
  
- 	uart = serial8250_find_match_or_unused(&up->port);
- 	if (uart && uart->port.type != PORT_8250_CIR) {
-+		struct mctrl_gpios *gpios;
+ #include "serial_mctrl_gpio.h"
+ 
+@@ -116,6 +117,19 @@ struct mctrl_gpios *mctrl_gpio_init_noauto(struct device *dev, unsigned int idx)
+ 
+ 	for (i = 0; i < UART_GPIO_MAX; i++) {
+ 		enum gpiod_flags flags;
++		char *gpio_str;
++		bool present;
 +
- 		if (uart->port.dev)
- 			uart_remove_one_port(&serial8250_reg, &uart->port);
- 
-@@ -1016,6 +1019,20 @@ int serial8250_register_8250_port(struct uart_8250_port *up)
- 		if (up->port.flags & UPF_FIXED_TYPE)
- 			uart->port.type = up->port.type;
- 
-+		/*
-+		 * Only call mctrl_gpio_init(), if the device has no ACPI
-+		 * companion device
-+		 */
-+		if (!has_acpi_companion(uart->port.dev)) {
-+			gpios = mctrl_gpio_init(&uart->port, 0);
-+			if (IS_ERR(gpios)) {
-+				if (PTR_ERR(gpios) != -ENOSYS)
-+					return PTR_ERR(gpios);
-+			} else {
-+				uart->gpios = gpios;
-+			}
-+		}
++		/* Check if GPIO property exists and continue if not */
++		gpio_str = kasprintf(GFP_KERNEL, "%s-gpios",
++				     mctrl_gpios_desc[i].name);
++		if (!gpio_str)
++			continue;
 +
- 		serial8250_set_defaults(uart);
++		present = device_property_present(dev, gpio_str);
++		kfree(gpio_str);
++		if (!present)
++			continue;
  
- 		/* Possibly override default I/O functions.  */
-diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
-index 0a8316632d75..d5bbfc8f2284 100644
---- a/drivers/tty/serial/8250/8250_omap.c
-+++ b/drivers/tty/serial/8250/8250_omap.c
-@@ -141,18 +141,20 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
- 
- 	serial8250_do_set_mctrl(port, mctrl);
- 
--	/*
--	 * Turn off autoRTS if RTS is lowered and restore autoRTS setting
--	 * if RTS is raised
--	 */
--	lcr = serial_in(up, UART_LCR);
--	serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
--	if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
--		priv->efr |= UART_EFR_RTS;
--	else
--		priv->efr &= ~UART_EFR_RTS;
--	serial_out(up, UART_EFR, priv->efr);
--	serial_out(up, UART_LCR, lcr);
-+	if (!up->gpios) {
-+		/*
-+		 * Turn off autoRTS if RTS is lowered and restore autoRTS
-+		 * setting if RTS is raised
-+		 */
-+		lcr = serial_in(up, UART_LCR);
-+		serial_out(up, UART_LCR, UART_LCR_CONF_MODE_B);
-+		if ((mctrl & TIOCM_RTS) && (port->status & UPSTAT_AUTORTS))
-+			priv->efr |= UART_EFR_RTS;
-+		else
-+			priv->efr &= ~UART_EFR_RTS;
-+		serial_out(up, UART_EFR, priv->efr);
-+		serial_out(up, UART_LCR, lcr);
-+	}
- }
- 
- /*
-@@ -453,7 +455,8 @@ static void omap_8250_set_termios(struct uart_port *port,
- 	priv->efr = 0;
- 	up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
- 
--	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW) {
-+	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
-+	    !up->gpios) {
- 		/* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
- 		up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
- 		priv->efr |= UART_EFR_CTS;
-diff --git a/drivers/tty/serial/8250/8250_port.c b/drivers/tty/serial/8250/8250_port.c
-index 19791d3694c6..bbecbc505497 100644
---- a/drivers/tty/serial/8250/8250_port.c
-+++ b/drivers/tty/serial/8250/8250_port.c
-@@ -1662,6 +1662,8 @@ static void serial8250_disable_ms(struct uart_port *port)
- 	if (up->bugs & UART_BUG_NOMSR)
- 		return;
- 
-+	mctrl_gpio_disable_ms(up->gpios);
-+
- 	up->ier &= ~UART_IER_MSI;
- 	serial_port_out(port, UART_IER, up->ier);
- }
-@@ -1674,6 +1676,8 @@ static void serial8250_enable_ms(struct uart_port *port)
- 	if (up->bugs & UART_BUG_NOMSR)
- 		return;
- 
-+	mctrl_gpio_enable_ms(up->gpios);
-+
- 	up->ier |= UART_IER_MSI;
- 
- 	serial8250_rpm_get(up);
-@@ -1945,12 +1949,17 @@ unsigned int serial8250_do_get_mctrl(struct uart_port *port)
- {
- 	struct uart_8250_port *up = up_to_u8250p(port);
- 	unsigned int status;
-+	unsigned int val;
- 
- 	serial8250_rpm_get(up);
- 	status = serial8250_modem_status(up);
- 	serial8250_rpm_put(up);
- 
--	return serial8250_MSR_to_TIOCM(status);
-+	val = serial8250_MSR_to_TIOCM(status);
-+	if (up->gpios)
-+		return mctrl_gpio_get(up->gpios, &val);
-+
-+	return val;
- }
- EXPORT_SYMBOL_GPL(serial8250_do_get_mctrl);
- 
-diff --git a/drivers/tty/serial/8250/Kconfig b/drivers/tty/serial/8250/Kconfig
-index 296115f6a4d8..509f6a3bb9ff 100644
---- a/drivers/tty/serial/8250/Kconfig
-+++ b/drivers/tty/serial/8250/Kconfig
-@@ -8,6 +8,7 @@ config SERIAL_8250
- 	tristate "8250/16550 and compatible serial support"
- 	depends on !S390
- 	select SERIAL_CORE
-+	select SERIAL_MCTRL_GPIO if GPIOLIB
- 	---help---
- 	  This selects whether you want to include the driver for the standard
- 	  serial ports.  The standard answer is Y.  People who might say N
-diff --git a/include/linux/serial_8250.h b/include/linux/serial_8250.h
-index 5e0b59422a68..bb2bc99388ca 100644
---- a/include/linux/serial_8250.h
-+++ b/include/linux/serial_8250.h
-@@ -110,6 +110,7 @@ struct uart_8250_port {
- 						 *   if no_console_suspend
- 						 */
- 	unsigned char		probe;
-+	struct mctrl_gpios	*gpios;
- #define UART_PROBE_RSA	(1 << 0)
- 
- 	/*
+ 		if (mctrl_gpios_desc[i].dir_out)
+ 			flags = GPIOD_OUT_LOW;
 -- 
 2.22.0
 
