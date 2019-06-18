@@ -2,107 +2,132 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AA13C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:10:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B38DDC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:11:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E09A420861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:10:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="Fw0s+dnS"
+	by mail.kernel.org (Postfix) with ESMTP id 982ED20861
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:11:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726872AbfFRCKu (ORCPT
+        id S1728115AbfFRCLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:10:50 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42100 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726026AbfFRCKt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:10:49 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x17so12072309wrl.9
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:10:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=QdfSFaHZxqOQnZpuak6zWlNXji2dmIrBwGxFI1wS7+U=;
-        b=Fw0s+dnSWgRsdQoysGIzRfeT9dEE8ID/HRqXifdScAg7DqiDZUMOZOPh3S6UNzfQJ/
-         1yIGUsHpdj7keHXtJAhZPE8A0//qyEE7l7HqzRNfVAX0PHT57SEtncquYXf7xw5bbSLd
-         CajeIfj6kJhBa8iSERlLDdalHh62z5G/iqgKBiEXfDZf2DqKQS62rMb+GmWB2V/OpK3O
-         Bco8MgZoRJ7lCOJ9aIIprgtT6d9mk85O+sTrG9/VPhyOUnnC0u25A3HcZznwINj9PNAF
-         TEcXr7mXxTI70faNGnjCfPy6RpIXSzKFmbHZncPdzUalg4UJQghP2j5N+n3OpkFzGguE
-         qNPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=QdfSFaHZxqOQnZpuak6zWlNXji2dmIrBwGxFI1wS7+U=;
-        b=EsbI3Kgq8LrWWt6XOfQKSK+wFZVu2Log/D332BZC1OaGRC8p7fQCb/wJaJBfXzrYVS
-         IAFFx4fNOeELae232imwHWn2PT/ZwHJoLs6PkjbimJgoAtGO5RKwgN19D6MngkxTNpBE
-         3zKpMhqGg1ioxf2VgrZsYb58Euzdn/dK4U71sqRqaAla9Fm4aHSHQ+FhjvJOVxWzVg+s
-         bpatkwz1VOB9LPxOEnwV0YS2K7vzPoYuzHSS8BTkdmigZRl4lpHRT4Sx4ReyMEmHgl/X
-         +6uOp1BLbPU5e5t+nQzMSZKyrvh3aGo5QCqz35PdWH8L5NqcvV7XeIdZ6dO8XD5ea5Bm
-         ocww==
-X-Gm-Message-State: APjAAAVmDTJplS4fVvCWFi/sKQbd2a1+8HzwfBfXMLMd6LxnoRKWJYGn
-        5ydDAGleQOfh6YgZju7tB6KtZw==
-X-Google-Smtp-Source: APXvYqwiEm9DoQKukITRWUaxtn9MCgqVmFdfUDHUEROyISBlo+VsmqW/yQv5WUyH+DqEyHEmQ3xN8Q==
-X-Received: by 2002:adf:afde:: with SMTP id y30mr17706287wrd.197.1560823847856;
-        Mon, 17 Jun 2019 19:10:47 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id j17sm11538710wrw.6.2019.06.17.19.10.46
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 19:10:47 -0700 (PDT)
-Message-ID: <5d084827.1c69fb81.708ea.ca74@mx.google.com>
-Date:   Mon, 17 Jun 2019 19:10:47 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v5.1.11-116-ga1610563f19b
-X-Kernelci-Branch: linux-5.1.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190617210759.929316339@linuxfoundation.org>
-References: <20190617210759.929316339@linuxfoundation.org>
-Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+        Mon, 17 Jun 2019 22:11:47 -0400
+Received: from mga12.intel.com ([192.55.52.136]:31762 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRCLq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 22:11:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 19:11:45 -0700
+X-ExtLoop1: 1
+Received: from khuang2-desk.gar.corp.intel.com ([10.255.91.82])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2019 19:11:40 -0700
+Message-ID: <1560823899.5187.92.camel@linux.intel.com>
+Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call
+ for MKTME
+From:   Kai Huang <kai.huang@linux.intel.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Dave Hansen <dave.hansen@intel.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        David Howells <dhowells@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Alison Schofield <alison.schofield@intel.com>,
+        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
+        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Tom Lendacky <thomas.lendacky@amd.com>
+Date:   Tue, 18 Jun 2019 14:11:39 +1200
+In-Reply-To: <CALCETrXNCmSnrTwGiwuF9=wLu797WBPZ0gt92D-CyU+V3sq7hA@mail.gmail.com>
+References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
+         <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
+         <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
+         <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
+         <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
+         <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
+         <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
+         <d599b1d7-9455-3012-0115-96ddbad31833@intel.com>
+         <1560818931.5187.70.camel@linux.intel.com>
+         <CALCETrXNCmSnrTwGiwuF9=wLu797WBPZ0gt92D-CyU+V3sq7hA@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.24.6 (3.24.6-1.fc26) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-5.1.y boot: 118 boots: 1 failed, 117 passed (v5.1.11-116-ga=
-1610563f19b)
+On Mon, 2019-06-17 at 18:50 -0700, Andy Lutomirski wrote:
+> On Mon, Jun 17, 2019 at 5:48 PM Kai Huang <kai.huang@linux.intel.com> wrote:
+> > 
+> > 
+> > > 
+> > > > And another silly argument: if we had /dev/mktme, then we could
+> > > > possibly get away with avoiding all the keyring stuff entirely.
+> > > > Instead, you open /dev/mktme and you get your own key under the hook.
+> > > > If you want two keys, you open /dev/mktme twice.  If you want some
+> > > > other program to be able to see your memory, you pass it the fd.
+> > > 
+> > > We still like the keyring because it's one-stop-shopping as the place
+> > > that *owns* the hardware KeyID slots.  Those are global resources and
+> > > scream for a single global place to allocate and manage them.  The
+> > > hardware slots also need to be shared between any anonymous and
+> > > file-based users, no matter what the APIs for the anonymous side.
+> > 
+> > MKTME driver (who creates /dev/mktme) can also be the one-stop-shopping. I think whether to
+> > choose
+> > keyring to manage MKTME key should be based on whether we need/should take advantage of existing
+> > key
+> > retention service functionalities. For example, with key retention service we can
+> > revoke/invalidate/set expiry for a key (not sure whether MKTME needs those although), and we
+> > have
+> > several keyrings -- thread specific keyring, process specific keyring, user specific keyring,
+> > etc,
+> > thus we can control who can/cannot find the key, etc. I think managing MKTME key in MKTME driver
+> > doesn't have those advantages.
+> > 
+> 
+> Trying to evaluate this with the current proposed code is a bit odd, I
+> think.  Suppose you create a thread-specific key and then fork().  The
+> child can presumably still use the key regardless of whether the child
+> can nominally access the key in the keyring because the PTEs are still
+> there.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--5.1.y/kernel/v5.1.11-116-ga1610563f19b/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.1.y=
-/kernel/v5.1.11-116-ga1610563f19b/
+Right. This is a little bit odd, although virtualization (Qemu, which is the main use case of MKTME
+at least so far) doesn't use fork().
 
-Tree: stable-rc
-Branch: linux-5.1.y
-Git Describe: v5.1.11-116-ga1610563f19b
-Git Commit: a1610563f19b8c84324c5b490e57ffd1f1bb62be
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 70 unique boards, 24 SoC families, 15 builds out of 209
+> 
+> More fundamentally, in some sense, the current code has no semantics.
+> Associating a key with memory and "encrypting" it doesn't actually do
+> anything unless you are attacking the memory bus but you haven't
+> compromised the kernel.  There's no protection against a guest that
+> can corrupt its EPT tables, there's no protection against kernel bugs
+> (*especially* if the duplicate direct map design stays), and there
+> isn't even any fd or other object around by which you can only access
+> the data if you can see the key.
 
-Boot Failure Detected:
+I am not saying managing MKTME key/keyID in key retention service is definitely better, but it seems
+all those you mentioned are not related to whether to choose key retention service to manage MKTME
+key/keyID? Or you are saying it doesn't matter we manage key/keyID in key retention service or in
+MKTME driver, since MKTME barely have any security benefits (besides physical attack)?
 
-arm:
-    multi_v7_defconfig:
-        gcc-8:
-            bcm4708-smartrg-sr400ac: 1 failed lab
+> 
+> I'm also wondering whether the kernel will always be able to be a
+> one-stop shop for key allocation -- if the MKTME hardware gains
+> interesting new uses down the road, who knows how key allocation will
+> work?
 
----
-For more info write to <info@kernelci.org>
+I by now don't have any use case which requires to manage key/keyID specifically for its own use,
+rather than letting kernel to manage keyID allocation. Please inspire us if you have any potential.
+
+Thanks,
+-Kai
