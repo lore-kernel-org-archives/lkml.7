@@ -2,375 +2,165 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20D85C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:55:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8653CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE08921479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6002721479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ceWnmm4i";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Flc9D2Ti"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729767AbfFROzn (ORCPT
+        id S1729786AbfFRO4b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:55:43 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:38461 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729665AbfFROzi (ORCPT
+        Tue, 18 Jun 2019 10:56:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:55252 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfFRO4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:55:38 -0400
-X-Originating-IP: 90.88.23.150
-Received: from mc-bl-xps13.lan (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
-        (Authenticated sender: maxime.chevallier@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id EBAFA4000F;
-        Tue, 18 Jun 2019 14:55:33 +0000 (UTC)
-From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
-To:     davem@davemloft.net
-Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        miquel.raynal@bootlin.com, nadavh@marvell.com, stefanc@marvell.com,
-        mw@semihalf.com, linux-arm-kernel@lists.infradead.org
-Subject: [PATCH net-next 4/4] net: mvpp2: cls: Add steering based on vlan Id and priority.
-Date:   Tue, 18 Jun 2019 16:55:19 +0200
-Message-Id: <20190618145519.27705-5-maxime.chevallier@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190618145519.27705-1-maxime.chevallier@bootlin.com>
-References: <20190618145519.27705-1-maxime.chevallier@bootlin.com>
+        Tue, 18 Jun 2019 10:56:31 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B55B460CEC; Tue, 18 Jun 2019 14:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560869790;
+        bh=xbKJPmMAYjgq8I6UR0jotR8HtE1F+opco6JMkB9KGLk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ceWnmm4iYJZas3B4RBtGze+kX2MJXmtsn6uCBIFBWa48QiTM0qKHuN2nvzUVLukbZ
+         hzOY57OkYlv4v2h9F5DFshr/cfa/8jw8siYZR9NdNlTOPWWrQoW7sIKVsksqXbi6Nm
+         t7U+hfLMkFnQO4hI+qE/9LpBJLxdSfeIRrxAxJ4c=
+Received: from [192.168.1.5] (unknown [122.164.143.169])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: sricharan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 193B3611FD;
+        Tue, 18 Jun 2019 14:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560869787;
+        bh=xbKJPmMAYjgq8I6UR0jotR8HtE1F+opco6JMkB9KGLk=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Flc9D2TibgCxpq5qLlq9Y8V6B2V/nJxUSu2q9iG3k5+cai/1mtWdG16wkzWOOGxQ2
+         ILJuqfsmsfJXOwPb/7QqPyuAcJHdXvZubKpyHRL/um78CCZpaukUl2MpyqCO3U1hEh
+         vZRcjX9jD1eKDQ/4xPw77Gg2MFnbV0vyLhiU4v7M=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 193B3611FD
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+ <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+ <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
+From:   Sricharan R <sricharan@codeaurora.org>
+Message-ID: <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
+Date:   Tue, 18 Jun 2019 20:26:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit allows using the vlan Id and priority as parts of the key
-for classification offload. These fields are extracted from the
-outermost tag, if multiple tags are present.
+Hi Srini,
 
-Vlan Id and priority are considered as 2 different fields by the
-classifier, however the fields are both appended in the Header Extracted
-Key in the same layout as they are found in the tags. This means that
-when steering only based on the prio, a 16-bit slot is still taken in
-the HEK.
+On 6/18/2019 8:20 PM, Srinivas Kandagatla wrote:
+> Hi Sricharan,
+> 
+> On 18/06/2019 08:13, Sricharan R wrote:
+>> Hi Srini,
+>>
+>> On 6/14/2019 7:50 PM, Srinivas Kandagatla wrote:
+>>> For some reason arguments to most of the circular buffers
+>>> macros are used in reverse, tail is used for head and vice versa.
+>>>
+>>> This leads to bam thinking that there is an extra descriptor at the
+>>> end and leading to retransmitting descriptor which was not scheduled
+>>> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
+>>> and done, so most of the drivers would not notice this, unless they are
+>>> heavily using bam dma. Originally found this issue while testing
+>>> SoundWire over SlimBus on DB845c which uses DMA very heavily for
+>>> read/writes.
+>>>
+>>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>>> ---
+>>>   drivers/dma/qcom/bam_dma.c | 9 ++++-----
+>>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>>> index cb860cb53c27..43d7b0a9713a 100644
+>>> --- a/drivers/dma/qcom/bam_dma.c
+>>> +++ b/drivers/dma/qcom/bam_dma.c
+>>> @@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
+>>>   #define BAM_DESC_FIFO_SIZE    SZ_32K
+>>>   #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+>>>   #define BAM_FIFO_SIZE    (SZ_32K - 8)
+>>> -#define IS_BUSY(chan)    (CIRC_SPACE(bchan->tail, bchan->head,\
+>>> -             MAX_DESCRIPTORS + 1) == 0)
+>>> +#define IS_BUSY(chan)    (CIRC_SPACE(bchan->head, bchan->tail,\
+>>> +             MAX_DESCRIPTORS) == 0)
+>>>     struct bam_chan {
+>>>       struct virt_dma_chan vc;
+>>> @@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
+>>>           offset /= sizeof(struct bam_desc_hw);
+>>>             /* Number of bytes available to read */
+>>> -        avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
+>>> +        avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
+>>>
+>>   one question, so MAX_DESCRIPTORS is already a mask,
+>>      #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+>>
+>>   CIRC_CNT/SPACE macros also does a size - 1, so would it not be a problem if we
+>>   just pass MAX_DESCRIPTORS ?
+> 
+> Thanks for looking at this,
+> TBH, usage of CIRC_* macros is only valid for power-of-2 buffers,
+> In bam case MAX_DESCRIPTORS is 4095.
+> Am really not sure why 8 bytes have been removed from fifo data buffer size.
+> So basically usage of these macros is incorrect in bam case, this need to be fixed properly.
+> 
+> Do you agree?
+> 
+  So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
+  That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
+  when the Macros does a size - 1
 
-The classifier doesn't allow extracting the DEI bit from the tag, so we
-explicitly prevent user from using this bit in the key.
+Regards,
+ Sricharan
 
-This commit adds the vlan priotity as a compatible HEK field for
-tagged traffic, meaning that we limit the possibility of extracting this
-field only to the flows that contain tagged traffic.
+> Vinod, can you hold off with this patch, I will try to find some time this week to cook up a better patch removing the usage of these macros.
+> 
+> 
+> 
+> thanks,
+> srini
+> 
+>>
+>> Regards,
+>>   Sricharan
+>>   
+>>>           list_for_each_entry_safe(async_desc, tmp,
+>>>                        &bchan->desc_list, desc_node) {
+>>> @@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
+>>>               bam_apply_new_config(bchan, async_desc->dir);
+>>>             desc = async_desc->curr_desc;
+>>> -        avail = CIRC_SPACE(bchan->tail, bchan->head,
+>>> -                   MAX_DESCRIPTORS + 1);
+>>> +        avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
+>>>             if (async_desc->num_desc > avail)
+>>>               async_desc->xfer_len = avail;
+>>>
+>>
 
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
----
- .../net/ethernet/marvell/mvpp2/mvpp2_cls.c    | 97 ++++++++++++++-----
- .../net/ethernet/marvell/mvpp2/mvpp2_cls.h    | 23 +++--
- 2 files changed, 86 insertions(+), 34 deletions(-)
-
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-index c4c467f5f4f6..b195fb5d61f4 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.c
-@@ -44,17 +44,17 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* TCP over IPv4 flows, Not fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP4, MVPP2_FL_IP4_TCP_NF_TAG,
--		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4 | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP4, MVPP2_FL_IP4_TCP_NF_TAG,
--		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OPT | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP4, MVPP2_FL_IP4_TCP_NF_TAG,
--		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OTHER | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
-@@ -79,17 +79,17 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* TCP over IPv4 flows, fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP4, MVPP2_FL_IP4_TCP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4 | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP4, MVPP2_FL_IP4_TCP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OPT | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP4, MVPP2_FL_IP4_TCP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OTHER | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
-@@ -114,17 +114,17 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* UDP over IPv4 flows, Not fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP4, MVPP2_FL_IP4_UDP_NF_TAG,
--		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4 | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP4, MVPP2_FL_IP4_UDP_NF_TAG,
--		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OPT | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP4, MVPP2_FL_IP4_UDP_NF_TAG,
--		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OTHER | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
-@@ -149,17 +149,17 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* UDP over IPv4 flows, fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP4, MVPP2_FL_IP4_UDP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4 | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP4, MVPP2_FL_IP4_UDP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OPT | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP4, MVPP2_FL_IP4_UDP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OTHER | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
-@@ -178,12 +178,12 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* TCP over IPv6 flows, not fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP6, MVPP2_FL_IP6_TCP_NF_TAG,
--		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6 | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP6, MVPP2_FL_IP6_TCP_NF_TAG,
--		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6_EXT | MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
-@@ -202,13 +202,13 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* TCP over IPv6 flows, fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP6, MVPP2_FL_IP6_TCP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6 | MVPP2_PRS_RI_IP_FRAG_TRUE |
- 		       MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_TCP6, MVPP2_FL_IP6_TCP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6_EXT | MVPP2_PRS_RI_IP_FRAG_TRUE |
- 		       MVPP2_PRS_RI_L4_TCP,
- 		       MVPP2_PRS_IP_MASK),
-@@ -228,12 +228,12 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* UDP over IPv6 flows, not fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP6, MVPP2_FL_IP6_UDP_NF_TAG,
--		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6 | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP6, MVPP2_FL_IP6_UDP_NF_TAG,
--		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_5T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6_EXT | MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
-@@ -252,13 +252,13 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* UDP over IPv6 flows, fragmented, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP6, MVPP2_FL_IP6_UDP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6 | MVPP2_PRS_RI_IP_FRAG_TRUE |
- 		       MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
- 
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_UDP6, MVPP2_FL_IP6_UDP_FRAG_TAG,
--		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6_EXT | MVPP2_PRS_RI_IP_FRAG_TRUE |
- 		       MVPP2_PRS_RI_L4_UDP,
- 		       MVPP2_PRS_IP_MASK),
-@@ -279,15 +279,15 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* IPv4 flows, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_IP4, MVPP2_FL_IP4_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4,
- 		       MVPP2_PRS_RI_L3_PROTO_MASK),
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_IP4, MVPP2_FL_IP4_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OPT,
- 		       MVPP2_PRS_RI_L3_PROTO_MASK),
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_IP4, MVPP2_FL_IP4_TAG,
--		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP4_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP4_OTHER,
- 		       MVPP2_PRS_RI_L3_PROTO_MASK),
- 
-@@ -303,11 +303,11 @@ static const struct mvpp2_cls_flow cls_flows[MVPP2_N_PRS_FLOWS] = {
- 
- 	/* IPv6 flows, with vlan tag */
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_IP6, MVPP2_FL_IP6_TAG,
--		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6,
- 		       MVPP2_PRS_RI_L3_PROTO_MASK),
- 	MVPP2_DEF_FLOW(MVPP22_FLOW_IP6, MVPP2_FL_IP6_TAG,
--		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_OPT_VLAN,
-+		       MVPP22_CLS_HEK_IP6_2T | MVPP22_CLS_HEK_TAGGED,
- 		       MVPP2_PRS_RI_L3_IP6,
- 		       MVPP2_PRS_RI_L3_PROTO_MASK),
- 
-@@ -655,6 +655,9 @@ static int mvpp2_flow_set_hek_fields(struct mvpp2_cls_flow_entry *fe,
- 		case MVPP22_CLS_HEK_OPT_VLAN:
- 			field_id = MVPP22_CLS_FIELD_VLAN;
- 			break;
-+		case MVPP22_CLS_HEK_OPT_VLAN_PRI:
-+			field_id = MVPP22_CLS_FIELD_VLAN_PRI;
-+			break;
- 		case MVPP22_CLS_HEK_OPT_IP4SA:
- 			field_id = MVPP22_CLS_FIELD_IP4SA;
- 			break;
-@@ -689,6 +692,10 @@ static int mvpp2_cls_hek_field_size(u32 field)
- 	switch (field) {
- 	case MVPP22_CLS_HEK_OPT_MAC_DA:
- 		return 48;
-+	case MVPP22_CLS_HEK_OPT_VLAN:
-+		return 12;
-+	case MVPP22_CLS_HEK_OPT_VLAN_PRI:
-+		return 3;
- 	case MVPP22_CLS_HEK_OPT_IP4SA:
- 	case MVPP22_CLS_HEK_OPT_IP4DA:
- 		return 32;
-@@ -777,6 +784,9 @@ u16 mvpp2_flow_get_hek_fields(struct mvpp2_cls_flow_entry *fe)
- 		case MVPP22_CLS_FIELD_VLAN:
- 			hash_opts |= MVPP22_CLS_HEK_OPT_VLAN;
- 			break;
-+		case MVPP22_CLS_FIELD_VLAN_PRI:
-+			hash_opts |= MVPP22_CLS_HEK_OPT_VLAN_PRI;
-+			break;
- 		case MVPP22_CLS_FIELD_L3_PROTO:
- 			hash_opts |= MVPP22_CLS_HEK_OPT_L3_PROTO;
- 			break;
-@@ -1224,6 +1234,43 @@ static int mvpp2_cls_c2_build_match(struct mvpp2_rfs_rule *rule)
- 	struct flow_rule *flow = rule->flow;
- 	int offs = 0;
- 
-+	/* The order of insertion in C2 tcam must match the order in which
-+	 * the fields are found in the header
-+	 */
-+	if (flow_rule_match_key(flow, FLOW_DISSECTOR_KEY_VLAN)) {
-+		struct flow_match_vlan match;
-+
-+		flow_rule_match_vlan(flow, &match);
-+		if (match.mask->vlan_id) {
-+			rule->hek_fields |= MVPP22_CLS_HEK_OPT_VLAN;
-+
-+			rule->c2_tcam |= ((u64)match.key->vlan_id) << offs;
-+			rule->c2_tcam_mask |= ((u64)match.mask->vlan_id) << offs;
-+
-+			/* Don't update the offset yet */
-+		}
-+
-+		if (match.mask->vlan_priority) {
-+			rule->hek_fields |= MVPP22_CLS_HEK_OPT_VLAN_PRI;
-+
-+			/* VLAN pri is always at offset 13 relative to the
-+			 * current offset
-+			 */
-+			rule->c2_tcam |= ((u64)match.key->vlan_priority) <<
-+				(offs + 13);
-+			rule->c2_tcam_mask |= ((u64)match.mask->vlan_priority) <<
-+				(offs + 13);
-+		}
-+
-+		if (match.mask->vlan_dei)
-+			return -EOPNOTSUPP;
-+
-+		/* vlan id and prio always seem to take a full 16-bit slot in
-+		 * the Header Extracted Key.
-+		 */
-+		offs += 16;
-+	}
-+
- 	if (flow_rule_match_key(flow, FLOW_DISSECTOR_KEY_PORTS)) {
- 		struct flow_match_ports match;
- 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-index 957f80b31743..8867f25afab4 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_cls.h
-@@ -33,15 +33,16 @@ enum mvpp2_cls_engine {
- };
- 
- #define MVPP22_CLS_HEK_OPT_MAC_DA	BIT(0)
--#define MVPP22_CLS_HEK_OPT_VLAN		BIT(1)
--#define MVPP22_CLS_HEK_OPT_L3_PROTO	BIT(2)
--#define MVPP22_CLS_HEK_OPT_IP4SA	BIT(3)
--#define MVPP22_CLS_HEK_OPT_IP4DA	BIT(4)
--#define MVPP22_CLS_HEK_OPT_IP6SA	BIT(5)
--#define MVPP22_CLS_HEK_OPT_IP6DA	BIT(6)
--#define MVPP22_CLS_HEK_OPT_L4SIP	BIT(7)
--#define MVPP22_CLS_HEK_OPT_L4DIP	BIT(8)
--#define MVPP22_CLS_HEK_N_FIELDS		9
-+#define MVPP22_CLS_HEK_OPT_VLAN_PRI	BIT(1)
-+#define MVPP22_CLS_HEK_OPT_VLAN		BIT(2)
-+#define MVPP22_CLS_HEK_OPT_L3_PROTO	BIT(3)
-+#define MVPP22_CLS_HEK_OPT_IP4SA	BIT(4)
-+#define MVPP22_CLS_HEK_OPT_IP4DA	BIT(5)
-+#define MVPP22_CLS_HEK_OPT_IP6SA	BIT(6)
-+#define MVPP22_CLS_HEK_OPT_IP6DA	BIT(7)
-+#define MVPP22_CLS_HEK_OPT_L4SIP	BIT(8)
-+#define MVPP22_CLS_HEK_OPT_L4DIP	BIT(9)
-+#define MVPP22_CLS_HEK_N_FIELDS		10
- 
- #define MVPP22_CLS_HEK_L4_OPTS	(MVPP22_CLS_HEK_OPT_L4SIP | \
- 				 MVPP22_CLS_HEK_OPT_L4DIP)
-@@ -59,8 +60,12 @@ enum mvpp2_cls_engine {
- #define MVPP22_CLS_HEK_IP6_5T	(MVPP22_CLS_HEK_IP6_2T | \
- 				 MVPP22_CLS_HEK_L4_OPTS)
- 
-+#define MVPP22_CLS_HEK_TAGGED	(MVPP22_CLS_HEK_OPT_VLAN | \
-+				 MVPP22_CLS_HEK_OPT_VLAN_PRI)
-+
- enum mvpp2_cls_field_id {
- 	MVPP22_CLS_FIELD_MAC_DA = 0x03,
-+	MVPP22_CLS_FIELD_VLAN_PRI = 0x05,
- 	MVPP22_CLS_FIELD_VLAN = 0x06,
- 	MVPP22_CLS_FIELD_L3_PROTO = 0x0f,
- 	MVPP22_CLS_FIELD_IP4SA = 0x10,
 -- 
-2.20.1
-
+"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
