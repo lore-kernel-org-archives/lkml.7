@@ -2,110 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0F5C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05DA3C31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:55:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC82F20861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:52:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LiC+04T7"
+	by mail.kernel.org (Postfix) with ESMTP id CED4120861
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:55:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560819315;
+	bh=LngrchH4I/IBN3Zh6OPsxtvSRQcY1UhYSAdzmmrSMZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JWGxPbyJzK1D73SP5Sp3hw8AZdsm20NH0nthKewiWzjomjK0OLRG03ecTpH1WoLiq
+	 omrYyii3vQf6WvLJO8fiqUeK4XXmMgcIUzcHfALu2J0QWnQixEwWDwdq0M2Sk96S0p
+	 atZ2JMf1O8CHN5BZN0OAEvQrXY+cuxlPKlv6PEHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726529AbfFRAww (ORCPT
+        id S1726542AbfFRAzO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:52:52 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36483 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRAwv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:52:51 -0400
-Received: by mail-io1-f66.google.com with SMTP id h6so25788757ioh.3;
-        Mon, 17 Jun 2019 17:52:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TYOiO/xzGnV71TjcwwyNpG8oxTziqhWA9sPeUoiZcCk=;
-        b=LiC+04T7sgr2ZsSyteDTIhkLHYKawG17xJC0E2z332b+oaIe35xDuLnryDndrLNJ87
-         KtIl0JHjBX5TqkcKvlXMG47mKcLLI43L0KLXMOOYGOzNblNK1PixfMcfDyxoPyMHyujY
-         emO9REDHcT8/23OniHmaQk9OhUrZpjZJLJnuBbmWG6jkhqx57mYpLSS/Mhj3owqyFIdv
-         aVjhTfLeJE1/LE1E6A9Qt3lohWjMoGK5YxykgQUKAKsEiiDCoJJjLybLlqG5SJzGNCkd
-         d5Kyp9FBQdxFGVVTMP7coneuAlm80Y+777iJ82EIzFNPJdKHYdarwQVV1Z7mAViYKRCN
-         K04w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TYOiO/xzGnV71TjcwwyNpG8oxTziqhWA9sPeUoiZcCk=;
-        b=jZ31xPiVjRayQbw7UtYuQXZdXW2wKXkkEHHslxxQexbHJinIKsBjUi7TSEpH+a41IK
-         3WBIYjFDUcQP1c0fWuWE7X98Y3xXXqGsEXkrQ89k4tIXOJHWX5jaE4PmK96wnf8mRkJF
-         aDB8iLPppbr0W84D8HNNCFe94N7tPbdOGntqicjCGF78gFI5TVirbLZ0SUiCRjOIOAv0
-         cE63dB9O/dW/YtIodyZ7XhLQblAg0/nzVvgiYVUa41NOieb9c+aXt4rdnuBavpk9uj+J
-         ZQkVQqyvovAT87y1a/97Hy7xZWEmp87lOXzaMYXfcMTJBE611aBjh/ZGVqBSBRIwh29J
-         n1qw==
-X-Gm-Message-State: APjAAAWm9bzJnuy86myIrjEELkXVNSvUygzjAex7KRM+LHYXO9jdOzci
-        gGOTVJKiyVJQB09DS2OM0t8Sty7ykg4fPx6KU68=
-X-Google-Smtp-Source: APXvYqwUp47RJ9vyOSB/NYU9YjR0QBgRIjSN9OM3nRoTofrsUPgaIMhtXP5cV3YhKhpd/0zxlMWVWZ7IssV20V1cOjU=
-X-Received: by 2002:a6b:f00c:: with SMTP id w12mr1676839ioc.280.1560819170596;
- Mon, 17 Jun 2019 17:52:50 -0700 (PDT)
+        Mon, 17 Jun 2019 20:55:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38922 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRAzO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 20:55:14 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B089320833;
+        Tue, 18 Jun 2019 00:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560819314;
+        bh=LngrchH4I/IBN3Zh6OPsxtvSRQcY1UhYSAdzmmrSMZI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oYn2ijJx2tyO/bwbH/NumDeIYuwoNhxc+WEvJdQ3tRhRtrnjbJZED4nHzzNDovMfg
+         he7lamj91s07bXu4cRiBZDOjDkCsVNcfnoqnniZvSwuaIT3b4wFSvVSYEb8RwvVW6W
+         13yAsZGMAoZL5Co54QcVOqiHELUx4VfuqjzqGSRg=
+Date:   Mon, 17 Jun 2019 20:55:12 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     Nadav Amit <namit@vmware.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>, Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 1/3] resource: Fix locking in find_next_iomem_res()
+Message-ID: <20190618005512.GC2226@sasha-vm>
+References: <20190613045903.4922-2-namit@vmware.com>
+ <20190615221557.CD1492183F@mail.kernel.org>
+ <549284C3-6A1C-4434-B716-FF9B0C87EE45@vmware.com>
 MIME-Version: 1.0
-References: <20190617160339.29179-1-andrew.smirnov@gmail.com>
- <20190617160339.29179-3-andrew.smirnov@gmail.com> <VI1PR04MB5055A9A725CED589FCF9254DEEEB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-In-Reply-To: <VI1PR04MB5055A9A725CED589FCF9254DEEEB0@VI1PR04MB5055.eurprd04.prod.outlook.com>
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-Date:   Mon, 17 Jun 2019 17:52:39 -0700
-Message-ID: <CAHQ1cqFVawQgCYbExj1_U05nwpbN+d9DaY+Giq3ErjKnE74ZzA@mail.gmail.com>
-Subject: Re: [PATCH v3 2/5] crypto: caam - correct DMA address size for the i.MX8
-To:     Leonard Crestez <leonard.crestez@nxp.com>
-Cc:     "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        Horia Geanta <horia.geanta@nxp.com>,
-        Chris Spencer <christopher.spencer@sea.co.uk>,
-        Aymen Sghaier <aymen.sghaier@nxp.com>,
-        Franck Lenormand <franck.lenormand@nxp.com>,
-        Cory Tusar <cory.tusar@zii.aero>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <549284C3-6A1C-4434-B716-FF9B0C87EE45@vmware.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 12:24 PM Leonard Crestez
-<leonard.crestez@nxp.com> wrote:
+On Mon, Jun 17, 2019 at 07:14:53PM +0000, Nadav Amit wrote:
+>> On Jun 15, 2019, at 3:15 PM, Sasha Levin <sashal@kernel.org> wrote:
+>>
+>> Hi,
+>>
+>> [This is an automated email]
+>>
+>> This commit has been processed because it contains a "Fixes:" tag,
+>> fixing commit: ff3cc952d3f0 resource: Add remove_resource interface.
+>>
+>> The bot has tested the following trees: v5.1.9, v4.19.50, v4.14.125, v4.9.181.
+>>
+>> v5.1.9: Build OK!
+>> v4.19.50: Failed to apply! Possible dependencies:
+>>    010a93bf97c7 ("resource: Fix find_next_iomem_res() iteration issue")
+>>    a98959fdbda1 ("resource: Include resource end in walk_*() interfaces")
+>>
+>> v4.14.125: Failed to apply! Possible dependencies:
+>>    010a93bf97c7 ("resource: Fix find_next_iomem_res() iteration issue")
+>>    0e4c12b45aa8 ("x86/mm, resource: Use PAGE_KERNEL protection for ioremap of memory pages")
+>>    1d2e733b13b4 ("resource: Provide resource struct in resource walk callback")
+>>    4ac2aed837cb ("resource: Consolidate resource walking code")
+>>    a98959fdbda1 ("resource: Include resource end in walk_*() interfaces")
+>>
+>> v4.9.181: Failed to apply! Possible dependencies:
+>>    010a93bf97c7 ("resource: Fix find_next_iomem_res() iteration issue")
+>>    0e4c12b45aa8 ("x86/mm, resource: Use PAGE_KERNEL protection for ioremap of memory pages")
+>>    1d2e733b13b4 ("resource: Provide resource struct in resource walk callback")
+>>    4ac2aed837cb ("resource: Consolidate resource walking code")
+>>    60fe3910bb02 ("kexec_file: Allow arch-specific memory walking for kexec_add_buffer")
+>>    a0458284f062 ("powerpc: Add support code for kexec_file_load()")
+>>    a98959fdbda1 ("resource: Include resource end in walk_*() interfaces")
+>>    da6658859b9c ("powerpc: Change places using CONFIG_KEXEC to use CONFIG_KEXEC_CORE instead.")
+>>    ec2b9bfaac44 ("kexec_file: Change kexec_add_buffer to take kexec_buf as argument.")
 >
-> On 6/17/2019 7:04 PM, Andrey Smirnov wrote:
-> > From: Chris Spencer <christopher.spencer@sea.co.uk>
-> >
-> > The i.MX8 is arm64, but its CAAM DMA address size is 32-bits.
->
-> > +/*
-> > + * On i.MX8 boards the arch is arm64 but the CAAM dma address size is
-> > + * 32 bits on 8MQ and 36 bits on 8QM and 8QXP.
-> > + * For 8QM and 8QXP there is a configurable field PS called pointer size
-> > + * in the MCFGR register to switch between 32 and 64 (default 32)
-> > + * But this register is only accessible by the SECO and is left to its
-> > + * default value.
-> > + * Here we set the CAAM dma address size to 32 bits for all i.MX8
-> > + */
-> > +#if defined(CONFIG_ARM64) && defined(CONFIG_ARCH_MXC)
-> > +#define caam_dma_addr_t u32
-> > +#else
-> > +#define caam_dma_addr_t dma_addr_t
-> > +#endif
->
-> Wait, doesn't this break Layerscape? Support for multiple SOC families
-> can be enabled at the same time and it is something that we actually
-> want to support.
->
+>Is there a reason 010a93bf97c7 ("resource: Fix find_next_iomem_res()
+>iteration issue”) was not backported?
 
-Ugh, l think you are right. Will fix in next version.
+Mostly because it's not tagged for stable :)
 
+--
 Thanks,
-Andrey Smirnov
+Sasha
