@@ -2,45 +2,57 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54E22C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0C4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38754213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A52521479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729595AbfFRO3J (ORCPT
+        id S1729668AbfFRO3Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:29:09 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50484 "EHLO
+        Tue, 18 Jun 2019 10:29:16 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50566 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729381AbfFRO3G (ORCPT
+        by vger.kernel.org with ESMTP id S1729550AbfFRO3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:29:06 -0400
+        Tue, 18 Jun 2019 10:29:08 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hdF6e-0007nD-4h; Tue, 18 Jun 2019 15:29:04 +0100
+        id 1hdF6e-0007nK-Cl; Tue, 18 Jun 2019 15:29:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hdF6d-0000HG-Bs; Tue, 18 Jun 2019 15:29:03 +0100
+        id 1hdF6d-0000HN-DL; Tue, 18 Jun 2019 15:29:03 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
 MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     torvalds@linux-foundation.org, Guenter Roeck <linux@roeck-us.net>,
-        akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>
-Date:   Tue, 18 Jun 2019 15:27:59 +0100
-Message-ID: <lsq.1560868079.359853905@decadent.org.uk>
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Matthew Wilcox" <willy@infradead.org>,
+        "Michal Hocko" <mhocko@suse.com>,
+        "Dave Chinner" <david@fromorbit.com>,
+        "Kevin Easton" <kevin@guarana.org>,
+        "Josh Snyder" <joshs@netflix.com>,
+        "Andy Lutomirski" <luto@amacapital.net>,
+        "Tejun Heo" <tj@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        "Vlastimil Babka" <vbabka@suse.cz>,
+        "Daniel Gruss" <daniel@gruss.cc>, "Cyril Hrubis" <chrubis@suse.cz>,
+        "Jiri Kosina" <jkosina@suse.cz>
+Date:   Tue, 18 Jun 2019 15:28:02 +0100
+Message-ID: <lsq.1560868082.552948978@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 00/10] 3.16.69-rc1 review
+Subject: [PATCH 3.16 02/10] mm/mincore.c: make mincore() more conservative
+In-Reply-To: <lsq.1560868079.359853905@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
 X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
@@ -49,78 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 3.16.69 release.
-There are 10 patches in this series, which will be posted as responses
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+3.16.69-rc1 review patch.  If anyone has any objections, please let me know.
 
-Responses should be made by Thu Jun 20 14:27:59 UTC 2019.
-Anything received after that time might be too late.
+------------------
 
-All the patches have also been committed to the linux-3.16.y-rc branch of
-https://git.kernel.org/pub/scm/linux/kernel/git/bwh/linux-stable-rc.git .
-A shortlog and diffstat can be found below.
+From: Jiri Kosina <jkosina@suse.cz>
 
-Ben.
+commit 134fca9063ad4851de767d1768180e5dede9a881 upstream.
 
--------------
+The semantics of what mincore() considers to be resident is not
+completely clear, but Linux has always (since 2.3.52, which is when
+mincore() was initially done) treated it as "page is available in page
+cache".
 
-Dan Carpenter (1):
-      drivers/virt/fsl_hypervisor.c: prevent integer overflow in ioctl
-         [6a024330650e24556b8a18cc654ad00cfecf6c6c]
+That's potentially a problem, as that [in]directly exposes
+meta-information about pagecache / memory mapping state even about
+memory not strictly belonging to the process executing the syscall,
+opening possibilities for sidechannel attacks.
 
-Eric Dumazet (4):
-      tcp: add tcp_min_snd_mss sysctl
-         [5f3e2bf008c2221478101ee72f5cb4654b9fc363]
-      tcp: enforce tcp_min_snd_mss in tcp_mtu_probing()
-         [967c05aee439e6e5d7d805e195b3a20ef5c433d6]
-      tcp: limit payload size of sacked skbs
-         [3b4929f65b0d8249f19a50245cd88ed1a2f78cff]
-      tcp: tcp_fragment() should apply sane memory limits
-         [f070ef2ac66716357066b683fb0baf55f8191a2e]
+Change the semantics of mincore() so that it only reveals pagecache
+information for non-anonymous mappings that belog to files that the
+calling process could (if it tried to) successfully open for writing;
+otherwise we'd be including shared non-exclusive mappings, which
 
-Jason Yan (1):
-      scsi: megaraid_sas: return error when create DMA pool failed
-         [bcf3b67d16a4c8ffae0aa79de5853435e683945c]
+ - is the sidechannel
 
-Jiri Kosina (1):
-      mm/mincore.c: make mincore() more conservative
-         [134fca9063ad4851de767d1768180e5dede9a881]
+ - is not the usecase for mincore(), as that's primarily used for data,
+   not (shared) text
 
-Oleg Nesterov (1):
-      mm: introduce vma_is_anonymous(vma) helper
-         [b5330628546616af14ff23075fbf8d4ad91f6e25]
-
-Sriram Rajagopalan (1):
-      ext4: zero out the unused memory region in the extent tree block
-         [592acbf16821288ecdc4192c47e3774a4c48bb64]
-
-Young Xiao (1):
-      Bluetooth: hidp: fix buffer overflow
-         [a1616a5ac99ede5d605047a9012481ce7ff18b16]
-
- Documentation/networking/ip-sysctl.txt    |  8 ++++++++
- Makefile                                  |  4 ++--
- drivers/scsi/megaraid/megaraid_sas_base.c |  1 +
- drivers/virt/fsl_hypervisor.c             |  3 +++
- fs/ext4/extents.c                         | 17 +++++++++++++++--
- include/linux/mm.h                        |  5 +++++
- include/linux/tcp.h                       |  3 +++
- include/net/tcp.h                         |  3 +++
- include/uapi/linux/snmp.h                 |  1 +
- mm/memory.c                               |  8 ++++----
- mm/mincore.c                              | 21 +++++++++++++++++++++
- net/bluetooth/hidp/sock.c                 |  1 +
- net/ipv4/proc.c                           |  1 +
- net/ipv4/sysctl_net_ipv4.c                | 11 +++++++++++
- net/ipv4/tcp.c                            |  1 +
- net/ipv4/tcp_input.c                      | 27 ++++++++++++++++++++++-----
- net/ipv4/tcp_output.c                     |  9 +++++++--
- net/ipv4/tcp_timer.c                      |  1 +
- 18 files changed, 110 insertions(+), 15 deletions(-)
-
--- 
-Ben Hutchings
-I'm always amazed by the number of people who take up solipsism because
-they heard someone else explain it. - E*Borg on alt.fan.pratchett
+[jkosina@suse.cz: v2]
+  Link: http://lkml.kernel.org/r/20190312141708.6652-2-vbabka@suse.cz
+[mhocko@suse.com: restructure can_do_mincore() conditions]
+Link: http://lkml.kernel.org/r/nycvar.YFH.7.76.1903062342020.19912@cbobk.fhfr.pm
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+Acked-by: Josh Snyder <joshs@netflix.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Originally-by: Linus Torvalds <torvalds@linux-foundation.org>
+Originally-by: Dominique Martinet <asmadeus@codewreck.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Dave Chinner <david@fromorbit.com>
+Cc: Kevin Easton <kevin@guarana.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Cyril Hrubis <chrubis@suse.cz>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Daniel Gruss <daniel@gruss.cc>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+[bwh: Backported to 3.16: adjust context]
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+--- a/mm/mincore.c
++++ b/mm/mincore.c
+@@ -212,6 +212,22 @@ static void mincore_page_range(struct vm
+ 	} while (pgd++, addr = next, addr != end);
+ }
+ 
++static inline bool can_do_mincore(struct vm_area_struct *vma)
++{
++	if (vma_is_anonymous(vma))
++		return true;
++	if (!vma->vm_file)
++		return false;
++	/*
++	 * Reveal pagecache information only for non-anonymous mappings that
++	 * correspond to the files the calling process could (if tried) open
++	 * for writing; otherwise we'd be including shared non-exclusive
++	 * mappings, which opens a side channel.
++	 */
++	return inode_owner_or_capable(file_inode(vma->vm_file)) ||
++		inode_permission(file_inode(vma->vm_file), MAY_WRITE) == 0;
++}
++
+ /*
+  * Do a chunk of "sys_mincore()". We've already checked
+  * all the arguments, we hold the mmap semaphore: we should
+@@ -227,6 +243,11 @@ static long do_mincore(unsigned long add
+ 		return -ENOMEM;
+ 
+ 	end = min(vma->vm_end, addr + (pages << PAGE_SHIFT));
++	if (!can_do_mincore(vma)) {
++		unsigned long pages = DIV_ROUND_UP(end - addr, PAGE_SIZE);
++		memset(vec, 1, pages);
++		return pages;
++	}
+ 
+ 	if (is_vm_hugetlb_page(vma))
+ 		mincore_hugetlb_page_range(vma, addr, end, vec);
 
