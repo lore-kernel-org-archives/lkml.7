@@ -2,76 +2,116 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F341C46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D04C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:55:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58ECA2089E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:43:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2EF20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:55:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="Re+YlSEG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727419AbfFRDnA (ORCPT
+        id S1728058AbfFRDzk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 23:43:00 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:52928 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725810AbfFRDnA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 23:43:00 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hd51A-0001Hk-N6; Tue, 18 Jun 2019 11:42:44 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hd516-0004RQ-Ap; Tue, 18 Jun 2019 11:42:40 +0800
-Date:   Tue, 18 Jun 2019 11:42:40 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Philipp Reisner <philipp.reisner@linbit.com>,
-        Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Roland Kammerer <roland.kammerer@linbit.com>,
-        Eric Biggers <ebiggers@google.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>, drbd-dev@lists.linbit.com,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drbd: dynamically allocate shash descriptor
-Message-ID: <20190618034240.m4cnyjsbe4txth72@gondor.apana.org.au>
-References: <20190617132440.2721536-1-arnd@arndb.de>
- <20190617144335.q243r7l7ox7galhl@gondor.apana.org.au>
- <CAK8P3a2g4ZDcyxuSOkYzOmqV3Hc3YF3Anc3GQysvGo9bijYufQ@mail.gmail.com>
+        Mon, 17 Jun 2019 23:55:40 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:34488 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFRDzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 23:55:40 -0400
+Received: by mail-ua1-f68.google.com with SMTP id c4so4478885uad.1
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 20:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hbfLnulmtVwAqcwjBVQHbsEOQQi7C7z9WxtDTCZnrSI=;
+        b=Re+YlSEGCfJ1SB3VhHEwCwAT+I6ygr7MjUUslXWdDU+dVyBdMjbbUUINT+gn0f95Gt
+         gg9fFMRoUhdyB6aOwVFzTZ3x9HpJzIfrsQQmJYlKO1ckg+tr2CWBpsvsicjNlcfcOZPh
+         Jjo2Ollxxgw1eq8cCXM6IblE9BTSEwKlx+gLpDFZZml6K9kj5sixbtZvglbkm5NeO1FJ
+         pn3L7N/EWqLXNXzMgN2GKO0YoOCHfJV7awJALwiImDvE42Anq00vY7lL2mf79V5hV7EE
+         WHb1h4xgcSiq4zEuMJvXyznw1cgR1HYOomy/E98TBj9AOe7bTOU1woffrfzuLkYRRzhz
+         SzBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hbfLnulmtVwAqcwjBVQHbsEOQQi7C7z9WxtDTCZnrSI=;
+        b=Ih+y9uRRAS0L/1Wmh7WbisOjEyZMneWqhMd2tncZElDc0u+yhocTlUj/gRnVF1TdB0
+         WDRvYg+OqMfsW/cJBqW9Q2HAo7zRNLAIe2TaHaf8xJLnT0H5k8Rk1hKb0kHirwlYM6B2
+         Yb6ZsoZbIGmDlgWujJO8gFKExBj+vi0isHEycD/+jpr+fAT2Y1h5cqFrGid4jGi6R9hr
+         OA0QGP1wScjpLeiDd8oUw/WVGbuIGNDJfccsZQvYin0wyMxlBbqyGZf8hOc8ipPM4dd+
+         neY3c6e7HXdWD4YgK6IMSkHLcTbcY3yidQWXH8jpo1LwvwpaXZHs50g6cSvCEsqLmDuM
+         RayA==
+X-Gm-Message-State: APjAAAVNzQdZKcP5JH8UmBlaFVFo2iC79Yo6QUnHYs1Clb5KKOiWnJIb
+        QNmIvm2xtyiPtCD9ENOdZ2P4/mxEBmysa9nwaF8tGQ==
+X-Google-Smtp-Source: APXvYqy1BIINnP7iB/p/G3CX4qFC0WhpHRsPDZZFp+sb3Ovjpawek1cuOI5hDkFHe03zqioI/wdd62UnpITKNKUex9w=
+X-Received: by 2002:a67:c84:: with SMTP id 126mr54621301vsm.178.1560830139405;
+ Mon, 17 Jun 2019 20:55:39 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2g4ZDcyxuSOkYzOmqV3Hc3YF3Anc3GQysvGo9bijYufQ@mail.gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1560336476-31763-1-git-send-email-sagar.kadam@sifive.com>
+ <1560336476-31763-3-git-send-email-sagar.kadam@sifive.com>
+ <70732c8e-111f-7c46-9e93-11894d944a1d@ti.com> <CAARK3HmFg=v+cMGAykPPpwxDGaSKk5k+Gz4fSHQPQmg-rCjPhQ@mail.gmail.com>
+ <547e251d87e307fa4d1e31dfc61b496c152f0905.camel@perches.com>
+In-Reply-To: <547e251d87e307fa4d1e31dfc61b496c152f0905.camel@perches.com>
+From:   Sagar Kadam <sagar.kadam@sifive.com>
+Date:   Tue, 18 Jun 2019 09:25:27 +0530
+Message-ID: <CAARK3H=4QjWr3D7GpNbw9YbFm9C+t5CDcMU=o6_O7rb1ofHuMA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] mtd: spi-nor: add support to unlock flash device
+To:     Joe Perches <joe@perches.com>
+Cc:     Vignesh Raghavendra <vigneshr@ti.com>, marek.vasut@gmail.com,
+        tudor.ambarus@microchip.com, dwmw2@infradead.org,
+        computersforpeace@gmail.com, miquel.raynal@bootlin.com,
+        richard@nod.at, linux-mtd@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>, aou@eecs.berkeley.edu,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Wesley Terpstra <wesley@sifive.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:58:58PM +0200, Arnd Bergmann wrote:
+Hello Joe,
+
+Thanks for reviewing the patch.
+
+On Tue, Jun 18, 2019 at 5:55 AM Joe Perches <joe@perches.com> wrote:
 >
-> The warning is gone with this patch. Instead of 1280 bytes for drbd_receiver,
-> I now see 512 bytes, and 768 bytes for drbd_get_response, everything else is
-> under 160 bytes in this file.
-> 
-> However, with the call chain of
-> 
-> drbd_receiver
->    conn_connect
->        drbd_do_auth
->              drbd_get_response
-> 
-> This still adds up to as much as before, so it only shuts up the
-> warning but does not reduce the maximum stack usage.
+> On Mon, 2019-06-17 at 21:10 +0530, Sagar Kadam wrote:
+> > On Sun, Jun 16, 2019 at 6:35 PM Vignesh Raghavendra <vigneshr@ti.com> wrote:
+> []
+> > > > +static int issi_unlock(struct spi_nor *nor, loff_t ofs, uint64_t len)
+> > > > +{
+> []
+> > > > +     if (ret > 0 && !(ret & mask)) {
+> > > > +             dev_info(nor->dev,
+> > > > +                     "ISSI Block Protection Bits cleared SR=0x%x", ret);
+>
+> Please use '\n' terminations on formats
+>
+I will include this in v6.
 
-OK so it doesn't really reduce it.  Let's just go with your patch.
-
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+> > > > +             ret = 0;
+> > > > +     } else {
+> > > > +             dev_err(nor->dev, "ISSI Block Protection Bits not cleared\n");
+>
+> like this one
+>
+> > > > +             ret = -EINVAL;
+> > > > +     }
+> > > > +     return ret;
+> > > > +}
+> > > > +
+> > > > +/**
+> > > >   * spansion_quad_enable() - set QE bit in Configuraiton Register.
+>
+> s/Configuraiton/Configuration/
+>
+>
+Thanks & BR,
+Sagar Kadam
