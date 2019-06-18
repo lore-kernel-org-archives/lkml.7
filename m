@@ -7,82 +7,106 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBFBC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:59:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F973C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CAE820823
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2FE220673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560841175;
-	bh=5ecne3rCtVqpWXP+h0ZrAWJGGu531cJx7E9w2U9xOz0=;
+	s=default; t=1560841224;
+	bh=zyoTbA/X8DjK3gQ0rzJxs92dPQZZnv6PtxgiKe9KUbI=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EE47hvvGN5s3JUheHanyPDHvQ6uhXmZuMbdcd5Z86uws7aCJ3yAyazuRCnICzWKkN
-	 qKP8wM9XBiUVrIj0FBuCOjOtGN9lQndcAgu6mgvH8FWVdG978P5VYPYe7MxnVaMult
-	 Sgf2dx/QVF/CGIy0dgyrUfUvYGHR1kcC6CkwbQk4=
+	b=gXMRBdBaYefZpUVcHEBQ35AZODeO9uw4SjGb4RWYpATVNlDTmR0zKi8NceFYMJfGv
+	 zMqP6X96HpdoQEYWb/GqvCSPFG3ymBoAvZ//SJNqr4qD6eb+hC2febPrI0hlx5Gye8
+	 3ARhN4n+QdFIYR+QsxgUGRnZHhNbvfQClIDzc2UE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728911AbfFRG7e (ORCPT
+        id S1726292AbfFRHAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:59:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59836 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 03:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60216 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRG7d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:59:33 -0400
+        id S1725829AbfFRHAW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:00:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C9FE20673;
-        Tue, 18 Jun 2019 06:59:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEB1B20665;
+        Tue, 18 Jun 2019 07:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560841172;
-        bh=5ecne3rCtVqpWXP+h0ZrAWJGGu531cJx7E9w2U9xOz0=;
+        s=default; t=1560841221;
+        bh=zyoTbA/X8DjK3gQ0rzJxs92dPQZZnv6PtxgiKe9KUbI=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=nW10Hu++sUQrj/S3YQTKUNgZJgfWeNCSb95YUyAw0/gQlWPavg1CfR91PTbv60Cgy
-         HaE+ZOhu3Vdc25N0ZC7bJvT20lGMLHaT0eu850YiT8QH35rZ9nlejaP2LGHkgtFCY2
-         gJl1cK8K4kK5wU7MDBxhKaP6wHa8fVWD4MoeEFCI=
-Date:   Tue, 18 Jun 2019 08:59:30 +0200
+        b=UMqfrvGmoZKS6fDsGggwuNfWr0M4aOYHDvAEomPqWZK5kBsXiByGfxwWulvle/eGL
+         3LajHF7zPGnjoHdAURTpA3CkD7zeNLMjXhLy8BqsaD6Wc6FjS6D/GvkM5OK9eD003v
+         xIr81+VyroIKqPGMUuUJCVv7+hRFJ7xaWonj4rGc=
+Date:   Tue, 18 Jun 2019 09:00:19 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Hariprasad Kelam <hariprasad.kelam@gmail.com>
-Cc:     Jeeeun Evans <jeeeunevans@gmail.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Quytelda Kahja <quytelda@tamalin.org>,
-        Omer Efrat <omer.efrat@tandemg.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8723bs: os_dep: Make use rtw_zmalloc
-Message-ID: <20190618065930.GB15358@kroah.com>
-References: <20190616051619.GA15036@hari-Inspiron-1545>
+To:     Shobhit Kukreti <shobhitkukreti@gmail.com>
+Cc:     Joe Perches <joe@perches.com>, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>,
+        Bastien Nocera <hadess@hadess.net>,
+        Larry Finger <Larry.Finger@lwfinger.net>
+Subject: Re: [PATCH v3 1/3] staging: rtl8723bs: Resolve checkpatch error
+ "that open brace { should be on the previous line" in the rtl8723 driver
+Message-ID: <20190618070019.GA20601@kroah.com>
+References: <cover.1560701271.git.shobhitkukreti@gmail.com>
+ <387734fb053e04eb44a0813ab3531a1f4344fdb2.1560701271.git.shobhitkukreti@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190616051619.GA15036@hari-Inspiron-1545>
+In-Reply-To: <387734fb053e04eb44a0813ab3531a1f4344fdb2.1560701271.git.shobhitkukreti@gmail.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Jun 16, 2019 at 10:46:19AM +0530, Hariprasad Kelam wrote:
-> rtw_malloc with memset can be replaced with rtw_zmalloc.
+On Sun, Jun 16, 2019 at 09:19:49AM -0700, Shobhit Kukreti wrote:
+> Cleaned up the code from the following files to get rid of
+> check patch error "that open brace { should be on the previous line"
 > 
-> Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+> drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> drivers/staging/rtl8723bs/os_dep/recv_linux.c
+> drivers/staging/rtl8723bs/os_dep/rtw_proc.c
+> drivers/staging/rtl8723bs/os_dep/sdio_intf.c
+> drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c
+> 
+> Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
 > ---
->  drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+>  drivers/staging/rtl8723bs/os_dep/mlme_linux.c     | 15 +++--
+>  drivers/staging/rtl8723bs/os_dep/recv_linux.c     | 77 ++++++++---------------
+>  drivers/staging/rtl8723bs/os_dep/rtw_proc.c       |  6 +-
+>  drivers/staging/rtl8723bs/os_dep/sdio_intf.c      | 15 ++---
+>  drivers/staging/rtl8723bs/os_dep/sdio_ops_linux.c | 24 +++----
+>  5 files changed, 49 insertions(+), 88 deletions(-)
 > 
-> diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> index 9bc6856..aa7cc50 100644
-> --- a/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> +++ b/drivers/staging/rtl8723bs/os_dep/ioctl_cfg80211.c
-> @@ -1078,12 +1078,10 @@ static int cfg80211_rtw_add_key(struct wiphy *wiphy, struct net_device *ndev,
->  	DBG_871X("pairwise =%d\n", pairwise);
+> diff --git a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> index aa2499f..4631b68 100644
+> --- a/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> +++ b/drivers/staging/rtl8723bs/os_dep/mlme_linux.c
+> @@ -46,8 +46,7 @@ void rtw_os_indicate_connect(struct adapter *adapter)
+>  	struct mlme_priv *pmlmepriv = &(adapter->mlmepriv);
 >  
->  	param_len = sizeof(struct ieee_param) + params->key_len;
-> -	param = rtw_malloc(param_len);
-> +	param = rtw_zmalloc(param_len);
+>  	if ((check_fwstate(pmlmepriv, WIFI_ADHOC_MASTER_STATE) == true) ||
+> -		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true))
+> -	{
+> +		(check_fwstate(pmlmepriv, WIFI_ADHOC_STATE) == true)) {
+>  		rtw_cfg80211_ibss_indicate_connect(adapter);
+>  	}
+>  	else
+> @@ -77,8 +76,8 @@ void rtw_reset_securitypriv(struct adapter *adapter)
+>  
+>  	spin_lock_bh(&adapter->security_key_mutex);
+>  
+> -	if (adapter->securitypriv.dot11AuthAlgrthm == dot11AuthAlgrthm_8021X)/* 802.1x */
+> -	{
+> +	if (adapter->securitypriv.dot11AuthAlgrthm == dot11AuthAlgrthm_8021X) { /* 802.1x */
+> +
 
+Why the blank line?
 
-No, please call the "real" kernel function instead.
+And don't keep the comment on the right side, that's just a pain to work
+with.
 
 thanks,
 
