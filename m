@@ -2,171 +2,151 @@ Return-Path: <SRS0=xALZ=UQ=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C673CC46477
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:59:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93EFBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:59:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A22DE208CB
-	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:59:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74CA120578
+	for <linux-kernel@archiver.kernel.org>; Mon, 17 Jun 2019 23:59:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728329AbfFQX70 (ORCPT
+        id S1728716AbfFQX7g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 19:59:26 -0400
-Received: from mga01.intel.com ([192.55.52.88]:46877 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726427AbfFQX70 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 19:59:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 16:59:25 -0700
-X-ExtLoop1: 1
-Received: from khuang2-desk.gar.corp.intel.com ([10.255.91.82])
-  by orsmga005.jf.intel.com with ESMTP; 17 Jun 2019 16:59:20 -0700
-Message-ID: <1560815959.5187.57.camel@linux.intel.com>
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call
- for MKTME
-From:   Kai Huang <kai.huang@linux.intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>,
-        Andy Lutomirski <luto@kernel.org>
-Cc:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Date:   Tue, 18 Jun 2019 11:59:19 +1200
-In-Reply-To: <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
-         <20190508144422.13171-46-kirill.shutemov@linux.intel.com>
-         <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
-         <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
-         <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
-         <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.24.6 (3.24.6-1.fc26) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 17 Jun 2019 19:59:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50760 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728499AbfFQX7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 19:59:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2F10CAC40;
+        Mon, 17 Jun 2019 23:59:33 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 1E9FADA832; Tue, 18 Jun 2019 02:00:20 +0200 (CEST)
+Date:   Tue, 18 Jun 2019 02:00:20 +0200
+From:   David Sterba <dsterba@suse.cz>
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+Subject: Re: [PATCH 11/19] btrfs: introduce submit buffer
+Message-ID: <20190618000020.GK19057@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Damien Le Moal <Damien.LeMoal@wdc.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Naohiro Aota <Naohiro.Aota@wdc.com>,
+        "linux-btrfs@vger.kernel.org" <linux-btrfs@vger.kernel.org>,
+        David Sterba <dsterba@suse.com>, Chris Mason <clm@fb.com>,
+        Qu Wenruo <wqu@suse.com>, Nikolay Borisov <nborisov@suse.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        Matias =?iso-8859-1?Q?Bj=F8rling?= <mb@lightnvm.io>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Bart Van Assche <bvanassche@acm.org>
+References: <20190607131025.31996-1-naohiro.aota@wdc.com>
+ <20190607131025.31996-12-naohiro.aota@wdc.com>
+ <20190613141457.jws5ca63wfgjf7da@MacBook-Pro-91.local>
+ <BYAPR04MB5816E9FC012A289CA438E794E7EB0@BYAPR04MB5816.namprd04.prod.outlook.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <BYAPR04MB5816E9FC012A289CA438E794E7EB0@BYAPR04MB5816.namprd04.prod.outlook.com>
+User-Agent: Mutt/1.5.23.1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 11:27 -0700, Dave Hansen wrote:
-> Tom Lendacky, could you take a look down in the message to the talk of
-> SEV?  I want to make sure I'm not misrepresenting what it does today.
-> ...
+On Mon, Jun 17, 2019 at 03:16:05AM +0000, Damien Le Moal wrote:
+> Josef,
 > 
-> 
-> > > I actually don't care all that much which one we end up with.  It's not
-> > > like the extra syscall in the second options means much.
+> On 2019/06/13 23:15, Josef Bacik wrote:
+> > On Fri, Jun 07, 2019 at 10:10:17PM +0900, Naohiro Aota wrote:
+> >> Sequential allocation is not enough to maintain sequential delivery of
+> >> write IOs to the device. Various features (async compress, async checksum,
+> >> ...) of btrfs affect ordering of the IOs. This patch introduces submit
+> >> buffer to sort WRITE bios belonging to a block group and sort them out
+> >> sequentially in increasing block address to achieve sequential write
+> >> sequences with __btrfs_map_bio().
+> >>
+> >> Signed-off-by: Naohiro Aota <naohiro.aota@wdc.com>
 > > 
-> > The benefit of the second one is that, if sys_encrypt is absent, it
-> > just works.  In the first model, programs need a fallback because
-> > they'll segfault of mprotect_encrypt() gets ENOSYS.
+> > I hate everything about this.  Can't we just use the plugging infrastructure for
+> > this and then make sure it re-orders the bios before submitting them?  Also
+> > what's to prevent the block layer scheduler from re-arranging these io's?
+> > Thanks,
 > 
-> Well, by the time they get here, they would have already had to allocate
-> and set up the encryption key.  I don't think this would really be the
-> "normal" malloc() path, for instance.
-> 
-> > >  How do we
-> > > eventually stack it on top of persistent memory filesystems or Device
-> > > DAX?
-> > 
-> > How do we stack anonymous memory on top of persistent memory or Device
-> > DAX?  I'm confused.
-> 
-> If our interface to MKTME is:
-> 
-> 	fd = open("/dev/mktme");
-> 	ptr = mmap(fd);
-> 
-> Then it's hard to combine with an interface which is:
-> 
-> 	fd = open("/dev/dax123");
-> 	ptr = mmap(fd);
-> 
-> Where if we have something like mprotect() (or madvise() or something
-> else taking pointer), we can just do:
-> 
-> 	fd = open("/dev/anything987");
-> 	ptr = mmap(fd);
-> 	sys_encrypt(ptr);
-> 
-> Now, we might not *do* it that way for dax, for instance, but I'm just
-> saying that if we go the /dev/mktme route, we never get a choice.
-> 
-> > I think that, in the long run, we're going to have to either expand
-> > the core mm's concept of what "memory" is or just have a whole
-> > parallel set of mechanisms for memory that doesn't work like memory.
-> 
-> ...
-> > I expect that some day normal memory will  be able to be repurposed as
-> > SGX pages on the fly, and that will also look a lot more like SEV or
-> > XPFO than like the this model of MKTME.
-> 
-> I think you're drawing the line at pages where the kernel can manage
-> contents vs. not manage contents.  I'm not sure that's the right
-> distinction to make, though.  The thing that is important is whether the
-> kernel can manage the lifetime and location of the data in the page.
-> 
-> Basically: Can the kernel choose where the page comes from and get the
-> page back when it wants?
-> 
-> I really don't like the current state of things like with SEV or with
-> KVM direct device assignment where the physical location is quite locked
-> down and the kernel really can't manage the memory.  I'm trying really
-> hard to make sure future hardware is more permissive about such things.
->  My hope is that these are a temporary blip and not the new normal.
-> 
-> > So, if we upstream MKTME as anonymous memory with a magic config
-> > syscall, I predict that, in a few years, it will be end up inheriting
-> > all downsides of both approaches with few of the upsides.  Programs
-> > like QEMU will need to learn to manipulate pages that can't be
-> > accessed outside the VM without special VM buy-in, so the fact that
-> > MKTME pages are fully functional and can be GUP-ed won't be very
-> > useful.  And the VM will learn about all these things, but MKTME won't
-> > really fit in.
-> 
-> Kai Huang (who is on cc) has been doing the QEMU enabling and might want
-> to weigh in.  I'd also love to hear from the AMD folks in case I'm not
-> grokking some aspect of SEV.
-> 
-> But, my understanding is that, even today, neither QEMU nor the kernel
-> can see SEV-encrypted guest memory.  So QEMU should already understand
-> how to not interact with guest memory.  I _assume_ it's also already
-> doing this with anonymous memory, without needing /dev/sme or something.
+> The block I/O scheduler reorders requests in LBA order, but that happens for a
+> newly inserted request against pending requests. If there are no pending
+> requests because all requests were already issued, no ordering happen, and even
+> worse, if the drive queue is not full yet (e.g. there are free tags), then the
+> newly inserted request will be dispatched almost immediately, preventing
+> reordering with subsequent incoming write requests to happen.
 
-Correct neither Qemu nor kernel can see SEV-encrypted guest memory. Qemu requires guest's
-cooperation when it needs to interacts with guest, i.e. to support virtual DMA (of virtual devices
-in SEV-guest), qemu requires SEV-guest to setup bounce buffer (which will not be SEV-encrypted
-memory, but shared memory can be accessed from host side too), so that guest kernel can copy DMA
-data from bounce buffer to its own SEV-encrypted memory after qemu/host kernel puts DMA data to
-bounce buffer.
+This would be good to add to the changelog.
+> 
+> The other problem is that the mq-deadline scheduler does not track zone WP
+> position. Write request issuing is done regardless of the current WP value,
+> solely based on LBA ordering. This means that mq-deadline will not prevent
+> out-of-order, or rather, unaligned write requests.
 
-And yes from my reading (better to have AMD guys to confirm) SEV guest uses anonymous memory, but it
-also pins all guest memory (by calling GUP from KVM -- SEV specifically introduced 2 KVM ioctls for
-this purpose), since SEV architecturally cannot support swapping, migraiton of SEV-encrypted guest
-memory, because SME/SEV also uses physical address as "tweak", and there's no way that kernel can
-get or use SEV-guest's memory encryption key. In order to swap/migrate SEV-guest memory, we need SGX
-EPC eviction/reload similar thing, which SEV doesn't have today.
+This seems to be the key point.
 
-From this perspective, I think driver proposal kinda makes sense since we already have security
-feature which uses normal memory some kind like "device memory" (no swap, no migration, etc), so it
-makes sense that MKTME just follows that (although from HW MKTME can support swap, page migration,
-etc). The downside of driver proposal for MKTME I think is, like Dave mentioned, it's hard (or not
-sure whether it is possible) to extend to support NVDIMM (and file backed guest memory), since for
-virtual NVDIMM, Qemu needs to call mmap against fd of NVDIMM.
+> These will not be detected
+> and dispatched whenever possible. The reasons for this are that:
+> 1) the disk user (the FS) has to manage zone WP positions anyway. So duplicating
+> that management at the block IO scheduler level is inefficient.
+> 2) Adding zone WP management at the block IO scheduler level would also need a
+> write error processing path to resync the WP value in case of failed writes. But
+> the user/FS also needs that anyway. Again duplicated functionalities.
+> 3) The block layer will need a timeout to force issue or cancel pending
+> unaligned write requests. This is necessary in case the drive user stops issuing
+> writes (for whatever reasons) or the scheduler is being switched. This would
+> unnecessarily cause write I/O errors or cause deadlocks if the request queue
+> quiesce mode is entered at the wrong time (and I do not see a good way to deal
+> with that).
+> 
+> blk-mq is already complicated enough. Adding this to the block IO scheduler will
+> unnecessarily complicate things further for no real benefits. I would like to
+> point out the dm-zoned device mapper and f2fs which are both already dealing
+> with write ordering and write error processing directly. Both are fairly
+> straightforward but completely different and each optimized for their own structure.
 
-Thanks,
--Kai
+So the question is where on which layer the decision logic is. The
+filesystem(s) or dm-zoned have enough information about the zones and
+the writes can be pre-sorted. This is what the patch proposes.
+
+From your explanation I get that the io scheduler can throw the wrench
+in the sequential ordering, for various reasons depending on state of
+internal structures od device queues. This is my simplified
+interpretation as I don't understand all the magic below filesystem
+layer.
+
+I assume there are some guarantees about the ordering, eg. within one
+plug, that apply to all schedulers (maybe not the noop one). Something
+like that should be the least common functionality that the filesystem
+layer can rely on.
+ 
+> Naohiro changes to btrfs IO scheduler have the same intent, that is, efficiently
+> integrate and handle write ordering "a la btrfs". Would creating a different
+> "hmzoned" btrfs IO scheduler help address your concerns ?
+
+IMHO this sounds both the same, all we care about is the sequential
+ordering, which in some sense is "scheduling", but I would not call it
+that way due to the simplicity.
+
+As implemented, it's a list of bios, but I'd suggest using rb-tree or
+xarray, the insertion is fast and submission is start to end traversal.
+I'm not sure that the loop in __btrfs_map_bio_zoned after label
+send_bios: has reasonable complexity, looks like an O(N^2).
