@@ -2,72 +2,63 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C636C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21591C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:32:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D0292085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:32:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F32DE20673
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:32:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfFRPcC (ORCPT
+        id S1729602AbfFRPc0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:32:02 -0400
-Received: from ms.lwn.net ([45.79.88.28]:50818 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729189AbfFRPcB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:32:01 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id EFDC94FA;
-        Tue, 18 Jun 2019 15:32:00 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 09:31:59 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [PATCH] docs/vm: hwpoison.rst: Fix quote formatting
-Message-ID: <20190618093159.26352aed@lwn.net>
-In-Reply-To: <20190618145605.21208-1-valentin.schneider@arm.com>
-References: <20190618145605.21208-1-valentin.schneider@arm.com>
-Organization: LWN.net
+        Tue, 18 Jun 2019 11:32:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49260 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729189AbfFRPc0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:32:26 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 6A46EAF79;
+        Tue, 18 Jun 2019 15:32:25 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 17:32:24 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Qian Cai <cai@lca.pw>
+Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] iommu/intel: silence a variable set but not used
+Message-ID: <20190618153223.GQ8151@suse.de>
+References: <1559570719-16285-1-git-send-email-cai@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559570719-16285-1-git-send-email-cai@lca.pw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 15:56:05 +0100
-Valentin Schneider <valentin.schneider@arm.com> wrote:
-
-> The asterisks prepended to the quoted text currently get translated to
-> bullet points, which gets increasingly confusing the smaller your
-> screen is (when viewing the sphinx output, that is).
+On Mon, Jun 03, 2019 at 10:05:19AM -0400, Qian Cai wrote:
+> The commit "iommu/vt-d: Probe DMA-capable ACPI name space devices"
+> introduced a compilation warning due to the "iommu" variable in
+> for_each_active_iommu() but never used the for each element, i.e,
+> "drhd->iommu".
 > 
-> Convert the whole quote to a literal block.
+> drivers/iommu/intel-iommu.c: In function 'probe_acpi_namespace_devices':
+> drivers/iommu/intel-iommu.c:4639:22: warning: variable 'iommu' set but
+> not used [-Wunused-but-set-variable]
+>   struct intel_iommu *iommu;
 > 
-> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+> Silence the warning the same way as in the commit d3ed71e5cc50
+> ("drivers/iommu/intel-iommu.c: fix variable 'iommu' set but not used")
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+>  drivers/iommu/intel-iommu.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-That definitely seems worth fixing, and I can apply this.  But a few
-things to ponder first...
+Applied, thanks.
 
- - If you convert it to a literal block, the asterisks can remain, making
-   for a less intrusive patch.
-
- - I was wondering if we should just use a kernel-doc directive to pull
-   the comment directly from the source, but investigation quickly showed
-   that the "overview comment" doesn't actually exist in anything close to
-   the quoted form.  See mm/memory-failure.c.
-
-Given that, and things like references to support in "upcoming Intel
-CPUs", I suspect that this document is pretty seriously out of date and
-needs some more in-depth attention.  If you're playing in this area and
-feel like it, updating the document for real would be much appreciated...:)
-
-Thanks,
-
-jon
