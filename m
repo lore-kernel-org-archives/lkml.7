@@ -2,70 +2,98 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7B90C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A414DC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB0EE20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560864075;
-	bh=z2OTz29gGjO1r9/j3/FdDQwDaOmqMmdwfbDUt50zhF8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=c4GfL6DgrwL6Ede62zG8CBvQPeqYztLZNGX6tze3bpIMBvAaFeDvLGQCtwHiC2GTa
-	 9C25mGvxuD4ycP7fdYo8jBi6/tD/myQEkyOafFJXUh0ZMSNC1vVka2A0OCqndmb/x7
-	 aYMGe1J7aD89xd+3Fe6r9LLM1llJjp2F9BR/uTsw=
+	by mail.kernel.org (Postfix) with ESMTP id 877FC20679
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbfFRNVO (ORCPT
+        id S1728904AbfFRN1l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:21:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41396 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 09:27:41 -0400
+Received: from relay.sw.ru ([185.231.240.75]:49592 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725919AbfFRNVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:21:13 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 358972070B;
-        Tue, 18 Jun 2019 13:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560864073;
-        bh=z2OTz29gGjO1r9/j3/FdDQwDaOmqMmdwfbDUt50zhF8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=02QlH3n/pNSgksJ/eL2RLYkp3gckL3seRwli0+1D0FBoylXP6OS3XW9iqML/oAOWy
-         cOkzc+4VcyVqM3AkEGdV13hgi/LJUi4el8NK2uSXg2u6hs5tvY2Wy32lNRRwZ0IsSC
-         L5dAIE5rd4m/Ym2eBWaSJRKv7jADcZ7JGcy4muOw=
-Date:   Tue, 18 Jun 2019 21:20:10 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     "Angus Ainslie (Purism)" <angus@akkea.ca>
-Cc:     angus.ainslie@puri.sm, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pavel@ucw.cz
-Subject: Re: [PATCH v16 0/3] Add support for the Purism Librem5 devkit
-Message-ID: <20190618132009.GF1959@dragon>
-References: <20190617135215.550-1-angus@akkea.ca>
+        id S1725919AbfFRN1l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:27:41 -0400
+Received: from [172.16.25.12]
+        by relay.sw.ru with esmtp (Exim 4.92)
+        (envelope-from <aryabinin@virtuozzo.com>)
+        id 1hdE98-0001lw-VL; Tue, 18 Jun 2019 16:27:35 +0300
+Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "# 3.4.x" <stable@vger.kernel.org>
+References: <20190617123109.667090-1-arnd@arndb.de>
+ <20190617140210.GB3436@hirez.programming.kicks-ass.net>
+ <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
+From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
+Message-ID: <fc10bc69-0628-59eb-c243-9cd1dd3b47a4@virtuozzo.com>
+Date:   Tue, 18 Jun 2019 16:27:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617135215.550-1-angus@akkea.ca>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:52:12AM -0600, Angus Ainslie (Purism) wrote:
-> Angus Ainslie (Purism) (3):
->   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
->   dt-bindings: Add an entry for Purism SPC
->   dt-bindings: arm: fsl: Add the imx8mq boards
 
-Applied all, thanks.
+
+On 6/18/19 3:56 PM, Arnd Bergmann wrote:
+> On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
+>>
+>> On Mon, Jun 17, 2019 at 02:31:09PM +0200, Arnd Bergmann wrote:
+>>> objtool points out a condition that it does not like:
+>>>
+>>> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+>>> lib/ubsan.o: warning: objtool: __ubsan_handle_type_mismatch_v1()+0x4a: call to stackleak_track_stack() with UACCESS enabled
+>>>
+>>> I guess this is related to the call ubsan_type_mismatch_common()
+>>> not being inline before it calls user_access_restore(), though
+>>> I don't fully understand why that is a problem.
+>>
+>> The rules are that when AC is set, one is not allowed to CALL schedule,
+>> because scheduling does not save/restore AC.  Preemption, through the
+>> exceptions is fine, because the exceptions do save/restore AC.
+>>
+>> And while most functions do not appear to call into schedule, function
+>> trace ensures that every single call does in fact call into schedule.
+>> Therefore any CALL (with AC set) is invalid.
+> 
+> I see that stackleak_track_stack is already marked 'notrace',
+> since we must ensure we don't recurse when calling into it from
+> any of the function trace logic.
+> 
+> Does that mean we could just mark it as another safe call?
+> 
+> --- a/tools/objtool/check.c
+> +++ b/tools/objtool/check.c
+> @@ -486,6 +486,7 @@ static const char *uaccess_safe_builtin[] = {
+>         "__ubsan_handle_type_mismatch",
+>         "__ubsan_handle_type_mismatch_v1",
+>         /* misc */
+> +       "stackleak_track_stack",
+>         "csum_partial_copy_generic",
+>         "__memcpy_mcsafe",
+>         "ftrace_likely_update", /* CONFIG_TRACE_BRANCH_PROFILING */
+> 
+> 
+>> Maybe we should disable stackleak when building ubsan instead? We
+>> already disable stack-protector when building ubsan.
+> 
+> I couldn't find out how that is done.
+> 
+
+I guess this:
+ccflags-y += $(DISABLE_STACKLEAK_PLUGIN)
