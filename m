@@ -2,136 +2,92 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 078D6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:36:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE288C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:37:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4B95213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979B120873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:37:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=amacapital-net.20150623.gappssmtp.com header.i=@amacapital-net.20150623.gappssmtp.com header.b="u2mLIPKk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ui9bGCqO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729958AbfFRQgl (ORCPT
+        id S1729972AbfFRQhV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:36:41 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35285 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729319AbfFRQgk (ORCPT
+        Tue, 18 Jun 2019 12:37:21 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36102 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729327AbfFRQhU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:36:40 -0400
-Received: by mail-pf1-f196.google.com with SMTP id d126so7977513pfd.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:36:40 -0700 (PDT)
+        Tue, 18 Jun 2019 12:37:20 -0400
+Received: by mail-pf1-f195.google.com with SMTP id r7so7980697pfl.3;
+        Tue, 18 Jun 2019 09:37:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=amacapital-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=IL1nW/+YbqMLhSW1samVerTY8Tv4aXFIAsLDfQFzMZQ=;
-        b=u2mLIPKkGGTJlfOT8DyPvMbOrxkjRX35AmG/PHGn9N+8BTe14RT9Ij8iitPKyQLmFR
-         wZSmx3Q4Z9agCYgcsZyxUI0L5UKzlAYSUUPFQBAyKt/WmYKvh2YXGAq6+/D85SQ39+d+
-         b/vhEUVskV/SrzyR9tNTIBItPUHr4JjZT6lXrKC21zp8O1TD4sSwYFBlPVp1egY2xfk0
-         5plXjFKxbsPmkNVUWhPTRXmWfqoQ8amD1yrULENsg1t2ngtBwwQjLekR8neR1u4UDu/L
-         KWv71tTl1AC0zcA7z5Ig7Z5zxzE1/SP5ItTSUZ7V2PiHekbW+drpfBPQblCLwn+tIAjn
-         ENZQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LoZXdKl2ZPQX9tqpcBDQyfYSEa9pJ4C8X2I1zGq15V4=;
+        b=Ui9bGCqOBdwv8kLPjHSIH7yYQe5FoY7pnWfjoUKdvr8O+u58Mv+FowTaxBoZRx0KxP
+         h7rWuystssbE5iwW+ygcjmk0A5+UoTiIChXynqvAvdQF5j8jruff4mdiq+A8S0dNStD+
+         kSkT3zpcnP4gamU/ELgJvEEQvoRN+pdGLNORqsOQ7RVj0lfJFznyj0gFn3qW14QKXq30
+         nVICTxHO1zihccN/diiform61TRhhdEFXd/hdOfdWUwPJFuutY/13K4XOf3u2WCoR8g7
+         +BCO3v+88xMB9IKDmePgjR3FzvBjC+K9cyFueeXWTztD1pMat/sMUC7JD5nT4n1WBjDS
+         H75Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=IL1nW/+YbqMLhSW1samVerTY8Tv4aXFIAsLDfQFzMZQ=;
-        b=DkHJ4DKpPoA1sFe7GyizR0JhCZnAng2JiBYvsYDR9iHllFvz+aSMGMjIh71dr5Zl8y
-         3Jrp7xEXmUKUNoJoy8qua+SQLCG8PwWBXXe/vXdVh4Go6xVdAT4yrL0PCAMXnM5wTX6h
-         PVtROrlWD75ESJagUcPvwQb4uEHSHbFU7/azjPIvrJFTA+/aI9YCRwB91bJxnqwnK1LK
-         J6K964JvalE24L6DBqENQzjkB/U4tGaLWylLkPeaHT8pxDGuhOlOcnbblZ9tZOU9jWVI
-         7GI5LkzjqpXP7AW1kNdP0DVEl6AJ20WwOnk3YmshR6PrwBotM+lgZtFSf9g2oqvhCSQJ
-         eOBA==
-X-Gm-Message-State: APjAAAXJXES+z5oLcUjbW/J4CHoxLNe5q6JmQcBN7sjuhVysKPM8OxW6
-        VX1YgR2AF6eeTfAVKKftbG3SsQ==
-X-Google-Smtp-Source: APXvYqyQvU/+csIGlmtLO32PzNEQX2l+DPt+z+FAIRO0RdFTy04j53jWOmgqHKj+t/TS9lbmsrDlTA==
-X-Received: by 2002:a63:e652:: with SMTP id p18mr3451756pgj.188.1560875800003;
-        Tue, 18 Jun 2019 09:36:40 -0700 (PDT)
-Received: from ?IPv6:2601:646:c200:1ef2:14b5:e5b0:c670:df13? ([2601:646:c200:1ef2:14b5:e5b0:c670:df13])
-        by smtp.gmail.com with ESMTPSA id k4sm6458646pfk.42.2019.06.18.09.36.39
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LoZXdKl2ZPQX9tqpcBDQyfYSEa9pJ4C8X2I1zGq15V4=;
+        b=kK1VEps0xGZ/hBeJeJd9hOshMZQeLzrQJeioA2ESGWjiJXYW+Cj5izjGMiRjOBDPhx
+         7btUQMALoJ7w+yW3uKrxsI4oS1dziV7mxj1hEVt3LxkT+LksIC/SxQ09cHCb/+kfVkZC
+         3EYJMKQt4hH0FSzStoeROC4535P4s4y8TGoabb0nX880YEszMz0T80SJTW4uutJhCSEP
+         GBz8r1avjq8jjH6MpmWkQehMaGJ6er0M9rzmSGSjHNxbBU0dQ4n6iFCXYEQ9NRB1vcKy
+         3V5D7gvHRUGtq4fim8gFmjtXoWWQkAm85Sr4l+VV8va//b6fRnbyX9PcIOIsS/2WwGpH
+         Ngjg==
+X-Gm-Message-State: APjAAAWePy3YGOZLkdP3RqnVr6PWusy5qpYjA3argLpLYi63wMd43KWh
+        KwDrdWAwue/AybG0bRM0srY=
+X-Google-Smtp-Source: APXvYqwdJX5B3ykM7QtH1dueV+gmYd0gbAfeNw5ni5qEZHHTY+l1CL51AyBpLWfMv7VCzj8u9OgCEg==
+X-Received: by 2002:a62:e511:: with SMTP id n17mr111127105pff.181.1560875840335;
+        Tue, 18 Jun 2019 09:37:20 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id 30sm5170171pjk.17.2019.06.18.09.37.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 09:36:39 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
-From:   Andy Lutomirski <luto@amacapital.net>
-X-Mailer: iPhone Mail (16F203)
-In-Reply-To: <f701f859-0990-9f02-baa2-451dd6c8b3c4@intel.com>
-Date:   Tue, 18 Jun 2019 09:36:38 -0700
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <8FDB1E33-21BC-400D-9051-7BE61400ACD2@amacapital.net>
-References: <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com> <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com> <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com> <1560816342.5187.63.camel@linux.intel.com> <CALCETrVcrPYUUVdgnPZojhJLgEhKv5gNqnT6u2nFVBAZprcs5g@mail.gmail.com> <1560821746.5187.82.camel@linux.intel.com> <CALCETrUrFTFGhRMuNLxD9G9=GsR6U-THWn4AtminR_HU-nBj+Q@mail.gmail.com> <1560824611.5187.100.camel@linux.intel.com> <20190618091246.GM3436@hirez.programming.kicks-ass.net> <2ec26c05-7c57-d0e0-a628-94d581b96b63@intel.com> <20190618161502.jiuqhvs3wvnac5ow@box.shutemov.name> <f701f859-0990-9f02-baa2-451dd6c8b3c4@intel.com>
-To:     Dave Hansen <dave.hansen@intel.com>
+        Tue, 18 Jun 2019 09:37:19 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 09:37:18 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.14 00/53] 4.14.128-stable review
+Message-ID: <20190618163718.GA1718@roeck-us.net>
+References: <20190617210745.104187490@linuxfoundation.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 11:09:43PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.128 release.
+> There are 53 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
+> Anything received after that time might be too late.
+> 
 
+Build results:
+	total: 172 pass: 172 fail: 0
+Qemu test results:
+	total: 348 pass: 348 fail: 0
 
-> On Jun 18, 2019, at 9:22 AM, Dave Hansen <dave.hansen@intel.com> wrote:
->=20
-> On 6/18/19 9:15 AM, Kirill A. Shutemov wrote:
->>> We'd need two rules:
->>> 1. A page must not be faulted into a VMA if the page's page_keyid()
->>>   is not consistent with the VMA's
->>> 2. Upon changing the VMA's KeyID, all underlying PTEs must either be
->>>   checked or zapped.
->>>=20
->>> If the rules are broken, we SIGBUS.  Andy's suggestion has the same
->>> basic requirements.  But, with his scheme, the error can be to the
->>> ioctl() instead of in the form of a SIGBUS.  I guess that makes the
->>> fuzzers' lives a bit easier.
->> I see a problem with the scheme: if we don't have a way to decide if the
->> key is right for the file, user without access to the right key is able t=
-o
->> prevent legitimate user from accessing the file. Attacker just need read
->> access to the encrypted file to prevent any legitimate use to access it.
->=20
-> I think you're bringing up a separate issue.
->=20
-> We were talking about how you resolve a conflict when someone attempts
-> to use two *different* keyids to decrypt the data in the API and what
-> the resulting API interaction looks like.
->=20
-> You're describing the situation where one of those is the wrong *key*
-> (not keyid).  That's a subtly different scenario and requires different
-> handling (or no handling IMNHO).
-
-I think we=E2=80=99re quibbling over details before we look at the big quest=
-ions:
-
-Should MKTME+DAX encrypt the entire volume or should it encrypt individual f=
-iles?  Or both?
-
-If it encrypts individual files, should the fs be involved at all?  Should t=
-here be metadata that can check whether a given key is the correct key?
-
-If it encrypts individual files, is it even conceptually possible to avoid c=
-orruption if the fs is not involved?  After all, many filesystems think that=
- they can move data blocks, compute checksums, journal data, etc.
-
-I think Dave is right that there should at least be a somewhat credible prop=
-osal for how this could fit together.
-
+Guenter
