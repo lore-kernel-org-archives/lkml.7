@@ -6,68 +6,92 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2226AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8452CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB52521530
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:26:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6121021655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730332AbfFRT0l convert rfc822-to-8bit (ORCPT
+        id S1730406AbfFRT12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:26:41 -0400
-Received: from MAIL2.ATTG.CO.TH ([180.222.145.230]:11960 "EHLO
-        attmfl02-data1.attg.co.th" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfFRT0l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:26:41 -0400
-X-Greylist: delayed 767 seconds by postgrey-1.27 at vger.kernel.org; Tue, 18 Jun 2019 15:26:40 EDT
-X-IronPort-Anti-Spam-Filtered: true
-X-IronPort-Anti-Spam-Result: A2CiRABO3/Jb/w0DFAonGgcaghmCaIEpjBUHiFKFBpATg2iFSREgEIREA1ABCIM6SgEDAQEBAQEDgQkMHwEBIQEQAYFUgzQhZ4EWAYMzAYIQNKgxGgKDZQEBJ4EWhFyCfoRchEKBP0CBOAwTgkyBPIFfBBiEfIImApAGj2kJgwaDdIotGIFJAVqHORQDhwQFgnmKQIE/hh2FEYFDgQVlAYJCCDWFSoocAVZRgxOLSQEB
-X-IPAS-Result: A2CiRABO3/Jb/w0DFAonGgcaghmCaIEpjBUHiFKFBpATg2iFSREgEIREA1ABCIM6SgEDAQEBAQEDgQkMHwEBIQEQAYFUgzQhZ4EWAYMzAYIQNKgxGgKDZQEBJ4EWhFyCfoRchEKBP0CBOAwTgkyBPIFfBBiEfIImApAGj2kJgwaDdIotGIFJAVqHORQDhwQFgnmKQIE/hh2FEYFDgQVlAYJCCDWFSoocAVZRgxOLSQEB
-Received: from unknown (HELO mail1-idc.attg.co.th) ([10.20.3.13])
-  by attmfl02-data1.attg.co.th with ESMTP; 19 Jun 2019 02:13:30 +0700
-Received: from [157.33.181.224] (helo=smtp.attg.co.th)
-        by mail1-idc.attg.co.th with esmtpa (Exim 4.80.1)
-        (envelope-from <daftster@attg.co.th>)
-        id 1hdJfd-0007ca-6u; Wed, 19 Jun 2019 02:21:30 +0700
-From:   daFtster <daftster@attg.co.th>
-Content-Type: text/plain;
-        charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Mime-Version: 1.0 (1.0)
-Subject: RE
-Message-Id: <B7111ACD-6277-4DBD-B17A-0C4BC15A6C08@attg.co.th>
-Date:   Tue, 18 Jun 2019 11:16:10 -0800
-To:     "Diana" <dianekoa@yahoo.com>, "Eiichiro" <ekono@rogers.com>,
-        "Kuls Dela Cruz" <kuleeo@gmail.com>,
-        "Jose Antonio" <jlacsam@yahoo.com>,
-        "Anna Liza" <annaliza_latina@yahoo.com>,
-        "ARNOLD" <starship_aly@yahoo.com>,
-        "Ma Cecilia" <cez_lim@yahoo.com>,
-        "Brian Eugene" <eugene_binondo@yahoo.com>,
-        "jacq" <jacq0725@yahoo.com>,
-        "linux arm lists" <linux-arm-kernel@lists.arm.linux.org.uk>,
-        "linux kernel" <linux-kernel@vger.kernel.org>,
-        "lynnlimsy" <lynnlimsy@yahoo.com>, "Eileen" <nlism_69@yahoo.com>,
-        "Eileen" <iln5m@yahoo.com>,
-        "Edmund" <edmund.manabat@trilliantinc.com>,
-        "Kristina NBC Universal" <Kristina.Manabat@nbcuni.com>,
-        "39 Edmund" <edmund.manabat@yahoo.com>,
-        "39 Edmund" <ebmdoddiemanabat@yahoo.com>,
-        "39 Tina" <tinamedalla_manabat@yahoo.com>
-X-Mailer: iPhone Mail (14A551)
+        Tue, 18 Jun 2019 15:27:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49344 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727553AbfFRT11 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:27:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6938458E42;
+        Tue, 18 Jun 2019 19:27:27 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D4CA19C5B;
+        Tue, 18 Jun 2019 19:27:25 +0000 (UTC)
+Subject: Re: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-api@vger.kernel.org
+References: <20190617142149.5245-1-longman@redhat.com>
+ <20190617143842.GC1492@dhcp22.suse.cz>
+ <9e165eae-e354-04c4-6362-0f80fe819469@redhat.com>
+ <20190618123750.GG3318@dhcp22.suse.cz>
+ <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
+ <20190618183208.GK3318@dhcp22.suse.cz>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <681ed4dc-e8a5-afcf-98b6-c17544c6094d@redhat.com>
+Date:   Tue, 18 Jun 2019 15:27:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190618183208.GK3318@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 18 Jun 2019 19:27:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/18/19 2:32 PM, Michal Hocko wrote:
+> On Tue 18-06-19 12:59:24, Waiman Long wrote:
+>> On 6/18/19 8:37 AM, Michal Hocko wrote:
+> [...]
+>>> Is this useful enough to put into slabinfo? Doesn't this sound more like
+>>> a debugfs kinda a thing?
+>> I guess it is probably more on the debug side of things. I add it to
+>> slabinfo as the data is readily available. It will be much more work if
+>> we need to export the data via debugfs.
+>>
+>> We are seeing the kmem_cache slab growing continuously overtime when
+>> running a container-based workloads. Roman's kmem_cache reparenting
+>> patch will hopefully solve a major part of the problem, but we still
+>> need a way to confirm that by looking at how many memcg kmem_caches are
+>> associated with each root kmem_cache.
+> I am not disputing usefulness. Dead memcgs are showing up as a problem
+> for a longer time and having a more debugging information is definitely
+> useful. I am just not really sure that /proc/slabinfo is the proper
+> vehicle for that information. It might be just easier to stick it there
+> but that is not the best justification for adding something we will have
+> to maintain for ever. Not to mention that the number of dead memcgs
+> might not be enough to debug further when we can easily end up needing
+> to provide more in something less "carved in stone" kinda interface like
+> debugfs.
+>
+Fair enough.
 
-hiya 
+I will rework the patch and expose the information via debugfs then.
 
-
-http://colexpresscargo.com/income.php?perkjl=USN8601
-
-
-
-
+Cheers,
+Longman
 
