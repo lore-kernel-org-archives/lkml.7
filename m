@@ -2,180 +2,145 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B6EC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29208C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BFB3D20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:05:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0254721655
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:06:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="djkt6tnm"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Atm7CO5C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfFROFz (ORCPT
+        id S1729401AbfFROGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:05:55 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:45714 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFROFy (ORCPT
+        Tue, 18 Jun 2019 10:06:32 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:35005 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726446AbfFROGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:05:54 -0400
-Received: by mail-wr1-f68.google.com with SMTP id f9so14090513wre.12
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:05:53 -0700 (PDT)
+        Tue, 18 Jun 2019 10:06:32 -0400
+Received: by mail-lj1-f194.google.com with SMTP id x25so3681662ljh.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:06:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8qHqhUTLPLAeUp/D+WrLyXnpz1H1Jll7QCXTM4rdBnU=;
-        b=djkt6tnmuZedsgQ4v+Rua7yfQcRyCI0RbFda0KhvSR/oADzdiA/209ohNfhcVRf8d6
-         lBE9K/fJZ8A/ZxP0jl48u8DqygtjLk6pPcX8AUimocdYXLXQw2RJnr38R2XKwe/o6X9N
-         ZOamdY9l71DGHUPX8V3uIZCrEbLY+wqRqK7B1FvRUTZM/MkMpzxXqA7hgrkn5Vv+p3o/
-         2i+Q5LM8XfqFHVaM1HEQ/GwNCw/9/FMpfSh9bxU2w3XRUBG016B+1xnhdb43B8UsSRqy
-         +fvmLZDCETQ8DJLKlkJh49O4rQZNrKvjfVhSeSVPO8KLHJgxbRRnFB65V8aEhN9ws1tS
-         SjiQ==
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QTZqy45k7+sDKOksZP/D2s9gAFDBBAHV7AhvC7CBxAQ=;
+        b=Atm7CO5Cu6u7ITQBOejBMNudmy6J6C6jPHf8lkqcirJUgLtaP5ac5yQ33LMRr7Dg8P
+         9bAspssbkF5m1NiYck3rTXbtN21Z6vGYbWSOEJEl3mIgmUAUxa9dE6609N94K1vQ1y9W
+         AYbnm4bbyIb1DOL1GNxgqb8pmFw3YA11xJ28KDcI2k95/DjaplWwuQwWXhW65IQ0uXk9
+         yUQ/0Oey7gYcfdoYNSBvzmvgljve31nsG/bS8Ar4UQMh8MQG+YtKdkDG0k3RtYUUi/lz
+         9v3/0wjSPGkofCXlPXVcTcJwuzpz+ZfSGivQ4ZWxlaKhhLdbSX8WToxQg0zO2Pj1jOhl
+         wN2g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8qHqhUTLPLAeUp/D+WrLyXnpz1H1Jll7QCXTM4rdBnU=;
-        b=e/gpKMAEOlU/KLHbphgXnWvyPLXLAh9zTrt3/xzP8mJa4PgXlueM4UO1UaVhvAeZdH
-         n8Sf1rlhvTCQYx6Ge1AoSaQXjQW0X34zo5TlYHMNQosn1TqayGya3dee44BcyzoV8HRQ
-         92co6KekaJw+UbOr4fYkItGyXP6hf8yI5HRYBi1cDs+OHVk2V6D3v98mExZEgDYTlb5p
-         IR1yx7WCM90f8uw16maXfns9detsUPzPc5b+44viQM9roMqrbB2ooLF4vLTvDNFZk9nS
-         tJlzAg5fddidIdriWfVBVrEsqxw8ierqU1baahdKpiEodZhYxZidabhcLemULOUM1EV6
-         H2LA==
-X-Gm-Message-State: APjAAAV3PHLJJNj3X201CWzKt4fcuTugu97NHCiE7bI+cH/wdklCQd9S
-        x+oVDKqzcLafUFmPl005J144Wi4FY1eC+N4nqrqHYw==
-X-Google-Smtp-Source: APXvYqweODXawSwtgymTZRrJNdMT45q8SqezxZPypJ8zBOLy843m58QTD1p0JxHjbascNuxyphfbzEeuTcKrS6urlOY=
-X-Received: by 2002:adf:90c3:: with SMTP id i61mr63288158wri.48.1560866751639;
- Tue, 18 Jun 2019 07:05:51 -0700 (PDT)
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QTZqy45k7+sDKOksZP/D2s9gAFDBBAHV7AhvC7CBxAQ=;
+        b=RnpDY3koZbo6U26O+FGn5wWQBF4bO/pMTU//DbNhwzktzFeVTQboexiFZmlIw3sNxR
+         2EbAU/mi5v077+ClLKLLeJO8xQuYRSIKoO0/XvcrEZhbzdUEZhegFUSjOnJVnrg9VZHa
+         XSTzXI9aZO5rdxi+yNFYbBgkGd7Vn3kJYz7Z3q+M1bkfmGhc1ejhz9ZZjJBBL7G35E3K
+         CjuHeG4GTA08Z9P8eooTLaWCEABKKqAV3vq9AD/Dnqef6/5xUaW0C7tBUGDUlUFOv2/N
+         75vS+c+Ypo9Gcp77fZdRSEgff8+PvCzERw7jBFrLzeVJRMXrzr/OBJ2n1Xzz/5lRB1GJ
+         8BTw==
+X-Gm-Message-State: APjAAAUQ3ZQYqKYfmMuZ1CyRhdgBXrjvmu0fTK8mESy8xD9McgTDC16Y
+        NQ9S4k/Pd7egQqS9bF69l/c=
+X-Google-Smtp-Source: APXvYqwHPxz5wQf2l7vQGoUuWHaLCHNCKVabuKAlqkhXyXtuR15zj4ULZlZKJJ46pS7yfP1c1Jo+wQ==
+X-Received: by 2002:a2e:9b84:: with SMTP id z4mr33791259lji.75.1560866789998;
+        Tue, 18 Jun 2019 07:06:29 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id a18sm2614271ljf.35.2019.06.18.07.06.28
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Jun 2019 07:06:29 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Tue, 18 Jun 2019 16:06:22 +0200
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Roman Penyaev <rpenyaev@suse.de>,
+        Uladzislau Rezki <urezki@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/vmalloc: avoid bogus -Wmaybe-uninitialized warning
+Message-ID: <20190618140622.bbak3is7yv32hfjn@pc636>
+References: <20190618092650.2943749-1-arnd@arndb.de>
+ <CAJWu+oqzd8MJqusRV0LAK=Xnm7VSRSu3QbNZ-j5h9_MbzcFhhg@mail.gmail.com>
 MIME-Version: 1.0
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
- <1560169080-27134-15-git-send-email-yong.wu@mediatek.com> <CAAFQd5A5GUn1Zq1xF2_2V0MReNPd5bra2F=nquvodSAZUua5AQ@mail.gmail.com>
- <1560859743.8082.23.camel@mhfsdcap03>
-In-Reply-To: <1560859743.8082.23.camel@mhfsdcap03>
-From:   Tomasz Figa <tfiga@google.com>
-Date:   Tue, 18 Jun 2019 23:05:39 +0900
-Message-ID: <CAAFQd5B8MiMA_OCUJ5HRmC5SA2772HF-rBGK0aZcKoWscOzOog@mail.gmail.com>
-Subject: Re: [PATCH v7 14/21] iommu/mediatek: Add mmu1 support
-To:     Yong Wu <yong.wu@mediatek.com>
-Cc:     youlin.pei@mediatek.com, devicetree@vger.kernel.org,
-        Nicolas Boichat <drinkcat@chromium.org>,
-        srv_heupstream <srv_heupstream@mediatek.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        "moderated list:ARM/Mediatek SoC support" 
-        <linux-mediatek@lists.infradead.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= 
-        <yingjoe.chen@mediatek.com>, anan.sun@mediatek.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJWu+oqzd8MJqusRV0LAK=Xnm7VSRSu3QbNZ-j5h9_MbzcFhhg@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 9:09 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> On Tue, 2019-06-18 at 15:19 +0900, Tomasz Figa wrote:
-> > On Mon, Jun 10, 2019 at 9:21 PM Yong Wu <yong.wu@mediatek.com> wrote:
-> > >
-> > > Normally the M4U HW connect EMI with smi. the diagram is like below:
-> > >               EMI
-> > >                |
-> > >               M4U
-> > >                |
-> > >             smi-common
-> > >                |
-> > >        -----------------
-> > >        |    |    |     |    ...
-> > >     larb0 larb1  larb2 larb3
-> > >
-> > > Actually there are 2 mmu cells in the M4U HW, like this diagram:
-> > >
-> > >               EMI
-> > >            ---------
-> > >             |     |
-> > >            mmu0  mmu1     <- M4U
-> > >             |     |
-> > >            ---------
-> > >                |
-> > >             smi-common
-> > >                |
-> > >        -----------------
-> > >        |    |    |     |    ...
-> > >     larb0 larb1  larb2 larb3
-> > >
-> > > This patch add support for mmu1. In order to get better performance,
-> > > we could adjust some larbs go to mmu1 while the others still go to
-> > > mmu0. This is controlled by a SMI COMMON register SMI_BUS_SEL(0x220).
-> > >
-> > > mt2712, mt8173 and mt8183 M4U HW all have 2 mmu cells. the default
-> > > value of that register is 0 which means all the larbs go to mmu0
-> > > defaultly.
-> > >
-> > > This is a preparing patch for adjusting SMI_BUS_SEL for mt8183.
-> > >
-> > > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > > Reviewed-by: Evan Green <evgreen@chromium.org>
-> > > ---
-> > >  drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++-----------------
-> > >  1 file changed, 29 insertions(+), 17 deletions(-)
-> > >
-> > > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> > > index 3a14301..ec4ce74 100644
-> > > --- a/drivers/iommu/mtk_iommu.c
-> > > +++ b/drivers/iommu/mtk_iommu.c
-> > > @@ -72,26 +72,32 @@
-> > >  #define F_INT_CLR_BIT                          BIT(12)
-> > >
-> > >  #define REG_MMU_INT_MAIN_CONTROL               0x124
-> > > -#define F_INT_TRANSLATION_FAULT                        BIT(0)
-> > > -#define F_INT_MAIN_MULTI_HIT_FAULT             BIT(1)
-> > > -#define F_INT_INVALID_PA_FAULT                 BIT(2)
-> > > -#define F_INT_ENTRY_REPLACEMENT_FAULT          BIT(3)
-> > > -#define F_INT_TLB_MISS_FAULT                   BIT(4)
-> > > -#define F_INT_MISS_TRANSACTION_FIFO_FAULT      BIT(5)
-> > > -#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   BIT(6)
-> > > +                                               /* mmu0 | mmu1 */
-> > > +#define F_INT_TRANSLATION_FAULT                        (BIT(0) | BIT(7))
-> > > +#define F_INT_MAIN_MULTI_HIT_FAULT             (BIT(1) | BIT(8))
-> > > +#define F_INT_INVALID_PA_FAULT                 (BIT(2) | BIT(9))
-> > > +#define F_INT_ENTRY_REPLACEMENT_FAULT          (BIT(3) | BIT(10))
-> > > +#define F_INT_TLB_MISS_FAULT                   (BIT(4) | BIT(11))
-> > > +#define F_INT_MISS_TRANSACTION_FIFO_FAULT      (BIT(5) | BIT(12))
-> > > +#define F_INT_PRETETCH_TRANSATION_FIFO_FAULT   (BIT(6) | BIT(13))
+On Tue, Jun 18, 2019 at 09:40:28AM -0400, Joel Fernandes wrote:
+> On Tue, Jun 18, 2019 at 5:27 AM Arnd Bergmann <arnd@arndb.de> wrote:
 > >
-> > If there are two IOMMUs, shouldn't we have two driver instances handle
-> > them, instead of making the driver combine them two internally?
->
-> Actually it means only one IOMMU(M4U) HW here. Each a M4U HW has two
-> small iommu cells which have independent MTLB. As the diagram above, M4U
-> contain mmu0 and mmu1.
->
-> MT8173 and MT8183 have only one M4U HW while MT2712 have 2 M4U HWs(two
-> driver instances).
->
+> > gcc gets confused in pcpu_get_vm_areas() because there are too many
+> > branches that affect whether 'lva' was initialized before it gets
+> > used:
 > >
-> > And, what is even more important from security point of view actually,
-> > have two separate page tables (aka IOMMU groups) for them?
->
-> Each a IOMMU(M4U) have its own pagetable, thus, mt8183 have only one
-> pagetable while mt2712 have two.
+> > mm/vmalloc.c: In function 'pcpu_get_vm_areas':
+> > mm/vmalloc.c:991:4: error: 'lva' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> >     insert_vmap_area_augment(lva, &va->rb_node,
+> >     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >      &free_vmap_area_root, &free_vmap_area_list);
+> >      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > mm/vmalloc.c:916:20: note: 'lva' was declared here
+> >   struct vmap_area *lva;
+> >                     ^~~
+> >
+> > Add an intialization to NULL, and check whether this has changed
+> > before the first use.
+> >
+> > Fixes: 68ad4a330433 ("mm/vmalloc.c: keep track of free blocks for vmap allocation")
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  mm/vmalloc.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index a9213fc3802d..42a6f795c3ee 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -913,7 +913,12 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> >         unsigned long nva_start_addr, unsigned long size,
+> >         enum fit_type type)
+> >  {
+> > -       struct vmap_area *lva;
+> > +       /*
+> > +        * GCC cannot always keep track of whether this variable
+> > +        * was initialized across many branches, therefore set
+> > +        * it NULL here to avoid a warning.
+> > +        */
+> > +       struct vmap_area *lva = NULL;
+> 
+> Fair enough, but is this 5-line comment really needed here?
+> 
+How it is rewritten now, probably not. I would just set it NULL and
+leave the comment, but that is IMHO. Anyway
 
-I see, thanks for clarifying.
+Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
 
-Best regards,
-Tomasz
+Thanks!
+
+--
+Vlad Rezki
