@@ -2,115 +2,122 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1421AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:42:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60927C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:43:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0BA620663
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:42:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220F721530
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:43:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qjQIrGkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfFRAmA (ORCPT
+        id S1726631AbfFRAnZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:42:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54562 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725829AbfFRAmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:42:00 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C43223082E1E;
-        Tue, 18 Jun 2019 00:41:59 +0000 (UTC)
-Received: from xz-x1 (unknown [10.66.60.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 786EA5E7C6;
-        Tue, 18 Jun 2019 00:41:55 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 08:41:52 +0800
-From:   Peter Xu <peterx@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, John Stultz <john.stultz@linaro.org>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>
-Subject: Re: [PATCH] timers: Fix up get_target_base() to use old base properly
-Message-ID: <20190618004152.GE30983@xz-x1>
-References: <20190603132944.9726-1-peterx@redhat.com>
- <alpine.DEB.2.21.1906170732410.1760@nanos.tec.linutronix.de>
- <20190617091122.GC12456@xz-x1>
- <alpine.DEB.2.21.1906171400050.1854@nanos.tec.linutronix.de>
+        Mon, 17 Jun 2019 20:43:25 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:42342 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRAnZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 20:43:25 -0400
+Received: by mail-ot1-f67.google.com with SMTP id l15so2138119otn.9;
+        Mon, 17 Jun 2019 17:43:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=k2lbSxS7dzxwxb6i0Oq5RHt/qUDihaL0G0ctkpHTiJo=;
+        b=qjQIrGkQ5XeuD8j9pDA0Qpe4HhzVjPlsGzACmzSceha6vC5OX5Kql7+UP7LiIlWHYj
+         acDmor3TqCWB6woaO12rj90cteAj0iWOiIdLkIQTSPNU8dvie8Fv1E/XTkLLu33fGmud
+         fOmmk0eExMhiBZFbPKu2VezF+vxVgwa+ZQg/0lV9BSMpZZJ3hk4QU+Ag92nlvBm2IN/4
+         Npi4k2gwdgLHq5jzQtAPO7AuJ9sC01TAjX9HE5vW8h0jsEPuHN/FPY2p3CR3aoeAm8cg
+         F8JFjUyKGFHqYl38TzGsG/NQbcQ3o/IEwDQHqbxchAKbcEpEDKGo0+OjXj7fMGSjY3Mt
+         +9tQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=k2lbSxS7dzxwxb6i0Oq5RHt/qUDihaL0G0ctkpHTiJo=;
+        b=Ms7JEPv06MAQ+GIER49ZroFukCjdFs3Pm4zXGwEJB9yiUKtux1noUh7ql3wfjSRhKe
+         lj4CAwrrvDaqcDhagAV2PSg2JTm75ukSvhdtwLbvh6nnpBuk5b+PqLOg8x7vqGm0+/fa
+         pVT5BqGhWtqpfwrgUzTjD8tC9VEAkq3uwSowd2y+dJScI2b40GR4B2t2XZLZWtFfEbzY
+         kgV1czym4/IcqcEQgU5CPqvMyeH6anNn0cRWclChy1nplocxPRegXmTgOsYavRkGujZY
+         Vv/pgfA3TvV3nLo+/aA98OUEm5zkzIhTKyaIevTyPXku/I1oZLJPYAaMft7AHlOB33Jc
+         hniA==
+X-Gm-Message-State: APjAAAUoExTbNCg/5rKZVqxMksooSXbRTEqvEU47k9sE0PQI48zSF7nh
+        zP6Uo/mLon6w8lr+5kTqnvabHixJTXqfXDnNEG4=
+X-Google-Smtp-Source: APXvYqz4ITqIRl3oYOhvThVAimSH0fc5M/eLGiTGrmNUEYhqJJXeEUPvocWkLLkya2ZPWQgr46dZhjjTUATXxbsVOfA=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr38008868oto.118.1560818604278;
+ Mon, 17 Jun 2019 17:43:24 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906171400050.1854@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 18 Jun 2019 00:41:59 +0000 (UTC)
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-6-git-send-email-wanpengli@tencent.com> <20190617213201.GA26346@flask>
+In-Reply-To: <20190617213201.GA26346@flask>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Tue, 18 Jun 2019 08:44:00 +0800
+Message-ID: <CANRm+Cxrn51mJUvjH7df+U-HpPPLJJzsRf+BMebxDogSabex3g@mail.gmail.com>
+Subject: Re: [PATCH v4 5/5] KVM: LAPIC: add advance timer support to pi_inject_timer
+To:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 02:07:48PM +0200, Thomas Gleixner wrote:
-> Peter,
-> 
-> On Mon, 17 Jun 2019, Peter Xu wrote:
-> > On Mon, Jun 17, 2019 at 08:09:20AM +0200, Thomas Gleixner wrote:
-> > > You might argue that in case of an explicit pinned timer, the above logic
-> > > is wrong when the timer is modified as it might move to a different
-> > > CPU. But from day one when the pinned logic was introduced, pinned just
-> > > prevents it from being queued on a remote CPU. If you need a timer to stay
-> > > on a particular CPU even if modified from a remote CPU, then the only way
-> > > right now is to dequeue and requeue it with add_timer_on(). 
-> > 
-> > Indeed.  If add_timer_on() should always be used when with pinned
-> > timers, IMHO it would be good to comment probably above TIMER_PINNED
-> > about the fact so people will never misuse the interfaces (it seems to
-> > be mis-used somehow but I cannot be 100% sure, please see below).
-> 
-> Yeah, some documentation would be good.
-> 
-> > > If we really want to change that, then we need to audit all usage sites of
-> > > pinned timers and figure out whether this would break anything.
-> > > 
-> > > The proper change would be in that case:
-> > > 
-> > >       return pinned ? base : get_timer_this_cpu_base(tflags);
-> > 
-> > Purely for curiousity - why would we like to use current cpu base even
-> > if it's unpinned?  My humble opinion is that if we use base directly
-> > at least we can avoid potential migration of the timer.  But I can be
-> > missing some real reason here...
-> 
-> In most cases it's desired to move the timer over. Assume you have a
-> network interrupt moving from one cpu to the other and then the tcp timers
-> would stay on the old cpu forever. So you'd pay the remote access price
-> every time you touch it and if it fires the callback is pretty much
-> guaranteed to be cache cold.
+On Tue, 18 Jun 2019 at 05:32, Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.c=
+om> wrote:
+>
+> 2019-06-17 19:24+0800, Wanpeng Li:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Wait before calling posted-interrupt deliver function directly to add
+> > advance timer support to pi_inject_timer.
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+>
+> Please merge this patch with [2/5], so bisection doesn't break.
 
-I see.
+Agreed.
 
-> 
-> > Though, I see two outliers:
-> > 
-> > ======================
-> > 
-> > *** drivers/cpufreq/powernv-cpufreq.c:
-> > powernv_cpufreq_cpu_init[867]  TIMER_PINNED | TIMER_DEFERRABLE);
-> > 
-> > *** net/ipv4/inet_timewait_sock.c:
-> > inet_twsk_alloc[189]           timer_setup(&tw->tw_timer, tw_timer_handler, TIMER_PINNED);
-> 
-> That's fine. It just wants to make sure that the timer is not queued on a
-> remote CPU if NOHZ is active. That gives them a serialization guarantee of
-> the network softirq vs. the timer softirq so they can spare some locking
-> stuff.
+>
+> >  arch/x86/kvm/lapic.c   | 6 ++++--
+> >  arch/x86/kvm/lapic.h   | 2 +-
+> >  arch/x86/kvm/svm.c     | 2 +-
+> >  arch/x86/kvm/vmx/vmx.c | 2 +-
+> >  4 files changed, 7 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index 1a31389..1a31ba5 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -1462,6 +1462,8 @@ static void apic_timer_expired(struct kvm_lapic *=
+apic, bool can_pi_inject)
+> >               return;
+> >
+> >       if (can_pi_inject && posted_interrupt_inject_timer(apic->vcpu)) {
+> > +             if (apic->lapic_timer.timer_advance_ns)
+> > +                     kvm_wait_lapic_expire(vcpu, true);
+>
+> From where does kvm_wait_lapic_expire() take
+> apic->lapic_timer.expired_tscdeadline?
 
-Thanks for the analysis.  Instead of this patch, let me post a
-documentation update for pinned timers.
+Sorry, I failed to understand this.
+https://git.kernel.org/pub/scm/virt/kvm/kvm.git/tree/arch/x86/kvm/lapic.c?h=
+=3Dqueue#n1541
+We can get apic->lapic_timer.expired_tscdeadline in
+kvm_wait_lapic_expire() directly.
 
-Thanks,
-
--- 
-Peter Xu
+Regards,
+Wanpeng Li
