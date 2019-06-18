@@ -2,104 +2,146 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E59DC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:41:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7B1C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:42:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 303DB206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:41:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560847261;
-	bh=10IeNowX3RW92UWladQLU7AhfNf5XVgPFvZ0Azmp+VA=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=e2bX8oS3ZWrmstgSTnlyo3EyJyCJVYNQYiP8mJEhOr/sVRZsZrunA7SzFzdLkZN94
-	 /I1IPxVajUm2x3E1Ayfuq3hoTdLFP3eKtijyO3QymSgURTsKBi6oPmbOJFzIh0wkoL
-	 /sCGAS6TA9yXaZKtOH3p5Uu69g8lFOLKUG7S6AT4=
+	by mail.kernel.org (Postfix) with ESMTP id 975E920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 08:42:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfFRIk7 (ORCPT
+        id S1729166AbfFRImG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 04:40:59 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:42884 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFRIk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 04:40:59 -0400
-Received: by mail-ot1-f67.google.com with SMTP id l15so3559143otn.9;
-        Tue, 18 Jun 2019 01:40:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=10IeNowX3RW92UWladQLU7AhfNf5XVgPFvZ0Azmp+VA=;
-        b=spmP1yx4Enan68cGYYcYM+py9PB+2pagjyUFfQ55L+jWv09pG8lxpQIoRECfVnJloo
-         m4SytzTVh70lGwfIhCbQ8Bjhpf9Pyk0NpY5HGb+2ghECa0SZuxRiwz2fGuqfWwh2f7cJ
-         OSTSN19kqfzN4xUfF3u4S0RAj7NUtAHWqKHRAM3QgRlR3mgsEpDIDU+mf7K0TLYBMdnd
-         JM7JGkFQv3iRXxep6myG706XNg95z6OQ9+XT/5ABnPsOOgBJrmwMo1k8EfETNCM33ZP4
-         OzcrovLx1z3dNyNbXmvnAL5ZX8RwuUWQjyDlC5cZ59jv9A/+rocSvbiCNehf+oP8RqdO
-         rN5Q==
-X-Gm-Message-State: APjAAAWHbvUFrZCarvvVJnUOlbF7w1TDNKW2KKTUCBykd0ysTMF/BKRg
-        jRwPeVWFrgcMsK1nZkG9DrAnSM/i2oOGsAew3NI=
-X-Google-Smtp-Source: APXvYqzBVXcfP7421rR8eXKYNY60z485ksnyrEI6OHcVnL1LP/bfIxHUVleiZmesIilT4xH9Q19toeV6i3LPcS7zT9U=
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr2146423otn.266.1560847258138;
- Tue, 18 Jun 2019 01:40:58 -0700 (PDT)
+        Tue, 18 Jun 2019 04:42:06 -0400
+Received: from foss.arm.com ([217.140.110.172]:57310 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfFRImG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 04:42:06 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1179F28;
+        Tue, 18 Jun 2019 01:42:05 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 341043F246;
+        Tue, 18 Jun 2019 01:42:04 -0700 (PDT)
+Subject: Re: [PATCH] irqchip/mbigen: stop printing kernel addresses
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Jason Cooper <jason@lakedaemon.net>,
+        linux-kernel@vger.kernel.org, guohanjun@huawei.com
+References: <20190618032202.11087-1-wangkefeng.wang@huawei.com>
+ <86h88npc47.wl-marc.zyngier@arm.com>
+ <d529faf2-9edd-8362-c208-fd1902d539e7@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <209f546b-8da2-982d-2f37-258da556f45c@arm.com>
+Date:   Tue, 18 Jun 2019 09:42:02 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-10-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0gi2vpr5y3USnPnPBHjPA1YAwfqjsJppfLgBP5CcycGog@mail.gmail.com> <85f942fc-52fd-c4ed-29b3-f28c55a6a7bb@arm.com>
-In-Reply-To: <85f942fc-52fd-c4ed-29b3-f28c55a6a7bb@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 18 Jun 2019 10:40:47 +0200
-Message-ID: <CAJZ5v0io59U1yy4RnX0fSXFyQ-PSHb1wXjLp7XLi8SzO3hSdVA@mail.gmail.com>
-Subject: Re: [PATCH v2 09/28] drivers: Add generic match helper by
- ACPI_COMPANION device
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Len Brown <lenb@kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        linux-spi <linux-spi@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <d529faf2-9edd-8362-c208-fd1902d539e7@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:38 AM Suzuki K Poulose
-<suzuki.poulose@arm.com> wrote:
->
-> Hi Rafael,
->
-> On 17/06/2019 23:07, Rafael J. Wysocki wrote:
-> > On Fri, Jun 14, 2019 at 7:55 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> >>
-> >> Add a generic helper to match a device by the ACPI_COMPANION device.
-> >> This will be later used for providing wrappers for
-> >> (bus/class/driver)_find_device().
-> >>
-> >> Cc: Len Brown <lenb@kernel.org>
-> >> Cc: linux-acpi@vger.kernel.org
-> >> Cc: linux-spi@vger.kernel.org
-> >> Cc: Mark Brown <broonie@kernel.org>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> >> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >
-> > Please fold this change into the patch adding users of device_match_acpi_dev().
->
-> There are variants of this by class/bus/driver and all of them are introduced
-> as separate patches with the respective users. If we do for this, we have to
-> do the same for other matches as well.
->
-> i.e, [ device_match_by_attr + class_find_device_by_attr & users +
-> driver_find_device_by_attr & users + bus_find_device_by_attr & users ]
->
-> And that becomes a large chunk, which could make the review painful.
->
-> If you would still like that approach, I could do that in the next revision.
+On 18/06/2019 09:35, Kefeng Wang wrote:
+> 
+> 
+> On 2019/6/18 15:48, Marc Zyngier wrote:
+>> Hi Kefeng,
+>>
+>> On Tue, 18 Jun 2019 04:22:02 +0100,
+>> Kefeng Wang <wangkefeng.wang@huawei.com> wrote:
+>>>
+>>> After commit ad67b74d2469d9b8 ("printk: hash addresses printed with %p"),
+>>> it will print "____ptrval____" instead of actual addresses when mbigen
+>>> create domain fails,
+>>>
+>>>   Hisilicon MBIGEN-V2 HISI0152:00: Failed to create mbi-gen@(____ptrval____) irqdomain
+>>>   Hisilicon MBIGEN-V2: probe of HISI0152:00 failed with error -12
+>>>
+>>> Instead of changing the print to "%px", and leaking kernel addresses,
+>>> just remove the print completely.
+>>>
+>>> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+>>> ---
+>>>  drivers/irqchip/irq-mbigen.c | 3 +--
+>>>  1 file changed, 1 insertion(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/irqchip/irq-mbigen.c b/drivers/irqchip/irq-mbigen.c
+>>> index 98b6e1d4b1a6..d0cf596c801b 100644
+>>> --- a/drivers/irqchip/irq-mbigen.c
+>>> +++ b/drivers/irqchip/irq-mbigen.c
+>>> @@ -355,8 +355,7 @@ static int mbigen_device_probe(struct platform_device *pdev)
+>>>  		err = -EINVAL;
+>>>  
+>>>  	if (err) {
+>>> -		dev_err(&pdev->dev, "Failed to create mbi-gen@%p irqdomain",
+>>> -			mgn_chip->base);
+>>> +		dev_err(&pdev->dev, "Failed to create mbi-gen irqdomain");
+>>
+>> The alternative would be to print res as a resource, which would still
+>> help identifying the offending device by printing its physical
+>> layout, and still not reveal much.
+> 
+> It's better to print res to show the physical layout, and add missing "\n",
+> will resend v2.
 
-Yes, please.
+As Hanjun mentioned in a separate email, pdev->dev seems to be enough to
+identify which MBIGEN has failed to probe. So maybe all you need to do
+is to add the missing '\n', and tidy up the commit message to reflect that.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
