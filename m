@@ -2,105 +2,70 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B098EC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89425C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A01C20665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:06:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ue8LR2Qk"
+	by mail.kernel.org (Postfix) with ESMTP id 5C08D20665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:06:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728951AbfFRHGA (ORCPT
+        id S1728835AbfFRHGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:06:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36677 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726158AbfFRHF7 (ORCPT
+        Tue, 18 Jun 2019 03:06:32 -0400
+Received: from relmlor1.renesas.com ([210.160.252.171]:50810 "EHLO
+        relmlie6.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725919AbfFRHGc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:05:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so7101409pfl.3;
-        Tue, 18 Jun 2019 00:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
-        b=Ue8LR2Qk7y+EWsK1kXFMPLzPeXzkdfH0ztEPZVb5Jfusm1NYSEeT8qzhlDfQo/Mo7m
-         l9409MLPWW+t0N0zo++a14pi+SGGltJ0SS42uhY4SXXGgGi8HAOE+LIGSyFLRA3NfbtE
-         zisJAa/0g+CPDB7AKAO2nYYFmLPH0ypBESfc0UCOavmrIrB0PoXhmASaaXN1DbY2quVq
-         lIdZ3KIjdRBUdJMe5gTa05BWd2YrDH+OAptQsADdxajQOZBK8XWvB/Rz4HWFSdGFYwBy
-         gvcj70OXo+RRh5f5nWUyIdktSspfSuZQBQ3QsJqNz1KMuGqDklr9UxiZHVATVylJMcyH
-         4Gpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KY0hOmAa86HuZE0h9c7QHLSN/sFybZcvdeeWuBmi/OU=;
-        b=iTPL4beohlgK0QWR+SH1a9kEirgWvihaXVFnjMi76HFnxjASzOzBJRVIUvJU2WGVzV
-         WzfI3VOgjHyV9An/oKIo6DLaDYp7z3R/tzDq0XsFSBbfooj2AHYv0vrweMJp3gKiuuid
-         oahgx2lVr76P3UTgsxW8b0sNqb88Rua2Hy3UvYxk1NZ4CmHyzDDUKZ0//ktFSkW4985v
-         MCpY/3dSSQayj6HCq3as9jYVnl4yRepxF8ktvWlJ/WD+adHnvBwbv2m3ifZ3mMouyB6h
-         V0Cqgxy7w6UHjP8G8HQfj9Tn7FY7rCT3TAPSLZHiEGFbkxLj+OIlKi400UvJD7SJ5OpJ
-         Um+g==
-X-Gm-Message-State: APjAAAVvjP6uulz8yfrrg/2KJ0w4wH2eN21mH5Ae3ozVSKfo9hrEQPng
-        8WrNN2kjfqo90q6+qb2UTpVgJ1JsWJA=
-X-Google-Smtp-Source: APXvYqxTytyfk9wnV8foDumcE1FOZD+ACJGrgFdfF44453aFg6xoz3efdMevejBUgM67y8CrZf3Wng==
-X-Received: by 2002:a17:90a:9b08:: with SMTP id f8mr3264521pjp.103.1560838638921;
-        Mon, 17 Jun 2019 23:17:18 -0700 (PDT)
-Received: from maya190131 ([13.66.160.195])
-        by smtp.gmail.com with ESMTPSA id y185sm14143581pfy.110.2019.06.17.23.17.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 23:17:18 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 06:17:18 +0000
-From:   Maya Nakamura <m.maya.nakamura@gmail.com>
-To:     mikelley@microsoft.com, kys@microsoft.com, haiyangz@microsoft.com,
-        sthemmin@microsoft.com, sashal@kernel.org
-Cc:     x86@kernel.org, linux-hyperv@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] Input: hv: Remove dependencies on PAGE_SIZE for ring
- buffer
-Message-ID: <78f6e9646f762c51febba6c5a52eb777c238d4aa.1560837096.git.m.maya.nakamura@gmail.com>
-References: <cover.1560837096.git.m.maya.nakamura@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1560837096.git.m.maya.nakamura@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Tue, 18 Jun 2019 03:06:32 -0400
+Date:   18 Jun 2019 14:21:21 +0900
+X-IronPort-AV: E=Sophos;i="5.62,388,1554735600"; 
+   d="scan'208";a="18723527"
+Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
+  by relmlie6.idc.renesas.com with ESMTP; 18 Jun 2019 14:21:21 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir6.idc.renesas.com (Postfix) with ESMTP id 75065418BB84;
+        Tue, 18 Jun 2019 14:21:21 +0900 (JST)
+Message-ID: <87wohjtqr1.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+To:     Jiada Wang <jiada_wang@mentor.com>
+Cc:     <lgirdwood@gmail.com>, <broonie@kernel.org>, <perex@perex.cz>,
+        <tiwai@suse.com>, <sudipi@jp.adit-jv.com>,
+        <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 1/1] ASoC: rsnd: fixup mod ID calculation in rsnd_ctu_probe_
+In-Reply-To: <20190618051953.13419-1-jiada_wang@mentor.com>
+References: <20190618051953.13419-1-jiada_wang@mentor.com>
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Define the ring buffer size as a constant expression because it should
-not depend on the guest page size.
 
-Signed-off-by: Maya Nakamura <m.maya.nakamura@gmail.com>
-Reviewed-by: Michael Kelley <mikelley@microsoft.com>
----
- drivers/input/serio/hyperv-keyboard.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Hi
 
-diff --git a/drivers/input/serio/hyperv-keyboard.c b/drivers/input/serio/hyperv-keyboard.c
-index 8e457e50f837..88ae7c2ac3c8 100644
---- a/drivers/input/serio/hyperv-keyboard.c
-+++ b/drivers/input/serio/hyperv-keyboard.c
-@@ -75,8 +75,8 @@ struct synth_kbd_keystroke {
- 
- #define HK_MAXIMUM_MESSAGE_SIZE 256
- 
--#define KBD_VSC_SEND_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
--#define KBD_VSC_RECV_RING_BUFFER_SIZE		(10 * PAGE_SIZE)
-+#define KBD_VSC_SEND_RING_BUFFER_SIZE		(40 * 1024)
-+#define KBD_VSC_RECV_RING_BUFFER_SIZE		(40 * 1024)
- 
- #define XTKBD_EMUL0     0xe0
- #define XTKBD_EMUL1     0xe1
--- 
-2.17.1
+> From: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+> 
+> commit c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
+> introduces rsnd_ctu_id which calcualates and gives
+> the main Device id of the CTU by dividing the id by 4.
+> rsnd_mod_id uses this interface to get the CTU main
+> Device id. But this commit forgets to revert the main
+> Device id calcution previously done in rsnd_ctu_probe_
+> which also divides the id by 4. This path corrects the
+> same to get the correct main Device id.
+> 
+> The issue is observered when rsnd_ctu_probe_ is done for CTU1
+> 
+> Fixes: c16015f36cc1 ("ASoC: rsnd: add .get_id/.get_id_sub")
+> 
+> Signed-off-by: Nilkanth Ahirrao <anilkanth@jp.adit-jv.com>
+> Signed-off-by: Suresh Udipi <sudipi@jp.adit-jv.com>
+> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+> ---
 
+Acked-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
