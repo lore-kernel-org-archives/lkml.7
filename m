@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B6D5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB547C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECBC820863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B85B2187F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 22:51:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731037AbfFRWvS (ORCPT
+        id S1731053AbfFRWvX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 18:51:18 -0400
-Received: from mga07.intel.com ([134.134.136.100]:48878 "EHLO mga07.intel.com"
+        Tue, 18 Jun 2019 18:51:23 -0400
+Received: from mga07.intel.com ([134.134.136.100]:48880 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730953AbfFRWvO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 18:51:14 -0400
+        id S1730979AbfFRWvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 18:51:15 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 15:51:12 -0700
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 15:51:13 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
-   d="scan'208";a="358009381"
+   d="scan'208";a="358009395"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 15:51:12 -0700
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 15:51:13 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -47,9 +47,9 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v9 13/17] x86/split_lock: Disable split lock detection by kernel parameter "nosplit_lock_detect"
-Date:   Tue, 18 Jun 2019 15:41:15 -0700
-Message-Id: <1560897679-228028-14-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v9 17/17] x86/split_lock: Warn on unaligned address in atomic bit operations
+Date:   Tue, 18 Jun 2019 15:41:19 -0700
+Message-Id: <1560897679-228028-18-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
 References: <1560897679-228028-1-git-send-email-fenghua.yu@intel.com>
@@ -58,83 +58,112 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To work around or debug split lock issues, the kernel parameter
-"nosplit_lock_detect" is introduced to disable the feature during boot
-time.
+An atomic bit operation operates one bit in a single unsigned long location
+in a bitmap. In 64-bit mode, the location is at:
+base address of the bitmap + (bit offset in the bitmap / 64) * 8
 
+If the base address is unaligned to unsigned long, each unsigned long
+location operated by the atomic operation will be unaligned to unsigned
+long and a split lock issue will happen if the unsigned long location
+crosses two cache lines.
+
+So checking alignment of the base address can proactively audit potential
+split lock issues in the atomic bit operation. A real split lock issue
+may or may not happen depending on the bit offset.
+
+Once analyzing the warning information, kernel developer can fix the
+potential split lock issue by aligning the base address to unsigned long
+instead of waiting for a real split lock issue happens.
+
+After applying this patch on 5.2-rc1, vmlinux size is increased by 0.2%
+and bzImage size is increased by 0.3% with allyesconfig.
+
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- .../admin-guide/kernel-parameters.txt         |  2 ++
- arch/x86/kernel/cpu/intel.c                   | 22 ++++++++++++++++---
- 2 files changed, 21 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 138f6664b2e2..bcf578a1bc77 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -3086,6 +3086,8 @@
+FYI. After applying this patch, I haven't noticed any warning generated
+from this patch with booting and limited run time tests on a few platforms.
+
+ arch/x86/include/asm/bitops.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
+index 8e790ec219a5..44d7a353d6fd 100644
+--- a/arch/x86/include/asm/bitops.h
++++ b/arch/x86/include/asm/bitops.h
+@@ -14,6 +14,7 @@
+ #endif
  
- 	nosoftlockup	[KNL] Disable the soft-lockup detector.
- 
-+	nosplit_lock_detect	[X86] Disable split lock detection
-+
- 	nosync		[HW,M68K] Disables sync negotiation for all devices.
- 
- 	nowatchdog	[KNL] Disable both lockup detectors, i.e.
-diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
-index 4ccd890a45b0..4a854f051cf4 100644
---- a/arch/x86/kernel/cpu/intel.c
-+++ b/arch/x86/kernel/cpu/intel.c
-@@ -19,6 +19,7 @@
- #include <asm/microcode_intel.h>
- #include <asm/hwcap2.h>
- #include <asm/elf.h>
-+#include <asm/cmdline.h>
- 
- #ifdef CONFIG_X86_64
- #include <linux/topology.h>
-@@ -34,6 +35,8 @@
- DEFINE_PER_CPU(u64, msr_test_ctl_cached);
- EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cached);
- 
-+static bool split_lock_detect_enabled;
-+
- /*
-  * Just in case our CPU detection goes bad, or you have a weird system,
-  * allow a way to override the automatic disabling of MPX.
-@@ -629,8 +632,13 @@ static void init_intel_misc_features(struct cpuinfo_x86 *c)
- 
- static void split_lock_update_msr(void)
+ #include <linux/compiler.h>
++#include <linux/bug.h>
+ #include <asm/alternative.h>
+ #include <asm/rmwcc.h>
+ #include <asm/barrier.h>
+@@ -67,6 +68,8 @@
+ static __always_inline void
+ set_bit(long nr, volatile unsigned long *addr)
  {
--	/* Enable split lock detection */
--	this_cpu_or(msr_test_ctl_cached, MSR_TEST_CTL_SPLIT_LOCK_DETECT);
-+	if (split_lock_detect_enabled) {
-+		/* Enable split lock detection */
-+		this_cpu_or(msr_test_ctl_cached, MSR_TEST_CTL_SPLIT_LOCK_DETECT);
-+	} else {
-+		/* Disable split lock detection */
-+		this_cpu_and(msr_test_ctl_cached, ~MSR_TEST_CTL_SPLIT_LOCK_DETECT);
-+	}
- 	wrmsrl(MSR_TEST_CTL, this_cpu_read(msr_test_ctl_cached));
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+ 	if (IS_IMMEDIATE(nr)) {
+ 		asm volatile(LOCK_PREFIX "orb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+@@ -105,6 +108,8 @@ static __always_inline void __set_bit(long nr, volatile unsigned long *addr)
+ static __always_inline void
+ clear_bit(long nr, volatile unsigned long *addr)
+ {
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+ 	if (IS_IMMEDIATE(nr)) {
+ 		asm volatile(LOCK_PREFIX "andb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+@@ -137,6 +142,9 @@ static __always_inline void __clear_bit(long nr, volatile unsigned long *addr)
+ static __always_inline bool clear_bit_unlock_is_negative_byte(long nr, volatile unsigned long *addr)
+ {
+ 	bool negative;
++
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+ 	asm volatile(LOCK_PREFIX "andb %2,%1"
+ 		CC_SET(s)
+ 		: CC_OUT(s) (negative), WBYTE_ADDR(addr)
+@@ -186,6 +194,8 @@ static __always_inline void __change_bit(long nr, volatile unsigned long *addr)
+  */
+ static __always_inline void change_bit(long nr, volatile unsigned long *addr)
+ {
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+ 	if (IS_IMMEDIATE(nr)) {
+ 		asm volatile(LOCK_PREFIX "xorb %1,%0"
+ 			: CONST_MASK_ADDR(nr, addr)
+@@ -206,6 +216,8 @@ static __always_inline void change_bit(long nr, volatile unsigned long *addr)
+  */
+ static __always_inline bool test_and_set_bit(long nr, volatile unsigned long *addr)
+ {
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+ 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(bts), *addr, c, "Ir", nr);
  }
  
-@@ -1027,7 +1035,15 @@ cpu_dev_register(intel_cpu_dev);
- static void __init split_lock_setup(void)
+@@ -252,6 +264,8 @@ static __always_inline bool __test_and_set_bit(long nr, volatile unsigned long *
+  */
+ static __always_inline bool test_and_clear_bit(long nr, volatile unsigned long *addr)
  {
- 	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
--	pr_info("enabled\n");
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
 +
-+	if (cmdline_find_option_bool(boot_command_line,
-+				     "nosplit_lock_detect")) {
-+		split_lock_detect_enabled = false;
-+		pr_info("disabled\n");
-+	} else {
-+		split_lock_detect_enabled = true;
-+		pr_info("enabled\n");
-+	}
+ 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btr), *addr, c, "Ir", nr);
  }
  
- void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+@@ -305,6 +319,8 @@ static __always_inline bool __test_and_change_bit(long nr, volatile unsigned lon
+  */
+ static __always_inline bool test_and_change_bit(long nr, volatile unsigned long *addr)
+ {
++	WARN_ON_ONCE(!IS_ALIGNED((unsigned long)addr, sizeof(unsigned long)));
++
+ 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
+ }
+ 
 -- 
 2.19.1
 
