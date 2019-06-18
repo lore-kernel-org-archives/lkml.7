@@ -2,111 +2,108 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 911AEC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:52:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBDBCC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:54:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A0A2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:52:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0F562070B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:54:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nXI/Gx44"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="d9gd1o7h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbfFRLwr (ORCPT
+        id S1729797AbfFRLy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:52:47 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:12449 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729775AbfFRLwq (ORCPT
+        Tue, 18 Jun 2019 07:54:29 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:42324 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbfFRLy2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:52:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d08d08d0000>; Tue, 18 Jun 2019 04:52:45 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 04:52:45 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 04:52:45 -0700
-Received: from [10.19.65.14] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 11:52:42 +0000
-Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
- <e1bf5aac-5528-3e54-0f41-5a1bbabce419@gmail.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <2724f809-fe0b-810c-6236-d94a1efc2112@nvidia.com>
-Date:   Tue, 18 Jun 2019 04:52:39 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 07:54:28 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IBmlPb069443;
+        Tue, 18 Jun 2019 11:54:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : mime-version : content-type : in-reply-to;
+ s=corp-2018-07-02; bh=9gsdLFMf2r5ChS58kjStnd5HOdzpIyd2OcNY/w49Mns=;
+ b=d9gd1o7hmjUYTxOGP40zHRruXHPYmZtIlcGTGDP394sD2WlPaUrTZOtUVk3LaWPHg2TJ
+ mjMxCZ7gVBlInmpHmAWWmfMbYWUGhlaTXLAZWNF4F+9x18BkHI+3BLnSivxT4ijuvCKB
+ envHXGJqKYpo+Cuwloeu9prnK1h0TDKikLu6WqWAe/U96zUJqpPMBzbjBhDJll+06PV8
+ hVzqfdWmEJcbakNk09MnyJZ/rkIJT2UpjnQPIFpOQmLilqueJr0pfRt4WDqYWVSlVkIu
+ 7o8Fu/1x93/SNk1MzCJYzjFafVqvf6HXmbRbSmG3chxkR42oyksGPSofzuF9lZvOj+WU yQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2t4rmp3xyb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 11:54:20 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5IBrYNU137368;
+        Tue, 18 Jun 2019 11:54:20 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2t59gdsdsx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 18 Jun 2019 11:54:20 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5IBsHW4022840;
+        Tue, 18 Jun 2019 11:54:17 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 04:54:17 -0700
+Date:   Tue, 18 Jun 2019 14:54:10 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     arm@kernel.org
+Cc:     Krzysztof Halasa <khalasa@piap.pl>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: [PATCH] soc: ixp4xx: npe: Fix an IS_ERR() vs NULL check in probe
+Message-ID: <20190618115410.GE18776@kadam>
 MIME-Version: 1.0
-In-Reply-To: <e1bf5aac-5528-3e54-0f41-5a1bbabce419@gmail.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560858765; bh=e1tSso8N3GCOauwbmbeeod/T6BaFIk3wbGNaptwkfqo=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nXI/Gx44H5Pc1Wl65W+eH9mEscbbjjtHYht1M4aTe1qwaM58xgatN5HlVNQY3dxjv
-         SSAIHxycH7rjhiO2sIjGNeib6gQ9RWvVWCLNs+ynDnHFVD+4jLQVIovU5eFoyLLjOb
-         K1zKjXveIvOGM12myYcw3c5gCsreI5B5LDaM1Jy40DjWwZuAMZYv2dcRUXk8gZdQ4h
-         QR1xA6PVa16XuVrKBb0iPdHTN0C2r+NBGLrBEd1FSAYt+mG6B9s+TUAqVGw8Aiyc01
-         k52jm7kCyA4o6KxG+3VTPKtvDIzFqDC8RI76taws+TG9/D3k0bked0fObQR5UYujap
-         aeE0h5sFLPiEg==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACRpkdaX66=g7dG7SFkgr5Dwmop-p4qe7ELkn0KERtqVvp0vNA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906180098
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9291 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906180098
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The devm_ioremap_resource() function doesn't return NULL, it returns
+error pointers.
 
+Fixes: 0b458d7b10f8 ("soc: ixp4xx: npe: Pass addresses as resources")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ drivers/soc/ixp4xx/ixp4xx-npe.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-On 6/18/19 4:29 AM, Dmitry Osipenko wrote:
-> 18.06.2019 14:09, Bitan Biswas =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->> The usage of BUG() macro is generally discouraged in kernel, unless
->> it's a problem that results in a physical damage or loss of data.
->> This patch removes unnecessary BUG() macros and replaces the rest
->> with warning.
->>
->> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->> ---
->>   drivers/i2c/busses/i2c-tegra.c | 47 ++++++++++++++++++++++++++++++++++=
-+-------
->>   1 file changed, 39 insertions(+), 8 deletions(-)
->=20
-> Thank you very much! Please keep applying all the advises that were given=
- to you
-> during the reviews in the future patches.
-Thank you Dmitry for the review inputs and patience. I shall try to keep=20
-the advices in mind for future reviews.
-
-
->=20
-> I made a quick test and no problems spotted, all warning spots are silent=
-.
->=20
-> Reviewed-by: Dmitry Osipenko <digetx@gmail.com>
-> Tested-by: Dmitry Osipenko <digetx@gmail.com>
->=20
-Also, Thank you for help in testing the patch at your end.
-
--regards,
-  Bitan
-
+diff --git a/drivers/soc/ixp4xx/ixp4xx-npe.c b/drivers/soc/ixp4xx/ixp4xx-npe.c
+index bc10e3194809..ec90b44fa0cd 100644
+--- a/drivers/soc/ixp4xx/ixp4xx-npe.c
++++ b/drivers/soc/ixp4xx/ixp4xx-npe.c
+@@ -695,8 +695,8 @@ static int ixp4xx_npe_probe(struct platform_device *pdev)
+ 			continue; /* NPE already disabled or not present */
+ 		}
+ 		npe->regs = devm_ioremap_resource(dev, res);
+-		if (!npe->regs)
+-			return -ENOMEM;
++		if (IS_ERR(npe->regs))
++			return PTR_ERR(npe->regs);
+ 
+ 		if (npe_reset(npe)) {
+ 			dev_info(dev, "NPE%d at 0x%08x-0x%08x does not reset\n",
+-- 
+2.20.1
