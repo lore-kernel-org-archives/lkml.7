@@ -2,124 +2,141 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13D6AC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BADDC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E15552080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560842610;
-	bh=ORNSm3VV7yBbWhw7wrgIXiHj+NTwg/Ayf9t01rN2feQ=;
-	h=From:To:Cc:Subject:In-Reply-To:References:Date:List-ID:From;
-	b=opLbZx9mSk9IjdvPcXuOJKp3uK7cn+ia640cpVsOQ3KewkEFAGJt5gqH4ylglDYQP
-	 p6emq4I8oFSjdi4Wkd/cC1t0DPhQSE6n3VZrmkw2UwlLIF6Hcrcsb7IGE/EwBy8vbS
-	 jpGqrD0TK6FL5ecxC71hbd8wtGJYejspiUoxa8/I=
+	by mail.kernel.org (Postfix) with ESMTP id 34D8A20823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727099AbfFRHX2 (ORCPT
+        id S1728872AbfFRHX4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:23:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:5733 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725870AbfFRHX2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:23:28 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 00:23:27 -0700
-X-ExtLoop1: 1
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by orsmga007.jf.intel.com with ESMTP; 18 Jun 2019 00:23:24 -0700
-From:   Felipe Balbi <balbi@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, agross@kernel.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, gregkh@linuxfoundation.org,
-        ard.biesheuvel@linaro.org, jlhugo@gmail.com,
-        linux-arm-msm@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v4 0/4] I2C: DWC3 USB: Add support for ACPI based AArch64 Laptops
-In-Reply-To: <20190617132349.GI16364@dell>
-References: <20190617125105.6186-1-lee.jones@linaro.org> <87lfy0gym0.fsf@linux.intel.com> <20190617132349.GI16364@dell>
-Date:   Tue, 18 Jun 2019 10:23:20 +0300
-Message-ID: <87a7efgxw7.fsf@linux.intel.com>
+        Tue, 18 Jun 2019 03:23:56 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:44626 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRHX4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:23:56 -0400
+Received: by mail-ed1-f67.google.com with SMTP id k8so20111397edr.11;
+        Tue, 18 Jun 2019 00:23:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qCmSq7/dX8Bi0Rr7j3EyPomsJ3SBkWb71qFb9BFHhSE=;
+        b=B9qz21nWB/btW1lVC4eiZcXqxFe4OMokumsyvum5S0Ipz+yS32BwMDQXZvpNqNUsCC
+         0azEK9UycqgMo9rtn54s0/wstgeMpQ/3jGksWeGPzHB5K1sccq3pc7cahRUVi6UgZQW9
+         Pee8AW+WVkKtM2dpvXcXKgcfJfb+CZQ5nnkmoIvKI49zCLl5RxidDQ6shF5VBU6QIoFw
+         A1WWBPDDC2P3BYgNwfAV2B/E2xHU62iKsPhbgRT+1IaH0qAvtQKvW/XlxUQtXlGmWiBR
+         sF295LerkXho3GF886yV1Ufg3bRx5e6m2L1nqyvOHg/KiBLbtPY/xJ9i/Nv4+kbQAfEr
+         43jw==
+X-Gm-Message-State: APjAAAUGZ/GqfGqWSsm58ltfFavtF//y8LnjGyO5cIvP5UWTxyhqzfhO
+        s+sWHdT5BpahufvcVMk8AAUSqRoqTMk=
+X-Google-Smtp-Source: APXvYqz8Lr3h2GkkvEjz6Op9fiq0cVORydxuf+FbIbmToxbrgtGG9LAdaHb0cx/un4PILzSZR79OfQ==
+X-Received: by 2002:a50:b7bc:: with SMTP id h57mr123835886ede.77.1560842634181;
+        Tue, 18 Jun 2019 00:23:54 -0700 (PDT)
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com. [209.85.128.54])
+        by smtp.gmail.com with ESMTPSA id w35sm1957440edd.32.2019.06.18.00.23.53
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 00:23:53 -0700 (PDT)
+Received: by mail-wm1-f54.google.com with SMTP id a15so1962183wmj.5;
+        Tue, 18 Jun 2019 00:23:53 -0700 (PDT)
+X-Received: by 2002:a1c:f512:: with SMTP id t18mr1991013wmh.47.1560842633421;
+ Tue, 18 Jun 2019 00:23:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <20190617114503.pclqsf6bo3ih47nt@flea>
+ <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com> <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ@mail.gmail.com>
+In-Reply-To: <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ@mail.gmail.com>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Tue, 18 Jun 2019 15:23:41 +0800
+X-Gmail-Original-Message-ID: <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
+Message-ID: <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
+ clock gates in probe
+To:     Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-
-Hi,
-
-Lee Jones <lee.jones@linaro.org> writes:
-> On Mon, 17 Jun 2019, Felipe Balbi wrote:
+On Tue, Jun 18, 2019 at 3:12 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
->> Lee Jones <lee.jones@linaro.org> writes:
->>=20
->> > This patch-set ensures the kernel is bootable on the newly released
->> > AArch64 based Laptops using ACPI configuration tables.  The Pinctrl
->> > changes have been accepted, leaving only I2C (keyboard, touchpad,
->> > touchscreen, fingerprint, etc, HID device) and USB (root filesystem,
->> > camera, networking, etc) enablement.
->> >
->> > RESEND: Stripped I2C patches as they have also been merged into
->> >         their respective subsystem.
->> >
->> > v4:
->> >  * Collecting Acks
->> >  * Adding Andy Gross' new email
->> >  * Removing applied Pinctrl patches
->> >
->> > Lee Jones (4):
->> >   soc: qcom: geni: Add support for ACPI
->> >   usb: dwc3: qcom: Add support for booting with ACPI
->> >   usb: dwc3: qcom: Start USB in 'host mode' on the SDM845
->> >   usb: dwc3: qcom: Improve error handling
->>=20
->> pushed to testing/next
+> On Mon, Jun 17, 2019 at 6:31 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 7:45 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
+> > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > now these are register during bind call.
+> > > >
+> > > > Of which, dsi clock gate would required during DPHY probe
+> > > > but same can miss to get since tcon top is not bound at
+> > > > that time.
+> > > >
+> > > > To solve, this circular dependency move the clock gate
+> > > > registration from bind to probe so-that DPHY can get the
+> > > > dsi gate clock on time.
+> > >
+> > > It's not really clear to me what the circular dependency is?
+> > >
+> > > if you have a chain that is:
+> > >
+> > > tcon-top +-> DSI
+> > >          +-> D-PHY
+> > >
+> > > There's no loop, right?
+> >
+> > Looking at how the DTSI patch structures things (without going into
+> > whether it is correct or accurate):
+> >
+> > The D-PHY is not part of the component graph. However it requests
+> > the DSI gate clock from the TCON-TOP.
+> >
+> > The TCON-TOP driver, in its current form, only registers the clocks
+> > it provides at component bind time. Thus the D-PHY can't successfully
+> > probe until the TCON-TOP has been bound.
+> >
+> > The DSI interface requires the D-PHY to bind. It will return -EPROBE_DEFER
+> > if it cannot request it. This in turn goes into the error path of
+> > component_bind_all, which unbinds all previous components.
+> >
+> > So it's actually
+> >
+> >     D-PHY -> TCON-TOP -> DSI
+> >       ^                   |
+> >       |--------------------
+> >
+> > I've not checked, but I suspect there's no possibility of having other
+> > drivers probe (to deal with deferred probing) within component_bind_all.
+> > Otherwise we shouldn't run into this weird circular dependency issue.
+> >
+> > So the question for Jagan is that is this indeed the case? Does this
+> > patch solve it, or at least work around it.
 >
-> Sounds promising, thanks Felipe.
->
-> OOI, what is your process?
->
-> How does do the patches typically sit in there?
+> Yes, this is what I was mentioned in initial version, since the "dsi"
+> gate in tcon top is registering during bind, the dphy of dsi
+> controller won't get the associated clock for "mod" so it is keep on
+> returning -EPROBE_DEFER. By moving the clock gate registration to
+> probe, everything bound as expected.
 
-I'll probably merge to my 'next' branch today. I leave them in
-testing/next for a couple days, usually, so 0-day can run its thing and
-I get a chance of at least boot testing on our machines in the lab here.
+I believe you failed to mention the DSI block, which is the part that
+completes the circular dependency. Don't expect others to have full
+awareness of the context. You have to provide it in your commit log.
 
-Since this doesn't touch anything "generic", I don't _have_ to boot
-test, so I'll probably merge to 'next' today.
-
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAl0IkWgACgkQzL64meEa
-mQZfuBAAuQZcnBloj3LoF6OISK9Br5hFTGB0GgLw0eVC0w8VavE1eR4HWJYAD9HU
-OtpJSw049QWg5tdam9Se6Vuz6vxi3Hsd0ALTLxaSscinMd1YoMmpnmnX83uSbINn
-V9OhiWwV7WmbGKSGAyvO9v+2tYsopxDyoFQr7uleNEF53w8hP4FEHY0BXmd7ZGqR
-X5zr6hA03V/7huGC6zqQgtWzrqif3quk/dns882qvNsb5KbsF6nHvbpmYj/50ytn
-jRJUG9XdqBgSKx9n4qdQNwtD1eJmpRm+Oa/M9MFwWMw/RZOciS0sfhcl7gHMJaGD
-x328NQj80cTs+jq0OiqqYdnKy8R+x7UuKdnNgZW7QvENVJwmEUOwFjU1Btyz4TYH
-FORe9XJiVXRUy9ytCykWNgj3jhlYeocnr9ZWGks5wTJkMKER+fUvMJfMSrW0PHDQ
-dn1Rs/orlx3rdJ1TnpfBTgqMBWqtxSPaYTqd0gHMPkUSoLm1ion1et7QlGUnteYb
-bsave1+35O6UT5b1hf6vUGWICU7zUdfMoQUD0pq+A6QlnvkpK7IBZhfvR0Z+5kNl
-1F+ut0O8O+PCE93AKYyhIGKDhy/dZYIR26/0ukGhGwtk8fbS4FfaYEYQYsr0fJuV
-myZ3TiG0YZXqgOKo8qauXRj0kZUw85lkzyeBCvpj3EgGzbtze28=
-=UaAI
------END PGP SIGNATURE-----
---=-=-=--
+ChenYu
