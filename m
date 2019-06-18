@@ -2,198 +2,138 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23FCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:32:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3B9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 938B920679
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48AD92080C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm8wzpJU"
+	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="pC55jakD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfFRBch (ORCPT
+        id S1728102AbfFRBcx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:32:37 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:32843 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRBcg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:32:36 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h10so11303870ljg.0;
-        Mon, 17 Jun 2019 18:32:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L9KJ4+1kzcAFaeSK/ZZjLqlQ0Pv9jO+ZIcSnFCmw2HA=;
-        b=Tm8wzpJUB5mUUzJ8N7lgiHFw15ltlHK303507E6/JjkM3QNE3v0SpjAvedUp6eMECd
-         NVlr696IFDShdnnQZO3JTHcpi/bGOyinjtDjtLvJVn9B5CsW0wJg18eOUOidFVAtvMlW
-         AjKwGWYAfK5allqXfyVQ+ARCRY4s5FafKDqPmyaTPq++6TQnKNo0vHSisEgr4gFX8/wo
-         vWPDDUXzoE1iR5431E3FY4NzZ2oTWKCtczXpyIzpLMRxDB1pQyBTbm/bK7v95KR/F1RV
-         kPw7wzKwn8YaLAkHWrqAcZHyXVV1jJuRjWFpUAfVWYyakiCIfkWZocZh6IdiiNnqwnOF
-         Ni+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L9KJ4+1kzcAFaeSK/ZZjLqlQ0Pv9jO+ZIcSnFCmw2HA=;
-        b=PFi2Vgqcjzi55opOkzqzmTi7EShz6+B2daTeMLoVQZetw2eGOsI52UYbIvXCLF41JT
-         HBbpOvL3m6NdFAbD0JY5E2QAOFftw8469X8Aod6taE1guyyaGan09gZ9YmpwyUX/xmTk
-         j1B7Wo7L3/BgEoDRzjR+OmuABX8ftKrhk4D1H5hJmXpNV3QDvmOiPs/Nf4Y7zQ6xYXdC
-         ymDsM5uDNqgZNEVVUvT5nCIjsKjUkKXK91IdHhoBTgD0C6tyHXeNBd0XaCTYYMzrxjhR
-         312vvqLh2ZePKikV9rZoaZkKU/gOCp1IaJrV87pFJgGZFksaapbLIbc0l6i35VEK5bvj
-         vdnQ==
-X-Gm-Message-State: APjAAAWZaho0cSo7TlBNRgPSwMZOgPgVyl3jRdfhv3iAh/0yvAaehKzv
-        MX0uitFjb9eVKXKoTkzmw6O8aGuC0lZSP5OXKjb0cw==
-X-Google-Smtp-Source: APXvYqyNPaHjqLM4VYBYU0C1gLB7y6TWpfCUx5A7FTDRRa5JoNWtIsAlwFQOxTqjfpus9cK6n6E2XAzVii29LL2vbKA=
-X-Received: by 2002:a2e:94c9:: with SMTP id r9mr14946799ljh.210.1560821553588;
- Mon, 17 Jun 2019 18:32:33 -0700 (PDT)
-MIME-Version: 1.0
-References: <201905202347.x4KNl0cs030532@aserv0121.oracle.com>
- <20190521175617.ipry6ue7o24a2e6n@ast-mbp.dhcp.thefacebook.com>
- <20190521184137.GH2422@oracle.com> <20190521205533.evfszcjvdouby7vp@ast-mbp.dhcp.thefacebook.com>
- <20190521213648.GK2422@oracle.com> <20190521232618.xyo6w3e6nkwu3h5v@ast-mbp.dhcp.thefacebook.com>
- <20190522041253.GM2422@oracle.com> <20190522201624.eza3pe2v55sn2t2w@ast-mbp.dhcp.thefacebook.com>
- <20190523051608.GP2422@oracle.com> <20190523202842.ij2quhpmem3nabii@ast-mbp.dhcp.thefacebook.com>
- <20190618012509.GF8794@oracle.com>
-In-Reply-To: <20190618012509.GF8794@oracle.com>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Mon, 17 Jun 2019 18:32:22 -0700
-Message-ID: <CAADnVQJoH4WOQ0t7ZhLgh4kh2obxkFs0UGDRas0y4QSqh1EMsg@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/11] bpf, trace, dtrace: DTrace BPF program type
- implementation and sample use
-To:     Kris Van Hees <kris.van.hees@oracle.com>
-Cc:     Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, dtrace-devel@oss.oracle.com,
+        Mon, 17 Jun 2019 21:32:53 -0400
+Received: from mail-eopbgr820048.outbound.protection.outlook.com ([40.107.82.48]:15679
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725829AbfFRBcx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 21:32:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=+7+vLfiIOUVtZheyGlMJIm14ipV+qzirqDVFokkBrdo=;
+ b=pC55jakDovgZ2X1tqSApuA4FxlmbzuITRhcpYxNUvKnXc5MWekVGPas8K0UjNclBmz3lPCg+OmmmUan7XWSVjWeQyMyJUxL3wJsVKoK1EsxsdsYetDAJG2NFJpZYvfNum3peSJEO5yFie6/0F0oDYn0zB+fZYIKTQBmsrMBiR6A=
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com (52.135.233.146) by
+ BYAPR05MB4214.namprd05.prod.outlook.com (52.135.200.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.12; Tue, 18 Jun 2019 01:32:50 +0000
+Received: from BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58]) by BYAPR05MB4776.namprd05.prod.outlook.com
+ ([fe80::f493:3bba:aabf:dd58%7]) with mapi id 15.20.2008.007; Tue, 18 Jun 2019
+ 01:32:50 +0000
+From:   Nadav Amit <namit@vmware.com>
+To:     Sasha Levin <sashal@kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Peter Zijlstra <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Borislav Petkov <bp@suse.de>, Toshi Kani <toshi.kani@hpe.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH 1/3] resource: Fix locking in find_next_iomem_res()
+Thread-Topic: [PATCH 1/3] resource: Fix locking in find_next_iomem_res()
+Thread-Index: AQHVJUDx0l46AfXW90KfYcnN1JLXWaaglnUAgAAKg4A=
+Date:   Tue, 18 Jun 2019 01:32:50 +0000
+Message-ID: <239D9ACE-E365-41B2-B9EF-4CF3A7316D07@vmware.com>
+References: <20190613045903.4922-2-namit@vmware.com>
+ <20190615221557.CD1492183F@mail.kernel.org>
+ <549284C3-6A1C-4434-B716-FF9B0C87EE45@vmware.com>
+ <20190618005512.GC2226@sasha-vm>
+In-Reply-To: <20190618005512.GC2226@sasha-vm>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=namit@vmware.com; 
+x-originating-ip: [66.170.99.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 1ad1e6b0-2d8f-45b5-9d39-08d6f38ce03f
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BYAPR05MB4214;
+x-ms-traffictypediagnostic: BYAPR05MB4214:
+x-microsoft-antispam-prvs: <BYAPR05MB4214837784FBD46BD22BD5E7D0EA0@BYAPR05MB4214.namprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3968;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(396003)(39860400002)(346002)(366004)(376002)(199004)(189003)(476003)(2616005)(3846002)(446003)(6116002)(305945005)(11346002)(186003)(33656002)(76176011)(25786009)(7736002)(71190400001)(71200400001)(229853002)(102836004)(6246003)(68736007)(6506007)(53546011)(66066001)(7416002)(53936002)(26005)(6512007)(81156014)(81166006)(8676002)(36756003)(316002)(14454004)(4326008)(6486002)(86362001)(64756008)(66556008)(66476007)(66946007)(76116006)(73956011)(54906003)(256004)(478600001)(99286004)(66446008)(110136005)(2906002)(8936002)(6436002)(5660300002)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR05MB4214;H:BYAPR05MB4776.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: vmware.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: QvKKIZNNYDEuGUDU5J9eBzPer+mNcbH4q8YJyYItGCMT9QLbACaLNwMRFEeTkVX3gxXFuvTDUG9TZjvV6q4K3wv4Tv79gn0RW6b/o6H1Vz3KgJTp/Rl3qXgJCxHs/TYvOr3+zMLxZEugO1UXfYR8DPhiT7xnzneYGNZ95MJVZcwpDv2aftUzOPeQ83ONpiox/7vDGUiF20EWO4o+o3yExVSH+IkZZYIP5OIW7bCezQ3YTOQQt93v7My3xqu5xoE0N+DuEafncrDqEX1Br1zO8MBKgGqrUXk70v/rQIm5Gsx4HBqrC4SlR0BGFMq1yFTNurPvNj71K2yn5PZbWrMugBDaR/xiwiW85V4ABxN1LhrDjsTc86BO/JlyvvYmuKatdUUNXJ2vXX6nhvod7Mdcoir/wOQHwIaPGV6s2ptM8xo=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <E719E12BB841DB439372546CDF4C10B5@namprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: vmware.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 1ad1e6b0-2d8f-45b5-9d39-08d6f38ce03f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 01:32:50.1820
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: namit@vmware.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR05MB4214
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:25 PM Kris Van Hees <kris.van.hees@oracle.com> wrote:
->
-> On Thu, May 23, 2019 at 01:28:44PM -0700, Alexei Starovoitov wrote:
->
-> << stuff skipped because it is not relevant to the technical discussion... >>
->
-> > > > In particular you brought up a good point that there is a use case
-> > > > for sharing a piece of bpf program between kprobe and tracepoint events.
-> > > > The better way to do that is via bpf2bpf call.
-> > > > Example:
-> > > > void bpf_subprog(arbitrary args)
-> > > > {
-> > > > }
-> > > >
-> > > > SEC("kprobe/__set_task_comm")
-> > > > int bpf_prog_kprobe(struct pt_regs *ctx)
-> > > > {
-> > > >   bpf_subprog(...);
-> > > > }
-> > > >
-> > > > SEC("tracepoint/sched/sched_switch")
-> > > > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
-> > > > {
-> > > >   bpf_subprog(...);
-> > > > }
-> > > >
-> > > > Such configuration is not supported by the verifier yet.
-> > > > We've been discussing it for some time, but no work has started,
-> > > > since there was no concrete use case.
-> > > > If you can work on adding support for it everyone will benefit.
-> > > >
-> > > > Could you please consider doing that as a step forward?
-> > >
-> > > This definitely looks to be an interesting addition and I am happy to look into
-> > > that further.  I have a few questions that I hope you can shed light on...
-> > >
-> > > 1. What context would bpf_subprog execute with?  If it can be called from
-> > >    multiple different prog types, would it see whichever context the caller
-> > >    is executing with?  Or would you envision bpf_subprog to not be allowed to
-> > >    access the execution context because it cannot know which one is in use?
-> >
-> > bpf_subprog() won't be able to access 'ctx' pointer _if_ it's ambiguous.
-> > The verifier already smart enough to track all the data flow, so it's fine to
-> > pass 'struct pt_regs *ctx' as long as it's accessed safely.
-> > For example:
-> > void bpf_subprog(int kind, struct pt_regs *ctx1, struct sched_switch_args *ctx2)
-> > {
-> >   if (kind == 1)
-> >      bpf_printk("%d", ctx1->pc);
-> >   if (kind == 2)
-> >      bpf_printk("%d", ctx2->next_pid);
-> > }
-> >
-> > SEC("kprobe/__set_task_comm")
-> > int bpf_prog_kprobe(struct pt_regs *ctx)
-> > {
-> >   bpf_subprog(1, ctx, NULL);
-> > }
-> >
-> > SEC("tracepoint/sched/sched_switch")
-> > int bpf_prog_tracepoint(struct sched_switch_args *ctx)
-> > {
-> >   bpf_subprog(2, NULL, ctx);
-> > }
-> >
-> > The verifier should be able to prove that the above is correct.
-> > It can do so already if s/ctx1/map_value1/, s/ctx2/map_value2/
-> > What's missing is an ability to have more than one 'starting' or 'root caller'
-> > program.
-> >
-> > Now replace SEC("tracepoint/sched/sched_switch") with SEC("cgroup/ingress")
-> > and it's becoming clear that BPF_PROG_TYPE_PROBE approach is not good enough, right?
-> > Folks are already sharing the bpf progs between kprobe and networking.
-> > Currently it's done via code duplication and actual sharing happens via maps.
-> > That's not ideal, hence we've been discussing 'shared library' approach for
-> > quite some time. We need a way to support common bpf functions that can be called
-> > from networking and from tracing programs.
-> >
-> > > 2. Given that BPF programs are loaded with a specification of the prog type,
-> > >    how would one load a code construct as the one you outline above?  How can
-> > >    you load a BPF function and have it be used as subprog from programs that
-> > >    are loaded separately?  I.e. in the sample above, if bpf_subprog is loaded
-> > >    as part of loading bpf_prog_kprobe (prog type KPROBE), how can it be
-> > >    referenced from bpf_prog_tracepoint (prog type TRACEPOINT) which would be
-> > >    loaded separately?
-> >
-> > The api to support shared libraries was discussed, but not yet implemented.
-> > We've discussed 'FD + name' approach.
-> > FD identifies a loaded program (which is root program + a set of subprogs)
-> > and other programs can be loaded at any time later. The BPF_CALL instructions
-> > in such later program would refer to older subprogs via FD + name.
-> > Note that both tracing and networking progs can be part of single elf file.
-> > libbpf has to be smart to load progs into kernel step by step
-> > and reusing subprogs that are already loaded.
-> >
-> > Note that libbpf work for such feature can begin _without_ kernel changes.
-> > libbpf can pass bpf_prog_kprobe+bpf_subprog as a single program first,
-> > then pass bpf_prog_tracepoint+bpf_subprog second (as a separate program).
-> > The bpf_subprog will be duplicated and JITed twice, but sharing will happen
-> > because data structures (maps, global and static data) will be shared.
-> > This way the support for 'pseudo shared libraries' can begin.
-> > (later accompanied by FD+name kernel support)
->
-> As far as I can determine, the current libbpd implementation is already able
-> to do the duplication of the called function, even when the ELF object contains
-> programs of differemt program types.  I.e. the example you give at the top
-> of the email actually seems to work already.  Right?
-
-Have you tried it?
-
-> In that case, I am a bit unsure what more can be done on the side of libbpf
-> without needing kernel changes?
-
-it's a bit weird to discuss hypothetical kernel changes when the first step
-of changing libbpf wasn't even attempted.
+PiBPbiBKdW4gMTcsIDIwMTksIGF0IDU6NTUgUE0sIFNhc2hhIExldmluIDxzYXNoYWxAa2VybmVs
+Lm9yZz4gd3JvdGU6DQo+IA0KPiBPbiBNb24sIEp1biAxNywgMjAxOSBhdCAwNzoxNDo1M1BNICsw
+MDAwLCBOYWRhdiBBbWl0IHdyb3RlOg0KPj4+IE9uIEp1biAxNSwgMjAxOSwgYXQgMzoxNSBQTSwg
+U2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPiB3cm90ZToNCj4+PiANCj4+PiBIaSwNCj4+
+PiANCj4+PiBbVGhpcyBpcyBhbiBhdXRvbWF0ZWQgZW1haWxdDQo+Pj4gDQo+Pj4gVGhpcyBjb21t
+aXQgaGFzIGJlZW4gcHJvY2Vzc2VkIGJlY2F1c2UgaXQgY29udGFpbnMgYSAiRml4ZXM6IiB0YWcs
+DQo+Pj4gZml4aW5nIGNvbW1pdDogZmYzY2M5NTJkM2YwIHJlc291cmNlOiBBZGQgcmVtb3ZlX3Jl
+c291cmNlIGludGVyZmFjZS4NCj4+PiANCj4+PiBUaGUgYm90IGhhcyB0ZXN0ZWQgdGhlIGZvbGxv
+d2luZyB0cmVlczogdjUuMS45LCB2NC4xOS41MCwgdjQuMTQuMTI1LCB2NC45LjE4MS4NCj4+PiAN
+Cj4+PiB2NS4xLjk6IEJ1aWxkIE9LIQ0KPj4+IHY0LjE5LjUwOiBGYWlsZWQgdG8gYXBwbHkhIFBv
+c3NpYmxlIGRlcGVuZGVuY2llczoNCj4+PiAgIDAxMGE5M2JmOTdjNyAoInJlc291cmNlOiBGaXgg
+ZmluZF9uZXh0X2lvbWVtX3JlcygpIGl0ZXJhdGlvbiBpc3N1ZSIpDQo+Pj4gICBhOTg5NTlmZGJk
+YTEgKCJyZXNvdXJjZTogSW5jbHVkZSByZXNvdXJjZSBlbmQgaW4gd2Fsa18qKCkgaW50ZXJmYWNl
+cyIpDQo+Pj4gDQo+Pj4gdjQuMTQuMTI1OiBGYWlsZWQgdG8gYXBwbHkhIFBvc3NpYmxlIGRlcGVu
+ZGVuY2llczoNCj4+PiAgIDAxMGE5M2JmOTdjNyAoInJlc291cmNlOiBGaXggZmluZF9uZXh0X2lv
+bWVtX3JlcygpIGl0ZXJhdGlvbiBpc3N1ZSIpDQo+Pj4gICAwZTRjMTJiNDVhYTggKCJ4ODYvbW0s
+IHJlc291cmNlOiBVc2UgUEFHRV9LRVJORUwgcHJvdGVjdGlvbiBmb3IgaW9yZW1hcCBvZiBtZW1v
+cnkgcGFnZXMiKQ0KPj4+ICAgMWQyZTczM2IxM2I0ICgicmVzb3VyY2U6IFByb3ZpZGUgcmVzb3Vy
+Y2Ugc3RydWN0IGluIHJlc291cmNlIHdhbGsgY2FsbGJhY2siKQ0KPj4+ICAgNGFjMmFlZDgzN2Ni
+ICgicmVzb3VyY2U6IENvbnNvbGlkYXRlIHJlc291cmNlIHdhbGtpbmcgY29kZSIpDQo+Pj4gICBh
+OTg5NTlmZGJkYTEgKCJyZXNvdXJjZTogSW5jbHVkZSByZXNvdXJjZSBlbmQgaW4gd2Fsa18qKCkg
+aW50ZXJmYWNlcyIpDQo+Pj4gDQo+Pj4gdjQuOS4xODE6IEZhaWxlZCB0byBhcHBseSEgUG9zc2li
+bGUgZGVwZW5kZW5jaWVzOg0KPj4+ICAgMDEwYTkzYmY5N2M3ICgicmVzb3VyY2U6IEZpeCBmaW5k
+X25leHRfaW9tZW1fcmVzKCkgaXRlcmF0aW9uIGlzc3VlIikNCj4+PiAgIDBlNGMxMmI0NWFhOCAo
+Ing4Ni9tbSwgcmVzb3VyY2U6IFVzZSBQQUdFX0tFUk5FTCBwcm90ZWN0aW9uIGZvciBpb3JlbWFw
+IG9mIG1lbW9yeSBwYWdlcyIpDQo+Pj4gICAxZDJlNzMzYjEzYjQgKCJyZXNvdXJjZTogUHJvdmlk
+ZSByZXNvdXJjZSBzdHJ1Y3QgaW4gcmVzb3VyY2Ugd2FsayBjYWxsYmFjayIpDQo+Pj4gICA0YWMy
+YWVkODM3Y2IgKCJyZXNvdXJjZTogQ29uc29saWRhdGUgcmVzb3VyY2Ugd2Fsa2luZyBjb2RlIikN
+Cj4+PiAgIDYwZmUzOTEwYmIwMiAoImtleGVjX2ZpbGU6IEFsbG93IGFyY2gtc3BlY2lmaWMgbWVt
+b3J5IHdhbGtpbmcgZm9yIGtleGVjX2FkZF9idWZmZXIiKQ0KPj4+ICAgYTA0NTgyODRmMDYyICgi
+cG93ZXJwYzogQWRkIHN1cHBvcnQgY29kZSBmb3Iga2V4ZWNfZmlsZV9sb2FkKCkiKQ0KPj4+ICAg
+YTk4OTU5ZmRiZGExICgicmVzb3VyY2U6IEluY2x1ZGUgcmVzb3VyY2UgZW5kIGluIHdhbGtfKigp
+IGludGVyZmFjZXMiKQ0KPj4+ICAgZGE2NjU4ODU5YjljICgicG93ZXJwYzogQ2hhbmdlIHBsYWNl
+cyB1c2luZyBDT05GSUdfS0VYRUMgdG8gdXNlIENPTkZJR19LRVhFQ19DT1JFIGluc3RlYWQuIikN
+Cj4+PiAgIGVjMmI5YmZhYWM0NCAoImtleGVjX2ZpbGU6IENoYW5nZSBrZXhlY19hZGRfYnVmZmVy
+IHRvIHRha2Uga2V4ZWNfYnVmIGFzIGFyZ3VtZW50LiIpDQo+PiANCj4+IElzIHRoZXJlIGEgcmVh
+c29uIDAxMGE5M2JmOTdjNyAoInJlc291cmNlOiBGaXggZmluZF9uZXh0X2lvbWVtX3JlcygpDQo+
+PiBpdGVyYXRpb24gaXNzdWXigJ0pIHdhcyBub3QgYmFja3BvcnRlZD8NCj4gDQo+IE1vc3RseSBi
+ZWNhdXNlIGl0J3Mgbm90IHRhZ2dlZCBmb3Igc3RhYmxlIDopDQoNCkdvb2QgcG9pbnQuIFVuZm9y
+dHVuYXRlbHksIDAxMGE5M2JmOTdjNyBkb2VzIG5vdCBhcHBseSBjbGVhbmx5IGVpdGhlci4NCg0K
+Qmpvcm4sIGRvIHlvdSB0aGluayB5b3VyIHBhdGNoIHNob3VsZCBiZSBiYWNrcG9ydGVkPw0KDQpJ
+ZiBub3QsIEkgY2FuIGNyZWF0ZSBhIHZlcnNpb24gb2YgdGhlIHBhdGNoIHRoYXQgSSBzZW50IGZv
+ciA0LjE0LzQuOS4NCg0K
