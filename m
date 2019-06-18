@@ -2,99 +2,114 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EEB7C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:28:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D60C9C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A412085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:28:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B180420833
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 03:37:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728446AbfFRD2F (ORCPT
+        id S1727443AbfFRDgL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 23:28:05 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34758 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRD2E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 23:28:04 -0400
-Received: by mail-pf1-f196.google.com with SMTP id c85so6796743pfc.1;
-        Mon, 17 Jun 2019 20:28:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Dc068kFuuIDX3bGg/sCi/c8aRklky+fPiCT3Bn0V2CM=;
-        b=CqUOzNFarhQhckbVeXTInm8kvIikJv5FHB3cvjDtzc9fN77KdX4VI8aRNBcMpNtZk6
-         yrfKiXgxtDgwVeJIdCKb+LnCdMRnwuDXlzXc8alMoIIDpiWwhhkmr09luJeD7b8ZB7E4
-         4huTT7xBmJjBFGYM/A3vUtyQSOZ7gBSYJb5la3VSU69/XdvMxhOCgVG0wzNWl3l1b62N
-         71rvK3VzxsnG9mHGDoSEeHfg22qYP/C7RlNTQNLhcLmimTiLqbf6uoANhrg2XDWYJJMx
-         R3qsZydEhtH+2s9OdwBRJ5Pe7pfZ80eHATaonSol1aKDKHxksZeG8FjowMsSTZLJ1oX6
-         tXWA==
-X-Gm-Message-State: APjAAAWO3HY2ZzY7bu8HcT0VGqzh0o6j5MrsZ2kQKx0yJ79a+dS/PIzy
-        dNTVMzW0tLPmEjBftTDprXI=
-X-Google-Smtp-Source: APXvYqzFvZOkWoL4GkYyvTKa/4MObDC4loXp4hKkIH+TitLiXG81PqkNQSkJUmfreMSelPYhx10S9w==
-X-Received: by 2002:a62:29c7:: with SMTP id p190mr116173105pfp.218.1560828483791;
-        Mon, 17 Jun 2019 20:28:03 -0700 (PDT)
-Received: from asus.site ([2601:647:4000:5dd1:c193:fa16:d79e:155e])
-        by smtp.gmail.com with ESMTPSA id u2sm678123pjv.30.2019.06.17.20.28.02
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 20:28:02 -0700 (PDT)
-Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
-To:     dgilbert@interlog.com, Marc Gonzalez <marc.w.gonzalez@free.fr>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>
-Cc:     SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
- <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
- <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
-From:   Bart Van Assche <bvanassche@acm.org>
-Message-ID: <da579578-349e-1320-0867-14fde659733e@acm.org>
-Date:   Mon, 17 Jun 2019 20:28:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Mon, 17 Jun 2019 23:36:11 -0400
+Received: from mga12.intel.com ([192.55.52.136]:34862 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725810AbfFRDgL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 23:36:11 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 20:36:10 -0700
+X-ExtLoop1: 1
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2019 20:36:09 -0700
+Date:   Tue, 18 Jun 2019 11:35:46 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, mhocko@suse.com,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, osalvador@suse.de
+Subject: Re: [PATCH v9 06/12] mm: Kill is_dev_zone() helper
+Message-ID: <20190618033546.GE18161@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155977191260.2443951.15908146523735681570.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <155977191260.2443951.15908146523735681570.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 5:35 PM, Douglas Gilbert wrote:
-> For sg3_utils:
+On Wed, Jun 05, 2019 at 02:58:32PM -0700, Dan Williams wrote:
+>Given there are no more usages of is_dev_zone() outside of 'ifdef
+>CONFIG_ZONE_DEVICE' protection, kill off the compilation helper.
+>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Logan Gunthorpe <logang@deltatee.com>
+>Acked-by: David Hildenbrand <david@redhat.com>
+>Reviewed-by: Oscar Salvador <osalvador@suse.de>
+>Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+
+Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+
+>---
+> include/linux/mmzone.h |   12 ------------
+> mm/page_alloc.c        |    2 +-
+> 2 files changed, 1 insertion(+), 13 deletions(-)
+>
+>diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+>index 6dd52d544857..49e7fb452dfd 100644
+>--- a/include/linux/mmzone.h
+>+++ b/include/linux/mmzone.h
+>@@ -855,18 +855,6 @@ static inline int local_memory_node(int node_id) { return node_id; };
+>  */
+> #define zone_idx(zone)		((zone) - (zone)->zone_pgdat->node_zones)
 > 
-> $ find . -name '*.c' -exec grep "/proc/scsi" {} \; -print
-> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-> ./src/sg_read.c
-> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-> ./src/sgp_dd.c
-> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-> ./src/sgm_dd.c
-> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-> ./src/sg_dd.c
->                  "'echo 1 > /proc/scsi/sg/allow_dio'\n", q_len, 
-> dirio_count);
-> ./testing/sg_tst_bidi.c
-> static const char * proc_allow_dio = "/proc/scsi/sg/allow_dio";
-> ./examples/sgq_dd.c
->  
-> That is 6 (not 38) by my count.
+>-#ifdef CONFIG_ZONE_DEVICE
+>-static inline bool is_dev_zone(const struct zone *zone)
+>-{
+>-	return zone_idx(zone) == ZONE_DEVICE;
+>-}
+>-#else
+>-static inline bool is_dev_zone(const struct zone *zone)
+>-{
+>-	return false;
+>-}
+>-#endif
+>-
+> /*
+>  * Returns true if a zone has pages managed by the buddy allocator.
+>  * All the reclaim decisions have to use this function rather than
+>diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>index bd773efe5b82..5dff3f49a372 100644
+>--- a/mm/page_alloc.c
+>+++ b/mm/page_alloc.c
+>@@ -5865,7 +5865,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
+> 	unsigned long start = jiffies;
+> 	int nid = pgdat->node_id;
+> 
+>-	if (WARN_ON_ONCE(!pgmap || !is_dev_zone(zone)))
+>+	if (WARN_ON_ONCE(!pgmap || zone_idx(zone) != ZONE_DEVICE))
+> 		return;
+> 
+> 	/*
+>
+>_______________________________________________
+>Linux-nvdimm mailing list
+>Linux-nvdimm@lists.01.org
+>https://lists.01.org/mailman/listinfo/linux-nvdimm
 
-Hi Doug,
-
-This is the command I ran:
-
-$ git grep /proc/scsi | wc -l
-38
-
-I think your query excludes scripts/rescan-scsi-bus.sh.
-
-Bart.
+-- 
+Wei Yang
+Help you, Help me
