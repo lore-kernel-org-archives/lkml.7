@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 345B1C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEDD1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0889D20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B90462085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:09:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="XjzjnU22"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="iz+ztRpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729471AbfFROHJ (ORCPT
+        id S1729087AbfFROJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:07:09 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38418 "EHLO
+        Tue, 18 Jun 2019 10:09:31 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:41903 "EHLO
         mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfFROHJ (ORCPT
+        with ESMTP id S1726248AbfFROJb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:07:09 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so19741617edo.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:07:08 -0700 (PDT)
+        Tue, 18 Jun 2019 10:09:31 -0400
+Received: by mail-ed1-f67.google.com with SMTP id p15so21914782eds.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:09:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=sender:date:from:to:cc:subject:message-id:mail-followup-to
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kbjXiDHUcs03Ham95m0Whx0OgVZ5j2550aVQnPTfdxQ=;
-        b=XjzjnU228yADptN7urnRtwf8Ole5zcytiEo9ewubNXfcudMgl6XJCKZLzRyF6DK60v
-         r0lXIvAbGBB3ijq69WVn9MUKU9OXLTsAtICIh3LWg6xWSLwVd9duS4BDQdd94/O/UjBN
-         Gf1rHG7pIdcfWWxcH62s7t4gajFPKygSMxMBY=
+        bh=rd5swHtQn6I4g05FOd476JWDZK1W4dVOi6bXk+VCUPQ=;
+        b=iz+ztRpIBrIo4iXy7HZw7wvhbwfGBVktYhUlYiMIbgaOxZQNafxnYMroWZS3Hvj4V/
+         qIDUojvQUiaWn1A5Vt3azHhw+MYeoDPl5oah6fT//VjXyLmBISjRJLLZKJ4fPrbUnB6I
+         c5RFdqjzd7ASAlYn1rZ96LAmB/zO6r2XJM6QU=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=kbjXiDHUcs03Ham95m0Whx0OgVZ5j2550aVQnPTfdxQ=;
-        b=dHn9M68IOdoW9f7C016LnCN4UT6Hyt+u9D+LDYLc85XkeWpF46NBhj9/R/QfRLLyiA
-         ashxwSdaPgss4CcumN55fGTAB9d3YqZSpIVGq0XErTcpgNGUNKKXwK1uTMO9lsXlIF7A
-         wEHD8K608pZMVlcVPfVOXemv3vdt0ijjUmPCHOg4A/9X1aKHNeOU+5FO/XqVu30xCSDV
-         H7N+dXiu2pL4TkugWigRNsyVmLp7yNX3/C50B8SBo1V5+Dm2bP9CZMx8uITG3BoATyGi
-         wRKf6ckbf4C3jD46f2tltFJj4Kwa5nKE/kU0aAvo9NLBVhWIYwq3LEVnM0L8lWk8tbOi
-         ENEw==
-X-Gm-Message-State: APjAAAUMT4T1IoFZOsSQtskfD08ncHb9WkRdJlp7UKUhoZw2eWbve9w6
-        N2+jG8NSxH1mPml2mHZtktF3mQ==
-X-Google-Smtp-Source: APXvYqybQkv2LSTpbVQqBNG0vU3Pn6LJz77TNlXyMjfN4HiYSdsBYRstxuDZf20J7rLw9S/ZVFFw7Q==
-X-Received: by 2002:a50:900d:: with SMTP id b13mr93026672eda.289.1560866827421;
-        Tue, 18 Jun 2019 07:07:07 -0700 (PDT)
+        bh=rd5swHtQn6I4g05FOd476JWDZK1W4dVOi6bXk+VCUPQ=;
+        b=JRJdbUqiBAwryRMT2bF4f7lQ1mp+ZgU9fB12yo5mJH6kF3WZ2vn4Dr3hZftamtiU7U
+         HKsrNSUSYexJzighy1ezc9+FVqVoGIVPSk3Q0EcbRrFpQbpn84WNSw64ViB03SZH1arX
+         mn5XrSQ+YJy4yIQIflAM0ZIdof0knK+0yct7/T64pNmnV3IEBhCnEjZF8G/YlqOf9Oy4
+         6p2cTzBS5Lyz9CkhpWLXSRQ/333RexluiFf9cH6NA5m0rzzxMEStmCJ1VyzfjPi1ISLk
+         oXNdakOPiwB03lKvdi4lqaD5JzppIoUTTsHh5IzUQpMkpNRS0EiqpLfNwqY6CTE1HWgw
+         kQWQ==
+X-Gm-Message-State: APjAAAWPdBFUFiPf9Rp50dufI9j7f84krjFL+mZwobkyVu+QzzMPZ+FJ
+        KUGslQKr5jCsmVuYKirsPYC+vQ==
+X-Google-Smtp-Source: APXvYqxfjGPU2BQiQCTzJdcSdy/5MdYMFSVDaL4zuBQZvv/UJIsO2W/GMuSac5Zl+3oa3BfMmQ4AWg==
+X-Received: by 2002:a50:b635:: with SMTP id b50mr31792908ede.293.1560866969483;
+        Tue, 18 Jun 2019 07:09:29 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id b25sm4631135ede.34.2019.06.18.07.07.06
+        by smtp.gmail.com with ESMTPSA id a9sm4932323edc.44.2019.06.18.07.09.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 07:07:06 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 16:07:04 +0200
+        Tue, 18 Jun 2019 07:09:27 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 16:09:25 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
 To:     Gerd Hoffmann <kraxel@redhat.com>
 Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
@@ -62,19 +62,19 @@ Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
         "open list:VIRTIO GPU DRIVER" 
         <virtualization@lists.linux-foundation.org>,
         open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 02/12] drm/virtio: switch virtio_gpu_wait_ioctl() to
- gem helper.
-Message-ID: <20190618140704.GA12905@phenom.ffwll.local>
+Subject: Re: [PATCH v2 06/12] drm/virtio: remove ttm calls from in
+ virtio_gpu_object_{reserve,unreserve}
+Message-ID: <20190618140925.GB12905@phenom.ffwll.local>
 Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
         dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
         "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>,
         open list <linux-kernel@vger.kernel.org>
 References: <20190618135821.8644-1-kraxel@redhat.com>
- <20190618135821.8644-3-kraxel@redhat.com>
+ <20190618135821.8644-7-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190618135821.8644-3-kraxel@redhat.com>
+In-Reply-To: <20190618135821.8644-7-kraxel@redhat.com>
 X-Operating-System: Linux phenom 4.19.0-5-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -82,58 +82,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 03:58:10PM +0200, Gerd Hoffmann wrote:
-> Use drm_gem_reservation_object_wait() in virtio_gpu_wait_ioctl().
-> This also makes the ioctl run lockless.
+On Tue, Jun 18, 2019 at 03:58:14PM +0200, Gerd Hoffmann wrote:
+> Call reservation_object_* directly instead
+> of using ttm_bo_{reserve,unreserve}.
 > 
 > Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-Nit: Missing the v2 changelog here.
--Daniel
-
 > ---
->  drivers/gpu/drm/virtio/virtgpu_ioctl.c | 24 ++++++++++--------------
->  1 file changed, 10 insertions(+), 14 deletions(-)
+>  drivers/gpu/drm/virtio/virtgpu_drv.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> index ac60be9b5c19..313c770ea2c5 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> @@ -464,23 +464,19 @@ static int virtio_gpu_wait_ioctl(struct drm_device *dev, void *data,
->  			    struct drm_file *file)
+> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> index 06cc0e961df6..91c320819a8c 100644
+> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
+> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
+> @@ -402,7 +402,7 @@ static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo)
 >  {
->  	struct drm_virtgpu_3d_wait *args = data;
-> -	struct drm_gem_object *gobj = NULL;
-> -	struct virtio_gpu_object *qobj = NULL;
-> +	struct drm_gem_object *obj;
-> +	long timeout = 15 * HZ;
->  	int ret;
-> -	bool nowait = false;
+>  	int r;
 >  
-> -	gobj = drm_gem_object_lookup(file, args->handle);
-> -	if (gobj == NULL)
-> -		return -ENOENT;
-> +	if (args->flags & VIRTGPU_WAIT_NOWAIT) {
-> +		obj = drm_gem_object_lookup(file, args->handle);
-> +		ret = reservation_object_test_signaled_rcu(obj->resv, true);
-> +		drm_gem_object_put_unlocked(obj);
-> +		return ret ? 0 : -EBUSY;
-> +	}
+> -	r = ttm_bo_reserve(&bo->tbo, true, false, NULL);
+> +	r = reservation_object_lock_interruptible(bo->gem_base.resv, NULL);
+>  	if (unlikely(r != 0)) {
+>  		if (r != -ERESTARTSYS) {
+
+errno semantics change here, I think you now get EINTR. With that fixed:
+
+Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+
+>  			struct virtio_gpu_device *qdev =
+> @@ -416,7 +416,7 @@ static inline int virtio_gpu_object_reserve(struct virtio_gpu_object *bo)
 >  
-> -	qobj = gem_to_virtio_gpu_obj(gobj);
-> -
-> -	if (args->flags & VIRTGPU_WAIT_NOWAIT)
-> -		nowait = true;
-> -	ret = virtio_gpu_object_wait(qobj, nowait);
-> -
-> -	drm_gem_object_put_unlocked(gobj);
-> -	return ret;
-> +	return drm_gem_reservation_object_wait(file, args->handle,
-> +					       true, timeout);
+>  static inline void virtio_gpu_object_unreserve(struct virtio_gpu_object *bo)
+>  {
+> -	ttm_bo_unreserve(&bo->tbo);
+> +	reservation_object_unlock(bo->gem_base.resv);
 >  }
 >  
->  static int virtio_gpu_get_caps_ioctl(struct drm_device *dev,
+>  /* virgl debufs */
 > -- 
 > 2.18.1
 > 
