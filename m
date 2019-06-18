@@ -2,106 +2,111 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B869C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B939CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:46:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B84020663
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EBD92089E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 00:46:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="icnDnXp2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726778AbfFRAoE (ORCPT
+        id S1726677AbfFRAqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 20:44:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52278 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfFRAoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 20:44:03 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A6764308421A;
-        Tue, 18 Jun 2019 00:44:03 +0000 (UTC)
-Received: from xz-x1.redhat.com (unknown [10.66.60.170])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 54DF41001DE7;
-        Tue, 18 Jun 2019 00:43:57 +0000 (UTC)
-From:   Peter Xu <peterx@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Marcelo Tosatti <mtosatti@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>, peterx@redhat.com,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH] timer: document TIMER_PINNED
-Date:   Tue, 18 Jun 2019 08:43:56 +0800
-Message-Id: <20190618004356.10357-1-peterx@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 18 Jun 2019 00:44:03 +0000 (UTC)
+        Mon, 17 Jun 2019 20:46:54 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:33338 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726007AbfFRAqy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 20:46:54 -0400
+Received: by mail-wm1-f68.google.com with SMTP id h19so1100775wme.0;
+        Mon, 17 Jun 2019 17:46:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=8040MIo3hoL1siZlh+IJp6lN+yzLI4mFWNXimyvlAT8=;
+        b=icnDnXp2u0Gupr9hz5qzVK3sx/3roplA+0k5zd87GQng1nhz6SqoI9E/novxYoKwEE
+         lDapE2xsyKXmDEcfKzyyGSJO4UvZdJOviYjvwxqimwFPQ1Wa2/Ht/iE79Gmve6jMIEtC
+         Jvao9tinNnvRSJ5Zj1z/RquntQwL2Bria4lsckZyZPjw+qLyXD9VLXzZxG/6M+0Hwe8b
+         +qOcMZi/96TSSJ9iMyTLyNhuBaMOapSTjmP/ho9zdnB9PqViGM1v6uyXqEQAPL8vAtQ8
+         weaAmGBCWsrh+SFbRgt46IDw/hRb6T5hP9PQPFWkggP/47wl84BjQ2hQyAtgeD6z0c8K
+         Gf3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=8040MIo3hoL1siZlh+IJp6lN+yzLI4mFWNXimyvlAT8=;
+        b=g6a3jcIr10lG78mzNFPDkSlvCptboKvI3zrBetvr4slCXMuJirzwm9415SgijUbhH8
+         tlb6rzjZuUgBvWcVKtVFxbX1P+/Vtxy8IuPyPVDxPpjLE0pg0Je3MAXiO1yUuEYmjyjp
+         0ql7KA5zxhMuHa/C1iJE+sYJ1/mTFyuL/JRwJAHCYIZi4Uo4433RvhGbCTDyQAug3zao
+         1FOqRnDyZEhSEA1G2GSVRfWXECXDhR69MN4UWxj1a6yFYkiDFLPmMzoa3/Z9xwRdIkpe
+         6dpMkP/lp5hKGqRURbTVAMuPc+72vxgld25otYdA/qX1tI1pefuzhT1cLuPGp/x4GPQX
+         w8Ww==
+X-Gm-Message-State: APjAAAUZzW1qNvg+mx6em+MVbKvLpTL0Y6S+WLs8BLhUTiWbhBXwD+rE
+        G6VOcmahaXkLaXibAgFsdJ70X635RAqHIyD/S+I=
+X-Google-Smtp-Source: APXvYqxMSUnTcEGSu/iiFpFg9Mxu8aSAdN3/6SxVGuAWKQLmuwThyhLKW85M76Jcf4jRiGyxe2H+tYw93p+WDXmfkhQ=
+X-Received: by 2002:a05:600c:204c:: with SMTP id p12mr813975wmg.121.1560818811702;
+ Mon, 17 Jun 2019 17:46:51 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617122000.22181-1-hch@lst.de> <20190617122000.22181-8-hch@lst.de>
+In-Reply-To: <20190617122000.22181-8-hch@lst.de>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Tue, 18 Jun 2019 08:46:40 +0800
+Message-ID: <CACVXFVObpdjN6V9qS-C9NG5xcrPqmx-X22qVamOSZf81Vog6zw@mail.gmail.com>
+Subject: Re: [PATCH 7/8] mpt3sas: set an unlimited max_segment_size for SAS
+ 3.0 HBAs
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        megaraidlinux.pdl@broadcom.com, MPT-FusionLinux.pdl@broadcom.com,
+        linux-hyperv@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The flag is very easy to understand but the interface is not,
-especially the assumption that add_timer_on() must be used to
-guarantee a correct behavior.
+On Mon, Jun 17, 2019 at 8:21 PM Christoph Hellwig <hch@lst.de> wrote:
+>
+> When using a virt_boundary_mask, as done for NVMe devices attached to
+> mpt3sas controllers we require an unlimited max_segment_size, as the
+> virt boundary merging code assumes that.  But we also need to propagate
+> that to the DMA mapping layer to make dma-debug happy.  The SCSI layer
+> takes care of that when using the per-host virt_boundary setting, but
+> given that mpt3sas only wants to set the virt_boundary for actual
+> NVMe devices we can't rely on that.  The DMA layer maximum segment
+> is global to the HBA however, so we have to set it explicitly.  This
+> patch assumes that mpt3sas does not have a segment size limitation,
+> which seems true based on the SGL format, but will need to be verified.
+>
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/scsi/mpt3sas/mpt3sas_scsih.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+> index 1ccfbc7eebe0..c719b807f6d8 100644
+> --- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+> +++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
+> @@ -10222,6 +10222,7 @@ static struct scsi_host_template mpt3sas_driver_template = {
+>         .this_id                        = -1,
+>         .sg_tablesize                   = MPT3SAS_SG_DEPTH,
+>         .max_sectors                    = 32767,
+> +       .max_segment_size               = 0xffffffff,
 
-For example, currently if we setup a pinned timer but later on we call
-mod_timer() upon the pinned timer, the mod_timer() will still try to
-run the timer on the current processor and migrate the timer if
-necessary.  In other words, the suggested way to arm a pinned timer
-should be add_timer_on() always.  mod_timer() can be used in this case
-only if current processor is the one that we want to pin the timer on.
+.max_segment_size should be aligned, either setting it here correctly or
+forcing to make it aligned in scsi-core.
 
-Document it a bit with the definition of TIMER_PINNED so that all
-future users will use it correctly.
-
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: linux-kernel@vger.kernel.org
-Signed-off-by: Peter Xu <peterx@redhat.com>
----
- include/linux/timer.h | 23 +++++++++++++++--------
- 1 file changed, 15 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index 7b066fd38248..4a3408a05f86 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -36,19 +36,26 @@ struct timer_list {
- #define __TIMER_LOCKDEP_MAP_INITIALIZER(_kn)
- #endif
- 
--/*
-- * A deferrable timer will work normally when the system is busy, but
-- * will not cause a CPU to come out of idle just to service it; instead,
-- * the timer will be serviced when the CPU eventually wakes up with a
-- * subsequent non-deferrable timer.
-+/**
-+ * @TIMER_DEFERRABLE: A deferrable timer will work normally when the
-+ * system is busy, but will not cause a CPU to come out of idle just
-+ * to service it; instead, the timer will be serviced when the CPU
-+ * eventually wakes up with a subsequent non-deferrable timer.
-  *
-- * An irqsafe timer is executed with IRQ disabled and it's safe to wait for
-- * the completion of the running instance from IRQ handlers, for example,
-- * by calling del_timer_sync().
-+ * @TIMER_IRQSAFE: An irqsafe timer is executed with IRQ disabled and
-+ * it's safe to wait for the completion of the running instance from
-+ * IRQ handlers, for example, by calling del_timer_sync().
-  *
-  * Note: The irq disabled callback execution is a special case for
-  * workqueue locking issues. It's not meant for executing random crap
-  * with interrupts disabled. Abuse is monitored!
-+ *
-+ * @TIMER_PINNED: A pinned timer will not be affected by timer
-+ * migration so it will always be run on a static cpu that was
-+ * specified.  Note: neither timer_setup() nor mod_timer() will
-+ * guarantee correct pinning of timers.  One should always use
-+ * add_timer_on() when arm the timer to guarantee that the timer will
-+ * be pinned to the target CPU correctly.
-  */
- #define TIMER_CPUMASK		0x0003FFFF
- #define TIMER_MIGRATING		0x00040000
--- 
-2.17.1
-
+Thanks,
+Ming Lei
