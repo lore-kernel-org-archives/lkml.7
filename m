@@ -2,155 +2,213 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D867EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08517C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:18:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3A1620657
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:17:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB88B20657
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 21:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Oz5HV1mo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aZFj62IN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbfFRVRb (ORCPT
+        id S1730708AbfFRVSt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 17:17:31 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:39752 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729982AbfFRVRa (ORCPT
+        Tue, 18 Jun 2019 17:18:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38465 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729982AbfFRVSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 17:17:30 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m202so8862395oig.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:17:30 -0700 (PDT)
+        Tue, 18 Jun 2019 17:18:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so1036156wrs.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 14:18:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=OVaisiOXoE8CbQX92HOyrJL+g6lUDABMWhLy1INrNs8=;
-        b=Oz5HV1moPPoMk0SLnChqqtEqzhvfYwLU7u/hCFBWGfivTj/kHAznEvBv4R467lgKUO
-         L2o4N+QjgGqsEEMT4nhuu34XkAv6TAvuLPG4rGiFrzyjtN+WuhwAOlydPGmDrk1cHusX
-         sQaGvh6JEmDt3/1c+1QEanNN00IfKCa9rHtZo=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=6KBwZ77vx+Ug72rN2lArM79k8txlJdN6M61O8g98a74=;
+        b=aZFj62IN2vZIXZvTDaPcwKiArUlNvRMNR6+HlHBb9xIb967N1rIFDTITx+pKwXNbpA
+         Duh0luTZvgd/ziOCnUAHiO5GqI59oxNxV9Yr8/R/wsKoGLwCtUDv0b1F/rwSzQQN+gzb
+         HaNrfm0twwgsU0X2pOJJ7EIinE5SRwX9IpTX2HQUoh3dBiSnsKS5BaRxTUq8bv4jrLce
+         C9JWX4f+/5QO6MHMYrhejPolbcN/+KKtnDU8NmramYN/hCL8C0dhcmdrX7h/VKi2FZib
+         t/JazsOZ9JAoG4hR1mTevjgMahICJTdV9lhC6pbV1gsAVxeD0u5Rd9unBGJWnRU65RTy
+         9JeA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=OVaisiOXoE8CbQX92HOyrJL+g6lUDABMWhLy1INrNs8=;
-        b=JdQTeD47mjVvcJAbvPH5Vi4hUtzuKUm1v8RRNSSgomFCEAsE1W/fh+xuErRHLgfy3h
-         YFlsOqd0geQv96ow6JA2RICpTrJcL9g/XY3xBgEAf9o17S0hf4q61hxoPJfuKhfJeOCv
-         DeI7ng1zNw/bTVr3WMi35SH6k4CZFOvxKfn4GzVlqqN3kSGba3GX8qy1L3If6UcXMNy/
-         YBW2ZQkIUmMR5pB3lV9VzRqJbECyiyNC25ReyI7xUriQb5U0oCaNQNkdmNkPtOErHWgJ
-         86MTtoOl8Gj2IssHo9xSAEyHPg6aXk3ZeQZxRbhdol+LV1GdQx8C4Hg0/9ANmNTg+lmc
-         F4HQ==
-X-Gm-Message-State: APjAAAX8Sop/MCBvLiVuNKTl/gU1auMBzEMJwdFCpsM5HeHfKYLR7t07
-        KENDjsMb8S04VvH2+GaqoOPHmOhJ4QVhpZpwsTPXiQ==
-X-Google-Smtp-Source: APXvYqwM5rdsu+2tscwSovuh/8/Anb5UmSPJu6tA1nsFIQjp4jCtEseqbfenFAQRa0EWvJ+Wgrw8cDcYjC5BdexcaM0=
-X-Received: by 2002:aca:ab13:: with SMTP id u19mr396863oie.127.1560892650121;
- Tue, 18 Jun 2019 14:17:30 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=6KBwZ77vx+Ug72rN2lArM79k8txlJdN6M61O8g98a74=;
+        b=beh2ZsdYG446sODRNqTa7TejahMxZql5TeybhQmSO2GOQN+HwpiXRn40t9Eoc68xpF
+         6MazvbDyVrsrLJyKQ2S+dW+3MU2WYRZYpA/6dOg0wbgmQGzSNVyOze3YXR4klPNqNkLw
+         huhiAXLqoS3y9M78WeFAT9zqghRBjzB93D0GJ7SU9pTcNZJv3NMTKCvUdwvjjQ1jsQ3n
+         Kt9sWf6MY7engvJicPUHsrqgbIhDxuDbh6vU1LADPAyJeqrJ3s/kROPyShnAmzFHvIl6
+         5Rd/tXbykIrjyvr/JmG5rmfbYK5bwiZi+Rhc3ZbcQEM/Xe/Vpx+Hj2FkOQcCDhEm5UvK
+         807Q==
+X-Gm-Message-State: APjAAAWNKL0qcB6YZZMv4k1gN63FDGY7U+wfmFtyDfHn/PscmaAvs++n
+        1nLTxrU08Xs7Bhl/lCyOIZMYdnYOHOs=
+X-Google-Smtp-Source: APXvYqyiIDxZ3fIw7Bhztp3fOsuq4vMXo9bl5mh9gJ6oFlR1CTHzsxcEYs+OIzGqwCFjAKWxf5C0tA==
+X-Received: by 2002:a5d:6a05:: with SMTP id m5mr29918004wru.161.1560892725335;
+        Tue, 18 Jun 2019 14:18:45 -0700 (PDT)
+Received: from ziggy.stardust ([95.169.230.25])
+        by smtp.gmail.com with ESMTPSA id f1sm3417833wml.28.2019.06.18.14.18.44
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 14:18:44 -0700 (PDT)
+Subject: Re: [PATCH 2/2] mfd: mt6397: use DEFINE_RES_* helpers to define RTC
+ resources
+To:     Fabien Parent <fparent@baylibre.com>, lee.jones@linaro.org
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20190618154347.16991-1-fparent@baylibre.com>
+ <20190618154347.16991-2-fparent@baylibre.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <6bf2d5a0-a768-b178-80c7-4f28f7db212c@gmail.com>
+Date:   Tue, 18 Jun 2019 23:18:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190618202425.15259-1-robdclark@gmail.com> <20190618202425.15259-6-robdclark@gmail.com>
- <CAOCk7NoTN6JEo7B=8P=T4C3t_Xr8eQUX=KG9j4N+jXZ8Pw2f4g@mail.gmail.com>
-In-Reply-To: <CAOCk7NoTN6JEo7B=8P=T4C3t_Xr8eQUX=KG9j4N+jXZ8Pw2f4g@mail.gmail.com>
-From:   Rob Clark <robdclark@chromium.org>
-Date:   Tue, 18 Jun 2019 14:17:16 -0700
-Message-ID: <CAJs_Fx4ys6CsgfrLHsU_8DKmgNAB6DbF+AQaHOJzwfzMFKj-Tw@mail.gmail.com>
-Subject: Re: [Freedreno] [PATCH 5/5] drm/msm/mdp5: Use the interconnect API
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Rob Clark <robdclark@gmail.com>,
-        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Rajesh Yadav <ryadav@codeaurora.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>,
-        Georgi Djakov <georgi.djakov@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190618154347.16991-2-fparent@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 1:44 PM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
->
-> On Tue, Jun 18, 2019 at 2:25 PM Rob Clark <robdclark@gmail.com> wrote:
-> >
-> > From: Georgi Djakov <georgi.djakov@linaro.org>
-> >
-> > The interconnect API provides an interface for consumer drivers to
-> > express their bandwidth needs in the SoC. This data is aggregated
-> > and the on-chip interconnect hardware is configured to the most
-> > appropriate power/performance profile.
-> >
-> > Use the API to configure the interconnects and request bandwidth
-> > between DDR and the display hardware (MDP port(s) and rotator
-> > downscaler).
-> >
-> > v2: update the path names to be consistent with dpu, handle the NULL
-> >     path case, updated commit msg from Georgi.
-> >
-> > Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-> > Signed-off-by: Rob Clark <robdclark@chromium.org>
-> > ---
-> >  drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 14 ++++++++++++++
-> >  1 file changed, 14 insertions(+)
-> >
-> > diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > index 97179bec8902..eeac429acf40 100644
-> > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> > @@ -16,6 +16,7 @@
-> >   * this program.  If not, see <http://www.gnu.org/licenses/>.
-> >   */
-> >
-> > +#include <linux/interconnect.h>
-> >  #include <linux/of_irq.h>
-> >
-> >  #include "msm_drv.h"
-> > @@ -1050,6 +1051,19 @@ static const struct component_ops mdp5_ops = {
-> >
-> >  static int mdp5_dev_probe(struct platform_device *pdev)
-> >  {
-> > +       struct icc_path *path0 = of_icc_get(&pdev->dev, "mdp0-mem");
-> > +       struct icc_path *path1 = of_icc_get(&pdev->dev, "mdp1-mem");
-> > +       struct icc_path *path_rot = of_icc_get(&pdev->dev, "rotator-mem");
-> > +
-> > +       if (IS_ERR_OR_NULL(path0))
-> > +               return PTR_ERR_OR_ZERO(path0);
->
-> Umm, am I misunderstanding something?  It seems like of_icc_get()
-> returns NULL if the property doesn't exist.  Won't this be backwards
-> incompatible?  Existing DTs won't specify the property, and I don't
-> believe the property is supported on all targets.  Seems like we'll
-> break things by not calling the below component_add() if the
-> interconnect is not supported, specified, or the interconnect driver
-> is not compiled.
 
-hmm, right, I guess I should test this w/out the dts patch.. probably
-should just revert back to the previous logic..
 
-BR,
--R
+On 18/06/2019 17:43, Fabien Parent wrote:
+> Use the DEFINE_RES_{MEM,IRQ} to define the RTC reosurce for the MT6397
+> PMIC.
+> 
+> Signed-off-by: Fabien Parent <fparent@baylibre.com>
 
-> > +       icc_set_bw(path0, 0, MBps_to_icc(6400));
-> > +
-> > +       if (!IS_ERR_OR_NULL(path1))
-> > +               icc_set_bw(path1, 0, MBps_to_icc(6400));
-> > +       if (!IS_ERR_OR_NULL(path_rot))
-> > +               icc_set_bw(path_rot, 0, MBps_to_icc(6400));
-> > +
-> >         DBG("");
-> >         return component_add(&pdev->dev, &mdp5_ops);
-> >  }
-> > --
-> > 2.20.1
-> >
-> > _______________________________________________
-> > Freedreno mailing list
-> > Freedreno@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/freedreno
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+> ---
+>  drivers/mfd/mt6397-core.c | 12 ++----------
+>  1 file changed, 2 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> index 190ed86ad93e..1e315712870b 100644
+> --- a/drivers/mfd/mt6397-core.c
+> +++ b/drivers/mfd/mt6397-core.c
+> @@ -23,16 +23,8 @@
+>  #define MT6397_CID_CODE		0x97
+>  
+>  static const struct resource mt6397_rtc_resources[] = {
+> -	{
+> -		.start = MT6397_RTC_BASE,
+> -		.end   = MT6397_RTC_BASE + MT6397_RTC_SIZE,
+> -		.flags = IORESOURCE_MEM,
+> -	},
+> -	{
+> -		.start = MT6397_IRQ_RTC,
+> -		.end   = MT6397_IRQ_RTC,
+> -		.flags = IORESOURCE_IRQ,
+> -	},
+> +	DEFINE_RES_MEM(MT6397_RTC_BASE, MT6397_RTC_SIZE),
+> +	DEFINE_RES_IRQ(MT6397_IRQ_RTC),
+>  };
+>  
+>  static const struct resource mt6323_keys_resources[] = {
+> 
