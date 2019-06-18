@@ -2,133 +2,248 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 251A6C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:46:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE81CC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:47:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F31AB2082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:46:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8FE4208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:47:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZF1zVPeh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="H5tfAqm2";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lWS5vBN2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729819AbfFRLp7 (ORCPT
+        id S1729787AbfFRLrl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:45:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54349 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729662AbfFRLp7 (ORCPT
+        Tue, 18 Jun 2019 07:47:41 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:36108 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbfFRLrk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:45:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id g135so2883221wme.4;
-        Tue, 18 Jun 2019 04:45:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Hmk5A34hevTih65ONqJk6gJ3pW2w0gAUTQ6jMje+Uj4=;
-        b=ZF1zVPehgmfyehYR+cbzThXdlcZDCmrJIyuLRSJ1IrMHRkDsD3ct6BMuzP9MWo6A0j
-         IR0IvIXMGr5Zpqdnjh9lOKG6sszGMQz1K/AZF3MrCB0GBcI3nVAeFzU9uQimqi8A0OpS
-         qMEt/pkg0PMyGu6S0lgq1ccT3QtCx043WpEWu6iqevbImPEgfKEi6ADUXjaKx+LAdtXZ
-         XrUC4sYz5al+ZtiQs28dPeesPssBcQq+3AXN8Rz/jyK5YJ+kMPH3P4VCN2BfNYij8K1N
-         iutBW8CMsQo/EKS4HXH5Wulm21BzfdDNWnyzkQI3fvqW9a6xbULi4AGiJW7UzDQ5oQ4q
-         Wxtg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Hmk5A34hevTih65ONqJk6gJ3pW2w0gAUTQ6jMje+Uj4=;
-        b=raRG74tUZBr8R8dR8YvaTh1c74QmWdj6W92yVQA7Xo9ZtJ2yF0wOCXF8ij/JjsUkUH
-         EMRORH9e6/1X5FKalO/aPA5n5eVTjtR0K8TOCqCWAL4nq3sem4CW986EWr7BHOZSmRU/
-         4TzQNUFPT41z8M2+ZtzzG8ptYo322VEc0oxNq4P/MCritjTDDN+hIeaKE/bGA3FrO51D
-         IyaXCCDuHamyeoDc0ltK2adIAbRY4HycurFqfQUDl5BXYqNthQ1Cx7Q9CJNaP380noXG
-         akHk4aAehBoL5MefKvXORxkKRRIV+eqQkY6Mmk65LGwAsP0HDiETWnUOjqIf1xKRdiMK
-         4LHA==
-X-Gm-Message-State: APjAAAVtBs/26whddzzImXVUtpc1cqKtVO6gG3H5Yb/quFoPD/j4mLh5
-        DEW+NDg3qBjntU9hRDNvO8Q=
-X-Google-Smtp-Source: APXvYqz3MAaHI3dRTEdsjIx4qOUPlTViVmJqHguDFGORtVNrPF/Y+Tzi5GZjf/61Y3+7LKPOcdwPOg==
-X-Received: by 2002:a1c:f001:: with SMTP id a1mr3427859wmb.130.1560858356319;
-        Tue, 18 Jun 2019 04:45:56 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id r12sm21351821wrt.95.2019.06.18.04.45.55
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 04:45:55 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 13:45:54 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     jonathanh@nvidia.com, tglx@linutronix.de, jason@lakedaemon.net,
-        marc.zyngier@arm.com, linus.walleij@linaro.org, stefan@agner.ch,
-        mark.rutland@arm.com, pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
-        sboyd@kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, jckuo@nvidia.com, josephl@nvidia.com,
-        talho@nvidia.com, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mperttunen@nvidia.com,
-        spatra@nvidia.com, robh+dt@kernel.org, digetx@gmail.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH V3 06/17] clk: tegra: pll: save and restore pll context
-Message-ID: <20190618114554.GI28892@ulmo>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
+        Tue, 18 Jun 2019 07:47:40 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AE02E6090E; Tue, 18 Jun 2019 11:47:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560858458;
+        bh=zsiyismHkNaIwa20jYT3ygpjBUSpDFV20h1wHyoiRi4=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=H5tfAqm20VO08QFGVdOVOtMkcVVGFL246Sf3UyVYR2o3TEG6v5OeIXMB8aHE8WN33
+         pDspwYOueoJUPxXUit0AQPkd4sK0qCot1aRU7IsQraLuq+vH5r7fO6vlyFCDXr8Nol
+         z4SSAolCahXWQV4OslSkw2Crm+rq16NTPpqxpa7c=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 99F376028D;
+        Tue, 18 Jun 2019 11:47:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560858456;
+        bh=zsiyismHkNaIwa20jYT3ygpjBUSpDFV20h1wHyoiRi4=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=lWS5vBN2n7mllaKBfP/xGUE/WXX3mG7tlT+2NMunARaEo6J1Emg3O4Bd61KfgDnIm
+         tS+SssTn8qjpetiuUWVaLkZGKYxngG+qLqIj7cxilaIwLuiNDycKy6gHTRjyNTfOof
+         5NF9IZc9lCRLoudqobxCMnGqIAVsAeTxfbXyP68Q=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 99F376028D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Douglas Anderson <dianders@chromium.org>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        brcm80211-dev-list.pdl@broadcom.com,
+        "open list\:ARM\/Rockchip SoC..." 
+        <linux-rockchip@lists.infradead.org>,
+        Double Lo <double.lo@cypress.com>,
+        Brian Norris <briannorris@chromium.org>,
+        linux-wireless <linux-wireless@vger.kernel.org>,
+        Naveen Gupta <naveen.gupta@cypress.com>,
+        Madhan Mohan R <madhanmohan.r@cypress.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Wright Feng <wright.feng@cypress.com>,
+        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
+        netdev <netdev@vger.kernel.org>,
+        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Allison Randal <allison@lohutok.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hante Meuleman <hante.meuleman@broadcom.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Niklas =?utf-8?Q?S=C3=B6derl?= =?utf-8?Q?und?= 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Ritesh Harjani <riteshh@codeaurora.org>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Franky Lin <franky.lin@broadcom.com>,
+        Ondrej Jirman <megous@megous.com>,
+        Jiong Wu <lohengrin1024@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Avri Altman <avri.altman@wdc.com>
+Subject: Re: [PATCH v5 0/5] brcmfmac: sdio: Deal better w/ transmission errors related to idle
+References: <20190617175653.21756-1-dianders@chromium.org>
+        <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
+        <87v9x39mxf.fsf@kamboji.qca.qualcomm.com>
+        <CAPDyKFoE0+KNBT5j3_VpJKcztghVa-eFJhy8887bZcUk8bfN2Q@mail.gmail.com>
+Date:   Tue, 18 Jun 2019 14:47:27 +0300
+In-Reply-To: <CAPDyKFoE0+KNBT5j3_VpJKcztghVa-eFJhy8887bZcUk8bfN2Q@mail.gmail.com>
+        (Ulf Hansson's message of "Tue, 18 Jun 2019 13:28:10 +0200")
+Message-ID: <87ef3r9kts.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="wjoFZxbW4tu+iR6v"
-Content-Disposition: inline
-In-Reply-To: <1560843991-24123-7-git-send-email-skomatineni@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
---wjoFZxbW4tu+iR6v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On Tue, 18 Jun 2019 at 13:02, Kalle Valo <kvalo@codeaurora.org> wrote:
+>
+>     Ulf Hansson <ulf.hansson@linaro.org> writes:
+>     
+>     > On Mon, 17 Jun 2019 at 19:57, Douglas Anderson
+>     <dianders@chromium.org> wrote:
+>     >>
+>     >> This series attempts to deal better with the expected
+>     transmission
+>     >> errors related to the idle states (handled by the
+>     Always-On-Subsystem
+>     >> or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
+>     >> rk3288-veyron-speedy, and rk3288-veyron-mickey.
+>     >>
+>     >> Some details about those errors can be found in
+>     >> <https://crbug.com/960222>, but to summarize it here: if we try
+>     to
+>     >> send the wakeup command to the WiFi card at the same time it
+>     has
+>     >> decided to wake up itself then it will behave badly on the SDIO
+>     bus.
+>     >> This can cause timeouts or CRC errors.
+>     >>
+>     >> When I tested on 4.19 and 4.20 these CRC errors can be seen to
+>     cause
+>     >> re-tuning. Since I am currently developing on 4.19 this was the
+>     >> original problem I attempted to solve.
+>     >>
+>     >> On mainline it turns out that you don't see the retuning errors
+>     but
+>     >> you see tons of spam about timeouts trying to wakeup from
+>     sleep. I
+>     >> tracked down the commit that was causing that and have
+>     partially
+>     >> reverted it here. I have no real knowledge about Broadcom WiFi,
+>     but
+>     >> the commit that was causing problems sounds (from the
+>     descriptioin) to
+>     >> be a hack commit penalizing all Broadcom WiFi users because of
+>     a bug
+>     >> in a Cypress SD controller. I will let others comment if this
+>     is
+>     >> truly the case and, if so, what the right solution should be.
+>     >>
+>     >> For v3 of this series I have added 2 patches to the end of the
+>     series
+>     >> to address errors that would show up on systems with these same
+>     SDIO
+>     >> WiFi cards when used on controllers that do periodic retuning.
+>     These
+>     >> systems need an extra fix to prevent the retuning from
+>     happening when
+>     >> the card is asleep.
+>     >>
+>     >> I believe v5 of this series is all ready to go assuming Kalle
+>     Valo is
+>     >> good with it. I've added after-the-cut notes to patches
+>     awaiting his
+>     >> Ack and have added other tags collected so far.
+>     >>
+>     >> Changes in v5:
+>     >> - Add missing sdio_retune_crc_enable() in comments (Ulf).
+>     >> - /s/reneable/re-enable (Ulf).
+>     >> - Remove leftover prototypes: mmc_expect_errors_begin() / end()
+>     (Ulf).
+>     >> - Rewording of "sleep command" in commit message (Arend).
+>     >>
+>     >> Changes in v4:
+>     >> - Moved to SDIO API only (Adrian, Ulf).
+>     >> - Renamed to make it less generic, now retune_crc_disable
+>     (Ulf).
+>     >> - Function header makes it clear host must be claimed (Ulf).
+>     >> - No more WARN_ON (Ulf).
+>     >> - Adjust to API rename (Adrian, Ulf).
+>     >> - Moved retune hold/release to SDIO API (Adrian).
+>     >> - Adjust to API rename (Adrian).
+>     >>
+>     >> Changes in v3:
+>     >> - Took out the spinlock since I believe this is all in one
+>     context.
+>     >> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
+>     >> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release
+>     ()") new for v3.
+>     >> - ("brcmfmac: sdio: Don't tune while the card is off") new for
+>     v3.
+>     >>
+>     >> Changes in v2:
+>     >> - A full revert, not just a partial one (Arend). ...with
+>     explicit Cc.
+>     >> - Updated commit message to clarify based on discussion of v1.
+>     >>
+>     >> Douglas Anderson (5):
+>     >> Revert "brcmfmac: disable command decode in sdio_aos"
+>     >> mmc: core: API to temporarily disable retuning for SDIO CRC
+>     errors
+>     >> brcmfmac: sdio: Disable auto-tuning around commands expected to
+>     fail
+>     >> mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
+>     >> brcmfmac: sdio: Don't tune while the card is off
+>     >>
+>     >> drivers/mmc/core/core.c | 5 +-
+>     >> drivers/mmc/core/sdio_io.c | 77 +++++++++++++++++++
+>     >> .../broadcom/brcm80211/brcmfmac/sdio.c | 17 ++--
+>     >> include/linux/mmc/host.h | 1 +
+>     >> include/linux/mmc/sdio_func.h | 6 ++
+>     >> 5 files changed, 99 insertions(+), 7 deletions(-)
+>     >>
+>     >> --
+>     >> 2.22.0.410.gd8fdbe21b5-goog
+>     >>
+>     >
+>     > Applied for fixes, thanks!
+>     >
+>     > Some minor changes:
+>     > 1) Dropped the a few "commit notes", that was more related to
+>     version
+>     > and practical information about the series.
+>     > 2) Dropped fixes tags for patch 2->5, but instead put a stable
+>     tag
+>     > targeted for v4.18+.
+>     >
+>     > Awaiting an ack from Kalle before sending the PR to Linus.
+>     >
+>     > Kalle, perhaps you prefer to pick patch 1, as it could go
+>     separate.
+>     > Then please tell - and/or if there is anything else you want me
+>     to
+>     > change.
+>     
+>     TBH I haven't followed the thread (or patches) that closely :) So
+>     feel
+>     free to take them and push them to Linus.
+>     
+>
+> I take that as an ack and will add your tag for it, thanks!
 
-On Tue, Jun 18, 2019 at 12:46:20AM -0700, Sowjanya Komatineni wrote:
-> This patch implements save and restore of pll context.
->=20
-> During system suspend, core power goes off and looses the settings
-> of the Tegra CAR controller registers.
->=20
-> So during suspend entry pll rate is stored and on resume it is
-> restored back along with its state.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-> ---
->  drivers/clk/tegra/clk-pll.c | 115 ++++++++++++++++++++++++++++++++------=
-------
->  drivers/clk/tegra/clk.h     |   6 ++-
->  2 files changed, 88 insertions(+), 33 deletions(-)
+Yes, it was an ack :) I forgot to add:
 
-Nit: s/pll/PLL/ in the commit message, but it's up to Stephen and Mike
-how important they consider this to be, so:
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
 
-Acked-by: Thierry Reding <treding@nvidia.com>
+BTW, your previous mail was in HTML so most likely it didn't reach the
+list.
 
---wjoFZxbW4tu+iR6v
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0IzvIACgkQ3SOs138+
-s6GbwhAAl81K7Fn0u6zVdK0Bb/EEToU7rUYTHyjjoF6pL7asgcFklYoc2+H0zeUr
-LQxgQ0QX4OdvjY/JkI7MoSnIMJxOjj8vYNXmavAdgLQWSCDsiNzfjmoFBIA2ZB0W
-zXikPpSrpHac3YzW4GwiR5qeFvv5YYA0PmIk9ojBTxb4pSbGIobhdjnAVrskBSp9
-5gICaaIOaAo+0YhZWHo2PdyAvOZpgf1KWKMik2RRO9M/LBJxm4v8Q3XC/sm4uko/
-95Tl8sFnIoLDZ6ZeOjIxa0YjDQgiVBdDNkPCWPdnzzwm+zIjJPUD7Mpd7si+jRfi
-/uNQaBwaL62sgX7pooVeEEIVJIlTcL1nYQNGH0rNzADxfThYGETM+/BTTaJeouJU
-iXT0XN9CGcXNlS/+0lShNEvUBmKhksAdOV0r3d+gdk2X++o4bg18oVZ5LeLaxiw9
-PKNwQivrb2f7IqPbFDB8vPIaa9JizgXCGw2/NHnuOMU6lW0Ddk3cRx+h6GGW2GnZ
-Kp/8GyTKe1eE2o+bnDBlcD5TxuwSk9GIN4T3snFeImmJtHBEA/e2kRMQvtTLoYX9
-xXYuNttR+hSoWhxirWHekS7EWpORz1EpxEvgIhztjI5Swz1BEyKHvK7NgEuLlJbE
-EnKwcp2Biak3DMMVdZLml8668uzm9i6dvILHYtzgFNw8jJhOKfQ=
-=qvUJ
------END PGP SIGNATURE-----
-
---wjoFZxbW4tu+iR6v--
+-- 
+Kalle Valo
