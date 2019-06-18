@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 115B9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:06:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87CBEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:06:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DEA4B214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:06:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CEE720B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560884786;
-	bh=U1Sq2C8IHuHyw6zehGQwxbLEKHLGFo/rZxykEE20tJc=;
+	s=default; t=1560884792;
+	bh=BuN4m7TCvsIHxw5rluKI30v0FDM5a8sAs/69N80hZis=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=l8wZd+MFAmJMXhM4zAiowpDCCtmdCQKRPItz6qyG0xJ/EOepov3Rs4RywULoBqWYe
-	 FjwXvHqq50frN+W3P0IAA5PSONXdhOcHmSSazFbdHYZCNeqigFDTTxhjxmvhUrqngy
-	 B5y+d13jepcwwhMlh3jeJfsMQKLKg2GdoPRE+OPI=
+	b=hnyY99RwXi+xr2pwiL2F0rWx7yIFEjqesN77ihxlHH+CZb7yoX6VLlcF+0ZA89ep6
+	 yswNGnnKBzSQs0nYcXnRg2OdP+SDbXNtSSoY/gCtrWuG3Jo+bZF9DTG7EYH9bKJ7VC
+	 h1xxC9xB7XnVwV8iq45cIZ9Z92yWDyBLFJxFMSc4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfFRTGZ (ORCPT
+        id S1730632AbfFRTGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:06:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41312 "EHLO mail.kernel.org"
+        Tue, 18 Jun 2019 15:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730196AbfFRTGY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:06:24 -0400
+        id S1730196AbfFRTGa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:06:30 -0400
 Received: from localhost.localdomain (unknown [194.230.155.186])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 11A9620B1F;
-        Tue, 18 Jun 2019 19:06:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64BD12147A;
+        Tue, 18 Jun 2019 19:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560884783;
-        bh=U1Sq2C8IHuHyw6zehGQwxbLEKHLGFo/rZxykEE20tJc=;
+        s=default; t=1560884789;
+        bh=BuN4m7TCvsIHxw5rluKI30v0FDM5a8sAs/69N80hZis=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GOJlh6xX8RowOZwKzGM/sZj/b6cHPgAWKCLHuKqSgWi7kuEA9bODYFmGFXib7vcqK
-         pCu42ENT2P9W/tfQUVbFMlTmg6xdX+tSo1xo0abbKciDKR1Zzkd9zl442fInpXrqOz
-         3NI8uy35FQ1m7j+pAZEGBT23Tpar+4JgO5oZa0jg=
+        b=vk/3iyv2fjeTYjDbv6hTp/CcA1L+m9C8OSjKDsOTRGbw+GOFxWyV+QMql7MD+EiYk
+         LIT+upk8J0tFo7v3AFqPkVcrZla3ZGyx39VKq+Kt9mAMcA8xa7+5ue36a/wIXWrpE7
+         hZQVmgljgFsg+lfB1isIJlAhOe7CQye2M+5zplpk=
 From:   Krzysztof Kozlowski <krzk@kernel.org>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -61,9 +61,9 @@ Cc:     Joseph Kogut <joseph.kogut@gmail.com>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Inki Dae <inki.dae@samsung.com>,
         Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [RFT 07/10] arm64: dts: exynos: Add GPU/Mali T760 node to Exynos7
-Date:   Tue, 18 Jun 2019 21:05:31 +0200
-Message-Id: <20190618190534.4951-8-krzk@kernel.org>
+Subject: [RFT 08/10] ARM: multi_v7_defconfig: Enable Panfrost and LIMA drivers
+Date:   Tue, 18 Jun 2019 21:05:32 +0200
+Message-Id: <20190618190534.4951-9-krzk@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190618190534.4951-1-krzk@kernel.org>
 References: <20190618190534.4951-1-krzk@kernel.org>
@@ -72,55 +72,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add nodes for GPU (Mali T760) to Exynos7.  Current support for Exynos7
-misses a lot, including proper clocks, power domains, frequency and
-voltage scaling and cooling.  However this still can provide basic GPU
-description.  Not tested on HW.
+Enable support for Mali GPU with Panfrost and LIMA drivers.  Most of
+Exynos chipsets come with Mali GPUs:
+1. Mali 400 (Exynos3250, Exynos4210, Exynos4412),
+2. Mali T7xx (Exynos542x).
+
+As Mali GPU is quite popular among ARM vendors, other platforms will
+benefit as well.
 
 Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 ---
- arch/arm64/boot/dts/exynos/exynos7-espresso.dts |  5 +++++
- arch/arm64/boot/dts/exynos/exynos7.dtsi         | 11 +++++++++++
- 2 files changed, 16 insertions(+)
+ arch/arm/configs/multi_v7_defconfig | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-index 00dd89b92b42..080e0f56e108 100644
---- a/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-+++ b/arch/arm64/boot/dts/exynos/exynos7-espresso.dts
-@@ -59,6 +59,11 @@
- 	clock-frequency = <24000000>;
- };
- 
-+&gpu {
-+	mali-supply = <&buck6_reg>;
-+	status = "okay";
-+};
-+
- &serial_2 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index 077d23478901..bcb9d8cee267 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -78,6 +78,17 @@
- 		};
- 	};
- 
-+	gpu: gpu@14ac0000 {
-+		compatible = "samsung,exynos5433-mali", "arm,mali-t760";
-+		reg = <0x14ac0000 0x5000>;
-+		interrupts = <GIC_SPI 241 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 242 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 240 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "job", "mmu", "gpu";
-+		status = "disabled";
-+		/* TODO: operating points for DVFS, cooling device */
-+	};
-+
- 	psci {
- 		compatible = "arm,psci-0.2";
- 		method = "smc";
+diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
+index 6b748f214eae..268161911fc9 100644
+--- a/arch/arm/configs/multi_v7_defconfig
++++ b/arch/arm/configs/multi_v7_defconfig
+@@ -656,6 +656,8 @@ CONFIG_DRM_VC4=m
+ CONFIG_DRM_ETNAVIV=m
+ CONFIG_DRM_MXSFB=m
+ CONFIG_DRM_PL111=m
++CONFIG_DRM_LIMA=m
++CONFIG_DRM_PANFROST=m
+ CONFIG_FB_EFI=y
+ CONFIG_FB_WM8505=y
+ CONFIG_FB_SH_MOBILE_LCDC=y
+@@ -940,7 +942,6 @@ CONFIG_ARCH_TEGRA_2x_SOC=y
+ CONFIG_ARCH_TEGRA_3x_SOC=y
+ CONFIG_ARCH_TEGRA_114_SOC=y
+ CONFIG_ARCH_TEGRA_124_SOC=y
+-CONFIG_PM_DEVFREQ=y
+ CONFIG_ARM_TEGRA_DEVFREQ=m
+ CONFIG_TI_AEMIF=y
+ CONFIG_IIO=y
 -- 
 2.17.1
 
