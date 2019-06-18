@@ -2,100 +2,152 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1972BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AC5C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C2B20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560899703;
-	bh=OA6I4ayEhiFnWN329YI6E+uL0b3iAc3DWYl05vZJgNs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=BOxnkEtlUGfUUhip1R3F+HhIbTjR840l/A1RVzHCO8Ihuvyia8jmdoVWrZWeyErXZ
-	 dd3vVV8BjWxtneymRRcyURccwNUd7xz1SCkA2RBWMoiAY9Zazq72QgVxsXFtmdPL7U
-	 0xQUa6dkHAO/wv57ta/oVirgwlzVKVztrcOJ91Z4=
+	by mail.kernel.org (Postfix) with ESMTP id 603EB20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="RFEpZtIn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729174AbfFRXPC (ORCPT
+        id S1729246AbfFRXP1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 19:15:02 -0400
-Received: from casper.infradead.org ([85.118.1.10]:37184 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFRXPC (ORCPT
+        Tue, 18 Jun 2019 19:15:27 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:39448 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFRXP0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 19:15:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YD3CDBnSmeqzGKbOwCAY3CZKaDLh95sd33iLbp3T1uU=; b=tIsxsufTq7E9IsMbw+MWb0tbC5
-        tpANoUwiF+PMZC10fp09AV1FLkM2apZ4V7pwSGklRs1GwLJj3O1MwZ8J90LBorH9Dmez8duksbLtm
-        cShMcigdOrSA7sCFxyQcWaT7N8axFoBTwkpa8QuBndEVHaZiObfGTwIcuUNgn85DBs2JypNungCXD
-        EvOJNPYlhVQqp73SEcvODHxDzpQ7BeYseALL/9SMAgD9R2qcq22I7QFNyYkpzlY/9awUykhfFbAkD
-        CSew9zhOgBJyNLcg0y47R8Ak4J+B0pc1ozqDJLk5GzaI4rxOQJajkdOfgziAztoEbkpUhwoPS+/+Q
-        tTEAsiBg==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdNJd-0007Mp-B3; Tue, 18 Jun 2019 23:15:01 +0000
-Date:   Tue, 18 Jun 2019 20:14:55 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>
-Subject: Re: [PATCH v2 02/29] docs: lcd-panel-cgram.txt: convert docs to
- ReST and rename to *.rst
-Message-ID: <20190618201455.04e8743d@coco.lan>
-In-Reply-To: <CANiq72kibf49R+QtUjqcttGiNr4kxBqc0TxSe+HdrQUahTxgng@mail.gmail.com>
-References: <cover.1560890800.git.mchehab+samsung@kernel.org>
-        <3da3e0379da562d703e6896ded6a7839d1272494.1560890800.git.mchehab+samsung@kernel.org>
-        <CANiq72kibf49R+QtUjqcttGiNr4kxBqc0TxSe+HdrQUahTxgng@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 18 Jun 2019 19:15:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id r21so14381517otq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 16:15:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CIsSf2GXvyDDqSHsag5yZpphi9br2QVejLk/bHmvVOU=;
+        b=RFEpZtInek3Io86FQLQYPSGxY5DbPdOrWHexhniqE/836Q7GoKyLBn5C/t/u+NyiOm
+         k91tU09m/SUR6H+dxUwX47Mx4GxGk1hO2WU7XCGEQgxBh6DQSwf6heoiugn9iNCP6o5F
+         z0oWkzGRcr+eDW8VjYY3lDtJld2zAiNrHmEkRMTX8rm2qA96nYlH41u3teob2jmMXlYF
+         t5acmoJ55ZKaiOWycmMm5ZqMgAzS36wBkDzLqNjJ6qe7bdv0/tAUs+OZeZdiAEyKUSx+
+         IoTYLES+7UrlT3ovI04C3hEM6/FCT+4dMoRFCP6QvEZZjdDVg+h4Mmak/08Vnz1J24dL
+         PuuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CIsSf2GXvyDDqSHsag5yZpphi9br2QVejLk/bHmvVOU=;
+        b=rjAd67wLNbw5Xt2gMgCejy318BtnwH8hoz0W/LExccytypHgwoWymtMFuIaYgmrH8l
+         ApKzRG8qj8iHhqvSsGJPAlaGMK2WNgGWGi5xtBHVxMi6iD0VHOHhK7tUDsF/zpt3b3Z3
+         40cJsYevHL5mEQD6LY/aPguitmVj2tTy/sZIKS6SDz5+SfENL87NFvzch1ZtPEuKfPkF
+         V/OOYsUwKs86P7FYWebcclAbM8EpOUy6EMHkq5kQXDPMaJmvSkbEOP/wlWZNN4QjdCNE
+         cX7goF8PmA2M07AN1Gejy+b+f7yesiY8bUve4ar76P16zafv9X/DP+9RIQbVwOUlLU2O
+         MBOw==
+X-Gm-Message-State: APjAAAWBFUFJofwSH/ID1myUa3+7i22WjfInKCYcfAgLPI0rHHPZIx+N
+        Ibxpy0JPCQSOmakvdZ6w7IBgD/URPHnXne+YmyEFyw==
+X-Google-Smtp-Source: APXvYqwNQLjWPtV+R8pF+k88qhC8khbqFVOtcNqlqN3daCyPXfL1Az/KXqmwaSLH86Onsw0+GoRPuR0JCs8tLaQzTqk=
+X-Received: by 2002:a9d:5911:: with SMTP id t17mr17885454oth.159.1560899725814;
+ Tue, 18 Jun 2019 16:15:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
+In-Reply-To: <4587569.x9DSL43cXO@kreacher>
+From:   Tri Vo <trong@android.com>
+Date:   Tue, 18 Jun 2019 16:15:14 -0700
+Message-ID: <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>, linux-pm@vger.kernel.org,
+        kernel-team@android.com, gregkh@linuxfoundation.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, 18 Jun 2019 23:14:01 +0200
-Miguel Ojeda <miguel.ojeda.sandonis@gmail.com> escreveu:
-
-> On Tue, Jun 18, 2019 at 10:56 PM Mauro Carvalho Chehab
-> <mchehab+samsung@kernel.org> wrote:
+On Tue, Jun 18, 2019 at 2:23 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Tuesday, June 18, 2019 10:17:16 PM CEST Sandeep Patil wrote:
 > >
-> > This small text file describes the usage of parallel port LCD
-> > displays from userspace PoV. So, a good candidate for the
-> > admin guide.
+> > Hi Rafael, Viresh etc.
 > >
-> > While this is not part of the admin-guide book, mark it as
-> > :orphan:, in order to avoid build warnings.  
-> 
-> If we are going to move everything else to `.rst` too, even things
-> outside the guide, then ack.
+> > On Tue, Jun 11, 2019 at 10:31:16AM -0700, Tri Vo wrote:
+> > > On Tue, Jun 4, 2019 at 5:23 PM Tri Vo <trong@android.com> wrote:
+> > > >
+> > > > Hello Rafael,
+> > > >
+> > > > Currently, Android reads wakeup sources statistics from
+> > > > /sys/kernel/debug/wakeup_sources in production environment. This
+> > > > information is used, for example, to report which wake lock prevents
+> > > > the device from suspending.
+> >
+> > Android's usage of the 'wakeup_sources' from debugfs can is linked at[1].
+> > Basically, android's battery stats implementation to plot history for suspend
+> > blocking wakeup sources over device's boot cycle. This is used both for power
+> > specific bug reporting but also is one of the stats that will be used towards
+> > attributing the battery consumption to specific processes over the period of
+> > time.
+> >
+> > Android depended on the out-of-tree /proc/wakelocks before and now relies on
+> > wakeup_sources debugfs entry heavily for the aforementioned use cases.
+> >
+> > > >
+> > > > Android userspace reading wakeup_sources is not ideal because:
+> > > > - Debugfs API is not stable, i.e. Android tools built on top of it are
+> > > > not guaranteed to be backward/forward compatible.
+> > > > - This file requires debugfs to be mounted, which itself is
+> > > > undesirable for security reasons.
+> > > >
+> > > > To address these problems, we want to contribute a way to expose these
+> > > > statistics that doesn't depend on debugfs.
+> > > >
+> > > > Some initial thoughts/questions: Should we expose the stats in sysfs?
+> > > > Or maybe implement eBPF-based solution? What do you think?
+> >
+> > We are going through Android's out-of-tree kernel dependencies along with
+> > userspace APIs that are not necessarily considered "stable and forever
+> > supported" upstream. The debugfs dependencies showed up on our radar as a
+> > result and so we are wondering if we should worry about changes in debugfs
+> > interface and hence the question(s) below.
+> >
+> > So, can we rely on /d/wakeup_sources to be considered a userspace API and
+> > hence maintained stable as we do for other /proc and /sys entries?
+> >
+> > If yes, then we will go ahead and add tests for this in LTP or
+> > somewhere else suitable.
+>
+> No, debugfs is not ABI.
+>
+> > If no, then we would love to hear suggestions for any changes that need to be
+> > made or we simply just move the debugfs entry into somewhere like
+> > /sys/power/ ?
+>
+> No, moving that entire file from debugfs into sysfs is not an option either.
+>
+> The statistics for the wakeup sources associated with devices are already there
+> under /sys/devices/.../power/ , but I guess you want all wakeup sources?
+>
+> That would require adding a kobject to struct wakeup_source and exposing
+> all of the statistics as separate attributes under it.  In which case it would be
+> good to replace the existing wakeup statistics under /sys/devices/.../power/
+> with symbolic links to the attributes under the wakeup_source kobject.
 
-Yeah, the plan is to move all text files inside Documentation/ to .rst[1].
+Thanks for your input, Rafael! Your suggestion makes sense. I'll work
+on a patch for this.
+>
+> > As a side effect, if the entry moves out of debugfs, Android can run without
+> > mounting debugfs in production that I assume is a good thing.
+>
+> And really Android developers might have thought about this a bit earlier.
 
-[1] There are some exceptions: for ABI and features, the current plan
-is to have a script that parses their strict formats and produce
-a ReST output.
+I'm still learning about kernel development. And Android has made
+missteps before. So I figured it's a good idea to ask first :)
 
-
-Btw, Still pending to be sent, I have already a patch removing the
-:orphan: from this file and adding it to the admin guide:
-
-	https://git.linuxtv.org/mchehab/experimental.git/commit/?h=convert_rst_renames_v5.1&id=eae5b48cab115c83be8dd59ee99b9e45f8142134
-
-And the corresponding output, after the patches I currently have:
-
-	https://www.infradead.org/~mchehab/rst_conversion/admin-guide/lcd-panel-cgram.html
-
-Thanks,
-Mauro
+Thanks!
