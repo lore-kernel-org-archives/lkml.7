@@ -2,117 +2,254 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F9A5C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A65C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:45:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 190B32084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:44:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560865444;
-	bh=jpwi1yqOwmzINvYa264hjoNAwgtlAPkdvF2LHsGZuSw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=DJXQvAQvXH5KrC1qL4VT7Zxhr3++8t5CWyRcUBEaDK11TaN+IuCZ/HB33FTOq/Nyj
-	 lBd8OMx+MAJ+mc+hlZQIaDvlY3UF7Os4JS27jVNcaSNG67t1sqQ4TK9fLhvoZQ0O8T
-	 zMvQdm8bDgvVOoQWW46BcHzB7AQG7N+SOxZ7qZ2w=
+	by mail.kernel.org (Postfix) with ESMTP id 2711120B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:45:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Sk5StRbj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729263AbfFRNoC (ORCPT
+        id S1729296AbfFRNpa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:44:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfFRNoB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:44:01 -0400
-Received: from dragon (li1322-146.members.linode.com [45.79.223.146])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7B70A2084B;
-        Tue, 18 Jun 2019 13:43:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560865441;
-        bh=jpwi1yqOwmzINvYa264hjoNAwgtlAPkdvF2LHsGZuSw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=dlTPHTxwnt6PhDNTjiSnVbxHAQANydojYv4DrMm3pkhiAXugUYFIMnhX+G7B2B7Wx
-         IG8xYOWcz/LHNiHMjHJYNcz/eV7MO8/42BaSqdopxg+ZmAT3HztnggMQ4JswjFOzPp
-         YkXA7B1KnSAyciFqCVVrG3o61qq6FrwjrNCZv4R8=
-Date:   Tue, 18 Jun 2019 21:42:55 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Abel Vesa <abel.vesa@nxp.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: Re: [PATCH] clk: imx6q: Annotate imx6q_obtain_fixed_clk_hw with
- __init
-Message-ID: <20190618134253.GK1959@dragon>
-References: <20190618022405.27952-1-natechancellor@gmail.com>
+        Tue, 18 Jun 2019 09:45:30 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:42182 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729050AbfFRNpa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:45:30 -0400
+Received: by mail-io1-f65.google.com with SMTP id u19so29836545ior.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 06:45:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hHqioTBNjt9iAW7qsAj1MGA0jRkZED+ks43d8hU4AUM=;
+        b=Sk5StRbjsbnBAuhfxRS127eSuO0NA5YWh3g4z9tOiefCQ1z+Ubf3xfmsxAhhCo38FA
+         z5W9dd2EvNPvugQe3QUWUsf4YtQc+P4rfpxnJ6kBJSGHTENt98o61nLZv6EcUCSTYEEz
+         lFRqme0FKc3mFpnkwE1nGxzrwuT/wiofrhIebgKe4LTTRF8G1cLg+Ewtasmbtz167egZ
+         IprHZRwVaaHkY9vhlchdmBIBxU1Fb+PUPCyuK4RYMl3q/oHghyp9QcOW3Ws+PlN1pq7l
+         l7o3NhNS7PbzSgB4Ec2mMoFaUStJ51saMFflVrGLvoCXLoTHzIHIAGiNV0sJF/1/agna
+         Hw+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hHqioTBNjt9iAW7qsAj1MGA0jRkZED+ks43d8hU4AUM=;
+        b=HWie+ODbPoS8dc0xqgwdETmuHlUdDH/NkKmvGrVlsr5/KpihF0KD3sFswQr9WBrwQT
+         b7TX8sQfPhQBMuty02FNKZg6/2LOjvz7SdsgUi48Mpw9HrlK/23hXZBiwrmWzTFK3+zo
+         OLRJX0dUqCOA1JrAc0HMgNa6IjXC9eLaDpak/KCrEROjW0QNA+0sspwctfddaq7SCDq6
+         bdR8m2OXMM/8nkjj8neLYXq1pc5KrlHRUE6KqCifGhQ7Kv1XdagsPfxCY/7SpjeGp77p
+         +5ufDLgLRj6IvWf+EiEoQRfh2asjncRyXPttUbZgj0kxczbWBwsCBHehjJ8gcuGNKlLK
+         ZEkQ==
+X-Gm-Message-State: APjAAAV46c4b2tBLuaMKQCE1g37mIBfluyn3077kK0fX3pGW+TJ0clNK
+        A1qvKGMw+LE5TVttZe64m0k4jw==
+X-Google-Smtp-Source: APXvYqzDaPCQOJP7+b9QX44U1hmNssHvCj4ype2sBXXK8UTxAOGdESYkJaFCoFZ9cNzAPD4R0LmyCw==
+X-Received: by 2002:a02:9143:: with SMTP id b3mr2252458jag.12.1560865529214;
+        Tue, 18 Jun 2019 06:45:29 -0700 (PDT)
+Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
+        by smtp.googlemail.com with ESMTPSA id x13sm11920449ioj.18.2019.06.18.06.45.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 06:45:28 -0700 (PDT)
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+To:     Johannes Berg <johannes@sipsolutions.net>,
+        Arnd Bergmann <arnd@arndb.de>, Dan Williams <dcbw@redhat.com>
+Cc:     Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+ <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+ <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+ <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+ <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+ <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+ <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+ <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+ <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+ <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+From:   Alex Elder <elder@linaro.org>
+Message-ID: <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
+Date:   Tue, 18 Jun 2019 08:45:26 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618022405.27952-1-natechancellor@gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:24:05PM -0700, Nathan Chancellor wrote:
-> When building with clang, the following modpost warning occurs:
+On 6/17/19 6:42 AM, Johannes Berg wrote:
+> On Wed, 2019-06-12 at 17:06 +0200, Arnd Bergmann wrote:
+>> On Wed, Jun 12, 2019 at 4:28 PM Dan Williams <dcbw@redhat.com> wrote:
+>>> On Wed, 2019-06-12 at 10:31 +0200, Arnd Bergmann wrote:
+>>>> On Tue, Jun 11, 2019 at 7:23 PM Dan Williams <dcbw@redhat.com> wrote:
+>>>
+>>> I was trying to make the point that rmnet doesn't need to care about
+>>> how the QMAP packets get to the device itself; it can be pretty generic
+>>> so that it can be used by IPA/qmi_wwan/rmnet_smd/etc.
+>>
+>> rmnet at the moment is completely generic in that regard already,
+>> however it is implemented as a tunnel driver talking to another
+>> device rather than an abstraction layer below that driver.
 > 
-> WARNING: vmlinux.o(.text+0x974dbc): Section mismatch in reference from
-> the function imx6q_obtain_fixed_clk_hw() to the function
-> .init.text:imx_obtain_fixed_clock_hw()
-> The function imx6q_obtain_fixed_clk_hw() references
-> the function __init imx_obtain_fixed_clock_hw().
-> This is often because imx6q_obtain_fixed_clk_hw lacks a __init
-> annotation or the annotation of imx_obtain_fixed_clock_hw is wrong.
+> It doesn't really actually *do* much other than muck with the headers a
+> small amount, but even that isn't really much.
 > 
-> imx6q_obtain_fixed_clk_hw is only used in imx6q_clocks_init, which is
-> marked __init so do that to imx6q_obtain_fixed_clk_hw to avoid this
-> warning.
-> 
-> Fixes: 992b703b5b38 ("clk: imx6q: Switch to clk_hw based API")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/541
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> You can probably implement that far more efficiently on some devices
+> where you have a semi-decent DMA engine that at least supports S/G.
 
-Thanks for the patch, Nathan.  But we already queued up a patch [1]
-from Arnd for that.
+If it had a well-defined way of creating new channels to be
+multiplexed over the connection to the modem, the IPA driver
+(rather than the rmnet driver) could present network interfaces
+for each and perform the multiplexing.  As I think Arnd
+suggested, this could at least partially be done with library
+code (to be shared with other "back-end" interfaces) rather
+than using a layered driver.  This applies to aggregation,
+channel flow control, and checksum offload as well.
 
-Shawn
+But I'm only familiar with IPA; I don't know whether the above
+statements make any sense for other "back-end" drivers.
 
-[1] https://lkml.org/lkml/2019/6/17/317
-
-> ---
->  drivers/clk/imx/clk-imx6q.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>>>> I understand that the rmnet model was intended to provide a cleaner
+>>>> abstraction, but it's not how we normally structure subsystems in
+>>>> Linux, and moving to a model more like how wireless_dev works
+>>>> would improve both readability and performance, as you describe
+>>>> it, it would be more like (ignoring for now the need for multiple
+>>>> connections):
+>>>>
+>>>>    ipa_dev
+>>>>         rmnet_dev
+>>>>                wwan_dev
+>>>>                       net_device
+>>>
+>>> Perhaps I'm assuming too much from this diagram but this shows a 1:1
+>>> between wwan_dev and "lower" devices.
 > 
-> diff --git a/drivers/clk/imx/clk-imx6q.c b/drivers/clk/imx/clk-imx6q.c
-> index 2caa71e91119..18914e0a1850 100644
-> --- a/drivers/clk/imx/clk-imx6q.c
-> +++ b/drivers/clk/imx/clk-imx6q.c
-> @@ -418,8 +418,9 @@ static void disable_anatop_clocks(void __iomem *anatop_base)
->  	writel_relaxed(reg, anatop_base + CCM_ANALOG_PLL_VIDEO);
->  }
->  
-> -static struct clk_hw *imx6q_obtain_fixed_clk_hw(struct device_node *np,
-> -						const char *name, unsigned long rate)
-> +static struct clk_hw __init *imx6q_obtain_fixed_clk_hw(struct device_node *np,
-> +							const char *name,
-> +							unsigned long rate)
->  {
->  	struct clk *clk = of_clk_get_by_name(np, name);
->  	struct clk_hw *hw;
-> -- 
-> 2.22.0
+> I guess the fuller picture would be something like
 > 
+> ipa_dev
+> 	rmnet_dev
+> 		wwan_dev
+> 			net_device*
+> 
+> (i.e. with multiple net_devices)
+> 
+>>> What Johannes is proposing (IIRC) is something a bit looser where a
+>>> wwan_dev does not necessarily provide netdev itself, but is instead the
+>>> central point that various channels (control, data, gps, sim card, etc)
+>>> register with. That way the wwan_dev can provide an overall view of the
+>>> WWAN device to userspace, and userspace can talk to the wwan_dev to ask
+>>> the lower drivers (ipa, rmnet, etc) to create new channels (netdev,
+>>> tty, otherwise) when the control channel has told the modem firmware to
+>>> expect one.
+> 
+> Yeah, that's more what I had in mind after all our discussions (will
+> continue this below).
+
+This is great.  The start of a more concrete discussion of the
+pieces that are missing...
+
+>> Right, as I noted above, I simplified it a bit. We probably want to
+>> have multiple net_device instances for an ipa_dev, so there has
+>> to be a 1:n relationship instead of 1:1 at one of the intermediate
+>> levels, but it's not obvious which level that should be.
+>>
+>> In theory we could even have a single net_device instance correspond
+>> to the ipa_dev, but then have multiple IP addresses bound to it,
+>> so each IP address corresponds to a channel/queue/napi_struct,
+>> but the user visible object remains a single device.
+> 
+> I don't think this latter (multiple IP addresses) works well - you want
+> a hardware specific header ("ETH_P_MAP") to carry the channel ID,
+> without looking up the IP address and all that.
+
+I agree with this.  It's not just multiple IP addresses for
+an interface, it really is multiplexed--with channel ids.
+It's another addressing parameter orthogonal to the IP space.
+
+> But anyway, as I alluded to above, I had something like this in mind:
+> 
+> driver_dev
+>   struct device *dev (USB, PCI, ...)
+>   net_device NA
+>   net_device NB
+>   tty TA
+>  ...
+> 
+> (I'm cutting out the rmnet layer here for now)
+> 
+> while having a separate that just links all the pieces together:
+> 
+> wwan_device W
+>   ---> dev
+>   ---> NA
+>   ---> NB
+>   ---> TA
+> 
+> So the driver is still responsible for creating the netdevs (or can of
+> course delegate that to an "rmnet" library), but then all it also does
+> is register the netdevs with the WWAN core like
+> 
+> 	wwan_add_netdev(dev, NA)
+> 
+> and the WWAN core would allocate the wwan_device W for this.
+
+That would be nice.  I believe you're saying that (in my case)
+the IPA driver creates and owns the netdevices.
+
+But I think the IPA driver would register with the WWAN core as
+a "provider," and then the WWAN core would subsequently request
+that it instantiate netdevices to represent channels on demand
+(rather than registering them).
+
+> That way, the drivers can concentrate on providing all the necessary
+> bits, and - crucially - even *different* drivers can end up linking to
+> the same wwan_device. For example, if you have a modem that has a multi-
+> function USB device, then an ethernet driver might create the netdev and
+> a tty driver might create the control channel, but if they both agree on
+> using the right "struct device" instance, you can still get the correct
+> wwan_device out of it all.
+> 
+> And, in fact, some should then be
+> 
+> 	wwan_maybe_add_netdev(dev, N)
+> 
+> because the ethernet driver may not know if it attached to a modem or
+> not, but if the control channel also attaches it's a modem for sure,
+> with that ethernet channel attached to it.
+> 
+> Additionally, I'm thinking API such as
+> 
+> 	wwan_add(dev, &ops, opsdata)
+> 
+> that doesn't automatically attach any channels, but provides "ops" to
+> the core to create appropriate channels. I think this latter would be
+> something for IPA/rmnet to use, perhaps for rmnet to offer the right ops
+> structure.
+
+Yes, that's more like what I meant above.  I see you're thinking
+as you write...
+
+					-Alex
+> 
+> johannes
+> 
+
