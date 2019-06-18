@@ -7,40 +7,37 @@ X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748BAC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:47:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97526C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:48:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D9FF2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:47:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BEC820863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:48:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="bbiwUL/p"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jGud0Hqr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfFRHr4 (ORCPT
+        id S1726308AbfFRHsN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:47:56 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14127 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729042AbfFRHrA (ORCPT
+        Tue, 18 Jun 2019 03:48:13 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:9689 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725870AbfFRHqp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:47:00 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0896f30002>; Tue, 18 Jun 2019 00:46:59 -0700
+        Tue, 18 Jun 2019 03:46:45 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0896e30000>; Tue, 18 Jun 2019 00:46:43 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 00:46:59 -0700
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 00:46:43 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 00:46:59 -0700
-Received: from HQMAIL112.nvidia.com (172.18.146.18) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 07:46:59 +0000
-Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL112.nvidia.com
- (172.18.146.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 07:46:59 +0000
+        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 00:46:43 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL108.nvidia.com
+ (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 07:46:42 +0000
 Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL107.nvidia.com
  (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 18 Jun 2019 07:46:59 +0000
+ Transport; Tue, 18 Jun 2019 07:46:43 +0000
 Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.217]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0896f00004>; Tue, 18 Jun 2019 00:46:58 -0700
+        id <B5d0896e00007>; Tue, 18 Jun 2019 00:46:43 -0700
 From:   Sowjanya Komatineni <skomatineni@nvidia.com>
 To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
         <tglx@linutronix.de>, <jason@lakedaemon.net>,
@@ -53,9 +50,9 @@ CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
         <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
         <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V3 09/17] clk: tegra: support for saving and restoring OSC clock context
-Date:   Tue, 18 Jun 2019 00:46:23 -0700
-Message-ID: <1560843991-24123-10-git-send-email-skomatineni@nvidia.com>
+Subject: [PATCH V3 03/17] gpio: tegra: use resume_noirq for tegra gpio resume
+Date:   Tue, 18 Jun 2019 00:46:17 -0700
+Message-ID: <1560843991-24123-4-git-send-email-skomatineni@nvidia.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
 References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
@@ -63,83 +60,85 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560844019; bh=LIyfL7frpgJGlYXzyqay8F1a5dljw6dG3mcUcqh5Ovo=;
+        t=1560844003; bh=Pr7vcEZPGjVmliq8J2fR0U6t7tGM+0Ul14bqoyMQjC8=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=bbiwUL/pLBrXnaYtjuKw11ptbgg6r6S8BMjNb5ojl5E4hLJA7zy95NqQ1N9xYhsTZ
-         v07nxMPAUHiCBf9lZgNWiP3i08+w1Teh97MN70tEmmsfdpJ1S37ZD3JBzXM0vx/uHD
-         YvsjgVNWls2igACcipyiPRIxMqUcw014rcwLQ8MOvpiyRAaxwhuULHrApSndPEFXIa
-         SxmHlpwTnLy+B/Lqwar1arYm5iGZDuS+YtqX6IZYs906m0f26kDZT2WOYYxHF8Apq5
-         1x1R4irTJ54KjCmea1CkRR9xnrxKxz22e578wk7f8kGcwH3b/2vjFz3BYtN5b2/KHR
-         QG7pQ5QXa46Yg==
+        b=jGud0Hqrlsdyja3FOUV8qfAb9/4AjvqCEy+IDTOk/kPu0lNqbprnH2jFYsLQ4EC5M
+         U2XSv8t087I75tzlOkfwctsi3NmUotvna3lIkYSONSLYoWWajX7GNafV4+ij8tpezF
+         Mw21p5uJU43qufboDfyCleg0SIxnndHAaIuEfzG3uxMZ4GngvKLsFr1gqyOoL5mfz/
+         ZIIlbj//xqDWBmrgy0f0kG3dkuJK60yGyVn/1wLQh0evQ4krDB4UBltD2YKosfW8x2
+         oIH+nwZG7THKehLdRSGrpseyWT9MvJKabRplQJimonT1jpJvL/nmvPIWAd6V0jI6iT
+         tSRzL8xFaF20Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch adds support for storing OSC clock frequency and the
-drive-strength during OSC clock init and creates an API to restore
-OSC control register value from the saved context.
+During SC7 resume, PARKED bit clear from the pinmux registers may
+cause a glitch on the GPIO lines.
 
-This API is invoked by Tegra210 clock driver during system resume
-to restore the  OSC clock settings.
+So, Tegra GPIOs restore should happen prior to restoring Tegra pinmux
+to keep the GPIO lines in a known good state prior to clearing PARKED
+bit.
+
+This patch has fix for this by moving Tegra GPIO restore to happen
+during resume_noirq.
 
 Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
- drivers/clk/tegra/clk-tegra-fixed.c | 14 ++++++++++++++
- drivers/clk/tegra/clk.h             |  1 +
- 2 files changed, 15 insertions(+)
+ drivers/gpio/gpio-tegra.c | 17 +++++++++++------
+ 1 file changed, 11 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/clk/tegra/clk-tegra-fixed.c b/drivers/clk/tegra/clk-tegra-fixed.c
-index 8d91b2b191cf..e8df0ccbffd0 100644
---- a/drivers/clk/tegra/clk-tegra-fixed.c
-+++ b/drivers/clk/tegra/clk-tegra-fixed.c
-@@ -17,7 +17,10 @@
- #define OSC_CTRL			0x50
- #define OSC_CTRL_OSC_FREQ_SHIFT		28
- #define OSC_CTRL_PLL_REF_DIV_SHIFT	26
-+#define OSC_CTRL_MASK			(0x3f2 |	\
-+					(0xf << OSC_CTRL_OSC_FREQ_SHIFT))
+diff --git a/drivers/gpio/gpio-tegra.c b/drivers/gpio/gpio-tegra.c
+index f57bfc07ae22..f3c58c597ab9 100644
+--- a/drivers/gpio/gpio-tegra.c
++++ b/drivers/gpio/gpio-tegra.c
+@@ -410,7 +410,7 @@ static void tegra_gpio_irq_handler(struct irq_desc *desc)
+ }
  
-+static u32 osc_ctrl_ctx;
- int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 			      unsigned long *input_freqs, unsigned int num,
- 			      unsigned int clk_m_div, unsigned long *osc_freq,
-@@ -29,6 +32,7 @@ int __init tegra_osc_clk_init(void __iomem *clk_base, struct tegra_clk *clks,
- 	unsigned osc_idx;
+ #ifdef CONFIG_PM_SLEEP
+-static int tegra_gpio_resume(struct device *dev)
++static int tegra_gpio_resume_noirq(struct device *dev)
+ {
+ 	struct tegra_gpio_info *tgi = dev_get_drvdata(dev);
+ 	unsigned long flags;
+@@ -506,6 +506,15 @@ static int tegra_gpio_irq_set_wake(struct irq_data *d, unsigned int enable)
  
- 	val = readl_relaxed(clk_base + OSC_CTRL);
-+	osc_ctrl_ctx = val & OSC_CTRL_MASK;
- 	osc_idx = val >> OSC_CTRL_OSC_FREQ_SHIFT;
- 
- 	if (osc_idx < num)
-@@ -96,3 +100,13 @@ void __init tegra_fixed_clk_init(struct tegra_clk *tegra_clks)
- 		*dt_clk = clk;
- 	}
+ 	return irq_set_irq_wake(bank->irq, enable);
  }
 +
-+void tegra_clk_osc_resume(void __iomem *clk_base)
-+{
-+	u32 val;
++static const struct dev_pm_ops tegra_gpio_pm_ops = {
++	.suspend = &tegra_gpio_suspend,
++	.resume_noirq = &tegra_gpio_resume_noirq
++};
 +
-+	val = readl_relaxed(clk_base + OSC_CTRL) & ~OSC_CTRL_MASK;
-+	val |= osc_ctrl_ctx;
-+	writel_relaxed(val, clk_base + OSC_CTRL);
-+	fence_udelay(2, clk_base);
-+}
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index a354cacae5a6..bb34a19aaf26 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -856,6 +856,7 @@ void tegra_sclk_cpulp_burst_policy_restore_context(void);
- void tegra_clk_periph_suspend(void __iomem *clk_base);
- void tegra_clk_periph_resume(void __iomem *clk_base);
- void tegra_clk_periph_force_on(u32 *clks_on, int count, void __iomem *clk_base);
-+void tegra_clk_osc_resume(void __iomem *clk_base);
++#define TEGRA_GPIO_PM	(&tegra_gpio_pm_ops)
++#else
++#define TEGRA_GPIO_PM	NULL
+ #endif
  
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
+ #ifdef	CONFIG_DEBUG_FS
+@@ -553,10 +562,6 @@ static inline void tegra_gpio_debuginit(struct tegra_gpio_info *tgi)
+ 
+ #endif
+ 
+-static const struct dev_pm_ops tegra_gpio_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(tegra_gpio_suspend, tegra_gpio_resume)
+-};
+-
+ static int tegra_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_gpio_info *tgi;
+@@ -706,7 +711,7 @@ static const struct of_device_id tegra_gpio_of_match[] = {
+ static struct platform_driver tegra_gpio_driver = {
+ 	.driver		= {
+ 		.name	= "tegra-gpio",
+-		.pm	= &tegra_gpio_pm_ops,
++		.pm	= TEGRA_GPIO_PM,
+ 		.of_match_table = tegra_gpio_of_match,
+ 	},
+ 	.probe		= tegra_gpio_probe,
 -- 
 2.7.4
 
