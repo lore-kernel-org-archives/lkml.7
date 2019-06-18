@@ -2,202 +2,107 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 350C5C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34C39C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E82DA206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DD132084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="hTpJIgPQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnxmFqcY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfFRJRk (ORCPT
+        id S1729409AbfFRJRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:17:40 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34884 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729253AbfFRJRb (ORCPT
+        Tue, 18 Jun 2019 05:17:51 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33090 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729253AbfFRJRu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:17:31 -0400
-Received: by mail-lj1-f196.google.com with SMTP id x25so2743900ljh.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 02:17:29 -0700 (PDT)
+        Tue, 18 Jun 2019 05:17:50 -0400
+Received: by mail-pg1-f196.google.com with SMTP id k187so7354049pga.0;
+        Tue, 18 Jun 2019 02:17:49 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=v4HP1f9I8mZkiZqFopwmMMkehyPq4NgMHQsfAEytrfU=;
-        b=hTpJIgPQ5zNz0esVepuf2/qfVqsVsbN759RHRHE1HHo1wVrtnn5aeaBEUGfBkeAvc4
-         KrxbEEn3fgE3Tqu+QXO/KbE2eL+1RCPd6tjrmUGdVNPbZHXwwruPAgGf7LWBVcoTzdvw
-         mzV0guv/lpW2E9O7PrjvutMEwHC377XWoVG1nJ4hE6NI/lC/7TYWJlBLYeD9/SNcOPAl
-         C7yRn7499jKGHu1bZrYqJMakaDa8y9H49b0XpraI75jLGBAMuQKQEbyCKOea/iJZFgXE
-         ca42qcUp0DHdJppt66qfbGtlP74lfXKCgvmiERZQAR2h+QSqySuT5+DT9X9Ynid5Sv1n
-         gHtw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=T8iho8zB2EI5q4Vs8qH35kthzunfwFzXsVq/N63fSg8=;
+        b=DnxmFqcYaL4E0yzWf4Ny5XU9Lmr/iNvLlEKA5tvmoA4m4tj3jhKkImeaeUHgor7hzs
+         kcKgPn51oQkNGADmzyWj8AzIZoR5a6pXcfGzQ2FijHCV/BvmCCeZI7YOSp4NJdKcrR+V
+         GK8iJkCzAO0Ath3MeQwKo/aBK+hEqkYugd7mGs5ejJCr1QKHQLQlCA2YXspN5D+Z/xaU
+         AAyTECbtdH59r1Skk0PiabZiNtSBPOhQQl8O769/sk0dGao+xhdvYN0FdMwVbc99giAr
+         BunOzlcA6JOZi0hd0AGcULuhbdOFSkAwOMprauXIYES3otB3MFPejHFeo5wO/AARyE9Q
+         oskA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=v4HP1f9I8mZkiZqFopwmMMkehyPq4NgMHQsfAEytrfU=;
-        b=Xc1X7OwviDFL9+Cqps/hA9gVSAyWktpKFjm9Y4F4sxkuLVk0EZneeX7EfA1kFbre0K
-         ZCztElyzl8zaeOk/94lSc+WFVtlYE6IcBY7ez58GPlqzSeXuEDuOBbbxf8eCGTTHphuU
-         JdAOPtqw5c9S+/NjbJ/J0m/RZb2CcED66bEkzasWwu9B2iOigB+uEssD9/4bKuCnscQd
-         +3NkykjSmUlIJD4xCBW9oUdKVmolJrCf4xf84ZUOXig7o9Lcq+TeE6C66Dkse20va5Yk
-         VX3/rEIkmZKQhQspj/J8DlZ1RzGedGTXuplTnYX+S4KoaXnoxjOZ9aTOFuWSkouu8xY6
-         29Ig==
-X-Gm-Message-State: APjAAAU6fMOdtLc1AIBqvMptAsFVTcQx3DqVe5FQazUHwnkKaCi3ElQL
-        4ieO+4XJYmzfPa6+sFOzMDiTfA==
-X-Google-Smtp-Source: APXvYqxAASa78CQEcaYVuktNiLcq0JeUIgmTj/eYK07MJp3NuwmX5jGuv3kfXKJESAq5inOBYpqRQg==
-X-Received: by 2002:a2e:3008:: with SMTP id w8mr26130958ljw.13.1560849448820;
-        Tue, 18 Jun 2019 02:17:28 -0700 (PDT)
-Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id b9sm2497444ljj.92.2019.06.18.02.17.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Jun 2019 02:17:28 -0700 (PDT)
-From:   Georgi Djakov <georgi.djakov@linaro.org>
-To:     linux-pm@vger.kernel.org
-Cc:     daidavid1@codeaurora.org, vincent.guittot@linaro.org,
-        bjorn.andersson@linaro.org, amit.kucheria@linaro.org,
-        evgreen@chromium.org, dianders@chromium.org,
-        seansw@qti.qualcomm.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-arm-msm@vger.kernel.org, georgi.djakov@linaro.org
-Subject: [PATCH v2 1/2] interconnect: Add support for path tags
-Date:   Tue, 18 Jun 2019 12:17:23 +0300
-Message-Id: <20190618091724.28232-2-georgi.djakov@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190618091724.28232-1-georgi.djakov@linaro.org>
-References: <20190618091724.28232-1-georgi.djakov@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=T8iho8zB2EI5q4Vs8qH35kthzunfwFzXsVq/N63fSg8=;
+        b=UqwNFLERpueOe7pFKnIVejAqy77G2sLLVy1C8xgqA8hdkyG1BxX0CpI/bd3XCWawbM
+         I1rfg6PTDaITq95+BTi25v/SHmV/CILK2z5NiN3iQFKgrQlEu3IHfBb7GuC1Ior4bQip
+         2AFqBLplMlqSl+ayf41tasLbefs2kjrOYs+74JIACYLSB9p1uOxeRbuCREPGJ/vpw0YZ
+         7JNgTZY7n4i0oblkqxXP72edw0v3pZGJnd9LjJzUykkawi0C9bsk0U5jWUlUfP+gh1sT
+         Pox4h9T0BSUlkZH6RtDeQbWCpfcn2h4fwI78O9Bhlj8PjZF32GFeU8XgrmN9oxak5cd/
+         OXSw==
+X-Gm-Message-State: APjAAAVQJZTaqVdgAGbU33xtblA6EKVYaaS3MmmMnGRSN/E24JhNunJP
+        4J/A3f+Hy/Spz6h+/JzI6aw=
+X-Google-Smtp-Source: APXvYqznfc4oBivpsKSj5zEbVhuvELVe7pEx+mqDBog7fgwcN7DeBJo8RqY39olEqs5lV86NOwGOkA==
+X-Received: by 2002:a63:4d0f:: with SMTP id a15mr1779210pgb.101.1560849469025;
+        Tue, 18 Jun 2019 02:17:49 -0700 (PDT)
+Received: from icarus ([2001:268:c0c9:ec1e:c70:4af9:86e2:2])
+        by smtp.gmail.com with ESMTPSA id i127sm14163574pfc.91.2019.06.18.02.17.46
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 18 Jun 2019 02:17:48 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 18:17:31 +0900
+From:   William Breathitt Gray <vilhelm.gray@gmail.com>
+To:     Patrick Havelange <patrick.havelange@essensium.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Cc:     linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH 1/1] counter/ftm-quaddec: Add missing '>' in MODULE_AUTHOR
+Message-ID: <20190618091731.GA8257@icarus>
+References: <20190618090542.13885-1-patrick.havelange@essensium.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190618090542.13885-1-patrick.havelange@essensium.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consumers may have use cases with different bandwidth requirements based
-on the system or driver state. The consumer driver can append a specific
-tag to the path and pass this information to the interconnect platform
-driver to do the aggregation based on this state.
+On Tue, Jun 18, 2019 at 11:05:41AM +0200, Patrick Havelange wrote:
+> The last '>' chars were missing in the MODULE_AUTHOR entries.
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Fixes: a3b9a99980d9 ("counter: add FlexTimer Module Quadrature decoder counter driver")
+> Signed-off-by: Patrick Havelange <patrick.havelange@essensium.com>
+> ---
+>  drivers/counter/ftm-quaddec.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/counter/ftm-quaddec.c b/drivers/counter/ftm-quaddec.c
+> index c83c8875bf82..68a9b7393457 100644
+> --- a/drivers/counter/ftm-quaddec.c
+> +++ b/drivers/counter/ftm-quaddec.c
+> @@ -352,5 +352,5 @@ static struct platform_driver ftm_quaddec_driver = {
+>  module_platform_driver(ftm_quaddec_driver);
+>  
+>  MODULE_LICENSE("GPL");
+> -MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com");
+> -MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com");
+> +MODULE_AUTHOR("Kjeld Flarup <kfa@deif.com>");
+> +MODULE_AUTHOR("Patrick Havelange <patrick.havelange@essensium.com>");
+> -- 
+> 2.19.1
 
-Introduce icc_set_tag() function that will allow the consumers to append
-an optional tag to each path. The aggregation of these tagged paths is
-platform specific.
+Signed-off-by: William Breathitt Gray <vilhelm.gray@gmail.com>
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
----
- drivers/interconnect/core.c           | 24 +++++++++++++++++++++++-
- drivers/interconnect/qcom/sdm845.c    |  2 +-
- include/linux/interconnect-provider.h |  4 ++--
- include/linux/interconnect.h          |  5 +++++
- 4 files changed, 31 insertions(+), 4 deletions(-)
+Jonathan, please pick up this fix as well.
 
-diff --git a/drivers/interconnect/core.c b/drivers/interconnect/core.c
-index 871eb4bc4efc..251354bb7fdc 100644
---- a/drivers/interconnect/core.c
-+++ b/drivers/interconnect/core.c
-@@ -29,6 +29,7 @@ static struct dentry *icc_debugfs_dir;
-  * @req_node: entry in list of requests for the particular @node
-  * @node: the interconnect node to which this constraint applies
-  * @dev: reference to the device that sets the constraints
-+ * @tag: path tag (optional)
-  * @avg_bw: an integer describing the average bandwidth in kBps
-  * @peak_bw: an integer describing the peak bandwidth in kBps
-  */
-@@ -36,6 +37,7 @@ struct icc_req {
- 	struct hlist_node req_node;
- 	struct icc_node *node;
- 	struct device *dev;
-+	u32 tag;
- 	u32 avg_bw;
- 	u32 peak_bw;
- };
-@@ -204,7 +206,7 @@ static int aggregate_requests(struct icc_node *node)
- 	node->peak_bw = 0;
- 
- 	hlist_for_each_entry(r, &node->req_list, req_node)
--		p->aggregate(node, r->avg_bw, r->peak_bw,
-+		p->aggregate(node, r->tag, r->avg_bw, r->peak_bw,
- 			     &node->avg_bw, &node->peak_bw);
- 
- 	return 0;
-@@ -385,6 +387,26 @@ struct icc_path *of_icc_get(struct device *dev, const char *name)
- }
- EXPORT_SYMBOL_GPL(of_icc_get);
- 
-+/**
-+ * icc_set_tag() - set an optional tag on a path
-+ * @path: the path we want to tag
-+ * @tag: the tag value
-+ *
-+ * This function allows consumers to append a tag to the requests associated
-+ * with a path, so that a different aggregation could be done based on this tag.
-+ */
-+void icc_set_tag(struct icc_path *path, u32 tag)
-+{
-+	int i;
-+
-+	if (!path)
-+		return;
-+
-+	for (i = 0; i < path->num_nodes; i++)
-+		path->reqs[i].tag = tag;
-+}
-+EXPORT_SYMBOL_GPL(icc_set_tag);
-+
- /**
-  * icc_set_bw() - set bandwidth constraints on an interconnect path
-  * @path: reference to the path returned by icc_get()
-diff --git a/drivers/interconnect/qcom/sdm845.c b/drivers/interconnect/qcom/sdm845.c
-index 4915b78da673..fb526004c82e 100644
---- a/drivers/interconnect/qcom/sdm845.c
-+++ b/drivers/interconnect/qcom/sdm845.c
-@@ -626,7 +626,7 @@ static void bcm_aggregate(struct qcom_icc_bcm *bcm)
- 	bcm->dirty = false;
- }
- 
--static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw,
-+static int qcom_icc_aggregate(struct icc_node *node, u32 tag, u32 avg_bw,
- 			      u32 peak_bw, u32 *agg_avg, u32 *agg_peak)
- {
- 	size_t i;
-diff --git a/include/linux/interconnect-provider.h b/include/linux/interconnect-provider.h
-index 63caccadc2db..4ee19fd41568 100644
---- a/include/linux/interconnect-provider.h
-+++ b/include/linux/interconnect-provider.h
-@@ -45,8 +45,8 @@ struct icc_provider {
- 	struct list_head	provider_list;
- 	struct list_head	nodes;
- 	int (*set)(struct icc_node *src, struct icc_node *dst);
--	int (*aggregate)(struct icc_node *node, u32 avg_bw, u32 peak_bw,
--			 u32 *agg_avg, u32 *agg_peak);
-+	int (*aggregate)(struct icc_node *node, u32 tag, u32 avg_bw,
-+			 u32 peak_bw, u32 *agg_avg, u32 *agg_peak);
- 	struct icc_node* (*xlate)(struct of_phandle_args *spec, void *data);
- 	struct device		*dev;
- 	int			users;
-diff --git a/include/linux/interconnect.h b/include/linux/interconnect.h
-index dc25864755ba..d70a914cba11 100644
---- a/include/linux/interconnect.h
-+++ b/include/linux/interconnect.h
-@@ -30,6 +30,7 @@ struct icc_path *icc_get(struct device *dev, const int src_id,
- struct icc_path *of_icc_get(struct device *dev, const char *name);
- void icc_put(struct icc_path *path);
- int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw);
-+void icc_set_tag(struct icc_path *path, u32 tag);
- 
- #else
- 
-@@ -54,6 +55,10 @@ static inline int icc_set_bw(struct icc_path *path, u32 avg_bw, u32 peak_bw)
- 	return 0;
- }
- 
-+static inline void icc_set_tag(struct icc_path *path, u32 tag)
-+{
-+}
-+
- #endif /* CONFIG_INTERCONNECT */
- 
- #endif /* __LINUX_INTERCONNECT_H */
+William Breathit Gray
