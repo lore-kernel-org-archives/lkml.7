@@ -2,148 +2,102 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5237C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ACC2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:09:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80CE121530
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00D8C2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:09:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560866994;
+	bh=6K/wRG1IurOYIBuuzccqJIUPKFi908D9irK0M3WxPJs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=wPlPL2j9t61A7NkSYmXRsAKv6Vmv9yeMmFRdmya/X0M/al+p5XY5SIJ2NnOf6tn0P
+	 fopq82JjHOfuLlKY6JVHBDSdZluErmZ90+9/GTvwnImZFeIR/HCnsOvKcEG4ZAF3aG
+	 vu977pSC4asuL/Q9vAdV4sYu0ddubMF30TIiBtnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729460AbfFROJj (ORCPT
+        id S1729552AbfFROJw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:09:39 -0400
-Received: from mga04.intel.com ([192.55.52.120]:7043 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726248AbfFROJi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:09:38 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 07:09:37 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
-   d="scan'208";a="243002896"
-Received: from oamaslek-mobl.amr.corp.intel.com (HELO [10.251.9.224]) ([10.251.9.224])
-  by orsmga001.jf.intel.com with ESMTP; 18 Jun 2019 07:09:37 -0700
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for
- MKTME
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Kai Huang <kai.huang@linux.intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        keyrings@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>
-References: <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
- <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com>
- <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
- <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com>
- <CALCETrWFXSndmPH0OH4DVVrAyPEeKUUfNwo_9CxO-3xy9awq0g@mail.gmail.com>
- <1560816342.5187.63.camel@linux.intel.com>
- <CALCETrVcrPYUUVdgnPZojhJLgEhKv5gNqnT6u2nFVBAZprcs5g@mail.gmail.com>
- <1560821746.5187.82.camel@linux.intel.com>
- <CALCETrUrFTFGhRMuNLxD9G9=GsR6U-THWn4AtminR_HU-nBj+Q@mail.gmail.com>
- <1560824611.5187.100.camel@linux.intel.com>
- <20190618091246.GM3436@hirez.programming.kicks-ass.net>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <2ec26c05-7c57-d0e0-a628-94d581b96b63@intel.com>
-Date:   Tue, 18 Jun 2019 07:09:36 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 10:09:52 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42262 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfFROJw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:09:52 -0400
+Received: by mail-qt1-f193.google.com with SMTP id s15so15418887qtk.9;
+        Tue, 18 Jun 2019 07:09:51 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GyQ7NHmIrnNmBSgVyVESd2wNXZg9DCHFi2yId0sHyBk=;
+        b=PdPzkB6/dua425wtW3F0dvMUs/GCYBeQX5UxO6oDjU+MUc5yjhLO7zMX9SnVYRbO45
+         T/D5kA30TBE9IQc3hdZw8lBsNKbVnSGzP0xrA2jMIS3a5AdFb/12kBs4BcQL4YuYCV+B
+         ztvqAfdeCI7lK6hVkpaOq+EkAw1w2kIEODIyWj8d9Yoxu8VzhQj7pZuzsK8f5sQVAkuF
+         FwBBLkTMLCn5ViyShaKslUMSZ75UmpPJics44VHeEdrh+Fya6F67S2Worla+a9KkTUD7
+         uJwHVQFiMBo2vsUHGImwRjnf7PwOMQb9ge+M8c3CVYaNsmaaxDuMdaKVric7cR3ya95j
+         eTCA==
+X-Gm-Message-State: APjAAAXS+Sn+qJ8QcNxudDxI+YMD0uTiVndhf34CHVNmW0d2VkXb8Ny2
+        8Znie1Cq8fDFaybT6It5iQ==
+X-Google-Smtp-Source: APXvYqy9m96oP9T8hp2Tshk/w80pIqjMUf7CXez4snhNRdVA9CnKuTOFT+BYdJIoAUJv31L+/KSzPw==
+X-Received: by 2002:ac8:3908:: with SMTP id s8mr99042910qtb.224.1560866990989;
+        Tue, 18 Jun 2019 07:09:50 -0700 (PDT)
+Received: from localhost ([64.188.179.192])
+        by smtp.gmail.com with ESMTPSA id x10sm10883256qtc.34.2019.06.18.07.09.49
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 07:09:50 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 08:09:48 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH next v2] of/fdt: Fix defined but not used compiler warning
+Message-ID: <20190618140948.GA18305@bogus>
+References: <20190612010011.90185-1-wangkefeng.wang@huawei.com>
+ <20190615030343.96524-1-wangkefeng.wang@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190618091246.GM3436@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190615030343.96524-1-wangkefeng.wang@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 2:12 AM, Peter Zijlstra wrote:
-> On Tue, Jun 18, 2019 at 02:23:31PM +1200, Kai Huang wrote:
->> Assuming I am understanding the context correctly, yes from this perspective it seems having
->> sys_encrypt is annoying, and having ENCRYPT_ME should be better. But Dave said "nobody is going to
->> do what you suggest in the ptr1/ptr2 example"? 
+On Sat, 15 Jun 2019 11:03:43 +0800, Kefeng Wang wrote:
+> When CONFIG_OF_EARLY_FLATTREE is disabled, there is a compiler
+> warning,
 > 
-> You have to phrase that as: 'nobody who knows what he's doing is going
-> to do that', which leaves lots of people and fuzzers.
+> drivers/of/fdt.c:129:19: warning: ‘of_fdt_match’ defined but not used [-Wunused-function]
+>  static int __init of_fdt_match(const void *blob, unsigned long node,
 > 
-> Murphy states that if it is possible, someone _will_ do it. And this
-> being something that causes severe data corruption on persistent
-> storage,...
+> Since the only caller of of_fdt_match() is of_flat_dt_match(),
+> let's move the body of of_fdt_match() into of_flat_dt_match()
+> and eliminate of_fdt_match().
+> 
+> Meanwhile, move of_fdt_is_compatible() under CONFIG_OF_EARLY_FLATTREE,
+> as all callers are over there.
+> 
+> Cc: Stephen Boyd <swboyd@chromium.org>
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+> ---
+> v2:
+> -Move the body of of_fdt_match() into of_flat_dt_match(), suggested by Frank.
+> 
+>  drivers/of/fdt.c | 99 ++++++++++++++++++++++--------------------------
+>  1 file changed, 45 insertions(+), 54 deletions(-)
+> 
 
-I actually think it's not a big deal at all to avoid the corruption that
-would occur if it were allowed.  But, if you're even asking to map the
-same data with two different keys, you're *asking* for data corruption.
- What we're doing here is continuing to  preserve cache coherency and
-ensuring an early failure.
+Applied, thanks.
 
-We'd need two rules:
-1. A page must not be faulted into a VMA if the page's page_keyid()
-   is not consistent with the VMA's
-2. Upon changing the VMA's KeyID, all underlying PTEs must either be
-   checked or zapped.
-
-If the rules are broken, we SIGBUS.  Andy's suggestion has the same
-basic requirements.  But, with his scheme, the error can be to the
-ioctl() instead of in the form of a SIGBUS.  I guess that makes the
-fuzzers' lives a bit easier.
-
-BTW, note that we don't have any problems with the current anonymous
-implementation and fork() because we zap at the encryption syscall.
+Rob
