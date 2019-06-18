@@ -2,79 +2,100 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-21.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A774C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:08:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73055C31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3063620B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:08:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560874133;
-	bh=YCsNI3NUEf3Ql1pa6VJY/tDOkScY+nHIByu9NbnC36Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wxIrgP7vf+bQjRI3PB1CitiujkmMc2olAKRg3vNJcxN1j16ww0m6t4dHf93IBjxLM
-	 ayI8TSOQS/l+9OeAUQpXZDJsXfVj7r7evmJsD0ga2CRRbpJiKcbHkrcNO4N9hu3SUz
-	 XvwT7WqImcHawz+CLhRiNunNwm0QjL6d4PdLuPJI=
+	by mail.kernel.org (Postfix) with ESMTP id 4D1BF20B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:09:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RTGBpnGi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbfFRQIv (ORCPT
+        id S1729917AbfFRQJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:08:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48366 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729247AbfFRQIu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:08:50 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A80C213F2;
-        Tue, 18 Jun 2019 16:08:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560874130;
-        bh=YCsNI3NUEf3Ql1pa6VJY/tDOkScY+nHIByu9NbnC36Y=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=0YKi/KzPywEj1N8qH2KtYtm/gAy7MGUSAmSjnLozqZfHcQkhJAsnU26kBZW3TnOs3
-         x050ZxqF1ZgcYIvK+f5UqVtG8lb76QINYtwEW8rJcere9TfZck1vQOubHmTKC07Jd7
-         ty3Y8cr9LSJxKvrBnJqvaycxBX2cJ6GxEC26G9m0=
-Date:   Tue, 18 Jun 2019 18:08:47 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>, hch@infradead.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH v2] fs: cramfs_fs.h: Fix shifting
- signed 32-bit value by 31 bits problem
-Message-ID: <20190618160847.GC27611@kroah.com>
-References: <20190618114947.10563-1-puranjay12@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618114947.10563-1-puranjay12@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 18 Jun 2019 12:09:18 -0400
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:42729 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729308AbfFRQJR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:09:17 -0400
+Received: by mail-pg1-f202.google.com with SMTP id d3so10235844pgc.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:09:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=6IDFouL/H7+c/7AlvTo7X9/eywwkp4tDYTIp5DP7IoQ=;
+        b=RTGBpnGivsxhigxzXCCAyfitf1UP+bR777ZW4X0Ba2SvpIluQba8Nf28uEO6Pd9o5s
+         +DdSidPp3cu9c3gNfbjiGWKpQeMTdOmgV0ErJWHNaAe0K7qVk7B+O1OKDTT6ILNlyls+
+         pWPCf5BrzJNSRDnYReBKEBGriap1vFXaaeb9PyfTjd3fhJ8mp/Uc7PdAJxBBm/QvZSJp
+         knf9G59aFXUt0qSOC5r8zoML2Fg9jW4Trxe1ox6ApyOhgbutcRhBbP6Kjj7oI4W0jSqH
+         +qXOzddWWWJgYAjKHtU21bNuYSe64JmBWXkGng+stzLXFms86RDD6dxgTMcJp1ySq/LL
+         8KCw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=6IDFouL/H7+c/7AlvTo7X9/eywwkp4tDYTIp5DP7IoQ=;
+        b=U/5birzgR+3OgwLldn3LudCy/90xeatmoMhG5KxjPi2UCEjK22WIZ428+Q0LQGAd+c
+         wg0PT4TTeFRzey/8EFQSNR8t6WlQYmBpHy5cAQSQw+D3ut4/L99w41vshIALCrypOX2Z
+         CbKbMIBcMtmyIeSkaPETozdxd6kGs0YWM2XtetcacIjIvqPqEflebZSRp+pATAzL3xl6
+         exv0Y3yQJYXSy0s3hrMFyXqmG88wvc9fBRsdbb+gxiPSzrqe2rm8sbGkdOzHG/Nejlzo
+         LE0WJCSKwJMoX+QMip4KT0tAfi4TT81un+3gDPUckkPJ2UogwKVGK9nm2+TV5gr3/tEo
+         GkdA==
+X-Gm-Message-State: APjAAAWRTXXEYcBjrrTjnrifZmlWrtloXmMpUlxDPaIZOeBctEdTi3kJ
+        eHSyjUD2hkP6m36aPrmA6dCo97Xngw==
+X-Google-Smtp-Source: APXvYqyo4hLXmSpMPPPSg/4SQs1y7daEnNSSdHXidTKy9+Ir8lzk1kY1I65tbUu+DwL1MAJ839z0DtEdbg==
+X-Received: by 2002:a17:902:6902:: with SMTP id j2mr42357327plk.321.1560874156473;
+ Tue, 18 Jun 2019 09:09:16 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 09:09:10 -0700
+In-Reply-To: <20190618083900.78eb88bd@bootlin.com>
+Message-Id: <20190618160910.62922-1-nhuck@google.com>
+Mime-Version: 1.0
+References: <20190618083900.78eb88bd@bootlin.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH] net: mvpp2: cls: Add pmap to fs dump
+From:   Nathan Huckleberry <nhuck@google.com>
+To:     davem@davemloft.net, maxime.chevallier@bootlin.com
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 05:19:47PM +0530, Puranjay Mohan wrote:
-> Fix CRAMFS_BLK_FLAG_UNCOMPRESSED to use "U" cast to avoid shifting signed
-> 32-bit value by 31 bits problem. This isn't a problem for kernel builds
-> with gcc.
-> 
-> This could be problem since this header is part of public API which
-> could be included for builds using compilers that don't handle this
-> condition safely resulting in undefined behavior.
-> 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+There was an unused variable 'mvpp2_dbgfs_prs_pmap_fops'
+Added a usage consistent with other fops to dump pmap
+to userspace.
 
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: clang-built-linux@googlegroups.com
+Link: https://github.com/ClangBuiltLinux/linux/issues/529
+Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+---
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-You should resend this and cc: Nicolas Pitre <nico@fluxnic.net> as he is
-the cramfs maintainer.
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
+index 0ee39ea47b6b..55947bc63cfd 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
+@@ -566,6 +566,9 @@ static int mvpp2_dbgfs_prs_entry_init(struct dentry *parent,
+ 	debugfs_create_file("hits", 0444, prs_entry_dir, entry,
+ 			    &mvpp2_dbgfs_prs_hits_fops);
+ 
++	ddebugfs_create_file("pmap", 0444, prs_entry_dir, entry,
++			     &mvpp2_dbgfs_prs_pmap_fops);
++
+ 	return 0;
+ }
+ 
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-thanks,
-
-greg k-h
