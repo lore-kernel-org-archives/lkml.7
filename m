@@ -2,81 +2,107 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2F31C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80DF0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:23:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4E13205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:22:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=comcastmailservice.net header.i=@comcastmailservice.net header.b="oFFa7lGA"
+	by mail.kernel.org (Postfix) with ESMTP id 67D20205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:23:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729826AbfFRRW6 (ORCPT
+        id S1729892AbfFRRX0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:22:58 -0400
-Received: from resqmta-ch2-08v.sys.comcast.net ([69.252.207.40]:57314 "EHLO
-        resqmta-ch2-08v.sys.comcast.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729435AbfFRRW5 (ORCPT
+        Tue, 18 Jun 2019 13:23:26 -0400
+Received: from mailoutvs37.siol.net ([185.57.226.228]:57499 "EHLO
+        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729325AbfFRRXZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:22:57 -0400
-Received: from resomta-ch2-14v.sys.comcast.net ([69.252.207.110])
-        by resqmta-ch2-08v.sys.comcast.net with ESMTP
-        id dGmihySmAmLM0dHovhPFfv; Tue, 18 Jun 2019 17:22:57 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=comcastmailservice.net; s=20180828_2048; t=1560878577;
-        bh=JHcgE4OMl2fKvXDVpOvk+kiciICu15GPHQ9+Epi74S4=;
-        h=Received:Received:Reply-To:Subject:To:From:Message-ID:Date:
-         MIME-Version:Content-Type;
-        b=oFFa7lGA3ExymOoKaqlYZf9oGbx0l1+nGx9KFWaHmpw4UDgb88VInSPuGYj/S9znq
-         KKUWf1BI2QiCRiAfTVzhxd7rsmRt0k8KZ6OcROoqC7KBErFUXvgQs80C2krfB30kNa
-         KoA/67ICo9IIFUPCLrCtNTeLWQXP2PI+RLwZL9aYNKbAt1C02PF3Xe7qOEzeaawx1N
-         spv1JKRlee9oK85OLH3sVnLi5a8y7JQbOA2xZzJBw/EusGdaA6/bMNp6bYtCOLks9U
-         5NbR9QF1I6zjEyvmwQerzNA/oQDv3F8l0cYPbYEQ98bdTxbQ2dMnDE+TcG6I4zq6I2
-         gCCZk8BOSEVog==
-Received: from [IPv6:2001:558:6040:22:2171:426f:b27e:296d] ([IPv6:2001:558:6040:22:2171:426f:b27e:296d])
-        by resomta-ch2-14v.sys.comcast.net with ESMTPSA
-        id dHoth3IEIllmHdHouhC4Ms; Tue, 18 Jun 2019 17:22:56 +0000
-X-Xfinity-VMeta: sc=-100;st=legit
-Reply-To: james@nurealm.net
-Subject: Re: [PATCH 5.1 003/115] HID: input: make sure the wheel high
- resolution multiplier is set
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Tissoires <benjamin.tissoires@redhat.com>
-References: <20190617210759.929316339@linuxfoundation.org>
- <20190617210800.096317488@linuxfoundation.org>
-From:   James Feeney <james@nurealm.net>
-Message-ID: <a90f3536-8833-498d-c9d5-ef460ad153da@nurealm.net>
-Date:   Tue, 18 Jun 2019 11:22:55 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Tue, 18 Jun 2019 13:23:25 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTP id 1EA4E5203EB;
+        Tue, 18 Jun 2019 19:23:22 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
+Received: from mail.siol.net ([127.0.0.1])
+        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id SvDg82OCXHri; Tue, 18 Jun 2019 19:23:21 +0200 (CEST)
+Received: from mail.siol.net (localhost [127.0.0.1])
+        by mail.siol.net (Zimbra) with ESMTPS id A4E9F5223EF;
+        Tue, 18 Jun 2019 19:23:21 +0200 (CEST)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net [86.58.52.202])
+        (Authenticated sender: jernej.skrabec@siol.net)
+        by mail.siol.net (Zimbra) with ESMTPA id 76FF65203EB;
+        Tue, 18 Jun 2019 19:23:18 +0200 (CEST)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+To:     Douglas Anderson <dianders@chromium.org>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        seanpaul@chromium.org, heiko@sntech.de, jonas@kwiboo.se,
+        linux-rockchip@lists.infradead.org, narmstrong@baylibre.com,
+        dgreid@chromium.org, cychiang@chromium.org,
+        David Airlie <airlied@linux.ie>,
+        Zheng Yang <zhengyang@rock-chips.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH] drm/bridge/synopsys: dw-hdmi: Handle audio for more clock rates
+Date:   Tue, 18 Jun 2019 19:23:18 +0200
+Message-ID: <6219398.I55JWXAmVF@jernej-laptop>
+In-Reply-To: <20190617235558.64571-1-dianders@chromium.org>
+References: <20190617235558.64571-1-dianders@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20190617210800.096317488@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Uhm - could someone please "clue me in" here?
+Hi!
 
-When I look into:
+Dne torek, 18. junij 2019 ob 01:55:58 CEST je Douglas Anderson napisal(a):
+> Let's add some better support for HDMI audio to dw_hdmi.
+> Specifically:
+> 
+> 1. For 44.1 kHz audio the old code made the assumption that an N of
+> 6272 was right most of the time.  That wasn't true and the new table
+> should give better 44.1 kHz audio for many more rates.
+> 
+> 2. The new table has values from the HDMI spec for 297 MHz and 594
+> MHz.
+> 
+> 3. There is now code to try to come up with a more idea N/CTS for
+> clock rates that aren't in the table.  This code is a bit slow because
+> it iterates over every possible value of N and picks the best one, but
+> it should make a good fallback.
+> 
+> 4. The new code allows for platforms that know they make a clock rate
+> slightly differently to pick different N/CTS values.  For instance on
+> rk3288 we can make 25,176,471 Hz instead of 25,174,825.1748... Hz
+> (25.2 MHz / 1.001).  A future patch to the rk3288 platform code could
+> enable support for this clock rate and specify the N/CTS that would be
+> ideal.
+> 
+> NOTE: the oddest part of this patch comes about because computing the
+> ideal N/CTS means knowing the _exact_ clock rate, not a rounded
+> version of it.  The drm framework makes this harder by rounding rates
+> to kHz, but even if it didn't there might be cases where the ideal
+> rate could only be calculated if we knew the real (non-integral) rate.
+> This means that in cases where we know (or believe) that the true rate
+> is something other than the rate we are told by drm.
+> 
+> Signed-off-by: Douglas Anderson <dianders@chromium.org>
 
-'move all the pending queues back to their "real" places'
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=c5da0df8985ac2f29ffdaba77bae201121bc0e10
+Which bus is used for audio transfer on your device? If it is I2S, which is 
+commonly used, then please be aware of this patch:
+https://lists.freedesktop.org/archives/dri-devel/2019-June/221539.html
 
-I can find both the "d43c17ead879ba7c076dc2f5fd80cd76047c9ff4" patch, "HID: input: make sure the wheel high resolution multiplier is set" and the "39b3c3a5fbc5d744114e497d35bf0c12f798c134" patch, "HID: input: fix assignment of .value".
+It avoids exact N/CTS calculation by enabling auto detection. It is well 
+tested on multiple SoCs from Allwinner, Amlogic and Rockchip.
 
-I take this to mean that these patches are "in the stable-queue".  But then, these patches are not "in the kernel".
+Best regards,
+Jernej
 
-So then, how do these patches go from being "in the stable-queue" to being "in the kernel"?
 
-To the "uninitiated" and "naive", as I am, to outward appearances, the patches are "just sitting there".  How do the patches get selected for inclusion into the "next" kernel revision?
-
-Thanks
-James
