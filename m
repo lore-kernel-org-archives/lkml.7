@@ -2,138 +2,122 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5ABAC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C2CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D20A20861
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:25:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75DE5205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="A2+Re1WB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+Dq0x7E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730718AbfFRUZt (ORCPT
+        id S1730599AbfFRU1W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:25:49 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37592 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfFRUZt (ORCPT
+        Tue, 18 Jun 2019 16:27:22 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:38823 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfFRU1W (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:25:49 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y57so17122531qtk.4;
-        Tue, 18 Jun 2019 13:25:48 -0700 (PDT)
+        Tue, 18 Jun 2019 16:27:22 -0400
+Received: by mail-yw1-f67.google.com with SMTP id k125so7290397ywe.5;
+        Tue, 18 Jun 2019 13:27:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=/mPcWOq6bvI/Rz9hbv+lJlmkKRg/e135jxE2BAg50pM=;
-        b=A2+Re1WBNBOftakVI6RS8tTdogZIEpHTmvSLUhBTnj7jSO/1JQdBvuHU/GTYpThg0v
-         cNvGiwlhpFX0Rz2L8uikLorkH5Z/VMo1TnBSwP42FrbPhRvGpVGF7e39yOIA6ZKNiGoZ
-         +2SGJOttWeg/zmqDYPVPw+6CyZAVzyXYcF5HGKf+sMEhPyYOsgvTm/Q6iiV1SDd+yz3L
-         CjiqL5/kToemOxQnH4GQmfNFh8XpH2atSaXIUBwZmBZvMeT3k0qW83KjwBANJ+Sg1/Qj
-         LIrPeFDjUPu95ncOTwy6lieNtH+gTWDuHPnAwp4p3Rb3UDe/rkQYIq5ayV+7UmMU5Rb5
-         XFXw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=7QMKaBxL4CnjzjmwadmOPe4XGvcXSwVBiLXM53oPLnQ=;
+        b=T+Dq0x7EPaLEza5d0zMKW1NvBlc7WCBqZ+ukuGL2lbxDTMhAQhjyRaZMsSlHWnz0b9
+         /NZLi/7k0NU6v3Ss1efP5H1LgDf5cReCDPURqtuDLd/xtTYqzCBKrOmPCwUC7Qx47+LH
+         VSfo829s+FB+SvzSurYMnZK4WTt9duhifHFO+wlg02GGu+z3j6OkRVeIRaHu7/lUMVGB
+         VzeYWdBIfhLkk/NzUgloOk9HcYQjLqKg3tQwarad3Tpf7tfq70D3kkGYMnaap6Ir6cZX
+         uyKKRaFq+/v5+TdS9xos5awfWpyq/fmp6+4qWOjRqa6fJpcE4s/w/50za6dTISqYPoj0
+         6ImA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=/mPcWOq6bvI/Rz9hbv+lJlmkKRg/e135jxE2BAg50pM=;
-        b=JZKVCzFPtclhgsAqLF3q1DAEUUdUmbSu70rlD5at2foECv7xANz6wAuX6LTTyMg1Dx
-         FZwZuLBQrLNuAtYuJRQsb5mwQkczhqyaOryagLVEPBdA2B8L3lFMUnzXERvZnLQ7AXJX
-         r+SXwnpZ1fBF7nwBxnTU1BnayR+aUgsNID1PzTcPj09s3JnmWfNL31FlZ8nhb9ui7Onk
-         aCajpFldcUCwxh2l6ZD04c66Fwllz4ib6FBPyieTicSUkYX9rIy8uBnuDIl4oIcCDteF
-         hb67fpGRtCbQ86leVvl718msle3a+dbzDjq4HNWRCWSPCTJ5n76jYqnqv5pu3Q5YqDIJ
-         RI+w==
-X-Gm-Message-State: APjAAAVvibroXaRyJMPT/0B7M76AaZo0wmsSOy69dJ9SxGT1RHdUoUZY
-        OlXYFsd8uFcND3y8whx1zsC0K39ON+Y=
-X-Google-Smtp-Source: APXvYqzyUL3X9E0qats7YR3PmXv//sVXhdaUp8xpUF8LRBxNUszW3/xqagPXh7quc7KRYLUMfm2cWw==
-X-Received: by 2002:ac8:38a8:: with SMTP id f37mr101708974qtc.150.1560889547868;
-        Tue, 18 Jun 2019 13:25:47 -0700 (PDT)
-Received: from localhost ([2601:184:4780:7861:5010:5849:d76d:b714])
-        by smtp.gmail.com with ESMTPSA id c16sm4004494qke.43.2019.06.18.13.25.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 13:25:47 -0700 (PDT)
-From:   Rob Clark <robdclark@gmail.com>
-To:     dri-devel@lists.freedesktop.org
-Cc:     linux-arm-msm@vger.kernel.org, Sean Paul <seanpaul@chromium.org>,
-        Georgi Djakov <georgi.djakov@linaro.org>,
-        Rob Clark <robdclark@chromium.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rajesh Yadav <ryadav@codeaurora.org>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 5/5] drm/msm/mdp5: Use the interconnect API
-Date:   Tue, 18 Jun 2019 13:24:13 -0700
-Message-Id: <20190618202425.15259-6-robdclark@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190618202425.15259-1-robdclark@gmail.com>
-References: <20190618202425.15259-1-robdclark@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=7QMKaBxL4CnjzjmwadmOPe4XGvcXSwVBiLXM53oPLnQ=;
+        b=RQOpqinHFODawXZo8pVEg/yk3rwQJ0vs4Gh8b+pd3BigE0P181S3i0VVDQqRvphRFD
+         F0Vl43I2cdjl51l0QlX28t22zZBx3pYXkjfc8orBadJMrYVRMblRO5g71rFrv5G/eb3r
+         PO8ea+yBNFWFptRbscmJjox8QYUa3t7cj7bLasOI8pmDVMs4ggj/km36M76yqiPwbbr+
+         4osR0cWL4Bp5u8tcOwyY8HS1n2C4p6jlYhlklhbJpx4yqY8lTTdwlrdlM6mCp4ekF/DR
+         LFyfQfMVkJjdLH5avW9HDH43k1U7BA+HhnsKXsF2Vn6jwTqrJVTmPtwzjlPndCktFbz8
+         i+uA==
+X-Gm-Message-State: APjAAAUqjpXfZtQbTT+nMJ9m6gMgESYiN3azYW9mWaJlNklU2kQ2rEZq
+        hQ4itJncGTxRg9vBZfe7tCcwCA/5Q9l5GvK6dhU=
+X-Google-Smtp-Source: APXvYqzOmIwVBwcmvQvSRdvCPmiYYWYbAEJNnMJ3QxF6seY1ZPR0HzYHP2MAVg0VNKuRWH6wVnKCGsD7iOmD9ELl3dY=
+X-Received: by 2002:a81:3956:: with SMTP id g83mr65870477ywa.183.1560889641067;
+ Tue, 18 Jun 2019 13:27:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <000000000000623c45058b9c2479@google.com>
+In-Reply-To: <000000000000623c45058b9c2479@google.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 18 Jun 2019 23:27:09 +0300
+Message-ID: <CAOQ4uxhsnOXXVCuOT4p4c_koBMFfprWwdtCPGNGhzprFaJZwRA@mail.gmail.com>
+Subject: Re: WARNING in fanotify_handle_event
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Georgi Djakov <georgi.djakov@linaro.org>
+On Tue, Jun 18, 2019 at 8:07 PM syzbot
+<syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    963172d9 Merge branch 'x86-urgent-for-linus' of git://git...
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17c090eaa00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
+> dashboard link: https://syzkaller.appspot.com/bug?extid=c277e8e2f46414645508
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a32f46a00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a7dc9ea00000
+>
+> The bug was bisected to:
+>
+> commit 77115225acc67d9ac4b15f04dd138006b9cd1ef2
+> Author: Amir Goldstein <amir73il@gmail.com>
+> Date:   Thu Jan 10 17:04:37 2019 +0000
+>
+>      fanotify: cache fsid in fsnotify_mark_connector
+>
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12bfcb66a00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11bfcb66a00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16bfcb66a00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com
+> Fixes: 77115225acc6 ("fanotify: cache fsid in fsnotify_mark_connector")
+>
+> WARNING: CPU: 0 PID: 8994 at fs/notify/fanotify/fanotify.c:359
+> fanotify_get_fsid fs/notify/fanotify/fanotify.c:359 [inline]
 
-The interconnect API provides an interface for consumer drivers to
-express their bandwidth needs in the SoC. This data is aggregated
-and the on-chip interconnect hardware is configured to the most
-appropriate power/performance profile.
+Oops, we forgot to update conn->fsid when the first mark added
+for inode has no fsid (e.g. inotify) and the second mark has fid,
+which is more or less the only thing the repro does.
+And if we are going to update conn->fsid, we do no have the
+cmpxchg to guaranty setting fsid atomically.
 
-Use the API to configure the interconnects and request bandwidth
-between DDR and the display hardware (MDP port(s) and rotator
-downscaler).
+I am thinking a set-once flag on connector FSNOTIFY_CONN_HAS_FSID
+checked before smp_rmb() in fanotify_get_fsid().
+If the flag is not set then call vfs_get_fsid() instead of using fsid cache.
+conn->fsid can be updated in fsnotify_add_mark_list() under conn->lock,
+and flag set after smp_wmb().
 
-v2: update the path names to be consistent with dpu, handle the NULL
-    path case, updated commit msg from Georgi.
+Does that sound correct?
 
-Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
-Signed-off-by: Rob Clark <robdclark@chromium.org>
----
- drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-index 97179bec8902..eeac429acf40 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-@@ -16,6 +16,7 @@
-  * this program.  If not, see <http://www.gnu.org/licenses/>.
-  */
- 
-+#include <linux/interconnect.h>
- #include <linux/of_irq.h>
- 
- #include "msm_drv.h"
-@@ -1050,6 +1051,19 @@ static const struct component_ops mdp5_ops = {
- 
- static int mdp5_dev_probe(struct platform_device *pdev)
- {
-+	struct icc_path *path0 = of_icc_get(&pdev->dev, "mdp0-mem");
-+	struct icc_path *path1 = of_icc_get(&pdev->dev, "mdp1-mem");
-+	struct icc_path *path_rot = of_icc_get(&pdev->dev, "rotator-mem");
-+
-+	if (IS_ERR_OR_NULL(path0))
-+		return PTR_ERR_OR_ZERO(path0);
-+	icc_set_bw(path0, 0, MBps_to_icc(6400));
-+
-+	if (!IS_ERR_OR_NULL(path1))
-+		icc_set_bw(path1, 0, MBps_to_icc(6400));
-+	if (!IS_ERR_OR_NULL(path_rot))
-+		icc_set_bw(path_rot, 0, MBps_to_icc(6400));
-+
- 	DBG("");
- 	return component_add(&pdev->dev, &mdp5_ops);
- }
--- 
-2.20.1
-
+Thanks,
+Amir.
