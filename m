@@ -2,125 +2,107 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7E08C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC2DC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7612085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E3CD62085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 13:36:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729547AbfFRNg0 (ORCPT
+        id S1729257AbfFRNgb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 09:36:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60010 "EHLO mx1.redhat.com"
+        Tue, 18 Jun 2019 09:36:31 -0400
+Received: from mga07.intel.com ([134.134.136.100]:21689 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729493AbfFRNgX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 09:36:23 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5369430860A0;
-        Tue, 18 Jun 2019 13:36:22 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-7.gru2.redhat.com [10.97.112.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CA61F1001DE7;
-        Tue, 18 Jun 2019 13:36:21 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 07144105165;
-        Tue, 18 Jun 2019 10:35:50 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x5IDZkZI027558;
-        Tue, 18 Jun 2019 10:35:46 -0300
-Date:   Tue, 18 Jun 2019 10:35:42 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     Wanpeng Li <kernellwp@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by
- posted interrupt
-Message-ID: <20190618133541.GA3932@amt.cnet>
-References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
- <1560770687-23227-3-git-send-email-wanpengli@tencent.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560770687-23227-3-git-send-email-wanpengli@tencent.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 18 Jun 2019 13:36:22 +0000 (UTC)
+        id S1729253AbfFRNgY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 09:36:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 06:36:24 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,389,1557212400"; 
+   d="scan'208";a="164705654"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga006.jf.intel.com with ESMTP; 18 Jun 2019 06:36:21 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [RFC net-next 5/5] net: stmmac: Set TSN HW tunable after tsn setup
+Date:   Wed, 19 Jun 2019 05:36:18 +0800
+Message-Id: <1560893778-6838-6-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1560893778-6838-1-git-send-email-weifeng.voon@intel.com>
+References: <1560893778-6838-1-git-send-email-weifeng.voon@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Dedicated instances are currently disturbed by unnecessary jitter due 
-> to the emulated lapic timers fire on the same pCPUs which vCPUs resident.
-> There is no hardware virtual timer on Intel for guest like ARM. Both 
-> programming timer in guest and the emulated timer fires incur vmexits.
-> This patch tries to avoid vmexit which is incurred by the emulated 
-> timer fires in dedicated instance scenario. 
-> 
-> When nohz_full is enabled in dedicated instances scenario, the emulated 
-> timers can be offload to the nearest busy housekeeping cpus since APICv 
-> is really common in recent years. The guest timer interrupt is injected 
-> by posted-interrupt which is delivered by housekeeping cpu once the emulated 
-> timer fires. 
-> 
-> The host admin should fine tuned, e.g. dedicated instances scenario w/ 
-> nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus 
-> for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-root  
-> mode, ~3% redis performance benefit can be observed on Skylake server.
-> 
-> w/o patch:
-> 
->             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Avg time
-> 
-> EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.71us ( +-   1.09% )
-> 
-> w/ patch:
-> 
->             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time         Avg time
-> 
-> EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.72us ( +-   4.02% )
-> 
-> Cc: Paolo Bonzini <pbonzini@redhat.com>
-> Cc: Radim Krčmář <rkrcmar@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++-------
->  arch/x86/kvm/lapic.h            |  1 +
->  arch/x86/kvm/vmx/vmx.c          |  3 ++-
->  arch/x86/kvm/x86.c              |  5 +++++
->  arch/x86/kvm/x86.h              |  2 ++
->  include/linux/sched/isolation.h |  2 ++
->  kernel/sched/isolation.c        |  6 ++++++
->  7 files changed, 44 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index 87ecb56..9ceeee5 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *apic)
->  	return apic->vcpu->vcpu_id;
->  }
->  
-> +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
-> +{
-> +	return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
-> +		kvm_hlt_in_guest(vcpu->kvm);
-> +}
-> +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+TSN HW tunable data for PTP Time Offset Value(PTOV),
+Current Time Offset Value(CTOV) and Time Interval Shift
+Amount(TILS) are added as platform data. These platform
+data are set after tsn setup.
 
-Paolo, can you explain the reasoning behind this?
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 16 ++++++++++++++++
+ include/linux/stmmac.h                            |  3 +++
+ 2 files changed, 19 insertions(+)
 
-Should not be necessary...
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index a443c42fa58b..d3ce86abdc69 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2533,6 +2533,22 @@ static int stmmac_hw_setup(struct net_device *dev, bool init_ptp)
+ 	/* Setup for TSN capability */
+ 	dwmac_tsn_setup(priv->ioaddr);
+ 
++	/* Set TSN HW tunable */
++	if (priv->plat->ptov)
++		stmmac_set_tsn_hwtunable(priv, priv->ioaddr,
++					 TSN_HWTUNA_TX_EST_PTOV,
++					 &priv->plat->ptov);
++
++	if (priv->plat->ctov)
++		stmmac_set_tsn_hwtunable(priv, priv->ioaddr,
++					 TSN_HWTUNA_TX_EST_CTOV,
++					 &priv->plat->ctov);
++
++	if (priv->plat->tils)
++		stmmac_set_tsn_hwtunable(priv, priv->ioaddr,
++					 TSN_HWTUNA_TX_EST_TILS,
++					 &priv->plat->tils);
++
+ 	return 0;
+ }
+ 
+diff --git a/include/linux/stmmac.h b/include/linux/stmmac.h
+index d4a90f48e49b..792aa8b3e138 100644
+--- a/include/linux/stmmac.h
++++ b/include/linux/stmmac.h
+@@ -176,5 +176,8 @@ struct plat_stmmacenet_data {
+ 	int mac_port_sel_speed;
+ 	bool en_tx_lpi_clockgating;
+ 	int has_xgmac;
++	unsigned int ptov;
++	unsigned int ctov;
++	unsigned int tils;
+ };
+ #endif
+-- 
+1.9.1
 
