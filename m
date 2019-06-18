@@ -2,154 +2,186 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF5D3C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:43:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A5AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2FA32080C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:43:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A3FB214AF
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 10:43:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=codeblueprint-co-uk.20150623.gappssmtp.com header.i=@codeblueprint-co-uk.20150623.gappssmtp.com header.b="pO1ElnKQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729525AbfFRKnD (ORCPT
+        id S1729575AbfFRKnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 06:43:03 -0400
-Received: from mga17.intel.com ([192.55.52.151]:59743 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729268AbfFRKnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 06:43:03 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 03:43:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,388,1557212400"; 
-   d="scan'208";a="181364060"
-Received: from kuha.fi.intel.com ([10.237.72.189])
-  by fmsmga001.fm.intel.com with SMTP; 18 Jun 2019 03:43:00 -0700
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 18 Jun 2019 13:42:59 +0300
-Date:   Tue, 18 Jun 2019 13:42:59 +0300
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org,
-        rafael@kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 14/28] drivers: Introduce
- class_find_device_by_fwnode() helper
-Message-ID: <20190618104259.GA25441@kuha.fi.intel.com>
-References: <1560534863-15115-1-git-send-email-suzuki.poulose@arm.com>
- <1560534863-15115-15-git-send-email-suzuki.poulose@arm.com>
+        Tue, 18 Jun 2019 06:43:23 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:45758 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729268AbfFRKnX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 06:43:23 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a14so20959092edv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 03:43:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=codeblueprint-co-uk.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EiGfP218TyYVw3oIdFy9RKq7TADgpiAhaNHmeMUYr4k=;
+        b=pO1ElnKQsOyzz/ort0DyFfwfmp1bAWRAuBwSI9NXrxnvwS1fp7AkRc9h7c4IDN9aSv
+         88DrpiA05hwAwJUYfLiB2gIvc7eZ48VBG8eqmDmCi9NI8LeNM0eA0PEmEfa2hCjRvMTU
+         +8xK55n6sUOfZlviscO6Q9v1tLSABAAWzWLUvodl9cqL8nMuWnSbcJzzcBy+2vNfWsvF
+         YXEOTR/5a/pyt12CZKSrs7PEenI64xkaL2CAP7WA87dKvsKSVcQacxv0q34K/4SmiRKa
+         x9vSyAUbFhG5UjNOhLSGaQ9/wN1zuXXKz5Nq/XRqGkL88RPFhx4ETYJQBKjUOhxIuKfv
+         wIGQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=EiGfP218TyYVw3oIdFy9RKq7TADgpiAhaNHmeMUYr4k=;
+        b=DLUyo/XaxNQ472m0zDEyynN7oFKDWmi32u6DsNclMGJIjC/gibYL952ynK6GUwXS0O
+         /J74TMNED2Suu6siP5ZZeJGqtie/5hva558a7XhSAT8zsc5dnLSskO2NU1WBjjUHbvqj
+         Ac3UwSUM44K4Yr4jK+uDfDb6DAxKljR81Rb49o98OrFOy15XqXo8j5J9kYGX3EsxHha8
+         +bwUIMiWPJNPf8O8YidKAHZT96yEYBIDBJcYANUavAsczcQuJhBThMZzanCV8K6V7+Wz
+         n7LXxgT0G+P22Cr3wENZNi7RIvnyWs7avKiXHvN5Urm3wrCohqUqPDOw+PxpvYw0hcrY
+         1HsA==
+X-Gm-Message-State: APjAAAW+afH1qrIgiP/ujgCCBFjiCYyoTCd54lRsUC63FShJyl3hxE/M
+        mRjdIP/Klg4/7twKnVh6nOr4Fw==
+X-Google-Smtp-Source: APXvYqzfcVLq+uK/+F9zUZ+Q27F4RbbE1XwaPQ0EnXrPwVSblFMVNFmjlrqw15gn7Iss39OQ3In2lQ==
+X-Received: by 2002:a17:906:451:: with SMTP id e17mr45052889eja.161.1560854601178;
+        Tue, 18 Jun 2019 03:43:21 -0700 (PDT)
+Received: from localhost ([94.1.151.203])
+        by smtp.gmail.com with ESMTPSA id i6sm4670808eda.79.2019.06.18.03.43.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 03:43:20 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 11:43:19 +0100
+From:   Matt Fleming <matt@codeblueprint.co.uk>
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH] sched/topology: Improve load balancing on AMD EPYC
+Message-ID: <20190618104319.GB4772@codeblueprint.co.uk>
+References: <20190605155922.17153-1-matt@codeblueprint.co.uk>
+ <20190605180035.GA3402@hirez.programming.kicks-ass.net>
+ <20190610212620.GA4772@codeblueprint.co.uk>
+ <18994abb-a2a8-47f4-9a35-515165c75942@amd.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560534863-15115-15-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <18994abb-a2a8-47f4-9a35-515165c75942@amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 06:54:09PM +0100, Suzuki K Poulose wrote:
-> Add a wrapper to class_find_device() to search for a device
-> by the fwnode pointer, reusing the generic match function.
-> Also convert the existing users to make use of the new helper.
+On Tue, 11 Jun, at 05:22:21PM, Lendacky, Thomas wrote:
+> On 6/10/19 4:26 PM, Matt Fleming wrote:
+> > On Wed, 05 Jun, at 08:00:35PM, Peter Zijlstra wrote:
+> >>
+> >> And then we had two magic values :/
+> >>
+> >> Should we not 'fix' RECLAIM_DISTANCE for EPYC or something? Because
+> >> surely, if we want to load-balance agressively over 30, then so too
+> >> should we do node_reclaim() I'm thikning.
+> > 
+> > Yeah we can fix it just for EPYC, Mel suggested that approach originally.
+> > 
+> > Suravee, Tom, what's the best way to detect these EPYC machines that need to
+> > override RECLAIM_DISTANCE?
 > 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-> Cc: linux-usb@vger.kernel.org
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> You should be able to do it based on the family. There's an init_amd_zn()
+> function in arch/x86/kernel/cpu/amd.c.  You can add something there or,
+> since init_amd_zn() sets X86_FEATURE_ZEN, you could check for that if you
+> prefer putting it in a different location.
 
-Acked-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+This works for me under all my tests. Thoughts?
 
-> ---
->  drivers/usb/roles/class.c |  8 +-------
->  drivers/usb/typec/class.c |  8 +-------
->  include/linux/device.h    | 13 +++++++++++++
->  3 files changed, 15 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/usb/roles/class.c b/drivers/usb/roles/class.c
-> index 07aaa96..5cd87d8 100644
-> --- a/drivers/usb/roles/class.c
-> +++ b/drivers/usb/roles/class.c
-> @@ -85,11 +85,6 @@ enum usb_role usb_role_switch_get_role(struct usb_role_switch *sw)
->  }
->  EXPORT_SYMBOL_GPL(usb_role_switch_get_role);
->  
-> -static int switch_fwnode_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev_fwnode(dev) == fwnode;
-> -}
-> -
->  static void *usb_role_switch_match(struct device_connection *con, int ep,
->  				   void *data)
->  {
-> @@ -99,8 +94,7 @@ static void *usb_role_switch_match(struct device_connection *con, int ep,
->  		if (!fwnode_property_present(con->fwnode, con->id))
->  			return NULL;
->  
-> -		dev = class_find_device(role_class, NULL, con->fwnode,
-> -					switch_fwnode_match);
-> +		dev = class_find_device_by_fwnode(role_class, con->fwnode);
->  	} else {
->  		dev = class_find_device_by_name(role_class, con->endpoint[ep]);
->  	}
-> diff --git a/drivers/usb/typec/class.c b/drivers/usb/typec/class.c
-> index 18a0687..af4fb73 100644
-> --- a/drivers/usb/typec/class.c
-> +++ b/drivers/usb/typec/class.c
-> @@ -205,11 +205,6 @@ static void typec_altmode_put_partner(struct altmode *altmode)
->  	put_device(&adev->dev);
->  }
->  
-> -static int typec_port_fwnode_match(struct device *dev, const void *fwnode)
-> -{
-> -	return dev_fwnode(dev) == fwnode;
-> -}
-> -
->  static void *typec_port_match(struct device_connection *con, int ep, void *data)
->  {
->  	struct device *dev;
-> @@ -219,8 +214,7 @@ static void *typec_port_match(struct device_connection *con, int ep, void *data)
->  	 * we need to return ERR_PTR(-PROBE_DEFER) when there is no device.
->  	 */
->  	if (con->fwnode)
-> -		return class_find_device(typec_class, NULL, con->fwnode,
-> -					 typec_port_fwnode_match);
-> +		return class_find_device_by_fwnode(typec_class, con->fwnode);
->  
->  	dev = class_find_device_by_name(typec_class, con->endpoint[ep]);
->  
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 9228502..52ac911 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -509,6 +509,19 @@ class_find_device_by_of_node(struct class *class, const struct device_node *np)
->  	return class_find_device(class, NULL, np, device_match_of_node);
->  }
->  
-> +/**
-> + * class_find_device_by_fwnode : device iterator for locating a particular device
-> + * matching the fwnode.
-> + * @class: class type
-> + * @fwnode: fwnode of the device to match.
-> + */
-> +static inline struct device *
-> +class_find_device_by_fwnode(struct class *class,
-> +			    const struct fwnode_handle *fwnode)
-> +{
-> +	return class_find_device(class, NULL, fwnode, device_match_fwnode);
-> +}
-> +
->  struct class_attribute {
->  	struct attribute attr;
->  	ssize_t (*show)(struct class *class, struct class_attribute *attr,
-> -- 
-> 2.7.4
+--->8---
 
-thanks,
-
--- 
-heikki
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index 80a405c2048a..4db4e9e7654b 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -8,6 +8,7 @@
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+ #include <linux/random.h>
++#include <linux/topology.h>
+ #include <asm/processor.h>
+ #include <asm/apic.h>
+ #include <asm/cacheinfo.h>
+@@ -824,6 +825,8 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
+ 
++	node_reclaim_distance = 32;
++
+ 	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
+ 	if (!cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+diff --git a/include/linux/topology.h b/include/linux/topology.h
+index cb0775e1ee4b..74b484354ac9 100644
+--- a/include/linux/topology.h
++++ b/include/linux/topology.h
+@@ -59,6 +59,9 @@ int arch_update_cpu_topology(void);
+  */
+ #define RECLAIM_DISTANCE 30
+ #endif
++
++extern int __read_mostly node_reclaim_distance;
++
+ #ifndef PENALTY_FOR_NODE_WITH_CPUS
+ #define PENALTY_FOR_NODE_WITH_CPUS	(1)
+ #endif
+diff --git a/kernel/sched/topology.c b/kernel/sched/topology.c
+index f53f89df837d..20f0f8f6792b 100644
+--- a/kernel/sched/topology.c
++++ b/kernel/sched/topology.c
+@@ -1284,6 +1284,7 @@ static int			sched_domains_curr_level;
+ int				sched_max_numa_distance;
+ static int			*sched_domains_numa_distance;
+ static struct cpumask		***sched_domains_numa_masks;
++int __read_mostly		node_reclaim_distance = RECLAIM_DISTANCE;
+ #endif
+ 
+ /*
+@@ -1410,7 +1411,7 @@ sd_init(struct sched_domain_topology_level *tl,
+ 
+ 		sd->flags &= ~SD_PREFER_SIBLING;
+ 		sd->flags |= SD_SERIALIZE;
+-		if (sched_domains_numa_distance[tl->numa_level] > RECLAIM_DISTANCE) {
++		if (sched_domains_numa_distance[tl->numa_level] > node_reclaim_distance) {
+ 			sd->flags &= ~(SD_BALANCE_EXEC |
+ 				       SD_BALANCE_FORK |
+ 				       SD_WAKE_AFFINE);
+diff --git a/mm/khugepaged.c b/mm/khugepaged.c
+index a335f7c1fac4..67f5f09d70ed 100644
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -710,7 +710,7 @@ static bool khugepaged_scan_abort(int nid)
+ 	for (i = 0; i < MAX_NUMNODES; i++) {
+ 		if (!khugepaged_node_load[i])
+ 			continue;
+-		if (node_distance(nid, i) > RECLAIM_DISTANCE)
++		if (node_distance(nid, i) > node_reclaim_distance)
+ 			return true;
+ 	}
+ 	return false;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d66bc8abe0af..8ccaaf3a47f2 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -3450,7 +3450,7 @@ bool zone_watermark_ok_safe(struct zone *z, unsigned int order,
+ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
+ {
+ 	return node_distance(zone_to_nid(local_zone), zone_to_nid(zone)) <=
+-				RECLAIM_DISTANCE;
++				node_reclaim_distance;
+ }
+ #else	/* CONFIG_NUMA */
+ static bool zone_allows_reclaim(struct zone *local_zone, struct zone *zone)
