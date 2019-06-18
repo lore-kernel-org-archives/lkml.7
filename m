@@ -2,137 +2,125 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03C8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64BC9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8515220863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43B5F20863
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:33:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560882803;
+	bh=SmAiALN4FmiiLKnO82pa5ciV3WbGq0fP8ix+Y9roag8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=OGwepV8egLPEdIF0d2jw4rlub7/hqNbTNMOcExzGL04BH0RgqiWEBEVdGJiEoJO22
+	 3zVhMUjROsR74VXlx8XUjTHBlfSyHvOmDVMeXapWIGNoQDNK00RBTxdmvAWDs3islI
+	 zwI7VyvgPPzOZl/rmTuTd7T8I0qvfAcalQS/Xbjk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730258AbfFRSci (ORCPT
+        id S1730316AbfFRSdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:32:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56128 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729922AbfFRSch (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:32:37 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01DB32084B;
-        Tue, 18 Jun 2019 18:32:35 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 14:32:34 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 5/7] powerpc/ftrace: Update ftrace_location() for
- powerpc -mprofile-kernel
-Message-ID: <20190618143234.78539805@gandalf.local.home>
-In-Reply-To: <1560881840.vz9llflvnf.naveen@linux.ibm.com>
-References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <186656540d3e6225abd98374e791a13d10d86fab.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <20190618114509.5b1acbe5@gandalf.local.home>
-        <1560881411.p0i6a1dkwk.naveen@linux.ibm.com>
-        <1560881840.vz9llflvnf.naveen@linux.ibm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Jun 2019 14:33:21 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47398 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727616AbfFRSdV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:33:21 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=C2fpSVPGJzPVwTzmH0qlyt9DQ91m4qmAVn0xCQzB2fc=; b=qft/z5p0A3Yr
+        B7HKHLZ4QxZTXkEFS05lfFVUEkTGe0NUO4cB4VRQwn7tjqzLhEhzCfKhFJkhy9J21KhdoBdJm9nf/
+        sMDTgzaJEAv7JkoSrg/idfvWUmhzA1H/TANCVKe28F03iIh87xT5oV3ZH0CVIa2T3HvJh786yNbml
+        DnhHA=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hdIut-0005KG-Nw; Tue, 18 Jun 2019 18:33:11 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 391D0440046; Tue, 18 Jun 2019 19:33:11 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alsa-devel@alsa-project.org,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: qcom: common: Mark links as nonatomic" to the asoc tree
+In-Reply-To: <20190618052909.32586-1-bjorn.andersson@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190618183311.391D0440046@finisterre.sirena.org.uk>
+Date:   Tue, 18 Jun 2019 19:33:11 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 23:53:11 +0530
-"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+The patch
 
-> Naveen N. Rao wrote:
-> > Steven Rostedt wrote:  
-> >> On Tue, 18 Jun 2019 20:17:04 +0530
-> >> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
-> >>   
-> >>> @@ -1551,7 +1551,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
-> >>>  	key.flags = end;	/* overload flags, as it is unsigned long */
-> >>>  
-> >>>  	for (pg = ftrace_pages_start; pg; pg = pg->next) {
-> >>> -		if (end < pg->records[0].ip ||
-> >>> +		if (end <= pg->records[0].ip ||  
-> >> 
-> >> This breaks the algorithm. "end" is inclusive. That is, if you look for
-> >> a single byte, where "start" and "end" are the same, and it happens to
-> >> be the first ip on the pg page, it will be skipped, and not found.  
-> > 
-> > Thanks. It looks like I should be over-riding ftrace_location() instead.  
-> > I will update this patch.  
-> 
-> I think I will have ftrace own the two instruction range, regardless of 
-> whether the preceding instruction is a 'mflr r0' or not. This simplifies 
-> things and I don't see an issue with it as of now. I will do more 
-> testing to confirm.
-> 
-> - Naveen
-> 
-> 
-> --- a/arch/powerpc/kernel/trace/ftrace.c
-> +++ b/arch/powerpc/kernel/trace/ftrace.c
-> @@ -951,6 +951,16 @@ void arch_ftrace_update_code(int command)
->  }
->  
->  #ifdef CONFIG_MPROFILE_KERNEL
-> +/*
-> + * We consider two instructions -- 'mflr r0', 'bl _mcount' -- to be part
-> + * of ftrace. When checking for the first instruction, we want to include
-> + * the next instruction in the range check.
-> + */
-> +unsigned long ftrace_location(unsigned long ip)
-> +{
-> +	return ftrace_location_range(ip, ip + MCOUNT_INSN_SIZE);
-> +}
-> +
->  /* Returns 1 if we patched in the mflr */
->  static int __ftrace_make_call_prep(struct dyn_ftrace *rec)
->  {
-> diff --git a/kernel/trace/ftrace.c b/kernel/trace/ftrace.c
-> index 21d8e201ee80..122e2bb4a739 100644
-> --- a/kernel/trace/ftrace.c
-> +++ b/kernel/trace/ftrace.c
-> @@ -1573,7 +1573,7 @@ unsigned long ftrace_location_range(unsigned long start, unsigned long end)
->   * the function tracer. It checks the ftrace internal tables to
->   * determine if the address belongs or not.
->   */
-> -unsigned long ftrace_location(unsigned long ip)
-> +unsigned long __weak ftrace_location(unsigned long ip)
->  {
->  	return ftrace_location_range(ip, ip);
->  }
+   ASoC: qcom: common: Mark links as nonatomic
 
-Actually, instead of making this a weak function, let's do this:
+has been applied to the asoc tree at
 
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
 
-In include/ftrace.h:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-#ifndef FTRACE_IP_EXTENSION
-# define FTRACE_IP_EXTENSION	0
-#endif
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-In arch/powerpc/include/asm/ftrace.h
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-#define FTRACE_IP_EXTENSION	MCOUNT_INSN_SIZE
+Thanks,
+Mark
 
+From c054b41690a44e6534eb2a1beda1b655f3994c5b Mon Sep 17 00:00:00 2001
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Mon, 17 Jun 2019 22:29:09 -0700
+Subject: [PATCH] ASoC: qcom: common: Mark links as nonatomic
 
-Then we can just have:
+The interface used to communicate with the DSP can sleep, so mark the
+links as nonatomic. This prevents various sleep while atomic errors when
+bringing up the audio interface.
 
-unsigned long ftrace_location(unsigned long ip)
-{
-	return ftrace_location_range(ip, ip + FTRACE_IP_EXTENSION);
-}
+Suggested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/qcom/common.c | 1 +
+ 1 file changed, 1 insertion(+)
 
--- Steve
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index 5661025e8cec..a612d860ad26 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -97,6 +97,7 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 			goto err;
+ 		}
+ 
++		link->nonatomic = 1;
+ 		link->dpcm_playback = 1;
+ 		link->dpcm_capture = 1;
+ 		link->stream_name = link->name;
+-- 
+2.20.1
+
