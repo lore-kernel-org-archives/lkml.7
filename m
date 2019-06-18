@@ -2,133 +2,106 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EE3BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A97C2C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:51:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 392A920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB94205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:51:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RwBVnBXM"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="J0EkuFyQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730007AbfFRRuj (ORCPT
+        id S1730132AbfFRRvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:50:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35591 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729285AbfFRRui (ORCPT
+        Tue, 18 Jun 2019 13:51:25 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:7683 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729285AbfFRRvY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:50:38 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c6so4182535wml.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:50:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=c1WigYm0cUIC6hZkrAWAPPTHDebRZz1ezFBY1qzMeiw=;
-        b=RwBVnBXMUs6CyRSqQXw1Doxy4/DTjCa3zCPa//ustSWnjdVbTRmtoP9TN/oSuf+krX
-         xl4fkoWrMAxa7R40u5rQS4PdI+iEJcO3uKO4D0bkbh/B5KWBLvg3lGo7+FdIxMUrU+Bk
-         rvEmDc+IBNiTeTABtleg0an5BGIUgk10CMRKiYoZNAttBlfEicQfnQLY+9kDs29ckxqz
-         65IqBq5uwXfydw2R7Lg1zG/1DFjmBXIwHeqx3q8Ijsr1e4cNt7GKq0hvEoPL5iNKvtQq
-         U6SWTmZI7yQGUfc753z1fEtZRZPvUdKT1kOJcVZtu+PEDdRq29uH2R2DzGprlWoXffg8
-         KCVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=c1WigYm0cUIC6hZkrAWAPPTHDebRZz1ezFBY1qzMeiw=;
-        b=rK/0v8bIvO3mBHLpO2hL1QXLj1VmBeGNqmjoZ+lDuOkCMGyzwdZR+gs16C5+0zJ+3c
-         LnLiw+RacUp/ON8X0+JkJcJRw5viEZdk3PgvuQaMu8MK0qAPGoNtc3KelzJdt/3SeoUG
-         h162+LAnm3w94g3YxhmLySZPiWIKES4V1nGAk3l0tB/YSFRzavD2bQUyd3AmvRB7N/2g
-         6jr0YaoQQCo+oNiH8Rcu/4iefd/k8cXk7guPitTrBqEQphjQs95rDObxEEwuK/C0fT8U
-         hZYcPndLczodl9Q/tD9sAVePKS0eIctS1zQ14Dv1F8PhFSL49z8x1Lm07luGI0xXt0Wx
-         yaLw==
-X-Gm-Message-State: APjAAAWWXwtiBxyi1+Aw76s5SaAUGukozpBlfPIo7i9/6WYGl37ldXaP
-        qpA/E9Q2dUZC2Iik2A/vJAXDJA7hX7sQfCrcNWXr
-X-Google-Smtp-Source: APXvYqwLpfFc3r+km3hllshfsJW4QlbwLhJP2SjcQT8KlUVTF5+VyukGnP6yn1xqzrGCctHX8i1Wihvkr2VXhMe2zT8=
-X-Received: by 2002:a1c:f102:: with SMTP id p2mr4299194wmh.60.1560880235583;
- Tue, 18 Jun 2019 10:50:35 -0700 (PDT)
+        Tue, 18 Jun 2019 13:51:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d09249b0000>; Tue, 18 Jun 2019 10:51:23 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 18 Jun 2019 10:51:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 10:51:23 -0700
+Received: from [10.21.132.143] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
+ 2019 17:51:21 +0000
+Subject: Re: [PATCH v3 6/8] clocksource/drivers/tegra: Restore base address
+ before cleanup
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "Peter De Schrijver" <pdeschrijver@nvidia.com>
+CC:     <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190618140358.13148-1-digetx@gmail.com>
+ <20190618140358.13148-7-digetx@gmail.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <6d167fee-7cf6-ba16-1f86-e90a72f0f18c@nvidia.com>
+Date:   Tue, 18 Jun 2019 18:51:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
- <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
- <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
- <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com> <CAErSpo5cqJCZjt6QqMNZ6_n=G-_WxFeERnsESOMxsdr1P-6JLg@mail.gmail.com>
- <9e8b6971-3189-9d4b-de9a-ff09f859f4f6@huawei.com> <CAErSpo4DemDWtnP2Gtram9tfQ0CaN9Na9_Gxk6Qk+nG5+JLuzA@mail.gmail.com>
- <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
-In-Reply-To: <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Tue, 18 Jun 2019 12:50:23 -0500
-Message-ID: <CAErSpo576mVAFkF69bxaTpyxELXEG+z_m7CmUE3WGqfCmy57uQ@mail.gmail.com>
-Subject: Re: [PATCH v2] bus: hisi_lpc: Don't use devm_kzalloc() to allocate
- logical PIO range
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, linuxarm@huawei.com, arm@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>, linux-pci@kernel.org,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Jiang Liu <jiang.liu@linux.intel.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190618140358.13148-7-digetx@gmail.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560880283; bh=l0t5Bc70KR4JXspIq7jhMCEWOGwN8mHBZC9PVJNdibE=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=J0EkuFyQ17oo0kiAioWr0Kx3O7E1BZNuLZVAbBMTbY+6DLvIT7/aVHRG7sZNDKkFV
+         fr0tZNxkbkxWbFo7VQC8/iGnLsiS5sdcuwPOyt9BECn8PPQhWXqVvmGCWSclX9OwAa
+         D7llY0KR2oa/xvzEw5z95/1N0gzG27X9hXn3KGJVximRVNpXkAPnN+BEIwaQ9PeRiC
+         I3z/3LjeYS5/85KXbuTKBSLn/IpS9LalIlgiohx5DxiQZh2khIWlR+Xo/fx0pOeSH6
+         EbVzosYShGe827ChS6FYXu5RTQtsU07Ux9GkZ/O79xgSeBuLycQ0/9hYZOeTYxXtS7
+         nk2Cou6aWbJ0A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[+cc Rafael, Mika, Jiang, linux-pci for ACPI host bridge hotplug test question]
 
-On Tue, Jun 18, 2019 at 3:44 AM John Garry <john.garry@huawei.com> wrote:
+On 18/06/2019 15:03, Dmitry Osipenko wrote:
+> We're adjusting the timer's base for each per-CPU timer to point to the
+> actual start of the timer since device-tree defines a compound registers
+> range that includes all of the timers. In this case the original base
+> need to be restore before calling iounmap to unmap the proper address.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/clocksource/timer-tegra.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+> index ddf5531c48a9..2673b6e0caa8 100644
+> --- a/drivers/clocksource/timer-tegra.c
+> +++ b/drivers/clocksource/timer-tegra.c
+> @@ -345,6 +345,8 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+>  			irq_dispose_mapping(cpu_to->clkevt.irq);
+>  		}
+>  	}
+> +
+> +	to->of_base.base = timer_reg_base;
+>  out:
+>  	timer_of_cleanup(to);
 
-> >>> Could you just move the logic_pio_register_range() call farther down
-> >>> in hisi_lpc_probe()?  IIUC, once logic_pio_register_range() returns,
-> >>> an inb() with the right port number will try to access that port, so
-> >>> we should be prepared for that, i.e., maybe this in the wrong order to
-> >>> begin with?
-> >>
-> >> No, unfortunately we can't. The reason is that we need the logical PIO
-> >> base for that range before we enumerate the children of that host. We
-> >> need that base address for "translating" the child bus addresses to
-> >> logical PIO addresses.
 
-> > Ah, yeah, that makes sense.  I think.  We do assume that we know all
-> > the MMIO and I/O port translations before enumerating devices.  It's
-> > *conceivable* that could be changed someday since we don't actually
-> > need the translations until a driver claims the device,
->
-> We actually need them before a driver claims the device.
->
-> The reason is that when we create that child platform device we set the
-> device's IORESOURCE_IO resources according to the translated logic PIO
-> addresses, and not the host bus address. This is what makes the host
-> transparent to the child device driver.
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-I think you need it to set pdev->resource[], which is currently done
-long before the driver claims the device (though one could imagine
-delaying it even as far as pci_enable_device()-time).  I don't think
-the translation is actually *used* until the driver claims the device
-because only the driver knows how to do any inb/outb to the device.
+Cheers
+Jon
 
-But of course, that's all speculative and doesn't change what you need
-to do now.  The current code assumes we know the translations during
-enumeration, so you need to do the logic_pio registration before
-enumerating.
-
-> > and it would
-> > gain some flexibility if we didn't have to program the host bridge
-> > windows until we know how much space is required.  But I don't see
-> > that happening anytime soon.
-
-> My problem is that I need to ensure that the new logical PIO unregister
-> function works ok for hot-pluggable host bridges. I need to get some way
-> to test this. Advice?
-
-Good question.  The ACPI host bridge driver (drivers/acpi/pci_root.c)
-should support hotplug, but I'm not sure if there's a manual way to
-trigger it via sysfs or something similar.  If there is, and you have
-a machine with more than one host bridge, you might be able to remove
-one that leads to non-essential devices.
-
-Bjorn
+-- 
+nvpublic
