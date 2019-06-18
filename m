@@ -2,108 +2,101 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27275C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB53BC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06BC20B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:19:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560831600;
-	bh=51rZ9e9LkNVBLGHAIif1eIVHEBL3AZLf/1gX1DPTttU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tOJMUflFKO4rVDz7xoHMDqNObxjcvAZLqiIdG2MnSFjwXWuUfcE9G5KodNfgMpmnR
-	 JUIBaYmd0klTrz3G6uIJyz73+y2Ske8D0R4AvP3kdIiOb9bTVVxJSfyMvWIJYqKpwz
-	 dNxer67rp9Py1ZInzJI7/MTmbDEM4KkyIjBM3SdY=
+	by mail.kernel.org (Postfix) with ESMTP id ABDB02133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 04:20:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RcItK+gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfFRET6 (ORCPT
+        id S1726901AbfFREUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 00:19:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57468 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726376AbfFRET5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 00:19:57 -0400
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 343C521874
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:19:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560831596;
-        bh=51rZ9e9LkNVBLGHAIif1eIVHEBL3AZLf/1gX1DPTttU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=DuLk3e8EkWUmqjbMfqOhBVznVeVo0ij+gX+dBj6X0D/RiqGPAyRXac3zAcRajl+NC
-         rG8dKjmVC7cMcg+ACN+3b4bthSfnYsFrxPjfTgqhyZKFcThYwI8P3UENip/XJE3+MM
-         sTMSBKCyqPy5UWo0Vh97re/7Sj11UC+1Gd22CCLk=
-Received: by mail-wr1-f41.google.com with SMTP id k11so12300282wrl.1
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 21:19:56 -0700 (PDT)
-X-Gm-Message-State: APjAAAW/OLgXTNAZZK+wgtcp4Ge5gk3ZuPqM4rPNylrFKM6OexSH2IRV
-        MoHZ3fP/0baD97UaMlH7LH/jLzBAyM6vRm1f22d+kA==
-X-Google-Smtp-Source: APXvYqwkWC2giN5A08cpptwz3BEntUfKPcruY0ZN2y5TqsdMlC09wK5a0VuZQ+7Nz/i2Q9X96feEw9aA23jTO9Vxlx4=
-X-Received: by 2002:adf:a443:: with SMTP id e3mr26082705wra.221.1560831594613;
- Mon, 17 Jun 2019 21:19:54 -0700 (PDT)
+        Tue, 18 Jun 2019 00:20:31 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:35583 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725826AbfFREUa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 00:20:30 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s27so6947488pgl.2;
+        Mon, 17 Jun 2019 21:20:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LbbvFzyAk/3ZDe/bSvDvggcgdm6o3bhDdilBCg54z4I=;
+        b=RcItK+gfLQn3m5Gtyd91++f+8ka0ruF0rgYKJ8XA5/BTYPpoC3GzJp0F4Xlitdiz90
+         eb4H6qLzRAMIWlqT7c/xQYJAYl0zLdGQUXnvk1pmuyNGnyXM/QLM7OhTX25JkqZVTCXI
+         LMtsKrDznHdM2G6M2mh/CMkx3mKVe873iiaxoQ5/BzV3ZHO16/6UphVCnMDVl5iPZJo5
+         heb8gZBtbsGLDkgy2z2FfzeJgH/eLolY3iPjJXFxL27m7JzrKdsBEKJRCI3yIBpU2mNa
+         iV89qoFESFLoBlRyj17SEFqSlt94KKz222lpsrxLOjQvN9vrQZri7qgMUyXJsapbzAk8
+         6q0w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=LbbvFzyAk/3ZDe/bSvDvggcgdm6o3bhDdilBCg54z4I=;
+        b=W7l+p1utEtX8Jp5a92UIXDht3TNszvLX4Drd1LvRQTjMMQm43OUwJdHVgncSMbOFps
+         xWiOE5wO1zwUhCDOx0vtzw/8P4pzV8mrqCQXEmTWJV9bBjzzJsw80zE04UDgnYOuxD3E
+         DOyDhPEW9u08XGHZK23SL8C/tQ44UeyVaIDL2qnNUgVtvMgIxq41IUcCxlCAPVqQNuG7
+         qPArzBlsgkR6qXUI0coqu/PW7xWuiAolisPLtNBBcvLZhNBFDuuGx7b8nO/vOhhKlFLM
+         EtEzis0coELAvipQClOFN+ySL2xoAHwVCLxrMQNy7+e1Bq7mSnVjDCsmydhFap4uhvDY
+         tThQ==
+X-Gm-Message-State: APjAAAXcMYqnAuQiR1i8rce220I/jq5pzBkLnJh4+D/pPxTZIroF5W4y
+        dws5jGU4i6fP2iy+6dHUQbY=
+X-Google-Smtp-Source: APXvYqzaFgEYUFu0k3lhSwDZqW9fQ4Ot24RTXYB/4ZKdkXmvjxy9zlwbjDrV80uwzH4cs86vGKbAaw==
+X-Received: by 2002:a17:90a:1c1:: with SMTP id 1mr2877558pjd.72.1560831629494;
+        Mon, 17 Jun 2019 21:20:29 -0700 (PDT)
+Received: from localhost.localdomain ([112.196.181.128])
+        by smtp.googlemail.com with ESMTPSA id e22sm13571288pgb.9.2019.06.17.21.20.26
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 21:20:28 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH RESEND] media: pci: cx88: Change the type of 'missed' to u64
+Date:   Tue, 18 Jun 2019 09:49:37 +0530
+Message-Id: <20190618041937.8424-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-References: <20190508144422.13171-1-kirill.shutemov@linux.intel.com>
- <20190508144422.13171-46-kirill.shutemov@linux.intel.com> <CALCETrVCdp4LyCasvGkc0+S6fvS+dna=_ytLdDPuD2xeAr5c-w@mail.gmail.com>
- <3c658cce-7b7e-7d45-59a0-e17dae986713@intel.com> <CALCETrUPSv4Xae3iO+2i_HecJLfx4mqFfmtfp+cwBdab8JUZrg@mail.gmail.com>
- <5cbfa2da-ba2e-ed91-d0e8-add67753fc12@intel.com> <1560815959.5187.57.camel@linux.intel.com>
- <cbbc6af7-36f8-a81f-48b1-2ad4eefc2417@amd.com> <CALCETrWq98--AgXXj=h1R70CiCWNncCThN2fEdxj2ZkedMw6=A@mail.gmail.com>
-In-Reply-To: <CALCETrWq98--AgXXj=h1R70CiCWNncCThN2fEdxj2ZkedMw6=A@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 17 Jun 2019 21:19:42 -0700
-X-Gmail-Original-Message-ID: <CALCETrWX877XD=mivftv96y00tWxT5THFD5MgoF+c_BPqc4aDQ@mail.gmail.com>
-Message-ID: <CALCETrWX877XD=mivftv96y00tWxT5THFD5MgoF+c_BPqc4aDQ@mail.gmail.com>
-Subject: Re: [PATCH, RFC 45/62] mm: Add the encrypt_mprotect() system call for MKTME
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Kai Huang <kai.huang@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        X86 ML <x86@kernel.org>, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Borislav Petkov <bp@alien8.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        David Howells <dhowells@redhat.com>,
-        Kees Cook <keescook@chromium.org>,
-        Jacob Pan <jacob.jun.pan@linux.intel.com>,
-        Alison Schofield <alison.schofield@intel.com>,
-        Linux-MM <linux-mm@kvack.org>, kvm list <kvm@vger.kernel.org>,
-        "keyrings@vger.kernel.org" <keyrings@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:40 PM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Mon, Jun 17, 2019 at 6:34 PM Lendacky, Thomas
-> <Thomas.Lendacky@amd.com> wrote:
-> >
-> > On 6/17/19 6:59 PM, Kai Huang wrote:
-> > > On Mon, 2019-06-17 at 11:27 -0700, Dave Hansen wrote:
->
-> > >
-> > > And yes from my reading (better to have AMD guys to confirm) SEV guest uses anonymous memory, but it
-> > > also pins all guest memory (by calling GUP from KVM -- SEV specifically introduced 2 KVM ioctls for
-> > > this purpose), since SEV architecturally cannot support swapping, migraiton of SEV-encrypted guest
-> > > memory, because SME/SEV also uses physical address as "tweak", and there's no way that kernel can
-> > > get or use SEV-guest's memory encryption key. In order to swap/migrate SEV-guest memory, we need SGX
-> > > EPC eviction/reload similar thing, which SEV doesn't have today.
-> >
-> > Yes, all the guest memory is currently pinned by calling GUP when creating
-> > an SEV guest.
->
-> Ick.
->
-> What happens if QEMU tries to read the memory?  Does it just see
-> ciphertext?  Is cache coherency lost if QEMU writes it?
+Callers of hrtimer_forward_now() should save the return value in u64.
+change type of missed from unsigned long to u64.
 
-I should add: is the current interface that SEV uses actually good, or
-should the kernel try to do something differently?  I've spent exactly
-zero time looking at SEV APIs or at how QEMU manages its memory.
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+RESEND - Added required mailing lists in CC
+
+ drivers/media/pci/cx88/cx88-input.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/media/pci/cx88/cx88-input.c b/drivers/media/pci/cx88/cx88-input.c
+index 27f690b54e0c..fa5ce464b0ba 100644
+--- a/drivers/media/pci/cx88/cx88-input.c
++++ b/drivers/media/pci/cx88/cx88-input.c
+@@ -167,7 +167,7 @@ static void cx88_ir_handle_key(struct cx88_IR *ir)
+ 
+ static enum hrtimer_restart cx88_ir_work(struct hrtimer *timer)
+ {
+-	unsigned long missed;
++	u64 missed;
+ 	struct cx88_IR *ir = container_of(timer, struct cx88_IR, timer);
+ 
+ 	cx88_ir_handle_key(ir);
+-- 
+2.21.0
+
