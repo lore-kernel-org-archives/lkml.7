@@ -2,160 +2,104 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55E3AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:42:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD9FCC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:45:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BC7B21479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:42:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="gLGf7oP0"
+	by mail.kernel.org (Postfix) with ESMTP id B751920B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560869123;
+	bh=2FSFEBWYNe5VehAFimM06XWjHfnUX7Si8He8wIaznFs=;
+	h=Date:From:To:Subject:References:In-Reply-To:List-ID:From;
+	b=julGhdppiZmYfrWJKzvN8Olkym04d2AxsZpPgoXHMKy4ve0j8YJjkoebn8pZszbb8
+	 6UBqpszJJ2LmwWFNY1GIx7eyY72VYfqsl3pweB5I0RQK34nVlftnSCA3FLX1qNlnaf
+	 +yL3/Lsj7YtcnFVbcMaKI56WVsOWyN/p77OyT9IM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729383AbfFROmU (ORCPT
+        id S1729394AbfFROpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:42:20 -0400
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:44464 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727105AbfFROmT (ORCPT
+        Tue, 18 Jun 2019 10:45:22 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:37835 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfFROpV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:42:19 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5IEg1QA118051;
-        Tue, 18 Jun 2019 09:42:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560868921;
-        bh=fHHIeoL6WrP+o42wBxL4d1KUkoVV62hUdcAiyBMH/XQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=gLGf7oP07AkblPP3ulwC9txJLKLwro1GDBXcIVluar7oyAlsYELqfH51VIgbo5Ppo
-         pO9S5r8OxfbKyjo1O+AUbknfIBdXie09X2HJYSUAUERgI52PzVI/6dGwob19QEGfVX
-         AN1BHbhjFQQt+1uphJfMnaKr9+TeuvKRbAVNV83Y=
-Received: from DFLE104.ent.ti.com (dfle104.ent.ti.com [10.64.6.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5IEg1d2096318
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 18 Jun 2019 09:42:01 -0500
-Received: from DFLE112.ent.ti.com (10.64.6.33) by DFLE104.ent.ti.com
- (10.64.6.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 18
- Jun 2019 09:42:00 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 18 Jun 2019 09:42:00 -0500
-Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5IEfvLs105464;
-        Tue, 18 Jun 2019 09:41:57 -0500
-Subject: Re: [PATCH 0/6] arm64: Initial support Texas Instrument's J721E
- Platform
-To:     Nishanth Menon <nm@ti.com>, Arnd Bergmann <arnd@arndb.de>,
-        Olof Johansson <olof@lixom.net>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     <linux-serial@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Russell King <linux@armlinux.org.uk>
-References: <20190522161921.20750-1-nm@ti.com>
-From:   Tero Kristo <t-kristo@ti.com>
-Message-ID: <6ae8cfc9-5bf0-14ec-109f-bafbf2cb7eac@ti.com>
-Date:   Tue, 18 Jun 2019 17:41:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 18 Jun 2019 10:45:21 -0400
+Received: by mail-pf1-f173.google.com with SMTP id 19so7804069pfa.4;
+        Tue, 18 Jun 2019 07:45:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NMnqg5fufjYWb0sSIzXnpqigWMgenHlEvuLuwxRG46k=;
+        b=iLxHc4UIhIvPcrQW4JIdi7HnIoh5OFdQzF8YuPTWZ8B43cT8o2Yxqe4KV1bj1XSZMg
+         MNOZzh+iuUavxLRbi71HCocW6OKcb5zTCfrglG8n8jxG5ZPD9v5UfoMYB11l3A1rHc0n
+         3GLvHrYfiGSTS/VKcs291iR42fPYzfBATJ83TP47ZwHsJhJBNxTMrRi2XLEPd9w3wKdi
+         QQSjf53v/hTwVTJNf1EOP5vhfCD1cRc99PaxStAc4al4J+76YCK2R9/VDQmYEST9JE9Y
+         1CDbo6TZ3g+zrQIVtIh8KNX3wsfP5+yJ9Zss/wdS+g5CtuAFj2WA0Al5d6U/VOXUzLK6
+         P4uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NMnqg5fufjYWb0sSIzXnpqigWMgenHlEvuLuwxRG46k=;
+        b=Go/agy2pVTfU0qkjpedPtm/J1isUv8jasWT7ntG82lnP0WC4YiG/MV+Q2qbVRAf9ls
+         akuu51OEPBQiIG3iDY8iev7dT1Ojj3dTbqhOwX3fpR95DW5r8vj7LOJztcff8O2Yh0Yt
+         JlyzWm6RraTuXMQc9l2+p+upFOhzYRR4tehhgLfEwNiOivPQLnDxhYg3QDUkImWtmQqN
+         KlDI3+gifhkbm3fKbR3Mth/I+hJ1RQZhZcM0RYx0I1UZ6OwlI7sPKyMUmy7oB4th9qE8
+         G1RC8ZWpOhPWri0xYUahZMNSWPwBPGyx6H+yhB/XDSxNqDx9PT3ENywxndkgjw3tHHiL
+         QKmw==
+X-Gm-Message-State: APjAAAWv5gYKJ8jN96HAg6a4lY+9LZZCzXud76xXP6Y/2KABRtsBEZFL
+        pAlMhPR8Q09/quO4wE/oyqk=
+X-Google-Smtp-Source: APXvYqzIYeLMQNgDRIdCyouue7+qbHrf+jL2uYPgXh4v17+m5Tepc54GRMoO5ApB7u1tpkGQs04mvg==
+X-Received: by 2002:a17:90a:a008:: with SMTP id q8mr5640617pjp.114.1560869120930;
+        Tue, 18 Jun 2019 07:45:20 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:500::2:5159])
+        by smtp.gmail.com with ESMTPSA id c133sm16558044pfb.111.2019.06.18.07.45.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 07:45:20 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 07:45:17 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     dsterba@suse.cz, dsterba@suse.com, clm@fb.com,
+        josef@toxicpanda.com, axboe@kernel.dk, jack@suse.cz,
+        linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com
+Subject: Re: [PATCHSET v2 btrfs/for-next] blkcg, btrfs: fix cgroup writeback
+ support
+Message-ID: <20190618144517.GI657710@devbig004.ftw2.facebook.com>
+References: <20190615182453.843275-1-tj@kernel.org>
+ <20190618125442.GL19057@twin.jikos.cz>
 MIME-Version: 1.0
-In-Reply-To: <20190522161921.20750-1-nm@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618125442.GL19057@twin.jikos.cz>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 22/05/2019 19:19, Nishanth Menon wrote:
-> Hi,
-> 
-> This series adds support for the latest new SoC, J721E, from Texas Instruments.
-> 
-> The series is an based off v5.2-rc1 and has the following driver
-> dependencies for a successful boot:
-> 1.  https://lore.kernel.org/lkml/20190429131533.25122-1-afd@ti.com (for newer firmware)
-> 2.  https://lore.kernel.org/linux-arm-kernel/1555093342-428-1-git-send-email-t-kristo@ti.com/
->      - Clock IDs cannot be guarenteed to be sequential, has to be
->        discovered from hardware description in dts
->      - Clock IDs on this massive chip also exceeds 255, so, the support
->        for the same is expected in follow on patches.
-> 
-> The full series is available here (including dependencies):
-> https://github.com/nmenon/linux-2.6-playground/commits/upstream/v5.2-rc1/j7es-base-v1
-> 
-> Boot Log: https://pastebin.ubuntu.com/p/j3NtfF8FQr/
-> 
-> NOTE:
->   - If Greg is ok, we can pick up the uart compatibility via the k3 tree,
->     else, I can spawn it off the series.
+Hello, David.
 
-Assuming here that Greg is ok with me picking up patch #2.
+On Tue, Jun 18, 2019 at 02:54:42PM +0200, David Sterba wrote:
+> However, as it's rc5, I'm not at all comfortable to add this patchset to
+> 5.3 queue, the changes seem to be intrusive and redoing bio submission
+> path is something that will affect all workloads. I did quick tests on
+> fstests (without cgruops enabled) and this was fine, but that's the
+> minimum that must work. Wider range of workloads would be needed, I can
+> do that with mmtests, but all of that means that 5.3 is infeasible.
 
->   - I will resubmit patch 6 (defconfig update) separately once again once
->     patches 1-5 hit the next tree or for 5.3-rc2 which ever is convenient.
-> 
+Sure thing.  These aren't urgent in any way.
 
-Seems it should be possible just to queue up everything, no need to 
-repost stuff.
+> So this opens more possibilites regarding the patchset routing. Both
+> parts can go separately through their usual trees.
 
-That said, queuing the whole series towards 5.3 with the mentioned fixes.
+Yeah, that sounds great too.  Let's wait for Jens's review and decide
+how to route the patches.
 
--Tero
+Thanks.
 
-> The J721E SoC belongs to the K3 Multicore SoC architecture platform
-> for automotive applications such as infotainment, cluster, premium
-> Audio, Gateway, industrial and a range of broad market applications.
-> This SoC is designed around reducing the system cost by eliminating
-> the need of an external system MCU and is targeted towards ASIL-B/C
-> certification/requirements in addition to allowing complex software
-> and system use-cases.
-> 
-> The Linux development follows AM654 in most of the configurations, but
-> adds new capabilities (details in follow on patches).
-> 
-> See J721E Technical Reference Manual (SPRUIL1, May 2019)
-> for further details: http://www.ti.com/lit/pdf/spruil1
-> 
-> Nishanth Menon (6):
->    dt-bindings: arm: ti: Add bindings for J721E SoC
->    dt-bindings: serial: 8250_omap: Add compatible for J721E UART
->      controller
->    arm64: dts: ti: Add Support for J721E SoC
->    soc: ti: Add Support for J721E SoC config option
->    arm64: dts: ti: Add support for J721E Common Processor Board
->    arm64: defconfig: Enable TI's J721E SoC platform
-> 
->   .../devicetree/bindings/arm/ti/k3.txt         |   3 +
->   .../bindings/serial/omap_serial.txt           |   1 +
->   arch/arm64/boot/dts/ti/Makefile               |   2 +
->   .../dts/ti/k3-j721e-common-proc-board.dts     |  50 +++++
->   arch/arm64/boot/dts/ti/k3-j721e-main.dtsi     | 202 ++++++++++++++++++
->   .../boot/dts/ti/k3-j721e-mcu-wakeup.dtsi      |  72 +++++++
->   arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi   |  29 +++
->   arch/arm64/boot/dts/ti/k3-j721e.dtsi          | 176 +++++++++++++++
->   arch/arm64/configs/defconfig                  |   1 +
->   drivers/soc/ti/Kconfig                        |   5 +
->   10 files changed, 541 insertions(+)
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-common-proc-board.dts
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-main.dtsi
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-mcu-wakeup.dtsi
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e-som-p0.dtsi
->   create mode 100644 arch/arm64/boot/dts/ti/k3-j721e.dtsi
-> 
-
---
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+-- 
+tejun
