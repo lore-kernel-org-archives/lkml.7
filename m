@@ -2,165 +2,119 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8653CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A14AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6002721479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E132B20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ceWnmm4i";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Flc9D2Ti"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UFyDjb+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbfFRO4b (ORCPT
+        id S1729804AbfFRO4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:56:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:55252 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728572AbfFRO4b (ORCPT
+        Tue, 18 Jun 2019 10:56:53 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:61838 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728572AbfFRO4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:56:31 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B55B460CEC; Tue, 18 Jun 2019 14:56:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560869790;
-        bh=xbKJPmMAYjgq8I6UR0jotR8HtE1F+opco6JMkB9KGLk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ceWnmm4iYJZas3B4RBtGze+kX2MJXmtsn6uCBIFBWa48QiTM0qKHuN2nvzUVLukbZ
-         hzOY57OkYlv4v2h9F5DFshr/cfa/8jw8siYZR9NdNlTOPWWrQoW7sIKVsksqXbi6Nm
-         t7U+hfLMkFnQO4hI+qE/9LpBJLxdSfeIRrxAxJ4c=
-Received: from [192.168.1.5] (unknown [122.164.143.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: sricharan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 193B3611FD;
-        Tue, 18 Jun 2019 14:56:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560869787;
-        bh=xbKJPmMAYjgq8I6UR0jotR8HtE1F+opco6JMkB9KGLk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Flc9D2TibgCxpq5qLlq9Y8V6B2V/nJxUSu2q9iG3k5+cai/1mtWdG16wkzWOOGxQ2
-         ILJuqfsmsfJXOwPb/7QqPyuAcJHdXvZubKpyHRL/um78CCZpaukUl2MpyqCO3U1hEh
-         vZRcjX9jD1eKDQ/4xPw77Gg2MFnbV0vyLhiU4v7M=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 193B3611FD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=sricharan@codeaurora.org
-Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        vkoul@kernel.org
-Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
- <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
- <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
-From:   Sricharan R <sricharan@codeaurora.org>
-Message-ID: <2d370a33-fa16-45ca-cf82-9d775349f806@codeaurora.org>
-Date:   Tue, 18 Jun 2019 20:26:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 10:56:53 -0400
+Received: from mail-ua1-f41.google.com (mail-ua1-f41.google.com [209.85.222.41]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x5IEulO3002830
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 23:56:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x5IEulO3002830
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560869808;
+        bh=6dxnBt3fIGFW+ROubfk95PVQRUtkj7Ua/pB+llQ1Ju0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UFyDjb+14G6pcwzM0N1YGpjD8LsS7oJHSZ/R7lBwUgfiwxvwQ3UT7CvXrXF+ubFxA
+         NxIPZ1Of+iqSsQuc6Iwn3kXLxP/Q5eVHjakfjmY7sJPvDpmewM3jPqNTh8F8Q8dxH6
+         921U1Gl8n5Z5BTv1pmB2QOfkG66epNXapFSIlY2JOTqPpIZC+ZFBWa1STHil8rWSdX
+         1IGZ2B7t+ZdgoZDB7ujiZxxWfL5L+DU4T6KMzDJkaVy8MAUHkOXmJiwOK1WVeiztgy
+         9vBJXCTA9oznqY2IJlxMDpa+CWcNbpy2+ByGkF2cI7ChUeae8Eu4ZqckESqolTneKF
+         f9TtQCfHM2FSA==
+X-Nifty-SrcIP: [209.85.222.41]
+Received: by mail-ua1-f41.google.com with SMTP id 34so6284304uar.8
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:56:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAUKb3WjwRZpTlojSYLBMqMZn1sPKMF4yMr+i5m9cjS3eITlsc1L
+        Ka0fpdBB+oGieeymVxpFIiF/LYpsEfGhQU02fLs=
+X-Google-Smtp-Source: APXvYqyFy7PjzXrke2SGI3Ov1shSEe5A0cTjaMUsuLy2ti7lQsJriQ0xM0+UJqKY02rLhDN4+v5wVdf9p3y6jUchTbc=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr24650793vsl.155.1560869807098;
+ Tue, 18 Jun 2019 07:56:47 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d84af3ad-5ba4-0f24-fd30-2fa20cf85658@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20190529182324.8140-1-Jason@zx2c4.com> <CAK7LNARFUaaJH+g3oGzwFyKnELum72nOzxnvUfMKYBaAoGVkug@mail.gmail.com>
+ <CAHmME9rGAUW9hjjZ7ZqNvZvaOCGrVHs3JNhYyr6g2PhZgS3TQg@mail.gmail.com>
+In-Reply-To: <CAHmME9rGAUW9hjjZ7ZqNvZvaOCGrVHs3JNhYyr6g2PhZgS3TQg@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 18 Jun 2019 23:56:11 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT4+O=eNoJHnW58pVob0Po0ULj3cEksXZ3w+kTGMNJj2w@mail.gmail.com>
+Message-ID: <CAK7LNAT4+O=eNoJHnW58pVob0Po0ULj3cEksXZ3w+kTGMNJj2w@mail.gmail.com>
+Subject: Re: [PATCH] arm: vdso: pass --be8 to linker if necessary
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srini,
+Hi.
 
-On 6/18/2019 8:20 PM, Srinivas Kandagatla wrote:
-> Hi Sricharan,
-> 
-> On 18/06/2019 08:13, Sricharan R wrote:
->> Hi Srini,
->>
->> On 6/14/2019 7:50 PM, Srinivas Kandagatla wrote:
->>> For some reason arguments to most of the circular buffers
->>> macros are used in reverse, tail is used for head and vice versa.
->>>
->>> This leads to bam thinking that there is an extra descriptor at the
->>> end and leading to retransmitting descriptor which was not scheduled
->>> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
->>> and done, so most of the drivers would not notice this, unless they are
->>> heavily using bam dma. Originally found this issue while testing
->>> SoundWire over SlimBus on DB845c which uses DMA very heavily for
->>> read/writes.
->>>
->>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->>> ---
->>>   drivers/dma/qcom/bam_dma.c | 9 ++++-----
->>>   1 file changed, 4 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
->>> index cb860cb53c27..43d7b0a9713a 100644
->>> --- a/drivers/dma/qcom/bam_dma.c
->>> +++ b/drivers/dma/qcom/bam_dma.c
->>> @@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
->>>   #define BAM_DESC_FIFO_SIZE    SZ_32K
->>>   #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
->>>   #define BAM_FIFO_SIZE    (SZ_32K - 8)
->>> -#define IS_BUSY(chan)    (CIRC_SPACE(bchan->tail, bchan->head,\
->>> -             MAX_DESCRIPTORS + 1) == 0)
->>> +#define IS_BUSY(chan)    (CIRC_SPACE(bchan->head, bchan->tail,\
->>> +             MAX_DESCRIPTORS) == 0)
->>>     struct bam_chan {
->>>       struct virt_dma_chan vc;
->>> @@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
->>>           offset /= sizeof(struct bam_desc_hw);
->>>             /* Number of bytes available to read */
->>> -        avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
->>> +        avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
->>>
->>   one question, so MAX_DESCRIPTORS is already a mask,
->>      #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
->>
->>   CIRC_CNT/SPACE macros also does a size - 1, so would it not be a problem if we
->>   just pass MAX_DESCRIPTORS ?
-> 
-> Thanks for looking at this,
-> TBH, usage of CIRC_* macros is only valid for power-of-2 buffers,
-> In bam case MAX_DESCRIPTORS is 4095.
-> Am really not sure why 8 bytes have been removed from fifo data buffer size.
-> So basically usage of these macros is incorrect in bam case, this need to be fixed properly.
-> 
-> Do you agree?
-> 
-  So MAX_DESCRIPTORS is used in driver for masking head/tail pointers.
-  That's why we have to pass MAX_DESCRIPTORS + 1 so that it works
-  when the Macros does a size - 1
+On Fri, May 31, 2019 at 5:20 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Hey Masahiro,
+>
+> I'm not sure exactly. I did just notice another place --be8 is being added:
 
-Regards,
- Sricharan
+That is not my question.
 
-> Vinod, can you hold off with this patch, I will try to find some time this week to cook up a better patch removing the usage of these macros.
-> 
-> 
-> 
-> thanks,
-> srini
-> 
->>
->> Regards,
->>   Sricharan
->>   
->>>           list_for_each_entry_safe(async_desc, tmp,
->>>                        &bchan->desc_list, desc_node) {
->>> @@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
->>>               bam_apply_new_config(bchan, async_desc->dir);
->>>             desc = async_desc->curr_desc;
->>> -        avail = CIRC_SPACE(bchan->tail, bchan->head,
->>> -                   MAX_DESCRIPTORS + 1);
->>> +        avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
->>>             if (async_desc->num_desc > avail)
->>>               async_desc->xfer_len = avail;
->>>
->>
+I just asked about your commit log:
+"big-endian ARM was relying on gcc to translate
+its -mbe8 option into ld's --be8 option"
+
+I grepped '-mbe8', but I did not see it anywhere
+in the source tree.
+
+So, I just wondered where it came from.
+
+
+> ifeq ($(CONFIG_CPU_ENDIAN_BE8),y)
+> LDFLAGS_vmlinux += --be8
+> KBUILD_LDFLAGS_MODULE   += --be8
+> endif
+>
+> I suppose it's possible that this is kbuild related where one of those
+> isn't winding up in the right place. I did see that the commit that
+> this patch addresses uses "=" instead of the more usual ":=" or "+="
+> for whatever reason.
+>
+> Jason
+
+Perhaps, the following will be cleaner:
+
+ldflags-$(CONFIG_CPU_ENDIAN_BE8) += --be8
+ldflags-y += -Bsymbolic --no-undefined -soname=linux-vdso.so.1 \
+            -z max-page-size=4096 -z common-page-size=4096 \
+            -nostdlib -shared \
+            $(call ld-option, --hash-style=sysv) \
+            $(call ld-option, --build-id) \
+            -T
+
+
+I think this fix-up should be applied by Russell.
+Please note he does not pick up patches directly from ML.
+To ask him to pick up patches, you need to put
+patches into his patch tracker.
+(patches@arm.linux.org.uk)
+
 
 -- 
-"QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Best Regards
+Masahiro Yamada
