@@ -2,142 +2,164 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35763C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:49:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6ABC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:49:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14D6920B1F
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:49:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C28820B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:49:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="udv6A62f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729161AbfFROtN (ORCPT
+        id S1729709AbfFROtx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:49:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1044 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729050AbfFROtN (ORCPT
+        Tue, 18 Jun 2019 10:49:53 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:38091 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729406AbfFROtx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:49:13 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5IEmoxY077801
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:49:12 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t70awd2e2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:49:03 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Tue, 18 Jun 2019 15:48:10 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Jun 2019 15:47:53 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5IElqcH45547558
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Jun 2019 14:47:52 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2906911C04C;
-        Tue, 18 Jun 2019 14:47:52 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 427EF11C054;
-        Tue, 18 Jun 2019 14:47:50 +0000 (GMT)
-Received: from naverao1-tp.ibmuc.com (unknown [9.85.74.6])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Jun 2019 14:47:50 +0000 (GMT)
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Cc:     <linuxppc-dev@lists.ozlabs.org>, <linux-kernel@vger.kernel.org>
-Subject: [PATCH 6/7] kprobes/ftrace: Use ftrace_location() when [dis]arming probes
-Date:   Tue, 18 Jun 2019 20:17:05 +0530
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+        Tue, 18 Jun 2019 10:49:53 -0400
+Received: by mail-wm1-f66.google.com with SMTP id s15so3576502wmj.3
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 07:49:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Bw9Az1sDvYftv6OoenbcNn/WFNLrPeZPeUya6SiZhJE=;
+        b=udv6A62ft/6+VkDzxa/PEOUwv3/ZITu7g/8w9iRR9ReSzG9lypxa62Pi4r9SN/Hhll
+         FxiwNMpXKfogjWbeqkzE2jV1lTTjRsI5u2Ncn8o1StwJg3GwNsiQ0HTrn5K0u/7RXh8S
+         e1Q4tcAQsalTh9bGi3YD4OfZYOGVt+uw3PnER43NYbFCThzlpqmKHcTqPQw3ZVPe9tWG
+         PH1NVJSU5xUCVBCrz1s0Olr29daX709FTtmsAxJ+DWL2f1e3r2fWhIlvai+QmhWcokqz
+         +sesl3yqFuJNNFqf70VfLr0azantLnGN1l0EabSUQ1F3+PVqxu2f2zGH9FeOGs9C6sdr
+         aP+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Bw9Az1sDvYftv6OoenbcNn/WFNLrPeZPeUya6SiZhJE=;
+        b=dTLwo/wZMTxMd1TxTYLhGokmpxYfsEWCliP9sPAyDBdbNNXL7kQIo82ylUPPSF7ay/
+         VmNmo5BqdbirJTlIomEjmY+c8WNO81trG2JUIeMYZW/6S1aRtSfIFd0FzuUkihCBhpDb
+         d+fIr/n2O/IBfQWwZCptf4yixunBPtLf8BU/XyYfcoUxqMjdrU/pFNetjONinRqVRFFJ
+         mIDS0GHc+SFhB/S2cKre1ggbSqML6DAqtEPgqo2AsZsTLTNipserr/VaO1hioe1tDIrT
+         H4JmKQ+26KSlXlm/hWDD3W7LCxS1f+mus7AO1sUkn4pg+zHeEPXGuNX7aHZBvgzy/2U6
+         1aDw==
+X-Gm-Message-State: APjAAAW/YUaJw5hisylEzDLAE5dYIb579OddOuUfjV/Uan516llAPA0Q
+        pGCbYBbdGsXqZUZiNUmmxxGdbg==
+X-Google-Smtp-Source: APXvYqy81kOsWTfc3qI9cyUFMvjSdlsf4pF4JIm5L+OGMDjbnEgEg9Dfd3m/D9WpbJsDGd8xvzXW1Q==
+X-Received: by 2002:a7b:c74a:: with SMTP id w10mr3834115wmk.99.1560869390770;
+        Tue, 18 Jun 2019 07:49:50 -0700 (PDT)
+Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
+        by smtp.googlemail.com with ESMTPSA id j189sm3881237wmb.48.2019.06.18.07.49.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 07:49:50 -0700 (PDT)
+Subject: Re: [PATCH] dmaengine: qcom-bam: fix circular buffer handling
+To:     Sricharan R <sricharan@codeaurora.org>, vkoul@kernel.org
+Cc:     dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <20190614142012.31384-1-srinivas.kandagatla@linaro.org>
+ <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Message-ID: <ab29c08b-d509-a275-f208-ace1041a27af@linaro.org>
+Date:   Tue, 18 Jun 2019 15:49:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061814-4275-0000-0000-00000343618D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061814-4276-0000-0000-0000385389E1
-Message-Id: <4fedad69107b7fd81b9324315ce4fbf6287e5084.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906180119
+In-Reply-To: <f4522b78-b406-954c-57b7-923e6ab31f96@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ftrace location could include more than a single instruction in case of
-some architectures (powerpc64, for now). In this case, kprobe is
-permitted on any of those instructions, and uses ftrace infrastructure
-for functioning.
+Hi Sricharan,
 
-However, [dis]arm_kprobe_ftrace() uses the kprobe address when setting
-up ftrace filter IP. This won't work if the address points to any
-instruction apart from the one that has a branch to _mcount(). To
-resolve this, have [dis]arm_kprobe_ftrace() use ftrace_function() to
-identify the filter IP.
+On 18/06/2019 08:13, Sricharan R wrote:
+> Hi Srini,
+> 
+> On 6/14/2019 7:50 PM, Srinivas Kandagatla wrote:
+>> For some reason arguments to most of the circular buffers
+>> macros are used in reverse, tail is used for head and vice versa.
+>>
+>> This leads to bam thinking that there is an extra descriptor at the
+>> end and leading to retransmitting descriptor which was not scheduled
+>> by any driver. This happens after MAX_DESCRIPTORS (4096) are scheduled
+>> and done, so most of the drivers would not notice this, unless they are
+>> heavily using bam dma. Originally found this issue while testing
+>> SoundWire over SlimBus on DB845c which uses DMA very heavily for
+>> read/writes.
+>>
+>> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+>> ---
+>>   drivers/dma/qcom/bam_dma.c | 9 ++++-----
+>>   1 file changed, 4 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/dma/qcom/bam_dma.c b/drivers/dma/qcom/bam_dma.c
+>> index cb860cb53c27..43d7b0a9713a 100644
+>> --- a/drivers/dma/qcom/bam_dma.c
+>> +++ b/drivers/dma/qcom/bam_dma.c
+>> @@ -350,8 +350,8 @@ static const struct reg_offset_data bam_v1_7_reg_info[] = {
+>>   #define BAM_DESC_FIFO_SIZE	SZ_32K
+>>   #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+>>   #define BAM_FIFO_SIZE	(SZ_32K - 8)
+>> -#define IS_BUSY(chan)	(CIRC_SPACE(bchan->tail, bchan->head,\
+>> -			 MAX_DESCRIPTORS + 1) == 0)
+>> +#define IS_BUSY(chan)	(CIRC_SPACE(bchan->head, bchan->tail,\
+>> +			 MAX_DESCRIPTORS) == 0)
+>>   
+>>   struct bam_chan {
+>>   	struct virt_dma_chan vc;
+>> @@ -806,7 +806,7 @@ static u32 process_channel_irqs(struct bam_device *bdev)
+>>   		offset /= sizeof(struct bam_desc_hw);
+>>   
+>>   		/* Number of bytes available to read */
+>> -		avail = CIRC_CNT(offset, bchan->head, MAX_DESCRIPTORS + 1);
+>> +		avail = CIRC_CNT(bchan->head, offset, MAX_DESCRIPTORS);
+>>
+>   one question, so MAX_DESCRIPTORS is already a mask,
+>      #define MAX_DESCRIPTORS (BAM_DESC_FIFO_SIZE / sizeof(struct bam_desc_hw) - 1)
+> 
+>   CIRC_CNT/SPACE macros also does a size - 1, so would it not be a problem if we
+>   just pass MAX_DESCRIPTORS ?
 
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- kernel/kprobes.c | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+Thanks for looking at this,
+TBH, usage of CIRC_* macros is only valid for power-of-2 buffers,
+In bam case MAX_DESCRIPTORS is 4095.
+Am really not sure why 8 bytes have been removed from fifo data buffer size.
+So basically usage of these macros is incorrect in bam case, this need 
+to be fixed properly.
 
-diff --git a/kernel/kprobes.c b/kernel/kprobes.c
-index 445337c107e0..282ee704e2d8 100644
---- a/kernel/kprobes.c
-+++ b/kernel/kprobes.c
-@@ -978,10 +978,10 @@ static int prepare_kprobe(struct kprobe *p)
- /* Caller must lock kprobe_mutex */
- static int arm_kprobe_ftrace(struct kprobe *p)
- {
-+	unsigned long ftrace_ip = ftrace_location((unsigned long)p->addr);
- 	int ret = 0;
- 
--	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
--				   (unsigned long)p->addr, 0, 0);
-+	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops, ftrace_ip, 0, 0);
- 	if (ret) {
- 		pr_debug("Failed to arm kprobe-ftrace at %pS (%d)\n",
- 			 p->addr, ret);
-@@ -1005,13 +1005,14 @@ static int arm_kprobe_ftrace(struct kprobe *p)
- 	 * non-empty filter_hash for IPMODIFY ops, we're safe from an accidental
- 	 * empty filter_hash which would undesirably trace all functions.
- 	 */
--	ftrace_set_filter_ip(&kprobe_ftrace_ops, (unsigned long)p->addr, 1, 0);
-+	ftrace_set_filter_ip(&kprobe_ftrace_ops, ftrace_ip, 1, 0);
- 	return ret;
- }
- 
- /* Caller must lock kprobe_mutex */
- static int disarm_kprobe_ftrace(struct kprobe *p)
- {
-+	unsigned long ftrace_ip = ftrace_location((unsigned long)p->addr);
- 	int ret = 0;
- 
- 	if (kprobe_ftrace_enabled == 1) {
-@@ -1022,8 +1023,7 @@ static int disarm_kprobe_ftrace(struct kprobe *p)
- 
- 	kprobe_ftrace_enabled--;
- 
--	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops,
--			   (unsigned long)p->addr, 1, 0);
-+	ret = ftrace_set_filter_ip(&kprobe_ftrace_ops, ftrace_ip, 1, 0);
- 	WARN_ONCE(ret < 0, "Failed to disarm kprobe-ftrace at %pS (%d)\n",
- 		  p->addr, ret);
- 	return ret;
--- 
-2.22.0
+Do you agree?
 
+Vinod, can you hold off with this patch, I will try to find some time 
+this week to cook up a better patch removing the usage of these macros.
+
+
+
+thanks,
+srini
+
+> 
+> Regards,
+>   Sricharan
+>    
+>>   		list_for_each_entry_safe(async_desc, tmp,
+>>   					 &bchan->desc_list, desc_node) {
+>> @@ -997,8 +997,7 @@ static void bam_start_dma(struct bam_chan *bchan)
+>>   			bam_apply_new_config(bchan, async_desc->dir);
+>>   
+>>   		desc = async_desc->curr_desc;
+>> -		avail = CIRC_SPACE(bchan->tail, bchan->head,
+>> -				   MAX_DESCRIPTORS + 1);
+>> +		avail = CIRC_SPACE(bchan->head, bchan->tail, MAX_DESCRIPTORS);
+>>   
+>>   		if (async_desc->num_desc > avail)
+>>   			async_desc->xfer_len = avail;
+>>
+> 
