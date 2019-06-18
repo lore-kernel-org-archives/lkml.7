@@ -2,108 +2,250 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91149C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:35:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81AB7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 682DB20863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:35:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="bm7i7c5f"
+	by mail.kernel.org (Postfix) with ESMTP id 53F8E2147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730353AbfFRSfA (ORCPT
+        id S1730334AbfFRSfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:35:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44842 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730116AbfFRSe7 (ORCPT
+        Tue, 18 Jun 2019 14:35:51 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50400 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729900AbfFRSfv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:34:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so8133332pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:34:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6kNZlMyc+BT+bVh0V15w4cgbur+weciC7/ZsAv2IV7U=;
-        b=bm7i7c5f2/GAPKW27PQz1CiDRmYmVVba0JO3/GX7R8G+fkjmqzIIjlSd4nI38HMNiO
-         JG+isnGj0iq6Ofd/6L/6Az0kLFKN3KBe+DUwfNJZrmXGBX8SDqz9yFi5xBVYZhRXZvx8
-         pJQsKXZRSuhhm6WH3KSC1QPvrSbAjRWmtJKOA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6kNZlMyc+BT+bVh0V15w4cgbur+weciC7/ZsAv2IV7U=;
-        b=mdQVfL2kz7w4hMCiBxRn9KcL26kWVlAFYylIBek4KNliJrEZZ8/ll/Ap2aDB6Luv3C
-         46+6OArHkOd/c317mmtYACGv82CLUWA9LREo6iC/B5lgJ7L87nQPvmwteFUWfwZq7HIX
-         FpdIsXJysDZjybb5nxxh9xfaqBL6i2U1gbw8Z+dIhK4nRLZyfT5+GU9zfQ5QCAUxCwVU
-         QLz+9ie6iqwl3hJ2S76FoA9RwxvKxNaFloVP0DJOci4+dBIqOwFeQT8Z4bo3XdhwwFxX
-         VbnMXj0s08ihBl/kPtH4ob8r97QgMbJz90djVXRqjuPz037/O0sfvJt6wCin6YunvawU
-         r7lg==
-X-Gm-Message-State: APjAAAWCFu4WjNzIiln6suYl2BSGt3zKiZAlSVxxZhSt+l9N674fYaMZ
-        nMNxpI0GB83JYBkIOgPtDc5rEQ==
-X-Google-Smtp-Source: APXvYqy+QvRjs4Drmi2FUQIv8wv4fenqIqrDebMofryze6kGt+JsmRV9NB16VTZPs4PMvqJusTHJsA==
-X-Received: by 2002:a65:654f:: with SMTP id a15mr3860571pgw.73.1560882898990;
-        Tue, 18 Jun 2019 11:34:58 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id e16sm22768169pga.11.2019.06.18.11.34.58
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 11:34:58 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 11:34:55 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     Heiko Stuebner <heiko@sntech.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>,
-        Douglas Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] Revert "ARM: dts: rockchip: set PWM delay backlight
- settings for Minnie"
-Message-ID: <20190618183455.GU137143@google.com>
-References: <20190614224533.169881-1-mka@chromium.org>
- <45f94c6a-5bd7-92b0-d23f-ae7e0481935f@collabora.com>
+        Tue, 18 Jun 2019 14:35:51 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdIxQ-0000rs-JD; Tue, 18 Jun 2019 18:35:48 +0000
+Date:   Tue, 18 Jun 2019 19:35:48 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Vicente Bergas <vicencb@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: d_lookup: Unable to handle kernel paging request
+Message-ID: <20190618183548.GB17978@ZenIV.linux.org.uk>
+References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
+ <20190522135331.GM17978@ZenIV.linux.org.uk>
+ <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+ <20190522162945.GN17978@ZenIV.linux.org.uk>
+ <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <45f94c6a-5bd7-92b0-d23f-ae7e0481935f@collabora.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Enric,
-
-On Tue, Jun 18, 2019 at 10:21:52AM +0200, Enric Balletbo i Serra wrote:
-> Hi Matthias,
-> 
-> On 15/6/19 0:45, Matthias Kaehlcke wrote:
-> > This reverts commit 288ceb85b505c19abe1895df068dda5ed20cf482.
+On Tue, May 28, 2019 at 11:38:43AM +0200, Vicente Bergas wrote:
+> On Wednesday, May 22, 2019 6:29:46 PM CEST, Al Viro wrote:
+> > ...
+> > IOW, here we have also run into bogus hlist forward pointer or head -
+> > same 0x1000000 in one case and 0x0000880001000000 in two others.
 > > 
-> > According to the commit message the AUO B101EAN01 panel on minnie
-> > requires a PWM delay of 200 ms, however this is not what the
-> > datasheet says. The datasheet mentions a *max* delay of 200 ms
-> > for T2 ("delay from LCDVDD to black video generation") and T3
-> > ("delay from LCDVDD to HPD high"), which aren't related to the
-> > PWM. The backlight power sequence does not specify min/max
-> > constraints for T15 (time from PWM on to BL enable) or T16
-> > (time from BL disable to PWM off).
-> > 
+> > Have you tried to see if KASAN catches anything on those loads?
+> > Use-after-free, for example...  Another thing to try: slap
+> > 	WARN_ON(entry->d_flags & DCACHE_NORCU);
+> > in __d_rehash() and see if it triggers.
 > 
-> Could you point from where the confusion comes from? I think will be helpful for
-> the record. B101EAN01.8 vs B101EAN01.1
-
-sounds good
-
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> Hi Al,
+> after 5 days with v5.2-rc1 + KASAN + WARN_ON could not reproduce the issue.
+> Neither the first day running v5.3-rc2 + WARN_ON. But today 6 times.
+> So, there is no KASAN and also the WARN_ON, being there, did not trigger.
+> The first trace hapenned while untaring a big file into tmpfs. The other
+> five while "git pull -r" severeal repos on f2fs.
 > 
-> With the above added:
+> Regards,
+>  Vicenç.
 > 
-> Reviewed-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 
-Thanks!
+__d_lookup() running into &dentry->d_hash == 0x01000000 at some point in hash chain
+and trying to look at ->d_name.hash:
+
+> pc : __d_lookup+0x58/0x198
+> lr : d_lookup+0x38/0x68
+> sp : ffff000012663b90
+> x29: ffff000012663b90 x28: ffff000012663d58 x27: 0000000000000000 x26:
+> ffff8000ae7cc900 x25: 0000000000000001 x24: ffffffffffffffff x23:
+> 00000000ce9c8f81 x22: 0000000000000000 x21: 0000000000000001 x20:
+> ffff000012663d58 x19: 0000000001000000 x18: 0000000000000000 x17:
+> 0000000000000000 x16: 0000000000000000 x15: 0000000000000000 x14:
+> 0000000000000000 x13: 0000000000000000 x12: 0000000000000000 x11:
+> fefefefefefefeff x10: b4fea3d0a3a4b4fe x9 : d237122a91454b69 x8 :
+> a0591ae4450bed6a x7 : 5845a2c80f79d4e7 x6 : 0000000000000004 x5 :
+> 0000000000000000 x4 : ffff000012663d58 x3 : ffff000010828a68 x2 :
+> ffff000010828000 x1 : ffff8000f3000000 x0 : 00000000000674e4 Call trace:
+
+__d_lookup_rcu() running into &dentry->d_hash == 0x01000000 at some point in hash
+chain and trying to look at ->d_seq:
+
+> pc : __d_lookup_rcu+0x68/0x198
+> lr : lookup_fast+0x44/0x2e8
+> sp : ffff0000130b3b60
+> x29: ffff0000130b3b60 x28: 00000000ce99d070 x27: ffffffffffffffff x26:
+> 0000000000000026 x25: ffff8000ecec6030 x24: ffff0000130b3c2c x23:
+> 0000000000000006 x22: 00000026ce99d070 x21: ffff8000811f3d80 x20:
+> 0000000000020000 x19: 0000000001000000 x18: 0000000000000000 x17:
+> 0000000000000000 x16: 0000000000000000 x15: 0000000000000000 x14:
+> 0000000000000000 x13: 0000000000000000 x12: 0000000000000000 x11:
+> fefefefefefefeff x10: e4d0b2e6e2b4b6e9 x9 : 5096e90463dfacb0 x8 :
+> 2b4f8961c30ebc93 x7 : aec349fb204a7256 x6 : 4fd9025392b5761a x5 :
+> 02ff010101030100 x4 : ffff8000f3000000 x3 : ffff0000130b3d58 x2 :
+> ffff0000130b3c2c x1 : 00000000000674ce x0 : ffff8000811f3d80 Call trace:
+
+__d_lookup_rcu() running into &dentry->d_hash == 0x0000880001000000 at some point
+in hash chain and trying to look at ->d_seq:
+
+> pc : __d_lookup_rcu+0x68/0x198
+> lr : lookup_fast+0x44/0x2e8
+> sp : ffff00001325ba90
+> x29: ffff00001325ba90 x28: 00000000ce99f075 x27: ffffffffffffffff x26:
+> 0000000000000007 x25: ffff8000ecec402a x24: ffff00001325bb5c x23:
+> 0000000000000007 x22: 00000007ce99f075 x21: ffff80007a810c00 x20:
+> 0000000000000000 x19: 0000880001000000 x18: 0000000000000000 x17:
+> 0000000000000000 x16: 0000000000000000 x15: 0000000000000000 x14:
+> 0000000000000000 x13: 0000000000000000 x12: 0000000000000000 x11:
+> fefefefefefefeff x10: d0bbbcbfa6b2b9bc x9 : 0000000000000000 x8 :
+> ffff80007a810c00 x7 : 6cad9ff29d8de19c x6 : ff94ec6f0ce3656c x5 :
+> ffff8000ecec402a x4 : ffff8000f3000000 x3 : ffff00001325bc78 x2 :
+> ffff00001325bb5c x1 : 00000000000674cf x0 : ffff80007a810c00 Call trace:
+
+ditto
+
+> pc : __d_lookup_rcu+0x68/0x198
+> lr : lookup_fast+0x44/0x2e8
+> sp : ffff000012a3ba90
+> x29: ffff000012a3ba90 x28: 00000000ce99f075 x27: ffffffffffffffff x26:
+> 0000000000000007 x25: ffff8000ecec702a x24: ffff000012a3bb5c x23:
+> 0000000000000007 x22: 00000007ce99f075 x21: ffff80007a810c00 x20:
+> 0000000000000000 x19: 0000880001000000 x18: 0000000000000000 x17:
+> 0000000000000000 x16: 0000000000000000 x15: 0000000000000000 x14:
+> 0000000000000000 x13: 0000000000000000 x12: 0000000000000000 x11:
+> fefefefefefefeff x10: d0bbbcbfa6b2b9bc x9 : 0000000000000000 x8 :
+> ffff80007a810c00 x7 : 6cad9ff29d8de19c x6 : ff94ec6f0ce3656c x5 :
+> ffff8000ecec702a x4 : ffff8000f3000000 x3 : ffff000012a3bc78 x2 :
+> ffff000012a3bb5c x1 : 00000000000674cf x0 : ffff80007a810c00 Call trace:
+
+ditto
+
+> pc : __d_lookup_rcu+0x68/0x198
+> lr : lookup_fast+0x44/0x2e8
+> sp : ffff0000132bba90
+> x29: ffff0000132bba90 x28: 00000000ce99e1a6 x27: ffffffffffffffff x26:
+> 000000000000000c x25: ffff8000f21dd036 x24: ffff0000132bbb5c x23:
+> 0000000000000004 x22: 0000000cce99e1a6 x21: ffff800074dd8d80 x20:
+> 0000000000000000 x19: 0000880001000000 x18: 0000000000000000 x17:
+> 0000000000000000 x16: 0000000000000000 x15: 0000000000000000 x14:
+> 0000000000000000 x13: 0000000000000000 x12: 0000000000000000 x11:
+> fefefefefefefeff x10: d0d0d0d0b8fea4b3 x9 : 40bcd8645005512e x8 :
+> c433ade89ebd10f9 x7 : c6b69091eeb194d2 x6 : 848f758ca69635b4 x5 :
+> ffff8000f21dd036 x4 : ffff8000f3000000 x3 : ffff0000132bbc78 x2 :
+> ffff0000132bbb5c x1 : 00000000000674cf x0 : ffff800074dd8d80 Call trace:
+
+... and ditto:
+
+> pc : __d_lookup_rcu+0x68/0x198
+> lr : lookup_fast+0x44/0x2e8
+> sp : ffff000013263a90
+> x29: ffff000013263a90 x28: 00000000ce99e1a6 x27: ffffffffffffffff x26:
+> 000000000000000c x25: ffff8000f0a6f036 x24: ffff000013263b5c x23:
+> 0000000000000004 x22: 0000000cce99e1a6 x21: ffff800074dd8d80 x20:
+> 0000000000000000 x19: 0000880001000000 x18: 0000000000000000 x17:
+> 0000000000000000 x16: 0000000000000000 x15: 0000000000000000 x14:
+> 0000000000000000 x13: 0000000000000000 x12: 0000000000000000 x11:
+> fefefefefefefeff x10: d0d0d0d0b8fea4b3 x9 : 40bcd8645005512e x8 :
+> c433ade89ebd10f9 x7 : c6b69091eeb194d2 x6 : 848f758ca69635b4 x5 :
+> ffff8000f0a6f036 x4 : ffff8000f3000000 x3 : ffff000013263c78 x2 :
+> ffff000013263b5c x1 : 00000000000674cf x0 : ffff800074dd8d80 Call trace:
+
+
+All of those run under rcu_read_lock() and no dentry with DCACHE_NORCU has
+ever been inserted into a hash chain, so it doesn't look like a plain
+use-after-free.  Could you try something like the following to see a bit
+more about where it comes from?  
+
+So far it looks like something is buggering a forward reference
+in hash chain in a fairly specific way - the values seen had been
+00000000010000000 and
+00008800010000000.  Does that smell like anything from arm64-specific
+data structures (PTE, etc.)?
+
+Alternatively, we might've gone off rails a step (or more) before,
+with the previous iteration going through bogus, but at least mapped
+address - the one that has never been a dentry in the first place.
+
+
+diff --git a/fs/dcache.c b/fs/dcache.c
+index c435398f2c81..cb555edb5b55 100644
+--- a/fs/dcache.c
++++ b/fs/dcache.c
+@@ -2114,6 +2114,22 @@ static inline bool d_same_name(const struct dentry *dentry,
+ 				       name) == 0;
+ }
+ 
++static void dump(struct dentry *dentry)
++{
++	int i;
++	if (!dentry) {
++		printk(KERN_ERR "list fucked in head");
++		return;
++	}
++	printk(KERN_ERR "fucked dentry[%p]: d_hash.next = %p, flags = %x, count = %d",
++			dentry, dentry->d_hash.next, dentry->d_flags,
++			dentry->d_lockref.count
++			);
++	for (i = 0; i < sizeof(struct dentry); i++)
++		printk(KERN_CONT "%c%02x", i & 31 ? ' ' : '\n',
++			((unsigned char *)dentry)[i]);
++}
++
+ /**
+  * __d_lookup_rcu - search for a dentry (racy, store-free)
+  * @parent: parent dentry
+@@ -2151,7 +2167,7 @@ struct dentry *__d_lookup_rcu(const struct dentry *parent,
+ 	const unsigned char *str = name->name;
+ 	struct hlist_bl_head *b = d_hash(hashlen_hash(hashlen));
+ 	struct hlist_bl_node *node;
+-	struct dentry *dentry;
++	struct dentry *dentry, *last = NULL;
+ 
+ 	/*
+ 	 * Note: There is significant duplication with __d_lookup_rcu which is
+@@ -2176,6 +2192,10 @@ struct dentry *__d_lookup_rcu(const struct dentry *parent,
+ 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
+ 		unsigned seq;
+ 
++		if (unlikely((u32)(unsigned long)&dentry->d_hash == 0x01000000))
++			dump(last);
++		last = dentry;
++
+ seqretry:
+ 		/*
+ 		 * The dentry sequence count protects us from concurrent
+@@ -2274,7 +2294,7 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
+ 	struct hlist_bl_head *b = d_hash(hash);
+ 	struct hlist_bl_node *node;
+ 	struct dentry *found = NULL;
+-	struct dentry *dentry;
++	struct dentry *dentry, *last = NULL;
+ 
+ 	/*
+ 	 * Note: There is significant duplication with __d_lookup_rcu which is
+@@ -2300,6 +2320,10 @@ struct dentry *__d_lookup(const struct dentry *parent, const struct qstr *name)
+ 	
+ 	hlist_bl_for_each_entry_rcu(dentry, node, b, d_hash) {
+ 
++		if (unlikely((u32)(unsigned long)&dentry->d_hash == 0x01000000))
++			dump(last);
++		last = dentry;
++
+ 		if (dentry->d_name.hash != hash)
+ 			continue;
+ 
