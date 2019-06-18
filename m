@@ -8,56 +8,56 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06961C31E5C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:42:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D51C31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:43:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C75AD2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:42:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E3EA2085A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:43:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hy5AZnnj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j8VmLcSz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728326AbfFRCmk (ORCPT
+        id S1726514AbfFRCnz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:42:40 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:40438 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfFRCmj (ORCPT
+        Mon, 17 Jun 2019 22:43:55 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:43862 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRCny (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:42:39 -0400
-Received: by mail-qk1-f194.google.com with SMTP id c70so7587466qkg.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:42:38 -0700 (PDT)
+        Mon, 17 Jun 2019 22:43:54 -0400
+Received: by mail-qk1-f195.google.com with SMTP id m14so7589527qka.10
+        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 19:43:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=wlec/cQbN79ilcIA62j7ETPEXuZxM1Vl8+YGK7vicPE=;
-        b=hy5AZnnj9Sy8oB42uxpu7r94T6qFPTL3bdSzfGdNl8zDRTzuOIiSMNibJYltHAC4cZ
-         brA8MYlM3Xqz4B6k4FuYlKDKDoZzRQpYjlPZWjXqGoU6c+QbRTdHRhm8Tz1NXjDPAhiJ
-         QpN2QTHVDPwH5T22gJ/H28P6Yl+U0027z0t9hO/uLwfvD4LCvjAEP6PxYzwXD9nxxpwo
-         u+qsF6jc+Sah6VQNhZnjwg485T+zUWv8cP5aMlGemK0gITwQZyntGGSXX9fe6PLpgN/R
-         TU43u/cN/V4snL1j8FTgxd2BYE+Ylp5S/hvp2Do69nanA1szjJziLjV3HeXikt9RXFRR
-         gjlg==
+        bh=nX4Lct0hRbElfJ7uVhNvumeaI9+AxXzXyu4vjSUGo1M=;
+        b=j8VmLcSzvjdb/VBg88RycwCMFYoVkDiyB70BREVjLnI/rS6u7tf/YgKFXMOIV7OKHB
+         8VPlv8dGUplv7FJGFKjN0ABKXZMTHe41UEEUvXk6p7BtBJZ1D6szk37oWN7ZKgb6Qpgs
+         14eohDBOf87aorOYeSkujUDc9oX9h/+dDCOLawoClLJ1qfRQdTMak3OFX9iG9F0V/0c8
+         pr4tRwousOtxRo2gbdlnWu2B/kvd0Zb8f3dUepLMfPlrKHRceNrLX1w8uGZm8u3G7ics
+         lXf2VT2u2YBom8lUs7lotfXTJ+wwuUioh1iqUgoaA2DrZoztAYGlDE7lMHuMIs+cmOAj
+         FSZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wlec/cQbN79ilcIA62j7ETPEXuZxM1Vl8+YGK7vicPE=;
-        b=umAsWq7hdLcl3vMEPZwBmtUTgYyFNZEPsvUXvrfipVWPB11sHheXBdBr58+nPWTWzx
-         mlg5Lx0hwi6mTGHDFkzDmW9bmv3fe8fibC9DsAGd4TzOTpLHpyJBa0f06UWnOkjRwXE3
-         ZccRiWnmvJxAdfcdq2zXr8GgqS4BXK9TPYWLSfyYCAwEUsdzDMDrT5VRMEqqpPrtl21o
-         qLKV7xueEYCtboJFRlZaoEd022FJ0xtcfl+H19RFVaFFKJtatV3zODGrx/9dubFCSO/R
-         za0NNLrTcVxnB3X4JvJkTGiR2u9pgOSCUbrg/TamA5skkyve+lPAO5qJ2UwcrtD2CIKM
-         2eWw==
-X-Gm-Message-State: APjAAAVpGOf5Xib6bb3oOGGt+1Q+prwTPiiTHrlKQ9WiPn4Ax4x7JHmf
-        /WMSCHBGaVRVxY4bcPGSmb0=
-X-Google-Smtp-Source: APXvYqzM6+yNmUJHDTr+5nEzxYhCkjXT7NgLVxCRPMrG8gTEANWEl/fG67mArrfESOV53aARSBl54g==
-X-Received: by 2002:ae9:ed0a:: with SMTP id c10mr89412855qkg.207.1560825758284;
-        Mon, 17 Jun 2019 19:42:38 -0700 (PDT)
+        bh=nX4Lct0hRbElfJ7uVhNvumeaI9+AxXzXyu4vjSUGo1M=;
+        b=C1xym+L054TJQqG+xFfEosd5YXfb81O0jlzD/hIvlYWX3WxQXeHPqwmIqIpsVjhTTw
+         dOkhm+5i+h1SMUVuTdmXG7vML4euU/T3jwTpLYXLeYIlC+xtzTEBBa27IbQpsUmKvXtc
+         PyccWySgi8pgw/b7RpDBBWMSl4OhULufmZaG0wwelDLmdryivMSzx1jPPl5DPfkFnxf7
+         hpL/Gtbl8MYpZWZ0wZ87XU8LH1IeIX8S9K86qwv6wZ+ob4P8S9JGAwsEsCsfiwoePu2j
+         XaxZop75BfQXp6aItuUVXykSe9rZy6S56vgmkpH9LqknYMDS38UCbbA3ajNsV5LhPWh4
+         DpZA==
+X-Gm-Message-State: APjAAAXyrODfBHAXYFg6DpuZD2fRe/MnKZpFuXU3povc+PoJsRObWhuu
+        Tr5++wqbZGFPYdCvW1Cvkd8=
+X-Google-Smtp-Source: APXvYqxaHjMOISQ9guRRmzpA9K7fPxEPwKahaqRJEEU3Oyiu+UsHUkxZRTlsd8Vnef+dSkF65wG1AA==
+X-Received: by 2002:a05:620a:1407:: with SMTP id d7mr80111271qkj.20.1560825833481;
+        Mon, 17 Jun 2019 19:43:53 -0700 (PDT)
 Received: from smtp.gmail.com ([187.121.151.146])
-        by smtp.gmail.com with ESMTPSA id c16sm2678549qke.43.2019.06.17.19.42.35
+        by smtp.gmail.com with ESMTPSA id n10sm7926370qke.72.2019.06.17.19.43.50
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 17 Jun 2019 19:42:37 -0700 (PDT)
-Date:   Mon, 17 Jun 2019 23:42:33 -0300
+        Mon, 17 Jun 2019 19:43:53 -0700 (PDT)
+Date:   Mon, 17 Jun 2019 23:43:48 -0300
 From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 To:     Brian Starkey <brian.starkey@arm.com>,
         Liviu Dudau <liviu.dudau@arm.com>,
@@ -65,9 +65,8 @@ To:     Brian Starkey <brian.starkey@arm.com>,
         Haneen Mohammed <hamohammed.sa@gmail.com>,
         Simon Ser <contact@emersion.fr>
 Cc:     dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2 1/5] drm/vkms: Move functions from vkms_crc to
- vkms_composer
-Message-ID: <408a662d504db1cfe13919688a4e9f7f7a6d8489.1560820888.git.rodrigosiqueiramelo@gmail.com>
+Subject: [PATCH V2 2/5] drm/vkms: Rename crc_enabled to composer_enabled
+Message-ID: <1ac8e97f5884ad441e849c0399cd48ed8b6df5cb.1560820888.git.rodrigosiqueiramelo@gmail.com>
 References: <cover.1560820888.git.rodrigosiqueiramelo@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -79,212 +78,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vkms_crc file has functions related to compose operations which are
-not directly associated with CRC. This patch, move those function for a
-new file named vkms_composer.
+Rename crc_enabled to composer_enabled since it does more than just
+compute a CRC.
 
 Signed-off-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 ---
- drivers/gpu/drm/vkms/Makefile        |  9 +++-
- drivers/gpu/drm/vkms/vkms_composer.c | 69 ++++++++++++++++++++++++++++
- drivers/gpu/drm/vkms/vkms_composer.h | 12 +++++
- drivers/gpu/drm/vkms/vkms_crc.c      | 65 +-------------------------
- 4 files changed, 90 insertions(+), 65 deletions(-)
- create mode 100644 drivers/gpu/drm/vkms/vkms_composer.c
- create mode 100644 drivers/gpu/drm/vkms/vkms_composer.h
+ drivers/gpu/drm/vkms/vkms_crc.c  | 2 +-
+ drivers/gpu/drm/vkms/vkms_crtc.c | 2 +-
+ drivers/gpu/drm/vkms/vkms_drv.h  | 2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/vkms/Makefile b/drivers/gpu/drm/vkms/Makefile
-index 89f09bec7b23..b4c040854bd6 100644
---- a/drivers/gpu/drm/vkms/Makefile
-+++ b/drivers/gpu/drm/vkms/Makefile
-@@ -1,4 +1,11 @@
- # SPDX-License-Identifier: GPL-2.0-only
--vkms-y := vkms_drv.o vkms_plane.o vkms_output.o vkms_crtc.o vkms_gem.o vkms_crc.o
-+vkms-y := \
-+	vkms_drv.o \
-+	vkms_plane.o \
-+	vkms_output.o \
-+	vkms_crtc.o \
-+	vkms_gem.o \
-+	vkms_composer.o \
-+	vkms_crc.o
- 
- obj-$(CONFIG_DRM_VKMS) += vkms.o
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.c b/drivers/gpu/drm/vkms/vkms_composer.c
-new file mode 100644
-index 000000000000..3d7c5e316d6e
---- /dev/null
-+++ b/drivers/gpu/drm/vkms/vkms_composer.c
-@@ -0,0 +1,69 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+
-+#include "vkms_drv.h"
-+#include "vkms_composer.h"
-+#include <drm/drm_gem_framebuffer_helper.h>
-+
-+/**
-+ * blend - belnd value at vaddr_src with value at vaddr_dst
-+ * @vaddr_dst: destination address
-+ * @vaddr_src: source address
-+ * @dest: destination framebuffer's metadata
-+ * @src: source framebuffer's metadata
-+ *
-+ * Blend value at vaddr_src with value at vaddr_dst.
-+ * Currently, this function write value at vaddr_src on value
-+ * at vaddr_dst using buffer's metadata to locate the new values
-+ * from vaddr_src and their distenation at vaddr_dst.
-+ *
-+ * Todo: Use the alpha value to blend vaddr_src with vaddr_dst
-+ *	 instead of overwriting it.
-+ */
-+void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
-+	   struct vkms_crc_data *src)
-+{
-+	int i, j, j_dst, i_dst;
-+	int offset_src, offset_dst;
-+
-+	int x_src = src->src.x1 >> 16;
-+	int y_src = src->src.y1 >> 16;
-+
-+	int x_dst = src->dst.x1;
-+	int y_dst = src->dst.y1;
-+	int h_dst = drm_rect_height(&src->dst);
-+	int w_dst = drm_rect_width(&src->dst);
-+
-+	int y_limit = y_src + h_dst;
-+	int x_limit = x_src + w_dst;
-+
-+	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
-+		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
-+			offset_dst = dest->offset
-+				     + (i_dst * dest->pitch)
-+				     + (j_dst++ * dest->cpp);
-+			offset_src = src->offset
-+				     + (i * src->pitch)
-+				     + (j * src->cpp);
-+
-+			memcpy(vaddr_dst + offset_dst,
-+			       vaddr_src + offset_src, sizeof(u32));
-+		}
-+		i_dst++;
-+	}
-+}
-+
-+void compose_cursor(struct vkms_crc_data *cursor,
-+		    struct vkms_crc_data *primary, void *vaddr_out)
-+{
-+	struct drm_gem_object *cursor_obj;
-+	struct vkms_gem_object *cursor_vkms_obj;
-+
-+	cursor_obj = drm_gem_fb_get_obj(&cursor->fb, 0);
-+	cursor_vkms_obj = drm_gem_to_vkms_gem(cursor_obj);
-+
-+	if (WARN_ON(!cursor_vkms_obj->vaddr))
-+		return;
-+
-+	blend(vaddr_out, cursor_vkms_obj->vaddr, primary, cursor);
-+}
-+
-diff --git a/drivers/gpu/drm/vkms/vkms_composer.h b/drivers/gpu/drm/vkms/vkms_composer.h
-new file mode 100644
-index 000000000000..53fdee17a632
---- /dev/null
-+++ b/drivers/gpu/drm/vkms/vkms_composer.h
-@@ -0,0 +1,12 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+
-+#ifndef _VKMS_COMPOSER_H_
-+#define _VKMS_COMPOSER_H_
-+
-+void blend(void *vaddr_dst, void *vaddr_src, struct vkms_crc_data *dest,
-+	   struct vkms_crc_data *src);
-+
-+void compose_cursor(struct vkms_crc_data *cursor,
-+		    struct vkms_crc_data *primary, void *vaddr_out);
-+
-+#endif /* _VKMS_COMPOSER_H_ */
 diff --git a/drivers/gpu/drm/vkms/vkms_crc.c b/drivers/gpu/drm/vkms/vkms_crc.c
-index 4b3146d83265..3c6a35aba494 100644
+index 3c6a35aba494..8b215677581f 100644
 --- a/drivers/gpu/drm/vkms/vkms_crc.c
 +++ b/drivers/gpu/drm/vkms/vkms_crc.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0+
+@@ -165,7 +165,7 @@ int vkms_set_crc_source(struct drm_crtc *crtc, const char *src_name)
+ 	ret = vkms_crc_parse_source(src_name, &enabled);
  
- #include "vkms_drv.h"
-+#include "vkms_composer.h"
- #include <linux/crc32.h>
- #include <drm/drm_atomic.h>
- #include <drm/drm_atomic_helper.h>
-@@ -39,70 +40,6 @@ static uint32_t compute_crc(void *vaddr_out, struct vkms_crc_data *crc_out)
- 	return crc;
- }
+ 	spin_lock_irq(&out->lock);
+-	out->crc_enabled = enabled;
++	out->composer_enabled = enabled;
+ 	spin_unlock_irq(&out->lock);
  
--/**
-- * blend - belnd value at vaddr_src with value at vaddr_dst
-- * @vaddr_dst: destination address
-- * @vaddr_src: source address
-- * @crc_dst: destination framebuffer's metadata
-- * @crc_src: source framebuffer's metadata
-- *
-- * Blend value at vaddr_src with value at vaddr_dst.
-- * Currently, this function write value at vaddr_src on value
-- * at vaddr_dst using buffer's metadata to locate the new values
-- * from vaddr_src and their distenation at vaddr_dst.
-- *
-- * Todo: Use the alpha value to blend vaddr_src with vaddr_dst
-- *	 instead of overwriting it.
-- */
--static void blend(void *vaddr_dst, void *vaddr_src,
--		  struct vkms_crc_data *crc_dst,
--		  struct vkms_crc_data *crc_src)
--{
--	int i, j, j_dst, i_dst;
--	int offset_src, offset_dst;
--
--	int x_src = crc_src->src.x1 >> 16;
--	int y_src = crc_src->src.y1 >> 16;
--
--	int x_dst = crc_src->dst.x1;
--	int y_dst = crc_src->dst.y1;
--	int h_dst = drm_rect_height(&crc_src->dst);
--	int w_dst = drm_rect_width(&crc_src->dst);
--
--	int y_limit = y_src + h_dst;
--	int x_limit = x_src + w_dst;
--
--	for (i = y_src, i_dst = y_dst; i < y_limit; ++i) {
--		for (j = x_src, j_dst = x_dst; j < x_limit; ++j) {
--			offset_dst = crc_dst->offset
--				     + (i_dst * crc_dst->pitch)
--				     + (j_dst++ * crc_dst->cpp);
--			offset_src = crc_src->offset
--				     + (i * crc_src->pitch)
--				     + (j * crc_src->cpp);
--
--			memcpy(vaddr_dst + offset_dst,
--			       vaddr_src + offset_src, sizeof(u32));
--		}
--		i_dst++;
--	}
--}
--
--static void compose_cursor(struct vkms_crc_data *cursor_crc,
--			   struct vkms_crc_data *primary_crc, void *vaddr_out)
--{
--	struct drm_gem_object *cursor_obj;
--	struct vkms_gem_object *cursor_vkms_obj;
--
--	cursor_obj = drm_gem_fb_get_obj(&cursor_crc->fb, 0);
--	cursor_vkms_obj = drm_gem_to_vkms_gem(cursor_obj);
--
--	if (WARN_ON(!cursor_vkms_obj->vaddr))
--		return;
--
--	blend(vaddr_out, cursor_vkms_obj->vaddr, primary_crc, cursor_crc);
--}
--
- static uint32_t _vkms_get_crc(struct vkms_crc_data *primary_crc,
- 			      struct vkms_crc_data *cursor_crc)
- {
+ 	return ret;
+diff --git a/drivers/gpu/drm/vkms/vkms_crtc.c b/drivers/gpu/drm/vkms/vkms_crtc.c
+index 14156ed70415..24a3ff0f7ff1 100644
+--- a/drivers/gpu/drm/vkms/vkms_crtc.c
++++ b/drivers/gpu/drm/vkms/vkms_crtc.c
+@@ -25,7 +25,7 @@ static enum hrtimer_restart vkms_vblank_simulate(struct hrtimer *timer)
+ 		DRM_ERROR("vkms failure on handling vblank");
+ 
+ 	state = output->crc_state;
+-	if (state && output->crc_enabled) {
++	if (state && output->composer_enabled) {
+ 		u64 frame = drm_crtc_accurate_vblank_count(crtc);
+ 
+ 		/* update frame_start only if a queued vkms_crc_work_handle()
+diff --git a/drivers/gpu/drm/vkms/vkms_drv.h b/drivers/gpu/drm/vkms/vkms_drv.h
+index 4e7450111d45..a887c05ff70e 100644
+--- a/drivers/gpu/drm/vkms/vkms_drv.h
++++ b/drivers/gpu/drm/vkms/vkms_drv.h
+@@ -72,7 +72,7 @@ struct vkms_output {
+ 	spinlock_t lock;
+ 
+ 	/* protected by @lock */
+-	bool crc_enabled;
++	bool composer_enabled;
+ 	struct vkms_crtc_state *crc_state;
+ 
+ 	spinlock_t crc_lock;
 -- 
 2.21.0
