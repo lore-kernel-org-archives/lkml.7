@@ -2,208 +2,196 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E70BCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87B3EC31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:36:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC995214AF
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="kwGAzBsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 721662084D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:36:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfFRRfE (ORCPT
+        id S1730124AbfFRRgP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:35:04 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10677 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729586AbfFRRfD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:35:03 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0920c60002>; Tue, 18 Jun 2019 10:35:02 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 10:35:01 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 10:35:01 -0700
-Received: from [10.2.168.217] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 17:34:58 +0000
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     Stephen Warren <swarren@wwwdotorg.org>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>,
-        <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <devicetree@vger.kernel.org>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
- <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
- <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
- <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
-Message-ID: <cff9b6a2-dc33-d03b-9945-799b158deb07@nvidia.com>
-Date:   Tue, 18 Jun 2019 10:34:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Tue, 18 Jun 2019 13:36:15 -0400
+Received: from foss.arm.com ([217.140.110.172]:51914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729586AbfFRRgO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:36:14 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A7BE344;
+        Tue, 18 Jun 2019 10:36:13 -0700 (PDT)
+Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 356983F738;
+        Tue, 18 Jun 2019 10:36:12 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 18:36:07 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Jeremy Linton <jeremy.linton@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        will.deacon@arm.com, rjw@rjwysocki.net, lenb@kernel.org,
+        mark.rutland@arm.com, sudeep.holla@arm.com
+Subject: Re: [PATCH 3/4] arm_pmu: acpi: spe: Add initial MADT/SPE probing
+Message-ID: <20190618173607.GA22558@e121166-lin.cambridge.arm.com>
+References: <20190615010910.33921-1-jeremy.linton@arm.com>
+ <20190615010910.33921-4-jeremy.linton@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560879302; bh=EtLjwWpiDtqSfPhNA/8G8Clz5OAG+A5COmGeaCrkKVg=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding:
-         Content-Language;
-        b=kwGAzBsQ1yoTWwKlo2/UOXv2gkDJ8firGCWiN14gqHzMxIIzL+NJZ9lpPELHx7++8
-         C93tekf3G0sFEXan2CyLBApX5uH4osQ5xuNl+ata+wnHZmNVrOtlPPhO6hhKsV/Juf
-         bZZ27nnu7W7H0ZnSISHtqcoPE+/xNqqhYTqKlosqswoYZXizfVaeos2MrmAZ08rpAS
-         yLrxRqjT/pGG5gMZ13xiR+i9Huo6g16m5gpObtCMD/6v8RkLqVDaMmayD+7Pe8lziR
-         FxzKA/nr4019w/Sj8inE7uex06rlPkDCg+nyeUgJDyr2rcvucvqnbVPNXZILdkVwtR
-         xtp0jurZ5tT0Q==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190615010910.33921-4-jeremy.linton@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Jun 14, 2019 at 08:09:09PM -0500, Jeremy Linton wrote:
+> ACPI 6.3 adds additional fields to the MADT GICC
+> structure to describe SPE PPI's. We pick these out
+> of the cached reference to the madt_gicc structure
+> similarly to the core PMU code. We then create a platform
+> device referring to the IRQ and let the user/module loader
+> decide whether to load the SPE driver.
+> 
+> Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
+> ---
+>  arch/arm64/include/asm/acpi.h |  3 ++
+>  drivers/perf/arm_pmu_acpi.c   | 75 +++++++++++++++++++++++++++++++++++
+>  include/linux/perf/arm_pmu.h  |  2 +
+>  3 files changed, 80 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/acpi.h b/arch/arm64/include/asm/acpi.h
+> index 7628efbe6c12..d10399b9f998 100644
+> --- a/arch/arm64/include/asm/acpi.h
+> +++ b/arch/arm64/include/asm/acpi.h
+> @@ -41,6 +41,9 @@
+>  	(!(entry) || (entry)->header.length < ACPI_MADT_GICC_MIN_LENGTH || \
+>  	(unsigned long)(entry) + (entry)->header.length > (end))
+>  
+> +#define ACPI_MADT_GICC_SPE  (ACPI_OFFSET(struct acpi_madt_generic_interrupt, \
+> +	spe_interrupt) + sizeof(u16))
+> +
 
-On 6/18/19 9:50 AM, Sowjanya Komatineni wrote:
->
-> On 6/18/19 8:41 AM, Stephen Warren wrote:
->> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
->>> 18.06.2019 12:22, Dmitry Osipenko =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>> 18.06.2019 10:46, Sowjanya Komatineni =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
->>>>> This patch adds suspend and resume support for Tegra pinctrl driver
->>>>> and registers them to syscore so the pinmux settings are restored
->>>>> before the devices resume.
->>>>>
->>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>> ---
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.c=C2=A0=C2=A0=C2=A0 | 62=20
->>>>> ++++++++++++++++++++++++++++++++
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra.h=C2=A0=C2=A0=C2=A0 |=C2=
-=A0 5 +++
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra114.c |=C2=A0 1 +
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra124.c |=C2=A0 1 +
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra20.c=C2=A0 |=C2=A0 1 +
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>>>> =C2=A0 drivers/pinctrl/tegra/pinctrl-tegra30.c=C2=A0 |=C2=A0 1 +
->>>>> =C2=A0 7 files changed, 84 insertions(+)
->>>>>
->>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c=20
->>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>> index 34596b246578..ceced30d8bd1 100644
->>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>> @@ -20,11 +20,16 @@
->>>>> =C2=A0 #include <linux/pinctrl/pinmux.h>
->>>>> =C2=A0 #include <linux/pinctrl/pinconf.h>
->>>>> =C2=A0 #include <linux/slab.h>
->>>>> +#include <linux/syscore_ops.h>
->>>>> =C2=A0 =C2=A0 #include "../core.h"
->>>>> =C2=A0 #include "../pinctrl-utils.h"
->>>>> =C2=A0 #include "pinctrl-tegra.h"
->>>>> =C2=A0 +#define EMMC2_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1c8
->>>>> +#define EMMC4_PAD_CFGPADCTRL_0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 0x1e0
->>>>> +#define EMMC_DPD_PARKING=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0=C2=A0=C2=A0=C2=A0 (0x1fff << 14)
->>>>> +
->>>>> =C2=A0 static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u=
-32=20
->>>>> reg)
->>>>> =C2=A0 {
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return readl(pmx->regs[bank] + reg);
->>>>> @@ -619,6 +624,48 @@ static void=20
->>>>> tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=
-=A0=C2=A0 pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0 if (pmx->soc->has_park_padcfg) {
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
- EMMC2_PAD_CFGPADCTRL_0);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
-G;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
-MMC2_PAD_CFGPADCTRL_0);
->>>>> +
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val =3D pmx_readl(pmx, 0,=
- EMMC4_PAD_CFGPADCTRL_0);
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 val &=3D ~EMMC_DPD_PARKIN=
-G;
->>>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pmx_writel(pmx, val, 0, E=
-MMC4_PAD_CFGPADCTRL_0);
->>>>> +=C2=A0=C2=A0=C2=A0 }
->>>>> +}
->>>>
->>>> Is there any reason why parked_bit can't be changed to=20
->>>> parked_bitmask like I was
->>>> asking in a comment to v2?
->>>>
->>>> I suppose that it's more preferable to keep pinctrl-tegra.c=20
->>>> platform-agnostic for
->>>> consistency when possible, hence adding platform specifics here=20
->>>> should be discouraged.
->>>> And then the parked_bitmask will also result in a proper hardware=20
->>>> description in the code.
->>>>
->>>
->>> I'm now also vaguely recalling that Stephen Warren had some kind of=20
->>> a "code generator"
->>> for the pinctrl drivers. So I guess all those tables were=20
->>> auto-generated initially.
->>>
->>> Stephen, maybe you could adjust the generator to take into account=20
->>> the bitmask (of
->>> course if that's a part of the generated code) and then re-gen it=20
->>> all for Sowjanya?
->>
->> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that=20
->> generate tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py.=20
->> IIRC, tegra-pinctrl.c (the core file) isn't auto-generated. Sowjanya=20
->> is welcome to send a patch to that repo if the code needs to be updated.
->
->
-> Hi Dmitry,
->
-> Just want to be clear on my understanding of your request.
->
-> "change parked_bit to parked_bitmask" are you requested to change=20
-> parked_bit of PINGROUP and DRV_PINGROUP to use bitmask value rather=20
-> than bit position inorder to have parked bit configuration for EMMC=20
-> PADs as well to happen by masking rather than checking for existence=20
-> of parked_bit?
->
-> Trying to understand the reason/benefit for changing parked_bit to=20
-> parked_bitmask.
-Also, Park bits in CFGPAD registers are not common for all CFGPAD=20
-registers. Park bits are available only for EMMC and also those bits are=20
-used for something else on other CFGPAD registers so bitmask can't be=20
-common and this also need an update to DRV_PINGROUP macro args just only=20
-to handle EMMC parked_bitmask. So not sure of the benefit in using=20
-bitmask rather than parked_bit
->
-> thanks
->
-> Sowjanya
->
+Nit: Do we really need this to be in a header file ?
+
+>  /* Basic configuration for ACPI */
+>  #ifdef	CONFIG_ACPI
+>  pgprot_t __acpi_get_mem_attribute(phys_addr_t addr);
+> diff --git a/drivers/perf/arm_pmu_acpi.c b/drivers/perf/arm_pmu_acpi.c
+> index 0f197516d708..f5df100bc4f4 100644
+> --- a/drivers/perf/arm_pmu_acpi.c
+> +++ b/drivers/perf/arm_pmu_acpi.c
+> @@ -74,6 +74,79 @@ static void arm_pmu_acpi_unregister_irq(int cpu)
+>  	acpi_unregister_gsi(gsi);
+>  }
+>  
+> +#if IS_ENABLED(CONFIG_ARM_SPE_PMU)
+> +static struct resource spe_resources[] = {
+> +	{
+> +		/* irq */
+> +		.flags          = IORESOURCE_IRQ,
+> +	}
+> +};
+> +
+> +static struct platform_device spe_dev = {
+> +	.name = ARMV8_SPE_PDEV_NAME,
+> +	.id = -1,
+> +	.resource = spe_resources,
+> +	.num_resources = ARRAY_SIZE(spe_resources)
+> +};
+> +
+> +/*
+> + * For lack of a better place, hook the normal PMU MADT walk
+> + * and create a SPE device if we detect a recent MADT with
+> + * a homogeneous PPI mapping.
+> + */
+> +static int arm_spe_acpi_register_device(void)
+> +{
+> +	int cpu, hetid, irq, ret;
+> +	bool first = true;
+> +	u16 gsi = 0;
+> +
+> +	/*
+> +	 * sanity check all the GICC tables for the same interrupt number
+> +	 * for now we only support homogeneous ACPI/SPE machines.
+> +	 */
+> +	for_each_possible_cpu(cpu) {
+> +		struct acpi_madt_generic_interrupt *gicc;
+> +
+> +		gicc = acpi_cpu_get_madt_gicc(cpu);
+> +		if (gicc->header.length < ACPI_MADT_GICC_SPE)
+> +			return -ENODEV;
+> +
+> +		if (first) {
+> +			gsi = gicc->spe_interrupt;
+> +			if (!gsi)
+> +				return -ENODEV;
+> +			hetid = find_acpi_cpu_topology_hetero_id(cpu);
+> +			first = false;
+> +		} else if ((gsi != gicc->spe_interrupt) ||
+> +			   (hetid != find_acpi_cpu_topology_hetero_id(cpu))) {
+> +			pr_warn("ACPI: SPE must be homogeneous\n");
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	irq = acpi_register_gsi(NULL, gsi, ACPI_LEVEL_SENSITIVE,
+> +				ACPI_ACTIVE_HIGH);
+> +	if (irq < 0) {
+> +		pr_warn("ACPI: SPE Unable to register interrupt: %d\n", gsi);
+> +		return irq;
+> +	}
+> +
+> +	spe_resources[0].start = irq;
+> +	ret = platform_device_register(&spe_dev);
+> +	if (ret < 0) {
+> +		pr_warn("ACPI: SPE: Unable to register device\n");
+> +		acpi_unregister_gsi(gsi);
+> +	}
+> +
+> +	return ret;
+> +}
+> +#else
+> +static inline int arm_spe_acpi_register_device(void)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif /* CONFIG_ARM_SPE_PMU */
+> +
+>  static int arm_pmu_acpi_parse_irqs(void)
+>  {
+>  	int irq, cpu, irq_cpu, err;
+> @@ -279,6 +352,8 @@ static int arm_pmu_acpi_init(void)
+>  	if (acpi_disabled)
+>  		return 0;
+>  
+> +	arm_spe_acpi_register_device(); /* failures are expected */
+
+Sounds ominous and it is false, ACPI never fails :)
+
+Nit: if we don't check the return value what's the point of
+returning it.
+
+Nothing problematic, if you manage to update the code before
+merging it is a plus.
+
+Reviewed-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+
+>  	ret = arm_pmu_acpi_parse_irqs();
+>  	if (ret)
+>  		return ret;
+> diff --git a/include/linux/perf/arm_pmu.h b/include/linux/perf/arm_pmu.h
+> index 4641e850b204..784bc58f165a 100644
+> --- a/include/linux/perf/arm_pmu.h
+> +++ b/include/linux/perf/arm_pmu.h
+> @@ -175,4 +175,6 @@ void armpmu_free_irq(int irq, int cpu);
+>  
+>  #endif /* CONFIG_ARM_PMU */
+>  
+> +#define ARMV8_SPE_PDEV_NAME "arm,spe-v1"
+> +
+>  #endif /* __ARM_PMU_H__ */
+> -- 
+> 2.21.0
+> 
