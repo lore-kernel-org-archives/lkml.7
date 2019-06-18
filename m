@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1579C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6EC2C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0892213F2
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D53A213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfFRO3i (ORCPT
+        id S1729473AbfFRO3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:29:38 -0400
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50510 "EHLO
+        Tue, 18 Jun 2019 10:29:06 -0400
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:50478 "EHLO
         shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729386AbfFRO3H (ORCPT
+        by vger.kernel.org with ESMTP id S1725919AbfFRO3G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:29:07 -0400
+        Tue, 18 Jun 2019 10:29:06 -0400
 Received: from [167.98.27.226] (helo=deadeye)
         by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hdF6e-0007nN-9x; Tue, 18 Jun 2019 15:29:04 +0100
+        id 1hdF6e-0007nF-0i; Tue, 18 Jun 2019 15:29:04 +0100
 Received: from ben by deadeye with local (Exim 4.92)
         (envelope-from <ben@decadent.org.uk>)
-        id 1hdF6d-0000I1-Oy; Tue, 18 Jun 2019 15:29:03 +0100
+        id 1hdF6d-0000Hd-Id; Tue, 18 Jun 2019 15:29:03 +0100
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
@@ -35,19 +35,13 @@ MIME-Version: 1.0
 From:   Ben Hutchings <ben@decadent.org.uk>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        "Jonathan Lemon" <jonathan.lemon@gmail.com>,
-        "Jonathan Looney" <jtl@netflix.com>,
-        "Eric Dumazet" <edumazet@google.com>,
-        "Yuchung Cheng" <ycheng@google.com>,
-        "Bruce Curtis" <brucec@netflix.com>,
-        "Neal Cardwell" <ncardwell@google.com>,
-        "Tyler Hicks" <tyhicks@canonical.com>
+        "Young Xiao" <YangX92@hotmail.com>,
+        "Marcel Holtmann" <marcel@holtmann.org>
 Date:   Tue, 18 Jun 2019 15:28:02 +0100
-Message-ID: <lsq.1560868082.100664112@decadent.org.uk>
+Message-ID: <lsq.1560868082.707403898@decadent.org.uk>
 X-Mailer: LinuxStableQueue (scripts by bwh)
 X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 10/10] tcp: enforce tcp_min_snd_mss in tcp_mtu_probing()
+Subject: [PATCH 3.16 06/10] Bluetooth: hidp: fix buffer overflow
 In-Reply-To: <lsq.1560868079.359853905@decadent.org.uk>
 X-SA-Exim-Connect-IP: 167.98.27.226
 X-SA-Exim-Mail-From: ben@decadent.org.uk
@@ -61,41 +55,31 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 ------------------
 
-From: Eric Dumazet <edumazet@google.com>
+From: Young Xiao <YangX92@hotmail.com>
 
-commit 967c05aee439e6e5d7d805e195b3a20ef5c433d6 upstream.
+commit a1616a5ac99ede5d605047a9012481ce7ff18b16 upstream.
 
-If mtu probing is enabled tcp_mtu_probing() could very well end up
-with a too small MSS.
+Struct ca is copied from userspace. It is not checked whether the "name"
+field is NULL terminated, which allows local users to obtain potentially
+sensitive information from kernel stack memory, via a HIDPCONNADD command.
 
-Use the new sysctl tcp_min_snd_mss to make sure MSS search
-is performed in an acceptable range.
+This vulnerability is similar to CVE-2011-1079.
 
-CVE-2019-11479 -- tcp mss hardcoded to 48
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: Jonathan Lemon <jonathan.lemon@gmail.com>
-Cc: Jonathan Looney <jtl@netflix.com>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Cc: Bruce Curtis <brucec@netflix.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[Salvatore Bonaccorso: Backport for context changes in 4.9.168]
-[bwh: Backported to 3.16: The sysctl is global]
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Marcel Holtmann <marcel@holtmann.org>
 Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
 ---
- net/ipv4/tcp_timer.c | 1 +
+ net/bluetooth/hidp/sock.c | 1 +
  1 file changed, 1 insertion(+)
 
---- a/net/ipv4/tcp_timer.c
-+++ b/net/ipv4/tcp_timer.c
-@@ -113,6 +113,7 @@ static void tcp_mtu_probing(struct inet_
- 			mss = tcp_mtu_to_mss(sk, icsk->icsk_mtup.search_low) >> 1;
- 			mss = min(sysctl_tcp_base_mss, mss);
- 			mss = max(mss, 68 - tp->tcp_header_len);
-+			mss = max(mss, sysctl_tcp_min_snd_mss);
- 			icsk->icsk_mtup.search_low = tcp_mss_to_mtu(sk, mss);
- 			tcp_sync_mss(sk, icsk->icsk_pmtu_cookie);
+--- a/net/bluetooth/hidp/sock.c
++++ b/net/bluetooth/hidp/sock.c
+@@ -76,6 +76,7 @@ static int hidp_sock_ioctl(struct socket
+ 			sockfd_put(csock);
+ 			return err;
  		}
++		ca.name[sizeof(ca.name)-1] = 0;
+ 
+ 		err = hidp_connection_add(&ca, csock, isock);
+ 		if (!err && copy_to_user(argp, &ca, sizeof(ca)))
 
