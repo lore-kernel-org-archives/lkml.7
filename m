@@ -2,61 +2,86 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6CAC31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAC09C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:02:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B1DB2084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:01:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B40DB2133F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 14:02:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GeCn97Tj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729724AbfFROBr (ORCPT
+        id S1729728AbfFROCK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 10:01:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46190 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729163AbfFROBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 10:01:47 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5A2D830C1205;
-        Tue, 18 Jun 2019 14:01:42 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BE17E7D933;
-        Tue, 18 Jun 2019 14:01:37 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
-        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
-        Kingdom.
-        Registered in England and Wales under Company Registration No. 3798903
-From:   David Howells <dhowells@redhat.com>
-In-Reply-To: <d88b3276-a81a-d5a6-76d6-1a01376aa31c@gmail.com>
-References: <d88b3276-a81a-d5a6-76d6-1a01376aa31c@gmail.com> <155905626142.1662.18430571708534506785.stgit@warthog.procyon.org.uk> <155905647369.1662.10806818386998503329.stgit@warthog.procyon.org.uk>
-To:     Alan Jenkins <alan.christopher.jenkins@gmail.com>
-Cc:     dhowells@redhat.com, viro@zeniv.linux.org.uk, raven@themaw.net,
-        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mszeredi@redhat.com
-Subject: Re: [PATCH 25/25] fsinfo: Add API documentation [ver #13]
+        Tue, 18 Jun 2019 10:02:10 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46696 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfFROCJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 10:02:09 -0400
+Received: by mail-lj1-f194.google.com with SMTP id v24so13230209ljg.13;
+        Tue, 18 Jun 2019 07:02:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=c/oq6PYXBAtOBIL4wKV4csfkFnFuFDeoOXik6aWtHD0=;
+        b=GeCn97TjTP96BLAQzE4IfeBlBpUmUrC5/KNCzouVXJwEeqUmjmIqhIcYkB80Q/rLLE
+         a2h0j8alTs1fNe10AYSdGiR0GZ7iYAXy6SdxPLFK1pbuMHXlVUIx+cIJvRtpSSDx/FQ2
+         Q2nsHApR3vVncCXePtgHK12ZldBDypNzToMB8T8DMPukzNXZU+wdh1PoqOrfLaBETsmF
+         HpM4jiXIP0B8IFFL8OOpUvpxrEY5Kw0jRheZaX/thzKhP1Mcc2C5xZ3TRMhotKii/iRJ
+         2O5/3VUywwYAMXwYesOLhpGKy1buwwFR/Td1W46ZiSQJ4Ne/u/pF0AhKnt2gkKYzTFXR
+         hMSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=c/oq6PYXBAtOBIL4wKV4csfkFnFuFDeoOXik6aWtHD0=;
+        b=RlykaveC+0gvHQS27/A9V8uiAtaJwn5MRPaJE677NFPzEg8+4vy93MGsICikERPdFm
+         qtOppN5T1bAxwS4Thn1/ryw3Zz7njHGq63HlS1Abpvg94pj5q7wNPwrqNt3GiBk3I+OF
+         KtaLUhI17/+oXvvCmIBMYl679vIUlidm0KkKh7nUYhP0ZDtY8nlTRPz510Yv0dWX138P
+         VD3A3Dly1/T21SmNB/cPNdXWo7zBiHVuX4Njau0X7vzXPtvg1y2yygf3+mBMM0qclh+M
+         7qMLq9NsFOyaXV0vOSxWwJ1hrJqcFQyXM828Yd+eVAYm9xUSPvP6YehOZdnDQiamgdju
+         ydJQ==
+X-Gm-Message-State: APjAAAXS5ekYvzgnUzSkyTUmZILmv4EHidMRDD5wvLCxS4zBJKhorM/a
+        xA8YuAYF0vYy/aiZca2S9eZtsERgfpw0J6gbNJg=
+X-Google-Smtp-Source: APXvYqxIOSz82C6GotSZhdxpV7t/RdzSd5kUvLAApU7gQ536c/KA+k4lt+HuTF50A3zM6eCuPR9WqxlQ2tgIWWwifTE=
+X-Received: by 2002:a2e:a311:: with SMTP id l17mr42584912lje.214.1560866527866;
+ Tue, 18 Jun 2019 07:02:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <18934.1560866496.1@warthog.procyon.org.uk>
-Date:   Tue, 18 Jun 2019 15:01:36 +0100
-Message-ID: <18935.1560866496@warthog.procyon.org.uk>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 18 Jun 2019 14:01:47 +0000 (UTC)
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+In-Reply-To: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Tue, 18 Jun 2019 11:02:18 -0300
+Message-ID: <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Pintu Agarwal <pintu.ping@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan Jenkins <alan.christopher.jenkins@gmail.com> wrote:
+Hi Pintu,
 
-> > +    eleemnts in the FSINFO_ATTR_MOUNT_CHROOT list.
-> 
-> FSINFO_ATTR_MOUNT_CHROOT -> FSINFO_ATTR_MOUNT_CHILDREN
+On Mon, Jun 17, 2019 at 10:50 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+>
+> Hi All,
+>
+> I am trying to implement suspend/resume functionality to to imx-hdmi driver:
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/tree/drivers/gpu/drm/imx/dw_hdmi-imx.c?h=v4.9.181
 
-I've applied your changes.
+Please test a recent kernel, such as 5.1.11. I recall that last time
+you reported an issue with the dw hdmi you were running kernel 3.10
+with backported patches from 4.9.
 
-David
+Just tried suspend/resume on a imx6q board and HDMI behaves correctly.
