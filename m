@@ -2,122 +2,102 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C2CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7409AC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DE5205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T+Dq0x7E"
+	by mail.kernel.org (Postfix) with ESMTP id 54DE620B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:27:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730599AbfFRU1W (ORCPT
+        id S1730635AbfFRU12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:27:22 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:38823 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfFRU1W (ORCPT
+        Tue, 18 Jun 2019 16:27:28 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:51764 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730607AbfFRU11 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:27:22 -0400
-Received: by mail-yw1-f67.google.com with SMTP id k125so7290397ywe.5;
-        Tue, 18 Jun 2019 13:27:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=7QMKaBxL4CnjzjmwadmOPe4XGvcXSwVBiLXM53oPLnQ=;
-        b=T+Dq0x7EPaLEza5d0zMKW1NvBlc7WCBqZ+ukuGL2lbxDTMhAQhjyRaZMsSlHWnz0b9
-         /NZLi/7k0NU6v3Ss1efP5H1LgDf5cReCDPURqtuDLd/xtTYqzCBKrOmPCwUC7Qx47+LH
-         VSfo829s+FB+SvzSurYMnZK4WTt9duhifHFO+wlg02GGu+z3j6OkRVeIRaHu7/lUMVGB
-         VzeYWdBIfhLkk/NzUgloOk9HcYQjLqKg3tQwarad3Tpf7tfq70D3kkGYMnaap6Ir6cZX
-         uyKKRaFq+/v5+TdS9xos5awfWpyq/fmp6+4qWOjRqa6fJpcE4s/w/50za6dTISqYPoj0
-         6ImA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=7QMKaBxL4CnjzjmwadmOPe4XGvcXSwVBiLXM53oPLnQ=;
-        b=RQOpqinHFODawXZo8pVEg/yk3rwQJ0vs4Gh8b+pd3BigE0P181S3i0VVDQqRvphRFD
-         F0Vl43I2cdjl51l0QlX28t22zZBx3pYXkjfc8orBadJMrYVRMblRO5g71rFrv5G/eb3r
-         PO8ea+yBNFWFptRbscmJjox8QYUa3t7cj7bLasOI8pmDVMs4ggj/km36M76yqiPwbbr+
-         4osR0cWL4Bp5u8tcOwyY8HS1n2C4p6jlYhlklhbJpx4yqY8lTTdwlrdlM6mCp4ekF/DR
-         LFyfQfMVkJjdLH5avW9HDH43k1U7BA+HhnsKXsF2Vn6jwTqrJVTmPtwzjlPndCktFbz8
-         i+uA==
-X-Gm-Message-State: APjAAAUqjpXfZtQbTT+nMJ9m6gMgESYiN3azYW9mWaJlNklU2kQ2rEZq
-        hQ4itJncGTxRg9vBZfe7tCcwCA/5Q9l5GvK6dhU=
-X-Google-Smtp-Source: APXvYqzOmIwVBwcmvQvSRdvCPmiYYWYbAEJNnMJ3QxF6seY1ZPR0HzYHP2MAVg0VNKuRWH6wVnKCGsD7iOmD9ELl3dY=
-X-Received: by 2002:a81:3956:: with SMTP id g83mr65870477ywa.183.1560889641067;
- Tue, 18 Jun 2019 13:27:21 -0700 (PDT)
+        Tue, 18 Jun 2019 16:27:27 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdKhN-0003PQ-66; Tue, 18 Jun 2019 20:27:21 +0000
+Date:   Tue, 18 Jun 2019 21:27:21 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        linux-mtd@lists.infradead.org, linux-nfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] jffs2: pass the correct prototype to read_cache_page
+Message-ID: <20190618202721.GD17978@ZenIV.linux.org.uk>
+References: <20190520055731.24538-1-hch@lst.de>
+ <20190520055731.24538-4-hch@lst.de>
 MIME-Version: 1.0
-References: <000000000000623c45058b9c2479@google.com>
-In-Reply-To: <000000000000623c45058b9c2479@google.com>
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 18 Jun 2019 23:27:09 +0300
-Message-ID: <CAOQ4uxhsnOXXVCuOT4p4c_koBMFfprWwdtCPGNGhzprFaJZwRA@mail.gmail.com>
-Subject: Re: WARNING in fanotify_handle_event
-To:     Jan Kara <jack@suse.cz>
-Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        syzbot <syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190520055731.24538-4-hch@lst.de>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 8:07 PM syzbot
-<syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com> wrote:
->
-> Hello,
->
-> syzbot found the following crash on:
->
-> HEAD commit:    963172d9 Merge branch 'x86-urgent-for-linus' of git://git...
-> git tree:       upstream
-> console output: https://syzkaller.appspot.com/x/log.txt?x=17c090eaa00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
-> dashboard link: https://syzkaller.appspot.com/bug?extid=c277e8e2f46414645508
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a32f46a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a7dc9ea00000
->
-> The bug was bisected to:
->
-> commit 77115225acc67d9ac4b15f04dd138006b9cd1ef2
-> Author: Amir Goldstein <amir73il@gmail.com>
-> Date:   Thu Jan 10 17:04:37 2019 +0000
->
->      fanotify: cache fsid in fsnotify_mark_connector
->
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12bfcb66a00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=11bfcb66a00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=16bfcb66a00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com
-> Fixes: 77115225acc6 ("fanotify: cache fsid in fsnotify_mark_connector")
->
-> WARNING: CPU: 0 PID: 8994 at fs/notify/fanotify/fanotify.c:359
-> fanotify_get_fsid fs/notify/fanotify/fanotify.c:359 [inline]
+On Mon, May 20, 2019 at 07:57:30AM +0200, Christoph Hellwig wrote:
+> Fix the callback jffs2 passes to read_cache_page to actually have the
+> proper type expected.  Casting around function pointers can easily
+> hide typing bugs, and defeats control flow protection.
 
-Oops, we forgot to update conn->fsid when the first mark added
-for inode has no fsid (e.g. inotify) and the second mark has fid,
-which is more or less the only thing the repro does.
-And if we are going to update conn->fsid, we do no have the
-cmpxchg to guaranty setting fsid atomically.
+FWIW, this
+unsigned char *jffs2_gc_fetch_page(struct jffs2_sb_info *c,
+                                   struct jffs2_inode_info *f,
+                                   unsigned long offset,
+                                   unsigned long *priv)
+{
+        struct inode *inode = OFNI_EDONI_2SFFJ(f);
+        struct page *pg;
 
-I am thinking a set-once flag on connector FSNOTIFY_CONN_HAS_FSID
-checked before smp_rmb() in fanotify_get_fsid().
-If the flag is not set then call vfs_get_fsid() instead of using fsid cache.
-conn->fsid can be updated in fsnotify_add_mark_list() under conn->lock,
-and flag set after smp_wmb().
+        pg = read_cache_page(inode->i_mapping, offset >> PAGE_SHIFT,
+                             (void *)jffs2_do_readpage_unlock, inode);
+        if (IS_ERR(pg))
+                return (void *)pg;
 
-Does that sound correct?
+        *priv = (unsigned long)pg;
+        return kmap(pg);
+}
+looks like crap.  And so does this:
+void jffs2_gc_release_page(struct jffs2_sb_info *c,
+                           unsigned char *ptr,
+                           unsigned long *priv)
+{
+        struct page *pg = (void *)*priv;
 
-Thanks,
-Amir.
+        kunmap(pg);
+        put_page(pg);
+}
+
+	First of all, there's only one caller for each of those, and both
+are direct calls.  So passing struct page * around that way is ridiculous.
+What's more, there is no reason not to do kmap() in caller (i.e. in
+jffs2_garbage_collect_dnode()).  That way jffs2_gc_fetch_page() would
+simply be return read_cache_page(....), and in the caller we'd have
+
+        struct page *pg;
+        unsigned char *pg_ptr;
+...
+        mutex_unlock(&f->sem);
+        pg = jffs2_gc_fetch_page(c, f, start);
+        if (IS_ERR(pg)) {
+		mutex_lock(&f->sem);
+                pr_warn("read_cache_page() returned error: %ld\n", PTR_ERR(pg));
+                return PTR_ERR(pg);
+        }
+	pg_ptr = kmap(pg);
+	mutex_lock(&f->sem);
+...
+	kunmap(pg);
+	put_page(pg);
+
+and that's it, preserving the current locking and with saner types...
