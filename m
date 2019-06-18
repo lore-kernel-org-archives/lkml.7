@@ -2,132 +2,90 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EB7C46477
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA403C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7756F2147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:30:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ub6bbFJz"
+	by mail.kernel.org (Postfix) with ESMTP id 898D52080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:32:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560882733;
+	bh=mx2GBaMPKIm/2tPzzP3cV12VlarSbBD4n4fTN+91FW0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=DiLzXWGcKryOWJQPYL9Vw2uLO2l7Q68mwVXENvV8MfjPFt7TAFOBEykdnMLspDbdu
+	 Iq2BqLHOY6/Of7LCcCnHh4F+/zV8qlNV9S/X7jLaFpxkzVg32WtweBW7SCbI9/doPh
+	 m2y+oDNf5WcJSxgZq/mvZlkyMtMI8M/+1ActSvr4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730156AbfFRSag (ORCPT
+        id S1730219AbfFRScL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:30:36 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:38538 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729642AbfFRSaf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:30:35 -0400
-Received: by mail-ot1-f68.google.com with SMTP id d17so16413581oth.5
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:30:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=QURH9BlGMn5ivsBiRhffgAaGzwMxDE7JjHw07LOOJ3U=;
-        b=ub6bbFJz3cGKP4DJvWt4cUVqnMPw0tYXYidWbWXz5IxojFBYfjQ8+NZNM0A1parMjg
-         XuFtTjWosbXHYsKY5pvZ5h+rYeB1mauKvpUBx4cgQrogpBjgrJMwYDtS3nIClop4mXlI
-         K1OFS3VCjjxATk1/fHRb3qM66QJ7N04Z7iRdxfnsHDIM6jfupT4uo0uS34WafuE5lwzp
-         FurJGKVyNOq9jawJJg3WekhcWtRoOty1/Qq2q6C4tCl2eJFzHji0sZCBR/nizOARyhOi
-         iudVj04uNutBsNfwMWZMlqzV1RPKKk1YzjBxEEfA/qewB6FXwktk1tkFRmWhTOP2u+7Q
-         /VDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QURH9BlGMn5ivsBiRhffgAaGzwMxDE7JjHw07LOOJ3U=;
-        b=rFBmQrJqrpvQMc/WGhq7h3mnYLXpZh5PFNGAd7ZbD2UlWPxx0NZ7tx6oE8R1bG9xCX
-         EqLRQag7unU1pNbS/C23dT35xHVxSrphhe59uoKqI5cL9R7FxY+xUmjxUvNvVjzBL3an
-         vz+XR84O64sQYLv1iXebnsROrbQPiyKu+chWg2hsjEW1C7UTK6oVEsjjrnGMeHqcDzuE
-         QJ3j1GvHjiGyH7Ikl9WICDIOccGCRcgf/ure3iGLeWCXpfiiEm6CYzKaWfulkS/MA+LJ
-         FVluYxOkUG8Gshd7m1Cp1V7ig95xMkqaQE6NlidsI23qFI1rXRjxlC7SR4vnaA/G5eB+
-         lCbQ==
-X-Gm-Message-State: APjAAAU4y3V2b2iSrIGE9vVeBowsOOwQNuPpECURXr28w6s7zD4N5R30
-        NnFdbxnAqfvunQl/9rWFJ1EmxJNuxW2ewn9T8SmKtA==
-X-Google-Smtp-Source: APXvYqzgZ0IGDjeEZoDLAA85SSKphkLslMWxC7Pq+36Ps83jAVNEXt1pNtzBuZDXh16tYO6i1b9YAg3RzegDs+Djppw=
-X-Received: by 2002:a9d:7a46:: with SMTP id z6mr281269otm.2.1560882635053;
- Tue, 18 Jun 2019 11:30:35 -0700 (PDT)
+        Tue, 18 Jun 2019 14:32:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49448 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729922AbfFRScL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 14:32:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E7E15AF56;
+        Tue, 18 Jun 2019 18:32:09 +0000 (UTC)
+Date:   Tue, 18 Jun 2019 20:32:08 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        linux-api@vger.kernel.org
+Subject: Re: [PATCH] mm, memcg: Report number of memcg caches in slabinfo
+Message-ID: <20190618183208.GK3318@dhcp22.suse.cz>
+References: <20190617142149.5245-1-longman@redhat.com>
+ <20190617143842.GC1492@dhcp22.suse.cz>
+ <9e165eae-e354-04c4-6362-0f80fe819469@redhat.com>
+ <20190618123750.GG3318@dhcp22.suse.cz>
+ <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
 MIME-Version: 1.0
-References: <20190613045903.4922-1-namit@vmware.com> <CAPcyv4hpWg5DWRhazS-ftyghiZP-J_M-7Vd5tiUd5UKONOib8g@mail.gmail.com>
- <9387A285-B768-4B58-B91B-61B70D964E6E@vmware.com>
-In-Reply-To: <9387A285-B768-4B58-B91B-61B70D964E6E@vmware.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 18 Jun 2019 11:30:23 -0700
-Message-ID: <CAPcyv4hstt+0teXPtAq2nwFQaNb9TujgetgWPVMOnYH8JwqGeA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] resource: find_next_iomem_res() improvements
-To:     Nadav Amit <namit@vmware.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dee4dee2-1f4f-a7c9-0014-dca54b991377@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:42 AM Nadav Amit <namit@vmware.com> wrote:
->
-> > On Jun 17, 2019, at 11:44 PM, Dan Williams <dan.j.williams@intel.com> w=
-rote:
-> >
-> > On Wed, Jun 12, 2019 at 9:59 PM Nadav Amit <namit@vmware.com> wrote:
-> >> Running some microbenchmarks on dax keeps showing find_next_iomem_res(=
-)
-> >> as a place in which significant amount of time is spent. It appears th=
-at
-> >> in order to determine the cacheability that is required for the PTE,
-> >> lookup_memtype() is called, and this one traverses the resources list =
-in
-> >> an inefficient manner. This patch-set tries to improve this situation.
-> >
-> > Let's just do this lookup once per device, cache that, and replay it
-> > to modified vmf_insert_* routines that trust the caller to already
-> > know the pgprot_values.
->
-> IIUC, one device can have multiple regions with different characteristics=
-,
-> which require difference cachability.
+On Tue 18-06-19 12:59:24, Waiman Long wrote:
+> On 6/18/19 8:37 AM, Michal Hocko wrote:
+[...]
+> > Is this useful enough to put into slabinfo? Doesn't this sound more like
+> > a debugfs kinda a thing?
+> 
+> I guess it is probably more on the debug side of things. I add it to
+> slabinfo as the data is readily available. It will be much more work if
+> we need to export the data via debugfs.
+> 
+> We are seeing the kmem_cache slab growing continuously overtime when
+> running a container-based workloads. Roman's kmem_cache reparenting
+> patch will hopefully solve a major part of the problem, but we still
+> need a way to confirm that by looking at how many memcg kmem_caches are
+> associated with each root kmem_cache.
 
-Not for pmem. It will always be one common cacheability setting for
-the entirety of persistent memory.
+I am not disputing usefulness. Dead memcgs are showing up as a problem
+for a longer time and having a more debugging information is definitely
+useful. I am just not really sure that /proc/slabinfo is the proper
+vehicle for that information. It might be just easier to stick it there
+but that is not the best justification for adding something we will have
+to maintain for ever. Not to mention that the number of dead memcgs
+might not be enough to debug further when we can easily end up needing
+to provide more in something less "carved in stone" kinda interface like
+debugfs.
 
-> Apparently, that is the reason there
-> is a tree of resources. Please be more specific about where you want to
-> cache it, please.
-
-The reason for lookup_memtype() was to try to prevent mixed
-cacheability settings of pages across different processes . The
-mapping type for pmem/dax is established by one of:
-
-drivers/nvdimm/pmem.c:413:              addr =3D
-devm_memremap_pages(dev, &pmem->pgmap);
-drivers/nvdimm/pmem.c:425:              addr =3D
-devm_memremap_pages(dev, &pmem->pgmap);
-drivers/nvdimm/pmem.c:432:              addr =3D devm_memremap(dev,
-pmem->phys_addr,
-drivers/nvdimm/pmem.c-433-                              pmem->size,
-ARCH_MEMREMAP_PMEM);
-
-...and is constant for the life of the device and all subsequent mappings.
-
-> Perhaps you want to cache the cachability-mode in vma->vm_page_prot (whic=
-h I
-> see being done in quite a few cases), but I don=E2=80=99t know the code w=
-ell enough
-> to be certain that every vma should have a single protection and that it
-> should not change afterwards.
-
-No, I'm thinking this would naturally fit as a property hanging off a
-'struct dax_device', and then create a version of vmf_insert_mixed()
-and vmf_insert_pfn_pmd() that bypass track_pfn_insert() to insert that
-saved value.
+-- 
+Michal Hocko
+SUSE Labs
