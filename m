@@ -2,199 +2,214 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C49EAC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:19:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEE9BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF2920873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:19:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PUXgpcZP"
+	by mail.kernel.org (Postfix) with ESMTP id A6793206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 20:23:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730598AbfFRUS7 (ORCPT
+        id S1730609AbfFRUW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 16:18:59 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38654 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730176AbfFRUS7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 16:18:59 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so4557084wmj.3;
-        Tue, 18 Jun 2019 13:18:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=LTMdBP8eCUfHjffwbb75FXDn3anqE4Gx9Xs6BmZvRK4=;
-        b=PUXgpcZPRsO9lRHA4KBsCleQ6lOorgPUrU1TbIh57xC/sGQKKDDOHjf1Og4r0T8PS3
-         4FfSGLxiKCQCnLWeOyz0+c86/6FMTGN15JmfgeTESNaDSLbgZ7F5FZi1kzI3ajLKLtw2
-         DEyItfEeTzojaeEGTTVLxf1UtJ6iOR2DuaoRx6Beigh51xKc0IbKjvE/GNRtuHEzTDDC
-         A3bA60KzjBJfAv4iQ2ydEp9Qs4ofjbiBxumAskwSn4HOSQbGjH0h11WHc3v1AFTsd368
-         PKTIX8FhEsJ3rqzXoy+heHkSsVjcRQAQV0nPENg3+euHl3apWsHwM/aJ99Wlf5fM5Fj2
-         bv3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=LTMdBP8eCUfHjffwbb75FXDn3anqE4Gx9Xs6BmZvRK4=;
-        b=cyO3S1dxdBfUd14lbNYHSGAGMXcZVafS3YswxdV+6Jw/uOgzHH+ABDjFF9mVZ7gKJq
-         qvUcfSUylg/VzYwKIVj/Dcerb625xRgxr/Dv+qs3VmxAtVBvTc5xUVPlj8pgnapKB/mA
-         oQ7fu6yX2+Zo9zdnE/3YvjYG1p12yvyE5XI3xn78PxB8PqkRC5wxjKTOOVpUhzdxWliV
-         4VJoU7+oB5968aizxf/qJpgQu8DrXaFEvNyeeZdBZn2kKy2TOP46/unf6NL2uOZ19oPi
-         Ak2Pt7clpiCDTP7HK/PCV6wNxtQ8RROzltDaifakQy5SByLbcE89VTM/4sOb174xvEYV
-         ygLw==
-X-Gm-Message-State: APjAAAXJIackY6NCmruS2hO7EKa+NbOHk671nTgpKz/npocKJ1aOz1QV
-        DsY2PsvOyBLD3FGTw+tKRjmewFtpEemURGE4EVQ=
-X-Google-Smtp-Source: APXvYqz1tLKUdFmkDYrn9GXuqjoehYxC5kr689Ke/bt0PzSYLe7IGleSGeQWVzCscTngOGlquK82tRYJAViCEDOCqHg=
-X-Received: by 2002:a7b:c051:: with SMTP id u17mr3115442wmc.25.1560889136270;
- Tue, 18 Jun 2019 13:18:56 -0700 (PDT)
+        Tue, 18 Jun 2019 16:22:59 -0400
+Received: from mga09.intel.com ([134.134.136.24]:12814 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730571AbfFRUW5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 16:22:57 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 13:22:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
+   d="asl'?hex'?scan'208";a="357972294"
+Received: from orsmsx109.amr.corp.intel.com ([10.22.240.7])
+  by fmsmga005.fm.intel.com with ESMTP; 18 Jun 2019 13:22:55 -0700
+Received: from orsmsx157.amr.corp.intel.com (10.22.240.23) by
+ ORSMSX109.amr.corp.intel.com (10.22.240.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 18 Jun 2019 13:22:55 -0700
+Received: from orsmsx110.amr.corp.intel.com ([169.254.10.92]) by
+ ORSMSX157.amr.corp.intel.com ([169.254.9.246]) with mapi id 14.03.0439.000;
+ Tue, 18 Jun 2019 13:22:55 -0700
+From:   "Moore, Robert" <robert.moore@intel.com>
+To:     Nikolaus Voss <nv@vosn.de>
+CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        "Schmauss, Erik" <erik.schmauss@intel.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Topic: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
+ loads
+Thread-Index: AQHVIPn/qqDB5Bv4z0aSsleXlAnDw6abVhaAgAADpwD///G0sIAEkokAgACES6CAAT+dAIAANdnAgAALWnA=
+Date:   Tue, 18 Jun 2019 20:22:54 +0000
+Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066@ORSMSX110.amr.corp.intel.com>
+References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
+ <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
+ <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
+ <94F2FBAB4432B54E8AACC7DFDE6C92E3B95F9EC6@ORSMSX110.amr.corp.intel.com>
+ <alpine.DEB.2.20.1906181030240.24846@fox.voss.local> 
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: yes
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYWYzNDM4MzQtOGVmNS00ZTRiLWJkZTktZDExNTM1YTg5ZDk3IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoialA3Y1d2Z3ZkMnZ2VUpzaXc3aDBTaWxGMFFmdEE4QUdvRCtYSHUrWWozN0g3cnRLckZMc1hwbEdXZkdmditHZiJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.140]
+Content-Type: multipart/mixed;
+        boundary="_004_94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066ORSMSX110amrcor_"
 MIME-Version: 1.0
-References: <20190604123257.2920-1-daniel.baluta@nxp.com> <20190604123257.2920-3-daniel.baluta@nxp.com>
-In-Reply-To: <20190604123257.2920-3-daniel.baluta@nxp.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Tue, 18 Jun 2019 23:18:44 +0300
-Message-ID: <CAEnQRZDhh-NiYhS6=t=URqA0Yn4=HdL2xXCci_AmqdUgU=8kkw@mail.gmail.com>
-Subject: Re: [PATCH v4 2/2] arm64: dts: imx8mm-evk: Enable audio codec wm8524
-To:     Daniel Baluta <daniel.baluta@nxp.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "S.j. Wang" <shengjiu.wang@nxp.com>,
-        Devicetree List <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Marco Felsch <m.felsch@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Shawn,
+--_004_94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066ORSMSX110amrcor_
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 
-Care to have a look at this? git send-email should correctly work now.
+It looks to me that the package objects are being initialized properly alre=
+ady, unless I'm missing something. Please check the examples below and in t=
+he attached files.
 
-Let me know if you want me to resend
+Attached is a small test case that dynamically loads an SSDT which contains=
+ a package object which in turn contains references to other objects.
 
-On Tue, Jun 4, 2019 at 3:34 PM <daniel.baluta@nxp.com> wrote:
->
-> From: Daniel Baluta <daniel.baluta@nxp.com>
->
-> i.MX8MM has one wm8524 audio codec connected with
-> SAI3 digital audio interface.
->
-> This patch uses simple-card machine driver in order
-> to enable wm8524 codec.
->
-> We need to set:
->         * SAI3 pinctrl configuration
->         * codec reset gpio pinctrl configuration
->         * clock hierarchy
->         * codec node
->         * simple-card configuration
->
-> Signed-off-by: Daniel Baluta <daniel.baluta@nxp.com>
-> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mm-evk.dts | 55 ++++++++++++++++++++
->  1 file changed, 55 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> index f8ff0a4b8961..7d2ec0326659 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> +++ b/arch/arm64/boot/dts/freescale/imx8mm-evk.dts
-> @@ -37,6 +37,37 @@
->                 gpio = <&gpio2 19 GPIO_ACTIVE_HIGH>;
->                 enable-active-high;
->         };
-> +
-> +       wm8524: audio-codec {
-> +               #sound-dai-cells = <0>;
-> +               compatible = "wlf,wm8524";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_gpio_wlf>;
-> +               wlf,mute-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
-> +       };
-> +
-> +       sound-wm8524 {
-> +               compatible = "simple-audio-card";
-> +               simple-audio-card,name = "wm8524-audio";
-> +               simple-audio-card,format = "i2s";
-> +               simple-audio-card,frame-master = <&cpudai>;
-> +               simple-audio-card,bitclock-master = <&cpudai>;
-> +               simple-audio-card,widgets =
-> +                       "Line", "Left Line Out Jack",
-> +                       "Line", "Right Line Out Jack";
-> +               simple-audio-card,routing =
-> +                       "Left Line Out Jack", "LINEVOUTL",
-> +                       "Right Line Out Jack", "LINEVOUTR";
-> +
-> +               cpudai: simple-audio-card,cpu {
-> +                       sound-dai = <&sai3>;
-> +               };
-> +
-> +               simple-audio-card,codec {
-> +                       sound-dai = <&wm8524>;
-> +                       clocks = <&clk IMX8MM_CLK_SAI3_ROOT>;
-> +               };
-> +       };
->  };
->
->  &A53_0 {
-> @@ -65,6 +96,15 @@
->         };
->  };
->
-> +&sai3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_sai3>;
-> +       assigned-clocks = <&clk IMX8MM_CLK_SAI3>;
-> +       assigned-clock-parents = <&clk IMX8MM_AUDIO_PLL1_OUT>;
-> +       assigned-clock-rates = <24576000>;
-> +       status = "okay";
-> +};
-> +
->  &uart2 { /* console */
->         pinctrl-names = "default";
->         pinctrl-0 = <&pinctrl_uart2>;
-> @@ -242,6 +282,12 @@
->                 >;
->         };
->
-> +       pinctrl_gpio_wlf: gpiowlfgrp {
-> +               fsl,pins = <
-> +                       MX8MM_IOMUXC_I2C4_SDA_GPIO5_IO21        0xd6
-> +               >;
-> +       };
-> +
->         pinctrl_i2c1: i2c1grp {
->                 fsl,pins = <
->                         MX8MM_IOMUXC_I2C1_SCL_I2C1_SCL                  0x400001c3
-> @@ -261,6 +307,15 @@
->                 >;
->         };
->
-> +       pinctrl_sai3: sai3grp {
-> +               fsl,pins = <
-> +                       MX8MM_IOMUXC_SAI3_TXFS_SAI3_TX_SYNC     0xd6
-> +                       MX8MM_IOMUXC_SAI3_TXC_SAI3_TX_BCLK      0xd6
-> +                       MX8MM_IOMUXC_SAI3_MCLK_SAI3_MCLK        0xd6
-> +                       MX8MM_IOMUXC_SAI3_TXD_SAI3_TX_DATA0     0xd6
-> +               >;
-> +       };
-> +
->         pinctrl_uart2: uart2grp {
->                 fsl,pins = <
->                         MX8MM_IOMUXC_UART2_RXD_UART2_DCE_RX     0x140
-> --
-> 2.17.1
->
+
+Main DSDT:
+    Method (LD1)
+    {
+        Load (BUF1, HNDL)      // SSDT is in BUF1
+        Store (HNDL, Debug)
+        Return
+    }  =20
+
+Loaded table:
+    External (DEV1, DeviceObj)
+    Name (PKG1, Package() {
+        1,2, DEV2, DEV1, 4})
+    Device (DEV2) {}
+
+
+AcpiExec Output:
+- ev ld1
+Evaluating \LD1
+ACPI: Dynamic OEM Table Load:
+ACPI: SSDT 0x00000000006DEEB8 000051 (v02 Intel  Load     00000001 INTL 201=
+90509)
+ACPI Exec: Table Event INSTALL, [SSDT] 006DEEB8
+Table [SSDT: Load    ] (id 06) -    5 Objects with   1 Devices,   0 Regions=
+,    1 Methods
+ACPI Exec: Table Event LOAD, [SSDT] 006DEEB8
+ACPI Debug:  Reference  [DdbHandle] Table Index 0x3
+0x7 Outstanding allocations after evaluation of \LD1
+Evaluation of \LD1 returned object 006D2FE8, external buffer length 18
+  [Integer] =3D 0000000000000000
+
+- ev pkg1
+Evaluating \PKG1
+Evaluation of \PKG1 returned object 006D2FE8, external buffer length 90
+  [Package] Contains 5 Elements:
+    [Integer] =3D 0000000000000001
+    [Integer] =3D 0000000000000002
+    [Object Reference] =3D 006DDF88 <Node>            Name DEV2 Device
+    [Object Reference] =3D 006DD608 <Node>            Name DEV1 Device
+    [Integer] =3D 0000000000000004
+
+
+--_004_94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066ORSMSX110amrcor_
+Content-Type: application/octet-stream; name="loadedtable.asl"
+Content-Description: loadedtable.asl
+Content-Disposition: attachment; filename="loadedtable.asl"; size=337;
+	creation-date="Tue, 18 Jun 2019 17:38:39 GMT";
+	modification-date="Tue, 18 Jun 2019 20:17:09 GMT"
+Content-Transfer-Encoding: base64
+
+DQpEZWZpbml0aW9uQmxvY2soDQoJIiIsICAgICAgICAgLy8gT3V0cHV0IGZpbGVuYW1lDQoJIlNT
+RFQiLCAgICAgLy8gU2lnbmF0dXJlDQoJMHgwMiwgICAgICAgLy8gRFNEVCBSZXZpc2lvbg0KCSJJ
+bnRlbCIsICAgIC8vIE9FTUlEDQoJIkR5bmFtaWMiLCAgLy8gVEFCTEUgSUQNCgkweDAwMDAwMDAx
+ICAvLyBPRU0gUmV2aXNpb24NCgkpDQp7DQogICAgRXh0ZXJuYWwgKERFVjEsIERldmljZU9iaikN
+CiAgICBOYW1lIChMMDAxLCAxKQ0KDQogICAgTmFtZSAoUEtHMSwgUGFja2FnZSgpIHsNCiAgICAg
+ICAgMSwyLCBERVYyLCBERVYxLCA0fSkNCg0KICAgIERldmljZSAoREVWMikge30NCn0NCg==
+
+--_004_94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066ORSMSX110amrcor_
+Content-Type: application/octet-stream; name="tableinit.asl"
+Content-Description: tableinit.asl
+Content-Disposition: attachment; filename="tableinit.asl"; size=1296;
+	creation-date="Tue, 18 Jun 2019 17:38:39 GMT";
+	modification-date="Tue, 18 Jun 2019 20:13:38 GMT"
+Content-Transfer-Encoding: base64
+
+DQpEZWZpbml0aW9uQmxvY2soDQoJIiIsICAgICAgICAgLy8gT3V0cHV0IGZpbGVuYW1lDQoJIkRT
+RFQiLCAgICAgLy8gU2lnbmF0dXJlDQoJMHgwMiwgICAgICAgLy8gRFNEVCBSZXZpc2lvbg0KCSJJ
+bnRlbCIsICAgIC8vIE9FTUlEDQoJIkxvYWRUZXN0IiwgLy8gVEFCTEUgSUQNCgkweDAwMDAwMDAx
+ICAvLyBPRU0gUmV2aXNpb24NCgkpDQp7DQoNCiAgICBOYW1lIChBRERSLCAwKQ0KICAgIE5hbWUg
+KEhOREwsIDApDQogICAgRGV2aWNlIChERVYxKSB7fQ0KDQogICAgTmFtZSAoQlVGMSwgQnVmZmVy
+KCkNCiAgICB7DQogICAgICAgIDB4NTMsMHg1MywweDQ0LDB4NTQsMHg1MSwweDAwLDB4MDAsMHgw
+MCwgIC8qIDAwMDAwMDAwICAgICJTU0RUUS4uLiIgKi8NCiAgICAgICAgMHgwMiwweEE4LDB4NDks
+MHg2RSwweDc0LDB4NjUsMHg2QywweDAwLCAgLyogMDAwMDAwMDggICAgIi4uSW50ZWwuIiAqLw0K
+ICAgICAgICAweDQ0LDB4NzksMHg2RSwweDYxLDB4NkQsMHg2OSwweDYzLDB4MDAsICAvKiAwMDAw
+MDAxMCAgICAiRHluYW1pYy4iICovDQogICAgICAgIDB4MDEsMHgwMCwweDAwLDB4MDAsMHg0OSww
+eDRFLDB4NTQsMHg0QywgIC8qIDAwMDAwMDE4ICAgICIuLi4uSU5UTCIgKi8NCiAgICAgICAgMHgw
+OSwweDA1LDB4MTksMHgyMCwweEEwLDB4MEEsMHgwMCwweDE1LCAgLyogMDAwMDAwMjAgICAgIi4u
+LiAuLi4uIiAqLw0KICAgICAgICAweDVDLDB4NDQsMHg0NSwweDU2LDB4MzEsMHgwNiwweDAwLDB4
+MDgsICAvKiAwMDAwMDAyOCAgICAiXERFVjEuLi4iICovDQogICAgICAgIDB4NEMsMHgzMCwweDMw
+LDB4MzEsMHgwMSwweDA4LDB4NTAsMHg0QiwgIC8qIDAwMDAwMDMwICAgICJMMDAxLi5QSyIgKi8N
+CiAgICAgICAgMHg0NywweDMxLDB4MTIsMHgwRiwweDA1LDB4MDEsMHgwQSwweDAyLCAgLyogMDAw
+MDAwMzggICAgIkcxLi4uLi4uIiAqLw0KICAgICAgICAweDQ0LDB4NDUsMHg1NiwweDMyLDB4NDQs
+MHg0NSwweDU2LDB4MzEsICAvKiAwMDAwMDA0MCAgICAiREVWMkRFVjEiICovDQogICAgICAgIDB4
+MEEsMHgwNCwweDVCLDB4ODIsMHgwNSwweDQ0LDB4NDUsMHg1NiwgIC8qIDAwMDAwMDQ4ICAgICIu
+LlsuLkRFViIgKi8NCiAgICAgICAgMHgzMiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgLyogMDAwMDAwNTAgICAgIjIiICAgICAgICAqLw0KICAgIH0pDQoNCiAgICBNZXRob2Qg
+KExEMSkNCiAgICB7DQogICAgICAgIExvYWQgKEJVRjEsIEhOREwpDQogICAgICAgIFN0b3JlIChI
+TkRMLCBEZWJ1ZykNCiAgICAgICAgUmV0dXJuDQogICAgfSAgIA0KfQ0K
+
+--_004_94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066ORSMSX110amrcor_
+Content-Type: application/octet-stream; name="loadedtable.hex"
+Content-Description: loadedtable.hex
+Content-Disposition: attachment; filename="loadedtable.hex"; size=1241;
+	creation-date="Tue, 18 Jun 2019 19:39:26 GMT";
+	modification-date="Tue, 18 Jun 2019 20:12:53 GMT"
+Content-Transfer-Encoding: base64
+
+LyoNCiAqIA0KICogSW50ZWwgQUNQSSBDb21wb25lbnQgQXJjaGl0ZWN0dXJlDQogKiBBU0wrIE9w
+dGltaXppbmcgQ29tcGlsZXIvRGlzYXNzZW1ibGVyIHZlcnNpb24gMjAxOTA1MDkgKDMyLWJpdCB2
+ZXJzaW9uKQ0KICogQ29weXJpZ2h0IChjKSAyMDAwIC0gMjAxOSBJbnRlbCBDb3Jwb3JhdGlvbg0K
+ICogDQogKiBDb21waWxhdGlvbiBvZiAibG9hZGVkdGFibGUuYXNsIiAtIFR1ZSBKdW4gMTggMTM6
+MTI6NTMgMjAxOQ0KICogDQogKiBBU0wgc291cmNlIGNvZGUgb3V0cHV0DQogKiBBTUwgY29kZSBi
+bG9jayBjb250YWlucyAweDUxIGJ5dGVzDQogKg0KICovDQogICAgTmFtZSAoQlVGMSwgQnVmZmVy
+KCkNCiAgICB7DQogICAgICAgIDB4NTMsMHg1MywweDQ0LDB4NTQsMHg1MSwweDAwLDB4MDAsMHgw
+MCwgIC8qIDAwMDAwMDAwICAgICJTU0RUUS4uLiIgKi8NCiAgICAgICAgMHgwMiwweEE4LDB4NDks
+MHg2RSwweDc0LDB4NjUsMHg2QywweDAwLCAgLyogMDAwMDAwMDggICAgIi4uSW50ZWwuIiAqLw0K
+ICAgICAgICAweDQ0LDB4NzksMHg2RSwweDYxLDB4NkQsMHg2OSwweDYzLDB4MDAsICAvKiAwMDAw
+MDAxMCAgICAiRHluYW1pYy4iICovDQogICAgICAgIDB4MDEsMHgwMCwweDAwLDB4MDAsMHg0OSww
+eDRFLDB4NTQsMHg0QywgIC8qIDAwMDAwMDE4ICAgICIuLi4uSU5UTCIgKi8NCiAgICAgICAgMHgw
+OSwweDA1LDB4MTksMHgyMCwweEEwLDB4MEEsMHgwMCwweDE1LCAgLyogMDAwMDAwMjAgICAgIi4u
+LiAuLi4uIiAqLw0KICAgICAgICAweDVDLDB4NDQsMHg0NSwweDU2LDB4MzEsMHgwNiwweDAwLDB4
+MDgsICAvKiAwMDAwMDAyOCAgICAiXERFVjEuLi4iICovDQogICAgICAgIDB4NEMsMHgzMCwweDMw
+LDB4MzEsMHgwMSwweDA4LDB4NTAsMHg0QiwgIC8qIDAwMDAwMDMwICAgICJMMDAxLi5QSyIgKi8N
+CiAgICAgICAgMHg0NywweDMxLDB4MTIsMHgwRiwweDA1LDB4MDEsMHgwQSwweDAyLCAgLyogMDAw
+MDAwMzggICAgIkcxLi4uLi4uIiAqLw0KICAgICAgICAweDQ0LDB4NDUsMHg1NiwweDMyLDB4NDQs
+MHg0NSwweDU2LDB4MzEsICAvKiAwMDAwMDA0MCAgICAiREVWMkRFVjEiICovDQogICAgICAgIDB4
+MEEsMHgwNCwweDVCLDB4ODIsMHgwNSwweDQ0LDB4NDUsMHg1NiwgIC8qIDAwMDAwMDQ4ICAgICIu
+LlsuLkRFViIgKi8NCiAgICAgICAgMHgzMiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgLyogMDAwMDAwNTAgICAgIjIiICAgICAgICAqLw0KICAgIH0pDQo=
+
+--_004_94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB066ORSMSX110amrcor_--
