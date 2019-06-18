@@ -2,109 +2,113 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B322C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD326C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:03:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E90EB21530
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C65721479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:03:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WAeGOWzC"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="HZFhb20x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730516AbfFRTAM (ORCPT
+        id S1730436AbfFRTDA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:00:12 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33743 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730231AbfFRTAM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:00:12 -0400
-Received: by mail-pl1-f195.google.com with SMTP id c14so6108564plo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 12:00:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eT7kK3k/DGGgofaFnIiFVb/h7MwsbABIk+ml7U8rfOc=;
-        b=WAeGOWzC/62xUfoOrp0D84mE+4Ea8G0metTMnVChRZviACt9qPPNHjs9o73B9l8F6c
-         q6gSNwFiLPrUgA6t9NsiTiBumEFKBf7i4nt7MhMIMRf32S9puHYXkIdiEjo9G5pMDTU0
-         WTJO7Ezk4+qiiuAm7pMPdk4iBrwJ9gQgv95T+2qdiZxPiI2Pv6+uJD0ge3vfqLYJkM9A
-         7w13l7IwtRIMisZFZKyoM9pvHuCDu/+uaOxTNoKs+/P6itZ3Gu6/HM6f7YWKR95PtfGC
-         cFDJtaqEeq4GXHpw5+YweZjxLEinwiR/k+jvTsfeCb7/w50msmE+6y8h77qr9X4Dsb9f
-         ltZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eT7kK3k/DGGgofaFnIiFVb/h7MwsbABIk+ml7U8rfOc=;
-        b=Hnle9/y0FH+VQu5RAwUHBRseGnxjdGAf/9TXQuJOUgi0qA/VAPkQOkp3KCBy4q/7kh
-         0YnnftZ5ABAcAn160YYGES0LLJu8rHFtWO7h/X1hHWBbSsUppE+V/4SmrzNmPjEUwz8q
-         lZXJKnCcCZaANDWjZh5dR+1+jsd5C4P9OJseuHXqjwOnY/+QRASom87y2nId4rPJ7x3F
-         sVrLlPKtHbR1F2dDo5B0WaS2/vpzMClQJ8B15S3VVG/C3K4fHtpV3yHXHzRWou0U4akQ
-         h+rHRktG34zqZFWSpJsZYMn96/Z7sWjpFAzRdze6ORcQGZEtbuHaBAAfGNjMDBPjczIo
-         ztfQ==
-X-Gm-Message-State: APjAAAWuWMGlzPnKnMGLUop8Q7b4uTpPxVH2A/dhh1M1TR0NKYmT+KzO
-        GOgzObdNF4xmXy6Z1q5ZTMOvxVYMr925OBNx3Q2r0A==
-X-Google-Smtp-Source: APXvYqxtkgfrCMyVOFWD+nhtS1s2hx+NJljuwLvz8oM33DKsEoji2grMTvg4SptxAw7eGcQq4jI4lrottWmX2QHp9Ds=
-X-Received: by 2002:a17:902:b944:: with SMTP id h4mr112133301pls.179.1560884411214;
- Tue, 18 Jun 2019 12:00:11 -0700 (PDT)
+        Tue, 18 Jun 2019 15:03:00 -0400
+Received: from mail-eopbgr150048.outbound.protection.outlook.com ([40.107.15.48]:3905
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727386AbfFRTDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:03:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EoXDLsFrsdn0r7ejsSlX5l7GKcc7/TCPz/18AQWJ4Go=;
+ b=HZFhb20x4m9HxUBx1TJT308CrR+VjRsZOjuS4L5/3kJbecDNC+AAa0aAd7AKpwBC4kYJ3kdf0TdMxU7xhOExogVEedHupCutnsR976yZn+8bkr819hIUllR9P1bY69XBgobsNL0tDnaWAYsKMpr/ude/4T976PybRZgKGughLMQ=
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com (10.172.227.7) by
+ DB6PR0501MB2695.eurprd05.prod.outlook.com (10.172.225.140) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Tue, 18 Jun 2019 19:02:55 +0000
+Received: from DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::a901:6951:59de:3278]) by DB6PR0501MB2759.eurprd05.prod.outlook.com
+ ([fe80::a901:6951:59de:3278%2]) with mapi id 15.20.1987.014; Tue, 18 Jun 2019
+ 19:02:55 +0000
+From:   Saeed Mahameed <saeedm@mellanox.com>
+To:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "leon@kernel.org" <leon@kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][next] net/mlx5: add missing void argument to function
+ mlx5_devlink_alloc
+Thread-Topic: [PATCH][next] net/mlx5: add missing void argument to function
+ mlx5_devlink_alloc
+Thread-Index: AQHVJeigp+yH7eURB0ynX/ql1MMSgKahxQoA
+Date:   Tue, 18 Jun 2019 19:02:54 +0000
+Message-ID: <cbf35c6557791aae0aec2eb3cb1b66cc5030ec9f.camel@mellanox.com>
+References: <20190618151510.18672-1-colin.king@canonical.com>
+In-Reply-To: <20190618151510.18672-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=saeedm@mellanox.com; 
+x-originating-ip: [209.116.155.178]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9c454dc5-965c-45d0-a3e1-08d6f41f920f
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DB6PR0501MB2695;
+x-ms-traffictypediagnostic: DB6PR0501MB2695:
+x-microsoft-antispam-prvs: <DB6PR0501MB26953F225197F98649DE7AC5BEEA0@DB6PR0501MB2695.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3044;
+x-forefront-prvs: 007271867D
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(136003)(346002)(376002)(366004)(396003)(199004)(189003)(6116002)(3846002)(118296001)(6246003)(11346002)(2201001)(26005)(5660300002)(86362001)(6486002)(8676002)(54906003)(305945005)(256004)(99286004)(229853002)(14444005)(2906002)(71200400001)(7736002)(316002)(4326008)(53936002)(6436002)(76176011)(64756008)(66556008)(8936002)(91956017)(66476007)(66946007)(76116006)(66446008)(73956011)(6512007)(2616005)(4744005)(14454004)(81166006)(71190400001)(478600001)(6506007)(81156014)(66066001)(36756003)(102836004)(58126008)(68736007)(486006)(476003)(186003)(2501003)(110136005)(446003)(25786009);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2695;H:DB6PR0501MB2759.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: tQHUbyUzwKAS6YmQJnOSf66MBoNe8xFaOMewaz5fVi4uWjOVWjcMiRWNerggmI6rPfNgPlw6Dzh6VxToBMwN2cxxOzPVMKjqdJdRP0DvWuG+ky5iEGdo/QgcwmrWkaDWMDi3KSDimYHI7ETK7eA8XXu1+qw+uWiVdFOdz8heH40/ptxvifvSgKTCNYGrVSE8QBbXK+95/LRODeUYGyRTdbB2TDfN9wcn97ptzK1kbpAUFnjDtinB70ZaL52Wi6v7X1U4zLNjeU9LDKFt2LCGRjUpi4zesqgM+NSWTDtxrgqp+L6eEKmX8CJ2GGaCShOWWhBCmnr5zxY43ZvJAQ5FsTXs5MV0oT+x5r4WIXqw5yjhtCAJ/60UhenDctMOB/bZSesbThjWOoIqRMl3g81epbRYu7fbNpvcM3gwsdlDZkY=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <7431CCDFE395F34992A12CBA4DCCED0E@eurprd05.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20190618083900.78eb88bd@bootlin.com> <20190618160910.62922-1-nhuck@google.com>
-In-Reply-To: <20190618160910.62922-1-nhuck@google.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 18 Jun 2019 12:00:00 -0700
-Message-ID: <CAKwvOdnoMv_Fkq02=F+RM8fRi0i4ycUxPe+VLdjHcDvy2DKo-A@mail.gmail.com>
-Subject: Re: [PATCH] net: mvpp2: cls: Add pmap to fs dump
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        maxime.chevallier@bootlin.com, netdev@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9c454dc5-965c-45d0-a3e1-08d6f41f920f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Jun 2019 19:02:54.9734
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: saeedm@mellanox.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2695
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 9:09 AM 'Nathan Huckleberry' via Clang Built
-Linux <clang-built-linux@googlegroups.com> wrote:
->
-> There was an unused variable 'mvpp2_dbgfs_prs_pmap_fops'
-> Added a usage consistent with other fops to dump pmap
-> to userspace.
->
-> Cc: clang-built-linux@googlegroups.com
-> Link: https://github.com/ClangBuiltLinux/linux/issues/529
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-
-Looks good to me based on Maxime's suggestion.  Thanks for seeking
-clarification and following up on the feedback.
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
-Nathan, you should use Suggested-by tags (liberally, IMO) when your
-patch is based on feedback from others, in this case:
-Suggested-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-
-> ---
->  drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-> index 0ee39ea47b6b..55947bc63cfd 100644
-> --- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-> +++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-> @@ -566,6 +566,9 @@ static int mvpp2_dbgfs_prs_entry_init(struct dentry *parent,
->         debugfs_create_file("hits", 0444, prs_entry_dir, entry,
->                             &mvpp2_dbgfs_prs_hits_fops);
->
-> +       ddebugfs_create_file("pmap", 0444, prs_entry_dir, entry,
-> +                            &mvpp2_dbgfs_prs_pmap_fops);
-> +
-
--- 
-Thanks,
-~Nick Desaulniers
+T24gVHVlLCAyMDE5LTA2LTE4IGF0IDE2OjE1ICswMTAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBG
+cm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gRnVu
+Y3Rpb24gbWx4NV9kZXZsaW5rX2FsbG9jIGlzIG1pc3NpbmcgYSB2b2lkIGFyZ3VtZW50LCBhZGQg
+aXQNCj4gdG8gY2xlYW4gdXAgdGhlIG5vbi1BTlNJIGZ1bmN0aW9uIGRlY2xhcmF0aW9uLg0KPiAN
+Cj4gU2lnbmVkLW9mZi1ieTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNv
+bT4NCj4gLS0tDQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZGV2
+bGluay5jIHwgMiArLQ0KPiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0
+aW9uKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gv
+bWx4NS9jb3JlL2RldmxpbmsuYw0KPiBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21s
+eDUvY29yZS9kZXZsaW5rLmMNCj4gaW5kZXggZWQ0MjAyZTg4M2YwLi4xNTMzYzY1NzIyMGIgMTAw
+NjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9kZXZs
+aW5rLmMNCj4gKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2Rl
+dmxpbmsuYw0KPiBAQCAtMzcsNyArMzcsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGRldmxpbmtf
+b3BzIG1seDVfZGV2bGlua19vcHMgPQ0KPiB7DQo+ICAJLmZsYXNoX3VwZGF0ZSA9IG1seDVfZGV2
+bGlua19mbGFzaF91cGRhdGUsDQo+ICB9Ow0KPiAgDQo+IC1zdHJ1Y3QgZGV2bGluayAqbWx4NV9k
+ZXZsaW5rX2FsbG9jKCkNCj4gK3N0cnVjdCBkZXZsaW5rICptbHg1X2RldmxpbmtfYWxsb2Modm9p
+ZCkNCj4gIHsNCj4gIAlyZXR1cm4gZGV2bGlua19hbGxvYygmbWx4NV9kZXZsaW5rX29wcywgc2l6
+ZW9mKHN0cnVjdA0KPiBtbHg1X2NvcmVfZGV2KSk7DQo+ICB9DQoNCkFja2VkLWJ5OiBTYWVlZCBN
+YWhhbWVlZCA8c2FlZWRtQG1lbGxhbm94LmNvbT4NCg0KRGF2ZSwgdGhpcyBvbmUgY2FuIGdvIHRv
+IG5ldC1uZXh0Lg0KDQpUaGFua3MsDQpTYWVlZC4NCg==
