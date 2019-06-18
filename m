@@ -2,95 +2,131 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59BB5C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:35:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4E0EC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D5F206B7
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:35:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pq48uxiM"
+	by mail.kernel.org (Postfix) with ESMTP id A48BC206B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:35:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729517AbfFRJfD (ORCPT
+        id S1729453AbfFRJfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:35:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:58150 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729220AbfFRJfD (ORCPT
+        Tue, 18 Jun 2019 05:35:53 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:43819 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729113AbfFRJfw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:35:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dQlwP6TgFV6Zw9LFlDihP87ElJ/8VMPCPxi7yCL1r8w=; b=pq48uxiMn5mlvKmYy9OauMu6A
-        cnGCav0BYetNzSYqRXXzGxeeRhiersbKStR0+QTN1W9zcjg84ZfzbTXEr3O20qjJHj9VGy39ltutB
-        D/KdacOHXvzJM+9MInfNw5AYy3ijOFBCA6yfuYThdyoEmUfUcQfUNd6WhMF0F330mqd06UqsS9JGU
-        8EVyFN7FDYWKgwAI1mY4wBzTLpWkMsITIPARSmd+Lf437jge4ctk+5FbcfPR4Jj2FyPpvfS3LJ4hU
-        f/4FbbP3OGz6g172rV7AW0XkvUY9TJV2aizGSPNEFLaKPykKbsysdag5janafdDCe8B2ByjVasYll
-        stMl0nGSA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdAVz-0004g7-K0; Tue, 18 Jun 2019 09:34:55 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7B3AE20A410E1; Tue, 18 Jun 2019 11:34:53 +0200 (CEST)
-Date:   Tue, 18 Jun 2019 11:34:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Valentin Schneider <valentin.schneider@arm.com>
-Cc:     Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk,
-        gregkh@linuxfoundation.org, rafael@kernel.org,
-        viresh.kumar@linaro.org, mingo@redhat.com, quentin.perret@arm.com
-Subject: Re: [PATCH] sched/topology: remove unused sd param from
- arch_scale_cpu_capacity()
-Message-ID: <20190618093453.GN3436@hirez.programming.kicks-ass.net>
-References: <1560783617-5827-1-git-send-email-vincent.guittot@linaro.org>
- <c8030f30-0899-070b-df3c-3839ec7e1909@arm.com>
+        Tue, 18 Jun 2019 05:35:52 -0400
+Received: from [192.168.1.110] ([95.114.66.109]) by mrelayeu.kundenserver.de
+ (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MALql-1hkZRC0XyV-00Bwv7; Tue, 18 Jun 2019 11:35:37 +0200
+Subject: Re: drivers: Inline code in devm_platform_ioremap_resource() from two
+ functions
+To:     Markus Elfring <Markus.Elfring@web.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc:     cocci@systeme.lip6.fr, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Himanshu Jha <himanshujha199640@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>
+References: <20190406061112.31620-1-himanshujha199640@gmail.com>
+ <f09006a3-691c-382a-23b8-8e9ff5b4a5f1@web.de>
+ <alpine.DEB.2.21.1906081925090.2543@hadrien>
+ <7b4fe770-dadd-80ba-2ba4-0f2bc90984ef@web.de>
+ <f573b2d3-11d0-92b5-f8ab-4c4b6493e152@metux.net>
+ <032e347f-e575-c89c-fa62-473d52232735@web.de>
+ <910a5806-9a08-adf4-4fba-d5ec2f5807ff@metux.net>
+ <efc38197-f846-142d-fbaf-93327c2669c9@web.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <714a38fe-a733-7264-bb06-d94bd58a245a@metux.net>
+Date:   Tue, 18 Jun 2019 11:35:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c8030f30-0899-070b-df3c-3839ec7e1909@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <efc38197-f846-142d-fbaf-93327c2669c9@web.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:QGOge7wGLS9wYOerll1EkGFgYhDGxxcXgNUpFw4ODbRJSI2IvQu
+ EgNQDoUgqQPHmht+B4xha2yiDDCKlybReidxeoCxJ+rwoIdIkF5oOJWDdQN/PLJCYmtwsdY
+ +k18JXBNva47Mqa/rQYAaiK0ltc20AueHqyQs7YbJfXMYwzLgf15a5PbvYUgkskfDAZUZwZ
+ fKheijEjcUDc9U6yv4onQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:D189xkVVdIU=:GM0TjioBmaopMMZ9spYJwQ
+ /GhJviRrSe4I/q2z8eiefDW9PTfL5f4N4KVWWRcVEqHG9mLc0DA99q6Y0ju2o0fUoCberydJX
+ 4BC4/bu3rJdvu/cP47IU4PTARHfFiUK45y6i7RwQYXgVZn9JoDM3W+XkPI5iPEPEATyCJTr48
+ HOHBKoIO3s8E1tB31GqfjnFmIvI+sfnyNErcJfWbPyz+lzk6bhrmAV9tWvWTElDitBNyMtcrE
+ /nw5ALsfbLExblh5UGhOHQ2uC6108yz0eUy7apSIDNa5rgX00meSVXZPR78zyD0uggmsY5ucD
+ VkoGTI2PltiXzWFHICPdnK3bkGqXL5Z0Vce6aLH6Vc9Zea+25eUhtIIP6A94NQTTFE8XAronH
+ WfI2YM+T6hbasa7Gmv/S412YZJot2Tgwz+Q2lwX1qIcdhTjVTbyjlDvjRWHQdsIhR2mICxgJE
+ Bw8X/o9kRGQaN3X9JC1CIYEHsuPZyPQnjYBH/4a80KApu/eVGNztSLllSfiGIX3mNFxnfKHOd
+ DHt36lWR3wnKxVUDh7DdQl/87N9x2X2O9Q6+JJ1QLTULsRtXOlRhT+TwSNhG2Ub0GGtTkZa3E
+ jyHeGe3ZBj+bR7qPT9nMsJtLr6/o3t26k1xbdQYYSowkC7oC+qFpz3cPNUwBIaukQsuKpSVoE
+ a6OxgLI13fyHWNRDnPsF+A7xdgMCyygZ+k/QSX3mWeb+TTNxLPtRvZA1YFE1kver6JbACU4If
+ wxOR78EAJ7zu1ExTKYfWAm57352UHhTpWexv9GOB2cuxephEghAJ7PqnbnA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 06:07:29PM +0100, Valentin Schneider wrote:
-> Hi,
+On 18.06.19 07:37, Markus Elfring wrote:
+>>> Two function calls were combined in this function implementation.
+>>> Inline corresponding code so that extra error checks can be avoided here.
+>>
+>> What exactly is the purpose of this ?
 > 
-> On 17/06/2019 16:00, Vincent Guittot wrote:
-> > struct sched_domain *sd parameter is not used anymore in
-> > arch_scale_cpu_capacity() so we can remove it.
-> > 
-> 
-> I think it can't hurt to give a bit of background. The *sd parameter used
-> to be there for smt_gain, which got snipped out by:
-> 
->   765d0af19f5f ("sched/topology: Remove the ::smt_gain field from 'struct sched_domain'")
-> 
-> I'd appreciate having that commit mentioned in the log.
-> 
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
-> 
-> Other than that, the changes look fine to me.
-> 
-> Reviewed-by: Valentin Schneider <valentin.schneider@arm.com>
+> I suggest to take another look at the need and relevance of involved
+> error checks in the discussed function combination.
 
-The commit log now reads:
+Sorry, don't have the time for guessing and trying to reproduce your
+thoughts. That's why we have patch descriptions / commit messages.
+It would be a lot easier for all of us if you just desribe the exact
+problem you'd like to solve and your approach to do so.
 
----
-The 'struct sched_domain *sd' argument to arch_scale_cpu_capacity() is
-unused since commit:
+>> Looks like a notable code duplication ...
+> 
+> This can be.
 
-  765d0af19f5f ("sched/topology: Remove the ::smt_gain field from 'struct sched_domain'")
+I doubt that code duplication is appreciated, as this increases the
+maintenance overhead. (actually, we're usually trying to reduce that,
+eg. by using lots of generic helpers).
 
-remove it.
----
+>> I thought we usually try to reduce this, instead of introducing new ones.
+> 
+> Would you like to check the software circumstances once more
+> for the generation of a similar code structure by a C compiler
+> (or optimiser)?
+
+As said: unfortunately, I don't have the time to do that - you'd have to
+tell us, what exactly you've got in mind.
+
+If it's just about some error checks which happen to be redundant in a
+particular case, you'll have to show that this case is a *really* hot
+path (eg. irq, syscall, scheduling, etc) - but I don't see that here.
+
+What's the exact scenario you're trying to optimize ? Any actual
+measurements on how your patch improves that ?
+
+
+Look, I understand that you'd like to squeeze out maximum performance,
+but this has to be practically maintainable. I could list a lot of
+things that I don't need in particular use cases and would like to
+introduce build knobs for, but I have to understand that maintainers
+have to be pretty reluctant towards those things.
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
