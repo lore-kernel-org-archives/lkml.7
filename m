@@ -2,112 +2,200 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4F9C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:18:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AB50C31E5F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:19:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A61E2085A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:18:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739DC206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 09:19:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729424AbfFRJSU (ORCPT
+        id S1729328AbfFRJTm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 05:18:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:58798 "EHLO foss.arm.com"
+        Tue, 18 Jun 2019 05:19:42 -0400
+Received: from foss.arm.com ([217.140.110.172]:58892 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729137AbfFRJSU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 05:18:20 -0400
+        id S1729137AbfFRJTm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 05:19:42 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D19DC344;
-        Tue, 18 Jun 2019 02:18:18 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BBBB3F246;
-        Tue, 18 Jun 2019 02:18:14 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 10:18:12 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>, kvm@vger.kernel.org,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        dri-devel@lists.freedesktop.org,
-        Kostya Serebryany <kcc@google.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Lee Smith <Lee.Smith@arm.com>, linux-kselftest@vger.kernel.org,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Leon Romanovsky <leon@kernel.org>, linux-rdma@vger.kernel.org,
-        amd-gfx@lists.freedesktop.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        linux-media@vger.kernel.org,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        linux-kernel@vger.kernel.org,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        enh <enh@google.com>, Robin Murphy <robin.murphy@arm.com>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>
-Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control
- the tagged user addresses ABI
-Message-ID: <20190618091811.GC2790@e103592.cambridge.arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
- <20190613110235.GW28398@e103592.cambridge.arm.com>
- <20190613152632.GT28951@C02TF0J2HF1T.local>
- <201906132209.FC65A3C771@keescook>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D547E344;
+        Tue, 18 Jun 2019 02:19:40 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A18AD3F246;
+        Tue, 18 Jun 2019 02:19:33 -0700 (PDT)
+Subject: Re: [PATCH V3 01/17] irqchip: tegra: do not disable COP IRQ during
+ suspend
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>,
+        thierry.reding@gmail.com, jonathanh@nvidia.com, tglx@linutronix.de,
+        jason@lakedaemon.net, linus.walleij@linaro.org, stefan@agner.ch,
+        mark.rutland@arm.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        digetx@gmail.com, devicetree@vger.kernel.org
+References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
+ <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <dc4b60ae-8716-0e7e-4e41-431c0ef9f50f@arm.com>
+Date:   Tue, 18 Jun 2019 10:19:31 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <201906132209.FC65A3C771@keescook>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1560843991-24123-2-git-send-email-skomatineni@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 10:13:54PM -0700, Kees Cook wrote:
-> On Thu, Jun 13, 2019 at 04:26:32PM +0100, Catalin Marinas wrote:
-> > On Thu, Jun 13, 2019 at 12:02:35PM +0100, Dave P Martin wrote:
-> > > On Wed, Jun 12, 2019 at 01:43:20PM +0200, Andrey Konovalov wrote:
-> > > > +static int zero;
-> > > > +static int one = 1;
-> > > 
-> > > !!!
-> > > 
-> > > And these can't even be const without a cast.  Yuk.
-> > > 
-> > > (Not your fault though, but it would be nice to have a proc_dobool() to
-> > > avoid this.)
-> > 
-> > I had the same reaction. Maybe for another patch sanitising this pattern
-> > across the kernel.
+On 18/06/2019 08:46, Sowjanya Komatineni wrote:
+> Tegra210 platforms use sc7 entry firmware to program Tegra LP0/SC7 entry
+> sequence and sc7 entry firmware is run from COP/BPMP-Lite.
 > 
-> That's actually already happening (via -mm tree last I looked). tl;dr:
-> it ends up using a cast hidden in a macro. It's in linux-next already
-> along with a checkpatch.pl addition to yell about doing what's being
-> done here. ;)
+> So, COP/BPMP-Lite still need IRQ function to finish SC7 suspend sequence
+> for Tegra210.
 > 
-> https://lore.kernel.org/lkml/20190430180111.10688-1-mcroce@redhat.com/#r
+> This patch has fix for leaving the COP IRQ enabled for Tegra210 during
+> interrupt controller suspend operation.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  drivers/irqchip/irq-tegra.c | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-tegra.c b/drivers/irqchip/irq-tegra.c
+> index e1f771c72fc4..cf0c07052064 100644
+> --- a/drivers/irqchip/irq-tegra.c
+> +++ b/drivers/irqchip/irq-tegra.c
+> @@ -44,18 +44,22 @@ static unsigned int num_ictlrs;
+>  
+>  struct tegra_ictlr_soc {
+>  	unsigned int num_ictlrs;
+> +	bool supports_sc7;
+>  };
+>  
+>  static const struct tegra_ictlr_soc tegra20_ictlr_soc = {
+>  	.num_ictlrs = 4,
+> +	.supports_sc7 = false,
 
-Hmmm, that is marginally less bad.
+nit: that's the default for a statically initialized structure.
 
-Ideally we'd have a union in there, not just a bunch of void *.  I may
-look at that someday...
+>  };
+>  
+>  static const struct tegra_ictlr_soc tegra30_ictlr_soc = {
+>  	.num_ictlrs = 5,
+> +	.supports_sc7 = false,
+>  };
+>  
+>  static const struct tegra_ictlr_soc tegra210_ictlr_soc = {
+>  	.num_ictlrs = 6,
+> +	.supports_sc7 = true,
+>  };
+>  
+>  static const struct of_device_id ictlr_matches[] = {
+> @@ -67,6 +71,7 @@ static const struct of_device_id ictlr_matches[] = {
+>  
+>  struct tegra_ictlr_info {
+>  	void __iomem *base[TEGRA_MAX_NUM_ICTLRS];
+> +	const struct tegra_ictlr_soc *soc;
+>  #ifdef CONFIG_PM_SLEEP
+>  	u32 cop_ier[TEGRA_MAX_NUM_ICTLRS];
+>  	u32 cop_iep[TEGRA_MAX_NUM_ICTLRS];
+> @@ -147,8 +152,19 @@ static int tegra_ictlr_suspend(void)
+>  		lic->cop_ier[i] = readl_relaxed(ictlr + ICTLR_COP_IER);
+>  		lic->cop_iep[i] = readl_relaxed(ictlr + ICTLR_COP_IEP_CLASS);
+>  
+> -		/* Disable COP interrupts */
+> -		writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+> +		/*
+> +		 * AVP/COP/BPMP-Lite is the Tegra boot processor.
+> +		 *
+> +		 * Tegra210 system suspend flow uses sc7entry firmware which
+> +		 * is executed by COP/BPMP and it includes disabling COP IRQ,
+> +		 * clamping CPU rail, turning off VDD_CPU, and preparing the
+> +		 * system to go to SC7/LP0.
+> +		 *
+> +		 * COP/BPMP wakes up when COP IRQ is triggered and runs
+> +		 * sc7entry-firmware. So need to keep COP interrupt enabled.
 
-Cheers
----Dave
+It is great that you're describing what happens when the system does
+support this SC7 thing...
+
+> +		 */
+> +		if (!lic->soc->supports_sc7)
+> +			writel_relaxed(~0ul, ictlr + ICTLR_COP_IER_CLR);
+
+Except that the code actually deals with *not* having this SC7, and
+you've deleted the one line of comment that was explaining it.
+
+>  
+>  		/* Disable CPU interrupts */
+>  		writel_relaxed(~0ul, ictlr + ICTLR_CPU_IER_CLR);
+> @@ -339,6 +355,7 @@ static int __init tegra_ictlr_init(struct device_node *node,
+>  		goto out_unmap;
+>  	}
+>  
+> +	lic->soc = soc;
+>  	tegra_ictlr_syscore_init();
+>  
+>  	pr_info("%pOF: %d interrupts forwarded to %pOF\n",
+> 
+
+Otherwise looks OK to me.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
