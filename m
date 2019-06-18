@@ -2,91 +2,99 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DD2C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:23:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0FAFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:27:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C896B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:23:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF8E205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:27:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NPuEEaeR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729980AbfFRRXh (ORCPT
+        id S1730178AbfFRR1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:23:37 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57284 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729325AbfFRRXh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:23:37 -0400
-Received: from DGGEMS405-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id BB44A547BFFE83A7EBBF;
-        Wed, 19 Jun 2019 01:23:34 +0800 (CST)
-Received: from [127.0.0.1] (10.210.170.177) by DGGEMS405-HUB.china.huawei.com
- (10.3.19.205) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Jun 2019
- 01:23:32 +0800
-Subject: Re: [PATCH v2 1/2] ACPI/PPTT: Add support for ACPI 6.3 thread flag
-To:     Valentin Schneider <valentin.schneider@arm.com>,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190614223158.49575-1-jeremy.linton@arm.com>
- <20190614223158.49575-2-jeremy.linton@arm.com>
- <667f95c0-5aa9-f460-a49a-e6dfefc027d8@arm.com>
- <2d1b547f-f9ee-391c-c4f3-0232a08a86bc@arm.com>
- <718438d0-8648-897a-83e8-801146a0af86@arm.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <rjw@rjwysocki.net>, <sudeep.holla@arm.com>, <lenb@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <f6f7f9bb-547d-3fd3-f3f8-1d55181f63d7@huawei.com>
-Date:   Tue, 18 Jun 2019 18:23:25 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Tue, 18 Jun 2019 13:27:53 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:34201 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729455AbfFRR1w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:27:52 -0400
+Received: by mail-ed1-f67.google.com with SMTP id s49so22915966edb.1;
+        Tue, 18 Jun 2019 10:27:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Bs24QD6yJ48wIr2D5TDhpx73Ym4NDSPa09Z8FwUIQvE=;
+        b=NPuEEaeRQXUM2LwJ6yO6Q6m9UffoQUEjfXVZT6RecHHaB4Bu4W2ixljoGBA2PK3pJT
+         83AN5mDJvX2A7Uy3UfxmeA1XaLuBXSTJxvzwWDjQdQZDmw45UE++XbDqk5brNWDRsf2r
+         DPwhdNwiDjvfm4vhjSk4gcQQo//h7dRkVH0S6LixKlGprCQS1NRcV5v8s3KegJHB3ZPg
+         gX3NGNlxq7OcOvQW8RGq7qnHIrjDpu2BPEAodbNWDnSVXaeepFwd+UStt3js+B9Z6Aqh
+         xkjvaOd+T6XrWbUn6aTp0f8VnONTITm1UEmMmX/eNHbCrFPg0PaRmDPm+g75Qxuj7Y3D
+         G70w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Bs24QD6yJ48wIr2D5TDhpx73Ym4NDSPa09Z8FwUIQvE=;
+        b=NKDb5Z8MK+0eIUxBlPb8Y8uFhlYumZ6BPcKCGzXnCw8eeUEkIPFBKu7WkWBf2NuXzh
+         PGgZn6xrZORwGo1l/ktMDRsAQLIv4Fo6P6FvnjHm64DXWR9BJOTxB02WlEunZgHnjqIT
+         P+feLeJuyw10kRHAxdDLd/V5CJXb/mRp1YMtKuKpE8WcbbFjqECGSztUkpHBaZmErT4z
+         PRVqdJP+WU7oUuwXftRSkSa62+sAvQf5auqp/US8v18ayIt0RlJk+3guxEEh5EdN7gsN
+         GEwjYRO1nGeZUWUsQzW3KnAyU5cwlMoTIMyL9YeR+CClBif43EhJ8yI58ztRh8mkymx8
+         UsLw==
+X-Gm-Message-State: APjAAAWtP0Bc+S62eQNBpqk82P2ECfUpj/5ijjY/tUVsSOVWyN0bsHFL
+        BsV5fBYubcf4UtnRGvVTzJhiPWP0oHImq/I1h2Y=
+X-Google-Smtp-Source: APXvYqy+vHPlxGTx8RjvjaFMbvXUSFFZSS8pgii3Bqo2LWopkCRdmxrsa32MOi905yoaHU9HmsN91HWR3FyE0VgaWxY=
+X-Received: by 2002:a17:906:cd1f:: with SMTP id oz31mr15684183ejb.226.1560878870625;
+ Tue, 18 Jun 2019 10:27:50 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <718438d0-8648-897a-83e8-801146a0af86@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.210.170.177]
-X-CFilter-Loop: Reflected
+References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
+ <20190618161036.GA28190@kroah.com> <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
+ <20190618.094759.539007481404905339.davem@davemloft.net> <20190618171516.GA17547@kroah.com>
+In-Reply-To: <20190618171516.GA17547@kroah.com>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 18 Jun 2019 13:27:14 -0400
+Message-ID: <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
+Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     David Miller <davem@davemloft.net>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Fred Klassen <fklassen@appneta.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2019 15:40, Valentin Schneider wrote:
-> On 18/06/2019 15:21, Jeremy Linton wrote:
-> [...]
->>>> + * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be found or
->>>> + *       the table revision isn't new enough.
->>>> + * Otherwise returns flag value
->>>> + */
->>>
->>> Nit: strictly speaking we're not returning the flag value but its mask
->>> applied to the flags field. I don't think anyone will care about getting
->>> the actual flag value, but it should be made obvious in the doc:
->>
->> Or I clarify the code to actually do what the comments says. Maybe that is what John G was also pointing out too?
->>
-
-No, I was just saying that the kernel topology can be broken without 
-this series.
-
+On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
 >
-> Mmm I didn't find any reply from John regarding this in v1, but I wouldn't
-> mind either way, as long as the doc & code are aligned.
+> On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
+> > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> > Date: Tue, 18 Jun 2019 12:37:33 -0400
+> >
+> > > Specific to the above test, I can add a check command testing
+> > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
+> > > way to denote "skipped", so this would just return "pass". Sounds a
+> > > bit fragile, passing success when a feature is absent.
+> >
+> > Especially since the feature might be absent because the 'config'
+> > template forgot to include a necessary Kconfig option.
 >
+> That is what the "skip" response is for, don't return "pass" if the
+> feature just isn't present.  That lets people run tests on systems
+> without the config option enabled as you say, or on systems without the
+> needed userspace tools present.
 
-BTW, to me, function acpi_pptt_cpu_is_thread() seems to try to do too 
-much, i.e. check if the PPTT is new enough to support the thread flag 
-and also check if it is set for a specific cpu. I'd consider separate 
-functions here.
+I was not aware that kselftest had this feature.
 
-thanks,
-John
-
-> [...]
->
-> .
->
-
-
+But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
+I'll send a patch and will keep that in mind for future tests.
