@@ -2,166 +2,318 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,T_HK_NAME_DR,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3035FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:42:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9FFCC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:42:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06A862147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:42:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89CF32147A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 15:42:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729782AbfFRPmB (ORCPT
+        id S1729815AbfFRPmf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 11:42:01 -0400
-Received: from wind.enjellic.com ([76.10.64.91]:35716 "EHLO wind.enjellic.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729349AbfFRPmA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 11:42:00 -0400
-Received: from wind.enjellic.com (localhost [127.0.0.1])
-        by wind.enjellic.com (8.15.2/8.15.2) with ESMTP id x5IFegEV006176;
-        Tue, 18 Jun 2019 10:40:42 -0500
-Received: (from greg@localhost)
-        by wind.enjellic.com (8.15.2/8.15.2/Submit) id x5IFeepQ006175;
-        Tue, 18 Jun 2019 10:40:40 -0500
-Date:   Tue, 18 Jun 2019 10:40:40 -0500
-From:   "Dr. Greg" <greg@enjellic.com>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Cedric Xing <cedric.xing@intel.com>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        selinux@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        linux-sgx@vger.kernel.org,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Paul Moore <paul@paul-moore.com>,
-        Eric Paris <eparis@parisplace.org>,
-        Jethro Beekman <jethro@fortanix.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>, nhorman@redhat.com,
-        pmccallum@redhat.com, "Ayoun, Serge" <serge.ayoun@intel.com>,
-        "Katz-zamir, Shay" <shay.katz-zamir@intel.com>,
-        "Huang, Haitao" <haitao.huang@intel.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        "Svahn, Kai" <kai.svahn@intel.com>, Borislav Petkov <bp@alien8.de>,
-        Josh Triplett <josh@joshtriplett.org>,
-        "Huang, Kai" <kai.huang@intel.com>,
-        David Rientjes <rientjes@google.com>,
-        "Roberts, William C" <william.c.roberts@intel.com>,
-        Philip Tricca <philip.b.tricca@intel.com>
-Subject: Re: [RFC PATCH v1 2/3] LSM/x86/sgx: Implement SGX specific hooks in SELinux
-Message-ID: <20190618154040.GA4603@wind.enjellic.com>
-Reply-To: "Dr. Greg" <greg@enjellic.com>
-References: <cover.1560131039.git.cedric.xing@intel.com> <a382d46f66756e13929ca9244479dd9f689c470e.1560131039.git.cedric.xing@intel.com> <b6f099cd-c0eb-d5cf-847d-27a15ac5ceaf@tycho.nsa.gov> <20190611220243.GB3416@linux.intel.com> <8d99d8fb-a921-286a-8cf0-cd522e09b37c@tycho.nsa.gov> <20190614004600.GF18385@linux.intel.com> <20190614153840.GC12191@linux.intel.com> <CALCETrXcOQkvMHdh5DgdQ6JAgzsZCNFVEtnQz-5RbNr4vsadDQ@mail.gmail.com> <20190617164915.GA25085@linux.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617164915.GA25085@linux.intel.com>
-User-Agent: Mutt/1.4i
-X-Greylist: Sender passed SPF test, not delayed by milter-greylist-4.2.3 (wind.enjellic.com [127.0.0.1]); Tue, 18 Jun 2019 10:40:42 -0500 (CDT)
+        Tue, 18 Jun 2019 11:42:35 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:39396 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729655AbfFRPme (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 11:42:34 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id EE96F1CCB746BD506137;
+        Tue, 18 Jun 2019 23:42:30 +0800 (CST)
+Received: from localhost (10.202.226.61) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 18 Jun 2019
+ 23:42:27 +0800
+Date:   Tue, 18 Jun 2019 16:42:15 +0100
+From:   Jonathan Cameron <jonathan.cameron@huawei.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+CC:     <iommu@lists.linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        "Eric Auger" <eric.auger@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Yi L <yi.l.liu@linux.intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        <Liu@mail.linuxfoundation.org>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v4 02/22] iommu: Introduce device fault data
+Message-ID: <20190618164215.00001772@huawei.com>
+In-Reply-To: <1560087862-57608-3-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1560087862-57608-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1560087862-57608-3-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Huawei
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; i686-w64-mingw32)
+MIME-Version: 1.0
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.61]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 09:49:15AM -0700, Sean Christopherson wrote:
+On Sun, 9 Jun 2019 06:44:02 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
 
-Good morning to everyone.
+> Device faults detected by IOMMU can be reported outside the IOMMU
+> subsystem for further processing. This patch introduces
+> a generic device fault data structure.
+> 
+> The fault can be either an unrecoverable fault or a page request,
+> also referred to as a recoverable fault.
+> 
+> We only care about non internal faults that are likely to be reported
+> to an external subsystem.
+> 
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
+> Signed-off-by: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+> Signed-off-by: Liu, Yi L <yi.l.liu@linux.intel.com>
+> Signed-off-by: Ashok Raj <ashok.raj@intel.com>
+> Signed-off-by: Eric Auger <eric.auger@redhat.com>
 
-> On Sun, Jun 16, 2019 at 03:14:51PM -0700, Andy Lutomirski wrote:
-> > The most significant issue I see is the following.  Consider two
-> > cases. First, an SGX2 enclave that dynamically allocates memory but
-> > doesn't execute code from dynamic memory.  Second, an SGX2 enclave
-> > that *does* execute code from dynamic memory.  In #1, the untrusted
-> > stack needs to decide whether to ALLOW_EXEC when the memory is
-> > allocated, which means that it either needs to assume the worst or it
-> > needs to know at allocation time whether the enclave ever intends to
-> > change the permission to X.
+A few trivial nitpicks in here.
 
-> I'm just not convinced that folks running enclaves that can't
-> communicate their basic functionality will care one whit about
-> SELinux restrictions, i.e. will happily give EXECMOD even if it's
-> not strictly necessary.
+Otherwise looks straight forward and sensible to me.
 
-Hence the comments in my mail from last Friday.
+Jonathan
+> ---
+>  include/linux/iommu.h      |  44 +++++++++++++++++
+>  include/uapi/linux/iommu.h | 118 +++++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 162 insertions(+)
+>  create mode 100644 include/uapi/linux/iommu.h
+> 
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index a815cf6..7890a92 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -25,6 +25,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/err.h>
+>  #include <linux/of.h>
+> +#include <uapi/linux/iommu.h>
+>  
+>  #define IOMMU_READ	(1 << 0)
+>  #define IOMMU_WRITE	(1 << 1)
+> @@ -49,6 +50,7 @@ struct device;
+>  struct iommu_domain;
+>  struct notifier_block;
+>  struct iommu_sva;
+> +struct iommu_fault_event;
+>  
+>  /* iommu fault flags */
+>  #define IOMMU_FAULT_READ	0x0
+> @@ -58,6 +60,7 @@ typedef int (*iommu_fault_handler_t)(struct iommu_domain *,
+>  			struct device *, unsigned long, int, void *);
+>  typedef int (*iommu_mm_exit_handler_t)(struct device *dev, struct iommu_sva *,
+>  				       void *);
+> +typedef int (*iommu_dev_fault_handler_t)(struct iommu_fault_event *, void *);
+>  
+>  struct iommu_domain_geometry {
+>  	dma_addr_t aperture_start; /* First address that can be mapped    */
+> @@ -301,6 +304,46 @@ struct iommu_device {
+>  	struct device *dev;
+>  };
+>  
+> +/**
+> + * struct iommu_fault_event - Generic fault event
+> + *
+> + * Can represent recoverable faults such as a page requests or
+> + * unrecoverable faults such as DMA or IRQ remapping faults.
+> + *
+> + * @fault: fault descriptor
+> + * @iommu_private: used by the IOMMU driver for storing fault-specific
+> + *                 data. Users should not modify this field before
+> + *                 sending the fault response.
+> + */
+> +struct iommu_fault_event {
+> +	struct iommu_fault fault;
+> +	u64 iommu_private;
+> +};
+> +
+> +/**
+> + * struct iommu_fault_param - per-device IOMMU fault data
+> + * @dev_fault_handler: Callback function to handle IOMMU faults at device level
+> + * @data: handler private data
+> + *
 
-It seems to us that the path forward is to require the enclave
-author/signer to express their intent to implement executable dynamic
-memory, see below.
+No need for this blank line.  Seems inconsistent with other docs in here.
 
-> > I suppose there's a middle ground.  The driver could use model #1 for
-> > driver-filled pages and model #2 for dynamic pages.  I haven't tried
-> > to fully work it out, but I think there would be the ALLOW_READ /
-> > ALLOW_WRITE / ALLOW_EXEC flag for EADD-ed pages but, for EAUG-ed
-> > pages, there would be a different policy.  This might be as simple as
-> > internally having four flags instead of three:
-> > 
-> > ALLOW_READ, ALLOW_WRITE, ALLOW_EXEC: as before
-> > 
-> > ALLOW_EXEC_COND: set implicitly by the driver for EAUG.
-> > 
-> > As in #1, if you try to mmap or protect a page with neither ALLOW_EXEC
-> > variant, it fails (-EACCES, perhaps).  But, if you try to mmap or
-> > mprotect an ALLOW_EXEC_COND page with PROT_EXEC, you ask LSM for
-> > permission.  There is no fancy DIRTY tracking here, since it's
-> > reasonable to just act as though *every* ALLOW_EXEC_COND page is
-> > dirty.  There is no real auditing issue here, since LSM can just log
-> > what permission is missing.
-> > 
-> > Does this seem sensible?  It might give us the best of #1 and #2.
+Also, there is a docs fixup in patch 3 which should be pulled back to here.
 
-> It would work and is easy to implement *if* SELinux ties permissions
-> to the process, as the SIGSTRUCT vma/file won't be available at
-> EAUG+mprotect().  I already have a set of patches to that effect,
-> I'll send 'em out in a bit.
+> + */
+> +struct iommu_fault_param {
+> +	iommu_dev_fault_handler_t handler;
+> +	void *data;
+> +};
+> +
+> +/**
+> + * struct iommu_param - collection of per-device IOMMU data
+> + *
+> + * @fault_param: IOMMU detected device fault reporting data
+> + *
+> + * TODO: migrate other per device data pointers under iommu_dev_data, e.g.
+> + *	struct iommu_group	*iommu_group;
+> + *	struct iommu_fwspec	*iommu_fwspec;
+> + */
+> +struct iommu_param {
+> +	struct iommu_fault_param *fault_param;
+Is it actually worth having the indirection of a pointer here as opposed
+to just embedding the actual structure?  The null value is used in places
+but can just use the handler being null for the same job I think...
 
-The VMA that is crafted from the enclave file is going to exist for
-the life of the enclave.  If the intent to use executable dynamic
-memory is specified when the enclave image is being built, or as a
-component of enclave initialization, the driver is in a position to
-log/deny a request to EAUG+mprotect whenever it occurs.  The sensitive
-criteria would seem to be any request for dynamically allocated memory
-with executable status.
+It reduces the code needed in patch 3 a bit.
 
-The potential security impact of dynamically executable content is
-something that is dependent on the enclave author rather then the
-context of execution that is requesting pages to be allocated for such
-purposes.  There is going to be an LSM hook to evaluate the SIGSTRUCT
-at the time of EINIT, so all of the necessary information is there to
-make a decision on whether or not to flag the VMA as being allowed to
-support dynamically executable content.
+It gets a bit bigger in patch 4, but is still only about 16 bytes.
 
-It doesn't seem like an onerous requirement for this information to be
-specified in the enclave metadata.  For optimum security, one could
-perhaps argue that the ability to implement dynamic memory should have
-been a specifiable attribute of the enclave, similar to the debug,
-launch and provisioning attributes.
+> +};
+> +
+>  int  iommu_device_register(struct iommu_device *iommu);
+>  void iommu_device_unregister(struct iommu_device *iommu);
+>  int  iommu_device_sysfs_add(struct iommu_device *iommu,
+> @@ -504,6 +547,7 @@ struct iommu_ops {};
+>  struct iommu_group {};
+>  struct iommu_fwspec {};
+>  struct iommu_device {};
+> +struct iommu_fault_param {};
+>  
+>  static inline bool iommu_present(struct bus_type *bus)
+>  {
+> diff --git a/include/uapi/linux/iommu.h b/include/uapi/linux/iommu.h
+> new file mode 100644
+> index 0000000..aaa3b6a
+> --- /dev/null
+> +++ b/include/uapi/linux/iommu.h
+> @@ -0,0 +1,118 @@
+> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> +/*
+> + * IOMMU user API definitions
+> + */
+> +
+> +#ifndef _UAPI_IOMMU_H
+> +#define _UAPI_IOMMU_H
+> +
+> +#include <linux/types.h>
+> +
+> +#define IOMMU_FAULT_PERM_READ	(1 << 0) /* read */
+> +#define IOMMU_FAULT_PERM_WRITE	(1 << 1) /* write */
+> +#define IOMMU_FAULT_PERM_EXEC	(1 << 2) /* exec */
+> +#define IOMMU_FAULT_PERM_PRIV	(1 << 3) /* privileged */
+> +
+> +/* Generic fault types, can be expanded IRQ remapping fault */
+> +enum iommu_fault_type {
+> +	IOMMU_FAULT_DMA_UNRECOV = 1,	/* unrecoverable fault */
+> +	IOMMU_FAULT_PAGE_REQ,		/* page request fault */
+> +};
+> +
+> +enum iommu_fault_reason {
+> +	IOMMU_FAULT_REASON_UNKNOWN = 0,
+> +
+> +	/* Could not access the PASID table (fetch caused external abort) */
+> +	IOMMU_FAULT_REASON_PASID_FETCH,
+> +
+> +	/* PASID entry is invalid or has configuration errors */
+> +	IOMMU_FAULT_REASON_BAD_PASID_ENTRY,
+> +
+> +	/*
+> +	 * PASID is out of range (e.g. exceeds the maximum PASID
+> +	 * supported by the IOMMU) or disabled.
+> +	 */
+> +	IOMMU_FAULT_REASON_PASID_INVALID,
+> +
+> +	/*
+> +	 * An external abort occurred fetching (or updating) a translation
+> +	 * table descriptor
+> +	 */
+> +	IOMMU_FAULT_REASON_WALK_EABT,
+> +
+> +	/*
+> +	 * Could not access the page table entry (Bad address),
+> +	 * actual translation fault
+> +	 */
+> +	IOMMU_FAULT_REASON_PTE_FETCH,
+> +
+> +	/* Protection flag check failed */
+> +	IOMMU_FAULT_REASON_PERMISSION,
+> +
+> +	/* access flag check failed */
 
-As we have indicated in the past, once the enclave is initialized with
-permissions for dynamically executable content, the platform is
-completely dependent on the security intentions of the author of the
-enclave.  Given that, the notion of enduring significant LSM
-complexity does not seem to be justified.
+Nitpick: Inconsistent capitalization of first word in comment :)
 
-Which opens up another set of security implications to discuss but we will let
-those lie for the moment.
+> +	IOMMU_FAULT_REASON_ACCESS,
+> +
+> +	/* Output address of a translation stage caused Address Size fault */
+> +	IOMMU_FAULT_REASON_OOR_ADDRESS,
+> +};
+> +
+> +/**
+> + * struct iommu_fault_unrecoverable - Unrecoverable fault data
+> + * @reason: reason of the fault, from &enum iommu_fault_reason
+> + * @flags: parameters of this fault (IOMMU_FAULT_UNRECOV_* values)
+> + * @pasid: Process Address Space ID
+> + * @perm: Requested permission access using by the incoming transaction
+> + *        (IOMMU_FAULT_PERM_* values)
+> + * @addr: offending page address
+> + * @fetch_addr: address that caused a fetch abort, if any
+> + */
+> +struct iommu_fault_unrecoverable {
+> +	__u32	reason;
+> +#define IOMMU_FAULT_UNRECOV_PASID_VALID		(1 << 0)
+> +#define IOMMU_FAULT_UNRECOV_ADDR_VALID		(1 << 1)
+> +#define IOMMU_FAULT_UNRECOV_FETCH_ADDR_VALID	(1 << 2)
+> +	__u32	flags;
+> +	__u32	pasid;
+> +	__u32	perm;
+> +	__u64	addr;
+> +	__u64	fetch_addr;
+> +};
+> +
+> +/**
+> + * struct iommu_fault_page_request - Page Request data
+> + * @flags: encodes whether the corresponding fields are valid and whether this
+> + *         is the last page in group (IOMMU_FAULT_PAGE_REQUEST_* values)
+> + * @pasid: Process Address Space ID
+> + * @grpid: Page Request Group Index
+> + * @perm: requested page permissions (IOMMU_FAULT_PERM_* values)
+> + * @addr: page address
+> + * @private_data: device-specific private information
+> + */
 
-Have a good day.
+Slightly surprised to see this given cover letter says no PRS.
+I guess it is part of the original patch rather than intended
+for this series.. Not a problem as far as I'm concerned.
 
-Dr. Greg
+> +struct iommu_fault_page_request {
+> +#define IOMMU_FAULT_PAGE_REQUEST_PASID_VALID	(1 << 0)
+> +#define IOMMU_FAULT_PAGE_REQUEST_LAST_PAGE	(1 << 1)
+> +#define IOMMU_FAULT_PAGE_REQUEST_PRIV_DATA	(1 << 2)
+> +	__u32	flags;
+> +	__u32	pasid;
+> +	__u32	grpid;
+> +	__u32	perm;
+> +	__u64	addr;
+> +	__u64	private_data[2];
+> +};
+> +
+> +/**
+> + * struct iommu_fault - Generic fault data
+> + * @type: fault type from &enum iommu_fault_type
+> + * @padding: reserved for future use (should be zero)
+> + * @event: Fault event, when @type is %IOMMU_FAULT_DMA_UNRECOV
+> + * @prm: Page Request message, when @type is %IOMMU_FAULT_PAGE_REQ
+> + */
+> +struct iommu_fault {
+> +	__u32	type;
+> +	__u32	padding;
+> +	union {
+> +		struct iommu_fault_unrecoverable event;
+> +		struct iommu_fault_page_request prm;
+> +	};
+> +};
+> +#endif /* _UAPI_IOMMU_H */
 
-As always,
-Dr. G.W. Wettstein, Ph.D.   Enjellic Systems Development, LLC.
-4206 N. 19th Ave.           Specializing in information infra-structure
-Fargo, ND  58102            development.
-PH: 701-281-1686            EMAIL: greg@enjellic.com
-------------------------------------------------------------------------------
-"More people are killed every year by pigs than by sharks, which shows
- you how good we are at evaluating risk."
-                                -- Bruce Schneier
-                                   Beyond Fear
+
