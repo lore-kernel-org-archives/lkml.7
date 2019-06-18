@@ -3,39 +3,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E649C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6460FC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 017A820665
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C8620665
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:01:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728753AbfFRHBx (ORCPT
+        id S1728880AbfFRHB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:01:53 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45076 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725829AbfFRHBx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:01:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7B4FB040;
-        Tue, 18 Jun 2019 07:01:51 +0000 (UTC)
-Message-ID: <1560841301.21660.9.camel@suse.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Pintu Agarwal <pintu.ping@gmail.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org
-Date:   Tue, 18 Jun 2019 09:01:41 +0200
-In-Reply-To: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+        Tue, 18 Jun 2019 03:01:57 -0400
+Received: from gate.crashing.org ([63.228.1.57]:44279 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRHB4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:01:56 -0400
+Received: from localhost (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5I5RJD1009174;
+        Tue, 18 Jun 2019 00:27:22 -0500
+Message-ID: <e406c7bc73971a3626cf587f3ee9970973b0782a.camel@kernel.crashing.org>
+Subject: Re: [PATCH v3 2/2] PCI: Fix disabling of bridge BARs when assigning
+ bus resources
+From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Kit Chow <kchow@gigaio.com>, Yinghai Lu <yinghai@kernel.org>
+Date:   Tue, 18 Jun 2019 15:27:18 +1000
+In-Reply-To: <20190617135307.GA13533@google.com>
+References: <20190531171216.20532-1-logang@deltatee.com>
+         <20190531171216.20532-3-logang@deltatee.com>
+         <20190617135307.GA13533@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
 Mime-Version: 1.0
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,44 +44,69 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Montag, den 17.06.2019, 19:19 +0530 schrieb Pintu Agarwal:
+On Mon, 2019-06-17 at 08:53 -0500, Bjorn Helgaas wrote:
+> On Fri, May 31, 2019 at 11:12:16AM -0600, Logan Gunthorpe wrote:
+> > One odd quirk of PLX switches is that their upstream bridge port has
+> > 256K of space allocated behind its BAR0 (most other bridge
+> > implementations do not report any BAR space).
+> 
+> Somewhat unusual, but completely legal, of course.
 
-> Currently, I am trying to understand what needs to be taken care
-> during suspend/resume.
+Ah yes, I've seen these. They have an MMIO path to their internal
+registers in addition to cfg. Can be annoying.
 
-You need to take care of
+> If a bridge has memory BARs, AFAIK it is impossible to enable a memory
+> window without also enabling the BARs, so if we want to use the bridge
+> at all, we *must* allocate space for its BARs, just like for any other
+> device.
 
-* wakeup sources
-* not requiring services of devices higher up in the tree.
+Right.
 
-> With some reference, I figured out that hdmi power off/on needs to be
-> done during suspend/resume.
+ .../... (agreeing violently)
 
-That would make sense.
+> In my ideal world we wouldn't zap the flags of any resource.  I think
+> we should derive the flags from the device's config space *once*
+> during enumeration and remember them for the life of the device.
 
-First of all you need to understand that the generic model is, well,
-generic. Now this may look like a tautology, so let me explain.
-A generic model cannot tell you how to save power on a specific
-hardware. It exists to model dependencies among subsystems and
-to help you.
+Amen brother. It will take a little while to get there. One thing we
+should do is have a clearer way to mark a resource that failed to
+assign/allocate (though technically parent=NULL is it really, as long
+as all archs these days claim properly, it used not to be the case).
 
-The suspend() call is a notification which tells you that the rest
-of the system will not require your services until resume() is
-called().
-That means that after resume() your driver must be functional again.
+We do wipe *bridge* windows (nor BARs) all over the place, that is less
+of an issue I suppose though I would be more comfortable if we also
+wrote to the bridge to close those windows as we do so...
 
-And it means that between suspend() and resume() you cannot touch
-your device because what is above you in the tree need not be
-functional.
+The problem of course is how much old weird quirky will break due to
+subtle assumptions as we "fix" these things :-)
 
-> But after resume, system is hanging.
-> It seems like vblank events are not getting triggered after the resume.
-> May be irq remains disabled after resume, I need to figure out some
-> way to enable the all the irqs again.
+> This patch preserves res->flags for bridge BARs just like for any
+> other device, so I think this is definitely a step in the right
+> direction.
+> 
+> I'm not sure the "dev->subordinate" test is really correct, though.
 
-In your case it looks like parts of dw_hdmi_imx_bind() need to be
-redone in resume().
+Right, shouldn't it be pci_is_bridge() ?
 
-	HTH
-		Oliver
+> I think the original intent of this code was to clear res->flags for
+> bridge windows under the assumptions that (a) we can identify bridges
+> by "dev->subordinate" being non-zero, and (b) bridges only have
+> windows and didn't have BARs.
+> 
+> This patch fixes assumption (b), but I think (a) is false, and we
+> should fix it as well.  One can imagine a bridge device without a
+> subordinate bus (maybe we ran out of bus numbers), so I don't think we
+> should test dev->subordinate.
+
+Yup.
+
+> We could test something like pci_is_bridge(), although testing for idx
+> being in the PCI_BRIDGE_RESOURCES range should be sufficient because I
+> don't think we use those resource for anything other than windows.
+
+Yeah quite possibly.
+
+Cheers,
+Ben.
+
 
