@@ -2,199 +2,231 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67D81C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97B2C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D5DB2070B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 271C5208E4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 11:02:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ls5pxqoH";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="oDNcoYN1"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="J8aRALCt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfFRLCb (ORCPT
+        id S1729666AbfFRLCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 07:02:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39352 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725934AbfFRLCb (ORCPT
+        Tue, 18 Jun 2019 07:02:45 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39689 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfFRLCp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 07:02:31 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id B736160C60; Tue, 18 Jun 2019 11:02:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560855749;
-        bh=QlHoC2q27QNg37TXurhV+oC6ZcdcvhESvo3u67o1qHk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=ls5pxqoH+OIyl1ASAa+lWCfxrVKCyJX1IciUbmyR8mTr7J5J6BtYRRMYClFCfrUQz
-         5BCid13ZtgLUIRXjc/eXYpyg++8aAFlsIjOhTaS6lKTeWqUjUO6pZxCi+fgbgxwdWg
-         WvkxbabbGkaYpDNW0ArDeMBHfygZ/77+LTTKutOQ=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 21C9960254;
-        Tue, 18 Jun 2019 11:02:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560855739;
-        bh=QlHoC2q27QNg37TXurhV+oC6ZcdcvhESvo3u67o1qHk=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=oDNcoYN1h5jNMgAIxxicOVZkBHA7RBMLqFRAuLfOfR0EFgEvxQ5ZTuIAZZu0AjOLo
-         QSUKDBy3L9J7bukHuHU4AwRqijb/zbm0QQeIPkYKAW+qjEeBYyrlz1PyEYr74jAPtV
-         AXyFtObhvg/VS4mgGl1qNf0xEzWeuveD4uFLs/YM=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 21C9960254
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Douglas Anderson <dianders@chromium.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Arend van Spriel <arend.vanspriel@broadcom.com>,
-        brcm80211-dev-list.pdl@broadcom.com,
-        "open list\:ARM\/Rockchip SoC..." 
-        <linux-rockchip@lists.infradead.org>,
-        Double Lo <double.lo@cypress.com>,
-        Brian Norris <briannorris@chromium.org>,
-        linux-wireless <linux-wireless@vger.kernel.org>,
-        Naveen Gupta <naveen.gupta@cypress.com>,
-        Madhan Mohan R <madhanmohan.r@cypress.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Wright Feng <wright.feng@cypress.com>,
-        Chi-Hsien Lin <chi-hsien.lin@cypress.com>,
-        netdev <netdev@vger.kernel.org>,
-        brcm80211-dev-list <brcm80211-dev-list@cypress.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hante Meuleman <hante.meuleman@broadcom.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Niklas =?utf-8?Q?S=C3=B6derl?= =?utf-8?Q?und?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Ritesh Harjani <riteshh@codeaurora.org>,
-        Michael Trimarchi <michael@amarulasolutions.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Franky Lin <franky.lin@broadcom.com>,
-        Ondrej Jirman <megous@megous.com>,
-        Jiong Wu <lohengrin1024@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "linux-mmc\@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: Re: [PATCH v5 0/5] brcmfmac: sdio: Deal better w/ transmission errors related to idle
-References: <20190617175653.21756-1-dianders@chromium.org>
-        <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
-Date:   Tue, 18 Jun 2019 14:02:04 +0300
-In-Reply-To: <CAPDyKFpaX6DSM_BjtghAHUf7qYCyEG+wMagXPUdgz3Eutovqfw@mail.gmail.com>
-        (Ulf Hansson's message of "Mon, 17 Jun 2019 20:38:49 +0200")
-Message-ID: <87v9x39mxf.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Tue, 18 Jun 2019 07:02:45 -0400
+Received: by mail-io1-f67.google.com with SMTP id r185so22759516iod.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 04:02:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6dPd3RrQAaJmSlxbXCrrYAeV5BgA8baQituPrW6T8q4=;
+        b=J8aRALCtZ5+q665nCDGHGWdB9L4KUtXUTr2aYEOhkvFYvSzSxjEZBnxAx8jq4+CIrG
+         kfZQ7h7AOkWGNUkPJQKvtrs7G8vA4tHYQkZSL8IOo8hSzMlRmFi5A4yNE+cQCaBXDkSS
+         Fw9gA1Q+2KAjPhGWQTXJpHt0jL6CbnzUxhC7k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6dPd3RrQAaJmSlxbXCrrYAeV5BgA8baQituPrW6T8q4=;
+        b=avASHnFA+oZThnhXNCJ4ef+JWv+B9TYU+xParOdy0ZBYdDs3iIXdL8m2I53sDekp0Y
+         ria1cyWz+TPFwVoHYjQTB04Ta5rBWkuW9Thh99CAAiH3gaEVUGbwU3GSg9tPcVtFhQix
+         xrDWftxu/7OlLiJQC17uPnx1mMfG6LnnI4AkH4F5l3d4kopEt4P9NvQxwU7a54i6eNDx
+         8NhhxxLaQADxEEzIuZG9D3M744armZvSZsjUKsMD4QkQRm7jZXuGgNoDwTkk8j7Zffh9
+         tfYdps63F6/E16JBLNtsMWA6W7l8OvTyGHxCm3oboFmHZ8is4GHTYZ7eTq5tNjrOkP59
+         8C6w==
+X-Gm-Message-State: APjAAAXOoOnnwHYXyT+dBgVGBQsaFjhshZJ29FPK43TKU5brxftpJgOE
+        ecDupgQbvLh5GUuRmvrKxYICPriFwgWkveo0/tL+QkSb
+X-Google-Smtp-Source: APXvYqx+1RXVIiXwJWvpnbgzk7DSvApiqXAee1b+tNWJ3+b7tOzqL9eacxMiiOpVam4G5g3AOCkWwGZPw6G4S5b385c=
+X-Received: by 2002:a5e:8618:: with SMTP id z24mr5045183ioj.174.1560855763973;
+ Tue, 18 Jun 2019 04:02:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190520090318.27570-1-jagan@amarulasolutions.com>
+ <20190520090318.27570-3-jagan@amarulasolutions.com> <20190523203754.2lhi37veeh4rwiy3@flea>
+ <CAMty3ZBvJ-7Ndq7NSfNMSFX=8hjYVhYsdA=nfyw5mMxOf6vW1Q@mail.gmail.com>
+ <20190530104242.d6ktwv7lip27vc3x@flea> <CAMty3ZCwS4BS5Lig4O8G3dE3RbJu6m1Ux3-ZS4rT-cPEAjXSFw@mail.gmail.com>
+ <20190614142810.hbdaikbk7immwzc3@flea>
+In-Reply-To: <20190614142810.hbdaikbk7immwzc3@flea>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 18 Jun 2019 16:32:32 +0530
+Message-ID: <CAMty3ZBmTTKk29EDxPLP1vYPg6ZvBQibRsB=7cfSUCXtML95qA@mail.gmail.com>
+Subject: Re: [PATCH v10 02/11] drm/sun4i: dsi: Update start value in video
+ start delay
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Chen-Yu Tsai <wens@csie.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bhushan Shah <bshah@mykolab.com>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        =?UTF-8?B?5Z2a5a6a5YmN6KGM?= <powerpan@qq.com>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ulf Hansson <ulf.hansson@linaro.org> writes:
+On Fri, Jun 14, 2019 at 7:58 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Jun 13, 2019 at 01:34:04PM +0530, Jagan Teki wrote:
+> > On Fri, May 31, 2019 at 12:23 AM Maxime Ripard
+> > <maxime.ripard@bootlin.com> wrote:
+> > >
+> > > On Fri, May 24, 2019 at 03:55:42PM +0530, Jagan Teki wrote:
+> > > > On Fri, May 24, 2019 at 2:07 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > > >
+> > > > > On Mon, May 20, 2019 at 02:33:09PM +0530, Jagan Teki wrote:
+> > > > > > start value in video start delay computation done in below commit
+> > > > > > is as per the legacy bsp drivers/video/sunxi/legacy..
+> > > > > > "drm/sun4i: dsi: Change the start delay calculation"
+> > > > > > (sha1: da676c6aa6413d59ab0a80c97bbc273025e640b2)
+> > > > > >
+> > > > > > This existing start delay computation gives start value of 35,
+> > > > > > for "bananapi,s070wv20-ct16" panel timings which indeed trigger
+> > > > > > panel flip_done timed out as:
+> > > > > >
+> > > > > >  WARNING: CPU: 0 PID: 31 at drivers/gpu/drm/drm_atomic_helper.c:1429 drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0
+> > > > > >  [CRTC:46:crtc-0] vblank wait timed out
+> > > > > >  Modules linked in:
+> > > > > >  CPU: 0 PID: 31 Comm: kworker/0:1 Tainted: G        W         5.1.0-next-20190514-00025-gf928bc7cc146 #15
+> > > > > >  Hardware name: Allwinner sun8i Family
+> > > > > >  Workqueue: events deferred_probe_work_func
+> > > > > >  [<c010ed54>] (unwind_backtrace) from [<c010b76c>] (show_stack+0x10/0x14)
+> > > > > >  [<c010b76c>] (show_stack) from [<c0688c90>] (dump_stack+0x84/0x98)
+> > > > > >  [<c0688c90>] (dump_stack) from [<c011d9e4>] (__warn+0xfc/0x114)
+> > > > > >  [<c011d9e4>] (__warn) from [<c011da40>] (warn_slowpath_fmt+0x44/0x68)
+> > > > > >  [<c011da40>] (warn_slowpath_fmt) from [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1+0x298/0x2a0)
+> > > > > >  [<c040cd50>] (drm_atomic_helper_wait_for_vblanks.part.1) from [<c040e694>] (drm_atomic_helper_commit_tail_rpm+0x5c/0x6c)
+> > > > > >  [<c040e694>] (drm_atomic_helper_commit_tail_rpm) from [<c040e4dc>] (commit_tail+0x40/0x6c)
+> > > > > >  [<c040e4dc>] (commit_tail) from [<c040e5cc>] (drm_atomic_helper_commit+0xbc/0x128)
+> > > > > >  [<c040e5cc>] (drm_atomic_helper_commit) from [<c0411b64>] (restore_fbdev_mode_atomic+0x1cc/0x1dc)
+> > > > > >  [<c0411b64>] (restore_fbdev_mode_atomic) from [<c0411cb0>] (drm_fb_helper_pan_display+0xac/0x1d0)
+> > > > > >  [<c0411cb0>] (drm_fb_helper_pan_display) from [<c03a4e84>] (fb_pan_display+0xcc/0x134)
+> > > > > >  [<c03a4e84>] (fb_pan_display) from [<c03b1214>] (bit_update_start+0x14/0x30)
+> > > > > >  [<c03b1214>] (bit_update_start) from [<c03afe94>] (fbcon_switch+0x3d8/0x4e0)
+> > > > > >  [<c03afe94>] (fbcon_switch) from [<c03ec930>] (redraw_screen+0x174/0x238)
+> > > > > >  [<c03ec930>] (redraw_screen) from [<c03aceb4>] (fbcon_prepare_logo+0x3c4/0x400)
+> > > > > >  [<c03aceb4>] (fbcon_prepare_logo) from [<c03ad2b8>] (fbcon_init+0x3c8/0x5ac)
+> > > > > >  [<c03ad2b8>] (fbcon_init) from [<c03eb8a0>] (visual_init+0xbc/0x104)
+> > > > > >  [<c03eb8a0>] (visual_init) from [<c03ed1b8>] (do_bind_con_driver+0x1b0/0x390)
+> > > > > >  [<c03ed1b8>] (do_bind_con_driver) from [<c03ed780>] (do_take_over_console+0x13c/0x1c4)
+> > > > > >  [<c03ed780>] (do_take_over_console) from [<c03ad800>] (do_fbcon_takeover+0x74/0xcc)
+> > > > > >  [<c03ad800>] (do_fbcon_takeover) from [<c013c9c8>] (notifier_call_chain+0x44/0x84)
+> > > > > >  [<c013c9c8>] (notifier_call_chain) from [<c013cd20>] (__blocking_notifier_call_chain+0x48/0x60)
+> > > > > >  [<c013cd20>] (__blocking_notifier_call_chain) from [<c013cd50>] (blocking_notifier_call_chain+0x18/0x20)
+> > > > > >  [<c013cd50>] (blocking_notifier_call_chain) from [<c03a6e44>] (register_framebuffer+0x1e0/0x2f8)
+> > > > > >  [<c03a6e44>] (register_framebuffer) from [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock+0x2fc/0x50c)
+> > > > > >  [<c04153c0>] (__drm_fb_helper_initial_config_and_unlock) from [<c04158c8>] (drm_fbdev_client_hotplug+0xe8/0x1b8)
+> > > > > >  [<c04158c8>] (drm_fbdev_client_hotplug) from [<c0415a20>] (drm_fbdev_generic_setup+0x88/0x118)
+> > > > > >  [<c0415a20>] (drm_fbdev_generic_setup) from [<c043f060>] (sun4i_drv_bind+0x128/0x160)
+> > > > > >  [<c043f060>] (sun4i_drv_bind) from [<c044b5b0>] (try_to_bring_up_master+0x164/0x1a0)
+> > > > > >  [<c044b5b0>] (try_to_bring_up_master) from [<c044b680>] (__component_add+0x94/0x140)
+> > > > > >  [<c044b680>] (__component_add) from [<c0445e1c>] (sun6i_dsi_probe+0x144/0x234)
+> > > > > >  [<c0445e1c>] (sun6i_dsi_probe) from [<c0452f0c>] (platform_drv_probe+0x48/0x9c)
+> > > > > >  [<c0452f0c>] (platform_drv_probe) from [<c04512e4>] (really_probe+0x1dc/0x2c8)
+> > > > > >  [<c04512e4>] (really_probe) from [<c0451530>] (driver_probe_device+0x60/0x160)
+> > > > > >  [<c0451530>] (driver_probe_device) from [<c044f7bc>] (bus_for_each_drv+0x74/0xb8)
+> > > > > >  [<c044f7bc>] (bus_for_each_drv) from [<c0451094>] (__device_attach+0xd0/0x13c)
+> > > > > >  [<c0451094>] (__device_attach) from [<c045048c>] (bus_probe_device+0x84/0x8c)
+> > > > > >  [<c045048c>] (bus_probe_device) from [<c0450918>] (deferred_probe_work_func+0x64/0x90)
+> > > > > >  [<c0450918>] (deferred_probe_work_func) from [<c0135970>] (process_one_work+0x204/0x420)
+> > > > > >  [<c0135970>] (process_one_work) from [<c013690c>] (worker_thread+0x274/0x5a0)
+> > > > > >  [<c013690c>] (worker_thread) from [<c013b3d8>] (kthread+0x11c/0x14c)
+> > > > > >  [<c013b3d8>] (kthread) from [<c01010e8>] (ret_from_fork+0x14/0x2c)
+> > > > > >  Exception stack(0xde539fb0 to 0xde539ff8)
+> > > > > >  9fa0:                                     00000000 00000000 00000000 00000000
+> > > > > >  9fc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > > > > >  9fe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > > > > >  ---[ end trace 755e10f62b83f396 ]---
+> > > > > >  Console: switching to colour frame buffer device 100x30
+> > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CRTC:46:crtc-0] flip_done timed out
+> > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [CONNECTOR:48:DSI-1] flip_done timed out
+> > > > > >  [drm:drm_atomic_helper_wait_for_dependencies] *ERROR* [PLANE:30:plane-0] flip_done timed out
+> > > > > >
+> > > > > > But the expected start delay value is 1 which is confirmed from
+> > > > > > new bsp [2].
+> > > > >
+> > > > > If you're saying that the "legacy" link (second one) is the new BSP.
+> > > >
+> > > > Will update, thanks.
+> > > >
+> > > > >
+> > > > > > The important and unclear note on legacy and new bsp codes [1] [2]
+> > > > > > is both use similar start computation initially but it later reassign
+> > > > > > it to 1 in new bsp.
+> > > > >
+> > > > > Then start_delay is never reassigned to 1 in that link, and is clamped
+> > > > > between 8 and 100 as the code that you are removing is doing.
+> > > >
+> > > > Please see the link one more please
+> > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
+> > > >
+> > > > >
+> > > > > > Unfortunately we don't have any evidence or documentation for this
+> > > > > > reassignment to 1 in new bsp, but it is working with all supported
+> > > > > > panels in A33, A64.
+> > > > >
+> > > > > No, it's not. That was added to fix a panel that is supported today.
+> > > >
+> > > > No, I have see this in A33, A64. and these are controller drivers
+> > > > right, if it panel fix and it should be part of panel driver isn't
+> > > > it?
+> > >
+> > > I'm not sure to follow that argument. You're submitting that fix to
+> > > allow other panels to work, right? So surely, some issues that can be
+> > > found using a given panel might not be solely fixed in the panel driver.
+> >
+> > I'm not sure I understand this. I have been verifying different panels
+> > to check across. and this change literally in BSP and the BSP code is
+> > using this based on the logs confirmation. all the logs and working
+> > conditions shows that the fix would required in dsi.
+>
+> You were saying that your fix was working with all supported panels in
+> A33, A64. That's simply not true, since at least one of mine will be
+> broken by this.
+>
+> You can say that it fixes all the panels *you* have, but it's
+> certainly not all of them.
 
-> On Mon, 17 Jun 2019 at 19:57, Douglas Anderson <dianders@chromium.org> wrote:
->>
->> This series attempts to deal better with the expected transmission
->> errors related to the idle states (handled by the Always-On-Subsystem
->> or AOS) on the SDIO-based WiFi on rk3288-veyron-minnie,
->> rk3288-veyron-speedy, and rk3288-veyron-mickey.
->>
->> Some details about those errors can be found in
->> <https://crbug.com/960222>, but to summarize it here: if we try to
->> send the wakeup command to the WiFi card at the same time it has
->> decided to wake up itself then it will behave badly on the SDIO bus.
->> This can cause timeouts or CRC errors.
->>
->> When I tested on 4.19 and 4.20 these CRC errors can be seen to cause
->> re-tuning.  Since I am currently developing on 4.19 this was the
->> original problem I attempted to solve.
->>
->> On mainline it turns out that you don't see the retuning errors but
->> you see tons of spam about timeouts trying to wakeup from sleep.  I
->> tracked down the commit that was causing that and have partially
->> reverted it here.  I have no real knowledge about Broadcom WiFi, but
->> the commit that was causing problems sounds (from the descriptioin) to
->> be a hack commit penalizing all Broadcom WiFi users because of a bug
->> in a Cypress SD controller.  I will let others comment if this is
->> truly the case and, if so, what the right solution should be.
->>
->> For v3 of this series I have added 2 patches to the end of the series
->> to address errors that would show up on systems with these same SDIO
->> WiFi cards when used on controllers that do periodic retuning.  These
->> systems need an extra fix to prevent the retuning from happening when
->> the card is asleep.
->>
->> I believe v5 of this series is all ready to go assuming Kalle Valo is
->> good with it.  I've added after-the-cut notes to patches awaiting his
->> Ack and have added other tags collected so far.
->>
->> Changes in v5:
->> - Add missing sdio_retune_crc_enable() in comments (Ulf).
->> - /s/reneable/re-enable (Ulf).
->> - Remove leftover prototypes: mmc_expect_errors_begin() / end() (Ulf).
->> - Rewording of "sleep command" in commit message (Arend).
->>
->> Changes in v4:
->> - Moved to SDIO API only (Adrian, Ulf).
->> - Renamed to make it less generic, now retune_crc_disable (Ulf).
->> - Function header makes it clear host must be claimed (Ulf).
->> - No more WARN_ON (Ulf).
->> - Adjust to API rename (Adrian, Ulf).
->> - Moved retune hold/release to SDIO API (Adrian).
->> - Adjust to API rename (Adrian).
->>
->> Changes in v3:
->> - Took out the spinlock since I believe this is all in one context.
->> - Expect errors for all of brcmf_sdio_kso_control() (Adrian).
->> - ("mmc: core: Export mmc_retune_hold_now() mmc_retune_release()") new for v3.
->> - ("brcmfmac: sdio: Don't tune while the card is off") new for v3.
->>
->> Changes in v2:
->> - A full revert, not just a partial one (Arend).  ...with explicit Cc.
->> - Updated commit message to clarify based on discussion of v1.
->>
->> Douglas Anderson (5):
->>   Revert "brcmfmac: disable command decode in sdio_aos"
->>   mmc: core: API to temporarily disable retuning for SDIO CRC errors
->>   brcmfmac: sdio: Disable auto-tuning around commands expected to fail
->>   mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
->>   brcmfmac: sdio: Don't tune while the card is off
->>
->>  drivers/mmc/core/core.c                       |  5 +-
->>  drivers/mmc/core/sdio_io.c                    | 77 +++++++++++++++++++
->>  .../broadcom/brcm80211/brcmfmac/sdio.c        | 17 ++--
->>  include/linux/mmc/host.h                      |  1 +
->>  include/linux/mmc/sdio_func.h                 |  6 ++
->>  5 files changed, 99 insertions(+), 7 deletions(-)
->>
->> --
->> 2.22.0.410.gd8fdbe21b5-goog
->>
->
-> Applied for fixes, thanks!
->
-> Some minor changes:
-> 1) Dropped the a few "commit notes", that was more related to version
-> and practical information about the series.
-> 2) Dropped fixes tags for patch 2->5, but instead put a stable tag
-> targeted for v4.18+.
->
-> Awaiting an ack from Kalle before sending the PR to Linus.
->
-> Kalle, perhaps you prefer to pick patch 1, as it could go separate.
-> Then please tell - and/or if there is anything else you want me to
-> change.
+The panels I have are running A33, A64 AW BSP and there are not using
+legacy drivers. better you can use what AW BSP's are using, if
+something not working with AW bsp then there can be an issue on the
+panel init sequence or timings.
 
-TBH I haven't followed the thread (or patches) that closely :) So feel
-free to take them and push them to Linus.
+>
+> > > > We can even see the same in pin64 longsleep kernel and others.
+> > > >
+> > > > https://github.com/BPI-SINOVOIP/BPI-M2M-bsp/blob/master/linux-sunxi/drivers/video/sunxi/disp/de/lowlevel_sun8iw5/de_dsi.c#L807
+> > > > https://github.com/longsleep/linux-pine64/blob/pine64-hacks-1.2/drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c#L730
+> > >
+> > > Yeah, and both of these have the legacy driver part with the clamping
+> > > too.
+> >
+> > Yes, both legacy has clamping, but not using.
+>
+> See the links above, they are being used.
+>
+> > they used it in new version driver which I'm referring above.
+>
+> I'm sorry, but I just don't get what you're saying. The links
+> mentionned above are clearly showing that it's being used, while the
+> other, !legacy, driver doesn't have them anymore. So it seems to be
+> exactly the opposite of what you're saying.
 
--- 
-Kalle Valo
+legacy drivers have the clamping of what the current code has, I agree
+that point. but the new version BSP driver which is running on right
+now, don't have clamping instead they do have a change what this patch
+has.
