@@ -2,70 +2,96 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=DKIM_ADSP_ALL,DKIM_INVALID,
+	DKIM_SIGNED,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E966C31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:00:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19ADAC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:01:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 493A420873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560873634;
-	bh=aeNXodnXi36O/klAfsttiGYiQgAFv2Vf36sQFe+u0eY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fZkZnj3qsvVG8W1I99WAW/PyL4zENbnLwgPM+FniZtjAu5Vw4eVtyCaDjIIg71UFQ
-	 S0jxs4eTfIqDhqfUQMen4a5TofdqEAqwpOI6meQRuS+Q3mivga9YU5fB6IbAn/6331
-	 Kgjg5x1ZoAGx8gN+7Hv+z8y3Jo/JQkf31veCb1OQ=
+	by mail.kernel.org (Postfix) with ESMTP id DADD320873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:01:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="AWY6F9P5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729619AbfFRQAd (ORCPT
+        id S1729831AbfFRQBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:00:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729209AbfFRQAd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:00:33 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D449D20873;
-        Tue, 18 Jun 2019 16:00:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560873632;
-        bh=aeNXodnXi36O/klAfsttiGYiQgAFv2Vf36sQFe+u0eY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=m5LIVr9M8OZSuB1bXNMzm+jfJiRw9O4tPWEMbbNrZUDDtLUCDyA1WhBgwHSoPtb40
-         PWcRmjVnAMHMv3AbtlL9s2QwunuNGqfJwSDkfL4RLbq9GA61UJuycuNv/91401cTb1
-         e020iCK0MRTinfdSnEbcS0MjrszGsZbbyN89UQZA=
-Date:   Tue, 18 Jun 2019 18:00:29 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     dan.j.williams@intel.com, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/6] dma: amba-pl08x: no need to cast away call to
- debugfs_create_file()
-Message-ID: <20190618160029.GA22218@kroah.com>
-References: <20190612122557.24158-1-gregkh@linuxfoundation.org>
- <20190614054613.GB2962@vkoul-mobl>
+        Tue, 18 Jun 2019 12:01:22 -0400
+Received: from smtp-fw-4101.amazon.com ([72.21.198.25]:21858 "EHLO
+        smtp-fw-4101.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729563AbfFRQBW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:01:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1560873681; x=1592409681;
+  h=from:to:cc:subject:date:message-id:mime-version;
+  bh=m5c+QxuC5TZHuXYLARbeSntlW7rvO+1YgCMe8NcYLYo=;
+  b=AWY6F9P55ufZNf3CyBk5pIfZquaC+9J5i2d0w3ix+EWW4a2vZZd39gog
+   DsvGIeHYwzoaQkVyusEbdVO3pzXxVC405Q6cHbqO2zzbqPyq0VeFffRzO
+   1u4aBTDjN07Uxqkro8Q/FXmWFZxaNtOGtqBCANP264WVnR0xwPKB4RHtM
+   w=;
+X-IronPort-AV: E=Sophos;i="5.62,389,1554768000"; 
+   d="scan'208";a="770859253"
+Received: from iad6-co-svc-p1-lb1-vlan3.amazon.com (HELO email-inbound-relay-1e-c7c08562.us-east-1.amazon.com) ([10.124.125.6])
+  by smtp-border-fw-out-4101.iad4.amazon.com with ESMTP; 18 Jun 2019 16:01:20 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1e-c7c08562.us-east-1.amazon.com (Postfix) with ESMTPS id A48A524209F;
+        Tue, 18 Jun 2019 16:01:17 +0000 (UTC)
+Received: from EX13D21UWB001.ant.amazon.com (10.43.161.108) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 18 Jun 2019 16:01:17 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (10.43.161.207) by
+ EX13D21UWB001.ant.amazon.com (10.43.161.108) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 18 Jun 2019 16:01:16 +0000
+Received: from 8c859006a84e.ant.amazon.com (172.26.203.28) by
+ mail-relay.amazon.com (10.43.161.249) with Microsoft SMTP Server id
+ 15.0.1367.3 via Frontend Transport; Tue, 18 Jun 2019 16:01:15 +0000
+From:   <alpawi@amazon.com>
+CC:     Benjamin Herrenschmidt <benh@amazon.com>,
+        Patrick Williams <alpawi@amazon.com>,
+        Jason Cooper <jason@lakedaemon.net>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        "Sebastian Hesselbarth" <sebastian.hesselbarth@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/2] pinctl: armada-37xx: fix for pins 32+
+Date:   Tue, 18 Jun 2019 11:01:03 -0500
+Message-ID: <20190618160105.26343-1-alpawi@amazon.com>
+X-Mailer: git-send-email 2.17.2 (Apple Git-113)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614054613.GB2962@vkoul-mobl>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:16:13AM +0530, Vinod Koul wrote:
-> On 12-06-19, 14:25, Greg Kroah-Hartman wrote:
-> > No need to check the return value of debugfs_create_file(), so no need
-> > to provide a fake "cast away" of the return value either.
-> 
-> Applied all after fixing the subsystem tag (dmaengine), thanks
+From: Patrick Williams <alpawi@amazon.com>
 
-Oops, messed that up, sorry.  Thanks for applying them!
+The 37xx GPIO config registers are only 32 bits long and
+span 2 registers for the NB GPIO controller.  The function
+to calculate the offset was missing the increase to the
+config register.
 
-greg k-h
+I have tested both raw gpio access and interrupts using
+libgpiod utilities on an Espressonbin.
+
+The first patch is a simple rename of a function because
+the original name implied it was doing IO itself ("update
+reg").  This patch could be dropped if undesired.
+
+The second patch contains the fix for GPIOs 32+.
+
+Patrick Williams (2):
+  pinctrl: armada-37xx: rename reg-offset function
+  pinctrl: armada-37xx: fix control of pins 32 and up
+
+ drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+-- 
+2.17.2 (Apple Git-113)
+
