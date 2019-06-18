@@ -2,121 +2,120 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7518C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88526C31E5D
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:54:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABEED20673
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:54:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Jkt/1rMf"
+	by mail.kernel.org (Postfix) with ESMTP id 6158320823
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 06:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560840865;
+	bh=h6KCEecYqvEUsVXMGsOj14p5VeuD+CI26MOesVKK8tw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=qlnpKCTf818hXrJSQLgfFHw2IcLle8nEAJRfUueyEsmtsSW2ST8hORZuEI6dyZ7Qh
+	 gx81OBt6vjXTwhU3moeQYbDVX2wj/1Wl2PWP0aCpkvmRO3arQTmUjJi/zFCwCb5Jl/
+	 LOwPoFwktuI2ib6nhxeedQ5fD5GLaDDOHRGc3rdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728876AbfFRGyH (ORCPT
+        id S1729026AbfFRGyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 02:54:07 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40645 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfFRGyG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 02:54:06 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a93so5297103pla.7
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 23:54:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=XxKJMd1N/7H2JNZBrL0GjfLdKt5XA0nEjEVfgW6l7ug=;
-        b=Jkt/1rMftJP6m6z7TQi0Lj1ts9T3Bnft1lLH1k2/Owsf4O6uyB/NJkikR2b6Q0tUXr
-         1kDMpWHVWBProI1B8MbJAdCZEcEfO/Y9IG/ZrI7gS4taTpy1gBOivJvCRfWR0qC2XOxe
-         BPPsOVw5JyWj75xjUV7B5MdRajEhBAT7mVVSX9U5n+QPQ9SLfGWzGlcqPO2fGJ0X29Zc
-         fKA7I8t6MkanAjFWFHIbB6v5pr8oYDzMF6lI2BuxrqIi2RD1DhZad0R98LZ8/9jYXA98
-         H1RLSvZy5PSNx4VTR0BQWFaUKkTkruE7bG6+R4oeNcqymIzPx/SPutl9YlXg+2GPBauk
-         lnjw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XxKJMd1N/7H2JNZBrL0GjfLdKt5XA0nEjEVfgW6l7ug=;
-        b=aY2Hx4SkY7GbLv45bQXP6K3VaO4GspOO2590ge8qLxcAcl+9mFh+L+Yx6Kc1O0Kn6Y
-         ekygdB7v4dckTlvmoEjHQ7nB5wgnIWNRRaiGbPD5WaditdMr0W019h/bo1HACZXWkLoZ
-         ZcO3FbfOv6dIA7sFYBGozcFDmaNdbOLj7SQlTawjQT/+scsl7ECdN+Ifl0i8Mn2iKueE
-         nsPgjpP528NWUD2FSEVALWNAWBkekwSCAuClpNAOBEKs36qzt020pPmMSF9wcwPQ45Tr
-         kZrJcZyAJUSokixzD0NO8goQqHAFq5EZ4OGWQpszFwlumsE1X3cxuA+AlRUcT/YfEY38
-         l6uA==
-X-Gm-Message-State: APjAAAXFTtfEqoL3NzhhGOgTjZRCVzuJNlE5BtKuyHDtJQESJZpoK2qg
-        pgF5fkGEe/Ad4aHgS69VU4JOwg==
-X-Google-Smtp-Source: APXvYqyC9+nnRj/+oVT15o3AC/A4OCdMwP0JLaEdRTbNBGjixQ6Fv5rz5PMgpGflDjfBe/pKedGKIw==
-X-Received: by 2002:a17:902:d897:: with SMTP id b23mr22622007plz.214.1560835430352;
-        Mon, 17 Jun 2019 22:23:50 -0700 (PDT)
-Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id j2sm16457065pfn.135.2019.06.17.22.23.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 22:23:49 -0700 (PDT)
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Andy Gross <agross@kernel.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: msm8996: Enable SMMUs
-Date:   Mon, 17 Jun 2019 22:23:46 -0700
-Message-Id: <20190618052346.32239-1-bjorn.andersson@linaro.org>
-X-Mailer: git-send-email 2.18.0
+        Tue, 18 Jun 2019 02:54:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57796 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728948AbfFRGyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 02:54:22 -0400
+Received: from brain-police (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AB0AB20665;
+        Tue, 18 Jun 2019 06:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560840861;
+        bh=h6KCEecYqvEUsVXMGsOj14p5VeuD+CI26MOesVKK8tw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=oBvX088a/fOuuObjn7+ntF6Kq5hoY2/4Hpn4C9r/FHAPQ18VfSrKIN6FL5H8J8wzc
+         BBR26SXGwC+04hPIj6pp4cWe3SMe5tW99SFutH5DZAbPe6caLBBE0uSV5X3hETFvma
+         RU/jAfOdqr0dwXiPJhdVASX8az+JIm0olJ4+olBE=
+Date:   Tue, 18 Jun 2019 07:54:15 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>, Qian Cai <cai@lca.pw>,
+        akpm@linux-foundation.org, Roman Gushchin <guro@fb.com>,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        mhocko@kernel.org, linux-mm@kvack.org, vdavydov.dev@gmail.com,
+        hannes@cmpxchg.org, cgroups@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH -next] arm64/mm: fix a bogus GFP flag in pgd_alloc()
+Message-ID: <20190618065414.GA15875@brain-police>
+References: <1559656836-24940-1-git-send-email-cai@lca.pw>
+ <20190604142338.GC24467@lakrids.cambridge.arm.com>
+ <20190610114326.GF15979@fuggles.cambridge.arm.com>
+ <1560187575.6132.70.camel@lca.pw>
+ <20190611100348.GB26409@lakrids.cambridge.arm.com>
+ <20190613121100.GB25164@rapoport-lnx>
+ <20190617151252.GF16810@rapoport-lnx>
+ <20190617163630.GH30800@fuggles.cambridge.arm.com>
+ <20190618061259.GB15497@rapoport-lnx>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618061259.GB15497@rapoport-lnx>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable SMMUs on 8996 now that the WRZ workaround in the arm-smmu driver
-has landed.
+On Tue, Jun 18, 2019 at 09:12:59AM +0300, Mike Rapoport wrote:
+> On Mon, Jun 17, 2019 at 05:36:30PM +0100, Will Deacon wrote:
+> > On Mon, Jun 17, 2019 at 06:12:52PM +0300, Mike Rapoport wrote:
+> > > Andrew, can you please add the patch below as an incremental fix?
+> > > 
+> > > With this the arm64::pgd_alloc() should be in the right shape.
+> > > 
+> > > 
+> > > From 1c1ef0bc04c655689c6c527bd03b140251399d87 Mon Sep 17 00:00:00 2001
+> > > From: Mike Rapoport <rppt@linux.ibm.com>
+> > > Date: Mon, 17 Jun 2019 17:37:43 +0300
+> > > Subject: [PATCH] arm64/mm: don't initialize pgd_cache twice
+> > > 
+> > > When PGD_SIZE != PAGE_SIZE, arm64 uses kmem_cache for allocation of PGD
+> > > memory. That cache was initialized twice: first through
+> > > pgtable_cache_init() alias and then as an override for weak
+> > > pgd_cache_init().
+> > > 
+> > > After enabling accounting for the PGD memory, this created a confusion for
+> > > memcg and slub sysfs code which resulted in the following errors:
+> > > 
+> > > [   90.608597] kobject_add_internal failed for pgd_cache(13:init.scope) (error: -2 parent: cgroup)
+> > > [   90.678007] kobject_add_internal failed for pgd_cache(13:init.scope) (error: -2 parent: cgroup)
+> > > [   90.713260] kobject_add_internal failed for pgd_cache(21:systemd-tmpfiles-setup.service) (error: -2 parent: cgroup)
+> > > 
+> > > Removing the alias from pgtable_cache_init() and keeping the only pgd_cache
+> > > initialization in pgd_cache_init() resolves the problem and allows
+> > > accounting of PGD memory.
+> > > 
+> > > Reported-by: Qian Cai <cai@lca.pw>
+> > > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> > > ---
+> > >  arch/arm64/include/asm/pgtable.h | 3 +--
+> > >  arch/arm64/mm/pgd.c              | 5 +----
+> > >  2 files changed, 2 insertions(+), 6 deletions(-)
+> > 
+> > Looks like this actually fixes caa841360134 ("x86/mm: Initialize PGD cache
+> > during mm initialization") due to an unlucky naming conflict!
+> > 
+> > In which case, I'd actually prefer to take this fix asap via the arm64
+> > tree. Is that ok?
+> 
+> I suppose so, it just won't apply as is. Would you like a patch against the
+> current upstream?
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 6 ------
- 1 file changed, 6 deletions(-)
+Yes, please. I'm assuming it's a straightforward change (please shout if it
+isn't).
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 1e3143c4fe8f..2ecd9d775d61 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -1177,7 +1177,6 @@
- 			clock-names = "iface",
- 				      "bus";
- 			#iommu-cells = <1>;
--			status = "disabled";
- 		};
- 
- 		camss: camss@a00000 {
-@@ -1330,8 +1329,6 @@
- 			clock-names = "iface", "bus";
- 
- 			power-domains = <&mmcc GPU_GDSC>;
--
--			status = "disabled";
- 		};
- 
- 		mdp_smmu: arm,smmu@d00000 {
-@@ -1348,8 +1345,6 @@
- 			clock-names = "iface", "bus";
- 
- 			power-domains = <&mmcc MDSS_GDSC>;
--
--			status = "disabled";
- 		};
- 
- 		lpass_q6_smmu: arm,smmu-lpass_q6@1600000 {
-@@ -1376,7 +1371,6 @@
- 			clocks = <&gcc GCC_HLOS1_VOTE_LPASS_CORE_SMMU_CLK>,
- 				 <&gcc GCC_HLOS1_VOTE_LPASS_ADSP_SMMU_CLK>;
- 			clock-names = "iface", "bus";
--			status = "disabled";
- 		};
- 
- 		agnoc@0 {
--- 
-2.18.0
-
+Will
