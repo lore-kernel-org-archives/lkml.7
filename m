@@ -2,71 +2,102 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87795C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D689C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5357721479
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F264206E0
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 16:59:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C3c4XTWo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730006AbfFRQ5z (ORCPT
+        id S1730013AbfFRQ7k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 12:57:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729472AbfFRQ5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:57:55 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 438A1206E0;
-        Tue, 18 Jun 2019 16:57:54 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 12:57:52 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Cong Wang <xiyou.wangcong@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>
-Subject: Re: [PATCH 0/4] trace: introduce trace event injection
-Message-ID: <20190618125752.75668a18@gandalf.local.home>
-In-Reply-To: <20190610211204.76c8ca50@oasis.local.home>
-References: <20190525165802.25944-1-xiyou.wangcong@gmail.com>
-        <20190525183715.0778f5e5@gandalf.local.home>
-        <CAM_iQpXg9PrA_T_Argxuc+SST2CqjY=qjQA_pEgBNtC6F_a2Pw@mail.gmail.com>
-        <20190610211204.76c8ca50@oasis.local.home>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 18 Jun 2019 12:59:40 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:37970 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729528AbfFRQ7k (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 12:59:40 -0400
+Received: by mail-pl1-f193.google.com with SMTP id f98so381739plb.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 09:59:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dRMDk2BAfRDYDNECYYhM1BfKg5f7KkTU03mHf+QYRbE=;
+        b=C3c4XTWoNgJakO71gg1YUplJAt4MELRvc4yd0sAONMl1zgwrGjZnEgmulHFTBQtsSN
+         zJpp3FK/4A8RkSgj+I8H445n9VaHxYRfCmIH0gPhLGCtErpM0MWqlZVhcbpKHNrhl9zt
+         fmWkivPYggTvuFKel8SMOuNoFNFsUGzN3VEbtVEoUmtNjm3B5JBQqNCBm5vmpDbMP2Zn
+         k65KS0bDEcOIdWrjoFEutjHusI6DMoxLTgv+qS5kPiJ4uq8jgLtcPuk7sq8Mi/itZvnw
+         LFPS68lD5kUz0Qt4XTTqy4Icn0kXywtcQNIGwebC1xKwlCACmrugcYPeTpdlLpWT7M6y
+         THlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=dRMDk2BAfRDYDNECYYhM1BfKg5f7KkTU03mHf+QYRbE=;
+        b=TZgHrjpjySR0bGMuSgGmG9cZCuZYJFyymL29vm85S+FvgA7WyCa5GdYJMB8cbyedSw
+         F64BbIg6WD+siF8Gj3w5sjK9sJr3/ecKI2MXhw50GA6LZC+LEC45lBDk+P7XbIahvrf0
+         rCRvffOibFKJ55NhvimNztjghnIPiq9poSaMi/ZbSzUSWKk5ac2xm/tzIvqhpmw+IzWD
+         5CCRhEhGktLdIf32UtEs9S1BiTA7OJ+wk0M6Y9d5y0Ju3/X4hrOf58vxaeQ6qQkM5d7Q
+         7uG3/qDkf4VKTAEhIFllHnR17B7MmhLxxM+R+U2Sz4dFVo4cHNc0necq45vTdcjHP3WS
+         XmRg==
+X-Gm-Message-State: APjAAAXVdL2TICWgir+3yzSl9PaTamrTlaRG2x9fEh5Nm/Sno4a62+QZ
+        Er1jBwXlEMG+NDwhVRZ5i/o=
+X-Google-Smtp-Source: APXvYqwpWBjfeXR2nSPVbLHaFfOhqkDLRBzVuZj6BkNDNTEsIJKP1MGFkea5KKD3TI5XDk+hlKqOBA==
+X-Received: by 2002:a17:902:2ae7:: with SMTP id j94mr30537867plb.270.1560877179452;
+        Tue, 18 Jun 2019 09:59:39 -0700 (PDT)
+Received: from localhost.localdomain ([112.196.181.128])
+        by smtp.googlemail.com with ESMTPSA id r6sm3307678pji.0.2019.06.18.09.59.36
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 09:59:38 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Subject: [PATCH] Sched: Change type of 'overrun' from int to u64
+Date:   Tue, 18 Jun 2019 22:29:08 +0530
+Message-Id: <20190618165908.15012-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 10 Jun 2019 21:12:04 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+Callers of hrtimer_forward_now() should save the return value in u64.
+function sched_cfs_period_timer() stores
+it in variable 'overrun' of type int
+change type of overrun from int to u64 to solve the issue.
 
-> On Mon, 10 Jun 2019 14:11:57 -0700
-> Cong Wang <xiyou.wangcong@gmail.com> wrote:
-> 
-> > On Sat, May 25, 2019 at 3:37 PM Steven Rostedt <rostedt@goodmis.org> wrote:  
-> > > Hi Cong,
-> > >
-> > > Thanks for sending these patches, but I just want to let you know that
-> > > it's currently a US holiday, and then afterward I'll be doing quite a
-> > > bit of traveling for the next two weeks. If you don't hear from me in
-> > > after two weeks, please send me a reminder.    
-> > 
-> > This is a reminder after two weeks. :) Please review my patches
-> > when you have a chance.
-> >  
-> 
-> Thanks for the reminder. I'll try to get to it this week.
->
+Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+---
+ kernel/sched/fair.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Bah, sorry I haven't gotten to this yet. It's still in my queue to do,
-and I'm going to be traveling again. I have not forgotten about it.
-It's now marked in my INBOX patchwork, so it will not be forgotten.
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index f35930f5e528..c6bcae7d4e49 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -4896,7 +4896,7 @@ static enum hrtimer_restart sched_cfs_period_timer(struct hrtimer *timer)
+ 	struct cfs_bandwidth *cfs_b =
+ 		container_of(timer, struct cfs_bandwidth, period_timer);
+ 	unsigned long flags;
+-	int overrun;
++	u64 overrun;
+ 	int idle = 0;
+ 	int count = 0;
+ 
+-- 
+2.21.0
 
--- Steve
