@@ -2,99 +2,141 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C3E4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:55:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FCEAC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:55:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62258205F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:55:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C4Iz1IGy"
+	by mail.kernel.org (Postfix) with ESMTP id 7B54F205F4
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 17:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729997AbfFRRzV (ORCPT
+        id S1730153AbfFRRzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 13:55:21 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35371 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729285AbfFRRzV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 13:55:21 -0400
-Received: by mail-pg1-f194.google.com with SMTP id s27so8108822pgl.2
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 10:55:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sZQNDbvRCX1/xmAgz48y9nkM0uP28/QjVvVkkR3CQOA=;
-        b=C4Iz1IGyiHO+KxnxVZJMXrvK0VMpgE0VV8M58ezWEBhGaMJqGoxNPncfAY9jQXro1a
-         q2Dzr43f5dlfHfhfUcftvrpCzA/BC3JWfBqDig80Yi+GH7GTGVcyEBvjlU4h93NUMTU2
-         +Vklf+mbjyEb6tgJFqATVI5ElgnQ8aZb5U95w6io2EoG9i6QBhq77xIblzZdHUys2JRy
-         0LBU6WNQ2ZZsau9C761+3HwY60Nx2/yUBgCKfAonztX4KVHD1vomR22vIfTmFOCMSPqV
-         q6Gl2llLemRxkoD0x8cQq0zZfmEQmxMSNapLKLrpIX0CTkoiBtCm7l+1eaHX3ykn+one
-         WwpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sZQNDbvRCX1/xmAgz48y9nkM0uP28/QjVvVkkR3CQOA=;
-        b=JeilnJL+XHr+xAsdDy5Er7eZcuXh2BMyhchCCJNHdfvQkSPE1t8JIeDsTcoOpFfd1n
-         H0oQ6BL5vsi+IjoorrQhdDts4KYpiXcDtYoQEvbDP77fMb94KU5G+cKZrz6M9LhptPyv
-         SU7aBT5ymQnhIxE2e1vDFXsVwlS3tQYU4pjN7M2dlSC7415LirHyg952y+SfYH0s+/UE
-         TYE/XdvyzCWjk3rtDZOYNymhJ97vVgRXzJDuFGsZcK2Jd8QUdlItTs6SKWSDhyVMBBdd
-         3MwQOYmneKGDCpwPL0rsh/O6mEQwYfqJNwRCIpv6TqDfuShZibrqj0Pxz66DLd/azo+p
-         PpsQ==
-X-Gm-Message-State: APjAAAWu7zd8S329jvYCgscJjwnRDeO4da77TdfB99fcVdB4P0fsK0+3
-        aatugqAtcRBo5WkL8wJikNQ=
-X-Google-Smtp-Source: APXvYqx96I5XvE7xRAPdGzOeTmm+5O+cLVaDcbbg2VIuBv+nd9XhInsanHzz00TGwE4M8MslR6ab5w==
-X-Received: by 2002:a17:90a:e397:: with SMTP id b23mr6347869pjz.140.1560880520698;
-        Tue, 18 Jun 2019 10:55:20 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id c18sm17498763pfc.180.2019.06.18.10.55.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 10:55:20 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 23:25:16 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        John Whitmore <johnfwhitmore@gmail.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8192u: ieee80211: Remove redundant memset
-Message-ID: <20190618175516.GA6518@hari-Inspiron-1545>
+        Tue, 18 Jun 2019 13:55:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:52732 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729285AbfFRRzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:55:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 30238344;
+        Tue, 18 Jun 2019 10:55:40 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B30693F738;
+        Tue, 18 Jun 2019 10:55:38 -0700 (PDT)
+Date:   Tue, 18 Jun 2019 18:55:36 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, robin.murphy@arm.com,
+        joro@8bytes.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        david.brown@linaro.org
+Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of
+ qcom_scm_call
+Message-ID: <20190618175536.GI4270@fuggles.cambridge.arm.com>
+References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
+ <20190612071554.13573-2-vivek.gautam@codeaurora.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190612071554.13573-2-vivek.gautam@codeaurora.org>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-alloc_etherdev function internally calls kvzalloc . So we may not need
-explicit memset after this call.
+On Wed, Jun 12, 2019 at 12:45:51PM +0530, Vivek Gautam wrote:
+> There are scnenarios where drivers are required to make a
+> scm call in atomic context, such as in one of the qcom's
+> arm-smmu-500 errata [1].
+> 
+> [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
+>       drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
+>       msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
+> 
+> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
+>  1 file changed, 92 insertions(+), 44 deletions(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> index 91d5ad7cf58b..b6dca32c5ac4 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -62,32 +62,71 @@ static DEFINE_MUTEX(qcom_scm_lock);
+>  #define FIRST_EXT_ARG_IDX 3
+>  #define N_REGISTER_ARGS (MAX_QCOM_SCM_ARGS - N_EXT_QCOM_SCM_ARGS + 1)
+>  
+> -/**
+> - * qcom_scm_call() - Invoke a syscall in the secure world
+> - * @dev:	device
+> - * @svc_id:	service identifier
+> - * @cmd_id:	command identifier
+> - * @desc:	Descriptor structure containing arguments and return values
+> - *
+> - * Sends a command to the SCM and waits for the command to finish processing.
+> - * This should *only* be called in pre-emptible context.
+> -*/
+> -static int qcom_scm_call(struct device *dev, u32 svc_id, u32 cmd_id,
+> -			 const struct qcom_scm_desc *desc,
+> -			 struct arm_smccc_res *res)
+> +static void __qcom_scm_call_do(const struct qcom_scm_desc *desc,
+> +			       struct arm_smccc_res *res, u32 fn_id,
+> +			       u64 x5, u32 type)
+> +{
+> +	u64 cmd;
+> +	struct arm_smccc_quirk quirk = {.id = ARM_SMCCC_QUIRK_QCOM_A6};
+> +
+> +	cmd = ARM_SMCCC_CALL_VAL(type, qcom_smccc_convention,
+> +				 ARM_SMCCC_OWNER_SIP, fn_id);
+> +
+> +	quirk.state.a6 = 0;
+> +
+> +	do {
+> +		arm_smccc_smc_quirk(cmd, desc->arginfo, desc->args[0],
+> +				    desc->args[1], desc->args[2], x5,
+> +				    quirk.state.a6, 0, res, &quirk);
+> +
+> +		if (res->a0 == QCOM_SCM_INTERRUPTED)
+> +			cmd = res->a0;
+> +
+> +	} while (res->a0 == QCOM_SCM_INTERRUPTED);
+> +}
+> +
+> +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
+> +			     struct arm_smccc_res *res, u32 fn_id,
+> +			     u64 x5, bool atomic)
+> +{
 
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
----
- drivers/staging/rtl8192u/ieee80211/ieee80211_module.c | 1 -
- 1 file changed, 1 deletion(-)
+Maybe pass in the call type (ARM_SMCCC_FAST_CALL vs ARM_SMCCC_STD_CALL)
+instead of "bool atomic"? Would certainly make the callsites easier to
+understand.
 
-diff --git a/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c b/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c
-index 3532ea9..4a6c3f6 100644
---- a/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c
-+++ b/drivers/staging/rtl8192u/ieee80211/ieee80211_module.c
-@@ -109,7 +109,6 @@ struct net_device *alloc_ieee80211(int sizeof_priv)
- 	}
- 
- 	ieee = netdev_priv(dev);
--	memset(ieee, 0, sizeof(struct ieee80211_device) + sizeof_priv);
- 	ieee->dev = dev;
- 
- 	err = ieee80211_networks_allocate(ieee);
--- 
-2.7.4
+> +	int retry_count = 0;
+> +
+> +	if (!atomic) {
+> +		do {
+> +			mutex_lock(&qcom_scm_lock);
+> +
+> +			__qcom_scm_call_do(desc, res, fn_id, x5,
+> +					   ARM_SMCCC_STD_CALL);
+> +
+> +			mutex_unlock(&qcom_scm_lock);
+> +
+> +			if (res->a0 == QCOM_SCM_V2_EBUSY) {
+> +				if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
+> +					break;
+> +				msleep(QCOM_SCM_EBUSY_WAIT_MS);
+> +			}
+> +		}  while (res->a0 == QCOM_SCM_V2_EBUSY);
+> +	} else {
+> +		__qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
+> +	}
 
+Is it safe to make concurrent FAST calls?
+
+Will
