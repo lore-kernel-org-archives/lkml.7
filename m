@@ -2,134 +2,119 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04489C31E51
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C26AC31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5B3720863
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F5B2080A
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VuEodqM3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfFRHOK (ORCPT
+        id S1729018AbfFRHOs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:14:10 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726181AbfFRHOJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:14:09 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 57A751F306E6E079F216;
-        Tue, 18 Jun 2019 15:14:06 +0800 (CST)
-Received: from [10.151.23.176] (10.151.23.176) by smtp.huawei.com
- (10.3.19.206) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 18 Jun
- 2019 15:13:58 +0800
-Subject: Re: [RFC PATCH 0/8] staging: erofs: decompression inplace approach
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC:     <devel@driverdev.osuosl.org>, <linux-erofs@lists.ozlabs.org>,
-        <chao@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        <weidu.du@huawei.com>, Fang Wei <fangwei1@huawei.com>,
-        <linux-fsdevel@vger.kernel.org>, Miao Xie <miaoxie@huawei.com>
-References: <20190614181619.64905-1-gaoxiang25@huawei.com>
- <20190617203609.GA22034@kroah.com>
- <c86d3fc0-8b4a-6583-4309-911960fbe862@huawei.com>
- <20190618054709.GA4271@kroah.com>
- <df18d7f9-f65a-5697-c7c4-edb1ad846c3e@huawei.com>
- <20190618064523.GA6015@kroah.com>
- <2a6abbf9-20a9-c1dd-0091-d8e3009037eb@huawei.com>
- <20190618070503.GB9160@kroah.com>
-From:   Gao Xiang <gaoxiang25@huawei.com>
-Message-ID: <08079e72-3ab5-fc9e-d229-13540badf199@huawei.com>
-Date:   Tue, 18 Jun 2019 15:13:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
-MIME-Version: 1.0
-In-Reply-To: <20190618070503.GB9160@kroah.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.151.23.176]
-X-CFilter-Loop: Reflected
+        Tue, 18 Jun 2019 03:14:48 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:39072 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfFRHOs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 03:14:48 -0400
+Received: by mail-oi1-f194.google.com with SMTP id m202so8290591oig.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:14:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=SqAd1fx2aqjUroAge2OaNB4tSLlvMkP+JhWERXOSN8Y=;
+        b=VuEodqM3GEhgspN5BcSZBejRWyu1yfMzsvbt/tZcCt5AtPf01DDmMcr/YxPt5la51Y
+         eAazo1sgyFm7hHAzmylz7IJwsHgTOpM5k1si7TJ3FbDsRl6PPeJHejJL0OEIt4gS1GKH
+         jR0XlMVF4O6H8x0vXenyxoUWmPaZQPyQb/Q46CfiDuoDd4AejRu2OH2TcvcoLt1KVvXz
+         hUTwDSqW+gWtikzfUEbdnp2rkDshNdXzeKLjxt1jXI6h6gfIJ88g9KwpGLNLUDwgO1Hu
+         R3Dd1X0fhutxGN+CDAGj/KHsrlAQKUqMMf725VQBhO+S4DbDoMz4CoqO6L9Amo24rp2K
+         RHZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=SqAd1fx2aqjUroAge2OaNB4tSLlvMkP+JhWERXOSN8Y=;
+        b=JpQZqMhumd03a7j8Edm3EK9RT5hY2pCQxJVxofLhqjqUbnCyQoX7u4Y6D8a+JJnUNN
+         9tIoeV6n441OhklG2yv1g4oslGN4BLi4vbZ378z3RMTu4K/xregs8f46D17ceH7mpaHI
+         rLqEkrExXzd8lIu5lLfKNLZ0Y/6U5wPF4GLi8+1eyQX85N8k0v4/5hrzZiqGd5LuPnZt
+         s/qrNZ7ZRBhXNxygOW1dwJIU3qDRvvBrX+GpoCYme7z6Pt3xEn3ij/5Z6oLUQEIFBkaN
+         2tkehz62jfrlFpyzaQKtVvrrHnQe+hq0/eTpO1djflwHkdOUlCZaQarsvhuJhUFKVDSr
+         IOJg==
+X-Gm-Message-State: APjAAAW0FjNyDnT4tBa/ryjnqQCK9mH6TdbOKDyCgKeaDyzB7Mnx2r6D
+        RqPLWXDRzkwPkmky5NLhJj3hDwaOCio=
+X-Google-Smtp-Source: APXvYqz4ODTWIjG3AqGUUeq6vsPQMClqM7BcnsAUOQ3cPzIUXZ5ipOaid/o/JhY/P+BpjDaxGb6eZQ==
+X-Received: by 2002:a63:4a1f:: with SMTP id x31mr972877pga.150.1560835696219;
+        Mon, 17 Jun 2019 22:28:16 -0700 (PDT)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 188sm13934085pfg.11.2019.06.17.22.28.15
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 17 Jun 2019 22:28:15 -0700 (PDT)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Patrick Lai <plai@codeaurora.org>,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH] ASoC: qcom: common: Fix NULL pointer in of parser
+Date:   Mon, 17 Jun 2019 22:28:13 -0700
+Message-Id: <20190618052813.32523-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.18.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+A snd_soc_dai_link_component is allocated and associated with the first
+link, so when the code tries to assign the of_node of the second link's
+"cpu" member it dereferences a NULL pointer.
 
+Fix this by moving the allocation and assignement of
+snd_soc_dai_link_components into the loop, giving us one pair per link.
 
-On 2019/6/18 15:05, Greg Kroah-Hartman wrote:
-> On Tue, Jun 18, 2019 at 02:52:21PM +0800, Gao Xiang wrote:
->>
->>
->> On 2019/6/18 14:45, Greg Kroah-Hartman wrote:
->>> On Tue, Jun 18, 2019 at 02:18:00PM +0800, Gao Xiang wrote:
->>>>
->>>>
->>>> On 2019/6/18 13:47, Greg Kroah-Hartman wrote:
->>>>> On Tue, Jun 18, 2019 at 09:47:08AM +0800, Gao Xiang wrote:
->>>>>>
->>>>>>
->>>>>> On 2019/6/18 4:36, Greg Kroah-Hartman wrote:
->>>>>>> On Sat, Jun 15, 2019 at 02:16:11AM +0800, Gao Xiang wrote:
->>>>>>>> At last, this is RFC patch v1, which means it is not suitable for
->>>>>>>> merging soon... I'm still working on it, testing its stability
->>>>>>>> these days and hope these patches get merged for 5.3 LTS
->>>>>>>> (if 5.3 is a LTS version).
->>>>>>>
->>>>>>> Why would 5.3 be a LTS kernel?
->>>>>>>
->>>>>>> curious as to how you came up with that :)
->>>>>>
->>>>>> My personal thought is about one LTS kernel one year...
->>>>>> Usually 5 versions after the previous kernel...(4.4 -> 4.9 -> 4.14 -> 4.19),
->>>>>> which is not suitable for all historical LTSs...just prepare for 5.3...
->>>>>
->>>>> I try to pick the "last" kernel that is released each year, which
->>>>> sometimes is 5 kernels, sometimes 4, sometimes 6, depending on the
->>>>> release cycle.
->>>>>
->>>>> So odds are it will be 5.4 for the next LTS kernel, but we will not know
->>>>> more until it gets closer to release time.
->>>>
->>>> Thanks for kindly explanation :)
->>>>
->>>> Anyway, I will test these patches, land to our commerical products and try the best
->>>> efforts on making it more stable for Linux upstream to merge.
->>>
->>> Sounds great.
->>>
->>> But why do you need to add compression to get this code out of staging?
->>> Why not move it out now and then add compression and other new features
->>> to it then?
->>
->> Move out of staging could be over several linux versions since I'd like to get
->> majority fs people agreed to this.
-> 
-> You never know until you try :)
+Fixes: 1e36ea360ab9 ("ASoC: qcom: common: use modern dai_link style")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ sound/soc/qcom/common.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
-Thanks for your encouragement :)
-Actually, I personally gave a brief talk on this year LSF/MM 2019 but since I cannot speak
-English well so the entire effect is not good enough :(...
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index c7a878507220..97488b5cc515 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -42,17 +42,17 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 	card->num_links = num_links;
+ 	link = card->dai_link;
+ 
+-	dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
+-	if (!dlc)
+-		return -ENOMEM;
++	for_each_child_of_node(dev->of_node, np) {
++		dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
++		if (!dlc)
++			return -ENOMEM;
+ 
+-	link->cpus	= &dlc[0];
+-	link->platforms	= &dlc[1];
++		link->cpus	= &dlc[0];
++		link->platforms	= &dlc[1];
+ 
+-	link->num_cpus		= 1;
+-	link->num_platforms	= 1;
++		link->num_cpus		= 1;
++		link->num_platforms	= 1;
+ 
+-	for_each_child_of_node(dev->of_node, np) {
+ 		cpu = of_get_child_by_name(np, "cpu");
+ 		platform = of_get_child_by_name(np, "platform");
+ 		codec = of_get_child_by_name(np, "codec");
+-- 
+2.18.0
 
-I will personally contact with important people ... to get their agreements on this file
-system soon.
-
-> 
->> Decompression inplace is an important part of erofs to show its performance
->> benefits over existed compress filesystems and I tend to merge it in advance.
-> 
-> There is no requirement to show benefits over other filesystems in order
-> to get it merged, but I understand the feeling.  That's fine, we can
-> wait, we are not going anywhere...
-
-Thanks again. I am just proving that the erofs solution may be one of the best compression
-solutions in performance first scenerio :)
-
-Thanks,
-Gao Xiang
-
-> 
-> thanks,
-> 
-> greg k-h
-> 
