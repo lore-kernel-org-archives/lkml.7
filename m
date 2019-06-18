@@ -2,152 +2,110 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96AC5C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3034EC31E5E
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 603EB20873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="RFEpZtIn"
+	by mail.kernel.org (Postfix) with ESMTP id 0E49D20873
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 23:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729246AbfFRXP1 (ORCPT
+        id S1729319AbfFRXPu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 19:15:27 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39448 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfFRXP0 (ORCPT
+        Tue, 18 Jun 2019 19:15:50 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49088 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFRXPu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 19:15:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id r21so14381517otq.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 16:15:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CIsSf2GXvyDDqSHsag5yZpphi9br2QVejLk/bHmvVOU=;
-        b=RFEpZtInek3Io86FQLQYPSGxY5DbPdOrWHexhniqE/836Q7GoKyLBn5C/t/u+NyiOm
-         k91tU09m/SUR6H+dxUwX47Mx4GxGk1hO2WU7XCGEQgxBh6DQSwf6heoiugn9iNCP6o5F
-         z0oWkzGRcr+eDW8VjYY3lDtJld2zAiNrHmEkRMTX8rm2qA96nYlH41u3teob2jmMXlYF
-         t5acmoJ55ZKaiOWycmMm5ZqMgAzS36wBkDzLqNjJ6qe7bdv0/tAUs+OZeZdiAEyKUSx+
-         IoTYLES+7UrlT3ovI04C3hEM6/FCT+4dMoRFCP6QvEZZjdDVg+h4Mmak/08Vnz1J24dL
-         PuuQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CIsSf2GXvyDDqSHsag5yZpphi9br2QVejLk/bHmvVOU=;
-        b=rjAd67wLNbw5Xt2gMgCejy318BtnwH8hoz0W/LExccytypHgwoWymtMFuIaYgmrH8l
-         ApKzRG8qj8iHhqvSsGJPAlaGMK2WNgGWGi5xtBHVxMi6iD0VHOHhK7tUDsF/zpt3b3Z3
-         40cJsYevHL5mEQD6LY/aPguitmVj2tTy/sZIKS6SDz5+SfENL87NFvzch1ZtPEuKfPkF
-         V/OOYsUwKs86P7FYWebcclAbM8EpOUy6EMHkq5kQXDPMaJmvSkbEOP/wlWZNN4QjdCNE
-         cX7goF8PmA2M07AN1Gejy+b+f7yesiY8bUve4ar76P16zafv9X/DP+9RIQbVwOUlLU2O
-         MBOw==
-X-Gm-Message-State: APjAAAWBFUFJofwSH/ID1myUa3+7i22WjfInKCYcfAgLPI0rHHPZIx+N
-        Ibxpy0JPCQSOmakvdZ6w7IBgD/URPHnXne+YmyEFyw==
-X-Google-Smtp-Source: APXvYqwNQLjWPtV+R8pF+k88qhC8khbqFVOtcNqlqN3daCyPXfL1Az/KXqmwaSLH86Onsw0+GoRPuR0JCs8tLaQzTqk=
-X-Received: by 2002:a9d:5911:: with SMTP id t17mr17885454oth.159.1560899725814;
- Tue, 18 Jun 2019 16:15:25 -0700 (PDT)
+        Tue, 18 Jun 2019 19:15:50 -0400
+Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hdNKG-0008Hx-Ui; Wed, 19 Jun 2019 01:15:41 +0200
+Date:   Wed, 19 Jun 2019 01:15:39 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Ricardo Neri <ricardo.neri-calderon@linux.intel.com>
+cc:     Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@suse.de>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>,
+        Stephane Eranian <eranian@google.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Jacob Pan <jacob.jun.pan@intel.com>,
+        Juergen Gross <jgross@suse.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Wincy Van <fanwenyi0529@gmail.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Baoquan He <bhe@redhat.com>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>
+Subject: Re: [RFC PATCH v4 18/21] x86/apic: Add a parameter for the APIC
+ delivery mode
+In-Reply-To: <20190618224738.GC30488@ranerica-svr.sc.intel.com>
+Message-ID: <alpine.DEB.2.21.1906190115240.1765@nanos.tec.linutronix.de>
+References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com> <1558660583-28561-19-git-send-email-ricardo.neri-calderon@linux.intel.com> <alpine.DEB.2.21.1906161151240.1760@nanos.tec.linutronix.de>
+ <20190618224738.GC30488@ranerica-svr.sc.intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
- <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
- <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
-In-Reply-To: <4587569.x9DSL43cXO@kreacher>
-From:   Tri Vo <trong@android.com>
-Date:   Tue, 18 Jun 2019 16:15:14 -0700
-Message-ID: <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
-Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Sandeep Patil <sspatil@android.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>, linux-pm@vger.kernel.org,
-        kernel-team@android.com, gregkh@linuxfoundation.org,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 2:23 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Tuesday, June 18, 2019 10:17:16 PM CEST Sandeep Patil wrote:
-> >
-> > Hi Rafael, Viresh etc.
-> >
-> > On Tue, Jun 11, 2019 at 10:31:16AM -0700, Tri Vo wrote:
-> > > On Tue, Jun 4, 2019 at 5:23 PM Tri Vo <trong@android.com> wrote:
-> > > >
-> > > > Hello Rafael,
-> > > >
-> > > > Currently, Android reads wakeup sources statistics from
-> > > > /sys/kernel/debug/wakeup_sources in production environment. This
-> > > > information is used, for example, to report which wake lock prevents
-> > > > the device from suspending.
-> >
-> > Android's usage of the 'wakeup_sources' from debugfs can is linked at[1].
-> > Basically, android's battery stats implementation to plot history for suspend
-> > blocking wakeup sources over device's boot cycle. This is used both for power
-> > specific bug reporting but also is one of the stats that will be used towards
-> > attributing the battery consumption to specific processes over the period of
-> > time.
-> >
-> > Android depended on the out-of-tree /proc/wakelocks before and now relies on
-> > wakeup_sources debugfs entry heavily for the aforementioned use cases.
-> >
-> > > >
-> > > > Android userspace reading wakeup_sources is not ideal because:
-> > > > - Debugfs API is not stable, i.e. Android tools built on top of it are
-> > > > not guaranteed to be backward/forward compatible.
-> > > > - This file requires debugfs to be mounted, which itself is
-> > > > undesirable for security reasons.
-> > > >
-> > > > To address these problems, we want to contribute a way to expose these
-> > > > statistics that doesn't depend on debugfs.
-> > > >
-> > > > Some initial thoughts/questions: Should we expose the stats in sysfs?
-> > > > Or maybe implement eBPF-based solution? What do you think?
-> >
-> > We are going through Android's out-of-tree kernel dependencies along with
-> > userspace APIs that are not necessarily considered "stable and forever
-> > supported" upstream. The debugfs dependencies showed up on our radar as a
-> > result and so we are wondering if we should worry about changes in debugfs
-> > interface and hence the question(s) below.
-> >
-> > So, can we rely on /d/wakeup_sources to be considered a userspace API and
-> > hence maintained stable as we do for other /proc and /sys entries?
-> >
-> > If yes, then we will go ahead and add tests for this in LTP or
-> > somewhere else suitable.
->
-> No, debugfs is not ABI.
->
-> > If no, then we would love to hear suggestions for any changes that need to be
-> > made or we simply just move the debugfs entry into somewhere like
-> > /sys/power/ ?
->
-> No, moving that entire file from debugfs into sysfs is not an option either.
->
-> The statistics for the wakeup sources associated with devices are already there
-> under /sys/devices/.../power/ , but I guess you want all wakeup sources?
->
-> That would require adding a kobject to struct wakeup_source and exposing
-> all of the statistics as separate attributes under it.  In which case it would be
-> good to replace the existing wakeup statistics under /sys/devices/.../power/
-> with symbolic links to the attributes under the wakeup_source kobject.
+On Tue, 18 Jun 2019, Ricardo Neri wrote:
 
-Thanks for your input, Rafael! Your suggestion makes sense. I'll work
-on a patch for this.
->
-> > As a side effect, if the entry moves out of debugfs, Android can run without
-> > mounting debugfs in production that I assume is a good thing.
->
-> And really Android developers might have thought about this a bit earlier.
+> On Sun, Jun 16, 2019 at 11:55:03AM +0200, Thomas Gleixner wrote:
+> > On Thu, 23 May 2019, Ricardo Neri wrote:
+> > >  
+> > >  struct irq_cfg {
+> > > -	unsigned int		dest_apicid;
+> > > -	unsigned int		vector;
+> > > +	unsigned int				dest_apicid;
+> > > +	unsigned int				vector;
+> > > +	enum ioapic_irq_destination_types	delivery_mode;
+> > 
+> > And how is this related to IOAPIC?
+> 
+> In my view, IOAPICs can also be programmed with a delivery mode. Mode
+> values are the same for MSI interrupts.
 
-I'm still learning about kernel development. And Android has made
-missteps before. So I figured it's a good idea to ask first :)
-
-Thanks!
+> > I know this enum exists already, but in
+> > connection with MSI this does not make any sense at all.
+> 
+> Is the issue here the name of the enumeration?
+> 
+> > 
+> > > +
+> > > +		/*
+> > > +		 * Initialize the delivery mode of this irq to match the
+> > > +		 * default delivery mode of the APIC. This is useful for
+> > > +		 * children irq domains which want to take the delivery
+> > > +		 * mode from the individual irq configuration rather
+> > > +		 * than from the APIC.
+> > > +		 */
+> > > +		 apicd->hw_irq_cfg.delivery_mode = apic->irq_delivery_mode;
+> > 
+> > And here it's initialized from apic->irq_delivery_mode, which is an
+> > u32. Intuitive and consistent - NOT!
+> 
+> Yes, this is wrong. Then should the member in the structure above be an
+> u32 instead of enum ioapic_irq_destination_types?
+> 
+> Thanks and BR,
+> Ricardo
+> 
