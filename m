@@ -2,99 +2,98 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A027C31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C91A8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:31:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 751F620873
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:30:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FC5C2082C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 01:31:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="pWeo/B2e"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VjMDps5z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfFRBav (ORCPT
+        id S1727011AbfFRBbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 21:30:51 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:41705 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726048AbfFRBau (ORCPT
+        Mon, 17 Jun 2019 21:31:39 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:41448 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725829AbfFRBbj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 21:30:50 -0400
-Received: by mail-wr1-f65.google.com with SMTP id c2so12016379wrm.8
-        for <linux-kernel@vger.kernel.org>; Mon, 17 Jun 2019 18:30:49 -0700 (PDT)
+        Mon, 17 Jun 2019 21:31:39 -0400
+Received: by mail-qt1-f194.google.com with SMTP id d17so8358634qtj.8;
+        Mon, 17 Jun 2019 18:31:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=XpVeh+sz8l0MglOFihLIUBQe1u4nS2JU8kbEBnBdz+E=;
-        b=pWeo/B2eO7lNBNG+NGf1psnaK9Bz1g9gqlU6XOHEXehvJkTdsYz159HFRSlbRe08rj
-         Ug2Vty8V/cDv8kEDe+jl3jL8botZBCVTLKWUqrNA1jCmwGL5tAkAFlVW+9yKegVrIaMi
-         549Miw4N5mxxTIFnhg9U6ZeLF8EiYX7gB3VgjlBr+yH4/lHZZdJCrc9jCstsXEXziIM8
-         lE63JAB491FehYFjdM8w8oYGoOWP8/3FjlgwRff/fX2LMZyvhKrVsllzZEIzr7tWyn3r
-         rb0ZSual4VS01ywLbfCjyv179uoBsedHGiwjBkMX4/uZUxLyVmMoFvU9O9qheqEPMJ+H
-         hsDQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kjb0KkcLsfA472XYdnRcQ6swrLy5rBSD+ZCDoLQnCFA=;
+        b=VjMDps5zs04C62YPKuFEV3G/lnx3b6AEJU/bF34Y97PexFC7zhoj5sj7D7BYDAFxw+
+         7fismKYtG7YJdtATl3jglE3u9YeOLW/cs6dckgkBhpuMuW7A7Sx8jrgnhJa53Numm+aI
+         sHJciKbHs/l/nWXb3OcJ3BewIghWlyk1FC+RxfMbQOQp8FXx7FZ1Ij18eDC+SdvcO77m
+         uWnS1bo3luGl+L6PDtGaVOl8s9Z7fHn/oRAyNx3JHgG5YQM638HAbGDNz7wo1UjCXsL3
+         nhq1GnnqZcqChIx75L36WcAeO49eeSdpnNnUTYot83dZJiMo1BcXMVryEHgoWuXj+Grz
+         86IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=XpVeh+sz8l0MglOFihLIUBQe1u4nS2JU8kbEBnBdz+E=;
-        b=TMYeGVI5Qj/lYSbGddrzcMtSSJw8sdLCy+sEwcIYIhX1a/SQssNSYW3h1jBRoaLrtY
-         SKTOpz8hVa7wIdhamlAR/k/IDIanIMXxYJ/+vaO44v3sT9DslSJ+lVPO8VhiQmk8BVXg
-         LH6WDUjSSmtOhWgIq+OB+3iJ2ZBz9zMIOG0+VE29e+G7falGXaaJiXaLR3Pbr/61yNXh
-         YiBjxFx+sZPgM6PK602u+9OQuUoDJCcGnBxTpxLNburYRPijrHF/5ySYBWLVq9CDbX1x
-         40HlTLnRfUiiRwTwFOAlu38JKQ5okvFOdG4wN1XBDmwd/boFpDSf/52M2deKO2oEeibg
-         4MhQ==
-X-Gm-Message-State: APjAAAUkYOI6wisqzlCDyo73cBgZSFUiVF9z1pqd/wSq28WSsHZMzXAB
-        BNN0j0AhVV1cvJUrpOyONqsMPw==
-X-Google-Smtp-Source: APXvYqxXH1WiGUiS4USOydi2PH6JSND1aSmufIk12JiYjaB/PpKwr4NasNi7bhWPzwo3l5BPwoxs8Q==
-X-Received: by 2002:adf:fc45:: with SMTP id e5mr30375644wrs.240.1560821448873;
-        Mon, 17 Jun 2019 18:30:48 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id t6sm734906wmb.29.2019.06.17.18.30.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 17 Jun 2019 18:30:48 -0700 (PDT)
-Message-ID: <5d083ec8.1c69fb81.9934b.416c@mx.google.com>
-Date:   Mon, 17 Jun 2019 18:30:48 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Kjb0KkcLsfA472XYdnRcQ6swrLy5rBSD+ZCDoLQnCFA=;
+        b=Nip5JvzOVmPuS/5BBYGjPVSwuR/3n+Q7SItzgB3gkKJ7f4abWDMVQbnvrcule3/y9s
+         lOExiX9bz4XGLIP+0j4jbnf5F4wX+gGlqnb041BswR7xrejuCYVYdzvzTf9SyELmDT82
+         DIV5CL5tJZ7/TomHh1JlcB79pjr96+JOQnHILLBfCoJ7XuPQohEPt3ft1wE+pKCY7YFF
+         B3Bv6jl4/zGoJAt2VxYz87VJxVhpQXRY4azrrwbxiLI1DqZ2q5b//X2U6efKLGFmTgV4
+         gXs3vOdQ3MqK4QtWZGuPJzeqVo2cys6F72soqSODTBoed+2EujWxJVp/blhQGR27qFG3
+         MGWw==
+X-Gm-Message-State: APjAAAVpgIzfXD6mSIGVdhcuO+WPDzj3Tx71wdJV2p0P1y4ddB49cSM0
+        NHekeTZ5s0/l2WIIX8WpvPnIsHXLsA8=
+X-Google-Smtp-Source: APXvYqwqy4zci5OY4W4YOp3pVEpnmfWyRvXNDWLLZdXYtHKsBJwqTku8+oIgo7mS2kmvtduL7FaauQ==
+X-Received: by 2002:ac8:323a:: with SMTP id x55mr6654287qta.211.1560821497979;
+        Mon, 17 Jun 2019 18:31:37 -0700 (PDT)
+Received: from localhost.localdomain ([186.212.50.252])
+        by smtp.gmail.com with ESMTPSA id c30sm8340874qta.25.2019.06.17.18.31.35
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 17 Jun 2019 18:31:37 -0700 (PDT)
+From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org
+Cc:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
+Subject: [PATCH 0/2] Honor VPD check in usb/storage for SanDisk device
+Date:   Mon, 17 Jun 2019 22:31:44 -0300
+Message-Id: <20190618013146.21961-1-marcos.souza.org@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.127-54-g1ed3ad23f285
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
-References: <20190617210745.104187490@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/53] 4.14.128-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 105 boots: 0 failed, 105 passed (v4.14.127-54-=
-g1ed3ad23f285)
+Before this patch, USB storage devices disabled VPD check by always setting
+skip_vpd_check.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.127-54-g1ed3ad23f285/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.127-54-g1ed3ad23f285/
+The first patch add a new entry to scsi_static_device_list related to SanDisk
+Cruzer Blade, which have VPD, adding BLIST_TRY_VPD_PAGES flag, which implies
+try_vpd_pages.
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.127-54-g1ed3ad23f285
-Git Commit: 1ed3ad23f2853e59a94e55528b42112d3e00c842
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 59 unique boards, 24 SoC families, 15 builds out of 201
+The second patch check try_vpd_pages, and only set skip_vpd_pages if
+try_vpd_pages is not set.
 
----
-For more info write to <info@kernelci.org>
+This patches along the wwid one [1], makes SanDisk Cruzer Blade device to
+present correctly wwid, vpd_pg80 and vpd_pg83 in sysfs, and let the window open
+to support another USB storage devices to support and present VPD.
+
+[1]: https://lkml.org/lkml/2019/6/11/1408
+
+Marcos Paulo de Souza (2):
+  scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk Cruzer Blade
+  usb: storage: scsiglue: Do not skip VPD if try_vpd_pages is set
+
+ drivers/scsi/scsi_devinfo.c    | 2 ++
+ drivers/usb/storage/scsiglue.c | 7 +++++--
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+
+-- 
+2.21.0
+
