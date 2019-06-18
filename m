@@ -2,150 +2,143 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2DF5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:44:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 408DCC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 954C92084B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:44:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="R4uJclZH"
+	by mail.kernel.org (Postfix) with ESMTP id 15CA020B1F
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 19:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560887106;
+	bh=3SVyETw2E2EX1ucf8dX5XihBlytLx4R2+9VoWquLfZ0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=siSLc3wGCJCR3wR/2xdgJNVU23lE3cOSM/lkmXp3s76rV93AGjbTEpV+A2htSi1+Y
+	 nPTEy1TLnjycnLb/IyEIF0Ia1Zj2Cwcp9nTxgwDMugCrVE+uBPfzeoawZOSKNnAStc
+	 VdbWgaFujT2V9EfHX1CgVuRzq80WLL8KbBY+1Xuc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbfFRToS (ORCPT
+        id S1730529AbfFRTpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 15:44:18 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:14507 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725909AbfFRToR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 15:44:17 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d093f100000>; Tue, 18 Jun 2019 12:44:16 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 12:44:16 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 18 Jun 2019 12:44:16 -0700
-Received: from [10.26.11.81] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 19:44:13 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
- phylib logic
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
- <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
- <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
- <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
- <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
-Message-ID: <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
-Date:   Tue, 18 Jun 2019 20:44:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+        Tue, 18 Jun 2019 15:45:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58526 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730494AbfFRTpE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 15:45:04 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E4AF2084B;
+        Tue, 18 Jun 2019 19:45:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560887103;
+        bh=3SVyETw2E2EX1ucf8dX5XihBlytLx4R2+9VoWquLfZ0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ux/8q1+R+SGkuJvyxGL5MB3IcTZzJnsY9YYEa8vnbLQQxX+jPZ2QB7LNc/awkQVT8
+         KmXsHCVzPnOmtaydBRw3os8e2NolICsAgAYf7cg/CovkaTK/zb81ap2GkPdqCkCVX7
+         zPfEs99C5nkuUu3LGsXblb+6J32MdX/+ImBYsnw0=
+Date:   Tue, 18 Jun 2019 12:45:02 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Michal Hocko <mhocko@suse.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@techsingularity.net>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>, linux-mm@kvack.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Subject: Re: [PATCH] mm: idle-page: fix oops because end_pfn is larger than
+ max_pfn
+Message-Id: <20190618124502.7b9c32a00a54f0c618a12ca4@linux-foundation.org>
+In-Reply-To: <20190618124352.28307-1-colin.king@canonical.com>
+References: <20190618124352.28307-1-colin.king@canonical.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560887056; bh=PwZarqBwDAlCSx+BZ96mh7Tp8BKOluB88TjkXU/xKMw=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=R4uJclZHP4uqM8KUkkbfj3B9imly/wEhiSJ+rvRgRqF3AJa6y9N1BU6AXqkxxAAN1
-         mNyagoJzU6qaXcWda8VeAbmZLFnX75S6fAuQQHcvCk3gd2EShrvgg1Z+bjMMc4B8rG
-         FJu/aAOR/Exkzc6LDxCm9bJ8mUYHGeMtsrFgMASjIzGq+V35FV3nybMf5El3fm2l2c
-         a9IXt/mfbR5HkwAzEORHNYj/z0kXPVAYYDufwAP4cL4C61y+gIAHwH/PXO/UTUq1YL
-         0SH0j61GFIRBnjbVDvzrPYmzQexp/GLub91IIoZcWbLe8IdIUEPvNW+KAN/m6Wuzle
-         rvnwW7P2e7h7Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, 18 Jun 2019 13:43:52 +0100 Colin King <colin.king@canonical.com> wrote:
 
-On 18/06/2019 16:20, Jon Hunter wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> On 18/06/2019 11:18, Jon Hunter wrote:
->>
->> On 18/06/2019 10:46, Jose Abreu wrote:
->>> From: Jon Hunter <jonathanh@nvidia.com>
->>>
->>>> I am not certain but I don't believe so. We are using a static IP address
->>>> and mounting the root file-system via NFS when we see this ...
->>>
->>> Can you please add a call to napi_synchronize() before every 
->>> napi_disable() calls, like this:
->>>
->>> if (queue < rx_queues_cnt) {
->>> 	napi_synchronize(&ch->rx_napi);
->>> 	napi_disable(&ch->rx_napi);
->>> }
->>>
->>> if (queue < tx_queues_cnt) {
->>> 	napi_synchronize(&ch->tx_napi);
->>> 	napi_disable(&ch->tx_napi);
->>> }
->>>
->>> [ I can send you a patch if you prefer ]
->>
->> Yes I can try this and for completeness you mean ...
->>
->> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> index 4ca46289a742..d4a12cb64d8e 100644
->> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->> @@ -146,10 +146,15 @@ static void stmmac_disable_all_queues(struct stmmac_priv *priv)
->>         for (queue = 0; queue < maxq; queue++) {
->>                 struct stmmac_channel *ch = &priv->channel[queue];
->>  
->> -               if (queue < rx_queues_cnt)
->> +               if (queue < rx_queues_cnt) {
->> +                       napi_synchronize(&ch->rx_napi);
->>                         napi_disable(&ch->rx_napi);
->> -               if (queue < tx_queues_cnt)
->> +               }
->> +
->> +               if (queue < tx_queues_cnt) {
->> +                       napi_synchronize(&ch->tx_napi);
->>                         napi_disable(&ch->tx_napi);
->> +               }
->>         }
->>  }
+> Currently the calcuation of end_pfn can round up the pfn number to
+> more than the actual maximum number of pfns, causing an Oops. Fix
+> this by ensuring end_pfn is never more than max_pfn.
 > 
-> So good news and bad news ...
+> This can be easily triggered when on systems where the end_pfn gets
+> rounded up to more than max_pfn using the idle-page stress-ng
+> stress test:
 > 
-> The good news is that the above change does fix the initial crash
-> I am seeing. However, even with this change applied on top of
-> -next, it is still dying somewhere else and so there appears to
-> be a second issue. 
 
-Further testing has shown that actually this does NOT resolve the issue
-and I am still seeing the crash. Sorry for the false-positive.
+cc Vladimir.  This seems rather obvious - I'm wondering if the code was
+that way for some subtle reason?
 
-Jon
+(I'll add a cc:stable to this)
 
--- 
-nvpublic
+From: Colin Ian King <colin.king@canonical.com>
+Subject: mm/page_idle.c: fix oops because end_pfn is larger than max_pfn
+
+Currently the calcuation of end_pfn can round up the pfn number to more
+than the actual maximum number of pfns, causing an Oops.  Fix this by
+ensuring end_pfn is never more than max_pfn.
+
+This can be easily triggered when on systems where the end_pfn gets
+rounded up to more than max_pfn using the idle-page stress-ng stress test:
+
+sudo stress-ng --idle-page 0
+
+[ 3812.222790] BUG: unable to handle kernel paging request at 00000000000020d8
+[ 3812.224341] #PF error: [normal kernel read fault]
+[ 3812.225144] PGD 0 P4D 0
+[ 3812.225626] Oops: 0000 [#1] SMP PTI
+[ 3812.226264] CPU: 1 PID: 11039 Comm: stress-ng-idle- Not tainted 5.0.0-5-generic #6-Ubuntu
+[ 3812.227643] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+[ 3812.229286] RIP: 0010:page_idle_get_page+0xc8/0x1a0
+[ 3812.230173] Code: 0f b1 0a 75 7d 48 8b 03 48 89 c2 48 c1 e8 33 83 e0 07 48 c1 ea 36 48 8d 0c 40 4c 8d 24 88 49 c1 e4 07 4c 03 24 d5 00 89 c3 be <49> 8b 44 24 58 48 8d b8 80 a1 02 00 e8 07 d5 77 00 48 8b 53 08 48
+[ 3812.234641] RSP: 0018:ffffafd7c672fde8 EFLAGS: 00010202
+[ 3812.235792] RAX: 0000000000000005 RBX: ffffe36341fff700 RCX: 000000000000000f
+[ 3812.237739] RDX: 0000000000000284 RSI: 0000000000000275 RDI: 0000000001fff700
+[ 3812.239225] RBP: ffffafd7c672fe00 R08: ffffa0bc34056410 R09: 0000000000000276
+[ 3812.241027] R10: ffffa0bc754e9b40 R11: ffffa0bc330f6400 R12: 0000000000002080
+[ 3812.242555] R13: ffffe36341fff700 R14: 0000000000080000 R15: ffffa0bc330f6400
+[ 3812.244073] FS: 00007f0ec1ea5740(0000) GS:ffffa0bc7db00000(0000) knlGS:0000000000000000
+[ 3812.245968] CS: 0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 3812.247162] CR2: 00000000000020d8 CR3: 0000000077d68000 CR4: 00000000000006e0
+[ 3812.249045] Call Trace:
+[ 3812.249625] page_idle_bitmap_write+0x8c/0x140
+[ 3812.250567] sysfs_kf_bin_write+0x5c/0x70
+[ 3812.251406] kernfs_fop_write+0x12e/0x1b0
+[ 3812.252282] __vfs_write+0x1b/0x40
+[ 3812.253002] vfs_write+0xab/0x1b0
+[ 3812.253941] ksys_write+0x55/0xc0
+[ 3812.254660] __x64_sys_write+0x1a/0x20
+[ 3812.255446] do_syscall_64+0x5a/0x110
+[ 3812.256254] entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+--- a/mm/page_idle.c~mm-idle-page-fix-oops-because-end_pfn-is-larger-than-max_pfn
++++ a/mm/page_idle.c
+@@ -136,7 +136,7 @@ static ssize_t page_idle_bitmap_read(str
+ 
+ 	end_pfn = pfn + count * BITS_PER_BYTE;
+ 	if (end_pfn > max_pfn)
+-		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
++		end_pfn = max_pfn;
+ 
+ 	for (; pfn < end_pfn; pfn++) {
+ 		bit = pfn % BITMAP_CHUNK_BITS;
+@@ -181,7 +181,7 @@ static ssize_t page_idle_bitmap_write(st
+ 
+ 	end_pfn = pfn + count * BITS_PER_BYTE;
+ 	if (end_pfn > max_pfn)
+-		end_pfn = ALIGN(max_pfn, BITMAP_CHUNK_BITS);
++		end_pfn = max_pfn;
+ 
+ 	for (; pfn < end_pfn; pfn++) {
+ 		bit = pfn % BITMAP_CHUNK_BITS;
+_
+
