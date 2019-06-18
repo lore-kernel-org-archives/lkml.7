@@ -2,136 +2,93 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 049BBC31E5E
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:30:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FB87C31E5C
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFD9520657
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:30:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eWt7+9O8"
+	by mail.kernel.org (Postfix) with ESMTP id D2DE420657
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 02:32:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726642AbfFRCaE (ORCPT
+        id S1726489AbfFRCc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 17 Jun 2019 22:30:04 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42271 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725829AbfFRCaE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 17 Jun 2019 22:30:04 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z25so19153202edq.9;
-        Mon, 17 Jun 2019 19:30:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t+K2dK7BB+ZRPcC5GlPxOx9E2uiXydCb4k3N74jOxNw=;
-        b=eWt7+9O8Te8FdO0baANBy+PyjNKsRirDGc/YMiULXRAQzbbf46urshe2L4HaunhBDl
-         +6dEajtT4AC0XyOBf6LMFpeRYsM4yxgwKlf3hxjlCTRIPQl4IwI90+Gg6hE/Q7Az2O1a
-         HqVYcoterlzR1FJwDrO2hAUseHILpm1RB3dhjzGctLJXB9mVs7OjxgfsmJxk2Tkn477c
-         WdSUEQnrXD2Pvqs9V1UfG5vCQsQ/cqYFCe5sJGkBml4RCUSyxUFYqxYY7OWDFdNsYMvT
-         Ljblp8OTZnRBbwFN1ESgnqCvqurvwsdNa95hg7kzDHzhHDP5L4mz27j5GoblSAC1YdJM
-         E3ZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t+K2dK7BB+ZRPcC5GlPxOx9E2uiXydCb4k3N74jOxNw=;
-        b=KSaOkfsLRB2Tk4h5W5SrKwfjApNWC6Qv50PGYCEHbFfb11wzBRcmKTIP+HYoUTGd2G
-         I/8Aq0lHdIXPZde5rWX5g2MKGrfMGA1Di1I9h1loubApNvdPrskLFgnb1N0NmN+2qMAe
-         JaSWA2y59FX99bj5Lto38dKbpxEiptBUdin7SI2UiUT5Do2LFaoBlKmopWsGEtAIKowa
-         mLf6KHJtiqojubJJZGPVS8Q1ZgvV2wEhY9OxenrqCd0+8EnVDcUZzBHZAHJwkNmFWRZy
-         2hOhRTRRp7JjBpvkBPyw+pXtOKyu1ZomAXXHmiWmAF3LA6skcFzc31V7YS0TWj25OLuU
-         GGsQ==
-X-Gm-Message-State: APjAAAWmJeg1ZPopvhG8kITTMoScB8VLRmZOHkRL42i9+Uifl8dr9Snn
-        ogd6Sr/AAhb9e9mccVn//8R5btB10m0evZp5gAE=
-X-Google-Smtp-Source: APXvYqygOwpTD9IA5CyUz2wEgTceJDuw085NFm3Qof/qmK4dkSGOHrK44tOaUF27/hs7YV0dS75TPtWBLPZe5g0GQeI=
-X-Received: by 2002:a50:cbc4:: with SMTP id l4mr89273565edi.264.1560825002272;
- Mon, 17 Jun 2019 19:30:02 -0700 (PDT)
+        Mon, 17 Jun 2019 22:32:28 -0400
+Received: from mga17.intel.com ([192.55.52.151]:41013 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725829AbfFRCc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 17 Jun 2019 22:32:28 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Jun 2019 19:32:27 -0700
+X-ExtLoop1: 1
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga004.jf.intel.com with ESMTP; 17 Jun 2019 19:32:25 -0700
+Cc:     baolu.lu@linux.intel.com, dwmw2@infradead.org,
+        eric.auger@redhat.com, iommu@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] iommu/intel: remove an unused variable "length"
+To:     Qian Cai <cai@lca.pw>, jroedel@suse.de
+References: <20190617132027.1960-1-cai@lca.pw>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <5405235e-50a2-cfbb-3f3d-af7cbefce183@linux.intel.com>
+Date:   Tue, 18 Jun 2019 10:25:09 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-6-masneyb@onstation.org>
- <20190616174106.GO22737@tuxbook-pro> <20190618020200.GB22330@onstation.org>
-In-Reply-To: <20190618020200.GB22330@onstation.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Mon, 17 Jun 2019 19:29:47 -0700
-Message-ID: <CAF6AEGsoPNL52h5gEHP8UtmD9_MhX89E=aWiPZXS7zepykEMFA@mail.gmail.com>
-Subject: Re: [PATCH 5/6] soc: qcom: add OCMEM driver
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>, agross@kernel.org,
-        David Brown <david.brown@linaro.org>,
-        Sean Paul <sean@poorly.run>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan <jonathan@marek.ca>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190617132027.1960-1-cai@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 7:02 PM Brian Masney <masneyb@onstation.org> wrote:
->
-> Hi Rob Clark,
->
-> On Sun, Jun 16, 2019 at 10:41:06AM -0700, Bjorn Andersson wrote:
-> > > diff --git a/drivers/soc/qcom/ocmem.xml.h b/drivers/soc/qcom/ocmem.xml.h
-> >
-> > I would prefer that these lived at the top of the c file, rather than
-> > being generated.
->
-> I think it would be nice to make this change as well.
->
-> Rob C: Your original file ocmem.xml.h was licensed under the MIT
-> license. I just wanted confirmation from you that it's OK to put
-> the contents of that file into ocmem.c which has the GPL 2.0 only
-> SPDX license tag. This will relicense the work. I imagine it's not
-> an issue but I just wanted to get confirmation so there is no
-> ambiguity regarding the licensing in the future.
+Hi,
 
-fine by me.. I defaulted to generated headers since that is extremely
-useful for gpu side of things (and userspace stuff defaults to MIT),
-but probably overkill for ocmem which just has a handful of registers
-(and no need for decoding userspace blob cmdstream dumps)
+On 6/17/19 9:20 PM, Qian Cai wrote:
+> The linux-next commit "iommu/vt-d: Duplicate iommu_resv_region objects
+> per device list" [1] left out an unused variable,
+> 
+> drivers/iommu/intel-iommu.c: In function 'dmar_parse_one_rmrr':
+> drivers/iommu/intel-iommu.c:4014:9: warning: variable 'length' set but
+> not used [-Wunused-but-set-variable]
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1083073/
+> 
+> Signed-off-by: Qian Cai <cai@lca.pw>
 
-BR,
--R
+With regard to the subject, we normally use "iommu/vt-d: ".
 
+Best regards,
+Baolu
 
->
-> Brian
->
->
-> >
-> > > new file mode 100644
-> > > index 000000000000..b4bfb85d1e33
-> > > --- /dev/null
-> > > +++ b/drivers/soc/qcom/ocmem.xml.h
-> > > @@ -0,0 +1,86 @@
-> > > +/* SPDX-License-Identifier: MIT */
-> > > +
-> > > +#ifndef OCMEM_XML
-> > > +#define OCMEM_XML
-> > > +
-> > > +/* Autogenerated file, DO NOT EDIT manually!
-> > > +
-> > > +This file was generated by the rules-ng-ng headergen tool in this git repository:
-> > > +http://github.com/freedreno/envytools/
-> > > +git clone https://github.com/freedreno/envytools.git
-> > > +
-> > > +The rules-ng-ng source files this header was generated from are:
-> > > +- /home/robclark/src/freedreno/envytools/rnndb/adreno/ocmem.xml         (   1773 bytes, from 2015-09-24 17:30:00)
-> > > +
-> > > +Copyright (C) 2013-2015 by the following authors:
-> > > +- Rob Clark <robdclark@gmail.com> (robclark)
-> > > +*/
+> ---
+>   drivers/iommu/intel-iommu.c | 3 ---
+>   1 file changed, 3 deletions(-)
+> 
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 478ac186570b..d86d4ee5cc78 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -4011,7 +4011,6 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+>   {
+>   	struct acpi_dmar_reserved_memory *rmrr;
+>   	struct dmar_rmrr_unit *rmrru;
+> -	size_t length;
+>   
+>   	rmrru = kzalloc(sizeof(*rmrru), GFP_KERNEL);
+>   	if (!rmrru)
+> @@ -4022,8 +4021,6 @@ int __init dmar_parse_one_rmrr(struct acpi_dmar_header *header, void *arg)
+>   	rmrru->base_address = rmrr->base_address;
+>   	rmrru->end_address = rmrr->end_address;
+>   
+> -	length = rmrr->end_address - rmrr->base_address + 1;
+> -
+>   	rmrru->devices = dmar_alloc_dev_scope((void *)(rmrr + 1),
+>   				((void *)rmrr) + rmrr->header.length,
+>   				&rmrru->devices_cnt);
+> 
