@@ -2,126 +2,123 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BA8FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84A9BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0D532147A
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CD33206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:59:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ajUxc5+W"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="StBLuVNj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730455AbfFRS7G (ORCPT
+        id S1730478AbfFRS7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:59:06 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:46188 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730196AbfFRS7F (ORCPT
+        Tue, 18 Jun 2019 14:59:15 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35768 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730332AbfFRS7O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:59:05 -0400
-Received: by mail-yw1-f66.google.com with SMTP id z197so6799547ywd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:59:05 -0700 (PDT)
+        Tue, 18 Jun 2019 14:59:14 -0400
+Received: by mail-pg1-f194.google.com with SMTP id s27so8195755pgl.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:59:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=n2DDWkzfly8h++f2u7ETcCEDtyV1BipVpATFf3iGFj8=;
-        b=ajUxc5+WJTxSIoBZ8SzOIP0EH5Oo4BIYMnTAueKHonh90SwDslBsrBqH/p5BpVV1lE
-         bd8TeYNgekt+y1cFqWvfRhaaJktj/9HlmdRNP7O58u1L65J44e2TAoQ8mMwBrd2BehYY
-         obhYCp/B5KF22P/dc7ZBTYUlxM50LS5cqX29I4OO2r4135df2kSGUOrYLAFBYkCwCbo6
-         cqjc1a96YiF6gxE5t85rWZKUyG+cGcX32J5aHJGR0RYnFzCFaVXB0BKAWWinXwoZqMuA
-         SssoPo5k02S7ZyalbCbsr+FvpZ8E+vHGkIcj1lW+J8TKA/Kd79OAsr3tVxdiBndDDKUG
-         R+bw==
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=KhmMKOSmpu8SqgnzUE1h6NWxiRGa7i6ZJDyLxzhQcgY=;
+        b=StBLuVNjXb1KUTHS1j3aOzNsFTQanhyAF9GXBkg8HHVIv77BKCnUGSDghC7ir30Xqb
+         id03qaWdx03OCflYSHi0Z/Jj/jDY+oRc3MJ85hLpXZUDyhoGEMaEsjYf5llCq9C+5cC6
+         ispDXsq71X1YyZmaKKjxphcqam1vpHa9h6dFeUfvZZjYQB1rStZ9jcb5P7BU3uVXHriJ
+         2a/hAVydqU9UWBbsYlWhSEtq5m/GKbl2rnOqqgvdNsp4Ujm0JABeO8o2TqBgfVrj0yqj
+         v5yUWrjiZDjdSAxredbylMPTIJB4ZKxihbAymHEvM+7PpXulZ5dcSpx5Nsp77+llN5Vp
+         qRDA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=n2DDWkzfly8h++f2u7ETcCEDtyV1BipVpATFf3iGFj8=;
-        b=NPwjbR1NWwhEWf/Z+ho4VpMnE7r+9gFXqIvaDzKPBqmXF4EFKZLNDIm0BZrO/Vocdm
-         n4a2h7TFp2PY5+Ca6F5/NYHlDWiaWuHpJKz80ep9cNP8SQk8QAfpHuxgpi5gvvuSosqr
-         M4XWfx8QyN1uhYBtMJrsbStFQmcH5Mem0l/qV+695DmOrYMPmdFPoO85A+3JjvsfGeHw
-         wsjSsdTJi/aO+/iAbBQ+lm6od7mlZuNxlsN1vGIFOeLWmSUmEW0ytAhaVv4iD8jo3291
-         ql7rVfEwwjmkyP86HW1gGekcIBrCQcn/+Yif0v3PYx9C2igxbzfrffu0D+xk2R8FfTyQ
-         hD6w==
-X-Gm-Message-State: APjAAAWpCN6gnolXQBOL7tGoOh8QkTqBUuSQcXJUUFnTmRR0bHg8mh3i
-        shC8k5uxqlS7glWXLUaauYpzi/CB
-X-Google-Smtp-Source: APXvYqwSaGU924CyotFuOd8eUpGfotrSwHDDjRr7GsUdnVUoDEj6PbvmUvxEoB4sT+7gf8FoziMA6Q==
-X-Received: by 2002:a81:7096:: with SMTP id l144mr68848471ywc.294.1560884344071;
-        Tue, 18 Jun 2019 11:59:04 -0700 (PDT)
-Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com. [209.85.161.51])
-        by smtp.gmail.com with ESMTPSA id s8sm4700608ywl.58.2019.06.18.11.59.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 11:59:03 -0700 (PDT)
-Received: by mail-yw1-f51.google.com with SMTP id n21so7195113ywh.0
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 11:59:02 -0700 (PDT)
-X-Received: by 2002:a0d:c0c4:: with SMTP id b187mr41089130ywd.389.1560884342538;
- Tue, 18 Jun 2019 11:59:02 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=KhmMKOSmpu8SqgnzUE1h6NWxiRGa7i6ZJDyLxzhQcgY=;
+        b=WZ3V2e8qBw1gWWVz+NQYlajJVAsFdfNawnWlOsFjVkDMlb10d7KN6adOeCjX2CJeIg
+         35JLoxoujGFXWW3A5lTrSGvez9GughxM6RKWb2Ccbo0MOR0ycA+wLYn42g9jRfNMTp7T
+         7mlvvuR3bl2Wu2Djic9O0+X/BqzGIIIMAviviHmvqooPvg7WcIA582bhvvD1nSJmBpIR
+         Wx7wyEuewv7RjgDr1J5Kt4BzyE78OuE4ljIj/pa3JcAdYOQxjvcaCXqHPVgUkea0O1L4
+         mvgogwYKe37OMvf/pnWfKl2vmO4zScS+r2swfF4F19iYr8LrrnaHdKlvIVHDDJF9XJxF
+         0S0Q==
+X-Gm-Message-State: APjAAAUNOybknoKvV1Sh6y4GTWJ0jR6LuZsPPvXqhKk4KnINt9JiYgwZ
+        9U8BAp2zMS2oI8ywjAFiqCA=
+X-Google-Smtp-Source: APXvYqybzRDkkEDrAQ1VAQr1kytjBCrUoCVXjECnVciqNYsQHWPI2v6Fqy9Nl/Vuch5PUgyojSTOng==
+X-Received: by 2002:a62:e315:: with SMTP id g21mr6651308pfh.225.1560884354089;
+        Tue, 18 Jun 2019 11:59:14 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id n89sm6532091pjc.0.2019.06.18.11.59.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 11:59:13 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 00:29:08 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        Himadri Pandya <himadri18.07@gmail.com>,
+        Nishka Dasgupta <nishkadg.linux@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] staging: rtl8723bs: hal: rtl8723b_cmd: fix Comparison to
+ NULL
+Message-ID: <20190618185908.GA10489@hari-Inspiron-1545>
 MIME-Version: 1.0
-References: <CA+FuTSfBFqRViKfG5crEv8xLMgAkp3cZ+yeuELK5TVv61xT=Yw@mail.gmail.com>
- <20190618161036.GA28190@kroah.com> <CAF=yD-JnTHdDE8K-EaJM2fH9awvjAmOJkoZbtU+Wi58pPnyAxw@mail.gmail.com>
- <20190618.094759.539007481404905339.davem@davemloft.net> <20190618171516.GA17547@kroah.com>
- <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com> <20190618173906.GB3649@kroah.com>
-In-Reply-To: <20190618173906.GB3649@kroah.com>
-From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Date:   Tue, 18 Jun 2019 14:58:26 -0400
-X-Gmail-Original-Message-ID: <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
-Message-ID: <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
-Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-        David Miller <davem@davemloft.net>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Fred Klassen <fklassen@appneta.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 1:39 PM Greg KH <gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 18, 2019 at 01:27:14PM -0400, Willem de Bruijn wrote:
-> > On Tue, Jun 18, 2019 at 1:15 PM Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Tue, Jun 18, 2019 at 09:47:59AM -0700, David Miller wrote:
-> > > > From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> > > > Date: Tue, 18 Jun 2019 12:37:33 -0400
-> > > >
-> > > > > Specific to the above test, I can add a check command testing
-> > > > > setsockopt SO_ZEROCOPY  return value. AFAIK kselftest has no explicit
-> > > > > way to denote "skipped", so this would just return "pass". Sounds a
-> > > > > bit fragile, passing success when a feature is absent.
-> > > >
-> > > > Especially since the feature might be absent because the 'config'
-> > > > template forgot to include a necessary Kconfig option.
-> > >
-> > > That is what the "skip" response is for, don't return "pass" if the
-> > > feature just isn't present.  That lets people run tests on systems
-> > > without the config option enabled as you say, or on systems without the
-> > > needed userspace tools present.
-> >
-> > I was not aware that kselftest had this feature.
-> >
-> > But it appears that exit code KSFT_SKIP (4) will achieve this. Okay,
-> > I'll send a patch and will keep that in mind for future tests.
->
-> Wonderful, thanks for doing that!
+This patch fixes below issues reported by checkpatch
 
-One complication: an exit code works for a single test, but here
-multiple test variants are run from a single shell script.
+CHECK: Comparison to NULL could be written "psta"
+CHECK: Comparison to NULL could be written
+"pmlmepriv->wps_probe_resp_ie"
+CHECK: Comparison to NULL could be written "psta"
 
-I see that in similar such cases that use the test harness
-(ksft_test_result_skip) the overall test returns success as long as
-all individual cases return either success or skip.
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/rtl8723b_cmd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-I think it's preferable to return KSFT_SKIP if any of the cases did so
-(and none returned an error). I'll do that unless anyone objects.
+diff --git a/drivers/staging/rtl8723bs/hal/rtl8723b_cmd.c b/drivers/staging/rtl8723bs/hal/rtl8723b_cmd.c
+index e001d30..ceb317f 100644
+--- a/drivers/staging/rtl8723bs/hal/rtl8723b_cmd.c
++++ b/drivers/staging/rtl8723bs/hal/rtl8723b_cmd.c
+@@ -436,7 +436,7 @@ static void ConstructARPResponse(
+ 		DBG_871X("%s(): Add MIC\n", __func__);
+ 
+ 		psta = rtw_get_stainfo(&padapter->stapriv, get_my_bssid(&(pmlmeinfo->network)));
+-		if (psta != NULL) {
++		if (psta) {
+ 			if (!memcmp(&psta->dot11tkiptxmickey.skey[0], null_key, 16)) {
+ 				DBG_871X("%s(): STA dot11tkiptxmickey == 0\n", __func__);
+ 			}
+@@ -753,7 +753,7 @@ static void ConstructProbeRsp(struct adapter *padapter, u8 *pframe, u32 *pLength
+ 			cur_network->IELength-_FIXED_IE_LENGTH_, NULL, &wps_ielen);
+ 
+ 	/* inerset & update wps_probe_resp_ie */
+-	if ((pmlmepriv->wps_probe_resp_ie != NULL) && pwps_ie && (wps_ielen > 0)) {
++	if (pmlmepriv->wps_probe_resp_ie && pwps_ie && (wps_ielen > 0)) {
+ 		uint wps_offset, remainder_ielen;
+ 		u8 *premainder_ie;
+ 
+@@ -1316,7 +1316,7 @@ static void rtl8723b_set_FwWoWlanRelated_cmd(struct adapter *padapter, u8 enable
+ 
+ 		if (!(ppwrpriv->wowlan_pno_enable)) {
+ 			psta = rtw_get_stainfo(&padapter->stapriv, get_bssid(pmlmepriv));
+-			if (psta != NULL)
++			if (psta)
+ 				rtl8723b_set_FwMediaStatusRpt_cmd(padapter, RT_MEDIA_CONNECT, psta->mac_id);
+ 		} else
+ 			DBG_871X("%s(): Disconnected, no FwMediaStatusRpt CONNECT\n", __func__);
+-- 
+2.7.4
+
