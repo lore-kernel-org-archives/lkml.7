@@ -2,154 +2,121 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F6C1C31E5B
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:45:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2953C31E5B
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:47:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FD3F206E0
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:45:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="LF+fg3ev";
-	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="YM/Qypl8"
+	by mail.kernel.org (Postfix) with ESMTP id C070621479
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 18:47:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560883673;
+	bh=fS53sAvfrvYkIRVRA1b2mWm15QF9/fZkNXNJFG6eZ8I=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vbtMsKGWOs5zD/2EM4Iw0g130icN0e0guLsNIOmP5CLxbl2zJaX5leH/Zs9eYl3GZ
+	 5BisBv2lIJaaPPau260bL5HcQxI28F0kWf00CefL84R1hGDJ3FRPNqqH8K0tsBACHv
+	 lzaM8u781USeG+RoWaYIcx/DRtpEH6X3noPpKn+U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730423AbfFRSpp (ORCPT
+        id S1730239AbfFRSrv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 14:45:45 -0400
-Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:31180 "EHLO
-        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730073AbfFRSpo (ORCPT
+        Tue, 18 Jun 2019 14:47:51 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43626 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730147AbfFRSrv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 14:45:44 -0400
-Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
-        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5IIiqmR015068;
-        Tue, 18 Jun 2019 11:45:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
- subject : date : message-id : in-reply-to : references : mime-version :
- content-type; s=proofpoint;
- bh=IRWeLlGnIxyGck2dxp6hdSEolvSTqbmQdM+3Y8pIV3M=;
- b=LF+fg3evQVd8QpYAThFbOYTMdZCyqEiZUZhYf1N4f+OdV0e2YeOTp3V/YEFzngrI8GBd
- N/BLr41Iy6m4YdsdoVxLahnJ+u2r9UQfV+xC+tQVSWbup9BGXMu7AhRFXwtJUcC8KWo8
- 68v0RIvF7vZZumh7haQ7zhtJOw8Lkx6QVjT0pkN4/Kg2zlxsEW6gmEas1+7tA50bTlWc
- PO8DD1T6jTTkBgedvpzhUJNBQg2KUbkOadfvp7SbvR4t/q1Pc6hghfqwS7cgWOpuBrtW
- wgTrZKmcXBt0ZneKt6qNFyLYZmRsLicAynEEixC1UTxt0OhjM/z9Mjzkzj9lkbw5H6vW wA== 
-Authentication-Results: cadence.com;
-        spf=pass smtp.mailfrom=pthombar@cadence.com
-Received: from nam01-by2-obe.outbound.protection.outlook.com (mail-by2nam01lp2055.outbound.protection.outlook.com [104.47.34.55])
-        by mx0b-0014ca01.pphosted.com with ESMTP id 2t4v8wdcfh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 18 Jun 2019 11:45:39 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=IRWeLlGnIxyGck2dxp6hdSEolvSTqbmQdM+3Y8pIV3M=;
- b=YM/Qypl8LJkgjfTzk2UraLMAHDyQylEAQ7pORbQnm2jcvuVRv4q8WeG2sESAfMZeglF7N71oIyMncD7aKkcOeaU6dmGnYflCTgl00IL7oG52Lqzf698znJX6Ds1ByHAMK+HY57UGmCgd8mk4ID00Y6Hw9SpJNxeRDybgTQwZB/o=
-Received: from DM6PR07CA0033.namprd07.prod.outlook.com (2603:10b6:5:94::46) by
- BYAPR07MB6821.namprd07.prod.outlook.com (2603:10b6:a03:128::26) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.12; Tue, 18 Jun
- 2019 18:45:36 +0000
-Received: from CO1NAM05FT027.eop-nam05.prod.protection.outlook.com
- (2a01:111:f400:7e50::206) by DM6PR07CA0033.outlook.office365.com
- (2603:10b6:5:94::46) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1965.17 via Frontend
- Transport; Tue, 18 Jun 2019 18:45:36 +0000
-Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
- cadence.com discourages use of 199.43.4.28 as permitted sender)
-Received: from rmmaillnx1.cadence.com (199.43.4.28) by
- CO1NAM05FT027.mail.protection.outlook.com (10.152.96.137) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2008.7 via Frontend Transport; Tue, 18 Jun 2019 18:45:34 +0000
-Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
-        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5IIjTvq032333
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Tue, 18 Jun 2019 14:45:31 -0400
-X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
-Received: from maileu3.global.cadence.com (10.160.88.99) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3; Tue, 18 Jun 2019 20:45:28 +0200
-Received: from lvlogina.cadence.com (10.165.176.102) by
- maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Tue, 18 Jun 2019 20:45:28 +0200
-Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
-        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5IIjSOS010641;
-        Tue, 18 Jun 2019 19:45:28 +0100
-From:   Parshuram Thombare <pthombar@cadence.com>
-To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
-        <davem@davemloft.net>, <f.fainelli@gmail.com>
-CC:     <netdev@vger.kernel.org>, <hkallweit1@gmail.com>,
-        <linux-kernel@vger.kernel.org>, <rafalc@cadence.com>,
-        <aniljoy@cadence.com>, <piotrs@cadence.com>, <pthombar@cadence.com>
-Subject: [PATCH v2 6/6] net: macb: parameter added to cadence ethernet controller DT binding
-Date:   Tue, 18 Jun 2019 19:45:27 +0100
-Message-ID: <1560883527-10591-1-git-send-email-pthombar@cadence.com>
-X-Mailer: git-send-email 2.2.2
-In-Reply-To: <1560642579-29803-1-git-send-email-pthombar@cadence.com>
-References: <1560642579-29803-1-git-send-email-pthombar@cadence.com>
+        Tue, 18 Jun 2019 14:47:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=2GybvW+pvKzG30g9GQw9L9iwbdt1DhKvlt4DtJh360k=; b=b7Qz7KSSZmxUpMZGWWHLF/qPy
+        Uh/Abr8TZ673wGtXFfudJl1y/K7E4W8HXP/+s41ygKirEKIhzJT5eAxS18YynY2vFz/Uj0FOUatgK
+        s0dc6mT6tLv4CFDqS2GkyCX3hksbgV+QqUQhyc+JsXZJQoyBSUh8h0C3cdsdFF66iTNyg=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hdJ8R-0005Ms-30; Tue, 18 Jun 2019 18:47:11 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 61995440046; Tue, 18 Jun 2019 19:47:10 +0100 (BST)
+Date:   Tue, 18 Jun 2019 19:47:10 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Curtis Malainey <cujomalainey@google.com>
+Cc:     Fletcher Woodruff <fletcherw@chromium.org>,
+        Cezary Rojewski <cezary.rojewski@intel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Oder Chiou <oder_chiou@realtek.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Ross Zwisler <zwisler@chromium.org>,
+        ALSA development <alsa-devel@alsa-project.org>
+Subject: Re: [PATCH v7 3/4] ASoC: rt5677: clear interrupts by polarity flip
+Message-ID: <20190618184710.GP5316@sirena.org.uk>
+References: <20190614194854.208436-1-fletcherw@chromium.org>
+ <20190614194854.208436-4-fletcherw@chromium.org>
+ <4e560e12-4c20-8d5d-b3f9-587a55da279d@intel.com>
+ <CAN-6NYZzMqwDaw2oDyms4P9uKFPJvuQOtGbqMWLtFV3kDyQHJQ@mail.gmail.com>
+ <CAOReqxhETC9xAojXyDWLMOJ3W22Zn4GNGry44=XC=t_k7SCHqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-OrganizationHeadersPreserved: maileu3.global.cadence.com
-X-EOPAttributedMessage: 0
-X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(396003)(39860400002)(346002)(376002)(2980300002)(199004)(36092001)(189003)(2906002)(316002)(81156014)(26005)(16586007)(70586007)(70206006)(76130400001)(5660300002)(53936002)(4744005)(2201001)(26826003)(478600001)(486006)(107886003)(4326008)(356004)(8676002)(476003)(2616005)(11346002)(305945005)(51416003)(7696005)(47776003)(86362001)(50466002)(69596002)(336012)(446003)(8936002)(426003)(7126003)(186003)(54906003)(76176011)(50226002)(126002)(81166006)(36756003)(110136005)(77096007)(53416004)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:BYAPR07MB6821;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:ErrorRetry;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: a5f61d7d-ac38-4e95-ee15-08d6f41d2617
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:BYAPR07MB6821;
-X-MS-TrafficTypeDiagnostic: BYAPR07MB6821:
-X-Microsoft-Antispam-PRVS: <BYAPR07MB6821DE00C1F91E4D7D145D9DC1EA0@BYAPR07MB6821.namprd07.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:4941;
-X-Forefront-PRVS: 007271867D
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: YaptWfAPIBpgkmfNns294LdNePU0K+RVhP2iZhcYq0ogKJnEnVEx3dIS7eAnxtz45MT4qiUnJpQPk4tgrdQlUu1bQ67rJGBv4qommNb/C0FNgemsC7gRZ7Gdq27RP4DJs5Q5/ezbmRU3EVZaPI6rJjcgE/d9FfgzMJgICCFMP8Cahwutwfaue/m5hAcjFetaHZoH/Ge2wLgFiF6rkkqEvuTQzRAOk5xkUS3Zal0nOCHuLMH52tnN/Bcj0RNQLdNVyYX5iX4LTJxpUbRFJl8YaPHKeDBgP5EXIK/x7f312NSu5XmDlsiircOxdfoJ33RL7w5iIVyNCH1jToniKDeUNEDvYYBLgoz94D4E89FcgxbY2wO/S4YZTPkCzPNtkjfOYf9CLE1TMMZlMAV8ZxFniyNhhhx0r9HSzxi2n2/om3I=
-X-OriginatorOrg: cadence.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2019 18:45:34.6222
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: a5f61d7d-ac38-4e95-ee15-08d6f41d2617
-X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR07MB6821
-X-Proofpoint-SPF-Result: pass
-X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
- include:mktomail.com include:spf-0014ca01.pphosted.com
- include:spf.protection.outlook.com include:auth.msgapp.com
- include:spf.mandrillapp.com ~all
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906180148
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BQstn4t8nd6twlV3"
+Content-Disposition: inline
+In-Reply-To: <CAOReqxhETC9xAojXyDWLMOJ3W22Zn4GNGry44=XC=t_k7SCHqA@mail.gmail.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New parameters added to Cadence ethernet controller DT binding
-for USXGMII interface.
 
-Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
----
- Documentation/devicetree/bindings/net/macb.txt | 3 +++
- 1 file changed, 3 insertions(+)
+--BQstn4t8nd6twlV3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-index 9c5e94482b5f..b80d58ed1650 100644
---- a/Documentation/devicetree/bindings/net/macb.txt
-+++ b/Documentation/devicetree/bindings/net/macb.txt
-@@ -25,6 +25,9 @@ Required properties:
- 	Optional elements: 'rx_clk' applies to cdns,zynqmp-gem
- 	Optional elements: 'tsu_clk'
- - clocks: Phandles to input clocks.
-+- serdes-rate External serdes rate.Mandatory for USXGMII mode.
-+	5 - 5G
-+	10 - 10G
- 
- The MAC address will be determined using the optional properties
- defined in ethernet.txt.
--- 
-2.17.1
+On Tue, Jun 18, 2019 at 11:12:58AM -0700, Curtis Malainey wrote:
+> On Tue, Jun 18, 2019 at 11:01 AM Fletcher Woodruff
+> > On Sun, Jun 16, 2019 at 10:56 AM Cezary Rojewski
+> > > On 2019-06-14 21:48, Fletcher Woodruff wrote:
 
+> > > > +     ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
+> > > > +     if (ret) {
+> > > > +             pr_err("rt5677: failed reading IRQ status: %d\n", ret);
+
+> > > The entire rt5677 makes use of dev_XXX with the exception of.. this very
+> > > function. Consider reusing "component" field which is already part of
+> > > struct rt5677_priv and removing pr_XXX.
+
+> > I was using dev_XXX, but I believe Curtis found that 'component' was
+> > sometimes uninitialized when this function was called, so I switched
+> > back to pr_XXX. I may be misremembering though, so I'll let Curtis
+> > comment as well.
+
+> The issue here is that the IRQ is setup in the i2c probe and the
+> component is setup in the codec probe. In theory if the hardware is in
+
+The component is not needed for a struct device, you must have a struct
+device if you have a regmap or have probed at all.
+
+--BQstn4t8nd6twlV3
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0JMa0ACgkQJNaLcl1U
+h9DZcQf/ccl646Fq6MOoLNN1gJ8spcWeyqqS0N9BX8AF0sxJxnubO0NtjYtWNrqS
+yRwufehgJtFHiEubQEyDR75hAO69qzV/vdYOMyohwCo2wcS8c/l3pZqKomHdRsBb
+UJQbxFdW1M1nlgfOWza83Ko9dT7cV/DnXQZquAKmwbLYaAp0BrBEoDIcjIuD7GdN
+pKnmw6/oAcpcVahvg/uVSriAcRjjvaykpzXnmDB78vqJ5yRs0thrTlBtkvlE3b4B
+lkymwUB3X1rSbrIMP2+8RC9vEsS96D0uyp4uL4IHFPqeOGxcdOd7k6dV/qbj8OH2
+LRRkK3adUQg1tGf/ksckR/q/1Em4Rw==
+=AmR9
+-----END PGP SIGNATURE-----
+
+--BQstn4t8nd6twlV3--
