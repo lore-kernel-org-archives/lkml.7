@@ -2,248 +2,146 @@ Return-Path: <SRS0=h0iA=UR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E34BC31E5D
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E268C31E51
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:47:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 037092082C
-	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:47:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67FB7213F2
+	for <linux-kernel@archiver.kernel.org>; Tue, 18 Jun 2019 07:47:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="hmtsUmsB"
+	dkim=pass (1024-bit key) header.d=amarulasolutions.com header.i=@amarulasolutions.com header.b="RjIbAgrD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729104AbfFRHrB (ORCPT
+        id S1729134AbfFRHrE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 03:47:01 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:9715 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFRHq4 (ORCPT
+        Tue, 18 Jun 2019 03:47:04 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35409 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729109AbfFRHrC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 03:46:56 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0896ed0000>; Tue, 18 Jun 2019 00:46:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 18 Jun 2019 00:46:54 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 18 Jun 2019 00:46:54 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 18 Jun
- 2019 07:46:53 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 18 Jun 2019 07:46:53 +0000
-Received: from skomatineni-linux.nvidia.com (Not Verified[10.2.168.217]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0896eb0003>; Tue, 18 Jun 2019 00:46:53 -0700
-From:   Sowjanya Komatineni <skomatineni@nvidia.com>
-To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <tglx@linutronix.de>, <jason@lakedaemon.net>,
-        <marc.zyngier@arm.com>, <linus.walleij@linaro.org>,
-        <stefan@agner.ch>, <mark.rutland@arm.com>
-CC:     <pdeschrijver@nvidia.com>, <pgaikwad@nvidia.com>,
-        <sboyd@kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <jckuo@nvidia.com>,
-        <josephl@nvidia.com>, <talho@nvidia.com>, <skomatineni@nvidia.com>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mperttunen@nvidia.com>, <spatra@nvidia.com>, <robh+dt@kernel.org>,
-        <digetx@gmail.com>, <devicetree@vger.kernel.org>
-Subject: [PATCH V3 07/17] clk: tegra: save and restore CPU and System clocks context
-Date:   Tue, 18 Jun 2019 00:46:21 -0700
-Message-ID: <1560843991-24123-8-git-send-email-skomatineni@nvidia.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
-X-NVConfidentiality: public
+        Tue, 18 Jun 2019 03:47:02 -0400
+Received: by mail-io1-f65.google.com with SMTP id m24so27669561ioo.2
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 00:47:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=amarulasolutions.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vxKYkLgA5MVuzsXMSMGfzla77yJINMaSigfo4ssAuus=;
+        b=RjIbAgrDl9/qI0Gii7VVzjfDkkA4UNrDQYVufYwYf/7w9vv+rUari1Sq1mvxZKpVXv
+         HaIXkNWo7j6M5sCPdtYLiEMFaEoOc1VdJf/4sMfMFzLfEb8cS2GpcVmxlv3o5DgQrlIr
+         /0peXvokP7Oc2S5VY+81T7ibHogSkES0k5wnA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vxKYkLgA5MVuzsXMSMGfzla77yJINMaSigfo4ssAuus=;
+        b=ZNWgTVi6nUGqG76VegjphRVDKmFMapzrPNJfJkoaf2mPi25PWmxuFJNo7BWcfahM6o
+         EzZkyToQTjPc3xixHgvPnsDY89o7ktk58MTdaKnD9Vk3fOJvaWC8cY4oINFRuH7rcC8V
+         xbFy8IYFNYfpPG7vBzEYv3H2xfbPqYrzZPWtB9Z5TxFXbAb2zDSSxkkOoiGafZzNztqD
+         YMVuRLJwZKT27YM1koF8OGMRCZ4RRFouDkRMzl9ZuzYFkLErSEmkz1XocYcfvFmBWiaZ
+         AaWE0ZdaKwG+zYDrPfmBrw2RGHX1aqUB1/N7BKE9eHTN+VIv2r9e31oOhQPPTmOIO6A2
+         PpDw==
+X-Gm-Message-State: APjAAAW5i87aFBOGbaoNmt+SRJfN97BPLwPeXH4daFPTBPKG9BL8kyJZ
+        mJEfOmFK8+uLI46fl+O9EBBbpvC7OpQasVyV7DBtWw==
+X-Google-Smtp-Source: APXvYqycTbdlGgVagVEKSPFXn3d5LsyT9I6EZwTdqQk/dkFhmrBl6uOW3Kl4M+fU023lwzcVYQVx/JhGLarll+uzkVY=
+X-Received: by 2002:a02:380c:: with SMTP id b12mr67109907jaa.85.1560844021305;
+ Tue, 18 Jun 2019 00:47:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560844014; bh=rX5C6TLRq6S7JDWcvC7pebJyWsbcNEJPnKOIpc/oRDQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         In-Reply-To:References:X-NVConfidentiality:MIME-Version:
-         Content-Type;
-        b=hmtsUmsBcnfkalFaVr5lFf0cnBssKBVcJ8SMd+T64qsDe+rXwauY26LHtvRXFYBU1
-         ID5Y1Acjw8v2KEdAk31OzrvHcOpymFQVGcTyj7nOJZLvko4BTh7f+KYioyCQndZLRt
-         /+iKvcSGCnYl93hv2IX3v0Q2pj9XRpsgwlkKzx862Bxih2h3+CHvzmvUaqmAoQLD3r
-         aUMPAPB8WI7qQOTl2WXSDY+0wWDnI1itTuSD650GQJ32Ms0gr/ESgVhEuLd+cwZNyq
-         TjACd0JGQ9iaSIZg2CZhMjuH/Q2/KCXDEmZ3kkVKKjJp4MK5y5f0f9hRIosuQSlXCO
-         +DuFqEMaPI+7Q==
+References: <20190614164324.9427-1-jagan@amarulasolutions.com>
+ <20190614164324.9427-6-jagan@amarulasolutions.com> <20190617114503.pclqsf6bo3ih47nt@flea>
+ <CAGb2v66RU=m0iA9VoBiYbake+mDoiiGcd5gGGXvNCBjhY2n+Dw@mail.gmail.com>
+ <CAMty3ZA0J+2fSRwX+tS-waJDLMyTOf6UY_1pHjXe0qOk5QuzrQ@mail.gmail.com> <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
+In-Reply-To: <CAGb2v64htYr+iRUnLx0hKkqCtYa0GbzZJEvb-ViyJFAYzU1sig@mail.gmail.com>
+From:   Jagan Teki <jagan@amarulasolutions.com>
+Date:   Tue, 18 Jun 2019 13:16:50 +0530
+Message-ID: <CAMty3ZBDjNa+Sso4hmKxXOg_LT8giNYQAuJCgjZW8AeVQhAtyQ@mail.gmail.com>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 5/9] drm/sun4i: tcon_top: Register
+ clock gates in probe
+To:     Chen-Yu Tsai <wens@csie.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Michael Trimarchi <michael@amarulasolutions.com>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-amarula <linux-amarula@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-During system suspend state, core power goes off and looses all the
-CAR controller register settings.
+On Tue, Jun 18, 2019 at 12:53 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Tue, Jun 18, 2019 at 3:12 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> >
+> > On Mon, Jun 17, 2019 at 6:31 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> > >
+> > > On Mon, Jun 17, 2019 at 7:45 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > >
+> > > > On Fri, Jun 14, 2019 at 10:13:20PM +0530, Jagan Teki wrote:
+> > > > > TCON TOP have clock gates for TV0, TV1, dsi and right
+> > > > > now these are register during bind call.
+> > > > >
+> > > > > Of which, dsi clock gate would required during DPHY probe
+> > > > > but same can miss to get since tcon top is not bound at
+> > > > > that time.
+> > > > >
+> > > > > To solve, this circular dependency move the clock gate
+> > > > > registration from bind to probe so-that DPHY can get the
+> > > > > dsi gate clock on time.
+> > > >
+> > > > It's not really clear to me what the circular dependency is?
+> > > >
+> > > > if you have a chain that is:
+> > > >
+> > > > tcon-top +-> DSI
+> > > >          +-> D-PHY
+> > > >
+> > > > There's no loop, right?
+> > >
+> > > Looking at how the DTSI patch structures things (without going into
+> > > whether it is correct or accurate):
+> > >
+> > > The D-PHY is not part of the component graph. However it requests
+> > > the DSI gate clock from the TCON-TOP.
+> > >
+> > > The TCON-TOP driver, in its current form, only registers the clocks
+> > > it provides at component bind time. Thus the D-PHY can't successfully
+> > > probe until the TCON-TOP has been bound.
+> > >
+> > > The DSI interface requires the D-PHY to bind. It will return -EPROBE_DEFER
+> > > if it cannot request it. This in turn goes into the error path of
+> > > component_bind_all, which unbinds all previous components.
+> > >
+> > > So it's actually
+> > >
+> > >     D-PHY -> TCON-TOP -> DSI
+> > >       ^                   |
+> > >       |--------------------
+> > >
+> > > I've not checked, but I suspect there's no possibility of having other
+> > > drivers probe (to deal with deferred probing) within component_bind_all.
+> > > Otherwise we shouldn't run into this weird circular dependency issue.
+> > >
+> > > So the question for Jagan is that is this indeed the case? Does this
+> > > patch solve it, or at least work around it.
+> >
+> > Yes, this is what I was mentioned in initial version, since the "dsi"
+> > gate in tcon top is registering during bind, the dphy of dsi
+> > controller won't get the associated clock for "mod" so it is keep on
+> > returning -EPROBE_DEFER. By moving the clock gate registration to
+> > probe, everything bound as expected.
+>
+> I believe you failed to mention the DSI block, which is the part that
+> completes the circular dependency. Don't expect others to have full
+> awareness of the context. You have to provide it in your commit log.
 
-This patch creates APIs for saving and restoring the context of Tegra
-CPUG, CPULP and SCLK.
-
-CPU and System clock context includes
-- CPUG, CPULP, and SCLK burst policy settings for clock sourcea of all
-  their normal states.
-- SCLK divisor and System clock rate for restoring SCLK, AHB and APB
-  rates on resume.
-- OSC_DIV settings which are used as reference clock input to some PLLs.
-- SPARE_REG and CLK_MASK settings.
-
-These APIs are used in Tegra210 clock driver during suspend and resume
-operation.
-
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/clk/tegra/clk-tegra-super-gen4.c |  4 --
- drivers/clk/tegra/clk.c                  | 80 ++++++++++++++++++++++++++++++++
- drivers/clk/tegra/clk.h                  | 14 ++++++
- 3 files changed, 94 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/clk/tegra/clk-tegra-super-gen4.c b/drivers/clk/tegra/clk-tegra-super-gen4.c
-index cdfe7c9697e1..ed69ec4d883e 100644
---- a/drivers/clk/tegra/clk-tegra-super-gen4.c
-+++ b/drivers/clk/tegra/clk-tegra-super-gen4.c
-@@ -19,10 +19,6 @@
- #define PLLX_MISC2 0x514
- #define PLLX_MISC3 0x518
- 
--#define CCLKG_BURST_POLICY 0x368
--#define CCLKLP_BURST_POLICY 0x370
--#define SCLK_BURST_POLICY 0x028
--#define SYSTEM_CLK_RATE 0x030
- #define SCLK_DIVIDER 0x2c
- 
- static DEFINE_SPINLOCK(sysrate_lock);
-diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-index 573e3c967ae1..26690663157a 100644
---- a/drivers/clk/tegra/clk.c
-+++ b/drivers/clk/tegra/clk.c
-@@ -70,6 +70,12 @@ static struct clk **clks;
- static int clk_num;
- static struct clk_onecell_data clk_data;
- 
-+static u32 cclkg_burst_policy_ctx[2];
-+static u32 cclklp_burst_policy_ctx[2];
-+static u32 sclk_burst_policy_ctx[2];
-+static u32 sys_clk_divisor_ctx, system_rate_ctx;
-+static u32 spare_ctx, misc_clk_enb_ctx, clk_arm_ctx;
-+
- /* Handlers for SoC-specific reset lines */
- static int (*special_reset_assert)(unsigned long);
- static int (*special_reset_deassert)(unsigned long);
-@@ -199,6 +205,80 @@ const struct tegra_clk_periph_regs *get_reg_bank(int clkid)
- 	}
- }
- 
-+void tegra_cclkg_burst_policy_save_context(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-+		cclkg_burst_policy_ctx[i] = readl_relaxed(clk_base +
-+							  CCLKG_BURST_POLICY +
-+							  (i * 4));
-+}
-+
-+void tegra_cclkg_burst_policy_restore_context(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++)
-+		writel_relaxed(cclkg_burst_policy_ctx[i],
-+			       clk_base + CCLKG_BURST_POLICY + (i * 4));
-+
-+	fence_udelay(2, clk_base);
-+}
-+
-+void tegra_sclk_cclklp_burst_policy_save_context(void)
-+{
-+	int i;
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-+		cclklp_burst_policy_ctx[i] = readl_relaxed(clk_base +
-+							  CCLKLP_BURST_POLICY +
-+							  (i * 4));
-+
-+		sclk_burst_policy_ctx[i] = readl_relaxed(clk_base +
-+							  SCLK_BURST_POLICY +
-+							  (i * 4));
-+	}
-+
-+	sys_clk_divisor_ctx = readl_relaxed(clk_base + SYS_CLK_DIV);
-+	system_rate_ctx = readl_relaxed(clk_base + SYSTEM_CLK_RATE);
-+	spare_ctx = readl_relaxed(clk_base + SPARE_REG0);
-+	misc_clk_enb_ctx = readl_relaxed(clk_base + MISC_CLK_ENB);
-+	clk_arm_ctx = readl_relaxed(clk_base + CLK_MASK_ARM);
-+}
-+
-+void tegra_sclk_cpulp_burst_policy_restore_context(void)
-+{
-+	int i;
-+	u32 val;
-+
-+	/*
-+	 * resume SCLK and CPULP clocks
-+	 * for SCLk, set safe dividers values first and then restore source
-+	 * and dividers
-+	 */
-+
-+	writel_relaxed(0x1, clk_base + SYSTEM_CLK_RATE);
-+	val = readl_relaxed(clk_base + SYS_CLK_DIV);
-+	if (val < sys_clk_divisor_ctx)
-+		writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-+
-+	fence_udelay(2, clk_base);
-+
-+	for (i = 0; i < BURST_POLICY_REG_SIZE; i++) {
-+		writel_relaxed(cclklp_burst_policy_ctx[i],
-+			       clk_base + CCLKLP_BURST_POLICY + (i * 4));
-+		writel_relaxed(sclk_burst_policy_ctx[i],
-+			       clk_base + SCLK_BURST_POLICY + (i * 4));
-+	}
-+
-+	writel_relaxed(sys_clk_divisor_ctx, clk_base + SYS_CLK_DIV);
-+	writel_relaxed(system_rate_ctx, clk_base + SYSTEM_CLK_RATE);
-+	writel_relaxed(spare_ctx, clk_base + SPARE_REG0);
-+	writel_relaxed(misc_clk_enb_ctx, clk_base + MISC_CLK_ENB);
-+	writel_relaxed(clk_arm_ctx, clk_base + CLK_MASK_ARM);
-+}
-+
- struct clk ** __init tegra_clk_init(void __iomem *regs, int num, int banks)
- {
- 	clk_base = regs;
-diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-index 581deb4f3ac0..c8f8a23096e2 100644
---- a/drivers/clk/tegra/clk.h
-+++ b/drivers/clk/tegra/clk.h
-@@ -10,6 +10,16 @@
- #include <linux/clkdev.h>
- #include <linux/delay.h>
- 
-+#define SCLK_BURST_POLICY	0x28
-+#define SYSTEM_CLK_RATE		0x30
-+#define CLK_MASK_ARM		0x44
-+#define MISC_CLK_ENB		0x48
-+#define CCLKG_BURST_POLICY	0x368
-+#define CCLKLP_BURST_POLICY	0x370
-+#define SYS_CLK_DIV		0x400
-+#define SPARE_REG0 		0x55c
-+#define BURST_POLICY_REG_SIZE	2
-+
- /**
-  * struct tegra_clk_sync_source - external clock source from codec
-  *
-@@ -839,6 +849,10 @@ int tegra_pll_p_div_to_hw(struct tegra_clk_pll *pll, u8 p_div);
- int div_frac_get(unsigned long rate, unsigned parent_rate, u8 width,
- 		 u8 frac_width, u8 flags);
- void tegra_clk_sync_state_pll(struct clk_hw *hw);
-+void tegra_cclkg_burst_policy_save_context(void);
-+void tegra_cclkg_burst_policy_restore_context(void);
-+void tegra_sclk_cclklp_burst_policy_save_context(void);
-+void tegra_sclk_cpulp_burst_policy_restore_context(void);
- 
- /* Combined read fence with delay */
- #define fence_udelay(delay, reg)	\
--- 
-2.7.4
-
+I have mentioned DPHY and yes it is possible to give more information
+will update in next version, no problem. thanks for mentioning that.
