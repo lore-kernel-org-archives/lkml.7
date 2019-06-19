@@ -7,96 +7,94 @@ X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD81C31E51
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:36:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D4EC31E51
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:39:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AD0A2082C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:36:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 666A820665
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:39:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="M5ChfN6s"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dfsDAJn0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730101AbfFSDfh (ORCPT
+        id S1730374AbfFSDjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 23:35:37 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:37942 "EHLO
+        Tue, 18 Jun 2019 23:39:08 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40222 "EHLO
         aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSDfh (ORCPT
+        with ESMTP id S1726037AbfFSDjI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 23:35:37 -0400
+        Tue, 18 Jun 2019 23:39:08 -0400
 Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3XpgE005263;
-        Wed, 19 Jun 2019 03:35:31 GMT
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3cgJj008198;
+        Wed, 19 Jun 2019 03:38:45 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
  from : references : date : in-reply-to : message-id : mime-version :
  content-type; s=corp-2018-07-02;
- bh=rzGxGRnDdtvtDqaMMzM73Ib40cXmOjf/MJkXIMZSzXI=;
- b=M5ChfN6sozfcdnH1dSrRq5c1qNPJGMonjkkm3dR/8vp5BhaFg6K9MFYnYuCfyKlbpLfd
- Wyc3HxWYy/pdjcuCCQ2ICl7UMCCM8yJvjfkKpDO5SB//vD5gnC9jylaDkhleWmLlkhSZ
- HYJVj2gjJgKRq592GzEkNU/HRUCe5jZD4yRf9l6UtWyOKD0x2yrqWzLDUQGcvnMA02En
- 55KIT9/Urku189vhHV8GBbebINFs5jnKD5XwrnEC92XvXpuodHyNHINUsJqgpwQW76JX
- IKrBEHER1LzAMqVgJeCSF++tUw4OIi4gNhYox6q4Ohn8P4kWNkH6C+gyY6xhbBSfv1by xQ== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2t78098tea-1
+ bh=b5qN28LGBy9a7xOcap+Wk6iZCiRNojShvf2zriROB8Q=;
+ b=dfsDAJn00iF/8pZ/i8qowCY4c9XARIhuNj7lp+jFphCgBHrCUqRE81UOsE5jWX57mJ+s
+ YEJgOigIbXJLegb35IRZYYPcGeKgtz4fdo6v36W8NzUrwKLgamWgUs2WBwZgxWZ2RYdS
+ P+zMURl8Qcoew4upstNreEAY3f9L4qBhT9QfMw/cuJ7je3qVn7ZYALsxlqSWMYdjJ8Yt
+ WnSwZJGgqBy1XzSIzh4fv4qpyUTStQOYIgW2Lpi9P/tXB9APfxKVFQkWNu8k5CCjcoJZ
+ E72ZvyaINjuc8UUsjH+J64EKlubW+xsdKkTeXdoCf5pbhNZ2AO46bL0dM79ugipNUq+j 5g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2t78098tmr-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:35:31 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3ZKfh113445;
-        Wed, 19 Jun 2019 03:35:30 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t77yn38mq-1
+        Wed, 19 Jun 2019 03:38:45 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3bdfZ049730;
+        Wed, 19 Jun 2019 03:38:44 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2t77ymu9fb-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:35:30 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J3ZShZ023785;
-        Wed, 19 Jun 2019 03:35:29 GMT
+        Wed, 19 Jun 2019 03:38:44 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5J3cfb8019954;
+        Wed, 19 Jun 2019 03:38:41 GMT
 Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 20:35:28 -0700
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        with ESMTP ; Tue, 18 Jun 2019 20:38:40 -0700
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, Hannes Reinecke <hare@suse.com>
-Subject: Re: [PATCH] scsi: scsi_sysfs.c: Hide wwid sdev attr if VPD is not supported
+        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
+Subject: Re: [PATCH v4 23/28] docs: target: convert docs to ReST and rename to *.rst
 From:   "Martin K. Petersen" <martin.petersen@oracle.com>
 Organization: Oracle Corporation
-References: <20190612020828.8140-1-marcos.souza.org@gmail.com>
-Date:   Tue, 18 Jun 2019 23:35:16 -0400
-In-Reply-To: <20190612020828.8140-1-marcos.souza.org@gmail.com> (Marcos Paulo
-        de Souza's message of "Tue, 11 Jun 2019 23:08:28 -0300")
-Message-ID: <yq1muieuu17.fsf@oracle.com>
+References: <cover.1560361364.git.mchehab+samsung@kernel.org>
+        <9c58d2f3478126736e69b688a7dbf0da26ba2285.1560361364.git.mchehab+samsung@kernel.org>
+Date:   Tue, 18 Jun 2019 23:38:37 -0400
+In-Reply-To: <9c58d2f3478126736e69b688a7dbf0da26ba2285.1560361364.git.mchehab+samsung@kernel.org>
+        (Mauro Carvalho Chehab's message of "Wed, 12 Jun 2019 14:52:59 -0300")
+Message-ID: <yq1imt2utvm.fsf@oracle.com>
 User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=767
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190026
+ engine=8.0.1-1810050000 definitions=main-1906190027
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=819 adultscore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190027
+ definitions=main-1906190028
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Marcos,
+Mauro,
 
-> WWID composed from VPD data from device, specifically page 0x83. So,
-> when a device does not have VPD support, for example USB storage
-> devices where VPD is specifically disabled, a read into <blk
-> device>/device/wwid file will always return ENXIO. To avoid this,
-> change the scsi_sdev_attr_is_visible function to hide wwid sysfs file
-> when the devices does not support VPD.
+> Convert the TCM docs to ReST format and add them to the
+> bookset.
 
-Not a big fan of attribute files that come and go.
+Looks good to me.
 
-Why not just return an empty string? Hannes?
+Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
 
 -- 
 Martin K. Petersen	Oracle Linux Engineering
