@@ -2,207 +2,122 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E72A2C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:11:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B226DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:12:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6F2A208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:11:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nro2yjMg"
+	by mail.kernel.org (Postfix) with ESMTP id 95927208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:12:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731414AbfFSJK7 (ORCPT
+        id S1731405AbfFSJMV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:10:59 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41126 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731321AbfFSJK7 (ORCPT
+        Wed, 19 Jun 2019 05:12:21 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:65249 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730996AbfFSJMV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:10:59 -0400
-Received: by mail-lf1-f68.google.com with SMTP id 136so11507475lfa.8;
-        Wed, 19 Jun 2019 02:10:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:references:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=3SIX09875uxUo1XhtKRNTRHSV68SKvXocMxJP/0aUoY=;
-        b=Nro2yjMgyfsgeuZHCwgAwVegS5Ar8Bgbwrbey/E5rrepHjy3swRq0Z1kLnw/VYe+I1
-         3Tgwpc3mZdY+fMoFW7JmI7IkSs0jRxY14TupOTLwZqxOSW/DlZHQMv1/XfIYTYSuolaO
-         kR84EkMowhArx0Hx7D4GJ6W3K+Z+H2FcF5VWwbgR0D8FN3X+0HBNE7tpN2+mCeDG8Z5K
-         0hPJnBuvwMqdDpe0MF6n2HakuRScXDqpSLzWc4PUPr76Jwxr0eTF8pN5jy489xOtpCTu
-         HINUCFLxORsI96S0m+Fz3M1+wiA2PV/A5dPdiWR5rmXX4Gj+D0IY8MOiBmhn8+StG/Ra
-         BsXw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3SIX09875uxUo1XhtKRNTRHSV68SKvXocMxJP/0aUoY=;
-        b=nOoSpJ0rzWzz4kqGbQbdimlOC+vTJuOOO0/g0Vh4/n02fjFYc1M8gfzTwS6CJVKcbn
-         Q7qgoQORocQzvt0dLvdxGRcAWBxXEABSKcAg9/7LVDeXqK4W21Xrs/xcmf+vzdmTPBVB
-         2VINrS6Fxpzeo68rKhvFIBVdCq3qkFpyLM6FexG/FeyPqiRGiq37OskQPlr+rIgnX3xA
-         gXh5sRnADNlaL2t53XCZhdWW6wzFOKLZ+9x2a87Tq0GYmqFdPOjSBb90PLNYeMrOa/NL
-         nlUCBKofFzZeMR63Y8CUzirDElAl97vIP61O3BqSXLaKGIjvj9B/dnqjUyUxGcZOYrmj
-         9WUw==
-X-Gm-Message-State: APjAAAWdJeOhmTwO30N9VuN1zK5z5r1F1EJ20vydC1VBd9RIN6rzlt/Q
-        Zqg2VamXldDc0mbnd41nvddxlaso
-X-Google-Smtp-Source: APXvYqyqjOlFtCg2fWKVh/UcrhzRsQxY8RAWJikNYKacC2Fc4GcjQ9G5cagQPOEB3gfsKTOMfRI5EA==
-X-Received: by 2002:ac2:5b05:: with SMTP id v5mr62359725lfn.38.1560935456171;
-        Wed, 19 Jun 2019 02:10:56 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id j23sm1876689lfb.93.2019.06.19.02.10.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 02:10:55 -0700 (PDT)
-Subject: Re: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Bitan Biswas <bbiswas@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>, linux-i2c@vger.kernel.org,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>
-Cc:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>
-References: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
- <cda89c10-c597-ce90-98dd-5cc13ee9b83d@gmail.com>
- <d29aa32d-55ef-c98b-00cd-f836bf003662@nvidia.com>
- <698b4903-0580-8a68-88f8-fba3e2cbe6c7@gmail.com>
-Message-ID: <30386276-d5cc-7a74-9f2f-b773b9f3e7a4@gmail.com>
-Date:   Wed, 19 Jun 2019 12:10:54 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 19 Jun 2019 05:12:21 -0400
+X-UUID: 583cab0048a7483293dd615e26509cae-20190619
+X-UUID: 583cab0048a7483293dd615e26509cae-20190619
+Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        (envelope-from <weiyi.lu@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 2102173806; Wed, 19 Jun 2019 17:11:58 +0800
+Received: from mtkcas08.mediatek.inc (172.21.101.126) by
+ mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 19 Jun 2019 17:11:55 +0800
+Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Wed, 19 Jun 2019 17:11:55 +0800
+Message-ID: <1560935516.2158.2.camel@mtksdaap41>
+Subject: Re: [PATCH v5 04/14] soc: mediatek: Refactor polling timeout and
+ documentation
+From:   Weiyi Lu <weiyi.lu@mediatek.com>
+To:     Nicolas Boichat <drinkcat@chromium.org>
+CC:     Rob Herring <robh@kernel.org>,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        James Liao <jamesjj.liao@mediatek.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Fan Chen <fan.chen@mediatek.com>,
+        "moderated list:ARM/Mediatek SoC support" 
+        <linux-mediatek@lists.infradead.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
+Date:   Wed, 19 Jun 2019 17:11:56 +0800
+In-Reply-To: <CANMq1KCLQaFg3bOrHnXzbjU9KM5Ny2rRX9bP4xg17jOYirxxig@mail.gmail.com>
+References: <20190319080140.24055-1-weiyi.lu@mediatek.com>
+         <20190319080140.24055-5-weiyi.lu@mediatek.com>
+         <CANMq1KCLQaFg3bOrHnXzbjU9KM5Ny2rRX9bP4xg17jOYirxxig@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-In-Reply-To: <698b4903-0580-8a68-88f8-fba3e2cbe6c7@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: FEF713524511270A67FE0C1B2152E937E6EDF13A65FACB2F23DD324F98A8FFCE2000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.06.2019 12:02, Dmitry Osipenko пишет:
-> 19.06.2019 11:58, Jon Hunter пишет:
->>
->> On 18/06/2019 19:26, Dmitry Osipenko wrote:
->>> 18.06.2019 11:42, Bitan Biswas пишет:
->>>> tegra_i2c_xfer_msg initiates the I2C transfer in DMA
->>>> or PIO mode. It involves steps that need FIFO register
->>>> access, DMA API calls like dma_sync_single_for_device, etc.
->>>> Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
->>>> and in DMA/PIO mode writes different I2C registers including
->>>> I2C interrupt status. ISR cannot start processing
->>>> before the preparation step at tegra_i2c_xfer_msg is complete.
->>>> Hence, a synchronization between ISR and tegra_i2c_xfer_msg
->>>> is in place today using spinlock.
->>>
->>> Please use full 75 chars per-line, this should make commit message to look better.
->>>
->>>> Spinlock busy waits and can add avoidable delays.
->>>>
->>>> In this patch needed synchronization is achieved by disabling
->>>> I2C interrupt during preparation step and enabling interrupt
->>>> once preparation is over and spinlock is no longer needed.
->>>>
->>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
->>>> ---
->>>>  drivers/i2c/busses/i2c-tegra.c | 17 ++++++++---------
->>>>  1 file changed, 8 insertions(+), 9 deletions(-)
->>>>
->>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
->>>> index 6fb545e..ccc7fae 100644
->>>> --- a/drivers/i2c/busses/i2c-tegra.c
->>>> +++ b/drivers/i2c/busses/i2c-tegra.c
->>>> @@ -240,7 +240,6 @@ struct tegra_i2c_hw_feature {
->>>>   * @bus_clk_rate: current I2C bus clock rate
->>>>   * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
->>>>   * @is_multimaster_mode: track if I2C controller is in multi-master mode
->>>> - * @xfer_lock: lock to serialize transfer submission and processing
->>>>   * @tx_dma_chan: DMA transmit channel
->>>>   * @rx_dma_chan: DMA receive channel
->>>>   * @dma_phys: handle to DMA resources
->>>> @@ -270,8 +269,6 @@ struct tegra_i2c_dev {
->>>>  	u32 bus_clk_rate;
->>>>  	u16 clk_divisor_non_hs_mode;
->>>>  	bool is_multimaster_mode;
->>>> -	/* xfer_lock: lock to serialize transfer submission and processing */
->>>> -	spinlock_t xfer_lock;
->>>>  	struct dma_chan *tx_dma_chan;
->>>>  	struct dma_chan *rx_dma_chan;
->>>>  	dma_addr_t dma_phys;
->>>> @@ -835,7 +832,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>>>  
->>>>  	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
->>>>  
->>>> -	spin_lock(&i2c_dev->xfer_lock);
->>>>  	if (status == 0) {
->>>>  		dev_warn(i2c_dev->dev, "irq status 0 %08x %08x %08x\n",
->>>>  			 i2c_readl(i2c_dev, I2C_PACKET_TRANSFER_STATUS),
->>>> @@ -935,7 +931,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->>>>  
->>>>  	complete(&i2c_dev->msg_complete);
->>>>  done:
->>>> -	spin_unlock(&i2c_dev->xfer_lock);
->>>>  	return IRQ_HANDLED;
->>>>  }
->>>>  
->>>> @@ -1054,7 +1049,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->>>>  	u32 packet_header;
->>>>  	u32 int_mask;
->>>>  	unsigned long time_left;
->>>> -	unsigned long flags;
->>>>  	size_t xfer_size;
->>>>  	u32 *buffer = NULL;
->>>>  	int err = 0;
->>>> @@ -1085,7 +1079,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
->>>>  	 */
->>>>  	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
->>>>  					i2c_dev->bus_clk_rate);
->>>> -	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
->>>> +	if (!i2c_dev->irq_disabled) {
->>>> +		disable_irq_nosync(i2c_dev->irq);
->>>> +		i2c_dev->irq_disabled = true;
->>>> +	}
->>>
->>> 1) Peter correctly pointed out in the other email that the disabling should be synced.
->>> But see more below in 3.
->>>
->>> 2) i2c_dev->irq_disabled == true can't ever be the case here because tegra_i2c_init()
->>> re-enables interrupt in a case of error condition. Hence interrupt always enabled at
->>> the beginning of the transfer.
->>>
->>> 3) In my previous answer I was suggesting to request IRQ in a disabled state, this
->>> will allow to remove i2c_dev->irq_disabled completely.
->>>
->>> Then the tegra_i2c_xfer_msg() will have to enable IRQ after completion of the
->>> transfer-preparation process and disable IRQ once transfer is done (both success and
->>> failure cases). This is actually not a bad additional motivation for this patch, to
->>> keep CPU's interrupt disabled while idling and not to only rely on interrupt masking
->>> of the I2C hardware.
->>>
->>> 4) ISR should simply return IRQ_NONE when interrupt status is 0 and allow kernel core
->>> to disable the faulty interrupt itself. There will be "unhandled interrupt" error
->>> message in KMSG log, following the disabling.
->>>
->>> 5) In order to request IRQ in a disabled state, the IRQ_NOAUTOEN flag need to be set
->>> before the requesting, like this:
->>>
->>>     irq_set_status_flags(irq, IRQ_NOAUTOEN);
->>>
->>>     devm_request_irq(&pdev->dev, irq...);
->>>
->>> In a result of combining 3-5, both i2c_dev->irq_disabled and i2c_dev->irq variables
->>> become obsolete and could be removed in addition to xfer_lock. That all is a good
->>> cleanup in my opinion.
+On Tue, 2019-03-19 at 19:45 +0800, Nicolas Boichat wrote:
+> On Tue, Mar 19, 2019 at 4:02 PM Weiyi Lu <weiyi.lu@mediatek.com> wrote:
+> >
+> > Use USEC_PER_SEC to indicate the polling timeout directly.
+> > And add documentation of scp_domain_data.
+> >
+> > Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-scpsys.c | 14 +++++++++++++-
+> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> > index 9f52f501178b..2855111b221a 100644
+> > --- a/drivers/soc/mediatek/mtk-scpsys.c
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> > @@ -21,7 +21,7 @@
+> >  #include <dt-bindings/power/mt8173-power.h>
+> >
+> >  #define MTK_POLL_DELAY_US   10
+> > -#define MTK_POLL_TIMEOUT    (jiffies_to_usecs(HZ))
+> > +#define MTK_POLL_TIMEOUT    USEC_PER_SEC
+> >
+> >  #define MTK_SCPD_ACTIVE_WAKEUP         BIT(0)
+> >  #define MTK_SCPD_FWAIT_SRAM            BIT(1)
+> > @@ -108,6 +108,18 @@ static const char * const clk_names[] = {
+> >
+> >  #define MAX_CLKS       3
+> >
+> > +/**
+> > + * struct scp_domain_data - scp domain data for power on/off flow
+> > + * @name: The domain name.
+> > + * @sta_mask: The mask for power on/off status bit.
+> > + * @ctl_offs: The offset for main power control register.
+> > + * @sram_pdn_bits: The mask for sram power control bits.
+> > + * @sram_pdn_ack_bits: The mask for sram power control acked bits.
+> > + * @bus_prot_mask: The mask for single step bus protection.
+> > + * @clk_id: The basic clock needs to be enabled before enabling certain
+> > + *          power domains.
+> 
+> I assume these are the clock*s* that *this* scp_domain requires?
+> 
+> So maybe just: "The basic clocks required by this power domain." ?
+> 
+Thanks for revision. I'll update in next version.
+> > + * @caps: The flag for active wake-up action.
+> > + */
+> >  struct scp_domain_data {
+> >         const char *name;
+> >         u32 sta_mask;
+> > --
+> > 2.18.0
+> >
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
 
 
-Ah, actually looks like i2c_dev->irq won't be obsoleted, but not a big deal.
-
-Also, please note that it won't be the least to change the type of "irq" to unsigned int for
-consistency. I know that Thierry is picky about it.
