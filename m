@@ -6,24 +6,25 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97FF8C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B76C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BCC021670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E7C421670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730876AbfFSOQ1 (ORCPT
+        id S1730919AbfFSOQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:16:27 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:54941 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730764AbfFSOQZ (ORCPT
+        Wed, 19 Jun 2019 10:16:29 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56553 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730844AbfFSOQ1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:16:25 -0400
+        Wed, 19 Jun 2019 10:16:27 -0400
+X-Originating-IP: 92.137.69.152
 Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 972D5200009;
-        Wed, 19 Jun 2019 14:16:19 +0000 (UTC)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 980F94000D;
+        Wed, 19 Jun 2019 14:16:23 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Mike Turquette <mturquette@baylibre.com>,
@@ -38,9 +39,9 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Antoine Tenart <antoine.tenart@bootlin.com>,
         =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH v6 5/6] arm64: marvell: enable the  Armada 7K/8K CPU clk driver
-Date:   Wed, 19 Jun 2019 16:15:38 +0200
-Message-Id: <20190619141539.16884-6-gregory.clement@bootlin.com>
+Subject: [PATCH v6 6/6] arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
+Date:   Wed, 19 Jun 2019 16:15:39 +0200
+Message-Id: <20190619141539.16884-7-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190619141539.16884-1-gregory.clement@bootlin.com>
 References: <20190619141539.16884-1-gregory.clement@bootlin.com>
@@ -51,26 +52,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit makes sure the driver for the Armada 7K/8K CPU clock is
-enabled.
+Add cpu clock node on AP
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 ---
- arch/arm64/Kconfig.platforms | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi | 4 ++++
+ arch/arm64/boot/dts/marvell/armada-ap806.dtsi      | 7 +++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/arch/arm64/Kconfig.platforms b/arch/arm64/Kconfig.platforms
-index 42eca656faa8..3cf5769fd17d 100644
---- a/arch/arm64/Kconfig.platforms
-+++ b/arch/arm64/Kconfig.platforms
-@@ -138,6 +138,7 @@ config ARCH_MESON
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+index 2baafe12ebd4..472211159979 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
+@@ -20,24 +20,28 @@
+ 			compatible = "arm,cortex-a72";
+ 			reg = <0x000>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 0>;
+ 		};
+ 		cpu1: cpu@1 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			reg = <0x001>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 0>;
+ 		};
+ 		cpu2: cpu@100 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			reg = <0x100>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 1>;
+ 		};
+ 		cpu3: cpu@101 {
+ 			device_type = "cpu";
+ 			compatible = "arm,cortex-a72";
+ 			reg = <0x101>;
+ 			enable-method = "psci";
++			clocks = <&cpu_clk 1>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+index 91dad7e4ee59..ed039aa8188f 100644
+--- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+@@ -280,6 +280,13 @@
+ 				#address-cells = <1>;
+ 				#size-cells = <1>;
  
- config ARCH_MVEBU
- 	bool "Marvell EBU SoC Family"
-+	select ARMADA_AP_CPU_CLK
- 	select ARMADA_AP806_SYSCON
- 	select ARMADA_CP110_SYSCON
- 	select ARMADA_37XX_CLK
++				cpu_clk: clock-cpu@0 {
++					compatible = "marvell,ap806-cpu-clock";
++					clocks = <&ap_clk 0>, <&ap_clk 1>;
++					#clock-cells = <1>;
++					reg = <0x278 0xa30>;
++				};
++
+ 				ap_thermal: thermal-sensor@80 {
+ 					compatible = "marvell,armada-ap806-thermal";
+ 					reg = <0x80 0x10>;
 -- 
 2.20.1
 
