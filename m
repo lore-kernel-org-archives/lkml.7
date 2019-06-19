@@ -2,138 +2,209 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE4EC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:34:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE03BC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:36:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0D25208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:34:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Me285Eft"
+	by mail.kernel.org (Postfix) with ESMTP id A0E66208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:36:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731136AbfFSKeU (ORCPT
+        id S1731447AbfFSKg0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:34:20 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51735 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfFSKeT (ORCPT
+        Wed, 19 Jun 2019 06:36:26 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46748 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726826AbfFSKgZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:34:19 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so1171968wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:34:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=urGhGMBj9Gj+93Uz4bCVBFsm8sW6q9N7nifD7I3Dmm0=;
-        b=Me285EftGAvkCIm9KR5xzgD/NL8izuvygR9J344xkydeliRaRPW5ey628RjJ9Mou79
-         LRJXCQjIuWJqhr/4KPcqV+ZZpgVZ0/ELnk0cchhFVf6V9uOdGdr16KW0EhYSuSLVZ3jL
-         ZRPYdouYLdWf+/VQReZpSzJJ3dWE/W1hyzpsxY5j/M9i1NqzGEvDjICgsyhCkPul+QV3
-         hM1Y7gnHrBQV7S3v5ibr7kqQm8YsXvPnOwodmB0P7yUzHmOkHBnQOsst4iWGPu1/H2J7
-         deHamS/6KyEiSgtA+ZaorzjLg+TeKkoJ3v9NZHOZ8szBo6X1aZyMt7+xBk55Oufo7lI3
-         Hkiw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=urGhGMBj9Gj+93Uz4bCVBFsm8sW6q9N7nifD7I3Dmm0=;
-        b=ac2K1HFweZ49glHmhAwAL9OdTaSoZspwdSDnY/hgFjJ81X/w+svj5WBOWRYS4e4env
-         nsQku3qwMscuaDGtGvVqYK23l08UFMahksvrHIwIE1LQkYPzYFl6hKxhNh+C+NmqqD+H
-         kKMlMHE6O/UpCOvtACp5nXyCtFxt8xNjmPHf8X4rNZdl28pn6dQVBoLzzBWdeTfYv+Xz
-         JxsSH3yUotdnwuWT++K34YmFwRVVK8FRkGWzU4Lr8zDUGe+E7VHKGMkxIWa1Do9arGS7
-         awIIqsQexN3PwhcUgUqXLXL9SoXLiNfk3mygTJR8qRX7Y/p8PSxrfhLEk1OnhlyLrrYY
-         DuQQ==
-X-Gm-Message-State: APjAAAURmA1Z7+DqTCm6VBn5xygLcz6QWBTbb1dFzT8s2qEcZ4qh1juT
-        f/5tZHHjwHs0vz0H1ocGNYgtzqhM
-X-Google-Smtp-Source: APXvYqxlJa5H3ubJWUsDp+ynl4+d24K8AumjDor4n6joXgVyOU36lrWHz8h2zbzlmxQFjprEYnnp3w==
-X-Received: by 2002:a1c:a186:: with SMTP id k128mr7944693wme.125.1560940457198;
-        Wed, 19 Jun 2019 03:34:17 -0700 (PDT)
-Received: from arch-x1c3 ([2a00:5f00:102:0:9665:9cff:feee:aa4d])
-        by smtp.gmail.com with ESMTPSA id w67sm1417860wma.24.2019.06.19.03.34.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 03:34:16 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 11:32:12 +0100
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>
-Subject: Re: [PATCH v3 01/12] drm: add gem array helpers
-Message-ID: <20190619103212.GA1896@arch-x1c3>
-References: <20190619090420.6667-1-kraxel@redhat.com>
- <20190619090420.6667-2-kraxel@redhat.com>
+        Wed, 19 Jun 2019 06:36:25 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JAYt4W011755
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 06:36:25 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7h6df16d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 06:36:24 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 19 Jun 2019 11:36:22 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Jun 2019 11:36:18 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JAaGwx43974834
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 10:36:17 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C834511C066;
+        Wed, 19 Jun 2019 10:36:16 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 833E711C054;
+        Wed, 19 Jun 2019 10:36:16 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.171.67])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Jun 2019 10:36:16 +0000 (GMT)
+Subject: Re: [PATCH] ocxl: Allow contexts to be attached with a NULL mm
+To:     Andrew Donnellan <ajd@linux.ibm.com>,
+        "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        Nicholas Piggin <npiggin@gmail.com>
+References: <20190617044152.13707-1-alastair@au1.ibm.com>
+ <81f8951e-a095-3e13-4229-6475f6a8d4a5@linux.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 19 Jun 2019 12:36:16 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619090420.6667-2-kraxel@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <81f8951e-a095-3e13-4229-6475f6a8d4a5@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061910-0012-0000-0000-0000032A768C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061910-0013-0000-0000-000021639726
+Message-Id: <682c9b63-7edd-eb4e-8d6f-2bfdd36453e4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=888 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190088
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gerd,
 
-On 2019/06/19, Gerd Hoffmann wrote:
 
-> +/**
-> + * drm_gem_array_from_handles -- lookup an array of gem handles.
-> + *
-> + * @drm_file: drm file-private structure to use for the handle look up
-> + * @handles: the array of handles to lookup.
-> + * @nents: the numer of handles.
-> + *
-> + * Returns: An array of gem objects on success, NULL on failure.
-> + */
-> +struct drm_gem_object_array*
-> +drm_gem_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents)
-> +{
-> +	struct drm_gem_object_array *objs;
-> +	u32 i;
-> +
-> +	objs = drm_gem_array_alloc(nents);
-> +	if (!objs)
-> +		return NULL;
-> +
-> +	for (i = 0; i < nents; i++) {
-> +		objs->objs[i] = drm_gem_object_lookup(drm_file, handles[i]);
-> +		if (!objs->objs[i]) {
-Missing object put for the 0..i-1 handles. Personally I would:
-    objs->nents = i;
-    drm_gem_array_put_free(objs);
-    return NULL;
+Le 18/06/2019 à 03:50, Andrew Donnellan a écrit :
+> On 17/6/19 2:41 pm, Alastair D'Silva wrote:
+>> From: Alastair D'Silva <alastair@d-silva.org>
+>>
+>> If an OpenCAPI context is to be used directly by a kernel driver, there
+>> may not be a suitable mm to use.
+>>
+>> The patch makes the mm parameter to ocxl_context_attach optional.
+>>
+>> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> 
+> The one issue I can see here is that using mm == NULL bypasses our 
+> method of enabling/disabling global TLBIs in mm_context_add_copro().
+> 
+> Discussing this privately with Alastair and Fred - this should be fine, 
+> but perhaps we should document that.
 
-> +			drm_gem_array_put_free(objs);
-> +			return NULL;
-> +		}
-> +	}
-> +	return objs;
-> +}
-Missing EXPORT_SYMBOL?
 
-> +
-> +/**
-> + * drm_gem_array_put_free -- put gem objects and free array.
-> + *
-> + * @objs: the gem object array.
-> + */
-> +void drm_gem_array_put_free(struct drm_gem_object_array *objs)
-> +{
-> +	u32 i;
-> +
-> +	for (i = 0; i < objs->nents; i++) {
-> +		if (!objs->objs[i])
-> +			continue;
-> +		drm_gem_object_put_unlocked(objs->objs[i]);
-> +	}
-> +	drm_gem_array_free(objs);
-> +}
-Ditto?
+So indeed we should be fine. I confirmed with Nick that kernel space 
+invalidations are already global today.
+Nick mentioned that we should still be fine tomorrow, but in the distant 
+future, we could imagine local usage of some part of the kernel space. 
+It will require some work, but it would be best to add a comment in one 
+of the kernel invalidation function (for example 
+radix__flush_tlb_kernel_range()) that if a kernel invalidation ever 
+becomes local, then clients of the nest MMU may need some work.
 
-HTH
-Emil
+A few more comments below.
+
+
+>> ---
+>>   drivers/misc/ocxl/context.c |  9 ++++++---
+>>   drivers/misc/ocxl/link.c    | 12 ++++++++----
+>>   2 files changed, 14 insertions(+), 7 deletions(-)
+>>
+>> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+>> index bab9c9364184..994563a078eb 100644
+>> --- a/drivers/misc/ocxl/context.c
+>> +++ b/drivers/misc/ocxl/context.c
+>> @@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, 
+>> u64 dsisr)
+>>   int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct 
+>> mm_struct *mm)
+>>   {
+>>       int rc;
+>> +    unsigned long pidr = 0;
+>>       // Locks both status & tidr
+>>       mutex_lock(&ctx->status_mutex);
+>> @@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, 
+>> u64 amr, struct mm_struct *mm)
+>>           goto out;
+>>       }
+>> -    rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
+>> -            mm->context.id, ctx->tidr, amr, mm,
+>> -            xsl_fault_error, ctx);
+>> +    if (mm)
+>> +        pidr = mm->context.id;
+>> +
+>> +    rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, 
+>> ctx->tidr,
+>> +                  amr, mm, xsl_fault_error, ctx);
+>>       if (rc)
+>>           goto out;
+>> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+>> index cce5b0d64505..43542f124807 100644
+>> --- a/drivers/misc/ocxl/link.c
+>> +++ b/drivers/misc/ocxl/link.c
+>> @@ -523,7 +523,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, 
+>> u32 pidr, u32 tidr,
+>>       pe->amr = cpu_to_be64(amr);
+>>       pe->software_state = cpu_to_be32(SPA_PE_VALID);
+>> -    mm_context_add_copro(mm);
+>> +    if (mm)
+>> +        mm_context_add_copro(mm);
+
+
+Same as above, we should add a comment here in the driver code that a 
+kernel context is ok because invalidations are global.
+
+
+We also need a new check in xsl_fault_handler(). A valid kernel address 
+shouldn't fault, but it's still possible for the FPGA to try accessing a 
+bogus kernel address. In which case, xsl_fault_handler() would be 
+entered, with a valid fault context. We'll find pe_data in the tree 
+based on the valid pe_handle, but pe_data->mm will be NULL. In that, we 
+can return early, acknowledging the interrupt with ADDRESS_ERROR value 
+(like we do if pe_data is not found in the tree).
+
+   Fred
+
+
+>>       /*
+>>        * Barrier is to make sure PE is visible in the SPA before it
+>>        * is used by the device. It also helps with the global TLBI
+>> @@ -546,7 +547,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, 
+>> u32 pidr, u32 tidr,
+>>        * have a reference on mm_users. Incrementing mm_count solves
+>>        * the problem.
+>>        */
+>> -    mmgrab(mm);
+>> +    if (mm)
+>> +        mmgrab(mm);
+>>       trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, 
+>> tidr);
+>>   unlock:
+>>       mutex_unlock(&spa->spa_lock);
+>> @@ -652,8 +654,10 @@ int ocxl_link_remove_pe(void *link_handle, int 
+>> pasid)
+>>       if (!pe_data) {
+>>           WARN(1, "Couldn't find pe data when removing PE\n");
+>>       } else {
+>> -        mm_context_remove_copro(pe_data->mm);
+>> -        mmdrop(pe_data->mm);
+>> +        if (pe_data->mm) {
+>> +            mm_context_remove_copro(pe_data->mm);
+>> +            mmdrop(pe_data->mm);
+>> +        }
+>>           kfree_rcu(pe_data, rcu);
+>>       }
+>>   unlock:
+>>
+> 
+
