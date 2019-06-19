@@ -2,274 +2,204 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AA6CC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0584EC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:05:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 373B720B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xKbs6LYe"
+	by mail.kernel.org (Postfix) with ESMTP id CF0A421670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560949499;
+	bh=n3KLKYts4K5N4cb9g1hjz5TkGGFF3p2iFeK6laS3lLY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=HB0LsM+z62XqpjGmm0V9Wtw8YbbHbKtzQrCd8hTAQuw1XQcTHTOpMS6sw09lqlRtV
+	 +hR89jctrINyrSiSg7r1PVE9wqxNHEYH6F6o4JFvTBMdxPSjMeDEt/UN+FcoO0JOVv
+	 iSFWf7JVJNrMcAaiu+YCo3AIyO3NrC3JhsyvgiC8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731988AbfFSNEp (ORCPT
+        id S1732003AbfFSNE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:04:45 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:36329 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731895AbfFSNEe (ORCPT
+        Wed, 19 Jun 2019 09:04:58 -0400
+Received: from casper.infradead.org ([85.118.1.10]:58188 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731422AbfFSNE5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:04:34 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCuDOn030429;
-        Wed, 19 Jun 2019 15:04:02 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
- date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=p5e2nfsElxNtsp+AWmabxwZass2bjpLHbaOSk3EXfxc=;
- b=xKbs6LYe8u7td8XhtcXeqRg/V8xdmFKrCFxWmC0/zvKrN5fLFw3DOaKsUJxhKt322uEk
- +qKfZIeBqlHL1/idmQY3TNWjkGPdrH+81v0MpKkcqsTA0nThikpRKcS7ZrPoWTx0SL6s
- dOeo0YBQ7FftBVl0+Pjygsff/l/RbZyNTaRyNlcSYghHOKGQ9J4ezO6wmdwfsrwSZdUp
- sY7qNwiLiThJ/UEWwX6wSzPUC7AchqjmKYqJH9i6KI1Ve8MyO5sD9QAwj/o88jgtBfZh
- uthoD49GdLN7+zR44DQ/pFmemysWLrNiJ42M8zZHsyUp/C296RY+IoSh58TLW6GcN4kz lQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t781a3yy1-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 15:04:02 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C24FA3A;
-        Wed, 19 Jun 2019 13:04:00 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 96AAB2835;
-        Wed, 19 Jun 2019 13:04:00 +0000 (GMT)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun
- 2019 15:04:00 +0200
-Received: from localhost (10.201.23.16) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun 2019 15:04:00
- +0200
-From:   Olivier Moysan <olivier.moysan@st.com>
-To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
-        <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <benjamin.gaignard@st.com>,
-        <olivier.moysan@st.com>
-Subject: [PATCH 4/5] iio: adc: stm32-dfsdm: add fast mode support
-Date:   Wed, 19 Jun 2019 15:03:50 +0200
-Message-ID: <1560949431-22948-5-git-send-email-olivier.moysan@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
-References: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
+        Wed, 19 Jun 2019 09:04:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=q/WTcjyOBpwvuJ+QVqRXy4uVu6c2/vfcA6WupQADJMI=; b=YTJGhL/roGk88lmexW/uHWOlaQ
+        EgYa65sYpAqt0Ty0JEH4izzuNiP8UlBPniX9w/09Bqsj2KUJQHW4ztl63QKu76k0ZvNdASWQFW+dO
+        EjKefNvevynwr1e32AJywF2TY4nSKlGjfRKrux47BVetV4ZtRdeKlPhgbfye+Xk0/gRKIdXWSPpFW
+        /HAavLrrm1omA+AZ8SBiG2YiW3TCjVyIM7aQx3exufHXxNUfexymhQssSFRRyXgVNeGCSOFIGP0V9
+        jvRooAWWvXgmz5j4/1Op3L5VSdVIBa2yjcirDpeemqYN12m7ov/r/Oty89RWEM2XZLFtps2XGTJg/
+        S6rJGcdA==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdaGm-0001Hv-9H; Wed, 19 Jun 2019 13:04:56 +0000
+Date:   Wed, 19 Jun 2019 10:04:50 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
+ dir
+Message-ID: <20190619100450.26d4d6f7@coco.lan>
+In-Reply-To: <20190619104239.GM3419@hirez.programming.kicks-ass.net>
+References: <cover.1560890771.git.mchehab+samsung@kernel.org>
+        <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
+        <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com>
+        <20190619072218.4437f891@coco.lan>
+        <20190619104239.GM3419@hirez.programming.kicks-ass.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.16]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
- signatures=0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The use of fast mode allows to get a larger set of solution
-for filter parameters. This can be useful to reach a better
-output sample resolution, when fast mode can be used.
+Em Wed, 19 Jun 2019 12:42:39 +0200
+Peter Zijlstra <peterz@infradead.org> escreveu:
 
-Fast mode is selected at startup if it is relevant.
-The startup is performed in postenable callback context,
-where there are too tight time constraints for filter parameters
-computation. For this reason both fast and non fast filter parameters
-are pre-computed previously.
+(reduced the C/C to just the relevant ML/people)
 
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
----
- drivers/iio/adc/stm32-dfsdm-adc.c | 65 ++++++++++++++++++++++++++++++---------
- drivers/iio/adc/stm32-dfsdm.h     |  4 +--
- 2 files changed, 53 insertions(+), 16 deletions(-)
+> On Wed, Jun 19, 2019 at 07:22:18AM -0300, Mauro Carvalho Chehab wrote:
+> > Hi Daniel,
+> > 
+> > Em Wed, 19 Jun 2019 11:05:57 +0200
+> > Daniel Vetter <daniel@ffwll.ch> escreveu:
+> >   
+> > > On Tue, Jun 18, 2019 at 10:55 PM Mauro Carvalho Chehab
+> > > <mchehab+samsung@kernel.org> wrote:  
+> > > > diff --git a/Documentation/gpu/drm-mm.rst b/Documentation/gpu/drm-mm.rst
+> > > > index fa30dfcfc3c8..b0f948d8733b 100644
+> > > > --- a/Documentation/gpu/drm-mm.rst
+> > > > +++ b/Documentation/gpu/drm-mm.rst
+> > > > @@ -320,7 +320,7 @@ struct :c:type:`struct file_operations <file_operations>` get_unmapped_area
+> > > >  field with a pointer on :c:func:`drm_gem_cma_get_unmapped_area`.
+> > > >
+> > > >  More detailed information about get_unmapped_area can be found in
+> > > > -Documentation/nommu-mmap.rst
+> > > > +Documentation/driver-api/nommu-mmap.rst    
+> > > 
+> > > Random drive-by comment: Could we convert these into hyperlinks within
+> > > sphinx somehow, without making them less useful as raw file references
+> > > (with vim I can just type 'gf' and it works, emacs probably the same).
+> > > -Daniel  
+> > 
+> > Short answer: I don't know how vim/emacs would recognize Sphinx tags.  
+> 
+> No, the other way around, Sphinx can recognize local files and treat
+> them special. That way we keep the text readable.
+> 
+> Same with that :c:func:'foo' crap, that needs to die, and Sphinx needs
+> to be taught about foo().
 
-diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index 5b19a88412a6..d855a605eab6 100644
---- a/drivers/iio/adc/stm32-dfsdm-adc.c
-+++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -196,7 +196,7 @@ static int stm32_dfsdm_compute_osrs(struct stm32_dfsdm_filter *fl,
- 	int bits, shift;
- 	unsigned int m = 1;	/* multiplication factor */
- 	unsigned int p = fl->ford;	/* filter order (ford) */
--	struct stm32_dfsdm_filter_osr *flo = &fl->flo;
-+	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fast];
+Just did a test today with Jon's extension with is meant to replace
+:c:func:'foo' (with is currently on a separate 'automarkup' branch).
+At least the version therestill needs some work, as it currently 
+mangles with titles and tables. like on those warnings/errors:
+
+	6.4 :c:func:`resync_start()`, :c:func:`resync_finish()`
+	-----------------------------------
+	/devel/v4l/docs/Documentation/driver-api/md/md-cluster.rst:323: WARNING: Title underline too short.
+
+
+	/devel/v4l/docs/Documentation/driver-api/serial/tty.rst:74: WARNING: Malformed table.
+	Text in column margin in table line 34.
+
+	======================= =======================================================
+	:c:func:`open()`                        Called when the line discipline is attached to
+
+-
+
+That's said, once it gets fixed to address those complex cases, a
+regex like:
+
+	\bDocumentation/([\w\d\-\_\/]+)\.rst\b
+
+could be used to convert to :doc: tag. It should be smart enough to convert
+the relative paths, as we refer to the files from the git root directory
+(with makes a lot sense to me), while Sphinx :doc: use relative patches
+from the location where the parsed file is.
+
+Something like the enclosed patch. 
+
+Thanks,
+Mauro
+
+[PATCH] automarkup.py: convert Documentation/* to hyperlinks
+
+Auto-create hyperlinks when it finds a Documentation/.. occurrence.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+index 39c8f4d5af82..9d6926b61241 100644
+--- a/Documentation/sphinx/automarkup.py
++++ b/Documentation/sphinx/automarkup.py
+@@ -9,6 +9,7 @@
+ from __future__ import print_function
+ import re
+ import sphinx
++#import sys		# Just for debug
  
- 	pr_debug("%s: Requested oversampling: %d\n",  __func__, oversamp);
- 	/*
-@@ -217,7 +217,6 @@ static int stm32_dfsdm_compute_osrs(struct stm32_dfsdm_filter *fl,
- 	 * Look for filter and integrator oversampling ratios which allows
- 	 * to maximize data output resolution.
- 	 */
--	flo->res = 0;
- 	for (fosr = 1; fosr <= DFSDM_MAX_FL_OVERSAMPLING; fosr++) {
- 		for (iosr = 1; iosr <= DFSDM_MAX_INT_OVERSAMPLING; iosr++) {
- 			if (fast)
-@@ -309,6 +308,28 @@ static int stm32_dfsdm_compute_osrs(struct stm32_dfsdm_filter *fl,
- 	return 0;
- }
+ #
+ # Regex nastiness.  Of course.
+@@ -31,10 +32,26 @@ RE_literal = re.compile(r'^(\s*)(.*::\s*|\.\.\s+code-block::.*)$')
+ #
+ RE_whitesp = re.compile(r'^(\s*)')
  
-+static int stm32_dfsdm_compute_all_osrs(struct iio_dev *indio_dev,
-+					unsigned int oversamp)
-+{
-+	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-+	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
-+	int ret0, ret1;
++#
++# Get a documentation reference
++#
++RE_doc_links = re.compile(r'\bDocumentation/([\w\d\-\_\/]+)\.rst\b')
 +
-+	memset(&fl->flo[0], 0, sizeof(fl->flo[0]));
-+	memset(&fl->flo[1], 0, sizeof(fl->flo[1]));
++#
++# Doc link false-positives
++#
++RE_false_doc_links = re.compile(r':ref:`\s*Documentation/[\w\d\-\_\/]+\.rst')
 +
-+	ret0 = stm32_dfsdm_compute_osrs(fl, 0, oversamp);
-+	ret1 = stm32_dfsdm_compute_osrs(fl, 1, oversamp);
-+	if (ret0 < 0 && ret1 < 0) {
-+		dev_err(&indio_dev->dev,
-+			"Filter parameters not found: errors %d/%d\n",
-+			ret0, ret1);
-+		return -EINVAL;
-+	}
+ def MangleFile(app, docname, text):
+     ret = [ ]
+     previous = ''
+     literal = False
 +
-+	return 0;
-+}
++    rel_dir = ''
 +
- static int stm32_dfsdm_start_channel(struct stm32_dfsdm_adc *adc)
- {
- 	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
-@@ -433,11 +454,25 @@ static int stm32_dfsdm_channels_configure(struct stm32_dfsdm_adc *adc,
- 	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
- 	struct regmap *regmap = adc->dfsdm->regmap;
- 	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[fl_id];
--	struct stm32_dfsdm_filter_osr *flo = &fl->flo;
-+	struct stm32_dfsdm_filter_osr *flo = &fl->flo[0];
- 	const struct iio_chan_spec *chan;
- 	unsigned int bit;
- 	int ret;
- 
-+	fl->fast = 0;
++    for depth in range(0, docname.count('/')):
++        rel_dir += "../"
 +
-+	/*
-+	 * In continuous mode, use fast mode configuration,
-+	 * if it provides a better resolution.
-+	 */
-+	if (adc->nconv == 1 && !trig &&
-+	    (indio_dev->currentmode & INDIO_BUFFER_SOFTWARE)) {
-+		if (fl->flo[1].res >= fl->flo[0].res) {
-+			fl->fast = 1;
-+			flo = &fl->flo[1];
-+		}
-+	}
+     for line in text[0].split('\n'):
+         #
+         # See if we might be ending a literal block, as denoted by
+@@ -63,7 +80,17 @@ def MangleFile(app, docname, text):
+         # Normal line - perform substitutions.
+         #
+         else:
+-            ret.append(RE_function.sub(r'\1:c:func:`\2`\3', line))
++            new_line = RE_function.sub(r'\1:c:func:`\2`\3', line)
 +
- 	if (!flo->res)
- 		return -EINVAL;
- 
-@@ -463,7 +498,7 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
- 	struct iio_dev *indio_dev = iio_priv_to_dev(adc);
- 	struct regmap *regmap = adc->dfsdm->regmap;
- 	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[fl_id];
--	struct stm32_dfsdm_filter_osr *flo = &fl->flo;
-+	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fl->fast];
- 	u32 cr1;
- 	const struct iio_chan_spec *chan;
- 	unsigned int bit, jchg = 0;
-@@ -490,6 +525,12 @@ static int stm32_dfsdm_filter_configure(struct stm32_dfsdm_adc *adc,
- 	if (ret)
- 		return ret;
- 
-+	ret = regmap_update_bits(regmap, DFSDM_CR1(fl_id),
-+				 DFSDM_CR1_FAST_MASK,
-+				 DFSDM_CR1_FAST(fl->fast));
-+	if (ret)
-+		return ret;
++            if not RE_false_doc_links.search(new_line):
++                new_line = RE_doc_links.sub(r':doc:`' + rel_dir + r'\1`', new_line)
 +
- 	/*
- 	 * DFSDM modes configuration W.R.T audio/iio type modes
- 	 * ----------------------------------------------------------------
-@@ -636,7 +677,6 @@ static int dfsdm_adc_set_samp_freq(struct iio_dev *indio_dev,
- 				   unsigned int spi_freq)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
--	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
- 	unsigned int oversamp;
- 	int ret;
- 
-@@ -646,11 +686,10 @@ static int dfsdm_adc_set_samp_freq(struct iio_dev *indio_dev,
- 			"Rate not accurate. requested (%u), actual (%u)\n",
- 			sample_freq, spi_freq / oversamp);
- 
--	ret = stm32_dfsdm_compute_osrs(fl, 0, oversamp);
--	if (ret < 0) {
--		dev_err(&indio_dev->dev, "No filter parameters that match!\n");
-+	ret = stm32_dfsdm_compute_all_osrs(indio_dev, oversamp);
-+	if (ret < 0)
- 		return ret;
--	}
++ #           # Just for debug - should be removed on production
++ #           if new_line != line:
++ #               print ("===>" + new_line, file=sys.stderr)
 +
- 	adc->sample_freq = spi_freq / oversamp;
- 	adc->oversamp = oversamp;
- 
-@@ -783,7 +822,7 @@ static inline void stm32_dfsdm_process_data(struct stm32_dfsdm_adc *adc,
- 					    s32 *buffer)
- {
- 	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
--	struct stm32_dfsdm_filter_osr *flo = &fl->flo;
-+	struct stm32_dfsdm_filter_osr *flo = &fl->flo[fl->fast];
- 	unsigned int i = adc->nconv;
- 	s32 *ptr = buffer;
- 
-@@ -1171,7 +1210,6 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
- 				 int val, int val2, long mask)
- {
- 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
--	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
- 	struct stm32_dfsdm_channel *ch = &adc->dfsdm->ch_list[chan->channel];
- 	unsigned int spi_freq;
- 	int ret = -EINVAL;
-@@ -1181,7 +1219,7 @@ static int stm32_dfsdm_write_raw(struct iio_dev *indio_dev,
- 		ret = iio_device_claim_direct_mode(indio_dev);
- 		if (ret)
- 			return ret;
--		ret = stm32_dfsdm_compute_osrs(fl, 0, val);
-+		ret = stm32_dfsdm_compute_all_osrs(indio_dev, val);
- 		if (!ret)
- 			adc->oversamp = val;
- 		iio_device_release_direct_mode(indio_dev);
-@@ -1430,8 +1468,7 @@ static int stm32_dfsdm_adc_init(struct iio_dev *indio_dev)
- 	int ret, chan_idx;
- 
- 	adc->oversamp = DFSDM_DEFAULT_OVERSAMPLING;
--	ret = stm32_dfsdm_compute_osrs(&adc->dfsdm->fl_list[adc->fl_id], 0,
--				       adc->oversamp);
-+	ret = stm32_dfsdm_compute_all_osrs(indio_dev, adc->oversamp);
- 	if (ret < 0)
- 		return ret;
- 
-diff --git a/drivers/iio/adc/stm32-dfsdm.h b/drivers/iio/adc/stm32-dfsdm.h
-index 18b06ee6ed7b..5dbdae4ed881 100644
---- a/drivers/iio/adc/stm32-dfsdm.h
-+++ b/drivers/iio/adc/stm32-dfsdm.h
-@@ -263,13 +263,13 @@ struct stm32_dfsdm_filter_osr {
- /**
-  * struct stm32_dfsdm_filter - structure relative to stm32 FDSDM filter
-  * @ford: filter order
-- * @flo: filter oversampling structure
-+ * @flo: filter oversampling data table indexed by fast mode flag
-  * @sync_mode: filter synchronized with filter 0
-  * @fast: filter fast mode
-  */
- struct stm32_dfsdm_filter {
- 	enum stm32_dfsdm_sinc_order ford;
--	struct stm32_dfsdm_filter_osr flo;
-+	struct stm32_dfsdm_filter_osr flo[2];
- 	unsigned int sync_mode;
- 	unsigned int fast;
- };
--- 
-2.7.4
++            ret.append(new_line)
++
+         #
+         # Might we be starting a literal block?  If so make note of
+         # the fact.
+
 
