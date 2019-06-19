@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31155C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA9C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00B8621670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C87820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="gC2g+F4F"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0xenS9bc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731881AbfFSNEa (ORCPT
+        id S1731930AbfFSNEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:04:30 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21868 "EHLO
+        Wed, 19 Jun 2019 09:04:35 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63798 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727076AbfFSNE1 (ORCPT
+        by vger.kernel.org with ESMTP id S1731894AbfFSNEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:04:27 -0400
+        Wed, 19 Jun 2019 09:04:34 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCu4JD023632;
-        Wed, 19 Jun 2019 15:03:58 +0200
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCu1vs023624;
+        Wed, 19 Jun 2019 15:04:03 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
  date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Snd2JSaEu7Z6XLdmFflA+YpQRWPbEmDirJH8rOIN+Hg=;
- b=gC2g+F4FLTf8VKpowhrkPjLvh3D1Z8GAwMlQcrwkCJqInZztHxLKi7EiFOGIcoW/A0cL
- 8qsClG8aWxwyaxd89UcdM43p0QwEZiFKeuAqzkvXm/7AX7654e6Oi3VztmklY/ptDJ+Z
- ON680YGi/YAgsylciwmqJxfMhGQl+Zcujqu5qegb6YZNYEaJW9zSpAI00nCPkTc4WgVs
- JjSH9/rKKd4mn3knLbjuJfJPNAHl9H6OYJYKQstqcgim0+rMWdMXFBrGcDnYmfDH60dh
- yXu4eSrkGkzxLufxNpNl4FCKC1B1kzHH4X+XNHxz7QZivq5DI7HLCL+SwW583U7btRVG /A== 
+ bh=1RIed4PSnLNoF/Qg8Sp7JJ0Sajo64o3gdxbSWUs/b4M=;
+ b=0xenS9bcGVcF8713j77nhv9uVF0N+3rssP3bIA4M00CmyUSAdrwem78TNJJNHfTMdReb
+ hibMRJP0HII90WclTnhXFen799MWDD/raHoZnqsHbOBbPWUJFplV8tYCsdK8h7BOWAgB
+ xk1FVwbkGYx828MwMagijwfaNOg1olBktgZfIZ5utfW8B/d5l+iFdSI+juK5e5c9iuKR
+ x4dpT76VUixZ5pa0Yz+5LRtRPnSyXKu7GCWx+etdZhJt7Ei2O0LF3lXSLgV/jD/V4e1U
+ Rs27nGZcFT54Z0W4601g8h6Ui5MHlqxcEanwRD+C6rqGePLtRs9XHJiNAg7pWbj8FW+J cA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t7813c0a8-1
+        by mx07-00178001.pphosted.com with ESMTP id 2t7813c0aq-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 15:03:57 +0200
+        Wed, 19 Jun 2019 15:04:03 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 639B631;
-        Wed, 19 Jun 2019 13:03:57 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 42B362831;
-        Wed, 19 Jun 2019 13:03:57 +0000 (GMT)
-Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun
- 2019 15:03:57 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DC7D638;
+        Wed, 19 Jun 2019 13:04:02 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B5A452834;
+        Wed, 19 Jun 2019 13:04:02 +0000 (GMT)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun
+ 2019 15:04:02 +0200
 Received: from localhost (10.201.23.16) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun 2019 15:03:56
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun 2019 15:04:02
  +0200
 From:   Olivier Moysan <olivier.moysan@st.com>
 To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
@@ -60,9 +60,9 @@ To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <benjamin.gaignard@st.com>,
         <olivier.moysan@st.com>
-Subject: [PATCH 2/5] iio: adc: stm32-dfsdm: fix data type
-Date:   Wed, 19 Jun 2019 15:03:48 +0200
-Message-ID: <1560949431-22948-3-git-send-email-olivier.moysan@st.com>
+Subject: [PATCH 5/5] iio: adc: stm32-dfsdm: add comment for 16 bits record
+Date:   Wed, 19 Jun 2019 15:03:51 +0200
+Message-ID: <1560949431-22948-6-git-send-email-olivier.moysan@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
 References: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
@@ -76,38 +76,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix the data type as DFSDM raw output is complements 2,
-24bits left aligned in a 32-bit register.
-This change does not affect AUDIO path
-- Set data as signed for IIO (as for AUDIO)
-- Set 8 bit right shift for IIO.
-The 8 LSBs bits of data contains channel info and are masked.
-
-Fixes: e2e6771c6462 ("IIO: ADC: add STM32 DFSDM sigma delta ADC support")
+Add a comment on DMA configuration for 16 bits record.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/iio/adc/stm32-dfsdm-adc.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index cb596f104919..6b90a40882f2 100644
+index d855a605eab6..ee1e0569d0e1 100644
 --- a/drivers/iio/adc/stm32-dfsdm-adc.c
 +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -1365,11 +1365,11 @@ static int stm32_dfsdm_adc_chan_init_one(struct iio_dev *indio_dev,
- 					BIT(IIO_CHAN_INFO_SAMP_FREQ);
- 
- 	if (adc->dev_data->type == DFSDM_AUDIO) {
--		ch->scan_type.sign = 's';
- 		ch->ext_info = dfsdm_adc_audio_ext_info;
- 	} else {
--		ch->scan_type.sign = 'u';
-+		ch->scan_type.shift = 8;
- 	}
-+	ch->scan_type.sign = 's';
- 	ch->scan_type.realbits = 24;
- 	ch->scan_type.storagebits = 32;
- 
+@@ -918,6 +918,11 @@ static void stm32_dfsdm_dma_buffer_done(void *data)
+ static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
+ {
+ 	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
++	/*
++	 * The DFSDM supports half-word transfers. However, for 16 bits record,
++	 * 4 bytes buswidth is kept, to avoid losing samples LSBs when left
++	 * shift is required.
++	 */
+ 	struct dma_slave_config config = {
+ 		.src_addr = (dma_addr_t)adc->dfsdm->phys_base,
+ 		.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
 -- 
 2.7.4
 
