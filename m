@@ -2,552 +2,102 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE6CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEE1C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:48:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F25A20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9541620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:48:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Xol0YMad";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rzs8gDE7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="hiCOxUvM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729607AbfFSAlW (ORCPT
+        id S1729377AbfFSAsF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 20:41:22 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52963 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726023AbfFSAlW (ORCPT
+        Tue, 18 Jun 2019 20:48:05 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:38550 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfFSAsE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 20:41:22 -0400
-Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
-        by mailout.nyi.internal (Postfix) with ESMTP id 6089622393;
-        Tue, 18 Jun 2019 20:41:18 -0400 (EDT)
-Received: from imap2 ([10.202.2.52])
-  by compute4.internal (MEProxy); Tue, 18 Jun 2019 20:41:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
-        mime-version:message-id:in-reply-to:references:date:from:to
-        :subject:content-type; s=fm3; bh=+gHRX6cTDmHSKWNNEZDiaV7fmTx8VY6
-        71JKMUQ7FfmQ=; b=Xol0YMadH0jNDydD1NfwOaNXlsouExZ4M1/9uyj0CJJ/jpZ
-        LNZvwztse1Y6jz3OP1zBUL0mJnRBH4otttEY/lzAyWs0lnJ7BtmEidtyfwZKq6GB
-        cumXGBzbtN2GPt8CSgoRe9u2TnBB2dAixuA8mKav6I9BRIm2bl4+KJ5m+eTYNbzm
-        URuxKfgvOf+uYiBbmKOJzJBOaF7WBjNnVJ05e/6py/S5soA6qTSJ2otMxaz9gXDK
-        vvxYo2ixeKftG2c11bfIv6MeqU3F1d8QFKsV3kv5IcbY6kMbmaUWXOvB1ggeGOWB
-        eIfKvP7lgNkpa8HEhkCf9G4cbvCx9RAnOe/nzZA==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=+gHRX6
-        cTDmHSKWNNEZDiaV7fmTx8VY671JKMUQ7FfmQ=; b=rzs8gDE7sglQ0dagm6cfWP
-        QZ1hyCLw1DVZdOJ0txMIFdOBWwC5rxieibF2JFGcbOfXGhbJGeZoiQjtcT3vDaqi
-        jy7al+DQgCaIJ8aSwTXgNCruIYnm+4d6oXksOS9bqDNoLXx9yj5v8i0J70TYBH0E
-        l/poxoJsgAbHwLXnu0qXmja+Ncxo7uMJTrCKvdSVgwKqqLLndUO0sMnd78aR0Bh5
-        wR4SwMGqoADMlHkRPSa6wD6MSHSL23CSQrdIqwxt2Ww6H1oLk6U4W6Hn5n0a4LTu
-        siDDcnpbkmyl8/XXjs9hQDcBtQz1MX/jI+hdpg/PZ/7ET7yrwZHPaQ8kpb74u2Pg
-        ==
-X-ME-Sender: <xms:rYQJXa-A0RY1be8EltPd6m24OKzg4pp6JUVwSMzwVIBXG7ux2cfKdw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddugdefiecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
-    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
-    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
-    ufhiiigvpedt
-X-ME-Proxy: <xmx:rYQJXRBI4ygcgye6OIWFLY_yQKTMsCXKYOUiVR79cwKYovE7uVkj-g>
-    <xmx:rYQJXctlfABcHf2rCDF4pjv5OISMtr_llb2bmbraEhfO_GNeOXYxcg>
-    <xmx:rYQJXREyR9Fq_ux5MV_uCxuV26L3guGYh9Xm5Wucd697lLaXUpEa_A>
-    <xmx:roQJXVYnljDdqWJlVb4MbfpeVUxSo-2sRru08PzriJHXlgl4mpwubQ>
-Received: by mailuser.nyi.internal (Postfix, from userid 501)
-        id 0505FE00A2; Tue, 18 Jun 2019 20:41:17 -0400 (EDT)
-X-Mailer: MessagingEngine.com Webmail Interface
-User-Agent: Cyrus-JMAP/3.1.6-666-gb2312fa-fmstable-20190614v4
-Mime-Version: 1.0
-Message-Id: <d201fadc-0b8e-48df-8e50-bccd5d5019c7@www.fastmail.com>
-In-Reply-To: <20190618042421.1227372-1-taoren@fb.com>
-References: <20190618042421.1227372-1-taoren@fb.com>
-Date:   Wed, 19 Jun 2019 10:11:16 +0930
-From:   "Andrew Jeffery" <andrew@aj.id.au>
-To:     "Tao Ren" <taoren@fb.com>, "Rob Herring" <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        openbmc@lists.ozlabs.org
-Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook Minipack BMC
+        Tue, 18 Jun 2019 20:48:04 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J0hrO9092797;
+        Wed, 19 Jun 2019 00:47:59 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=skUGrUeWkZHkqno23rVbcBqEa6lARdjMrsLZQMB/CUg=;
+ b=hiCOxUvMPKCQ6K+j+WeoF2ddBcYjeHzI3WKHObEemnDthLJSzRil24poxr2i+MhKOreZ
+ sKFx0/4MAF1fwrZ28Jad2ecD+55bEHtxURY0K37sw2oaXFeb+BxNAeq/auwhp1dIwL2/
+ wXVClwfd0G5ydJgN9ys8EYTv3gAI9OPLvpaVzutGUXveRvFkuZo0nJqlV030xLywiGBm
+ IgtLbPBe2XQvrhpb/amp/tkOBL2pUZFz/h3zzW4rEi8WjPUfwTTMfyrqXr16bgqnsGI6
+ UQBpE+BC7FbtJX46iTf12BTfd9WfCSbmE0KlaTiWcKSqTEomAp1uECGi9hJKKh5NGDBf 9w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2t78098efh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 00:47:59 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J0kSbq076303;
+        Wed, 19 Jun 2019 00:47:59 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2t77ynhsrv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 00:47:59 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J0lvAr010725;
+        Wed, 19 Jun 2019 00:47:57 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Jun 2019 00:47:56 +0000
+To:     Michael Schmitz <schmitzmic@gmail.com>
+Cc:     Finn Thain <fthain@telegraphics.com.au>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH v2 2/7] scsi: NCR5380: Always re-enable reselection interrupt
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <cover.1560043151.git.fthain@telegraphics.com.au>
+        <61f0c0f6aaf8fa96bf3dade5475615b2cfbc8846.1560043151.git.fthain@telegraphics.com.au>
+        <58081aba-4e77-3c8e-847e-0698cf80e426@gmail.com>
+        <alpine.LNX.2.21.1906111926330.25@nippy.intranet>
+        <9c61076b-81f7-dc7b-0103-1e2e56072453@gmail.com>
+Date:   Tue, 18 Jun 2019 20:47:54 -0400
+In-Reply-To: <9c61076b-81f7-dc7b-0103-1e2e56072453@gmail.com> (Michael
+        Schmitz's message of "Wed, 12 Jun 2019 11:46:59 +1200")
+Message-ID: <yq1wohixux1.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
 Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=713
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190003
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=765 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190004
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Michael,
 
-On Tue, 18 Jun 2019, at 13:54, Tao Ren wrote:
-> Add initial version of device tree for Facebook Minipack ast2500 BMC.
-> 
-> Signed-off-by: Tao Ren <taoren@fb.com>
+> No matter - patch applied cleanly to what I'm running on my Falcon,
+> and works just fine for now (stresstest will take a few hours to
+> complete). And that'll thoroughly exercise the reselection code path,
+> from what we've seen before.
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+How did it go?
 
-> ---
->  arch/arm/boot/dts/Makefile                    |   1 +
->  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 429 ++++++++++++++++++
->  2 files changed, 430 insertions(+)
->  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 323fb7f13438..4c94e4c8de1e 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1267,6 +1267,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
->  	aspeed-bmc-arm-centriq2400-rep.dtb \
->  	aspeed-bmc-arm-stardragon4800-rep2.dtb \
->  	aspeed-bmc-facebook-cmm.dtb \
-> +	aspeed-bmc-facebook-minipack.dtb \
->  	aspeed-bmc-facebook-tiogapass.dtb \
->  	aspeed-bmc-facebook-yamp.dtb \
->  	aspeed-bmc-intel-s2600wf.dtb \
-> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts 
-> b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-> new file mode 100644
-> index 000000000000..c05478296446
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
-> @@ -0,0 +1,429 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +// Copyright (c) 2018 Facebook Inc.
-> +/dts-v1/;
-> +
-> +#include "aspeed-g5.dtsi"
-> +
-> +/ {
-> +	model = "Facebook Minipack 100 BMC";
-> +	compatible = "facebook,minipack-bmc", "aspeed,ast2500";
-> +
-> +	aliases {
-> +		/*
-> +		 * Override the default serial aliases to avoid breaking
-> +		 * the legacy applications.
-> +		 */
-> +		serial0 = &uart5;
-> +		serial1 = &uart1;
-> +		serial2 = &uart2;
-> +		serial3 = &uart3;
-> +		serial4 = &uart4;
-> +
-> +		/*
-> +		 * i2c switch 2-0070, pca9548, 8 child channels assigned
-> +		 * with bus number 16-23.
-> +		 */
-> +		i2c16 = &imux16;
-> +		i2c17 = &imux17;
-> +		i2c18 = &imux18;
-> +		i2c19 = &imux19;
-> +		i2c20 = &imux20;
-> +		i2c21 = &imux21;
-> +		i2c22 = &imux22;
-> +		i2c23 = &imux23;
-> +
-> +		/*
-> +		 * i2c switch 8-0070, pca9548, 8 child channels assigned
-> +		 * with bus number 24-31.
-> +		 */
-> +		i2c24 = &imux24;
-> +		i2c25 = &imux25;
-> +		i2c26 = &imux26;
-> +		i2c27 = &imux27;
-> +		i2c28 = &imux28;
-> +		i2c29 = &imux29;
-> +		i2c30 = &imux30;
-> +		i2c31 = &imux31;
-> +
-> +		/*
-> +		 * i2c switch 9-0070, pca9548, 8 child channels assigned
-> +		 * with bus number 32-39.
-> +		 */
-> +		i2c32 = &imux32;
-> +		i2c33 = &imux33;
-> +		i2c34 = &imux34;
-> +		i2c35 = &imux35;
-> +		i2c36 = &imux36;
-> +		i2c37 = &imux37;
-> +		i2c38 = &imux38;
-> +		i2c39 = &imux39;
-> +
-> +		/*
-> +		 * i2c switch 11-0070, pca9548, 8 child channels assigned
-> +		 * with bus number 40-47.
-> +		 */
-> +		i2c40 = &imux40;
-> +		i2c41 = &imux41;
-> +		i2c42 = &imux42;
-> +		i2c43 = &imux43;
-> +		i2c44 = &imux44;
-> +		i2c45 = &imux45;
-> +		i2c46 = &imux46;
-> +		i2c47 = &imux47;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = &uart1;
-> +		bootargs = "debug console=ttyS1,9600n8 root=/dev/ram rw";
-> +	};
-> +
-> +	memory@80000000 {
-> +		reg = <0x80000000 0x20000000>;
-> +	};
-> +};
-> +
-> +&wdt1 {
-> +	status = "okay";
-> +	aspeed,reset-type = "system";
-> +};
-> +
-> +&wdt2 {
-> +	status = "okay";
-> +	aspeed,reset-type = "system";
-> +};
-> +
-> +&fmc {
-> +	status = "okay";
-> +	flash@0 {
-> +		status = "okay";
-> +		m25p,fast-read;
-> +		label = "bmc";
-> +#include "facebook-bmc-flash-layout.dtsi"
-> +	};
-> +};
-> +
-> +&uart1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_txd1_default
-> +		     &pinctrl_rxd1_default
-> +		     &pinctrl_ncts1_default
-> +		     &pinctrl_ndsr1_default
-> +		     &pinctrl_ndtr1_default
-> +		     &pinctrl_nrts1_default>;
-> +};
-> +
-> +&uart2 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_txd2_default
-> +		     &pinctrl_rxd2_default>;
-> +};
-> +
-> +&uart3 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_txd3_default
-> +		     &pinctrl_rxd3_default>;
-> +};
-> +
-> +&uart4 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_txd4_default
-> +		     &pinctrl_rxd4_default>;
-> +};
-> +
-> +&uart5 {
-> +	status = "okay";
-> +};
-> +
-> +&mac1 {
-> +	status = "okay";
-> +	no-hw-checksum;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
-> +};
-> +
-> +&i2c0 {
-> +	status = "okay";
-> +	bus-frequency = <400000>;
-> +	multi-master;
-> +};
-> +
-> +&i2c1 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c2 {
-> +	status = "okay";
-> +
-> +	i2c-switch@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		imux16: i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +		};
-> +
-> +		imux17: i2c@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +
-> +		imux18: i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <2>;
-> +		};
-> +
-> +		imux19: i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <3>;
-> +		};
-> +
-> +		imux20: i2c@4 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <4>;
-> +		};
-> +
-> +		imux21: i2c@5 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <5>;
-> +		};
-> +
-> +		imux22: i2c@6 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <6>;
-> +		};
-> +
-> +		imux23: i2c@7 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <7>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c3 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c4 {
-> +	status = "okay";
-> +	multi-master;
-> +};
-> +
-> +&i2c5 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c6 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c7 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c8 {
-> +	status = "okay";
-> +
-> +	i2c-switch@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		imux24: i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +		};
-> +
-> +		imux25: i2c@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +
-> +		imux26: i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <2>;
-> +		};
-> +
-> +		imux27: i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <3>;
-> +		};
-> +
-> +		imux28: i2c@4 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <4>;
-> +		};
-> +
-> +		imux29: i2c@5 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <5>;
-> +		};
-> +
-> +		imux30: i2c@6 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <6>;
-> +		};
-> +
-> +		imux31: i2c@7 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <7>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c9 {
-> +	status = "okay";
-> +
-> +	i2c-switch@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		imux32: i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +		};
-> +
-> +		imux33: i2c@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +
-> +		imux34: i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <2>;
-> +		};
-> +
-> +		imux35: i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <3>;
-> +		};
-> +
-> +		imux36: i2c@4 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <4>;
-> +		};
-> +
-> +		imux37: i2c@5 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <5>;
-> +		};
-> +
-> +		imux38: i2c@6 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <6>;
-> +		};
-> +
-> +		imux39: i2c@7 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <7>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c10 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c11 {
-> +	status = "okay";
-> +
-> +	i2c-switch@70 {
-> +		compatible = "nxp,pca9548";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		reg = <0x70>;
-> +
-> +		imux40: i2c@0 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <0>;
-> +		};
-> +
-> +		imux41: i2c@1 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <1>;
-> +		};
-> +
-> +		imux42: i2c@2 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <2>;
-> +		};
-> +
-> +		imux43: i2c@3 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <3>;
-> +		};
-> +
-> +		imux44: i2c@4 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <4>;
-> +		};
-> +
-> +		imux45: i2c@5 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <5>;
-> +		};
-> +
-> +		imux46: i2c@6 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <6>;
-> +		};
-> +
-> +		imux47: i2c@7 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			reg = <7>;
-> +		};
-> +	};
-> +};
-> +
-> +&i2c12 {
-> +	status = "okay";
-> +};
-> +
-> +&i2c13 {
-> +	status = "okay";
-> +};
-> +
-> +&vhub {
-> +	status = "okay";
-> +};
-> -- 
-> 2.17.1
-> 
->
+-- 
+Martin K. Petersen	Oracle Linux Engineering
