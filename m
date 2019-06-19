@@ -2,90 +2,116 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2805FC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:42:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04310C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:44:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE31F21670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:42:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D053521743
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:44:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="eF3AODqB"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OIdFgOci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730615AbfFSNmw (ORCPT
+        id S1730097AbfFSNoV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:42:52 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:50065 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726330AbfFSNmw (ORCPT
+        Wed, 19 Jun 2019 09:44:21 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:43389 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFSNoU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:42:52 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id D837C22371;
-        Wed, 19 Jun 2019 09:42:50 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 19 Jun 2019 09:42:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=0z874X
-        IbEoU1zgqyVPQZYDchNO0JEbah55jVm3pylWw=; b=eF3AODqBeZGKqFMtbMkrfG
-        3MQX8a+izuNZ2MRgI693t68iNL7m2alvO4PJKpwAqd0psEpWMNCC2lZ1IDZ5+RJ1
-        FOpaAKT3ApzjH6Tj7NDKeRridPOtJ0jPZoHz7m0oicbPSwnRYXv7++S4tkyzFiEt
-        yWoWUSGomFi8nlwvrN0A/6pWWWXcbgaSUfGnFQWZeMYAzn9MdYHOH1D+zpVnhCdJ
-        bXWqBjUbanBzw/JSWdmCo+HpLmdYyGiecsaKcQBqisD4KozrDySrwHGhZfvztLYH
-        4GE7aln4KqrFM8SiPZpZqWaZ8P3OiLFlVwr1ThUe6z5eAeDZxQAIuZLIRKOe6JWQ
-        ==
-X-ME-Sender: <xms:2TsKXfsACg1AXH8Q6tTWyI2PFPETJX9ymyBMLqtqMPkpmGyUervKNQ>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddvgdegudcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucffohhmrghinh
-    epkhgvrhhnvghlrdhorhhgnecukfhppeduleefrdegjedrudeihedrvdehudenucfrrghr
-    rghmpehmrghilhhfrhhomhepihguohhstghhsehiughoshgthhdrohhrghenucevlhhush
-    htvghrufhiiigvpedt
-X-ME-Proxy: <xmx:2TsKXT1Bi6gTDk2sb8aMEGoZ1S7DOby127_eJqFbTPSD92Hw8UcFqg>
-    <xmx:2TsKXeCnKhs7Qv_1YWzezL_7wX-eGtKPJINEemXolTfyE2bVvus1Zw>
-    <xmx:2TsKXfspOR0RVJxAdRH2gs-PdoI7Wb11l3YIdnnbni5_WqGsmcVgCw>
-    <xmx:2jsKXSXhlPmGkZ6865qZ25rdhzN9CCBP2vGYhky8x82f317KZpCElg>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id CB7EE8005B;
-        Wed, 19 Jun 2019 09:42:48 -0400 (EDT)
-Date:   Wed, 19 Jun 2019 16:42:46 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Jiri Pirko <jiri@mellanox.com>, Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Shalom Toledo <shalomt@mellanox.com>,
-        Petr Machata <petrm@mellanox.com>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] mlxsw: spectrum_ptp: fix 32-bit build
-Message-ID: <20190619134246.GA26214@splinter>
-References: <20190619133128.2259960-1-arnd@arndb.de>
+        Wed, 19 Jun 2019 09:44:20 -0400
+Received: by mail-lf1-f65.google.com with SMTP id j29so12158816lfk.10;
+        Wed, 19 Jun 2019 06:44:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Sh/qIBw1XKDUdQ0Wxpr8WG15MJA13mpU4YtnzOpaKLE=;
+        b=OIdFgOcig0sQN7irVtXlKzuUYnNpdV1QiD1wZV9NUpIz3rzt9QrMhB2vZdMgO0dDZ5
+         N05RhZia6MmkDuZ9lReuExcnttV/eCkIHQgXv/bZyL0H2+jP84zT/qvY96zXDf4iJop7
+         UQyt7pn+TmFRgSRFTdk2qnP0JvNi5N6WNQWx0sWNnI/PczhgPk4YRwlkPDEM98kTV7wX
+         Ei2qA5i40HrzUql+JbtY/4oYdMRtBrcpkVpmBHsd1GrLZcDURYD1zf2IPuovqT1PZ3jA
+         NeBkY8lEZtzL6WQs4D644wb00nPn5IdFpZssFJDs5AGV5X4+jfZu2clZjaHYEiJUIIji
+         Vokg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Sh/qIBw1XKDUdQ0Wxpr8WG15MJA13mpU4YtnzOpaKLE=;
+        b=s3wPYw1fGvCo5/eGhk7T2Ytkub/vVuqcBPZqRZAITHzxfUAhCaI/k+TOBmbKJy7C+C
+         ENwhoJi6Wv8zxnSkao+WHc4hXW5x9772k67IHIo91PElNvEl4fuNtfFf5uIZwmFF8lcR
+         Hxn2oOW4FQR2W2l0ipWrB5qwurGbHBY87bNXlUgjfNsw/RfOv52iLEeOE00/WaD29EOj
+         hvbkpZw0FPtD2Yicz5mpLqPWbuWcsP4oPWwkbPuFiUz9/O+yENLRpTpuu1oevniacxNy
+         CNYlk1aEe+mW2OgqTUaQupIjwNiAOf1ZMWIXPi1nZeC7z/w293L8oXtpIrjlAXmHvsFa
+         5T0w==
+X-Gm-Message-State: APjAAAUWANhfHEOHB5uIvCGsRvbZYCrVdP1E9bqA2sTUnwt1bXZXkR3J
+        8LY+daKT0KnpNiX+aVzEUbnm/1JAdf9SnrLR0Ks=
+X-Google-Smtp-Source: APXvYqzIHC2qwwy1WwyVkFuivPy0ti/t0LmJDTX/uQQG/dGgpZBVy8Yf6Ax2JhyVKa5qoMS4Z7Nr8uBXW6Fx5oQqAF8=
+X-Received: by 2002:a05:6512:29a:: with SMTP id j26mr28443954lfp.44.1560951858594;
+ Wed, 19 Jun 2019 06:44:18 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619133128.2259960-1-arnd@arndb.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+ <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+ <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com> <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
+In-Reply-To: <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Jun 2019 10:44:31 -0300
+Message-ID: <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Pintu Agarwal <pintu.ping@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 03:31:20PM +0200, Arnd Bergmann wrote:
-> On 32-bit architectures, we cannot easily device 64-bit numbers:
-> 
-> ERROR: "__aeabi_uldivmod" [drivers/net/ethernet/mellanox/mlxsw/mlxsw_spectrum.ko] undefined!
-> 
-> Use do_div() to annotate the fact that we know this is an
-> expensive operation.
-> 
-> Fixes: 992aa864dca0 ("mlxsw: spectrum_ptp: Add implementation for physical hardware clock operations")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+On Wed, Jun 19, 2019 at 10:33 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
 
-Arnd, thanks for the patch. We already patched this issue yesterday:
-https://git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git/commit/?id=cd4bb2a3344cb53d9234cca232edfb2dce0f0a35
+> You can think that the version I am using right now is almost 4.9 itself.
+
+"almost 4.9" does not help, sorry.
+
+> Upgrading again to higher kernel version is again difficult, also
+> customer does not want it.
+
+dw-hdmi is well supported on i.MX6 with mainline, so you could simply try that.
+
+Try booting 5.1.11 on your custom board with a very minimal dts with
+HDMI support.
+
+Then you can test suspend/resume and see if HDMI hangs or not.
+
+> Another approach I tried is, installing hdmi {dw-hdmi.ko,
+> dw_hdmi-imx.ko} as a module, just after the resume.
+> With this also system hangs during installation of dw_hdmi-imx.ko at
+> below location:
+>
+> imx_drm_driver_load(..)
+> |
+> |--> component_bind_all(...)
+>      |
+>      |-> component_bind(ipu)
+>          |
+>          |
+>          ipu_drm_bind(..)
+>          |
+>          |-> ipu_crtc_init(..)
+>              |
+>              |-> ipu_plane_irq(..)
+>              |
+>              | ----> << __HANGS HERE__ >>
+
+I am not able to reproduce this hang. As I mentioned yesterday
+suspend/resume is working just fine.
+
+We would be glad to help fixing the hang if you could reproduce it
+with a mainline kernel.
