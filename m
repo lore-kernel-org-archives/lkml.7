@@ -2,99 +2,124 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D4EC31E51
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:39:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B66EAC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:40:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666A820665
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:39:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90627208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:40:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dfsDAJn0"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="BQ7vWgHm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730374AbfFSDjI (ORCPT
+        id S1730416AbfFSDks (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 23:39:08 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:40222 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSDjI (ORCPT
+        Tue, 18 Jun 2019 23:40:48 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42182 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfFSDkr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 23:39:08 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3cgJj008198;
-        Wed, 19 Jun 2019 03:38:45 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=b5qN28LGBy9a7xOcap+Wk6iZCiRNojShvf2zriROB8Q=;
- b=dfsDAJn00iF/8pZ/i8qowCY4c9XARIhuNj7lp+jFphCgBHrCUqRE81UOsE5jWX57mJ+s
- YEJgOigIbXJLegb35IRZYYPcGeKgtz4fdo6v36W8NzUrwKLgamWgUs2WBwZgxWZ2RYdS
- P+zMURl8Qcoew4upstNreEAY3f9L4qBhT9QfMw/cuJ7je3qVn7ZYALsxlqSWMYdjJ8Yt
- WnSwZJGgqBy1XzSIzh4fv4qpyUTStQOYIgW2Lpi9P/tXB9APfxKVFQkWNu8k5CCjcoJZ
- E72ZvyaINjuc8UUsjH+J64EKlubW+xsdKkTeXdoCf5pbhNZ2AO46bL0dM79ugipNUq+j 5g== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2t78098tmr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:38:45 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3bdfZ049730;
-        Wed, 19 Jun 2019 03:38:44 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2t77ymu9fb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:38:44 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5J3cfb8019954;
-        Wed, 19 Jun 2019 03:38:41 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 20:38:40 -0700
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, target-devel@vger.kernel.org
-Subject: Re: [PATCH v4 23/28] docs: target: convert docs to ReST and rename to *.rst
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <cover.1560361364.git.mchehab+samsung@kernel.org>
-        <9c58d2f3478126736e69b688a7dbf0da26ba2285.1560361364.git.mchehab+samsung@kernel.org>
-Date:   Tue, 18 Jun 2019 23:38:37 -0400
-In-Reply-To: <9c58d2f3478126736e69b688a7dbf0da26ba2285.1560361364.git.mchehab+samsung@kernel.org>
-        (Mauro Carvalho Chehab's message of "Wed, 12 Jun 2019 14:52:59 -0300")
-Message-ID: <yq1imt2utvm.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 18 Jun 2019 23:40:47 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so8167014otn.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 20:40:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4V43vNNP9UR/YMy0iUrU7kUuUwSqcmG602S5hpOD5NE=;
+        b=BQ7vWgHmVXoWfX5W8xsL12ik15mXugB0SaJil+xQI3I0WxyylMDSZVjeFIBqrMpPVJ
+         Tgiut3d49qvcxdiNlr/Wuqhf5OYmZDTD6pJsL4uc8B7AvZ8wwh8aPM4n71HSolE5Oxc3
+         FA9Ld6qDcf1gl5dm9y3qsfehBHljHi5HXuDdd7/icxI+t/oHdrlAmeDiUP/Kmr+DiaXd
+         ygMke+1L3EJ6jv6Or7J7ka07JnJyzYJ6usnlq/hrYPaTv2PCenHPThlG9fXMEyQo3ktq
+         qYnDyLZfzEglV0V7mhDK4JYNDdtBeedbRy3nXiodLZw2O63uvgAs/frjTUrFddu2fdwk
+         1G9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4V43vNNP9UR/YMy0iUrU7kUuUwSqcmG602S5hpOD5NE=;
+        b=dwBQUrE388OR7Xd2VnsBEZpCs+CwEDv/D7I/j2BCS/3YbpyfZ3d8h/uZ5OTuQPVvXX
+         szspdalK3RYkncrWc+ikJgyGDdk8OEYo8Y6LGdDl17VKvUucIiEL13nWrp/nFGlodFFO
+         fOcGQfjvXkWzC7SgweVJ4XSv21QpMs55fzsYzibVtPwq5lf1KAwam9Fjd2xTeE8H5msE
+         HjnKEc8LbesDtpW7PXh8yeeHEJEyPlU9z8x2v8yB9OXtVlQNRMElfw0kcZNq7tyQoroZ
+         R1d37x+BDAl2qJXURhlvL1ZClrTZyBeYem4UVaub3guojyydrFCOgxyc5I88XAtG9/Xm
+         Q9vg==
+X-Gm-Message-State: APjAAAXxAEDgCCyKcrwnpPEANpyrnJ1iWIDGwBRFQ/Xq0Li9bw1xElpE
+        sC7UcGkYyNAz/X22kzUGUMLKBpHfJq9IqOKDgHtgNQ==
+X-Google-Smtp-Source: APXvYqzSIN9dPRssFnDKf+ysKlqbDab6DghA3P8E1YBeqgXp36cJF4wdWJZxF+5DmxoFz1Yx1IYT0Jk4KmWR0apXjnU=
+X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr59223453otn.71.1560915647227;
+ Tue, 18 Jun 2019 20:40:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190027
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190028
+References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <155977188458.2443951.9573565800736334460.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190618014223.GD18161@richard>
+In-Reply-To: <20190618014223.GD18161@richard>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Tue, 18 Jun 2019 20:40:36 -0700
+Message-ID: <CAPcyv4gXzNgghUq337foa3ywB0R4g1e1atnXX-=KJCjCacv0TA@mail.gmail.com>
+Subject: Re: [PATCH v9 03/12] mm/hotplug: Prepare shrink_{zone, pgdat}_span
+ for sub-section removal
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Jun 17, 2019 at 6:42 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
+>
+> On Wed, Jun 05, 2019 at 02:58:04PM -0700, Dan Williams wrote:
+> >Sub-section hotplug support reduces the unit of operation of hotplug
+> >from section-sized-units (PAGES_PER_SECTION) to sub-section-sized units
+> >(PAGES_PER_SUBSECTION). Teach shrink_{zone,pgdat}_span() to consider
+> >PAGES_PER_SUBSECTION boundaries as the points where pfn_valid(), not
+> >valid_section(), can toggle.
+> >
+> >Cc: Michal Hocko <mhocko@suse.com>
+> >Cc: Vlastimil Babka <vbabka@suse.cz>
+> >Cc: Logan Gunthorpe <logang@deltatee.com>
+> >Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> >Reviewed-by: Oscar Salvador <osalvador@suse.de>
+> >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+> >---
+> > mm/memory_hotplug.c |   29 ++++++++---------------------
+> > 1 file changed, 8 insertions(+), 21 deletions(-)
+> >
+> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> >index 7b963c2d3a0d..647859a1d119 100644
+> >--- a/mm/memory_hotplug.c
+> >+++ b/mm/memory_hotplug.c
+> >@@ -318,12 +318,8 @@ static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
+> >                                    unsigned long start_pfn,
+> >                                    unsigned long end_pfn)
+> > {
+> >-      struct mem_section *ms;
+> >-
+> >-      for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SECTION) {
+> >-              ms = __pfn_to_section(start_pfn);
+> >-
+> >-              if (unlikely(!valid_section(ms)))
+> >+      for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SUBSECTION) {
+> >+              if (unlikely(!pfn_valid(start_pfn)))
+> >                       continue;
+>
+> Hmm, we change the granularity of valid section from SECTION to SUBSECTION.
+> But we didn't change the granularity of node id and zone information.
+>
+> For example, we found the node id of a pfn mismatch, we can skip the whole
+> section instead of a subsection.
+>
+> Maybe this is not a big deal.
 
-Mauro,
-
-> Convert the TCM docs to ReST format and add them to the
-> bookset.
-
-Looks good to me.
-
-Acked-by: Martin K. Petersen <martin.petersen@oracle.com>
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+I don't see a problem.
