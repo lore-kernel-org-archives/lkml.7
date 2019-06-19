@@ -2,115 +2,108 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37B76C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE88CC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:18:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E7C421670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B79CF2064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:18:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PXycLjrh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730919AbfFSOQ3 (ORCPT
+        id S1729550AbfFSOSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:16:29 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:56553 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730844AbfFSOQ1 (ORCPT
+        Wed, 19 Jun 2019 10:18:08 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:43446 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727198AbfFSOSG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:16:27 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 980F94000D;
-        Wed, 19 Jun 2019 14:16:23 +0000 (UTC)
-From:   Gregory CLEMENT <gregory.clement@bootlin.com>
-To:     Stephen Boyd <sboyd@kernel.org>,
-        Mike Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        Jason Cooper <jason@lakedaemon.net>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Gregory CLEMENT <gregory.clement@bootlin.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH v6 6/6] arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
-Date:   Wed, 19 Jun 2019 16:15:39 +0200
-Message-Id: <20190619141539.16884-7-gregory.clement@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190619141539.16884-1-gregory.clement@bootlin.com>
-References: <20190619141539.16884-1-gregory.clement@bootlin.com>
+        Wed, 19 Jun 2019 10:18:06 -0400
+Received: by mail-pl1-f194.google.com with SMTP id cl9so7293058plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 07:18:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mlNb/IaItSyqkmca1yT8QCZfXO867q6hvVBmX/nB+c4=;
+        b=PXycLjrhAM+mZu18Pk5r0Od9xKOFKkduE9WzkYHJ+odD7+1IRtjO4DeJCKBNBl3JHx
+         MyFgo7eGQcG0sQ1v7ihSGKKMlr8obsid9FYzfjVsDrlyC9sf4IZ+z+eY2SiGxKvVZ7WC
+         dn7L00CNezvaaSwh2MnzUqCs079oy4zciUBqKvkppkuLpfvyyYYdLePxiQqBvmlC9ZSJ
+         8PS96NAHVgpfyrqt7VqB+pZB9SuCEkLSPIE57z4760HJYsp3EL/p+LV5jD8IabQex6Yy
+         Wch6Es7GeVkfWy+smOE9y8t1vr7gUItR7MyOzKJr73c//uQhEmvYEvKHyyhhyMPMozJb
+         /qkQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mlNb/IaItSyqkmca1yT8QCZfXO867q6hvVBmX/nB+c4=;
+        b=ao/dZpSuRXhDwSPLVrsDtOEr+NVT8dJhQZnfCD5dOCAV5yJZyG/8BwGs+ZF9jfyVgR
+         tPWGfdqAqaqVs7X8DFpPjDOEdMwCqbstPwaFv0btJNP5D5zRnsuI98trb2YnjFK5/Kei
+         ERFHaSNQ0eAzigKxm88XYP2NCf3IeDQf+0tkgS6Im+Sy44wZQNy+3TouygCCHpIJ/iHu
+         1yt/SCsJcXLUAzMIpXjwxYvoESpCq+K+8K9Xz1Szuz+BwfPLtShTeVkRhFigtEN5aj4t
+         h2rmPgfE8Ak1R2kBFybK1qvQBtA7rB/IEIJgwZbY5xPtbZfrVFpIL3LEB1VyQ5B5U9t0
+         hv0w==
+X-Gm-Message-State: APjAAAU9q1xoGDwZra67nnZ4zksGsxcIPJeP4dWK04c/0MvJHchBQmny
+        meo+PN3fjU1fuawRUbiKBqoH4g==
+X-Google-Smtp-Source: APXvYqzFqF0kPamb4VkHuPaXiQxrSC5szQYQtdITcGzbILhiG/SpxFzTNoiwSg0DTPW+Cc7LtHv3Kw==
+X-Received: by 2002:a17:902:42a5:: with SMTP id h34mr83369858pld.16.1560953886202;
+        Wed, 19 Jun 2019 07:18:06 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id r6sm2247795pji.0.2019.06.19.07.18.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 07:18:05 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 19:48:03 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 2/6] cpufreq: Replace few CPUFREQ_CONST_LOOPS checks with
+ has_target()
+Message-ID: <20190619141803.ywsod6ayhrqdreck@vireshk-i7>
+References: <cover.1560944014.git.viresh.kumar@linaro.org>
+ <0660b023a0d80c63ec7a1f7fcb692de9a9f4d604.1560944014.git.viresh.kumar@linaro.org>
+ <CAJZ5v0g1avBwjezWpMimGbs1NHOchib9pmTKoxaixKtpw_CGJw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0g1avBwjezWpMimGbs1NHOchib9pmTKoxaixKtpw_CGJw@mail.gmail.com>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add cpu clock node on AP
+On 19-06-19, 14:20, Rafael J. Wysocki wrote:
+> On Wed, Jun 19, 2019 at 1:36 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> > index 54befd775bd6..e59194c2c613 100644
+> > --- a/drivers/cpufreq/cpufreq.c
+> > +++ b/drivers/cpufreq/cpufreq.c
+> > @@ -359,12 +359,10 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+> >                  * which is not equal to what the cpufreq core thinks is
+> >                  * "old frequency".
+> >                  */
+> > -               if (!(cpufreq_driver->flags & CPUFREQ_CONST_LOOPS)) {
+> > -                       if (policy->cur && (policy->cur != freqs->old)) {
+> > -                               pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
+> > -                                        freqs->old, policy->cur);
+> > -                               freqs->old = policy->cur;
+> > -                       }
+> > +               if (has_target() && policy->cur && policy->cur != freqs->old) {
+> > +                       pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
+> > +                                freqs->old, policy->cur);
+> > +                       freqs->old = policy->cur;
+> 
+> Is cpufreq_notify_transition() ever called if ->setpolicy drivers are in use?
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi | 4 ++++
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi      | 7 +++++++
- 2 files changed, 11 insertions(+)
+I tried to find it, but I couldn't find any driver from where we can
+get this called for setpolicy drivers.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-index 2baafe12ebd4..472211159979 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806-quad.dtsi
-@@ -20,24 +20,28 @@
- 			compatible = "arm,cortex-a72";
- 			reg = <0x000>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu1: cpu@1 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x001>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 0>;
- 		};
- 		cpu2: cpu@100 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x100>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 1>;
- 		};
- 		cpu3: cpu@101 {
- 			device_type = "cpu";
- 			compatible = "arm,cortex-a72";
- 			reg = <0x101>;
- 			enable-method = "psci";
-+			clocks = <&cpu_clk 1>;
- 		};
- 	};
- };
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 91dad7e4ee59..ed039aa8188f 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -280,6 +280,13 @@
- 				#address-cells = <1>;
- 				#size-cells = <1>;
- 
-+				cpu_clk: clock-cpu@0 {
-+					compatible = "marvell,ap806-cpu-clock";
-+					clocks = <&ap_clk 0>, <&ap_clk 1>;
-+					#clock-cells = <1>;
-+					reg = <0x278 0xa30>;
-+				};
-+
- 				ap_thermal: thermal-sensor@80 {
- 					compatible = "marvell,armada-ap806-thermal";
- 					reg = <0x80 0x10>;
 -- 
-2.20.1
-
+viresh
