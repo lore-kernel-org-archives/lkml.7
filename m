@@ -2,98 +2,209 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5293C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3326EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:50:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B7D3204FD
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F36A5217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:50:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULctRkHD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730050AbfFSPrr (ORCPT
+        id S1729507AbfFSPuC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:47:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32810 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727144AbfFSPrq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:47:46 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 42C843078AA0;
-        Wed, 19 Jun 2019 15:47:42 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-85.bos.redhat.com [10.18.17.85])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8DEEF19C6F;
-        Wed, 19 Jun 2019 15:47:40 +0000 (UTC)
-Subject: Re: [PATCH] mm, memcg: Add a memcg_slabinfo debugfs file
-To:     Shakeel Butt <shakeelb@google.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-References: <20190619144610.12520-1-longman@redhat.com>
- <CALvZod5yHbtYe2x3TGQKGtxjvTDpAGjvSc8Pvphbn00pdRfs2g@mail.gmail.com>
- <20831975-590f-ecab-53db-5d7e6b1a053f@redhat.com>
- <CALvZod6T31z2P+wdUz3LVYO3dTSbOc89cKDn=8LKpN+ZovL8jw@mail.gmail.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <a33fba37-ef61-8179-9994-df7e04cc5866@redhat.com>
-Date:   Wed, 19 Jun 2019 11:47:40 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CALvZod6T31z2P+wdUz3LVYO3dTSbOc89cKDn=8LKpN+ZovL8jw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 19 Jun 2019 15:47:46 +0000 (UTC)
+        Wed, 19 Jun 2019 11:50:02 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:46023 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFSPuC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:50:02 -0400
+Received: by mail-wr1-f67.google.com with SMTP id f9so3897778wre.12;
+        Wed, 19 Jun 2019 08:49:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=zjf81C76HrVq+IReyDc6rr3+Eybofc2ke2b3vedZ5Rg=;
+        b=ULctRkHDOigvuGlSvdwNv3rWYSF9l80UIsojktkG8wSVREp60zn7BBE0zSyH4N1C+c
+         L3QO7i7auNozvzvjRDFGY92+L8FgL94ArECvsovHgh6SCv94okLREIFeVG+ncRncFQZo
+         adh5deAk9NRmmpuRxNyk0YFZw8C2rcgt6tWYpPnidOI5d2mM1nHZ2YfaS0CYu7PHno1w
+         6jLtVujb2t47X+hh0PgqPsb/FZL2bayp0ebjBm8K8squkHPdR+9JImYWaPIV/CtiL1Zu
+         9gIh6TMh8OG2lXWeCuqJ4IPAw9MRzsrA+dSJoNx44vovu+Io3vUNkW4dyZTl1FwIaOEX
+         EG9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=zjf81C76HrVq+IReyDc6rr3+Eybofc2ke2b3vedZ5Rg=;
+        b=ksB/GcdwDtRAduY3xrMOt0aEWwRAw8kKDrnF28PU/cfOrPlybD05XiZIAmGca1ELpQ
+         TFOQPErPVjY/BMyURU5gCsb+INpav0I5QfkcdSNwnsD05uOrVWmznWOdWJY5O6gInq3o
+         k66Q96KkoNBkb1zxgBpV4vGeTa2ZwKERjjU0rRDZdBTbuHiSTCtORj4N42uTflnAcaOP
+         wpiTIPti5U8rxvsosXK22YJPDAOWv/yXKro+jtWpgEqx8h8sgsSw/xkqG5J034nGqqPr
+         SvXXiqCnLtKOIRDA77OuKJfhXfrLgUOhQJQcj9FkS5EK5TpyWd8IeEsWVySB+mKGdKjL
+         wn+Q==
+X-Gm-Message-State: APjAAAXbPim8m2f7RqyxXJgPe7yyF6xvPLB/nf/fP8Igqeo/kgBsObxp
+        3ni2vu3KfUGS7AJ4Er5QssPn2irl
+X-Google-Smtp-Source: APXvYqwlCcWEflll908xJpAYKY+HQOFWGdzfS9lQKxxuzhnSmvwWppTU0LaGLOKY0gVoXg3rRewatA==
+X-Received: by 2002:adf:dd03:: with SMTP id a3mr34099070wrm.87.1560959398652;
+        Wed, 19 Jun 2019 08:49:58 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id q21sm1977424wmq.13.2019.06.19.08.49.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 08:49:57 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Aaron Lewis <aaronlewis@google.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: [PATCH] KVM: nVMX: reorganize initial steps of vmx_set_nested_state
+Date:   Wed, 19 Jun 2019 17:49:56 +0200
+Message-Id: <1560959396-13969-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 11:35 AM, Shakeel Butt wrote:
-> On Wed, Jun 19, 2019 at 8:30 AM Waiman Long <longman@redhat.com> wrote:
->> On 6/19/19 11:18 AM, Shakeel Butt wrote:
->>> On Wed, Jun 19, 2019 at 7:46 AM Waiman Long <longman@redhat.com> wrote:
->>>> There are concerns about memory leaks from extensive use of memory
->>>> cgroups as each memory cgroup creates its own set of kmem caches. There
->>>> is a possiblity that the memcg kmem caches may remain even after the
->>>> memory cgroup removal. Therefore, it will be useful to show how many
->>>> memcg caches are present for each of the kmem caches.
->>>>
->>>> This patch introduces a new <debugfs>/memcg_slabinfo file which is
->>>> somewhat similar to /proc/slabinfo in format, but lists only slabs that
->>>> are in memcg kmem caches. Information available in /proc/slabinfo are
->>>> not repeated in memcg_slabinfo.
->>>>
->>> At Google, we have an interface /proc/slabinfo_full which shows each
->>> kmem cache (root and memcg) on a separate line i.e. no accumulation.
->>> This interface has helped us a lot for debugging zombies and memory
->>> leaks. The name of the memcg kmem caches include the memcg name, css
->>> id and "dead" for offlined memcgs. I think these extra information is
->>> much more useful for debugging. What do you think?
->>>
->>> Shakeel
->> Yes, I think that can be a good idea. My only concern is that it can be
->> very verbose. Will work on a v2 patch.
->>
-> Yes, it is very verbose but it is only for debugging and normal users
-> should not be (continuously) reading that interface.
+Commit 332d079735f5 ("KVM: nVMX: KVM_SET_NESTED_STATE - Tear down old EVMCS
+state before setting new state", 2019-05-02) broke evmcs_test because the
+eVMCS setup must be performed even if there is no VMXON region defined,
+as long as the eVMCS bit is set in the assist page.
 
-I am not against it. It is just an observation. I still think we can
-skip kmem caches that don't have any child memcg caches as the
-information is in slabinfo already.
+While the simplest possible fix would be to add a check on
+kvm_state->flags & KVM_STATE_NESTED_EVMCS in the initial "if" that
+covers kvm_state->hdr.vmx.vmxon_pa == -1ull, that is quite ugly.
 
-Cheers,
-Longman
+Instead, this patch moves checks earlier in the function and
+conditionalizes them on kvm_state->hdr.vmx.vmxon_pa, so that
+vmx_set_nested_state always goes through vmx_leave_nested
+and nested_enable_evmcs.
+
+Fixes: 332d079735f5
+Cc: Aaron Lewis <aaronlewis@google.com>
+Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/vmx/nested.c                          | 26 ++++++++++--------
+ .../kvm/x86_64/vmx_set_nested_state_test.c         | 32 ++++++++++++++--------
+ 2 files changed, 35 insertions(+), 23 deletions(-)
+
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index fb6d1f7b43f3..5f9c1a200201 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -5343,9 +5343,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_VMX)
+ 		return -EINVAL;
+ 
+-	if (!nested_vmx_allowed(vcpu))
+-		return kvm_state->hdr.vmx.vmxon_pa == -1ull ? 0 : -EINVAL;
+-
+ 	if (kvm_state->hdr.vmx.vmxon_pa == -1ull) {
+ 		if (kvm_state->hdr.vmx.smm.flags)
+ 			return -EINVAL;
+@@ -5353,12 +5350,15 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 		if (kvm_state->hdr.vmx.vmcs12_pa != -1ull)
+ 			return -EINVAL;
+ 
+-		vmx_leave_nested(vcpu);
+-		return 0;
+-	}
++		if (kvm_state->flags & ~KVM_STATE_NESTED_EVMCS)
++			return -EINVAL;
++	} else {
++		if (!nested_vmx_allowed(vcpu))
++			return -EINVAL;
+ 
+-	if (!page_address_valid(vcpu, kvm_state->hdr.vmx.vmxon_pa))
+-		return -EINVAL;
++		if (!page_address_valid(vcpu, kvm_state->hdr.vmx.vmxon_pa))
++			return -EINVAL;
++    	}
+ 
+ 	if ((kvm_state->hdr.vmx.smm.flags & KVM_STATE_NESTED_SMM_GUEST_MODE) &&
+ 	    (kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
+@@ -5381,11 +5381,15 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
+ 		return -EINVAL;
+ 
+ 	vmx_leave_nested(vcpu);
+-	if (kvm_state->hdr.vmx.vmxon_pa == -1ull)
+-		return 0;
++	if (kvm_state->flags & KVM_STATE_NESTED_EVMCS) {
++		if (!nested_vmx_allowed(vcpu))
++			return -EINVAL;
+ 
+-	if (kvm_state->flags & KVM_STATE_NESTED_EVMCS)
+ 		nested_enable_evmcs(vcpu, NULL);
++	}
++
++	if (kvm_state->hdr.vmx.vmxon_pa == -1ull)
++		return 0;
+ 
+ 	vmx->nested.vmxon_ptr = kvm_state->hdr.vmx.vmxon_pa;
+ 	ret = enter_vmx_operation(vcpu);
+diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+index 0648fe6df5a8..e64ca20b315a 100644
+--- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
++++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
+@@ -123,36 +123,44 @@ void test_vmx_nested_state(struct kvm_vm *vm)
+ 	/*
+ 	 * We cannot virtualize anything if the guest does not have VMX
+ 	 * enabled.  We expect KVM_SET_NESTED_STATE to return 0 if vmxon_pa
+-	 * is set to -1ull.
++	 * is set to -1ull, but the flags must be zero.
+ 	 */
+ 	set_default_vmx_state(state, state_sz);
+ 	state->hdr.vmx.vmxon_pa = -1ull;
++	test_nested_state_expect_einval(vm, state);
++
++	state->hdr.vmx.vmcs12_pa = -1ull;
++	state->flags = KVM_STATE_NESTED_EVMCS;
++	test_nested_state_expect_einval(vm, state);
++
++	state->flags = 0;
+ 	test_nested_state(vm, state);
+ 
+ 	/* Enable VMX in the guest CPUID. */
+ 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
+ 
+-	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
++	/*
++	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
++	 * setting the nested state but flags other than eVMCS must be clear.
++	 */
+ 	set_default_vmx_state(state, state_sz);
+ 	state->hdr.vmx.vmxon_pa = -1ull;
++	state->hdr.vmx.vmcs12_pa = -1ull;
++	test_nested_state_expect_einval(vm, state);
++
++	state->flags = KVM_STATE_NESTED_EVMCS;
++	test_nested_state(vm, state);
++
++	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
+ 	state->hdr.vmx.smm.flags = 1;
+ 	test_nested_state_expect_einval(vm, state);
+ 
+ 	/* It is invalid to have vmxon_pa == -1ull and vmcs_pa != -1ull. */
+ 	set_default_vmx_state(state, state_sz);
+ 	state->hdr.vmx.vmxon_pa = -1ull;
+-	state->hdr.vmx.vmcs12_pa = 0;
++	state->flags = 0;
+ 	test_nested_state_expect_einval(vm, state);
+ 
+-	/*
+-	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
+-	 * setting the nested state.
+-	 */
+-	set_default_vmx_state(state, state_sz);
+-	state->hdr.vmx.vmxon_pa = -1ull;
+-	state->hdr.vmx.vmcs12_pa = -1ull;
+-	test_nested_state(vm, state);
+-
+ 	/* It is invalid to have vmxon_pa set to a non-page aligned address. */
+ 	set_default_vmx_state(state, state_sz);
+ 	state->hdr.vmx.vmxon_pa = 1;
+-- 
+1.8.3.1
 
