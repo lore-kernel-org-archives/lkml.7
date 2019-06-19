@@ -2,112 +2,160 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F85C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1B5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2F0821783
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eEIpXOcP"
+	by mail.kernel.org (Postfix) with ESMTP id 5A44221537
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfFSQqh (ORCPT
+        id S1730315AbfFSQqn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 19 Jun 2019 12:46:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50417 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726689AbfFSQqh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 12:46:37 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38167 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfFSQqe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:46:34 -0400
-Received: by mail-ot1-f67.google.com with SMTP id d17so20006877oth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 09:46:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=dAeca+NaeasgKg8wLjwxe/d8KFhZwiNtk4NpQn2oH10=;
-        b=eEIpXOcPgh/FQm8AcRovuq2bVonIAGIxG4O8hqog+t2sNo8lmrfYIpq/+3PFypMTty
-         siI4svCj0XFFk8DvueW2Zz7Zvoia5aS+WjHA2V9kjitsGk2Dr7OrDOGRxd+jgBEHrThr
-         EHGL3vlgHvvthlk8Gfj633B1vbDSWX+nCllo+CoYhKFeZWAJNLlFWMmdziVMMg2G+cne
-         9LkPYCnW/ZVKV1OTMMtvp9jixEL4J8gu4orI34DCJ30mCCAblY3ezSDjxZuDDDsPUqbB
-         ZHR6EtInNGpbX74S1TmPO0TGeYVW9GToDYCY1yWZmGb6+1NQToWu8/vN0HJQG43y5Q4m
-         K3fw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=dAeca+NaeasgKg8wLjwxe/d8KFhZwiNtk4NpQn2oH10=;
-        b=e83JwncyGeKdXDG1qyhcfuWbxkBxFa3wbqHDVrAbACJTqLXridFkBYzwM4+FP9VUIs
-         OSLkfNB884Z/oYu1m+coHe1Q2ZahUuSImaFOibqUs8TTedifitqgiyMeEhILIqF5Pfal
-         sjUxmtrFsg9SwEtnkpF0ndj82Zg6y1z4tOzID6aVBT9hAcXiZ5gYLueyDCukWj74t+WP
-         CyG97Cis7gDi3EeNmHWg//EMKCZgNsP5zpj5PzV7Ms/AM4uXvmffd/3K6DiZxhwy6MM4
-         DULBeFdbsBdTYiIBFhVFu7UkD2wir8tLeJ7gTZd9ADyRMr2VK+W8mu+EITJZmV2Kv5tH
-         SnzQ==
-X-Gm-Message-State: APjAAAVH+G7P8v+uXlDYmkH1syQE2IK5QiEwugwLG2GApwLqCTmw7WyP
-        jPjCy8ZfW6vUh5xvco5UfYZzaHqv/1J/cdC/b1+oyQ==
-X-Google-Smtp-Source: APXvYqxu7jzERtujGtRB1JUPTrrSRxaJnnRx7A59gFxSd7DNSrReLEw7sHQTmTBvokQEtVRT1Qlvl4tg5ll4Z2fBIRs=
-X-Received: by 2002:a9d:7b48:: with SMTP id f8mr9700022oto.207.1560962794186;
- Wed, 19 Jun 2019 09:46:34 -0700 (PDT)
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 90A8E356C4;
+        Wed, 19 Jun 2019 16:46:36 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1ECD35D96E;
+        Wed, 19 Jun 2019 16:46:31 +0000 (UTC)
+Subject: [PATCH 0/9] keys: Namespacing [ver #4]
+From:   David Howells <dhowells@redhat.com>
+To:     ebiederm@xmission.com, keyrings@vger.kernel.org
+Cc:     linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
+        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
+        dhowells@redhat.com, dwalsh@redhat.com, vgoyal@redhat.com,
+        linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Wed, 19 Jun 2019 17:46:31 +0100
+Message-ID: <156096279115.28733.8761881995303698232.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-References: <20190617122733.22432-1-hch@lst.de> <CAPcyv4hBUJB2RxkDqHkfEGCupDdXfQSrEJmAdhLFwnDOwt8Lig@mail.gmail.com>
- <20190619094032.GA8928@lst.de> <20190619163655.GG9360@ziepe.ca>
-In-Reply-To: <20190619163655.GG9360@ziepe.ca>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 Jun 2019 09:46:23 -0700
-Message-ID: <CAPcyv4hYtQdg0DTYjrJxCNXNjadBSWQ5QaMJYsA-QSribKuwrQ@mail.gmail.com>
-Subject: Re: dev_pagemap related cleanups v2
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
-        nouveau@lists.freedesktop.org,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        linux-pci@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 19 Jun 2019 16:46:36 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 9:37 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
->
-> On Wed, Jun 19, 2019 at 11:40:32AM +0200, Christoph Hellwig wrote:
-> > On Tue, Jun 18, 2019 at 12:47:10PM -0700, Dan Williams wrote:
-> > > > Git tree:
-> > > >
-> > > >     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
-> > > >
-> > > > Gitweb:
-> > > >
-> > > >     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-devmem-cleanup.2
-> >
-> > >
-> > > Attached is my incremental fixups on top of this series, with those
-> > > integrated you can add:
-> >
-> > I've folded your incremental bits in and pushed out a new
-> > hmm-devmem-cleanup.3 to the repo above.  Let me know if I didn't mess
-> > up anything else.  I'll wait for a few more comments and Jason's
-> > planned rebase of the hmm branch before reposting.
->
-> I said I wouldn't rebase the hmm.git (as it needs to go to DRM, AMD
-> and RDMA git trees)..
->
-> Instead I will merge v5.2-rc5 to the tree before applying this series.
->
-> I've understood this to be Linus's prefered workflow.
->
-> So, please send the next iteration of this against either
-> plainv5.2-rc5 or v5.2-rc5 merged with hmm.git and I'll sort it out.
 
-Just make sure that when you backmerge v5.2-rc5 you have a clear
-reason in the merge commit message about why you needed to do it.
-While needless rebasing is top of the pet peeve list, second place, as
-I found out, is mystery merges without explanations.
+Here are some patches to make keys and keyrings more namespace aware.
+
+Firstly some miscellaneous patches to make the process easier:
+
+ (1) Simplify key index_key handling so that the word-sized chunks
+     assoc_array requires don't have to be shifted about, making it easier
+     to add more bits into the key.
+
+ (2) Cache the hash value in the key so that we don't have to calculate on
+     every key we examine during a search (it involves a bunch of
+     multiplications).
+
+ (3) Allow keying_search() to search non-recursively.
+
+Then the main patches:
+
+ (4) Make it so that keyring names are per-user_namespace from the point of
+     view of KEYCTL_JOIN_SESSION_KEYRING so that they're not accessible
+     cross-user_namespace.
+
+     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEYRING_NAME for this.
+
+ (5) Move the user and user-session keyrings to the user_namespace rather
+     than the user_struct.  This prevents them propagating directly across
+     user_namespaces boundaries (ie. the KEY_SPEC_* flags will only pick
+     from the current user_namespace).
+
+ (6) Make it possible to include the target namespace in which the key shall
+     operate in the index_key.  This will allow the possibility of multiple
+     keys with the same description, but different target domains to be held
+     in the same keyring.
+
+     keyctl_capabilities() shows KEYCTL_CAPS1_NS_KEY_TAG for this.
+
+ (7) Make it so that keys are implicitly invalidated by removal of a domain
+     tag, causing them to be garbage collected.
+
+ (8) Institute a network namespace domain tag that allows keys to be
+     differentiated by the network namespace in which they operate.  New keys
+     that are of a type marked 'KEY_TYPE_NET_DOMAIN' are assigned the network
+     domain in force when they are created.
+
+ (9) Make it so that the desired network namespace can be handed down into the
+     request_key() mechanism.  This allows AFS, NFS, etc. to request keys
+     specific to the network namespace of the superblock.
+
+     This also means that the keys in the DNS record cache are thenceforth
+     namespaced, provided network filesystems pass the appropriate network
+     namespace down into dns_query().
+
+     For DNS, AFS and NFS are good; CIFS and Ceph are not.  Other cache
+     keyrings, such as idmapper keyrings, also need to set the domain tag -
+     for which they need access to the network namespace of the superblock.
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-namespace
+
+David
+---
+David Howells (9):
+      keys: Simplify key description management
+      keys: Cache the hash value to avoid lots of recalculation
+      keys: Add a 'recurse' flag for keyring searches
+      keys: Namespace keyring names
+      keys: Move the user and user-session keyrings to the user_namespace
+      keys: Include target namespace in match criteria
+      keys: Garbage collect keys for which the domain has been removed
+      keys: Network namespace domain tag
+      keys: Pass the network namespace into request_key mechanism
+
+
+ Documentation/security/keys/core.rst        |   38 +++-
+ Documentation/security/keys/request-key.rst |   29 ++-
+ certs/blacklist.c                           |    2 
+ crypto/asymmetric_keys/asymmetric_type.c    |    2 
+ fs/afs/addr_list.c                          |    4 
+ fs/afs/dynroot.c                            |    8 +
+ fs/cifs/dns_resolve.c                       |    3 
+ fs/nfs/dns_resolve.c                        |    3 
+ fs/nfs/nfs4idmap.c                          |    2 
+ include/linux/dns_resolver.h                |    3 
+ include/linux/key-type.h                    |    3 
+ include/linux/key.h                         |   81 ++++++++
+ include/linux/sched/user.h                  |   14 -
+ include/linux/user_namespace.h              |   12 +
+ include/net/net_namespace.h                 |    3 
+ include/uapi/linux/keyctl.h                 |    2 
+ kernel/user.c                               |    8 -
+ kernel/user_namespace.c                     |    9 -
+ lib/digsig.c                                |    2 
+ net/ceph/messenger.c                        |    3 
+ net/core/net_namespace.c                    |   19 ++
+ net/dns_resolver/dns_key.c                  |    1 
+ net/dns_resolver/dns_query.c                |    7 +
+ net/rxrpc/key.c                             |    6 -
+ net/rxrpc/security.c                        |    2 
+ security/integrity/digsig_asymmetric.c      |    4 
+ security/keys/gc.c                          |    2 
+ security/keys/internal.h                    |   10 +
+ security/keys/key.c                         |    5 -
+ security/keys/keyctl.c                      |    8 +
+ security/keys/keyring.c                     |  263 +++++++++++++++------------
+ security/keys/persistent.c                  |   10 +
+ security/keys/proc.c                        |    3 
+ security/keys/process_keys.c                |  262 +++++++++++++++++----------
+ security/keys/request_key.c                 |   62 ++++--
+ security/keys/request_key_auth.c            |    3 
+ 36 files changed, 588 insertions(+), 310 deletions(-)
+
