@@ -2,166 +2,93 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB595C43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:02:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C3B9C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:02:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0DB420673
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:02:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tQKRrCMR"
+	by mail.kernel.org (Postfix) with ESMTP id 765FB206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:02:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727458AbfFSUCZ (ORCPT
+        id S1730103AbfFSUC3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:02:25 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:36286 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfFSUCY (ORCPT
+        Wed, 19 Jun 2019 16:02:29 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:43295 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfFSUCZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:02:24 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JJxCMh013084;
-        Wed, 19 Jun 2019 20:01:33 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=Vroyiiy2apNH9g1WQULlt3tAhqXh3qFzkC0thjbI/tY=;
- b=tQKRrCMRIZFf76xHdG+OcQRJVCixkQdbl3HfJkhqJ6zQ5Fq71mORMALE81hvlqMU5cq2
- K4F8SUycLHKVrHTiluUHLfebVsFtIV4u7NZst1BEEOGeJtKDYGfPNuGNBzsiq/6/sG1m
- oHmWEWnqBcx8EHxc8VsLy1BXGGOzd4qHtZgUM3+RorIGLB7LeM8SEKQOzG7hpzi3tUIX
- cBqz1T+7bPFIBDeruJWhgHUJUNTS7jmoeogb9Jt64Fnvc0VzloFKzLKS2q+3tVxVQSnx
- bLlYN2Mg5EBeENllw30HSTJNHEAnYlsgKqvHUrkE60SZa/hI/hGzXCuuUFok8MhRdXuP yg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2t7809ddd7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 20:01:33 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JK0U82055051;
-        Wed, 19 Jun 2019 20:01:32 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2t77yp1s13-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 20:01:32 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5JK1P5e025354;
-        Wed, 19 Jun 2019 20:01:25 GMT
-Received: from [10.65.164.174] (/10.65.164.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Jun 2019 13:01:25 -0700
-Subject: Re: [PATCH v17 07/15] fs, arm64: untag user pointers in
- copy_mount_options
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <4ed871e14cc265a519c6ba8660a1827844371791.1560339705.git.andreyknvl@google.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <14e49054-01dc-dab5-40cc-71434ea3852a@oracle.com>
-Date:   Wed, 19 Jun 2019 14:01:22 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 16:02:25 -0400
+Received: by mail-qk1-f194.google.com with SMTP id m14so349372qka.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:02:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+Jp00XoiVvGbGlEluLFIXyTXkAggQEZTk36BNSSi00I=;
+        b=iqDUZ+ZV8rQn3Mm9g5EyM4+rrBwiLKizSA76VstCyLsEWiletxiDlo9FFuZbBmCC9t
+         kE34zck9XE80SOit1dRWqAWrzyjxNzOn1+8JWyhDZ/dPKNKGyrAnQy5zxrOypJLIf3wQ
+         wjX1IlA4CEaKLYPfqYkTuktkvILtXpG+yLg32O70AKqNbBlS7PH49U6FkJPHSo9gJjIb
+         uERyQSOw5IrHkh/RtCAN0IuoRD4bfODthfMvvxwt8RJ0Dc8zDjh9ytc/oZxjAtAqm2FK
+         ZmIoFdUHqBk1j1tV2xVnpYYtE6z6rB7Yyyg288ZAIzefOYdWWzbuLDfxfGNK2Em0AfPN
+         mLaQ==
+X-Gm-Message-State: APjAAAUDc6EIXSjdcRMsWKY5RC88SlHsg25KfN/81AOTKq1yUmDI9uQH
+        15vOMj72hwIRpphaKGEE61Om8SlsmRgTbkUSYpNU9G8e
+X-Google-Smtp-Source: APXvYqx4FzKkNpfMVs1Y/1dVTHfAfGLNC0mnAy2KZoNX2en8RfEpPMlR3YrGpas5Ii8+mt3Tk8RwAjlT3JBWeB08Las=
+X-Received: by 2002:ae9:c106:: with SMTP id z6mr80901779qki.285.1560974544874;
+ Wed, 19 Jun 2019 13:02:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <4ed871e14cc265a519c6ba8660a1827844371791.1560339705.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190164
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190164
+References: <20190619142350.1985-1-Jason@zx2c4.com> <CAK8P3a10PfTOhLA9d3vMTV_YXqymKLNeqCg6r7dLiNA1BwJbmA@mail.gmail.com>
+ <CAHmME9rYgKxNyLH4MFJwaj4188O5N6vjseQRHwF0n5pZhU8kuw@mail.gmail.com>
+In-Reply-To: <CAHmME9rYgKxNyLH4MFJwaj4188O5N6vjseQRHwF0n5pZhU8kuw@mail.gmail.com>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 19 Jun 2019 22:02:07 +0200
+Message-ID: <CAK8P3a1Wirao3s4Xz4Rgkc1FkpT4isMNuuPv7X7orwX4fcotXg@mail.gmail.com>
+Subject: Re: [PATCH v2] timekeeping: get_jiffies_boot_64() for jiffies that
+ include sleep time
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 5:43 AM, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow=
- to
-> pass tagged user pointers (with the top byte set to something else othe=
-r
-> than 0x00) as syscall arguments.
->=20
-> In copy_mount_options a user address is being subtracted from TASK_SIZE=
-=2E
-> If the address is lower than TASK_SIZE, the size is calculated to not
-> allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
-> However if the address is tagged, then the size will be calculated
-> incorrectly.
->=20
-> Untag the address before subtracting.
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
+On Wed, Jun 19, 2019 at 5:31 PM Jason A. Donenfeld <Jason@zx2c4.com> wrote:
+>
+> Hi Arnd,
+>
+> On Wed, Jun 19, 2019 at 5:08 PM Arnd Bergmann <arnd@arndb.de> wrote:
+> > Can you quantify how much this gains you over ktime_get_coarse_boottime
+> > in practice? You are effectively adding yet another abstraction for time,
+> > which is something I'd hope to avoid unless you have a strong reason other
+> > than it being faster in theory.
+>
+> Excellent idea. It turns out to be precisely 0 (see below). A
+> motivation still remains, though: this allows comparison with units
+> specified in terms of jiffies, which means that the unit being
+> compared matches the exact tick of the clock, making those comparisons
+> as precise as possible, for what they are. I suppose you could argue,
+> on the other hand, that nanoseconds give so much precision already,
+> that approximations using them amount practically to the same thing.
+> I'm not sure which way to reason about that.
+>
+> For interest, here are a few comparisons taken with kbench9000:
+>
+> get_jiffies_boot_64 26
+> ktime_get_coarse_boottime 26
+> ktime_get_boot_fast_ns with tsc 70
+> ktime_get_boot_fast_ns with hpet 4922
+> ktime_get_boot_fast_ns with acpi_pm 1884
+>
+> As expected, hpet is really quite painful.
 
-Please update commit log to make it not arm64 specific since this change
-affects other architectures as well. Other than that,
+I would prefer not to add the new interface then. We might in
+fact move users of get_jiffies_64() to ktime_get_coarse() for
+consistency given the small overhead of that function.
 
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-
-
->  fs/namespace.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/fs/namespace.c b/fs/namespace.c
-> index b26778bdc236..2e85712a19ed 100644
-> --- a/fs/namespace.c
-> +++ b/fs/namespace.c
-> @@ -2993,7 +2993,7 @@ void *copy_mount_options(const void __user * data=
-)
->  	 * the remainder of the page.
->  	 */
->  	/* copy_from_user cannot cross TASK_SIZE ! */
-> -	size =3D TASK_SIZE - (unsigned long)data;
-> +	size =3D TASK_SIZE - (unsigned long)untagged_addr(data);
->  	if (size > PAGE_SIZE)
->  		size =3D PAGE_SIZE;
-> =20
->=20
-
-
+      Arnd
