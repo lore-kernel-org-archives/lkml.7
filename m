@@ -2,116 +2,162 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511D8C43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2929DC43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EDA62080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:51:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560977468;
-	bh=pVVgZ74gCooqX06dwANWqG/mMbygHoYja3uW6e/JJog=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=MpQQ9QZabb94xS1vsQOIRpiCARH+UuHEAcrG2G4Bp2wZoCVFw/ROIdLGX+rC09Kmi
-	 ruumaFavpweqSEVcBLvnH0eqXoMbiLGCGAuyxppQArrQnbj9LaxP8WjsFpffthRH95
-	 TixHbO5UjwMnKdxd98rBpbjo8Tb+DELOGkEdz4N4=
+	by mail.kernel.org (Postfix) with ESMTP id EB2692147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:52:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="isEfq6jw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730314AbfFSUvG (ORCPT
+        id S1730441AbfFSUwQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:51:06 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:44169 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfFSUvG (ORCPT
+        Wed, 19 Jun 2019 16:52:16 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37220 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfFSUwP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:51:06 -0400
-Received: by mail-lj1-f195.google.com with SMTP id k18so514012ljc.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:51:05 -0700 (PDT)
+        Wed, 19 Jun 2019 16:52:15 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d15so479600qkl.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:52:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
+        d=google.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=kr00XCalu9BxXvOgaKUwp/Tuo/EGDGjVmPbF4AysT5A=;
-        b=Q1FREvAhfqHLPs7hiXDan54VkBHE5Oj2EVjFMwHkWWC7wX7DAacLPKkQYU+IIcSvWH
-         x1sSpDVOPkn0QmS6iGkFCAWW0CpcasVSCZOovaaN/vpoiMsyshW78DIDZMUx6Yu0bxeI
-         xqUOuX56dOc/mPuWrrgkbOgpt+3frD4UIqPjc=
+        bh=z5rCzuSBrLaA6Op7MrdaVHZXcenmKCOz9zKA6giX+v0=;
+        b=isEfq6jwPaqZYRufeqYVpJ4aUF6Eb6geHHhjFcA1KRzHKejvtKuLLqkcpIC5eGp9IL
+         CL5KmPAcWju+EnTpWN3M64lTL/2QKtE/UZOmOn3pEn3cubJ+MUfD0QcGWyazytqFYmbZ
+         d+H32Mpqyp8BdB9ZFBn9dRsK4qbKzYmySwFv/xBRxAHJ5vKUqA0NyC1t4FvA+HAY7l7K
+         Rg5dLqeUzk2TFd+gkVR5XVmH9p/HijHY5ep7VD97WKpAUhk3ogXDCRdwCnC/1L6GZdgN
+         +8hf6t60DlfUqIVIGTRQKBRLLHWG5b8KlCE5FFFv4WiAaViBYD5412kgCHPQz9X8vBOM
+         Fmug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=kr00XCalu9BxXvOgaKUwp/Tuo/EGDGjVmPbF4AysT5A=;
-        b=OpSRyjcV2ONF9Ul8OCcO9VCOnZAueC7iP7HCuDCfWWDm6d8tWie7S8VVqNk+doWNVN
-         uloxQgERzY89mmwEzVrUoJHfPKMHnYtiUXCTV5CQOwrxlXOO73EbE0FOnqruxK7HPL/V
-         KxKCkZShqNwCTDzHfQiN7DBOLIp6h34iMxpOhDQBflWFLmqH/qRVi1781Bv7xJx/v7m2
-         vL/y7DcjWfpoCTvuPzm/0MevJ9Sxxy4t1WaT88cDF63+LibwPKE2IC/G95Pc4qdkor+S
-         phQ8BiOtZw2pnV1iNUJHMjyaLOh2gABccKlUlH9FybsRgqeL3P+X5pD4Eho6aPZmq/q/
-         F46g==
-X-Gm-Message-State: APjAAAXJmUuqDRr30s38NwnAAmKTOxFOjKGgAzUK5OlTxBd4tMvGrLAt
-        F97A35QhXRyAOJsb9UKPe8WfghiIq0Y=
-X-Google-Smtp-Source: APXvYqwk63cHx07QnyMkNzyTDjIwM3NndKaom3Dvk8WxgUIty/tgmzIGVNjQmpvc4/0OpqrJlMHm4g==
-X-Received: by 2002:a2e:7c15:: with SMTP id x21mr4186216ljc.55.1560976990379;
-        Wed, 19 Jun 2019 13:43:10 -0700 (PDT)
-Received: from mail-lj1-f175.google.com (mail-lj1-f175.google.com. [209.85.208.175])
-        by smtp.gmail.com with ESMTPSA id a17sm3169259lfk.0.2019.06.19.13.43.09
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 13:43:09 -0700 (PDT)
-Received: by mail-lj1-f175.google.com with SMTP id 16so504449ljv.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:43:09 -0700 (PDT)
-X-Received: by 2002:a2e:b003:: with SMTP id y3mr34133328ljk.72.1560976989040;
- Wed, 19 Jun 2019 13:43:09 -0700 (PDT)
+        bh=z5rCzuSBrLaA6Op7MrdaVHZXcenmKCOz9zKA6giX+v0=;
+        b=ZH4GNphygKaqXpSvrp3t2We1da3gtpbwOcOh7MYlimd7wsmmfxuI9Vlu7EPPwf12Gf
+         /JiCjpnFnPh7T1T+jkkPqCNOhR1wzGDJik/+MT9bYbNFgEGWGTmkkKgSSIvG/8NX1sXC
+         OJJZ35M9tFZeFagP7tTHeTQEdd+2tSjY7OjV4QwazAi9BT7OfwIy+XB4ZtcJsc1edzCG
+         C/kp7JyIe2Xmk6/rSIqp1b+gTgzoiUvpmuNBmPrArELU2wQn4L/246FNS+HeWiNOqGk8
+         Zpw7m/qG1aYfBkmRAgSvuwUyRnQ2QKyuhaFBARxfmw0O+qSIIpprmjq5MoJUgb8NSPlB
+         KsuQ==
+X-Gm-Message-State: APjAAAVwvLBwNfCCHtpPY5Kju+2wJp16H0Fdbi4wf6FJ6wJpCFgBkb3O
+        TB/Ut6hvEfW+RaXXRGRCDw1mEvoUnODUMiHiwYSQgQ==
+X-Google-Smtp-Source: APXvYqwkXi3xCG67StWJ97g9gbtDGdMv3fbCQX0ogpKxqIV6EucXjdPKsNGjHSyQ53Xs8SDPItZaYfdNbc5clFbMMoU=
+X-Received: by 2002:a05:620a:15b3:: with SMTP id f19mr37627773qkk.314.1560977534249;
+ Wed, 19 Jun 2019 13:52:14 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAHk-=whEQPvLpDbx+WR4Q4jf2FxXjf_zTX3uLy_6ZzHtgTV4LA@mail.gmail.com>
- <156094799629.21217.4574572565333265288@skylake-alporthouse-com>
- <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com> <156097197830.664.13418742301997062555@skylake-alporthouse-com>
-In-Reply-To: <156097197830.664.13418742301997062555@skylake-alporthouse-com>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 19 Jun 2019 13:42:53 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wjoeZ9_aiu+642ur=iGhGjfBQhRPURxX9Py+-B6coctXw@mail.gmail.com>
-Message-ID: <CAHk-=wjoeZ9_aiu+642ur=iGhGjfBQhRPURxX9Py+-B6coctXw@mail.gmail.com>
-Subject: Re: NMI hardlock stacktrace deadlock [was Re: Linux 5.2-rc5]
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
+ <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
+ <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+ <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
+ <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
+ <20190619170750.GB10107@kroah.com> <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
+ <20190619183523.GA7018@kroah.com> <CAJWu+opk+9j8=AtBFggbBn+nYZnCv2jS+mD=Vri9foN2rjvo8A@mail.gmail.com>
+ <CAGETcx-ZZRc_jtBws2cFTe1wjiWeBowdqfqOhcCJV_7AUyBEVw@mail.gmail.com>
+ <CAJWu+ooaDBCF06QAeddFig5myfUABd6qebJ14nd6pKaBwQq8MA@mail.gmail.com> <CAGETcx9yWAvp0UYHQxfCkPi1ooBuYA1ZzZXVUvfyBh8XUTcbMg@mail.gmail.com>
+In-Reply-To: <CAGETcx9yWAvp0UYHQxfCkPi1ooBuYA1ZzZXVUvfyBh8XUTcbMg@mail.gmail.com>
+From:   Joel Fernandes <joelaf@google.com>
+Date:   Wed, 19 Jun 2019 16:52:02 -0400
+Message-ID: <CAJWu+oqh4_MiVGpbuRpN1-RLd=HuS_uViTnfHbuhB3OZKJ8_Ng@mail.gmail.com>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
         Steven Rostedt <rostedt@goodmis.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>
+        Alexei Starovoitov <ast@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:19 PM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+On Wed, Jun 19, 2019 at 4:41 PM 'Saravana Kannan' via kernel-team
+<kernel-team@android.com> wrote:
+> > > On Wed, Jun 19, 2019, 11:55 AM 'Joel Fernandes' via kernel-team <kernel-team@android.com> wrote:
+> > >>
+> > >> On Wed, Jun 19, 2019 at 2:35 PM Greg Kroah-Hartman
+> > >> <gregkh@linuxfoundation.org> wrote:
+> > >> >
+> > >> > On Wed, Jun 19, 2019 at 02:01:36PM -0400, Joel Fernandes wrote:
+> > >> > > On Wed, Jun 19, 2019 at 1:07 PM Greg Kroah-Hartman
+> > >> > > <gregkh@linuxfoundation.org> wrote:
+> > >> > > >
+> > >> > > > On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
+> > >> > > > > > It is conceivable to have a "wakeup_sources" directory under
+> > >> > > > > > /sys/power/ and sysfs nodes for all wakeup sources in there.
+> > >> > > > >
+> > >> > > > > One of the "issues" with this is, now if you have say 100 wake up
+> > >> > > > > sources, with 10 entries each, then we're talking about a 1000 sysfs
+> > >> > > > > files. Each one has to be opened, and read individually. This adds
+> > >> > > > > overhead and it is more convenient to read from a single file. The
+> > >> > > > > problem is this single file is not ABI. So the question I guess is,
+> > >> > > > > how do we solve this in both an ABI friendly way while keeping the
+> > >> > > > > overhead low.
+> > >> > > >
+> > >> > > > How much overhead?  Have you measured it, reading from virtual files is
+> > >> > > > fast :)
+> > >> > >
+> > >> > > I measured, and it is definitely not free. If you create and read a
+> > >> > > 1000 files and just return a string back, it can take up to 11-13
+> > >> > > milliseconds (did not lock CPU frequencies, was just looking for
+> > >> > > average ball park). This is assuming that the counter reading is just
+> > >> > > doing that, and nothing else is being done to return the sysfs data
+> > >> > > which is probably not always true in practice.
+> > >> > >
+> > >> > > Our display pipeline deadline is around 16ms at 60Hz. Conceivably, any
+> > >> > > CPU scheduling competion reading sysfs can hurt the deadline. There's
+> > >> > > also the question of power - we definitely have spent time in the past
+> > >> > > optimizing other virtual files such as /proc/pid/smaps for this reason
+> > >> > > where it spent lots of CPU time.
+> > >> >
+> > >> > smaps was "odd", but that was done after measurements were actually made
+> > >> > to prove it was needed.  That hasn't happened yet :)
+> > >> >
+> > >> > And is there a reason you have to do this every 16ms?
+> > >>
+> > >> Not every, I was just saying whenever it happens and a frame delivery
+> > >> deadline is missed, then a frame drop can occur which can result in a
+> > >> poor user experience.
+> > >
+> > >
+> > > But this is not done in the UI thread context. So some thread running for more than 16ms shouldn't cause a frame drop. If it does, we have bigger problems.
+> > >
+> >
+> > Not really. That depends on the priority of the other thread and other
+> > things. It can obviously time share the same CPU as the UI thread if
+> > it is not configured correctly. Even with CFS it can reduce the time
+> > consumed by other "real-time" CFS threads. I am not sure what you are
+> > proposing, there are also (obviously) power issues with things running
+> > for long times pointlessly. We should try to do better if we can. As
+> > Greg said, some study/research can be done on the use case before
+> > settling for a solution (sysfs or other).
+> >
 >
-> > Do you have the oops itself at all?
->
-> An example at
-> https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_6310/fi-kbl-x1275/dmesg0.log
-> https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_6310/fi-kbl-x1275/boot0.log
->
-> The bug causing the oops is clearly a driver problem. The rc5 fallout
-> just seems to be because of some shrinker changes affecting some object
-> reaping that were unfortunately still active. What perturbed the CI
-> team was the machine failed to panic & reboot.
+> Agree, power and optimization is good. Just saying that the UI example
+> is not a real one. If the UI thread is that poorly configured that
+> some thread running for a second can cause frame drops in a multicore
+> system, that's a problem with the UI framework design.
 
-Hmm. It's hard to guess at the cause of that. The oopses themselves
-don't look like they are happening in any particularly bad context, so
-all the normal reboot-on-oops etc stuff _should_ work.
-
-So it would help a lot if you could bisect the bad problem at least a
-bit, if it is at all reproducible. Because with no other clues, it's
-hard to even guess at what might be up.
-
-The fact that you say "NMI watchdog firing as we dumped the ftrace"
-means that maybe it might be some ftrace / stacktrace issue where the
-dumping itself leads to some endless loop, but who knows.
-
-For example, one thing that has happened during this development cycle
-is the stacktrace common infrastructure changes (arch_stack_walk() and
-friends). I'm, not seeing why that would cause your issues, but I'm
-adding a few random people for ftrace / stacktrace changes.
-
-                     Linus
+We do know that historically there are problems with the UI thread's
+scheduling and folks are looking into DL scheduling for that. I was
+just giving UI thread as an example, there are also other low latency
+threads (audio etc). Anyway, I think we know the next steps here so we
+can park this discussion for now.
