@@ -2,173 +2,404 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2660AC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 22:33:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0D0C48BDF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 22:33:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3911215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 22:33:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41014215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 22:33:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="gFiu/ghP";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="MMSr3wji"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k/OoraMN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730909AbfFSWdZ (ORCPT
+        id S1730942AbfFSWd3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 18:33:25 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:59018 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730847AbfFSWdU (ORCPT
+        Wed, 19 Jun 2019 18:33:29 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:38348 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730914AbfFSWd1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 18:33:20 -0400
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.27/8.16.0.27) with SMTP id x5JMQYfq010356;
-        Wed, 19 Jun 2019 15:32:45 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=5JRfY6IAs61MAa/z2JPZ2R7kQHhNH3FbQBo5vBJHFXo=;
- b=gFiu/ghPun3dca0kecrT2yE0UrGZW+7WF6RwmA7QAD0Lh4gTAzApYwC1VWDvg467Pql4
- FdvQ9H871rdSPKNkGL97zWmRUqTUoPGpCPgPo4E9/fIMRrjtjnPNdN+eZFz8vkQocf7j
- FDaUoEVEfK8ZApnL/zSvj2Jzf+0+TKXttbw= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by m0089730.ppops.net with ESMTP id 2t7s8xh25y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
-        Wed, 19 Jun 2019 15:32:45 -0700
-Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
- ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 19 Jun 2019 15:32:43 -0700
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
- by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 19 Jun 2019 15:32:43 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5JRfY6IAs61MAa/z2JPZ2R7kQHhNH3FbQBo5vBJHFXo=;
- b=MMSr3wjiJqzyOP+0XrZQ1q9sGmCSAqGYnzLfrvEVHUFWtseSPdjaOXCyU1h35s2r3I35o0fIfmJCW0TpghmzGay/0CoBcmh807eHrqebKy7pNX38gr4OlDSvPnUu2MGbB5ECtWI/dNTivlTqGQFFgcA1rD3Sdlyq4Ufb/TtEh0Y=
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com (10.175.2.17) by
- MWHPR15MB1454.namprd15.prod.outlook.com (10.173.235.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Wed, 19 Jun 2019 22:32:42 +0000
-Received: from MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::d51f:8f19:e2b5:3ae8]) by MWHPR15MB1216.namprd15.prod.outlook.com
- ([fe80::d51f:8f19:e2b5:3ae8%6]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
- 22:32:42 +0000
-From:   Tao Ren <taoren@fb.com>
-To:     Brendan Higgins <brendanhiggins@google.com>
-CC:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
-        devicetree <devicetree@vger.kernel.org>
-Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-Thread-Topic: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-Thread-Index: AQHVJuIcteG+E70PmUey9PLXreYJ5KajfUSAgAASwwA=
-Date:   Wed, 19 Jun 2019 22:32:42 +0000
-Message-ID: <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
-References: <20190619205009.4176588-1-taoren@fb.com>
- <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
-In-Reply-To: <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR02CA0034.namprd02.prod.outlook.com
- (2603:10b6:a02:ee::47) To MWHPR15MB1216.namprd15.prod.outlook.com
- (2603:10b6:320:22::17)
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:200::3:2141]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: ed9c44b7-e67a-482a-b909-08d6f5060ae2
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR15MB1454;
-x-ms-traffictypediagnostic: MWHPR15MB1454:
-x-microsoft-antispam-prvs: <MWHPR15MB1454A9550E09D75CAD496527B2E50@MWHPR15MB1454.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0073BFEF03
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(346002)(39860400002)(136003)(366004)(189003)(199004)(256004)(58126008)(5660300002)(73956011)(25786009)(316002)(54906003)(476003)(305945005)(76176011)(6916009)(81166006)(186003)(7736002)(446003)(6486002)(8936002)(68736007)(11346002)(229853002)(36756003)(81156014)(64126003)(52116002)(4326008)(6436002)(478600001)(2906002)(99286004)(14454004)(6116002)(65826007)(53546011)(6506007)(6512007)(46003)(386003)(66446008)(486006)(65956001)(6246003)(7416002)(64756008)(65806001)(66946007)(66556008)(31696002)(71190400001)(53936002)(31686004)(66476007)(71200400001)(102836004)(2616005)(8676002)(86362001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1454;H:MWHPR15MB1216.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Xw4pntFvQtrt9M+1t7gOdMqqrrsTemfi39bL3c7j55gcojkwn/Bxf8X9+B9Y3QLKPpIDcEY1Zo9WUjGRXEm7apthyVOXKkqTQMgd59Q8+kIEfNkFzWyBlLpzjrzogZCHoky/EgyWrwBwhbYDCDyg4RSIBSnhk6TKAPQMUoIQLtp2l41ggP8WZHokc5+n9Tic4/INiYO238rIC8LMvct4YqO8m8BSsDLLadbotRb6ra+/4HXzYuakl0g5j/pEyUt97Km5y9H9DaX0fNPVS25hhv8xeonWfKjZMXRe1Wu29QKzhoaD2Wokvq2/a8N+ZtFtaUx5+0qzZsP4n/7FxP7AdE7d1sQYzN4qdLrkS0VZatLjTPJBp1Nq5yhhhCxjS0SxBBx6iBYIxgo6zdyJlz7tjV+sR5Gjbacf6GJske1avhU=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <7A954D46C2698146AB155AC71B775D65@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 19 Jun 2019 18:33:27 -0400
+Received: by mail-io1-f67.google.com with SMTP id j6so436809ioa.5;
+        Wed, 19 Jun 2019 15:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=uFIpek7shBaVr9DU13GRQZ4ibKs0x6v0iQmP4OpKI7k=;
+        b=k/OoraMNYNLWswsjRZR3jEbeHgciCrA3Pvkj8V+NcMuwZd4nDStE1mCeb2clq7uoPE
+         Bf0GYaBQ58HCl4cWZHr/PK4K4jEqlPVoK9CIq9gBKyQP+SAMwHApaOQ+/pM/boz+OI3N
+         Ddc47rKbDu9wx2/eEEMCGKLqNnTrNgKTd6Eb2XLmtry661w/558JU3OoCoNGpsOBoRAn
+         mhk+F4qr5+ZnCArtmzi2LJGPyjE7a2T+Bn/9P+Ib5zy4BsTFTShpemJziW9RGWAgDKkx
+         0qaUB6uoFgFyhUPIj/dCvXQQW9NCpd74Z4QihncLfIL8C1BwyheFscAO19MnmxiE0jYW
+         AH+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=uFIpek7shBaVr9DU13GRQZ4ibKs0x6v0iQmP4OpKI7k=;
+        b=Alae/MRlkPe2T2dQ19GnGDhfV5rAVql1UkKno/m/uGlo02w8juQEk/mogfXYItpDmk
+         lF9U1TxQJ/Ghysudw/+lP5THPaPJ/l4YIOpsKEJf00pChAFyGQ1ZW8OhAK+QTfVpgE89
+         aBIr6tYqmTOnH7ILh9x/PdPVnmGakelmM9VVFXg9y9A80X9VUC2Bcf5pO6TmTsrF9nuO
+         6si8KiZMWMxaaBgVhcA6LPaDPvHaVqraAC5kHSo+nacvupKZco2QxkZdDp4oz5yYsJCh
+         reY+DayjxD/sQciYPRCcO0hDSCOMMNEQ0B9xrbDHzXM0FB+r+lijkmzsPoFaSQHLlNVg
+         b90w==
+X-Gm-Message-State: APjAAAUdnJKkEVnjkU0Qw2dcfZV3bIHszDmGWvHq23xLkV42D9CkrvYB
+        leXkRFyYMzJ+DVOruKdOUiU=
+X-Google-Smtp-Source: APXvYqyGIUEECip5yOIkf36i1rUmylXKTO5CxpW8E+NA2U4z3c9cYnuIYIokSVtGEOBlV0rtIuMF/Q==
+X-Received: by 2002:a02:ccd2:: with SMTP id k18mr1709593jaq.3.1560983605934;
+        Wed, 19 Jun 2019 15:33:25 -0700 (PDT)
+Received: from localhost.localdomain (50-126-100-225.drr01.csby.or.frontiernet.net. [50.126.100.225])
+        by smtp.gmail.com with ESMTPSA id a15sm13136500ioc.27.2019.06.19.15.33.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 15:33:25 -0700 (PDT)
+Subject: [PATCH v1 4/6] mm: Introduce "aerated" pages
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     nitesh@redhat.com, kvm@vger.kernel.org, david@redhat.com,
+        mst@redhat.com, dave.hansen@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org
+Cc:     yang.zhang.wz@gmail.com, pagupta@redhat.com, riel@surriel.com,
+        konrad.wilk@oracle.com, lcapitulino@redhat.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com
+Date:   Wed, 19 Jun 2019 15:33:23 -0700
+Message-ID: <20190619223323.1231.86906.stgit@localhost.localdomain>
+In-Reply-To: <20190619222922.1231.27432.stgit@localhost.localdomain>
+References: <20190619222922.1231.27432.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: ed9c44b7-e67a-482a-b909-08d6f5060ae2
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 22:32:42.5317
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: taoren@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1454
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190184
-X-FB-Internal: deliver
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNi8xOS8xOSAyOjI1IFBNLCBCcmVuZGFuIEhpZ2dpbnMgd3JvdGU6DQo+IE9uIFdlZCwgSnVu
-IDE5LCAyMDE5IGF0IDI6MDAgUE0gVGFvIFJlbiA8dGFvcmVuQGZiLmNvbT4gd3JvdGU6DQo+Pg0K
-Pj4gU29tZSBpbnRlcm1pdHRlbnQgSTJDIHRyYW5zYWN0aW9uIGZhaWx1cmVzIGFyZSBvYnNlcnZl
-ZCBvbiBGYWNlYm9vayBDTU0gYW5kDQo+PiBNaW5pcGFjayAoYXN0MjUwMCkgQk1DIHBsYXRmb3Jt
-cywgYmVjYXVzZSBzbGF2ZSBkZXZpY2VzIChzdWNoIGFzIENQTEQsIEJJQw0KPj4gYW5kIGV0Yy4p
-IE5BQ0sgdGhlIGFkZHJlc3MgYnl0ZSBzb21ldGltZXMuIFRoZSBpc3N1ZSBjYW4gYmUgcmVzb2x2
-ZWQgYnkNCj4+IGluY3JlYXNpbmcgYmFzZSBjbG9jayBkaXZpc29yIHdoaWNoIGFmZmVjdHMgQVNQ
-RUVEIEkyQyBDb250cm9sbGVyJ3MgYmFzZQ0KPj4gY2xvY2sgYW5kIG90aGVyIEFDIHRpbWluZyBw
-YXJhbWV0ZXJzLg0KPj4NCj4+IFRoaXMgcGF0Y2ggYWxsb3dzIHRvIGN1c3RvbWl6ZSBBU1BFRUQg
-STJDIENvbnRyb2xsZXIncyBiYXNlIGNsb2NrIGRpdmlzb3INCj4+IGluIGRldmljZSB0cmVlLg0K
-PiANCj4gRmlyc3Qgb2ZmLCBhcmUgeW91IHN1cmUgeW91IGFjdHVhbGx5IG5lZWQgdGhpcz8NCj4g
-DQo+IFlvdSBzaG91bGQgYmUgYWJsZSB0byBhY2hpZXZlIGFuIGVmZmVjdGl2ZWx5IGVxdWl2YWxl
-bnQgcmVzdWx0IGJ5IGp1c3QNCj4gbG93ZXJpbmcgdGhlIGBidXMtZnJlcXVlbmN5YCBwcm9wZXJ0
-eSBzcGVjaWZpZWQgaW4gdGhlIERULiBUaGUNCj4gYGJ1cy1mcmVxdWVuY3lgIHByb3BlcnR5IHVs
-dGltYXRlbHkgZGV0ZXJtaW5lcyBhbGwgdGhlIHJlZ2lzdGVyDQo+IHZhbHVlcywgYW5kIHlvdSBz
-aG91bGQgYmUgYWJsZSB0byBzZXQgaXQgdG8gd2hhdGV2ZXIgeW91IHdhbnQgYnkNCj4gcmVmZXJp
-bmcgdG8gdGhlIEFzcGVlZCBkb2N1bWVudGF0aW9uLg0KPiANCj4gTmV2ZXJ0aGVsZXNzLCB0aGUg
-Y29kZSB0aGF0IGRldGVybWluZXMgdGhlIGNvcnJlY3QgZGl2aWRlcnMgZnJvbSB0aGUNCj4gZnJl
-cXVlbmN5IGlzIGJhc2VkIG9uIHRoZSB0YWJsZXMgaW4gdGhlIEFzcGVlZCBkb2N1bWVudGF0aW9u
-LiBJIGRvbid0DQo+IHRoaW5rIHRoZSBlcXVhdGlvbiBtYWtlcyBzZW5zZSB3aGVuIHRoZSBiYXNl
-X2Nsa19kaXZpc29yIGlzIGZpeGVkOyBJDQo+IG1lYW4gaXQgd2lsbCBwcm9iYWJseSBqdXN0IHNl
-dCB0aGUgb3RoZXIgZGl2aXNvciB0byBtYXggb3IgbWluDQo+IGRlcGVuZGluZyBvbiB0aGUgdmFs
-dWVzIGNob3Nlbi4gSSB0aGluayBpZiBzb21lb25lIHJlYWxseSB3YW50cyB0bw0KPiBwcm9ncmFt
-IHRoaXMgcGFyYW1ldGVyIG1hbnVhbGx5LCB0aGV5IHByb2JhYmx5IHdhbnQgdG8gc2V0IHRoZSBv
-dGhlcg0KPiBwYXJhbWV0ZXJzIG1hbnVhbGx5IHRvby4NClRoYW5rIHlvdSBmb3IgdGhlIHF1aWNr
-IHJlc3BvbnNlLCBCcmVuZGFuLg0KDQpBc3BlZWQgSTJDIGJ1cyBmcmVxdWVuY3kgaXMgZGVmaW5l
-ZCBieSAzIHBhcmFtZXRlcnMgKGJhc2VfY2xrX2Rpdmlzb3IsIGNsa19oaWdoX3dpZHRoLCBjbGtf
-bG93X3dpZHRoKSwgYW5kIEkgY2hvb3NlIGJhc2VfY2xrX2Rpdmlzb3IgYmVjYXVzZSBpdCBjb250
-cm9scyBhbGwgdGhlIEFzcGVlZCBJMkMgdGltaW5ncyAoc3VjaCBhcyBzZXR1cCB0aW1lIGFuZCBo
-b2xkIHRpbWUpLiBPbmNlIGJhc2VfY2xrX2Rpdmlzb3IgaXMgZGVjaWRlZCAoZWl0aGVyIGJ5IHRo
-ZSBjdXJyZW50IGxvZ2ljIGluIGkyYy1hc3BlZWQgZHJpdmVyIG9yIG1hbnVhbGx5IHNldCBpbiBk
-ZXZpY2UgdHJlZSksIGNsa19oaWdoX3dpZHRoIGFuZCBjbGtfbG93X3dpZHRoIHdpbGwgYmUgY2Fs
-Y3VsYXRlZCBieSBpMmMtYXNwZWVkIGRyaXZlciB0byBtZWV0IHRoZSBzcGVjaWZpZWQgSTJDIGJ1
-cyBzcGVlZC4NCg0KRm9yIGV4YW1wbGUsIGJ5IHNldHRpbmcgSTJDIGJ1cyBmcmVxdWVuY3kgdG8g
-MTAwS0h6IG9uIEFTVDI1MDAgcGxhdGZvcm0sIChiYXNlX2Nsb2NrX2Rpdmlzb3IsIGNsa19oaWdo
-X3dpZHRoLCBjbGtfbG93X3dpZHRoKSBpcyBzZXQgdG8gKDMsIDE1LCAxNCkgYnkgb3VyIGRyaXZl
-ci4gQnV0IHNvbWUgc2xhdmUgZGV2aWNlcyAob24gQ01NIGkyYy04IGFuZCBNaW5pcGFjayBpMmMt
-MCkgTkFDSyBieXRlIHRyYW5zYWN0aW9ucyB3aXRoIHRoZSBkZWZhdWx0IHRpbWluZyBzZXR0aW5n
-OiB0aGUgaXNzdWUgY2FuIGJlIHJlc29sdmVkIGJ5IHNldHRpbmcgYmFzZV9jbGtfZGl2aXNvciB0
-byA0LCBhbmQgKGNsa19oaWdoX3dpZHRoLCBjbGtfbG93X3dpZHRoKSB3aWxsIGJlIHNldCB0byAo
-NywgNykgYnkgb3VyIGkyYy1hc3BlZWQgZHJpdmVyIHRvIGFjaGlldmUgc2ltaWxhciBJMkMgYnVz
-IHNwZWVkLg0KDQpOb3Qgc3VyZSBpZiBteSBhbnN3ZXIgaGVscHMgdG8gYWRkcmVzcyB5b3VyIGNv
-bmNlcm5zLCBidXQga2luZGx5IGxldCBtZSBrbm93IGlmIHlvdSBoYXZlIGZ1cnRoZXIgcXVlc3Rp
-b25zL3N1Z2dlc3Rpb25zLg0KDQoNClRoYW5rcywNCg0KVGFvDQo=
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+
+In order to pave the way for free page hinting in virtualized environments
+we will need a way to get pages out of the free lists and identify those
+pages after they have been returned. To accomplish this patch adds the
+concept of an "aerated" flag, which is essentially meant to just be the
+Offline page type used in conjustion with the Buddy page type bit.
+
+For now we can just add the basic logic to set the flag and track the
+number of aerated pages per free area.
+
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ include/linux/memory_aeration.h |   61 +++++++++++++++++++++++++
+ include/linux/mmzone.h          |   13 ++++-
+ mm/Kconfig                      |    5 ++
+ mm/page_alloc.c                 |   97 +++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 168 insertions(+), 8 deletions(-)
+ create mode 100644 include/linux/memory_aeration.h
+
+diff --git a/include/linux/memory_aeration.h b/include/linux/memory_aeration.h
+new file mode 100644
+index 000000000000..44cfbc259778
+--- /dev/null
++++ b/include/linux/memory_aeration.h
+@@ -0,0 +1,61 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _LINUX_MEMORY_AERATION_H
++#define _LINUX_MEMORY_AERATION_H
++
++#include <linux/mmzone.h>
++#include <linux/pageblock-flags.h>
++
++struct page *get_aeration_page(struct zone *zone, unsigned int order,
++			       int migratetype);
++void put_aeration_page(struct zone *zone, struct page *page);
++
++static inline struct list_head *aerator_get_tail(struct zone *zone,
++						 unsigned int order,
++						 int migratetype)
++{
++	return &zone->free_area[order].free_list[migratetype];
++}
++
++static inline void set_page_aerated(struct page *page,
++				    struct zone *zone,
++				    unsigned int order,
++				    int migratetype)
++{
++#ifdef CONFIG_AERATION
++	/* update areated page accounting */
++	zone->free_area[order].nr_free_aerated++;
++
++	/* record migratetype and flag page as aerated */
++	set_pcppage_migratetype(page, migratetype);
++	__SetPageAerated(page);
++#endif
++}
++
++static inline void clear_page_aerated(struct page *page,
++				      struct zone *zone,
++				      struct free_area *area)
++{
++#ifdef CONFIG_AERATION
++	if (likely(!PageAerated(page)))
++		return;
++
++	__ClearPageAerated(page);
++	area->nr_free_aerated--;
++#endif
++}
++
++/**
++ * aerator_notify_free - Free page notification that will start page processing
++ * @zone: Pointer to current zone of last page processed
++ * @order: Order of last page added to zone
++ *
++ * This function is meant to act as a screener for __aerator_notify which
++ * will determine if a give zone has crossed over the high-water mark that
++ * will justify us beginning page treatment. If we have crossed that
++ * threshold then it will start the process of pulling some pages and
++ * placing them in the batch list for treatment.
++ */
++static inline void aerator_notify_free(struct zone *zone, int order)
++{
++}
++#endif /*_LINUX_MEMORY_AERATION_H */
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index c3597920a155..7d89722ae9eb 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -116,6 +116,7 @@ static inline void set_pcppage_migratetype(struct page *page, int migratetype)
+ struct free_area {
+ 	struct list_head	free_list[MIGRATE_TYPES];
+ 	unsigned long		nr_free;
++	unsigned long		nr_free_aerated;
+ };
+ 
+ static inline struct page *get_page_from_free_area(struct free_area *area,
+@@ -773,6 +774,8 @@ static inline bool pgdat_is_empty(pg_data_t *pgdat)
+ 	return !pgdat->node_start_pfn && !pgdat->node_spanned_pages;
+ }
+ 
++#include <linux/memory_aeration.h>
++
+ /* Used for pages not on another list */
+ static inline void add_to_free_area(struct page *page, struct zone *zone,
+ 				    unsigned int order, int migratetype)
+@@ -787,10 +790,10 @@ static inline void add_to_free_area(struct page *page, struct zone *zone,
+ static inline void add_to_free_area_tail(struct page *page, struct zone *zone,
+ 					 unsigned int order, int migratetype)
+ {
+-	struct free_area *area = &zone->free_area[order];
++	struct list_head *tail = aerator_get_tail(zone, order, migratetype);
+ 
+-	list_add_tail(&page->lru, &area->free_list[migratetype]);
+-	area->nr_free++;
++	list_add_tail(&page->lru, tail);
++	zone->free_area[order].nr_free++;
+ }
+ 
+ /* Used for pages which are on another list */
+@@ -799,6 +802,8 @@ static inline void move_to_free_area(struct page *page, struct zone *zone,
+ {
+ 	struct free_area *area = &zone->free_area[order];
+ 
++	clear_page_aerated(page, zone, area);
++
+ 	list_move(&page->lru, &area->free_list[migratetype]);
+ }
+ 
+@@ -807,6 +812,8 @@ static inline void del_page_from_free_area(struct page *page, struct zone *zone,
+ {
+ 	struct free_area *area = &zone->free_area[order];
+ 
++	clear_page_aerated(page, zone, area);
++
+ 	list_del(&page->lru);
+ 	__ClearPageBuddy(page);
+ 	set_page_private(page, 0);
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 7c41d2300e07..209dc4bea481 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -236,6 +236,11 @@ config COMPACTION
+           linux-mm@kvack.org.
+ 
+ #
++# support for memory aeration
++config AERATION
++	bool
++
++#
+ # support for page migration
+ #
+ config MIGRATION
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index aad2b2529ab7..eb7ba8385374 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -68,6 +68,7 @@
+ #include <linux/lockdep.h>
+ #include <linux/nmi.h>
+ #include <linux/psi.h>
++#include <linux/memory_aeration.h>
+ 
+ #include <asm/sections.h>
+ #include <asm/tlbflush.h>
+@@ -868,10 +869,11 @@ static inline struct capture_control *task_capc(struct zone *zone)
+ static inline void __free_one_page(struct page *page,
+ 		unsigned long pfn,
+ 		struct zone *zone, unsigned int order,
+-		int migratetype)
++		int migratetype, bool aerated)
+ {
+ 	struct capture_control *capc = task_capc(zone);
+ 	unsigned long uninitialized_var(buddy_pfn);
++	bool fully_aerated = aerated;
+ 	unsigned long combined_pfn;
+ 	unsigned int max_order;
+ 	struct page *buddy;
+@@ -902,6 +904,11 @@ static inline void __free_one_page(struct page *page,
+ 			goto done_merging;
+ 		if (!page_is_buddy(page, buddy, order))
+ 			goto done_merging;
++
++		/* assume buddy is not aerated */
++		if (aerated)
++			fully_aerated = false;
++
+ 		/*
+ 		 * Our buddy is free or it is CONFIG_DEBUG_PAGEALLOC guard page,
+ 		 * merge with it and move up one order.
+@@ -943,11 +950,17 @@ static inline void __free_one_page(struct page *page,
+ done_merging:
+ 	set_page_order(page, order);
+ 
+-	if (buddy_merge_likely(pfn, buddy_pfn, page, order) ||
++	if (aerated ||
++	    buddy_merge_likely(pfn, buddy_pfn, page, order) ||
+ 	    is_shuffle_tail_page(order))
+ 		add_to_free_area_tail(page, zone, order, migratetype);
+ 	else
+ 		add_to_free_area(page, zone, order, migratetype);
++
++	if (fully_aerated)
++		set_page_aerated(page, zone, order, migratetype);
++	else
++		aerator_notify_free(zone, order);
+ }
+ 
+ /*
+@@ -1247,7 +1260,7 @@ static void free_pcppages_bulk(struct zone *zone, int count,
+ 		if (unlikely(isolated_pageblocks))
+ 			mt = get_pageblock_migratetype(page);
+ 
+-		__free_one_page(page, page_to_pfn(page), zone, 0, mt);
++		__free_one_page(page, page_to_pfn(page), zone, 0, mt, false);
+ 		trace_mm_page_pcpu_drain(page, 0, mt);
+ 	}
+ 	spin_unlock(&zone->lock);
+@@ -1263,7 +1276,7 @@ static void free_one_page(struct zone *zone,
+ 		is_migrate_isolate(migratetype))) {
+ 		migratetype = get_pfnblock_migratetype(page, pfn);
+ 	}
+-	__free_one_page(page, pfn, zone, order, migratetype);
++	__free_one_page(page, pfn, zone, order, migratetype, false);
+ 	spin_unlock(&zone->lock);
+ }
+ 
+@@ -2127,6 +2140,77 @@ struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+ 	return NULL;
+ }
+ 
++#ifdef CONFIG_AERATION
++/**
++ * get_aeration_page - Provide a "raw" page for aeration by the aerator
++ * @zone: Zone to draw pages from
++ * @order: Order to draw pages from
++ * @migratetype: Migratetype to draw pages from
++ *
++ * This function will obtain a page from above the boundary. As a result
++ * we can guarantee the page has not been aerated.
++ *
++ * The page will have the migrate type and order stored in the page
++ * metadata.
++ *
++ * Return: page pointer if raw page found, otherwise NULL
++ */
++struct page *get_aeration_page(struct zone *zone, unsigned int order,
++			       int migratetype)
++{
++	struct free_area *area = &(zone->free_area[order]);
++	struct list_head *list = &area->free_list[migratetype];
++	struct page *page;
++
++	/* Find a page of the appropriate size in the preferred list */
++	page = list_last_entry(aerator_get_tail(zone, order, migratetype),
++			       struct page, lru);
++	list_for_each_entry_from_reverse(page, list, lru) {
++		if (PageAerated(page)) {
++			page = list_first_entry(list, struct page, lru);
++			if (PageAerated(page))
++				break;
++		}
++
++		del_page_from_free_area(page, zone, order);
++
++		/* record migratetype and order within page */
++		set_pcppage_migratetype(page, migratetype);
++		set_page_private(page, order);
++		__mod_zone_freepage_state(zone, -(1 << order), migratetype);
++
++		return page;
++	}
++
++	return NULL;
++}
++
++/**
++ * put_aeration_page - Return a now-aerated "raw" page back where we got it
++ * @zone: Zone to return pages to
++ * @page: Previously "raw" page that can now be returned after aeration
++ *
++ * This function will pull the migratetype and order information out
++ * of the page and attempt to return it where it found it.
++ */
++void put_aeration_page(struct zone *zone, struct page *page)
++{
++	unsigned int order, mt;
++	unsigned long pfn;
++
++	mt = get_pcppage_migratetype(page);
++	pfn = page_to_pfn(page);
++
++	if (unlikely(has_isolate_pageblock(zone) || is_migrate_isolate(mt)))
++		mt = get_pfnblock_migratetype(page, pfn);
++
++	order = page_private(page);
++	set_page_private(page, 0);
++
++	__free_one_page(page, pfn, zone, order, mt, true);
++}
++#endif /* CONFIG_AERATION */
++
+ /*
+  * This array describes the order lists are fallen back to when
+  * the free lists for the desirable migrate type are depleted
+@@ -5929,9 +6013,12 @@ void __ref memmap_init_zone_device(struct zone *zone,
+ static void __meminit zone_init_free_lists(struct zone *zone)
+ {
+ 	unsigned int order, t;
+-	for_each_migratetype_order(order, t) {
++	for_each_migratetype_order(order, t)
+ 		INIT_LIST_HEAD(&zone->free_area[order].free_list[t]);
++
++	for (order = MAX_ORDER; order--; ) {
+ 		zone->free_area[order].nr_free = 0;
++		zone->free_area[order].nr_free_aerated = 0;
+ 	}
+ }
+ 
+
