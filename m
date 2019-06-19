@@ -2,127 +2,552 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC434C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEE6CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D3A720B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F25A20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL+CRB0y"
+	dkim=pass (2048-bit key) header.d=aj.id.au header.i=@aj.id.au header.b="Xol0YMad";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="rzs8gDE7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729496AbfFSAlL (ORCPT
+        id S1729607AbfFSAlW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 20:41:11 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:53704 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfFSAlK (ORCPT
+        Tue, 18 Jun 2019 20:41:22 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:52963 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726023AbfFSAlW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 20:41:10 -0400
-Received: by mail-wm1-f68.google.com with SMTP id x15so5147617wmj.3;
-        Tue, 18 Jun 2019 17:41:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=4SHCjBMan004B+ijIlPx4Pn3xROU+n7uFgrQp2KsfSs=;
-        b=eL+CRB0yQi9G/o531hvb2YOujfgf1xcnevSWIFFukShk/sDef498WkAoHShxPC0m5T
-         rqVJ2SJmmL98sI2FQeVeYLw/N85A/Zud1WJ1MTjr0HoolcTeFcV6EHzwFE7mWNmpBldY
-         bIyiM9by8ogLGzdelWaDbzAAsKwCfAeIPeTSpagrI+6N9btBBid0mHUDvxGzdEmTifF7
-         GjmxXLlLfVfv78OSH1Wa5CXrNhb0WwRLUNpvqGyf2ft/h9xYqcMFtG+I4jUJc0Y0fJsn
-         qtPk/rLLEkEwbhZ8FwyzVDSpfmPI/OIXbw4u857NjtcZNrir+ke/9Oz1ZB9cIB20vfY1
-         8kFA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=4SHCjBMan004B+ijIlPx4Pn3xROU+n7uFgrQp2KsfSs=;
-        b=K2dUuDi79vUqAu0W06t7NuZkQ7Zde/yhEtl1mnGG8Z2swlxEULgQXEudDw0DhoFDix
-         zVs1+BBb68bFGyTNLa2ipAdifDPl1XWvBjpC9F92ndrTk82mLaQ4HN36cvwxWeiVUJ2J
-         JHRvlmpKsWsqilecA6mUpwGKV3GlZcNfNsTOJcpXZC+XgJEOxn+ewwcm2TYUuWR9y70w
-         dyKZo/SmXlx77b/+7+NeZlHwZ/sdqYNS8k5mSdvi2axnWGl//HOXSS4pQcGm43TN7wEd
-         ny5ic0nOWdF9iKqz/UZ5aFLoOhiQJTVTRwNKenf9mYtgk4OopVCInRU3y8D+mpOKv4AL
-         f91A==
-X-Gm-Message-State: APjAAAV83LmFJjGzt0HItD/wkrLxkZkNKCensHkLZ2imexhcC5azFSIC
-        CL8De1DTLGw6R8YYDr+9JChzAg7a
-X-Google-Smtp-Source: APXvYqyM5EDqjy/4xxrG+0PX2bsz4GstmJ3Q06xdocP3+YhT8u2Fk4bpcgwr500Dp8PQQLTiXPHvrA==
-X-Received: by 2002:a1c:a686:: with SMTP id p128mr157437wme.163.1560904867553;
-        Tue, 18 Jun 2019 17:41:07 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id n10sm15767722wrw.83.2019.06.18.17.41.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 17:41:06 -0700 (PDT)
-Subject: Re: [PATCH v3 3/8] clocksource/drivers/tegra: Set and use timer's
- period
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190618140358.13148-1-digetx@gmail.com>
- <20190618140358.13148-4-digetx@gmail.com>
- <16c20c1b-d106-cb1e-6d67-bdd402ecf57f@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <17556fe2-8481-258a-9be9-2598da0a67eb@gmail.com>
-Date:   Wed, 19 Jun 2019 03:41:05 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
-MIME-Version: 1.0
-In-Reply-To: <16c20c1b-d106-cb1e-6d67-bdd402ecf57f@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 18 Jun 2019 20:41:22 -0400
+Received: from compute4.internal (compute4.nyi.internal [10.202.2.44])
+        by mailout.nyi.internal (Postfix) with ESMTP id 6089622393;
+        Tue, 18 Jun 2019 20:41:18 -0400 (EDT)
+Received: from imap2 ([10.202.2.52])
+  by compute4.internal (MEProxy); Tue, 18 Jun 2019 20:41:18 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aj.id.au; h=
+        mime-version:message-id:in-reply-to:references:date:from:to
+        :subject:content-type; s=fm3; bh=+gHRX6cTDmHSKWNNEZDiaV7fmTx8VY6
+        71JKMUQ7FfmQ=; b=Xol0YMadH0jNDydD1NfwOaNXlsouExZ4M1/9uyj0CJJ/jpZ
+        LNZvwztse1Y6jz3OP1zBUL0mJnRBH4otttEY/lzAyWs0lnJ7BtmEidtyfwZKq6GB
+        cumXGBzbtN2GPt8CSgoRe9u2TnBB2dAixuA8mKav6I9BRIm2bl4+KJ5m+eTYNbzm
+        URuxKfgvOf+uYiBbmKOJzJBOaF7WBjNnVJ05e/6py/S5soA6qTSJ2otMxaz9gXDK
+        vvxYo2ixeKftG2c11bfIv6MeqU3F1d8QFKsV3kv5IcbY6kMbmaUWXOvB1ggeGOWB
+        eIfKvP7lgNkpa8HEhkCf9G4cbvCx9RAnOe/nzZA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=+gHRX6
+        cTDmHSKWNNEZDiaV7fmTx8VY671JKMUQ7FfmQ=; b=rzs8gDE7sglQ0dagm6cfWP
+        QZ1hyCLw1DVZdOJ0txMIFdOBWwC5rxieibF2JFGcbOfXGhbJGeZoiQjtcT3vDaqi
+        jy7al+DQgCaIJ8aSwTXgNCruIYnm+4d6oXksOS9bqDNoLXx9yj5v8i0J70TYBH0E
+        l/poxoJsgAbHwLXnu0qXmja+Ncxo7uMJTrCKvdSVgwKqqLLndUO0sMnd78aR0Bh5
+        wR4SwMGqoADMlHkRPSa6wD6MSHSL23CSQrdIqwxt2Ww6H1oLk6U4W6Hn5n0a4LTu
+        siDDcnpbkmyl8/XXjs9hQDcBtQz1MX/jI+hdpg/PZ/7ET7yrwZHPaQ8kpb74u2Pg
+        ==
+X-ME-Sender: <xms:rYQJXa-A0RY1be8EltPd6m24OKzg4pp6JUVwSMzwVIBXG7ux2cfKdw>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddugdefiecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpefofgggkfgjfhffhffvufgtsehttdertderredtnecuhfhrohhmpedftehnughr
+    vgifucflvghffhgvrhihfdcuoegrnhgurhgvfiesrghjrdhiugdrrghuqeenucfrrghrrg
+    hmpehmrghilhhfrhhomheprghnughrvgifsegrjhdrihgurdgruhenucevlhhushhtvghr
+    ufhiiigvpedt
+X-ME-Proxy: <xmx:rYQJXRBI4ygcgye6OIWFLY_yQKTMsCXKYOUiVR79cwKYovE7uVkj-g>
+    <xmx:rYQJXctlfABcHf2rCDF4pjv5OISMtr_llb2bmbraEhfO_GNeOXYxcg>
+    <xmx:rYQJXREyR9Fq_ux5MV_uCxuV26L3guGYh9Xm5Wucd697lLaXUpEa_A>
+    <xmx:roQJXVYnljDdqWJlVb4MbfpeVUxSo-2sRru08PzriJHXlgl4mpwubQ>
+Received: by mailuser.nyi.internal (Postfix, from userid 501)
+        id 0505FE00A2; Tue, 18 Jun 2019 20:41:17 -0400 (EDT)
+X-Mailer: MessagingEngine.com Webmail Interface
+User-Agent: Cyrus-JMAP/3.1.6-666-gb2312fa-fmstable-20190614v4
+Mime-Version: 1.0
+Message-Id: <d201fadc-0b8e-48df-8e50-bccd5d5019c7@www.fastmail.com>
+In-Reply-To: <20190618042421.1227372-1-taoren@fb.com>
+References: <20190618042421.1227372-1-taoren@fb.com>
+Date:   Wed, 19 Jun 2019 10:11:16 +0930
+From:   "Andrew Jeffery" <andrew@aj.id.au>
+To:     "Tao Ren" <taoren@fb.com>, "Rob Herring" <robh+dt@kernel.org>,
+        "Mark Rutland" <mark.rutland@arm.com>,
+        "Joel Stanley" <joel@jms.id.au>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        openbmc@lists.ozlabs.org
+Subject: Re: [PATCH] ARM: dts: aspeed: Add Facebook Minipack BMC
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-18.06.2019 19:32, Jon Hunter пишет:
-> 
-> On 18/06/2019 15:03, Dmitry Osipenko wrote:
->> The of_clk structure has a period field that is set up initially by
->> timer_of_clk_init(), that period value need to be adjusted for a case of
->> TIMER1-9 that are running at a fixed rate that doesn't match the clock's
->> rate. Note that the period value is currently used only by some of the
->> clocksource drivers internally and hence this is just a minor cleanup
->> change that doesn't fix anything.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/clocksource/timer-tegra.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
->> index ff5a4ccb5d52..e6221e070499 100644
->> --- a/drivers/clocksource/timer-tegra.c
->> +++ b/drivers/clocksource/timer-tegra.c
->> @@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_device *evt)
->>  static int tegra_timer_set_periodic(struct clock_event_device *evt)
->>  {
->>  	void __iomem *reg_base = timer_of_base(to_timer_of(evt)); 
->> +	unsigned long period = timer_of_period(to_timer_of(evt));
->>  
->> -	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
->> -		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
->> +	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
->>  		       reg_base + TIMER_PTV);
->>  
->>  	return 0;
->> @@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
->>  		cpu_to->clkevt.rating = rating;
->>  		cpu_to->clkevt.cpumask = cpumask_of(cpu);
->>  		cpu_to->of_base.base = timer_reg_base + base;
->> +		cpu_to->of_clk.period = rate / HZ;
->>  		cpu_to->of_clk.rate = rate;
->>  
->>  		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
-> 
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
 
-Thanks!
+
+On Tue, 18 Jun 2019, at 13:54, Tao Ren wrote:
+> Add initial version of device tree for Facebook Minipack ast2500 BMC.
+> 
+> Signed-off-by: Tao Ren <taoren@fb.com>
+
+Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+
+> ---
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../boot/dts/aspeed-bmc-facebook-minipack.dts | 429 ++++++++++++++++++
+>  2 files changed, 430 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 323fb7f13438..4c94e4c8de1e 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -1267,6 +1267,7 @@ dtb-$(CONFIG_ARCH_ASPEED) += \
+>  	aspeed-bmc-arm-centriq2400-rep.dtb \
+>  	aspeed-bmc-arm-stardragon4800-rep2.dtb \
+>  	aspeed-bmc-facebook-cmm.dtb \
+> +	aspeed-bmc-facebook-minipack.dtb \
+>  	aspeed-bmc-facebook-tiogapass.dtb \
+>  	aspeed-bmc-facebook-yamp.dtb \
+>  	aspeed-bmc-intel-s2600wf.dtb \
+> diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts 
+> b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
+> new file mode 100644
+> index 000000000000..c05478296446
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/aspeed-bmc-facebook-minipack.dts
+> @@ -0,0 +1,429 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +// Copyright (c) 2018 Facebook Inc.
+> +/dts-v1/;
+> +
+> +#include "aspeed-g5.dtsi"
+> +
+> +/ {
+> +	model = "Facebook Minipack 100 BMC";
+> +	compatible = "facebook,minipack-bmc", "aspeed,ast2500";
+> +
+> +	aliases {
+> +		/*
+> +		 * Override the default serial aliases to avoid breaking
+> +		 * the legacy applications.
+> +		 */
+> +		serial0 = &uart5;
+> +		serial1 = &uart1;
+> +		serial2 = &uart2;
+> +		serial3 = &uart3;
+> +		serial4 = &uart4;
+> +
+> +		/*
+> +		 * i2c switch 2-0070, pca9548, 8 child channels assigned
+> +		 * with bus number 16-23.
+> +		 */
+> +		i2c16 = &imux16;
+> +		i2c17 = &imux17;
+> +		i2c18 = &imux18;
+> +		i2c19 = &imux19;
+> +		i2c20 = &imux20;
+> +		i2c21 = &imux21;
+> +		i2c22 = &imux22;
+> +		i2c23 = &imux23;
+> +
+> +		/*
+> +		 * i2c switch 8-0070, pca9548, 8 child channels assigned
+> +		 * with bus number 24-31.
+> +		 */
+> +		i2c24 = &imux24;
+> +		i2c25 = &imux25;
+> +		i2c26 = &imux26;
+> +		i2c27 = &imux27;
+> +		i2c28 = &imux28;
+> +		i2c29 = &imux29;
+> +		i2c30 = &imux30;
+> +		i2c31 = &imux31;
+> +
+> +		/*
+> +		 * i2c switch 9-0070, pca9548, 8 child channels assigned
+> +		 * with bus number 32-39.
+> +		 */
+> +		i2c32 = &imux32;
+> +		i2c33 = &imux33;
+> +		i2c34 = &imux34;
+> +		i2c35 = &imux35;
+> +		i2c36 = &imux36;
+> +		i2c37 = &imux37;
+> +		i2c38 = &imux38;
+> +		i2c39 = &imux39;
+> +
+> +		/*
+> +		 * i2c switch 11-0070, pca9548, 8 child channels assigned
+> +		 * with bus number 40-47.
+> +		 */
+> +		i2c40 = &imux40;
+> +		i2c41 = &imux41;
+> +		i2c42 = &imux42;
+> +		i2c43 = &imux43;
+> +		i2c44 = &imux44;
+> +		i2c45 = &imux45;
+> +		i2c46 = &imux46;
+> +		i2c47 = &imux47;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = &uart1;
+> +		bootargs = "debug console=ttyS1,9600n8 root=/dev/ram rw";
+> +	};
+> +
+> +	memory@80000000 {
+> +		reg = <0x80000000 0x20000000>;
+> +	};
+> +};
+> +
+> +&wdt1 {
+> +	status = "okay";
+> +	aspeed,reset-type = "system";
+> +};
+> +
+> +&wdt2 {
+> +	status = "okay";
+> +	aspeed,reset-type = "system";
+> +};
+> +
+> +&fmc {
+> +	status = "okay";
+> +	flash@0 {
+> +		status = "okay";
+> +		m25p,fast-read;
+> +		label = "bmc";
+> +#include "facebook-bmc-flash-layout.dtsi"
+> +	};
+> +};
+> +
+> +&uart1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd1_default
+> +		     &pinctrl_rxd1_default
+> +		     &pinctrl_ncts1_default
+> +		     &pinctrl_ndsr1_default
+> +		     &pinctrl_ndtr1_default
+> +		     &pinctrl_nrts1_default>;
+> +};
+> +
+> +&uart2 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd2_default
+> +		     &pinctrl_rxd2_default>;
+> +};
+> +
+> +&uart3 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd3_default
+> +		     &pinctrl_rxd3_default>;
+> +};
+> +
+> +&uart4 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_txd4_default
+> +		     &pinctrl_rxd4_default>;
+> +};
+> +
+> +&uart5 {
+> +	status = "okay";
+> +};
+> +
+> +&mac1 {
+> +	status = "okay";
+> +	no-hw-checksum;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_rgmii2_default &pinctrl_mdio2_default>;
+> +};
+> +
+> +&i2c0 {
+> +	status = "okay";
+> +	bus-frequency = <400000>;
+> +	multi-master;
+> +};
+> +
+> +&i2c1 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c2 {
+> +	status = "okay";
+> +
+> +	i2c-switch@70 {
+> +		compatible = "nxp,pca9548";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x70>;
+> +
+> +		imux16: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		imux17: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +
+> +		imux18: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +		};
+> +
+> +		imux19: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +		};
+> +
+> +		imux20: i2c@4 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <4>;
+> +		};
+> +
+> +		imux21: i2c@5 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <5>;
+> +		};
+> +
+> +		imux22: i2c@6 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <6>;
+> +		};
+> +
+> +		imux23: i2c@7 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <7>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c4 {
+> +	status = "okay";
+> +	multi-master;
+> +};
+> +
+> +&i2c5 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c6 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c7 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c8 {
+> +	status = "okay";
+> +
+> +	i2c-switch@70 {
+> +		compatible = "nxp,pca9548";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x70>;
+> +
+> +		imux24: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		imux25: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +
+> +		imux26: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +		};
+> +
+> +		imux27: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +		};
+> +
+> +		imux28: i2c@4 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <4>;
+> +		};
+> +
+> +		imux29: i2c@5 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <5>;
+> +		};
+> +
+> +		imux30: i2c@6 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <6>;
+> +		};
+> +
+> +		imux31: i2c@7 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <7>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c9 {
+> +	status = "okay";
+> +
+> +	i2c-switch@70 {
+> +		compatible = "nxp,pca9548";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x70>;
+> +
+> +		imux32: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		imux33: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +
+> +		imux34: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +		};
+> +
+> +		imux35: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +		};
+> +
+> +		imux36: i2c@4 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <4>;
+> +		};
+> +
+> +		imux37: i2c@5 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <5>;
+> +		};
+> +
+> +		imux38: i2c@6 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <6>;
+> +		};
+> +
+> +		imux39: i2c@7 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <7>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c10 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c11 {
+> +	status = "okay";
+> +
+> +	i2c-switch@70 {
+> +		compatible = "nxp,pca9548";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		reg = <0x70>;
+> +
+> +		imux40: i2c@0 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <0>;
+> +		};
+> +
+> +		imux41: i2c@1 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <1>;
+> +		};
+> +
+> +		imux42: i2c@2 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <2>;
+> +		};
+> +
+> +		imux43: i2c@3 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <3>;
+> +		};
+> +
+> +		imux44: i2c@4 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <4>;
+> +		};
+> +
+> +		imux45: i2c@5 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <5>;
+> +		};
+> +
+> +		imux46: i2c@6 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <6>;
+> +		};
+> +
+> +		imux47: i2c@7 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			reg = <7>;
+> +		};
+> +	};
+> +};
+> +
+> +&i2c12 {
+> +	status = "okay";
+> +};
+> +
+> +&i2c13 {
+> +	status = "okay";
+> +};
+> +
+> +&vhub {
+> +	status = "okay";
+> +};
+> -- 
+> 2.17.1
+> 
+>
