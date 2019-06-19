@@ -2,131 +2,120 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B651BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:16:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 738D4C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A01121530
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:16:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5736A2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:16:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731686AbfFSMPr (ORCPT
+        id S1731866AbfFSMQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:15:47 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:40444 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbfFSMPr (ORCPT
+        Wed, 19 Jun 2019 08:16:43 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60171 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731568AbfFSMQm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:15:47 -0400
-Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7767C26069F;
-        Wed, 19 Jun 2019 13:15:44 +0100 (BST)
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        linux-rockchip@lists.infradead.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Boris Brezillon <boris.brezillon@collabora.com>
-Subject: [PATCH 0/9] media: hantro: Add support for H264 decoding
-Date:   Wed, 19 Jun 2019 14:15:31 +0200
-Message-Id: <20190619121540.29320-1-boris.brezillon@collabora.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 08:16:42 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id DF92780470; Wed, 19 Jun 2019 14:16:27 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 14:16:38 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 5.1 043/115] ALSA: seq: Protect in-kernel ioctl calls
+ with mutex
+Message-ID: <20190619121637.GA19792@amd>
+References: <20190617210759.929316339@linuxfoundation.org>
+ <20190617210802.258998943@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Content-Disposition: inline
+In-Reply-To: <20190617210802.258998943@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-This patch series adds support H264 decoding support to the hantro
-driver and doing some consilidation cleanup in the driver along the
-way.
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Some details about the patches forming this patchset:
+Hi!
 
-* The first patch is adding support for the sort_r() variant and has
-  been posted separately by Rasmus. I put it back there because Andrew
-  told me to repost it with the patch series using this new variant.
-  As mentioned in the patch itself, I'd like this patch to be merged
-  as soon as possible to avoid the synchronisation burden that might
-  appear if we decide to delay it.
+> [ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
+>=20
+> ALSA OSS sequencer calls the ioctl function indirectly via
+> snd_seq_kernel_client_ctl().  While we already applied the protection
+> against races between the normal ioctls and writes via the client's
+> ioctl_mutex, this code path was left untouched.  And this seems to be
+> the cause of still remaining some rare UAF as spontaneously triggered
+> by syzkaller.
+>=20
+> For the sake of robustness, wrap the ioctl_mutex also for the call via
+> snd_seq_kernel_client_ctl(), too.
 
-* Patch 2 is needed to properly propagate the output buf timestamp to
-  the capture buf one, which is required for intra-frame references.
+This is reverted with patch after the next one. Should simply this and
+the revert be deleted from the queue?
 
-* Patches 3 to 6 are consolidating the code by providing helpers that
-  can be used by all hantro backend and simplifying the ctrl
-  initialization logic. We also constify the controls array.
+Thanks,
+								Pavel
 
-* Patches 7 to 8 are adding common H264 decoding bits and patch 9 is
-  enabling H264 decoding on rk3288
 
-Now, a few words about the dependencies. Unfortunately there are a lot,
-and that'd be great to have some of them merged.
+> diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmg=
+r.c
+> index 38e7deab6384..b3280e81bfd1 100644
+> --- a/sound/core/seq/seq_clientmgr.c
+> +++ b/sound/core/seq/seq_clientmgr.c
+> @@ -2343,14 +2343,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsig=
+ned int cmd, void *arg)
+>  {
+>  	const struct ioctl_handler *handler;
+>  	struct snd_seq_client *client;
+> +	int err;
+> =20
+>  	client =3D clientptr(clientid);
+>  	if (client =3D=3D NULL)
+>  		return -ENXIO;
+> =20
+>  	for (handler =3D ioctl_handlers; handler->cmd > 0; ++handler) {
+> -		if (handler->cmd =3D=3D cmd)
+> -			return handler->func(client, arg);
+> +		if (handler->cmd =3D=3D cmd) {
+> +			mutex_lock(&client->ioctl_mutex);
+> +			err =3D handler->func(client, arg);
+> +			mutex_unlock(&client->ioctl_mutex);
+> +			return err;
+> +		}
+>  	}
+> =20
+>  	pr_debug("ALSA: seq unknown ioctl() 0x%x (type=3D'%c', number=3D0x%02x)=
+\n",
 
-* This series is based on top of Ezequiel's VP8 work [1].
-* It depends on [2] which defines/described the H264 decoding mode
-  control.
-* Depends on [3] since I'm using vb2_get_buffer() to retrieve a
-  reference buffer
-* The final dep is a fix I sent this morning allowing me to simplify the
-  ctrl initialization logic
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Regards,
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Boris
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Boris Brezillon (5):
-  media: hantro: Move copy_metadata() before doing a decode operation
-  media: hantro: Constify the control array
-  media: hantro: Simplify the controls creation logic
-  media: hantro: Add hantro_get_{src,dst}_buf() helpers
-  media: hantro: Add helpers to prepare/finish a run
+iEYEARECAAYFAl0KJ6UACgkQMOfwapXb+vLRIACgpxVaZo8G/mYONSgkmeOfcYQ/
+XHMAoJXByHRwnAmMnp39J/t+b2fnMDfk
+=8kd5
+-----END PGP SIGNATURE-----
 
-Hertz Wong (3):
-  media: hantro: Add core bits to support H264 decoding
-  media: hantro: Add support for H264 decoding on G1
-  media: hantro: Enable H264 decoding on rk3288
-
-Rasmus Villemoes (1):
-  lib/sort.c: implement sort() variant taking context argument
-
- drivers/staging/media/hantro/Makefile         |   2 +
- drivers/staging/media/hantro/hantro.h         |  24 +-
- drivers/staging/media/hantro/hantro_drv.c     |  95 ++-
- .../staging/media/hantro/hantro_g1_h264_dec.c | 295 ++++++++
- .../media/hantro/hantro_g1_mpeg2_dec.c        |  14 +-
- .../staging/media/hantro/hantro_g1_vp8_dec.c  |  17 +-
- .../staging/media/hantro/hantro_h1_jpeg_enc.c |  11 +-
- drivers/staging/media/hantro/hantro_h264.c    | 638 ++++++++++++++++++
- drivers/staging/media/hantro/hantro_hw.h      |  55 ++
- drivers/staging/media/hantro/hantro_v4l2.c    |  15 +-
- drivers/staging/media/hantro/rk3288_vpu_hw.c  |  21 +-
- .../media/hantro/rk3399_vpu_hw_jpeg_enc.c     |  12 +-
- .../media/hantro/rk3399_vpu_hw_mpeg2_dec.c    |  14 +-
- include/linux/sort.h                          |   5 +
- lib/sort.c                                    |  34 +-
- 15 files changed, 1175 insertions(+), 77 deletions(-)
- create mode 100644 drivers/staging/media/hantro/hantro_g1_h264_dec.c
- create mode 100644 drivers/staging/media/hantro/hantro_h264.c
-
--- 
-2.20.1
-
+--cNdxnHkX5QqsyA0e--
