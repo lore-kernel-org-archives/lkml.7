@@ -2,110 +2,124 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.5 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECFDFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:56:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F5EC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:56:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCA7A2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:56:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F170621874
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:56:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="EUVRh8HO";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="wsMAY3t9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfFSO4b (ORCPT
+        id S1729612AbfFSO4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:56:31 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:33672 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfFSO4b (ORCPT
+        Wed, 19 Jun 2019 10:56:54 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:37633 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726496AbfFSO4y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:56:31 -0400
-Received: by mail-io1-f67.google.com with SMTP id u13so38917197iop.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 07:56:31 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ST8NyS5lS7ZO35UtngAcwLs8pyVYyzQpclBMnNE1AtU=;
-        b=FMs9+/x/F+IMpm2SXWTh0fGyKiFUTThaJid3bAn4x5G1OhBOKuNNPk3mvgxawZ33am
-         eXC7wcznRaIepLaMRZoo0k01xwnNvHeSVk1/ziL9LOCJ1DIf2ZF3vAj6hHH/0PBLhsT7
-         9RDh8wBlgIkJfAsx7nHhb/oLYLyLiQoY55HC5Poq2sLCmSPt4QUQ0/t0COIYbDjpifQe
-         KkTuFiWieald94qOqh1e3Yb7ttV4buS2jjls7uP7ehrIKmvfXYbMQEKpKXsEkLODoRoI
-         R7tZGImh0gn5M8yidmu39ANGIN/teaBwceHETPnhCr9iAGnw4VOc30G2SDD40ZdxwKkf
-         nA3g==
-X-Gm-Message-State: APjAAAWU0aptgMqymJnpgdPsEeFIStubgP1b3L3/cQr+dXQLXE7E43CI
-        QeH7S/WiwDUjz3ZFZoJ5hm2o1A==
-X-Google-Smtp-Source: APXvYqwUKdWZua2InEY/mHBUFIiPdRoM85uj6Eutp9Jo/m4ldx//+Eb8q4tByILJaDYRYyuTdyefZw==
-X-Received: by 2002:a02:b016:: with SMTP id p22mr48724859jah.121.1560956190592;
-        Wed, 19 Jun 2019 07:56:30 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id f4sm17491877iok.56.2019.06.19.07.56.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 07:56:29 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 08:56:25 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Adrian Hunter <adrian.hunter@intel.com>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Daniel Kurtz <djkurtz@chromium.org>,
-        hongjiefang <hongjiefang@asrmicro.com>,
+        Wed, 19 Jun 2019 10:56:54 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id F113021B82;
+        Wed, 19 Jun 2019 10:56:52 -0400 (EDT)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute6.internal (MEProxy); Wed, 19 Jun 2019 10:56:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=1skUKVQ9bmW3rSJdzRaTjgtPz/f
+        qbeFJVQAQli51q/Y=; b=EUVRh8HOgyRCl53y6fMuJmFU4Gz4+OvnCOx1/0H3+7S
+        7hVgJVm/tUpP+isCRFgAhVoC24cWx62WQuZyP/5KsJFCIaKLZrYVICaJjVVtceYZ
+        aJecnQy+QH+wwTFtjtnUFj3Db1zpsJUdnGQsDnIc8r5c3YCuEEyAiZZK+ek7NzCS
+        /5ABf9cqRDyu/BV2X3QNEoNPwMRqVTUyZxtvwZXZee/e5ND/yq8CMpeWpAlbYOYW
+        GEwbBYerNK9vq9IVuB4+H/rW8cLeimkWFiToNXDTyAKwdvFqeIl7DA/JTPi1NFYi
+        IqyLMHj1a040Uf9XiGsRplS0DXF2QlA5n4/Wma4xWsA==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=1skUKV
+        Q9bmW3rSJdzRaTjgtPz/fqbeFJVQAQli51q/Y=; b=wsMAY3t9z9lHchM2EMb/+C
+        fCOBdf4dhjWBGfYav+c5IWi65ZuymfKYe+SzMUZMXy8BwIrHtxxfeG5DAwwD9xAf
+        D8BJokGh+iA+tLJAKBiD43fmkktHfPbNpPNsMfhoY3URfVxRtrHaw+hF2O2Z8jZZ
+        BrI/Ea8oEk5DjO7B8IhMVk/qgzlQkYUribM3xmr0lOJSaz7pOpnEiEuuqZSOWTjO
+        p/CYolOYwv+iIZDv0vxAY6GOr1F0junzCbbKuDQvl5QutbIxoLBkeiMHrSylk2qA
+        +4hxz3KKneuvKvaB/VL8ztFPlyd/yvOskcxgSCK8MaL/iSwgg3ExBwza30NqTlXg
+        ==
+X-ME-Sender: <xms:NE0KXWa4OuSHx7IL_lpTSz8cxCbuL0uEhCJHGxEinLpPTGv4wIT2XA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddvgdehjecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:NE0KXem18ohBX3Eaivrul4tgCkaQpzyUFTeekhv0jnopc4HpAFQBgw>
+    <xmx:NE0KXR3ISgCFai1n9wmaXzZos5eQHzK6BUzI2HSSGkhss7XTvYHy4A>
+    <xmx:NE0KXe2SIHNpDdYKQ7CI8Lh5m-xHikmIbDi63g8ZIp7N21IjTawLFA>
+    <xmx:NE0KXf7iO68BA68rcI9LsjNS-0f5TsJWDg99UXc7b_3Iryc_EjzSdg>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id A78448005C;
+        Wed, 19 Jun 2019 10:56:51 -0400 (EDT)
+Date:   Wed, 19 Jun 2019 16:56:49 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shawn Lin <shawn.lin@rock-chips.com>,
-        Kyle Roeschley <kyle.roeschley@ni.com>,
-        Avri Altman <avri.altman@wdc.com>
-Subject: Re: [RFC PATCH 1/2] mmc: sdhci: Manually check card status after
- reset
-Message-ID: <20190619145625.GA50985@google.com>
-References: <20190501175457.195855-1-rrangel@chromium.org>
- <CAPDyKFpL1nHt1E1zgS-iDZf_KDWk2CN32Lvr+5Nmo8CtB2VCWg@mail.gmail.com>
- <20190607160553.GA185100@google.com>
- <CAPDyKFout6AY2Q92pYQ-KPH0NENq1-SkYivkDxjjb=uB=tKXuQ@mail.gmail.com>
- <20190610163252.GA227032@google.com>
- <fcdf6cc4-2729-abe2-85c8-b0d04901c5ae@intel.com>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: linux-next: build failure after merge of the usb tree
+Message-ID: <20190619145649.GA14207@kroah.com>
+References: <20190619164351.6c3f83be@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <fcdf6cc4-2729-abe2-85c8-b0d04901c5ae@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190619164351.6c3f83be@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 11, 2019 at 01:30:55PM +0300, Adrian Hunter wrote:
-> Does the following work?
+On Wed, Jun 19, 2019 at 04:43:51PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
+> After merging the usb tree, today's linux-next build (x86_64 allmodconfig)
+> failed like this:
 > 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 0cd5f2ce98df..f672171246b0 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -341,8 +341,19 @@ static void sdhci_init(struct sdhci_host *host, int soft)
->  
->  static void sdhci_reinit(struct sdhci_host *host)
->  {
-> +	u32 cd = host->ier & (SDHCI_INT_CARD_REMOVE | SDHCI_INT_CARD_INSERT);
-> +
->  	sdhci_init(host, 0);
->  	sdhci_enable_card_detection(host);
-> +
-> +	/*
-> +	 * A change to the card detect bits indicates a change in present state,
-> +	 * refer sdhci_set_card_detection(). A card detect interrupt might have
-> +	 * been missed while the host controller was being reset, so trigger a
-> +	 * rescan to check.
-> +	 */
-> +	if (cd != (host->ier & (SDHCI_INT_CARD_REMOVE | SDHCI_INT_CARD_INSERT)))
-> +		mmc_detect_change(host->mmc, msecs_to_jiffies(200));
->  }
->  
->  static void __sdhci_led_activate(struct sdhci_host *host)
+> In file included from usr/include/linux/usbdevice_fs.hdrtest.c:1:
+> ./usr/include/linux/usbdevice_fs.h:88:2: error: unknown type name 'u8'
+>   u8 num_ports;  /* Number of ports the device is connected */
+>   ^~
+> ./usr/include/linux/usbdevice_fs.h:92:2: error: unknown type name 'u8'
+>   u8 ports[7];  /* List of ports on the way from the root  */
+>   ^~
+> 
+> Caused by commit
+> 
+>   6d101f24f1dd ("USB: add usbfs ioctl to retrieve the connection parameters")
+> 
+> Presumably exposed by commit
+> 
+>   b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-contained")
+> 
+> from the kbuild tree.
+> 
+> I have added this patch for now:
+> 
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 19 Jun 2019 16:36:16 +1000
+> Subject: [PATCH] USB: fix types in uapi include
+> 
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/uapi/linux/usbdevice_fs.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-Your patch looks good. I tried it out and got over 57k insertion/removal
-iterations. Do you want me to send out your patch, or do you want to do
-it?
+Ah, good catch, sorry about that.  Now applied.
 
-Just to recap, the patch you proposed + the AMD SDHCI specific patch fix
-the problem.
-
-Thanks!
+greg k-h
