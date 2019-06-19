@@ -2,84 +2,83 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52FD0C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E17C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:48:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 300462075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:46:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A5E2075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:48:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731195AbfFSHqC (ORCPT
+        id S1731212AbfFSHsJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:46:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22162 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725980AbfFSHqC (ORCPT
+        Wed, 19 Jun 2019 03:48:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31946 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725980AbfFSHsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:46:02 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J7gYnN107081
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:46:01 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7en1694d-1
+        Wed, 19 Jun 2019 03:48:08 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J7lW4B149786
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:48:07 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t7dbuh7n4-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:46:00 -0400
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:48:07 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 19 Jun 2019 08:45:58 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 19 Jun 2019 08:48:05 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 08:45:56 +0100
+        Wed, 19 Jun 2019 08:48:00 +0100
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J7jtFo48758878
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J7m0eH53674124
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 07:45:55 GMT
+        Wed, 19 Jun 2019 07:48:00 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 87263A4053;
-        Wed, 19 Jun 2019 07:45:55 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id ED6D1A4057;
+        Wed, 19 Jun 2019 07:47:59 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E55DFA4040;
-        Wed, 19 Jun 2019 07:45:53 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5A778A4040;
+        Wed, 19 Jun 2019 07:47:58 +0000 (GMT)
 Received: from [9.124.31.60] (unknown [9.124.31.60])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 07:45:53 +0000 (GMT)
-Subject: Re: [PATCH 5/5] Powerpc/Watchpoint: Fix length calculation for
- unaligned target
-To:     Michael Neuling <mikey@neuling.org>
+        Wed, 19 Jun 2019 07:47:58 +0000 (GMT)
+Subject: Re: [PATCH 0/5] Powerpc/hw-breakpoint: Fixes plus Code refactor
+To:     Michael Neuling <mikey@neuling.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
 Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
         linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com,
+        npiggin@gmail.com, naveen.n.rao@linux.vnet.ibm.com,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>
 References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
- <20190618042732.5582-6-ravi.bangoria@linux.ibm.com>
- <707bc0b664b8ebbb843a1541155fed219c216035.camel@neuling.org>
+ <2344165b-b55b-d1b9-fd96-e057500e8c74@c-s.fr>
+ <85d5494d2a5d4a887e739c379105436e498217a8.camel@neuling.org>
 From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Wed, 19 Jun 2019 13:15:53 +0530
+Date:   Wed, 19 Jun 2019 13:17:57 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <707bc0b664b8ebbb843a1541155fed219c216035.camel@neuling.org>
+In-Reply-To: <85d5494d2a5d4a887e739c379105436e498217a8.camel@neuling.org>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19061907-4275-0000-0000-000003439F99
+x-cbid: 19061907-0016-0000-0000-0000028A6128
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061907-4276-0000-0000-00003853C9AB
-Message-Id: <8a8a17b6-bdd6-4efb-7937-b1af105e08e0@linux.ibm.com>
+x-cbparentid: 19061907-0017-0000-0000-000032E7B628
+Message-Id: <44c41c74-66a5-fa34-00b8-6de6e9b264bb@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=942 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190064
+ mlxlogscore=944 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190065
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -87,57 +86,23 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 6/18/19 7:02 PM, Michael Neuling wrote:
-> On Tue, 2019-06-18 at 09:57 +0530, Ravi Bangoria wrote:
->> Watchpoint match range is always doubleword(8 bytes) aligned on
->> powerpc. If the given range is crossing doubleword boundary, we
->> need to increase the length such that next doubleword also get
->> covered. Ex,
+On 6/18/19 11:47 AM, Michael Neuling wrote:
+> On Tue, 2019-06-18 at 08:01 +0200, Christophe Leroy wrote:
 >>
->>           address   len = 6 bytes
->>                 |=========.
->>    |------------v--|------v--------|
->>    | | | | | | | | | | | | | | | | |
->>    |---------------|---------------|
->>     <---8 bytes--->
+>> Le 18/06/2019 à 06:27, Ravi Bangoria a écrit :
+>>> patch 1-3: Code refactor
+>>> patch 4: Speedup disabling breakpoint
+>>> patch 5: Fix length calculation for unaligned targets
 >>
->> In such case, current code configures hw as:
->>   start_addr = address & ~HW_BREAKPOINT_ALIGN
->>   len = 8 bytes
->>
->> And thus read/write in last 4 bytes of the given range is ignored.
->> Fix this by including next doubleword in the length. Watchpoint
->> exception handler already ignores extraneous exceptions, so no
->> changes required for that.
+>> While you are playing with hw breakpoints, did you have a look at 
+>> https://github.com/linuxppc/issues/issues/38 ?
 > 
-> Nice catch. Thanks.
+> Agreed and also: 
 > 
-> I assume this has been broken forever? Should we be CCing stable? If so, it
-> would be nice to have this self contained (separate from the refactor) so we can
-> more easily backport it.
-
-Yes this has been broken forever. I'll add Fixes: tag and cc stable.
-
+> https://github.com/linuxppc/issues/issues/170
 > 
-> Also, can you update 
-> tools/testing/selftests/powerpc/ptrace/ptrace-hwbreak.c to catch this issue?
-
-Sure, will add the test case.
-
-[...]
-
->> +u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
->> +				unsigned long *start_addr,
->> +				unsigned long *end_addr)
+> https://github.com/linuxppc/issues/issues/128 
 > 
-> I don't really like this.  "final" is not a good name. Something like hardware
-> would be better.
-> 
-> Also, can you put the start_addr and end addr in the arch_hw_breakpoint rather
-> than doing what you have above.  Call them hw_start_addr, hw_end_addr.
-> 
-> We could even set these two new addresses where we set the set of
-> arch_hw_breakpoint rather than having this late call.
 
-Sure, will use 'hw_' prefix for them.
+Yes, I'm aware of those. Will have a look at them.
 
