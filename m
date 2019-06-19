@@ -2,710 +2,258 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BA8BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FA1C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:08:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5E9020679
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:07:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560931650;
-	bh=h+ip12dxs1Xv+Nf/f8Hs77vvSCXxpRuw8F9Y1rLem4k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=a/isq/aZtRzO9s//084ScwQiq23qD3uUz2w4Le15ium7srfBWvVbXvUX0XTPPl/7D
-	 E5zjptZPOPiuZAOilzrgwTGXpNm0ZTYIkJLVfRcFDUSgCpPcPvM9d9jD4X5SpK4Dz3
-	 HAa+H/kOBcsM0T6cX6OUGLFi3elPo3pMIuxTKjO0=
+	by mail.kernel.org (Postfix) with ESMTP id EB73120679
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:08:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731196AbfFSIH2 (ORCPT
+        id S1731231AbfFSIId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:07:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44438 "EHLO mail.kernel.org"
+        Wed, 19 Jun 2019 04:08:33 -0400
+Received: from mga05.intel.com ([192.55.52.43]:9615 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730418AbfFSIH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:07:28 -0400
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC2992084A
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:07:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560931645;
-        bh=h+ip12dxs1Xv+Nf/f8Hs77vvSCXxpRuw8F9Y1rLem4k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=aL4B2IgOQMwOZplPZQCUgzDb6tKLxhyNzsv0H5eVHj43QqwUwHIWqG4nUVuQyeW0c
-         mRK3k0zkj34hrCwUkM3YfDViRDCFycCpmXjO95v0w8CTs0m+CfYT7zUVwjf5GvmEDF
-         WBdL0UOT2HWvQ0SQQQ8J8MUg1yxHYO7BLZXxLEBs=
-Received: by mail-wr1-f50.google.com with SMTP id k11so2305694wrl.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 01:07:24 -0700 (PDT)
-X-Gm-Message-State: APjAAAWnCYUdVODcChZe8ooGb0nCBVjrGe/zxwYxF+YKfH/jYNQh1YlE
-        FGF1sNnautsABT4GEoQqDRpISjTyUiVo9PcNUmU=
-X-Google-Smtp-Source: APXvYqxpZyQdIRiYdSA8q+iIqOh4plr+jWOYRGsYYayThC5lDg1ov+1W4bh6u9OvKTZzdEY8YYSLgOVy71gWtzkpR1U=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr3004737wro.343.1560931643378;
- Wed, 19 Jun 2019 01:07:23 -0700 (PDT)
+        id S1726142AbfFSIId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:08:33 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 01:08:31 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="gz'50?scan'50,208,50";a="186378962"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by fmsmga002.fm.intel.com with ESMTP; 19 Jun 2019 01:08:30 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hdVdu-000CM7-7e; Wed, 19 Jun 2019 16:08:30 +0800
+Date:   Wed, 19 Jun 2019 16:07:54 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     kbuild-all@01.org, linux-kernel@vger.kernel.org, tipbuild@zytor.com
+Subject: [tip:WIP.x86/ipi 3/11] arch/x86/kernel/nmi.c:515:46: error:
+ 'cpu_is_dead' undeclared; did you mean 'cpuid_eax'?
+Message-ID: <201906191652.VGOCGBmi%lkp@intel.com>
 MIME-Version: 1.0
-References: <20190321163623.20219-1-julien.grall@arm.com> <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
-In-Reply-To: <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 19 Jun 2019 16:07:10 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
-Message-ID: <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, aou@eecs.berkeley.edu,
-        gary@garyguo.net, Atish.Patra@wdc.com, hch@infradead.org,
-        paul.walmsley@sifive.com, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com,
-        julien.thierry@arm.com, will.deacon@arm.com,
-        christoffer.dall@arm.com, james.morse@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="X1bOJ3K7DJ5YkBrT"
+Content-Disposition: inline
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Julien,
 
-You forgot CCing C-SKY folks :P
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Move arm asid allocator code in a generic one is a agood idea, I've
-made a patchset for C-SKY and test is on processing, See:
-https://lore.kernel.org/linux-csky/1560930553-26502-1-git-send-email-guoren@kernel.org/
+tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git WIP.x86/ipi
+head:   0663387727c00bb25ce1e76f30deb6b193f591f8
+commit: 8adde844ea4f8d0d147e0ad6c675970a58550bae [3/11] x86/hotplug: Silence APIC and NMI when CPU is dead
+config: i386-tinyconfig (attached as .config)
+compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+reproduce:
+        git checkout 8adde844ea4f8d0d147e0ad6c675970a58550bae
+        # save the attached .config to linux build tree
+        make ARCH=i386 
 
-If you plan to seperate it into generic one, I could co-work with you.
-Or I'll bring asid code into csky subsystem first and you can cleanup
-them later.
+If you fix the issue, kindly add following tag
+Reported-by: kbuild test robot <lkp@intel.com>
 
-Best Regards
- Guo Ren
+All errors (new ones prefixed by >>):
 
-ML: linux-csky@vger.kernel.org
+   In file included from include/asm-generic/percpu.h:7:0,
+                    from arch/x86/include/asm/percpu.h:544,
+                    from arch/x86/include/asm/preempt.h:6,
+                    from include/linux/preempt.h:78,
+                    from include/linux/spinlock.h:51,
+                    from arch/x86/kernel/nmi.c:14:
+   arch/x86/kernel/nmi.c: In function 'do_nmi':
+>> arch/x86/kernel/nmi.c:515:46: error: 'cpu_is_dead' undeclared (first use in this function); did you mean 'cpuid_eax'?
+     if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_is_dead))
+                                                 ^
+   include/linux/percpu-defs.h:319:9: note: in definition of macro '__pcpu_size_call_return'
+     typeof(variable) pscr_ret__;     \
+            ^~~~~~~~
+   arch/x86/kernel/nmi.c:515:32: note: in expansion of macro 'this_cpu_read'
+     if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_is_dead))
+                                   ^~~~~~~~~~~~~
+   arch/x86/kernel/nmi.c:515:46: note: each undeclared identifier is reported only once for each function it appears in
+     if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_is_dead))
+                                                 ^
+   include/linux/percpu-defs.h:319:9: note: in definition of macro '__pcpu_size_call_return'
+     typeof(variable) pscr_ret__;     \
+            ^~~~~~~~
+   arch/x86/kernel/nmi.c:515:32: note: in expansion of macro 'this_cpu_read'
+     if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_is_dead))
+                                   ^~~~~~~~~~~~~
 
-On Thu, Jun 6, 2019 at 12:56 AM Julien Grall <julien.grall@arm.com> wrote:
->
-> Hi,
->
-> I am CCing RISC-V folks to see if there are an interest to share the code.
->
-> @RISC-V: I noticed you are discussing about importing a version of ASID
-> allocator in RISC-V. At a first look, the code looks quite similar. Would the
-> library below helps you?
->
-> Cheers,
->
-> On 21/03/2019 16:36, Julien Grall wrote:
-> > We will want to re-use the ASID allocator in a separate context (e.g
-> > allocating VMID). So move the code in a new file.
-> >
-> > The function asid_check_context has been moved in the header as a static
-> > inline function because we want to avoid add a branch when checking if the
-> > ASID is still valid.
-> >
-> > Signed-off-by: Julien Grall <julien.grall@arm.com>
-> >
-> > ---
-> >
-> > This code will be used in the virt code for allocating VMID. I am not
-> > entirely sure where to place it. Lib could potentially be a good place but I
-> > am not entirely convinced the algo as it is could be used by other
-> > architecture.
-> >
-> > Looking at x86, it seems that it will not be possible to re-use because
-> > the number of PCID (aka ASID) could be smaller than the number of CPUs.
-> > See commit message 10af6235e0d327d42e1bad974385197817923dc1 "x86/mm:
-> > Implement PCID based optimization: try to preserve old TLB entries using
-> > PCI".
-> > ---
-> >   arch/arm64/include/asm/asid.h |  77 ++++++++++++++
-> >   arch/arm64/lib/Makefile       |   2 +
-> >   arch/arm64/lib/asid.c         | 185 +++++++++++++++++++++++++++++++++
-> >   arch/arm64/mm/context.c       | 235 +-----------------------------------------
-> >   4 files changed, 267 insertions(+), 232 deletions(-)
-> >   create mode 100644 arch/arm64/include/asm/asid.h
-> >   create mode 100644 arch/arm64/lib/asid.c
-> >
-> > diff --git a/arch/arm64/include/asm/asid.h b/arch/arm64/include/asm/asid.h
-> > new file mode 100644
-> > index 000000000000..bb62b587f37f
-> > --- /dev/null
-> > +++ b/arch/arm64/include/asm/asid.h
-> > @@ -0,0 +1,77 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +#ifndef __ASM_ASM_ASID_H
-> > +#define __ASM_ASM_ASID_H
-> > +
-> > +#include <linux/atomic.h>
-> > +#include <linux/compiler.h>
-> > +#include <linux/cpumask.h>
-> > +#include <linux/percpu.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +struct asid_info
-> > +{
-> > +     atomic64_t      generation;
-> > +     unsigned long   *map;
-> > +     atomic64_t __percpu     *active;
-> > +     u64 __percpu            *reserved;
-> > +     u32                     bits;
-> > +     /* Lock protecting the structure */
-> > +     raw_spinlock_t          lock;
-> > +     /* Which CPU requires context flush on next call */
-> > +     cpumask_t               flush_pending;
-> > +     /* Number of ASID allocated by context (shift value) */
-> > +     unsigned int            ctxt_shift;
-> > +     /* Callback to locally flush the context. */
-> > +     void                    (*flush_cpu_ctxt_cb)(void);
-> > +};
-> > +
-> > +#define NUM_ASIDS(info)                      (1UL << ((info)->bits))
-> > +#define NUM_CTXT_ASIDS(info)         (NUM_ASIDS(info) >> (info)->ctxt_shift)
-> > +
-> > +#define active_asid(info, cpu)       *per_cpu_ptr((info)->active, cpu)
-> > +
-> > +void asid_new_context(struct asid_info *info, atomic64_t *pasid,
-> > +                   unsigned int cpu);
-> > +
-> > +/*
-> > + * Check the ASID is still valid for the context. If not generate a new ASID.
-> > + *
-> > + * @pasid: Pointer to the current ASID batch
-> > + * @cpu: current CPU ID. Must have been acquired throught get_cpu()
-> > + */
-> > +static inline void asid_check_context(struct asid_info *info,
-> > +                                   atomic64_t *pasid, unsigned int cpu)
-> > +{
-> > +     u64 asid, old_active_asid;
-> > +
-> > +     asid = atomic64_read(pasid);
-> > +
-> > +     /*
-> > +      * The memory ordering here is subtle.
-> > +      * If our active_asid is non-zero and the ASID matches the current
-> > +      * generation, then we update the active_asid entry with a relaxed
-> > +      * cmpxchg. Racing with a concurrent rollover means that either:
-> > +      *
-> > +      * - We get a zero back from the cmpxchg and end up waiting on the
-> > +      *   lock. Taking the lock synchronises with the rollover and so
-> > +      *   we are forced to see the updated generation.
-> > +      *
-> > +      * - We get a valid ASID back from the cmpxchg, which means the
-> > +      *   relaxed xchg in flush_context will treat us as reserved
-> > +      *   because atomic RmWs are totally ordered for a given location.
-> > +      */
-> > +     old_active_asid = atomic64_read(&active_asid(info, cpu));
-> > +     if (old_active_asid &&
-> > +         !((asid ^ atomic64_read(&info->generation)) >> info->bits) &&
-> > +         atomic64_cmpxchg_relaxed(&active_asid(info, cpu),
-> > +                                  old_active_asid, asid))
-> > +             return;
-> > +
-> > +     asid_new_context(info, pasid, cpu);
-> > +}
-> > +
-> > +int asid_allocator_init(struct asid_info *info,
-> > +                     u32 bits, unsigned int asid_per_ctxt,
-> > +                     void (*flush_cpu_ctxt_cb)(void));
-> > +
-> > +#endif
-> > diff --git a/arch/arm64/lib/Makefile b/arch/arm64/lib/Makefile
-> > index 5540a1638baf..720df5ee2aa2 100644
-> > --- a/arch/arm64/lib/Makefile
-> > +++ b/arch/arm64/lib/Makefile
-> > @@ -5,6 +5,8 @@ lib-y         := clear_user.o delay.o copy_from_user.o                \
-> >                  memcmp.o strcmp.o strncmp.o strlen.o strnlen.o       \
-> >                  strchr.o strrchr.o tishift.o
-> >
-> > +lib-y                += asid.o
-> > +
-> >   ifeq ($(CONFIG_KERNEL_MODE_NEON), y)
-> >   obj-$(CONFIG_XOR_BLOCKS)    += xor-neon.o
-> >   CFLAGS_REMOVE_xor-neon.o    += -mgeneral-regs-only
-> > diff --git a/arch/arm64/lib/asid.c b/arch/arm64/lib/asid.c
-> > new file mode 100644
-> > index 000000000000..72b71bfb32be
-> > --- /dev/null
-> > +++ b/arch/arm64/lib/asid.c
-> > @@ -0,0 +1,185 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Generic ASID allocator.
-> > + *
-> > + * Based on arch/arm/mm/context.c
-> > + *
-> > + * Copyright (C) 2002-2003 Deep Blue Solutions Ltd, all rights reserved.
-> > + * Copyright (C) 2012 ARM Ltd.
-> > + */
-> > +
-> > +#include <linux/slab.h>
-> > +
-> > +#include <asm/asid.h>
-> > +
-> > +#define reserved_asid(info, cpu) *per_cpu_ptr((info)->reserved, cpu)
-> > +
-> > +#define ASID_MASK(info)                      (~GENMASK((info)->bits - 1, 0))
-> > +#define ASID_FIRST_VERSION(info)     (1UL << ((info)->bits))
-> > +
-> > +#define asid2idx(info, asid)         (((asid) & ~ASID_MASK(info)) >> (info)->ctxt_shift)
-> > +#define idx2asid(info, idx)          (((idx) << (info)->ctxt_shift) & ~ASID_MASK(info))
-> > +
-> > +static void flush_context(struct asid_info *info)
-> > +{
-> > +     int i;
-> > +     u64 asid;
-> > +
-> > +     /* Update the list of reserved ASIDs and the ASID bitmap. */
-> > +     bitmap_clear(info->map, 0, NUM_CTXT_ASIDS(info));
-> > +
-> > +     for_each_possible_cpu(i) {
-> > +             asid = atomic64_xchg_relaxed(&active_asid(info, i), 0);
-> > +             /*
-> > +              * If this CPU has already been through a
-> > +              * rollover, but hasn't run another task in
-> > +              * the meantime, we must preserve its reserved
-> > +              * ASID, as this is the only trace we have of
-> > +              * the process it is still running.
-> > +              */
-> > +             if (asid == 0)
-> > +                     asid = reserved_asid(info, i);
-> > +             __set_bit(asid2idx(info, asid), info->map);
-> > +             reserved_asid(info, i) = asid;
-> > +     }
-> > +
-> > +     /*
-> > +      * Queue a TLB invalidation for each CPU to perform on next
-> > +      * context-switch
-> > +      */
-> > +     cpumask_setall(&info->flush_pending);
-> > +}
-> > +
-> > +static bool check_update_reserved_asid(struct asid_info *info, u64 asid,
-> > +                                    u64 newasid)
-> > +{
-> > +     int cpu;
-> > +     bool hit = false;
-> > +
-> > +     /*
-> > +      * Iterate over the set of reserved ASIDs looking for a match.
-> > +      * If we find one, then we can update our mm to use newasid
-> > +      * (i.e. the same ASID in the current generation) but we can't
-> > +      * exit the loop early, since we need to ensure that all copies
-> > +      * of the old ASID are updated to reflect the mm. Failure to do
-> > +      * so could result in us missing the reserved ASID in a future
-> > +      * generation.
-> > +      */
-> > +     for_each_possible_cpu(cpu) {
-> > +             if (reserved_asid(info, cpu) == asid) {
-> > +                     hit = true;
-> > +                     reserved_asid(info, cpu) = newasid;
-> > +             }
-> > +     }
-> > +
-> > +     return hit;
-> > +}
-> > +
-> > +static u64 new_context(struct asid_info *info, atomic64_t *pasid)
-> > +{
-> > +     static u32 cur_idx = 1;
-> > +     u64 asid = atomic64_read(pasid);
-> > +     u64 generation = atomic64_read(&info->generation);
-> > +
-> > +     if (asid != 0) {
-> > +             u64 newasid = generation | (asid & ~ASID_MASK(info));
-> > +
-> > +             /*
-> > +              * If our current ASID was active during a rollover, we
-> > +              * can continue to use it and this was just a false alarm.
-> > +              */
-> > +             if (check_update_reserved_asid(info, asid, newasid))
-> > +                     return newasid;
-> > +
-> > +             /*
-> > +              * We had a valid ASID in a previous life, so try to re-use
-> > +              * it if possible.
-> > +              */
-> > +             if (!__test_and_set_bit(asid2idx(info, asid), info->map))
-> > +                     return newasid;
-> > +     }
-> > +
-> > +     /*
-> > +      * Allocate a free ASID. If we can't find one, take a note of the
-> > +      * currently active ASIDs and mark the TLBs as requiring flushes.  We
-> > +      * always count from ASID #2 (index 1), as we use ASID #0 when setting
-> > +      * a reserved TTBR0 for the init_mm and we allocate ASIDs in even/odd
-> > +      * pairs.
-> > +      */
-> > +     asid = find_next_zero_bit(info->map, NUM_CTXT_ASIDS(info), cur_idx);
-> > +     if (asid != NUM_CTXT_ASIDS(info))
-> > +             goto set_asid;
-> > +
-> > +     /* We're out of ASIDs, so increment the global generation count */
-> > +     generation = atomic64_add_return_relaxed(ASID_FIRST_VERSION(info),
-> > +                                              &info->generation);
-> > +     flush_context(info);
-> > +
-> > +     /* We have more ASIDs than CPUs, so this will always succeed */
-> > +     asid = find_next_zero_bit(info->map, NUM_CTXT_ASIDS(info), 1);
-> > +
-> > +set_asid:
-> > +     __set_bit(asid, info->map);
-> > +     cur_idx = asid;
-> > +     return idx2asid(info, asid) | generation;
-> > +}
-> > +
-> > +/*
-> > + * Generate a new ASID for the context.
-> > + *
-> > + * @pasid: Pointer to the current ASID batch allocated. It will be updated
-> > + * with the new ASID batch.
-> > + * @cpu: current CPU ID. Must have been acquired through get_cpu()
-> > + */
-> > +void asid_new_context(struct asid_info *info, atomic64_t *pasid,
-> > +                   unsigned int cpu)
-> > +{
-> > +     unsigned long flags;
-> > +     u64 asid;
-> > +
-> > +     raw_spin_lock_irqsave(&info->lock, flags);
-> > +     /* Check that our ASID belongs to the current generation. */
-> > +     asid = atomic64_read(pasid);
-> > +     if ((asid ^ atomic64_read(&info->generation)) >> info->bits) {
-> > +             asid = new_context(info, pasid);
-> > +             atomic64_set(pasid, asid);
-> > +     }
-> > +
-> > +     if (cpumask_test_and_clear_cpu(cpu, &info->flush_pending))
-> > +             info->flush_cpu_ctxt_cb();
-> > +
-> > +     atomic64_set(&active_asid(info, cpu), asid);
-> > +     raw_spin_unlock_irqrestore(&info->lock, flags);
-> > +}
-> > +
-> > +/*
-> > + * Initialize the ASID allocator
-> > + *
-> > + * @info: Pointer to the asid allocator structure
-> > + * @bits: Number of ASIDs available
-> > + * @asid_per_ctxt: Number of ASIDs to allocate per-context. ASIDs are
-> > + * allocated contiguously for a given context. This value should be a power of
-> > + * 2.
-> > + */
-> > +int asid_allocator_init(struct asid_info *info,
-> > +                     u32 bits, unsigned int asid_per_ctxt,
-> > +                     void (*flush_cpu_ctxt_cb)(void))
-> > +{
-> > +     info->bits = bits;
-> > +     info->ctxt_shift = ilog2(asid_per_ctxt);
-> > +     info->flush_cpu_ctxt_cb = flush_cpu_ctxt_cb;
-> > +     /*
-> > +      * Expect allocation after rollover to fail if we don't have at least
-> > +      * one more ASID than CPUs. ASID #0 is always reserved.
-> > +      */
-> > +     WARN_ON(NUM_CTXT_ASIDS(info) - 1 <= num_possible_cpus());
-> > +     atomic64_set(&info->generation, ASID_FIRST_VERSION(info));
-> > +     info->map = kcalloc(BITS_TO_LONGS(NUM_CTXT_ASIDS(info)),
-> > +                         sizeof(*info->map), GFP_KERNEL);
-> > +     if (!info->map)
-> > +             return -ENOMEM;
-> > +
-> > +     raw_spin_lock_init(&info->lock);
-> > +
-> > +     return 0;
-> > +}
-> > diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
-> > index 678a57b77c91..95ee7711a2ef 100644
-> > --- a/arch/arm64/mm/context.c
-> > +++ b/arch/arm64/mm/context.c
-> > @@ -22,47 +22,22 @@
-> >   #include <linux/slab.h>
-> >   #include <linux/mm.h>
-> >
-> > +#include <asm/asid.h>
-> >   #include <asm/cpufeature.h>
-> >   #include <asm/mmu_context.h>
-> >   #include <asm/smp.h>
-> >   #include <asm/tlbflush.h>
-> >
-> > -struct asid_info
-> > -{
-> > -     atomic64_t      generation;
-> > -     unsigned long   *map;
-> > -     atomic64_t __percpu     *active;
-> > -     u64 __percpu            *reserved;
-> > -     u32                     bits;
-> > -     raw_spinlock_t          lock;
-> > -     /* Which CPU requires context flush on next call */
-> > -     cpumask_t               flush_pending;
-> > -     /* Number of ASID allocated by context (shift value) */
-> > -     unsigned int            ctxt_shift;
-> > -     /* Callback to locally flush the context. */
-> > -     void                    (*flush_cpu_ctxt_cb)(void);
-> > -} asid_info;
-> > -
-> > -#define active_asid(info, cpu)       *per_cpu_ptr((info)->active, cpu)
-> > -#define reserved_asid(info, cpu) *per_cpu_ptr((info)->reserved, cpu)
-> > -
-> >   static DEFINE_PER_CPU(atomic64_t, active_asids);
-> >   static DEFINE_PER_CPU(u64, reserved_asids);
-> >
-> > -#define ASID_MASK(info)                      (~GENMASK((info)->bits - 1, 0))
-> > -#define NUM_ASIDS(info)                      (1UL << ((info)->bits))
-> > -
-> > -#define ASID_FIRST_VERSION(info)     NUM_ASIDS(info)
-> > -
-> >   #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
-> >   #define ASID_PER_CONTEXT            2
-> >   #else
-> >   #define ASID_PER_CONTEXT            1
-> >   #endif
-> >
-> > -#define NUM_CTXT_ASIDS(info)         (NUM_ASIDS(info) >> (info)->ctxt_shift)
-> > -#define asid2idx(info, asid)         (((asid) & ~ASID_MASK(info)) >> (info)->ctxt_shift)
-> > -#define idx2asid(info, idx)          (((idx) << (info)->ctxt_shift) & ~ASID_MASK(info))
-> > +struct asid_info asid_info;
-> >
-> >   /* Get the ASIDBits supported by the current CPU */
-> >   static u32 get_cpu_asid_bits(void)
-> > @@ -102,178 +77,6 @@ void verify_cpu_asid_bits(void)
-> >       }
-> >   }
-> >
-> > -static void flush_context(struct asid_info *info)
-> > -{
-> > -     int i;
-> > -     u64 asid;
-> > -
-> > -     /* Update the list of reserved ASIDs and the ASID bitmap. */
-> > -     bitmap_clear(info->map, 0, NUM_CTXT_ASIDS(info));
-> > -
-> > -     for_each_possible_cpu(i) {
-> > -             asid = atomic64_xchg_relaxed(&active_asid(info, i), 0);
-> > -             /*
-> > -              * If this CPU has already been through a
-> > -              * rollover, but hasn't run another task in
-> > -              * the meantime, we must preserve its reserved
-> > -              * ASID, as this is the only trace we have of
-> > -              * the process it is still running.
-> > -              */
-> > -             if (asid == 0)
-> > -                     asid = reserved_asid(info, i);
-> > -             __set_bit(asid2idx(info, asid), info->map);
-> > -             reserved_asid(info, i) = asid;
-> > -     }
-> > -
-> > -     /*
-> > -      * Queue a TLB invalidation for each CPU to perform on next
-> > -      * context-switch
-> > -      */
-> > -     cpumask_setall(&info->flush_pending);
-> > -}
-> > -
-> > -static bool check_update_reserved_asid(struct asid_info *info, u64 asid,
-> > -                                    u64 newasid)
-> > -{
-> > -     int cpu;
-> > -     bool hit = false;
-> > -
-> > -     /*
-> > -      * Iterate over the set of reserved ASIDs looking for a match.
-> > -      * If we find one, then we can update our mm to use newasid
-> > -      * (i.e. the same ASID in the current generation) but we can't
-> > -      * exit the loop early, since we need to ensure that all copies
-> > -      * of the old ASID are updated to reflect the mm. Failure to do
-> > -      * so could result in us missing the reserved ASID in a future
-> > -      * generation.
-> > -      */
-> > -     for_each_possible_cpu(cpu) {
-> > -             if (reserved_asid(info, cpu) == asid) {
-> > -                     hit = true;
-> > -                     reserved_asid(info, cpu) = newasid;
-> > -             }
-> > -     }
-> > -
-> > -     return hit;
-> > -}
-> > -
-> > -static u64 new_context(struct asid_info *info, atomic64_t *pasid)
-> > -{
-> > -     static u32 cur_idx = 1;
-> > -     u64 asid = atomic64_read(pasid);
-> > -     u64 generation = atomic64_read(&info->generation);
-> > -
-> > -     if (asid != 0) {
-> > -             u64 newasid = generation | (asid & ~ASID_MASK(info));
-> > -
-> > -             /*
-> > -              * If our current ASID was active during a rollover, we
-> > -              * can continue to use it and this was just a false alarm.
-> > -              */
-> > -             if (check_update_reserved_asid(info, asid, newasid))
-> > -                     return newasid;
-> > -
-> > -             /*
-> > -              * We had a valid ASID in a previous life, so try to re-use
-> > -              * it if possible.
-> > -              */
-> > -             if (!__test_and_set_bit(asid2idx(info, asid), info->map))
-> > -                     return newasid;
-> > -     }
-> > -
-> > -     /*
-> > -      * Allocate a free ASID. If we can't find one, take a note of the
-> > -      * currently active ASIDs and mark the TLBs as requiring flushes.  We
-> > -      * always count from ASID #2 (index 1), as we use ASID #0 when setting
-> > -      * a reserved TTBR0 for the init_mm and we allocate ASIDs in even/odd
-> > -      * pairs.
-> > -      */
-> > -     asid = find_next_zero_bit(info->map, NUM_CTXT_ASIDS(info), cur_idx);
-> > -     if (asid != NUM_CTXT_ASIDS(info))
-> > -             goto set_asid;
-> > -
-> > -     /* We're out of ASIDs, so increment the global generation count */
-> > -     generation = atomic64_add_return_relaxed(ASID_FIRST_VERSION(info),
-> > -                                              &info->generation);
-> > -     flush_context(info);
-> > -
-> > -     /* We have more ASIDs than CPUs, so this will always succeed */
-> > -     asid = find_next_zero_bit(info->map, NUM_CTXT_ASIDS(info), 1);
-> > -
-> > -set_asid:
-> > -     __set_bit(asid, info->map);
-> > -     cur_idx = asid;
-> > -     return idx2asid(info, asid) | generation;
-> > -}
-> > -
-> > -static void asid_new_context(struct asid_info *info, atomic64_t *pasid,
-> > -                          unsigned int cpu);
-> > -
-> > -/*
-> > - * Check the ASID is still valid for the context. If not generate a new ASID.
-> > - *
-> > - * @pasid: Pointer to the current ASID batch
-> > - * @cpu: current CPU ID. Must have been acquired throught get_cpu()
-> > - */
-> > -static void asid_check_context(struct asid_info *info,
-> > -                            atomic64_t *pasid, unsigned int cpu)
-> > -{
-> > -     u64 asid, old_active_asid;
-> > -
-> > -     asid = atomic64_read(pasid);
-> > -
-> > -     /*
-> > -      * The memory ordering here is subtle.
-> > -      * If our active_asid is non-zero and the ASID matches the current
-> > -      * generation, then we update the active_asid entry with a relaxed
-> > -      * cmpxchg. Racing with a concurrent rollover means that either:
-> > -      *
-> > -      * - We get a zero back from the cmpxchg and end up waiting on the
-> > -      *   lock. Taking the lock synchronises with the rollover and so
-> > -      *   we are forced to see the updated generation.
-> > -      *
-> > -      * - We get a valid ASID back from the cmpxchg, which means the
-> > -      *   relaxed xchg in flush_context will treat us as reserved
-> > -      *   because atomic RmWs are totally ordered for a given location.
-> > -      */
-> > -     old_active_asid = atomic64_read(&active_asid(info, cpu));
-> > -     if (old_active_asid &&
-> > -         !((asid ^ atomic64_read(&info->generation)) >> info->bits) &&
-> > -         atomic64_cmpxchg_relaxed(&active_asid(info, cpu),
-> > -                                  old_active_asid, asid))
-> > -             return;
-> > -
-> > -     asid_new_context(info, pasid, cpu);
-> > -}
-> > -
-> > -/*
-> > - * Generate a new ASID for the context.
-> > - *
-> > - * @pasid: Pointer to the current ASID batch allocated. It will be updated
-> > - * with the new ASID batch.
-> > - * @cpu: current CPU ID. Must have been acquired through get_cpu()
-> > - */
-> > -static void asid_new_context(struct asid_info *info, atomic64_t *pasid,
-> > -                          unsigned int cpu)
-> > -{
-> > -     unsigned long flags;
-> > -     u64 asid;
-> > -
-> > -     raw_spin_lock_irqsave(&info->lock, flags);
-> > -     /* Check that our ASID belongs to the current generation. */
-> > -     asid = atomic64_read(pasid);
-> > -     if ((asid ^ atomic64_read(&info->generation)) >> info->bits) {
-> > -             asid = new_context(info, pasid);
-> > -             atomic64_set(pasid, asid);
-> > -     }
-> > -
-> > -     if (cpumask_test_and_clear_cpu(cpu, &info->flush_pending))
-> > -             info->flush_cpu_ctxt_cb();
-> > -
-> > -     atomic64_set(&active_asid(info, cpu), asid);
-> > -     raw_spin_unlock_irqrestore(&info->lock, flags);
-> > -}
-> > -
-> >   void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
-> >   {
-> >       if (system_supports_cnp())
-> > @@ -305,38 +108,6 @@ static void asid_flush_cpu_ctxt(void)
-> >       local_flush_tlb_all();
-> >   }
-> >
-> > -/*
-> > - * Initialize the ASID allocator
-> > - *
-> > - * @info: Pointer to the asid allocator structure
-> > - * @bits: Number of ASIDs available
-> > - * @asid_per_ctxt: Number of ASIDs to allocate per-context. ASIDs are
-> > - * allocated contiguously for a given context. This value should be a power of
-> > - * 2.
-> > - */
-> > -static int asid_allocator_init(struct asid_info *info,
-> > -                            u32 bits, unsigned int asid_per_ctxt,
-> > -                            void (*flush_cpu_ctxt_cb)(void))
-> > -{
-> > -     info->bits = bits;
-> > -     info->ctxt_shift = ilog2(asid_per_ctxt);
-> > -     info->flush_cpu_ctxt_cb = flush_cpu_ctxt_cb;
-> > -     /*
-> > -      * Expect allocation after rollover to fail if we don't have at least
-> > -      * one more ASID than CPUs. ASID #0 is always reserved.
-> > -      */
-> > -     WARN_ON(NUM_CTXT_ASIDS(info) - 1 <= num_possible_cpus());
-> > -     atomic64_set(&info->generation, ASID_FIRST_VERSION(info));
-> > -     info->map = kcalloc(BITS_TO_LONGS(NUM_CTXT_ASIDS(info)),
-> > -                         sizeof(*info->map), GFP_KERNEL);
-> > -     if (!info->map)
-> > -             return -ENOMEM;
-> > -
-> > -     raw_spin_lock_init(&info->lock);
-> > -
-> > -     return 0;
-> > -}
-> > -
-> >   static int asids_init(void)
-> >   {
-> >       u32 bits = get_cpu_asid_bits();
-> > @@ -344,7 +115,7 @@ static int asids_init(void)
-> >       if (!asid_allocator_init(&asid_info, bits, ASID_PER_CONTEXT,
-> >                                asid_flush_cpu_ctxt))
-> >               panic("Unable to initialize ASID allocator for %lu ASIDs\n",
-> > -                   1UL << bits);
-> > +                   NUM_ASIDS(&asid_info));
-> >
-> >       asid_info.active = &active_asids;
-> >       asid_info.reserved = &reserved_asids;
-> >
->
-> --
-> Julien Grall
->
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+vim +515 arch/x86/kernel/nmi.c
+
+   511	
+   512	dotraplinkage notrace void
+   513	do_nmi(struct pt_regs *regs, long error_code)
+   514	{
+ > 515		if (IS_ENABLED(CONFIG_SMP) && this_cpu_read(cpu_is_dead))
+   516			return;
+   517	
+   518		if (this_cpu_read(nmi_state) != NMI_NOT_RUNNING) {
+   519			this_cpu_write(nmi_state, NMI_LATCHED);
+   520			return;
+   521		}
+   522		this_cpu_write(nmi_state, NMI_EXECUTING);
+   523		this_cpu_write(nmi_cr2, read_cr2());
+   524	nmi_restart:
+   525	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/gzip
+Content-Disposition: attachment; filename=".config.gz"
+Content-Transfer-Encoding: base64
+
+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
+
+--X1bOJ3K7DJ5YkBrT--
