@@ -2,161 +2,181 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C19BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED28C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:01:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB6E20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:00:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A0E820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:01:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=toradex.com header.i=@toradex.com header.b="NDuLEA8C"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cqxp1Ob7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731538AbfFSKAf (ORCPT
+        id S1731549AbfFSKBR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:00:35 -0400
-Received: from mail-eopbgr80107.outbound.protection.outlook.com ([40.107.8.107]:16606
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726479AbfFSKAf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:00:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=toradex.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=qr6g1cm7ng129IYm1V5p86lHZWyWhhQWJmuI0SaSofM=;
- b=NDuLEA8C9AHGHTduW81jcH2VjmIA55/33qP+lFuePToq/neYUx9ikFJeA55wJkzikwDlP7oHycCoB3/NNeZMg/lmhUEESrs8sePRIVxirsRMJnjSqUfhQ4kSjgyOj58unCtTznTP5hInFZiZov/RWAxXvETl5i07GAt7sTB2a1s=
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com (20.179.18.16) by
- AM6PR05MB6120.eurprd05.prod.outlook.com (20.179.3.141) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.10; Wed, 19 Jun 2019 10:00:30 +0000
-Received: from AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::2c23:fdba:9ce4:7397]) by AM6PR05MB6535.eurprd05.prod.outlook.com
- ([fe80::2c23:fdba:9ce4:7397%7]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
- 10:00:30 +0000
-From:   Oleksandr Suvorov <oleksandr.suvorov@toradex.com>
-To:     Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        "festevam@gmail.com" <festevam@gmail.com>
-CC:     Igor Opaniuk <igor.opaniuk@toradex.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
-Subject: Re: [PATCH v1 1/6] ASoC: sgtl5000: Fix definition of VAG Ramp Control
-Thread-Topic: [PATCH v1 1/6] ASoC: sgtl5000: Fix definition of VAG Ramp
- Control
-Thread-Index: AQHVD9BbLTSN4sMG+UK9nZhF2PRISKaZbpKAgAl3jbA=
-Date:   Wed, 19 Jun 2019 10:00:30 +0000
-Message-ID: <AM6PR05MB65351FF540C6CD22167A6F90F9E50@AM6PR05MB6535.eurprd05.prod.outlook.com>
-References: <20190521103619.4707-1-oleksandr.suvorov@toradex.com>
-         <20190521103619.4707-2-oleksandr.suvorov@toradex.com>,<79fa1a0855bfcc1abad348aa047e7a69fffb8225.camel@toradex.com>
-In-Reply-To: <79fa1a0855bfcc1abad348aa047e7a69fffb8225.camel@toradex.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=oleksandr.suvorov@toradex.com; 
-x-originating-ip: [194.105.145.90]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 6b0ffbc8-b4b5-4fe2-9ead-08d6f49cf66c
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR05MB6120;
-x-ms-traffictypediagnostic: AM6PR05MB6120:
-x-microsoft-antispam-prvs: <AM6PR05MB612012650CD52848148D1F00F9E50@AM6PR05MB6120.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7219;
-x-forefront-prvs: 0073BFEF03
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(396003)(39850400004)(346002)(366004)(189003)(199004)(6506007)(305945005)(110136005)(316002)(86362001)(74316002)(76176011)(53546011)(26005)(6246003)(66476007)(64756008)(71200400001)(66446008)(486006)(73956011)(66946007)(3846002)(7696005)(478600001)(6116002)(99286004)(66556008)(102836004)(44832011)(76116006)(4326008)(71190400001)(33656002)(81166006)(446003)(8936002)(68736007)(14444005)(54906003)(25786009)(5660300002)(256004)(8676002)(7736002)(66066001)(11346002)(186003)(476003)(229853002)(2906002)(81156014)(9686003)(52536014)(53936002)(6436002)(55016002)(14454004)(2501003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM6PR05MB6120;H:AM6PR05MB6535.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: toradex.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: woUE+ynWcg3JxzWku8Gwy4huTEeW0kF8K+u69tv4kYgOMjfXPmtxwj7TX00L4ls0+AjuJjpmCBd9HZDKCBtejflZdZ9t7JpL0HurcRXm7UkNHmLfKJkzbmr7aM8xyPBLKPDayY+i6Z1eBXaQaObCkqPn+H7+gbvwBvB4eWQd0hNMr5RrYxBEOLSqswsZFzjSoY/uuVOpDCQHm7qTeR/szX+NZQ9ZGauUz/AvyHO+fqg53GDnDEIBVeCQONF32zAEUrL9sE6MQA7xORJS7Q4XW6o9cytZ1dWmEls/QsS3ro+p69wuiiUHVjK4wOscQBw8XYkCqIMTGtBKavjTJhyxm2muUtfVL45XivRfwrCuEfJKGfPyYdpYb+/e3xVC0wBrP/RZCdtbjWK17urASSkvMKeXDfPJYObYaQ5IG9yRpBg=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 19 Jun 2019 06:01:17 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:60463 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfFSKBQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:01:16 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190619100114euoutp0188716ebfb6980cd325e4d41fe4352ae5~pkUXMEd3m0287502875euoutp01c
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:01:14 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190619100114euoutp0188716ebfb6980cd325e4d41fe4352ae5~pkUXMEd3m0287502875euoutp01c
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1560938474;
+        bh=+5Aoi9KusrDIevbz701jCID7pa2iYGWJAx0tkxsUsaU=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=Cqxp1Ob7vCTqgYhcChErG/Ouc9Qh2EaLV8Ac0THGlOa7Xj/9q3X+RJu1UxW5mz5yp
+         nq09w7x14cBoXGW5TWtaWMCYMau7zy9+GaOppvHjW59fy9KmTWMgKE08e59AyBltjd
+         c+jZ/Ti0nNtUzKLI1wb18QX+DqUi6Gm33krWQesQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190619100113eucas1p1685d5fcb85feeb41af812d7b1e65c533~pkUWILYHC0885208852eucas1p17;
+        Wed, 19 Jun 2019 10:01:13 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4E.44.04377.9E70A0D5; Wed, 19
+        Jun 2019 11:01:13 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190619100112eucas1p25eb0476f1b1dc1bb80c3662c3528c254~pkUVTw3YT0942809428eucas1p2d;
+        Wed, 19 Jun 2019 10:01:12 +0000 (GMT)
+Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20190619100112eusmtrp1124545bd7f52fa019bebe98b7452f910~pkUVFfwp73261132611eusmtrp15;
+        Wed, 19 Jun 2019 10:01:12 +0000 (GMT)
+X-AuditID: cbfec7f4-12dff70000001119-d7-5d0a07e9a40f
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9F.85.04146.8E70A0D5; Wed, 19
+        Jun 2019 11:01:12 +0100 (BST)
+Received: from [106.120.50.25] (unknown [106.120.50.25]) by
+        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190619100111eusmtip242ed98c0f3f696e11dec29ab5b2bf902~pkUUHPMIF2666626666eusmtip2_;
+        Wed, 19 Jun 2019 10:01:11 +0000 (GMT)
+Subject: Re: [RFT 01/10] dt-bindings: gpu: mali: Add Samsung compatibles for
+ Midgard and Utgard
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sylwester Nawrocki <s.nawrocki@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Olof Johansson <olof@lixom.net>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Cc:     Joseph Kogut <joseph.kogut@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <9d16d4f7-8353-e0f0-a005-1b04457d70f0@samsung.com>
+Date:   Wed, 19 Jun 2019 12:01:10 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Thunderbird/60.7.1
 MIME-Version: 1.0
-X-OriginatorOrg: toradex.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6b0ffbc8-b4b5-4fe2-9ead-08d6f49cf66c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 10:00:30.3894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: d9995866-0d9b-4251-8315-093f062abab4
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: oleksandr.suvorov@toradex.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB6120
+In-Reply-To: <20190618190534.4951-2-krzk@kernel.org>
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1zU6lOBaVG9xLNGoUxfUZl7gmY9RojB9GJDrKBIxs6YDrhwuu
+        pW74AVaQiqKmqSAVATFFi0BFkyJCBDQKCkhcCEIrLlSRMqj8nXPuue+cmzyO1FxlArmdMfGS
+        LkaM0jIqKr/8h3PaB1YVNiPRHoBPOysI/Cu5nMW5qTk0br9uQLjW3UrjnvzzJM4oddK45ms7
+        g5MbzlHYcMJD47NNn0hcWXmbxdamFzTuMLyhcXVRGoNTK4sJnFVbReCqJyvxk1oXg4/ZSln8
+        6PMJGv9+kUthc5EH4Q8dj6klIFguW5DQ/TMZCe11x1jB1mWihHvG16xgNZ9ihIKuRlpoSHIQ
+        wp1rB4Wax0do4UyeGQku65j1vptVC8OlqJ27Jd30xdtUkfU2OxX33m9v+c8k4hDK9NUjHw74
+        2WA4+x7pkYrT8DcRvGp5TSvEjSC3uZhUiAvB97yjzN+VmsIkShncQJDjcfaTNgSZZXba6/Ln
+        RXB12ljvYBhfT0OBNbHPRfJXETy9cLjvLYYPAX2bvg+r+cXw5WEFoUccR/ETwH0qzisP57dA
+        amErpViGQsXF5j7s01ujx9lJeDHJj4WCtjRSwQHwsjmD8GYB38jB+eff+nuvgJS6DFbB/vDR
+        kdePR/X2MVDKQiKCt85brEIMCKqPpCLFtQAeOapobzuSnww5RdMVeSnUd5gZrwy8H9S1DVVK
+        +EFyfgqpyGo4eVyjuCeC0ZH9L9b+7Dl5DmmNA04zDjjHOOAc4/9cE6LMKEBKkKMjJHlmjLQn
+        WBaj5YSYiOAdsdFW1Pt1n/52uAtRkWd7CeI5pPVV8y4uTEOLu+V90SUIOFI7TD040SdMow4X
+        9+2XdLFbdQlRklyCRnKUNkB9YFBjqIaPEOOlXZIUJ+n+TgnOJ/AQmjvi22hPaJch1HJ3FYR0
+        7yFbUsYvlS7pMyoMl8zy+Enpsya0N4R3L1MV7xoXu/bCZHHWukrLopsH7Ku3nJmXeSX9flm8
+        /+E12ZM2NQzpKU3PCeo8Onx+1wbLjaypJtW86rQVp3W27JGDjrsfBJqso5cHLTDdamqZc3l9
+        3Meywe/Sv7du1FJypBgyhdTJ4h+XsRu4tgMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89lO1MXp9PEF0mtRQRdVmdqvqYuPxgcqCioKErTpQcnuR3b
+        mXb70DDE3Kx0H8KGaBeNGEFNy1JYpZW3SJuZpl2s7KKoWXkBL2lbK/Db732e/+/heeGhcOYu
+        GUxlGEy80aDNVEr8iGdzTe/XD0j9kjbaukLRubYWDP22NUqRs+QWiUavFwLUPf6NRPM1xTgq
+        f9JGos6JUQmy9RURqDB/lkQX+odw1N5+W4qq+rtI9LPwPYle1pVKUEn7AwxVdrsx5G7dilq7
+        xyQoz/VEih4P55NorstJIEfdLECDP5uJeMjdLLsJuJlpG+BGX+dJOdfkZYKrtb+TclWOAgl3
+        b/IDyfVZmzCuuuI019mcS3Ln7zgAN1YVuivggCrWKGSb+OU6QTTFKQ+ySK1io5FKHRGtYsOj
+        kjarI5UbNLFpfGZGDm/coElR6Xpc9UTW18XHG6etmBlcDbAAGQXpCNh530pYgB/F0JUAzj19
+        CHyNZbDlopn08VI422WR+EJDAHa4S/+GltJaOPbLJfU2FHQPCXsrhnDvA6evAdhjLZf6FKdH
+        cbpwryKhWWgZ8c6SUXJaA388asEsgKIIehUcL8jylgPpRPiw/g3hiyyBLZc+/2WZZ9f5tl+Y
+        l3F6Eyyr/oj7OAzeGyn9x0Gw93M5VgQY+wLdvkCxL1DsC5TLgHAABZ8t6tP1IqsStXox25Cu
+        ShX0VcBzMjWNU9X3QYdzdwOgKaAMkOsmqCSG1OaIJ/QNAFK4UiH3PyNLYuRp2hMneaOQbMzO
+        5MUGEOn5WzEeHJgqeA7QYEpmI9koFM1GhUeFb0LKIPlZuj6RodO1Jv4Iz2fxxv8eRsmCzSDh
+        hrWOKDJMr9MNpsYrruwwzwSl0+I2NDUY96X/mIrCE2pt/st3L4p8e8vY/DVgS5h72LFz+9qI
+        8AGBeZV79G2ikMgcnq0dOci8WM24zcK+45oVCUWHavwqhOcxIEuREzKgDklNiWj6fqo4c2+f
+        Rv2GjLE+/zQyvPI6t2e/o1xJiDotuwY3ito/yg4JmkgDAAA=
+X-CMS-MailID: 20190619100112eucas1p25eb0476f1b1dc1bb80c3662c3528c254
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c
+References: <20190618190534.4951-1-krzk@kernel.org>
+        <CGME20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c@epcas2p3.samsung.com>
+        <20190618190534.4951-2-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> ________________________________________=0A=
-> From: Marcel Ziswiler=0A=
-> Sent: Thursday, June 13, 2019 12:05=0A=
-> To: festevam@gmail.com; Oleksandr Suvorov=0A=
-> Cc: Igor Opaniuk; linux-kernel@vger.kernel.org; alsa-devel@alsa-project.o=
-rg=0A=
-> Subject: Re: [PATCH v1 1/6] ASoC: sgtl5000: Fix definition of VAG Ramp Co=
-ntrol=0A=
-> =0A=
-> On Tue, 2019-05-21 at 13:36 +0300, Oleksandr Suvorov wrote:=0A=
-> > SGTL5000_SMALL_POP is a bit mask, not a value. Usage of=0A=
-> > correct definition makes device probing code more clear.=0A=
-> >=0A=
-> > Signed-off-by: Oleksandr Suvorov <oleksandr.suvorov@toradex.com>=0A=
-> =0A=
-> Reviewed-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>=0A=
-> =0A=
-> > ---=0A=
-> >=0A=
-> >  sound/soc/codecs/sgtl5000.c | 2 +-=0A=
-> >  sound/soc/codecs/sgtl5000.h | 2 +-=0A=
-> >  2 files changed, 2 insertions(+), 2 deletions(-)=0A=
-> >=0A=
-> > diff --git sound/soc/codecs/sgtl5000.c sound/soc/codecs/sgtl5000.c=0A=
-> =0A=
-> I'm not sure how exactly you generated this patch set but usually git=0A=
-> format-patch inserts an additional folder level called a/b which is=0A=
-> what git am accepts by default e.g.=0A=
-=0A=
-I just used patman to generate this set of patches. But my .gitconfig inclu=
-ded diff option "noprefix".=0A=
-Thanks for pointing me! Fixed. Should I resent regenerated patchset with th=
-e prefix?=0A=
- =0A=
-> diff --git a/sound/soc/codecs/sgtl5000.c b/sound/soc/codecs/sgtl5000.c=0A=
-> =0A=
-> > index a6a4748c97f9..5e49523ee0b6 100644=0A=
-> > --- sound/soc/codecs/sgtl5000.c=0A=
-> > +++ sound/soc/codecs/sgtl5000.c=0A=
-> =0A=
-> Of course, the same a/b stuff applies here:=0A=
-> =0A=
-> --- a/sound/soc/codecs/sgtl5000.c=0A=
-> +++ b/sound/soc/codecs/sgtl5000.c=0A=
-> =0A=
-> > @@ -1296,7 +1296,7 @@ static int sgtl5000_probe(struct=0A=
-> > snd_soc_component *component)=0A=
-> >=0A=
-> >       /* enable small pop, introduce 400ms delay in turning off */=0A=
-> >       snd_soc_component_update_bits(component,=0A=
-> > SGTL5000_CHIP_REF_CTRL,=0A=
-> > -                             SGTL5000_SMALL_POP, 1);=0A=
-> > +                             SGTL5000_SMALL_POP,=0A=
-> > SGTL5000_SMALL_POP);=0A=
-> >=0A=
-> >       /* disable short cut detector */=0A=
-> >       snd_soc_component_write(component, SGTL5000_CHIP_SHORT_CTRL,=0A=
-> > 0);=0A=
-> > diff --git sound/soc/codecs/sgtl5000.h sound/soc/codecs/sgtl5000.h=0A=
-> > index 18cae08bbd3a..a4bf4bca95bf 100644=0A=
-> > --- sound/soc/codecs/sgtl5000.h=0A=
-> > +++ sound/soc/codecs/sgtl5000.h=0A=
-> > @@ -273,7 +273,7 @@=0A=
-> >  #define SGTL5000_BIAS_CTRL_MASK                      0x000e=0A=
-> >  #define SGTL5000_BIAS_CTRL_SHIFT             1=0A=
-> >  #define SGTL5000_BIAS_CTRL_WIDTH             3=0A=
-> > -#define SGTL5000_SMALL_POP                   1=0A=
-> > +#define SGTL5000_SMALL_POP                   0x0001=0A=
-> >=0A=
-> >  /*=0A=
-> >   * SGTL5000_CHIP_MIC_CTRL=0A=
-> > --=0A=
-> > 2.20.1=
+Hi Krzysztof,
+
+On 2019-06-18 21:05, Krzysztof Kozlowski wrote:
+> Add vendor compatibles for specific implementation of Mali Utgard
+> (Exynos3250, Exynos4-family) and Midgard (Exynos5433, Exynos7).
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 1 +
+>   Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt  | 1 +
+>   2 files changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> index e5ad3b2afe17..9b298edec5b2 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>     * which must be preceded by one of the following vendor specifics:
+>       + "allwinner,sun50i-h6-mali"
+>       + "amlogic,meson-gxm-mali"
+> +    + "samsung,exynos5433-mali"
+>       + "rockchip,rk3288-mali"
+>       + "rockchip,rk3399-mali"
+>   
+> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> index ae63f09fda7d..519018cb860b 100644
+> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>         + amlogic,meson8b-mali
+>         + amlogic,meson-gxbb-mali
+>         + amlogic,meson-gxl-mali
+> +      + samsung,exynos3250-mali
+I would prefer 'samsung,exynos4-mali', because historically Exynos4 was 
+the first SoC with Mali400 and such prefix is already used for many hw 
+blocks.
+>         + rockchip,rk3036-mali
+>         + rockchip,rk3066-mali
+>         + rockchip,rk3188-mali
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
+
