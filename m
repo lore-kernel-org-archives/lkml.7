@@ -2,117 +2,182 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DFBC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:42:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E47B1C4646C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0689021721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:42:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3424215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:42:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=sma.de header.i=@sma.de header.b="lYu6zeYM"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EaQyYCuf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfFSUmN (ORCPT
+        id S1730411AbfFSUmp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:42:13 -0400
-Received: from mail-eopbgr80129.outbound.protection.outlook.com ([40.107.8.129]:30070
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726230AbfFSUmN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:42:13 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=sma.de; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=o4r5QD766sOZQuGqSfvpvPbibSOcbyz0qH1MFqqa8KI=;
- b=lYu6zeYMM3tyBOr2dtem+eAbd41IaJMt0KUpPCv3GYbstS09JHIo4g5P6/5eQr6UvD+3RqVm2gCmphG2aY28Bd4ZKgrdw+JsvaCegSlOVfRawRigFPY0hR6keoCsfnqQwlCEh+HrCjjo3VF6yeH1SdQEFYmWCp+dCTOeLPoTn2M=
-Received: from AM0PR04MB5427.eurprd04.prod.outlook.com (20.178.114.156) by
- AM0PR04MB4114.eurprd04.prod.outlook.com (52.134.94.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Wed, 19 Jun 2019 20:42:09 +0000
-Received: from AM0PR04MB5427.eurprd04.prod.outlook.com
- ([fe80::542a:ddc6:d453:1cbf]) by AM0PR04MB5427.eurprd04.prod.outlook.com
- ([fe80::542a:ddc6:d453:1cbf%7]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
- 20:42:09 +0000
-From:   Felix Riemann <Felix.Riemann@sma.de>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-CC:     Support Opensource <support.opensource@diasemi.com>,
+        Wed, 19 Jun 2019 16:42:45 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:43665 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfFSUmp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 16:42:45 -0400
+Received: by mail-qk1-f193.google.com with SMTP id m14so433186qka.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:42:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TBgu1F4abnQgrkAM7sC23aDSMvrhGnN7FBKN+b/i6is=;
+        b=EaQyYCufZoEOHUrhA5C65HJeWWPQ44TPFwOFRGPSs/kadihvsNLaI7C/q5Lx8nN+Ag
+         sSDJ00GlbBb7AJQltrBt4pAJwniFtTcJwmPfocq+9b/luxO0IGfSUSCUcqNBfJDLTEJK
+         tB9u05+y9B2z2wjTFsd1vtJjyBLIpYpd/eq94rM0W2qq4HuwikeZhRhGE2DCMw8Kh+XN
+         k5mEjEVJVKN3SSaBa9vFnUXWcZjDEkf4Rj6INQpXctWJQ+wQ2KMy1BsL2lqcmQdWLVPw
+         rX7ZLwMaAvHaIuHIm75mR3SW8q1aJpTlLjILf0Y2XNeQqa7qWoAclPlvugKKMyVxXGnU
+         tGhQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TBgu1F4abnQgrkAM7sC23aDSMvrhGnN7FBKN+b/i6is=;
+        b=A2+qjXejrZjUVtor6sC5FT/XB9BMZUW2b1KoQFhneRa9LHkDa5991gQjaXuzB6uJQY
+         FDKEGE6LO5u9rHZZcV7hr4mjo+iLVpWlLhwONnaySGEJWpU5JXJO7slvxxsi0q1XBLm1
+         itGr46knnEjkdfkFiSnnBO+WhmK4PrLsVcp0jVEW9VpEU+491DN7AlEv/xHA88sJgPyI
+         xjaOzMwflkIJelcaOKsGpzS7k8Dk5XA9LF80hH8wM1luII4tXU6HGLp9b9gxt4oVsvMW
+         DsCskQjJKFVSS1EllcrtfqblrOfXVMUpZkG4ZVoNsiYSAg1tHvwmCPSXHRU73plPqAZe
+         Y8qw==
+X-Gm-Message-State: APjAAAUkZ6D4tVHog52aZEZo/m2zbqIlps3ay3pBrF8cxTuhsaDDzE7j
+        3ID8dd8+jcyNX/D/41ZmFLBqSg==
+X-Google-Smtp-Source: APXvYqwkpP3oHvZN3nRaQ3RbrtVXeyrf0MwnUp9n/IQIWK8LXxln8+qpmD6ZJN85f7XPHS4TGxx0zg==
+X-Received: by 2002:a37:a854:: with SMTP id r81mr25171872qke.53.1560976964070;
+        Wed, 19 Jun 2019 13:42:44 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id q36sm14171694qtc.12.2019.06.19.13.42.43
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 13:42:43 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hdhPn-00033G-4Y; Wed, 19 Jun 2019 17:42:43 -0300
+Date:   Wed, 19 Jun 2019 17:42:43 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Jerome Glisse <jglisse@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V2] regulator: da9061/62: Adjust LDO voltage selection
- minimum value
-Thread-Topic: [PATCH V2] regulator: da9061/62: Adjust LDO voltage selection
- minimum value
-Thread-Index: AdUm3QeB54lUFgggQ2yizx2Lz7Rw5Q==
-Date:   Wed, 19 Jun 2019 20:42:09 +0000
-Message-ID: <AM0PR04MB54277574167351CD6FD2AECB88E50@AM0PR04MB5427.eurprd04.prod.outlook.com>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Felix.Riemann@sma.de; 
-x-originating-ip: [93.209.170.209]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 186650cf-6e7e-4ede-5f39-08d6f4f69978
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM0PR04MB4114;
-x-ms-traffictypediagnostic: AM0PR04MB4114:
-x-microsoft-antispam-prvs: <AM0PR04MB4114D724C41399FBDA1D9B4788E50@AM0PR04MB4114.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0073BFEF03
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(136003)(39860400002)(366004)(346002)(396003)(199004)(189003)(14454004)(6436002)(66476007)(66446008)(26005)(66946007)(7696005)(73956011)(76116006)(54906003)(64756008)(66066001)(99286004)(6506007)(68736007)(53936002)(316002)(6916009)(52536014)(476003)(4326008)(74482002)(25786009)(6246003)(102836004)(86362001)(72206003)(66556008)(6116002)(8936002)(256004)(71190400001)(486006)(186003)(5660300002)(8676002)(55016002)(74316002)(2906002)(7736002)(229853002)(33656002)(81166006)(81156014)(75402003)(305945005)(478600001)(71200400001)(3846002)(9686003);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR04MB4114;H:AM0PR04MB5427.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: sma.de does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Qmh3WPmwcttA4ZjuStgIraSmZe2B0NODRCxlyGkms0InnRYvNKErZOvaOS4cogvA0QkwCZ1Vx/IlMu4O6e//TSdN8JRD16u3Rke/aWR/pnoHTEn8wAmW3cb3VeAqc3ULy7W1lONLIoWiAK8hdLpXL+NZv91rfGXdUJvJ7VgrQoYC0NKa3zjNpTzPhGirJ11Su9NJ2yYWXTSZ6EmrTOmpQ/T0+hfJMrZAI95yLE1gtwMU+6cDCFz25jTxRKj/3QrOtdlGBvJSmkPfqs+o0zanOQ34TFu+aBdbr4CQsQ+ZCUzcjbsmZSbyBySAsb+nhjZxaV4kgZMLj8YoQJtMw8O7lhu4qgN8u0aiMdTFcXyb3gFFbOmHOYE6URxKtyIRTYVfjY3DhIIxoiBPLm6M+9+pEnf8eOYN31vTximcsdTUzwE=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux MM <linux-mm@kvack.org>,
+        David Rientjes <rientjes@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
+Subject: Re: [PATCH 1/4] mm: Check if mmu notifier callbacks are allowed to
+ fail
+Message-ID: <20190619204243.GM9360@ziepe.ca>
+References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+ <20190521154411.GD3836@redhat.com>
+ <20190618152215.GG12905@phenom.ffwll.local>
+ <20190619165055.GI9360@ziepe.ca>
+ <CAKMK7uGpupxF8MdyX3_HmOfc+OkGxVM_b9WbF+S-2fHe0F5SQA@mail.gmail.com>
+ <20190619201340.GL9360@ziepe.ca>
+ <CAKMK7uGtXT1qLdUqnmTd9uUkdMrcreg4UmAxscx0Fp4Pv6uj_A@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: sma.de
-X-MS-Exchange-CrossTenant-Network-Message-Id: 186650cf-6e7e-4ede-5f39-08d6f4f69978
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 20:42:09.2789
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a059b96c-2829-4d11-8837-4cc1ff84735d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: riemann@SMA.DE
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4114
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uGtXT1qLdUqnmTd9uUkdMrcreg4UmAxscx0Fp4Pv6uj_A@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Steve,
+On Wed, Jun 19, 2019 at 10:18:43PM +0200, Daniel Vetter wrote:
+> On Wed, Jun 19, 2019 at 10:13 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > On Wed, Jun 19, 2019 at 09:57:15PM +0200, Daniel Vetter wrote:
+> > > On Wed, Jun 19, 2019 at 6:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > > On Tue, Jun 18, 2019 at 05:22:15PM +0200, Daniel Vetter wrote:
+> > > > > On Tue, May 21, 2019 at 11:44:11AM -0400, Jerome Glisse wrote:
+> > > > > > On Mon, May 20, 2019 at 11:39:42PM +0200, Daniel Vetter wrote:
+> > > > > > > Just a bit of paranoia, since if we start pushing this deep into
+> > > > > > > callchains it's hard to spot all places where an mmu notifier
+> > > > > > > implementation might fail when it's not allowed to.
+> > > > > > >
+> > > > > > > Inspired by some confusion we had discussing i915 mmu notifiers and
+> > > > > > > whether we could use the newly-introduced return value to handle some
+> > > > > > > corner cases. Until we realized that these are only for when a task
+> > > > > > > has been killed by the oom reaper.
+> > > > > > >
+> > > > > > > An alternative approach would be to split the callback into two
+> > > > > > > versions, one with the int return value, and the other with void
+> > > > > > > return value like in older kernels. But that's a lot more churn for
+> > > > > > > fairly little gain I think.
+> > > > > > >
+> > > > > > > Summary from the m-l discussion on why we want something at warning
+> > > > > > > level: This allows automated tooling in CI to catch bugs without
+> > > > > > > humans having to look at everything. If we just upgrade the existing
+> > > > > > > pr_info to a pr_warn, then we'll have false positives. And as-is, no
+> > > > > > > one will ever spot the problem since it's lost in the massive amounts
+> > > > > > > of overall dmesg noise.
+> > > > > > >
+> > > > > > > v2: Drop the full WARN_ON backtrace in favour of just a pr_warn for
+> > > > > > > the problematic case (Michal Hocko).
+> > > >
+> > > > I disagree with this v2 note, the WARN_ON/WARN will trigger checkers
+> > > > like syzkaller to report a bug, while a random pr_warn probably will
+> > > > not.
+> > > >
+> > > > I do agree the backtrace is not useful here, but we don't have a
+> > > > warn-no-backtrace version..
+> > > >
+> > > > IMHO, kernel/driver bugs should always be reported by WARN &
+> > > > friends. We never expect to see the print, so why do we care how big
+> > > > it is?
+> > > >
+> > > > Also note that WARN integrates an unlikely() into it so the codegen is
+> > > > automatically a bit more optimal that the if & pr_warn combination.
+> > >
+> > > Where do you make a difference between a WARN without backtrace and a
+> > > pr_warn? They're both dumped at the same log-level ...
+> >
+> > WARN panics the kernel when you set
+> >
+> > /proc/sys/kernel/panic_on_warn
+> >
+> > So auto testing tools can set that and get a clean detection that the
+> > kernel has failed the test in some way.
+> >
+> > Otherwise you are left with frail/ugly grepping of dmesg.
+> 
+> Hm right.
+> 
+> Anyway, I'm happy to repaint the bikeshed in any color that's desired,
+> if that helps with landing it. WARN_WITHOUT_BACKTRACE might take a bit
+> longer (need to find a bit of time, plus it'll definitely attract more
+> comments).
 
->
-> I have taken your previous patch, fixed the whitespace like we discussed
-> and updated the commit message to add more details. Also, I have
-> simplified your original patch slightly by using a single define in the
-> include file instead of repeating the same value for each LDO[1-4].
+I was actually just writing something very similar when looking at the
+hmm things..
 
-Thanks for taking care of the whitespaces and the commit message.
+Also, is the test backwards?
 
-> I've finished my testing for DA9061 and DA9062 and so I've Acked your
-> patch and added a Tested-by tag. If you are happy with those changes to
-> your patch, I guess you can let the Maintainers take a look.
+mmu_notifier_range_blockable() == true means the callback must return
+zero
 
-Yes, I am. I  couldn't spot anything problematic in your changes so far.
+mmu_notififer_range_blockable() == false means the callback can return
+0 or -EAGAIN.
 
-Regards,
+Suggest this:
 
-Felix
+                                pr_info("%pS callback failed with %d in %sblockable context.\n",
+                                        mn->ops->invalidate_range_start, _ret,
+                                        !mmu_notifier_range_blockable(range) ? "non-" : "");
++                               WARN_ON(mmu_notifier_range_blockable(range) ||
++                                       _ret != -EAGAIN);
+                                ret = _ret;
+                        }
+                }
 
+To express the API invariant.
 
-
-___________________________________________________
-
-SMA Solar Technology AG
-Aufsichtsrat: Dr. Erik Ehrentraut (Vorsitzender)
-Vorstand: Ulrich Hadding, Dr.-Ing. Juergen Reinert
-Handelsregister: Amtsgericht Kassel HRB 3972
-Sitz der Gesellschaft: 34266 Niestetal
-USt-ID-Nr. DE 113 08 59 54
-WEEE-Reg.-Nr. DE 95881150
-___________________________________________________
+Jason
