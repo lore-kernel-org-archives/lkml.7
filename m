@@ -2,96 +2,121 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C87C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:56:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AB2C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:56:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63F6421734
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:56:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DDF8214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:56:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K09sKTfz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbfFSS4a (ORCPT
+        id S1730327AbfFSS4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:56:30 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:35962 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfFSS4a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:56:30 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hdfkx-000311-RL; Wed, 19 Jun 2019 12:56:28 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hdfkx-00049I-3I; Wed, 19 Jun 2019 12:56:27 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     "linux-pci @ vger . kernel . org" <linux-pci@vger.kernel.org>,
-        linux-kernel@vger.kernel.org
-Cc:     Logan Gunthorpe <logang@deltatee.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Christoph Hellwig <hch@lst.de>
-Date:   Wed, 19 Jun 2019 12:56:26 -0600
-Message-Id: <20190619185626.15806-1-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, logang@deltatee.com, christian.koenig@amd.com, bhelgaas@google.com, hch@lst.de
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [PATCH v2] PCI/P2PDMA: Root complex whitelist should not apply when an IOMMU is present
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+        Wed, 19 Jun 2019 14:56:46 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:34379 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfFSS4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 14:56:45 -0400
+Received: by mail-pl1-f196.google.com with SMTP id i2so202378plt.1;
+        Wed, 19 Jun 2019 11:56:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=OkzFZAuud0Hfdg+gFLkDdFw2KlS0o4maAGobdQqqxOw=;
+        b=K09sKTfzk/1V1FVb91KhHBhulMdP9dNiW6yCmG1LmZh0tzpexURLjG/yaLbz0FfkoG
+         UXr+4qqSEzDqDYENevwQmTYDbrOBIDNHLIieLlfKQCjBD44KXcipKhl2bOUgqGzNBCvr
+         3bO75bXzvM7Ae5tjrDiogwG4DzrlyAbgfT61ScataheFtrDfDX2tiI04bDGVJPVqkycV
+         tdy/tkT1zZup0CmFnE5myLMDyAXBWjN0vgLk6SSF8sczFWxO8mqA6tyrb4sAFNUxAp5C
+         sY37aK1w4F6aveM/j7giDolEiIDnja2EiD99h8XYRuP+Q55t7W8UO5dPfkm0IwbU/sR8
+         bdAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=OkzFZAuud0Hfdg+gFLkDdFw2KlS0o4maAGobdQqqxOw=;
+        b=DVSS0dKtZF+VL25XzhkYz8pLi8RBnF+vbTvDSCqIKhjvBU7IAk6ATItc9LnB2+PVFE
+         qZ4Y7rJG/GsNw7CbyHoIvE41kFqpQcvLufQtZ/QYGnGAylcx6OlDxn+YdmHSjgDDHffn
+         cA+1YmiwAZEd0ozL3h00jzkjUglWKuF0umP/XitFwuL6PPe2t7xZu7Fkxaf3R2Yk1hvt
+         S8Ma85KdrqiHpklAWznebsG6h1IvXiNvbvuO6WeOr1j5OHjM5lD0qY1egWD/753Qd6mc
+         UqHWENrpkedbcS7E/PR/1DJGF2AGsim8FLZXBvTO1gaW6/VJLrxRzuBvIbbNTDKXIaYK
+         CZ5A==
+X-Gm-Message-State: APjAAAU1xMt6Uj5ap6uj0R1FXjWNUJMBxrElcvWrCEiLgwRkl9e6vgC+
+        iRwwDu0hU/O3CWvJrEH3Syg=
+X-Google-Smtp-Source: APXvYqxqdyV3MHM7B6JUL4lVQy99pP4kEfyZIwn/ip1Zpfjp5DnHT/byaPd6NIZ2CtYIS7swafeFfw==
+X-Received: by 2002:a17:902:b187:: with SMTP id s7mr29283066plr.309.1560970605062;
+        Wed, 19 Jun 2019 11:56:45 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id b26sm21627842pfo.129.2019.06.19.11.56.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 11:56:44 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, jorge.ramirez-ortiz@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] regulator: qcom_spmi: Fix math of spmi_regulator_set_voltage_time_sel
+Date:   Wed, 19 Jun 2019 11:56:36 -0700
+Message-Id: <20190619185636.10831-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Presently, there is no path to DMA map P2PDMA memory, so if a TLP
-targeting this memory hits the root complex and an IOMMU is present,
-the IOMMU will reject the transaction, even if the RC would support
-P2PDMA.
+spmi_regulator_set_voltage_time_sel() calculates the amount of delay
+needed as the result of setting a new voltage.  Essentially this is the
+absolute difference of the old and new voltages, divided by the slew rate.
 
-So until the kernel knows to map these DMA addresses in the IOMMU,
-we should not enable the whitelist when an IOMMU is present.
+The implementation of spmi_regulator_set_voltage_time_sel() is wrong.
 
-Link: https://lore.kernel.org/linux-pci/20190522201252.2997-1-logang@deltatee.com/
-Fixes: 0f97da831026 ("PCI/P2PDMA: Allow P2P DMA between any devices under AMD ZEN Root Complex")
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Christoph Hellwig <hch@lst.de>
+It attempts to calculate the difference in voltages by using the
+difference in selectors and multiplying by the voltage step between
+selectors.  This ignores the possibility that the old and new selectors
+might be from different ranges, which have different step values.  Also,
+the difference between the selectors may encapsulate N ranges inbetween,
+so a summation of each selector change from old to new would be needed.
+
+Lets avoid all of that complexity, and just get the actual voltage
+represented by both the old and new selector, and use those to directly
+compute the voltage delta.  This is more straight forward, and has the
+side benifit of avoiding issues with regulator implementations that don't
+have hardware register support to get the current configured range.
+
+Fixes: e92a4047419c ("regulator: Add QCOM SPMI regulator driver")
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Reported-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- drivers/pci/p2pdma.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/qcom_spmi-regulator.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/pci/p2pdma.c b/drivers/pci/p2pdma.c
-index a98126ad9c3a..a4994aa3acc0 100644
---- a/drivers/pci/p2pdma.c
-+++ b/drivers/pci/p2pdma.c
-@@ -18,6 +18,7 @@
- #include <linux/percpu-refcount.h>
- #include <linux/random.h>
- #include <linux/seq_buf.h>
-+#include <linux/iommu.h>
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index 13f83be50076..877df33e0246 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -813,14 +813,10 @@ static int spmi_regulator_set_voltage_time_sel(struct regulator_dev *rdev,
+ 		unsigned int old_selector, unsigned int new_selector)
+ {
+ 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
+-	const struct spmi_voltage_range *range;
+ 	int diff_uV;
  
- struct pci_p2pdma {
- 	struct gen_pool *pool;
-@@ -299,6 +300,9 @@ static bool root_complex_whitelist(struct pci_dev *dev)
- 	struct pci_dev *root = pci_get_slot(host->bus, PCI_DEVFN(0, 0));
- 	unsigned short vendor, device;
+-	range = spmi_regulator_find_range(vreg);
+-	if (!range)
+-		return -EINVAL;
+-
+-	diff_uV = abs(new_selector - old_selector) * range->step_uV;
++	diff_uV = abs(spmi_regulator_common_list_voltage(rdev, new_selector) -
++		      spmi_regulator_common_list_voltage(rdev, old_selector));
  
-+	if (iommu_present(dev->dev.bus))
-+		return false;
-+
- 	if (!root)
- 		return false;
- 
+ 	return DIV_ROUND_UP(diff_uV, vreg->slew_rate);
+ }
 -- 
-2.20.1
+2.17.1
 
