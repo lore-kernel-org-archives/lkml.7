@@ -2,94 +2,112 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 039F1C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:44:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C94A8C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8CC821530
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E0A521479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:44:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560941043;
-	bh=uqCTXHrCel4Y6/6/wUj2WViVXt+GgvlSaCIe0fO/Cp8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=pQkuOQozHaf5dIE+z+cn8Hu5Nr6tO+ZN+Cxb1My+t4PvT8VWQeywGJThy4lUFFOB/
-	 2HNzLQTTqSVaFiqiT8Nm3ZSi3rdVCkyAWbVdZZCLLvSaXyFL2qWNuSptUpE3YP4FM5
-	 vP25ry1SsmksE8764CMKV2QkYGfyVoMkg+j6W5kE=
+	s=default; t=1560941047;
+	bh=M/k0nQhz8LkeCh1Dwe+5NVhKYN4yxN+K87ayZLGfYCc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oY9rr+UnTaoBvFAM5pR3gZBmZyn84BiuzB1l45OPSPlEu2/bFzYq8eMPtUTxkIQWj
+	 6R6CuG0qclghatIZVTNTq2WWqyKtXBY51GuoX/f/Pb8EYv9N/wuO7v0eu7woeNpIxX
+	 epRl8zywuQle3tAckhlsiOO5RGFY9dEu/KvIEAIA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbfFSKoC (ORCPT
+        id S1731539AbfFSKoG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:44:02 -0400
-Received: from casper.infradead.org ([85.118.1.10]:45556 "EHLO
-        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfFSKoC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:44:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
-        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=WKW/0TRPIb29ZUwqdiEIWuQ61spuUdkZV5X/uIQH8S0=; b=t84WOhRQC7YxmEGug4+IeE6ZG2
-        f+hoPyDbMpZ1t1RdL04ORAisWEtnBm7TBzZCei4viOpDDvy0Bz37Dzse0a6sB91zznwDqLFIavFPZ
-        L2+aMBp0o3rBIpixd9Gbfy2CXTASqIiKw/0YX1jH4qmI2yIxEVvhclGLgH9oz2oQfnMjq5r3Ma7FH
-        VPBesNLK0jlZm/X+Azr5T27AVvWUO6/aNwXoUAVTdV9RvkWs8SrgtucdWogeS+Xl0RSaxeOX7X+4Y
-        bTSgdODUhdMY6pcuFbSLEtjyuA2CUsklO6h4/EoWuCbjvgnNaiwS5whTX9PyKRUDIjnU/OmVMIVdt
-        t6pOk19w==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdY4M-0003f9-Vr; Wed, 19 Jun 2019 10:43:59 +0000
-Date:   Wed, 19 Jun 2019 07:43:52 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: Re: [PATCH v1 20/22] docs: extcon: move it to acpi dir and convert
- it to ReST
-Message-ID: <20190619074352.79993138@coco.lan>
-In-Reply-To: <4701210.Ilfu9VLqBR@kreacher>
-References: <cover.1560891322.git.mchehab+samsung@kernel.org>
-        <b6d199c3e7c8c868acbb313a1a516ea8aed042ee.1560891322.git.mchehab+samsung@kernel.org>
-        <4701210.Ilfu9VLqBR@kreacher>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Jun 2019 06:44:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36400 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726751AbfFSKoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:44:03 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 982872147A;
+        Wed, 19 Jun 2019 10:44:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560941043;
+        bh=M/k0nQhz8LkeCh1Dwe+5NVhKYN4yxN+K87ayZLGfYCc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dh/1xgSDlKl15b7R8xfyWpIHVKVzxTlD6bCyopEOyPe8YWZAu9JYdKSco+Sgo9GL3
+         u+OUWKYTNBcUK5NnMZnaPc+hf2ZZoQBn9i4fHG6phr1tTKrVIlqznbArWoIRS/IXDM
+         MO/uBeZaxeLaJ08INUELgi7JiRFtD65Dahj8849Q=
+Date:   Wed, 19 Jun 2019 12:44:00 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
+Message-ID: <20190619104400.GA3150@kroah.com>
+References: <20190617210759.929316339@linuxfoundation.org>
+ <CA+G9fYsUmFrTDHJfS=1vYVfv4BVRZ0AByEOHV6toidAxWuDqDg@mail.gmail.com>
+ <20190618133502.GA5416@kroah.com>
+ <CA+G9fYsDG94ZjpchTqD80vioNBUdoUXH_k-tBM0L8YumefYO-w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYsDG94ZjpchTqD80vioNBUdoUXH_k-tBM0L8YumefYO-w@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 19 Jun 2019 11:59:18 +0200
-"Rafael J. Wysocki" <rjw@rjwysocki.net> escreveu:
-
-> On Tuesday, June 18, 2019 11:05:44 PM CEST Mauro Carvalho Chehab wrote:
-> > The intel-int3496.txt file is a documentation for an ACPI driver.
-> > 
-> > There's no reason to keep it on a separate directory.
-> > 
-> > So, instead of keeping it on some random location, move it
-> > to a sub-directory inside the ACPI documentation dir.
-> > 
-> > For now, keep it with .txt extension, in order to avoid
-> > Sphinx build noise. A later patch should change it to .rst
-> > and movin it to be together with other acpi docs.
-> > 
-> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
+On Wed, Jun 19, 2019 at 10:10:12AM +0530, Naresh Kamboju wrote:
+> On Tue, 18 Jun 2019 at 19:05, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Tue, Jun 18, 2019 at 06:04:25PM +0530, Naresh Kamboju wrote:
+> > > On Tue, 18 Jun 2019 at 02:50, Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org> wrote:
+> > > >
+> > > > This is the start of the stable review cycle for the 5.1.12 release.
+> > > > There are 115 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > >
+> > > > Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
+> > > > Anything received after that time might be too late.
+> > > >
+> > > > The whole patch series can be found in one patch at:
+> > > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.12-rc1.gz
+> > > > or in the git tree and branch at:
+> > > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> > > > and the diffstat can be found below.
+> > > >
+> > > > thanks,
+> > > >
+> > > > greg k-h
+> > >
+> > > Results from Linaro’s test farm.
+> > > No regressions on arm64, arm, x86_64, and i386.
+> > >
+> > > NOTE:
+> > > kernel/workqueue.c:3030 __flush_work+0x2c2/0x2d0
+> > > Kernel warning is been fixed by below patch.
+> > >
+> > > > John Fastabend <john.fastabend@gmail.com>
+> > > >     bpf: sockmap, only stop/flush strp if it was enabled at some point
+> >
+> > What is the git commit id for this patch?
 > 
-> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> 
-> Or please let me know if you want me to pick up this one.
+>      Upstream commit 014894360ec95abe868e94416b3dd6569f6e2c0c
 
-Feel free to pick it.
+Ah, it's been fixed, not that a fix is needed to be backported, sorry
+for the confusion.
 
-
-Thanks,
-Mauro
+greg k-h
