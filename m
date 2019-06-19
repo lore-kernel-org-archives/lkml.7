@@ -2,108 +2,91 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 509A1C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C12BAC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B0F21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95B5E21743
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:39:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Xlz/uZM4"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="g90t1pfG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfFSNiK (ORCPT
+        id S1730289AbfFSNjE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:38:10 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:7500 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFSNiK (ORCPT
+        Wed, 19 Jun 2019 09:39:04 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:46105 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfFSNjE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:38:10 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0a3ac00000>; Wed, 19 Jun 2019 06:38:08 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Jun 2019 06:38:09 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Jun 2019 06:38:09 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun
- 2019 13:38:07 +0000
-Subject: Re: [REGRESSION v5.2-rc] SUNRPC: Declare RPC timers as
- TIMER_DEFERRABLE (431235818bc3)
-To:     Anna Schumaker <schumaker.anna@gmail.com>,
-        Trond Myklebust <trondmy@hammerspace.com>
-CC:     "linux-nfs@vger.kernel.org" <linux-nfs@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-References: <c54db63b-0d5d-2012-162a-cb08cf32245a@nvidia.com>
- <b2c142996bc25aff51a197db52015bf9222139fe.camel@hammerspace.com>
- <36e34e81-8399-be71-2dd6-399d70057657@nvidia.com>
- <313d971a-96ab-c7f0-34f5-631bb5f39e49@nvidia.com>
- <7d335b53c9878865cef1de83960701c0ece4e611.camel@gmail.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <2aee35b5-f0f9-aac3-8957-01ebd4930f3b@nvidia.com>
-Date:   Wed, 19 Jun 2019 14:38:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 09:39:04 -0400
+Received: by mail-lf1-f66.google.com with SMTP id z15so12124728lfh.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 06:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=QKggU93Ov3OGvJTHnvBvpp3+c/GovGceSumOJbG5Kag=;
+        b=g90t1pfGMsBwZkO7WMEchWQcZ+/SFokkE8pEWUuLCb4C3gYFVxXCamqCaOHb0oU86f
+         hKn1mrowaUHFrQhDAjQgFXxbg41JHSzq1WOEiWnerS2ucghntb6bKh1mc/92iTFACbbV
+         ir2tYsqSxKSCptkKdrbEiwPCf9vRVMh1WzcZoJzreE9lvPIWSArEMNbxvXH55EY0eHMJ
+         VCWVsBapJ5f1S4WGzeGFZvGIZYVs77NHAMs9895hD1WvrARdnQgxMzX8XwB7QkNTXyNw
+         TOcsiylUCckRO1mfm2IvdhpoopFTotV8sg8FNECsAi3P4PrzuPz1rGptQlH9L7wHUg96
+         QsHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QKggU93Ov3OGvJTHnvBvpp3+c/GovGceSumOJbG5Kag=;
+        b=Npd8OW3vfi/izuk53FICqVfYUApRG2N3AkNQG+Y2+YPiBXCvTcqOeib7WSAxewm72M
+         jr4ZXrUZKKIPXcJ0/16G3V69Qfc5/ziFIhLsJRNqCCnlFXo3/6wQQioe9/+8xSQW5euM
+         y9q0VnrZsMUYha9FU55TGZ8ZKbADySZgveI7IUuV94uRWfkUUFP7aIQsq14L4Cx0yxxn
+         64JljINmgtr/cq+tpKHIB4cJr8guPHsEQAYC5VlacCHBgziCI42r7/sVvVeozF7K6W3h
+         u9b+iQoUjHpkK9PQaiHKe9sQz7y0Cygxld3wDuKWkWpMNuwSS2kIb0QshvmrZ0zHj42u
+         A+vA==
+X-Gm-Message-State: APjAAAXUTZ8D01m/6G0TaFoISOur3RAaBBP7Iq69T7mpM/vVhsXXg+Ao
+        yoPgV8608cR0s9zA3xcm2L4VYA==
+X-Google-Smtp-Source: APXvYqzy1/85AoVZe5aXzHxGKPGMI3YKh1i1xTNcGjAlPkxkPNjoWmNiF/UkKqbk9mR2Jw4m3oq8iA==
+X-Received: by 2002:a19:9156:: with SMTP id y22mr16577964lfj.43.1560951542029;
+        Wed, 19 Jun 2019 06:39:02 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id c15sm3082664lja.79.2019.06.19.06.39.00
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 06:39:00 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 06:16:59 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     adrian.hunter@intel.com, ulf.hansson@linaro.org,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, arnd@arndb.de, vincent.guittot@linaro.org,
+        arm@kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 9/9] arm64: dts: sprd: Add Spreadtrum SD host
+ controller support
+Message-ID: <20190619131659.vjw5kgepe6pz5inz@localhost>
+References: <cover.1559635435.git.baolin.wang@linaro.org>
+ <3ca273e341f2f5f66b121d411428c60afd412586.1559635435.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <7d335b53c9878865cef1de83960701c0ece4e611.camel@gmail.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1560951488; bh=Zel5PYiYMkDYLwsNuzJEpvObHIvYkHUd09Lf/adG/yM=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=Xlz/uZM4adV3CMJ2Q2GjznojRjrjLRj7gzMBcVtIbZ2TZWbmrz+8lRamQIJNNmfev
-         z0709eHqvESiXyp2D8fPJYr2AatULJMLW4wsWDSK+pj7yNvp8ith2ew6YGQosz2QH/
-         L+CFPjkV9T9ywF38l/hAuxiU05GL8oXoavte3jdiWMAFtzMokXfI+bOcPC6y15K3Qh
-         DDjFreMGC8MhMIKpL7rwRMxOr8bDdBDnvOhOf1r1SDN6ybnyNJRKz3A/fbXV2CxySF
-         yZKO9IO59VPts0MSoQ2dVZvx3vuxeDieLLY45/Y1ylqPF8Yie/XjX/b/gNgongrOJd
-         8MfM79AK0+spQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <3ca273e341f2f5f66b121d411428c60afd412586.1559635435.git.baolin.wang@linaro.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Jun 04, 2019 at 04:14:29PM +0800, Baolin Wang wrote:
+> Add one Spreadtrum SD host controller to support eMMC card for Spreadtrum
+> SC9860 platform.
+> 
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 
-On 18/06/2019 21:18, Anna Schumaker wrote:
-> 
-> On Tue, 2019-06-18 at 10:35 +0100, Jon Hunter wrote:
->> Trond, Anna,
->>
->> On 12/06/2019 15:23, Jon Hunter wrote:
->>> On 05/06/2019 23:01, Trond Myklebust wrote:
->>>
->>> ...
->>>
->>>> I'd be OK with just reverting this patch if it is causing a
->>>> performance
->>>> issue.
->>>>
->>>> Anna?
->>>
->>> Any update on this?
->>
->> I have not seen any update on this. Do you plan to revert this?
->>
->> We are getting ever closer to v5.2 and this problem still persists.
-> 
-> Hi Jon,
-> 
-> Sorry it took me so long to see this. I've applied the revert and
-> pushed it out to my linux-next branch. I'm planning to send it with
-> some other bugfixes this week.
-Thanks Anna!
+Applied, thanks!
 
-Jon
--- 
-nvpublic
+
+-Olof
