@@ -2,175 +2,178 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2879BC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 379ACC48BE0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E46AF2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:18:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 063D12085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:20:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="VNslJ7mh"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Tz3wIEMJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730532AbfFSVSf (ORCPT
+        id S1730538AbfFSVUi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 17:18:35 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:40064 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfFSVSe (ORCPT
+        Wed, 19 Jun 2019 17:20:38 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:41698 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfFSVUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 17:18:34 -0400
-Received: by mail-io1-f65.google.com with SMTP id n5so159223ioc.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:18:34 -0700 (PDT)
+        Wed, 19 Jun 2019 17:20:38 -0400
+Received: by mail-oi1-f193.google.com with SMTP id g7so466391oia.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:20:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=ffwll.ch; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=XY7aJ7dmXPxqNPvIOXdraSG/mXJqcFutpgqcMN/Km28=;
-        b=VNslJ7mhNRCKEXVbWHWhBbcjyZQQnZuTLynWJkzRy6HJWCzrYxgAE2HhkW/VSd5Pz9
-         SHfFCPP+ICxn6nicRTh1QtGs0tabSVxS4XDWpZ26c2/+NvIS9qM5t7B+rePUZMndCsUY
-         d/Xt1q1xsTgqaK/ACYSjZ3NODpHgZdE4uqn5I=
+         :cc;
+        bh=bI9P9AKaggByB2J+3Bzt1bHMyBdbzhZul43br86InHM=;
+        b=Tz3wIEMJQ6KUu24p8kJGpTzmA6Co/vmiIUI3dfmnw92cqIil2cOfv4n0isjZeDFBj/
+         N2DwUQt3F8qi0Lq/xtl6BMeVRiOStswnCRJNxGBm9I3jcsl0Vin08++XC8/kTEXa8Rb4
+         gdhuT8fnTwj/ll0yWjskwxZDpP7xdYe59hvjI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=XY7aJ7dmXPxqNPvIOXdraSG/mXJqcFutpgqcMN/Km28=;
-        b=ISPcDOvZcEDHo4qF1Cb+kn4uTUpkp68GeB6+YviBijCzfzcOuAni3ofeX82gMkM2E8
-         uHwSLZJ2PYhE+ZYQgbuodI5x6O6c7JOSXyWHO+gKr8ZjeJaryTgQ80wXPHaScuUDjCFA
-         Pyegy2MQNcw3u2afLXBOIAW5xSwPoQZjzZ2TYJ9g3h5KlB+SyCNIusjq6et7jHcLUdae
-         +2g5qSziDlbghVEDghAOqU1eXzwwaZ1mFL79qifxb94bgwfR18rE1soe+21yDIB2w3It
-         m+4UgwxCwr3OGsfLswspIRr7pw0od4cj9UOQMrlOr/kCDForMI9MKXy0L90k/VFAVAZk
-         YIFg==
-X-Gm-Message-State: APjAAAUvEPBoEx6dqRJ0RkzQLzemzkjuj6KkhE+wgJ/JQw9jZxWcowto
-        u4GbuAUxHlF1G/b/12MoF8e0KgY3D5U=
-X-Google-Smtp-Source: APXvYqzC2UHinvDMoJ2D1InD9oRxX5Eh7zi818Mg/E8pXuABIyFjSfXvYxqZ9fgpA52HNcpRVy94mw==
-X-Received: by 2002:a5d:85c3:: with SMTP id e3mr37007257ios.265.1560979113182;
-        Wed, 19 Jun 2019 14:18:33 -0700 (PDT)
-Received: from mail-io1-f50.google.com (mail-io1-f50.google.com. [209.85.166.50])
-        by smtp.gmail.com with ESMTPSA id x13sm15366123ioj.18.2019.06.19.14.18.33
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 14:18:33 -0700 (PDT)
-Received: by mail-io1-f50.google.com with SMTP id r185so553009iod.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:18:33 -0700 (PDT)
-X-Received: by 2002:a02:5b05:: with SMTP id g5mr93849116jab.114.1560978714620;
- Wed, 19 Jun 2019 14:11:54 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=bI9P9AKaggByB2J+3Bzt1bHMyBdbzhZul43br86InHM=;
+        b=CvFmuWSMkMaxl/tEHQzmhjKDw9rf7uVKFyovpNkuHpmWxsaD+Fv14zLQ89tOOuQXsa
+         hsSChssdFyyHalvZG1S94us0QluQENSRV/PGSFIjetqzv5z7JhF4+XVQtvU+THmfCi3z
+         ETdwADx53LnS+f3yN56WKFwUBK9hPCiFrv+sb1qtGi+9cW5R4Ft/yZRcMpsX+TYjEJ6g
+         GVIWXVlJVjn/Wvm+IbdGKiLwghVKCPl5zX1oJV4W0Jtsd3UYBJaS3p2MugzSzIIQ9a9l
+         tdw6R0UEcRC/yUxDyvkwwW1MP+dsT0aJsbfRZ024/j6YGxF790+ViyOl0gl6lmhSOJH6
+         B1Bw==
+X-Gm-Message-State: APjAAAUOIq1KLX7QhvXLzy6WA6KeoT9B9zn2wZtqpUtYOwiVU/rYTo24
+        0wv/0P5tYKC0tlWb1f+fZv88Rtg/HEu2yD0o2e36Cg==
+X-Google-Smtp-Source: APXvYqx/TLTpB9wGr9JZtdZ6RHY2xIrpHVS+clHcKNaPFf5G0BlbrC2hAFkgq7x4pUPG8gx88sa6UIhdMVbNbLa5tDI=
+X-Received: by 2002:a05:6808:118:: with SMTP id b24mr3757147oie.128.1560979237149;
+ Wed, 19 Jun 2019 14:20:37 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190617235558.64571-1-dianders@chromium.org> <6219398.I55JWXAmVF@jernej-laptop>
- <9bba43cb-7070-8b2a-cfc6-f601fd22a315@baylibre.com>
-In-Reply-To: <9bba43cb-7070-8b2a-cfc6-f601fd22a315@baylibre.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 19 Jun 2019 14:11:41 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=V_xg3VfWDMfjJp158ELUQm5xJQCRn85H4mx_-YfjfWTg@mail.gmail.com>
-Message-ID: <CAD=FV=V_xg3VfWDMfjJp158ELUQm5xJQCRn85H4mx_-YfjfWTg@mail.gmail.com>
-Subject: Re: [PATCH] drm/bridge/synopsys: dw-hdmi: Handle audio for more clock rates
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
-        Dylan Reid <dgreid@chromium.org>,
-        Cheng-Yi Chiang <cychiang@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        Zheng Yang <zhengyang@rock-chips.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
+References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
+ <20190521154411.GD3836@redhat.com> <20190618152215.GG12905@phenom.ffwll.local>
+ <20190619165055.GI9360@ziepe.ca> <CAKMK7uGpupxF8MdyX3_HmOfc+OkGxVM_b9WbF+S-2fHe0F5SQA@mail.gmail.com>
+ <20190619201340.GL9360@ziepe.ca> <CAKMK7uGtXT1qLdUqnmTd9uUkdMrcreg4UmAxscx0Fp4Pv6uj_A@mail.gmail.com>
+ <20190619204243.GM9360@ziepe.ca>
+In-Reply-To: <20190619204243.GM9360@ziepe.ca>
+From:   Daniel Vetter <daniel.vetter@ffwll.ch>
+Date:   Wed, 19 Jun 2019 23:20:23 +0200
+Message-ID: <CAKMK7uEJu4+gDLGDabxeDpArgXEGQ0B+9Z_SUM2zTB4QsnTB+g@mail.gmail.com>
+Subject: Re: [PATCH 1/4] mm: Check if mmu notifier callbacks are allowed to fail
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Jerome Glisse <jglisse@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Daniel Vetter <daniel@ffwll.ch>
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        Linux MM <linux-mm@kvack.org>,
+        David Rientjes <rientjes@google.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On Wed, Jun 19, 2019 at 8:23 AM Neil Armstrong <narmstrong@baylibre.com> wr=
-ote:
+On Wed, Jun 19, 2019 at 10:42 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
 >
-> On 18/06/2019 19:23, Jernej =C5=A0krabec wrote:
-> > Hi!
+> On Wed, Jun 19, 2019 at 10:18:43PM +0200, Daniel Vetter wrote:
+> > On Wed, Jun 19, 2019 at 10:13 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > On Wed, Jun 19, 2019 at 09:57:15PM +0200, Daniel Vetter wrote:
+> > > > On Wed, Jun 19, 2019 at 6:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+> > > > > On Tue, Jun 18, 2019 at 05:22:15PM +0200, Daniel Vetter wrote:
+> > > > > > On Tue, May 21, 2019 at 11:44:11AM -0400, Jerome Glisse wrote:
+> > > > > > > On Mon, May 20, 2019 at 11:39:42PM +0200, Daniel Vetter wrote:
+> > > > > > > > Just a bit of paranoia, since if we start pushing this deep into
+> > > > > > > > callchains it's hard to spot all places where an mmu notifier
+> > > > > > > > implementation might fail when it's not allowed to.
+> > > > > > > >
+> > > > > > > > Inspired by some confusion we had discussing i915 mmu notifiers and
+> > > > > > > > whether we could use the newly-introduced return value to handle some
+> > > > > > > > corner cases. Until we realized that these are only for when a task
+> > > > > > > > has been killed by the oom reaper.
+> > > > > > > >
+> > > > > > > > An alternative approach would be to split the callback into two
+> > > > > > > > versions, one with the int return value, and the other with void
+> > > > > > > > return value like in older kernels. But that's a lot more churn for
+> > > > > > > > fairly little gain I think.
+> > > > > > > >
+> > > > > > > > Summary from the m-l discussion on why we want something at warning
+> > > > > > > > level: This allows automated tooling in CI to catch bugs without
+> > > > > > > > humans having to look at everything. If we just upgrade the existing
+> > > > > > > > pr_info to a pr_warn, then we'll have false positives. And as-is, no
+> > > > > > > > one will ever spot the problem since it's lost in the massive amounts
+> > > > > > > > of overall dmesg noise.
+> > > > > > > >
+> > > > > > > > v2: Drop the full WARN_ON backtrace in favour of just a pr_warn for
+> > > > > > > > the problematic case (Michal Hocko).
+> > > > >
+> > > > > I disagree with this v2 note, the WARN_ON/WARN will trigger checkers
+> > > > > like syzkaller to report a bug, while a random pr_warn probably will
+> > > > > not.
+> > > > >
+> > > > > I do agree the backtrace is not useful here, but we don't have a
+> > > > > warn-no-backtrace version..
+> > > > >
+> > > > > IMHO, kernel/driver bugs should always be reported by WARN &
+> > > > > friends. We never expect to see the print, so why do we care how big
+> > > > > it is?
+> > > > >
+> > > > > Also note that WARN integrates an unlikely() into it so the codegen is
+> > > > > automatically a bit more optimal that the if & pr_warn combination.
+> > > >
+> > > > Where do you make a difference between a WARN without backtrace and a
+> > > > pr_warn? They're both dumped at the same log-level ...
+> > >
+> > > WARN panics the kernel when you set
+> > >
+> > > /proc/sys/kernel/panic_on_warn
+> > >
+> > > So auto testing tools can set that and get a clean detection that the
+> > > kernel has failed the test in some way.
+> > >
+> > > Otherwise you are left with frail/ugly grepping of dmesg.
 > >
-> > Dne torek, 18. junij 2019 ob 01:55:58 CEST je Douglas Anderson napisal(=
-a):
-> >> Let's add some better support for HDMI audio to dw_hdmi.
-> >> Specifically:
-> >>
-> >> 1. For 44.1 kHz audio the old code made the assumption that an N of
-> >> 6272 was right most of the time.  That wasn't true and the new table
-> >> should give better 44.1 kHz audio for many more rates.
-> >>
-> >> 2. The new table has values from the HDMI spec for 297 MHz and 594
-> >> MHz.
-> >>
-> >> 3. There is now code to try to come up with a more idea N/CTS for
-> >> clock rates that aren't in the table.  This code is a bit slow because
-> >> it iterates over every possible value of N and picks the best one, but
-> >> it should make a good fallback.
-> >>
-> >> 4. The new code allows for platforms that know they make a clock rate
-> >> slightly differently to pick different N/CTS values.  For instance on
-> >> rk3288 we can make 25,176,471 Hz instead of 25,174,825.1748... Hz
-> >> (25.2 MHz / 1.001).  A future patch to the rk3288 platform code could
-> >> enable support for this clock rate and specify the N/CTS that would be
-> >> ideal.
-> >>
-> >> NOTE: the oddest part of this patch comes about because computing the
-> >> ideal N/CTS means knowing the _exact_ clock rate, not a rounded
-> >> version of it.  The drm framework makes this harder by rounding rates
-> >> to kHz, but even if it didn't there might be cases where the ideal
-> >> rate could only be calculated if we knew the real (non-integral) rate.
-> >> This means that in cases where we know (or believe) that the true rate
-> >> is something other than the rate we are told by drm.
-> >>
-> >> Signed-off-by: Douglas Anderson <dianders@chromium.org>
+> > Hm right.
 > >
-> > Which bus is used for audio transfer on your device? If it is I2S, whic=
-h is
-> > commonly used, then please be aware of this patch:
-> > https://lists.freedesktop.org/archives/dri-devel/2019-June/221539.html
-> >
-> > It avoids exact N/CTS calculation by enabling auto detection. It is wel=
-l
-> > tested on multiple SoCs from Allwinner, Amlogic and Rockchip.
-> >
-> > Best regards,
-> > Jernej
-> >
-> >
-> Hi Douglas,
+> > Anyway, I'm happy to repaint the bikeshed in any color that's desired,
+> > if that helps with landing it. WARN_WITHOUT_BACKTRACE might take a bit
+> > longer (need to find a bit of time, plus it'll definitely attract more
+> > comments).
 >
-> Thanks for your work !
+> I was actually just writing something very similar when looking at the
+> hmm things..
 >
-> If you could rebase on top of https://lists.freedesktop.org/archives/dri-=
-devel/2019-June/221539.html
-> so we can make use of your extended N table with automatic CTS HW calcula=
-tion, it would be great !
+> Also, is the test backwards?
 
-Thanks to you and Jernej for pointing me at this.  It seems likely
-that patch by itself would solve problems we found and I'll pick that
-into my tree.
+Yes, in the last rebase I screwed things up :-/
+-Daniel
 
-Probably my patch is no longer quite as useful atop yours, but I'll
-still post a v2 since (in theory) folks that aren't using I2S might
-find it useful.  I guess it's also possible (?) that picking an N
-where CTS would be able to be integral has some type of advantage,
-even with auto CTS?
+> mmu_notifier_range_blockable() == true means the callback must return
+> zero
+>
+> mmu_notififer_range_blockable() == false means the callback can return
+> 0 or -EAGAIN.
+>
+> Suggest this:
+>
+>                                 pr_info("%pS callback failed with %d in %sblockable context.\n",
+>                                         mn->ops->invalidate_range_start, _ret,
+>                                         !mmu_notifier_range_blockable(range) ? "non-" : "");
+> +                               WARN_ON(mmu_notifier_range_blockable(range) ||
+> +                                       _ret != -EAGAIN);
+>                                 ret = _ret;
+>                         }
+>                 }
+>
+> To express the API invariant.
+>
+> Jason
 
 
-> Finally could you add the plat_data tmds table as a separate patch to sim=
-plify review ?
 
-Sure.  I'm probably not going to be able to post the patch to actually
-use it, so I guess we could just not bother applying the 2nd patch
-unless someone ever needs it.
-
--Doug
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
