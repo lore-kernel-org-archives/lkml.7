@@ -2,223 +2,207 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04597C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E72A2C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:11:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0A6D20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:08:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6F2A208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:11:00 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nro2yjMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731406AbfFSJIX (ORCPT
+        id S1731414AbfFSJK7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:08:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19466 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731295AbfFSJIW (ORCPT
+        Wed, 19 Jun 2019 05:10:59 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:41126 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731321AbfFSJK7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:08:22 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J97Yxt075377
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:08:22 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7gsvv9qv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:08:21 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
-        Wed, 19 Jun 2019 10:08:19 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 10:08:16 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J987US38142230
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 09:08:07 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B27A4203F;
-        Wed, 19 Jun 2019 09:08:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B6BB342047;
-        Wed, 19 Jun 2019 09:08:13 +0000 (GMT)
-Received: from oc0383214508.ibm.com (unknown [9.124.35.103])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 09:08:13 +0000 (GMT)
-Subject: Re: [PATCH v2 1/1] cpuidle-powernv : forced wakeup for stop states
-To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
-        mpe@ellerman.id.au, rjw@rjwysocki.net
-References: <20190617095648.18847-1-huntbag@linux.vnet.ibm.com>
- <20190617095648.18847-2-huntbag@linux.vnet.ibm.com>
- <1560917320.mk5nn6r8jw.astroid@bobo.none>
-From:   Abhishek <huntbag@linux.vnet.ibm.com>
-Date:   Wed, 19 Jun 2019 14:38:13 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 19 Jun 2019 05:10:59 -0400
+Received: by mail-lf1-f68.google.com with SMTP id 136so11507475lfa.8;
+        Wed, 19 Jun 2019 02:10:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=3SIX09875uxUo1XhtKRNTRHSV68SKvXocMxJP/0aUoY=;
+        b=Nro2yjMgyfsgeuZHCwgAwVegS5Ar8Bgbwrbey/E5rrepHjy3swRq0Z1kLnw/VYe+I1
+         3Tgwpc3mZdY+fMoFW7JmI7IkSs0jRxY14TupOTLwZqxOSW/DlZHQMv1/XfIYTYSuolaO
+         kR84EkMowhArx0Hx7D4GJ6W3K+Z+H2FcF5VWwbgR0D8FN3X+0HBNE7tpN2+mCeDG8Z5K
+         0hPJnBuvwMqdDpe0MF6n2HakuRScXDqpSLzWc4PUPr76Jwxr0eTF8pN5jy489xOtpCTu
+         HINUCFLxORsI96S0m+Fz3M1+wiA2PV/A5dPdiWR5rmXX4Gj+D0IY8MOiBmhn8+StG/Ra
+         BsXw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3SIX09875uxUo1XhtKRNTRHSV68SKvXocMxJP/0aUoY=;
+        b=nOoSpJ0rzWzz4kqGbQbdimlOC+vTJuOOO0/g0Vh4/n02fjFYc1M8gfzTwS6CJVKcbn
+         Q7qgoQORocQzvt0dLvdxGRcAWBxXEABSKcAg9/7LVDeXqK4W21Xrs/xcmf+vzdmTPBVB
+         2VINrS6Fxpzeo68rKhvFIBVdCq3qkFpyLM6FexG/FeyPqiRGiq37OskQPlr+rIgnX3xA
+         gXh5sRnADNlaL2t53XCZhdWW6wzFOKLZ+9x2a87Tq0GYmqFdPOjSBb90PLNYeMrOa/NL
+         nlUCBKofFzZeMR63Y8CUzirDElAl97vIP61O3BqSXLaKGIjvj9B/dnqjUyUxGcZOYrmj
+         9WUw==
+X-Gm-Message-State: APjAAAWdJeOhmTwO30N9VuN1zK5z5r1F1EJ20vydC1VBd9RIN6rzlt/Q
+        Zqg2VamXldDc0mbnd41nvddxlaso
+X-Google-Smtp-Source: APXvYqyqjOlFtCg2fWKVh/UcrhzRsQxY8RAWJikNYKacC2Fc4GcjQ9G5cagQPOEB3gfsKTOMfRI5EA==
+X-Received: by 2002:ac2:5b05:: with SMTP id v5mr62359725lfn.38.1560935456171;
+        Wed, 19 Jun 2019 02:10:56 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id j23sm1876689lfb.93.2019.06.19.02.10.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 02:10:55 -0700 (PDT)
+Subject: Re: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
+ <cda89c10-c597-ce90-98dd-5cc13ee9b83d@gmail.com>
+ <d29aa32d-55ef-c98b-00cd-f836bf003662@nvidia.com>
+ <698b4903-0580-8a68-88f8-fba3e2cbe6c7@gmail.com>
+Message-ID: <30386276-d5cc-7a74-9f2f-b773b9f3e7a4@gmail.com>
+Date:   Wed, 19 Jun 2019 12:10:54 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-In-Reply-To: <1560917320.mk5nn6r8jw.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <698b4903-0580-8a68-88f8-fba3e2cbe6c7@gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19061909-0016-0000-0000-0000028A66E6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061909-0017-0000-0000-000032E7BC79
-Message-Id: <689a52a7-7bfc-7225-e563-ac07f7357e75@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190075
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
+19.06.2019 12:02, Dmitry Osipenko пишет:
+> 19.06.2019 11:58, Jon Hunter пишет:
+>>
+>> On 18/06/2019 19:26, Dmitry Osipenko wrote:
+>>> 18.06.2019 11:42, Bitan Biswas пишет:
+>>>> tegra_i2c_xfer_msg initiates the I2C transfer in DMA
+>>>> or PIO mode. It involves steps that need FIFO register
+>>>> access, DMA API calls like dma_sync_single_for_device, etc.
+>>>> Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
+>>>> and in DMA/PIO mode writes different I2C registers including
+>>>> I2C interrupt status. ISR cannot start processing
+>>>> before the preparation step at tegra_i2c_xfer_msg is complete.
+>>>> Hence, a synchronization between ISR and tegra_i2c_xfer_msg
+>>>> is in place today using spinlock.
+>>>
+>>> Please use full 75 chars per-line, this should make commit message to look better.
+>>>
+>>>> Spinlock busy waits and can add avoidable delays.
+>>>>
+>>>> In this patch needed synchronization is achieved by disabling
+>>>> I2C interrupt during preparation step and enabling interrupt
+>>>> once preparation is over and spinlock is no longer needed.
+>>>>
+>>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>>> ---
+>>>>  drivers/i2c/busses/i2c-tegra.c | 17 ++++++++---------
+>>>>  1 file changed, 8 insertions(+), 9 deletions(-)
+>>>>
+>>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+>>>> index 6fb545e..ccc7fae 100644
+>>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>>> @@ -240,7 +240,6 @@ struct tegra_i2c_hw_feature {
+>>>>   * @bus_clk_rate: current I2C bus clock rate
+>>>>   * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
+>>>>   * @is_multimaster_mode: track if I2C controller is in multi-master mode
+>>>> - * @xfer_lock: lock to serialize transfer submission and processing
+>>>>   * @tx_dma_chan: DMA transmit channel
+>>>>   * @rx_dma_chan: DMA receive channel
+>>>>   * @dma_phys: handle to DMA resources
+>>>> @@ -270,8 +269,6 @@ struct tegra_i2c_dev {
+>>>>  	u32 bus_clk_rate;
+>>>>  	u16 clk_divisor_non_hs_mode;
+>>>>  	bool is_multimaster_mode;
+>>>> -	/* xfer_lock: lock to serialize transfer submission and processing */
+>>>> -	spinlock_t xfer_lock;
+>>>>  	struct dma_chan *tx_dma_chan;
+>>>>  	struct dma_chan *rx_dma_chan;
+>>>>  	dma_addr_t dma_phys;
+>>>> @@ -835,7 +832,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>>>>  
+>>>>  	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
+>>>>  
+>>>> -	spin_lock(&i2c_dev->xfer_lock);
+>>>>  	if (status == 0) {
+>>>>  		dev_warn(i2c_dev->dev, "irq status 0 %08x %08x %08x\n",
+>>>>  			 i2c_readl(i2c_dev, I2C_PACKET_TRANSFER_STATUS),
+>>>> @@ -935,7 +931,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>>>>  
+>>>>  	complete(&i2c_dev->msg_complete);
+>>>>  done:
+>>>> -	spin_unlock(&i2c_dev->xfer_lock);
+>>>>  	return IRQ_HANDLED;
+>>>>  }
+>>>>  
+>>>> @@ -1054,7 +1049,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>>>>  	u32 packet_header;
+>>>>  	u32 int_mask;
+>>>>  	unsigned long time_left;
+>>>> -	unsigned long flags;
+>>>>  	size_t xfer_size;
+>>>>  	u32 *buffer = NULL;
+>>>>  	int err = 0;
+>>>> @@ -1085,7 +1079,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>>>>  	 */
+>>>>  	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
+>>>>  					i2c_dev->bus_clk_rate);
+>>>> -	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
+>>>> +	if (!i2c_dev->irq_disabled) {
+>>>> +		disable_irq_nosync(i2c_dev->irq);
+>>>> +		i2c_dev->irq_disabled = true;
+>>>> +	}
+>>>
+>>> 1) Peter correctly pointed out in the other email that the disabling should be synced.
+>>> But see more below in 3.
+>>>
+>>> 2) i2c_dev->irq_disabled == true can't ever be the case here because tegra_i2c_init()
+>>> re-enables interrupt in a case of error condition. Hence interrupt always enabled at
+>>> the beginning of the transfer.
+>>>
+>>> 3) In my previous answer I was suggesting to request IRQ in a disabled state, this
+>>> will allow to remove i2c_dev->irq_disabled completely.
+>>>
+>>> Then the tegra_i2c_xfer_msg() will have to enable IRQ after completion of the
+>>> transfer-preparation process and disable IRQ once transfer is done (both success and
+>>> failure cases). This is actually not a bad additional motivation for this patch, to
+>>> keep CPU's interrupt disabled while idling and not to only rely on interrupt masking
+>>> of the I2C hardware.
+>>>
+>>> 4) ISR should simply return IRQ_NONE when interrupt status is 0 and allow kernel core
+>>> to disable the faulty interrupt itself. There will be "unhandled interrupt" error
+>>> message in KMSG log, following the disabling.
+>>>
+>>> 5) In order to request IRQ in a disabled state, the IRQ_NOAUTOEN flag need to be set
+>>> before the requesting, like this:
+>>>
+>>>     irq_set_status_flags(irq, IRQ_NOAUTOEN);
+>>>
+>>>     devm_request_irq(&pdev->dev, irq...);
+>>>
+>>> In a result of combining 3-5, both i2c_dev->irq_disabled and i2c_dev->irq variables
+>>> become obsolete and could be removed in addition to xfer_lock. That all is a good
+>>> cleanup in my opinion.
 
-Thanks for the review. Some replies below.
 
-On 06/19/2019 09:53 AM, Nicholas Piggin wrote:
-> Abhishek Goel's on June 17, 2019 7:56 pm:
->> Currently, the cpuidle governors determine what idle state a idling CPU
->> should enter into based on heuristics that depend on the idle history on
->> that CPU. Given that no predictive heuristic is perfect, there are cases
->> where the governor predicts a shallow idle state, hoping that the CPU will
->> be busy soon. However, if no new workload is scheduled on that CPU in the
->> near future, the CPU may end up in the shallow state.
->>
->> This is problematic, when the predicted state in the aforementioned
->> scenario is a shallow stop state on a tickless system. As we might get
->> stuck into shallow states for hours, in absence of ticks or interrupts.
->>
->> To address this, We forcefully wakeup the cpu by setting the
->> decrementer. The decrementer is set to a value that corresponds with the
->> residency of the next available state. Thus firing up a timer that will
->> forcefully wakeup the cpu. Few such iterations will essentially train the
->> governor to select a deeper state for that cpu, as the timer here
->> corresponds to the next available cpuidle state residency. Thus, cpu will
->> eventually end up in the deepest possible state.
->>
->> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
->> ---
->>
->> Auto-promotion
->>   v1 : started as auto promotion logic for cpuidle states in generic
->> driver
->>   v2 : Removed timeout_needed and rebased the code to upstream kernel
->> Forced-wakeup
->>   v1 : New patch with name of forced wakeup started
->>   v2 : Extending the forced wakeup logic for all states. Setting the
->> decrementer instead of queuing up a hrtimer to implement the logic.
->>
->>   drivers/cpuidle/cpuidle-powernv.c | 38 +++++++++++++++++++++++++++++++
->>   1 file changed, 38 insertions(+)
->>
->> diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
->> index 84b1ebe212b3..bc9ca18ae7e3 100644
->> --- a/drivers/cpuidle/cpuidle-powernv.c
->> +++ b/drivers/cpuidle/cpuidle-powernv.c
->> @@ -46,6 +46,26 @@ static struct stop_psscr_table stop_psscr_table[CPUIDLE_STATE_MAX] __read_mostly
->>   static u64 default_snooze_timeout __read_mostly;
->>   static bool snooze_timeout_en __read_mostly;
->>   
->> +static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
->> +				 struct cpuidle_driver *drv,
->> +				 int index)
->> +{
->> +	int i;
->> +
->> +	for (i = index + 1; i < drv->state_count; i++) {
->> +		struct cpuidle_state *s = &drv->states[i];
->> +		struct cpuidle_state_usage *su = &dev->states_usage[i];
->> +
->> +		if (s->disabled || su->disable)
->> +			continue;
->> +
->> +		return (s->target_residency + 2 * s->exit_latency) *
->> +			tb_ticks_per_usec;
->> +	}
->> +
->> +	return 0;
->> +}
-> It would be nice to not have this kind of loop iteration in the
-> idle fast path. Can we add a flag or something to the idle state?
-Currently, we do not have any callback notification or some feedback that
-notifies the driver everytime some state is enabled/disabled. So we have
-to parse everytime to get the next enabled state. Are you suggesting to
-add something like next_enabled_state in cpuidle state structure itself
-which will be updated when a state is enabled or disabled?
->> +
->>   static u64 get_snooze_timeout(struct cpuidle_device *dev,
->>   			      struct cpuidle_driver *drv,
->>   			      int index)
->> @@ -144,8 +164,26 @@ static int stop_loop(struct cpuidle_device *dev,
->>   		     struct cpuidle_driver *drv,
->>   		     int index)
->>   {
->> +	u64 dec_expiry_tb, dec, timeout_tb, forced_wakeup;
->> +
->> +	dec = mfspr(SPRN_DEC);
->> +	timeout_tb = forced_wakeup_timeout(dev, drv, index);
->> +	forced_wakeup = 0;
->> +
->> +	if (timeout_tb && timeout_tb < dec) {
->> +		forced_wakeup = 1;
->> +		dec_expiry_tb = mftb() + dec;
->> +	}
-> The compiler probably can't optimise away the SPR manipulations so try
-> to avoid them if possible.
-Are you suggesting something like set_dec_before_idle?(in line with
-what you have suggested to do after idle, reset_dec_after_idle)
->
->> +
->> +	if (forced_wakeup)
->> +		mtspr(SPRN_DEC, timeout_tb);
-> This should just be put in the above 'if'.
-Fair point.
->
->> +
->>   	power9_idle_type(stop_psscr_table[index].val,
->>   			 stop_psscr_table[index].mask);
->> +
->> +	if (forced_wakeup)
->> +		mtspr(SPRN_DEC, dec_expiry_tb - mftb());
-> This will sometimes go negative and result in another timer interrupt.
->
-> It also breaks irq work (which can be set here by machine check I
-> believe.
->
-> May need to implement some timer code to do this for you.
->
-> static void reset_dec_after_idle(void)
-> {
-> 	u64 now;
->          u64 *next_tb;
->
-> 	if (test_irq_work_pending())
-> 		return;
-> 	now = mftb;
-> 	next_tb = this_cpu_ptr(&decrementers_next_tb);
->
-> 	if (now >= *next_tb)
-> 		return;
-> 	set_dec(*next_tb - now);
-> 	if (test_irq_work_pending())
-> 		set_dec(1);
-> }
->
-> Something vaguely like that. See timer_interrupt().
-Ah, Okay. Will go through timer_interrupt().
-> Thanks,
-> Nick
-Thanks,
-Abhishek
+Ah, actually looks like i2c_dev->irq won't be obsoleted, but not a big deal.
 
+Also, please note that it won't be the least to change the type of "irq" to unsigned int for
+consistency. I know that Thierry is picky about it.
