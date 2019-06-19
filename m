@@ -2,198 +2,101 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC865C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7F1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:02:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF1AC2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9865D21880
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:02:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729179AbfFSP7h convert rfc822-to-8bit (ORCPT
+        id S1729020AbfFSQCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:59:37 -0400
-Received: from mga02.intel.com ([134.134.136.20]:46099 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfFSP7g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:59:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 08:59:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="181662641"
-Received: from orsmsx107.amr.corp.intel.com ([10.22.240.5])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2019 08:59:34 -0700
-Received: from orsmsx160.amr.corp.intel.com (10.22.226.43) by
- ORSMSX107.amr.corp.intel.com (10.22.240.5) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 19 Jun 2019 08:59:34 -0700
-Received: from orsmsx110.amr.corp.intel.com ([169.254.10.92]) by
- ORSMSX160.amr.corp.intel.com ([169.254.13.41]) with mapi id 14.03.0439.000;
- Wed, 19 Jun 2019 08:59:34 -0700
-From:   "Moore, Robert" <robert.moore@intel.com>
-To:     Nikolaus Voss <nv@vosn.de>
-CC:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        "Schmauss, Erik" <erik.schmauss@intel.com>,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        Linux PWM List <linux-pwm@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "nikolaus.voss@loewensteinmedical.de" 
-        <nikolaus.voss@loewensteinmedical.de>
-Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-Thread-Topic: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
- loads
-Thread-Index: AQHVIPn/qqDB5Bv4z0aSsleXlAnDw6abVhaAgAADpwD///G0sIAEkokAgACES6CAAT+dAIAANdnAgAALWnCAAAJ3oIAAAgmggAFPOoD///bKAA==
-Date:   Wed, 19 Jun 2019 15:59:33 +0000
-Message-ID: <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FC28D@ORSMSX110.amr.corp.intel.com>
-References: <cover.1560327219.git.nikolaus.voss@loewensteinmedical.de>
- <e2a4ddfd93a904b50b7ccc074e00e14dc4661963.1560327219.git.nikolaus.voss@loewensteinmedical.de>
- <CAJZ5v0jqxWs=PPik-TCDqQiyxCSyRP7HTue1WsdWP9e-nik2eA@mail.gmail.com>
- <alpine.DEB.2.20.1906141114490.6579@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B95EFB26@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1906170746150.12344@fox.voss.local>
- <94F2FBAB4432B54E8AACC7DFDE6C92E3B95F9EC6@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1906181030240.24846@fox.voss.local>
-    <94F2FBAB4432B54E8AACC7DFDE6C92E3B95FB0BA@ORSMSX110.amr.corp.intel.com>
- <alpine.DEB.2.20.1906191123400.34742@fox.voss.local>
-In-Reply-To: <alpine.DEB.2.20.1906191123400.34742@fox.voss.local>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiY2MwMjlmZjgtMjNkYi00N2ZjLTlmMmQtNjNlYmY1OTMyOWFiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZVBaZGNrSVo0dnZpczNyWHlzc01mTWJMNUtVRDd2b24yMnJxQkNPb25xcjhrM1ZoQjZEb0t4QWR5YUNISFZjOCJ9
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.138]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 19 Jun 2019 12:02:12 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.187]:16515 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726496AbfFSQCL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:02:11 -0400
+Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 9E3A117235
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:02:10 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id dd2IhOhRx4FKpdd2Ihg5a2; Wed, 19 Jun 2019 11:02:10 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:23729 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hdd2G-0038A9-JG; Wed, 19 Jun 2019 11:02:08 -0500
+Date:   Wed, 19 Jun 2019 11:02:07 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc:     netdev@vger.kernel.org, bpf@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH][bpf] bpf: verifier: add break statement in switch
+Message-ID: <20190619160207.GA26960@embeddedor>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.213
+X-Source-L: No
+X-Exim-ID: 1hdd2G-0038A9-JG
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net (embeddedor) [187.160.61.213]:23729
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 10
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Notice that in this case, it's much clearer to explicitly add a break
+rather than letting the code to fall through. It also avoid potential
+future fall-through warnings[1].
 
+This patch is part of the ongoing efforts to enable
+-Wimplicit-fallthrough.
 
-> -----Original Message-----
-> From: Nikolaus Voss [mailto:nv@vosn.de]
-> Sent: Wednesday, June 19, 2019 2:31 AM
-> To: Moore, Robert <robert.moore@intel.com>
-> Cc: Rafael J. Wysocki <rafael@kernel.org>; Rafael J. Wysocki
-> <rjw@rjwysocki.net>; Len Brown <lenb@kernel.org>; Schmauss, Erik
-> <erik.schmauss@intel.com>; Jacek Anaszewski
-> <jacek.anaszewski@gmail.com>; Pavel Machek <pavel@ucw.cz>; Dan Murphy
-> <dmurphy@ti.com>; Thierry Reding <thierry.reding@gmail.com>; ACPI Devel
-> Maling List <linux-acpi@vger.kernel.org>; open list:ACPI COMPONENT
-> ARCHITECTURE (ACPICA) <devel@acpica.org>; linux-leds@vger.kernel.org;
-> Linux PWM List <linux-pwm@vger.kernel.org>; Linux Kernel Mailing List
-> <linux-kernel@vger.kernel.org>; nikolaus.voss@loewensteinmedical.de
-> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed table
-> loads
-> 
-> Hi Bob,
-> 
-> On Tue, 18 Jun 2019, Moore, Robert wrote:
-> >
-> >
-> >> -----Original Message-----
-> >> From: Moore, Robert
-> >> Sent: Tuesday, June 18, 2019 1:25 PM
-> >> To: 'Nikolaus Voss' <nv@vosn.de>
-> >> Cc: 'Rafael J. Wysocki' <rafael@kernel.org>; 'Rafael J. Wysocki'
-> >> <rjw@rjwysocki.net>; 'Len Brown' <lenb@kernel.org>; Schmauss, Erik
-> >> <erik.schmauss@intel.com>; 'Jacek Anaszewski'
-> >> <jacek.anaszewski@gmail.com>; 'Pavel Machek' <pavel@ucw.cz>; 'Dan
-> >> Murphy' <dmurphy@ti.com>; 'Thierry Reding'
-> >> <thierry.reding@gmail.com>; 'ACPI Devel Maling List'
-> >> <linux-acpi@vger.kernel.org>; 'open list:ACPI COMPONENT ARCHITECTURE
-> >> (ACPICA)' <devel@acpica.org>; 'linux- leds@vger.kernel.org' <linux-
-> leds@vger.kernel.org>; 'Linux PWM List'
-> >> <linux-pwm@vger.kernel.org>; 'Linux Kernel Mailing List' <linux-
-> >> kernel@vger.kernel.org>
-> >> Subject: RE: [PATCH v2 1/3] ACPI: Resolve objects on host-directed
-> >> table loads
-> >>
-> >> If it is in fact the AcpiLoadTable interface that is incorrect, that
-> >> of course is different. I'll check that out next.
-> >>
-> > [Moore, Robert]
-> >
-> > Yes, this is the issue, not specifically the Load() operator, but the
-> > AcpiLoadTable interface only.
-> 
-> thanks for checking this out. So what is the conclusion? Is my fix of
-> AcpiLoadTable() sufficient or do we need a different solution?
-> 
-> Niko
-> 
+[1] https://lore.kernel.org/patchwork/patch/1087056/
 
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ kernel/bpf/verifier.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Your change is in the correct area. We want to do something like this, however:
+diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+index d2c8a6677ac4..0acf7c569ec6 100644
+--- a/kernel/bpf/verifier.c
++++ b/kernel/bpf/verifier.c
+@@ -5365,6 +5365,7 @@ static int check_return_code(struct bpf_verifier_env *env)
+ 		if (env->prog->expected_attach_type == BPF_CGROUP_UDP4_RECVMSG ||
+ 		    env->prog->expected_attach_type == BPF_CGROUP_UDP6_RECVMSG)
+ 			range = tnum_range(1, 1);
++		break;
+ 	case BPF_PROG_TYPE_CGROUP_SKB:
+ 	case BPF_PROG_TYPE_CGROUP_SOCK:
+ 	case BPF_PROG_TYPE_SOCK_OPS:
+-- 
+2.21.0
 
-diff --git a/source/components/executer/exconfig.c b/source/components/executer/exconfig.c
-index 84a058ada..eba1a6d28 100644
---- a/source/components/executer/exconfig.c
-+++ b/source/components/executer/exconfig.c
-@@ -342,10 +342,9 @@ AcpiExLoadTableOp (
-         return_ACPI_STATUS (Status);
-     }
- 
--    /* Complete the initialization/resolution of package objects */
-+    /* Complete the initialization/resolution of new objects */
- 
--    Status = AcpiNsWalkNamespace (ACPI_TYPE_PACKAGE, ACPI_ROOT_OBJECT,
--        ACPI_UINT32_MAX, 0, AcpiNsInitOnePackage, NULL, NULL, NULL);
-+    AcpiNsInitializeObjects ();
- 
-     /* Parameter Data (optional) */
- 
-@@ -620,10 +619,11 @@ AcpiExLoadOp (
-         return_ACPI_STATUS (Status);
-     }
- 
--    /* Complete the initialization/resolution of package objects */
-+    /* Complete the initialization/resolution of new objects */
- 
--    Status = AcpiNsWalkNamespace (ACPI_TYPE_PACKAGE, ACPI_ROOT_OBJECT,
--        ACPI_UINT32_MAX, 0, AcpiNsInitOnePackage, NULL, NULL, NULL);
-+    AcpiExExitInterpreter ();
-+    AcpiNsInitializeObjects ();
-+    AcpiExEnterInterpreter ();
- 
-     /* Store the DdbHandle into the Target operand */
- 
-diff --git a/source/components/tables/tbxfload.c b/source/components/tables/tbxfload.c
-index 217d54bf0..1e17db6c8 100644
---- a/source/components/tables/tbxfload.c
-+++ b/source/components/tables/tbxfload.c
-@@ -479,6 +479,13 @@ AcpiLoadTable (
-     ACPI_INFO (("Host-directed Dynamic ACPI Table Load:"));
-     Status = AcpiTbInstallAndLoadTable (ACPI_PTR_TO_PHYSADDR (Table),
-         ACPI_TABLE_ORIGIN_EXTERNAL_VIRTUAL, FALSE, &TableIndex);
-+    if (ACPI_SUCCESS (Status))
-+    {
-+        /* Complete the initialization/resolution of new objects */
-+
-+        AcpiNsInitializeObjects ();
-+    }
-+
-     return_ACPI_STATUS (Status);
- }
-
-
-
-> [...]
