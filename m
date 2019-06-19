@@ -2,98 +2,92 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A2AC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724A2C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:31:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 692F32166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 561782166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:31:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfFSOav (ORCPT
+        id S1730357AbfFSObW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:30:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56887 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfFSOav (ORCPT
+        Wed, 19 Jun 2019 10:31:22 -0400
+Received: from relay7-d.mail.gandi.net ([217.70.183.200]:52483 "EHLO
+        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSObW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:30:51 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hdbbp-0005sO-5S; Wed, 19 Jun 2019 14:30:45 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Jeff Kirsher <jeffrey.t.kirsher@intel.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        intel-wired-lan@lists.osuosl.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][net-next] iavf: fix dereference of null rx_buffer pointer
-Date:   Wed, 19 Jun 2019 15:30:44 +0100
-Message-Id: <20190619143044.10259-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 10:31:22 -0400
+X-Originating-IP: 92.137.69.152
+Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 5EA3620016;
+        Wed, 19 Jun 2019 14:31:14 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 16:31:12 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Sebastian Reichel <sre@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>, mazziesaccount@gmail.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [PATCH v15 0/7] support ROHM BD70528 PMIC
+Message-ID: <20190619143112.GO23549@piout.net>
+References: <cover.1559546139.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190611200043.eib3g3acc7ilawsx@earth.universe>
+ <20190612060328.GQ4797@dell>
+ <20190613130529.kgswgbuszb24itxz@earth.universe>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613130529.kgswgbuszb24itxz@earth.universe>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On 13/06/2019 15:05:29+0200, Sebastian Reichel wrote:
+> Hi,
+> 
+> On Wed, Jun 12, 2019 at 07:03:28AM +0100, Lee Jones wrote:
+> > On Tue, 11 Jun 2019, Sebastian Reichel wrote:
+> > > On Mon, Jun 03, 2019 at 10:23:37AM +0300, Matti Vaittinen wrote:
+> > > > Patch series introducing support for ROHM BD70528 PMIC
+> > > > [...]
+> > > 
+> > > I think all patches have been reviewed by the respective subsystem
+> > > maintainers. Lee, can you provide an immutable branch with the MFD
+> > > patches (1, 2, 4)? Looks like the other patches only depend on those
+> > > and can go through their respective subsystems.
+> > 
+> > Yes.  It's on my TODO list.
+> 
+> Thanks.
+> 
+> > Would you prefer this method over me just taking them all and sending
+> > out a PR?  The latter is my usual flow, but I'm happy with either.
+> 
+> Both methods are fine with me. I usually go with "my" method, since
+> that results in less shared commits. It simplifies potential
+> follow-up bug fixes, since there is only one tree to fix.
+> 
 
-A recent commit efa14c3985828d ("iavf: allow null RX descriptors") added
-a null pointer sanity check on rx_buffer, however, rx_buffer is being
-dereferenced before that check, which implies a null pointer dereference
-bug can potentially occur.  Fix this by only dereferencing rx_buffer
-until after the null pointer check.
+Personally, I'm fine with Lee taking everything in his tree as it is
+very unlikely to require follow up patches this cycle (i.e before rc1).
 
-Addresses-Coverity: ("Dereference before null check")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/ethernet/intel/iavf/iavf_txrx.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/intel/iavf/iavf_txrx.c b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-index 1cde1601bc32..0cca1b589b56 100644
---- a/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-+++ b/drivers/net/ethernet/intel/iavf/iavf_txrx.c
-@@ -1296,7 +1296,7 @@ static struct sk_buff *iavf_construct_skb(struct iavf_ring *rx_ring,
- 					  struct iavf_rx_buffer *rx_buffer,
- 					  unsigned int size)
- {
--	void *va = page_address(rx_buffer->page) + rx_buffer->page_offset;
-+	void *va;
- #if (PAGE_SIZE < 8192)
- 	unsigned int truesize = iavf_rx_pg_size(rx_ring) / 2;
- #else
-@@ -1308,6 +1308,7 @@ static struct sk_buff *iavf_construct_skb(struct iavf_ring *rx_ring,
- 	if (!rx_buffer)
- 		return NULL;
- 	/* prefetch first cache line of first page */
-+	va = page_address(rx_buffer->page) + rx_buffer->page_offset;
- 	prefetch(va);
- #if L1_CACHE_BYTES < 128
- 	prefetch(va + L1_CACHE_BYTES);
-@@ -1362,7 +1363,7 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
- 				      struct iavf_rx_buffer *rx_buffer,
- 				      unsigned int size)
- {
--	void *va = page_address(rx_buffer->page) + rx_buffer->page_offset;
-+	void *va;
- #if (PAGE_SIZE < 8192)
- 	unsigned int truesize = iavf_rx_pg_size(rx_ring) / 2;
- #else
-@@ -1374,6 +1375,7 @@ static struct sk_buff *iavf_build_skb(struct iavf_ring *rx_ring,
- 	if (!rx_buffer)
- 		return NULL;
- 	/* prefetch first cache line of first page */
-+	va = page_address(rx_buffer->page) + rx_buffer->page_offset;
- 	prefetch(va);
- #if L1_CACHE_BYTES < 128
- 	prefetch(va + L1_CACHE_BYTES);
 -- 
-2.20.1
-
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
