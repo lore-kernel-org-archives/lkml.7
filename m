@@ -2,72 +2,102 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BFEEC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:17:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5954CC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4832054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:17:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3320B20673
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:20:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731594AbfFSLRR (ORCPT
+        id S1731565AbfFSLUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:17:17 -0400
-Received: from mail.us.es ([193.147.175.20]:32978 "EHLO mail.us.es"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727242AbfFSLRQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:17:16 -0400
-Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
-        by mail.us.es (Postfix) with ESMTP id 17F8A2519C9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:17:15 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id 09655DA715
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:17:15 +0200 (CEST)
-Received: by antivirus1-rhel7.int (Postfix, from userid 99)
-        id E7B4DDA738; Wed, 19 Jun 2019 13:17:14 +0200 (CEST)
-Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
-        by antivirus1-rhel7.int (Postfix) with ESMTP id E510BDA707;
-        Wed, 19 Jun 2019 13:17:12 +0200 (CEST)
-Received: from 192.168.1.97 (192.168.1.97)
- by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
- Wed, 19 Jun 2019 13:17:12 +0200 (CEST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
-Received: from us.es (sys.soleta.eu [212.170.55.40])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: 1984lsi)
-        by entrada.int (Postfix) with ESMTPSA id B27494265A32;
-        Wed, 19 Jun 2019 13:17:12 +0200 (CEST)
-Date:   Wed, 19 Jun 2019 13:17:12 +0200
-X-SMTPAUTHUS: auth mail.us.es
-From:   Pablo Neira Ayuso <pablo@netfilter.org>
-To:     Lukasz Pawelczyk <l.pawelczyk@samsung.com>
-Cc:     Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Lukasz Pawelczyk <havner@gmail.com>
-Subject: Re: [PATCH v5] extensions: libxt_owner: Add supplementary groups
- option
-Message-ID: <20190619111712.vcww4uxqk3k7aegq@salvia>
-References: <CGME20190610105906eucas1p1a1e124ea55dd97bc7400b5504002e41c@eucas1p1.samsung.com>
- <20190610105856.31754-1-l.pawelczyk@samsung.com>
+        Wed, 19 Jun 2019 07:20:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33702 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727076AbfFSLUG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 07:20:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 649E0B002;
+        Wed, 19 Jun 2019 11:20:04 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BC8081E15DD; Wed, 19 Jun 2019 13:20:03 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 13:20:03 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     axboe@kernel.dk, jbacik@fb.com, linux-kernel@vger.kernel.org,
+        linux-block@vger.kernel.org, kernel-team@fb.com, dennis@kernel.org,
+        jack@suse.cz
+Subject: Re: [PATCH 5/5] blkcg, writeback: dead memcgs shouldn't contribute
+ to writeback ownership arbitration
+Message-ID: <20190619112003.GD27954@quack2.suse.cz>
+References: <20190613223041.606735-1-tj@kernel.org>
+ <20190613223041.606735-6-tj@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190610105856.31754-1-l.pawelczyk@samsung.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Virus-Scanned: ClamAV using ClamSMTP
+In-Reply-To: <20190613223041.606735-6-tj@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 12:58:56PM +0200, Lukasz Pawelczyk wrote:
-> The --suppl-groups option causes GIDs specified with --gid-owner to be
-> also checked in the supplementary groups of a process.
+On Thu 13-06-19 15:30:41, Tejun Heo wrote:
+> wbc_account_io() collects information on cgroup ownership of writeback
+> pages to determine which cgroup should own the inode.  Pages can stay
+> associated with dead memcgs but we want to avoid attributing IOs to
+> dead blkcgs as much as possible as the association is likely to be
+> stale.  However, currently, pages associated with dead memcgs
+> contribute to the accounting delaying and/or confusing the
+> arbitration.
+> 
+> Fix it by ignoring pages associated with dead memcgs.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Cc: Jan Kara <jack@suse.cz>
 
-Applied, thanks.
+I see Jens has already pulled the changes so this is mostly informative but
+the patch looks good to me.
+
+								Honza
+> ---
+>  fs/fs-writeback.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index e41cbe8e81b9..9ebfb1b28430 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -715,6 +715,7 @@ void wbc_detach_inode(struct writeback_control *wbc)
+>  void wbc_account_io(struct writeback_control *wbc, struct page *page,
+>  		    size_t bytes)
+>  {
+> +	struct cgroup_subsys_state *css;
+>  	int id;
+>  
+>  	/*
+> @@ -726,7 +727,12 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+>  	if (!wbc->wb)
+>  		return;
+>  
+> -	id = mem_cgroup_css_from_page(page)->id;
+> +	css = mem_cgroup_css_from_page(page);
+> +	/* dead cgroups shouldn't contribute to inode ownership arbitration */
+> +	if (!(css->flags & CSS_ONLINE))
+> +		return;
+> +
+> +	id = css->id;
+>  
+>  	if (id == wbc->wb_id) {
+>  		wbc->wb_bytes += bytes;
+> -- 
+> 2.17.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
