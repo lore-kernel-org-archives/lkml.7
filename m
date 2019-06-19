@@ -2,128 +2,137 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED693C48BC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:21:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E75C48BC5
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:22:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E77214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:21:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AraBg7zq"
+	by mail.kernel.org (Postfix) with ESMTP id DBCC52147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:22:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730029AbfFSUVi (ORCPT
+        id S1730294AbfFSUWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:21:38 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35099 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfFSUVi (ORCPT
+        Wed, 19 Jun 2019 16:22:05 -0400
+Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:64834
+        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726143AbfFSUWF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:21:38 -0400
-Received: by mail-ed1-f66.google.com with SMTP id p26so1160904edr.2;
-        Wed, 19 Jun 2019 13:21:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Dt5foXU+GSxuVMklIKIKR8ocB5pAKJsCTrBcOxfy50A=;
-        b=AraBg7zqtUA6q56HZl04tbp2kVZutw3FJe0SuFvMdzlxMIh0y3Mp5tKVIffuYBaWhJ
-         JpxJcI3RzyjyEJ6p9od/SmjAsFYCIBUXkIft4Khrxe0AKzGYNCosKu912/XWzMdlZrQ+
-         pQIGYai+TE2OHtyzYVeetKp9QZHt0RWHwfjsVfa9CHReYql6rUPYo8qmQ8KvB1xT7xNv
-         ktBWchctw34EaZdJKN6v9yMkpoGFee9QG1YpS/mAfmLdvnq81dig+lrfXLQvKU6Nea9u
-         TGmh/XbuIW33FWdoT+srdSJ9LRZNlDE/ZNJwpOujVbhLBt7GaLqttSG6hB1tuLCxSj8c
-         FlJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Dt5foXU+GSxuVMklIKIKR8ocB5pAKJsCTrBcOxfy50A=;
-        b=DXwrTgmGpsjJuRyF7mGuW9G5zSB6VYtbwr4IY0jHi8znT4XmFET88Pl4NjSg7QJEoR
-         27qCYaHocHeS/HB30QeVpMyja0tCFv/9Vkqq2alEvam9BsN+60yO35rKUmUKwQihS4WG
-         JuyYygDn+vukTiVRg3J6RL6TjeN9u65m0zWFQUjDmV1O9vJmRelKOXNIK01DhwWHDQ9Q
-         504mpoebLGOahEQdShfJ6gYB9BvK7NmAwvjHalmXScQ9B3YIWII1TPg3tBNtxE7XGaCW
-         u4miPQc7CuIKVmbmFBif/Hh7umRAnUyTC8re2hCGLrCPjlueUV/kkj1u/BA7ue9lOpoz
-         KBmQ==
-X-Gm-Message-State: APjAAAU535MTn6c8mCVKF9MqtcNETo8xvdKTr7SkEmrHlL9fg5vXf0uF
-        Q2wyZq9rBRewGjbZZ/1A3PTJRNNuct8+A0aRpjg=
-X-Google-Smtp-Source: APXvYqxiuHWkvqriR4R7oJlLWlmCuNQMbohUlkbW5G32Zn3s+lqiJyUeJOj/hTLGnhHr/AUshdmpn/1PBNhzP8/JWNg=
-X-Received: by 2002:a17:906:f85:: with SMTP id q5mr12605405ejj.192.1560975695671;
- Wed, 19 Jun 2019 13:21:35 -0700 (PDT)
+        Wed, 19 Jun 2019 16:22:05 -0400
+X-IronPort-AV: E=Sophos;i="5.63,394,1557180000"; 
+   d="scan'208";a="309906047"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 22:22:00 +0200
+Date:   Wed, 19 Jun 2019 22:21:59 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Kirill Smelkov <kirr@nexedi.com>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kbuild-all@01.org
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+In-Reply-To: <20190619201859.GA197717@google.com>
+Message-ID: <alpine.DEB.2.21.1906192221290.2634@hadrien>
+References: <alpine.DEB.2.20.1906191227430.3726@hadrien> <20190619162713.GA19859@deco.navytux.spb.ru> <20190619201859.GA197717@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-3-masneyb@onstation.org>
- <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Wed, 19 Jun 2019 13:21:20 -0700
-Message-ID: <CAF6AEGs6By9-LGRBAPw2OwR9tRKJtEiZVgS2WVWRXmOK1VxNLA@mail.gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add optional ocmem property
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Brian Masney <masneyb@onstation.org>,
-        Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Sean Paul <sean@poorly.run>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jonathan Marek <jonathan@marek.ca>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 1:17 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
-> >
-> > Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
-> > must use the On Chip MEMory (OCMEM) in order to be functional. Add the
-> > optional ocmem property to the Adreno Graphics Management Unit bindings.
-> >
-> > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> > ---
-> >  Documentation/devicetree/bindings/display/msm/gmu.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > index 90af5b0a56a9..c746b95e95d4 100644
-> > --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
-> > @@ -31,6 +31,10 @@ Required properties:
-> >  - iommus: phandle to the adreno iommu
-> >  - operating-points-v2: phandle to the OPP operating points
-> >
-> > +Optional properties:
-> > +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
-> > +         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
->
-> We already have a couple of similar properties. Lets standardize on
-> 'sram' as that is what TI already uses.
->
-> Also, is the whole OCMEM allocated to the GMU? If not you should have
-> child nodes to subdivide the memory.
->
 
-iirc, downstream a large chunk of OCMEM is statically allocated for
-GPU.. the remainder is dynamically allocated for different use-cases.
-The upstream driver Brian is proposing only handles the static
-allocation case (and I don't think we have upstream support for the
-various audio and video use-cases that used dynamic OCMEM allocation
-downstream)
 
-Although maybe we should still have a child node to separate the
-statically and dynamically allocated parts?  I'm not sure what would
-make the most sense..
+On Wed, 19 Jun 2019, Bjorn Helgaas wrote:
 
-BR,
--R
+> On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
+> > Hi Julia, everyone.
+> >
+> > On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
+> > > Hi,
+> > >
+> > > Can you forward this patch to the people below if you think it is
+> > > appropriate?
+> >
+> > Yes, this patch is appropriate. It was actually part of
+> > git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
+> > it removes a chance for deadlock) to apply it.
+> >
+> > Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+>
+> I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
+> stream-like files from nonseekable_open -> stream_open"), so it looks like
+> this is already done.  What would you like me to do with it?
+
+Somehow 0-day got a hold of it...  If there is nothing to do, just ignore
+it.
+
+thanks,
+julia
+
+>
+> > > Could I tell the kbuild people to add you to the CC list for
+> > > this semantic patch?
+> >
+> > Yes, sure. Please feel free to add me to CC list for stream_open.cocci
+> > related patches.
+> >
+> > Kirill
+> >
+> >
+> > > thanks,
+> > > julia
+> > >
+> > > ---------- Forwarded message ----------
+> > > Date: Wed, 19 Jun 2019 18:23:18 +0800
+> > > From: kbuild test robot <lkp@intel.com>
+> > > To: kbuild@01.org
+> > > Cc: Julia Lawall <julia.lawall@lip6.fr>
+> > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> > >
+> > > CC: kbuild-all@01.org
+> > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> > > CC: Logan Gunthorpe <logang@deltatee.com>
+> > > CC: Bjorn Helgaas <helgaas@kernel.org>
+> > > CC: linux-pci@vger.kernel.org
+> > > CC: linux-kernel@vger.kernel.org
+> > >
+> > > From: kbuild test robot <lkp@intel.com>
+> > >
+> > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> > >
+> > > Generated by: scripts/coccinelle/api/stream_open.cocci
+> > >
+> > > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
+> > > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > > ---
+> > >
+> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> > > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
+> > > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
+> > > :::::: branch date: 6 days ago
+> > > :::::: commit date: 6 days ago
+> > >
+> > > Please take the patch only if it's a positive warning. Thanks!
+> > >
+> > >  switchtec.c |    2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > >
+> > > --- a/drivers/pci/switch/switchtec.c
+> > > +++ b/drivers/pci/switch/switchtec.c
+> > > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+> > >  		return PTR_ERR(stuser);
+> > >
+> > >  	filp->private_data = stuser;
+> > > -	nonseekable_open(inode, filp);
+> > > +	stream_open(inode, filp);
+> > >
+> > >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+> > >
+>
