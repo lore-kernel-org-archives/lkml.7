@@ -2,95 +2,98 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64336C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2C2EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DBDA21880
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:17:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iyBAkwkW"
+	by mail.kernel.org (Postfix) with ESMTP id 8550021880
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728881AbfFSPRq (ORCPT
+        id S1729264AbfFSPST (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:17:46 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:37984 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfFSPRq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:17:46 -0400
-Received: by mail-ua1-f65.google.com with SMTP id j2so10230184uaq.5;
-        Wed, 19 Jun 2019 08:17:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Y3W31eT4pjnEE9VumU700qhsrfgm3ej+hMlDN8GbJRU=;
-        b=iyBAkwkWJj1+Aw13vY7fCF+blFJGykJyavfB2eMwITvxzAB144ff0wRE3tgEkNWEBF
-         hxXtdJ1Qub7oJphAZ4nogBgMeM9uGHymppWIfKEbGHAYoVdouvQkgjOqfKDp6mj8iehQ
-         OuywrdJFZlgN1p7KIULRqiw12TsvkbsUV3SA+EYRbng++P0/EoIB3b17k7O0lPdwwRc5
-         KD2L4N1LAidT+01zEt0+/gs72VcZJlyG2r21IuJY7DnEEalr8NWoGlpml8EfRwTsKhqD
-         L9n/REmLSyfE+BmiK4ex+kwTkqIMeH+Hosxo8zEeVJboON6PAMPS6w0rvrVJXoQbUp6K
-         Ij6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Y3W31eT4pjnEE9VumU700qhsrfgm3ej+hMlDN8GbJRU=;
-        b=JGyD+e9csilET5QfDjGU2pWHIIEHC/dLmhJ/LgmvdVXZUQnN9zaLks3gFS8Rw51cz7
-         8XdprsW0FPxa3aN/9+nCXBu/RXITGursDKONAtwCs4x819cY89tR1Oy/ajJcNdXMa2IT
-         RM0wBB2E8GBiCxrsRcAMgw4oVRZTDvEviaUuP5UGzWEdoH88FMsuS1GZYYV74ruEMziv
-         k45XJ7q3p6VTPv0jdcSNM/k9UjgSSQOqnO60+uR/0u5G+BvlNDonGkr0suVI4w05ul5G
-         mFWyZ77YQS62VFlJCDR18luOdRZ/UhIwsHrD8f6xdNpuVbpKt84ORaic1Qm4fHF5kVg4
-         duxw==
-X-Gm-Message-State: APjAAAUXpbjmLChUGPQFOc6dD0T9jhGJr9Cgu79Plor/s/WNhzjuOeY8
-        jAkBejpW8EDF9wN+jIcCQKeMn02DzrGha34fn7s=
-X-Google-Smtp-Source: APXvYqwQFXiKBQhKIgxQWpWN0iV3lA9cGQ+Hkpj2dsp1L/4TSPbcNmuVqNJnISoxxObtW2bKXn3xtrfX6S2seJNuz2E=
-X-Received: by 2002:a67:320c:: with SMTP id y12mr827714vsy.30.1560957465295;
- Wed, 19 Jun 2019 08:17:45 -0700 (PDT)
+        Wed, 19 Jun 2019 11:18:19 -0400
+Received: from foss.arm.com ([217.140.110.172]:44722 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726958AbfFSPST (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:18:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 75D91344;
+        Wed, 19 Jun 2019 08:18:18 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BE8683F246;
+        Wed, 19 Jun 2019 08:18:16 -0700 (PDT)
+Subject: Re: [PATCH 1/8] sched: introduce task_se_h_load helper
+To:     Rik van Riel <riel@surriel.com>, peterz@infradead.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        dietmar.eggeman@arm.com, mgorman@techsingularity.com,
+        vincent.guittot@linaro.org
+References: <20190612193227.993-1-riel@surriel.com>
+ <20190612193227.993-2-riel@surriel.com>
+ <55d914d2-fba2-48c0-e7ff-3c7337c8cf8e@arm.com>
+ <c8c3a78884be6c1b3a5e0984750ed8968230c976.camel@surriel.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <9e75dd03-23e5-8ab3-8f5c-789b2581b3a7@arm.com>
+Date:   Wed, 19 Jun 2019 17:18:15 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
- <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
- <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
- <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
- <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com> <20190619150406.GB19346@kroah.com>
-In-Reply-To: <20190619150406.GB19346@kroah.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Wed, 19 Jun 2019 20:47:34 +0530
-Message-ID: <CAOuPNLgYN3FDvNsaWqom45h7aFz=HczDdL-QoHOc_Sreqf8T2g@mail.gmail.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-To:     Greg KH <greg@kroah.com>
-Cc:     Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org,
-        open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <c8c3a78884be6c1b3a5e0984750ed8968230c976.camel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 8:34 PM Greg KH <greg@kroah.com> wrote:
->
-> On Wed, Jun 19, 2019 at 07:03:39PM +0530, Pintu Agarwal wrote:
-> > You can think that the version I am using right now is almost 4.9 itself.
-> > Upgrading again to higher kernel version is again difficult, also
-> > customer does not want it.
->
-> They don't want a secure and supported kernel over the lifetime of their
-> device?  That sounds really odd.
-No I mean to say, there are lots of features and customization already
-done on this version and stabilized.
-Upgrading again may require months of effort.
-Of course upgrading is planned for later products.
+On 6/19/19 3:57 PM, Rik van Riel wrote:
+> On Wed, 2019-06-19 at 14:52 +0200, Dietmar Eggemann wrote:
+> 
+>>> @@ -7833,14 +7834,19 @@ static void update_cfs_rq_h_load(struct
+>>> cfs_rq *cfs_rq)
+>>>  	}
+>>>  }
+>>>  
+>>> -static unsigned long task_h_load(struct task_struct *p)
+>>> +static unsigned long task_se_h_load(struct sched_entity *se)
+>>>  {
+>>> -	struct cfs_rq *cfs_rq = task_cfs_rq(p);
+>>> +	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>>>  
+>>>  	update_cfs_rq_h_load(cfs_rq);
+>>> -	return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
+>>> +	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
+>>>  			cfs_rq_load_avg(cfs_rq) + 1);
+>>>  }
+>>
+>> I wonder if this is necessary. I placed a BUG_ON(!entity_is_task(se))
+>> into task_se_h_load() after I applied the whole patch-set and ran
+>> some
+>> taskgroup related testcases. It didn't hit.
+>>
+>> So why not use task_h_load(task_of(se)) instead?
+>>
+>> [...]
+> 
+> That would work, but task_h_load then dereferences
+> task->se to get the se->avg.load_avg value.
+> 
+> Going back to task from the se, only to then get the
+> se from the task seems a little unnecessary :)
+> 
+> Can you explain why you think task_h_load(task_of(se))
+> would be better? I think I may be overlooking something.
 
-> Never create a new device using the 4.9.y kernel tree unless you have someone else doing the support for it
-> (i.e. a SoC vendor that you are paying support from).
->
-Actually, this is not a new device. Its an older device itself.
-This is an experimental activity.
+Ah, OK, I just wanted to avoid having task_se_h_load() and task_h_load()
+at the same time. You could replace the remaining calls to
+task_h_load(p) with task_se_h_load(&p->se) in this case.
+
+- task_load = task_h_load(p);
++ task_load = task_se_h_load(&p->se);
+
+Not that important though right now ...
+
