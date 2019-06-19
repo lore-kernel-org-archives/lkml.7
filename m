@@ -2,74 +2,94 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0825C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:51:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 143FFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:54:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D032821881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:51:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB7CB2187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:54:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729642AbfFSPvG (ORCPT
+        id S1729406AbfFSPyD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:51:06 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30650 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfFSPvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:51:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 08:51:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="181661305"
-Received: from mcostacx-wtg.ger.corp.intel.com (HELO localhost) ([10.249.47.136])
-  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2019 08:51:02 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Jonathan Corbet <corbet@lwn.net>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     David Howells <dhowells@redhat.com>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main dir
-In-Reply-To: <20190619085458.08872dbb@lwn.net>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190619072218.4437f891@coco.lan> <cover.1560890771.git.mchehab+samsung@kernel.org> <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org> <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com> <11422.1560951550@warthog.procyon.org.uk> <20190619111528.3e2665e3@coco.lan> <20190619085458.08872dbb@lwn.net>
-Date:   Wed, 19 Jun 2019 18:52:32 +0300
-Message-ID: <874l4llghr.fsf@intel.com>
+        Wed, 19 Jun 2019 11:54:03 -0400
+Received: from faui03.informatik.uni-erlangen.de ([131.188.30.103]:34740 "EHLO
+        faui03.informatik.uni-erlangen.de" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728671AbfFSPyC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:54:02 -0400
+Received: from faui06c.informatik.uni-erlangen.de (faui06c.informatik.uni-erlangen.de [IPv6:2001:638:a000:4130:131:188:30:202])
+        by faui03.informatik.uni-erlangen.de (Postfix) with ESMTP id 0B4FD240A7B;
+        Wed, 19 Jun 2019 17:46:57 +0200 (CEST)
+Received: by faui06c.informatik.uni-erlangen.de (Postfix, from userid 30063)
+        id EE86CB0084D; Wed, 19 Jun 2019 17:46:56 +0200 (CEST)
+From:   Lukas Schneider <lukas.s.schneider@fau.de>
+To:     kim.jamie.bradley@gmail.com, pakki001@umn.edu,
+        colin.king@canonical.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Lukas Schneider <lukas.s.schneider@fau.de>,
+        Jannik Moritz <jannik.moritz@fau.de>
+Subject: [PATCH 2/4] rts5208: Fix usleep_range is preferred over udelay
+Date:   Wed, 19 Jun 2019 17:46:46 +0200
+Message-Id: <20190619154648.13840-2-lukas.s.schneider@fau.de>
+X-Mailer: git-send-email 2.19.1
+In-Reply-To: <20190619154648.13840-1-lukas.s.schneider@fau.de>
+References: <20190619154648.13840-1-lukas.s.schneider@fau.de>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Jun 2019, Jonathan Corbet <corbet@lwn.net> wrote:
-> Organization of the documentation tree is important; it has never really
-> gotten any attention so far, and we're trying to make it better.  But
-> moving documents will, by its nature, annoy people.  We can generally get
-> past that, but I'd really like to avoid moving things twice.  In general,
-> I would rather see a single document converted, read critically and
-> updated, and carefully integrated with the rest than a hundred of them
-> swept into different piles...
+This patch fixes the issue reported by checkpatch:
 
-FWIW, as a first step, my preference would actually be cleaning up the
-top level Documentation/ directory. Move every file to an existing or a
-new subdirectory, even if just as .txt, or just delete. I understand
-this would lead to an extra rst conversion and extension change later,
-which you'd like to avoid, but IMO would be helpful.
+CHECK: usleep_range is preferred over udelay;
+see Documentation/timers/timers-howto.txt
 
-We could even add an attic directory, which would be a suitable place
-for things like zorro.txt. Attic is where I'd look for my old Amiga
-hardware, so feels natural.
+It's save to sleep here instead of using busy waiting,
+because we are not in an atomic context.
 
-BR,
-Jani.
+Signed-off-by: Lukas Schneider <lukas.s.schneider@fau.de>
+Signed-off-by: Jannik Moritz <jannik.moritz@fau.de>
+Cc <linux-kernel@i4.cs.fau.de>
+---
+ drivers/staging/rts5208/rtsx_card.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-
+diff --git a/drivers/staging/rts5208/rtsx_card.c b/drivers/staging/rts5208/rtsx_card.c
+index 294f381518fa..960e845133c3 100644
+--- a/drivers/staging/rts5208/rtsx_card.c
++++ b/drivers/staging/rts5208/rtsx_card.c
+@@ -679,7 +679,7 @@ int switch_ssc_clock(struct rtsx_chip *chip, int clk)
+ 	if (retval < 0)
+ 		return STATUS_ERROR;
+ 
+-	udelay(10);
++	usleep_range(10, 20);
+ 	retval = rtsx_write_register(chip, CLK_CTL, CLK_LOW_FREQ, 0);
+ 	if (retval)
+ 		return retval;
+@@ -797,7 +797,7 @@ int switch_normal_clock(struct rtsx_chip *chip, int clk)
+ 		return retval;
+ 
+ 	if (sd_vpclk_phase_reset) {
+-		udelay(200);
++		usleep_range(200, 210);
+ 		retval = rtsx_write_register(chip, SD_VPCLK0_CTL,
+ 					     PHASE_NOT_RESET, PHASE_NOT_RESET);
+ 		if (retval)
+@@ -806,7 +806,7 @@ int switch_normal_clock(struct rtsx_chip *chip, int clk)
+ 					     PHASE_NOT_RESET, PHASE_NOT_RESET);
+ 		if (retval)
+ 			return retval;
+-		udelay(200);
++		usleep_range(200, 210);
+ 	}
+ 	retval = rtsx_write_register(chip, CLK_CTL, 0xFF, 0);
+ 	if (retval)
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.19.1
+
