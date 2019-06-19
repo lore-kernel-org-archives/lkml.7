@@ -2,116 +2,128 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D128C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:29:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E59C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D902208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:29:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D37BE208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731772AbfFSM3x (ORCPT
+        id S1731782AbfFSMa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:29:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38462 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731427AbfFSM3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:29:53 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0EB2C3004149;
-        Wed, 19 Jun 2019 12:29:51 +0000 (UTC)
-Received: from hive.brq.redhat.com (unknown [10.43.2.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C7F0E608A7;
-        Wed, 19 Jun 2019 12:29:42 +0000 (UTC)
-From:   Petr Oros <poros@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        ivecera@redhat.com
-Subject: [PATCH v2 net] be2net: fix link failure after ethtool offline test
-Date:   Wed, 19 Jun 2019 14:29:42 +0200
-Message-Id: <20190619122942.15497-1-poros@redhat.com>
+        Wed, 19 Jun 2019 08:30:28 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43931 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731427AbfFSMa2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:30:28 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so3167495wru.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ZQFy3noIgLzCKKvfJTpCDEkL2tduUrGhw500s5XjKOM=;
+        b=uEKuINp+dDn1+2aAHjNuOpcrZvmmhXEMyNKHNAYElP/zaPrKDiD9hB7RRlBvbdlZUs
+         2r5UuO6ctmhvvYOATAkPM5SR3EcBPIoIDOE7zHvfltBXiCEfcsHDh9b4jv4fjx1srjRV
+         J63bacB1MmPDL/FpWzfrnMILmknCEg2l5Ae/kGUrqmEJkALH7lP7/K99FRm1cO4JMNOV
+         taPGImXUVh0wOxcBwl0bZe46hNzqOSAE/Wpb7S8dROmVKLo7WDMQJ2jqkO3glkjVNFl3
+         j2nsQm4tx2VLp7Kx24G1J45ok4VwQpAWRfo6ddPOW2CXQkNE18j1Q465XenwR0jfoG0N
+         +Q0g==
+X-Gm-Message-State: APjAAAXALxryFB4vwEWtjzDduRulYGsDxlEhHVw9HfIUGS6HcRJzWqAi
+        Vz21IZoqr7XaZOaxmr5mJfr/vw==
+X-Google-Smtp-Source: APXvYqyM0eIINJF5V89HnKZUprBMY1GZ2O4C7V7moar/rzzhLkG1oS4KKMtGfJ/P9Up2vnllSLiCCw==
+X-Received: by 2002:adf:ec0f:: with SMTP id x15mr87257157wrn.165.1560947425796;
+        Wed, 19 Jun 2019 05:30:25 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.23
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 05:30:24 -0700 (PDT)
+From:   Miklos Szeredi <mszeredi@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 01/13] vfs: verify param type in vfs_parse_sb_flag()
+Date:   Wed, 19 Jun 2019 14:30:07 +0200
+Message-Id: <20190619123019.30032-1-mszeredi@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 19 Jun 2019 12:29:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain cards in conjunction with certain switches need a little more
-time for link setup that results in ethtool link test failure after
-offline test. Patch adds a loop that waits for a link setup finish.
+vfs_parse_sb_flag() accepted any kind of param with a matching key, not
+just a flag.  This is wrong, only allow flag type and return -EINVAL
+otherwise.
 
-Changes in v2:
-- added fixes header
-
-Fixes: 4276e47e2d1c ("be2net: Add link test to list of ethtool self tests.")
-Signed-off-by: Petr Oros <poros@redhat.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+ fs/fs_context.c | 31 +++++++++++++++----------------
+ 1 file changed, 15 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index 8a6785173228f3..492f8769ac12c2 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -891,7 +891,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 			 u64 *data)
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index 103643c68e3f..e56310fd8c75 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -81,30 +81,29 @@ static const char *const forbidden_sb_flag[] = {
+ /*
+  * Check for a common mount option that manipulates s_flags.
+  */
+-static int vfs_parse_sb_flag(struct fs_context *fc, const char *key)
++static int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter *param)
  {
- 	struct be_adapter *adapter = netdev_priv(netdev);
--	int status;
-+	int status, cnt;
- 	u8 link_status = 0;
+-	unsigned int token;
++	const char *key = param->key;
++	unsigned int set, clear;
+ 	unsigned int i;
  
- 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -902,6 +902,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
+ 	for (i = 0; i < ARRAY_SIZE(forbidden_sb_flag); i++)
+ 		if (strcmp(key, forbidden_sb_flag[i]) == 0)
+ 			return -EINVAL;
  
- 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
+-	token = lookup_constant(common_set_sb_flag, key, 0);
+-	if (token) {
+-		fc->sb_flags |= token;
+-		fc->sb_flags_mask |= token;
+-		return 0;
+-	}
++	set = lookup_constant(common_set_sb_flag, key, 0);
++	clear = lookup_constant(common_clear_sb_flag, key, 0);
++	if (!set && !clear)
++		return -ENOPARAM;
  
-+	/* check link status before offline tests */
-+	link_status = netif_carrier_ok(netdev);
-+
- 	if (test->flags & ETH_TEST_FL_OFFLINE) {
- 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
- 			test->flags |= ETH_TEST_FL_FAILED;
-@@ -922,13 +925,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 		test->flags |= ETH_TEST_FL_FAILED;
- 	}
+-	token = lookup_constant(common_clear_sb_flag, key, 0);
+-	if (token) {
+-		fc->sb_flags &= ~token;
+-		fc->sb_flags_mask |= token;
+-		return 0;
+-	}
++	if (param->type != fs_value_is_flag)
++		return invalf(fc, "%s: Unexpected value for '%s'",
++			      fc->fs_type->name, param->key);
  
--	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
--	if (status) {
--		test->flags |= ETH_TEST_FL_FAILED;
--		data[4] = -1;
--	} else if (!link_status) {
-+	/* link status was down prior to test */
-+	if (!link_status) {
- 		test->flags |= ETH_TEST_FL_FAILED;
- 		data[4] = 1;
-+		return;
-+	}
-+
-+	for (cnt = 10; cnt; cnt--) {
-+		status = be_cmd_link_status_query(adapter, NULL, &link_status,
-+						  0);
-+		if (status) {
-+			test->flags |= ETH_TEST_FL_FAILED;
-+			data[4] = -1;
-+			break;
-+		}
-+
-+		if (link_status)
-+			break;
-+
-+		msleep_interruptible(500);
- 	}
+-	return -ENOPARAM;
++	fc->sb_flags |= set;
++	fc->sb_flags &= ~clear;
++	fc->sb_flags_mask |= set | clear;
++	return 0;
  }
+ 
+ /**
+@@ -130,7 +129,7 @@ int vfs_parse_fs_param(struct fs_context *fc, struct fs_parameter *param)
+ 	if (!param->key)
+ 		return invalf(fc, "Unnamed parameter\n");
+ 
+-	ret = vfs_parse_sb_flag(fc, param->key);
++	ret = vfs_parse_sb_flag(fc, param);
+ 	if (ret != -ENOPARAM)
+ 		return ret;
  
 -- 
 2.21.0
