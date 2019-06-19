@@ -2,129 +2,104 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0E5C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAB3CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA68721880
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC84521874
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fU0DJtyN"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="n2Rcmy/b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729923AbfFSPFI (ORCPT
+        id S1729949AbfFSPFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:05:08 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:39768 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726238AbfFSPFI (ORCPT
+        Wed, 19 Jun 2019 11:05:53 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36453 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726496AbfFSPFx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:05:08 -0400
-Received: by mail-ua1-f68.google.com with SMTP id j8so10173460uan.6;
-        Wed, 19 Jun 2019 08:05:07 -0700 (PDT)
+        Wed, 19 Jun 2019 11:05:53 -0400
+Received: by mail-lj1-f195.google.com with SMTP id i21so3627686ljj.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:05:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pkwqFDU1m9y1SmwwSPbuxARBXbcsz4Hg+ImtIjkxe0I=;
-        b=fU0DJtyNLrcixK/O0KvTyH0V+rJYMHK4QbYcOjT2Rh7QaHKwWZOt+i3x+KCpYcfPVe
-         /ifw9OBIcAIwu0gj3TlxpRPlmtzmnNdySQvWwbR7E3+WQWLRc6A4icFLP5pupx82L+4K
-         GjG7iQvhlJi5aPBzh2l1p5k44weDEcw0zJHTLqTx6hMNG5bkDtHRrTD0ajwbF47PvVvB
-         1+RMqBuvg1de+T4WXa44lUd0lF42/Sf2Kqb8mqtmqoUoTToWxAAX6qeumOA/DdjL9W2D
-         atuV1iDF4pnKrsCvPOYsoUKV/RlDsYZjwv8KtKUHaqlYGtw+ek1WErJN8v/kIHXqN1+7
-         T3/A==
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=/la8YhxZ2cr5zsG/Mj3bf2KoRNJCvpbpOWf93KaGA8M=;
+        b=n2Rcmy/bvTvujq0Mp0NgQKBCE14/CMC0O4fTI+A+a4Kvj4+M50RkihtSc9uRfk8Z1w
+         /mveI+IdabqrlEOJE+jEoSSpQkBHb6VyAKB7JcK8o2xixedM8kCsl6Fk6MUwMMuZQG5z
+         TlOTnbmuCaPaFaXBuKMUNFE1QlmI1nXMVlK0Dg1gkQK0qFAh8SnJFPUh5xKa+PBdpJeI
+         UrOUDg7RfSI4cAEsRYH3a9ZtlwCJBGphcOqDZRoGHhrglqoJmzzFsTVlR/CNbrJrkReH
+         dnG7kL0wcOBxSymEJRCdlhyM724zEicdRxWhlrUwwsyftCxRCTtA+HSZMqPszi0d7Zpa
+         4MXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pkwqFDU1m9y1SmwwSPbuxARBXbcsz4Hg+ImtIjkxe0I=;
-        b=DVFv1xuwwzCLM42DYZVrkKgx+0ykSGA3YraB7h09H0Nhej0hWBGEG1XMdHTEtYa8Ri
-         pzSsSziVCgWK9w2X8v7DiNkZK+M3VfRHcl+u26WLaQuWpDIUKyt9RgNJXQkOSyL3ZBqA
-         PtsmAJhn7oW9NGvCmzg+Pdpsf9/r7QMuO4dzqKDTeu52hCslHLyLHrHvALN3naHR3ib8
-         W9stPb//Ik00uymV/yr+0K8+tgDNMd6bUYnbrRePXD4ynQ6ItlisPECZIKmzBpJzbFmq
-         3vikrtNtagYzU+mV3is3r5HZ+k7GQVA1C52VW/AgjRD+fIuoB9c8ljRLgQm80IHbqUrF
-         2ePw==
-X-Gm-Message-State: APjAAAVbrXaP5FzpMi+Edn1S81x08KJV53BGqRgIw+PmigSGswHzfu0Z
-        /GEaYDbVHM9GC0HggVb9ssYqPUwUT1AhWV1yC0A=
-X-Google-Smtp-Source: APXvYqwK/xA+axdU8X8NLuJu0qn2jf1SXM8PkR8+V9KMrB2p3kYXqlcm7OSWbUsoqisq6XlVx7wqtBrHHdaDOCqLpxs=
-X-Received: by 2002:a67:e419:: with SMTP id d25mr6657505vsf.196.1560956706613;
- Wed, 19 Jun 2019 08:05:06 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/la8YhxZ2cr5zsG/Mj3bf2KoRNJCvpbpOWf93KaGA8M=;
+        b=ZJ9Hib7pCCbQUOB66hYTkYIP3Ss+jwHR6pGY825Pp9VccRQynDpwmDJ9m4a4xEpDFx
+         0LwzPLvSAgIpNytgq9OwkM/Frh7lSk06p0e33FqoanfjP7gREGIp7lOmG5YAoKLSyzGj
+         d9+EB7AM9dnYy3nKZ+1pBaejiaBal4tev308OZYhmtyIc3TSwC5qgjcyJ9oX0IYl0dtc
+         o19x+RWm8LHtiZW3o57dYawth0+GpGdJ/GbCcmbt5C5d/gmvOmdD0ZejE2sdVTzjgaOW
+         3md1gQh6jha+4pWWLjE+WiUX8aFj3cgyje+hQJ4MpqPvj/d3Brp/EgPOPGVBYiylAV7A
+         tQgQ==
+X-Gm-Message-State: APjAAAVk/xvppVCgylxqTMMDPLOH9QgibYEFTJj9UdX2gtphPhFp/k9A
+        +uV4FS9RJusF4SMIpAsP+gAlyQ==
+X-Google-Smtp-Source: APXvYqxJ83jJylZF4/0OSKRawqgT1V4DMOOY2IfhVDxokK2wW4QaZ/7KhrJCKCQaKHgjSaTQiMvx/w==
+X-Received: by 2002:a2e:9685:: with SMTP id q5mr18130200lji.227.1560956751539;
+        Wed, 19 Jun 2019 08:05:51 -0700 (PDT)
+Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
+        by smtp.gmail.com with ESMTPSA id p76sm2628684ljb.49.2019.06.19.08.05.50
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 08:05:50 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 07:02:32 -0700
+From:   Olof Johansson <olof@lixom.net>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Russell King <linux@armlinux.org.uk>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Aaro Koskinen <aaro.koskinen@iki.fi>,
+        Tony Lindgren <tony@atomide.com>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, arm@kernel.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Alexander Shiyan <shc_work@mail.ru>
+Subject: Re: [PATCH v2] ARM: config: Remove left-over BACKLIGHT_LCD_SUPPORT
+Message-ID: <20190619140232.hkhrq63ly4mlb3yi@localhost>
+References: <1559633061-28003-1-git-send-email-krzk@kernel.org>
 MIME-Version: 1.0
-References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
- <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
- <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
- <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
- <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com> <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
-In-Reply-To: <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
-From:   Pintu Agarwal <pintu.ping@gmail.com>
-Date:   Wed, 19 Jun 2019 20:34:55 +0530
-Message-ID: <CAOuPNLhZhgN26rquLQq9zHBct1QxK-7hXAza0xk-0QooPGYLNw@mail.gmail.com>
-Subject: Re: [IMX] [DRM]: suspend/resume support
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
-        linux-pm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1559633061-28003-1-git-send-email-krzk@kernel.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 7:14 PM Fabio Estevam <festevam@gmail.com> wrote:
->
-> On Wed, Jun 19, 2019 at 10:33 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
->
-> > You can think that the version I am using right now is almost 4.9 itself.
->
-> "almost 4.9" does not help, sorry.
->
-> > Upgrading again to higher kernel version is again difficult, also
-> > customer does not want it.
->
-> dw-hdmi is well supported on i.MX6 with mainline, so you could simply try that.
->
-> Try booting 5.1.11 on your custom board with a very minimal dts with
-> HDMI support.
->
-Okay. I will surely try it on another IMX6 fresh board.
-With 5.1.11 you mean the kernel from mainline kernel.org
-Or, is there a separate kernel repo for imx6. If yes, please let me know.
+On Tue, Jun 04, 2019 at 09:24:21AM +0200, Krzysztof Kozlowski wrote:
+> The CONFIG_BACKLIGHT_LCD_SUPPORT was removed in commit 8c5dc8d9f19c
+> ("video: backlight: Remove useless BACKLIGHT_LCD_SUPPORT kernel
+> symbol"). Options protected by CONFIG_BACKLIGHT_LCD_SUPPORT are now
+> available directly.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-> Then you can test suspend/resume and see if HDMI hangs or not.
->
-By this suspend/resume, you mean "suspend-to-ram" or "suspend-to-disk" ?
 
-> > Another approach I tried is, installing hdmi {dw-hdmi.ko,
-> > dw_hdmi-imx.ko} as a module, just after the resume.
-> > With this also system hangs during installation of dw_hdmi-imx.ko at
-> > below location:
-> >
-> > imx_drm_driver_load(..)
-> > |
-> > |--> component_bind_all(...)
-> >      |
-> >      |-> component_bind(ipu)
-> >          |
-> >          |
-> >          ipu_drm_bind(..)
-> >          |
-> >          |-> ipu_crtc_init(..)
-> >              |
-> >              |-> ipu_plane_irq(..)
-> >              |
-> >              | ----> << __HANGS HERE__ >>
->
-> I am not able to reproduce this hang. As I mentioned yesterday
-> suspend/resume is working just fine.
->
-This scenario is not with suspend/resume.
-This hang is, when we make hdmi as a loadable module (.ko) and trying
-to install it after resume.
-In this case, suspend/resume will not come into picture. Not sure why
-it still hangs.
-Do you have any clue for this scenario?
+Applied, thanks.
+
+
+-Olof
