@@ -8,97 +8,97 @@ X-Spam-Status: No, score=-21.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA6FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:17:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E6AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:18:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59B9E21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:17:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CFE321721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:18:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="L1NZ6goC"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pD5jK+Uy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfFSSRU (ORCPT
+        id S1729477AbfFSSSs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:17:20 -0400
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:51764 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726332AbfFSSRT (ORCPT
+        Wed, 19 Jun 2019 14:18:48 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:49672 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726191AbfFSSSs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:17:19 -0400
-Received: by mail-pf1-f202.google.com with SMTP id 145so102528pfv.18
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:17:19 -0700 (PDT)
+        Wed, 19 Jun 2019 14:18:48 -0400
+Received: by mail-pf1-f201.google.com with SMTP id x9so109977pfm.16
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:18:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=O7rv2aQ+NZXAwqWEnlsVJInaVAsSvihbId/ltqpnhno=;
-        b=L1NZ6goCzBfV03VfFjkvbvXTv1TSjEjf/4k2Mk71dw+3pJ0zRjNqfHR6GkaB1rB4lh
-         Vi8lL27r/YHsA6fDTXTy8wIfsLZG46ltJ1HFZ/jUsi6iVvgMk3644k3q+hs6F1ch/aic
-         yECJUmwDTfpVhKZ9flqwZv5W6QcxlqtkZIWpiGDcf6DAdAwFy6qVZmsLmWSAi9nqXtcI
-         Q5o0vE868amfRuXf5cwTKwHqa/pTqSZv6mp5My349i2AuauNFjLOlp3mN5QA0nGr6AhD
-         xFLvIhb6Rh9xI+axDQOn6Ql1lCeaS6VQhTVEo81LPzGJBRAEzpCjLTfFPEnp9B2OPDb4
-         DjNA==
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=9SP6MUWk873Ch/qsaQOv86zFySgp2PlyOeK7M/kFehU=;
+        b=pD5jK+Uyg8ZNOAIvhEa7UgdPRgCtjB2BbMy+UMTUUXAYL6W0Kl2ujwK8pGy1NdmPIh
+         IlfCkHrjHyEFesgPjd5PE5S+ZLL55lO0tbyvO0lgPWAW1nR7V8kERali+1SESilx8ZjA
+         zwvBpKHO2uW4wPZoGCLtzbIJGXYSzvSETdA7A/Uzc8jDArSRyFV4b9HAAiLhalYrztWd
+         z76Rr9DxKZpunPUre9f8SAFv1ZMYTXdI/EIeo9A2/ttvoYP7xdGzz8cWHYrSiUPQDGuf
+         y80PuvDZOimgRDHNYbrkIBtLhoHajrzVi4OztO1/hkhn02RCOhxsJ77px2KN+XbEN5Nf
+         Dvaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=O7rv2aQ+NZXAwqWEnlsVJInaVAsSvihbId/ltqpnhno=;
-        b=dKI97PE4e5eUMsvd+SM06VhAlf5Ci1pCzy16JDorgypxVxuyAAe8su+hvMc3TdVU8t
-         wg1+0Gd6LupE+15LD81gbZPAxvdL4qkxb+z/8MdXniAX9eyVxvYWK5uPeEelVi3vp7S3
-         kjChTDS4OgG5P1a7XR9trzKgy4TrrtTM3Ia5VnE8PThmMneJOe4lBE5Tr8jrb3JX9iDM
-         E+C1xapkD+LERfj/BU7GGCFiznUIhgjAZIqs1+QZAj3+5lB8QuAVAoKldPRe9DSO98zp
-         ragR02UHQPK2TXNFSZe62315IlFTxkbFnSnsiMQmrxKUEzEFuIza1oOlU5nuvaC0sFiC
-         6SGw==
-X-Gm-Message-State: APjAAAWlNe39ANq26zNA76CX/v+qhs+fY7C2mTNdVDzbYpGSNyhqWBa6
-        2jqrFtEh6NGZE+ZaQpApCc8stw3pSA==
-X-Google-Smtp-Source: APXvYqzCqygg6fRWJ9UuWuzECpwXNQ/ze8FCSiCnGa/FlHW33doGjRIRoYNNUX56OXyeA9DOyqBhBwCO0g==
-X-Received: by 2002:a63:b1d:: with SMTP id 29mr8888660pgl.103.1560968238611;
- Wed, 19 Jun 2019 11:17:18 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 11:17:15 -0700
-In-Reply-To: <20190619084921.7e1310e0@bootlin.com>
-Message-Id: <20190619181715.253903-1-nhuck@google.com>
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=9SP6MUWk873Ch/qsaQOv86zFySgp2PlyOeK7M/kFehU=;
+        b=LlhEr+z6nhKK9ysj/bJg+GJg/z5i8cyhsAipsoM8HuVdBL/0ACcerSBQKzbB1oTPH0
+         2hK8ZEhSFhCc1Es9RzPlsxNU5pTAUMlTTJWQaiQWboXS9zwjI/ULfZfEsFWok+tylEs8
+         zFlUJXDqRHxTER2bPZkjHA9qqSBwyeLAMpjOoBkFMao00c/DWCYIzDcmWslbG1GLiX7D
+         N69tg7jbnlv5rWRtBW5dsWJA+fM/30pM+5itO+9OjK88ZYYE0D78pCK+ehD++e1QCXE7
+         Jw4MAiCxlNKGjpq6PTW1KGpE/Q4AbebTJeC95Ue3C4kPfoUc/Lf+n4RGmHTY+9vpH7RH
+         MoEQ==
+X-Gm-Message-State: APjAAAU5wXtjnELTYjeDLYOH19N0HXvMU78VzWgHjmLzBN/ABJaQUe1P
+        ZA5N5lSmmOZivawDMeFgXPZxz0OWegkA+HAu4yA=
+X-Google-Smtp-Source: APXvYqykVq7KmiJ6FaseWDZ/iHfU1QNxPCm9zuhYfrBj1sRQJAEwGxl/VdGd9CFiQ2Isa0mjFBRFo6JhpKhaB5tGgBI=
+X-Received: by 2002:a63:151a:: with SMTP id v26mr9065451pgl.9.1560968327444;
+ Wed, 19 Jun 2019 11:18:47 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 11:18:44 -0700
+Message-Id: <20190619181844.57696-1-ndesaulniers@google.com>
 Mime-Version: 1.0
-References: <20190619084921.7e1310e0@bootlin.com>
 X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH v2] net: mvpp2: debugfs: Add pmap to fs dump
-From:   Nathan Huckleberry <nhuck@google.com>
-To:     davem@davemloft.net, maxime.chevallier@bootlin.com
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Nathan Huckleberry <nhuck@google.com>,
-        clang-built-linux@googlegroups.com
+Subject: [PATCH] MAINTAINERS: add CLANG/LLVM BUILD SUPPORT info
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     akpm@linux-foundation.org
+Cc:     clang-built-linux@googlegroups.com, joe@perches.com,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There was an unused variable 'mvpp2_dbgfs_prs_pmap_fops'
-Added a usage consistent with other fops to dump pmap
-to userspace.
+Add keyword support so that our mailing list gets cc'ed for clang/llvm
+patches. We're pretty active on our mailing list so far as code review.
+There are numerous Googlers like myself that are paid to support
+building the Linux kernel with Clang and LLVM.
 
-Cc: clang-built-linux@googlegroups.com
-Link: https://github.com/ClangBuiltLinux/linux/issues/529
-Signed-off-by: Nathan Huckleberry <nhuck@google.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
 ---
-Changes from v1 -> v2
-* Fix typo
-* Change commit prefix to debugfs
- drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c | 3 +++
- 1 file changed, 3 insertions(+)
+Thanks for Joe Perches for help on the syntax for the case insensitive
+syntax.
 
-diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-index 0ee39ea47b6b..274fb07362cb 100644
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_debugfs.c
-@@ -566,6 +566,9 @@ static int mvpp2_dbgfs_prs_entry_init(struct dentry *parent,
- 	debugfs_create_file("hits", 0444, prs_entry_dir, entry,
- 			    &mvpp2_dbgfs_prs_hits_fops);
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ef58d9a881ee..fa798cc48e34 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3940,6 +3940,14 @@ M:	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+ S:	Maintained
+ F:	.clang-format
  
-+	debugfs_create_file("pmap", 0444, prs_entry_dir, entry,
-+			     &mvpp2_dbgfs_prs_pmap_fops);
++CLANG/LLVM BUILD SUPPORT
++L: clang-built-linux@googlegroups.com
++W: https://clangbuiltlinux.github.io/
++B: https://github.com/ClangBuiltLinux/linux/issues
++C: irc://chat.freenode.net/clangbuiltlinux
++S: Supported
++K: \b(?i:clang|llvm)\b
 +
- 	return 0;
- }
- 
+ CLEANCACHE API
+ M:	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+ L:	linux-kernel@vger.kernel.org
 -- 
 2.22.0.410.gd8fdbe21b5-goog
 
