@@ -2,84 +2,77 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3329C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:43:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24301C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:44:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86D28206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:43:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9616206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:44:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="1sNz137Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731899AbfFSMnj (ORCPT
+        id S1731847AbfFSMok (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:43:39 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:37930 "EHLO ns.iliad.fr"
+        Wed, 19 Jun 2019 08:44:40 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:39972 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfFSMni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:43:38 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id ECA7720564;
-        Wed, 19 Jun 2019 14:43:36 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id D084F20186;
-        Wed, 19 Jun 2019 14:43:36 +0200 (CEST)
-Subject: Re: [PATCH] phy: qcom-qmp: Correct READY_STATUS poll break condition
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     MSM <linux-arm-msm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Niklas Cassel <niklas.cassel@linaro.org>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>
-References: <20190604232443.3417-1-bjorn.andersson@linaro.org>
- <619d2559-6d88-e795-76e0-3078236933ef@free.fr>
- <20190612172501.GY4814@minitux>
- <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
-Message-ID: <ed29cd18-81de-f90d-474b-30612418a67e@free.fr>
-Date:   Wed, 19 Jun 2019 14:43:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727244AbfFSMok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:44:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=oF6P+ACF0Y2JFhAjtVOgzpA0oW5syeHiby1lqhM0jRA=; b=1sNz137Y+5YnAiRovEAwbnlCq+
+        W7NYHUJPUQGPduwkwY7wnhRv44j+HiPM4RMUYKup/RzXKe899oOiBrVniVsGJzxrKcg7pgZI8oo4R
+        VSvu+4S+Sddh7mrJzEJ/oxhA4alpZbAoSrTNpEIU7xRVhqfLx/RG6TWucD8nDl5VpJs4=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hdZx3-0000t9-V0; Wed, 19 Jun 2019 14:44:33 +0200
+Date:   Wed, 19 Jun 2019 14:44:33 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     "Voon, Weifeng" <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        "Gomes, Vinicius" <vinicius.gomes@intel.com>,
+        "Ong, Boon Leong" <boon.leong.ong@intel.com>
+Subject: Re: [RFC net-next 1/5] net: stmmac: introduce IEEE 802.1Qbv
+ configuration functionalities
+Message-ID: <20190619124433.GC26784@lunn.ch>
+References: <1560893778-6838-1-git-send-email-weifeng.voon@intel.com>
+ <1560893778-6838-2-git-send-email-weifeng.voon@intel.com>
+ <20190619030729.GA26784@lunn.ch>
+ <D6759987A7968C4889FDA6FA91D5CBC81472623A@PGSMSX103.gar.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <3570d880-2b76-88ae-8721-e75cf5acec4c@free.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Wed Jun 19 14:43:36 2019 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <D6759987A7968C4889FDA6FA91D5CBC81472623A@PGSMSX103.gar.corp.intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/06/2019 11:10, Marc Gonzalez wrote:
-
-> Here are my observations for a 8998 board:
+> > It looks like most o the TSN_WARN should actually be netdev_dbg().
+> > 
+> >    Andrew
 > 
-> 1) If I apply only the readl_poll_timeout() fix (not the mask_pcs_ready fixup)
-> qcom_pcie_probe() fails with a timeout in phy_init.
-> => this is in line with your regression analysis.
-> 
-> 2) Your patch also fixes a long-standing bug in UFS init whereby sending
-> lots of information to the console during phy init would lead to an
-> incorrectly diagnosed time-out.
-> 
-> Good stuff!
-> 
-> Reviewed-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
-> Tested-by: Marc Gonzalez <marc.w.gonzalez@free.fr>
+> Hi Andrew,
+> This file is targeted for dual licensing which is GPL-2.0 OR BSD-3-Clause.
+> This is the reason why we are using wrappers around the functions so that
+> all the function call is generic.
 
-Hello Kishon,
+I don't see why dual licenses should require wrappers. Please explain.
 
-Could you take this patch through your tree?
-It fixes a pair of nasty bugs.
-
-I do have a follow-up (trivial) patch on top of this one:
-https://lore.kernel.org/patchwork/patch/1088044/
-
-What are your thoughts on the usleep_range issue?
-https://lore.kernel.org/patchwork/patch/1088035/
-
-Regards.
+  Thanks
+	Andrew
