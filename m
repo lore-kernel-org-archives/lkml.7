@@ -2,127 +2,118 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F791C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:11:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E455C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:12:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 221892084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:11:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E627121734
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:12:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="TCSvmjBF"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="At3JbsRS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfFSIL0 (ORCPT
+        id S1731283AbfFSIMd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:11:26 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:40896 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731164AbfFSIL0 (ORCPT
+        Wed, 19 Jun 2019 04:12:33 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:59358 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730783AbfFSIMd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:11:26 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so25820369eds.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 01:11:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MC/t0+GCQCXJ5HUw0cDp3wEG1uegYs81hRvZB9zVfE0=;
-        b=TCSvmjBFMsZZpW3/6MEVx/M9rF5A1CIG3A8MxzxJxdmjwtt3zBZJhDrICd3UjKokZG
-         GdVSHPAkfPNi9HmYnYnLR9+c0Fzdn18pvcnp1ZUU1KOmqejSfqXlRka+TsfuMM/UwQNt
-         1oGFzgQsKETlSKCa8LEXGuV2ekdZCkNVa/tP4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=MC/t0+GCQCXJ5HUw0cDp3wEG1uegYs81hRvZB9zVfE0=;
-        b=sdhp5S9y3bqgYTI1KaT9bBMH9fr6BS5cejt8VTyWeUbV2nlDrHO7He/zFUm/gP9+L8
-         aLkC3hJeUIxJ2LKrLnoj2TZPyIEmNzEw7DzbC8teCkR4G6ajXtI02Mt0Lpsima2j7fHK
-         TA5cMtDvZ3BoPvDfWRGpRwP2HPr/u38Yq0GPVWcS9OB1g6s7bT/92cOFUJCEV2Z43B6e
-         gXewJdIwRnAeCuLhBo2xla0WYiW1ogIOZWsqSAgcktmimzHokWBeRy+rSLrH7fk9UuJZ
-         fLV30uQm616dF9S72vQklhnhkuYVhKjxZGLfjkgo86TF+cOC6gno0mwcvp+URNsLEg4k
-         rMwg==
-X-Gm-Message-State: APjAAAVhQ9liJv/KTNKydaheH2AbifEmiKWkU5GFlCIOvnoBqJL+Iyu+
-        eGq4nEPen7Q6HDBkYGWdJq9httNkQN4=
-X-Google-Smtp-Source: APXvYqyzTlz7Dqh5Dq8iiPWQJepg5nNh+DInaUL45FQ0/ysRzTOM13RL70UlqW1akAA2NnNB+6n7Sg==
-X-Received: by 2002:a50:b343:: with SMTP id r3mr44092303edd.16.1560931884407;
-        Wed, 19 Jun 2019 01:11:24 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id x4sm5562329eda.22.2019.06.19.01.11.22
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 01:11:23 -0700 (PDT)
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
-        kbuild test robot <lkp@intel.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Jingoo Han <jingoohan1@gmail.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Yisheng Xie <ysxie@foxmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Peter Rosin <peda@axentia.se>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        linux-fbdev@vger.kernel.org, Gerd Hoffmann <kraxel@redhat.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Lukas Wunner <lukas@wunner.de>, dri-devel@lists.freedesktop.org
-Subject: [PATCH] fbcon: Export fbcon_update_vcs
-Date:   Wed, 19 Jun 2019 10:11:15 +0200
-Message-Id: <20190619081115.27921-1-daniel.vetter@ffwll.ch>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 04:12:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=DFDmIe4RHPAZL+qQ9KFPuggzK78PR57GX9gLSjen+80=; b=At3JbsRS7oZLpVhfSse6JdB+E
+        pyzG235bIhVrraEKC2+7FUyrGtImw2zubb59+UYWjJpC2HI/Nbtr0lsuO+mckK/gwEAFndBMvCo2R
+        g4AKi6Q6smS2bbWKNanKx2u8rpzoQtWA+ywqsOpbOBvIFGXtauZ1PlMB3r0DgrrW7KW5j8Jbouzuu
+        9cD0uSl7mNwIkxKTYCQhv4Fmja9atFHGPiuREM0Dr8XZyxRnr/X0PWgYLBM4KoPaNXLV8pirXhb5r
+        FGhecwrFSq9e+fWItzZSLfnWXh5FKcDIa87qOWT0b8D2HQ4KJSE4YaKFA8c9Izi8n16n03DSjQjy8
+        6hMUNp4HQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdVhl-0006TM-LX; Wed, 19 Jun 2019 08:12:29 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0051120A4E0A0; Wed, 19 Jun 2019 10:12:27 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 10:12:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc:     Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        Jason Baron <jbaron@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+Message-ID: <20190619081227.GL3419@hirez.programming.kicks-ass.net>
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I failed to spot this while compile-testing. Oops.
+On Tue, Jun 18, 2019 at 04:16:20PM +0000, Vineet Gupta wrote:
 
-Reported-by: kbuild test robot <lkp@intel.com>
-Fixes: 9e1467002630 ("fbcon: replace FB_EVENT_MODE_CHANGE/_ALL with direct calls")
-Cc: Sam Ravnborg <sam@ravnborg.org>
-Cc: Daniel Vetter <daniel.vetter@intel.com>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Jingoo Han <jingoohan1@gmail.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Yisheng Xie <ysxie@foxmail.com>
-Cc: "Michał Mirosław" <mirq-linux@rere.qmqm.pl>
-Cc: Peter Rosin <peda@axentia.se>
-Cc: Mikulas Patocka <mpatocka@redhat.com>
-Cc: linux-fbdev@vger.kernel.org
-Cc: Gerd Hoffmann <kraxel@redhat.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: dri-devel@lists.freedesktop.org
-Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
----
- drivers/video/fbdev/core/fbcon.c | 1 +
- 1 file changed, 1 insertion(+)
+> > +/*
+> > + * To make atomic update of patched instruction available we need to guarantee
+> > + * that this instruction doesn't cross L1 cache line boundary.
+> > + *
 
-diff --git a/drivers/video/fbdev/core/fbcon.c b/drivers/video/fbdev/core/fbcon.c
-index b8067e07f8a8..c9235a2f42f8 100644
---- a/drivers/video/fbdev/core/fbcon.c
-+++ b/drivers/video/fbdev/core/fbcon.c
-@@ -3037,6 +3037,7 @@ void fbcon_update_vcs(struct fb_info *info, bool all)
- 	else
- 		fbcon_modechanged(info);
- }
-+EXPORT_SYMBOL(fbcon_update_vcs);
- 
- int fbcon_mode_deleted(struct fb_info *info,
- 		       struct fb_videomode *mode)
--- 
-2.20.1
+Oh urgh. Is that the only way ARC can do text patching? We've actually
+considered something like this on x86 at some point, but there we have
+the 'fun' detail that the i-fetch window does not in fact align with L1
+size on all uarchs, so that got complicated real fast.
+
+I'm assuming you've looked at what x86 currently does and found
+something like that doesn't work for ARC?
+
+> > +/* Halt system on fatal error to make debug easier */
+> > +#define arc_jl_fatal(format...)						\
+> > +({									\
+> > +	pr_err(JUMPLABEL_ERR format);					\
+> > +	BUG();								\
+> 
+> Does it make sense to bring down the whole system vs. failing and returning.
+> I see there is no error propagation to core code, but still.
+
+It is what x86 does. And I've been fairly adamant about doing so. When
+the kernel text is compromised, do you really want to continue running
+it?
+
+> > +})
+> > +
+> > +static inline u32 arc_gen_nop(void)
+> > +{
+> > +	/* 1x 32bit NOP in middle endian */
+
+I dare not ask...
+
+> > +	return 0x7000264a;
+> > +}
+> > +
+
+> > +	/*
+> > +	 * All instructions are aligned by 2 bytes so we should never get offset
+> > +	 * here which is not 2 bytes aligned.
+> > +	 */
+
+> > +	WRITE_ONCE(*instr_addr, instr);
+> > +	flush_icache_range(entry->code, entry->code + JUMP_LABEL_NOP_SIZE);
+
+So do you have a 2 byte opcode that traps unconditionally? In that case
+I'm thinking you could do something like x86 does. And it would avoid
+that NOP padding you do to get the alignment.
 
