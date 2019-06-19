@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE59C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:28:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 891E3C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:28:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD7421479
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5023A21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:28:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4faZ1Tb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uLA4Ungo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbfFSF2T (ORCPT
+        id S1731140AbfFSF2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:28:19 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:44083 "EHLO
+        Wed, 19 Jun 2019 01:28:23 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45525 "EHLO
         mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730937AbfFSF1p (ORCPT
+        with ESMTP id S1730923AbfFSF1n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:27:45 -0400
-Received: by mail-pf1-f196.google.com with SMTP id t16so9005971pfe.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:27:44 -0700 (PDT)
+        Wed, 19 Jun 2019 01:27:43 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so9017025pfq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:27:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=I9w3vbYRNonfWwiM3GpCHW7GL5rSQ3YHcxXb/k2AGzQ=;
-        b=e4faZ1Tb0y/joGNp4jAM/quBbn7kTkp85v5l+MniGlO1En0q9WBorUk9hf9Y97tFTq
-         ZdMzPNxuFK3om4VrzJxDvTTRzt46zi9q4ttSLLbDLAywQfbWqn/08QLkj+WEiZnHPsLP
-         H+1/yNdsA6HkKlyeH/0OXX5mdjV1VczjnWwa1w93j6VyPefOz/T6Fddk9weT4/FpX1QW
-         OUT5roGJtUqo4BCGHC2iW/wfu2UYMok5WSKCl1b7tal3r3rh0SaveusuL2QlB9sHUMj6
-         odZayasDNNjgvisog0BcY6wvbTuycgXdCCkvyV6bfm4oAXbFFnuuyD2cAWUbL1uu+DQ6
-         nVFw==
+        bh=GTaqBAzCZc4tNG3/fwrCdpD8i/fiZyLrGTzNBgRKb94=;
+        b=uLA4Ungo9ScC2fe6LMYu8CyNwNTr5HV7kzB5iLN3MZUCqLyByJvvBAjWHo2ytumRtu
+         cqRJAFWOyUAPBfozjbmFqmo3fJEwn6dRYbTrQnRktrioJHZk4ghQTi2/Qi9QmJm+XRzY
+         SKCB7Ped6hDHPeHMZpJLMkhpmbQhUqrlaimdYqsA8+3gt+8no3LDsYywhbnKIzCJZeOf
+         RblkbpbuUeszrEEIpQJUF/jJe3mFo2pdKeWss5mdUDN4xI/hXJvff0JjQf39FEfVOw4z
+         3wRQhat0VGFUD02gReCrVYkH8OM9GWOi/Z8jzAoa4ii44PJ6YKw5+1D96vB/Jj2M5sfH
+         eABw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=I9w3vbYRNonfWwiM3GpCHW7GL5rSQ3YHcxXb/k2AGzQ=;
-        b=Y22pPxOdYNooU3KZTf8Buqa+F3NQGb80FkzVoCQ6yUsQX6RveuhtiGyjv29MYxzJK8
-         PP12CJSfJwCOn+ngnKFCN7nOVxAX+hLgV3EpFixAckVMxOR2nHozuZFzYIeUU2Z4eSwD
-         MBddpKYo17Q7InZGy1G/cP5tu7VK8zdyTVcjYkvgzxNADw4l+aogz6lERdflYSdUQFmg
-         43ONDHW8IkP2ELihDI+1S7LJA8DcKQxYgZkKfDHj1TBErkmapbzmjO9nWmL9hhapk6Vp
-         ucFky1SIojyxTSp31pDUEtVTZTN4wXCebS9Zqcuwfur0G42k5+pgUWW10HOiafkkCGHO
-         82pg==
-X-Gm-Message-State: APjAAAW9604/4rBi7YFP2yaFek4B7M2CQ/yGkfb7Rvj/HSnM0/qjdUZN
-        h4erv5dfABN/GwYuKp4P4L8=
-X-Google-Smtp-Source: APXvYqz1q735f/rQV+0Af9T5y76kSlcoPs77OeglZPrfHTAGXQwp2lSRMMEYN8SJvQKfZfqtlR3dMw==
-X-Received: by 2002:a65:508b:: with SMTP id r11mr5840715pgp.387.1560922064349;
-        Tue, 18 Jun 2019 22:27:44 -0700 (PDT)
+        bh=GTaqBAzCZc4tNG3/fwrCdpD8i/fiZyLrGTzNBgRKb94=;
+        b=iHPDTcPlvAFPrzDFL9i24q0R0YFK8UMjUcBswoaNX/HfamRlHznGCiRp/wqRe8r4Ul
+         2nDLSIrIvjfuH0LV4ZdRUQdPqLLuuOc/zItOSwYJ4pw8OKcvwLDMnM5TxS0YjgoSmTkV
+         7V7nJ1YqeVkbIUtX3uNqwZQSPdf7c7oAe5XCS24+ShDJydwNG0OAWHLRd9n2T0J3If4c
+         1JKpWZRroX7o+WNlXYJ/aaci1DuzNeedZ0sXdC78jkLPt/w1qZT729bV+oc+wQnYCv2b
+         0iU+EwEZ8YpIjwTT8BIp6EZKf9ARTu5DDxwL8l4QZetr0LN7/p8oJKV0Hk7J3sdB9ia8
+         L+kA==
+X-Gm-Message-State: APjAAAW2vaczZNg1qIZwcliyPO71E6CsdDOuUxLU3wMA8gUmBQlKCyJK
+        6eqnuCM2kZs45+WpLmQbtHk=
+X-Google-Smtp-Source: APXvYqyoNwNGC6zfle7yS3gvaPetPMP0k63jXNfaiOuRHCSHHK68cNJKIjrhlC7a3MLS7dT5O5v3dw==
+X-Received: by 2002:aa7:818b:: with SMTP id g11mr8455488pfi.122.1560922062980;
+        Tue, 18 Jun 2019 22:27:42 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id l44sm534742pje.29.2019.06.18.22.27.43
+        by smtp.gmail.com with ESMTPSA id l44sm534742pje.29.2019.06.18.22.27.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 22:27:43 -0700 (PDT)
+        Tue, 18 Jun 2019 22:27:42 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 08/15] drm/bridge: tc358767: Increase AUX transfer length limit
-Date:   Tue, 18 Jun 2019 22:27:09 -0700
-Message-Id: <20190619052716.16831-9-andrew.smirnov@gmail.com>
+Subject: [PATCH v6 07/15] drm/bridge: tc358767: Simplify AUX data write
+Date:   Tue, 18 Jun 2019 22:27:08 -0700
+Message-Id: <20190619052716.16831-8-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190619052716.16831-1-andrew.smirnov@gmail.com>
 References: <20190619052716.16831-1-andrew.smirnov@gmail.com>
@@ -82,12 +82,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According to the datasheet tc358767 can transfer up to 16 bytes via
-its AUX channel, so the artificial limit of 8 appears to be too
-low. However only up to 15-bytes seem to be actually supported and
-trying to use 16-byte transfers results in transfers failing
-sporadically (with bogus status in case of I2C transfers), so limit it
-to 15.
+Simplify AUX data write by dropping index arithmetic and shifting and
+replacing it with a call to a helper function that does two things:
+
+    1. Copies user-provided data into a write buffer
+    2. Transfers contents of the write buffer to up to 4 32-bit
+       registers on the chip
+
+Note that separate data endianness fix:
+
+    tmp = (tmp << 8) | buf[i];
+
+that was reserved for DP_AUX_I2C_WRITE looks really strange, since it
+will place data differently depending on the passed user-data
+size. E.g. for a write of 1 byte, data transferred to the chip would
+look like:
+
+[byte0] [dummy1] [dummy2] [dummy3]
+
+whereas for a write of 4 bytes we'd get:
+
+[byte3] [byte2] [byte1] [byte0]
+
+Since there's no indication in the datasheet that I2C write buffer
+should be treated differently than AUX write buffer and no comment in
+the original code explaining why it was done this way, that special
+I2C write buffer transformation was dropped in this patch.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
@@ -102,21 +122,81 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/bridge/tc358767.c | 48 +++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 22 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index a441e8e66287..bdbf88057946 100644
+index 02f6d907f5c4..a441e8e66287 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -354,7 +354,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
- 			       struct drm_dp_aux_msg *msg)
+@@ -321,6 +321,21 @@ static int tc_aux_get_status(struct tc_data *tc, u8 *reply)
+ 	return 0;
+ }
+ 
++static int tc_aux_write_data(struct tc_data *tc, const void *data,
++			     size_t size)
++{
++	u32 auxwdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)] = { 0 };
++	int ret, count = ALIGN(size, sizeof(u32));
++
++	memcpy(auxwdata, data, size);
++
++	ret = regmap_raw_write(tc->regmap, DP0_AUXWDATA(0), auxwdata, count);
++	if (ret)
++		return ret;
++
++	return size;
++}
++
+ static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
  {
+ 	u32 auxrdata[DP_AUX_MAX_PAYLOAD_BYTES / sizeof(u32)];
+@@ -341,9 +356,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
  	struct tc_data *tc = aux_to_tc(aux);
--	size_t size = min_t(size_t, 8, msg->size);
-+	size_t size = min_t(size_t, DP_AUX_MAX_PAYLOAD_BYTES - 1, msg->size);
+ 	size_t size = min_t(size_t, 8, msg->size);
  	u8 request = msg->request & ~DP_AUX_I2C_MOT;
+-	u8 *buf = msg->buffer;
+-	u32 tmp = 0;
+-	int i = 0;
  	int ret;
+ 
+ 	if (size == 0)
+@@ -353,25 +365,17 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	if (ret)
+ 		return ret;
+ 
+-	if (request == DP_AUX_I2C_WRITE || request == DP_AUX_NATIVE_WRITE) {
+-		/* Store data */
+-		while (i < size) {
+-			if (request == DP_AUX_NATIVE_WRITE)
+-				tmp = tmp | (buf[i] << (8 * (i & 0x3)));
+-			else
+-				tmp = (tmp << 8) | buf[i];
+-			i++;
+-			if (((i % 4) == 0) || (i == size)) {
+-				ret = regmap_write(tc->regmap,
+-						   DP0_AUXWDATA((i - 1) >> 2),
+-						   tmp);
+-				if (ret)
+-					return ret;
+-				tmp = 0;
+-			}
+-		}
+-	} else if (request != DP_AUX_I2C_READ &&
+-		   request != DP_AUX_NATIVE_READ) {
++	switch (request) {
++	case DP_AUX_NATIVE_READ:
++	case DP_AUX_I2C_READ:
++		break;
++	case DP_AUX_NATIVE_WRITE:
++	case DP_AUX_I2C_WRITE:
++		ret = tc_aux_write_data(tc, msg->buffer, size);
++		if (ret < 0)
++			return ret;
++		break;
++	default:
+ 		return -EINVAL;
+ 	}
  
 -- 
 2.21.0
