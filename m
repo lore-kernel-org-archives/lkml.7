@@ -2,98 +2,110 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7E5C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:25:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DCA7C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFF9E208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:25:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560947158;
-	bh=xkXkM6pk3D1wt75LNn+sl1QCrk+nTkgt9CiNrQc2iLY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IE/YsrlIZ0HP+ZSLD/EtVuVbf+jWOT70mjxYEITWidG7MWvjCbSoa/w8/jC2pM5Yr
-	 1wEOLFncgW004jS+kdz32JWwK9Q3aT4l8K+xYEfZQbj2HQ1EfekcAqUN38yPUrMC8T
-	 rz17m33RUEMzRhstReEVTfyBnH1FAun7zm9dWHds=
+	by mail.kernel.org (Postfix) with ESMTP id F1F1E2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:26:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731705AbfFSMZ4 (ORCPT
+        id S1731737AbfFSM01 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:25:56 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45918 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfFSMZ4 (ORCPT
+        Wed, 19 Jun 2019 08:26:27 -0400
+Received: from asavdk3.altibox.net ([109.247.116.14]:57532 "EHLO
+        asavdk3.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfFSM01 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:25:56 -0400
-Received: by mail-ot1-f65.google.com with SMTP id x21so19024328otq.12;
-        Wed, 19 Jun 2019 05:25:55 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t636JR0WhKBOeLD0UwHYBIKxLtvPrJCBGRwoWUBCtFY=;
-        b=fizbzBOfmYcQZQGreojAqxPK2D3h0RYGNlD6HW4e+a+0+cQzIQY2swEWzrymtXxqrW
-         v2q4wTkUmpPjqgeV95riS488ty6kYdNZVpPHA5GOfbbBlnr+9Ao9kUeDQlvu9yJ4OhYf
-         lq6R5Vox0iAFY3NmqWz5XgNymj/2+pTqs1h4sdjk9wfH5PAv/6QzLhTYroaNAEBsjc0N
-         FEDtoSjwTY28rHeHItDDAoz/B3kNPiKm16jG7lQTCN0wQHHfRmAqI3lQwLGDZSlH88Fi
-         xm52lKb0l3whfr07to+yA+JY4I5iszxq80j+jinfXWcgim2CxBZL1o9bY5WCO6BCpAM5
-         w0Mg==
-X-Gm-Message-State: APjAAAX4pWJSkrelwkFUq5CTfmusGXMpxRQieF3LR5ONmAjs/hqv4B59
-        uFTv6wi/Jx3eQtf5gTAi+bSeCVtYJ4RInqpVI6k=
-X-Google-Smtp-Source: APXvYqy02yoWKMqt5h/YXcJjrxDjMFc91cJ/bUD9qVVWG6Usl1FN1ytOlSfXptOi2wc94asLYWkrKF21cp3FkaNK5GI=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr45214408oto.118.1560947155377;
- Wed, 19 Jun 2019 05:25:55 -0700 (PDT)
+        Wed, 19 Jun 2019 08:26:27 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk3.altibox.net (Postfix) with ESMTPS id 6507420025;
+        Wed, 19 Jun 2019 14:26:23 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 14:26:22 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Paul Cercueil <paul@crapouillou.net>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, od@zcrc.me,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Artur Rojek <contact@artur-rojek.eu>
+Subject: Re: [PATCH v5 2/2] DRM: Add KMS driver for the Ingenic JZ47xx SoCs
+Message-ID: <20190619122622.GB29084@ravnborg.org>
+References: <20190603152331.23160-1-paul@crapouillou.net>
+ <20190603152331.23160-2-paul@crapouillou.net>
 MIME-Version: 1.0
-References: <cover.1560944014.git.viresh.kumar@linaro.org> <4008d21f166accfb28180eb804cb8ebda6da4f4d.1560944014.git.viresh.kumar@linaro.org>
-In-Reply-To: <4008d21f166accfb28180eb804cb8ebda6da4f4d.1560944014.git.viresh.kumar@linaro.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 19 Jun 2019 14:25:44 +0200
-Message-ID: <CAJZ5v0iR8oBZ2mM2vdHzTBNcjsHa6QtJmN+Q17Q8ZD-ny3qy3w@mail.gmail.com>
-Subject: Re: [PATCH 3/6] cpufreq: Remove the has_target() check from notifier handler
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603152331.23160-2-paul@crapouillou.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=dqr19Wo4 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=ER_8r6IbAAAA:8
+        a=p6pI0oa4AAAA:8 a=e5mUnYsNAAAA:8 a=H0UmMNABUbsaJNjzNOkA:9
+        a=CjuIK1q_8ugA:10 a=9LHmKk7ezEChjTCyhBa9:22 a=9cw2y2bKwytFd151gpuR:22
+        a=Vxmtnl_E_bksehYqCbjh:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 1:35 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> cpufreq_notify_transition() is only called for has_target() type driver
-> and not for set_policy type, and the check is simply redundant. Remove
-> it.
+Hi Paul.
 
-Ah, OK
-
-So this patch removes a check introduced by the previous one. :-)
-
-Please merge them together.
-
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+On Mon, Jun 03, 2019 at 05:23:31PM +0200, Paul Cercueil wrote:
+> Add a KMS driver for the Ingenic JZ47xx family of SoCs.
+> This driver is meant to replace the aging jz4740-fb driver.
+> 
+> This driver does not make use of the simple pipe helper, for the reason
+> that it will soon be updated to support more advanced features like
+> multiple planes, IPU integration for colorspace conversion and up/down
+> scaling, support for DSI displays, and TV-out and HDMI outputs.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Tested-by: Artur Rojek <contact@artur-rojek.eu>
 > ---
->  drivers/cpufreq/cpufreq.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-> index e59194c2c613..41ac701e324f 100644
-> --- a/drivers/cpufreq/cpufreq.c
-> +++ b/drivers/cpufreq/cpufreq.c
-> @@ -359,7 +359,7 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
->                  * which is not equal to what the cpufreq core thinks is
->                  * "old frequency".
->                  */
-> -               if (has_target() && policy->cur && policy->cur != freqs->old) {
-> +               if (policy->cur && policy->cur != freqs->old) {
->                         pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
->                                  freqs->old, policy->cur);
->                         freqs->old = policy->cur;
-> --
-> 2.21.0.rc0.269.g1a574e7a288b
->
+> 
+> Notes:
+>     v2: - Remove custom handling of panel. The panel is now discovered using
+>     	  the standard API.
+>     	- Lots of small tweaks suggested by upstream
+>     
+>     v3: - Use devm_drm_dev_init()
+>     	- Update compatible strings to -lcd instead of -drm
+>     	- Add destroy() callbacks to plane and crtc
+>     	- The ingenic,lcd-mode is now read from the bridge's DT node
+>     
+>     v4: Remove ingenic,lcd-mode property completely. The various modes are now
+>     	deduced from the connector type, the pixel format or the bus flags.
+>     
+>     v5: - Fix framebuffer size incorrectly calculated for 24bpp framebuffers
+>     	- Use 32bpp framebuffer instead of 16bpp, as it'll work with both
+>     	  16-bit and 24-bit panel
+>     	- Get rid of drm_format_plane_cpp() which has been dropped upstream
+>     	- Avoid using drm_format_info->depth, which is deprecated.
+In the drm world we include the revision notes in the changelog.
+So I did this when I applied it to drm-misc-next.
+
+Fixed a few trivial checkpatch warnings about indent too.
+There was a few too-long-lines warnings that I ignored. Fixing them
+would have hurt readability.
+
+I assume you will maintain this driver onwards from now.
+Please request drm-misc commit rights (see
+https://www.freedesktop.org/wiki/AccountRequests/)
+You will need a legacy SSH account.
+
+And you should familiarize yourself with the maintainer-tools:
+https://drm.pages.freedesktop.org/maintainer-tools/index.html
+
+For my use I use "dim update-branches; dim apply; dim push
+So only a small subset i needed for simple use.
+
+	Sam
