@@ -2,145 +2,141 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 556FCC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:24:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE880C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C2EE206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:24:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560950695;
-	bh=sVXWOdBjTXMk5XIEE6lZthOguUTmAYHznW2JtvJgFGg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2uGNJAn6a6wkx1F05A0sEKb43PKHtNZj6UxS9qNPsUI18K+QQfFclSX/5pgSAKPHt
-	 /lBXkX3jtjd8k2iL75IhVZKilmlyJPi9sg/h0aQR6qfz1WZgwSfytx6e+8JJi7r448
-	 9IA2x2PkZsJPqSEMax2A5X7C8qHl0bzw29qevdYo=
+	by mail.kernel.org (Postfix) with ESMTP id 7D68C21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:25:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729984AbfFSNYy (ORCPT
+        id S1730440AbfFSNZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:24:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:34082 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726109AbfFSNYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:24:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A63F2AD96;
-        Wed, 19 Jun 2019 13:24:51 +0000 (UTC)
-Date:   Wed, 19 Jun 2019 15:24:50 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
-Message-ID: <20190619132450.GQ2968@dhcp22.suse.cz>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-5-minchan@kernel.org>
+        Wed, 19 Jun 2019 09:25:30 -0400
+Received: from mout.kundenserver.de ([212.227.126.131]:33203 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726060AbfFSNZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:25:29 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1Mbies-1iBHAs3HME-00dBxG; Wed, 19 Jun 2019 15:24:48 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Max Kellermann <max.kellermann@gmail.com>,
+        Wolfgang Rohdewald <wolfgang@rohdewald.de>,
+        stable@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Richard Fontana <rfontana@redhat.com>,
+        Sean Young <sean@mess.org>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] [RESEND^2] media: don't drop front-end reference count for ->detach
+Date:   Wed, 19 Jun 2019 15:24:17 +0200
+Message-Id: <20190619132447.2224228-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190610111252.239156-5-minchan@kernel.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:CeUekxDC6JO6ENQ4SJIuNU0QYix/S5DqkpwK/WxHovTZuGEQkmL
+ qV32Chr0BRTxPamU1i+xY+s3Kup/Cbj53EURKJ+dS/EhNeOLMxUbzxd/EtxMh1XxZivSbtc
+ o2FXbLY8t9WYX2YnZhzNNLjMsfTBJEy1fEJzFRgsnJ2ewnHsQyeZWHtyOnyihK0UZ1nW5Nn
+ jL832bEXJwOBD/A+SeeZg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:g5EO8Qvn5Ng=:f8/swMhK+LfLyGQS2Iu+wP
+ BcGqJvK/cwJpevUDOHIoSCc4cVtItCIRhiN+TRxbkrOZLPLPf9nwwFNNXpQmi2RSm4ys18GFh
+ 18Jb7vw4KK6HYRFGOpZkr//pdNmUj17c0iAH60nmEl7PDw0N+LN1GDgHaQpRr8W/MMZxIlNkp
+ tLGa/CbmrlD8pERSQXvCfqlO0LUOHKNEFHDN5e+C2828lwT9k49HVVFd1REY8XsadAA7BgbMs
+ V7weDlxPxsoXmbAJWqo3U5rMtLYB+9YdIlVd50jRr204rpOJMYYiCd2H8sriV2/4zrFZWhQOz
+ wIvlxQMmsP4bOMCRqUfg6sEFpLxjh/zcjqhePraRLpPHalZs9OGIP2JDcvqmIpf767orgaj7J
+ 96TjtjrEF8eYzZBYb+tIRfMRmpwN/pA1ikCQ60lSan8wI02K4bbEwsS2o6WtobHJZjhl3eb7n
+ Mt49J3blfhwoR/IBvJ1KwLJDrWuoL83HvBfMxlf1rQkIgQlJE/SVDQQn9jDlvV6GBiNMH7kOY
+ qqrO1U0uws8/t34l6bYaftI2ifTcKNV2bS+6MuO6n82QNq8Gj0AArhqtQWEswgaNQNJD3jgEp
+ U+e27d0+gFMlXKv9ZSg4U6UjhBIpJRnTRZaMtA5xlRYVyEWYQS3Hbksb72xwCMiqVRFO8ZDZn
+ eRetHON58GNSmtOj7dAJKEpJfBs6VhTYNqibfnH+nGuNlHFTd1fTfcJNdXpApmtkJbzl8Nu5V
+ vHYnv8GNL1ncfmWfAbgKrIPOnALKjdllV/MdEw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10-06-19 20:12:51, Minchan Kim wrote:
-[...]
-> +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> +				unsigned long end, struct mm_walk *walk)
+A bugfix introduce a link failure in configurations without CONFIG_MODULES:
 
-Again the same question about a potential code reuse...
-[...]
-> +regular_page:
-> +	tlb_change_page_size(tlb, PAGE_SIZE);
-> +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> +	flush_tlb_batched_pending(mm);
-> +	arch_enter_lazy_mmu_mode();
-> +	for (; addr < end; pte++, addr += PAGE_SIZE) {
-> +		ptent = *pte;
-> +		if (!pte_present(ptent))
-> +			continue;
-> +
-> +		page = vm_normal_page(vma, addr, ptent);
-> +		if (!page)
-> +			continue;
-> +
-> +		if (isolate_lru_page(page))
-> +			continue;
-> +
-> +		isolated++;
-> +		if (pte_young(ptent)) {
-> +			ptent = ptep_get_and_clear_full(mm, addr, pte,
-> +							tlb->fullmm);
-> +			ptent = pte_mkold(ptent);
-> +			set_pte_at(mm, addr, pte, ptent);
-> +			tlb_remove_tlb_entry(tlb, pte, addr);
-> +		}
-> +		ClearPageReferenced(page);
-> +		test_and_clear_page_young(page);
-> +		list_add(&page->lru, &page_list);
-> +		if (isolated >= SWAP_CLUSTER_MAX) {
+In file included from drivers/media/usb/dvb-usb/pctv452e.c:20:0:
+drivers/media/usb/dvb-usb/pctv452e.c: In function 'pctv452e_frontend_attach':
+drivers/media/dvb-frontends/stb0899_drv.h:151:36: error: weak declaration of 'stb0899_attach' being applied to a already existing, static definition
 
-Why do we need SWAP_CLUSTER_MAX batching? Especially when we need ...
-[...]
+The problem is that the !IS_REACHABLE() declaration of stb0899_attach()
+is a 'static inline' definition that clashes with the weak definition.
 
-> +unsigned long reclaim_pages(struct list_head *page_list)
-> +{
-> +	int nid = -1;
-> +	unsigned long nr_reclaimed = 0;
-> +	LIST_HEAD(node_page_list);
-> +	struct reclaim_stat dummy_stat;
-> +	struct scan_control sc = {
-> +		.gfp_mask = GFP_KERNEL,
-> +		.priority = DEF_PRIORITY,
-> +		.may_writepage = 1,
-> +		.may_unmap = 1,
-> +		.may_swap = 1,
-> +	};
-> +
-> +	while (!list_empty(page_list)) {
-> +		struct page *page;
-> +
-> +		page = lru_to_page(page_list);
-> +		if (nid == -1) {
-> +			nid = page_to_nid(page);
-> +			INIT_LIST_HEAD(&node_page_list);
-> +		}
-> +
-> +		if (nid == page_to_nid(page)) {
-> +			list_move(&page->lru, &node_page_list);
-> +			continue;
-> +		}
-> +
-> +		nr_reclaimed += shrink_page_list(&node_page_list,
-> +						NODE_DATA(nid),
-> +						&sc, 0,
-> +						&dummy_stat, false);
+I further observed that the bugfix was only done for one of the five users
+of stb0899_attach(), the other four still have the problem.  This reverts
+the bugfix and instead addresses the problem by not dropping the reference
+count when calling '->detach()', instead we call this function directly
+in dvb_frontend_put() before dropping the kref on the front-end.
 
-per-node batching in fact. Other than that nothing really jumped at me.
-Except for the shared page cache side channel timing aspect not being
-considered AFAICS. To be more specific. Pushing out a shared page cache
-is possible even now but this interface gives a much easier tool to
-evict shared state and perform all sorts of timing attacks. Unless I am
-missing something we should be doing something similar to mincore and
-ignore shared pages without a writeable access or at least document why
-we do not care.
+I first submitted this in early 2018, and after some discussion it
+was apparently discarded.  While there is a long-term plan in place,
+that plan is obviously not nearing completion yet, and the current
+kernel is still broken unless this patch is applied.
+
+Cc: Max Kellermann <max.kellermann@gmail.com>
+Cc: Wolfgang Rohdewald <wolfgang@rohdewald.de>
+Cc: stable@vger.kernel.org
+Fixes: f686c14364ad ("[media] stb0899: move code to "detach" callback")
+Fixes: 6cdeaed3b142 ("media: dvb_usb_pctv452e: module refcount changes were unbalanced")
+Link: https://patchwork.kernel.org/patch/10140175/
+Link: https://patchwork.linuxtv.org/patch/54831/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+resending again, after nobody commented on the resending in March.
+---
+ drivers/media/dvb-core/dvb_frontend.c | 4 +++-
+ drivers/media/usb/dvb-usb/pctv452e.c  | 8 --------
+ 2 files changed, 3 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/media/dvb-core/dvb_frontend.c b/drivers/media/dvb-core/dvb_frontend.c
+index cc31c2bf0483..202f0ba5819c 100644
+--- a/drivers/media/dvb-core/dvb_frontend.c
++++ b/drivers/media/dvb-core/dvb_frontend.c
+@@ -152,6 +152,9 @@ static void dvb_frontend_free(struct kref *ref)
+ 
+ static void dvb_frontend_put(struct dvb_frontend *fe)
+ {
++	/* call detach before dropping the reference count */
++	if (fe->ops.detach)
++		fe->ops.detach(fe);
+ 	/*
+ 	 * Check if the frontend was registered, as otherwise
+ 	 * kref was not initialized yet.
+@@ -3040,7 +3043,6 @@ void dvb_frontend_detach(struct dvb_frontend *fe)
+ 	dvb_frontend_invoke_release(fe, fe->ops.release_sec);
+ 	dvb_frontend_invoke_release(fe, fe->ops.tuner_ops.release);
+ 	dvb_frontend_invoke_release(fe, fe->ops.analog_ops.release);
+-	dvb_frontend_invoke_release(fe, fe->ops.detach);
+ 	dvb_frontend_put(fe);
+ }
+ EXPORT_SYMBOL(dvb_frontend_detach);
+diff --git a/drivers/media/usb/dvb-usb/pctv452e.c b/drivers/media/usb/dvb-usb/pctv452e.c
+index d6b36e4f33d2..441d878fc22c 100644
+--- a/drivers/media/usb/dvb-usb/pctv452e.c
++++ b/drivers/media/usb/dvb-usb/pctv452e.c
+@@ -909,14 +909,6 @@ static int pctv452e_frontend_attach(struct dvb_usb_adapter *a)
+ 						&a->dev->i2c_adap);
+ 	if (!a->fe_adap[0].fe)
+ 		return -ENODEV;
+-
+-	/*
+-	 * dvb_frontend will call dvb_detach for both stb0899_detach
+-	 * and stb0899_release but we only do dvb_attach(stb0899_attach).
+-	 * Increment the module refcount instead.
+-	 */
+-	symbol_get(stb0899_attach);
+-
+ 	if ((dvb_attach(lnbp22_attach, a->fe_adap[0].fe,
+ 					&a->dev->i2c_adap)) == NULL)
+ 		err("Cannot attach lnbp22\n");
 -- 
-Michal Hocko
-SUSE Labs
+2.20.0
+
