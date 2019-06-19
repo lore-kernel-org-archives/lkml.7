@@ -2,147 +2,104 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5B34C43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:13:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E953C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:17:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FEBD214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:13:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="cLoTJVoj"
+	by mail.kernel.org (Postfix) with ESMTP id 632C42147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:17:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560975434;
+	bh=541XiS0AbaClh3nYwpHX5EEggdOh+N+d4mSDoxX/Rpg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=vYMG16uDsslpiMjOIWOygI4gzTTVV82Vc1pPBOt+9mmI35OK8RHcKQpesMJN+dNuF
+	 i+RQQKICpX0f5Onsk9dZaaBoJl8/q1xwbFWopkubPXNO++nxEmR/w2fqA0d71yZCyl
+	 C57FvykMhoDSX7/kv7wJbGagpN/QV7ia0+1dNF18=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730070AbfFSUNm (ORCPT
+        id S1730116AbfFSURM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:13:42 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:40698 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726322AbfFSUNm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:13:42 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c70so386340qkg.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:13:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=pgcngtEs9uVcYhtJPpPurWF53FUixqD8oD/gTijpCZs=;
-        b=cLoTJVojiiY28gDdbS4BiMud3Q2ttCA35wRWS9+enmEKV/fFhoK5HMbRgWCMRNjzCQ
-         b5ZrG1xcUBu7h6XelJpG4UMUjYJIzXdXfvpPiSyGYKdOweQ8twH8VntPLrq71j/TsSLy
-         jpJZxemlj6uSAxjIlpkxEfVLL6t4SnPV1Na+7aRJWlC/JUKSKlZ2Kb2Z4WwTJsvlN637
-         Cevv50iZDvZBGXCN6Gv70gfCH3gmRKeT9j0XQcvmKxIGDNpJ19N3X2W+pEIfCgtmESSX
-         foHoQot+LMBKmcpM4/NBKgRFPmN0qLPKRN6ubqbiqKhMYESz50hc7k0uZOGPL7CFxZJG
-         aZsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=pgcngtEs9uVcYhtJPpPurWF53FUixqD8oD/gTijpCZs=;
-        b=m2T+SdeHtxfs54neGJ9fEneuBOeDh5CRuthaypgCCTgn9lIdplM0ZUnJOMlOWlrwRh
-         tc81ukvkmKtNwZZ7wZJ2zPEn5XPdd9AJnZNhH+YlIz5zBtd7jtKc3o8i+pORVHpMK32b
-         hyJlSvWcNCwVb9LBdOKhPGW4YOz8zBfP8L6PiSxNyMjICa2vNJvphyK7Rm3AMw7r7w7D
-         AaC+DT10kB3sB24fcOKlMetwEl+SNTQeKFeJtGKixphlvFLO0n2LvEgTr/UA8OwP3B8m
-         Zbpno2+0dxsgdG6PB1tBLvVplaq9EgrzhuVNdlb1EwBb+3JUDg8bAhDUbOl+XgmVzqsD
-         0pog==
-X-Gm-Message-State: APjAAAVNvKsATJJ+Fnw0PUlvULzoxiz5pL3YrZtEoI32pv6tEv8aWoib
-        6KBVDVhG3zzgkYIMTMOISTZcsQ==
-X-Google-Smtp-Source: APXvYqx89CcDrXNyjbTWXMmP5tm+atmaNtgywjB10MJ+6xvDJdWKl3S7Qx9ZNBRu4t92EqyHMT9VzA==
-X-Received: by 2002:a37:4cd2:: with SMTP id z201mr54688926qka.284.1560975221161;
-        Wed, 19 Jun 2019 13:13:41 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id 34sm12796326qtq.59.2019.06.19.13.13.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Jun 2019 13:13:40 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hdgxg-0002nE-42; Wed, 19 Jun 2019 17:13:40 -0300
-Date:   Wed, 19 Jun 2019 17:13:40 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Daniel Vetter <daniel.vetter@ffwll.ch>
-Cc:     Jerome Glisse <jglisse@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        Daniel Vetter <daniel.vetter@intel.com>,
-        Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>,
-        David Rientjes <rientjes@google.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian =?utf-8?B?S8O2bmln?= <christian.koenig@amd.com>
-Subject: Re: [PATCH 1/4] mm: Check if mmu notifier callbacks are allowed to
- fail
-Message-ID: <20190619201340.GL9360@ziepe.ca>
-References: <20190520213945.17046-1-daniel.vetter@ffwll.ch>
- <20190521154411.GD3836@redhat.com>
- <20190618152215.GG12905@phenom.ffwll.local>
- <20190619165055.GI9360@ziepe.ca>
- <CAKMK7uGpupxF8MdyX3_HmOfc+OkGxVM_b9WbF+S-2fHe0F5SQA@mail.gmail.com>
+        Wed, 19 Jun 2019 16:17:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32810 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfFSURM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 16:17:12 -0400
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4282D217D9;
+        Wed, 19 Jun 2019 20:17:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560975431;
+        bh=541XiS0AbaClh3nYwpHX5EEggdOh+N+d4mSDoxX/Rpg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=YVVZo+x89SxPwT5avxM6SUocpzWOqaV1fttnSeTufy/f48lKwzYOPqQV0k6yp4Ixf
+         GYbD1O/Lg6MbfB6VUF6kG2MAP8QOp3B2cucQt2I/CtVGotYf/GsYzQ2gSRnHctarOg
+         +VmQNytdY3f/ykQO4q1Ij6clsBS3a+LvOI0ddnQw=
+Received: by mail-qt1-f176.google.com with SMTP id h21so545584qtn.13;
+        Wed, 19 Jun 2019 13:17:11 -0700 (PDT)
+X-Gm-Message-State: APjAAAUFkK/fWdO4xLeia1qjFJdaivB8eeWh5jIm0q9dH9IVYs3yLn33
+        E4h4XTtIcYbQG540bhHAh+z0PpuDct/wAC909A==
+X-Google-Smtp-Source: APXvYqxlXaUhYK7Rc1Fe1p9kGyCNNEK0+tjQBq7joBikhFVY5XwyssWYCZlgH1+7TyA7AeG2N/Rd9++exvETdBgfXxg=
+X-Received: by 2002:a0c:8a43:: with SMTP id 3mr36153698qvu.138.1560975430399;
+ Wed, 19 Jun 2019 13:17:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKMK7uGpupxF8MdyX3_HmOfc+OkGxVM_b9WbF+S-2fHe0F5SQA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+References: <20190616132930.6942-1-masneyb@onstation.org> <20190616132930.6942-3-masneyb@onstation.org>
+In-Reply-To: <20190616132930.6942-3-masneyb@onstation.org>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Wed, 19 Jun 2019 14:16:57 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
+Message-ID: <CAL_Jsq+Ne=NEcLbO6C19iOny4bwm_m5QEtcsM78ZDeBmDUVO_Q@mail.gmail.com>
+Subject: Re: [PATCH 2/6] dt-bindings: display: msm: gmu: add optional ocmem property
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jonathan Marek <jonathan@marek.ca>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 09:57:15PM +0200, Daniel Vetter wrote:
-> On Wed, Jun 19, 2019 at 6:50 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
-> > On Tue, Jun 18, 2019 at 05:22:15PM +0200, Daniel Vetter wrote:
-> > > On Tue, May 21, 2019 at 11:44:11AM -0400, Jerome Glisse wrote:
-> > > > On Mon, May 20, 2019 at 11:39:42PM +0200, Daniel Vetter wrote:
-> > > > > Just a bit of paranoia, since if we start pushing this deep into
-> > > > > callchains it's hard to spot all places where an mmu notifier
-> > > > > implementation might fail when it's not allowed to.
-> > > > >
-> > > > > Inspired by some confusion we had discussing i915 mmu notifiers and
-> > > > > whether we could use the newly-introduced return value to handle some
-> > > > > corner cases. Until we realized that these are only for when a task
-> > > > > has been killed by the oom reaper.
-> > > > >
-> > > > > An alternative approach would be to split the callback into two
-> > > > > versions, one with the int return value, and the other with void
-> > > > > return value like in older kernels. But that's a lot more churn for
-> > > > > fairly little gain I think.
-> > > > >
-> > > > > Summary from the m-l discussion on why we want something at warning
-> > > > > level: This allows automated tooling in CI to catch bugs without
-> > > > > humans having to look at everything. If we just upgrade the existing
-> > > > > pr_info to a pr_warn, then we'll have false positives. And as-is, no
-> > > > > one will ever spot the problem since it's lost in the massive amounts
-> > > > > of overall dmesg noise.
-> > > > >
-> > > > > v2: Drop the full WARN_ON backtrace in favour of just a pr_warn for
-> > > > > the problematic case (Michal Hocko).
-> >
-> > I disagree with this v2 note, the WARN_ON/WARN will trigger checkers
-> > like syzkaller to report a bug, while a random pr_warn probably will
-> > not.
-> >
-> > I do agree the backtrace is not useful here, but we don't have a
-> > warn-no-backtrace version..
-> >
-> > IMHO, kernel/driver bugs should always be reported by WARN &
-> > friends. We never expect to see the print, so why do we care how big
-> > it is?
-> >
-> > Also note that WARN integrates an unlikely() into it so the codegen is
-> > automatically a bit more optimal that the if & pr_warn combination.
-> 
-> Where do you make a difference between a WARN without backtrace and a
-> pr_warn? They're both dumped at the same log-level ...
+On Sun, Jun 16, 2019 at 7:29 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Some A3xx and A4xx Adreno GPUs do not have GMEM inside the GPU core and
+> must use the On Chip MEMory (OCMEM) in order to be functional. Add the
+> optional ocmem property to the Adreno Graphics Management Unit bindings.
+>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  Documentation/devicetree/bindings/display/msm/gmu.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> index 90af5b0a56a9..c746b95e95d4 100644
+> --- a/Documentation/devicetree/bindings/display/msm/gmu.txt
+> +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> @@ -31,6 +31,10 @@ Required properties:
+>  - iommus: phandle to the adreno iommu
+>  - operating-points-v2: phandle to the OPP operating points
+>
+> +Optional properties:
+> +- ocmem: phandle to the On Chip Memory (OCMEM) that's present on some Snapdragon
+> +         SoCs. See Documentation/devicetree/bindings/soc/qcom/qcom,ocmem.yaml.
 
-WARN panics the kernel when you set 
+We already have a couple of similar properties. Lets standardize on
+'sram' as that is what TI already uses.
 
-/proc/sys/kernel/panic_on_warn
+Also, is the whole OCMEM allocated to the GMU? If not you should have
+child nodes to subdivide the memory.
 
-So auto testing tools can set that and get a clean detection that the
-kernel has failed the test in some way.
-
-Otherwise you are left with frail/ugly grepping of dmesg.
-
-Jason
+Rob
