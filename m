@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E126C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D5AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:38:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 539C12166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A542147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:38:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560965874;
-	bh=FI/Aaanl67vGaL7CZBArwPQzwgfCA/zMq2im/eG81jE=;
+	s=default; t=1560965886;
+	bh=jknSe5jW3bcaltB/kyMG6IREECByf4zxqPgnYI39H6I=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=LttJoSxhbXkFxMAFd6ddx25vjXcPXoYVw2joHQJZ/GVpWWy4cXJROjp1z/FtQsjIR
-	 mnAAB5N3ol2c2XT/HjRf0pGg5CMa4JDaaC0DkiICjRlgkXE7HuB7Ocp08qOgwLM5cS
-	 owCJW0Wj4Q4rNOD+7GE6zOdZhYZ7D4FK84YSDshw=
+	b=hEc4leTppRFCuTlYvR3eThH12RgcJ8qn0pQ6kYAPO2XI2KGCrzn/VAaDDwG7Jrb5X
+	 Yt5b/B/SVsnOi9puSt+AvXg+8oMKAdF7h7vE1zeFjLwlvKzuGHca6YnFAb6zz5nm98
+	 xUEDoiKg3JeJtrJIOYs8UNG2OZtVs6m3GUycqBWE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730211AbfFSRhw (ORCPT
+        id S1730274AbfFSRiE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:37:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37830 "EHLO mail.kernel.org"
+        Wed, 19 Jun 2019 13:38:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37974 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729681AbfFSRhw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:37:52 -0400
+        id S1727124AbfFSRiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:38:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED25220645;
-        Wed, 19 Jun 2019 17:37:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0B30921744;
+        Wed, 19 Jun 2019 17:38:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560965871;
-        bh=FI/Aaanl67vGaL7CZBArwPQzwgfCA/zMq2im/eG81jE=;
+        s=default; t=1560965883;
+        bh=jknSe5jW3bcaltB/kyMG6IREECByf4zxqPgnYI39H6I=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gjOlTvbXBJ8Q7188Pf6UHmQ6i3qmehkbMqf7qti7BktvzpIvamuZ8KJmvYB8sjW4B
-         ic35saUA2nB2ol0AYoe1ccLop1CBme8rVqGtfJN120tzxq8pq4jYyDPOER+Ya1ARQe
-         n/0jMhsWjkDHoXZn4dxxh248BSTmyjh2BXwGmXoM=
-Date:   Wed, 19 Jun 2019 19:37:49 +0200
+        b=A7y4JpuNEob+dMW/flJ37Q1UplBw77V0kcriLi9MVJ7KwtU2DRpoEES5eLippmSzJ
+         xIwPzqeMFfemyirPsvGBRCIC+EzxOgm+gfFoNqmORlz9zxg5IVH/zrcbkKCk45p9EP
+         Y04Z2hWVJSTFRpabjgboL7uF+iAFiP4hRE04veEA=
+Date:   Wed, 19 Jun 2019 19:38:01 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
+Cc:     linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
+        Sudeep Holla <sudeep.holla@arm.com>,
         Will Deacon <will.deacon@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
         Albert Ou <aou@eecs.berkeley.edu>,
         Anup Patel <anup@brainfault.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -66,35 +66,34 @@ Cc:     linux-kernel@vger.kernel.org, Sudeep Holla <sudeep.holla@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org,
         Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v7 7/7] MAINTAINERS: Add an entry for generic
- architecture topology
-Message-ID: <20190619173749.GA20916@kroah.com>
+Subject: Re: [PATCH v7 3/7] cpu-topology: Move cpu topology code to common
+ code.
+Message-ID: <20190619173801.GB20916@kroah.com>
 References: <20190617185920.29581-1-atish.patra@wdc.com>
- <20190617185920.29581-8-atish.patra@wdc.com>
+ <20190617185920.29581-4-atish.patra@wdc.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190617185920.29581-8-atish.patra@wdc.com>
+In-Reply-To: <20190617185920.29581-4-atish.patra@wdc.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:59:20AM -0700, Atish Patra wrote:
-> From: Sudeep Holla <sudeep.holla@arm.com>
+On Mon, Jun 17, 2019 at 11:59:16AM -0700, Atish Patra wrote:
+> Both RISC-V & ARM64 are using cpu-map device tree to describe
+> their cpu topology. It's better to move the relevant code to
+> a common place instead of duplicate code.
 > 
-> arm and arm64 shared lot of CPU topology related code. This was
-> consolidated under driver/base/arch_topology.c by Juri. Now RISC-V
-> is also started sharing the same code pulling more code from arm64
-> into arch_topology.c
-> 
-> Since I was involved in the review from the beginning, I would like
-> to assume maintenance for the same.
-> 
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Acked-by: Juri Lelli <juri.lelli@redhat.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> To: Will Deacon <will.deacon@arm.com>
+> To: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> [Tested on QDF2400]
+> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> [Tested on Juno and other embedded platforms.]
+> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
+> Acked-by: Will Deacon <will.deacon@arm.com>
 
 Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
