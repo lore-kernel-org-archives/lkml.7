@@ -2,188 +2,112 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ABDEC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:51:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31A9FC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:54:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FBC621479
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:51:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B8E21670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:54:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ohai5YMf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfFSGvs (ORCPT
+        id S1730901AbfFSGye (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 02:51:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49812 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725901AbfFSGvs (ORCPT
+        Wed, 19 Jun 2019 02:54:34 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59314 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfFSGye (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 02:51:48 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J6m8vx093054
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 02:51:46 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7ephknwy-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 02:51:46 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 19 Jun 2019 07:51:44 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 07:51:41 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J6peBR59375666
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 06:51:40 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 379F4A4053;
-        Wed, 19 Jun 2019 06:51:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A95FEA4040;
-        Wed, 19 Jun 2019 06:51:38 +0000 (GMT)
-Received: from [9.124.31.60] (unknown [9.124.31.60])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 06:51:38 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH 5/5] Powerpc/Watchpoint: Fix length calculation for
- unaligned target
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        mikey@neuling.org, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, npiggin@gmail.com,
-        naveen.n.rao@linux.vnet.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
- <20190618042732.5582-6-ravi.bangoria@linux.ibm.com>
- <3390c3c2-8290-da55-a183-872c593c7b1e@c-s.fr>
-Date:   Wed, 19 Jun 2019 12:21:37 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 19 Jun 2019 02:54:34 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J6s3o1049267;
+        Wed, 19 Jun 2019 06:54:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2018-07-02;
+ bh=DlKNJuvcASeK8pBRu937XHctNTJ0nqeBGOzXI0KJiZk=;
+ b=Ohai5YMfgkYyE2gW6+kp0v734uX79EDWBfm+7mUeaNCOClTgeZ2ukG9aq4oELB8q0yMo
+ spxgW5BVidnS0ZPC6wmMMiD1Dtps13S7Fvo2+UHg1vam2zH8M4+ww/UHzuE86B3L4xST
+ u5wy3RpL3WfMBntDZdBJxSt9UEYtb8a5PIeX6W0YqsMsPSdM7F/Drk9BSzr4c857tGHy
+ HGrfpQoSqgqlkaJ+APUPXp2mxXakX1JKcCVGI5u57hJ6gm53pZsLbifhuSZftxUucz0e
+ 1oENivX1K58BRP22PcgIK+Li9ZAKOmuwHu2xsWzut02YyTMXoKSMpkLZNUYwsbk14eZH +w== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t78099fe0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 06:54:29 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J6rAwt042359;
+        Wed, 19 Jun 2019 06:54:29 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by userp3020.oracle.com with ESMTP id 2t77ymwbjk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 06:54:29 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5J6rD9O024098;
+        Wed, 19 Jun 2019 06:53:14 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 23:53:12 -0700
+Date:   Wed, 19 Jun 2019 09:53:06 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Simon =?iso-8859-1?Q?Sandstr=F6m?= <simon@nikanor.nu>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: kpc2000: simplify error handling in
+ kp2000_pcie_probe
+Message-ID: <20190619065306.GN28859@kadam>
+References: <20190619063607.20722-1-simon@nikanor.nu>
 MIME-Version: 1.0
-In-Reply-To: <3390c3c2-8290-da55-a183-872c593c7b1e@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061906-0028-0000-0000-0000037B9370
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061906-0029-0000-0000-0000243B9F9B
-Message-Id: <1f3873b7-d924-61ad-2f0e-f6cc12c012ea@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190056
+In-Reply-To: <20190619063607.20722-1-simon@nikanor.nu>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190057
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190057
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 08:36:07AM +0200, Simon Sandstr�m wrote:
+> We can get rid of a few iounmaps in the middle of the function by
+> re-ordering the error handling labels and adding two new labels.
+> 
+> Signed-off-by: Simon Sandstr�m <simon@nikanor.nu>
+> ---
+> 
+> This change has not been tested besides by compiling. It might be good
+> took take an extra look to make sure that I got everything right.
+> 
 
-On 6/18/19 12:16 PM, Christophe Leroy wrote:
->>   +/* Maximum len for DABR is 8 bytes and DAWR is 512 bytes */
->> +static int hw_breakpoint_validate_len(struct arch_hw_breakpoint *hw)
->> +{
->> +    u16 length_max = 8;
->> +    u16 final_len;
-> 
-> You should be more consistent in naming. If one is called final_len, the other one should be called max_len.
+You have the right instincts that when something looks really
+complicated that's probably for a reason.  That attitude will serve you
+well in the future!  But in this case it's staging code so the original
+code is just strange.
 
-Copy/paste :). Will change it.
+Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-> 
->> +    unsigned long start_addr, end_addr;
->> +
->> +    final_len = hw_breakpoint_get_final_len(hw, &start_addr, &end_addr);
->> +
->> +    if (dawr_enabled()) {
->> +        length_max = 512;
->> +        /* DAWR region can't cross 512 bytes boundary */
->> +        if ((start_addr >> 9) != (end_addr >> 9))
->> +            return -EINVAL;
->> +    }
->> +
->> +    if (final_len > length_max)
->> +        return -EINVAL;
->> +
->> +    return 0;
->> +}
->> +
-> 
-> Is many places, we have those numeric 512 and 9 shift. Could we replace them by some symbol, for instance DAWR_SIZE and DAWR_SHIFT ?
+> Also, this change was proposed by Dan Carpenter. Should I add anything
+> in the commit message to show this?
 
-I don't see any other place where we check for boundary limit.
+There is a Suggested-by: tag for this, but don't resend because I don't
+care and I've already reviewed this version so I don't want to review
+the patch again.
 
-[...]
-
-> 
->> +u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
->> +                unsigned long *start_addr,
->> +                unsigned long *end_addr)
->> +{
->> +    *start_addr = brk->address & ~HW_BREAKPOINT_ALIGN;
->> +    *end_addr = (brk->address + brk->len - 1) | HW_BREAKPOINT_ALIGN;
->> +    return *end_addr - *start_addr + 1;
->> +}
-> 
-> This function gives horrible code (a couple of unneeded store/re-read and read/re-read).
-> 
-> 000006bc <hw_breakpoint_get_final_len>:
->      6bc:    81 23 00 00     lwz     r9,0(r3)
->      6c0:    55 29 00 38     rlwinm  r9,r9,0,0,28
->      6c4:    91 24 00 00     stw     r9,0(r4)
->      6c8:    81 43 00 00     lwz     r10,0(r3)
->      6cc:    a1 23 00 06     lhz     r9,6(r3)
->      6d0:    38 6a ff ff     addi    r3,r10,-1
->      6d4:    7c 63 4a 14     add     r3,r3,r9
->      6d8:    60 63 00 07     ori     r3,r3,7
->      6dc:    90 65 00 00     stw     r3,0(r5)
->      6e0:    38 63 00 01     addi    r3,r3,1
->      6e4:    81 24 00 00     lwz     r9,0(r4)
->      6e8:    7c 69 18 50     subf    r3,r9,r3
->      6ec:    54 63 04 3e     clrlwi  r3,r3,16
->      6f0:    4e 80 00 20     blr
-> 
-> Below code gives something better:
-> 
-> u16 hw_breakpoint_get_final_len(struct arch_hw_breakpoint *brk,
->                 unsigned long *start_addr,
->                 unsigned long *end_addr)
-> {
->     unsigned long address = brk->address;
->     unsigned long len = brk->len;
->     unsigned long start = address & ~HW_BREAKPOINT_ALIGN;
->     unsigned long end = (address + len - 1) | HW_BREAKPOINT_ALIGN;
-> 
->     *start_addr = start;
->     *end_addr = end;
->     return end - start + 1;
-> }
-> 
-> 000006bc <hw_breakpoint_get_final_len>:
->      6bc:    81 43 00 00     lwz     r10,0(r3)
->      6c0:    a1 03 00 06     lhz     r8,6(r3)
->      6c4:    39 2a ff ff     addi    r9,r10,-1
->      6c8:    7d 28 4a 14     add     r9,r8,r9
->      6cc:    55 4a 00 38     rlwinm  r10,r10,0,0,28
->      6d0:    61 29 00 07     ori     r9,r9,7
->      6d4:    91 44 00 00     stw     r10,0(r4)
->      6d8:    20 6a 00 01     subfic  r3,r10,1
->      6dc:    91 25 00 00     stw     r9,0(r5)
->      6e0:    7c 63 4a 14     add     r3,r3,r9
->      6e4:    54 63 04 3e     clrlwi  r3,r3,16
->      6e8:    4e 80 00 20     blr
-> 
-> 
-> And regardless, that's a pitty to have this function using pointers which are from local variables in the callers, as we loose the benefit of registers. Couldn't this function go in the .h as a static inline ? I'm sure the result would be worth it.
-
-This is obviously a bit of optimization, but I like Mikey's idea of
-storing start_addr and end_addr in the arch_hw_breakpoint. That way
-we don't have to recalculate length every time in set_dawr.
+regards,
+dan carpenter
 
