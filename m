@@ -2,78 +2,94 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68821C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:52:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27F5C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38D07208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:52:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560923531;
-	bh=ZkuAsgequni95HbNK6ONBqjvUgeSIKHzcp8y3cXEKz8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=myoltw0eJNLkMH6zqt4evt1YWo4YpL53IXAHt2XlxBhApv47SuL1YRpxWCZhSBL0H
-	 T1bhg7TSMh4Xs2DjI/LKB1nFsNOcR9uyUX0XlEfJgbegZ8K7bhkNrWc6sFAFvPkAQz
-	 C/azW6my44F4Z/+6CeejQXIZtVPfI6FlJZaK5zIo=
+	by mail.kernel.org (Postfix) with ESMTP id D2631208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731075AbfFSFwK (ORCPT
+        id S1730875AbfFSFyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:52:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52002 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfFSFwJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:52:09 -0400
-Received: from localhost (107-207-74-175.lightspeed.austtx.sbcglobal.net [107.207.74.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DB91920B1F;
-        Wed, 19 Jun 2019 05:52:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560923529;
-        bh=ZkuAsgequni95HbNK6ONBqjvUgeSIKHzcp8y3cXEKz8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MWH4DBJfxrXWzAFsqaWAnBOD2tH+jkU0ekX2LD7Z3/LcYKnoODJ0/ScFaGDx0YCEd
-         DBbDYukz3hvGCkGRlVb7osPPAHbwx6kCjoZM2lMrTmz2Q+SgBrCvGNFkSqJGpDyAC1
-         NY8t6HUR8T/k9LDqdHZEecD6DRxa5VVYh75tiJZQ=
-Date:   Wed, 19 Jun 2019 00:52:07 -0500
-From:   Andy Gross <agross@kernel.org>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     alokc@codeaurora.org, david.brown@linaro.org,
-        bjorn.andersson@linaro.org, balbi@kernel.org,
-        gregkh@linuxfoundation.org, ard.biesheuvel@linaro.org,
-        jlhugo@gmail.com, linux-arm-msm@vger.kernel.org,
-        linux-usb@vger.kernel.org, felipe.balbi@linux.intel.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [RESEND v4 1/4] soc: qcom: geni: Add support for ACPI
-Message-ID: <20190619055207.GA14273@hector.attlocal.net>
-References: <20190617125105.6186-1-lee.jones@linaro.org>
- <20190617125105.6186-2-lee.jones@linaro.org>
+        Wed, 19 Jun 2019 01:54:37 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39059 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfFSFyh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 01:54:37 -0400
+X-Originating-IP: 79.86.19.127
+Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E2F4DE000E;
+        Wed, 19 Jun 2019 05:54:21 +0000 (UTC)
+From:   Alex Ghiti <alex@ghiti.fr>
+To:     Alexandre Ghiti <alex@ghiti.fr>
+Cc:     "James E . J . Bottomley" <james.bottomley@hansenpartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH RESEND 1/8] s390: Start fallback of top-down mmap at
+ mm->mmap_base
+References: <20190619054224.5983-1-alex@ghiti.fr>
+ <20190619054224.5983-2-alex@ghiti.fr>
+Message-ID: <4fcd8c83-dc33-12ab-3ba2-85a8d851674d@ghiti.fr>
+Date:   Wed, 19 Jun 2019 01:54:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617125105.6186-2-lee.jones@linaro.org>
-User-Agent: Mutt/1.5.23.1 (2014-03-12)
+In-Reply-To: <20190619054224.5983-2-alex@ghiti.fr>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 01:51:02PM +0100, Lee Jones wrote:
-> When booting with ACPI as the active set of configuration tables,
-> all; clocks, regulators, pin functions ect are expected to be at
-> their ideal values/levels/rates, thus the associated frameworks
-> are unavailable.  Ensure calls to these APIs are shielded when
-> ACPI is enabled.
-> 
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> Acked-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Really sorry about that, my connection is weird this morning, I'll retry 
+tomorrow.
 
-Applied.
+Sorry again,
 
-Thanks,
+Alex
 
-Andy
+On 6/19/19 1:42 AM, Alexandre Ghiti wrote:
+> In case of mmap failure in top-down mode, there is no need to go through
+> the whole address space again for the bottom-up fallback: the goal of this
+> fallback is to find, as a last resort, space between the top-down mmap base
+> and the stack, which is the only place not covered by the top-down mmap.
+>
+> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> ---
+>   arch/s390/mm/mmap.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
+> index cbc718ba6d78..4a222969843b 100644
+> --- a/arch/s390/mm/mmap.c
+> +++ b/arch/s390/mm/mmap.c
+> @@ -166,7 +166,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+>   	if (addr & ~PAGE_MASK) {
+>   		VM_BUG_ON(addr != -ENOMEM);
+>   		info.flags = 0;
+> -		info.low_limit = TASK_UNMAPPED_BASE;
+> +		info.low_limit = mm->mmap_base;
+>   		info.high_limit = TASK_SIZE;
+>   		addr = vm_unmapped_area(&info);
+>   		if (addr & ~PAGE_MASK)
