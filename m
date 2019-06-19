@@ -2,105 +2,90 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45004C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:54:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D62DC31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EABB2182B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:54:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560956096;
-	bh=1o2dMj31GORXJZyOFULgtIRqexZMCNTkB7pR8LOrtJ4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tQZib8C0EXe4Aa6hfBHK9KzjapAOofm9Ya5J7K6tL49Mne4mmEYXYO8yKLApL1ken
-	 J4WN4Val3QWbkrGQ524K0WC5tkEyay/OYVejLExp+w9rX3oXDzEgvWFM8FVbSa6tNs
-	 tjsHIKwdTobAbBLyPrRIyfEyYU+Ozp6IukZat65Q=
+	by mail.kernel.org (Postfix) with ESMTP id 1C9532183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:55:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729671AbfFSOyy (ORCPT
+        id S1729785AbfFSOzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:54:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50950 "EHLO mail.kernel.org"
+        Wed, 19 Jun 2019 10:55:01 -0400
+Received: from ms.lwn.net ([45.79.88.28]:58304 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfFSOyy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:54:54 -0400
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726238AbfFSOzA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 10:55:00 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D55352182B;
-        Wed, 19 Jun 2019 14:54:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560956093;
-        bh=1o2dMj31GORXJZyOFULgtIRqexZMCNTkB7pR8LOrtJ4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WNj4iaYt8/G5RaEDTSZfDsFjp6NVfp8+Eao8HcnQtl2WtIz059/SPsFZ4/w3uv6px
-         67wlVpxhLvDfoTpoFbQZQOAr/v7soTPuK6Nq2xYD/iP4ju2Ax69/FF6c5ubeEBqbUi
-         4WJLwK3hQRENzyYmfVF27jQgQQ9f/GPh1m75B4zw=
-Received: by mail-qt1-f169.google.com with SMTP id s15so20195623qtk.9;
-        Wed, 19 Jun 2019 07:54:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAVAxoTRzbQzaweSqxVwyrC5mo06bdWQCc1JF5ZdL39QRzkjj1X+
-        0TywWYfga3YGMqgVkiAtEF+wR68xDK4k7bi8cA==
-X-Google-Smtp-Source: APXvYqyIsFoKeKt8JjG9xmjujYGTtwkYLYLaB8h+ix0Pl7lN0krfkUYZCEy8rme8HA3CdujMucRPRNSAzdKC1rAn+e4=
-X-Received: by 2002:aed:3fb0:: with SMTP id s45mr53667104qth.136.1560956092103;
- Wed, 19 Jun 2019 07:54:52 -0700 (PDT)
+        by ms.lwn.net (Postfix) with ESMTPSA id EA3012BA;
+        Wed, 19 Jun 2019 14:54:59 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 08:54:58 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
+ dir
+Message-ID: <20190619085458.08872dbb@lwn.net>
+In-Reply-To: <20190619111528.3e2665e3@coco.lan>
+References: <20190619072218.4437f891@coco.lan>
+        <cover.1560890771.git.mchehab+samsung@kernel.org>
+        <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
+        <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com>
+        <11422.1560951550@warthog.procyon.org.uk>
+        <20190619111528.3e2665e3@coco.lan>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <1559754961-26783-1-git-send-email-sricharan@codeaurora.org> <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
-In-Reply-To: <1559754961-26783-3-git-send-email-sricharan@codeaurora.org>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 19 Jun 2019 08:54:40 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+0TLtLiX17nRSyVWrJM2_UvLEVMsp7Hf2e3hU7fh4WGg@mail.gmail.com>
-Message-ID: <CAL_Jsq+0TLtLiX17nRSyVWrJM2_UvLEVMsp7Hf2e3hU7fh4WGg@mail.gmail.com>
-Subject: Re: [PATCH 2/6] dt-bindings: qcom: Add ipq6018 bindings
-To:     Sricharan R <sricharan@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@codeaurora.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 5, 2019 at 11:16 AM Sricharan R <sricharan@codeaurora.org> wrote:
->
-> Signed-off-by: Sricharan R <sricharan@codeaurora.org>
-> Signed-off-by: speriaka <speriaka@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/arm/qcom.yaml | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/qcom.yaml b/Documentation/devicetree/bindings/arm/qcom.yaml
-> index f6316ab..7b19028 100644
-> --- a/Documentation/devicetree/bindings/arm/qcom.yaml
-> +++ b/Documentation/devicetree/bindings/arm/qcom.yaml
-> @@ -36,6 +36,7 @@ description: |
->         mdm9615
->         ipq8074
->         sdm845
-> +       ipq6018
+[Trimming the CC list from hell made sense, but it might have been better
+to leave me on it...]
 
-You need to add actual schema for this, not just a description.
+On Wed, 19 Jun 2019 11:15:28 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
->
->    The 'board' element must be one of the following strings:
->
-> @@ -45,6 +46,7 @@ description: |
->         mtp
->         sbc
->         hk01
-> +       cp01-c1
->
->    The 'soc_version' and 'board_version' elements take the form of v<Major>.<Minor>
->    where the minor number may be omitted when it's zero, i.e.  v1.0 is the same
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
->
+> Em Wed, 19 Jun 2019 14:39:10 +0100
+> David Howells <dhowells@redhat.com> escreveu:
+> 
+> > Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> >   
+> > > > > -Documentation/nommu-mmap.rst
+> > > > > +Documentation/driver-api/nommu-mmap.rst      
+> > 
+> > Why is this moving to Documentation/driver-api?    
+> 
+> Good point. I tried to do my best with those document renames, but
+> I'm pretty sure some of them ended by going to the wrong place - or
+> at least there are arguments in favor of moving it to different
+> places :-)
+
+I think that a lot of this might also be an argument for slowing down just
+a little bit.  I really don't think that blasting through and reformatting
+all of our text documents is the most urgent problem right now and, in
+cases like this, it might create others.
+
+Organization of the documentation tree is important; it has never really
+gotten any attention so far, and we're trying to make it better.  But
+moving documents will, by its nature, annoy people.  We can generally get
+past that, but I'd really like to avoid moving things twice.  In general,
+I would rather see a single document converted, read critically and
+updated, and carefully integrated with the rest than a hundred of them
+swept into different piles...
+
+See what I'm getting at?
+
+Thanks,
+
+jon
