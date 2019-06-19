@@ -6,130 +6,155 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7DEC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED607C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:33:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C2020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:32:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CAC0B20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:33:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730993AbfFSNcp (ORCPT
+        id S1731190AbfFSNdC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:32:45 -0400
-Received: from gate.crashing.org ([63.228.1.57]:50445 "EHLO gate.crashing.org"
+        Wed, 19 Jun 2019 09:33:02 -0400
+Received: from mga05.intel.com ([192.55.52.43]:23391 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726143AbfFSNcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:32:45 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5JDVjMj029809;
-        Wed, 19 Jun 2019 08:31:53 -0500
-Message-ID: <a5fc355e44fb5edea41274329f7c5d04a8dff6fc.camel@kernel.crashing.org>
-Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>,
-        Christoph Hellwig <hch@lst.de>, paulus@samba.org
-Cc:     Larry.Finger@lwfinger.net, linuxppc-dev@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, aaro.koskinen@iki.fi
-Date:   Wed, 19 Jun 2019 23:31:44 +1000
-In-Reply-To: <87tvcldacn.fsf@concordia.ellerman.id.au>
-References: <20190613082446.18685-1-hch@lst.de>
-         <20190619105039.GA10118@lst.de> <87tvcldacn.fsf@concordia.ellerman.id.au>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        id S1729287AbfFSNdC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:33:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 06:33:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="311356409"
+Received: from dli18-mobl.ccr.corp.intel.com (HELO [10.255.29.252]) ([10.255.29.252])
+  by orsmga004.jf.intel.com with ESMTP; 19 Jun 2019 06:32:57 -0700
+Subject: Re: [PATCH v4 1/3] KVM: x86: add support for user wait instructions
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>, pbonzini@redhat.com,
+        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, jingqi.liu@intel.com
+References: <20190619060945.14104-1-tao3.xu@intel.com>
+ <20190619060945.14104-2-tao3.xu@intel.com>
+ <7f6bc0fa-abcd-ce0a-19a0-a5767d094181@linux.intel.com>
+ <10820bce-69fa-4cee-f95b-5a8de20388d1@intel.com>
+ <a9c9fe6a-3dc5-662a-94d3-1ef86c69f25d@linux.intel.com>
+From:   Tao Xu <tao3.xu@intel.com>
+Message-ID: <6b2abf36-2b2f-d721-ae9d-bd2b26785eba@intel.com>
+Date:   Wed, 19 Jun 2019 21:32:55 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <a9c9fe6a-3dc5-662a-94d3-1ef86c69f25d@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-19 at 22:32 +1000, Michael Ellerman wrote:
-> Christoph Hellwig <hch@lst.de> writes:
-> > Any chance this could get picked up to fix the regression?
+On 6/19/2019 3:16 PM, Xiaoyao Li wrote:
+> On 6/19/2019 3:01 PM, Tao Xu wrote:
+>> On 6/19/2019 2:23 PM, Xiaoyao Li wrote:
+>>>
+>>>
+>>> On 6/19/2019 2:09 PM, Tao Xu wrote:
+>>>> UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
+>>>> This patch adds support for user wait instructions in KVM. Availability
+>>>> of the user wait instructions is indicated by the presence of the CPUID
+>>>> feature flag WAITPKG CPUID.0x07.0x0:ECX[5]. User wait instructions may
+>>>> be executed at any privilege level, and use IA32_UMWAIT_CONTROL MSR to
+>>>> set the maximum time.
+>>>>
+>>>> The behavior of user wait instructions in VMX non-root operation is
+>>>> determined first by the setting of the "enable user wait and pause"
+>>>> secondary processor-based VM-execution control bit 26.
+>>>>     If the VM-execution control is 0, UMONITOR/UMWAIT/TPAUSE cause
+>>>> an invalid-opcode exception (#UD).
+>>>>     If the VM-execution control is 1, treatment is based on the
+>>>> setting of the “RDTSC exiting” VM-execution control. Because KVM never
+>>>> enables RDTSC exiting, if the instruction causes a delay, the amount of
+>>>> time delayed is called here the physical delay. The physical delay is
+>>>> first computed by determining the virtual delay. If
+>>>> IA32_UMWAIT_CONTROL[31:2] is zero, the virtual delay is the value in
+>>>> EDX:EAX minus the value that RDTSC would return; if
+>>>> IA32_UMWAIT_CONTROL[31:2] is not zero, the virtual delay is the minimum
+>>>> of that difference and AND(IA32_UMWAIT_CONTROL,FFFFFFFCH).
+>>>>
+>>>> Because umwait and tpause can put a (psysical) CPU into a power saving
+>>>> state, by default we dont't expose it to kvm and enable it only when
+>>>> guest CPUID has it.
+>>>>
+>>>> Detailed information about user wait instructions can be found in the
+>>>> latest Intel 64 and IA-32 Architectures Software Developer's Manual.
+>>>>
+>>>> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
+>>>> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
+>>>> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+>>>> ---
+>>>>
+>>>> no changes in v4.
+>>>> ---
+>>>>   arch/x86/include/asm/vmx.h      | 1 +
+>>>>   arch/x86/kvm/cpuid.c            | 2 +-
+>>>>   arch/x86/kvm/vmx/capabilities.h | 6 ++++++
+>>>>   arch/x86/kvm/vmx/vmx.c          | 4 ++++
+>>>>   4 files changed, 12 insertions(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
+>>>> index a39136b0d509..8f00882664d3 100644
+>>>> --- a/arch/x86/include/asm/vmx.h
+>>>> +++ b/arch/x86/include/asm/vmx.h
+>>>> @@ -69,6 +69,7 @@
+>>>>   #define SECONDARY_EXEC_PT_USE_GPA        0x01000000
+>>>>   #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC    0x00400000
+>>>>   #define SECONDARY_EXEC_TSC_SCALING              0x02000000
+>>>> +#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE    0x04000000
+>>>>   #define PIN_BASED_EXT_INTR_MASK                 0x00000001
+>>>>   #define PIN_BASED_NMI_EXITING                   0x00000008
+>>>> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
+>>>> index e18a9f9f65b5..48bd851a6ae5 100644
+>>>> --- a/arch/x86/kvm/cpuid.c
+>>>> +++ b/arch/x86/kvm/cpuid.c
+>>>> @@ -405,7 +405,7 @@ static inline int __do_cpuid_ent(struct 
+>>>> kvm_cpuid_entry2 *entry, u32 function,
+>>>>           F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ |
+>>>>           F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
+>>>>           F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
+>>>> -        F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B);
+>>>> +        F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
+>>>>       /* cpuid 7.0.edx*/
+>>>>       const u32 kvm_cpuid_7_0_edx_x86_features =
+>>>> diff --git a/arch/x86/kvm/vmx/capabilities.h 
+>>>> b/arch/x86/kvm/vmx/capabilities.h
+>>>> index d6664ee3d127..fd77e17651b4 100644
+>>>> --- a/arch/x86/kvm/vmx/capabilities.h
+>>>> +++ b/arch/x86/kvm/vmx/capabilities.h
+>>>> @@ -253,6 +253,12 @@ static inline bool cpu_has_vmx_tsc_scaling(void)
+>>>>           SECONDARY_EXEC_TSC_SCALING;
+>>>>   }
+>>>> +static inline bool vmx_waitpkg_supported(void)
+>>>> +{
+>>>> +    return vmcs_config.cpu_based_2nd_exec_ctrl &
+>>>> +        SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
+>>>
+>>> Shouldn't it be
+>>>      return vmx->secondary_exec_control &
+>>>                  SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;   ?
+>>
+>> vmx->secondary_exec_control is another way to get 
+>> SECONDARY_EXEC_CONTROL but it need to add vmx as input. Use 
+>> vmcs_config.cpu_based_2nd_exec_ctrl   is easy expand to use in other 
+>> place.
+>>
 > 
-> Was hoping Ben would Ack it. He's still powermac maintainer :)
+> This patch want to enable waitpkg for guest only when 
+> guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG), and it only updates 
+> vmx->secondary_exec_control based on guest's cpuid when setup vcpu. But 
+> vmcs_config remains unchanged.  So using vmcs_config there is wrong.
 > 
-> I guess he OK'ed it in the other thread, will add it to my queue.
 
-Yeah ack. If I had written it myself, I would have made the DMA bits a
-variable and only set it down to 30 if I see that device in the DT
-early on, but I can't be bothered now, if it works, ship it :-)
-
-Note: The patch affects all ppc32, though I don't think it will cause
-any significant issue on those who don't need it.
-
-Cheers,
-Ben.
-
-> cheers
-> 
-> > On Thu, Jun 13, 2019 at 10:24:46AM +0200, Christoph Hellwig wrote:
-> > > With the strict dma mask checking introduced with the switch to
-> > > the generic DMA direct code common wifi chips on 32-bit
-> > > powerbooks
-> > > stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
-> > > to allow them to reliably allocate dma coherent memory.
-> > > 
-> > > Fixes: 65a21b71f948 ("powerpc/dma: remove
-> > > dma_nommu_dma_supported")
-> > > Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  arch/powerpc/include/asm/page.h         | 7 +++++++
-> > >  arch/powerpc/mm/mem.c                   | 3 ++-
-> > >  arch/powerpc/platforms/powermac/Kconfig | 1 +
-> > >  3 files changed, 10 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/powerpc/include/asm/page.h
-> > > b/arch/powerpc/include/asm/page.h
-> > > index b8286a2013b4..0d52f57fca04 100644
-> > > --- a/arch/powerpc/include/asm/page.h
-> > > +++ b/arch/powerpc/include/asm/page.h
-> > > @@ -319,6 +319,13 @@ struct vm_area_struct;
-> > >  #endif /* __ASSEMBLY__ */
-> > >  #include <asm/slice.h>
-> > >  
-> > > +/*
-> > > + * Allow 30-bit DMA for very limited Broadcom wifi chips on many
-> > > powerbooks.
-> > > + */
-> > > +#ifdef CONFIG_PPC32
-> > > +#define ARCH_ZONE_DMA_BITS 30
-> > > +#else
-> > >  #define ARCH_ZONE_DMA_BITS 31
-> > > +#endif
-> > >  
-> > >  #endif /* _ASM_POWERPC_PAGE_H */
-> > > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> > > index cba29131bccc..2540d3b2588c 100644
-> > > --- a/arch/powerpc/mm/mem.c
-> > > +++ b/arch/powerpc/mm/mem.c
-> > > @@ -248,7 +248,8 @@ void __init paging_init(void)
-> > >  	       (long int)((top_of_ram - total_ram) >> 20));
-> > >  
-> > >  #ifdef CONFIG_ZONE_DMA
-> > > -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL
-> > > >> PAGE_SHIFT);
-> > > +	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
-> > > +			((1UL << ARCH_ZONE_DMA_BITS) - 1) >>
-> > > PAGE_SHIFT);
-> > >  #endif
-> > >  	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-> > >  #ifdef CONFIG_HIGHMEM
-> > > diff --git a/arch/powerpc/platforms/powermac/Kconfig
-> > > b/arch/powerpc/platforms/powermac/Kconfig
-> > > index f834a19ed772..c02d8c503b29 100644
-> > > --- a/arch/powerpc/platforms/powermac/Kconfig
-> > > +++ b/arch/powerpc/platforms/powermac/Kconfig
-> > > @@ -7,6 +7,7 @@ config PPC_PMAC
-> > >  	select PPC_INDIRECT_PCI if PPC32
-> > >  	select PPC_MPC106 if PPC32
-> > >  	select PPC_NATIVE
-> > > +	select ZONE_DMA if PPC32
-> > >  	default y
-> > >  
-> > >  config PPC_PMAC64
-> > > -- 
-> > > 2.20.1
-> > 
-> > ---end quoted text---
-
+Xiaoyao, you are right. And MSR_IA32_XSS has the same logic. I will fix 
+my patch. And we may need to submit a fix patch for MSR_IA32_XSS.
