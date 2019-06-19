@@ -2,83 +2,180 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12451C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEC0C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E48F32080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B62612080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731288AbfFSIy2 (ORCPT
+        id S1731305AbfFSIz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:54:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:56492 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730783AbfFSIy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:54:28 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8981ECFC;
-        Wed, 19 Jun 2019 01:54:27 -0700 (PDT)
-Received: from [10.37.12.160] (unknown [10.37.12.160])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3A5CD3F246;
-        Wed, 19 Jun 2019 01:54:22 -0700 (PDT)
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Guo Ren <guoren@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, aou@eecs.berkeley.edu,
-        gary@garyguo.net, Atish.Patra@wdc.com, hch@infradead.org,
-        paul.walmsley@sifive.com, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com,
-        julien.thierry@arm.com, will.deacon@arm.com,
-        christoffer.dall@arm.com, james.morse@arm.com
-References: <20190321163623.20219-1-julien.grall@arm.com>
- <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
- <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
-Date:   Wed, 19 Jun 2019 09:54:21 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 04:55:56 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:12053 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730783AbfFSIz4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:55:56 -0400
+Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
+        by TWHMLLG3.macronix.com with ESMTP id x5J8toeS012886;
+        Wed, 19 Jun 2019 16:55:50 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id 2BA0A30C5566E1BC54BA;
+        Wed, 19 Jun 2019 16:55:51 +0800 (CST)
+In-Reply-To: <20190619101519.391919ec@collabora.com>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
+        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
+        <20190617143510.4ded5728@xps13> <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
+        <20190618081436.5d488320@collabora.com> <20190618092901.3bdd9f61@collabora.com>
+        <OF5EAF94EB.AE31CF59-ON4825841E.002A2C38-4825841E.002C60BF@mxic.com.tw> <20190619101519.391919ec@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
+        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        mark.rutland@arm.com, "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
+        stefan@agner.ch, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
 MIME-Version: 1.0
-In-Reply-To: <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-KeepSent: 9EFE4BDE:3166D82B-4825841E:00307F51;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF9EFE4BDE.3166D82B-ON4825841E.00307F51-4825841E.00310FB5@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 19 Jun 2019 16:55:52 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/06/19 PM 04:55:51,
+        Serialize complete at 2019/06/19 PM 04:55:51
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG3.macronix.com x5J8toeS012886
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+Hi Boris,
 
-On 6/19/19 9:07 AM, Guo Ren wrote:
-> Hi Julien,
+> > > 
+> > > Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND 
+controller
+> > > 
+> > > On Tue, 18 Jun 2019 08:14:36 +0200
+> > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> > > 
+> > > > > > > > > 
+> > > > > > > > > How to make all #CS keep high for NAND to enter 
+> > > > > > > > > low-power standby mode if driver don't use 
+> > "legacy.select_chip()" 
+> > > > > ? 
+> > > > > > > > 
+> > > > > > > > See commit 02b4a52604a4 ("mtd: rawnand: Make 
+->select_chip() 
+> > > > > optional 
+> > > > > > > > when ->exec_op() is implemented") which states:
+> > > > > > > > 
+> > > > > > > >         "When [->select_chip() is] not implemented, the 
+core 
+> > is 
+> > > > > assuming 
+> > > > > > > >    the CS line is automatically asserted/deasserted by the 
+ 
+> > driver 
+> > > > > > > >    ->exec_op() implementation." 
+> > > > > > > > 
+> > > > > > > > Of course, the above is right only when the controller 
+driver 
+> > 
+> > > > > supports 
+> > > > > > > > the ->exec_op() interface. 
+> > > > > > > 
+> > > > > > > Currently, it seems that we will get the incorrect data and  
 
-Hi,
+> > error
+> > > > > > > operation due to CS in error toggling if CS line is 
+controlled 
+> > in 
+> > > > > > > ->exec_op(). 
+> > > 
+> > > Oh, and please provide the modifications you added on top of this 
+patch.
+> > > Right now we're speculating on what you've done which is definitely 
+not
+> > > an efficient way to debug this sort of issues. 
+> > 
+> > The patch is to add in beginning of ->exec_op() to control CS# low and 
 
+> > before return from ->exec_op() to control CS# High.
+> > i.e,.
+> > static in mxic_nand_exec_op( )
+> > {
+> >  cs_to_low();
+> > 
+> > 
+> > 
+> >  cs_to_high();
+> >  return;
+> > }
+> > 
+> > But for nand_onfi_detect(), 
+> > it calls nand_read_param_page_op() and then nand_read_data_op().
+> > mxic_nand_exec_op() be called twice for nand_onfi_detect() and
+> > driver will get incorrect ONFI parameter table data from 
+> > nand_read_data_op().
 > 
-> You forgot CCing C-SKY folks :P
+> And I think it's valid to release the CE pin between
+> read_param_page_op() (CMD(0xEC)+ADDR(0x0)) and read_data_op() (data
+> cycles) if your chip is CE-dont-care compliant. So, either you have a
+> problem with your controller driver (CS-related timings are incorrect)
+> or your chip is not CE-dont-care compliant.
 
-I wasn't aware you could be interested :).
+Understood, I will try to fix it on my NFC driver.
 
-> 
-> Move arm asid allocator code in a generic one is a agood idea, I've
-> made a patchset for C-SKY and test is on processing, See:
-> https://lore.kernel.org/linux-csky/1560930553-26502-1-git-send-email-guoren@kernel.org/
-> 
-> If you plan to seperate it into generic one, I could co-work with you.
+And I think CS# pin goes to high is much important for power consumption.
 
-Was the ASID allocator work out of box on C-Sky? If so, I can easily 
-move the code in a generic place (maybe lib/asid.c).
+thanks & best regards,
+Mason
 
-Cheers,
 
--- 
-Julien Grall
+
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
