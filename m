@@ -2,294 +2,125 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A428BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:56:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B764C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6561D2187F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:56:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tiWkZ/w9"
+	by mail.kernel.org (Postfix) with ESMTP id 6BA952187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfFSP4w (ORCPT
+        id S1729874AbfFSP5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:56:52 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:43922 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfFSP4v (ORCPT
+        Wed, 19 Jun 2019 11:57:10 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:54810 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfFSP5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:56:51 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JFrt88113520;
-        Wed, 19 Jun 2019 15:56:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=SoDrd9n3X32J5yU22MXe5hxvbr0oADlAzco6AaNmPlY=;
- b=tiWkZ/w95Jnc750JE7NdIbSVLAxuNCJanB6vqjZPJ1aa3V8V1zz7hD/Mpir7yCJj4IkD
- UQZJ4T89Du+KDCmcxRn0ky0McpX+U/kGRnqOQRs9Q9lPNTQrXSPaHIcnrAd14qwTT+Ls
- CGw1pVAKq/48OOP4FVYkyfrOoPEKCzD3TVQpqowv9EXgafE2X+GyV2ycT9MSpTab4s91
- k+axl+0IYieWJcr4RyrP9FuovImoVA8NHW3+4dnQhyAVZXUqxpDMsH20ju5Zy1ck0hGd
- PWwheucUcbKKfNgIakqhbBRgWYJkSnvYDhZj4P1QxV3xVq7enCqaFO9qReDYFpCFmV9e cg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2t7809cba1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 15:56:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JFsVbp049987;
-        Wed, 19 Jun 2019 15:55:59 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t77ynx8s0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 15:55:59 +0000
-Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5JFtpTh010454;
-        Wed, 19 Jun 2019 15:55:51 GMT
-Received: from [10.65.164.174] (/10.65.164.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Jun 2019 08:55:51 -0700
-Subject: Re: [PATCH v17 04/15] mm, arm64: untag user pointers passed to memory
- syscalls
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <f9b50767d639b7116aa986dc67f158131b8d4169.1560339705.git.andreyknvl@google.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <a5e0e465-89d5-91d0-c6a4-39674269bbf2@oracle.com>
-Date:   Wed, 19 Jun 2019 09:55:45 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 11:57:09 -0400
+Received: by mail-io1-f72.google.com with SMTP id n8so21761905ioo.21
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:57:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=MGvBmLiBNh+C4+wwdFS/TTKkg1E7EQ8Skztj3YqExG8=;
+        b=V+FspX4fAOFVjwvHEWyGrJydsI52csau6GqFnBSCzbw1ByArUJTE8AYeOaeIKCWS0m
+         e8dxuedAHPGJt1i9X3XyxuFrThJOWPVQe6SYKDVAFWafdJXNb0kTWoc+QyNK3Srci24V
+         jzC9hcXRrFmEXSj8+84yDnLZewoJRnKixtYy/o0JN26beb/i1wK+CwCutNVlznWjcRW7
+         4CcFpKZ3JZpxxkjMhIJnVhddbVdbZr2kXlPncYUYqw2JBEN11iCr4CUo0lTo9VRZURuJ
+         xT6UM+IqH92DTJR3OiqqJwoN0LYP5JoZJvdDAYUA0iYimnUZtJOKHk7hdLvV0TkHyVVB
+         w2kQ==
+X-Gm-Message-State: APjAAAW+fWCtTqpCxNi55qIpFhLJmRubYIwRtcwD2/K7vaLx8inJ3Lzx
+        ecYS6W7Nt0KzB9nY9W2zhLxoQCKPd43Y1pdwPrQamRXMo9g8
+X-Google-Smtp-Source: APXvYqwy3jlTWkzep4C7eEUdiRgCjyCM7AL+gOyGCmyWMyoS6tuYdLGT59ANozFBE0rq+3jURdPRilgwQILtYs8AX77T3ZXpMepY
 MIME-Version: 1.0
-In-Reply-To: <f9b50767d639b7116aa986dc67f158131b8d4169.1560339705.git.andreyknvl@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190128
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190128
+X-Received: by 2002:a05:6638:cf:: with SMTP id w15mr2319925jao.136.1560959828884;
+ Wed, 19 Jun 2019 08:57:08 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 08:57:08 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000001c03bf058baf488a@google.com>
+Subject: BUG: unable to handle kernel paging request in hrtimer_interrupt
+From:   syzbot <syzbot+037e18398ba8c655a652@syzkaller.appspotmail.com>
+To:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        tglx@linutronix.de
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 5:43 AM, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow=
- to
-> pass tagged user pointers (with the top byte set to something else othe=
-r
-> than 0x00) as syscall arguments.
->=20
-> This patch allows tagged pointers to be passed to the following memory
-> syscalls: get_mempolicy, madvise, mbind, mincore, mlock, mlock2, mprote=
-ct,
-> mremap, msync, munlock, move_pages.
->=20
-> The mmap and mremap syscalls do not currently accept tagged addresses.
-> Architectures may interpret the tag as a background colour for the
-> corresponding vma.
->=20
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> ---
+Hello,
 
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+syzbot found the following crash on:
 
+HEAD commit:    29f785ff Merge branch 'fixes' of git://git.kernel.org/pub/..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=10539ceaa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
+dashboard link: https://syzkaller.appspot.com/bug?extid=037e18398ba8c655a652
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16da8cc9a00000
 
->  mm/madvise.c   | 2 ++
->  mm/mempolicy.c | 3 +++
->  mm/migrate.c   | 2 +-
->  mm/mincore.c   | 2 ++
->  mm/mlock.c     | 4 ++++
->  mm/mprotect.c  | 2 ++
->  mm/mremap.c    | 7 +++++++
->  mm/msync.c     | 2 ++
->  8 files changed, 23 insertions(+), 1 deletion(-)
->=20
-> diff --git a/mm/madvise.c b/mm/madvise.c
-> index 628022e674a7..39b82f8a698f 100644
-> --- a/mm/madvise.c
-> +++ b/mm/madvise.c
-> @@ -810,6 +810,8 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, size=
-_t, len_in, int, behavior)
->  	size_t len;
->  	struct blk_plug plug;
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	if (!madvise_behavior_valid(behavior))
->  		return error;
-> =20
-> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
-> index 01600d80ae01..78e0a88b2680 100644
-> --- a/mm/mempolicy.c
-> +++ b/mm/mempolicy.c
-> @@ -1360,6 +1360,7 @@ static long kernel_mbind(unsigned long start, uns=
-igned long len,
->  	int err;
->  	unsigned short mode_flags;
-> =20
-> +	start =3D untagged_addr(start);
->  	mode_flags =3D mode & MPOL_MODE_FLAGS;
->  	mode &=3D ~MPOL_MODE_FLAGS;
->  	if (mode >=3D MPOL_MAX)
-> @@ -1517,6 +1518,8 @@ static int kernel_get_mempolicy(int __user *polic=
-y,
->  	int uninitialized_var(pval);
->  	nodemask_t nodes;
-> =20
-> +	addr =3D untagged_addr(addr);
-> +
->  	if (nmask !=3D NULL && maxnode < nr_node_ids)
->  		return -EINVAL;
-> =20
-> diff --git a/mm/migrate.c b/mm/migrate.c
-> index f2ecc2855a12..d22c45cf36b2 100644
-> --- a/mm/migrate.c
-> +++ b/mm/migrate.c
-> @@ -1616,7 +1616,7 @@ static int do_pages_move(struct mm_struct *mm, no=
-demask_t task_nodes,
->  			goto out_flush;
->  		if (get_user(node, nodes + i))
->  			goto out_flush;
-> -		addr =3D (unsigned long)p;
-> +		addr =3D (unsigned long)untagged_addr(p);
-> =20
->  		err =3D -ENODEV;
->  		if (node < 0 || node >=3D MAX_NUMNODES)
-> diff --git a/mm/mincore.c b/mm/mincore.c
-> index c3f058bd0faf..64c322ed845c 100644
-> --- a/mm/mincore.c
-> +++ b/mm/mincore.c
-> @@ -249,6 +249,8 @@ SYSCALL_DEFINE3(mincore, unsigned long, start, size=
-_t, len,
->  	unsigned long pages;
->  	unsigned char *tmp;
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	/* Check the start address: needs to be page-aligned.. */
->  	if (start & ~PAGE_MASK)
->  		return -EINVAL;
-> diff --git a/mm/mlock.c b/mm/mlock.c
-> index 080f3b36415b..e82609eaa428 100644
-> --- a/mm/mlock.c
-> +++ b/mm/mlock.c
-> @@ -674,6 +674,8 @@ static __must_check int do_mlock(unsigned long star=
-t, size_t len, vm_flags_t fla
->  	unsigned long lock_limit;
->  	int error =3D -ENOMEM;
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	if (!can_do_mlock())
->  		return -EPERM;
-> =20
-> @@ -735,6 +737,8 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, size=
-_t, len)
->  {
->  	int ret;
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	len =3D PAGE_ALIGN(len + (offset_in_page(start)));
->  	start &=3D PAGE_MASK;
-> =20
-> diff --git a/mm/mprotect.c b/mm/mprotect.c
-> index bf38dfbbb4b4..19f981b733bc 100644
-> --- a/mm/mprotect.c
-> +++ b/mm/mprotect.c
-> @@ -465,6 +465,8 @@ static int do_mprotect_pkey(unsigned long start, si=
-ze_t len,
->  	const bool rier =3D (current->personality & READ_IMPLIES_EXEC) &&
->  				(prot & PROT_READ);
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	prot &=3D ~(PROT_GROWSDOWN|PROT_GROWSUP);
->  	if (grows =3D=3D (PROT_GROWSDOWN|PROT_GROWSUP)) /* can't be both */
->  		return -EINVAL;
-> diff --git a/mm/mremap.c b/mm/mremap.c
-> index fc241d23cd97..64c9a3b8be0a 100644
-> --- a/mm/mremap.c
-> +++ b/mm/mremap.c
-> @@ -606,6 +606,13 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsig=
-ned long, old_len,
->  	LIST_HEAD(uf_unmap_early);
->  	LIST_HEAD(uf_unmap);
-> =20
-> +	/*
-> +	 * Architectures may interpret the tag passed to mmap as a background=
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+037e18398ba8c655a652@syzkaller.appspotmail.com
 
-> +	 * colour for the corresponding vma. For mremap we don't allow tagged=
-
-> +	 * new_addr to preserve similar behaviour to mmap.
-> +	 */
-> +	addr =3D untagged_addr(addr);
-> +
->  	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
->  		return ret;
-> =20
-> diff --git a/mm/msync.c b/mm/msync.c
-> index ef30a429623a..c3bd3e75f687 100644
-> --- a/mm/msync.c
-> +++ b/mm/msync.c
-> @@ -37,6 +37,8 @@ SYSCALL_DEFINE3(msync, unsigned long, start, size_t, =
-len, int, flags)
->  	int unmapped_error =3D 0;
->  	int error =3D -EINVAL;
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	if (flags & ~(MS_ASYNC | MS_INVALIDATE | MS_SYNC))
->  		goto out;
->  	if (offset_in_page(start))
->=20
+kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+BUG: unable to handle page fault for address: ffff88807a92fb10
+#PF: supervisor instruction fetch in kernel mode
+#PF: error_code(0x0011) - permissions violation
+PGD b401067 P4D b401067 PUD 80000000400001e3
+Thread overran stack, or stack corrupted
+Oops: 0011 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 9205 Comm: syz-executor.0 Not tainted 5.2.0-rc5+ #2
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:0xffff88807a92fb10
+Code: ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff ff ff 40 8c f0 89 80  
+88 ff ff 00 00 00 00 00 00 00 00 a0 a9 1d 8b ff ff ff ff <40> fb 92 7a 80  
+88 ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff
+RSP: 0018:ffff8880ae909e10 EFLAGS: 00010006
+RAX: ffff88807a92fb10 RBX: 0000000000000000 RCX: ffffffff816162e2
+RDX: 0000000000010000 RSI: ffffffff81615cdf RDI: ffff88807a92fab8
+RBP: ffff8880ae909f08 R08: ffff888092914180 R09: ffffed1015d26c70
+R10: ffffed1015d26c6f R11: ffff8880ae93637b R12: ffff8880ae926d80
+R13: ffffffff8b1da9a0 R14: ffff88807a92fab8 R15: dffffc0000000000
+FS:  0000555557401940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff88807a92fb10 CR3: 000000009016a000 CR4: 00000000001406e0
+Call Trace:
+  <IRQ>
+  hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+  local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+  smp_apic_timer_interrupt+0x111/0x550 arch/x86/kernel/apic/apic.c:1066
+  apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+  </IRQ>
+Modules linked in:
+CR2: ffff88807a92fb10
+---[ end trace f7934f1b1fe3f476 ]---
+RIP: 0010:0xffff88807a92fb10
+Code: ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff ff ff 40 8c f0 89 80  
+88 ff ff 00 00 00 00 00 00 00 00 a0 a9 1d 8b ff ff ff ff <40> fb 92 7a 80  
+88 ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff
+RSP: 0018:ffff8880ae909e10 EFLAGS: 00010006
+RAX: ffff88807a92fb10 RBX: 0000000000000000 RCX: ffffffff816162e2
+RDX: 0000000000010000 RSI: ffffffff81615cdf RDI: ffff88807a92fab8
+RBP: ffff8880ae909f08 R08: ffff888092914180 R09: ffffed1015d26c70
+R10: ffffed1015d26c6f R11: ffff8880ae93637b R12: ffff8880ae926d80
+R13: ffffffff8b1da9a0 R14: ffff88807a92fab8 R15: dffffc0000000000
+FS:  0000555557401940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: ffff88807a92fb10 CR3: 000000009016a000 CR4: 00000000001406e0
 
 
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
