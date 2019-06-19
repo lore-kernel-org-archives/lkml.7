@@ -2,68 +2,124 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A497C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 156F0C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:18:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E6692166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED76321670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:18:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730233AbfFSNSC (ORCPT
+        id S1730794AbfFSNSv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:18:02 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:59597 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfFSNSC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:18:02 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id A09081C0009;
-        Wed, 19 Jun 2019 13:17:58 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     linux-rtc@vger.kernel.org
-Cc:     Dylan Howey <Dylan.Howey@tennantco.com>,
-        linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH] rtc: pcf2123: fix negative offset rounding
-Date:   Wed, 19 Jun 2019 15:17:53 +0200
-Message-Id: <20190619131753.14802-1-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 19 Jun 2019 09:18:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60698 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfFSNSv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:18:51 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E85E2309C390;
+        Wed, 19 Jun 2019 13:18:45 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 59FB55C220;
+        Wed, 19 Jun 2019 13:18:41 +0000 (UTC)
+Subject: [PATCH 00/10] keys: Miscellany [ver #3]
+From:   David Howells <dhowells@redhat.com>
+To:     keyrings@vger.kernel.org, ebiggers@kernel.org
+Cc:     Mat Martineau <mathew.j.martineau@linux.intel.com>,
+        Eric Biggers <ebiggers@google.com>,
+        James Morris <jamorris@linux.microsoft.com>,
+        dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 19 Jun 2019 14:18:40 +0100
+Message-ID: <156095032052.9363.8954337545422131435.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 19 Jun 2019 13:18:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Using result = (value + divisor/2) / divisor is rounding values up and only
-works well for positive values. Instead use DIV_ROUND_CLOSEST which does
-the correct thing.
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Here are some miscellaneous keyrings fixes and improvements intended for
+the next merge window:
+
+ (1) Fix a bunch of warnings from sparse, including missing RCU bits and
+     kdoc-function argument mismatches
+
+ (2) Implement a keyctl to allow a key to be moved from one keyring to
+     another, with the option of prohibiting key replacement in the
+     destination keyring.
+
+ (3) Grant Link permission to possessors of request_key_auth tokens so that
+     upcall servicing daemons can more easily arrange things such that only
+     the necessary auth key is passed to the actual service program, and
+     not all the auth keys a daemon might possesss.
+
+ (4) Improvement in lookup_user_key().
+
+ (5) Implement a keyctl to allow keyrings subsystem capabilities to be
+     queried.
+
+The patches can be found on the following branch:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-misc
+
+The keyutils next branch has commits to make available, document and test
+the move-key and capabilities code:
+
+	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/keyutils.git/log/?h=next
+
+Changes:
+
+V3:
+
+ (*) Made the capabilities array unsigned char[] rather than unsigned int[].
+
+V2:
+
+ (*) Fixed lock ordering bug in KEYCTL_MOVE.
+
+ (*) Added improvement patch from Eric.
+
+ (*) Added capabilities patch.
+
+David
 ---
- drivers/rtc/rtc-pcf2123.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+David Howells (9):
+      keys: sparse: Fix key_fs[ug]id_changed()
+      keys: sparse: Fix incorrect RCU accesses
+      keys: sparse: Fix kdoc mismatches
+      keys: Change keyring_serialise_link_sem to a mutex
+      keys: Break bits out of key_unlink()
+      keys: Hoist locking out of __key_link_begin()
+      keys: Add a keyctl to move a key between keyrings
+      keys: Grant Link permission to possessers of request_key auth keys
+      keys: Add capability-checking keyctl function
 
-diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
-index 39da8b214275..80a53d2dc813 100644
---- a/drivers/rtc/rtc-pcf2123.c
-+++ b/drivers/rtc/rtc-pcf2123.c
-@@ -244,7 +244,7 @@ static int pcf2123_set_offset(struct device *dev, long offset)
- 	else if (offset < OFFSET_STEP * -128)
- 		reg = -128;
- 	else
--		reg = (s8)((offset + (OFFSET_STEP >> 1)) / OFFSET_STEP);
-+		reg = DIV_ROUND_CLOSEST(offset, OFFSET_STEP);
- 
- 	/* choose fine offset only for odd values in the normal range */
- 	if (reg & 1 && reg <= 63 && reg >= -64) {
--- 
-2.21.0
+Eric Biggers (1):
+      keys: Reuse keyring_index_key::desc_len in lookup_user_key()
+
+
+ Documentation/security/keys/core.rst |   21 +++
+ include/linux/key.h                  |   13 +-
+ include/uapi/linux/keyctl.h          |   17 ++
+ kernel/cred.c                        |    4 
+ security/keys/compat.c               |    6 +
+ security/keys/internal.h             |    7 +
+ security/keys/key.c                  |   27 +++
+ security/keys/keyctl.c               |   90 +++++++++++
+ security/keys/keyring.c              |  278 ++++++++++++++++++++++++++++------
+ security/keys/process_keys.c         |   26 +--
+ security/keys/request_key.c          |    9 +
+ security/keys/request_key_auth.c     |    4 
+ 12 files changed, 418 insertions(+), 84 deletions(-)
 
