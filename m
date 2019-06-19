@@ -2,258 +2,137 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB6EEC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:39:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0461BC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:40:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E552084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C32032147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Y4pgHIKK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiaGMjNT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729356AbfFSGjy (ORCPT
+        id S1730947AbfFSGkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 02:39:54 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43093 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfFSGjx (ORCPT
+        Wed, 19 Jun 2019 02:40:17 -0400
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:34567 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfFSGkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 02:39:53 -0400
-Received: by mail-pg1-f196.google.com with SMTP id f25so9063141pgv.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 23:39:52 -0700 (PDT)
+        Wed, 19 Jun 2019 02:40:16 -0400
+Received: by mail-yb1-f195.google.com with SMTP id x32so2885646ybh.1;
+        Tue, 18 Jun 2019 23:40:16 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=KAXBjc7glk0c+HE4Clw27sMJtcWTAp7e/EA0t3BWvYc=;
-        b=Y4pgHIKKYczvlutIQ9hWKHWk76TCFrTf2sFR9+JDlKvgQag2KOrOw9jsJLaWmGpe22
-         omOC94n1VDzJKMIdbecVWKg4WS+Bo1+/acMIt+SWCVThBs4GlQY4oXmzLbs8KmP296Hq
-         l3rYNiEzYeKL3sg0Gs4CFSicW3LHm2WptH+yVisRGADuehe79n03ZPEkQna64CVHzinI
-         geMSKYfPWE8zuRpqnP93bk4EX/kaKB/BQ9pg2XUlz+Xm6t9Rtlzc5GX+ueHyNGYtsQt8
-         KBO4dEIMkPP42fZHwckWCudp2eZkU3PwpQFmH3tYcqbHzs8oWlW4qh7RUx22phsH4cPv
-         AnnA==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gUQB8b/ALcnBOEXgIR9mL83C8fnNPPgpdoM8ggiCu6o=;
+        b=UiaGMjNTRZklEIOHaKABCJZaYsCo2aau7Kd/LOksavDTm9WMyYfdNonQ0OuTvUkyVu
+         Zf/dmD6NUiMFJ1h5akTSE3OjBQocNr+nuCt5x5vgF7eDU1gt/F8xT8UKCTFBEcHdIyvb
+         GNnu5iL1KLg84OCWLN4t6TMu1XjzZN6d2//WYiG+pC+8SlVe2ga7H2xHOXw2PaxaeTgH
+         n3jqi+WonV3sxY6Gh2WHZ0S/vWjtI89IzbflPProwPdwulvYD/J3OPS1e82XPlBj2wFE
+         g9bjVQGtmAEwvSXYvkV/ULfpXrSOa6BOQ2zMNESIqxfrmaLcGwlUQy5PaNJXrMd0EYXJ
+         wFYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=KAXBjc7glk0c+HE4Clw27sMJtcWTAp7e/EA0t3BWvYc=;
-        b=JbhHK+78f/uT9xB8LeTn60Vk6CMzM6Wd2DOK++bqOlD+GEAAD1G9uWIvVEXIyNHwHj
-         TtLj3p6qFbvz11U8koEouWPMUQ9nOH/HJBeSZJwwgR/VUBx9s7oNnAyICLklKd4tM4Ef
-         CtyhE/oXAvrozmBEgR2aDEUkfJi4j9d+cQXrOJDwJOBBuXOjhXysHNyqi4+OKjFoF2Ve
-         N4Be+dcuWET3CzDorL1ZgsQnb2cKZEajYDldLvEO1cogk/V3lE9zB1nhjBfVFboVrPLX
-         aCNwijzKVkYqoXXqymuHYXU9Cskqx0aSsH9kv5DI8daICgXsBaWrLvvHzyLBVnWdN4Be
-         A2pA==
-X-Gm-Message-State: APjAAAV8kWQnNJYsypLKkwQACDoqp+lJbgwmkybj1CRbrYy6bpd4cFfq
-        nwofaUVrn00OpOex2t7kGA5SAQ==
-X-Google-Smtp-Source: APXvYqwC7LNxJSthdvpM1tbhqqTP1fYjEdwZ6Lyb8i1z6leoDylAGsZ/teBkos+7J4MQTY9pKLsLCA==
-X-Received: by 2002:a17:90a:b387:: with SMTP id e7mr9743345pjr.113.1560926392084;
-        Tue, 18 Jun 2019 23:39:52 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id t7sm664336pjq.20.2019.06.18.23.39.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 23:39:49 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 12:09:47 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Qais.Yousef@arm.com, mka@chromium.org, juri.lelli@gmail.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 4/5] cpufreq: Register notifiers with the PM QoS
- framework
-Message-ID: <20190619063947.nj2awibmalrdccn2@vireshk-i7>
-References: <cover.1560163748.git.viresh.kumar@linaro.org>
- <3504053.Rmt1Mul0J4@kreacher>
- <20190618112522.4odrysf7wmxgjlb2@vireshk-i7>
- <3176289.QFhGQadiPc@kreacher>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gUQB8b/ALcnBOEXgIR9mL83C8fnNPPgpdoM8ggiCu6o=;
+        b=WPsTL71Fy1c0PvFNMAMn0MiqSV77Fb5xVhKF6cKa7zqyX4bIHSHN7MyBuw1PByeQ64
+         Iy1KKqv1LlIHHR7CROlE2ZiaCyFeuL99JJQyUShtVgxqb1789+hoEiwDuuyrMcG2MscC
+         bbXokZdHGVSDW1I8eBqQf0aC3fAbcAvsKdsyWPzgjPTy5/EJ48RgrQW6r/gT2cQfQKNw
+         cti+ROYamqzZOG8PF6A3/+NVPu90VFEBHhxebJLvUH0773mmxa4qv3+1Sn5DFCkmyuiF
+         IfXIyx+o8oOY7CSD8NyxftW9uMPvREW6+bpqY6Xppx0YyenGjhEDBQ10WkpnSwhUONMi
+         enuA==
+X-Gm-Message-State: APjAAAXGN8UAgF2b0+uaVxe4KKpnB069vlPBnuMzH1AmEt6XdpCEcnQb
+        wrmAhgM/j4C90nH6t3GUI3UlHzq6v46pESOyI84=
+X-Google-Smtp-Source: APXvYqwXp4890is+TONe5fQdzQFKrWFMeQ51oVqSH9DSJdiLLDDBr0ylytN+Guu85z2Kf+87w/ZP9nujvn10DJQDb4Q=
+X-Received: by 2002:a25:a081:: with SMTP id y1mr36233727ybh.428.1560926416060;
+ Tue, 18 Jun 2019 23:40:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <3176289.QFhGQadiPc@kreacher>
-User-Agent: NeoMutt/20180716-391-311a52
+References: <000000000000623c45058b9c2479@google.com> <CAOQ4uxhsnOXXVCuOT4p4c_koBMFfprWwdtCPGNGhzprFaJZwRA@mail.gmail.com>
+In-Reply-To: <CAOQ4uxhsnOXXVCuOT4p4c_koBMFfprWwdtCPGNGhzprFaJZwRA@mail.gmail.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Wed, 19 Jun 2019 09:40:04 +0300
+Message-ID: <CAOQ4uxh9ZWghUNS3i_waNq5huitwwypEwY9xEWddFo1JHYu88g@mail.gmail.com>
+Subject: Re: WARNING in fanotify_handle_event
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        syzbot <syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com>,
+        Matthew Bobrowski <mbobrowski@mbobrowski.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-06-19, 00:23, Rafael J. Wysocki wrote:
-> In patch [3/5] you could point notifiers for both min and max freq to the same
-> notifier head.   Both of your notifiers end up calling cpufreq_update_policy()
-> anyway.
+On Tue, Jun 18, 2019 at 11:27 PM Amir Goldstein <amir73il@gmail.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 8:07 PM syzbot
+> <syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com> wrote:
+> >
+> > Hello,
+> >
+> > syzbot found the following crash on:
+> >
+> > HEAD commit:    963172d9 Merge branch 'x86-urgent-for-linus' of git://git...
+> > git tree:       upstream
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=17c090eaa00000
+> > kernel config:  https://syzkaller.appspot.com/x/.config?x=fa9f7e1b6a8bb586
+> > dashboard link: https://syzkaller.appspot.com/bug?extid=c277e8e2f46414645508
+> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15a32f46a00000
+> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13a7dc9ea00000
+> >
+> > The bug was bisected to:
+> >
+> > commit 77115225acc67d9ac4b15f04dd138006b9cd1ef2
+> > Author: Amir Goldstein <amir73il@gmail.com>
+> > Date:   Thu Jan 10 17:04:37 2019 +0000
+> >
+> >      fanotify: cache fsid in fsnotify_mark_connector
+> >
+> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12bfcb66a00000
+> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=11bfcb66a00000
+> > console output: https://syzkaller.appspot.com/x/log.txt?x=16bfcb66a00000
+> >
+> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > Reported-by: syzbot+c277e8e2f46414645508@syzkaller.appspotmail.com
+> > Fixes: 77115225acc6 ("fanotify: cache fsid in fsnotify_mark_connector")
+> >
+> > WARNING: CPU: 0 PID: 8994 at fs/notify/fanotify/fanotify.c:359
+> > fanotify_get_fsid fs/notify/fanotify/fanotify.c:359 [inline]
+>
+> Oops, we forgot to update conn->fsid when the first mark added
+> for inode has no fsid (e.g. inotify) and the second mark has fid,
+> which is more or less the only thing the repro does.
+> And if we are going to update conn->fsid, we do no have the
+> cmpxchg to guaranty setting fsid atomically.
+>
+> I am thinking a set-once flag on connector FSNOTIFY_CONN_HAS_FSID
+> checked before smp_rmb() in fanotify_get_fsid().
+> If the flag is not set then call vfs_get_fsid() instead of using fsid cache.
 
-I tried it and the changes in qos.c file look fine. But I don't like at all how
-cpufreq.c looks now. We only register for min-freq notifier now and that takes
-care of max as well. What could have been better is if we could have registered
-a freq-notifier instead of min/max, which isn't possible as well because of how
-qos framework works.
+Actually, we don't need to call vfs_get_fsid() in race we just drop the event.
 
-Honestly, the cpufreq changes look hacky to me :(
+> conn->fsid can be updated in fsnotify_add_mark_list() under conn->lock,
+> and flag set after smp_wmb().
+>
+> Does that sound correct?
+>
 
-What do you say.
+Something like this:
 
--- 
-viresh
+#syz test: https://github.com/amir73il/linux.git fsnotify-fix-fsid-cache
 
----
- drivers/base/power/qos.c  | 15 ++++++++-------
- drivers/cpufreq/cpufreq.c | 38 ++++++++------------------------------
- include/linux/cpufreq.h   |  3 +--
- 3 files changed, 17 insertions(+), 39 deletions(-)
+It passed my modified ltp test:
+https://github.com/amir73il/ltp/commits/fanotify_dirent
 
-diff --git a/drivers/base/power/qos.c b/drivers/base/power/qos.c
-index cde2692b97f9..9bbf2d2a3376 100644
---- a/drivers/base/power/qos.c
-+++ b/drivers/base/power/qos.c
-@@ -202,20 +202,20 @@ static int dev_pm_qos_constraints_allocate(struct device *dev)
- 	if (!qos)
- 		return -ENOMEM;
- 
--	n = kzalloc(3 * sizeof(*n), GFP_KERNEL);
-+	n = kzalloc(2 * sizeof(*n), GFP_KERNEL);
- 	if (!n) {
- 		kfree(qos);
- 		return -ENOMEM;
- 	}
- 
-+	BLOCKING_INIT_NOTIFIER_HEAD(n);
- 	c = &qos->resume_latency;
- 	plist_head_init(&c->list);
- 	c->target_value = PM_QOS_RESUME_LATENCY_DEFAULT_VALUE;
- 	c->default_value = PM_QOS_RESUME_LATENCY_DEFAULT_VALUE;
- 	c->no_constraint_value = PM_QOS_RESUME_LATENCY_NO_CONSTRAINT;
- 	c->type = PM_QOS_MIN;
--	c->notifiers = n;
--	BLOCKING_INIT_NOTIFIER_HEAD(n);
-+	c->notifiers = n++;
- 
- 	c = &qos->latency_tolerance;
- 	plist_head_init(&c->list);
-@@ -224,14 +224,16 @@ static int dev_pm_qos_constraints_allocate(struct device *dev)
- 	c->no_constraint_value = PM_QOS_LATENCY_TOLERANCE_NO_CONSTRAINT;
- 	c->type = PM_QOS_MIN;
- 
-+	/* Same notifier head is used for both min/max frequency */
-+	BLOCKING_INIT_NOTIFIER_HEAD(n);
-+
- 	c = &qos->min_frequency;
- 	plist_head_init(&c->list);
- 	c->target_value = PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE;
- 	c->default_value = PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE;
- 	c->no_constraint_value = PM_QOS_MIN_FREQUENCY_DEFAULT_VALUE;
- 	c->type = PM_QOS_MAX;
--	c->notifiers = ++n;
--	BLOCKING_INIT_NOTIFIER_HEAD(n);
-+	c->notifiers = n;
- 
- 	c = &qos->max_frequency;
- 	plist_head_init(&c->list);
-@@ -239,8 +241,7 @@ static int dev_pm_qos_constraints_allocate(struct device *dev)
- 	c->default_value = PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE;
- 	c->no_constraint_value = PM_QOS_MAX_FREQUENCY_DEFAULT_VALUE;
- 	c->type = PM_QOS_MIN;
--	c->notifiers = ++n;
--	BLOCKING_INIT_NOTIFIER_HEAD(n);
-+	c->notifiers = n;
- 
- 	INIT_LIST_HEAD(&qos->flags.list);
- 
-diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
-index 1344e1b1307f..1605dba1327e 100644
---- a/drivers/cpufreq/cpufreq.c
-+++ b/drivers/cpufreq/cpufreq.c
-@@ -1139,19 +1139,10 @@ static int cpufreq_update_freq(struct cpufreq_policy *policy)
- 	return 0;
- }
- 
--static int cpufreq_notifier_min(struct notifier_block *nb, unsigned long freq,
-+static int cpufreq_notifier_qos(struct notifier_block *nb, unsigned long freq,
- 				void *data)
- {
--	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_min);
--
--	return cpufreq_update_freq(policy);
--}
--
--static int cpufreq_notifier_max(struct notifier_block *nb, unsigned long freq,
--				void *data)
--{
--	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_max);
-+	struct cpufreq_policy *policy = container_of(nb, struct cpufreq_policy, nb_qos);
- 
- 	return cpufreq_update_freq(policy);
-@@ -1214,10 +1205,10 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
- 		goto err_free_real_cpus;
- 	}
- 
--	policy->nb_min.notifier_call = cpufreq_notifier_min;
--	policy->nb_max.notifier_call = cpufreq_notifier_max;
-+	policy->nb_qos.notifier_call = cpufreq_notifier_qos;
- 
--	ret = dev_pm_qos_add_notifier(dev, &policy->nb_min,
-+	/* Notifier for min frequency also takes care of max frequency notifier */
-+	ret = dev_pm_qos_add_notifier(dev, &policy->nb_qos,
- 				      DEV_PM_QOS_MIN_FREQUENCY);
- 	if (ret) {
- 		dev_err(dev, "Failed to register MIN QoS notifier: %d (%*pbl)\n",
-@@ -1225,18 +1216,10 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
- 		goto err_kobj_remove;
- 	}
- 
--	ret = dev_pm_qos_add_notifier(dev, &policy->nb_max,
--				      DEV_PM_QOS_MAX_FREQUENCY);
--	if (ret) {
--		dev_err(dev, "Failed to register MAX QoS notifier: %d (%*pbl)\n",
--			ret, cpumask_pr_args(policy->cpus));
--		goto err_min_qos_notifier;
--	}
--
- 	policy->min_freq_req = kzalloc(2 * sizeof(*policy->min_freq_req),
- 				       GFP_KERNEL);
- 	if (!policy->min_freq_req)
--		goto err_max_qos_notifier;
-+		goto err_min_qos_notifier;
- 
- 	policy->max_freq_req = policy->min_freq_req + 1;
- 	INIT_LIST_HEAD(&policy->policy_list);
-@@ -1250,11 +1233,8 @@ static struct cpufreq_policy *cpufreq_policy_alloc(unsigned int cpu)
- 	policy->cpu = cpu;
- 	return policy;
- 
--err_max_qos_notifier:
--	dev_pm_qos_remove_notifier(dev, &policy->nb_max,
--				   DEV_PM_QOS_MAX_FREQUENCY);
- err_min_qos_notifier:
--	dev_pm_qos_remove_notifier(dev, &policy->nb_min,
-+	dev_pm_qos_remove_notifier(dev, &policy->nb_qos,
- 				   DEV_PM_QOS_MIN_FREQUENCY);
- err_kobj_remove:
- 	cpufreq_policy_put_kobj(policy);
-@@ -1284,9 +1264,7 @@ static void cpufreq_policy_free(struct cpufreq_policy *policy)
- 		per_cpu(cpufreq_cpu_data, cpu) = NULL;
- 	write_unlock_irqrestore(&cpufreq_driver_lock, flags);
- 
--	dev_pm_qos_remove_notifier(dev, &policy->nb_max,
--				   DEV_PM_QOS_MAX_FREQUENCY);
--	dev_pm_qos_remove_notifier(dev, &policy->nb_min,
-+	dev_pm_qos_remove_notifier(dev, &policy->nb_qos,
- 				   DEV_PM_QOS_MIN_FREQUENCY);
- 	cancel_work_sync(&policy->req_work);
- 	dev_pm_qos_remove_request(policy->max_freq_req);
-diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
-index 6bbed9af4fd2..2080d6490ed1 100644
---- a/include/linux/cpufreq.h
-+++ b/include/linux/cpufreq.h
-@@ -145,8 +145,7 @@ struct cpufreq_policy {
- 	/* Pointer to the cooling device if used for thermal mitigation */
- 	struct thermal_cooling_device *cdev;
- 
--	struct notifier_block nb_min;
--	struct notifier_block nb_max;
-+	struct notifier_block nb_qos;
- };
- 
- struct cpufreq_freqs {
+Thanks,
+Amir.
