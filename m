@@ -2,101 +2,134 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:17:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BAFC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:18:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A78CA21537
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:17:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6DB421721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:18:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kragniz.eu header.i=@kragniz.eu header.b="bk5Reg+T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4QDjw+B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730384AbfFSTRt (ORCPT
+        id S1730389AbfFSTSh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:17:49 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35211 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729988AbfFSTRs (ORCPT
+        Wed, 19 Jun 2019 15:18:37 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40286 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfFSTSh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:17:48 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so664393wml.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 12:17:47 -0700 (PDT)
+        Wed, 19 Jun 2019 15:18:37 -0400
+Received: by mail-ed1-f65.google.com with SMTP id k8so870617eds.7;
+        Wed, 19 Jun 2019 12:18:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kragniz.eu; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Mjc4e9qXJ2nnNgq6HpuUlvVMyhFQupHDeveJmwGSTcc=;
-        b=bk5Reg+Tthnhuz/BFDqUvGGkLX/O+aNMKLbqPXFoEq614Ueu2vs0mVT94CjtYpBgF6
-         4IZ+j+POJGIjD5PFd5bcIhXOXI3wz0HGjzQpBMi1hYiaP7OAl6X3MN5khPHjzbIJ24xJ
-         DF0BQhQT55rH2gekkP1hPxve0qr/rKyHYv8zc=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=2bx2Y/hN4Cn5kEf9/eyTDQFYiuK9AF+r04fSjxWQhMk=;
+        b=p4QDjw+Bv2jk955O2zyVMZTnM32O5HtfjIlCWhEuRixFfgSNTzxm3+9Db9HAM/EPC7
+         tstzPBCbIXrF3RFtaB3HizOyM9SWWt5HWYQ1tbvRzXAGpWpEr+vN/lwN01wRxeSBoK9W
+         bpQwqr1q1d1f9ppXB2he49kZel0QKKyW3o/HGDJHoFlPvbRsGP2jXnyhRVU6jG7uAoL1
+         W2tfcNoZVssnqHgVl3JGM4wEF7bn+UznJ1M8rf23rTk4h0kfbgRrJEPYSN4e43Cwk0qk
+         iYTnS7I/DRHzLihnqvb1zIqzOiPdryb4M+nAgN54VH8F8XwvS47EFgAOmNULEQvqm4f4
+         9EVA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Mjc4e9qXJ2nnNgq6HpuUlvVMyhFQupHDeveJmwGSTcc=;
-        b=jZqn47+lDA+FEGH9+l15cXF4nYWQ12e+dVqdNHiYbA0FqDVdAuzll5kMcRKiPJ0HtX
-         TqevNBXVl+uDzR9mbvgzUPWO0JXclnRK46rdudAk308N3H2q2LybbnR7np2kD+pO7FxM
-         rIXQM+swsbQ5nESdSUsAONEVp0UDvLowleUjQmMCWBwbHSAWXjlK64lwmEikyqlyTM3q
-         jivoH9cCc+Low2PnDCKzhw0f3uuRcmdm18JUaQM1dQ1rMBLr79Ocd7/LTpKTeaesC/zN
-         4TlLSSFL7GAw2WaypYP+h0+W0+N3IYKThzI/2HXS4NbQmMbpAYn3ltqT99FziHuSwM8c
-         pKmA==
-X-Gm-Message-State: APjAAAXdO4Fp0Mc8O4YXHAZsO9rAMcroH53m3sV3YT8UBJQO9xvtO05Z
-        2/b/T21QxG67IUPCbYZeUxNH/g==
-X-Google-Smtp-Source: APXvYqzjDBaaBwQLbZ12fbh5cDsg0VP4n9phLBdvM5LvhkrKdtb16ZvLJpYvr4tRLgPKdxd0vjrNKA==
-X-Received: by 2002:a05:600c:2056:: with SMTP id p22mr3284154wmg.155.1560971866975;
-        Wed, 19 Jun 2019 12:17:46 -0700 (PDT)
-Received: from gmail.com ([95.149.160.61])
-        by smtp.gmail.com with ESMTPSA id s63sm2392244wme.17.2019.06.19.12.17.46
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=2bx2Y/hN4Cn5kEf9/eyTDQFYiuK9AF+r04fSjxWQhMk=;
+        b=Zwi1PVFNgPhLD/O0ps03k8nWU0VPAC8/jTh71irI4QdQkte2r3DhE36arAo0VRwids
+         XQGkgzEbIgQBtnVmJCcS4MnTmHAbT03Mq7yTWEIj3NdCUf+k0ebwFU4zIQStftD3+Q9E
+         EibWoYh2ZTGzwjl2v6zBi0GgPQViFppaO7yw4qI6mdpXTVazB6nOOlzeDl9hyKWEjMWA
+         5ztedhHJSvJX91bCoZCvYkhMTygI5+Op4s7yDz+RyUJ+HDMMNSYM4o4zCTfQdZQaWMQ8
+         HeP7lukRISMIq7e63A8u10XxNxx6ro/F2+US2Sns9TOoAPdUn5CZdNPdp5II7doFxv2K
+         ATqw==
+X-Gm-Message-State: APjAAAW196fIHthhcaLp5w6mUxLFIMp+Th5rGtduXZW4zSTXeaJvQtkw
+        avVmtg8kA5Nt2U1sCWt6dlvd0vOuzokQKA==
+X-Google-Smtp-Source: APXvYqziPGp5grduRzW0xyDykY6Q2CiVE7PN5wKnvPzCIrZ9ZOacu6Eabu5qSgjYqicqN2+JvVA1GQ==
+X-Received: by 2002:a17:906:d052:: with SMTP id bo18mr26656411ejb.311.1560971915091;
+        Wed, 19 Jun 2019 12:18:35 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id j30sm3394270edb.8.2019.06.19.12.18.34
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 12:17:46 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 20:16:05 +0100
-From:   Louis Taylor <louis@kragniz.eu>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     akpm@linux-foundation.org, clang-built-linux@googlegroups.com,
-        joe@perches.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] MAINTAINERS: add CLANG/LLVM BUILD SUPPORT info
-Message-ID: <20190619191605.GA5837@gmail.com>
-References: <20190619181844.57696-1-ndesaulniers@google.com>
+        Wed, 19 Jun 2019 12:18:34 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH v2] drm/msm/dsi: Add parentheses to quirks check in dsi_phy_hw_v3_0_lane_settings
+Date:   Wed, 19 Jun 2019 12:17:23 -0700
+Message-Id: <20190619191722.25811-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190619161913.102998-1-natechancellor@gmail.com>
+References: <20190619161913.102998-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619181844.57696-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 11:18:44AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> Add keyword support so that our mailing list gets cc'ed for clang/llvm
-> patches. We're pretty active on our mailing list so far as code review.
-> There are numerous Googlers like myself that are paid to support
-> building the Linux kernel with Clang and LLVM.
-> 
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-> ---
-> Thanks for Joe Perches for help on the syntax for the case insensitive
-> syntax.
-> 
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ef58d9a881ee..fa798cc48e34 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3940,6 +3940,14 @@ M:	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
->  S:	Maintained
->  F:	.clang-format
->  
-> +CLANG/LLVM BUILD SUPPORT
-> +L: clang-built-linux@googlegroups.com
+Clang warns:
 
-I think this should have "(moderated for non-subscribers)" added.
+drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: warning: logical not is
+only applied to the left hand side of this bitwise operator
+[-Wlogical-not-parentheses]
+        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
+            ^                 ~
+drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: note: add parentheses
+after the '!' to evaluate the bitwise operator first
+        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
+            ^
+             (                                               )
+drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: note: add parentheses
+around left hand side expression to silence this warning
+        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
+            ^
+            (                )
+1 warning generated.
 
-Cheers,
-Louis
+Add parentheses around the bitwise AND so it is evaluated first then
+negated.
+
+Fixes: 3dbbf8f09e83 ("drm/msm/dsi: Add old timings quirk for 10nm phy")
+Link: https://github.com/ClangBuiltLinux/linux/issues/547
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Reviewed-by: Sean Paul <sean@poorly.run>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+
+v1 -> v2:
+
+* Fix broken link (thanks to Sean for pointing it out)
+* Add Sean's reviewed-by
+
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
+index eb28937f4b34..47403d4f2d28 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
+@@ -77,7 +77,7 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
+ 			      tx_dctrl[i]);
+ 	}
+ 
+-	if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
++	if (!(phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK)) {
+ 		/* Toggle BIT 0 to release freeze I/0 */
+ 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
+ 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
+-- 
+2.22.0
+
