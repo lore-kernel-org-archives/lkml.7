@@ -2,167 +2,193 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03175C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2014AC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:27:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE4B20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:23:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9E5620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:27:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ScVErEvZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730857AbfFSGXl (ORCPT
+        id S1729042AbfFSG1T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 02:23:41 -0400
-Received: from mga01.intel.com ([192.55.52.88]:3213 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfFSGXl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 02:23:41 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 23:23:40 -0700
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="153709771"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 18 Jun 2019 23:23:38 -0700
-Subject: Re: [PATCH v4 1/3] KVM: x86: add support for user wait instructions
-To:     Tao Xu <tao3.xu@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, jingqi.liu@intel.com
-References: <20190619060945.14104-1-tao3.xu@intel.com>
- <20190619060945.14104-2-tao3.xu@intel.com>
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Message-ID: <7f6bc0fa-abcd-ce0a-19a0-a5767d094181@linux.intel.com>
-Date:   Wed, 19 Jun 2019 14:23:36 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 02:27:19 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42503 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfFSG1T (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 02:27:19 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so4527727plb.9
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 23:27:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=w1bSoQ+dJtlXZEku3TZj7oxFQBkzy7Vz7weHtHQQXxI=;
+        b=ScVErEvZv4bTmUAFWK//lPXmMdQ0lZ1D3r1KJnY8zvFN0ylwC3t+E1PSnleu4bkLc1
+         EOn9/hk+iIK8pxY/JlEy9pAPVf5CDF4KyvnCbw/gCDBz8zo8b0J1rahNLNXSajo7hrUv
+         Tf/2vttombUjP5JdoYLrE9lmup4/evzEz8vhaj2veymwpImDS8Y7wCP0Em/bVS61tY0Z
+         IjwFwllMefRzmZ07eQae4ycIiZTa+BmXrGm8YHfSgp9YjFwsJrc/wYK3acBaX/EseipP
+         7YGROA0k6/LbBMW8lnRabCFyWfK/jz2t+V3SUwPpr7hBQTeoTOpKlCBJjXrAbs9FhtT6
+         x6eQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=w1bSoQ+dJtlXZEku3TZj7oxFQBkzy7Vz7weHtHQQXxI=;
+        b=QeidBqBgYsTR9bkgj4J2ebLQL/wE8skXZgl1+Qsj++HnO4zwVJ0j823MqZcjqTH+R5
+         obKUVmI1I25SxeXxaO3fEMV2TXP8OyBsESd1N7sVe6pgih1Ab5nBW3x2t06kCX2pOFrT
+         KdgrMZ1RnMZmTy0aTm4+sle0/DnuGCWCueRprTfcHrUOHvzMEI5K3Xr4kQz7P5WIsuZm
+         /Oz5HHs4GJFej3nVn2JYkfBGe5YPXON+tmRgC0crRW88DsU4ZN36Ovzm6lZ/Qa+nYfSx
+         kzHqbw3HhRXoNEQ58tzPKo7cy5OSNdiItglB1BzBAZdcKNMsax44tqLuwZzt7xiRnsHG
+         zPOA==
+X-Gm-Message-State: APjAAAUD8P4hl2R3Nb1xWmStoOF6a7O0E67n4wsfz8SAsRnRhFmO5nyA
+        XDjUNBzCQisnImpglT8+nY8=
+X-Google-Smtp-Source: APXvYqwy/M8Cdw9j6DjVgFob7H5o1NDE8RpnXbKYW+/wcJqjTn/4FPE60rtVgNUjj+WVMzBkMKoTxg==
+X-Received: by 2002:a17:902:59da:: with SMTP id d26mr57620512plj.306.1560925638445;
+        Tue, 18 Jun 2019 23:27:18 -0700 (PDT)
+Received: from localhost ([175.223.10.253])
+        by smtp.gmail.com with ESMTPSA id y22sm34712915pgj.38.2019.06.18.23.27.17
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 23:27:17 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 15:27:14 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Ilia Mirkin <imirkin@alum.mit.edu>
+Cc:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: nouveau: DRM: GPU lockup - switching to software fbcon
+Message-ID: <20190619062714.GA11457@jagdpanzerIV>
+References: <20190614024957.GA9645@jagdpanzerIV>
+ <20190619050811.GA15221@jagdpanzerIV>
+ <CAKb7UvhdN=RUdfrnWswT4ANK5UwPcM-upDP85=84zsCF+a5-bg@mail.gmail.com>
+ <20190619054826.GA2059@jagdpanzerIV>
+ <CAKb7UvgkEXtmJV67EXeBctgaOxM1D91fBbKw9oFMUaB1ZViZQg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190619060945.14104-2-tao3.xu@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKb7UvgkEXtmJV67EXeBctgaOxM1D91fBbKw9oFMUaB1ZViZQg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On (06/19/19 02:07), Ilia Mirkin wrote:
+> On Wed, Jun 19, 2019 at 1:48 AM Sergey Senozhatsky
+> <sergey.senozhatsky.work@gmail.com> wrote:
+> >
+> > On (06/19/19 01:20), Ilia Mirkin wrote:
+> > > On Wed, Jun 19, 2019 at 1:08 AM Sergey Senozhatsky
+> > > <sergey.senozhatsky.work@gmail.com> wrote:
+> > > >
+> > > > On (06/14/19 11:50), Sergey Senozhatsky wrote:
+> > > > > dmesg
+> > > > >
+> > > > >  nouveau 0000:01:00.0: DRM: GPU lockup - switching to software fbcon
+> > > > >  nouveau 0000:01:00.0: fifo: SCHED_ERROR 0a [CTXSW_TIMEOUT]
+> > > > >  nouveau 0000:01:00.0: fifo: runlist 0: scheduled for recovery
+> > > > >  nouveau 0000:01:00.0: fifo: channel 5: killed
+> > > > >  nouveau 0000:01:00.0: fifo: engine 6: scheduled for recovery
+> > > > >  nouveau 0000:01:00.0: fifo: engine 0: scheduled for recovery
+> > > > >  nouveau 0000:01:00.0: firefox[476]: channel 5 killed!
+> > > > >  nouveau 0000:01:00.0: firefox[476]: failed to idle channel 5 [firefox[476]]
+> > > > >
+> > > > > It lockups several times a day. Twice in just one hour today.
+> > > > > Can we fix this?
+> > > >
+> > > > Unusable
+> > >
+> > > Are you using a GTX 660 by any chance? You've provided rather minimal
+> > > system info.
+> >
+> > 01:00.0 VGA compatible controller: NVIDIA Corporation GK208B [GeForce GT 730] (rev a1)
+> 
+> Quite literally the same GPU I have plugged in...
+> 
+> 02:00.0 VGA compatible controller [0300]: NVIDIA Corporation GK208B
+> [GeForce GT 730] [10de:1287] (rev a1)
+> 
+> Works great here! Only other thing I can think of is that I avoid
+> applications with the letters "G" and "K" in their names, and I'm
+> using xf86-video-nouveau ddx, whereas you might be using the "modeset"
+> ddx with glamor.
 
+xf86-video-nouveau 1.0.16-1
 
-On 6/19/2019 2:09 PM, Tao Xu wrote:
-> UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
-> This patch adds support for user wait instructions in KVM. Availability
-> of the user wait instructions is indicated by the presence of the CPUID
-> feature flag WAITPKG CPUID.0x07.0x0:ECX[5]. User wait instructions may
-> be executed at any privilege level, and use IA32_UMWAIT_CONTROL MSR to
-> set the maximum time.
-> 
-> The behavior of user wait instructions in VMX non-root operation is
-> determined first by the setting of the "enable user wait and pause"
-> secondary processor-based VM-execution control bit 26.
-> 	If the VM-execution control is 0, UMONITOR/UMWAIT/TPAUSE cause
-> an invalid-opcode exception (#UD).
-> 	If the VM-execution control is 1, treatment is based on the
-> setting of the “RDTSC exiting” VM-execution control. Because KVM never
-> enables RDTSC exiting, if the instruction causes a delay, the amount of
-> time delayed is called here the physical delay. The physical delay is
-> first computed by determining the virtual delay. If
-> IA32_UMWAIT_CONTROL[31:2] is zero, the virtual delay is the value in
-> EDX:EAX minus the value that RDTSC would return; if
-> IA32_UMWAIT_CONTROL[31:2] is not zero, the virtual delay is the minimum
-> of that difference and AND(IA32_UMWAIT_CONTROL,FFFFFFFCH).
-> 
-> Because umwait and tpause can put a (psysical) CPU into a power saving
-> state, by default we dont't expose it to kvm and enable it only when
-> guest CPUID has it.
-> 
-> Detailed information about user wait instructions can be found in the
-> latest Intel 64 and IA-32 Architectures Software Developer's Manual.
-> 
-> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
-> ---
-> 
-> no changes in v4.
-> ---
->   arch/x86/include/asm/vmx.h      | 1 +
->   arch/x86/kvm/cpuid.c            | 2 +-
->   arch/x86/kvm/vmx/capabilities.h | 6 ++++++
->   arch/x86/kvm/vmx/vmx.c          | 4 ++++
->   4 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/vmx.h b/arch/x86/include/asm/vmx.h
-> index a39136b0d509..8f00882664d3 100644
-> --- a/arch/x86/include/asm/vmx.h
-> +++ b/arch/x86/include/asm/vmx.h
-> @@ -69,6 +69,7 @@
->   #define SECONDARY_EXEC_PT_USE_GPA		0x01000000
->   #define SECONDARY_EXEC_MODE_BASED_EPT_EXEC	0x00400000
->   #define SECONDARY_EXEC_TSC_SCALING              0x02000000
-> +#define SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE	0x04000000
->   
->   #define PIN_BASED_EXT_INTR_MASK                 0x00000001
->   #define PIN_BASED_NMI_EXITING                   0x00000008
-> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> index e18a9f9f65b5..48bd851a6ae5 100644
-> --- a/arch/x86/kvm/cpuid.c
-> +++ b/arch/x86/kvm/cpuid.c
-> @@ -405,7 +405,7 @@ static inline int __do_cpuid_ent(struct kvm_cpuid_entry2 *entry, u32 function,
->   		F(AVX512VBMI) | F(LA57) | F(PKU) | 0 /*OSPKE*/ |
->   		F(AVX512_VPOPCNTDQ) | F(UMIP) | F(AVX512_VBMI2) | F(GFNI) |
->   		F(VAES) | F(VPCLMULQDQ) | F(AVX512_VNNI) | F(AVX512_BITALG) |
-> -		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B);
-> +		F(CLDEMOTE) | F(MOVDIRI) | F(MOVDIR64B) | 0 /*WAITPKG*/;
->   
->   	/* cpuid 7.0.edx*/
->   	const u32 kvm_cpuid_7_0_edx_x86_features =
-> diff --git a/arch/x86/kvm/vmx/capabilities.h b/arch/x86/kvm/vmx/capabilities.h
-> index d6664ee3d127..fd77e17651b4 100644
-> --- a/arch/x86/kvm/vmx/capabilities.h
-> +++ b/arch/x86/kvm/vmx/capabilities.h
-> @@ -253,6 +253,12 @@ static inline bool cpu_has_vmx_tsc_scaling(void)
->   		SECONDARY_EXEC_TSC_SCALING;
->   }
->   
-> +static inline bool vmx_waitpkg_supported(void)
-> +{
-> +	return vmcs_config.cpu_based_2nd_exec_ctrl &
-> +		SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
+cat .local/share/xorg/Xorg.0.log
 
-Shouldn't it be
-	return vmx->secondary_exec_control &
-                 SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;   ?
+[..]
+[   304.159] (II) NOUVEAU driver 
+[   304.159] (II) NOUVEAU driver for NVIDIA chipset families :
+[   304.159] 	RIVA TNT            (NV04)
+[   304.159] 	RIVA TNT2           (NV05)
+[   304.159] 	GeForce 256         (NV10)
+[   304.159] 	GeForce 2           (NV11, NV15)
+[   304.159] 	GeForce 4MX         (NV17, NV18)
+[   304.159] 	GeForce 3           (NV20)
+[   304.159] 	GeForce 4Ti         (NV25, NV28)
+[   304.159] 	GeForce FX          (NV3x)
+[   304.159] 	GeForce 6           (NV4x)
+[   304.159] 	GeForce 7           (G7x)
+[   304.159] 	GeForce 8           (G8x)
+[   304.159] 	GeForce 9           (G9x)
+[   304.159] 	GeForce GTX 2xx/3xx (GT2xx)
+[   304.159] 	GeForce GTX 4xx/5xx (GFxxx)
+[   304.159] 	GeForce GTX 6xx/7xx (GKxxx)
+[   304.159] 	GeForce GTX 9xx     (GMxxx)
+[   304.159] 	GeForce GTX 10xx    (GPxxx)
+[   304.159] (II) modesetting: Driver for Modesetting Kernel Drivers: kms
+[   304.159] (II) [drm] nouveau interface version: 1.3.1
+[   304.159] (WW) Falling back to old probe method for modesetting
+[   304.159] (WW) VGA arbiter: cannot open kernel arbiter, no multi-card support
+[   304.159] (II) Loading sub module "dri2"
+[   304.159] (II) LoadModule: "dri2"
+[   304.159] (II) Module "dri2" already built-in
+[   304.159] (--) NOUVEAU(0): Chipset: "NVIDIA NV106"
+[   304.159] (II) NOUVEAU(0): Creating default Display subsection in Screen section
+	"Default Screen Section" for depth/fbbpp 24/32
+[...]
+[   304.309] (II) UnloadModule: "modesetting"
+[   304.309] (II) Unloading modesetting
+[   304.310] (II) NOUVEAU(0): Channel setup complete.
+[   304.310] (II) NOUVEAU(0): [COPY] async initialised.
+[   304.310] (II) NOUVEAU(0): Hardware support for Present enabled
+[   304.310] (II) NOUVEAU(0): [DRI2] Setup complete
+[   304.310] (II) NOUVEAU(0): [DRI2]   DRI driver: nouveau
+[   304.310] (II) NOUVEAU(0): [DRI2]   VDPAU driver: nouveau
+[   304.310] (II) Loading sub module "exa"
+[   304.310] (II) LoadModule: "exa"
+[   304.310] (II) Loading /usr/lib/xorg/modules/libexa.so
+[   304.310] (II) Module exa: vendor="X.Org Foundation"
+[   304.310] 	compiled for 1.20.5, module version = 2.6.0
+[   304.310] 	ABI class: X.Org Video Driver, version 24.0
+[   304.310] (II) EXA(0): Driver allocated offscreen pixmaps
+[   304.310] (II) EXA(0): Driver registered support for the following operations:
+[   304.310] (II)         Solid
+[   304.310] (II)         Copy
+[   304.310] (II)         Composite (RENDER acceleration)
+[   304.310] (II)         UploadToScreen
+[   304.310] (II)         DownloadFromScreen
+[   304.310] (==) NOUVEAU(0): Backing store enabled
+[   304.310] (==) NOUVEAU(0): Silken mouse disabled
+[   304.310] (II) NOUVEAU(0): [XvMC] Associated with Nouveau GeForce 8/9 Textured Video.
+[   304.310] (II) NOUVEAU(0): [XvMC] Extension initialized.
+[   304.310] (==) NOUVEAU(0): DPMS enabled
+[..]
 
-> +}
-> +
->   static inline bool cpu_has_vmx_apicv(void)
->   {
->   	return cpu_has_vmx_apic_register_virt() &&
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b93e36ddee5e..b35bfac30a34 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -2250,6 +2250,7 @@ static __init int setup_vmcs_config(struct vmcs_config *vmcs_conf,
->   			SECONDARY_EXEC_RDRAND_EXITING |
->   			SECONDARY_EXEC_ENABLE_PML |
->   			SECONDARY_EXEC_TSC_SCALING |
-> +			SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE |
->   			SECONDARY_EXEC_PT_USE_GPA |
->   			SECONDARY_EXEC_PT_CONCEAL_VMX |
->   			SECONDARY_EXEC_ENABLE_VMFUNC |
-> @@ -3987,6 +3988,9 @@ static void vmx_compute_secondary_exec_control(struct vcpu_vmx *vmx)
->   		}
->   	}
->   
-> +	if (!guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
-> +		exec_control &= ~SECONDARY_EXEC_ENABLE_USR_WAIT_PAUSE;
-> +
->   	vmx->secondary_exec_control = exec_control;
->   }
->   
-> 
+> If all else fails, just remove nouveau_dri.so and/or boot with
+> nouveau.noaccel=1 -- should be perfect.
+
+Can give it a try.
+
+	-ss
