@@ -2,184 +2,250 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1B5C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BEC6C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:32:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 45C4C205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JY8aSeEX"
+	by mail.kernel.org (Postfix) with ESMTP id E3CBE208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:32:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731530AbfFSK1f (ORCPT
+        id S1731351AbfFSKcD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:27:35 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:39018 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfFSK1c (ORCPT
+        Wed, 19 Jun 2019 06:32:03 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:37211 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726958AbfFSKcD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:27:32 -0400
-Received: by mail-lf1-f68.google.com with SMTP id p24so11696175lfo.6;
-        Wed, 19 Jun 2019 03:27:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=Wy23WVAFMNzzYY79+Ss7U5VUGCY1fAwe+Ks92MNYJcA=;
-        b=JY8aSeEXXwnaubHzeAGt4qebktJ0cmPLFPzARE+Xle/C/sUzJ0zJHpuWALRO/CVo6T
-         mRfJI2UxQfLXsgvAaElJNTAr05q04d+pIdT5okiByUrb7pql3XIbK/GkEki7ZlP2xNSe
-         22CmcKvFcV9nqetBeu2NC2Iod8kkt6SKdFejVhMBYITNEKBo2kP3tSNxLd35ZERw3ncC
-         o10OeU7j8Kr1u6gb5GFoBpKHfFHhPPR0JNKtMdlgYo+z7o3B7rI3/Ziofj6JkYY5VEdr
-         hxxOpqpZzI4L8WGZSLseI0HL0VR1UbZIwVnxmuN9FpbghD7ENf8sZUDDqvffBdBJEWG4
-         m8zg==
+        Wed, 19 Jun 2019 06:32:03 -0400
+Received: by mail-wm1-f65.google.com with SMTP id f17so1254705wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:32:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=Wy23WVAFMNzzYY79+Ss7U5VUGCY1fAwe+Ks92MNYJcA=;
-        b=F1w3XR+9Wa4qAneYokf9mhWYBJIziK8xDltI6KlQYcQi2ddJjMt8zU9jYewJ9lUDSP
-         46STGa5xO0WF446FkqAzcwmLrJtOxizYA3UIWLcKflkX0EQivpSLr0H5vmsVh8vE/K+L
-         jUzQ2lN55OoSYaX9D+IGa1MgJFYxzvsEcYPSndtwbkCaUqKSPgiIhJCRpDjxIcnf80jq
-         Mxbgey28OQfSmHf+Pz9GL1gDiIHu8GnZPwg2d13mcBOOTgbi/zx+Z3ySW26VGOgYg9Oi
-         DE/H10w/u0RFm7lMwvc3HUCX5OrPNHjXi6bBzXoXHwxMmvFydU+ZlvC6r61mQTF/F2jH
-         f0Dw==
-X-Gm-Message-State: APjAAAWKevBog/jst+kqOkDU3+gB6zdhIvujjpOjk9gV3ohUzOQqYIGT
-        tcscJjAeBg+ZNnhDXyHKSsnARK3X
-X-Google-Smtp-Source: APXvYqxlbjExaeGdlE6PVLq80Nomu52hXD4OgLr0wrQ/P9LFDDrVlz6eBFZaXHC4lbT9DqcirmxewA==
-X-Received: by 2002:a19:bec1:: with SMTP id o184mr31363372lff.86.1560940049495;
-        Wed, 19 Jun 2019 03:27:29 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id q2sm2594636lfj.25.2019.06.19.03.27.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 03:27:28 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190613210849.10382-1-digetx@gmail.com>
- <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
- <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
- <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
-Date:   Wed, 19 Jun 2019 13:27:27 +0300
+        bh=DJZLFd0c94DNMXPW5hr0a4XsSq32KXr9fHp7tjVQYOI=;
+        b=WZ3ljOFwDExFptg0CaVsIoN812v5xt4YgpwSLdZ3xHmnhqAupNIgU4DlxRRs2c/Aiz
+         0AtGnQNBu7sq2+gWZtj8iByUdARBbbAiK4ALh5JVKNNiPyhaCChh4qtqNmqC/1wuN39z
+         5l0NMCsLpPKnaTH1WzapFSgf7NoLNPJML5cc/ltmQ204Z2+OXNHujTpscIVlUNV7CuQC
+         jGmwCFONnMZYuuAO8qDrc6Fy0kckGkqHN2WM0kE5h3JiEPooZ5shX1EFTLbNJfuRnO6M
+         2y6eMZ3HYaAY0x5U56CZA9cpgkngYNtLzRFpDNaWrI70EuoltRO/CgjpC1+EF5PcZDwQ
+         ip+Q==
+X-Gm-Message-State: APjAAAXocGBc2Dk5Fu9hKg+sX0RZbltsf9Z6izyBnXY2SiBEKh/tUY3K
+        z4dmpb4Vxa1eA4Oelv4FpNINKg==
+X-Google-Smtp-Source: APXvYqztQsarVOnhB1yn83G7nO8rSTu5dtmeGmfn81Fkc/B/fzXj77GL4jJHvj+ldJrIJDkfNiY3wQ==
+X-Received: by 2002:a1c:2c41:: with SMTP id s62mr7728299wms.8.1560940320046;
+        Wed, 19 Jun 2019 03:32:00 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:51c0:d03f:68e:1f6d? ([2001:b07:6468:f312:51c0:d03f:68e:1f6d])
+        by smtp.gmail.com with ESMTPSA id s8sm23922522wra.55.2019.06.19.03.31.51
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 03:31:58 -0700 (PDT)
+Subject: Re: [PATCH 1/2] scsi_host: add support for request batching
+To:     Hannes Reinecke <hare@suse.de>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     jejb@linux.ibm.com, martin.petersen@oracle.com,
+        linux-scsi@vger.kernel.org, stefanha@redhat.com
+References: <20190530112811.3066-1-pbonzini@redhat.com>
+ <20190530112811.3066-2-pbonzini@redhat.com>
+ <760164a0-589d-d9fa-fb63-79b5e0899c00@suse.de>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <aaa344bf-af29-0485-4e83-5442331a2c9c@redhat.com>
+Date:   Wed, 19 Jun 2019 12:31:58 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+In-Reply-To: <760164a0-589d-d9fa-fb63-79b5e0899c00@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.06.2019 13:04, Jon Hunter пишет:
-> 
-> On 19/06/2019 00:27, Dmitry Osipenko wrote:
->> 19.06.2019 1:22, Ben Dooks пишет:
->>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>>> Tegra's APB DMA engine updates words counter after each transferred burst
->>>> of data, hence it can report transfer's residual with more fidelity which
->>>> may be required in cases like audio playback. In particular this fixes
->>>> audio stuttering during playback in a chromiuim web browser. The patch is
->>>> based on the original work that was made by Ben Dooks [1]. It was tested
->>>> on Tegra20 and Tegra30 devices.
->>>>
->>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>>
->>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>> ---
->>>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>>>   1 file changed, 28 insertions(+), 7 deletions(-)
->>>>
->>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>> index 79e9593815f1..c5af8f703548 100644
->>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>       return 0;
->>>>   }
->>>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->>>> +                          struct tegra_dma_sg_req *sg_req,
->>>> +                          struct tegra_dma_desc *dma_desc,
->>>> +                          unsigned int residual)
->>>> +{
->>>> +    unsigned long status, wcount = 0;
->>>> +
->>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>> +        return residual;
->>>> +
->>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>> +
->>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>> +
->>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>> +        wcount = status;
->>>> +
->>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>> +        return residual - sg_req->req_len;
->>>> +
->>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>>> +}
->>>
->>> I am unfortunately nowhere near my notes, so can't completely
->>> review this. I think the complexity of my patch series is due
->>> to an issue with the count being updated before the EOC IRQ
->>> is actually flagged (and most definetly before it gets to the
->>> CPU IRQ handler).
->>>
->>> The test system I was using, which i've not really got any
->>> access to at the moment would show these internal inconsistent
->>> states every few hours, however it was moving 48kHz 8ch 16bit
->>> TDM data.
->>>
->>> Thanks for looking into this, I am not sure if I am going to
->>> get any time to look into this within the next couple of
->>> months.
+On 19/06/19 10:11, Hannes Reinecke wrote:
+> On 5/30/19 1:28 PM, Paolo Bonzini wrote:
+>> This allows a list of requests to be issued, with the LLD only writing
+>> the hardware doorbell when necessary, after the last request was prepared.
+>> This is more efficient if we have lists of requests to issue, particularly
+>> on virtualized hardware, where writing the doorbell is more expensive than
+>> on real hardware.
 >>
->> I'll try to add some debug checks to try to catch the case where count is updated before EOC
->> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
->> anything going wrong.
+>> The use case for this is plugged IO, where blk-mq flushes a batch of
+>> requests all at once.
 >>
->> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
->> vs EOC? Assuming the cyclic transfer mode.
+>> The API is the same as for blk-mq, just with blk-mq concepts tweaked to
+>> fit the SCSI subsystem API: the "last" flag in blk_mq_queue_data becomes
+>> a flag in scsi_cmnd, while the queue_num in the commit_rqs callback is
+>> extracted from the hctx and passed as a parameter.
+>>
+>> The only complication is that blk-mq uses different plugging heuristics
+>> depending on whether commit_rqs is present or not.  So we have two
+>> different sets of blk_mq_ops and pick one depending on whether the
+>> scsi_host template uses commit_rqs or not.
+>>
+>> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+>> ---
+>>  drivers/scsi/scsi_lib.c  | 37 ++++++++++++++++++++++++++++++++++---
+>>  include/scsi/scsi_cmnd.h |  1 +
+>>  include/scsi/scsi_host.h | 16 ++++++++++++++--
+>>  3 files changed, 49 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+>> index 601b9f1de267..eb4e67d02bfe 100644
+>> --- a/drivers/scsi/scsi_lib.c
+>> +++ b/drivers/scsi/scsi_lib.c
+>> @@ -1673,10 +1673,11 @@ static blk_status_t scsi_queue_rq(struct blk_mq_hw_ctx *hctx,
+>>  		blk_mq_start_request(req);
+>>  	}
+>>  
+>> +	cmd->flags &= SCMD_PRESERVED_FLAGS;
+>>  	if (sdev->simple_tags)
+>>  		cmd->flags |= SCMD_TAGGED;
+>> -	else
+>> -		cmd->flags &= ~SCMD_TAGGED;
+>> +	if (bd->last)
+>> +		cmd->flags |= SCMD_LAST;
+>>  
+>>  	scsi_init_cmd_errh(cmd);
+>>  	cmd->scsi_done = scsi_mq_done;
+>> @@ -1807,10 +1808,37 @@ void __scsi_init_queue(struct Scsi_Host *shost, struct request_queue *q)
+>>  }
+>>  EXPORT_SYMBOL_GPL(__scsi_init_queue);
+>>  
+>> +static const struct blk_mq_ops scsi_mq_ops_no_commit = {
+>> +	.get_budget	= scsi_mq_get_budget,
+>> +	.put_budget	= scsi_mq_put_budget,
+>> +	.queue_rq	= scsi_queue_rq,
+>> +	.complete	= scsi_softirq_done,
+>> +	.timeout	= scsi_timeout,
+>> +#ifdef CONFIG_BLK_DEBUG_FS
+>> +	.show_rq	= scsi_show_rq,
+>> +#endif
+>> +	.init_request	= scsi_mq_init_request,
+>> +	.exit_request	= scsi_mq_exit_request,
+>> +	.initialize_rq_fn = scsi_initialize_rq,
+>> +	.busy		= scsi_mq_lld_busy,
+>> +	.map_queues	= scsi_map_queues,
+>> +};
+>> +
+>> +
+>> +static void scsi_commit_rqs(struct blk_mq_hw_ctx *hctx)
+>> +{
+>> +	struct request_queue *q = hctx->queue;
+>> +	struct scsi_device *sdev = q->queuedata;
+>> +	struct Scsi_Host *shost = sdev->host;
+>> +
+>> +	shost->hostt->commit_rqs(shost, hctx->queue_num);
+>> +}
+>> +
+>>  static const struct blk_mq_ops scsi_mq_ops = {
+>>  	.get_budget	= scsi_mq_get_budget,
+>>  	.put_budget	= scsi_mq_put_budget,
+>>  	.queue_rq	= scsi_queue_rq,
+>> +	.commit_rqs	= scsi_commit_rqs,
+>>  	.complete	= scsi_softirq_done,
+>>  	.timeout	= scsi_timeout,
+>>  #ifdef CONFIG_BLK_DEBUG_FS
+>> @@ -1845,7 +1873,10 @@ int scsi_mq_setup_tags(struct Scsi_Host *shost)
+>>  		cmd_size += sizeof(struct scsi_data_buffer) + sgl_size;
+>>  
+>>  	memset(&shost->tag_set, 0, sizeof(shost->tag_set));
+>> -	shost->tag_set.ops = &scsi_mq_ops;
+>> +	if (shost->hostt->commit_rqs)
+>> +		shost->tag_set.ops = &scsi_mq_ops;
+>> +	else
+>> +		shost->tag_set.ops = &scsi_mq_ops_no_commit;
+>>  	shost->tag_set.nr_hw_queues = shost->nr_hw_queues ? : 1;
+>>  	shost->tag_set.queue_depth = shost->can_queue;
+>>  	shost->tag_set.cmd_size = cmd_size;
+>> diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
+>> index 76ed5e4acd38..91bd749a02f7 100644
+>> --- a/include/scsi/scsi_cmnd.h
+>> +++ b/include/scsi/scsi_cmnd.h
+>> @@ -57,6 +57,7 @@ struct scsi_pointer {
+>>  #define SCMD_TAGGED		(1 << 0)
+>>  #define SCMD_UNCHECKED_ISA_DMA	(1 << 1)
+>>  #define SCMD_INITIALIZED	(1 << 2)
+>> +#define SCMD_LAST		(1 << 3)
+>>  /* flags preserved across unprep / reprep */
+>>  #define SCMD_PRESERVED_FLAGS	(SCMD_UNCHECKED_ISA_DMA | SCMD_INITIALIZED)
+>>  
+>> diff --git a/include/scsi/scsi_host.h b/include/scsi/scsi_host.h
+>> index 2b539a1b3f62..28f1c9177cd2 100644
+>> --- a/include/scsi/scsi_host.h
+>> +++ b/include/scsi/scsi_host.h
+>> @@ -80,8 +80,10 @@ struct scsi_host_template {
+>>  	 * command block to the LLDD.  When the driver finished
+>>  	 * processing the command the done callback is invoked.
+>>  	 *
+>> -	 * If queuecommand returns 0, then the HBA has accepted the
+>> -	 * command.  The done() function must be called on the command
+>> +	 * If queuecommand returns 0, then the driver has accepted the
+>> +	 * command.  It must also push it to the HBA if the scsi_cmnd
+>> +	 * flag SCMD_LAST is set, or if the driver does not implement
+>> +	 * commit_rqs.  The done() function must be called on the command
+>>  	 * when the driver has finished with it. (you may call done on the
+>>  	 * command before queuecommand returns, but in this case you
+>>  	 * *must* return 0 from queuecommand).
+>> @@ -109,6 +111,16 @@ struct scsi_host_template {
+>>  	 */
+>>  	int (* queuecommand)(struct Scsi_Host *, struct scsi_cmnd *);
+>>  
+>> +	/*
+>> +	 * The commit_rqs function is used to trigger a hardware
+>> +	 * doorbell after some requests have been queued with
+>> +	 * queuecommand, when an error is encountered before sending
+>> +	 * the request with SCMD_LAST set.
+>> +	 *
+>> +	 * STATUS: OPTIONAL
+>> +	 */
+>> +	void (*commit_rqs)(struct Scsi_Host *, u16);
+>> +
+>>  	/*
+>>  	 * This is an error handling strategy routine.  You don't need to
+>>  	 * define one of these if you don't want to - there is a default
+>>
+> I'm a bit unsure if 'bd->last' is always set; it's quite obvious that
+> it's present if set, but what about requests with 'bd->last == false' ?
+> Is there a guarantee that they will _always_ be followed with a request
+> with bd->last == true?
+> And if so, is there a guarantee that this request is part of the same batch?
+
+It's complicated.  A request with bd->last == false _will_ always be
+followed by a request with bd->last == true in the same batch.  However,
+due to e.g. errors it may be possible that the last request is not sent.
+ In that case, the block layer sends commit_rqs, as documented in the
+comment above, to flush the requests that have been sent already.
+
+So, a driver that obeys bd->last (or SCMD_LAST) but does not implement
+commit_rqs is bound to have bugs, which is why this patch was not split
+further.
+
+Makes sense?
+
+Paolo
+
+> Aside from it: I think it's a good idea to match the '->last' setting
+> onto the SCMD_LAST flag; I would even go so far and make this an
+> independent patch.
+
+> Once to above points are cleared, that is.
 > 
-> I can't say that I am. However, for the case of cyclic transfer, given
-> that the next transfer is always programmed into the registers before
-> the last one completes, I could see that by the time the interrupt is
-> serviced that the DMA has moved on to the next transfer (which I assume
-> would reset the count).
+> But if that one is in, why do we need to have the separate 'commit_rqs'
+> callback?
+> Can't we let the driver decide to issue a doorbell kick (or whatever the
+> driver decides to do there)?
+> If we ensure that the SCMD_LAST flag is always set for the end of a
+> batch (even if this batch consists only of one request), the driver
+> simply can evaluate the flag and do its actions.
+> Why do we need a new callback here?
 > 
-> Interestingly, our downstream kernel implemented a change to avoid the
-> count appearing to move backwards. I am curious if this also works,
-> which would be a lot simpler that what Ben has implemented and may
-> mitigate that race condition that Ben is describing.
+> Cheers,
 > 
-> Cheers
-> Jon
-> 
-> [0]
-> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+> Hannes
 > 
 
-The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
-tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
-doesn't check whether the dma_desc is *the active* transfer and not a pending!
-
-Jon, thanks for the pointer anyway! I'll try to catch the case that Ben is describing by
-adding some extra debug checks, will come back with a report after thorough testing.
