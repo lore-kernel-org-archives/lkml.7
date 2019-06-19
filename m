@@ -2,124 +2,156 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07A61C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 904A0C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:46:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4FE52183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:45:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EvIEznAc"
+	by mail.kernel.org (Postfix) with ESMTP id 6BAC321873
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:46:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729919AbfFSOpP (ORCPT
+        id S1729914AbfFSOqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:45:15 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38274 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729582AbfFSOpO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:45:14 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so9800190pgl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 07:45:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8fT/vuEA7OU0dJVEYE3r7kPp1EiCp3ty74wiME2Ad6k=;
-        b=EvIEznAc2XDTlXpBOjY12Pc2q1rIxcWk6U40JWRUJTQeG8doG5XM7cV9g4/aAvpAbm
-         r3Vk1xob0ZSfzJTTT+FaHc9R0h1eLHkawgh+Y2HeR9XjGIs5zVJz5vVbm53lpriaFfb7
-         WLyV/uAQNAYVDSY/FjIXmEn/qRI4X4yYKhErVQMtfpicAASkyevJQubb5nypERO8S2Td
-         5b/ik5O20WuHwXvtTFgmOoa0CziwFqCIOtcjre2VZ/5fgyUl+9VVN5r0dUvXPdBUWYAX
-         74ptz4qqjfqvUzObFkRm/Ek6sICgg7UMvCYbjzj6hCVv3sQaFa6vMFhwyadaNP4W/A/J
-         GtIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8fT/vuEA7OU0dJVEYE3r7kPp1EiCp3ty74wiME2Ad6k=;
-        b=ewvN55UNe6hErusLMs02rkegNaZuBkTsP8rtZM4rkAmK60829X6rSZm6Tn3wxgADqg
-         u1nxfAdC/CDdOpv+t14dLJlrOU8bq70zj70lO0JnKN2q1ZWgSX3SzwBHUUvTotKizzGO
-         YiPzD3UZMBE2wJm1EoIBQX0RIXBY23z25p+Kg9Wa+BKT2GK98AYEyRV3pJcIiggjUQ5F
-         Ru/5sgHdDsYqDohT55bItKfsI3u2V8PGISIYz5Qy07k7nRpO6HpXMoMT4pBMbpYTvT+V
-         cHycKsyggafcsGkcbN8+YhPrXZJy//MPYkGikoY0BjIH20gdUPLvVpIhCR1AH0qS9pbR
-         wIbQ==
-X-Gm-Message-State: APjAAAX6Sq6vUp4gWRBfgyIAvnItvMaj0vOKymrRnfALB0ZqzzcEAQIx
-        2qWCMcrM1ZaBnDp9tmXogYy2UnwUQzF50kEQnlObYw==
-X-Google-Smtp-Source: APXvYqxml1AJCp6VXxhzIr0ScKXgidc4P55u7fkRG0uKH1TmixS7V2epvHYKLjz4L0moJR3Tz7zj8BeYkr14oUMqT1c=
-X-Received: by 2002:a17:90a:a116:: with SMTP id s22mr11521374pjp.47.1560955513903;
- Wed, 19 Jun 2019 07:45:13 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1560339705.git.andreyknvl@google.com> <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
-In-Reply-To: <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 19 Jun 2019 16:45:02 +0200
-Message-ID: <CAAeHK+xvtqALY9DESF048mR17Po=W++QwWOUOOeSXKgriVTC-w@mail.gmail.com>
-Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control the
- tagged user addresses ABI
-To:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Jun 2019 10:46:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57432 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726246AbfFSOqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 10:46:25 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0B90730BBE9A;
+        Wed, 19 Jun 2019 14:46:25 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 92848608A7;
+        Wed, 19 Jun 2019 14:46:22 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH] mm, memcg: Add a memcg_slabinfo debugfs file
+Date:   Wed, 19 Jun 2019 10:46:10 -0400
+Message-Id: <20190619144610.12520-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Wed, 19 Jun 2019 14:46:25 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 1:43 PM Andrey Konovalov <andreyknvl@google.com> wrote:
->
-> From: Catalin Marinas <catalin.marinas@arm.com>
->
-> It is not desirable to relax the ABI to allow tagged user addresses into
-> the kernel indiscriminately. This patch introduces a prctl() interface
-> for enabling or disabling the tagged ABI with a global sysctl control
-> for preventing applications from enabling the relaxed ABI (meant for
-> testing user-space prctl() return error checking without reconfiguring
-> the kernel). The ABI properties are inherited by threads of the same
-> application and fork()'ed children but cleared on execve().
->
-> The PR_SET_TAGGED_ADDR_CTRL will be expanded in the future to handle
-> MTE-specific settings like imprecise vs precise exceptions.
->
-> Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+There are concerns about memory leaks from extensive use of memory
+cgroups as each memory cgroup creates its own set of kmem caches. There
+is a possiblity that the memcg kmem caches may remain even after the
+memory cgroup removal. Therefore, it will be useful to show how many
+memcg caches are present for each of the kmem caches.
 
-Catalin, would you like to do the requested changes to this patch
-yourself and send it to me or should I do that?
+This patch introduces a new <debugfs>/memcg_slabinfo file which is
+somewhat similar to /proc/slabinfo in format, but lists only slabs that
+are in memcg kmem caches. Information available in /proc/slabinfo are
+not repeated in memcg_slabinfo.
+
+A portion of a sample output of the file was:
+
+  # <name> <active_objs> <num_objs> <active_slabs> <num_slabs> <num_caches> <num_empty_caches>
+  rpc_inode_cache        0      0      0      0   1   1
+  xfs_inode           6342   7888    232    232  59  13
+  RAWv6                  0      0      0      0   2   2
+  UDPv6                100    100      4      4   5   3
+  TCPv6                  0      0      0      0   1   1
+  UNIX                4864   4864    152    152  53  35
+  RAW                    0      0      0      0   1   1
+  TCP                   14     14      1      1   2   1
+
+Besides the number of objects and slabs in the memcg kmem caches only,
+it also shows the total number of memcg kmem caches associated with each
+root kmem cache as well as the number memcg kmem caches that are empty.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ mm/slab_common.c | 53 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
+
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 58251ba63e4a..63fb18f4f811 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -17,6 +17,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/seq_file.h>
+ #include <linux/proc_fs.h>
++#include <linux/debugfs.h>
+ #include <asm/cacheflush.h>
+ #include <asm/tlbflush.h>
+ #include <asm/page.h>
+@@ -1498,6 +1499,58 @@ static int __init slab_proc_init(void)
+ 	return 0;
+ }
+ module_init(slab_proc_init);
++
++#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_MEMCG)
++/*
++ * Display information about slabs that are in memcg kmem caches, but not
++ * in the root kmem caches.
++ */
++static int memcg_slabinfo_show(struct seq_file *m, void *unused)
++{
++	struct kmem_cache *s, *c;
++	struct slabinfo sinfo, cinfo;
++
++	mutex_lock(&slab_mutex);
++	seq_puts(m, "# <name> <active_objs> <num_objs> <active_slabs>");
++	seq_puts(m, " <num_slabs> <num_caches> <num_empty_caches>\n");
++	memset(&sinfo, 0, sizeof(sinfo));
++	list_for_each_entry(s, &slab_root_caches, root_caches_node) {
++		int scnt = 0;	/* memcg kmem cache count */
++		int ecnt = 0;	/* # of empty kmem caches */
++
++		for_each_memcg_cache(c, s) {
++			memset(&cinfo, 0, sizeof(cinfo));
++			get_slabinfo(c, &cinfo);
++
++			sinfo.active_slabs += cinfo.active_slabs;
++			sinfo.num_slabs += cinfo.num_slabs;
++			sinfo.active_objs += cinfo.active_objs;
++			sinfo.num_objs += cinfo.num_objs;
++			scnt++;
++			if (!cinfo.num_slabs)
++				ecnt++;
++		}
++		if (!scnt)
++			continue;
++		seq_printf(m, "%-17s %6lu %6lu %6lu %6lu %3d %3d\n",
++			   cache_name(s), sinfo.active_objs, sinfo.num_objs,
++			   sinfo.active_slabs, sinfo.num_slabs, scnt, ecnt);
++		memset(&sinfo, 0, sizeof(sinfo));
++	}
++	mutex_unlock(&slab_mutex);
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(memcg_slabinfo);
++
++static int __init memcg_slabinfo_init(void)
++{
++	debugfs_create_file("memcg_slabinfo", S_IFREG | S_IRUGO,
++			    NULL, NULL, &memcg_slabinfo_fops);
++	return 0;
++}
++
++late_initcall(memcg_slabinfo_init);
++#endif /* CONFIG_DEBUG_FS && CONFIG_MEMCG */
+ #endif /* CONFIG_SLAB || CONFIG_SLUB_DEBUG */
+ 
+ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+-- 
+2.18.1
+
