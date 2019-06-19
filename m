@@ -2,96 +2,124 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7C29C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B2FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6908214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="M7B34DN6"
+	by mail.kernel.org (Postfix) with ESMTP id EFA8921721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfFSSgy (ORCPT
+        id S1730446AbfFSShN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:36:54 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:58612 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbfFSSgt (ORCPT
+        Wed, 19 Jun 2019 14:37:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33066 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726109AbfFSShN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:36:49 -0400
-Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 91AA7C0CAF;
-        Wed, 19 Jun 2019 18:36:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560969408; bh=wuJso1hif5l+TevIvXSskXT7xugWbLyyyXYKC8aX+1k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=M7B34DN6cpwZaD9kNltLdZxt93WgCPJrq5KPIU7CkwC0Pd6auNAse1s0zDm5K1Fh4
-         xNrPKE6DMP4NFsCrAuKUcTTAMxznXl8lwK/u/BgafjlaaqFEDdT8eLfQrWGWxLBy1p
-         /JjPtp6LPF5cQNEpkVbkOoLR0dOiUmxmuEgzu4EZo1DwjmDfvI73v58o48SXWasqDt
-         qUMwxF+YgHygoCPMMYvb9FzcF+gTE1MST4bOjc/I689Z8ZohrPEWokZ92V+GIjNWD4
-         k+c6iy4geXZgarVdWzX+wQiBOeNujoZYenADu3qEraBN1i+ffxY6L8UZ+4eoxEWtx2
-         +LBA0tjkwzXTQ==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 11BA5A0064;
-        Wed, 19 Jun 2019 18:36:45 +0000 (UTC)
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id B39D83F21A;
-        Wed, 19 Jun 2019 20:36:45 +0200 (CEST)
-From:   Vitor Soares <Vitor.Soares@synopsys.com>
-To:     linux-i3c@lists.infradead.org, Joao.Pinto@synopsys.com
-Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 3/3] i3c: dw: add limited bus mode support
-Date:   Wed, 19 Jun 2019 20:36:33 +0200
-Message-Id: <10b810c9afa9f06515b52a8fd580720f239e0a99.1560968688.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1560968688.git.vitor.soares@synopsys.com>
-References: <cover.1560968688.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1560968688.git.vitor.soares@synopsys.com>
-References: <cover.1560968688.git.vitor.soares@synopsys.com>
+        Wed, 19 Jun 2019 14:37:13 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JIWuhK141669
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:37:11 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7te485ms-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:37:11 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 19 Jun 2019 19:37:09 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Jun 2019 19:37:08 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JIawso35062266
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 18:36:58 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 349D5A4040;
+        Wed, 19 Jun 2019 18:37:07 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 92462A404D;
+        Wed, 19 Jun 2019 18:37:06 +0000 (GMT)
+Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Jun 2019 18:37:06 +0000 (GMT)
+Subject: Re: [PATCH 2/3] IMA:Define a new template field buf
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     prakhar srivastava <prsriva02@gmail.com>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
+Date:   Wed, 19 Jun 2019 14:37:06 -0400
+In-Reply-To: <CAEFn8qK9Tg99PA_=Ukm=CwSE6ajjUL2FxLs0ZiVdGLvG_baK_A@mail.gmail.com>
+References: <20190617183507.14160-1-prsriva02@gmail.com>
+         <20190617183507.14160-3-prsriva02@gmail.com>
+         <1560952466.3975.40.camel@linux.ibm.com>
+         <CAEFn8qK9Tg99PA_=Ukm=CwSE6ajjUL2FxLs0ZiVdGLvG_baK_A@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061918-4275-0000-0000-00000343D828
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061918-4276-0000-0000-000038540473
+Message-Id: <1560969426.3975.64.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add limited bus mode support for DesignWare i3c master
+On Wed, 2019-06-19 at 11:08 -0700, prakhar srivastava wrote:
+> <snip>
+> > >       if (iint->measured_pcrs & (0x1 << pcr))
+> > > diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> > > index 993d0f1915ff..c8591406c0e2 100644
+> > > --- a/security/integrity/ima/ima_init.c
+> > > +++ b/security/integrity/ima/ima_init.c
+> > > @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
+> > >       struct ima_template_entry *entry;
+> > >       struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+> > >       struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
+> > > -                                         NULL, 0, NULL};
+> > > +                                         NULL, 0, NULL, NULL, 0};
+> > >       int result = -ENOMEM;
+> > >       int violation = 0;
+> > >       struct {
+> > >
+> >
+> > These changes shouldn't be necessary.  Please rebase these patches on
+> > top of the latest next-queued-testing branch (git remote update).  "IMA: support for per
+> > policy rule template formats" is still changing.
+> >
+> > Minor nit.  When re-posting the patches please update the patch titles
+> > so that there is a space between the subsystem name and the patch
+> > title (eg. "ima: define ...").
+> >
+> I believe the above event_data changes are needed, to store/read the
+> buffer length and buffer itself. The only exception will be if needed will be to
+> remove ima-buf as a template instead used a template_fmt in the policy
+> with KEXEC_CMDLINE from the "IMA: support for per
+>  policy rule template formats" is still changing.".
+> In my view even ima-buf is needed as it simplifies the usage.
+> 
+> Please let me know if I misunderstood your comment.
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
----
-Changes in v4:
-  None
+The tip of next-queued-testing branch is commit 687d57f90461 ("IMA:
+support for per policy rule template formats").  The current code is:
 
-Changes in v3:
-  None
+        struct ima_event_data event_data = { .iint = iint,
+                                             .filename = boot_aggregate_name };
 
-Changes in v2:
-  None
-
- drivers/i3c/master/dw-i3c-master.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 1d83c97..9612d93 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -599,6 +599,7 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
- 
- 	switch (bus->mode) {
- 	case I3C_BUS_MODE_MIXED_FAST:
-+	case I3C_BUS_MODE_MIXED_LIMITED:
- 		ret = dw_i2c_clk_cfg(master);
- 		if (ret)
- 			return ret;
--- 
-2.7.4
+Mimi
 
