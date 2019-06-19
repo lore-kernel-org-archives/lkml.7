@@ -2,98 +2,183 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87D5AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:38:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:40:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62A542147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:38:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560965886;
-	bh=jknSe5jW3bcaltB/kyMG6IREECByf4zxqPgnYI39H6I=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hEc4leTppRFCuTlYvR3eThH12RgcJ8qn0pQ6kYAPO2XI2KGCrzn/VAaDDwG7Jrb5X
-	 Yt5b/B/SVsnOi9puSt+AvXg+8oMKAdF7h7vE1zeFjLwlvKzuGHca6YnFAb6zz5nm98
-	 xUEDoiKg3JeJtrJIOYs8UNG2OZtVs6m3GUycqBWE=
+	by mail.kernel.org (Postfix) with ESMTP id 8FCB120645
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:40:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k16j+97H";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kleMmKW0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730274AbfFSRiE (ORCPT
+        id S1730456AbfFSRki (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:38:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37974 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727124AbfFSRiE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:38:04 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 19 Jun 2019 13:40:38 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38914 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730224AbfFSRkg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:40:36 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 78D3561B7E; Wed, 19 Jun 2019 17:40:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560966034;
+        bh=3g9wLryrQ2F10ZSjtE5svtR7JJ802mUzznx1+lwmBzs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=k16j+97HKeRzrK2dBga+ebAtQTXtxl0uthMtVMONMf/w9PvQiBR3zFrN8R9BCQBZu
+         i7BbsW9mYNAJRiuJmchVuqQklJAwHAFc0F1FXoFstBVFq7rWlKPPOlDrIopgV4Oc1n
+         0p+SqFJzhTDzxMcnJqa5VcE51i6sjk9OqXCENVO0=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0B30921744;
-        Wed, 19 Jun 2019 17:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560965883;
-        bh=jknSe5jW3bcaltB/kyMG6IREECByf4zxqPgnYI39H6I=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=A7y4JpuNEob+dMW/flJ37Q1UplBw77V0kcriLi9MVJ7KwtU2DRpoEES5eLippmSzJ
-         xIwPzqeMFfemyirPsvGBRCIC+EzxOgm+gfFoNqmORlz9zxg5IVH/zrcbkKCk45p9EP
-         Y04Z2hWVJSTFRpabjgboL7uF+iAFiP4hRE04veEA=
-Date:   Wed, 19 Jun 2019 19:38:01 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Atish Patra <atish.patra@wdc.com>
-Cc:     linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>
-Subject: Re: [PATCH v7 3/7] cpu-topology: Move cpu topology code to common
- code.
-Message-ID: <20190619173801.GB20916@kroah.com>
-References: <20190617185920.29581-1-atish.patra@wdc.com>
- <20190617185920.29581-4-atish.patra@wdc.com>
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id D85FB618EA;
+        Wed, 19 Jun 2019 17:40:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560966030;
+        bh=3g9wLryrQ2F10ZSjtE5svtR7JJ802mUzznx1+lwmBzs=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=kleMmKW0cdmDe0Y3kyJmC0sfObgfizGuc5eh8tpwyhr9krvCDvVkTtuU13eoKcbAP
+         zhj2SEhIKm/wIrRhf23XD6KrqRcstL8hpTMx8cKoFV2tc1u5z1wGiTxd81DOx3mfO7
+         plBfFAhGOC4cwTIs2QcG1QQOS/okDiobs6Ilbucs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D85FB618EA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        benjamin.tissoires@redhat.com, jikos@kernel.org,
+        hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
+        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, linux-input@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+ <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
+ <20190612214636.GA40779@dtor-ws>
+ <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
+ <20190619171010.24c25oenpmjpiayw@penguin>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <8cd10509-6a67-7c5b-9139-89bdcaa35f3f@codeaurora.org>
+Date:   Wed, 19 Jun 2019 11:40:28 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617185920.29581-4-atish.patra@wdc.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190619171010.24c25oenpmjpiayw@penguin>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:59:16AM -0700, Atish Patra wrote:
-> Both RISC-V & ARM64 are using cpu-map device tree to describe
-> their cpu topology. It's better to move the relevant code to
-> a common place instead of duplicate code.
+On 6/19/2019 11:10 AM, Dmitry Torokhov wrote:
+> On Wed, Jun 12, 2019 at 04:20:42PM -0600, Jeffrey Hugo wrote:
+>> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
+>>> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
+>>>> There needs to be coordination between hid-quirks and the elan_i2c driver
+>>>> about which devices are handled by what drivers.  Currently, both use
+>>>> whitelists, which results in valid devices being unhandled by default,
+>>>> when they should not be rejected by hid-quirks.  This is quickly becoming
+>>>> an issue.
+>>>>
+>>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
+>>>> which is now in a header file that hid-quirks can access, use that to
+>>>> implement a blacklist in hid-quirks so that only the devices that need to
+>>>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
+>>>> handled by default.
+>>>>
+>>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>>>> ---
+>>>>    drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
+>>>>    1 file changed, 16 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>>>> index e5ca6fe2ca57..bd81bb090222 100644
+>>>> --- a/drivers/hid/hid-quirks.c
+>>>> +++ b/drivers/hid/hid-quirks.c
+>>>> @@ -16,6 +16,7 @@
+>>>>    #include <linux/export.h>
+>>>>    #include <linux/slab.h>
+>>>>    #include <linux/mutex.h>
+>>>> +#include <linux/input/elan-i2c-ids.h>
+>>>>    #include "hid-ids.h"
+>>>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>>>>    bool hid_ignore(struct hid_device *hdev)
+>>>>    {
+>>>> +	int i;
+>>>> +
+>>>>    	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
+>>>>    		return false;
+>>>>    	if (hdev->quirks & HID_QUIRK_IGNORE)
+>>>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
+>>>>    		break;
+>>>>    	case USB_VENDOR_ID_ELAN:
+>>>>    		/*
+>>>> -		 * Many Elan devices have a product id of 0x0401 and are handled
+>>>> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+>>>> -		 * is not (and cannot be) handled by that driver ->
+>>>> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
+>>>> +		 * Blacklist of everything that gets handled by the elan_i2c
+>>>> +		 * input driver.  This avoids disabling valid touchpads and
+>>>> +		 * other ELAN devices.
+>>>>    		 */
+>>>> -		if (hdev->product == 0x0401 &&
+>>>> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
+>>>> -			return true;
+>>>> -		/* Same with product id 0x0400 */
+>>>> -		if (hdev->product == 0x0400 &&
+>>>> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
+>>>> -			return true;
+>>>> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
+>>>> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
+>>>> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
+>>>> +					     strlen(elan_acpi_id[i].id)))
+>>>> +					return true;
+>>>> +			for (i = 0; strlen(elan_of_match[i].name); ++i)
+>>>> +				if (!strncmp(hdev->name, elan_of_match[i].name,
+>>>> +					     strlen(elan_of_match[i].name)))
+>>>> +					return true;
+>>>
+>>> Do we really need to blacklist the OF case here? I thought that in ACPI
+>>> case we have clashes as HID gets matched by elan_i2c and CID is matched
+>>> by i2c-hid, but I do not believe we'll run into the same situation on OF
+>>> systems.
+>>
+>> I think its the safer approach.
+>>
+>> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will end
+>> up running through this (kind of the whole reason why this series exists).
+>> The vendor and product ids will still match, so we'll end up going through
+>> the lists to see if the hdev->name (the compatible string) will match the
+>> blacklist.  "hid-over-i2c" won't match the blacklist, but if there is a more
+>> specific compatible, it might.
+>>
+>> In that case, not matching OF would work, however how it could break today
+>> is if both "hid-over-i2c" and "elan,ekth3000" were listed for the same
+>> device, and elan_i2c was not compiled.  In that case, if we skip the OF part
+>> of the black list, hid-quirks will not reject the device, and you'll
+>> probably have some odd behavior instead of the obvious "the device doesn't
+>> work because the correct driver isn't present" behavior.
+>>
+>> While that scenario might be far fetched since having both "hid-over-i2c"
+>> and "elan,ekth3000" probably violates the OF bindings, its still safer to
+>> include the OF case in the blacklist against future scenarios.
 > 
-> To: Will Deacon <will.deacon@arm.com>
-> To: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> [Tested on QDF2400]
-> Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> [Tested on Juno and other embedded platforms.]
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Reviewed-by: Sudeep Holla <sudeep.holla@arm.com>
-> Acked-by: Will Deacon <will.deacon@arm.com>
+> Yes, I believe it is quite far fetched. We are talking about someone
+> setting compatible sting to something that is decidedly not compatible.
+> I.e. we know that devices driven by elan_i2c are not compatible with
+> hi-over-i2c driver/protocol, so why do we expect that they both will be
+> specified in the same compatible string? I know ACPI case is messier in
+> this regard as 2 drivers look at the different data items when
+> evaluating whether they should bind to the device, but here we are
+> dealing with the same string.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Alright.  Sounds like you really want the DT matching dropped, so I'll 
+update the series with a new version ASAP that drops that.
