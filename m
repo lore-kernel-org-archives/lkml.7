@@ -2,162 +2,265 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2283EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 259C0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:39:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFF9214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE67E214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:39:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="nXaidQyk"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R7YTlEiT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730506AbfFSShr (ORCPT
+        id S1729937AbfFSSjN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:37:47 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33580 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730070AbfFSShr (ORCPT
+        Wed, 19 Jun 2019 14:39:13 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46991 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfFSSjN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:37:47 -0400
-Received: by mail-pl1-f193.google.com with SMTP id c14so182808plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:37:46 -0700 (PDT)
+        Wed, 19 Jun 2019 14:39:13 -0400
+Received: by mail-io1-f66.google.com with SMTP id i10so718357iol.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:39:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2UHrTE7B5XpI1WvMqZiW3y+ZVgQqpXieqgBOuUL3YDY=;
-        b=nXaidQykLu0h3v+pNAwd13wc4DhE5worNOflID9Mf2valzfpNLEoz/00pn7rrU7Dmn
-         FxeUrAO5yA7lCOSKq1jd1jzQ4O1aY0TxEMX08ip6aEoG4HxpImTpVC6VSk+69Kpzm6Ys
-         gmqahyhRmADeRLd6d+ldLEDrNFb2uHKhQjwM8=
+        bh=upe+kPLR7/GeOqeBD5ktrgjPKSUUFPLYfd4Aq1vyU9c=;
+        b=R7YTlEiTJ6NjLuKauQara9BSR2VXFSZ9ykEVmaqb4o0RaxVyI+IXcs7ivnnQCBGn2/
+         t4GHFapVL0erq/PKWThOVdPPI7JT1xS1vhTRID/odRFR3qRE3Y0bqjjb9Zst2smtL+pn
+         Q7GPhA4zEDlseZS3N6TGzSLN26Bj5Zw/vq8BmDE6bh2yHEfZEDwZ0WYbEzSzYpCBn4BS
+         VCG1Uz+MIOib0WSUhSCorBWP2mjjx2BTlaCf+q93Xbz/dWG6QKonDDKj9OE7nGWsi3fd
+         A7VyHHaf3/uWN+jHH3ih5/i4y4ewZJVFcFjLBeqv+FDFjKYAt+8YQ3F1w4u8zGrpB9zk
+         /MMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=2UHrTE7B5XpI1WvMqZiW3y+ZVgQqpXieqgBOuUL3YDY=;
-        b=P30y76aUTVSLLw9RtfTGk7dtQJMMRvOXVaae75qvWRuaJpR1ApJRbkR8u4Zo9mgzrU
-         3oc9ga4Rjx1xKmpMYVslz1QPl3Jp9RTPUkX0cv3/8KnBNtlmGX/4LT0n0hiarE8JrMZK
-         CMJYf2ZkwAyGkacv3RhJxQu2/xj9Zri2b0zSqorkHllVAPpoc5Y3NPzQ01WFEITcOfm2
-         pMOHbcf0mIet55fflVI8ccY55ZU2zIXntrxAW/RZO2XhGMo9lg9TY2sl+nYx1Ot9rJWc
-         PSy7676yR6WqbdGh8NkmdHQF8LnrGa7avvxNJteAq1ZlUnluICLifoe/zPuNkcp+Obl3
-         zHuQ==
-X-Gm-Message-State: APjAAAW7BrMKgHRJSAJp2O1nxKGSg7mIjMK0fWi0pooBlubpAoMr8zbw
-        TmCkYG4BBEQg6KJPOXBmtuUx0gwfUBE=
-X-Google-Smtp-Source: APXvYqw3w3u7xuqL2IUmlLYdr5iRpyNBWMi+c4rhFrkhqFLsCOFAK3UzXw/uPna24Mybo1ZWf+lnpA==
-X-Received: by 2002:a17:902:7e0e:: with SMTP id b14mr96610234plm.257.1560969466479;
-        Wed, 19 Jun 2019 11:37:46 -0700 (PDT)
-Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id j16sm2681463pjz.31.2019.06.19.11.37.45
+        bh=upe+kPLR7/GeOqeBD5ktrgjPKSUUFPLYfd4Aq1vyU9c=;
+        b=c66waBtMLqGQtwUpqKvduSu+VkQesarT4/WYNsRawwFqz9SWmnSwyV67+xbDiEWtIb
+         JlGbVtaWII3c+Dx1nGZ1M08cDAbOOLDAk7WPZ+pK9L243Y4jvoAOOgcBt2TAOUreCtDR
+         tTieS2Nm0qZ6cA9R7KGF6XebJnA3650pEbHfXT8WDi5zMqMXiQkluj0h3bcUwdv4LSlv
+         ZzAe/aDwA2L5Np1YsAuiaLqDq98Bz0WB+cGvOnyyWlVzuU8LZynoaS8Ey/YxUYNeTlm4
+         ByXR2bMYPK5M4GHA9on9sr87Vrx6aLmJ7JGeJhVRKb5+PEXXrLfHOR9UkbvVKCtO3paT
+         qJYQ==
+X-Gm-Message-State: APjAAAWXpFTtXl3zvE4aT4vwLdx0lOU4qpHQrx6ng8LzIPPOuM9B1VD2
+        0qdEGSogBb1pCv7E1IF/L6kMeevR
+X-Google-Smtp-Source: APXvYqxNceTma3Jg+FVVJiVsrEHC1qmWzZW1+1U3uElHQaPqpEUPKITw1GfT09u4FA8Opx/1JPi1LA==
+X-Received: by 2002:a02:1a86:: with SMTP id 128mr99230610jai.95.1560969551259;
+        Wed, 19 Jun 2019 11:39:11 -0700 (PDT)
+Received: from svens-asus.arcx.com ([184.94.50.30])
+        by smtp.gmail.com with ESMTPSA id l5sm16606999ioq.83.2019.06.19.11.39.10
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 11:37:46 -0700 (PDT)
-From:   Douglas Anderson <dianders@chromium.org>
-To:     heiko@sntech.de
-Cc:     linux-rockchip@lists.infradead.org, mka@chromium.org,
-        Douglas Anderson <dianders@chromium.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH] ARM: dts: rockchip: Configure BT_DEV_WAKE in on rk3288-veyron
-Date:   Wed, 19 Jun 2019 11:34:25 -0700
-Message-Id: <20190619183425.149470-1-dianders@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        Wed, 19 Jun 2019 11:39:10 -0700 (PDT)
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
+To:     Lucas Stach <l.stach@pengutronix.de>
+Cc:     Russell King <linux+etnaviv@armlinux.org.uk>,
+        Christian Gmeiner <christian.gmeiner@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>, etnaviv@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        =?UTF-8?q?Ga=C3=ABl=20PORTAY?= <gael.portay@collabora.com>
+Subject: [PATCH] drm/etnaviv: optionally set gpu linear window to cma area
+Date:   Wed, 19 Jun 2019 14:38:56 -0400
+Message-Id: <20190619183856.467-1-TheSven73@gmail.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the other half of the hacky solution from commit f497ab6b4bb8
-("ARM: dts: rockchip: Configure BT_HOST_WAKE as wake-up signal on
-veyron").  Specifically the LPM driver that the Broadcom Bluetooth
-expects to have (but is missing in mainline) has two halves of the
-equation: BT_HOST_WAKE and BT_DEV_WAKE.  The BT_HOST_WAKE (which was
-handled in the previous commit) is the one that lets the Bluetooth
-wake the system up.  The BT_DEV_WAKE (this patch) tells the Bluetooth
-that it's OK to go into a low power mode.  That means we were burning
-a bit of extra power in S3 without this patch.  Measurements are a bit
-noisy, but it appears to be a few mA worth of difference.
+On Vivante GPUs with an iommu-v1, the gpu linear window's
+position must be determined at probe time, and cannot change
+during the driver's lifetime.
 
-NOTE: Though these pins don't do much on systems with Marvell
-Bluetooth, downstream kernels set it on all veyron boards so we'll do
-the same.
+The existing code attempts to guess a suitable window position
+using the dma mask, but this does not always work [1].
 
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
+According to a recent thread [2], Lucas Stach mentions that
+on MC2.0 GPUs, one may simply point the window to the start
+of the global cma area.
+
+This patch provides an optional method to set the window
+to the cma area, by adding a phandle to the etnaviv driver's
+devicetree node, pointing to the global cma area.
+
+Note that on iommu-v2 GPUs, this setting has no effect:
+they do not depend on a fixed window position.
+
+<Example>
+
+/ {
+	reserved-memory {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges;
+
+		cma_area: linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			size = <0x10000000>;
+			linux,cma-default;
+		};
+	};
+};
+
+/* Tell the Vivante GPUS where the CMA area is */
+
+&gpu_3d {
+	default-cma-region = <&cma_area>;
+};
+
+&gpu_2d {
+	default-cma-region = <&cma_area>;
+};
+
+</Example>
+
+[1] iMX6Q 2G ram, 256M cma, v5.2-rc4 kernel:
+    cma area @ 0x30000000 (auto-assigned by kernel)
+    dma mask is 0xffffffff
+    driver sets gpu window to 0x80000000
+    result: gpu iommu-v1 cannot access cma area
+
+[2] https://lkml.org/lkml/2017/11/15/599
+
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Russell King <linux+etnaviv@armlinux.org.uk>
+Cc: Christian Gmeiner <christian.gmeiner@gmail.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: etnaviv@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: Gaël PORTAY <gael.portay@collabora.com>
+Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
 
- .../boot/dts/rk3288-veyron-chromebook.dtsi    |  2 ++
- arch/arm/boot/dts/rk3288-veyron.dtsi          | 20 +++++++++++++++++++
- 2 files changed, 22 insertions(+)
+devicetree documentation patch to follow, depending on how this patch
+is received.
 
-diff --git a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-index 5727017f34b2..1cadb522fd0d 100644
---- a/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron-chromebook.dtsi
-@@ -237,6 +237,7 @@
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.c | 48 +++++++++++++++++++++------
+ drivers/gpu/drm/etnaviv/etnaviv_gpu.h |  2 ++
+ 2 files changed, 39 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+index 72d01e873160..7ed8705744d0 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.c
+@@ -8,6 +8,7 @@
+ #include <linux/dma-fence.h>
+ #include <linux/moduleparam.h>
+ #include <linux/of_device.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/thermal.h>
  
- 		/* Wake only */
- 		&suspend_l_wake
-+		&bt_dev_wake_awake
- 	>;
- 	pinctrl-1 = <
- 		/* Common for sleep and wake, but no owners */
-@@ -246,6 +247,7 @@
+@@ -687,6 +688,12 @@ static void etnaviv_gpu_hw_init(struct etnaviv_gpu *gpu)
+ 			     prefetch);
+ }
  
- 		/* Sleep only */
- 		&suspend_l_sleep
-+		&bt_dev_wake_sleep
- 	>;
- 
- 	backlight {
-diff --git a/arch/arm/boot/dts/rk3288-veyron.dtsi b/arch/arm/boot/dts/rk3288-veyron.dtsi
-index e2635ad574e7..53d2f2452868 100644
---- a/arch/arm/boot/dts/rk3288-veyron.dtsi
-+++ b/arch/arm/boot/dts/rk3288-veyron.dtsi
-@@ -485,12 +485,18 @@
- 		&ddr0_retention
- 		&ddrio_pwroff
- 		&global_pwroff
++static bool gpu_is_3d_mc10(const struct etnaviv_chip_identity *id)
++{
++	return (id->features & chipFeatures_PIPE_3D) &&
++		!(id->minor_features0 & chipMinorFeatures0_MC20);
++}
 +
-+		/* Wake only */
-+		&bt_dev_wake_awake
- 	>;
- 	pinctrl-1 = <
- 		/* Common for sleep and wake, but no owners */
- 		&ddr0_retention
- 		&ddrio_pwroff
- 		&global_pwroff
-+
-+		/* Sleep only */
-+		&bt_dev_wake_sleep
- 	>;
+ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ {
+ 	int ret, i;
+@@ -713,23 +720,33 @@ int etnaviv_gpu_init(struct etnaviv_gpu *gpu)
+ 		goto fail;
+ 	}
  
- 	pcfg_pull_none_drv_8ma: pcfg-pull-none-drv-8ma {
-@@ -596,6 +602,20 @@
- 		sdio0_clk: sdio0-clk {
- 			rockchip,pins = <4 RK_PD1 1 &pcfg_pull_none_drv_8ma>;
- 		};
-+
+-	/*
+-	 * Set the GPU linear window to be at the end of the DMA window, where
+-	 * the CMA area is likely to reside. This ensures that we are able to
+-	 * map the command buffers while having the linear window overlap as
+-	 * much RAM as possible, so we can optimize mappings for other buffers.
+-	 *
+-	 * For 3D cores only do this if MC2.0 is present, as with MC1.0 it leads
+-	 * to different views of the memory on the individual engines.
+-	 */
+-	if (!(gpu->identity.features & chipFeatures_PIPE_3D) ||
+-	    (gpu->identity.minor_features0 & chipMinorFeatures0_MC20)) {
++	if (!gpu_is_3d_mc10(&gpu->identity) && gpu->cma_base) {
 +		/*
-+		 * These pins are only present on very new veyron boards; on
-+		 * older boards bt_dev_wake is simply always high.  Note that
-+		 * gpio4_D2 is a NC on old veyron boards, so it doesn't hurt
-+		 * to map this pin everywhere
++		 * If we know the location of the CMA area, point the
++		 * GPU linear window to it. This ensures that we are able to
++		 * map the command buffers while having the linear window
++		 * overlap as much RAM as possible, so we can optimize mappings
++		 * for other buffers.
 +		 */
-+		bt_dev_wake_sleep: bt-dev-wake-sleep {
-+			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_output_low>;
-+		};
-+
-+		bt_dev_wake_awake: bt-dev-wake-awake {
-+			rockchip,pins = <4 RK_PD2 RK_FUNC_GPIO &pcfg_output_high>;
-+		};
- 	};
++		gpu->memory_base = (u32)gpu->cma_base;
++	} else if (!gpu_is_3d_mc10(&gpu->identity)) {
++		/*
++		 * Set the GPU linear window to be at the end of the DMA window,
++		 * where the CMA area is likely to reside. In most cases, this
++		 * ensures that we are able to map the command buffers while
++		 * having the linear window overlap as much RAM as possible, so
++		 * we can optimize mappings for other buffers.
++		 */
+ 		u32 dma_mask = (u32)dma_get_required_mask(gpu->dev);
+ 		if (dma_mask < PHYS_OFFSET + SZ_2G)
+ 			gpu->memory_base = PHYS_OFFSET;
+ 		else
+ 			gpu->memory_base = dma_mask - SZ_2G + 1;
+ 	} else if (PHYS_OFFSET >= SZ_2G) {
++		/*
++		 * For MC1.0 3D cores, moving the linear window leads to
++		 * different views of the memory on the individual engines.
++		 */
+ 		dev_info(gpu->dev, "Need to move linear window on MC1.0, disabling TS\n");
+ 		gpu->memory_base = PHYS_OFFSET;
+ 		gpu->identity.features &= ~chipFeatures_FAST_CLEAR;
+@@ -1709,7 +1726,9 @@ MODULE_DEVICE_TABLE(of, etnaviv_gpu_match);
  
- 	tpm {
+ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
+ {
++	struct reserved_mem *rmem = NULL;
+ 	struct device *dev = &pdev->dev;
++	struct device_node *node;
+ 	struct etnaviv_gpu *gpu;
+ 	struct resource *res;
+ 	int err;
+@@ -1718,6 +1737,13 @@ static int etnaviv_gpu_platform_probe(struct platform_device *pdev)
+ 	if (!gpu)
+ 		return -ENOMEM;
+ 
++	node = of_parse_phandle(dev->of_node, "default-cma-region", 0);
++	if (node)
++		rmem = of_reserved_mem_lookup(node);
++	of_node_put(node);
++	if (rmem)
++		gpu->cma_base = rmem->base;
++
+ 	gpu->dev = &pdev->dev;
+ 	mutex_init(&gpu->lock);
+ 	mutex_init(&gpu->fence_lock);
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+index 9bcf151f706b..3e968b395a72 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
++++ b/drivers/gpu/drm/etnaviv/etnaviv_gpu.h
+@@ -106,6 +106,8 @@ struct etnaviv_gpu {
+ 
+ 	/* bus base address of memory  */
+ 	u32 memory_base;
++	/* base of the cma area */
++	phys_addr_t cma_base;
+ 
+ 	/* event management: */
+ 	DECLARE_BITMAP(event_bitmap, ETNA_NR_EVENTS);
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.17.1
 
