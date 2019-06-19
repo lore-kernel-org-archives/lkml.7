@@ -2,144 +2,90 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C785C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:38:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7D2C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA6520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:38:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D2E42064A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:42:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyIsIIb+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731298AbfFSKim (ORCPT
+        id S1731065AbfFSKmV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:38:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:53432 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726826AbfFSKim (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:38:42 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 70364AF86;
-        Wed, 19 Jun 2019 10:38:39 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id D4A991E15DD; Wed, 19 Jun 2019 12:38:38 +0200 (CEST)
-Date:   Wed, 19 Jun 2019 12:38:38 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Dave Chinner <david@fromorbit.com>,
-        Kent Overstreet <kent.overstreet@gmail.com>,
-        Dave Chinner <dchinner@redhat.com>,
-        "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Matthew Wilcox <willy@infradead.org>, Jan Kara <jack@suse.cz>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-xfs <linux-xfs@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: pagecache locking (was: bcachefs status update) merged)
-Message-ID: <20190619103838.GB32409@quack2.suse.cz>
-References: <20190611043336.GB14363@dread.disaster.area>
- <20190612162144.GA7619@kmo-pixel>
- <20190612230224.GJ14308@dread.disaster.area>
- <20190613183625.GA28171@kmo-pixel>
- <20190613235524.GK14363@dread.disaster.area>
- <CAHk-=whMHtg62J2KDKnyOTaoLs9GxcNz1hN9QKqpxoO=0bJqdQ@mail.gmail.com>
- <CAHk-=wgz+7O0pdn8Wfxc5EQKNy44FTtf4LAPO1WgCidNjxbWzg@mail.gmail.com>
- <20190617224714.GR14363@dread.disaster.area>
- <CAHk-=wiR3a7+b0cUN45hGp1dvFh=s1i1OkVhoP7CivJxKqsLFQ@mail.gmail.com>
- <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
+        Wed, 19 Jun 2019 06:42:21 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:33396 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfFSKmV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:42:21 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h19so4325256wme.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:42:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=TT2nK9A47FLcAVPWjohBdM0YSA12JZIvgdjlygMunHY=;
+        b=NyIsIIb+uVSx90RcZzFhDtYTjpvPlbj+hShSLfVTuJIpwMvZ/ktBguPb0h4gANFzoi
+         hvLO9eK3+HcdDVGQqD4g6tfj30LVmL361dA7To7DiQGi0nM1Zm1pvX7plq+6FOH7NmAr
+         /O+kiyQUl0JxHCQQcIUjmJvlZIDtqcyTcqHWD7j+mEn55FSdIUa+BgKm50iEvucQFs6s
+         enAOJmxl4UVjU7zLox6+cqbLZeNCNPM24D74OHDh2chnsVpkFDOlc4Nn8zllc0AlalEC
+         VdJcgCpHGQZ2WOKypxHA5wiou0C8wvRHblDGY4Y9c8KsQ+vcp7r5s5pobRcx7rLVlV03
+         1hZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=TT2nK9A47FLcAVPWjohBdM0YSA12JZIvgdjlygMunHY=;
+        b=ECLTpIp7foOMvHfwKvmNAQUVVXtcDdSndLAnAa6E46POrsy7/pKP1CyI2uKwjZHEMc
+         hhGYNabINHVi2AP+agp5B05ip+Er4hLhmIKitlYu58ASvWtkl/DM+dhfvaPbKvixGVba
+         J2i+3UTLClLHp5bbjLMejqff8brH17USqRQyD6RTf7YcRrv75oy9ha1Xht7FMQ3gc1Tc
+         On5xMwsAfV6nhhxbPdunMtItQKGX+Fvq0G+PmDe5p6yT2aEcj0NVs4IKHtAXjGM+4QVi
+         B1bCLffgDU2uxNMlDRDBFq8mDtTH6piXXYU2EyZ5iqWwC5iH/pDfbiP1+FJpSfJKtuIb
+         qxFQ==
+X-Gm-Message-State: APjAAAUgGdB0t4ajtUIWoMqyvBbSbLwG8p3X4iBqKF+qgSLeZWZqpPak
+        ynQYNPmD5bFgtylioJ1h6rfeBHrE
+X-Google-Smtp-Source: APXvYqwZTMniWreXGV97t4naAESnNM/rCdLIobReK3BHsdELYGgUuiUhiov95Ols8kq0IrJru4hIaQ==
+X-Received: by 2002:a1c:6c08:: with SMTP id h8mr8069991wmc.62.1560940939330;
+        Wed, 19 Jun 2019 03:42:19 -0700 (PDT)
+Received: from arch-x1c3 ([2a00:5f00:102:0:9665:9cff:feee:aa4d])
+        by smtp.gmail.com with ESMTPSA id w2sm16821493wrr.31.2019.06.19.03.42.18
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 03:42:18 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 11:40:14 +0100
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
+        "open list:VIRTIO GPU DRIVER" 
+        <virtualization@lists.linux-foundation.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 11/12] drm/virtio: switch from ttm to gem shmem helpers
+Message-ID: <20190619104014.GB1896@arch-x1c3>
+References: <20190619090420.6667-1-kraxel@redhat.com>
+ <20190619090420.6667-12-kraxel@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjqQjrCCt=ixgdUYjBJvKLhw4R9NeMZOB_s2rrWvoDMBw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190619090420.6667-12-kraxel@redhat.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 18-06-19 07:21:56, Amir Goldstein wrote:
-> > > Right, but regardless of the spec we have to consider that the
-> > > behaviour of XFS comes from it's Irix heritage (actually from EFS,
-> > > the predecessor of XFS from the late 1980s)
-> >
-> > Sure. And as I mentioned, I think it's technically the nicer guarantee.
-> >
-> > That said, it's a pretty *expensive* guarantee. It's one that you
-> > yourself are not willing to give for O_DIRECT IO.
-> >
-> > And it's not a guarantee that Linux has ever had. In fact, it's not
-> > even something I've ever seen anybody ever depend on.
-> >
-> > I agree that it's possible that some app out there might depend on
-> > that kind of guarantee, but I also suspect it's much much more likely
-> > that it's the other way around: XFS is being unnecessarily strict,
-> > because everybody is testing against filesystems that don't actually
-> > give the total atomicity guarantees.
-> >
-> > Nobody develops for other unixes any more (and nobody really ever did
-> > it by reading standards papers - even if they had been very explicit).
-> >
-> > And honestly, the only people who really do threaded accesses to the same file
-> >
-> >  (a) don't want that guarantee in the first place
-> >
-> >  (b) are likely to use direct-io that apparently doesn't give that
-> > atomicity guarantee even on xfs
-> >
-> > so I do think it's moot.
-> >
-> > End result: if we had a really cheap range lock, I think it would be a
-> > good idea to use it (for the whole QoI implementation), but for
-> > practical reasons it's likely better to just stick to the current lack
-> > of serialization because it performs better and nobody really seems to
-> > want anything else anyway.
-> >
-> 
-> This is the point in the conversation where somebody usually steps in
-> and says "let the user/distro decide". Distro maintainers are in a much
-> better position to take the risk of breaking hypothetical applications.
-> 
-> I should point out that even if "strict atomic rw" behavior is desired, then
-> page cache warmup [1] significantly improves performance.
-> Having mentioned that, the discussion can now return to what is the
-> preferred way to solve the punch hole vs. page cache add race.
-> 
-> XFS may end up with special tailored range locks, which beings some
-> other benefits to XFS, but all filesystems need the solution for the punch
-> hole vs. page cache add race.
-> Jan recently took a stab at it for ext4 [2], but that didn't work out.
+Hi Gerd,
 
-Yes, but I have idea how to fix it. I just need to push acquiring ext4's
-i_mmap_sem down a bit further so that only page cache filling is protected
-by it but not copying of data out to userspace. But I didn't get to coding
-it last week due to other stuff.
+On 2019/06/19, Gerd Hoffmann wrote:
 
-> So I wonder what everyone thinks about Kent's page add lock as the
-> solution to the problem.
-> Allegedly, all filesystems (XFS included) are potentially exposed to
-> stale data exposure/data corruption.
+> -static void virtio_gpu_init_ttm_placement(struct virtio_gpu_object *vgbo)
+> +static const struct drm_gem_object_funcs v3d_gem_funcs = {
+s/v3d/virtio/g
 
-When we first realized that hole-punching vs page faults races are an issue I
-was looking into a generic solution but at that time there was a sentiment
-against adding another rwsem to struct address_space (or inode) so we ended
-up with a private lock in ext4 (i_mmap_rwsem), XFS (I_MMAPLOCK), and other
-filesystems these days. If people think that growing struct inode for
-everybody is OK, we can think about lifting private filesystem solutions
-into a generic one. I'm fine with that.
+Doubt I'll have the time for a proper review - just this and the 1/12 nits :-\
 
-That being said as Dave said we use those fs-private locks also for
-serializing against equivalent issues arising for DAX. So the problem is
-not only about page cache but generally about doing IO and caching
-block mapping information for a file range. So the solution should not be
-too tied to page cache.
-
-								Honza
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+HTH
+Emil
