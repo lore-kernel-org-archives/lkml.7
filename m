@@ -2,137 +2,150 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02E75C48BC5
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:22:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06AF3C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:29:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBCC52147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA1A0214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:28:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730294AbfFSUWF (ORCPT
+        id S1730226AbfFSU26 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:22:05 -0400
-Received: from mail3-relais-sop.national.inria.fr ([192.134.164.104]:64834
-        "EHLO mail3-relais-sop.national.inria.fr" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726143AbfFSUWF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:22:05 -0400
-X-IronPort-AV: E=Sophos;i="5.63,394,1557180000"; 
-   d="scan'208";a="309906047"
-Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
-  by mail3-relais-sop.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 22:22:00 +0200
-Date:   Wed, 19 Jun 2019 22:21:59 +0200 (CEST)
-From:   Julia Lawall <julia.lawall@lip6.fr>
-X-X-Sender: jll@hadrien
-To:     Bjorn Helgaas <helgaas@kernel.org>
-cc:     Kirill Smelkov <kirr@nexedi.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kbuild-all@01.org
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-In-Reply-To: <20190619201859.GA197717@google.com>
-Message-ID: <alpine.DEB.2.21.1906192221290.2634@hadrien>
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien> <20190619162713.GA19859@deco.navytux.spb.ru> <20190619201859.GA197717@google.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 19 Jun 2019 16:28:58 -0400
+Received: from mga07.intel.com ([134.134.136.100]:43836 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfFSU25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 16:28:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 13:28:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
+   d="scan'208";a="358307881"
+Received: from rchatre-s.jf.intel.com ([10.54.70.76])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Jun 2019 13:28:56 -0700
+From:   Reinette Chatre <reinette.chatre@intel.com>
+To:     tglx@linutronix.de, fenghua.yu@intel.com, bp@alien8.de,
+        tony.luck@intel.com
+Cc:     mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Reinette Chatre <reinette.chatre@intel.com>,
+        stable@vger.kernel.org
+Subject: [PATCH] x86/resctrl: Prevent possible overrun during bitmap operations
+Date:   Wed, 19 Jun 2019 13:27:16 -0700
+Message-Id: <58c9b6081fd9bf599af0dfc01a6fdd335768efef.1560975645.git.reinette.chatre@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+While the DOC at the beginning of lib/bitmap.c explicitly states that
+"The number of valid bits in a given bitmap does _not_ need to be an
+exact multiple of BITS_PER_LONG.", some of the bitmap operations do
+indeed access BITS_PER_LONG portions of the provided bitmap no matter
+the size of the provided bitmap. For example, if find_first_bit()
+is provided with an 8 bit bitmap the operation will access
+BITS_PER_LONG bits from the provided bitmap. While the operation
+ensures that these extra bits do not affect the result, the memory
+is still accessed.
 
+The capacity bitmasks (CBMs) are typically stored in u32 since they
+can never exceed 32 bits. A few instances exist where a bitmap_*
+operation is performed on a CBM by simply pointing the bitmap operation
+to the stored u32 value.
 
-On Wed, 19 Jun 2019, Bjorn Helgaas wrote:
+The consequence of this pattern is that some bitmap_* operations will
+access out-of-bounds memory when interacting with the provided CBM.
 
-> On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
-> > Hi Julia, everyone.
-> >
-> > On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
-> > > Hi,
-> > >
-> > > Can you forward this patch to the people below if you think it is
-> > > appropriate?
-> >
-> > Yes, this patch is appropriate. It was actually part of
-> > git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
-> > it removes a chance for deadlock) to apply it.
-> >
-> > Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
->
-> I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
-> stream-like files from nonseekable_open -> stream_open"), so it looks like
-> this is already done.  What would you like me to do with it?
+This same issue has previously been addressed with commit 49e00eee0061
+("x86/intel_rdt: Fix out-of-bounds memory access in CBM tests")
+but at that time not all instances of the issue were fixed.
 
-Somehow 0-day got a hold of it...  If there is nothing to do, just ignore
-it.
+Fix this by using an unsigned long to store the capacity bitmask data
+that is passed to bitmap functions.
 
-thanks,
-julia
+Fixes: e651901187ab ("x86/intel_rdt: Introduce "bit_usage" to display cache allocations details")
+Fixes: f4e80d67a527 ("x86/intel_rdt: Resctrl files reflect pseudo-locked information")
+Fixes: 95f0b77efa57 ("x86/intel_rdt: Initialize new resource group with sane defaults")
 
->
-> > > Could I tell the kbuild people to add you to the CC list for
-> > > this semantic patch?
-> >
-> > Yes, sure. Please feel free to add me to CC list for stream_open.cocci
-> > related patches.
-> >
-> > Kirill
-> >
-> >
-> > > thanks,
-> > > julia
-> > >
-> > > ---------- Forwarded message ----------
-> > > Date: Wed, 19 Jun 2019 18:23:18 +0800
-> > > From: kbuild test robot <lkp@intel.com>
-> > > To: kbuild@01.org
-> > > Cc: Julia Lawall <julia.lawall@lip6.fr>
-> > > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
-> > >
-> > > CC: kbuild-all@01.org
-> > > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> > > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
-> > > CC: Logan Gunthorpe <logang@deltatee.com>
-> > > CC: Bjorn Helgaas <helgaas@kernel.org>
-> > > CC: linux-pci@vger.kernel.org
-> > > CC: linux-kernel@vger.kernel.org
-> > >
-> > > From: kbuild test robot <lkp@intel.com>
-> > >
-> > > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
-> > >
-> > > Generated by: scripts/coccinelle/api/stream_open.cocci
-> > >
-> > > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
-> > > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > > ---
-> > >
-> > > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-> > > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
-> > > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
-> > > :::::: branch date: 6 days ago
-> > > :::::: commit date: 6 days ago
-> > >
-> > > Please take the patch only if it's a positive warning. Thanks!
-> > >
-> > >  switchtec.c |    2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > --- a/drivers/pci/switch/switchtec.c
-> > > +++ b/drivers/pci/switch/switchtec.c
-> > > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
-> > >  		return PTR_ERR(stuser);
-> > >
-> > >  	filp->private_data = stuser;
-> > > -	nonseekable_open(inode, filp);
-> > > +	stream_open(inode, filp);
-> > >
-> > >  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
-> > >
->
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Reinette Chatre <reinette.chatre@intel.com>
+---
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 35 ++++++++++++--------------
+ 1 file changed, 16 insertions(+), 19 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 333c177a2471..b63e50b1a096 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -804,8 +804,12 @@ static int rdt_bit_usage_show(struct kernfs_open_file *of,
+ 			      struct seq_file *seq, void *v)
+ {
+ 	struct rdt_resource *r = of->kn->parent->priv;
+-	u32 sw_shareable = 0, hw_shareable = 0;
+-	u32 exclusive = 0, pseudo_locked = 0;
++	/*
++	 * Use unsigned long even though only 32 bits are used to ensure
++	 * test_bit() is used safely.
++	 */
++	unsigned long sw_shareable = 0, hw_shareable = 0;
++	unsigned long exclusive = 0, pseudo_locked = 0;
+ 	struct rdt_domain *dom;
+ 	int i, hwb, swb, excl, psl;
+ 	enum rdtgrp_mode mode;
+@@ -850,10 +854,10 @@ static int rdt_bit_usage_show(struct kernfs_open_file *of,
+ 		}
+ 		for (i = r->cache.cbm_len - 1; i >= 0; i--) {
+ 			pseudo_locked = dom->plr ? dom->plr->cbm : 0;
+-			hwb = test_bit(i, (unsigned long *)&hw_shareable);
+-			swb = test_bit(i, (unsigned long *)&sw_shareable);
+-			excl = test_bit(i, (unsigned long *)&exclusive);
+-			psl = test_bit(i, (unsigned long *)&pseudo_locked);
++			hwb = test_bit(i, &hw_shareable);
++			swb = test_bit(i, &sw_shareable);
++			excl = test_bit(i, &exclusive);
++			psl = test_bit(i, &pseudo_locked);
+ 			if (hwb && swb)
+ 				seq_putc(seq, 'X');
+ 			else if (hwb && !swb)
+@@ -2494,26 +2498,19 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
+  */
+ static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
+ {
+-	/*
+-	 * Convert the u32 _val to an unsigned long required by all the bit
+-	 * operations within this function. No more than 32 bits of this
+-	 * converted value can be accessed because all bit operations are
+-	 * additionally provided with cbm_len that is initialized during
+-	 * hardware enumeration using five bits from the EAX register and
+-	 * thus never can exceed 32 bits.
+-	 */
+-	unsigned long *val = (unsigned long *)_val;
++	unsigned long val = *_val;
+ 	unsigned int cbm_len = r->cache.cbm_len;
+ 	unsigned long first_bit, zero_bit;
+ 
+-	if (*val == 0)
++	if (val == 0)
+ 		return;
+ 
+-	first_bit = find_first_bit(val, cbm_len);
+-	zero_bit = find_next_zero_bit(val, cbm_len, first_bit);
++	first_bit = find_first_bit(&val, cbm_len);
++	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
+ 
+ 	/* Clear any remaining bits to ensure contiguous region */
+-	bitmap_clear(val, zero_bit, cbm_len - zero_bit);
++	bitmap_clear(&val, zero_bit, cbm_len - zero_bit);
++	*_val = (u32)val;
+ }
+ 
+ /*
+-- 
+2.17.2
+
