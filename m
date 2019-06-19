@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAC0C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45886C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C5F121873
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 256912147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbfFSMa7 (ORCPT
+        id S1731948AbfFSMbH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:30:59 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:39806 "EHLO
+        Wed, 19 Jun 2019 08:31:07 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38243 "EHLO
         mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731859AbfFSMao (ORCPT
+        with ESMTP id S1731845AbfFSMak (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:30:44 -0400
-Received: by mail-wr1-f66.google.com with SMTP id x4so3187659wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:43 -0700 (PDT)
+        Wed, 19 Jun 2019 08:30:40 -0400
+Received: by mail-wr1-f66.google.com with SMTP id d18so3212502wrs.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:39 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1nQV+HbwwVC5JDcFHvgQnxZlAQ2DeroGpuSkk8jd0Tk=;
-        b=JY+DN3K+8z6qR5EaaN4BIxFx9ZQ298uAIsuCNuiD6d/NzXy3lbNZPNFYmanSgN2ekv
-         WulNdyCfsr6Y7lUELObOYb4G42SpjkWkqzBlDf06+9u6foaxXi3RlNoxYWIMCYBQdgGu
-         J+rM63CsY3fsdtxzERsLnUeF9b8HOpFEQ5rWSX3TMEvpjFrGeB+qanMNMxaTGCXlbbT8
-         nN7h73l+vQrnd9/7/rJDC+NgxFLOtHDIhNMVd4byuwwKPGOXQhrnFPYpjtzg/uiaDuja
-         3jK+jDSYNfobUPLDVWeuPBMcoC8GGRUyGWXT7MD/Bq42/bKplidvvWsaFHzencF3Wt2D
-         h5cA==
-X-Gm-Message-State: APjAAAUFSLTKhIUXrT0QKdApEUxGyOGGJVaQ0UMvxB4EA3/DHa36evHP
-        2HmWTLVnqb3pQi78l7eI3WWfYg==
-X-Google-Smtp-Source: APXvYqzHsHTMP8Vjwh/pAfZnm0GsX3Los4ghw0Tsr9S1GdEGtjlvPbrdctjrtSZCkpbDaeO0HjA9Bg==
-X-Received: by 2002:a5d:4908:: with SMTP id x8mr18266350wrq.290.1560947442583;
-        Wed, 19 Jun 2019 05:30:42 -0700 (PDT)
+        bh=cdQVoNmmq/tpICs94VWnUfb4xhH0uHVfAUpoN+yDuN4=;
+        b=DnWe2at0dLok+t5fMobLMYlffKBP56+wg6ra7wExpF00ynQ4XYIhPJRmCj5R4qHdBo
+         cLwleIAHCxEuBFXXILFSLDR4fN72Fv3GLPt35pMHeE7U6Hr0xXaDRBDeBCVOa4Jj/cWR
+         MMry++3Xd3yf3WMTUIuvwch++HBeLPT4napY83srcPD9cX6qnvv4dVvYOfmVo9tdRWnY
+         7zo9MDKX8vbSuUFQgYyv2UBovWSFVJIKsoBNklVLMBePOZ6IyMIXEb89GctcHPxlOBKS
+         NnJNtTxjpEfLCOelrzqNj9dWgNYSiH4/6Gwews/Ed1tThKQQWoW64+pk9ASs2DZe+QJj
+         lhhA==
+X-Gm-Message-State: APjAAAVasL69vcSgzYeH/hYjxTs+MM8VPIhjwe1OjRZCtjx0AdbLP9kw
+        AWB+uGQ6HpfECi5DXvXvt9IQyA==
+X-Google-Smtp-Source: APXvYqzgc/pTXrx3oLCjioNyxDtYbyoBKOJfXCsDmaWxhuRtivEE9x9bE9zw/wRPVqXoUt4DZF9cvQ==
+X-Received: by 2002:adf:efcb:: with SMTP id i11mr37772543wrp.188.1560947438884;
+        Wed, 19 Jun 2019 05:30:38 -0700 (PDT)
 Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.41
+        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.37
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 05:30:42 -0700 (PDT)
+        Wed, 19 Jun 2019 05:30:38 -0700 (PDT)
 From:   Miklos Szeredi <mszeredi@redhat.com>
 To:     David Howells <dhowells@redhat.com>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
         linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/13] cgroup: don't ignore options
-Date:   Wed, 19 Jun 2019 14:30:17 +0200
-Message-Id: <20190619123019.30032-11-mszeredi@redhat.com>
+Subject: [PATCH 09/13] mqueue: don't ignore options
+Date:   Wed, 19 Jun 2019 14:30:15 +0200
+Message-Id: <20190619123019.30032-9-mszeredi@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190619123019.30032-1-mszeredi@redhat.com>
 References: <20190619123019.30032-1-mszeredi@redhat.com>
@@ -61,7 +61,7 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The options "sync", "async", "dirsync", "lazytime", "nolazytime", "mand"
-and "nomand" make no sense for the cgroup filesystem.  If these options are
+and "nomand" make no sense for the mqueue filesystem.  If these options are
 supplied to fsconfig(FSCONFIG_SET_FLAG), then return -EINVAL instead of
 silently ignoring the option.
 
@@ -70,35 +70,21 @@ without failing should simply ignore the return value from fsconfig().
 
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- kernel/cgroup/cgroup-v1.c | 2 +-
- kernel/cgroup/cgroup.c    | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ ipc/mqueue.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
-index f960e6149311..1f50d59f7f4e 100644
---- a/kernel/cgroup/cgroup-v1.c
-+++ b/kernel/cgroup/cgroup-v1.c
-@@ -929,7 +929,7 @@ int cgroup1_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 	struct fs_parse_result result;
- 	int ret, opt, i;
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 557aa887996a..1e8567c20d6a 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -1577,7 +1577,7 @@ static const struct super_operations mqueue_super_ops = {
  
--	ret = vfs_parse_sb_flag(fc, param);
-+	ret = vfs_parse_ro_rw(fc, param);
- 	if (ret != -ENOPARAM)
- 		return ret;
- 
-diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
-index 93890285b510..f2e86b3942b3 100644
---- a/kernel/cgroup/cgroup.c
-+++ b/kernel/cgroup/cgroup.c
-@@ -1836,7 +1836,7 @@ static int cgroup2_parse_param(struct fs_context *fc, struct fs_parameter *param
- 	struct fs_parse_result result;
- 	int ret, opt;
- 
--	ret = vfs_parse_sb_flag(fc, param);
-+	ret = vfs_parse_ro_rw(fc, param);
- 	if (ret != -ENOPARAM)
- 		return ret;
+ static const struct fs_context_operations mqueue_fs_context_ops = {
+ 	.free		= mqueue_fs_context_free,
+-	.parse_param	= vfs_parse_sb_flag,
++	.parse_param	= vfs_parse_ro_rw,
+ 	.get_tree	= mqueue_get_tree,
+ };
  
 -- 
 2.21.0
