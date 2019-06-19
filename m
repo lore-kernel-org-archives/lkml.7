@@ -2,122 +2,120 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53D1AC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 04:40:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7FC4C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 04:40:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA5D20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 04:40:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC9E820823
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 04:40:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="c59f8lIU"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="n86cBl3A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726180AbfFSEk0 (ORCPT
+        id S1730250AbfFSEkv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 00:40:26 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44052 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSEk0 (ORCPT
+        Wed, 19 Jun 2019 00:40:51 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:48490 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfFSEku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 00:40:26 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so1789373ljc.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 21:40:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=jzsAnOW0fiQKd91apGMhizgDc21BUMXc9JiZfugsWIs=;
-        b=c59f8lIUe36phMpw9ATYq8C9p86NK7iNRNUtf7m7HybHY8uzb7pZGJMNCEFz5qGF4c
-         25wvKBlryiyndOfi04/8SArC5wwAxbFNiK3axmQdEyVYy9xOCuhAkbYKFiglETfNZNJ6
-         wPAAzH7ZH3LDckayhcEfjhRmlSJUD33EHZm3WWNLHRsORSAxAkyxS8AeOtDRg8CsYp0d
-         Qwy0pqV8MQk8OMTPJj0qUDOvpZ5T8wHXjsZPRAHkdoAkl1zR6plDaehAXSrvh9CtlUlk
-         pM5lr62r1gXqk4QgTK/hAHh6J0ETGjU21ggNbdakog+N1Wgy6FrHt6rAVLZz7sFhdbqi
-         sUYQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=jzsAnOW0fiQKd91apGMhizgDc21BUMXc9JiZfugsWIs=;
-        b=X0cyAKELQs33Uh7KFlzjlJIbo1TQ+SKkOf1TLO7PyO+J4ISDKPTldXSuTYgBTYG8mu
-         x3+YaVQI1oBJbiGWzrAX6V+4aFXG9fwsAqJ0fYebEjLLeGDV0VChSHEe9QqjPMyvQCZu
-         lfDOMLumDvYsFW85KVJ7cT4auqgMZjOICBBoHN5vgTbAHxpyvT2PoMR3ntc8rO6U99/3
-         CZKaIQh2OQa16L8Kxy3X4NvFL01MrbCqqnR5ov/58cxLDJZpk3mr9iK7jDJXd7qfh5g7
-         JFLKkdAQ8bkCrhd2nFFY/WQ4VTi19mLLPl4kNdj0fU9AQSAxDDYEKseqBgo5Quqajgey
-         zrew==
-X-Gm-Message-State: APjAAAWP43GhmPcz9dnqUjvNPR4WcxuSguCvPBD7nmT5U2orPvXyaWLw
-        ab+nn5jbzIzU0/IqRCRg9tbeNe1rcQ3wa0wIzsv1ww==
-X-Google-Smtp-Source: APXvYqwOza7DC7cFHNRbAMh2d9YefDyLYP7euYEy2neD9yOj3NA6R+Z8Zj5AM81hpKPlb8QGZ68F4vdZ68MiYe933n4=
-X-Received: by 2002:a2e:8559:: with SMTP id u25mr18237899ljj.224.1560919223720;
- Tue, 18 Jun 2019 21:40:23 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190617210759.929316339@linuxfoundation.org> <CA+G9fYsUmFrTDHJfS=1vYVfv4BVRZ0AByEOHV6toidAxWuDqDg@mail.gmail.com>
- <20190618133502.GA5416@kroah.com>
-In-Reply-To: <20190618133502.GA5416@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Wed, 19 Jun 2019 10:10:12 +0530
-Message-ID: <CA+G9fYsDG94ZjpchTqD80vioNBUdoUXH_k-tBM0L8YumefYO-w@mail.gmail.com>
-Subject: Re: [PATCH 5.1 000/115] 5.1.12-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 19 Jun 2019 00:40:50 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J4dA2U136343;
+        Wed, 19 Jun 2019 04:40:43 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2018-07-02;
+ bh=xCG15FH/MMpgMm7ED9PXskNDW9T4VwJa/+lUjFrH2e4=;
+ b=n86cBl3APDwvWmt/owoAqZB95BWTcSWBukuk6/lt+jVdQAonOkGjMKs5OTUd4AgBFdZj
+ Vv2dKff8UxD4n5bbdNoYJ+ieaclnYu5fcbtmIJwtqCQP+abSnw+m4EYojnUkd19igX4Y
+ PTVRflzf49o8XNJ+9x/Km8prEDUGGrkwb7z8iPaFF9BJaX87rjD77BGpKu4ibp13OjfP
+ w5hVHm7Paqilwgr8y2/YmH3Jcw/fX7D9fa89qB4otlBTRrHfuRviUioJIl7XtzwOhB8h
+ vcUYoZzxNLAKUUcLLoUxH/r+aSxSXFFt5fTqbP+qEAxeTis6ZswII3x9u32hDDc5kcpQ hA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t780990a1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 04:40:43 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J4eW5K101604;
+        Wed, 19 Jun 2019 04:40:42 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2t77ynkw0q-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 04:40:42 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J4eZBY010913;
+        Wed, 19 Jun 2019 04:40:35 GMT
+Received: from localhost.localdomain (/10.159.132.89)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 21:40:34 -0700
+From:   Santosh Shilimkar <santosh.shilimkar@oracle.com>
+To:     arm@kernel.org, linux-arm-kernel@lists.infradead.org
+Cc:     khilman@kernel.org, arnd@arndb.de, olof@lixom.net,
+        linux-kernel@vger.kernel.org, santosh.shilimkar@oracle.com
+Subject: [GIT PULL] ARM: TI SOC updates for v5.3
+Date:   Tue, 18 Jun 2019 21:40:18 -0700
+Message-Id: <1560919218-3847-1-git-send-email-santosh.shilimkar@oracle.com>
+X-Mailer: git-send-email 1.9.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=802
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190037
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=852 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190037
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 at 19:05, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Tue, Jun 18, 2019 at 06:04:25PM +0530, Naresh Kamboju wrote:
-> > On Tue, 18 Jun 2019 at 02:50, Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > This is the start of the stable review cycle for the 5.1.12 release.
-> > > There are 115 patches in this series, all will be posted as a respons=
-e
-> > > to this one.  If anyone has any issues with these being applied, plea=
-se
-> > > let me know.
-> > >
-> > > Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
-> > > Anything received after that time might be too late.
-> > >
-> > > The whole patch series can be found in one patch at:
-> > >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/pa=
-tch-5.1.12-rc1.gz
-> > > or in the git tree and branch at:
-> > >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-st=
-able-rc.git linux-5.1.y
-> > > and the diffstat can be found below.
-> > >
-> > > thanks,
-> > >
-> > > greg k-h
-> >
-> > Results from Linaro=E2=80=99s test farm.
-> > No regressions on arm64, arm, x86_64, and i386.
-> >
-> > NOTE:
-> > kernel/workqueue.c:3030 __flush_work+0x2c2/0x2d0
-> > Kernel warning is been fixed by below patch.
-> >
-> > > John Fastabend <john.fastabend@gmail.com>
-> > >     bpf: sockmap, only stop/flush strp if it was enabled at some poin=
-t
->
-> What is the git commit id for this patch?
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-     Upstream commit 014894360ec95abe868e94416b3dd6569f6e2c0c
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
-- Naresh
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/drivers_soc_for_5.3
+
+for you to fetch changes up to 4c960505df44b94001178575a505dd8315086edc:
+
+  firmware: ti_sci: Fix gcc unused-but-set-variable warning (2019-06-18 21:32:25 -0700)
+
+----------------------------------------------------------------
+SOC: TI SCI updates for v5.3
+
+- Couple of fixes to handle resource ranges and
+  requesting response always from firmware;
+- Add processor control
+- Add support APIs for DMA
+- Fix the SPDX license plate
+- Unused varible warning fix
+
+----------------------------------------------------------------
+Andrew F. Davis (1):
+      firmware: ti_sci: Always request response from firmware
+
+Nishad Kamdar (1):
+      firmware: ti_sci: Use the correct style for SPDX License Identifier
+
+Peter Ujfalusi (2):
+      firmware: ti_sci: Add resource management APIs for ringacc, psi-l and udma
+      firmware: ti_sci: Parse all resource ranges even if some is not available
+
+Suman Anna (1):
+      firmware: ti_sci: Add support for processor control
+
+YueHaibing (1):
+      firmware: ti_sci: Fix gcc unused-but-set-variable warning
+
+ drivers/firmware/ti_sci.c              | 1143 +++++++++++++++++++++++++++-----
+ drivers/firmware/ti_sci.h              |  812 ++++++++++++++++++++++-
+ include/linux/soc/ti/ti_sci_protocol.h |  246 +++++++
+ 3 files changed, 2051 insertions(+), 150 deletions(-)
