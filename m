@@ -2,123 +2,385 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 065DDC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE63C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:15:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D4DE421721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:15:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5B2821734
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:15:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Gb99iCF6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="UxVqLj3q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730131AbfFSSPG (ORCPT
+        id S1730195AbfFSSPe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:15:06 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34251 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfFSSPG (ORCPT
+        Wed, 19 Jun 2019 14:15:34 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:38980 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726197AbfFSSPe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:15:06 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hdf6u-0006TU-HP; Wed, 19 Jun 2019 18:15:04 +0000
-Subject: Re: [PATCH] x86/apic: fix integer overflow on 10 bit right shift of
- cpu_khz
-From:   Colin Ian King <colin.king@canonical.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190619181325.13574-1-colin.king@canonical.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <00bb0b52-7a3c-24f6-50d2-9d10cfe80895@canonical.com>
-Date:   Wed, 19 Jun 2019 19:15:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 19 Jun 2019 14:15:34 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 06BEA609D4; Wed, 19 Jun 2019 18:15:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560968132;
+        bh=m+jhB6capUsffdvv9hXxYT4fdNrNak+XzVzEYa3hStE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Gb99iCF6QWyNwRR+3An1xtp+k0r5/S+Dca4sg7TvFwzs76Bai43P6kosZB6z+XIcH
+         Gkf+bQY+75800FndQXKRALFkRBZ6DJsQX+RODyLqkJVjAsNWuBWOP9kgMlgxs5rLaT
+         krlbZ+8NAFzQiNQkdMgK3V7S8WM6XY8CU0f0Uf6I=
+Received: from jcrouse1-lnx.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: jcrouse@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 82866602A9;
+        Wed, 19 Jun 2019 18:15:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560968129;
+        bh=m+jhB6capUsffdvv9hXxYT4fdNrNak+XzVzEYa3hStE=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UxVqLj3qKpPJin3/aVggwzCNLbqpCWWNRS1LH+KXq5hVmSPuvzCdZIDHw/9eGX+s2
+         hzupxA415ZyRKLC8em+SwfUdEWE8N2p/ly9Ylyp5Vd9LY5lPDFN6gWA8K0NanXdyMh
+         9sGf+OAPK5w54Gq4KaUzSfKGRYAAjJmfwg9QTnV0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 82866602A9
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jcrouse@codeaurora.org
+Date:   Wed, 19 Jun 2019 12:15:26 -0600
+From:   Jordan Crouse <jcrouse@codeaurora.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     agross@kernel.org, david.brown@linaro.org, robdclark@gmail.com,
+        sean@poorly.run, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, jonathan@marek.ca, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org,
+        daniel@ffwll.ch, freedreno@lists.freedesktop.org
+Subject: Re: [Freedreno] [PATCH 6/6] drm/msm/gpu: add ocmem init/cleanup
+ functions
+Message-ID: <20190619181526.GC17590@jcrouse1-lnx.qualcomm.com>
+Mail-Followup-To: Brian Masney <masneyb@onstation.org>, agross@kernel.org,
+        david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, jonathan@marek.ca, airlied@linux.ie,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, bjorn.andersson@linaro.org,
+        daniel@ffwll.ch, freedreno@lists.freedesktop.org
+References: <20190616132930.6942-1-masneyb@onstation.org>
+ <20190616132930.6942-7-masneyb@onstation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190619181325.13574-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190616132930.6942-7-masneyb@onstation.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2019 19:13, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Sun, Jun 16, 2019 at 09:29:30AM -0400, Brian Masney wrote:
+> The files a3xx_gpu.c and a4xx_gpu.c have ifdefs for the OCMEM support
+> that was missing upstream. Add two new functions (adreno_gpu_ocmem_init
+> and adreno_gpu_ocmem_cleanup) that removes some duplicated code. We also
+> need to change the ifdef check for CONFIG_MSM_OCMEM to CONFIG_QCOM_OCMEM
+> now that OCMEM support is upstream.
 > 
-> The right shift of unsigned int cpu_khz will overflow for large values
-> of cpu_khz, so cast it to a long long before shifting it to avoid
-> overvlow.  For example, this can happen when cpu_khz is 4194305 (just
-> less than 4.2 GHz).  Also wrap line to avoid checkpatch wide line
-> warning.
-> 
-> Addresses-Coverity: ("Unintentional integer overflow")
-> Fixes: 8c3ba8d04924 ("x86, apic: ack all pending irqs when crashed/on kexec")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
->  arch/x86/kernel/apic/apic.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.c   | 33 +++++++-------------
+>  drivers/gpu/drm/msm/adreno/a3xx_gpu.h   |  3 +-
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.c   | 30 ++++++------------
+>  drivers/gpu/drm/msm/adreno/a4xx_gpu.h   |  3 +-
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.c | 41 +++++++++++++++++++++++++
+>  drivers/gpu/drm/msm/adreno/adreno_gpu.h | 10 ++++++
+>  6 files changed, 74 insertions(+), 46 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/apic/apic.c b/arch/x86/kernel/apic/apic.c
-> index 8956072f677d..31426126e5e0 100644
-> --- a/arch/x86/kernel/apic/apic.c
-> +++ b/arch/x86/kernel/apic/apic.c
-> @@ -1464,7 +1464,8 @@ static void apic_pending_intr_clear(void)
->  		if (queued) {
->  			if (boot_cpu_has(X86_FEATURE_TSC) && cpu_khz) {
->  				ntsc = rdtsc();
-> -				max_loops = (cpu_khz << 10) - (ntsc - tsc);
-> +				max_loops = ((long long)cpu_khz << 10) -
-> +					    (ntsc - tsc);
->  			} else {
->  				max_loops--;
->  			}
-> 
-Nack. V2 coming next.
+> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> index c3b4bc6e4155..72720bb2aca1 100644
+> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.c
+> @@ -17,10 +17,6 @@
+>   * this program.  If not, see <http://www.gnu.org/licenses/>.
+>   */
+>  
+> -#ifdef CONFIG_MSM_OCMEM
+> -#  include <mach/ocmem.h>
+> -#endif
+> -
+>  #include "a3xx_gpu.h"
+>  
+>  #define A3XX_INT0_MASK \
+> @@ -206,9 +202,9 @@ static int a3xx_hw_init(struct msm_gpu *gpu)
+>  		gpu_write(gpu, REG_A3XX_RBBM_GPR0_CTL, 0x00000000);
+>  
+>  	/* Set the OCMEM base address for A330, etc */
+> -	if (a3xx_gpu->ocmem_hdl) {
+> +	if (a3xx_gpu->ocmem.hdl) {
+>  		gpu_write(gpu, REG_A3XX_RB_GMEM_BASE_ADDR,
+> -			(unsigned int)(a3xx_gpu->ocmem_base >> 14));
+> +			(unsigned int)(a3xx_gpu->ocmem.base >> 14));
+>  	}
+>  
+>  	/* Turn on performance counters: */
+> @@ -329,10 +325,7 @@ static void a3xx_destroy(struct msm_gpu *gpu)
+>  
+>  	adreno_gpu_cleanup(adreno_gpu);
+>  
+> -#ifdef CONFIG_MSM_OCMEM
+> -	if (a3xx_gpu->ocmem_base)
+> -		ocmem_free(OCMEM_GRAPHICS, a3xx_gpu->ocmem_hdl);
+> -#endif
+> +	adreno_gpu_ocmem_cleanup(&a3xx_gpu->ocmem);
+>  
+>  	kfree(a3xx_gpu);
+>  }
+> @@ -507,17 +500,10 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
+>  
+>  	/* if needed, allocate gmem: */
+>  	if (adreno_is_a330(adreno_gpu)) {
+> -#ifdef CONFIG_MSM_OCMEM
+> -		/* TODO this is different/missing upstream: */
+> -		struct ocmem_buf *ocmem_hdl =
+> -				ocmem_allocate(OCMEM_GRAPHICS, adreno_gpu->gmem);
+> -
+> -		a3xx_gpu->ocmem_hdl = ocmem_hdl;
+> -		a3xx_gpu->ocmem_base = ocmem_hdl->addr;
+> -		adreno_gpu->gmem = ocmem_hdl->len;
+> -		DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
+> -				a3xx_gpu->ocmem_base);
+> -#endif
+> +		ret = adreno_gpu_ocmem_init(&adreno_gpu->base.pdev->dev,
+> +					    adreno_gpu, &a3xx_gpu->ocmem);
+> +		if (ret)
+> +			goto fail;
+>  	}
+>  
+>  	if (!gpu->aspace) {
+> @@ -530,11 +516,14 @@ struct msm_gpu *a3xx_gpu_init(struct drm_device *dev)
+>  		 */
+>  		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
+>  		ret = -ENXIO;
+> -		goto fail;
+> +		goto fail_cleanup_ocmem;
+>  	}
+>  
+>  	return gpu;
+>  
+> +fail_cleanup_ocmem:
+> +	adreno_gpu_ocmem_cleanup(&a3xx_gpu->ocmem);
+> +
+>  fail:
+>  	if (a3xx_gpu)
+>  		a3xx_destroy(&a3xx_gpu->base.base);
+
+a3xx_destroy is going to have to be able to cleanup the ocmem anyway, so you
+might as well stick it in there instead of having a second goto label.
+
+> diff --git a/drivers/gpu/drm/msm/adreno/a3xx_gpu.h b/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
+> index ab60dc9e344e..727c34f38f9e 100644
+> --- a/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a3xx_gpu.h
+> @@ -30,8 +30,7 @@ struct a3xx_gpu {
+>  	struct adreno_gpu base;
+>  
+>  	/* if OCMEM is used for GMEM: */
+> -	uint32_t ocmem_base;
+> -	void *ocmem_hdl;
+> +	struct adreno_ocmem ocmem;
+>  };
+>  #define to_a3xx_gpu(x) container_of(x, struct a3xx_gpu, base)
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> index ab2b752566d8..b8f825107796 100644
+> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.c
+> @@ -2,9 +2,6 @@
+>  /* Copyright (c) 2014 The Linux Foundation. All rights reserved.
+>   */
+>  #include "a4xx_gpu.h"
+> -#ifdef CONFIG_MSM_OCMEM
+> -#  include <soc/qcom/ocmem.h>
+> -#endif
+>  
+>  #define A4XX_INT0_MASK \
+>  	(A4XX_INT0_RBBM_AHB_ERROR |        \
+> @@ -188,7 +185,7 @@ static int a4xx_hw_init(struct msm_gpu *gpu)
+>  			(1 << 30) | 0xFFFF);
+>  
+>  	gpu_write(gpu, REG_A4XX_RB_GMEM_BASE_ADDR,
+> -			(unsigned int)(a4xx_gpu->ocmem_base >> 14));
+> +			(unsigned int)(a4xx_gpu->ocmem.base >> 14));
+>  
+>  	/* Turn on performance counters: */
+>  	gpu_write(gpu, REG_A4XX_RBBM_PERFCTR_CTL, 0x01);
+> @@ -318,10 +315,7 @@ static void a4xx_destroy(struct msm_gpu *gpu)
+>  
+>  	adreno_gpu_cleanup(adreno_gpu);
+>  
+> -#ifdef CONFIG_MSM_OCMEM
+> -	if (a4xx_gpu->ocmem_base)
+> -		ocmem_free(OCMEM_GRAPHICS, a4xx_gpu->ocmem_hdl);
+> -#endif
+> +	adreno_gpu_ocmem_cleanup(&a4xx_gpu->ocmem);
+>  
+>  	kfree(a4xx_gpu);
+>  }
+> @@ -578,17 +572,10 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
+>  
+>  	/* if needed, allocate gmem: */
+>  	if (adreno_is_a4xx(adreno_gpu)) {
+> -#ifdef CONFIG_MSM_OCMEM
+> -		/* TODO this is different/missing upstream: */
+> -		struct ocmem_buf *ocmem_hdl =
+> -				ocmem_allocate(OCMEM_GRAPHICS, adreno_gpu->gmem);
+> -
+> -		a4xx_gpu->ocmem_hdl = ocmem_hdl;
+> -		a4xx_gpu->ocmem_base = ocmem_hdl->addr;
+> -		adreno_gpu->gmem = ocmem_hdl->len;
+> -		DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
+> -				a4xx_gpu->ocmem_base);
+> -#endif
+> +		ret = adreno_gpu_ocmem_init(dev->dev, adreno_gpu,
+> +					    &a4xx_gpu->ocmem);
+> +		if (ret)
+> +			goto fail;
+>  	}
+>  
+>  	if (!gpu->aspace) {
+> @@ -601,11 +588,14 @@ struct msm_gpu *a4xx_gpu_init(struct drm_device *dev)
+>  		 */
+>  		DRM_DEV_ERROR(dev->dev, "No memory protection without IOMMU\n");
+>  		ret = -ENXIO;
+> -		goto fail;
+> +		goto fail_cleanup_ocmem;
+>  	}
+>  
+>  	return gpu;
+>  
+> +fail_cleanup_ocmem:
+> +	adreno_gpu_ocmem_cleanup(&a4xx_gpu->ocmem);
+> +
+>  fail:
+>  	if (a4xx_gpu)
+>  		a4xx_destroy(&a4xx_gpu->base.base);
+
+And same.
+
+> diff --git a/drivers/gpu/drm/msm/adreno/a4xx_gpu.h b/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
+> index d506311ee240..a01448cba2ea 100644
+> --- a/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/a4xx_gpu.h
+> @@ -16,8 +16,7 @@ struct a4xx_gpu {
+>  	struct adreno_gpu base;
+>  
+>  	/* if OCMEM is used for GMEM: */
+> -	uint32_t ocmem_base;
+> -	void *ocmem_hdl;
+> +	struct adreno_ocmem ocmem;
+>  };
+>  #define to_a4xx_gpu(x) container_of(x, struct a4xx_gpu, base)
+>  
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.c b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> index 6f7f4114afcf..e0a9409c8a32 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.c
+> @@ -29,6 +29,10 @@
+>  #include "msm_gem.h"
+>  #include "msm_mmu.h"
+>  
+> +#ifdef CONFIG_QCOM_OCMEM
+
+You won't need a ifdef here if the rest of the support is merged too.
+
+> +#  include <soc/qcom/ocmem.h>
+> +#endif
+> +
+>  static bool zap_available = true;
+>  
+>  static int zap_shader_load_mdt(struct msm_gpu *gpu, const char *fwname,
+> @@ -897,6 +901,43 @@ static int adreno_get_pwrlevels(struct device *dev,
+>  	return 0;
+>  }
+>  
+> +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
+> +			  struct adreno_ocmem *adreno_ocmem)
+> +{
+> +#ifdef CONFIG_QCOM_OCMEM
+
+Same. It should be assumed that the generic ocmem functions will be properly
+stubbed. I suppose you have an argument for wanting to not compile in this
+extra code if it isn't needed, but if so you'll want to #ifdef the entire
+function(s) and use stubs in the include file instead.
+
+> +	struct ocmem_buf *ocmem_hdl;
+> +	struct ocmem *ocmem;
+> +
+> +	ocmem = of_get_ocmem(dev);
+> +	if (!ocmem) {
+> +		/* This is an optional property so return success. */
+> +		return 0;
+> +	}
+> +
+> +	ocmem_hdl = ocmem_allocate(ocmem, OCMEM_GRAPHICS, adreno_gpu->gmem);
+> +	if (IS_ERR(ocmem_hdl))
+> +		return PTR_ERR(ocmem_hdl);
+> +
+> +	adreno_ocmem->ocmem = ocmem;
+> +	adreno_ocmem->base = ocmem_hdl->addr;
+> +	adreno_ocmem->hdl = ocmem_hdl;
+> +	adreno_gpu->gmem = ocmem_hdl->len;
+> +	DBG("using %dK of OCMEM at 0x%08x", adreno_gpu->gmem / 1024,
+> +	    adreno_ocmem->base);
+> +#endif
+> +
+> +	return 0;
+> +}
+> +
+> +void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *adreno_ocmem)
+> +{
+> +#ifdef CONFIG_QCOM_OCMEM
+> +	if (adreno_ocmem->base)
+> +		ocmem_free(adreno_ocmem->ocmem, OCMEM_GRAPHICS,
+> +			   adreno_ocmem->hdl);
+> +#endif
+> +}
+> +
+>  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  		struct adreno_gpu *adreno_gpu,
+>  		const struct adreno_gpu_funcs *funcs, int nr_rings)
+> diff --git a/drivers/gpu/drm/msm/adreno/adreno_gpu.h b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> index 0925606ec9b5..1cd11570323b 100644
+> --- a/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> +++ b/drivers/gpu/drm/msm/adreno/adreno_gpu.h
+> @@ -136,6 +136,12 @@ struct adreno_gpu {
+>  };
+>  #define to_adreno_gpu(x) container_of(x, struct adreno_gpu, base)
+>  
+> +struct adreno_ocmem {
+> +	struct ocmem *ocmem;
+> +	uint32_t base;
+> +	void *hdl;
+> +};
+> +
+>  /* platform config data (ie. from DT, or pdata) */
+>  struct adreno_platform_config {
+>  	struct adreno_rev rev;
+> @@ -241,6 +247,10 @@ void adreno_dump(struct msm_gpu *gpu);
+>  void adreno_wait_ring(struct msm_ringbuffer *ring, uint32_t ndwords);
+>  struct msm_ringbuffer *adreno_active_ring(struct msm_gpu *gpu);
+>  
+> +int adreno_gpu_ocmem_init(struct device *dev, struct adreno_gpu *adreno_gpu,
+> +			  struct adreno_ocmem *ocmem);
+> +void adreno_gpu_ocmem_cleanup(struct adreno_ocmem *ocmem);
+> +
+>  int adreno_gpu_init(struct drm_device *drm, struct platform_device *pdev,
+>  		struct adreno_gpu *gpu, const struct adreno_gpu_funcs *funcs,
+>  		int nr_rings);
+> -- 
+> 2.20.1
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
