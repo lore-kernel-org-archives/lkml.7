@@ -2,89 +2,101 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0DFC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:03:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0AAC48BE0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10FB2205ED
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:03:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6024205ED
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:04:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t5CyOJNf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfFSXDQ (ORCPT
+        id S1730658AbfFSXEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 19:03:16 -0400
-Received: from gate.crashing.org ([63.228.1.57]:48234 "EHLO gate.crashing.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726251AbfFSXDP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 19:03:15 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x5JN2NFs022741;
-        Wed, 19 Jun 2019 18:02:25 -0500
-Message-ID: <4c8b9ca5e84db7db67ad552d8fdbaa17d11b6432.camel@kernel.crashing.org>
-Subject: Re: [PATCH 1/2] i2c: aspeed: allow to customize base clock divisor
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Tao Ren <taoren@fb.com>,
-        Brendan Higgins <brendanhiggins@google.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        OpenBMC Maillist <openbmc@lists.ozlabs.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Joel Stanley <joel@jms.id.au>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "ryan_chen@aspeedtech.com" <ryan_chen@aspeedtech.com>
-Date:   Thu, 20 Jun 2019 09:02:23 +1000
-In-Reply-To: <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
-References: <20190619205009.4176588-1-taoren@fb.com>
-         <CAFd5g45TMtXcuqONdkpN_K+c0O+wUw8wkGzcQfV+sO8p5Krc9w@mail.gmail.com>
-         <18565fcf-3dc1-b671-f826-e4417e4ad284@fb.com>
+        Wed, 19 Jun 2019 19:04:41 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:44874 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfFSXEl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 19:04:41 -0400
+Received: by mail-yw1-f67.google.com with SMTP id l79so304031ywe.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 16:04:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=NbzMOyrZckNlP/Lcg+Lm/vM3zrC2t8DPpb83xlh9FiI=;
+        b=t5CyOJNfaac+Q7sPzpACyPTDx6EHsMBAXAnNFHc1O5tDZWecDaCzf1vYTuyz7Zjf/e
+         67AVLo3wFwFhYh4mwpzgD+9UNuTSphgseGd0AVOtn7iOtYOElLcQ3s+WX4gwDSQUJSAG
+         kHzUBPWbM3Dmo4KyNNeKLuRTTau5zxBm1pYUE8IUgg96i3/B0ojjp1aZCvK8b5YvIrRq
+         3y/D3kCzgimUMVAjolJtiirGA8S5lSRCCmJdB1ggTynoPqquMl1gDOrFf2Hao69SK3nD
+         qqRIODa4r7NbdVpNTrP+mSFxZxA2I3Lap/PkRe7pPMQAA9C50Yxp8L3JthprklpEeTg/
+         Qmtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NbzMOyrZckNlP/Lcg+Lm/vM3zrC2t8DPpb83xlh9FiI=;
+        b=Z0QeQo7X/hAr+z9/gp4kRXAB/YTpLc+uGpxDXbMXepAe4JIXUKLhh4w4s8KCmGbevi
+         X8QP6fEdCnVfzZ5AFhJS+f54fjj2SRKL4elT/C7fwh2X2LylOyA4Jh3kyLki2e/UKV1K
+         Tohvwb2qCYsVa+iovqOKs93HErEYzB7rMe9NWemG1c/aNzHVZ7CezsmVmzppVnIg1jcz
+         gK3sQBjdYOJPsH897MIvF7SaF3qfj7Qw5S9hz17nrny2FCML9mTRUorNgQHfb636uEXe
+         mCF8NHkkn/REjOyfG/OlNVigG8D19/nC4TOdhwMl7rREPwH4KLBT2MU/Yf558P7KLS7R
+         TDAQ==
+X-Gm-Message-State: APjAAAVP06Ol9I+Zz9tKYe0YIwlHXvyrr2tNZV+wG1CLxyc03yYGU9YS
+        ZVpvk4HF5ZoFNHyjvSyFLvS2lctdVtbgTClkexoRBw==
+X-Google-Smtp-Source: APXvYqwwLc9GbuN1yski600QDsOdlXMt97I/+eg7SO2Z7GQo/t8DI3dWtHIREvPeuOmKIK1eoWONOQDWPdZIfMaHZBs=
+X-Received: by 2002:a81:a55:: with SMTP id 82mr37722007ywk.205.1560985479831;
+ Wed, 19 Jun 2019 16:04:39 -0700 (PDT)
+MIME-Version: 1.0
+References: <e5cfe17c-a59f-b1d1-19ce-590245106068@intel.com>
+In-Reply-To: <e5cfe17c-a59f-b1d1-19ce-590245106068@intel.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 19 Jun 2019 16:04:28 -0700
+Message-ID: <CALvZod6Bfbi57mRmbYetO+R=gB07kkewo=F9sTyMdWpDXGgwDg@mail.gmail.com>
+Subject: Re: memcg/kmem panics
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Cgroups <cgroups@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-19 at 22:32 +0000, Tao Ren wrote:
-> Thank you for the quick response, Brendan.
-> 
-> Aspeed I2C bus frequency is defined by 3 parameters
-> (base_clk_divisor, clk_high_width, clk_low_width), and I choose
-> base_clk_divisor because it controls all the Aspeed I2C timings (such
-> as setup time and hold time). Once base_clk_divisor is decided
-> (either by the current logic in i2c-aspeed driver or manually set in
-> device tree), clk_high_width and clk_low_width will be calculated by
-> i2c-aspeed driver to meet the specified I2C bus speed.
-> 
-> For example, by setting I2C bus frequency to 100KHz on AST2500
-> platform, (base_clock_divisor, clk_high_width, clk_low_width) is set
-> to (3, 15, 14) by our driver. But some slave devices (on CMM i2c-8
-> and Minipack i2c-0) NACK byte transactions with the default timing
-> setting: the issue can be resolved by setting base_clk_divisor to 4,
-> and (clk_high_width, clk_low_width) will be set to (7, 7) by our i2c-
-> aspeed driver to achieve similar I2C bus speed.
-> 
-> Not sure if my answer helps to address your concerns, but kindly let
-> me know if you have further questions/suggestions.
+On Wed, Jun 19, 2019 at 3:50 PM Dave Hansen <dave.hansen@intel.com> wrote:
+>
+> I have a bit of a grievance to file.  :)
+>
+> I'm seeing "Cannot create slab..." panic()s coming from
+> kmem_cache_open() when trying to create memory cgroups on a Fedora
+> system running 5.2-rc's.  The panic()s happen when failing to create
+> memcg-specific slabs because the memcg code passes through the
+> root_cache->flags, which can include SLAB_PANIC.
+>
+> I haven't tracked down the root cause yet, or where this behavior
+> started.  But, the end-user experience is that systemd tries to create a
+> cgroup and ends up with a kernel panic.  That's rather sad, especially
+> for the poor sod that's trying to debug it.
+>
+> Should memcg_create_kmem_cache() be, perhaps filtering out SLAB_PANIC
+> from root_cache->flags, for instance?  That might make the system a bit
+> less likely to turn into a doorstop if and when something goes mildly
+> wrong.  I've hacked out the panic()s and the system actually seems to
+> boot OK.
 
-Did you look at the resulting output on a scope ? I'm curious what
-might be wrong.... 
+You must be using CONFIG_SLUB and I see that in kmem_cache_open() in
+SLUB doing a SLAB_PANIC check. I think we should remove that
+altogether from SLUB as SLAB does not do this and failure in memcg
+kmem cache creation can and should be handled gracefully. I can send a
+patch to remove that check.
 
-CCing Ryan from Aspeed, he might have some idea.
-
-Could it be that with some specific dividers you have more jitter ?
-Still, i2c devices tend to be rather robust vs crappy clocks unless you
-are massively out of bounds, which makes me wonder whether something
-else might be wrong in your setup.
-
-Cheers,
-Ben.
-
-
+Shakeel
