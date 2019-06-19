@@ -2,68 +2,173 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95162C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:39:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEDCC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:42:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 743A1217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:39:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 388C121783
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:42:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iM3Ngn2x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730052AbfFSQj5 (ORCPT
+        id S1729334AbfFSQmL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:39:57 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:56916 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726091AbfFSQj4 (ORCPT
+        Wed, 19 Jun 2019 12:42:11 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:50576 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726091AbfFSQmL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:39:56 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TUccqUw_1560962390;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TUccqUw_1560962390)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 20 Jun 2019 00:39:52 +0800
-Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
- correctly in mbind
-To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190618130253.GH3318@dhcp22.suse.cz>
- <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
- <2c30d86f-43e4-f43c-411d-c916fb1de44e@suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <68b67faf-d1c3-bc36-3db4-c86c6dfd8f11@linux.alibaba.com>
-Date:   Wed, 19 Jun 2019 09:39:48 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 19 Jun 2019 12:42:11 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JGZ3BA139193;
+        Wed, 19 Jun 2019 16:41:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=4T5a0glbRa2aBSKkc/pjnTjMsTPHECFT1E9bbL1l2HM=;
+ b=iM3Ngn2x6aaNg+8wMaz2TYv3kwfBr7esbrJ8PsegJPNksN4Z/YjPTI3TmHcIUAH5xIxd
+ gAnjdNn//nUURYK/24P/Mz+8CWzLw/ldkJ0Ah8cTKTN8TsQstYz7Wc1JokBHslvlpojt
+ t58Ckn54FcLS6JnUQMgNT/8sCvOqKf+qXUPK2SC5pwHYaAG2DxzZEfDTOmnxSxjRlk17
+ 81k1k3JZIHS9isv6MaXvl6eghbedIhy09UL0UJZ7M5tLa9EvLThKgTnTshAaPgND2Tmz
+ VORmseouIshgIQ+DfXX2+2Cq67n27+huaukcohM59RMNDmLVIT4WZNeTT5o/4WBjQ22r Kg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2t7809ckb0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 16:41:19 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JGeTfm168992;
+        Wed, 19 Jun 2019 16:41:18 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2t77ynxysy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 16:41:18 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5JGfFiP008310;
+        Wed, 19 Jun 2019 16:41:16 GMT
+Received: from [10.65.164.174] (/10.65.164.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Jun 2019 09:41:15 -0700
+Subject: Re: [PATCH v17 05/15] mm, arm64: untag user pointers in mm/gup.c
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <8f65548bef8544d49980a92d221b74440d544c1e.1560339705.git.andreyknvl@google.com>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <dbf2dd46-0240-f8a9-203c-4f1234c16825@oracle.com>
+Date:   Wed, 19 Jun 2019 10:41:12 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <2c30d86f-43e4-f43c-411d-c916fb1de44e@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <8f65548bef8544d49980a92d221b74440d544c1e.1560339705.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190134
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190134
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 6/12/19 5:43 AM, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow=
+ to
+> pass tagged user pointers (with the top byte set to something else othe=
+r
+> than 0x00) as syscall arguments.
+>=20
+> mm/gup.c provides a kernel interface that accepts user addresses and
+> manipulates user pages directly (for example get_user_pages, that is us=
+ed
+> by the futex syscall). Since a user can provided tagged addresses, we n=
+eed
+> to handle this case.
+>=20
+> Add untagging to gup.c functions that use user addresses for vma lookup=
+s.
+>=20
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
+
+Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
 
 
-On 6/19/19 1:18 AM, Vlastimil Babka wrote:
-> On 6/18/19 7:06 PM, Yang Shi wrote:
->> The BUG_ON was removed by commit
->> d44d363f65780f2ac2ec672164555af54896d40d ("mm: don't assume anonymous
->> pages have SwapBacked flag") since 4.12.
-> Perhaps that commit should be sent to stable@ ? Although with
-> VM_BUG_ON() this is less critical than plain BUG_ON().
-
-I don't think we have to. I agree it is less critical,  VM_DEBUG should 
-be not enabled for production environment.
-
-And, it doesn't actually break anything since split_huge_page would just 
-return error, and those unmovable pages are silently ignored by isolate.
+>  mm/gup.c | 4 ++++
+>  1 file changed, 4 insertions(+)
+>=20
+> diff --git a/mm/gup.c b/mm/gup.c
+> index ddde097cf9e4..c37df3d455a2 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -802,6 +802,8 @@ static long __get_user_pages(struct task_struct *ts=
+k, struct mm_struct *mm,
+>  	if (!nr_pages)
+>  		return 0;
+> =20
+> +	start =3D untagged_addr(start);
+> +
+>  	VM_BUG_ON(!!pages !=3D !!(gup_flags & FOLL_GET));
+> =20
+>  	/*
+> @@ -964,6 +966,8 @@ int fixup_user_fault(struct task_struct *tsk, struc=
+t mm_struct *mm,
+>  	struct vm_area_struct *vma;
+>  	vm_fault_t ret, major =3D 0;
+> =20
+> +	address =3D untagged_addr(address);
+> +
+>  	if (unlocked)
+>  		fault_flags |=3D FAULT_FLAG_ALLOW_RETRY;
+> =20
+>=20
 
 
