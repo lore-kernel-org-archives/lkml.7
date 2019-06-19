@@ -2,133 +2,152 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7120C43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CB3C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:01:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7241C21537
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:59:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="Cxlshnxo"
+	by mail.kernel.org (Postfix) with ESMTP id DDF1821537
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:01:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560978088;
+	bh=2+w/sDc7TOGcJqUGNqoLVM4ANfIB5qdNfkMoJOUEWRQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tNzK3km+QcQ4H+JLLguvvE6jxZ9hCX9y24XRQ4gogBRttSALBhUykm5gegs66QDKh
+	 HCfdeNV9nLt5BAB5y6bUfuIY184iNZhDhHcvrrrfAYSaRJrFYqQh6Ry7BOmMMzBUCg
+	 1PoBkKd8LKZfCOojoTZyeYiUi8ceWi6gd9lsdVu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730399AbfFSU75 (ORCPT
+        id S1730405AbfFSVB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:59:57 -0400
-Received: from mail-eopbgr770057.outbound.protection.outlook.com ([40.107.77.57]:37070
-        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726175AbfFSU74 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:59:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DTHGYOhpatmnEqkiw9CQVzMRW8PafcxSLjZyEiD7N64=;
- b=CxlshnxovhlTt/G0xAgrLQ5pdxXnsE/jSIx+STMI4KRAIzw0yeFnD1AMNxFa5Mu52v0aulKxhSM/JMkwNxEfyh/Wg1+jU8WqjgV6Y+/faM+c8BHqbPsC2VUy5kOQ0YHj3p6uXwGMFGVOCahjLhzTYVOWTn6S+3YxVMGK2gGNcZA=
-Received: from BL0PR02CA0040.namprd02.prod.outlook.com (2603:10b6:207:3d::17)
- by DM6PR02MB6234.namprd02.prod.outlook.com (2603:10b6:5:1d1::24) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.11; Wed, 19 Jun
- 2019 20:59:54 +0000
-Received: from CY1NAM02FT014.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by BL0PR02CA0040.outlook.office365.com
- (2603:10b6:207:3d::17) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14 via Frontend
- Transport; Wed, 19 Jun 2019 20:59:54 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
- header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- CY1NAM02FT014.mail.protection.outlook.com (10.152.75.142) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Wed, 19 Jun 2019 20:59:53 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:34414 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1hdhgP-0002H1-Al; Wed, 19 Jun 2019 13:59:53 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1hdhgK-0001oK-6L; Wed, 19 Jun 2019 13:59:48 -0700
-Received: from xsj-pvapsmtp01 (mailhub.xilinx.com [149.199.38.66])
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5JKxauR005191;
-        Wed, 19 Jun 2019 13:59:37 -0700
-Received: from [172.19.2.91] (helo=xsjjollys50.xilinx.com)
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <jolly.shah@xilinx.com>)
-        id 1hdhg8-0001ng-P6; Wed, 19 Jun 2019 13:59:36 -0700
-From:   Jolly Shah <jolly.shah@xilinx.com>
-To:     ard.biesheuvel@linaro.org, mingo@kernel.org,
-        gregkh@linuxfoundation.org, matt@codeblueprint.co.uk,
-        sudeep.holla@arm.com, hkallweit1@gmail.com, keescook@chromium.org,
-        dmitry.torokhov@gmail.com, michal.simek@xilinx.com
-Cc:     rajanv@xilinx.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, Jolly Shah <jolly.shah@xilinx.com>,
-        Tejas Patel <tejas.patel@xilinx.com>
-Subject: [PATCH] firmware: xilinx: zynqmp: Remove unused macro
-Date:   Wed, 19 Jun 2019 13:59:34 -0700
-Message-Id: <1560977974-6267-1-git-send-email-jolly.shah@xilinx.com>
-X-Mailer: git-send-email 2.7.4
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(136003)(396003)(2980300002)(199004)(189003)(486006)(70586007)(48376002)(356004)(126002)(476003)(50466002)(63266004)(336012)(70206006)(9786002)(426003)(478600001)(14444005)(72206003)(107886003)(6636002)(4326008)(2906002)(16586007)(2616005)(44832011)(305945005)(8936002)(50226002)(36386004)(36756003)(7696005)(51416003)(316002)(47776003)(8676002)(54906003)(186003)(5660300002)(106002)(26005)(81156014)(81166006)(4744005)(7416002)(77096007)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB6234;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;A:1;MX:1;
+        Wed, 19 Jun 2019 17:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58186 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfFSVB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 17:01:27 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5944A215EA;
+        Wed, 19 Jun 2019 21:01:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560978085;
+        bh=2+w/sDc7TOGcJqUGNqoLVM4ANfIB5qdNfkMoJOUEWRQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=nswNsuVILZTLvHSmd9m/WJSBlUuD27RumWInokuIMM+7tLdj0pQm6bmm4k5RFJDG3
+         5jXPCOZmZXFWqZ1VCTYWySLjtcyokLtjSFi00xL5IGf341Mw5/N3r5YYqO7FCu9qlf
+         mbWcMVhqQdhJ3Q+ju0pDqysLhQ5xAwMnWLtCgqKA=
+Date:   Wed, 19 Jun 2019 17:01:24 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Keith Busch <keith.busch@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH AUTOSEL 4.14 15/31] PCI: PM: Avoid possible
+ suspend-to-idle issue
+Message-ID: <20190619210124.GF2226@sasha-vm>
+References: <20190608114646.9415-1-sashal@kernel.org>
+ <20190608114646.9415-15-sashal@kernel.org>
+ <7003865c-8689-78f2-d441-f2a223fb3122@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 90178417-2cde-445f-b72d-08d6f4f91449
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:DM6PR02MB6234;
-X-MS-TrafficTypeDiagnostic: DM6PR02MB6234:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <DM6PR02MB6234D26C8ADBE5DD066DEF63B8E50@DM6PR02MB6234.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:873;
-X-Forefront-PRVS: 0073BFEF03
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: EdWSZxSpjtW0TITjbQ4sPnxodwfUt3NN5Qe5d7N5RuBaA8U+++E+yJuYxC0gy3wGcsK2w68779dEXS/7gE1az/iC/RUlsQlanOHsLUeyTN6nEgl9S+2rUcCqsZZqfdcSO0PGOL3oFlGQG00B9j0zOWTeEMYjO02XyveyumiyF3orzvBnvQKfvVwoS4RBvLaIk6oRmtre03VJIpRPwXNReIos+31H+ALVR+8Cq3EEGotcB75AHjNAVdQ8wWiERIUjp6a0Xrr4QWBxPWqUdYguelI0MNk9NZoOCFtX8w4I5t1+6RulkoKSo1wNjlvfyJdEA4+1jWcuGEfnSKKxkE38C+MVvuuPt1OfVwwG4fezuSkAC82Qpa3UL80qFFdX/IvSig4z3flBBtoyJmvVXFC3DHAvFp5pM4r1Snqf7pZUNLg=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2019 20:59:53.8198
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 90178417-2cde-445f-b72d-08d6f4f91449
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB6234
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <7003865c-8689-78f2-d441-f2a223fb3122@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ZYNQMP_PM_CAPABILITY_POWER capability is not supported by firmware
-and hence needs to be removed
+On Tue, Jun 11, 2019 at 05:25:48PM +0200, Rafael J. Wysocki wrote:
+>On 6/8/2019 1:46 PM, Sasha Levin wrote:
+>>From: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+>>
+>>[ Upstream commit d491f2b75237ef37d8867830ab7fad8d9659e853 ]
+>>
+>>If a PCI driver leaves the device handled by it in D0 and calls
+>>pci_save_state() on the device in its ->suspend() or ->suspend_late()
+>>callback, it can expect the device to stay in D0 over the whole
+>>s2idle cycle.  However, that may not be the case if there is a
+>>spurious wakeup while the system is suspended, because in that case
+>>pci_pm_suspend_noirq() will run again after pci_pm_resume_noirq()
+>>which calls pci_restore_state(), via pci_pm_default_resume_early(),
+>>so state_saved is cleared and the second iteration of
+>>pci_pm_suspend_noirq() will invoke pci_prepare_to_sleep() which
+>>may change the power state of the device.
+>>
+>>To avoid that, add a new internal flag, skip_bus_pm, that will be set
+>>by pci_pm_suspend_noirq() when it runs for the first time during the
+>>given system suspend-resume cycle if the state of the device has
+>>been saved already and the device is still in D0.  Setting that flag
+>>will cause the next iterations of pci_pm_suspend_noirq() to set
+>>state_saved for pci_pm_resume_noirq(), so that it always restores the
+>>device state from the originally saved data, and avoid calling
+>>pci_prepare_to_sleep() for the device.
+>>
+>>Fixes: 33e4f80ee69b ("ACPI / PM: Ignore spurious SCI wakeups from suspend-to-idle")
+>>Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+>>Reviewed-by: Keith Busch <keith.busch@intel.com>
+>>Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+>>Signed-off-by: Sasha Levin <sashal@kernel.org>
+>>---
+>>  drivers/pci/pci-driver.c | 17 ++++++++++++++++-
+>>  include/linux/pci.h      |  1 +
+>>  2 files changed, 17 insertions(+), 1 deletion(-)
+>>
+>>diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
+>>index ea69b4dbab66..f5d66335fe53 100644
+>>--- a/drivers/pci/pci-driver.c
+>>+++ b/drivers/pci/pci-driver.c
+>>@@ -726,6 +726,8 @@ static int pci_pm_suspend(struct device *dev)
+>>  	struct pci_dev *pci_dev = to_pci_dev(dev);
+>>  	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
+>>+	pci_dev->skip_bus_pm = false;
+>>+
+>>  	if (pci_has_legacy_pm_support(pci_dev))
+>>  		return pci_legacy_suspend(dev, PMSG_SUSPEND);
+>>@@ -799,7 +801,20 @@ static int pci_pm_suspend_noirq(struct device *dev)
+>>  		}
+>>  	}
+>>-	if (!pci_dev->state_saved) {
+>>+	if (pci_dev->skip_bus_pm) {
+>>+		/*
+>>+		 * The function is running for the second time in a row without
+>>+		 * going through full resume, which is possible only during
+>>+		 * suspend-to-idle in a spurious wakeup case.  Moreover, the
+>>+		 * device was originally left in D0, so its power state should
+>>+		 * not be changed here and the device register values saved
+>>+		 * originally should be restored on resume again.
+>>+		 */
+>>+		pci_dev->state_saved = true;
+>>+	} else if (pci_dev->state_saved) {
+>>+		if (pci_dev->current_state == PCI_D0)
+>>+			pci_dev->skip_bus_pm = true;
+>>+	} else {
+>>  		pci_save_state(pci_dev);
+>>  		if (pci_power_manageable(pci_dev))
+>>  			pci_prepare_to_sleep(pci_dev);
+>>diff --git a/include/linux/pci.h b/include/linux/pci.h
+>>index 59f4d10568c6..430f3c335446 100644
+>>--- a/include/linux/pci.h
+>>+++ b/include/linux/pci.h
+>>@@ -346,6 +346,7 @@ struct pci_dev {
+>>  						   D3cold, not set for devices
+>>  						   powered on/off by the
+>>  						   corresponding bridge */
+>>+	unsigned int	skip_bus_pm:1;	/* Internal: Skip bus-level PM */
+>>  	unsigned int	ignore_hotplug:1;	/* Ignore hotplug events */
+>>  	unsigned int	hotplug_user_indicators:1; /* SlotCtl indicators
+>>  						      controlled exclusively by
+>
+>This has been reported to be problematic, I wouldn't recommend taking 
+>it for -stable at this point.
 
-Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-Signed-off-by: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
----
- include/linux/firmware/xlnx-zynqmp.h | 1 -
- 1 file changed, 1 deletion(-)
+I've dropped it, thank you.
 
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 1262ea6..778abbb 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -46,7 +46,6 @@
- #define	ZYNQMP_PM_CAPABILITY_ACCESS	0x1U
- #define	ZYNQMP_PM_CAPABILITY_CONTEXT	0x2U
- #define	ZYNQMP_PM_CAPABILITY_WAKEUP	0x4U
--#define	ZYNQMP_PM_CAPABILITY_POWER	0x8U
- 
- /*
-  * Firmware FPGA Manager flags
--- 
-2.7.4
-
+--
+Thanks,
+Sasha
