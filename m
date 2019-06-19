@@ -2,98 +2,141 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2D8C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:27:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCEDBC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:28:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF02C2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:27:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4402177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:28:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730021AbfFSQ1w (ORCPT
+        id S1730065AbfFSQ2F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:27:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:60382 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfFSQ1w (ORCPT
+        Wed, 19 Jun 2019 12:28:05 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38566 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726251AbfFSQ2F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:27:52 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hddR1-0000l7-4Q; Wed, 19 Jun 2019 16:27:43 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][next] libbpf: fix spelling mistake "conflictling" -> "conflicting"
-Date:   Wed, 19 Jun 2019 17:27:42 +0100
-Message-Id: <20190619162742.985-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 12:28:05 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hddRK-0005y4-90; Wed, 19 Jun 2019 16:28:02 +0000
+Date:   Wed, 19 Jun 2019 17:28:02 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Vicente Bergas <vicencb@gmail.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: Re: d_lookup: Unable to handle kernel paging request
+Message-ID: <20190619162802.GF17978@ZenIV.linux.org.uk>
+References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
+ <20190522135331.GM17978@ZenIV.linux.org.uk>
+ <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+ <20190522162945.GN17978@ZenIV.linux.org.uk>
+ <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
+ <20190618183548.GB17978@ZenIV.linux.org.uk>
+ <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+[arm64 maintainers Cc'd; I'm not adding a Cc to moderated list,
+sorry]
 
-There are several spelling mistakes in pr_warning messages. Fix these.
+On Wed, Jun 19, 2019 at 02:42:16PM +0200, Vicente Bergas wrote:
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- tools/lib/bpf/libbpf.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> Hi Al,
+> i have been running the distro-provided kernel the last few weeks
+> and had no issues at all.
+> https://archlinuxarm.org/packages/aarch64/linux-aarch64
+> It is from the v5.1 branch and is compiled with gcc 8.3.
+> 
+> IIRC, i also tested
+> https://archlinuxarm.org/packages/aarch64/linux-aarch64-rc
+> v5.2-rc1 and v5.2-rc2 (which at that time where compiled with
+> gcc 8.2) with no issues.
+> 
+> This week tested v5.2-rc4 and v5.2-rc5 from archlinuxarm but
+> there are regressions unrelated to d_lookup.
+> 
+> At this point i was convinced it was a gcc 9.1 issue and had
+> nothing to do with the kernel, but anyways i gave your patch a try.
+> The tested kernel is v5.2-rc5-224-gbed3c0d84e7e and
+> it has been compiled with gcc 8.3.
+> The sentinel you put there has triggered!
+> So, it is not a gcc 9.1 issue.
+> 
+> In any case, i have no idea if those addresses are arm64-specific
+> in any way.
 
-diff --git a/tools/lib/bpf/libbpf.c b/tools/lib/bpf/libbpf.c
-index 4259c9f0cfe7..68f45a96769f 100644
---- a/tools/lib/bpf/libbpf.c
-+++ b/tools/lib/bpf/libbpf.c
-@@ -1169,7 +1169,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
- 			pr_debug("map '%s': found key_size = %u.\n",
- 				 map_name, sz);
- 			if (map->def.key_size && map->def.key_size != sz) {
--				pr_warning("map '%s': conflictling key size %u != %u.\n",
-+				pr_warning("map '%s': conflicting key size %u != %u.\n",
- 					   map_name, map->def.key_size, sz);
- 				return -EINVAL;
- 			}
-@@ -1197,7 +1197,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
- 			pr_debug("map '%s': found key [%u], sz = %lld.\n",
- 				 map_name, t->type, sz);
- 			if (map->def.key_size && map->def.key_size != sz) {
--				pr_warning("map '%s': conflictling key size %u != %lld.\n",
-+				pr_warning("map '%s': conflicting key size %u != %lld.\n",
- 					   map_name, map->def.key_size, sz);
- 				return -EINVAL;
- 			}
-@@ -1212,7 +1212,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
- 			pr_debug("map '%s': found value_size = %u.\n",
- 				 map_name, sz);
- 			if (map->def.value_size && map->def.value_size != sz) {
--				pr_warning("map '%s': conflictling value size %u != %u.\n",
-+				pr_warning("map '%s': conflicting value size %u != %u.\n",
- 					   map_name, map->def.value_size, sz);
- 				return -EINVAL;
- 			}
-@@ -1240,7 +1240,7 @@ static int bpf_object__init_user_btf_map(struct bpf_object *obj,
- 			pr_debug("map '%s': found value [%u], sz = %lld.\n",
- 				 map_name, t->type, sz);
- 			if (map->def.value_size && map->def.value_size != sz) {
--				pr_warning("map '%s': conflictling value size %u != %lld.\n",
-+				pr_warning("map '%s': conflicting value size %u != %lld.\n",
- 					   map_name, map->def.value_size, sz);
- 				return -EINVAL;
- 			}
--- 
-2.20.1
+Cute...  So *all* of those are in dentry_hashtable itself.  IOW, we have
+these two values (1<<24 and (1<<24)|(0x88L<<40)) cropping up in
+dentry_hashtable[...].first on that config.
 
+That, at least, removes the possibility of corrupted forward pointer in
+the middle of a chain, with several pointers traversed before we run
+into something unmapped - the crap is in the very beginning.
+
+I don't get it.  The only things modifying these pointers should be:
+
+static void ___d_drop(struct dentry *dentry)
+{
+        struct hlist_bl_head *b;
+        /*
+         * Hashed dentries are normally on the dentry hashtable,
+         * with the exception of those newly allocated by
+         * d_obtain_root, which are always IS_ROOT:
+         */
+        if (unlikely(IS_ROOT(dentry)))
+                b = &dentry->d_sb->s_roots;
+        else   
+                b = d_hash(dentry->d_name.hash);
+
+        hlist_bl_lock(b);
+        __hlist_bl_del(&dentry->d_hash);
+        hlist_bl_unlock(b);
+}
+
+and
+
+static void __d_rehash(struct dentry *entry)
+{
+        struct hlist_bl_head *b = d_hash(entry->d_name.hash);
+
+        hlist_bl_lock(b);
+        hlist_bl_add_head_rcu(&entry->d_hash, b);
+        hlist_bl_unlock(b);
+}
+
+The latter sets that pointer to (unsigned long)&entry->d_hash | LIST_BL_LOCKMASK),
+having dereferenced entry->d_hash prior to that.  It can't be the source of those
+values, or we would've oopsed right there.
+
+The former...  __hlist_bl_del() does
+        /* pprev may be `first`, so be careful not to lose the lock bit */
+        WRITE_ONCE(*pprev,
+                   (struct hlist_bl_node *)
+                        ((unsigned long)next |
+                         ((unsigned long)*pprev & LIST_BL_LOCKMASK)));
+        if (next)
+                next->pprev = pprev;
+so to end up with that garbage in the list head we'd have to had next
+the same bogus pointer (modulo bit 0, possibly).  And since it's non-NULL,
+we would've immediately oopsed on trying to set next->pprev.
+
+There shouldn't be any pointers to hashtable elements other than ->d_hash.pprev
+of various dentries.  And ->d_hash is not a part of anon unions in struct
+dentry, so it can't be mistaken access through the aliasing member.
+
+Of course, there's always a possibility of something stomping on random places
+in memory and shitting those values all over, with the hashtable being the
+hottest place on the loads where it happens...  Hell knows...
+
+What's your config, BTW?  SMP and DEBUG_SPINLOCK, specifically...
