@@ -2,104 +2,84 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1854BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE55C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBDC4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 822622054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:14:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfFSLMP (ORCPT
+        id S1731622AbfFSLOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:12:15 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60606 "EHLO mx1.suse.de"
+        Wed, 19 Jun 2019 07:14:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60880 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727076AbfFSLMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:12:15 -0400
+        id S1727067AbfFSLN7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 07:13:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 15634AE74;
-        Wed, 19 Jun 2019 11:12:14 +0000 (UTC)
-Date:   Wed, 19 Jun 2019 13:12:12 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Peter Zijlstra <peterz@infradead.org>
-cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net
-Subject: Re: [RFC][PATCH] module: Propagate MODULE_STATE_COMING notifier
- errors
-In-Reply-To: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
-Message-ID: <alpine.LSU.2.21.1906191251380.23337@pobox.suse.cz>
-References: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        by mx1.suse.de (Postfix) with ESMTP id 3A905AF90;
+        Wed, 19 Jun 2019 11:13:58 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id BD2D61E15DD; Wed, 19 Jun 2019 13:13:57 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 13:13:57 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] ext4: remove redundant assignment to node
+Message-ID: <20190619111357.GD32409@quack2.suse.cz>
+References: <20190619090007.26962-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619090007.26962-1-colin.king@canonical.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019, Peter Zijlstra wrote:
-
+On Wed 19-06-19 10:00:06, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Some module notifiers; such as jump_label_module_notifier(),
-> tracepoint_module_notify(); can fail the MODULE_STATE_COMING callback
-> (due to -ENOMEM for example). However module.c:prepare_coming_module()
-> ignores all such errors, even though this function can already fail due
-> to klp_module_coming().
+> Pointer 'node' is assigned a value that is never read, node is
+> later overwritten when it re-assigned a different value inside
+> the while-loop.  The assignment is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-It does, but there is no change from the pre-prepare_coming_module() 
-times. Coming notifiers were called in complete_formation(), their return 
-values happily ignored and going notifiers not called to clean up even 
-before.
+Looks good to me. You can add:
 
-> Therefore, propagate the notifier error and ensure we call the GOING
-> notifier when we do fail, to ensure cleanup for all notifiers that
-> didn't fail. Auditing all notifiers to make sure calling GOING without
-> COMING first is OK found no obvious problems with that, but it did find
-> a whole bunch of issues with return values, so clean those up too.
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Jessica, do you know why coming notifiers do not return errors without 
-this patch (or to be precise, blocking_notifier_call_chain() return value 
-is not taken into the account)? We have come across the issue couple of 
-times already and I think there was a reason, but I cannot remember 
-anything and the code does not help either.
+								Honza
 
-Also the situation around the return values themselves is not completely 
-clear. If there is no NOTIFY_STOP_MASK set, only the return value of the 
-last notifier called is returned, so good that you checked, Peter.
- 
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3638,9 +3638,10 @@ static int prepare_coming_module(struct module *mod)
->  	if (err)
->  		return err;
->  
-> -	blocking_notifier_call_chain(&module_notify_list,
-> -				     MODULE_STATE_COMING, mod);
-> -	return 0;
-> +	ret = blocking_notifier_call_chain(&module_notify_list,
-> +					   MODULE_STATE_COMING, mod);
-> +	ret = notifier_to_errno(ret);
-> +	return ret;
->  }
->  
->  static int unknown_module_param_cb(char *param, char *val, const char *modname,
-> @@ -3780,7 +3781,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
->  
->  	err = prepare_coming_module(mod);
->  	if (err)
-> -		goto bug_cleanup;
-> +		goto coming_cleanup;
-
-Not good. klp_module_going() is not prepared to be called without 
-klp_module_coming() succeeding. "Funny" things might happen.
-
-Also destroy_params() might be called without parse_args() first now.
-
-So it calls for more fine-grained error handling.
-
-Miroslav
+> ---
+>  fs/ext4/extents_status.c | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
+> index 023a3eb3afa3..7521de2dcf3a 100644
+> --- a/fs/ext4/extents_status.c
+> +++ b/fs/ext4/extents_status.c
+> @@ -1317,7 +1317,6 @@ static int es_do_reclaim_extents(struct ext4_inode_info *ei, ext4_lblk_t end,
+>  	es = __es_tree_search(&tree->root, ei->i_es_shrink_lblk);
+>  	if (!es)
+>  		goto out_wrap;
+> -	node = &es->rb_node;
+>  	while (*nr_to_scan > 0) {
+>  		if (es->es_lblk > end) {
+>  			ei->i_es_shrink_lblk = end + 1;
+> -- 
+> 2.20.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
