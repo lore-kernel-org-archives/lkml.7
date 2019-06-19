@@ -2,77 +2,110 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77CAFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:01:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37464C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49EEC217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:01:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="A0yKsaRU"
+	by mail.kernel.org (Postfix) with ESMTP id 1B543217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727818AbfFSRBh (ORCPT
+        id S1727584AbfFSREt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:01:37 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34638 "EHLO mail.skyhub.de"
+        Wed, 19 Jun 2019 13:04:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:49174 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726091AbfFSRBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:01:37 -0400
-Received: from zn.tnic (p200300EC2F109900E125872A2998079C.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:9900:e125:872a:2998:79c])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 127441EC066F;
-        Wed, 19 Jun 2019 19:01:36 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1560963696;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=L6j4/IOrFDpSzrtIdlaNvKNfpxp/c7Xol/Qi84PXfZQ=;
-        b=A0yKsaRUrrCvvTKfaUHD4ytyrCi+tYgm4s+FQySXfUkG/GB33zqrZ65N3GIDsd9wEthAJY
-        OGElbmrsWukLQbnIHZ8PRyNdBYNX/gTzGKpHRdPAO3W8H5ef7MYmOvtkgCQbn+DHuM0Ynx
-        bPavgaWKndYyMX3JIQ4rbA/9gvstdhw=
-Date:   Wed, 19 Jun 2019 19:01:27 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Sean Christopherson <sean.j.christopherson@intel.com>
-Cc:     Qian Cai <cai@lca.pw>, tglx@linutronix.de, mingo@redhat.com,
-        hpa@zytor.com, x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] x86/cacheinfo: fix a -Wtype-limits warning
-Message-ID: <20190619170127.GF9574@zn.tnic>
-References: <1559763654-5155-1-git-send-email-cai@lca.pw>
- <20190605200703.GD26328@linux.intel.com>
+        id S1726091AbfFSREt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:04:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D1E2344;
+        Wed, 19 Jun 2019 10:04:48 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7A7C13F246;
+        Wed, 19 Jun 2019 10:04:47 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 18:04:45 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Vicente Bergas <vicencb@gmail.com>, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: d_lookup: Unable to handle kernel paging request
+Message-ID: <20190619170445.GI7767@fuggles.cambridge.arm.com>
+References: <23950bcb-81b0-4e07-8dc8-8740eb53d7fd@gmail.com>
+ <20190522135331.GM17978@ZenIV.linux.org.uk>
+ <bdc8b245-afca-4662-99e2-a082f25fc927@gmail.com>
+ <20190522162945.GN17978@ZenIV.linux.org.uk>
+ <10192e43-c21d-44e4-915d-bf77a50c22c4@gmail.com>
+ <20190618183548.GB17978@ZenIV.linux.org.uk>
+ <bf2b3aa6-bda1-43f1-9a01-e4ad3df81c0b@gmail.com>
+ <20190619162802.GF17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190605200703.GD26328@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190619162802.GF17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 01:07:04PM -0700, Sean Christopherson wrote:
-> Might be worth calling out in the changelog that 'c->x86 == 0x17' is true
-> if and only if c->x86_model was explicitly set by cpu_detect(), i.e. the
-> patch is correct even if the original intent was a misguided attempt to
-> check that x86_model has been set.
+Hi all,
 
-Are you thinking about some sick virt scenario where base CPUID level is < 1?
+On Wed, Jun 19, 2019 at 05:28:02PM +0100, Al Viro wrote:
+> [arm64 maintainers Cc'd; I'm not adding a Cc to moderated list,
+> sorry]
 
-In this particular case, there's a guard at the beginning of
-cacheinfo_amd_init_llc_id():
+Thanks for adding us.
 
-        if (!cpuid_edx(0x80000006))
-                return;
+> On Wed, Jun 19, 2019 at 02:42:16PM +0200, Vicente Bergas wrote:
+> 
+> > Hi Al,
+> > i have been running the distro-provided kernel the last few weeks
+> > and had no issues at all.
+> > https://archlinuxarm.org/packages/aarch64/linux-aarch64
+> > It is from the v5.1 branch and is compiled with gcc 8.3.
+> > 
+> > IIRC, i also tested
+> > https://archlinuxarm.org/packages/aarch64/linux-aarch64-rc
+> > v5.2-rc1 and v5.2-rc2 (which at that time where compiled with
+> > gcc 8.2) with no issues.
+> > 
+> > This week tested v5.2-rc4 and v5.2-rc5 from archlinuxarm but
+> > there are regressions unrelated to d_lookup.
+> > 
+> > At this point i was convinced it was a gcc 9.1 issue and had
+> > nothing to do with the kernel, but anyways i gave your patch a try.
+> > The tested kernel is v5.2-rc5-224-gbed3c0d84e7e and
+> > it has been compiled with gcc 8.3.
+> > The sentinel you put there has triggered!
+> > So, it is not a gcc 9.1 issue.
+> > 
+> > In any case, i have no idea if those addresses are arm64-specific
+> > in any way.
+> 
+> Cute...  So *all* of those are in dentry_hashtable itself.  IOW, we have
+> these two values (1<<24 and (1<<24)|(0x88L<<40)) cropping up in
+> dentry_hashtable[...].first on that config.
 
-but if there's CPUs which have CPUID 0x80000006 but base CPUID level is
-< 1, then that's their problem.
+Unfortunately, those values don't jump out at me as something particularly
+meaningful on arm64. Bloody weird though.
 
--- 
-Regards/Gruss,
-    Boris.
+> There shouldn't be any pointers to hashtable elements other than ->d_hash.pprev
+> of various dentries.  And ->d_hash is not a part of anon unions in struct
+> dentry, so it can't be mistaken access through the aliasing member.
+> 
+> Of course, there's always a possibility of something stomping on random places
+> in memory and shitting those values all over, with the hashtable being the
+> hottest place on the loads where it happens...  Hell knows...
+> 
+> What's your config, BTW?  SMP and DEBUG_SPINLOCK, specifically...
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+I'd also be interesting in seeing the .config (the pastebin link earlier in
+the thread appears to have expired). Two areas where we've had issues
+recently are (1) module relocations and (2) CONFIG_OPTIMIZE_INLINING.
+However, this is the first report I've seen of the sort of crash you're
+reporting.
+
+Will
