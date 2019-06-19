@@ -2,177 +2,150 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E12F0C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B4CC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAED9208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8574F214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:56:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731945AbfFSMzu (ORCPT
+        id S1731960AbfFSM4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:55:50 -0400
-Received: from imap1.codethink.co.uk ([176.9.8.82]:41584 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbfFSMzu (ORCPT
+        Wed, 19 Jun 2019 08:56:05 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:38119 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727002AbfFSM4E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:55:50 -0400
-Received: from 92.40.248.88.threembb.co.uk ([92.40.248.88] helo=[192.168.43.158])
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1hda7t-0005rZ-UF; Wed, 19 Jun 2019 13:55:46 +0100
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190613210849.10382-1-digetx@gmail.com>
- <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
- <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
- <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
- <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
- <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
- <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
-From:   Ben Dooks <ben.dooks@codethink.co.uk>
-Organization: Codethink Limited.
-Message-ID: <2e355ba0-2a77-3b39-7cec-cf580cd609b4@codethink.co.uk>
-Date:   Wed, 19 Jun 2019 13:55:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 08:56:04 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mna0x-1iN3th1WTd-00jb2X; Wed, 19 Jun 2019 14:55:48 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Tomasz Figa <tomasz.figa@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: exynos: only build mcpm support if used
+Date:   Wed, 19 Jun 2019 14:55:29 +0200
+Message-Id: <20190619125545.1087023-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:8lSv7z+Az3irPtD3mBB1X3CyVNiokLNe5prcDUQOA+DJCgdNyTg
+ 5HSfU0ojjXGl3H8v+ZOW1BF3QjWfGmLd45HQYerFQo1hF6TOJzjmg6CkfWrDRye+Rzi8qBH
+ /T/44D9/lYapFuhEwutzgfKwYjiA+hdiwTmPO8CETObOh3B+m5z9ouWT/F2LMF72K5FF4RV
+ 3C2EoYdsB4fpZ7kUqHWHg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rtxPUz4OOkQ=:fDfYCbeOzs7Zzr9OmJxvjt
+ yyB51ipVi9MfHI95lXT3mMbcckRT44/OfhgO/r8f/AiyrzQyXzaQn44vC3PeuNqLnrz+zKklE
+ 2mp4HStkOI0sZZ3PZqkzHIkRDMvKaR+RW7SRv/CrzoPRnh9R8I5MFA8G7ZV8cuXegPXp+z3i4
+ 80rK0Q1MT1RGT2oFiP7i7JB0ntt4u9x7hO55iWlSChLooK3AbPpbX52fngBz7xBELYhz11Dox
+ tZFYgHdvr/YIR92bEYwobWpOGYoFjjXnJyRyC++Wmz3qhbmAaxoSnxhDVbA83VxrlWbwplf80
+ tC0EFzKa/8MWTQqI6YwZEDwPB15n32VZtxHyfLPfG9nKKpMRaTDM032HVXWjgYB0fpkeoVBc5
+ 7BGwvvwsNNhKDCwzLmW5gg8hlsxqpwsKE09Ayv8jpixGgyKx9PWTu4KLMs8QdiCi4CzCtbKjw
+ xOtIJjw8LelXoTVhPJUW77gWUsB3DV1pDXnbRjPSew3jxOmvaYqNS/ZEkG2dYGVwFDPWg9QEP
+ T67FlDy2N9tapg8l7NA2nKo5VX4JydvE94f9TwFTVl36Yij/JggC3q6Qy2c7Zil139XbUI6gT
+ 0NZNubaTFeDdIqeji6In7y/qj/j+kpCpvKqrQKvjwpDITPUmuuxjnTA7Q2ExUu6jwyc8wsR6o
+ do/Cl7vDEhdSHQU5IXkcA+/wqOofmQLi+6H28GTyxykr1XNboFaj/MZIGBXWbUo95zs82n0+O
+ 5z1/97vGrraG7S9A6ibHFYEdxNQmrzy5K4aFnw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2019 12:10, Dmitry Osipenko wrote:
-> 19.06.2019 13:55, Jon Hunter пишет:
->>
->> On 19/06/2019 11:27, Dmitry Osipenko wrote:
->>> 19.06.2019 13:04, Jon Hunter пишет:
->>>>
->>>> On 19/06/2019 00:27, Dmitry Osipenko wrote:
->>>>> 19.06.2019 1:22, Ben Dooks пишет:
->>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
->>>>>>> of data, hence it can report transfer's residual with more fidelity which
->>>>>>> may be required in cases like audio playback. In particular this fixes
->>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
->>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
->>>>>>> on Tegra20 and Tegra30 devices.
->>>>>>>
->>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>>>>>
->>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>> ---
->>>>>>>    drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>>>>>>    1 file changed, 28 insertions(+), 7 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>>>>> index 79e9593815f1..c5af8f703548 100644
->>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>>>>        return 0;
->>>>>>>    }
->>>>>>>    +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->>>>>>> +                          struct tegra_dma_sg_req *sg_req,
->>>>>>> +                          struct tegra_dma_desc *dma_desc,
->>>>>>> +                          unsigned int residual)
->>>>>>> +{
->>>>>>> +    unsigned long status, wcount = 0;
->>>>>>> +
->>>>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>>>>> +        return residual;
->>>>>>> +
->>>>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>>>>> +
->>>>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>>>>> +
->>>>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>>>> +        wcount = status;
->>>>>>> +
->>>>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>>>>> +        return residual - sg_req->req_len;
->>>>>>> +
->>>>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>>>>>> +}
->>>>>>
->>>>>> I am unfortunately nowhere near my notes, so can't completely
->>>>>> review this. I think the complexity of my patch series is due
->>>>>> to an issue with the count being updated before the EOC IRQ
->>>>>> is actually flagged (and most definetly before it gets to the
->>>>>> CPU IRQ handler).
->>>>>>
->>>>>> The test system I was using, which i've not really got any
->>>>>> access to at the moment would show these internal inconsistent
->>>>>> states every few hours, however it was moving 48kHz 8ch 16bit
->>>>>> TDM data.
->>>>>>
->>>>>> Thanks for looking into this, I am not sure if I am going to
->>>>>> get any time to look into this within the next couple of
->>>>>> months.
->>>>>
->>>>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
->>>>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
->>>>> anything going wrong.
->>>>>
->>>>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
->>>>> vs EOC? Assuming the cyclic transfer mode.
->>>>
->>>> I can't say that I am. However, for the case of cyclic transfer, given
->>>> that the next transfer is always programmed into the registers before
->>>> the last one completes, I could see that by the time the interrupt is
->>>> serviced that the DMA has moved on to the next transfer (which I assume
->>>> would reset the count).
->>>>
->>>> Interestingly, our downstream kernel implemented a change to avoid the
->>>> count appearing to move backwards. I am curious if this also works,
->>>> which would be a lot simpler that what Ben has implemented and may
->>>> mitigate that race condition that Ben is describing.
->>>>
->>>> Cheers
->>>> Jon
->>>>
->>>> [0]
->>>> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>>>
->>>
->>> The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
->>> tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
->>> doesn't check whether the dma_desc is *the active* transfer and not a pending!
->>
->> I agree that it should check to see if it is active. I assume that what
->> this patch is doing is not updating the dma position if it appears to
->> have gone backwards, implying we have moved on to the next buffer. Yes
->> this is still probably not as accurate as Ben's implementation because
->> most likely we have finished that transfer and this patch would report
->> that it is not quite finished.
->>
->> If Ben's patch works for you then why not go with this?
-> 
-> Because I'm doubtful that it is really the case and not something else. It will be very odd
-> if hardware updates words count and sets EOC asynchronously, I'd call it as a faulty design
-> and thus a bug that need to worked around in software if that's really happening.
+We get a link error for configurations that enable an exynos
+SoC that does not require mcpm, but then manually enable
+mcpm anyway wihtout also turning on the arm-cci:
 
-Unfortunately someone designed hardware which does not update all the
-state in one go. Find the designer and make them explain why they did
-this.
+arch/arm/mach-exynos/mcpm-exynos.o: In function `exynos_pm_power_up_setup':
+mcpm-exynos.c:(.text+0x8): undefined reference to `cci_enable_port_for_self'
 
+Change it back to only build the code we actually need, by
+introducing a CONFIG_EXYNOS_MCPM that serves the same purpose
+as the older CONFIG_EXYNOS5420_MCPM.
+
+Fixes: 2997520c2d4e ("ARM: exynos: Set MCPM as mandatory for Exynos542x/5800 SoCs")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-exynos/Kconfig   | 6 +++++-
+ arch/arm/mach-exynos/Makefile  | 2 +-
+ arch/arm/mach-exynos/suspend.c | 6 +++---
+ 3 files changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 21ad78d79d8d..d7422233a130 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -107,7 +107,7 @@ config SOC_EXYNOS5420
+ 	bool "SAMSUNG EXYNOS5420"
+ 	default y
+ 	depends on ARCH_EXYNOS5
+-	select MCPM if SMP
++	select EXYNOS_MCPM if SMP
+ 	select ARM_CCI400_PORT_CTRL
+ 	select ARM_CPU_SUSPEND
+ 
+@@ -116,6 +116,10 @@ config SOC_EXYNOS5800
+ 	default y
+ 	depends on SOC_EXYNOS5420
+ 
++config EXYNOS_MCPM
++	bool
++	select MCPM
++
+ config EXYNOS_CPU_SUSPEND
+ 	bool
+ 	select ARM_CPU_SUSPEND
+diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+index 264dbaa89c3d..5abf3db23912 100644
+--- a/arch/arm/mach-exynos/Makefile
++++ b/arch/arm/mach-exynos/Makefile
+@@ -18,5 +18,5 @@ plus_sec := $(call as-instr,.arch_extension sec,+sec)
+ AFLAGS_exynos-smc.o		:=-Wa,-march=armv7-a$(plus_sec)
+ AFLAGS_sleep.o			:=-Wa,-march=armv7-a$(plus_sec)
+ 
+-obj-$(CONFIG_MCPM)		+= mcpm-exynos.o
++obj-$(CONFIG_EXYNOS_MCPM)	+= mcpm-exynos.o
+ CFLAGS_mcpm-exynos.o		+= -march=armv7-a
+diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
+index be122af0de8f..8b1e6ab8504f 100644
+--- a/arch/arm/mach-exynos/suspend.c
++++ b/arch/arm/mach-exynos/suspend.c
+@@ -268,7 +268,7 @@ static int exynos5420_cpu_suspend(unsigned long arg)
+ 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+ 	unsigned int cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+ 
+-	if (IS_ENABLED(CONFIG_MCPM)) {
++	if (IS_ENABLED(CONFIG_EXYNOS_MCPM)) {
+ 		mcpm_set_entry_vector(cpu, cluster, exynos_cpu_resume);
+ 		mcpm_cpu_suspend();
+ 	}
+@@ -351,7 +351,7 @@ static void exynos5420_pm_prepare(void)
+ 	exynos_pm_enter_sleep_mode();
+ 
+ 	/* ensure at least INFORM0 has the resume address */
+-	if (IS_ENABLED(CONFIG_MCPM))
++	if (IS_ENABLED(CONFIG_EXYNOS_MCPM))
+ 		pmu_raw_writel(__pa_symbol(mcpm_entry_point), S5P_INFORM0);
+ 
+ 	tmp = pmu_raw_readl(EXYNOS_L2_OPTION(0));
+@@ -455,7 +455,7 @@ static void exynos5420_prepare_pm_resume(void)
+ 	mpidr = read_cpuid_mpidr();
+ 	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+ 
+-	if (IS_ENABLED(CONFIG_MCPM))
++	if (IS_ENABLED(CONFIG_EXYNOS_MCPM))
+ 		WARN_ON(mcpm_cpu_powered_up());
+ 
+ 	if (IS_ENABLED(CONFIG_HW_PERF_EVENTS) && cluster != 0) {
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+2.20.0
 
-https://www.codethink.co.uk/privacy.html
