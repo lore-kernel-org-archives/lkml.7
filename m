@@ -4,47 +4,47 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04051C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:49:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B4AC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC07C2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:49:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 792EE2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560930572;
-	bh=jFjt4mOUZ7RInGkZfou5f9uaL/3OjrrYf5P0awFtrOQ=;
+	s=default; t=1560930577;
+	bh=K7C+XbzsaxR4wOymDxOJZZi8hO/ysQEL/vXyWuxa2u0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2plPwTqkIqxpBE0X3zxf+QI1+AbAXn/9b1svldIoz8OxWftVRlQUUlD3i6HiVk6kj
-	 K6FgFffL7bD9WXQHmtXIPJeEHlqWMW0iEMZuKxwdmm9Z3448iRmUxGGmg0HH73F2gC
-	 q2msqpLl5UVG0VDvB7wK1yE5hCbdpeNiGVEX9+tA=
+	b=BdPju0xaoFIi3S5mBp2YbGBv5OJCEbwYF6IrMgwescnpbq/ebQEEYQh2mUjcUQnI1
+	 aNQv6JKePf4Gtnb/0WiP4460Seoa1rnTA9JHz4LLDgVqhJvv7jpwRgMhUWCZ/3KR8i
+	 IJb0kpl7+uSW6EEs9BrzKvxQ7MuRKyEwValYNzss=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731265AbfFSHtb (ORCPT
+        id S1731278AbfFSHtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:49:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34346 "EHLO mail.kernel.org"
+        Wed, 19 Jun 2019 03:49:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34368 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731253AbfFSHta (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:49:30 -0400
+        id S1731253AbfFSHtd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 03:49:33 -0400
 Received: from localhost.localdomain (unknown [223.93.147.148])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3921C21479;
-        Wed, 19 Jun 2019 07:49:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0F0B72147A;
+        Wed, 19 Jun 2019 07:49:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560930569;
-        bh=jFjt4mOUZ7RInGkZfou5f9uaL/3OjrrYf5P0awFtrOQ=;
+        s=default; t=1560930572;
+        bh=K7C+XbzsaxR4wOymDxOJZZi8hO/ysQEL/vXyWuxa2u0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xskst31QS7cfbm5NFYG3ZQQns3J4QUsbU79eQszb69fcTqYlNHbfgJUVOJaTSxXMK
-         VEcXjoiFfEQP6LDlwp+rS3mMUx+NgZ5NLOpRmcxcMFB0KVNhgoXx1GINV9tIqxdrqd
-         6G1RzhSoTbGt3Csbt4TsKp0Q8Ad1or+qayF1RUDg=
+        b=I0OllnGuIl/hx6pUqoVUIbKHBBiMAKBQIaD/jrzYiRybVAIz7op0HFFHeKJ9n6Glj
+         nt+/pvjhBO/QaHfjGw4ReEOx8nMO0PvnYYDZ/+d5TvUFv2t1DqpjwSPj+8imW9LLKE
+         IlX9ULWRh4+pplxFNMwfMhp7D4jU2zLxgC16MSr0=
 From:   guoren@kernel.org
 To:     julien.grall@arm.com, arnd@arndb.de, linux-kernel@vger.kernel.org
 Cc:     linux-csky@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
-Subject: [PATCH 1/4] csky: Revert mmu ASID mechanism
-Date:   Wed, 19 Jun 2019 15:49:10 +0800
-Message-Id: <1560930553-26502-2-git-send-email-guoren@kernel.org>
+Subject: [PATCH 2/4] arch: Add generic asid implement from arm
+Date:   Wed, 19 Jun 2019 15:49:11 +0800
+Message-Id: <1560930553-26502-3-git-send-email-guoren@kernel.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560930553-26502-1-git-send-email-guoren@kernel.org>
 References: <1560930553-26502-1-git-send-email-guoren@kernel.org>
@@ -55,431 +55,303 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Guo Ren <ren_guo@c-sky.com>
 
-Current C-SKY ASID mechanism is from mips and it doesn't work well
-in a multi-core case. ASID per core mechanism is not suitable for
-C-SKY SMP tlb maintain operations, eg: tlbi.vas need share the same
-asid in all processors and it'll invalid the tlb entry in all cores
-with the same asid.
+The asid code is from arm64 and here is the ref link:
+https://lore.kernel.org/linux-arm-kernel/20190321163623.20219-12-julien.grall@arm.com/
 
-This patch is prepare for new ASID mechanism.
+Seems it's good for other arch to implement asid.
 
 Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 ---
- arch/csky/include/asm/mmu.h         |   1 -
- arch/csky/include/asm/mmu_context.h | 112 ++-------------------
- arch/csky/include/asm/pgtable.h     |   2 -
- arch/csky/kernel/smp.c              |   2 -
- arch/csky/mm/init.c                 |   2 -
- arch/csky/mm/tlb.c                  | 190 ++----------------------------------
- 6 files changed, 14 insertions(+), 295 deletions(-)
+ arch/csky/include/asm/asid.h |  77 ++++++++++++++++++
+ arch/csky/mm/Makefile        |   1 +
+ arch/csky/mm/asid.c          | 185 +++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 263 insertions(+)
+ create mode 100644 arch/csky/include/asm/asid.h
+ create mode 100644 arch/csky/mm/asid.c
 
-diff --git a/arch/csky/include/asm/mmu.h b/arch/csky/include/asm/mmu.h
-index cb34467..06f509a 100644
---- a/arch/csky/include/asm/mmu.h
-+++ b/arch/csky/include/asm/mmu.h
-@@ -5,7 +5,6 @@
- #define __ASM_CSKY_MMU_H
- 
- typedef struct {
--	unsigned long asid[NR_CPUS];
- 	void *vdso;
- } mm_context_t;
- 
-diff --git a/arch/csky/include/asm/mmu_context.h b/arch/csky/include/asm/mmu_context.h
-index 734db3a1..86dde48 100644
---- a/arch/csky/include/asm/mmu_context.h
-+++ b/arch/csky/include/asm/mmu_context.h
-@@ -16,122 +16,24 @@
- 
- #define TLBMISS_HANDLER_SETUP_PGD(pgd) \
- 	setup_pgd(__pa(pgd), false)
+diff --git a/arch/csky/include/asm/asid.h b/arch/csky/include/asm/asid.h
+new file mode 100644
+index 0000000..bb62b58
+--- /dev/null
++++ b/arch/csky/include/asm/asid.h
+@@ -0,0 +1,77 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __ASM_ASM_ASID_H
++#define __ASM_ASM_ASID_H
 +
- #define TLBMISS_HANDLER_SETUP_PGD_KERNEL(pgd) \
- 	setup_pgd(__pa(pgd), true)
- 
--#define cpu_context(cpu, mm)	((mm)->context.asid[cpu])
--#define cpu_asid(cpu, mm)	(cpu_context((cpu), (mm)) & ASID_MASK)
--#define asid_cache(cpu)		(cpu_data[cpu].asid_cache)
--
--#define ASID_FIRST_VERSION	(1 << CONFIG_CPU_ASID_BITS)
--#define ASID_INC		0x1
--#define ASID_MASK		(ASID_FIRST_VERSION - 1)
--#define ASID_VERSION_MASK	~ASID_MASK
-+#define init_new_context(tsk,mm)	0
-+#define activate_mm(prev,next)		switch_mm(prev, next, current)
- 
- #define destroy_context(mm)		do {} while (0)
- #define enter_lazy_tlb(mm, tsk)		do {} while (0)
- #define deactivate_mm(tsk, mm)		do {} while (0)
- 
--/*
-- *  All unused by hardware upper bits will be considered
-- *  as a software asid extension.
-- */
--static inline void
--get_new_mmu_context(struct mm_struct *mm, unsigned long cpu)
--{
--	unsigned long asid = asid_cache(cpu);
--
--	asid += ASID_INC;
--	if (!(asid & ASID_MASK)) {
--		flush_tlb_all();	/* start new asid cycle */
--		if (!asid)		/* fix version if needed */
--			asid = ASID_FIRST_VERSION;
--	}
--	cpu_context(cpu, mm) = asid_cache(cpu) = asid;
--}
--
--/*
-- * Initialize the context related info for a new mm_struct
-- * instance.
-- */
--static inline int
--init_new_context(struct task_struct *tsk, struct mm_struct *mm)
--{
--	int i;
--
--	for_each_online_cpu(i)
--		cpu_context(i, mm) = 0;
--	return 0;
--}
--
--static inline void switch_mm(struct mm_struct *prev, struct mm_struct *next,
--			struct task_struct *tsk)
--{
--	unsigned int cpu = smp_processor_id();
--	unsigned long flags;
--
--	local_irq_save(flags);
--	/* Check if our ASID is of an older version and thus invalid */
--	if ((cpu_context(cpu, next) ^ asid_cache(cpu)) & ASID_VERSION_MASK)
--		get_new_mmu_context(next, cpu);
--	write_mmu_entryhi(cpu_asid(cpu, next));
--	TLBMISS_HANDLER_SETUP_PGD(next->pgd);
--
--	/*
--	 * Mark current->active_mm as not "active" anymore.
--	 * We don't want to mislead possible IPI tlb flush routines.
--	 */
--	cpumask_clear_cpu(cpu, mm_cpumask(prev));
--	cpumask_set_cpu(cpu, mm_cpumask(next));
--
--	local_irq_restore(flags);
--}
--
--/*
-- * After we have set current->mm to a new value, this activates
-- * the context for the new mm so we see the new mappings.
-- */
- static inline void
--activate_mm(struct mm_struct *prev, struct mm_struct *next)
-+switch_mm(struct mm_struct *prev, struct mm_struct *next,
-+	  struct task_struct *tsk)
- {
--	unsigned long flags;
--	int cpu = smp_processor_id();
--
--	local_irq_save(flags);
-+	if (prev != next)
-+		tlb_invalid_all();
- 
--	/* Unconditionally get a new ASID.  */
--	get_new_mmu_context(next, cpu);
--
--	write_mmu_entryhi(cpu_asid(cpu, next));
- 	TLBMISS_HANDLER_SETUP_PGD(next->pgd);
--
--	/* mark mmu ownership change */
--	cpumask_clear_cpu(cpu, mm_cpumask(prev));
--	cpumask_set_cpu(cpu, mm_cpumask(next));
--
--	local_irq_restore(flags);
- }
--
--/*
-- * If mm is currently active_mm, we can't really drop it. Instead,
-- * we will get a new one for it.
-- */
--static inline void
--drop_mmu_context(struct mm_struct *mm, unsigned int cpu)
--{
--	unsigned long flags;
--
--	local_irq_save(flags);
--
--	if (cpumask_test_cpu(cpu, mm_cpumask(mm)))  {
--		get_new_mmu_context(mm, cpu);
--		write_mmu_entryhi(cpu_asid(cpu, mm));
--	} else {
--		/* will get a new context next time */
--		cpu_context(cpu, mm) = 0;
--	}
--
--	local_irq_restore(flags);
--}
--
- #endif /* __ASM_CSKY_MMU_CONTEXT_H */
-diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
-index dcea277..c429a6f 100644
---- a/arch/csky/include/asm/pgtable.h
-+++ b/arch/csky/include/asm/pgtable.h
-@@ -290,8 +290,6 @@ static inline pte_t *pte_offset(pmd_t *dir, unsigned long address)
- extern pgd_t swapper_pg_dir[PTRS_PER_PGD];
- extern void paging_init(void);
- 
--extern void show_jtlb_table(void);
--
- void update_mmu_cache(struct vm_area_struct *vma, unsigned long address,
- 		      pte_t *pte);
- 
-diff --git a/arch/csky/kernel/smp.c b/arch/csky/kernel/smp.c
-index b07a534..b753d38 100644
---- a/arch/csky/kernel/smp.c
-+++ b/arch/csky/kernel/smp.c
-@@ -212,8 +212,6 @@ void csky_start_secondary(void)
- 	TLBMISS_HANDLER_SETUP_PGD(swapper_pg_dir);
- 	TLBMISS_HANDLER_SETUP_PGD_KERNEL(swapper_pg_dir);
- 
--	asid_cache(smp_processor_id()) = ASID_FIRST_VERSION;
--
- #ifdef CONFIG_CPU_HAS_FPU
- 	init_fpu();
- #endif
-diff --git a/arch/csky/mm/init.c b/arch/csky/mm/init.c
-index 66e5970..eb0dc9e 100644
---- a/arch/csky/mm/init.c
-+++ b/arch/csky/mm/init.c
-@@ -114,8 +114,6 @@ void __init pre_mmu_init(void)
- 	TLBMISS_HANDLER_SETUP_PGD(swapper_pg_dir);
- 	TLBMISS_HANDLER_SETUP_PGD_KERNEL(swapper_pg_dir);
- 
--	asid_cache(smp_processor_id()) = ASID_FIRST_VERSION;
--
- 	/* Setup page mask to 4k */
- 	write_mmu_pagemask(0);
- }
-diff --git a/arch/csky/mm/tlb.c b/arch/csky/mm/tlb.c
-index 08b8394..efae81c 100644
---- a/arch/csky/mm/tlb.c
-+++ b/arch/csky/mm/tlb.c
-@@ -10,8 +10,6 @@
- #include <asm/pgtable.h>
- #include <asm/setup.h>
- 
--#define CSKY_TLB_SIZE CONFIG_CPU_TLB_SIZE
--
- void flush_tlb_all(void)
- {
- 	tlb_invalid_all();
-@@ -19,201 +17,27 @@ void flush_tlb_all(void)
- 
- void flush_tlb_mm(struct mm_struct *mm)
- {
--	int cpu = smp_processor_id();
--
--	if (cpu_context(cpu, mm) != 0)
--		drop_mmu_context(mm, cpu);
--
- 	tlb_invalid_all();
- }
- 
--#define restore_asid_inv_utlb(oldpid, newpid) \
--do { \
--	if ((oldpid & ASID_MASK) == newpid) \
--		write_mmu_entryhi(oldpid + 1); \
--	write_mmu_entryhi(oldpid); \
--} while (0)
--
- void flush_tlb_range(struct vm_area_struct *vma, unsigned long start,
--			   unsigned long end)
-+			unsigned long end)
- {
--	struct mm_struct *mm = vma->vm_mm;
--	int cpu = smp_processor_id();
--
--	if (cpu_context(cpu, mm) != 0) {
--		unsigned long size, flags;
--		int newpid = cpu_asid(cpu, mm);
--
--		local_irq_save(flags);
--		size = (end - start + (PAGE_SIZE - 1)) >> PAGE_SHIFT;
--		size = (size + 1) >> 1;
--		if (size <= CSKY_TLB_SIZE/2) {
--			start &= (PAGE_MASK << 1);
--			end += ((PAGE_SIZE << 1) - 1);
--			end &= (PAGE_MASK << 1);
--#ifdef CONFIG_CPU_HAS_TLBI
--			while (start < end) {
--				asm volatile("tlbi.vaas %0"
--					     ::"r"(start | newpid));
--				start += (PAGE_SIZE << 1);
--			}
--			sync_is();
--#else
--			{
--			int oldpid = read_mmu_entryhi();
--
--			while (start < end) {
--				int idx;
--
--				write_mmu_entryhi(start | newpid);
--				start += (PAGE_SIZE << 1);
--				tlb_probe();
--				idx = read_mmu_index();
--				if (idx >= 0)
--					tlb_invalid_indexed();
--			}
--			restore_asid_inv_utlb(oldpid, newpid);
--			}
--#endif
--		} else {
--			drop_mmu_context(mm, cpu);
--		}
--		local_irq_restore(flags);
--	}
-+	tlb_invalid_all();
- }
- 
- void flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
--	unsigned long size, flags;
--
--	local_irq_save(flags);
--	size = (end - start + (PAGE_SIZE - 1)) >> PAGE_SHIFT;
--	if (size <= CSKY_TLB_SIZE) {
--		start &= (PAGE_MASK << 1);
--		end += ((PAGE_SIZE << 1) - 1);
--		end &= (PAGE_MASK << 1);
--#ifdef CONFIG_CPU_HAS_TLBI
--		while (start < end) {
--			asm volatile("tlbi.vaas %0"::"r"(start));
--			start += (PAGE_SIZE << 1);
--		}
--		sync_is();
--#else
--		{
--		int oldpid = read_mmu_entryhi();
--
--		while (start < end) {
--			int idx;
--
--			write_mmu_entryhi(start);
--			start += (PAGE_SIZE << 1);
--			tlb_probe();
--			idx = read_mmu_index();
--			if (idx >= 0)
--				tlb_invalid_indexed();
--		}
--		restore_asid_inv_utlb(oldpid, 0);
--		}
--#endif
--	} else {
--		flush_tlb_all();
--	}
--
--	local_irq_restore(flags);
-+	tlb_invalid_all();
- }
- 
--void flush_tlb_page(struct vm_area_struct *vma, unsigned long page)
-+void flush_tlb_page(struct vm_area_struct *vma, unsigned long addr)
- {
--	int cpu = smp_processor_id();
--	int newpid = cpu_asid(cpu, vma->vm_mm);
--
--	if (!vma || cpu_context(cpu, vma->vm_mm) != 0) {
--		page &= (PAGE_MASK << 1);
--
--#ifdef CONFIG_CPU_HAS_TLBI
--		asm volatile("tlbi.vaas %0"::"r"(page | newpid));
--		sync_is();
--#else
--		{
--		int oldpid, idx;
--		unsigned long flags;
--
--		local_irq_save(flags);
--		oldpid = read_mmu_entryhi();
--		write_mmu_entryhi(page | newpid);
--		tlb_probe();
--		idx = read_mmu_index();
--		if (idx >= 0)
--			tlb_invalid_indexed();
--
--		restore_asid_inv_utlb(oldpid, newpid);
--		local_irq_restore(flags);
--		}
--#endif
--	}
-+	tlb_invalid_all();
- }
- 
--/*
-- * Remove one kernel space TLB entry.  This entry is assumed to be marked
-- * global so we don't do the ASID thing.
-- */
--void flush_tlb_one(unsigned long page)
-+void flush_tlb_one(unsigned long addr)
- {
--	int oldpid;
--
--	oldpid = read_mmu_entryhi();
--	page &= (PAGE_MASK << 1);
--
--#ifdef CONFIG_CPU_HAS_TLBI
--	page = page | (oldpid & 0xfff);
--	asm volatile("tlbi.vaas %0"::"r"(page));
--	sync_is();
--#else
--	{
--	int idx;
--	unsigned long flags;
--
--	page = page | (oldpid & 0xff);
--
--	local_irq_save(flags);
--	write_mmu_entryhi(page);
--	tlb_probe();
--	idx = read_mmu_index();
--	if (idx >= 0)
--		tlb_invalid_indexed();
--	restore_asid_inv_utlb(oldpid, oldpid);
--	local_irq_restore(flags);
--	}
--#endif
-+	tlb_invalid_all();
- }
- EXPORT_SYMBOL(flush_tlb_one);
--
--/* show current 32 jtlbs */
--void show_jtlb_table(void)
--{
--	unsigned long flags;
--	int entryhi, entrylo0, entrylo1;
--	int entry;
--	int oldpid;
--
--	local_irq_save(flags);
--	entry = 0;
--	pr_info("\n\n\n");
--
--	oldpid = read_mmu_entryhi();
--	while (entry < CSKY_TLB_SIZE) {
--		write_mmu_index(entry);
--		tlb_read();
--		entryhi = read_mmu_entryhi();
--		entrylo0 = read_mmu_entrylo0();
--		entrylo0 = entrylo0;
--		entrylo1 = read_mmu_entrylo1();
--		entrylo1 = entrylo1;
--		pr_info("jtlb[%d]:	entryhi - 0x%x;	entrylo0 - 0x%x;"
--			"	entrylo1 - 0x%x\n",
--			entry, entryhi, entrylo0, entrylo1);
--		entry++;
--	}
--	write_mmu_entryhi(oldpid);
--	local_irq_restore(flags);
--}
++#include <linux/atomic.h>
++#include <linux/compiler.h>
++#include <linux/cpumask.h>
++#include <linux/percpu.h>
++#include <linux/spinlock.h>
++
++struct asid_info
++{
++	atomic64_t	generation;
++	unsigned long	*map;
++	atomic64_t __percpu	*active;
++	u64 __percpu		*reserved;
++	u32			bits;
++	/* Lock protecting the structure */
++	raw_spinlock_t		lock;
++	/* Which CPU requires context flush on next call */
++	cpumask_t		flush_pending;
++	/* Number of ASID allocated by context (shift value) */
++	unsigned int		ctxt_shift;
++	/* Callback to locally flush the context. */
++	void			(*flush_cpu_ctxt_cb)(void);
++};
++
++#define NUM_ASIDS(info)			(1UL << ((info)->bits))
++#define NUM_CTXT_ASIDS(info)		(NUM_ASIDS(info) >> (info)->ctxt_shift)
++
++#define active_asid(info, cpu)	*per_cpu_ptr((info)->active, cpu)
++
++void asid_new_context(struct asid_info *info, atomic64_t *pasid,
++		      unsigned int cpu);
++
++/*
++ * Check the ASID is still valid for the context. If not generate a new ASID.
++ *
++ * @pasid: Pointer to the current ASID batch
++ * @cpu: current CPU ID. Must have been acquired throught get_cpu()
++ */
++static inline void asid_check_context(struct asid_info *info,
++				      atomic64_t *pasid, unsigned int cpu)
++{
++	u64 asid, old_active_asid;
++
++	asid = atomic64_read(pasid);
++
++	/*
++	 * The memory ordering here is subtle.
++	 * If our active_asid is non-zero and the ASID matches the current
++	 * generation, then we update the active_asid entry with a relaxed
++	 * cmpxchg. Racing with a concurrent rollover means that either:
++	 *
++	 * - We get a zero back from the cmpxchg and end up waiting on the
++	 *   lock. Taking the lock synchronises with the rollover and so
++	 *   we are forced to see the updated generation.
++	 *
++	 * - We get a valid ASID back from the cmpxchg, which means the
++	 *   relaxed xchg in flush_context will treat us as reserved
++	 *   because atomic RmWs are totally ordered for a given location.
++	 */
++	old_active_asid = atomic64_read(&active_asid(info, cpu));
++	if (old_active_asid &&
++	    !((asid ^ atomic64_read(&info->generation)) >> info->bits) &&
++	    atomic64_cmpxchg_relaxed(&active_asid(info, cpu),
++				     old_active_asid, asid))
++		return;
++
++	asid_new_context(info, pasid, cpu);
++}
++
++int asid_allocator_init(struct asid_info *info,
++			u32 bits, unsigned int asid_per_ctxt,
++			void (*flush_cpu_ctxt_cb)(void));
++
++#endif
+diff --git a/arch/csky/mm/Makefile b/arch/csky/mm/Makefile
+index c870eb3..897368f 100644
+--- a/arch/csky/mm/Makefile
++++ b/arch/csky/mm/Makefile
+@@ -11,3 +11,4 @@ obj-y +=			init.o
+ obj-y +=			ioremap.o
+ obj-y +=			syscache.o
+ obj-y +=			tlb.o
++obj-y +=			asid.o
+diff --git a/arch/csky/mm/asid.c b/arch/csky/mm/asid.c
+new file mode 100644
+index 0000000..72b71bf
+--- /dev/null
++++ b/arch/csky/mm/asid.c
+@@ -0,0 +1,185 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Generic ASID allocator.
++ *
++ * Based on arch/arm/mm/context.c
++ *
++ * Copyright (C) 2002-2003 Deep Blue Solutions Ltd, all rights reserved.
++ * Copyright (C) 2012 ARM Ltd.
++ */
++
++#include <linux/slab.h>
++
++#include <asm/asid.h>
++
++#define reserved_asid(info, cpu) *per_cpu_ptr((info)->reserved, cpu)
++
++#define ASID_MASK(info)			(~GENMASK((info)->bits - 1, 0))
++#define ASID_FIRST_VERSION(info)	(1UL << ((info)->bits))
++
++#define asid2idx(info, asid)		(((asid) & ~ASID_MASK(info)) >> (info)->ctxt_shift)
++#define idx2asid(info, idx)		(((idx) << (info)->ctxt_shift) & ~ASID_MASK(info))
++
++static void flush_context(struct asid_info *info)
++{
++	int i;
++	u64 asid;
++
++	/* Update the list of reserved ASIDs and the ASID bitmap. */
++	bitmap_clear(info->map, 0, NUM_CTXT_ASIDS(info));
++
++	for_each_possible_cpu(i) {
++		asid = atomic64_xchg_relaxed(&active_asid(info, i), 0);
++		/*
++		 * If this CPU has already been through a
++		 * rollover, but hasn't run another task in
++		 * the meantime, we must preserve its reserved
++		 * ASID, as this is the only trace we have of
++		 * the process it is still running.
++		 */
++		if (asid == 0)
++			asid = reserved_asid(info, i);
++		__set_bit(asid2idx(info, asid), info->map);
++		reserved_asid(info, i) = asid;
++	}
++
++	/*
++	 * Queue a TLB invalidation for each CPU to perform on next
++	 * context-switch
++	 */
++	cpumask_setall(&info->flush_pending);
++}
++
++static bool check_update_reserved_asid(struct asid_info *info, u64 asid,
++				       u64 newasid)
++{
++	int cpu;
++	bool hit = false;
++
++	/*
++	 * Iterate over the set of reserved ASIDs looking for a match.
++	 * If we find one, then we can update our mm to use newasid
++	 * (i.e. the same ASID in the current generation) but we can't
++	 * exit the loop early, since we need to ensure that all copies
++	 * of the old ASID are updated to reflect the mm. Failure to do
++	 * so could result in us missing the reserved ASID in a future
++	 * generation.
++	 */
++	for_each_possible_cpu(cpu) {
++		if (reserved_asid(info, cpu) == asid) {
++			hit = true;
++			reserved_asid(info, cpu) = newasid;
++		}
++	}
++
++	return hit;
++}
++
++static u64 new_context(struct asid_info *info, atomic64_t *pasid)
++{
++	static u32 cur_idx = 1;
++	u64 asid = atomic64_read(pasid);
++	u64 generation = atomic64_read(&info->generation);
++
++	if (asid != 0) {
++		u64 newasid = generation | (asid & ~ASID_MASK(info));
++
++		/*
++		 * If our current ASID was active during a rollover, we
++		 * can continue to use it and this was just a false alarm.
++		 */
++		if (check_update_reserved_asid(info, asid, newasid))
++			return newasid;
++
++		/*
++		 * We had a valid ASID in a previous life, so try to re-use
++		 * it if possible.
++		 */
++		if (!__test_and_set_bit(asid2idx(info, asid), info->map))
++			return newasid;
++	}
++
++	/*
++	 * Allocate a free ASID. If we can't find one, take a note of the
++	 * currently active ASIDs and mark the TLBs as requiring flushes.  We
++	 * always count from ASID #2 (index 1), as we use ASID #0 when setting
++	 * a reserved TTBR0 for the init_mm and we allocate ASIDs in even/odd
++	 * pairs.
++	 */
++	asid = find_next_zero_bit(info->map, NUM_CTXT_ASIDS(info), cur_idx);
++	if (asid != NUM_CTXT_ASIDS(info))
++		goto set_asid;
++
++	/* We're out of ASIDs, so increment the global generation count */
++	generation = atomic64_add_return_relaxed(ASID_FIRST_VERSION(info),
++						 &info->generation);
++	flush_context(info);
++
++	/* We have more ASIDs than CPUs, so this will always succeed */
++	asid = find_next_zero_bit(info->map, NUM_CTXT_ASIDS(info), 1);
++
++set_asid:
++	__set_bit(asid, info->map);
++	cur_idx = asid;
++	return idx2asid(info, asid) | generation;
++}
++
++/*
++ * Generate a new ASID for the context.
++ *
++ * @pasid: Pointer to the current ASID batch allocated. It will be updated
++ * with the new ASID batch.
++ * @cpu: current CPU ID. Must have been acquired through get_cpu()
++ */
++void asid_new_context(struct asid_info *info, atomic64_t *pasid,
++		      unsigned int cpu)
++{
++	unsigned long flags;
++	u64 asid;
++
++	raw_spin_lock_irqsave(&info->lock, flags);
++	/* Check that our ASID belongs to the current generation. */
++	asid = atomic64_read(pasid);
++	if ((asid ^ atomic64_read(&info->generation)) >> info->bits) {
++		asid = new_context(info, pasid);
++		atomic64_set(pasid, asid);
++	}
++
++	if (cpumask_test_and_clear_cpu(cpu, &info->flush_pending))
++		info->flush_cpu_ctxt_cb();
++
++	atomic64_set(&active_asid(info, cpu), asid);
++	raw_spin_unlock_irqrestore(&info->lock, flags);
++}
++
++/*
++ * Initialize the ASID allocator
++ *
++ * @info: Pointer to the asid allocator structure
++ * @bits: Number of ASIDs available
++ * @asid_per_ctxt: Number of ASIDs to allocate per-context. ASIDs are
++ * allocated contiguously for a given context. This value should be a power of
++ * 2.
++ */
++int asid_allocator_init(struct asid_info *info,
++			u32 bits, unsigned int asid_per_ctxt,
++			void (*flush_cpu_ctxt_cb)(void))
++{
++	info->bits = bits;
++	info->ctxt_shift = ilog2(asid_per_ctxt);
++	info->flush_cpu_ctxt_cb = flush_cpu_ctxt_cb;
++	/*
++	 * Expect allocation after rollover to fail if we don't have at least
++	 * one more ASID than CPUs. ASID #0 is always reserved.
++	 */
++	WARN_ON(NUM_CTXT_ASIDS(info) - 1 <= num_possible_cpus());
++	atomic64_set(&info->generation, ASID_FIRST_VERSION(info));
++	info->map = kcalloc(BITS_TO_LONGS(NUM_CTXT_ASIDS(info)),
++			    sizeof(*info->map), GFP_KERNEL);
++	if (!info->map)
++		return -ENOMEM;
++
++	raw_spin_lock_init(&info->lock);
++
++	return 0;
++}
 -- 
 2.7.4
 
