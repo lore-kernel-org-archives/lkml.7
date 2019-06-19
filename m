@@ -2,152 +2,152 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C355CC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC56C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A34FA2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:48:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EDC52084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:49:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731579AbfFSJsv (ORCPT
+        id S1731598AbfFSJtI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:48:51 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43392 "EHLO huawei.com"
+        Wed, 19 Jun 2019 05:49:08 -0400
+Received: from szxga01-in.huawei.com ([45.249.212.187]:6938 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726958AbfFSJsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:48:50 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9CE4EEB9E44137C3E136;
-        Wed, 19 Jun 2019 17:48:45 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Jun 2019
- 17:48:37 +0800
-Subject: PCI host bridge hotplug test question (was Re: [PATCH v2] bus:
- hisi_lpc: Don't use devm_kzalloc() to allocate logical PIO range)
-To:     Bjorn Helgaas <bhelgaas@google.com>
-References: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
- <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
- <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
- <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com>
- <CAErSpo5cqJCZjt6QqMNZ6_n=G-_WxFeERnsESOMxsdr1P-6JLg@mail.gmail.com>
- <9e8b6971-3189-9d4b-de9a-ff09f859f4f6@huawei.com>
- <CAErSpo4DemDWtnP2Gtram9tfQ0CaN9Na9_Gxk6Qk+nG5+JLuzA@mail.gmail.com>
- <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
- <CAErSpo576mVAFkF69bxaTpyxELXEG+z_m7CmUE3WGqfCmy57uQ@mail.gmail.com>
-CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Joe Perches <joe@perches.com>, <linux-pci@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
-        Jiang Liu <jiang.liu@linux.intel.com>,
-        "liudongdong (C)" <liudongdong3@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <3ada51e7-7cb9-e1e8-7ab7-859799232aa5@huawei.com>
-Date:   Wed, 19 Jun 2019 10:48:32 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1731186AbfFSJtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 05:49:07 -0400
+Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
+        by Forcepoint Email with ESMTP id 55BFF979A653C45FD5B1;
+        Wed, 19 Jun 2019 17:49:05 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Jun 2019 17:49:04 +0800
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Wed, 19 Jun 2019 17:49:04 +0800
+Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
+ dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
+ Wed, 19 Jun 2019 17:49:04 +0800
+From:   linmiaohe <linmiaohe@huawei.com>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+CC:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
+        "fw@strlen.de" <fw@strlen.de>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
+        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
+        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
+        "coreteam@netfilter.org" <coreteam@netfilter.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dsahern@gmail.com" <dsahern@gmail.com>,
+        Mingfangsen <mingfangsen@huawei.com>
+Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Topic: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
+ mistake
+Thread-Index: AdUmfDnLJBRdmfpcd0eT0vsD259sjw==
+Date:   Wed, 19 Jun 2019 09:49:04 +0000
+Message-ID: <30442ee669c44d9db01fb374b73fd2dd@huawei.com>
+Accept-Language: en-US
+Content-Language: zh-CN
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.184.189.20]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <CAErSpo576mVAFkF69bxaTpyxELXEG+z_m7CmUE3WGqfCmy57uQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2019 18:50, Bjorn Helgaas wrote:
-> [+cc Rafael, Mika, Jiang, linux-pci for ACPI host bridge hotplug test question]
->
-> On Tue, Jun 18, 2019 at 3:44 AM John Garry <john.garry@huawei.com> wrote:
->
->>>>> Could you just move the logic_pio_register_range() call farther down
->>>>> in hisi_lpc_probe()?  IIUC, once logic_pio_register_range() returns,
->>>>> an inb() with the right port number will try to access that port, so
->>>>> we should be prepared for that, i.e., maybe this in the wrong order to
->>>>> begin with?
->>>>
->>>> No, unfortunately we can't. The reason is that we need the logical PIO
->>>> base for that range before we enumerate the children of that host. We
->>>> need that base address for "translating" the child bus addresses to
->>>> logical PIO addresses.
->
->>> Ah, yeah, that makes sense.  I think.  We do assume that we know all
->>> the MMIO and I/O port translations before enumerating devices.  It's
->>> *conceivable* that could be changed someday since we don't actually
->>> need the translations until a driver claims the device,
+
+On 2019/6/18 23:58, Pablo Neira Ayuso wrote:
+> On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
+>> From: Miaohe Lin <linmiaohe@huawei.com>
 >>
->> We actually need them before a driver claims the device.
+>> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
+>> ipv4/ipv6 packets will be dropped because in device is vrf but out 
+>> device is an enslaved device. So failed with the check of the 
+>> rpfilter.
 >>
->> The reason is that when we create that child platform device we set the
->> device's IORESOURCE_IO resources according to the translated logic PIO
->> addresses, and not the host bus address. This is what makes the host
->> transparent to the child device driver.
->
-> I think you need it to set pdev->resource[], which is currently done
-> long before the driver claims the device (though one could imagine
-> delaying it even as far as pci_enable_device()-time).  I don't think
-> the translation is actually *used* until the driver claims the device
-> because only the driver knows how to do any inb/outb to the device.
->
-> But of course, that's all speculative and doesn't change what you need
-> to do now.  The current code assumes we know the translations during
-> enumeration, so you need to do the logic_pio registration before
-> enumerating.
->
->>> and it would
->>> gain some flexibility if we didn't have to program the host bridge
->>> windows until we know how much space is required.  But I don't see
->>> that happening anytime soon.
->
->> My problem is that I need to ensure that the new logical PIO unregister
->> function works ok for hot-pluggable host bridges. I need to get some way
->> to test this. Advice?
->
-
-Hi Bjorn,
-
-> Good question.  The ACPI host bridge driver (drivers/acpi/pci_root.c)
-> should support hotplug, but I'm not sure if there's a manual way to
-> trigger it via sysfs or something similar.  If there is, and you have
-> a machine with more than one host bridge, you might be able to remove
-> one that leads to non-essential devices.
-
-For one of our earlier boards I don't think that it had any essential 
-devices on the host bridge. But I need to find out about possibility of 
-removal. Hmmm.
-
->
-> Bjorn
->
-
-Further to the topic of supporting hotplug and unregistering IO port 
-regions, we don't even release IO port regions in the error path of PCI 
-host enumeration. We have pci_register_io_range(), but no unregister 
-equivalent.
-
-Looking at the history here, pci_register_io_range() was originally in 
-OF code. And in the OF code, calling pci_register_io_range() is a 
-side-effect of parsing the device tree. As such, I can see why there was 
-no unregister function.
-
-It would be worth noting this discussion, where the same was mentioned:
-https://lore.kernel.org/linux-pci/20180403140410.GE27789@ulmo/
-
-The tegra PCI host probe can defer, but, since there is no tidy-up of 
-pci_register_io_range() when deferring, we need to ensure that the port 
-IO management code can handle re-attempts to register the same range.
-
-It looks like this can be cleaned up also.
-
-Thanks,
-John
-
-> .
->
-
-
+>> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
+>> ---
+>> --- a/net/ipv4/netfilter/ipt_rpfilter.c
+>> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
+>> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
+>>  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
+>>  	flow.flowi4_tos = RT_TOS(iph->tos);
+>>  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
+>> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
+>>
+>>  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par),
+>> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
+>> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
+>> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+>>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
+>>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
+>>  		fl6.flowi6_oif = dev->ifindex;
+>> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
+>> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
+>> +		   (netif_is_l3_master(dev)) ||
+>> +		   (netif_is_l3_slave(dev)))
+>>  		fl6.flowi6_oif = dev->ifindex;
+>>
+>>  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags); @@
+>> -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
+>>  		goto out;
+>>  	}
+>>
+>> +	if (netif_is_l3_master(dev)) {
+>> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
+>> +		if (!dev)
+>> +			goto out;
+>> +	}
+> 
+> So, for the l3 device cases this makes:
+> 
+> #1 ip6_route_lookup() to fetch the route, using the device in xt_in()
+>    (the _LOOSE flag is ignored for the l3 device case).
+> 
+> #2 If this is a l3dev master, then you make a global lookup for the
+>    device using IP6CB(skb)->iif.
+> 
+> #3 You check if route matches with the device, using the new device
+>    from the lookup:
+> 
+>    if (rt->rt6i_idev->dev == dev ...
+> 
+> If there is no other way to fix this, OK, that's fair enough.
+> 
+> Still this fix looks a bit tricky to me.
+> 
+> And this assymmetric between the IPv4 and IPv6 codebase looks rare.
+> 
+> Probably someone can explain me this in more detail? I'd appreciate.
+> 
+> Thanks!
+> 
+    Thanks for your reply. I will try to explain this in more detail.
+    Vrf device will pass through netfilter hook twice. One with skb->dev=l3mdev
+Slave device and another one with skb->dev=l3mdev master deivce.
+    If a device is an l3mdev,  l3mdev_master_ifindex_rcu will return l3mdev
+master device ifindex otherwise 0 . So for non l3mdev cases,  v4 version is
+as same as the previous one. And for l3mdev cases,  flow.flowi4_oif
+will be l3mdev master device ifindex, so we can do a fib lookup in l3mdev
+domain as expected. Since fib_info_nh_uses_dev help us handle the case with
+dev=l3mdev slave or master and  XT_RPFILTER_LOOSE do not lookup route
+table, we finish v4.
+    For v6 version we need to set fl6.flowi6_oif as we are supposed to lookup 
+fib in l3mdev domain even in XT_RPFILTER_LOOSE mode.
+    And fib result rt->rt6i_idev->dev is l3mdev slave device, we need change
+dev to enslaved l3mdev device when dev passed in is l3mdev master device.
+    The key is l3mdev will pass through netfilter hook twice with skb dev is l3mdev slave
+and master . And we need to set flowi6_oif as fib lookup should in the l3mdev
+domain.
+    Thanks a lot. Have a good day!
