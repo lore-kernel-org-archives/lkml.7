@@ -2,147 +2,146 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DE4C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC16C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75A09208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0AC1205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="NHTEMx1G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731536AbfFSKZX (ORCPT
+        id S1731424AbfFSK1b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:25:23 -0400
-Received: from foss.arm.com ([217.140.110.172]:60272 "EHLO foss.arm.com"
+        Wed, 19 Jun 2019 06:27:31 -0400
+Received: from onstation.org ([52.200.56.107]:36936 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfFSKZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:25:22 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0012360;
-        Wed, 19 Jun 2019 03:25:21 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5B913F738;
-        Wed, 19 Jun 2019 03:27:07 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 3719D680120; Wed, 19 Jun 2019 11:25:20 +0100 (BST)
-Date:   Wed, 19 Jun 2019 11:25:20 +0100
-From:   Liviu Dudau <Liviu.Dudau@arm.com>
-To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc:     "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Ben Davis <Ben.Davis@arm.com>,
-        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
-        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>
-Subject: Re: [PATCH] drm/komeda: Correct printk format specifier for "size_t"
-Message-ID: <20190619102520.GC17204@e110455-lin.cambridge.arm.com>
-References: <20190619074225.13521-1-james.qian.wang@arm.com>
+        id S1726826AbfFSK1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:27:30 -0400
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id B2E0F3E93E;
+        Wed, 19 Jun 2019 10:27:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1560940049;
+        bh=MOk9vBejJD3LU6pvBKkl0HAgBqxiYYl+m7zxPntItDs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=NHTEMx1GjbaN2+J57y71Lmw6cyCTUTc//Df/6nc1PdjAadKR4+knfGiGK8xtnYs30
+         XDLg4JB15+XvEgUXz37mMkzC1zuBgI0BbRr1mVUZWdfg+iV3SafJuDg9hrxPnHTe+D
+         imbxp7cXdi7boHKky3/3zJvkePfad63ao+kCLYe0=
+Date:   Wed, 19 Jun 2019 06:27:28 -0400
+From:   Brian Masney <masneyb@onstation.org>
+To:     bjorn.andersson@linaro.org, agross@kernel.org,
+        david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run,
+        robh+dt@kernel.org
+Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
+        jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Subject: Re: [PATCH v2 5/6] soc: qcom: add OCMEM driver
+Message-ID: <20190619102728.GA894@onstation.org>
+References: <20190619023209.10036-1-masneyb@onstation.org>
+ <20190619023209.10036-6-masneyb@onstation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190619074225.13521-1-james.qian.wang@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190619023209.10036-6-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 08:42:45AM +0100, james qian wang (Arm Technology China) wrote:
-> Warnings popup when "make ARCH=i386"
-> 
-> In file included from include/drm/drm_mm.h:49,
->                  from include/drm/drm_vma_manager.h:26,
->                  from include/drm/drm_gem.h:40,
->                  from drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c:9:
-> drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c: In function 'komeda_fb_afbc_size_check':
-> drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c:96:17: error: format '%lx' expects argument of type 'long unsigned int', but argument 3 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
->    DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
-> 
-> That leads by misuse "%lx" as format speicifier for size_t, correct it
-> to "%zx"
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
+On Tue, Jun 18, 2019 at 10:32:08PM -0400, Brian Masney wrote:
+> +++ b/include/soc/qcom/ocmem.h
+> @@ -0,0 +1,62 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * The On Chip Memory (OCMEM) allocator allows various clients to allocate
+> + * memory from OCMEM based on performance, latency and power requirements.
+> + * This is typically used by the GPU, camera/video, and audio components on
+> + * some Snapdragon SoCs.
+> + *
+> + * Copyright (C) 2019 Brian Masney <masneyb@onstation.org>
+> + * Copyright (C) 2015 Red Hat. Author: Rob Clark <robdclark@gmail.com>
+> + */
+> +
+> +#ifndef __OCMEM_H__
+> +#define __OCMEM_H__
+> +
+> +enum ocmem_client {
+> +	/* GMEM clients */
+> +	OCMEM_GRAPHICS = 0x0,
+> +	/*
+> +	 * TODO add more once ocmem_allocate() is clever enough to
+> +	 * deal with multiple clients.
+> +	 */
+> +	OCMEM_CLIENT_MAX,
+> +};
+> +
+> +struct ocmem;
+> +
+> +struct ocmem_buf {
+> +	unsigned long offset;
+> +	unsigned long addr;
+> +	unsigned long len;
+> +};
+> +
+> +#if IS_ENABLED(CONFIG_QCOM_OCMEM)
+> +
+> +struct ocmem *of_get_ocmem(struct device *dev);
+> +struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem, enum ocmem_client client,
+> +				 unsigned long size);
+> +void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
+> +		struct ocmem_buf *buf);
+> +
+> +#else /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
+> +
+> +static inline struct ocmem *of_get_ocmem(struct device *dev)
+> +{
+> +	return NULL;
 
-Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
+This, along with ocmem_allocate() below, need to return ERR_PTR(-ENOSYS).
+adreno_gpu_ocmem_init() needs to check for this error code:
 
-Best regards,
-Liviu
+        ocmem = of_get_ocmem(dev);
+        if (IS_ERR(ocmem)) {
+                if (PTR_ERR(ocmem) == -ENXIO || PTR_ERR(ocmem) == -ENOSYS) {
+                        /*
+                         * Return success since either the ocmem property was
+                         * not specified in device tree, or ocmem support is
+                         * not compiled into the kernel.
+                         */
+                        return 0;
+                }
 
-> ---
->  .../gpu/drm/arm/display/komeda/komeda_framebuffer.c   | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> index abc8c0ccc053..3b0a70ed6aa0 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
-> @@ -43,8 +43,8 @@ komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
->  	struct drm_framebuffer *fb = &kfb->base;
->  	const struct drm_format_info *info = fb->format;
->  	struct drm_gem_object *obj;
-> -	u32 alignment_w = 0, alignment_h = 0, alignment_header;
-> -	u32 n_blocks = 0, min_size = 0;
-> +	u32 alignment_w = 0, alignment_h = 0, alignment_header, n_blocks;
-> +	u64 min_size;
->  
->  	obj = drm_gem_object_lookup(file, mode_cmd->handles[0]);
->  	if (!obj) {
-> @@ -93,7 +93,7 @@ komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
->  			       AFBC_SUPERBLK_ALIGNMENT);
->  	min_size = kfb->afbc_size + fb->offsets[0];
->  	if (min_size > obj->size) {
-> -		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
-> +		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%zx. min_size 0x%llx.\n",
->  			      obj->size, min_size);
->  		goto check_failed;
->  	}
-> @@ -114,7 +114,8 @@ komeda_fb_none_afbc_size_check(struct komeda_dev *mdev, struct komeda_fb *kfb,
->  	struct drm_framebuffer *fb = &kfb->base;
->  	const struct drm_format_info *info = fb->format;
->  	struct drm_gem_object *obj;
-> -	u32 i, min_size, block_h;
-> +	u32 i, block_h;
-> +	u64 min_size;
->  
->  	if (komeda_fb_check_src_coords(kfb, 0, 0, fb->width, fb->height))
->  		return -EINVAL;
-> @@ -137,7 +138,7 @@ komeda_fb_none_afbc_size_check(struct komeda_dev *mdev, struct komeda_fb *kfb,
->  		min_size = komeda_fb_get_pixel_addr(kfb, 0, fb->height, i)
->  			 - to_drm_gem_cma_obj(obj)->paddr;
->  		if (obj->size < min_size) {
-> -			DRM_DEBUG_KMS("The fb->obj[%d] size: %ld lower than the minimum requirement: %d.\n",
-> +			DRM_DEBUG_KMS("The fb->obj[%d] size: 0x%zx lower than the minimum requirement: 0x%llx.\n",
->  				      i, obj->size, min_size);
->  			return -EINVAL;
->  		}
+                return PTR_ERR(ocmem);
+        }
+
+Brian
+
+
+
+> +}
+> +
+> +static inline struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem,
+> +					       enum ocmem_client client,
+> +					       unsigned long size)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
+> +			      struct ocmem_buf *buf)
+> +{
+> +}
+> +
+> +#endif /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
+> +
+> +#endif /* __OCMEM_H__ */
 > -- 
-> 2.17.1
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+> 2.20.1
