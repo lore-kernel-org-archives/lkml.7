@@ -2,113 +2,99 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D74C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:52:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74E81C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5390D2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:52:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5826A214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:54:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731667AbfFSLwp (ORCPT
+        id S1731647AbfFSLyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:52:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57598 "EHLO mx1.redhat.com"
+        Wed, 19 Jun 2019 07:54:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:35630 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfFSLwp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:52:45 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9AF03308792E;
-        Wed, 19 Jun 2019 11:52:38 +0000 (UTC)
-Received: from hive.brq.redhat.com (unknown [10.43.2.95])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40C4460FDE;
-        Wed, 19 Jun 2019 11:52:32 +0000 (UTC)
-From:   Petr Oros <poros@redhat.com>
-To:     netdev@vger.kernel.org
-Cc:     sathya.perla@broadcom.com, ajit.khaparde@broadcom.com,
-        sriharsha.basavapatna@broadcom.com, somnath.kotur@broadcom.com,
-        davem@davemloft.net, linux-kernel@vger.kernel.org,
-        ivecera@redhat.com
-Subject: [PATCH net] be2net: fix link failure after ethtool offline test
-Date:   Wed, 19 Jun 2019 13:52:31 +0200
-Message-Id: <20190619115231.6020-1-poros@redhat.com>
+        id S1727067AbfFSLyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 07:54:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 89DB6360;
+        Wed, 19 Jun 2019 04:54:16 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 71F893F738;
+        Wed, 19 Jun 2019 04:56:01 -0700 (PDT)
+Subject: Re: [PATCH 3/8] iommu/arm-smmu-v3: Support platform SSID
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     "joro@8bytes.org" <joro@8bytes.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "jacob.jun.pan@linux.intel.com" <jacob.jun.pan@linux.intel.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "eric.auger@redhat.com" <eric.auger@redhat.com>
+References: <20190610184714.6786-1-jean-philippe.brucker@arm.com>
+ <20190610184714.6786-4-jean-philippe.brucker@arm.com>
+ <20190618180851.GK4270@fuggles.cambridge.arm.com>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <73cfb797-5ae7-b9d9-01ea-fe98a1bed5c3@arm.com>
+Date:   Wed, 19 Jun 2019 12:53:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 19 Jun 2019 11:52:45 +0000 (UTC)
+In-Reply-To: <20190618180851.GK4270@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain cards in conjunction with certain switches need a little more
-time for link setup that results in ethtool link test failure after
-offline test. Patch adds a loop that waits for a link setup finish.
+On 18/06/2019 19:08, Will Deacon wrote:
+>> +	/*
+>> +	 * If the SMMU doesn't support 2-stage CD, limit the linear
+>> +	 * tables to a reasonable number of contexts, let's say
+>> +	 * 64kB / sizeof(ctx_desc) = 1024 = 2^10
+>> +	 */
+>> +	if (!(smmu->features & ARM_SMMU_FEAT_2_LVL_CDTAB))
+>> +		master->ssid_bits = min(master->ssid_bits, 10U);
+> 
+> Please introduce a #define for the 10, so that it is computed in the way
+> you describe in the comment (a bit like we do for things like queue sizes).
 
-Signed-off-by: Petr Oros <poros@redhat.com>
----
- .../net/ethernet/emulex/benet/be_ethtool.c    | 28 +++++++++++++++----
- 1 file changed, 22 insertions(+), 6 deletions(-)
+Ok
 
-diff --git a/drivers/net/ethernet/emulex/benet/be_ethtool.c b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-index 8a6785173228f3..492f8769ac12c2 100644
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -891,7 +891,7 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 			 u64 *data)
- {
- 	struct be_adapter *adapter = netdev_priv(netdev);
--	int status;
-+	int status, cnt;
- 	u8 link_status = 0;
- 
- 	if (adapter->function_caps & BE_FUNCTION_CAPS_SUPER_NIC) {
-@@ -902,6 +902,9 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 
- 	memset(data, 0, sizeof(u64) * ETHTOOL_TESTS_NUM);
- 
-+	/* check link status before offline tests */
-+	link_status = netif_carrier_ok(netdev);
-+
- 	if (test->flags & ETH_TEST_FL_OFFLINE) {
- 		if (be_loopback_test(adapter, BE_MAC_LOOPBACK, &data[0]) != 0)
- 			test->flags |= ETH_TEST_FL_FAILED;
-@@ -922,13 +925,26 @@ static void be_self_test(struct net_device *netdev, struct ethtool_test *test,
- 		test->flags |= ETH_TEST_FL_FAILED;
- 	}
- 
--	status = be_cmd_link_status_query(adapter, NULL, &link_status, 0);
--	if (status) {
--		test->flags |= ETH_TEST_FL_FAILED;
--		data[4] = -1;
--	} else if (!link_status) {
-+	/* link status was down prior to test */
-+	if (!link_status) {
- 		test->flags |= ETH_TEST_FL_FAILED;
- 		data[4] = 1;
-+		return;
-+	}
-+
-+	for (cnt = 10; cnt; cnt--) {
-+		status = be_cmd_link_status_query(adapter, NULL, &link_status,
-+						  0);
-+		if (status) {
-+			test->flags |= ETH_TEST_FL_FAILED;
-+			data[4] = -1;
-+			break;
-+		}
-+
-+		if (link_status)
-+			break;
-+
-+		msleep_interruptible(500);
- 	}
- }
- 
--- 
-2.21.0
+>> +
+>>  	group = iommu_group_get_for_dev(dev);
+>>  	if (!IS_ERR(group)) {
+>>  		iommu_group_put(group);
+>> diff --git a/drivers/iommu/of_iommu.c b/drivers/iommu/of_iommu.c
+>> index f04a6df65eb8..04f4f6b95d82 100644
+>> --- a/drivers/iommu/of_iommu.c
+>> +++ b/drivers/iommu/of_iommu.c
+>> @@ -206,8 +206,12 @@ const struct iommu_ops *of_iommu_configure(struct device *dev,
+>>  			if (err)
+>>  				break;
+>>  		}
+>> -	}
+>>  
+>> +		fwspec = dev_iommu_fwspec_get(dev);
+>> +		if (!err && fwspec)
+>> +			of_property_read_u32(master_np, "pasid-num-bits",
+>> +					     &fwspec->num_pasid_bits);
+>> +	}
+> 
+> Hmm. Do you know if there's anything in ACPI for this?
 
+Yes, IORT version D introduced a "substream width" field for the Named
+component node (platform device). I don't think it existed last time I
+checked, so I'll see about supporting it.
+
+Thanks,
+Jean
