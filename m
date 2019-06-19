@@ -7,119 +7,152 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B66EAC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:40:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72258C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 04:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90627208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:40:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19EE12084B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 04:03:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="BQ7vWgHm"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="njLHgxeA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730416AbfFSDks (ORCPT
+        id S1726058AbfFSEDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 23:40:48 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42182 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSDkr (ORCPT
+        Wed, 19 Jun 2019 00:03:05 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:53560 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725562AbfFSEDF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 23:40:47 -0400
-Received: by mail-ot1-f65.google.com with SMTP id l15so8167014otn.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 20:40:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4V43vNNP9UR/YMy0iUrU7kUuUwSqcmG602S5hpOD5NE=;
-        b=BQ7vWgHmVXoWfX5W8xsL12ik15mXugB0SaJil+xQI3I0WxyylMDSZVjeFIBqrMpPVJ
-         Tgiut3d49qvcxdiNlr/Wuqhf5OYmZDTD6pJsL4uc8B7AvZ8wwh8aPM4n71HSolE5Oxc3
-         FA9Ld6qDcf1gl5dm9y3qsfehBHljHi5HXuDdd7/icxI+t/oHdrlAmeDiUP/Kmr+DiaXd
-         ygMke+1L3EJ6jv6Or7J7ka07JnJyzYJ6usnlq/hrYPaTv2PCenHPThlG9fXMEyQo3ktq
-         qYnDyLZfzEglV0V7mhDK4JYNDdtBeedbRy3nXiodLZw2O63uvgAs/frjTUrFddu2fdwk
-         1G9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4V43vNNP9UR/YMy0iUrU7kUuUwSqcmG602S5hpOD5NE=;
-        b=dwBQUrE388OR7Xd2VnsBEZpCs+CwEDv/D7I/j2BCS/3YbpyfZ3d8h/uZ5OTuQPVvXX
-         szspdalK3RYkncrWc+ikJgyGDdk8OEYo8Y6LGdDl17VKvUucIiEL13nWrp/nFGlodFFO
-         fOcGQfjvXkWzC7SgweVJ4XSv21QpMs55fzsYzibVtPwq5lf1KAwam9Fjd2xTeE8H5msE
-         HjnKEc8LbesDtpW7PXh8yeeHEJEyPlU9z8x2v8yB9OXtVlQNRMElfw0kcZNq7tyQoroZ
-         R1d37x+BDAl2qJXURhlvL1ZClrTZyBeYem4UVaub3guojyydrFCOgxyc5I88XAtG9/Xm
-         Q9vg==
-X-Gm-Message-State: APjAAAXxAEDgCCyKcrwnpPEANpyrnJ1iWIDGwBRFQ/Xq0Li9bw1xElpE
-        sC7UcGkYyNAz/X22kzUGUMLKBpHfJq9IqOKDgHtgNQ==
-X-Google-Smtp-Source: APXvYqzSIN9dPRssFnDKf+ysKlqbDab6DghA3P8E1YBeqgXp36cJF4wdWJZxF+5DmxoFz1Yx1IYT0Jk4KmWR0apXjnU=
-X-Received: by 2002:a9d:7a9a:: with SMTP id l26mr59223453otn.71.1560915647227;
- Tue, 18 Jun 2019 20:40:47 -0700 (PDT)
+        Wed, 19 Jun 2019 00:03:05 -0400
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x5J42qB4032589;
+        Wed, 19 Jun 2019 13:02:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5J42qB4032589
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1560916973;
+        bh=tkjX5PNPrJPasCTxYHgyfQnyjLXksXDnK7VVj0pwtio=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=njLHgxeAGTZ5u0FEsPFhFCMOXl8f5pQ/EGbVZSeENKMHAWMQsfwCoTCWU/U7Ov5KU
+         SFK3e3xhe+ovZc9jbwXYo7GvanaDCaRumyuRmyWf/X+6EIhpNvjC4FsXfsf4LXmiiO
+         w9yv77nIuqOKlgPDlGhI4ePlpqpoZJpgbQ9X7kYCGemTTE5ZVCmVwX/j0FeEOU+Jyk
+         HtCvJRWgPAiyf/ygzvbVNi56ywoBFvCBOxUDJhMzFhsHhr/+M4lYGwi5mWJQ/3UizI
+         YxExw6VY/RMuDD9UNdLh9hbBSF+oDW+LwkjgVyCrBXf5xZfFUOGj3fBg3pqrChVB0g
+         RqOJhZ6u5X+Lg==
+X-Nifty-SrcIP: [209.85.222.54]
+Received: by mail-ua1-f54.google.com with SMTP id v20so3021031uao.3;
+        Tue, 18 Jun 2019 21:02:52 -0700 (PDT)
+X-Gm-Message-State: APjAAAXUfrKw3y3ZmopRuYu8DK2ocC8zDi+UmQZwwdArs7riTy/SoRmJ
+        Rc9I+ewo2XiTU0wcu2OcH9KHlFDmdwlxhmQCmsM=
+X-Google-Smtp-Source: APXvYqyrqOA+mb7BvfFmB/sS1UkmNbUU4f3Y32P40E16rHImNQaL4GpzCijTQmg4Wje+hkLazBbiBWljAqa5DIzeWLA=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr26623437vsl.155.1560916971750;
+ Tue, 18 Jun 2019 21:02:51 -0700 (PDT)
 MIME-Version: 1.0
-References: <155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155977188458.2443951.9573565800736334460.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20190618014223.GD18161@richard>
-In-Reply-To: <20190618014223.GD18161@richard>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 18 Jun 2019 20:40:36 -0700
-Message-ID: <CAPcyv4gXzNgghUq337foa3ywB0R4g1e1atnXX-=KJCjCacv0TA@mail.gmail.com>
-Subject: Re: [PATCH v9 03/12] mm/hotplug: Prepare shrink_{zone, pgdat}_span
- for sub-section removal
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
+References: <20190619132326.1846345b@canb.auug.org.au>
+In-Reply-To: <20190619132326.1846345b@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 19 Jun 2019 13:02:15 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQCe0APJ3ggJYRDf_DjYg=dH9+2nNsYoygiFKhTa=givg@mail.gmail.com>
+Message-ID: <CAK7LNAQCe0APJ3ggJYRDf_DjYg=dH9+2nNsYoygiFKhTa=givg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 6:42 PM Wei Yang <richardw.yang@linux.intel.com> wrote:
->
-> On Wed, Jun 05, 2019 at 02:58:04PM -0700, Dan Williams wrote:
-> >Sub-section hotplug support reduces the unit of operation of hotplug
-> >from section-sized-units (PAGES_PER_SECTION) to sub-section-sized units
-> >(PAGES_PER_SUBSECTION). Teach shrink_{zone,pgdat}_span() to consider
-> >PAGES_PER_SUBSECTION boundaries as the points where pfn_valid(), not
-> >valid_section(), can toggle.
-> >
-> >Cc: Michal Hocko <mhocko@suse.com>
-> >Cc: Vlastimil Babka <vbabka@suse.cz>
-> >Cc: Logan Gunthorpe <logang@deltatee.com>
-> >Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> >Reviewed-by: Oscar Salvador <osalvador@suse.de>
-> >Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> >---
-> > mm/memory_hotplug.c |   29 ++++++++---------------------
-> > 1 file changed, 8 insertions(+), 21 deletions(-)
-> >
-> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >index 7b963c2d3a0d..647859a1d119 100644
-> >--- a/mm/memory_hotplug.c
-> >+++ b/mm/memory_hotplug.c
-> >@@ -318,12 +318,8 @@ static unsigned long find_smallest_section_pfn(int nid, struct zone *zone,
-> >                                    unsigned long start_pfn,
-> >                                    unsigned long end_pfn)
-> > {
-> >-      struct mem_section *ms;
-> >-
-> >-      for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SECTION) {
-> >-              ms = __pfn_to_section(start_pfn);
-> >-
-> >-              if (unlikely(!valid_section(ms)))
-> >+      for (; start_pfn < end_pfn; start_pfn += PAGES_PER_SUBSECTION) {
-> >+              if (unlikely(!pfn_valid(start_pfn)))
-> >                       continue;
->
-> Hmm, we change the granularity of valid section from SECTION to SUBSECTION.
-> But we didn't change the granularity of node id and zone information.
->
-> For example, we found the node id of a pfn mismatch, we can skip the whole
-> section instead of a subsection.
->
-> Maybe this is not a big deal.
+Hi.
 
-I don't see a problem.
+
+On Wed, Jun 19, 2019 at 12:23 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+>
+> Hi all,
+>
+> After merging the net-next tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> In file included from usr/include/linux/tc_act/tc_ctinfo.hdrtest.c:1:
+> ./usr/include/linux/tc_act/tc_ctinfo.h:30:21: error: implicit declaration of function 'BIT' [-Werror=implicit-function-declaration]
+>   CTINFO_MODE_DSCP = BIT(0),
+>                      ^~~
+> ./usr/include/linux/tc_act/tc_ctinfo.h:30:2: error: enumerator value for 'CTINFO_MODE_DSCP' is not an integer constant
+>   CTINFO_MODE_DSCP = BIT(0),
+>   ^~~~~~~~~~~~~~~~
+> ./usr/include/linux/tc_act/tc_ctinfo.h:32:1: error: enumerator value for 'CTINFO_MODE_CPMARK' is not an integer constant
+>  };
+>  ^
+>
+> Caused by commit
+>
+>   24ec483cec98 ("net: sched: Introduce act_ctinfo action")
+>
+> Presumably exposed by commit
+>
+>   b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-contained")
+>
+> from the kbuild tree.
+
+
+My commit correctly blocked the broken UAPI header, Hooray!
+
+People export more and more headers that
+are never able to compile in user-space.
+
+We must block new breakages from coming in.
+
+
+BIT() is not exported to user-space
+since it is not prefixed with underscore.
+
+
+You can use _BITUL() in user-space,
+which is available in include/uapi/linux/const.h
+
+
+Thanks.
+
+
+
+
+> I have applied the following (obvious) patch for today.
+>
+> From: Stephen Rothwell <sfr@canb.auug.org.au>
+> Date: Wed, 19 Jun 2019 13:15:22 +1000
+> Subject: [PATCH] net: sched: don't use BIT() in uapi headers
+>
+> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> ---
+>  include/uapi/linux/tc_act/tc_ctinfo.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/include/uapi/linux/tc_act/tc_ctinfo.h b/include/uapi/linux/tc_act/tc_ctinfo.h
+> index da803e05a89b..6166c62dd7dd 100644
+> --- a/include/uapi/linux/tc_act/tc_ctinfo.h
+> +++ b/include/uapi/linux/tc_act/tc_ctinfo.h
+> @@ -27,8 +27,8 @@ enum {
+>  #define TCA_CTINFO_MAX (__TCA_CTINFO_MAX - 1)
+>
+>  enum {
+> -       CTINFO_MODE_DSCP        = BIT(0),
+> -       CTINFO_MODE_CPMARK      = BIT(1)
+> +       CTINFO_MODE_DSCP        = (1UL << 0),
+> +       CTINFO_MODE_CPMARK      = (1UL << 1)
+>  };
+>
+>  #endif
+> --
+> 2.20.1
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
