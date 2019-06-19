@@ -2,192 +2,73 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90CEEC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 391DAC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7017C208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1923E2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732059AbfFSMcI (ORCPT
+        id S1732061AbfFSMcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:32:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41794 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731358AbfFSMcH (ORCPT
+        Wed, 19 Jun 2019 08:32:17 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:60531 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731755AbfFSMcQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:32:07 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCMWgD006031
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:32:06 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7m3hunh2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:32:06 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Wed, 19 Jun 2019 13:32:05 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 13:32:03 +0100
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JCW01u37880254
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 12:32:00 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 190DE28059;
-        Wed, 19 Jun 2019 12:32:00 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32DA12805C;
-        Wed, 19 Jun 2019 12:31:59 +0000 (GMT)
-Received: from [9.85.194.193] (unknown [9.85.194.193])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 12:31:59 +0000 (GMT)
-Subject: Re: [PATCH v4 1/7] s390: vfio-ap: Refactor vfio_ap driver probe and
- remove callbacks
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
- <1560454780-20359-2-git-send-email-akrowiak@linux.ibm.com>
- <20190618181456.0252227b.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Wed, 19 Jun 2019 08:31:58 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 19 Jun 2019 08:32:16 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 9B7458046F; Wed, 19 Jun 2019 14:32:03 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 14:32:10 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     pavel@ucw.cz
+Cc:     linux-kernel@vger.kernel.org,
+        Randall Huang <huangrandall@google.com>,
+        Chao Yu <yuchao0@huawei.com>, Jaegeuk Kim <jaegeuk@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.19 33/75] f2fs: fix to avoid accessing xattr across the
+ boundary
+Message-ID: <20190619123210.GA14477@xo-6d-61-c0.localdomain>
+References: <20190617210752.799453599@linuxfoundation.org>
+ <20190617210754.076823433@linuxfoundation.org>
 MIME-Version: 1.0
-In-Reply-To: <20190618181456.0252227b.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061912-0072-0000-0000-0000043E66E3
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011290; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01220214; UDB=6.00641882; IPR=6.01001356;
- MB=3.00027374; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-19 12:32:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061912-0073-0000-0000-00004CAE71A3
-Message-Id: <b4a77364-3924-20d7-42cd-e011106e0301@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190103
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190617210754.076823433@linuxfoundation.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 12:14 PM, Cornelia Huck wrote:
-> On Thu, 13 Jun 2019 15:39:34 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> 
->> In order to limit the number of private mdev functions called from the
->> vfio_ap device driver as well as to provide a landing spot for dynamic
->> configuration code related to binding/unbinding AP queue devices to/from
->> the vfio_ap driver, the following changes are being introduced:
->>
->> * Move code from the vfio_ap driver's probe callback into a function
->>    defined in the mdev private operations file.
->>
->> * Move code from the vfio_ap driver's remove callback into a function
->>    defined in the mdev private operations file.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++++++++++-----------------
->>   drivers/s390/crypto/vfio_ap_ops.c     | 28 ++++++++++++++++++++++++++++
->>   drivers/s390/crypto/vfio_ap_private.h |  6 +++---
->>   3 files changed, 41 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
->> index 003662aa8060..3c60df70891b 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -49,15 +49,15 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->>    */
->>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->>   {
->> -	struct vfio_ap_queue *q;
->> -
->> -	q = kzalloc(sizeof(*q), GFP_KERNEL);
->> -	if (!q)
->> -		return -ENOMEM;
->> -	dev_set_drvdata(&apdev->device, q);
->> -	q->apqn = to_ap_queue(&apdev->device)->qid;
->> -	q->saved_isc = VFIO_AP_ISC_INVALID;
->> +	int ret;
->> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
->> +
->> +	ret = vfio_ap_mdev_probe_queue(queue);
->> +	if (ret)
->> +		return ret;
->> +
->>   	return 0;
->> +
-> 
-> Maybe you could even condense this into a simple
-> 
-> return vfio_ap_mdev_probe_queue(to_ap_queue(&apdev->device));
-> 
-> (Unless you plan to do more things with queue in a future patch, of
-> course.)
+Hi!
 
-Consider it done.
+> When we traverse xattr entries via __find_xattr(),
+> if the raw filesystem content is faked or any hardware failure occurs,
+> out-of-bound error can be detected by KASAN.
+> Fix the issue by introducing boundary check.
 
-> 
->>   }
->>   
->>   /**
-> 
-> (...)
-> 
->> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
->> index f46dde56b464..5cc3c2ebf151 100644
->> --- a/drivers/s390/crypto/vfio_ap_private.h
->> +++ b/drivers/s390/crypto/vfio_ap_private.h
->> @@ -90,8 +90,6 @@ struct ap_matrix_mdev {
->>   
->>   extern int vfio_ap_mdev_register(void);
->>   extern void vfio_ap_mdev_unregister(void);
->> -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
->> -			     unsigned int retry);
-> 
-> If you don't need that function across files anymore, you probably want
-> to make it static.
+Ok, so this prevents fs corruption from causing problems,
 
-Yes.
+> @@ -340,7 +347,11 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>  	else
+>  		cur_addr = txattr_addr;
+>  
+> -	*xe = __find_xattr(cur_addr, index, len, name);
+> +	*xe = __find_xattr(cur_addr, last_txattr_addr, index, len, name);
+> +	if (!*xe) {
+> +		err = -EFAULT;
+> +		goto out;
+> +	}
 
-> 
->>   
->>   struct vfio_ap_queue {
->>   	struct ap_matrix_mdev *matrix_mdev;
->> @@ -100,5 +98,7 @@ struct vfio_ap_queue {
->>   #define VFIO_AP_ISC_INVALID 0xff
->>   	unsigned char saved_isc;
->>   };
->> -struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
-> 
-> Same here.
+Is -EFAULT suitable here? We do not have userspace passing pointers to us, we
+have fs corruption. -EUNCLEAN?
 
-Yes again.
+Should it do some kind of printk to let the user know fs is corrupted, and mark
+it as needing fsck?
 
-> 
->> +int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
->> +void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
->> +
->>   #endif /* _VFIO_AP_PRIVATE_H_ */
-> 
-
+Thanks,
+									Pavel
