@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E35C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B7DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:53:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1802A20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A5AE21530
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:53:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="iGGsogxe"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="fdI2e6NY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731408AbfFSJwm (ORCPT
+        id S1731555AbfFSJw6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:52:42 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:13226 "EHLO
+        Wed, 19 Jun 2019 05:52:58 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:2482 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726826AbfFSJwk (ORCPT
+        by vger.kernel.org with ESMTP id S1731384AbfFSJwm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:52:40 -0400
+        Wed, 19 Jun 2019 05:52:42 -0400
 Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J9kvaL028234;
-        Wed, 19 Jun 2019 11:52:17 +0200
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J9ktnT028226;
+        Wed, 19 Jun 2019 11:52:15 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=rXR4M7t22XwNh12WImA9EjQhM49Lilzc8OvfTApgm+o=;
- b=iGGsogxeuihyRqyf+NUuAHw1UY8OdhkL66YAdnA03GETYkx8MvSRj/acGEsad8Bv9CZL
- yflRA4BVX68NOhqfBKkYR/ldH4q0H8mtoDXk2198JgawTSuSfYxANORwl2rpz1OukU8M
- p3owuyH3jdgaxsSwaxE/KgkD0q72El3OGyLNFocpuuPvI3MQmPgdPdrszukc0K+q8J+V
- K8jHfRrbQAdHf5AVdAMbJ0Mtqngvm+ckjur9u7Mb3+d4cg6sIZ8Nl8Y40hNwvQ32Nw1p
- fnar9ce4L7R/af3VHInsrXbCJV/hIw3WvWLlNSjapiA/BLoVzHRZTsiWvVm9FDa/3vlv Lg== 
+ bh=I+Fy96rJlsG36GIKvoePX16L+1iTpw0s4H1f1l6+Eco=;
+ b=fdI2e6NYsrnpZ5ZCM8EEpGproDk50ozyZso/EUdyZ9sVcoP3ECFuUkK/cWpwKGCGtR8F
+ 2RpOe3PNEaHfT06CRoQ98mbfJl41GzWtO3nZ0WqOM8OJ47PFmcnMUvNVvrdJmGfYkofN
+ 45ZsAJj1IUH6UoJkBztD/5xKlAbk9AU8+jEA1nIHkejv8audXwPPNpJJMdAqk+Rk85o1
+ oPZIyA8KDImRb6OAKKjEFE5T73X0LY8tcFxOllPo0nIpF6rE70xHIbF/jSkdAuiasrJy
+ LNn2ucWfF1/3tL26FJ1JFzcfJ4GryY1CaY7paCG7AkDtZYc1wJ7j4l4Dn/yaUEUgeNZU UA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t781uu6dm-1
+        by mx08-00178001.pphosted.com with ESMTP id 2t781uu6d5-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 11:52:17 +0200
+        Wed, 19 Jun 2019 11:52:15 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2E17634;
-        Wed, 19 Jun 2019 09:52:17 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6F71A34;
+        Wed, 19 Jun 2019 09:52:14 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 126D124CA;
-        Wed, 19 Jun 2019 09:52:17 +0000 (GMT)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 11:52:16
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 42EB024C7;
+        Wed, 19 Jun 2019 09:52:14 +0000 (GMT)
+Received: from localhost (10.75.127.47) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 11:52:13
  +0200
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <thierry.reding@gmail.com>, <robh+dt@kernel.org>,
@@ -58,16 +58,16 @@ CC:     <mark.rutland@arm.com>, <linux@armlinux.org.uk>,
         <linux-kernel@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
         <benjamin.gaignard@st.com>,
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH 5/5] ARM: dts: stm32: add pwm cells to stm32f746
-Date:   Wed, 19 Jun 2019 11:52:05 +0200
-Message-ID: <1560937925-8990-6-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 1/5] dt-bindings: pwm-stm32: add #pwm-cells
+Date:   Wed, 19 Jun 2019 11:52:01 +0200
+Message-ID: <1560937925-8990-2-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
 References: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG5NODE3.st.com (10.75.127.15) To SFHDAG5NODE3.st.com
+X-Originating-IP: [10.75.127.47]
+X-ClientProxiedBy: SFHDAG1NODE1.st.com (10.75.127.1) To SFHDAG5NODE3.st.com
  (10.75.127.15)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_05:,,
  signatures=0
@@ -76,117 +76,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-STM32 Timers support generic 3 cells PWM to encode PWM number, period and
-polarity.
+STM32 Timers support generic 3 cells PWM bindings to encode PWM number,
+period and polarity as defined in pwm.txt.
 
-Fixes: 9bd7b77af8e4 ("ARM: dts: stm32: add Timers driver for stm32f746
-MCU")
+Fixes: cd9a99c2f8e8 ("dt-bindings: pwm: Add STM32 bindings")
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- arch/arm/boot/dts/stm32f746.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ Documentation/devicetree/bindings/pwm/pwm-stm32.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32f746.dtsi b/arch/arm/boot/dts/stm32f746.dtsi
-index a25b700..d26f93f 100644
---- a/arch/arm/boot/dts/stm32f746.dtsi
-+++ b/arch/arm/boot/dts/stm32f746.dtsi
-@@ -94,6 +94,7 @@
+diff --git a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+index 3e6d550..a8690bf 100644
+--- a/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
++++ b/Documentation/devicetree/bindings/pwm/pwm-stm32.txt
+@@ -8,6 +8,8 @@ Required parameters:
+ - pinctrl-names: 	Set to "default".
+ - pinctrl-0: 		List of phandles pointing to pin configuration nodes for PWM module.
+ 			For Pinctrl properties see ../pinctrl/pinctrl-bindings.txt
++- #pwm-cells:		Should be set to 3. This PWM chip uses the default 3 cells
++			bindings defined in pwm.txt.
  
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
+ Optional parameters:
+ - st,breakinput:	One or two <index level filter> to describe break input configurations.
+@@ -28,6 +30,7 @@ Example:
  
-@@ -123,6 +124,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -152,6 +154,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -180,6 +183,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -249,6 +253,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -270,6 +275,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -285,6 +291,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -419,6 +426,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -440,6 +448,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -512,6 +521,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 
-@@ -533,6 +543,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
-@@ -548,6 +559,7 @@
- 
- 			pwm {
- 				compatible = "st,stm32-pwm";
-+				#pwm-cells = <3>;
- 				status = "disabled";
- 			};
- 		};
+ 		pwm {
+ 			compatible = "st,stm32-pwm";
++			#pwm-cells = <3>;
+ 			pinctrl-0	= <&pwm1_pins>;
+ 			pinctrl-names	= "default";
+ 			st,breakinput = <0 1 5>;
 -- 
 2.7.4
 
