@@ -2,156 +2,103 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05F01C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:29:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A690FC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:30:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD58A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:29:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FEFB2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:30:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cOiq5jfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730010AbfFSO3B (ORCPT
+        id S1728926AbfFSOaO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:29:01 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:45755 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725901AbfFSO3A (ORCPT
+        Wed, 19 Jun 2019 10:30:14 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:46171 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725901AbfFSOaO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:29:00 -0400
-Received: by mail-ot1-f68.google.com with SMTP id x21so19443255otq.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 07:28:59 -0700 (PDT)
+        Wed, 19 Jun 2019 10:30:14 -0400
+Received: by mail-pl1-f195.google.com with SMTP id e5so7297926pls.13
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 07:30:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wbSy2s8b06uYzvj3ndAKYZAduDYOArcZnaIvxvyQgo0=;
+        b=cOiq5jfYeEGcgPX22TOVA4gcm3kYgfJ7cH2GXUsJe/DJvO5PzONBTuRUY7rEQ46AIu
+         WehGhnrygYSzah/rah+b42PU/kyAp1+moLsufPnxN7nOanZPfksq6271SRXH4IjfZbzM
+         FTP6SZ0Pap1GqfpmMF935NYkAmAPC+LZacioNcxjgsidZyQpUyH/t3nqzX8a9vKrTdUE
+         Y24NUSuvWj79OjZRLdvR4bwILgw1yUvSPAvrLdewIcUqOcpyqIBOllHqcIqC1fh5WKQU
+         S4ZZOS8sbDZnmyAugflSvukT350q0w7Z6goOJUhVYOdtP2B8CMVmrTi9ow1UznBZITrz
+         QMjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=vKuhhu0U9b6dOInq0htudLnaWCBwc1Az//oZC0564RE=;
-        b=dTVmFjvePHgkeL5ZLO6pDNrGkdcBpzJRipQ3OiRrB2TLMCiMLqA1XQYYstp4VCMTe6
-         Plm2Vdzki1FhROdtL+EnIIKmU8/7gnMjAqemaUZfNPkXbZca5WMo0IY7kWyLg9gZm7Mh
-         b5vlhbT3x7Egf3XlmKsNeoeIlFIhKIHWG39gmLmG9/S2qqQRG9raaVJ3A1uWhRQ6Qklz
-         T4raXJeTmGK8/tA/66BRLKG/AKZRUbIgoJjkK1VdtiIvJ1JEjvTmQma1xzD0F3aeKdN2
-         ts5Rg1Xyh1UiQ0pQNnyoqGF3uTegHijRxm8M3JpwLqgs/jdG4QjL8LAuPb/gwPMBwyJ5
-         kBZA==
-X-Gm-Message-State: APjAAAWgX1TCk7bA/0wgf5ZiHhzKCk0Ol/vUAI68m5xSdujFs/VUgm3l
-        P6YRLCzpp0AlP+yTV8szJ9QWhDl5/Fq0cj744s8=
-X-Google-Smtp-Source: APXvYqz0b/GK3kxwkGdOpEl7OTKj5RNpjvAo6j4fakCjJeVEWxAUbeK/4qjQ7RP8NLHM83NlVM5LrM7/PeKDXBLQV9E=
-X-Received: by 2002:a9d:3b76:: with SMTP id z109mr66900579otb.335.1560954539353;
- Wed, 19 Jun 2019 07:28:59 -0700 (PDT)
+        bh=wbSy2s8b06uYzvj3ndAKYZAduDYOArcZnaIvxvyQgo0=;
+        b=Zh54SDs6Zmg9snVTMrKLbk9cvNnOJrEbewSjL7bYgZxBrCjw1afGy793jzdZvRcgAZ
+         5a5Psba+rXakyKkru60dy0AsPE+nUeb4yyqDV0ffde3mI18vi+F7pb6bhSzqnZXjCoPa
+         8Ft5+ZEylV0ny+jQimiX2bC4z8WC7N/y1AVA7ALTPrGHd0Szyoh1JfiopLgCavMIDIen
+         fqCj+kd76o9QguC2Sd50J1IHqTk6KMjONDhikihvvNcbI+qMPTwARXHJ18516cDY5ge6
+         JVftCUoVj81Rh1PuoUWzjDtW28g/ttc3k9/+Ryj7v6kFD1UX+xLMJPojE6H9Y4upkYBj
+         qthw==
+X-Gm-Message-State: APjAAAXm4qQECQPuA88LEqELL6VMvq5FgYD+6iS869jbAMyHiHD6r4Yz
+        iu/GjikxpAWcQhBdLeL3Ob0XjMxU1d2hP5yqOhQNjg==
+X-Google-Smtp-Source: APXvYqxJeKxi+JFTcCbZxYUAMWmmpAcV2XApTu5wfpBcn7Gp7GAJhuHOE1pOGX85L/aTMVNbl1lpN4W2j/DdlCP3mw4=
+X-Received: by 2002:a17:902:8609:: with SMTP id f9mr111024389plo.252.1560954613254;
+ Wed, 19 Jun 2019 07:30:13 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190613082446.18685-1-hch@lst.de> <20190619105039.GA10118@lst.de>
- <87tvcldacn.fsf@concordia.ellerman.id.au> <a5fc355e44fb5edea41274329f7c5d04a8dff6fc.camel@kernel.crashing.org>
-In-Reply-To: <a5fc355e44fb5edea41274329f7c5d04a8dff6fc.camel@kernel.crashing.org>
-From:   Mathieu Malaterre <malat@debian.org>
-Date:   Wed, 19 Jun 2019 16:28:47 +0200
-Message-ID: <CA+7wUsy78oRKsNBJqM494MZynC+aZd27D1ZcvMCCQmF2wu5-gw@mail.gmail.com>
-Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Mackerras <paulus@samba.org>, aaro.koskinen@iki.fi,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+References: <b3761c6479a49b60316325ebc22da904e36d4538.1556813333.git.andreyknvl@google.com>
+ <20190502163907.GA14995@kroah.com>
+In-Reply-To: <20190502163907.GA14995@kroah.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 19 Jun 2019 16:30:01 +0200
+Message-ID: <CAAeHK+w9xGtaQ5oSCq-=1YNk_11T2Tz9LKehkL7ZsAz-XwKajw@mail.gmail.com>
+Subject: Re: [PATCH] media: pvrusb2: use a different format for warnings
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     USB list <linux-usb@vger.kernel.org>, linux-media@vger.kernel.org,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Mike Isely <isely@pobox.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
         LKML <linux-kernel@vger.kernel.org>,
-        Larry Finger <Larry.Finger@lwfinger.net>
+        syzbot <syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com>,
+        syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 4:18 PM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
+On Thu, May 2, 2019 at 6:39 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> On Wed, 2019-06-19 at 22:32 +1000, Michael Ellerman wrote:
-> > Christoph Hellwig <hch@lst.de> writes:
-> > > Any chance this could get picked up to fix the regression?
+> On Thu, May 02, 2019 at 06:09:26PM +0200, Andrey Konovalov wrote:
+> > When the pvrusb2 driver detects that there's something wrong with the
+> > device, it prints a warning message. Right now those message are
+> > printed in two different formats:
 > >
-> > Was hoping Ben would Ack it. He's still powermac maintainer :)
+> > 1. ***WARNING*** message here
+> > 2. WARNING: message here
 > >
-> > I guess he OK'ed it in the other thread, will add it to my queue.
+> > There's an issue with the second format. Syzkaller recognizes it as a
+> > message produced by a WARN_ON(), which is used to indicate a bug in the
+> > kernel. However pvrusb2 prints those warnings to indicate an issue with
+> > the device, not the bug in the kernel.
+> >
+> > This patch changes the pvrusb2 driver to consistently use the first
+> > warning message format. This will unblock syzkaller testing of this
+> > driver.
+> >
+> > Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
+> > Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
+> > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
 >
-> Yeah ack. If I had written it myself, I would have made the DMA bits a
-> variable and only set it down to 30 if I see that device in the DT
-> early on, but I can't be bothered now, if it works, ship it :-)
->
-> Note: The patch affects all ppc32, though I don't think it will cause
-> any significant issue on those who don't need it.
+> Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Thanks, that answer my earlier question.
-
-> Cheers,
-> Ben.
->
-> > cheers
-> >
-> > > On Thu, Jun 13, 2019 at 10:24:46AM +0200, Christoph Hellwig wrote:
-> > > > With the strict dma mask checking introduced with the switch to
-> > > > the generic DMA direct code common wifi chips on 32-bit
-> > > > powerbooks
-> > > > stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
-> > > > to allow them to reliably allocate dma coherent memory.
-> > > >
-> > > > Fixes: 65a21b71f948 ("powerpc/dma: remove
-> > > > dma_nommu_dma_supported")
-> > > > Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-> > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > ---
-> > > >  arch/powerpc/include/asm/page.h         | 7 +++++++
-> > > >  arch/powerpc/mm/mem.c                   | 3 ++-
-> > > >  arch/powerpc/platforms/powermac/Kconfig | 1 +
-> > > >  3 files changed, 10 insertions(+), 1 deletion(-)
-> > > >
-> > > > diff --git a/arch/powerpc/include/asm/page.h
-> > > > b/arch/powerpc/include/asm/page.h
-> > > > index b8286a2013b4..0d52f57fca04 100644
-> > > > --- a/arch/powerpc/include/asm/page.h
-> > > > +++ b/arch/powerpc/include/asm/page.h
-> > > > @@ -319,6 +319,13 @@ struct vm_area_struct;
-> > > >  #endif /* __ASSEMBLY__ */
-> > > >  #include <asm/slice.h>
-> > > >
-> > > > +/*
-> > > > + * Allow 30-bit DMA for very limited Broadcom wifi chips on many
-> > > > powerbooks.
-> > > > + */
-> > > > +#ifdef CONFIG_PPC32
-> > > > +#define ARCH_ZONE_DMA_BITS 30
-> > > > +#else
-> > > >  #define ARCH_ZONE_DMA_BITS 31
-> > > > +#endif
-> > > >
-> > > >  #endif /* _ASM_POWERPC_PAGE_H */
-> > > > diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> > > > index cba29131bccc..2540d3b2588c 100644
-> > > > --- a/arch/powerpc/mm/mem.c
-> > > > +++ b/arch/powerpc/mm/mem.c
-> > > > @@ -248,7 +248,8 @@ void __init paging_init(void)
-> > > >          (long int)((top_of_ram - total_ram) >> 20));
-> > > >
-> > > >  #ifdef CONFIG_ZONE_DMA
-> > > > - max_zone_pfns[ZONE_DMA] = min(max_low_pfn, 0x7fffffffUL
-> > > > >> PAGE_SHIFT);
-> > > > + max_zone_pfns[ZONE_DMA] = min(max_low_pfn,
-> > > > +                 ((1UL << ARCH_ZONE_DMA_BITS) - 1) >>
-> > > > PAGE_SHIFT);
-> > > >  #endif
-> > > >   max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-> > > >  #ifdef CONFIG_HIGHMEM
-> > > > diff --git a/arch/powerpc/platforms/powermac/Kconfig
-> > > > b/arch/powerpc/platforms/powermac/Kconfig
-> > > > index f834a19ed772..c02d8c503b29 100644
-> > > > --- a/arch/powerpc/platforms/powermac/Kconfig
-> > > > +++ b/arch/powerpc/platforms/powermac/Kconfig
-> > > > @@ -7,6 +7,7 @@ config PPC_PMAC
-> > > >   select PPC_INDIRECT_PCI if PPC32
-> > > >   select PPC_MPC106 if PPC32
-> > > >   select PPC_NATIVE
-> > > > + select ZONE_DMA if PPC32
-> > > >   default y
-> > > >
-> > > >  config PPC_PMAC64
-> > > > --
-> > > > 2.20.1
-> > >
-> > > ---end quoted text---
->
+I don't think I see this patch picked up anywhere. Should this fix go
+through the USB or some media tree?
