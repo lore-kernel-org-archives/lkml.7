@@ -2,182 +2,109 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99C41C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC27C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 708002166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE82A2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731959AbfFSNUQ (ORCPT
+        id S1731966AbfFSNUY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:20:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37198 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726330AbfFSNUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:20:15 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 020AC19CF7B;
-        Wed, 19 Jun 2019 13:20:15 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BA78E1001DD1;
-        Wed, 19 Jun 2019 13:20:13 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 10/10] keys: Add capability-checking keyctl function [ver #3]
-From:   David Howells <dhowells@redhat.com>
-To:     keyrings@vger.kernel.org, ebiggers@kernel.org
-Cc:     dhowells@redhat.com, linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Date:   Wed, 19 Jun 2019 14:20:12 +0100
-Message-ID: <156095041274.9363.11713800194055313640.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156095032052.9363.8954337545422131435.stgit@warthog.procyon.org.uk>
-References: <156095032052.9363.8954337545422131435.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 19 Jun 2019 09:20:24 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:39181 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfFSNUX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:20:23 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1Mj7yt-1iIg1X2nOH-00fBKk; Wed, 19 Jun 2019 15:20:02 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Jiri Kosina <jikos@kernel.org>, Jens Axboe <axboe@kernel.dk>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Robert Elliott <elliott@hpe.com>,
+        Keith Busch <kbusch@kernel.org>,
+        Hannes Reinecke <hare@suse.de>, Omar Sandoval <osandov@fb.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Andy Whitcroft <apw@canonical.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] [RESEND] floppy: fix harmless clang build warning
+Date:   Wed, 19 Jun 2019 15:19:44 +0200
+Message-Id: <20190619131959.2055400-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 19 Jun 2019 13:20:15 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:9sLIhj4RYRE24WCHm3szMo8GZJ4FomoOvzRvWEJj02wygrg65IH
+ 3/dU9k856rxtHNK3t4/hslHZyQJzy2g2X2ZTJf3XPB8w6RP7FX5Rw5hg2/9g1Z+0020tmKu
+ 15F86/OrwblahiJQngqOmErumRAcMWRWPua/ZruSOPNeT9OVZBl5p5qTJ2O6ELfIGrGsezq
+ 1OG08rxDPlmc7iqo7gt8A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:ytyqrxA5jJA=:AgNeAiNF5GoxUuYp/hzPZs
+ CO+U7Y8oJyRl5CTNKZ/25bkcDyvJzmUTmOQTKWWg7iWCdpnkC9UOHH1q4DR+bsH6gLeL2vmOn
+ sY4dHITnPoHaKPjmB7bXx0HdKV8KbMagCOsIX9/pbPMfBPGDkmYmLafqbrkqU1Qi65zUdoI+k
+ UThpwAElzGMSdcaLyrOxldYJXLi9w34VasizMbNgGzIoQ3e9rqBzdIU76WfQ9RfmyuvREmcvC
+ wJSj3B6jLXRMcm+94AQqlEcxBMQTNF4FieTXgKwOy0tQPgfBQMIgIdgVgy5iLXqTf/EjLR2GW
+ 9dkA284SkCt7r/U5WmTDX9PXVWW55fFFMgKUQM1LQklBwiWvWF4mg7LsSaRwV0f3iWAX+JM4y
+ v2LvjAyIWPZBYlAl7FXzmHQfCpwBCgXeJwKwESMOoPck0M+JBtuSRMHdaEoMbLeXcvdDQmx/q
+ +kYfKW0kg0ELVIyaLBSJlkPx4ilBTWMDEy/ueJ4k/jcjkG52ncuVtXAFzRoBHApnNCsXqz8Vv
+ PdUt+leRK92fTojDjxVLn2wtYxEqt1tNPGt9GiIlG1/NhRNhHXe7G/MwtbgN2CWFa6Is986/z
+ NGOVbSJyDXFnuJGQh/DH3yQ+hfwppVPSjtVEbNHNB5zdpItXJ698crNVzr0RGi96XSuOz7wDM
+ YGavkGSNfvpeYZ6Kbm0RXwUpV2bW7BLizKBn8wMXzCE1qG1Vc0Q0vVS+cOchrFOzFaUsFTPjo
+ jqL7c+P3BwdBOv8NU1a9jSBjOd6UAXbBc25APQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a keyctl function that requests a set of capability bits to find out
-what features are supported.
+clang warns about unusual code in floppy.c that looks like it
+was intended to be a bit mask operation, checking for a specific
+bit in the UDP->cmos variable (FLOPPY1_TYPE expands to '4' on
+ARM):
 
-Signed-off-by: David Howells <dhowells@redhat.com>
+drivers/block/floppy.c:3902:17: error: use of logical '&&' with constant operand [-Werror,-Wconstant-logical-operand]
+        if (!UDP->cmos && FLOPPY1_TYPE)
+                       ^  ~~~~~~~~~~~~
+drivers/block/floppy.c:3902:17: note: use '&' for a bitwise operation
+        if (!UDP->cmos && FLOPPY1_TYPE)
+
+The check here is redundant anyway, if FLOPPY1_TYPE is zero, then
+assigning it to a zero UDP->cmos field does not change anything,
+so removing the extra check here has no effect other than shutting
+up the warning.
+
+On x86, this will no longer read a hardware register, as the
+FLOPPY1_TYPE macro is not expanded if UDP->cmos is already
+zero, but the result is the same.
+
+Cc: Robert Elliott <elliott@hpe.com>
+Cc: Keith Busch <kbusch@kernel.org>
+Link: https://patchwork.kernel.org/patch/10851841/
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
+The original patch did not get merged since there was some
+discussion (see link), but as far as I can tell, the outcome
+was that it's harmless so I just summarized the findings
+above. The patch is unchanged from March.
+---
+ drivers/block/floppy.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- include/uapi/linux/keyctl.h |   14 ++++++++++++++
- security/keys/compat.c      |    3 +++
- security/keys/internal.h    |    2 ++
- security/keys/keyctl.c      |   35 +++++++++++++++++++++++++++++++++++
- 4 files changed, 54 insertions(+)
-
-diff --git a/include/uapi/linux/keyctl.h b/include/uapi/linux/keyctl.h
-index fd9fb11b312b..551b5814f53e 100644
---- a/include/uapi/linux/keyctl.h
-+++ b/include/uapi/linux/keyctl.h
-@@ -68,6 +68,7 @@
- #define KEYCTL_PKEY_VERIFY		28	/* Verify a public key signature */
- #define KEYCTL_RESTRICT_KEYRING		29	/* Restrict keys allowed to link to a keyring */
- #define KEYCTL_MOVE			30	/* Move keys between keyrings */
-+#define KEYCTL_CAPABILITIES		31	/* Find capabilities of keyrings subsystem */
+diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
+index 9fb9b312ab6b..b933a7eea52b 100644
+--- a/drivers/block/floppy.c
++++ b/drivers/block/floppy.c
+@@ -3900,7 +3900,7 @@ static void __init config_types(void)
+ 	if (!UDP->cmos)
+ 		UDP->cmos = FLOPPY0_TYPE;
+ 	drive = 1;
+-	if (!UDP->cmos && FLOPPY1_TYPE)
++	if (!UDP->cmos)
+ 		UDP->cmos = FLOPPY1_TYPE;
  
- /* keyctl structures */
- struct keyctl_dh_params {
-@@ -115,4 +116,17 @@ struct keyctl_pkey_params {
- 
- #define KEYCTL_MOVE_EXCL	0x00000001 /* Do not displace from the to-keyring */
- 
-+/*
-+ * Capabilities flags.  The capabilities list is an array of 8-bit integers;
-+ * each integer can carry up to 8 flags.
-+ */
-+#define KEYCTL_CAPS0_CAPABILITIES	0x01 /* KEYCTL_CAPABILITIES supported */
-+#define KEYCTL_CAPS0_PERSISTENT_KEYRINGS 0x02 /* Persistent keyrings enabled */
-+#define KEYCTL_CAPS0_DIFFIE_HELLMAN	0x04 /* Diffie-Hellman computation enabled */
-+#define KEYCTL_CAPS0_PUBLIC_KEY		0x08 /* Public key ops enabled */
-+#define KEYCTL_CAPS0_BIG_KEY		0x10 /* big_key-type enabled */
-+#define KEYCTL_CAPS0_INVALIDATE		0x20 /* KEYCTL_INVALIDATE supported */
-+#define KEYCTL_CAPS0_RESTRICT_KEYRING	0x40 /* KEYCTL_RESTRICT_KEYRING supported */
-+#define KEYCTL_CAPS0_MOVE		0x80 /* KEYCTL_MOVE supported */
-+
- #endif /*  _LINUX_KEYCTL_H */
-diff --git a/security/keys/compat.c b/security/keys/compat.c
-index b326bc4f84d7..a53e30da20c5 100644
---- a/security/keys/compat.c
-+++ b/security/keys/compat.c
-@@ -162,6 +162,9 @@ COMPAT_SYSCALL_DEFINE5(keyctl, u32, option,
- 	case KEYCTL_MOVE:
- 		return keyctl_keyring_move(arg2, arg3, arg4, arg5);
- 
-+	case KEYCTL_CAPABILITIES:
-+		return keyctl_capabilities(compat_ptr(arg2), arg3);
-+
- 	default:
- 		return -EOPNOTSUPP;
- 	}
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index b54a58c025ae..d04bff631227 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -329,6 +329,8 @@ static inline long keyctl_pkey_e_d_s(int op,
- }
- #endif
- 
-+extern long keyctl_capabilities(unsigned char __user *_buffer, size_t buflen);
-+
- /*
-  * Debugging key validation
-  */
-diff --git a/security/keys/keyctl.c b/security/keys/keyctl.c
-index bbfe7d92d41c..9f418e66f067 100644
---- a/security/keys/keyctl.c
-+++ b/security/keys/keyctl.c
-@@ -30,6 +30,18 @@
- 
- #define KEY_MAX_DESC_SIZE 4096
- 
-+static const unsigned char keyrings_capabilities[1] = {
-+	[0] = (KEYCTL_CAPS0_CAPABILITIES |
-+	       (IS_ENABLED(CONFIG_PERSISTENT_KEYRINGS)	? KEYCTL_CAPS0_PERSISTENT_KEYRINGS : 0) |
-+	       (IS_ENABLED(CONFIG_KEY_DH_OPERATIONS)	? KEYCTL_CAPS0_DIFFIE_HELLMAN : 0) |
-+	       (IS_ENABLED(CONFIG_ASYMMETRIC_KEY_TYPE)	? KEYCTL_CAPS0_PUBLIC_KEY : 0) |
-+	       (IS_ENABLED(CONFIG_BIG_KEYS)		? KEYCTL_CAPS0_BIG_KEY : 0) |
-+	       KEYCTL_CAPS0_INVALIDATE |
-+	       KEYCTL_CAPS0_RESTRICT_KEYRING |
-+	       KEYCTL_CAPS0_MOVE
-+	       ),
-+};
-+
- static int key_get_type_from_user(char *type,
- 				  const char __user *_type,
- 				  unsigned len)
-@@ -1678,6 +1690,26 @@ long keyctl_restrict_keyring(key_serial_t id, const char __user *_type,
- 	return ret;
- }
- 
-+/*
-+ * Get keyrings subsystem capabilities.
-+ */
-+long keyctl_capabilities(unsigned char __user *_buffer, size_t buflen)
-+{
-+	size_t size = buflen;
-+
-+	if (size > 0) {
-+		if (size > sizeof(keyrings_capabilities))
-+			size = sizeof(keyrings_capabilities);
-+		if (copy_to_user(_buffer, keyrings_capabilities, size) != 0)
-+			return -EFAULT;
-+		if (size < buflen &&
-+		    clear_user(_buffer + size, buflen - size) != 0)
-+			return -EFAULT;
-+	}
-+
-+	return sizeof(keyrings_capabilities);
-+}
-+
- /*
-  * The key control system call
-  */
-@@ -1824,6 +1856,9 @@ SYSCALL_DEFINE5(keyctl, int, option, unsigned long, arg2, unsigned long, arg3,
- 					   (key_serial_t)arg4,
- 					   (unsigned int)arg5);
- 
-+	case KEYCTL_CAPABILITIES:
-+		return keyctl_capabilities((unsigned char __user *)arg2, (size_t)arg3);
-+
- 	default:
- 		return -EOPNOTSUPP;
- 	}
+ 	/* FIXME: additional physical CMOS drive detection should go here */
+-- 
+2.20.0
 
