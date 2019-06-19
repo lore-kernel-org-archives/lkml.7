@@ -2,94 +2,127 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3FCDC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:05:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB49C46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:09:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4A5220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:05:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B34B4215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:09:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560949789;
+	bh=8YepQqGxxiCYLEevul83mJt5reicSBKBeRcnB/6BH3M=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hPjuwQrr3ZE6m0J+/pLZwStcf+XmmwzzZqqVLogV5z57NUm8VjoB2CPQhzEwyskwW
+	 XFi4whFPBB6QgiNrKab9dwyTMKWMuKDdjbZf5dTo1Ertv2gJJHuT7eR0uAhNWifpJP
+	 VfktpMw98CLRRldCFIOLpurP6e14h1W3J0BwZq9Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732011AbfFSNFy (ORCPT
+        id S1731576AbfFSNJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:05:54 -0400
-Received: from mout.kundenserver.de ([212.227.17.10]:60669 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731178AbfFSNFx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:05:53 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M7s1M-1hhPlr438s-0051Nk; Wed, 19 Jun 2019 15:05:38 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     arm@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tony Lindgren <tony@atomide.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Paul Walmsley <paul@pwsan.com>, linux-omap@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: omap2: remove incorrect __init annotation
-Date:   Wed, 19 Jun 2019 15:04:54 +0200
-Message-Id: <20190619130529.1502322-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 19 Jun 2019 09:09:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58880 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727126AbfFSNJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:09:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 53761B002;
+        Wed, 19 Jun 2019 13:09:46 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 15:09:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 2/5] mm: change PAGEREF_RECLAIM_CLEAN with
+ PAGE_REFRECLAIM
+Message-ID: <20190619130943.GP2968@dhcp22.suse.cz>
+References: <20190610111252.239156-1-minchan@kernel.org>
+ <20190610111252.239156-3-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:dnAraIqnAFKO4Ee+PXPJF/LL3WFx+kBCx35hS/zH3XPenx1T9Ys
- kgXaZ8E4MOrxh9YQWe2g5fxpnQBAjZAJiNm8/rhI/Q9x58NdE5suxhAdEY176sJhbxqO0ZU
- 0dwSTg4Gvhn+nxBMPKr9Wz38owbJx2ueOa5DEA60MCmTAC8sdf7kVmXLR/nWg7mc692p9Le
- BvoIQPBnyZctUKgIRs8/g==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0mRlXBkSslw=:FoLq8ELxMpa2ObJt7RxxZ7
- QQJlQ/XyvjcJchlJGmvbu+7W4CFnMm5z4zxQ1TwUtjrpriuekVOwMyX0PdzUFJ7fXpmHcF/ZW
- yjCB7+ZOpMJj+0ECdwIc0Pd9O0t3fYDc1ahzT9prtfhu/uu4/kd6/jSuXvKKbcE9IdoX3iIkA
- ZAFlq9IT9R+8iOEvGQG7iGZiJAjbBA1MfTwMuxlvDkv7tBZR1ezHdDQjwg4shzvEvIDVl7hEg
- WlPAfmpIvWKIyqR7KHkYlbjHCHvt/gmpzfzsCYJQIEHKW9LSAESmDmoVDV7v8Om9kXBh9BwQT
- ZH0bhfooDV5RhLKH6euGrIeQEl1DeNKGp3DP/huqIiEYezEH0k1KCdkBRduZr9EHFAvEUJChY
- rhMi6qLhqnzdUHUcdc7jpaunWTtFbN7hvCinLppWvCEUCjxHfnlxnoCAIHhBTSlIjusySXLhM
- jftrcky1AQcVoBAgxOGxxnvT1B9qA8y0R9PU/Tfdw34KZ9oUz2P3n0heMcClgTD/qoDKorXGy
- Z27RxBCvyruSt90PIPKW5mSl7huKCyW3u4tDQWwATKwZlHvA3nt6aJtxeAawRaHn6rITq5JXm
- FvTuguSX2tcSG8yNuTNTJ/6iE45AJ222Mr4tj+JbceubmXOsFyceBnZ5iNa5efEIAdwW7oJu9
- Wvj8eI0QnD9UHilbLOp7yk63PY/iCCHOOWdCc6VQoyE460y7ceIEvWFYYO8F86sTz1OjTNA6B
- FxGgg1lfBa7KgEULX59U37Mgu4FH1j2G2JzutA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610111252.239156-3-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
-we get a warning with clang-8:
+On Mon 10-06-19 20:12:49, Minchan Kim wrote:
+> The local variable references in shrink_page_list is PAGEREF_RECLAIM_CLEAN
+> as default. It is for preventing to reclaim dirty pages when CMA try to
+> migrate pages. Strictly speaking, we don't need it because CMA didn't allow
+> to write out by .may_writepage = 0 in reclaim_clean_pages_from_list.
+> 
+> Moreover, it has a problem to prevent anonymous pages's swap out even
+> though force_reclaim = true in shrink_page_list on upcoming patch.
+> So this patch makes references's default value to PAGEREF_RECLAIM and
+> rename force_reclaim with ignore_references to make it more clear.
+> 
+> This is a preparatory work for next patch.
+> 
+> * RFCv1
+>  * use ignore_referecnes as parameter name - hannes
+> 
+> Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+> Signed-off-by: Minchan Kim <minchan@kernel.org>
 
-WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
-The function omap3xxx_prm_late_init() references
-the function __init omap3xxx_prm_enable_io_wakeup().
-This is often because omap3xxx_prm_late_init lacks a __init
-annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+The code path is quite tricky to follow but the patch looks OK to me.
 
-When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
-inlined, so we never noticed in the past.
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/mach-omap2/prm3xxx.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> ---
+>  mm/vmscan.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index 84dcb651d05c..0973a46a0472 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -1102,7 +1102,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  				      struct scan_control *sc,
+>  				      enum ttu_flags ttu_flags,
+>  				      struct reclaim_stat *stat,
+> -				      bool force_reclaim)
+> +				      bool ignore_references)
+>  {
+>  	LIST_HEAD(ret_pages);
+>  	LIST_HEAD(free_pages);
+> @@ -1116,7 +1116,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  		struct address_space *mapping;
+>  		struct page *page;
+>  		int may_enter_fs;
+> -		enum page_references references = PAGEREF_RECLAIM_CLEAN;
+> +		enum page_references references = PAGEREF_RECLAIM;
+>  		bool dirty, writeback;
+>  		unsigned int nr_pages;
+>  
+> @@ -1247,7 +1247,7 @@ static unsigned long shrink_page_list(struct list_head *page_list,
+>  			}
+>  		}
+>  
+> -		if (!force_reclaim)
+> +		if (!ignore_references)
+>  			references = page_check_references(page, sc);
+>  
+>  		switch (references) {
+> -- 
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
 
-diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
-index 05858f966f7d..dfa65fc2c82b 100644
---- a/arch/arm/mach-omap2/prm3xxx.c
-+++ b/arch/arm/mach-omap2/prm3xxx.c
-@@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
-  * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
-  * No return value.
-  */
--static void __init omap3xxx_prm_enable_io_wakeup(void)
-+static void omap3xxx_prm_enable_io_wakeup(void)
- {
- 	if (prm_features & PRM_HAS_IO_WAKEUP)
- 		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
 -- 
-2.20.0
-
+Michal Hocko
+SUSE Labs
