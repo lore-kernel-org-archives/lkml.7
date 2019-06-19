@@ -2,181 +2,108 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 238BFC31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7836C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD2C2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A042C21530
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:14:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560946486;
+	bh=5CLEtH/34vRJw/s7GWbRpPMdnWZ/d7bZwgPY8fMzgFQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=zO3M2CJusmmmHLj29Or4huRKYKDa3c8e0ykJmFsipapLEiLd/dS/Tan2QrdI5wY+9
+	 sKUQ2Hpry5acELMzdVVfgXGXJHpAURmw9kcG6iCrDztPnYE+vDjHcHyC7OQPxsLXim
+	 F0EL+HxztEqve4ev3c2gC8O5LMB5EnKR4RiM1EUY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731726AbfFSMMz (ORCPT
+        id S1731586AbfFSMOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:12:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45818 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731711AbfFSMMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:12:55 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1536FAC54;
-        Wed, 19 Jun 2019 12:12:53 +0000 (UTC)
-Subject: Re: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP
- eligibility
-To:     Yang Shi <yang.shi@linux.alibaba.com>, hughd@google.com,
-        kirill.shutemov@linux.intel.com, mhocko@suse.com,
-        rientjes@google.com, akpm@linux-foundation.org
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
- <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- mQINBFZdmxYBEADsw/SiUSjB0dM+vSh95UkgcHjzEVBlby/Fg+g42O7LAEkCYXi/vvq31JTB
- KxRWDHX0R2tgpFDXHnzZcQywawu8eSq0LxzxFNYMvtB7sV1pxYwej2qx9B75qW2plBs+7+YB
- 87tMFA+u+L4Z5xAzIimfLD5EKC56kJ1CsXlM8S/LHcmdD9Ctkn3trYDNnat0eoAcfPIP2OZ+
- 9oe9IF/R28zmh0ifLXyJQQz5ofdj4bPf8ecEW0rhcqHfTD8k4yK0xxt3xW+6Exqp9n9bydiy
- tcSAw/TahjW6yrA+6JhSBv1v2tIm+itQc073zjSX8OFL51qQVzRFr7H2UQG33lw2QrvHRXqD
- Ot7ViKam7v0Ho9wEWiQOOZlHItOOXFphWb2yq3nzrKe45oWoSgkxKb97MVsQ+q2SYjJRBBH4
- 8qKhphADYxkIP6yut/eaj9ImvRUZZRi0DTc8xfnvHGTjKbJzC2xpFcY0DQbZzuwsIZ8OPJCc
- LM4S7mT25NE5kUTG/TKQCk922vRdGVMoLA7dIQrgXnRXtyT61sg8PG4wcfOnuWf8577aXP1x
- 6mzw3/jh3F+oSBHb/GcLC7mvWreJifUL2gEdssGfXhGWBo6zLS3qhgtwjay0Jl+kza1lo+Cv
- BB2T79D4WGdDuVa4eOrQ02TxqGN7G0Biz5ZLRSFzQSQwLn8fbwARAQABtCBWbGFzdGltaWwg
- QmFia2EgPHZiYWJrYUBzdXNlLmN6PokCVAQTAQoAPgIbAwULCQgHAwUVCgkICwUWAgMBAAIe
- AQIXgBYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJcbbyGBQkH8VTqAAoJECJPp+fMgqZkpGoP
- /1jhVihakxw1d67kFhPgjWrbzaeAYOJu7Oi79D8BL8Vr5dmNPygbpGpJaCHACWp+10KXj9yz
- fWABs01KMHnZsAIUytVsQv35DMMDzgwVmnoEIRBhisMYOQlH2bBn/dqBjtnhs7zTL4xtqEcF
- 1hoUFEByMOey7gm79utTk09hQE/Zo2x0Ikk98sSIKBETDCl4mkRVRlxPFl4O/w8dSaE4eczH
- LrKezaFiZOv6S1MUKVKzHInonrCqCNbXAHIeZa3JcXCYj1wWAjOt9R3NqcWsBGjFbkgoKMGD
- usiGabetmQjXNlVzyOYdAdrbpVRNVnaL91sB2j8LRD74snKsV0Wzwt90YHxDQ5z3M75YoIdl
- byTKu3BUuqZxkQ/emEuxZ7aRJ1Zw7cKo/IVqjWaQ1SSBDbZ8FAUPpHJxLdGxPRN8Pfw8blKY
- 8mvLJKoF6i9T6+EmlyzxqzOFhcc4X5ig5uQoOjTIq6zhLO+nqVZvUDd2Kz9LMOCYb516cwS/
- Enpi0TcZ5ZobtLqEaL4rupjcJG418HFQ1qxC95u5FfNki+YTmu6ZLXy+1/9BDsPuZBOKYpUm
- 3HWSnCS8J5Ny4SSwfYPH/JrtberWTcCP/8BHmoSpS/3oL3RxrZRRVnPHFzQC6L1oKvIuyXYF
- rkybPXYbmNHN+jTD3X8nRqo+4Qhmu6SHi3VquQENBFsZNQwBCACuowprHNSHhPBKxaBX7qOv
- KAGCmAVhK0eleElKy0sCkFghTenu1sA9AV4okL84qZ9gzaEoVkgbIbDgRbKY2MGvgKxXm+kY
- n8tmCejKoeyVcn9Xs0K5aUZiDz4Ll9VPTiXdf8YcjDgeP6/l4kHb4uSW4Aa9ds0xgt0gP1Xb
- AMwBlK19YvTDZV5u3YVoGkZhspfQqLLtBKSt3FuxTCU7hxCInQd3FHGJT/IIrvm07oDO2Y8J
- DXWHGJ9cK49bBGmK9B4ajsbe5GxtSKFccu8BciNluF+BqbrIiM0upJq5Xqj4y+Xjrpwqm4/M
- ScBsV0Po7qdeqv0pEFIXKj7IgO/d4W2bABEBAAGJA3IEGAEKACYWIQSpQNQ0mSwujpkQPVAi
- T6fnzIKmZAUCWxk1DAIbAgUJA8JnAAFACRAiT6fnzIKmZMB0IAQZAQoAHRYhBKZ2GgCcqNxn
- k0Sx9r6Fd25170XjBQJbGTUMAAoJEL6Fd25170XjDBUH/2jQ7a8g+FC2qBYxU/aCAVAVY0NE
- YuABL4LJ5+iWwmqUh0V9+lU88Cv4/G8fWwU+hBykSXhZXNQ5QJxyR7KWGy7LiPi7Cvovu+1c
- 9Z9HIDNd4u7bxGKMpn19U12ATUBHAlvphzluVvXsJ23ES/F1c59d7IrgOnxqIcXxr9dcaJ2K
- k9VP3TfrjP3g98OKtSsyH0xMu0MCeyewf1piXyukFRRMKIErfThhmNnLiDbaVy6biCLx408L
- Mo4cCvEvqGKgRwyckVyo3JuhqreFeIKBOE1iHvf3x4LU8cIHdjhDP9Wf6ws1XNqIvve7oV+w
- B56YWoalm1rq00yUbs2RoGcXmtX1JQ//aR/paSuLGLIb3ecPB88rvEXPsizrhYUzbe1TTkKc
- 4a4XwW4wdc6pRPVFMdd5idQOKdeBk7NdCZXNzoieFntyPpAq+DveK01xcBoXQ2UktIFIsXey
- uSNdLd5m5lf7/3f0BtaY//f9grm363NUb9KBsTSnv6Vx7Co0DWaxgC3MFSUhxzBzkJNty+2d
- 10jvtwOWzUN+74uXGRYSq5WefQWqqQNnx+IDb4h81NmpIY/X0PqZrapNockj3WHvpbeVFAJ0
- 9MRzYP3x8e5OuEuJfkNnAbwRGkDy98nXW6fKeemREjr8DWfXLKFWroJzkbAVmeIL0pjXATxr
- +tj5JC0uvMrrXefUhXTo0SNoTsuO/OsAKOcVsV/RHHTwCDR2e3W8mOlA3QbYXsscgjghbuLh
- J3oTRrOQa8tUXWqcd5A0+QPo5aaMHIK0UAthZsry5EmCY3BrbXUJlt+23E93hXQvfcsmfi0N
- rNh81eknLLWRYvMOsrbIqEHdZBT4FHHiGjnck6EYx/8F5BAZSodRVEAgXyC8IQJ+UVa02QM5
- D2VL8zRXZ6+wARKjgSrW+duohn535rG/ypd0ctLoXS6dDrFokwTQ2xrJiLbHp9G+noNTHSan
- ExaRzyLbvmblh3AAznb68cWmM3WVkceWACUalsoTLKF1sGrrIBj5updkKkzbKOq5gcC5AQ0E
- Wxk1NQEIAJ9B+lKxYlnKL5IehF1XJfknqsjuiRzj5vnvVrtFcPlSFL12VVFVUC2tT0A1Iuo9
- NAoZXEeuoPf1dLDyHErrWnDyn3SmDgb83eK5YS/K363RLEMOQKWcawPJGGVTIRZgUSgGusKL
- NuZqE5TCqQls0x/OPljufs4gk7E1GQEgE6M90Xbp0w/r0HB49BqjUzwByut7H2wAdiNAbJWZ
- F5GNUS2/2IbgOhOychHdqYpWTqyLgRpf+atqkmpIJwFRVhQUfwztuybgJLGJ6vmh/LyNMRr8
- J++SqkpOFMwJA81kpjuGR7moSrUIGTbDGFfjxmskQV/W/c25Xc6KaCwXah3OJ40AEQEAAYkC
- PAQYAQoAJhYhBKlA1DSZLC6OmRA9UCJPp+fMgqZkBQJbGTU1AhsMBQkDwmcAAAoJECJPp+fM
- gqZkPN4P/Ra4NbETHRj5/fM1fjtngt4dKeX/6McUPDIRuc58B6FuCQxtk7sX3ELs+1+w3eSV
- rHI5cOFRSdgw/iKwwBix8D4Qq0cnympZ622KJL2wpTPRLlNaFLoe5PkoORAjVxLGplvQIlhg
- miljQ3R63ty3+MZfkSVsYITlVkYlHaSwP2t8g7yTVa+q8ZAx0NT9uGWc/1Sg8j/uoPGrctml
- hFNGBTYyPq6mGW9jqaQ8en3ZmmJyw3CHwxZ5FZQ5qc55xgshKiy8jEtxh+dgB9d8zE/S/UGI
- E99N/q+kEKSgSMQMJ/CYPHQJVTi4YHh1yq/qTkHRX+ortrF5VEeDJDv+SljNStIxUdroPD29
- 2ijoaMFTAU+uBtE14UP5F+LWdmRdEGS1Ah1NwooL27uAFllTDQxDhg/+LJ/TqB8ZuidOIy1B
- xVKRSg3I2m+DUTVqBy7Lixo73hnW69kSjtqCeamY/NSu6LNP+b0wAOKhwz9hBEwEHLp05+mj
- 5ZFJyfGsOiNUcMoO/17FO4EBxSDP3FDLllpuzlFD7SXkfJaMWYmXIlO0jLzdfwfcnDzBbPwO
- hBM8hvtsyq8lq8vJOxv6XD6xcTtj5Az8t2JjdUX6SF9hxJpwhBU0wrCoGDkWp4Bbv6jnF7zP
- Nzftr4l8RuJoywDIiJpdaNpSlXKpj/K6KrnyAI/joYc7
-Message-ID: <4a07a6b8-8ff2-419c-eac8-3e7dc17670df@suse.cz>
-Date:   Wed, 19 Jun 2019 14:12:35 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 19 Jun 2019 08:14:45 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51448 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbfFSMOo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:14:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=k3P3++6GQiP2ImSaOTC4gPs5tYB1KrKrlADh55M4Y7c=; b=GLoxLkGT3DKYUTbegAR4dtLvl
+        JAcOZ35M+taNnvlktiRr/9cbCSk4qpR/PmFqAoCqDXh//hiD5SZ/ynCIud2p0Hd/FMTUNsYa+qiIS
+        NKWiVYV6bxLxxM2DoLQCNcZfdjWSFUQK/qNwEbUZxmd1Y41Khiv3C6QLu3DgXsKGS/4zU=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hdZUA-0007EJ-9X; Wed, 19 Jun 2019 12:14:42 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id D7BDC440046; Wed, 19 Jun 2019 13:14:41 +0100 (BST)
+Date:   Wed, 19 Jun 2019 13:14:41 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
+Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org
+Subject: Re: [PATCH 1/3] include: linux: spi: more helpers for declaring spi
+ drivers
+Message-ID: <20190619121441.GS5316@sirena.org.uk>
+Mail-Followup-To: "Enrico Weigelt, metux IT consult" <info@metux.net>,
+        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
+        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
+        linux-spi@vger.kernel.org
+References: <1560796840-18207-1-git-send-email-info@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="6s/G0Ait2f6IH9MX"
+Content-Disposition: inline
+In-Reply-To: <1560796840-18207-1-git-send-email-info@metux.net>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/19 6:44 AM, Yang Shi wrote:
-> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
-> vma") introduced THPeligible bit for processes' smaps. But, when checking
-> the eligibility for shmem vma, __transparent_hugepage_enabled() is
-> called to override the result from shmem_huge_enabled().  It may result
-> in the anonymous vma's THP flag override shmem's.  For example, running a
-> simple test which create THP for shmem, but with anonymous THP disabled,
-> when reading the process's smaps, it may show:
 
-...
+--6s/G0Ait2f6IH9MX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
-> index 01d4eb0..6a13882 100644
-> --- a/fs/proc/task_mmu.c
-> +++ b/fs/proc/task_mmu.c
-> @@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
->  
->  	__show_smap(m, &mss);
->  
-> -	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
-> +	seq_printf(m, "THPeligible:		%d\n",
-> +		   transparent_hugepage_enabled(vma));
->  
->  	if (arch_pkeys_enabled())
->  		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
-> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
-> index 4bc2552..36f0225 100644
-> --- a/mm/huge_memory.c
-> +++ b/mm/huge_memory.c
-> @@ -65,10 +65,15 @@
->  
->  bool transparent_hugepage_enabled(struct vm_area_struct *vma)
->  {
-> +	/* The addr is used to check if the vma size fits */
-> +	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
-> +
-> +	if (!transhuge_vma_suitable(vma, addr))
-> +		return false;
+On Mon, Jun 17, 2019 at 08:40:38PM +0200, Enrico Weigelt, metux IT consult wrote:
 
-Sorry for replying rather late, and not in the v2 thread, but unlike
-Hugh I'm not convinced that we should include vma size/alignment in the
-test for reporting THPeligible, which was supposed to reflect
-administrative settings and madvise hints. I guess it's mostly a matter
-of personal feeling. But one objective distinction is that the admin
-settings and madvise do have an exact binary result for the whole VMA,
-while this check is more fuzzy - only part of the VMA's span might be
-properly sized+aligned, and THPeligible will be 1 for the whole VMA.
+> +/* subsys_spi_driver() - Helper macro for drivers that don't do
+> + * anything special in module init/exit.  This eliminates a lot of
+> + * boilerplate.  Each module may only use this macro once, and
+> + * calling it replaces subsys_initcall() and module_exit()
+> + */
+> +#define subsys_spi_driver(__spi_driver) \
 
->  	if (vma_is_anonymous(vma))
->  		return __transparent_hugepage_enabled(vma);
-> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
-> -		return __transparent_hugepage_enabled(vma);
-> +	if (vma_is_shmem(vma))
-> +		return shmem_huge_enabled(vma);
->  
->  	return false;
->  }
-> diff --git a/mm/shmem.c b/mm/shmem.c
-> index 1bb3b8d..a807712 100644
-> --- a/mm/shmem.c
-> +++ b/mm/shmem.c
-> @@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
->  	loff_t i_size;
->  	pgoff_t off;
->  
-> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
-> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
-> +		return false;
->  	if (shmem_huge == SHMEM_HUGE_FORCE)
->  		return true;
->  	if (shmem_huge == SHMEM_HUGE_DENY)
-> 
+I'm not convinced we want to be encouraging anyone to be using
+subsys_initcall() for SPI drivers in the first place - my guess would be
+that with deferred probing none of that is needed anyway and the driver
+could just use module_spi_driver().  Certainly if the drivers do
+actually need subsys_initcall() I'd like to understand why before going
+forward with something like this, and ideally we'd be able to remove the
+need.
 
+--6s/G0Ait2f6IH9MX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0KJzAACgkQJNaLcl1U
+h9DeUQf+PgOAkyo4pT4LasAHcsQL8bXxE3hqloJcMpaFpRgnSp4/I5Pc/Jg04XCu
+CI2k7QnDLDIcUq1FlrI+eVvb0SKhzeEkIfJyaL8dX1kRPea2n9WbP0ZF5GcnQQ2d
+ZidAKFQNB7eSWEhgPUIvkNHIvGm7TUNST35PbhZCd+j4ACcErdrKhGpZPm2hmHRN
+7T7nUtkLFL5YvCH8QqdPLUzg2Co6BFik3jiseCAIi1PH4+zIA9QPi3g47VDPQ6aF
+nTUg51S5Y4aduklIOTW8G+D47tUTsjFiKb3g2ZqUz1wbgmJlyd6q48h4lR55gSj8
+xJYmx5diMemXIks5Ksr1Ny2mhGsXqg==
+=szr+
+-----END PGP SIGNATURE-----
+
+--6s/G0Ait2f6IH9MX--
