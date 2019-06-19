@@ -1,200 +1,214 @@
 Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 060FDC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF0F9C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0AFE2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:42:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560987767;
-	bh=K48IWpm0qpQcnGCs8lSaqXW+G4i+WnEM3gjkSNu8Jb8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=mBdERLAEbYZ//0YMJ65oESNGap+U7DWAzIvVOvKLh6ffqDtyyn+wRut6V2yTqAdnz
-	 UDzFXe0I1MKJIFmifLI0UYUrwO+6gnno76nQa7T3Wcl1JqNtfSlmKPBtGT5ckYm9XR
-	 bdd6i0wrdwHEf+lc9qOjcMd85rgTLgaSEIELgZyc=
+	by mail.kernel.org (Postfix) with ESMTP id 9CBC920851
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MSMUjfeu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730737AbfFSXmq (ORCPT
+        id S1730728AbfFSXsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 19:42:46 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34292 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfFSXmq (ORCPT
+        Wed, 19 Jun 2019 19:48:22 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:37152 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfFSXsW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 19:42:46 -0400
-Received: by mail-pl1-f194.google.com with SMTP id i2so567752plt.1;
-        Wed, 19 Jun 2019 16:42:45 -0700 (PDT)
+        Wed, 19 Jun 2019 19:48:22 -0400
+Received: by mail-yw1-f66.google.com with SMTP id 186so360973ywo.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 16:48:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=vsbPrRbTy3n+9aeG6Y9WG7BmsjIf/GUTHi4GwNMBp8A=;
-        b=sg+QN5DojLMGxQQDCS+jGFwhnp/TLRwrvzhYpTG6Y8H8qxN1UxurIXe/OVcpscALku
-         SR2IxIhu/MpK1E3IjWjSfb6Q+Utkc8F1Iwi1LmQnJn1AYZz+AfCDrMwA0ujfRwE+Y4c4
-         DDfalXES/sc+uvLmUCV2D9QDn6sJYQEQfb/aSJw7KNMNyS5k9mpd8eX5p+dTK9T9rsaj
-         Fz0D3SQxIJsjtrx2EF+EKZodWobX20P5cOeF/oE8xnlZU1E+Dyv0xPVPRqoWTugLsZYd
-         EjDQOAGCnfUANmgZBT8o3qvxaYgeL2frTMIUj6me0ApUAM9fwlHOYDQJL/8Lt8h0hEXI
-         dO9w==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=mdR8cofBW05/dlJOYy5MJxgZ+fOVkZamOkomK1RfURQ=;
+        b=MSMUjfeuIIMWIAJ5C708F/2OSLY+fwUt/8W9JQ1YSkbXB4N4Q/KUz+PAqWiyCtxC8I
+         t2ShqEKiMO68Iqm8esLXZ/Zc7jP42gUYUUHcxfY7WsF1g58qaDBNxCjtKSEeZAGajpin
+         g1Y7nWTBahghzM1misk6ZqrFiUnj28CVM157L+EHhMJN2buIPwJIaqWNds4zn16CNCW7
+         gGnIXuRrqu1oS6c8flY0CYvv0irqfs04XyDUcJHjssdLgIdv9P0lrdc+zcNBY1Kn3Dyn
+         H+bMYSUzFOTkJGi5uaUdG11jsKLbbr5RxTqXTYtoQoFV3+9GCaEo0YKYs4VGeS6F5Vxa
+         VKjg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=vsbPrRbTy3n+9aeG6Y9WG7BmsjIf/GUTHi4GwNMBp8A=;
-        b=l4QlA+xteGNXRBmcZX450+29oGJzGfS+SE6tR0N5RZAShoKpTlzYyJi2uhHBOE2cxI
-         TahA6hkZw6Tq8S1J3nZRVqHzGjJmz/3EYYQ5dNMP0IPM++Tb/j3k0VCxyUCAHjhAqmB/
-         nLqbLMGrVrD/XVFXgZUee59DNqZ88dGSnPIziaLK66hWBHw4UWl6BNuLk236IRzNs+gY
-         xsEG/jID25o0J9MWckyzsxbKEhJ+ghMKo+o0vq1oB8NbZd8zkXOiYEk58WoVeagr0oOL
-         7hOisx0IAmcXmuurrJa2yoLAsxjiIMVG877mmUshvvJGnntDRBe51UJ2iLQIfZnuzL0+
-         ql9A==
-X-Gm-Message-State: APjAAAVSWE2/RVlQTmxxakOOQg08H44Whz/fn3RTbjXbcmyzPK17e5hh
-        K0s9p5GZDUi7uUgWhWoX+0o=
-X-Google-Smtp-Source: APXvYqyBFSgDTUXU7wAhb9dojUkivR3grLasbuyIhBXnxjA2gqQw71aDb1O3j7rkdX9uurouxgzQvg==
-X-Received: by 2002:a17:902:d887:: with SMTP id b7mr15509236plz.28.1560987765105;
-        Wed, 19 Jun 2019 16:42:45 -0700 (PDT)
-Received: from google.com ([122.38.223.241])
-        by smtp.gmail.com with ESMTPSA id j1sm21890149pfe.101.2019.06.19.16.42.38
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 16:42:43 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 08:42:35 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 0/5] Introduce MADV_COLD and MADV_PAGEOUT
-Message-ID: <20190619234235.GA52978@google.com>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190619122750.GN2968@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=mdR8cofBW05/dlJOYy5MJxgZ+fOVkZamOkomK1RfURQ=;
+        b=BzOSmNisI80h4iHxsDVxIvLXz/D57kmQ6xF5H0jGc7ZVCjqsQy7B+1HnXBQyfKdqVn
+         4QpOgRCAPGkokxAHBl6iBGtkQtRkDmcmbioKaJfdiDu9Y5k+0sCwY33rDjpFmt9PK72F
+         mczkMFpPjvbzNpmxmtaeAZscqPnKNkf019Qahf7LS0wSdhdtRrcPyRU94DBSVFZ4XEsA
+         sxtFhI4XS2sCnwmt+9pFfmrvR7gYve8wHQf++AWRqL+wdH2KBLry0a80x9z5QTW16PHJ
+         cIp+/cEfOAQnjMICYR5pNPE48K0Om9TgbFocy0VHteUdWjosPhdEB7W/LS4bg2UT3P0U
+         /0KQ==
+X-Gm-Message-State: APjAAAXGTZTf46e7mg0QSpVtXwhNWmhDNeSqwJ45vFzn31C0dvlJ40yz
+        /FN9xlsaDb51/K9FGXxna88OvMqS+h7GIGxibm/XNw==
+X-Google-Smtp-Source: APXvYqwXXDiu34H1Done8oxemcyeGdttzq+yvBnu/E8HZ/ceNguvnB/CiOduLOD/BnON5rB7aDDp3Zdct/GtF4kOBVo=
+X-Received: by 2002:a81:a55:: with SMTP id 82mr37827365ywk.205.1560988100833;
+ Wed, 19 Jun 2019 16:48:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190619122750.GN2968@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190619171621.26209-1-longman@redhat.com>
+In-Reply-To: <20190619171621.26209-1-longman@redhat.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 19 Jun 2019 16:48:09 -0700
+Message-ID: <CALvZod7pdOx0a1v4oX5-7ZfCykM8iwRwPkW-+gbO1B4+j1SXqw@mail.gmail.com>
+Subject: Re: [PATCH v2] mm, memcg: Add a memcg_slabinfo debugfs file
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 02:27:50PM +0200, Michal Hocko wrote:
-> On Mon 10-06-19 20:12:47, Minchan Kim wrote:
-> > This patch is part of previous series:
-> > https://lore.kernel.org/lkml/20190531064313.193437-1-minchan@kernel.org/T/#u
-> > Originally, it was created for external madvise hinting feature.
-> > 
-> > https://lkml.org/lkml/2019/5/31/463
-> > Michal wanted to separte the discussion from external hinting interface
-> > so this patchset includes only first part of my entire patchset
-> > 
-> >   - introduce MADV_COLD and MADV_PAGEOUT hint to madvise.
-> > 
-> > However, I keep entire description for others for easier understanding
-> > why this kinds of hint was born.
-> > 
-> > Thanks.
-> > 
-> > This patchset is against on next-20190530.
-> > 
-> > Below is description of previous entire patchset.
-> > ================= &< =====================
-> > 
-> > - Background
-> > 
-> > The Android terminology used for forking a new process and starting an app
-> > from scratch is a cold start, while resuming an existing app is a hot start.
-> > While we continually try to improve the performance of cold starts, hot
-> > starts will always be significantly less power hungry as well as faster so
-> > we are trying to make hot start more likely than cold start.
-> > 
-> > To increase hot start, Android userspace manages the order that apps should
-> > be killed in a process called ActivityManagerService. ActivityManagerService
-> > tracks every Android app or service that the user could be interacting with
-> > at any time and translates that into a ranked list for lmkd(low memory
-> > killer daemon). They are likely to be killed by lmkd if the system has to
-> > reclaim memory. In that sense they are similar to entries in any other cache.
-> > Those apps are kept alive for opportunistic performance improvements but
-> > those performance improvements will vary based on the memory requirements of
-> > individual workloads.
-> > 
-> > - Problem
-> > 
-> > Naturally, cached apps were dominant consumers of memory on the system.
-> > However, they were not significant consumers of swap even though they are
-> > good candidate for swap. Under investigation, swapping out only begins
-> > once the low zone watermark is hit and kswapd wakes up, but the overall
-> > allocation rate in the system might trip lmkd thresholds and cause a cached
-> > process to be killed(we measured performance swapping out vs. zapping the
-> > memory by killing a process. Unsurprisingly, zapping is 10x times faster
-> > even though we use zram which is much faster than real storage) so kill
-> > from lmkd will often satisfy the high zone watermark, resulting in very
-> > few pages actually being moved to swap.
-> > 
-> > - Approach
-> > 
-> > The approach we chose was to use a new interface to allow userspace to
-> > proactively reclaim entire processes by leveraging platform information.
-> > This allowed us to bypass the inaccuracy of the kernel’s LRUs for pages
-> > that are known to be cold from userspace and to avoid races with lmkd
-> > by reclaiming apps as soon as they entered the cached state. Additionally,
-> > it could provide many chances for platform to use much information to
-> > optimize memory efficiency.
-> > 
-> > To achieve the goal, the patchset introduce two new options for madvise.
-> > One is MADV_COLD which will deactivate activated pages and the other is
-> > MADV_PAGEOUT which will reclaim private pages instantly. These new options
-> > complement MADV_DONTNEED and MADV_FREE by adding non-destructive ways to
-> > gain some free memory space. MADV_PAGEOUT is similar to MADV_DONTNEED in a way
-> > that it hints the kernel that memory region is not currently needed and
-> > should be reclaimed immediately; MADV_COLD is similar to MADV_FREE in a way
-> > that it hints the kernel that memory region is not currently needed and
-> > should be reclaimed when memory pressure rises.
-> 
-> This all is a very good background information suitable for the cover
-> letter.
-> 
-> > This approach is similar in spirit to madvise(MADV_WONTNEED), but the
-> > information required to make the reclaim decision is not known to the app.
-> > Instead, it is known to a centralized userspace daemon, and that daemon
-> > must be able to initiate reclaim on its own without any app involvement.
-> > To solve the concern, this patch introduces new syscall -
-> > 
-> >     struct pr_madvise_param {
-> >             int size;               /* the size of this structure */
-> >             int cookie;             /* reserved to support atomicity */
-> >             int nr_elem;            /* count of below arrary fields */
-> >             int __user *hints;      /* hints for each range */
-> >             /* to store result of each operation */
-> >             const struct iovec __user *results;
-> >             /* input address ranges */
-> >             const struct iovec __user *ranges;
-> >     };
-> >     
-> >     int process_madvise(int pidfd, struct pr_madvise_param *u_param,
-> >                             unsigned long flags);
-> 
-> But this and the following paragraphs are referring to the later step
-> when the madvise gains a remote process capabilities and that is out
-> of the scope of this patch series so I would simply remove it from
-> here. Andrew tends to put the cover letter into the first patch of the
-> series and that would be indeed
-> confusing here.
+Hi Waiman,
 
-Okay, I will remove the part in next revision.
+On Wed, Jun 19, 2019 at 10:16 AM Waiman Long <longman@redhat.com> wrote:
+>
+> There are concerns about memory leaks from extensive use of memory
+> cgroups as each memory cgroup creates its own set of kmem caches. There
+> is a possiblity that the memcg kmem caches may remain even after the
+> memory cgroups have been offlined. Therefore, it will be useful to show
+> the status of each of memcg kmem caches.
+>
+> This patch introduces a new <debugfs>/memcg_slabinfo file which is
+> somewhat similar to /proc/slabinfo in format, but lists only information
+> about kmem caches that have child memcg kmem caches. Information
+> available in /proc/slabinfo are not repeated in memcg_slabinfo.
+>
+> A portion of a sample output of the file was:
+>
+>   # <name> <css_id[:dead]> <active_objs> <num_objs> <active_slabs> <num_slabs>
+>   rpc_inode_cache   root          13     51      1      1
+>   rpc_inode_cache     48           0      0      0      0
+>   fat_inode_cache   root           1     45      1      1
+>   fat_inode_cache     41           2     45      1      1
+>   xfs_inode         root         770    816     24     24
+>   xfs_inode           92          22     34      1      1
+>   xfs_inode           88:dead      1     34      1      1
+>   xfs_inode           89:dead     23     34      1      1
+>   xfs_inode           85           4     34      1      1
+>   xfs_inode           84           9     34      1      1
+>
+> The css id of the memcg is also listed. If a memcg is not online,
+> the tag ":dead" will be attached as shown above.
+>
+> Suggested-by: Shakeel Butt <shakeelb@google.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
+> ---
+>  mm/slab_common.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>
+> diff --git a/mm/slab_common.c b/mm/slab_common.c
+> index 58251ba63e4a..2bca1558a722 100644
+> --- a/mm/slab_common.c
+> +++ b/mm/slab_common.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/uaccess.h>
+>  #include <linux/seq_file.h>
+>  #include <linux/proc_fs.h>
+> +#include <linux/debugfs.h>
+>  #include <asm/cacheflush.h>
+>  #include <asm/tlbflush.h>
+>  #include <asm/page.h>
+> @@ -1498,6 +1499,62 @@ static int __init slab_proc_init(void)
+>         return 0;
+>  }
+>  module_init(slab_proc_init);
+> +
+> +#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_MEMCG_KMEM)
+> +/*
+> + * Display information about kmem caches that have child memcg caches.
+> + */
+> +static int memcg_slabinfo_show(struct seq_file *m, void *unused)
+> +{
+> +       struct kmem_cache *s, *c;
+> +       struct slabinfo sinfo;
+> +
+> +       mutex_lock(&slab_mutex);
+
+On large machines there can be thousands of memcgs and potentially
+each memcg can have hundreds of kmem caches. So, the slab_mutex can be
+held for a very long time.
+
+Our internal implementation traverses the memcg tree and then
+traverses 'memcg->kmem_caches' within the slab_mutex (and
+cond_resched() after unlock).
+
+> +       seq_puts(m, "# <name> <css_id[:dead]> <active_objs> <num_objs>");
+> +       seq_puts(m, " <active_slabs> <num_slabs>\n");
+> +       list_for_each_entry(s, &slab_root_caches, root_caches_node) {
+> +               /*
+> +                * Skip kmem caches that don't have any memcg children.
+> +                */
+> +               if (list_empty(&s->memcg_params.children))
+> +                       continue;
+> +
+> +               memset(&sinfo, 0, sizeof(sinfo));
+> +               get_slabinfo(s, &sinfo);
+> +               seq_printf(m, "%-17s root      %6lu %6lu %6lu %6lu\n",
+> +                          cache_name(s), sinfo.active_objs, sinfo.num_objs,
+> +                          sinfo.active_slabs, sinfo.num_slabs);
+> +
+> +               for_each_memcg_cache(c, s) {
+> +                       struct cgroup_subsys_state *css;
+> +                       char *dead = "";
+> +
+> +                       css = &c->memcg_params.memcg->css;
+> +                       if (!(css->flags & CSS_ONLINE))
+> +                               dead = ":dead";
+
+Please note that Roman's kmem cache reparenting patch series have made
+kmem caches of zombie memcgs a bit tricky. On memcg offlining the
+memcg kmem caches are reparented and the css->id can get recycled. So,
+we want to know that the a kmem cache is reparented and which memcg it
+belonged to initially. Determining if a kmem cache is reparented, we
+can store a flag on the kmem cache and for the previous memcg we can
+use fhandle. However to not make this more complicated, for now, we
+can just have the info that the kmem cache was reparented i.e. belongs
+to an offlined memcg.
+
+> +
+> +                       memset(&sinfo, 0, sizeof(sinfo));
+> +                       get_slabinfo(c, &sinfo);
+> +                       seq_printf(m, "%-17s %4d%5s %6lu %6lu %6lu %6lu\n",
+> +                                  cache_name(c), css->id, dead,
+> +                                  sinfo.active_objs, sinfo.num_objs,
+> +                                  sinfo.active_slabs, sinfo.num_slabs);
+> +               }
+> +       }
+> +       mutex_unlock(&slab_mutex);
+> +       return 0;
+> +}
+> +DEFINE_SHOW_ATTRIBUTE(memcg_slabinfo);
+> +
+> +static int __init memcg_slabinfo_init(void)
+> +{
+> +       debugfs_create_file("memcg_slabinfo", S_IFREG | S_IRUGO,
+> +                           NULL, NULL, &memcg_slabinfo_fops);
+> +       return 0;
+> +}
+> +
+> +late_initcall(memcg_slabinfo_init);
+> +#endif /* CONFIG_DEBUG_FS && CONFIG_MEMCG_KMEM */
+>  #endif /* CONFIG_SLAB || CONFIG_SLUB_DEBUG */
+>
+>  static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+> --
+> 2.18.1
+>
