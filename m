@@ -2,162 +2,261 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2929DC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:52:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C078EC48BE0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:53:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB2692147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:52:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F2E82147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:53:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="isEfq6jw"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PBQvRmU9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730441AbfFSUwQ (ORCPT
+        id S1730452AbfFSUx1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:52:16 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:37220 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfFSUwP (ORCPT
+        Wed, 19 Jun 2019 16:53:27 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:44385 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfFSUx1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:52:15 -0400
-Received: by mail-qk1-f194.google.com with SMTP id d15so479600qkl.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:52:15 -0700 (PDT)
+        Wed, 19 Jun 2019 16:53:27 -0400
+Received: by mail-qt1-f196.google.com with SMTP id x47so692957qtk.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:53:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=z5rCzuSBrLaA6Op7MrdaVHZXcenmKCOz9zKA6giX+v0=;
-        b=isEfq6jwPaqZYRufeqYVpJ4aUF6Eb6geHHhjFcA1KRzHKejvtKuLLqkcpIC5eGp9IL
-         CL5KmPAcWju+EnTpWN3M64lTL/2QKtE/UZOmOn3pEn3cubJ+MUfD0QcGWyazytqFYmbZ
-         d+H32Mpqyp8BdB9ZFBn9dRsK4qbKzYmySwFv/xBRxAHJ5vKUqA0NyC1t4FvA+HAY7l7K
-         Rg5dLqeUzk2TFd+gkVR5XVmH9p/HijHY5ep7VD97WKpAUhk3ogXDCRdwCnC/1L6GZdgN
-         +8hf6t60DlfUqIVIGTRQKBRLLHWG5b8KlCE5FFFv4WiAaViBYD5412kgCHPQz9X8vBOM
-         Fmug==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=r1JW72QZvFM97mG3byq8Xb6t+u2a6sidb0hhLRwcOmU=;
+        b=PBQvRmU97QmDiSH6VHDaVQhPepePHrPHYlwwQ/KedfmWFuxP7nUwqp4/gHO2vD8PXY
+         SW9GabxMpnd0/VDvqluCZBrgba4B+TZYn77dps9SRIWk2FLlws4+lPZaBGwxR9ZgjM2C
+         7xwslkwmmsnwnPue83IhaipYL5eRyUk5+oWTnWae3b1fwgku785VXUP54Ar7RnMV4R3m
+         RE9tyi1FcCXdjUJTubVkJobdiO0q/NrOpxhXAtRsHS/dMms3Qj4rgqvYQf5xhyi07dpw
+         TqZPdrr43X0vGiK+pke37NhAY8QZWb7anvOlUJl9WUNKa1+r9pA81Myq6CsYzOWv+tym
+         apsQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=z5rCzuSBrLaA6Op7MrdaVHZXcenmKCOz9zKA6giX+v0=;
-        b=ZH4GNphygKaqXpSvrp3t2We1da3gtpbwOcOh7MYlimd7wsmmfxuI9Vlu7EPPwf12Gf
-         /JiCjpnFnPh7T1T+jkkPqCNOhR1wzGDJik/+MT9bYbNFgEGWGTmkkKgSSIvG/8NX1sXC
-         OJJZ35M9tFZeFagP7tTHeTQEdd+2tSjY7OjV4QwazAi9BT7OfwIy+XB4ZtcJsc1edzCG
-         C/kp7JyIe2Xmk6/rSIqp1b+gTgzoiUvpmuNBmPrArELU2wQn4L/246FNS+HeWiNOqGk8
-         Zpw7m/qG1aYfBkmRAgSvuwUyRnQ2QKyuhaFBARxfmw0O+qSIIpprmjq5MoJUgb8NSPlB
-         KsuQ==
-X-Gm-Message-State: APjAAAVwvLBwNfCCHtpPY5Kju+2wJp16H0Fdbi4wf6FJ6wJpCFgBkb3O
-        TB/Ut6hvEfW+RaXXRGRCDw1mEvoUnODUMiHiwYSQgQ==
-X-Google-Smtp-Source: APXvYqwkXi3xCG67StWJ97g9gbtDGdMv3fbCQX0ogpKxqIV6EucXjdPKsNGjHSyQ53Xs8SDPItZaYfdNbc5clFbMMoU=
-X-Received: by 2002:a05:620a:15b3:: with SMTP id f19mr37627773qkk.314.1560977534249;
- Wed, 19 Jun 2019 13:52:14 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
- <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
- <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
- <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
- <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
- <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
- <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
- <20190619170750.GB10107@kroah.com> <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
- <20190619183523.GA7018@kroah.com> <CAJWu+opk+9j8=AtBFggbBn+nYZnCv2jS+mD=Vri9foN2rjvo8A@mail.gmail.com>
- <CAGETcx-ZZRc_jtBws2cFTe1wjiWeBowdqfqOhcCJV_7AUyBEVw@mail.gmail.com>
- <CAJWu+ooaDBCF06QAeddFig5myfUABd6qebJ14nd6pKaBwQq8MA@mail.gmail.com> <CAGETcx9yWAvp0UYHQxfCkPi1ooBuYA1ZzZXVUvfyBh8XUTcbMg@mail.gmail.com>
-In-Reply-To: <CAGETcx9yWAvp0UYHQxfCkPi1ooBuYA1ZzZXVUvfyBh8XUTcbMg@mail.gmail.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Wed, 19 Jun 2019 16:52:02 -0400
-Message-ID: <CAJWu+oqh4_MiVGpbuRpN1-RLd=HuS_uViTnfHbuhB3OZKJ8_Ng@mail.gmail.com>
-Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sandeep Patil <sspatil@android.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=r1JW72QZvFM97mG3byq8Xb6t+u2a6sidb0hhLRwcOmU=;
+        b=m4SQzka5YFpAD1W5vQRBcHeetANnNzKpSOgnqb7JRvPHaAn14Rk9bh4d4RxdyrKEeB
+         Ql+FUAbBC28rY4FOuYpc8P+Pzrngruwy+saNZcvkLSmn44K/6tTAuxnJNMqv1x8l9OYj
+         mC9Ncut6KV56AD6kzJ2D2zPE1O31RTMnxXRFKT5Kz2UQdQy3Yf323W6P/TCd8IOJrS7Z
+         jUmwLb8QbpmsI+OV+wCoT214bESu0bVjXOFYktvJ7iTVRNkXywdCXqe/ujQsIdYAVkxA
+         ohx5aNeoBhHK2KR4LEEz1XTPK+lobEkMtWBFQz/vqX56bqtVAKpm+KqEdNRXcY5ybhIN
+         CBxA==
+X-Gm-Message-State: APjAAAWKxm9RcEeEjyJtof1UWnICF4iTU3L0dn8h+iRgv5Y8ifWKKnTL
+        z3oeA0ptXNH2oPOmj57829c74Q==
+X-Google-Smtp-Source: APXvYqzoYanqwMwE8GB/pmwJLxlLQcRHAuhdcsBEYsWD0YJ/kIjmSl19ksNIX8BZAxajAHkqRUDi9g==
+X-Received: by 2002:a0c:acab:: with SMTP id m40mr19419150qvc.52.1560977605321;
+        Wed, 19 Jun 2019 13:53:25 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id g2sm8477275qkm.31.2019.06.19.13.53.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 13:53:24 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     guro@fb.com, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] mm/slab: fix an use-after-free in kmemcg_workfn()
+Date:   Wed, 19 Jun 2019 16:52:53 -0400
+Message-Id: <1560977573-10715-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 4:41 PM 'Saravana Kannan' via kernel-team
-<kernel-team@android.com> wrote:
-> > > On Wed, Jun 19, 2019, 11:55 AM 'Joel Fernandes' via kernel-team <kernel-team@android.com> wrote:
-> > >>
-> > >> On Wed, Jun 19, 2019 at 2:35 PM Greg Kroah-Hartman
-> > >> <gregkh@linuxfoundation.org> wrote:
-> > >> >
-> > >> > On Wed, Jun 19, 2019 at 02:01:36PM -0400, Joel Fernandes wrote:
-> > >> > > On Wed, Jun 19, 2019 at 1:07 PM Greg Kroah-Hartman
-> > >> > > <gregkh@linuxfoundation.org> wrote:
-> > >> > > >
-> > >> > > > On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
-> > >> > > > > > It is conceivable to have a "wakeup_sources" directory under
-> > >> > > > > > /sys/power/ and sysfs nodes for all wakeup sources in there.
-> > >> > > > >
-> > >> > > > > One of the "issues" with this is, now if you have say 100 wake up
-> > >> > > > > sources, with 10 entries each, then we're talking about a 1000 sysfs
-> > >> > > > > files. Each one has to be opened, and read individually. This adds
-> > >> > > > > overhead and it is more convenient to read from a single file. The
-> > >> > > > > problem is this single file is not ABI. So the question I guess is,
-> > >> > > > > how do we solve this in both an ABI friendly way while keeping the
-> > >> > > > > overhead low.
-> > >> > > >
-> > >> > > > How much overhead?  Have you measured it, reading from virtual files is
-> > >> > > > fast :)
-> > >> > >
-> > >> > > I measured, and it is definitely not free. If you create and read a
-> > >> > > 1000 files and just return a string back, it can take up to 11-13
-> > >> > > milliseconds (did not lock CPU frequencies, was just looking for
-> > >> > > average ball park). This is assuming that the counter reading is just
-> > >> > > doing that, and nothing else is being done to return the sysfs data
-> > >> > > which is probably not always true in practice.
-> > >> > >
-> > >> > > Our display pipeline deadline is around 16ms at 60Hz. Conceivably, any
-> > >> > > CPU scheduling competion reading sysfs can hurt the deadline. There's
-> > >> > > also the question of power - we definitely have spent time in the past
-> > >> > > optimizing other virtual files such as /proc/pid/smaps for this reason
-> > >> > > where it spent lots of CPU time.
-> > >> >
-> > >> > smaps was "odd", but that was done after measurements were actually made
-> > >> > to prove it was needed.  That hasn't happened yet :)
-> > >> >
-> > >> > And is there a reason you have to do this every 16ms?
-> > >>
-> > >> Not every, I was just saying whenever it happens and a frame delivery
-> > >> deadline is missed, then a frame drop can occur which can result in a
-> > >> poor user experience.
-> > >
-> > >
-> > > But this is not done in the UI thread context. So some thread running for more than 16ms shouldn't cause a frame drop. If it does, we have bigger problems.
-> > >
-> >
-> > Not really. That depends on the priority of the other thread and other
-> > things. It can obviously time share the same CPU as the UI thread if
-> > it is not configured correctly. Even with CFS it can reduce the time
-> > consumed by other "real-time" CFS threads. I am not sure what you are
-> > proposing, there are also (obviously) power issues with things running
-> > for long times pointlessly. We should try to do better if we can. As
-> > Greg said, some study/research can be done on the use case before
-> > settling for a solution (sysfs or other).
-> >
->
-> Agree, power and optimization is good. Just saying that the UI example
-> is not a real one. If the UI thread is that poorly configured that
-> some thread running for a second can cause frame drops in a multicore
-> system, that's a problem with the UI framework design.
+The linux-next commit "mm: rework non-root kmem_cache lifecycle
+management" [1] introduced an use-after-free below because
+kmemcg_workfn() may call slab_kmem_cache_release() which has already
+freed the whole kmem_cache. Fix it by removing the bogus NULL assignment
+and checkings that will not work with SLUB_DEBUG poisoning anyway.
 
-We do know that historically there are problems with the UI thread's
-scheduling and folks are looking into DL scheduling for that. I was
-just giving UI thread as an example, there are also other low latency
-threads (audio etc). Anyway, I think we know the next steps here so we
-can park this discussion for now.
+[1] https://lore.kernel.org/patchwork/patch/1087376/
+
+BUG kmem_cache (Tainted: G    B   W        ): Poison overwritten
+INFO: 0x(____ptrval____)-0x(____ptrval____). First byte 0x0 instead of
+0x6b
+INFO: Allocated in create_cache+0x6c/0x1bc age=2653 cpu=154 pid=1599
+	kmem_cache_alloc+0x514/0x568
+	create_cache+0x6c/0x1bc
+	memcg_create_kmem_cache+0xfc/0x11c
+	memcg_kmem_cache_create_func+0x40/0x170
+	process_one_work+0x4e0/0xa54
+	worker_thread+0x498/0x650
+	kthread+0x1b8/0x1d4
+	ret_from_fork+0x10/0x18
+INFO: Freed in slab_kmem_cache_release+0x3c/0x48 age=255 cpu=7 pid=1505
+	slab_kmem_cache_release+0x3c/0x48
+	kmem_cache_release+0x1c/0x28
+	kobject_cleanup+0x134/0x288
+	kobject_put+0x5c/0x68
+	sysfs_slab_release+0x2c/0x38
+	shutdown_cache+0x190/0x234
+	kmemcg_cache_shutdown_fn+0x1c/0x34
+	kmemcg_workfn+0x44/0x68
+	process_one_work+0x4e0/0xa54
+	worker_thread+0x498/0x650
+	kthread+0x1b8/0x1d4
+	ret_from_fork+0x10/0x18
+INFO: Slab 0x(____ptrval____) objects=64 used=64 fp=0x(____ptrval____)
+flags=0x17ffffffc000200
+INFO: Object 0x(____ptrval____) @offset=11601272640106456192
+fp=0x(____ptrval____)
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
+bb  ................
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 00 00 00 00
+kkkkkkkk........
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
+kkkkkkkkkkkkkkkk
+Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b a5
+kkkkkkk.
+Redzone (____ptrval____): bb bb bb bb bb bb bb bb
+........
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+5a  ZZZZZZZZZZZZZZZZ
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+5a  ZZZZZZZZZZZZZZZZ
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+5a  ZZZZZZZZZZZZZZZZ
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
+5a  ZZZZZZZZZZZZZZZZ
+Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a
+ZZZZZZZZ
+CPU: 193 PID: 1557 Comm: kworker/193:1 Tainted: G    B   W
+5.2.0-rc5-next-20190619+ #8
+Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS
+L50_5.13_1.0.9 03/01/2019
+Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
+Call trace:
+ dump_backtrace+0x0/0x268
+ show_stack+0x20/0x2c
+ dump_stack+0xb4/0x108
+ print_trailer+0x274/0x298
+ check_bytes_and_report+0xc4/0x118
+ check_object+0x2fc/0x36c
+ alloc_debug_processing+0x154/0x240
+ ___slab_alloc+0x710/0xa68
+ kmem_cache_alloc+0x514/0x568
+ create_cache+0x6c/0x1bc
+ memcg_create_kmem_cache+0xfc/0x11c
+ memcg_kmem_cache_create_func+0x40/0x170
+ process_one_work+0x4e0/0xa54
+ worker_thread+0x498/0x650
+ kthread+0x1b8/0x1d4
+ ret_from_fork+0x10/0x18
+FIX kmem_cache: Restoring 0x(____ptrval____)-0x(____ptrval____)=0x6b
+
+FIX kmem_cache: Marking all objects used
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ mm/slab_common.c | 5 -----
+ 1 file changed, 5 deletions(-)
+
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 91e8c739dc97..bb8aec6d8744 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -714,10 +714,7 @@ static void kmemcg_workfn(struct work_struct *work)
+ 	get_online_mems();
+ 
+ 	mutex_lock(&slab_mutex);
+-
+ 	s->memcg_params.work_fn(s);
+-	s->memcg_params.work_fn = NULL;
+-
+ 	mutex_unlock(&slab_mutex);
+ 
+ 	put_online_mems();
+@@ -753,7 +750,6 @@ static void kmemcg_cache_shutdown(struct percpu_ref *percpu_ref)
+ 	if (s->memcg_params.root_cache->memcg_params.dying)
+ 		goto unlock;
+ 
+-	WARN_ON(s->memcg_params.work_fn);
+ 	s->memcg_params.work_fn = kmemcg_cache_shutdown_fn;
+ 	INIT_WORK(&s->memcg_params.work, kmemcg_workfn);
+ 	queue_work(memcg_kmem_cache_wq, &s->memcg_params.work);
+@@ -784,7 +780,6 @@ static void kmemcg_cache_deactivate(struct kmem_cache *s)
+ 	if (s->memcg_params.root_cache->memcg_params.dying)
+ 		goto unlock;
+ 
+-	WARN_ON_ONCE(s->memcg_params.work_fn);
+ 	s->memcg_params.work_fn = kmemcg_cache_deactivate_after_rcu;
+ 	call_rcu(&s->memcg_params.rcu_head, kmemcg_rcufn);
+ unlock:
+-- 
+1.8.3.1
+
