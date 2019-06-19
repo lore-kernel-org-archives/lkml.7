@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1A0C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CF78C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EEEF208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 80E402147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731955AbfFSMbP (ORCPT
+        id S1731826AbfFSMad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:31:15 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51646 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731848AbfFSMai (ORCPT
+        Wed, 19 Jun 2019 08:30:33 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:36358 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731787AbfFSMab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:30:38 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 207so1589322wma.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:36 -0700 (PDT)
+        Wed, 19 Jun 2019 08:30:31 -0400
+Received: by mail-wr1-f66.google.com with SMTP id n4so3221742wrs.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:29 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=zH+k6ndWzHXcUGt/1dQWHzCs9DtuO0deMfiOOMoKDp4=;
-        b=oM719ck8Ft4ekBtloCTL30xpR/TMHvQaVdwePjKduMDz4ejXsGXjAi6+4tfWO7D9W4
-         ivz2OapI2ev4nfZroN9JPpFLpTQlAIsyXD+oPVHRMXomPVZE4ApogK1iC0pFgJmjsmJl
-         H1ndjtwGqA/eGfB4cg4Yr3jt+DQBsjvzlc7zFqbZwW39ihitOZX6s8W8eSkAR3Vz0msa
-         +by/N4z3zXL1yyOmZ1ywhFtii//Td7nAScok4c6aoy59O+F6R8vu3yNt4v6fgj2jPK0W
-         ml5EBTSwmx3sZ+wCOewXPNYHUU0XBFGYeKOLm4wDZ3U264eFALqhPRjgjGGKtGLmQhP8
-         5K4w==
-X-Gm-Message-State: APjAAAWNT2XKvF34rD0l0WIUyuXxNL8YMhzrYPaLixTeksoNRqzzT0kj
-        6aQh75muTdji8VSnh8+02sOCCQ==
-X-Google-Smtp-Source: APXvYqzuyPwUZiu30WPoQqiKG/EAE+hhjNevOIChGgYRXYTK/dXvHdqIoIpAjRdiAlQh9pVuex6Smw==
-X-Received: by 2002:a1c:6585:: with SMTP id z127mr8881330wmb.25.1560947436334;
-        Wed, 19 Jun 2019 05:30:36 -0700 (PDT)
+        bh=syOsz+pCnNIc/qrQgZM4/GIrteB9uldeCUT6WZA8hVM=;
+        b=b5lpZC9Xdhpftq9INpELDdYeJClYMW5tZ0M8h5BdJUIgzjlgMRNDVLDKk0i9FYQibf
+         zizxdYEJUWqBaI+59dpxwml10BEEq+Dt+Z1TySKlLK9oA6d1YNejnux3frw/uDH1BiPR
+         aHcRvQgeh0tYyuYmJT73m4WBZD/tizuEPHtPdZpl+OcmN54TADP3KTTi/JGCxvIdRiho
+         faUNBYMJZjKQDBQhPIciHFeKD4sUInas8ezljvYPgJHIJXbuF7mMTrWFLRpaCK378mCd
+         F+PImVj0apJy+J8z8bvi8zqnZRqbsn2xVYFya9cEA5pHfsLkF5N7OGdczk8dft+IWjDp
+         VrOg==
+X-Gm-Message-State: APjAAAXHShRXsSKZEeHMA35jrVGEtvJlwHQxGQyoZhEiuwQ/hx+WuoSZ
+        iEMfgSVvJZknpVW3LNoaIF26XQ==
+X-Google-Smtp-Source: APXvYqyjzkTgS7F88coETlRjgqd7E9iaHcb9QaeY+SJUGxkfZmk3cECPjwg/IA9yNUyKVxPD4Cdb2g==
+X-Received: by 2002:a5d:56c1:: with SMTP id m1mr3035374wrw.26.1560947429205;
+        Wed, 19 Jun 2019 05:30:29 -0700 (PDT)
 Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.35
+        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.27
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 05:30:35 -0700 (PDT)
+        Wed, 19 Jun 2019 05:30:28 -0700 (PDT)
 From:   Miklos Szeredi <mszeredi@redhat.com>
 To:     David Howells <dhowells@redhat.com>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
         linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 07/13] proc: don't ignore options
-Date:   Wed, 19 Jun 2019 14:30:13 +0200
-Message-Id: <20190619123019.30032-7-mszeredi@redhat.com>
+Subject: [PATCH 03/13] vfs: don't parse forbidden flags
+Date:   Wed, 19 Jun 2019 14:30:09 +0200
+Message-Id: <20190619123019.30032-3-mszeredi@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190619123019.30032-1-mszeredi@redhat.com>
 References: <20190619123019.30032-1-mszeredi@redhat.com>
@@ -60,32 +60,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The options "sync", "async", "dirsync", "lazytime", "nolazytime", "mand"
-and "nomand" make no sense for the proc filesystem.  If these options are
-supplied to fsconfig(FSCONFIG_SET_FLAG), then return -EINVAL instead of
-silently ignoring the option.
+Impossible to keep this blacklist properly synced with what mount(8) parses
+and what it doesn't.  E.g. it has various forms of "*atime" options, but
+not "atime"...
 
-Any implementation, such as mount(8) that needs to parse this option
-without failing should simply ignore the return value from fsconfig().
+Other than being impossible to maintain, it also makes little sense.  So
+just get rid of it.
 
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- fs/proc/root.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/fs_context.c | 28 ----------------------------
+ 1 file changed, 28 deletions(-)
 
-diff --git a/fs/proc/root.c b/fs/proc/root.c
-index 6ef1527ad975..70127eaba04d 100644
---- a/fs/proc/root.c
-+++ b/fs/proc/root.c
-@@ -58,7 +58,7 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
- 	struct fs_parse_result result;
- 	int ret, opt;
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index a9f314390b99..cbf89117a507 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -55,29 +55,6 @@ static const struct constant_table common_clear_sb_flag[] = {
+ 	{ "silent",	SB_SILENT },
+ };
  
--	ret = vfs_parse_sb_flag(fc, param);
-+	ret = vfs_parse_ro_rw(fc, param);
- 	if (ret != -ENOPARAM)
- 		return ret;
+-static const char *const forbidden_sb_flag[] = {
+-	"bind",
+-	"dev",
+-	"exec",
+-	"move",
+-	"noatime",
+-	"nodev",
+-	"nodiratime",
+-	"noexec",
+-	"norelatime",
+-	"nostrictatime",
+-	"nosuid",
+-	"private",
+-	"rec",
+-	"relatime",
+-	"remount",
+-	"shared",
+-	"slave",
+-	"strictatime",
+-	"suid",
+-	"unbindable",
+-};
+-
+ /*
+  * Check for a common mount option that manipulates s_flags.
+  */
+@@ -85,11 +62,6 @@ int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter *param)
+ {
+ 	const char *key = param->key;
+ 	unsigned int set, clear;
+-	unsigned int i;
+-
+-	for (i = 0; i < ARRAY_SIZE(forbidden_sb_flag); i++)
+-		if (strcmp(key, forbidden_sb_flag[i]) == 0)
+-			return -EINVAL;
  
+ 	set = lookup_constant(common_set_sb_flag, key, 0);
+ 	clear = lookup_constant(common_clear_sb_flag, key, 0);
 -- 
 2.21.0
 
