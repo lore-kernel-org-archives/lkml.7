@@ -2,119 +2,96 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CB7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8D4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C4F21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25AD72177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560969410;
+	bh=ASPng6hEbz1DA8ra61scrwvKdhNdcvVtXH/fg2JLJ/s=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JMMW2Kyh56QqjqTqZu3ZdkJQxL3s2DbV0DtAzz9itxRCzSVzdJsBjYFNVgId8YKSz
+	 kiw8XH1ty7spRiARWX36hbUdcXBuktijnfBD2wRL8WGF2OT0+R/RE+dcpFQ3hArF7+
+	 9xTAoF6E5M2USwbtztSmoO95vD7+xKvuBYtuChZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730080AbfFSSgm (ORCPT
+        id S1730272AbfFSSgs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:36:42 -0400
-Received: from hosting.gsystem.sk ([212.5.213.30]:40510 "EHLO
-        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFSSgm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:36:42 -0400
-Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
+        Wed, 19 Jun 2019 14:36:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbfFSSgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 14:36:46 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by hosting.gsystem.sk (Postfix) with ESMTPSA id 2E7187A0318;
-        Wed, 19 Jun 2019 20:36:41 +0200 (CEST)
-From:   Ondrej Zary <linux@zary.sk>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH] scsi: fdomain: fix building pcmcia front-end
-Date:   Wed, 19 Jun 2019 20:36:37 +0200
-User-Agent: KMail/1.9.10
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190617111937.2355936-1-arnd@arndb.de> <yq1v9x2uv2a.fsf@oracle.com>
-In-Reply-To: <yq1v9x2uv2a.fsf@oracle.com>
-X-KMail-QuotePrefix: > 
+        by mail.kernel.org (Postfix) with ESMTPSA id A8B3F214AF;
+        Wed, 19 Jun 2019 18:36:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560969406;
+        bh=ASPng6hEbz1DA8ra61scrwvKdhNdcvVtXH/fg2JLJ/s=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=W1FLG9an4047zm9mVfDTVvrGzubs52CY5JRu9D+egtHOZdMOjWp4XXY1Uht+F4nbs
+         JiRzj5rZkAt0avcEaxw5PCfqtifX0K9Tss4ZgIMpiHnPse3iYGO8cAg6RGjh2o2qlY
+         3qiHh+MxSkbD7CpCZ44UvadIW8i2ZjUx6hTIfldA=
+Date:   Wed, 19 Jun 2019 20:36:43 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Raul Rangel <rrangel@chromium.org>
+Cc:     stable@vger.kernel.org, linux-mmc@vger.kernel.org,
+        djkurtz@google.com, adrian.hunter@intel.com, zwisler@chromium.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-kernel@vger.kernel.org, Chris Boot <bootc@bootc.net>,
+        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [stable/4.14.y PATCH 0/3] mmc: Fix a potential resource leak
+ when shutting down request queue.
+Message-ID: <20190619183643.GB7018@kroah.com>
+References: <20190513175521.84955-1-rrangel@chromium.org>
+ <20190514091933.GA27269@kroah.com>
+ <20190619164625.GA85539@google.com>
+ <20190619170917.GC10107@kroah.com>
+ <20190619182304.GA98587@google.com>
 MIME-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Message-Id: <201906192036.37384.linux@zary.sk>
+In-Reply-To: <20190619182304.GA98587@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wednesday 19 June 2019 05:13:01 Martin K. Petersen wrote:
-> 
-> Arnd,
-> 
-> > Move the common support outside of the SCSI_LOWLEVEL section.
-> > Alternatively, we could move all of SCSI_LOWLEVEL_PCMCIA into
-> > SCSI_LOWLEVEL. This would be more sensible, but might cause surprises
-> > for users that have SCSI_LOWLEVEL disabled.
-> 
-> It seems messy to me that PCMCIA lives outside of the LOWLEVEL section.
-> 
-> Given that the number of users that rely on PCMCIA for their system disk
-> is probably pretty low, I think I'm leaning towards cleaning things up
-> instead of introducing a nonsensical top level option.
-> 
-> Or even better: Get rid of SCSI_FDOMAIN as a user-visible option and
-> select it if either of the PCI/ISA/PCMCIA drivers are enabled.
+On Wed, Jun 19, 2019 at 12:23:04PM -0600, Raul Rangel wrote:
+> On Wed, Jun 19, 2019 at 07:09:17PM +0200, Greg Kroah-Hartman wrote:
+> > On Wed, Jun 19, 2019 at 10:46:25AM -0600, Raul Rangel wrote:
+> > > On Tue, May 14, 2019 at 11:19:34AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Mon, May 13, 2019 at 11:55:18AM -0600, Raul E Rangel wrote:
+> > > > > I think we should cherry-pick 41e3efd07d5a02c80f503e29d755aa1bbb4245de
+> > > > > https://lore.kernel.org/patchwork/patch/856512/ into 4.14. It fixes a
+> > > > > potential resource leak when shutting down the request queue.
+> > > > 
+> > > > Potential meaning "it does happen", or "it can happen if we do this", or
+> > > > just "maybe it might happen, we really do not know?"
+> > > It does happen if the AMD SDHCI patches are cherry-picked into 4.14.
+> > > https://lkml.org/lkml/2019/5/1/398
+> > 
+> > Why are those patches somehow being required to be added to 4.14.y?  If
+> > they are not added, is all fine?
+> I was just thinking we would backport the patches to fix this AMD SDHCI
+> hardware bug, but I guess we don't need to.
 
-SCSI_FDOMAIN is not an user-visible option. PCI/ISA/PCMCIA drivers select it:
+Has anyone asked for those to be backported?  Does anyone require them
+to be?  What's keeping users from using a newer kernel that have this
+specific hardware issue?
 
-Symbol: PCMCIA_FDOMAIN [=m]
-Type  : tristate
-Prompt: Future Domain PCMCIA support
-  Location:
-    -> Device Drivers
-      -> SCSI device support
-        -> PCMCIA SCSI adapter support (SCSI_LOWLEVEL_PCMCIA [=y])
-  Defined at drivers/scsi/pcmcia/Kconfig:22
-  Depends on: SCSI_LOWLEVEL_PCMCIA [=y] && SCSI [=y] && PCMCIA [=m] && m && MODULES [=y]
-  Selects: SCSI_FDOMAIN [=m]
+Trying to apply patches to a stable kernel due to an issue that is not
+even in that stable kernel is crazy.  No wonder I am totally confused...
 
+thanks,
 
-Symbol: SCSI_FDOMAIN [=m]
-Type  : tristate
-  Defined at drivers/scsi/Kconfig:666
-  Depends on: SCSI_LOWLEVEL [=y] && SCSI [=y]
-  Selected by [m]:
-  - SCSI_FDOMAIN_PCI [=m] && SCSI_LOWLEVEL [=y] && PCI [=y] && SCSI [=y]
-  - SCSI_FDOMAIN_ISA [=m] && SCSI_LOWLEVEL [=y] && ISA [=y] && SCSI [=y]
-  - PCMCIA_FDOMAIN [=m] && SCSI_LOWLEVEL_PCMCIA [=y] && SCSI [=y] && PCMCIA [=m] && m && MODULES [=y]
-
-
-Symbol: SCSI_FDOMAIN_ISA [=m]
-Type  : tristate
-Prompt: Future Domain 16xx ISA SCSI support
-  Location:
-    -> Device Drivers
-      -> SCSI device support
-        -> SCSI low-level drivers (SCSI_LOWLEVEL [=y])
-  Defined at drivers/scsi/Kconfig:687
-  Depends on: SCSI_LOWLEVEL [=y] && ISA [=y] && SCSI [=y]
-  Selects: CHECK_SIGNATURE [=y] && SCSI_FDOMAIN [=m]
-
-
-Symbol: SCSI_FDOMAIN_PCI [=m]
-Type  : tristate
-Prompt: Future Domain TMC-3260/AHA-2920A PCI SCSI support
-  Location:
-    -> Device Drivers
-      -> SCSI device support
-        -> SCSI low-level drivers (SCSI_LOWLEVEL [=y])
-  Defined at drivers/scsi/Kconfig:670
-  Depends on: SCSI_LOWLEVEL [=y] && PCI [=y] && SCSI [=y]
-  Selects: SCSI_FDOMAIN [=m]
-
-
-
--- 
-Ondrej Zary
+greg k-h
