@@ -2,150 +2,226 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B4CC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:56:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACA84C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:56:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8574F214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:56:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84D50215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560948977;
+	bh=Klyt72CiTWoudxWR3vkxuKGtuwMj4twFywzYtcFsRwY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=MgI9LqxS4at/nPQ4HPjSXu5MxmvHaSDpX0aCk0v2jftNWbaMYolJY2MV1t+F3gSgL
+	 fFZ096m8LrDg42IPoGwaEgAkrwmfcYCBY9psDXgvE3s3J998Wt2SOVyGqN6BgAXW7S
+	 DdDf0yqUapHxZ//5w8N6dFZPxTUikX1d+2geneeE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731960AbfFSM4F (ORCPT
+        id S1731970AbfFSM4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:56:05 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:38119 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727002AbfFSM4E (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:56:04 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mna0x-1iN3th1WTd-00jb2X; Wed, 19 Jun 2019 14:55:48 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: exynos: only build mcpm support if used
-Date:   Wed, 19 Jun 2019 14:55:29 +0200
-Message-Id: <20190619125545.1087023-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 19 Jun 2019 08:56:16 -0400
+Received: from mx2.suse.de ([195.135.220.15]:56228 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731757AbfFSM4P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:56:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 78E24AFE9;
+        Wed, 19 Jun 2019 12:56:13 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 14:56:12 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 1/5] mm: introduce MADV_COLD
+Message-ID: <20190619125611.GO2968@dhcp22.suse.cz>
+References: <20190610111252.239156-1-minchan@kernel.org>
+ <20190610111252.239156-2-minchan@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8lSv7z+Az3irPtD3mBB1X3CyVNiokLNe5prcDUQOA+DJCgdNyTg
- 5HSfU0ojjXGl3H8v+ZOW1BF3QjWfGmLd45HQYerFQo1hF6TOJzjmg6CkfWrDRye+Rzi8qBH
- /T/44D9/lYapFuhEwutzgfKwYjiA+hdiwTmPO8CETObOh3B+m5z9ouWT/F2LMF72K5FF4RV
- 3C2EoYdsB4fpZ7kUqHWHg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:rtxPUz4OOkQ=:fDfYCbeOzs7Zzr9OmJxvjt
- yyB51ipVi9MfHI95lXT3mMbcckRT44/OfhgO/r8f/AiyrzQyXzaQn44vC3PeuNqLnrz+zKklE
- 2mp4HStkOI0sZZ3PZqkzHIkRDMvKaR+RW7SRv/CrzoPRnh9R8I5MFA8G7ZV8cuXegPXp+z3i4
- 80rK0Q1MT1RGT2oFiP7i7JB0ntt4u9x7hO55iWlSChLooK3AbPpbX52fngBz7xBELYhz11Dox
- tZFYgHdvr/YIR92bEYwobWpOGYoFjjXnJyRyC++Wmz3qhbmAaxoSnxhDVbA83VxrlWbwplf80
- tC0EFzKa/8MWTQqI6YwZEDwPB15n32VZtxHyfLPfG9nKKpMRaTDM032HVXWjgYB0fpkeoVBc5
- 7BGwvvwsNNhKDCwzLmW5gg8hlsxqpwsKE09Ayv8jpixGgyKx9PWTu4KLMs8QdiCi4CzCtbKjw
- xOtIJjw8LelXoTVhPJUW77gWUsB3DV1pDXnbRjPSew3jxOmvaYqNS/ZEkG2dYGVwFDPWg9QEP
- T67FlDy2N9tapg8l7NA2nKo5VX4JydvE94f9TwFTVl36Yij/JggC3q6Qy2c7Zil139XbUI6gT
- 0NZNubaTFeDdIqeji6In7y/qj/j+kpCpvKqrQKvjwpDITPUmuuxjnTA7Q2ExUu6jwyc8wsR6o
- do/Cl7vDEhdSHQU5IXkcA+/wqOofmQLi+6H28GTyxykr1XNboFaj/MZIGBXWbUo95zs82n0+O
- 5z1/97vGrraG7S9A6ibHFYEdxNQmrzy5K4aFnw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610111252.239156-2-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We get a link error for configurations that enable an exynos
-SoC that does not require mcpm, but then manually enable
-mcpm anyway wihtout also turning on the arm-cci:
+On Mon 10-06-19 20:12:48, Minchan Kim wrote:
+> When a process expects no accesses to a certain memory range, it could
+> give a hint to kernel that the pages can be reclaimed when memory pressure
+> happens but data should be preserved for future use.  This could reduce
+> workingset eviction so it ends up increasing performance.
+> 
+> This patch introduces the new MADV_COLD hint to madvise(2) syscall.
+> MADV_COLD can be used by a process to mark a memory range as not expected
+> to be used in the near future. The hint can help kernel in deciding which
+> pages to evict early during memory pressure.
+> 
+> It works for every LRU pages like MADV_[DONTNEED|FREE]. IOW, It moves
+> 
+> 	active file page -> inactive file LRU
+> 	active anon page -> inacdtive anon LRU
+> 
+> Unlike MADV_FREE, it doesn't move active anonymous pages to inactive
+> file LRU's head because MADV_COLD is a little bit different symantic.
+> MADV_FREE means it's okay to discard when the memory pressure because
+> the content of the page is *garbage* so freeing such pages is almost zero
+> overhead since we don't need to swap out and access afterward causes just
+> minor fault. Thus, it would make sense to put those freeable pages in
+> inactive file LRU to compete other used-once pages. It makes sense for
+> implmentaion point of view, too because it's not swapbacked memory any
+> longer until it would be re-dirtied. Even, it could give a bonus to make
+> them be reclaimed on swapless system. However, MADV_COLD doesn't mean
+> garbage so reclaiming them requires swap-out/in in the end so it's bigger
+> cost. Since we have designed VM LRU aging based on cost-model, anonymous
+> cold pages would be better to position inactive anon's LRU list, not file
+> LRU. Furthermore, it would help to avoid unnecessary scanning if system
+> doesn't have a swap device. Let's start simpler way without adding
+> complexity at this moment.
 
-arch/arm/mach-exynos/mcpm-exynos.o: In function `exynos_pm_power_up_setup':
-mcpm-exynos.c:(.text+0x8): undefined reference to `cci_enable_port_for_self'
+I would only add that it is a caveat that workloads with a lot of page
+cache are likely to ignore MADV_COLD on anonymous memory because we
+rarely age anonymous LRU lists.
 
-Change it back to only build the code we actually need, by
-introducing a CONFIG_EXYNOS_MCPM that serves the same purpose
-as the older CONFIG_EXYNOS5420_MCPM.
+[...]
+> +static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+> +				unsigned long end, struct mm_walk *walk)
+> +{
 
-Fixes: 2997520c2d4e ("ARM: exynos: Set MCPM as mandatory for Exynos542x/5800 SoCs")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-exynos/Kconfig   | 6 +++++-
- arch/arm/mach-exynos/Makefile  | 2 +-
- arch/arm/mach-exynos/suspend.c | 6 +++---
- 3 files changed, 9 insertions(+), 5 deletions(-)
+This is duplicating a large part of madvise_free_pte_range with some
+subtle differences which are not explained anywhere (e.g. why does
+madvise_free_huge_pmd need try_lock on a page while not here? etc.).
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 21ad78d79d8d..d7422233a130 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -107,7 +107,7 @@ config SOC_EXYNOS5420
- 	bool "SAMSUNG EXYNOS5420"
- 	default y
- 	depends on ARCH_EXYNOS5
--	select MCPM if SMP
-+	select EXYNOS_MCPM if SMP
- 	select ARM_CCI400_PORT_CTRL
- 	select ARM_CPU_SUSPEND
- 
-@@ -116,6 +116,10 @@ config SOC_EXYNOS5800
- 	default y
- 	depends on SOC_EXYNOS5420
- 
-+config EXYNOS_MCPM
-+	bool
-+	select MCPM
-+
- config EXYNOS_CPU_SUSPEND
- 	bool
- 	select ARM_CPU_SUSPEND
-diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
-index 264dbaa89c3d..5abf3db23912 100644
---- a/arch/arm/mach-exynos/Makefile
-+++ b/arch/arm/mach-exynos/Makefile
-@@ -18,5 +18,5 @@ plus_sec := $(call as-instr,.arch_extension sec,+sec)
- AFLAGS_exynos-smc.o		:=-Wa,-march=armv7-a$(plus_sec)
- AFLAGS_sleep.o			:=-Wa,-march=armv7-a$(plus_sec)
- 
--obj-$(CONFIG_MCPM)		+= mcpm-exynos.o
-+obj-$(CONFIG_EXYNOS_MCPM)	+= mcpm-exynos.o
- CFLAGS_mcpm-exynos.o		+= -march=armv7-a
-diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
-index be122af0de8f..8b1e6ab8504f 100644
---- a/arch/arm/mach-exynos/suspend.c
-+++ b/arch/arm/mach-exynos/suspend.c
-@@ -268,7 +268,7 @@ static int exynos5420_cpu_suspend(unsigned long arg)
- 	unsigned int cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 	unsigned int cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
- 
--	if (IS_ENABLED(CONFIG_MCPM)) {
-+	if (IS_ENABLED(CONFIG_EXYNOS_MCPM)) {
- 		mcpm_set_entry_vector(cpu, cluster, exynos_cpu_resume);
- 		mcpm_cpu_suspend();
- 	}
-@@ -351,7 +351,7 @@ static void exynos5420_pm_prepare(void)
- 	exynos_pm_enter_sleep_mode();
- 
- 	/* ensure at least INFORM0 has the resume address */
--	if (IS_ENABLED(CONFIG_MCPM))
-+	if (IS_ENABLED(CONFIG_EXYNOS_MCPM))
- 		pmu_raw_writel(__pa_symbol(mcpm_entry_point), S5P_INFORM0);
- 
- 	tmp = pmu_raw_readl(EXYNOS_L2_OPTION(0));
-@@ -455,7 +455,7 @@ static void exynos5420_prepare_pm_resume(void)
- 	mpidr = read_cpuid_mpidr();
- 	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
- 
--	if (IS_ENABLED(CONFIG_MCPM))
-+	if (IS_ENABLED(CONFIG_EXYNOS_MCPM))
- 		WARN_ON(mcpm_cpu_powered_up());
- 
- 	if (IS_ENABLED(CONFIG_HW_PERF_EVENTS) && cluster != 0) {
+Why cannot we reuse a large part of that code and differ essentially on
+the reclaim target check and action? Have you considered to consolidate
+the code to share as much as possible? Maybe that is easier said than
+done because the devil is always in details...
+
+I would definitely feel much more comfortable to review the code without
+thinking about all those subtle details that have been already solved
+before. Especially all the THP ones.
+
+Other than that the patch looks sane to me.
+
+> +	struct mmu_gather *tlb = walk->private;
+> +	struct mm_struct *mm = tlb->mm;
+> +	struct vm_area_struct *vma = walk->vma;
+> +	pte_t *orig_pte, *pte, ptent;
+> +	spinlock_t *ptl;
+> +	struct page *page;
+> +	unsigned long next;
+> +
+> +	next = pmd_addr_end(addr, end);
+> +	if (pmd_trans_huge(*pmd)) {
+> +		pmd_t orig_pmd;
+> +
+> +		tlb_change_page_size(tlb, HPAGE_PMD_SIZE);
+> +		ptl = pmd_trans_huge_lock(pmd, vma);
+> +		if (!ptl)
+> +			return 0;
+> +
+> +		orig_pmd = *pmd;
+> +		if (is_huge_zero_pmd(orig_pmd))
+> +			goto huge_unlock;
+> +
+> +		if (unlikely(!pmd_present(orig_pmd))) {
+> +			VM_BUG_ON(thp_migration_supported() &&
+> +					!is_pmd_migration_entry(orig_pmd));
+> +			goto huge_unlock;
+> +		}
+> +
+> +		page = pmd_page(orig_pmd);
+> +		if (next - addr != HPAGE_PMD_SIZE) {
+> +			int err;
+> +
+> +			if (page_mapcount(page) != 1)
+> +				goto huge_unlock;
+> +
+> +			get_page(page);
+> +			spin_unlock(ptl);
+> +			lock_page(page);
+> +			err = split_huge_page(page);
+> +			unlock_page(page);
+> +			put_page(page);
+> +			if (!err)
+> +				goto regular_page;
+> +			return 0;
+> +		}
+> +
+> +		if (pmd_young(orig_pmd)) {
+> +			pmdp_invalidate(vma, addr, pmd);
+> +			orig_pmd = pmd_mkold(orig_pmd);
+> +
+> +			set_pmd_at(mm, addr, pmd, orig_pmd);
+> +			tlb_remove_pmd_tlb_entry(tlb, pmd, addr);
+> +		}
+> +
+> +		test_and_clear_page_young(page);
+> +		deactivate_page(page);
+> +huge_unlock:
+> +		spin_unlock(ptl);
+> +		return 0;
+> +	}
+> +
+> +	if (pmd_trans_unstable(pmd))
+> +		return 0;
+> +
+> +regular_page:
+> +	tlb_change_page_size(tlb, PAGE_SIZE);
+> +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> +	flush_tlb_batched_pending(mm);
+> +	arch_enter_lazy_mmu_mode();
+> +	for (; addr < end; pte++, addr += PAGE_SIZE) {
+> +		ptent = *pte;
+> +
+> +		if (pte_none(ptent))
+> +			continue;
+> +
+> +		if (!pte_present(ptent))
+> +			continue;
+> +
+> +		page = vm_normal_page(vma, addr, ptent);
+> +		if (!page)
+> +			continue;
+> +
+> +		if (pte_young(ptent)) {
+> +			ptent = ptep_get_and_clear_full(mm, addr, pte,
+> +							tlb->fullmm);
+> +			ptent = pte_mkold(ptent);
+> +			set_pte_at(mm, addr, pte, ptent);
+> +			tlb_remove_tlb_entry(tlb, pte, addr);
+> +		}
+> +
+> +		/*
+> +		 * We are deactivating a page for accelerating reclaiming.
+> +		 * VM couldn't reclaim the page unless we clear PG_young.
+> +		 * As a side effect, it makes confuse idle-page tracking
+> +		 * because they will miss recent referenced history.
+> +		 */
+> +		test_and_clear_page_young(page);
+> +		deactivate_page(page);
+> +	}
+> +
+> +	arch_enter_lazy_mmu_mode();
+> +	pte_unmap_unlock(orig_pte, ptl);
+> +	cond_resched();
+> +
+> +	return 0;
+> +}
 -- 
-2.20.0
-
+Michal Hocko
+SUSE Labs
