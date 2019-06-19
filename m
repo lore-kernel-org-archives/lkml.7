@@ -2,110 +2,96 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35525C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:52:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9532CC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:52:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0339B208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:52:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 579BB20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:52:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731889AbfFSMwH (ORCPT
+        id S1731906AbfFSMwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:52:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:38258 "EHLO foss.arm.com"
+        Wed, 19 Jun 2019 08:52:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:38310 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731328AbfFSMwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:52:07 -0400
+        id S1727002AbfFSMwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:52:40 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 64E27360;
-        Wed, 19 Jun 2019 05:52:06 -0700 (PDT)
-Received: from [10.1.196.50] (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0EDE23F738;
-        Wed, 19 Jun 2019 05:52:03 -0700 (PDT)
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Guo Ren <guoren@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, aou@eecs.berkeley.edu,
-        gary@garyguo.net, Atish.Patra@wdc.com, hch@infradead.org,
-        paul.walmsley@sifive.com, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com,
-        julien.thierry@arm.com, will.deacon@arm.com,
-        christoffer.dall@arm.com, james.morse@arm.com
-References: <20190321163623.20219-1-julien.grall@arm.com>
- <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com>
- <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
- <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
-From:   Julien Grall <julien.grall@arm.com>
-Message-ID: <aafb3478-ce7b-3771-c03a-58510261f01c@arm.com>
-Date:   Wed, 19 Jun 2019 13:52:02 +0100
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00E41360;
+        Wed, 19 Jun 2019 05:52:40 -0700 (PDT)
+Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41A603F738;
+        Wed, 19 Jun 2019 05:52:38 -0700 (PDT)
+Subject: Re: [PATCH 1/8] sched: introduce task_se_h_load helper
+To:     Rik van Riel <riel@surriel.com>, peterz@infradead.org
+Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
+        morten.rasmussen@arm.com, tglx@linutronix.de,
+        dietmar.eggeman@arm.com, mgorman@techsingularity.com,
+        vincent.guittot@linaro.org
+References: <20190612193227.993-1-riel@surriel.com>
+ <20190612193227.993-2-riel@surriel.com>
+From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
+Message-ID: <55d914d2-fba2-48c0-e7ff-3c7337c8cf8e@arm.com>
+Date:   Wed, 19 Jun 2019 14:52:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190612193227.993-2-riel@surriel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Guo,
-
-On 19/06/2019 12:51, Guo Ren wrote:
-> On Wed, Jun 19, 2019 at 4:54 PM Julien Grall <julien.grall@arm.com> wrote:
->>
->>
->>
->> On 6/19/19 9:07 AM, Guo Ren wrote:
->>> Hi Julien,
->>
->> Hi,
->>
->>>
->>> You forgot CCing C-SKY folks :P
->>
->> I wasn't aware you could be interested :).
->>
->>>
->>> Move arm asid allocator code in a generic one is a agood idea, I've
->>> made a patchset for C-SKY and test is on processing, See:
->>> https://lore.kernel.org/linux-csky/1560930553-26502-1-git-send-email-guoren@kernel.org/
->>>
->>> If you plan to seperate it into generic one, I could co-work with you.
->>
->> Was the ASID allocator work out of box on C-Sky?
-> Almost done, but one question:
-> arm64 remove the code in switch_mm:
->    cpumask_clear_cpu(cpu, mm_cpumask(prev));
->    cpumask_set_cpu(cpu, mm_cpumask(next));
-
-
+On 6/12/19 9:32 PM, Rik van Riel wrote:
+> Sometimes the hierarchical load of a sched_entity needs to be calculated.
+> Split out task_h_load into a task_se_h_load that takes a sched_entity pointer
+> as its argument, and a task_h_load wrapper that calls task_se_h_load.
 > 
-> Why? Although arm64 cache operations could affect all harts with CTC
-> method of interconnect, I think we should
-> keep these code for primitive integrity in linux. Because cpu_bitmap
-> is in mm_struct instead of mm->context.
+> No functional changes.
+> 
+> Signed-off-by: Rik van Riel <riel@surriel.com>
+> ---
+>  kernel/sched/fair.c | 17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+> 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index f35930f5e528..df624f7a68e7 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -706,6 +706,7 @@ static u64 sched_vslice(struct cfs_rq *cfs_rq, struct sched_entity *se)
+>  #ifdef CONFIG_SMP
+>  
+>  static int select_idle_sibling(struct task_struct *p, int prev_cpu, int cpu);
+> +static unsigned long task_se_h_load(struct sched_entity *se);
+>  static unsigned long task_h_load(struct task_struct *p);
+>  static unsigned long capacity_of(int cpu);
+>  
+> @@ -7833,14 +7834,19 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+>  	}
+>  }
+>  
+> -static unsigned long task_h_load(struct task_struct *p)
+> +static unsigned long task_se_h_load(struct sched_entity *se)
+>  {
+> -	struct cfs_rq *cfs_rq = task_cfs_rq(p);
+> +	struct cfs_rq *cfs_rq = cfs_rq_of(se);
+>  
+>  	update_cfs_rq_h_load(cfs_rq);
+> -	return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
+> +	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
+>  			cfs_rq_load_avg(cfs_rq) + 1);
+>  }
 
-I will let Will answer to this.
+I wonder if this is necessary. I placed a BUG_ON(!entity_is_task(se))
+into task_se_h_load() after I applied the whole patch-set and ran some
+taskgroup related testcases. It didn't hit.
+
+So why not use task_h_load(task_of(se)) instead?
 
 [...]
-
->> If so, I can easily move the code in a generic place (maybe lib/asid.c).
-> I think it's OK.
-
-Will emits concern to move the code in lib. So I will stick with what I 
-currently have.
-
-Cheers,
-
--- 
-Julien Grall
