@@ -5,48 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABA62C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3339C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850F821743
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CC402147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="xdOPrEqF"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eQ7K9Wfn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732039AbfFSMbq (ORCPT
+        id S1732045AbfFSMbv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:31:46 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58160 "EHLO
+        Wed, 19 Jun 2019 08:31:51 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58172 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731970AbfFSMb0 (ORCPT
+        by vger.kernel.org with ESMTP id S1731973AbfFSMb0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 08:31:26 -0400
 Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCQslq023576;
-        Wed, 19 Jun 2019 14:30:54 +0200
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCQsls023576;
+        Wed, 19 Jun 2019 14:30:55 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=oAiWQhP8kjNHRQt1B3eYE6VWYU18HtqaWo8L2287044=;
- b=xdOPrEqF0DYh5Tm9FGLLzsu9avW1sSlgsFvk7TodQDtAuuYiDMd7QptdxsxChIcP69my
- S5scsqkOVv1pLoYcQfzlkB12RNe8un0R5KO5ggQc6uqvNnddV254QUTvCOM0SqwvG3sm
- 2gFjkUSbJNSR3Ps3Dw4pb6VUiEGvZYG5RpKAWXHiZBsi9sQH7Bn5171EBeasqP5knqFK
- i0UmeumY9ONV1U1dWy1/6yxu7cG4zT7gvRDahBiBklBvJoICDlPvPop1yrw8k7SeRu/N
- iG5wb1mC6nWqSBH/f6THD3QbERD2gg5GS5p5gzbQPDjAM4oTMFxFhnTQJpLE8BUmQLL9 Gw== 
+ bh=1IKlN0lkX6OamQA0QpTf6frKqVaPaxAimtqxa01cDP0=;
+ b=eQ7K9WfnRExhJ7fuAwpPxKZeF30fuldkU4Prr3V1ve4TRf7RBIg6zroXnUu6BioHtxlg
+ xN306/i9RPorLmthNLQgVi6YVqDO+PVvaP9mcfM3T7dkfi82lXCKOKWefGd4j+K6iU6j
+ vCtZfMrtaOAS24zevMbnrmUkXy/R2sxY8yQE4d0+LVkPS5wJfRZ5V/MHKQyP1wnkyAKB
+ Ttb9qb3GH4yQzhxUcRrJ68duS/X5CzdOgxS4X+cLmAlE3l0uaettcf80vJyJv3uu783K
+ KRJSZ2QdIroZfyI8cWLmkmH6aJA6iUzhnRcYc2vE7CyQO+DDGTT+nN1PhAjORuyXRZaN 8w== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t7812uxwr-1
+        by mx08-00178001.pphosted.com with ESMTP id 2t7812uxwv-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 14:30:54 +0200
+        Wed, 19 Jun 2019 14:30:55 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3BD723A;
-        Wed, 19 Jun 2019 12:30:53 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6D08231;
+        Wed, 19 Jun 2019 12:30:54 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0859227A7;
-        Wed, 19 Jun 2019 12:30:53 +0000 (GMT)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 14:30:52
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4732727A5;
+        Wed, 19 Jun 2019 12:30:54 +0000 (GMT)
+Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 14:30:53
  +0200
 From:   Fabrice Gasnier <fabrice.gasnier@st.com>
 To:     <jic23@kernel.org>, <robh+dt@kernel.org>, <alexandre.torgue@st.com>
@@ -57,16 +57,16 @@ CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
         <linux-stm32@st-md-mailman.stormreply.com>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>
-Subject: [PATCH 2/5] iio: adc: stm32-adc: add missing vdda-supply
-Date:   Wed, 19 Jun 2019 14:29:55 +0200
-Message-ID: <1560947398-11592-3-git-send-email-fabrice.gasnier@st.com>
+Subject: [PATCH 4/5] ARM: dts: stm32: add missing vdda-supply to adc on stm32429i-eval
+Date:   Wed, 19 Jun 2019 14:29:57 +0200
+Message-ID: <1560947398-11592-5-git-send-email-fabrice.gasnier@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
 References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE3.st.com
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
  (10.75.127.15)
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
  signatures=0
@@ -75,87 +75,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing vdda-supply, analog power supply, to STM32 ADC. When vdda is
-an independent supply, it needs to be properly turned on or off to supply
-the ADC.
+Add missing vdda-supply required by STM32 ADC.
 
-Fixes: 1add69880240 ("iio: adc: Add support for STM32 ADC core").
+Fixes: 7465d81191a1 ("ARM: dts: stm32: enable ADC on stm32f429i-eval
+board")
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- drivers/iio/adc/stm32-adc-core.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/stm32429i-eval.dts | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/iio/adc/stm32-adc-core.c b/drivers/iio/adc/stm32-adc-core.c
-index 2327ec1..1f7ce51 100644
---- a/drivers/iio/adc/stm32-adc-core.c
-+++ b/drivers/iio/adc/stm32-adc-core.c
-@@ -87,6 +87,7 @@ struct stm32_adc_priv_cfg {
-  * @domain:		irq domain reference
-  * @aclk:		clock reference for the analog circuitry
-  * @bclk:		bus clock common for all ADCs, depends on part used
-+ * @vdda:		vdda analog supply reference
-  * @vref:		regulator reference
-  * @cfg:		compatible configuration data
-  * @common:		common data for all ADC instances
-@@ -97,6 +98,7 @@ struct stm32_adc_priv {
- 	struct irq_domain		*domain;
- 	struct clk			*aclk;
- 	struct clk			*bclk;
-+	struct regulator		*vdda;
- 	struct regulator		*vref;
- 	const struct stm32_adc_priv_cfg	*cfg;
- 	struct stm32_adc_common		common;
-@@ -394,10 +396,16 @@ static int stm32_adc_core_hw_start(struct device *dev)
- 	struct stm32_adc_priv *priv = to_stm32_adc_priv(common);
- 	int ret;
+diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
+index d79f58f..ba08624 100644
+--- a/arch/arm/boot/dts/stm32429i-eval.dts
++++ b/arch/arm/boot/dts/stm32429i-eval.dts
+@@ -81,6 +81,12 @@
+ 		dma-ranges = <0xc0000000 0x0 0x10000000>;
+ 	};
  
-+	ret = regulator_enable(priv->vdda);
-+	if (ret < 0) {
-+		dev_err(dev, "vdda enable failed %d\n", ret);
-+		return ret;
-+	}
-+
- 	ret = regulator_enable(priv->vref);
- 	if (ret < 0) {
- 		dev_err(dev, "vref enable failed\n");
--		return ret;
-+		goto err_vdda_disable;
- 	}
++	vdda: regulator-vdda {
++		compatible = "regulator-fixed";
++		regulator-name = "vdda";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
  
- 	if (priv->bclk) {
-@@ -425,6 +433,8 @@ static int stm32_adc_core_hw_start(struct device *dev)
- 		clk_disable_unprepare(priv->bclk);
- err_regulator_disable:
- 	regulator_disable(priv->vref);
-+err_vdda_disable:
-+	regulator_disable(priv->vdda);
- 
- 	return ret;
- }
-@@ -441,6 +451,7 @@ static void stm32_adc_core_hw_stop(struct device *dev)
- 	if (priv->bclk)
- 		clk_disable_unprepare(priv->bclk);
- 	regulator_disable(priv->vref);
-+	regulator_disable(priv->vdda);
- }
- 
- static int stm32_adc_probe(struct platform_device *pdev)
-@@ -468,6 +479,14 @@ static int stm32_adc_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->common.base);
- 	priv->common.phys_base = res->start;
- 
-+	priv->vdda = devm_regulator_get(&pdev->dev, "vdda");
-+	if (IS_ERR(priv->vdda)) {
-+		ret = PTR_ERR(priv->vdda);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "vdda get failed, %d\n", ret);
-+		return ret;
-+	}
-+
- 	priv->vref = devm_regulator_get(&pdev->dev, "vref");
- 	if (IS_ERR(priv->vref)) {
- 		ret = PTR_ERR(priv->vref);
+ 	vref: regulator-vref {
+ 		compatible = "regulator-fixed";
+@@ -151,6 +157,7 @@
+ &adc {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&adc3_in8_pin>;
++	vdda-supply = <&vdda>;
+ 	vref-supply = <&vref>;
+ 	status = "okay";
+ 	adc3: adc@200 {
 -- 
 2.7.4
 
