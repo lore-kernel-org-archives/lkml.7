@@ -2,111 +2,138 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CEF01C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E299C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:44:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9F82084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:42:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WTev4s7P"
+	by mail.kernel.org (Postfix) with ESMTP id 021AB2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:44:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731643AbfFSLmp (ORCPT
+        id S1731652AbfFSLo4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:42:45 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:44688 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727134AbfFSLmp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:42:45 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JBfBx0001850;
-        Wed, 19 Jun 2019 13:42:24 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=jAayPybMAxCHXtDmLft/T64tgWULV2g7e3s0ys/xt7c=;
- b=WTev4s7P/RCeq68dfxKoEPTgP9Bu7gbgDy+JYF9OEUdefIGTl9aNQ7UStjd8GSgen5Ca
- S19TE4IInepLFPfSV1l319VpIXdOHwhEyh1oQr98Jj5BagdyWQ47swgj6IoEbTXM8B54
- gUdZFzYlJvjbCpOgNfuoqGf8SzVcbG89clmuriaSYu2OxcAh9bMCfQQkNeId5K34gby5
- L4qdHbzzuVs+LXlTEKq4ZC1ATUILfD6qqAZsapjsq1CBCrtAzwXXHYkDSMQfnmj2li4v
- 6sYjb425JJGipZeGXggc030pb7IiR0K7woGZj7DhMavWYjJ9yH4WY7QDP2e98etQOj9p Tg== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t7813bm3k-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 13:42:24 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6AEF331;
-        Wed, 19 Jun 2019 11:42:23 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3DCAF26D5;
-        Wed, 19 Jun 2019 11:42:23 +0000 (GMT)
-Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun
- 2019 13:42:23 +0200
-Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
- SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
- 15.00.1347.000; Wed, 19 Jun 2019 13:42:22 +0200
-From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
-To:     Fabrice GASNIER <fabrice.gasnier@st.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        Alexandre TORGUE <alexandre.torgue@st.com>
-CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "linux@armlinux.org.uk" <linux@armlinux.org.uk>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
+        Wed, 19 Jun 2019 07:44:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:35194 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727067AbfFSLo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 07:44:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 284C7360;
+        Wed, 19 Jun 2019 04:44:55 -0700 (PDT)
+Received: from [10.1.196.129] (ostrya.cambridge.arm.com [10.1.196.129])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A30193F738;
+        Wed, 19 Jun 2019 04:46:39 -0700 (PDT)
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-Subject: Re: [PATCH 2/5] pwm: stm32: use 3 cells ->of_xlate()
-Thread-Topic: [PATCH 2/5] pwm: stm32: use 3 cells ->of_xlate()
-Thread-Index: AQHVJoSsYAMsPXn+akirjvBTdUuqe6aiuYoA
-Date:   Wed, 19 Jun 2019 11:42:22 +0000
-Message-ID: <c583094f-2429-d5f1-09df-fff54ab33af1@st.com>
-References: <1560937925-8990-1-git-send-email-fabrice.gasnier@st.com>
- <1560937925-8990-3-git-send-email-fabrice.gasnier@st.com>
-In-Reply-To: <1560937925-8990-3-git-send-email-fabrice.gasnier@st.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vincent Stehle <Vincent.Stehle@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+ <20190526161004.25232-27-eric.auger@redhat.com>
+ <20190603163139.70fe8839@x1.home>
+ <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+ <20190605154553.0d00ad8d@jacob-builder>
+ <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+ <20190606132903.064f7ac4@jacob-builder>
+ <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
+ <20190607104301.6b1bbd74@jacob-builder>
+ <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
+ <20190610143134.7bff96e9@jacob-builder>
+ <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
+ <20190612115358.0d90b322@jacob-builder>
+ <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
+ <20190618171908.76284cd7@jacob-builder>
+From:   Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Message-ID: <138f6a16-d2ee-d7b8-7bfb-ac08b6cfb9da@arm.com>
+Date:   Wed, 19 Jun 2019 12:44:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.50]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <25284ABC327AEA4991DCD1504D64AD22@st.com>
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
- signatures=0
+In-Reply-To: <20190618171908.76284cd7@jacob-builder>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiA2LzE5LzE5IDExOjUyIEFNLCBGYWJyaWNlIEdhc25pZXIgd3JvdGU6DQo+IFNUTTMyIFRp
-bWVycyBzdXBwb3J0IGdlbmVyaWMgMyBjZWxscyBQV00gdG8gZW5jb2RlIFBXTSBudW1iZXIsIHBl
-cmlvZCBhbmQNCj4gcG9sYXJpdHkuDQo+DQo+IEZpeGVzOiA3ZWRmNzM2OTIwNWIgKCJwd206IEFk
-ZCBkcml2ZXIgZm9yIFNUTTMyIHBsYWZ0b3JtIikNClJldmlld2VkLWJ5OiBCZW5qYW1pbiBHYWln
-bmFyZCA8YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBGYWJy
-aWNlIEdhc25pZXIgPGZhYnJpY2UuZ2FzbmllckBzdC5jb20+DQo+IC0tLQ0KPiAgIGRyaXZlcnMv
-cHdtL3B3bS1zdG0zMi5jIHwgMiArKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlvbnMo
-KykNCj4NCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1zdG0zMi5jIGIvZHJpdmVycy9w
-d20vcHdtLXN0bTMyLmMNCj4gaW5kZXggNGY4NDI1NS4uNzQwZTJkZSAxMDA2NDQNCj4gLS0tIGEv
-ZHJpdmVycy9wd20vcHdtLXN0bTMyLmMNCj4gKysrIGIvZHJpdmVycy9wd20vcHdtLXN0bTMyLmMN
-Cj4gQEAgLTYwOCw2ICs2MDgsOCBAQCBzdGF0aWMgaW50IHN0bTMyX3B3bV9wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiAgIAlwcml2LT5yZWdtYXAgPSBkZGF0YS0+cmVnbWFw
-Ow0KPiAgIAlwcml2LT5jbGsgPSBkZGF0YS0+Y2xrOw0KPiAgIAlwcml2LT5tYXhfYXJyID0gZGRh
-dGEtPm1heF9hcnI7DQo+ICsJcHJpdi0+Y2hpcC5vZl94bGF0ZSA9IG9mX3B3bV94bGF0ZV93aXRo
-X2ZsYWdzOw0KPiArCXByaXYtPmNoaXAub2ZfcHdtX25fY2VsbHMgPSAzOw0KPiAgIA0KPiAgIAlp
-ZiAoIXByaXYtPnJlZ21hcCB8fCAhcHJpdi0+Y2xrKQ0KPiAgIAkJcmV0dXJuIC1FSU5WQUw7
+On 19/06/2019 01:19, Jacob Pan wrote:
+>>> I see this as a future extension due to limited testing,   
+>>
+>> I'm wondering how we deal with:
+>> (1) old userspace that won't fill the new private_data field in
+>> page_response. A new kernel still has to support it.
+>> (2) old kernel that won't recognize the new PRIVATE_DATA flag.
+>> Currently iommu_page_response() rejects page responses with unknown
+>> flags.
+>>
+>> I guess we'll need a two-way negotiation, where userspace queries
+>> whether the kernel supports the flag (2), and the kernel learns
+>> whether it should expect the private data to come back (1).
+>>
+> I am not sure case (1) exist in that there is no existing user space
+> supports PRQ w/o private data. Am I missing something?
+> 
+> For VT-d emulation, private data is always part of the scalable mode
+> PASID capability. If vIOMMU query host supports PASID and scalable
+> mode, it will always support private data once PRQ is enabled.
+
+Right if VT-d won't ever support page_response without private data then
+I don't think we have to worry about (1).
+
+> So I think we only need to negotiate (2) which should be covered by
+> VT-d PASID cap.
+> 
+>>> perhaps for
+>>> now, can you add paddings similar to page request? Make it 64B as
+>>> well.  
+>>
+>> I don't think padding is necessary, because iommu_page_response is
+>> sent by userspace to the kernel, unlike iommu_fault which is
+>> allocated by userspace and filled by the kernel.
+>>
+>> Page response looks a lot more like existing VFIO mechanisms, so I
+>> suppose we'll wrap the iommu_page_response structure and include an
+>> argsz parameter at the top:
+>>
+>> 	struct vfio_iommu_page_response {
+>> 		u32 argsz;
+>> 		struct iommu_page_response pr;
+>> 	};
+>>
+>> 	struct vfio_iommu_page_response vpr = {
+>> 		.argsz = sizeof(vpr),
+>> 		.pr = ...
+>> 		...
+>> 	};
+>>
+>> 	ioctl(devfd, VFIO_IOMMU_PAGE_RESPONSE, &vpr);
+>>
+>> In that case supporting private data can be done by simply appending a
+>> field at the end (plus the negotiation above).
+>>
+> Do you mean at the end of struct vfio_iommu_page_response{}? or at
+> the end of that seems struct iommu_page_response{}?
+> 
+> The consumer of the private data is iommu driver not vfio. So I think
+> you want to add the new field at the end of struct iommu_page_response,
+> right?
+
+Yes that's what I meant
+
+Thanks,
+Jean
