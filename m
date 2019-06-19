@@ -2,134 +2,149 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA68C31E51
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:01:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37A63C31E51
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:07:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5CE920673
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0552A20657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:07:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XA8ComtP"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="G096vJ/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfFSDBg (ORCPT
+        id S1730245AbfFSDHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 23:01:36 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:45038 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSDBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 23:01:36 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J2xXmx070355;
-        Wed, 19 Jun 2019 03:01:17 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=7tyT0YcMicDx0xhFBdh7+OaH2yc89XO8q+cebhQ9PlY=;
- b=XA8ComtPxAHsBCBAmlvOcy5PFm3bQ+bJxRwXbWIv1Jvmz6p60FLvq/JaykfI+i1vwAWK
- RXbMjJM5jGKXOlxyq5wBsQxh9U3fE76irqfWhQAhnlQR+u/n/Yxj8qdQSU5RxYXL1QB/
- wWg5LHmTFQqdPf07yCtLsJjCTpNJ1WWgvdiUddPDXClXYYYiriDzxIhYfcEgNNIUsVrc
- M9FGHAwQs3U1QwDbr6dH9PPj6O01XR2gpjLcHk3E0TDB/8jyPwXRIyB7QjCd5ttV55zG
- 8kqt+4QemoViH7qXXMh8OZ8tLEZetsRnOtwHGb54nPTtmfY0UN4ecyPD+JrBlSR+JMFn JA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t78098qwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:01:17 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J31Cmq051398;
-        Wed, 19 Jun 2019 03:01:16 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t77yn2xe6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:01:16 +0000
-Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J31GfN030593;
-        Wed, 19 Jun 2019 03:01:16 GMT
-Received: from [10.156.74.184] (/10.156.74.184)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 20:01:15 -0700
-Subject: Re: [RFC PATCH 16/16] xen/grant-table: host_addr fixup in mapping on
- xenhost_r0
-To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
-        xen-devel@lists.xenproject.org
-Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
-        konrad.wilk@oracle.com, sstabellini@kernel.org,
-        joao.m.martins@oracle.com
-References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-17-ankur.a.arora@oracle.com>
- <a35ab9a8-4874-fbc8-0148-aa07543e8672@suse.com>
-From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <11b62ba8-8aa2-9b84-c6fb-259d0548d753@oracle.com>
-Date:   Tue, 18 Jun 2019 20:02:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 18 Jun 2019 23:07:37 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:38822 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfFSDHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 23:07:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=AixH9ESZvfDH28I8mSEmpRr0X0vbsD2WpNmHZWsXSvo=; b=G096vJ/mvORPe5syshMT/McfRZ
+        GQp7+YgCBOxqh8/3F+cgK5JMNRkAEoQwr4UecZfmws1MCx8AnFA2l2UY08LjW4wTUP2jgHHHggG7Y
+        bkPv+0VdzdcqH1BxqcBzDu6koTwDzPi62OvZG1Sm9S5M2jSnXoXOT5equNJ/KCaur08M=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hdQwb-000725-Ue; Wed, 19 Jun 2019 05:07:29 +0200
+Date:   Wed, 19 Jun 2019 05:07:29 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Voon Weifeng <weifeng.voon@intel.com>
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Vinicius Costa Gomes <vinicius.gomes@intel.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>
+Subject: Re: [RFC net-next 1/5] net: stmmac: introduce IEEE 802.1Qbv
+ configuration functionalities
+Message-ID: <20190619030729.GA26784@lunn.ch>
+References: <1560893778-6838-1-git-send-email-weifeng.voon@intel.com>
+ <1560893778-6838-2-git-send-email-weifeng.voon@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <a35ab9a8-4874-fbc8-0148-aa07543e8672@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190022
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190022
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560893778-6838-2-git-send-email-weifeng.voon@intel.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 3:55 AM, Juergen Gross wrote:
-> On 09.05.19 19:25, Ankur Arora wrote:
->> Xenhost type xenhost_r0 does not support standard GNTTABOP_map_grant_ref
->> semantics (map a gref onto a specified host_addr). That's because
->> since the hypervisor is local (same address space as the caller of
->> GNTTABOP_map_grant_ref), there is no external entity that could
->> map an arbitrary page underneath an arbitrary address.
->>
->> To handle this, the GNTTABOP_map_grant_ref hypercall on xenhost_r0
->> treats the host_addr as an OUT parameter instead of IN and expects the
->> gnttab_map_refs() and similar to fixup any state that caches the
->> value of host_addr from before the hypercall.
->>
->> Accordingly gnttab_map_refs() now adds two parameters, a fixup function
->> and a pointer to cached maps to fixup:
->>   int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref 
->> *map_ops,
->>               struct gnttab_map_grant_ref *kmap_ops,
->> -            struct page **pages, unsigned int count)
->> +            struct page **pages, gnttab_map_fixup_t map_fixup_fn,
->> +            void **map_fixup[], unsigned int count)
->>
->> The reason we use a fixup function and not an additional mapping op
->> in the xenhost_t is because, depending on the caller, what we are fixing
->> might be different: blkback, netback for instance cache host_addr in
->> via a struct page *, while __xenbus_map_ring() caches a phys_addr.
->>
->> This patch fixes up xen-blkback and xen-gntdev drivers.
->>
->> TODO:
->>    - also rewrite gnttab_batch_map() and __xenbus_map_ring().
->>    - modify xen-netback, scsiback, pciback etc
->>
->> Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
->> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
-> 
-> Without seeing the __xenbus_map_ring() modification it is impossible to
-> do a proper review of this patch.
-Will do in v2.
+On Wed, Jun 19, 2019 at 05:36:14AM +0800, Voon Weifeng wrote:
 
-Ankur
+Hi Voon
 
-> 
-> 
-> Juergen
+> +static int est_poll_srwo(void *ioaddr)
+> +{
+> +	/* Poll until the EST GCL Control[SRWO] bit clears.
+> +	 * Total wait = 12 x 50ms ~= 0.6s.
+> +	 */
+> +	unsigned int retries = 12;
+> +	unsigned int value;
+> +
+> +	do {
+> +		value = TSN_RD32(ioaddr + MTL_EST_GCL_CTRL);
+> +		if (!(value & MTL_EST_GCL_CTRL_SRWO))
+> +			return 0;
+> +		msleep(50);
+> +	} while (--retries);
+> +
+> +	return -ETIMEDOUT;
+
+Maybe use one of the readx_poll_timeout() macros?
+
+> +static int est_read_gce(void *ioaddr, unsigned int row,
+> +			unsigned int *gates, unsigned int *ti_nsec,
+> +			unsigned int dbgb, unsigned int dbgm)
+> +{
+> +	struct tsn_hw_cap *cap = &dw_tsn_hwcap;
+> +	unsigned int ti_wid = cap->ti_wid;
+> +	unsigned int gates_mask;
+> +	unsigned int ti_mask;
+> +	unsigned int value;
+> +	int ret;
+> +
+> +	gates_mask = (1 << cap->txqcnt) - 1;
+> +	ti_mask = (1 << ti_wid) - 1;
+> +
+> +	ret = est_read_gcl_config(ioaddr, &value, row, 0, dbgb, dbgm);
+> +	if (ret) {
+> +		TSN_ERR("Read GCE failed! row=%u\n", row);
+
+It is generally not a good idea to put wrappers around the kernel
+print functions. It would be better if all these functions took struct
+stmmac_priv *priv rather than ioaddr, so you could then do
+
+	netdev_err(priv->dev, "Read GCE failed! row=%u\n", row);
+
+> +	/* Ensure that HW is not in the midst of GCL transition */
+> +	value = TSN_RD32(ioaddr + MTL_EST_CTRL);
+
+Also, don't put wrapper around readl()/writel().
+
+> +	value &= ~MTL_EST_CTRL_SSWL;
+> +
+> +	/* MTL_EST_CTRL value has been read earlier, if TILS value
+> +	 * differs, we update here.
+> +	 */
+> +	if (tils != dw_tsn_hwtunable[TSN_HWTUNA_TX_EST_TILS]) {
+> +		value &= ~MTL_EST_CTRL_TILS;
+> +		value |= (tils << MTL_EST_CTRL_TILS_SHIFT);
+> +
+> +		TSN_WR32(value, ioaddr + MTL_EST_CTRL);
+> +		dw_tsn_hwtunable[TSN_HWTUNA_TX_EST_TILS] = tils;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int est_set_ov(void *ioaddr,
+> +		      const unsigned int *ptov,
+> +		      const unsigned int *ctov)
+> +{
+> +	unsigned int value;
+> +
+> +	if (!dw_tsn_feat_en[TSN_FEAT_ID_EST])
+> +		return -ENOTSUPP;
+> +
+> +	value = TSN_RD32(ioaddr + MTL_EST_CTRL);
+> +	value &= ~MTL_EST_CTRL_SSWL;
+> +
+> +	if (ptov) {
+> +		if (*ptov > EST_PTOV_MAX) {
+> +			TSN_WARN("EST: invalid PTOV(%u), max=%u\n",
+> +				 *ptov, EST_PTOV_MAX);
+
+It looks like most o the TSN_WARN should actually be netdev_dbg().
+
+   Andrew
