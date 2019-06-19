@@ -2,29 +2,29 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52279C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B580BC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DF8E21670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B50A21670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:16:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729737AbfFSOQB (ORCPT
+        id S1730176AbfFSOQK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:16:01 -0400
-Received: from relay5-d.mail.gandi.net ([217.70.183.197]:51295 "EHLO
-        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFSOQA (ORCPT
+        Wed, 19 Jun 2019 10:16:10 -0400
+Received: from relay4-d.mail.gandi.net ([217.70.183.196]:40283 "EHLO
+        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfFSOQK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:16:00 -0400
+        Wed, 19 Jun 2019 10:16:10 -0400
 X-Originating-IP: 92.137.69.152
 Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
         (Authenticated sender: gregory.clement@bootlin.com)
-        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 6C9761C0020;
-        Wed, 19 Jun 2019 14:15:54 +0000 (UTC)
+        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id A914AE0003;
+        Wed, 19 Jun 2019 14:16:03 +0000 (UTC)
 From:   Gregory CLEMENT <gregory.clement@bootlin.com>
 To:     Stephen Boyd <sboyd@kernel.org>,
         Mike Turquette <mturquette@baylibre.com>,
@@ -39,10 +39,12 @@ Cc:     Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
         Antoine Tenart <antoine.tenart@bootlin.com>,
         =?UTF-8?q?Miqu=C3=A8l=20Raynal?= <miquel.raynal@bootlin.com>,
         Maxime Chevallier <maxime.chevallier@bootlin.com>
-Subject: [PATCH v6 0/6] Add CPU clock support for Armada 7K/8K
-Date:   Wed, 19 Jun 2019 16:15:33 +0200
-Message-Id: <20190619141539.16884-1-gregory.clement@bootlin.com>
+Subject: [PATCH v6 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
+Date:   Wed, 19 Jun 2019 16:15:34 +0200
+Message-Id: <20190619141539.16884-2-gregory.clement@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190619141539.16884-1-gregory.clement@bootlin.com>
+References: <20190619141539.16884-1-gregory.clement@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -50,77 +52,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+Document the device tree binding for the cluster clock controllers found
+in the Armada 7K/8K SoCs.
 
-This is the sixth version of a series allowing to manage the cpu clock
-for Armada 7K/8K.
+Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ .../arm/marvell/ap806-system-controller.txt   | 25 +++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-For these SoCs, the CPUs share the same clock by cluster, so actually
-the clock management is done at cluster level.
-
-As for the other Armada 7K/8K clocks it is possible to have multiple
-AP so here again we need to have unique name: the purpose of the second
-patch is to share a common code which will be used in 3 drivers.
-
-The last 2 patch enable the driver at dt and platform level and will
-be applied through the mvebu subsystem.
-
-Changelog v5->v6:
-
-   - Restraint the reg property for the child node to not overlap the
-     other node.
-   - Give a specific compatible to ap_syscon1.
-
-Changelog v4->v5:
-
- - As requested by the device tree maintainer make the reg property
-   mandatory
-
- - Updated the device tree files accordingly with the new binding
-
-Changelog v3->v4:
- - Rebased on v5.1-rc1
- - Mention in the binding that a reg property can be used to make the
-   device tree maintainer happy in the hope that there will be finally
-   a review on this patch blocking the whole series.
-
-Changelog v2->v3:
- - Add back the first patch documenting the binding
-
-Changelog v1->v2:
- - Header cleanup
- - Use unsigned int instead of it for cluster member of the ap_cpu_clk struct
- - Use clk_hw instead of clk
- - Use regmap_read_poll_timeout
- - Use for_each_of_cpu_node
- - Remove unnecessary WARN_ON()
- - Remove headers from armada_ap_cp_helper.h
- - Few other minor cleanup
-
-Gregory CLEMENT (6):
-  dt-bindings: ap806: add the cluster clock node in the syscon file
-  clk: mvebu: add helper file for Armada AP and CP clocks
-  clk: mvebu: add CPU clock driver for Armada 7K/8K
-  clk: mvebu: ap806: Fix clock name for the cluster
-  arm64: marvell: enable the  Armada 7K/8K CPU clk driver
-  arm64: dts: marvell: Add cpu clock node on Armada 7K/8K
-
- .../arm/marvell/ap806-system-controller.txt   |  25 ++
- arch/arm64/Kconfig.platforms                  |   1 +
- .../boot/dts/marvell/armada-ap806-quad.dtsi   |   4 +
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi |   7 +
- drivers/clk/mvebu/Kconfig                     |   8 +
- drivers/clk/mvebu/Makefile                    |   2 +
- drivers/clk/mvebu/ap-cpu-clk.c                | 259 ++++++++++++++++++
- drivers/clk/mvebu/ap806-system-controller.c   |  24 +-
- drivers/clk/mvebu/armada_ap_cp_helper.c       |  30 ++
- drivers/clk/mvebu/armada_ap_cp_helper.h       |  11 +
- drivers/clk/mvebu/cp110-system-controller.c   |  32 +--
- 11 files changed, 361 insertions(+), 42 deletions(-)
- create mode 100644 drivers/clk/mvebu/ap-cpu-clk.c
- create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.c
- create mode 100644 drivers/clk/mvebu/armada_ap_cp_helper.h
-
+diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+index 7b8b8eb0191f..4a3bb9c12312 100644
+--- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
++++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
+@@ -143,3 +143,28 @@ ap_syscon1: system-controller@6f8000 {
+ 		#thermal-sensor-cells = <1>;
+ 	};
+ };
++
++Cluster clocks:
++---------------
++
++Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
++cluster contain up to 2 CPUs running at the same frequency.
++
++Required properties:
++- compatible: must be  "marvell,ap806-cpu-clock";
++- #clock-cells : should be set to 1.
++- clocks : shall be the input parents clock phandle for the clock.
++- reg: register range associated with the cluster clocks
++
++
++ap_syscon1: system-controller@6f8000 {
++	compatible = "marvell,armada-ap806-syscon1", "syscon", "simple-mfd";
++	reg = <0x6f8000 0x1000>;
++
++	cpu_clk: clock-cpu@0 {
++		compatible = "marvell,ap806-cpu-clock";
++		clocks = <&ap_clk 0>, <&ap_clk 1>;
++		#clock-cells = <1>;
++		reg = <0x274 0xa30>;
++	};
++};
 -- 
 2.20.1
 
