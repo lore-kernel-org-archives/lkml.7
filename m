@@ -2,114 +2,292 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3339C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3569C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CC402147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eQ7K9Wfn"
+	by mail.kernel.org (Postfix) with ESMTP id AA10721530
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732045AbfFSMbv (ORCPT
+        id S1731427AbfFSMad (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:31:51 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:58172 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731973AbfFSMb0 (ORCPT
+        Wed, 19 Jun 2019 08:30:33 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:37399 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731785AbfFSMab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:31:26 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCQsls023576;
-        Wed, 19 Jun 2019 14:30:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=1IKlN0lkX6OamQA0QpTf6frKqVaPaxAimtqxa01cDP0=;
- b=eQ7K9WfnRExhJ7fuAwpPxKZeF30fuldkU4Prr3V1ve4TRf7RBIg6zroXnUu6BioHtxlg
- xN306/i9RPorLmthNLQgVi6YVqDO+PVvaP9mcfM3T7dkfi82lXCKOKWefGd4j+K6iU6j
- vCtZfMrtaOAS24zevMbnrmUkXy/R2sxY8yQE4d0+LVkPS5wJfRZ5V/MHKQyP1wnkyAKB
- Ttb9qb3GH4yQzhxUcRrJ68duS/X5CzdOgxS4X+cLmAlE3l0uaettcf80vJyJv3uu783K
- KRJSZ2QdIroZfyI8cWLmkmH6aJA6iUzhnRcYc2vE7CyQO+DDGTT+nN1PhAjORuyXRZaN 8w== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t7812uxwv-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 14:30:55 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6D08231;
-        Wed, 19 Jun 2019 12:30:54 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 4732727A5;
-        Wed, 19 Jun 2019 12:30:54 +0000 (GMT)
-Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 14:30:53
- +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>, <alexandre.torgue@st.com>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 4/5] ARM: dts: stm32: add missing vdda-supply to adc on stm32429i-eval
-Date:   Wed, 19 Jun 2019 14:29:57 +0200
-Message-ID: <1560947398-11592-5-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
-References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
+        Wed, 19 Jun 2019 08:30:31 -0400
+Received: by mail-wm1-f67.google.com with SMTP id f17so1646370wme.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=NVPnLeIv971f025k0CXEVACXNX2ckV29nGAgqfri3so=;
+        b=JX9oHZBcjLVedprrPKbZWhWYbXTrvM3lHD2vTjjfFTbf9OTyuL032uKCartDGCwWZW
+         fZA5mTvnYivvcD8QTp46hJBc3+60o6b4JEfapFN2Pyiilug6RKOAqRSjpHW0ICfnFiSe
+         dRYQJA9qWi70TPGtjUkgagVBxIOADTu9AO0IE14PnVQI3lxFnqglQagyj2m0BykJkTGY
+         N4Bx9jNr/UPNXJIhua9hV0VIV/7pi+jrWGASazipDl8LMjLDYDuQW2CptS+67chZCS8d
+         /Dk7GXa0bodmTQZTYw7ej1KDMGaAxgmPQo6WXupDiBTFS0k7dX/sMK7HDLHr5xaCxoIh
+         FofA==
+X-Gm-Message-State: APjAAAWFtNv6D1/vUb9FhIDdAY8sqOpEngzJFDeTZnHqM2SdXISgjagz
+        Htc8YpRO0zGvKNKktfh2tDYvAg==
+X-Google-Smtp-Source: APXvYqzncdXtuPhfGwULjbWMrB268X3YQkOcb42lp3YuSywCSatwWWMFFsHdc7kraOvkXl4lQKZrMQ==
+X-Received: by 2002:a7b:ca43:: with SMTP id m3mr8465369wml.45.1560947427727;
+        Wed, 19 Jun 2019 05:30:27 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.25
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 05:30:26 -0700 (PDT)
+From:   Miklos Szeredi <mszeredi@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 02/13] vfs: move vfs_parse_sb_flag() calls into filesystems
+Date:   Wed, 19 Jun 2019 14:30:08 +0200
+Message-Id: <20190619123019.30032-2-mszeredi@redhat.com>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190619123019.30032-1-mszeredi@redhat.com>
+References: <20190619123019.30032-1-mszeredi@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG3NODE1.st.com (10.75.127.7) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing vdda-supply required by STM32 ADC.
+Move parsing "standard" options into filesystems' ->parse_param().  This
+patch doesn't change behavior.
 
-Fixes: 7465d81191a1 ("ARM: dts: stm32: enable ADC on stm32f429i-eval
-board")
+This is in preparation for allowing filesystems to reject options that they
+don't support.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- arch/arm/boot/dts/stm32429i-eval.dts | 7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c |  6 +++++-
+ fs/afs/super.c                         |  6 +++++-
+ fs/fs_context.c                        | 12 +++++++-----
+ fs/fuse/control.c                      |  1 +
+ fs/hugetlbfs/inode.c                   |  6 +++++-
+ fs/proc/root.c                         |  6 +++++-
+ fs/sysfs/mount.c                       |  1 +
+ include/linux/fs_context.h             |  1 +
+ ipc/mqueue.c                           |  1 +
+ kernel/cgroup/cgroup-v1.c              |  6 +++++-
+ kernel/cgroup/cgroup.c                 |  6 +++++-
+ kernel/cgroup/cpuset.c                 |  1 +
+ 12 files changed, 42 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stm32429i-eval.dts b/arch/arm/boot/dts/stm32429i-eval.dts
-index d79f58f..ba08624 100644
---- a/arch/arm/boot/dts/stm32429i-eval.dts
-+++ b/arch/arm/boot/dts/stm32429i-eval.dts
-@@ -81,6 +81,12 @@
- 		dma-ranges = <0xc0000000 0x0 0x10000000>;
- 	};
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 2131b8bbaad7..83d3c358f95e 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2051,7 +2051,11 @@ static int rdt_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ {
+ 	struct rdt_fs_context *ctx = rdt_fc2context(fc);
+ 	struct fs_parse_result result;
+-	int opt;
++	int ret, opt;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
  
-+	vdda: regulator-vdda {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdda";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
+ 	opt = fs_parse(fc, &rdt_fs_parameters, param, &result);
+ 	if (opt < 0)
+diff --git a/fs/afs/super.c b/fs/afs/super.c
+index f18911e8d770..7f032d08781b 100644
+--- a/fs/afs/super.c
++++ b/fs/afs/super.c
+@@ -321,7 +321,11 @@ static int afs_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ {
+ 	struct fs_parse_result result;
+ 	struct afs_fs_context *ctx = fc->fs_private;
+-	int opt;
++	int ret, opt;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
  
- 	vref: regulator-vref {
- 		compatible = "regulator-fixed";
-@@ -151,6 +157,7 @@
- &adc {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&adc3_in8_pin>;
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vref>;
- 	status = "okay";
- 	adc3: adc@200 {
+ 	opt = fs_parse(fc, &afs_fs_parameters, param, &result);
+ 	if (opt < 0)
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index e56310fd8c75..a9f314390b99 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -81,7 +81,7 @@ static const char *const forbidden_sb_flag[] = {
+ /*
+  * Check for a common mount option that manipulates s_flags.
+  */
+-static int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter *param)
++int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter *param)
+ {
+ 	const char *key = param->key;
+ 	unsigned int set, clear;
+@@ -105,6 +105,7 @@ static int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter *param)
+ 	fc->sb_flags_mask |= set | clear;
+ 	return 0;
+ }
++EXPORT_SYMBOL(vfs_parse_sb_flag);
+ 
+ /**
+  * vfs_parse_fs_param - Add a single parameter to a superblock config
+@@ -129,10 +130,6 @@ int vfs_parse_fs_param(struct fs_context *fc, struct fs_parameter *param)
+ 	if (!param->key)
+ 		return invalf(fc, "Unnamed parameter\n");
+ 
+-	ret = vfs_parse_sb_flag(fc, param);
+-	if (ret != -ENOPARAM)
+-		return ret;
+-
+ 	ret = security_fs_context_parse_param(fc, param);
+ 	if (ret != -ENOPARAM)
+ 		/* Param belongs to the LSM or is disallowed by the LSM; so
+@@ -561,6 +558,11 @@ static int legacy_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 	struct legacy_fs_context *ctx = fc->fs_private;
+ 	unsigned int size = ctx->data_size;
+ 	size_t len = 0;
++	int ret;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
+ 
+ 	if (strcmp(param->key, "source") == 0) {
+ 		if (param->type != fs_value_is_string)
+diff --git a/fs/fuse/control.c b/fs/fuse/control.c
+index 14ce1e47f980..c35013ed7f65 100644
+--- a/fs/fuse/control.c
++++ b/fs/fuse/control.c
+@@ -351,6 +351,7 @@ static int fuse_ctl_get_tree(struct fs_context *fc)
+ 
+ static const struct fs_context_operations fuse_ctl_context_ops = {
+ 	.get_tree	= fuse_ctl_get_tree,
++	.parse_param	= vfs_parse_fs_param,
+ };
+ 
+ static int fuse_ctl_init_fs_context(struct fs_context *fc)
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 1dcc57189382..89125cc36d0e 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1149,7 +1149,11 @@ static int hugetlbfs_parse_param(struct fs_context *fc, struct fs_parameter *par
+ 	struct fs_parse_result result;
+ 	char *rest;
+ 	unsigned long ps;
+-	int opt;
++	int ret, opt;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
+ 
+ 	opt = fs_parse(fc, &hugetlb_fs_parameters, param, &result);
+ 	if (opt < 0)
+diff --git a/fs/proc/root.c b/fs/proc/root.c
+index 8b145e7b9661..6ef1527ad975 100644
+--- a/fs/proc/root.c
++++ b/fs/proc/root.c
+@@ -56,7 +56,11 @@ static int proc_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ {
+ 	struct proc_fs_context *ctx = fc->fs_private;
+ 	struct fs_parse_result result;
+-	int opt;
++	int ret, opt;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
+ 
+ 	opt = fs_parse(fc, &proc_fs_parameters, param, &result);
+ 	if (opt < 0)
+diff --git a/fs/sysfs/mount.c b/fs/sysfs/mount.c
+index 1b56686ab178..ba576a976e8c 100644
+--- a/fs/sysfs/mount.c
++++ b/fs/sysfs/mount.c
+@@ -49,6 +49,7 @@ static void sysfs_fs_context_free(struct fs_context *fc)
+ 
+ static const struct fs_context_operations sysfs_fs_context_ops = {
+ 	.free		= sysfs_fs_context_free,
++	.parse_param	= vfs_parse_sb_flag,
+ 	.get_tree	= sysfs_get_tree,
+ };
+ 
+diff --git a/include/linux/fs_context.h b/include/linux/fs_context.h
+index d476ff0c10df..39f4d8b0a390 100644
+--- a/include/linux/fs_context.h
++++ b/include/linux/fs_context.h
+@@ -127,6 +127,7 @@ extern struct fs_context *fs_context_for_submount(struct file_system_type *fs_ty
+ 						struct dentry *reference);
+ 
+ extern struct fs_context *vfs_dup_fs_context(struct fs_context *fc);
++extern int vfs_parse_sb_flag(struct fs_context *fc, struct fs_parameter *param);
+ extern int vfs_parse_fs_param(struct fs_context *fc, struct fs_parameter *param);
+ extern int vfs_parse_fs_string(struct fs_context *fc, const char *key,
+ 			       const char *value, size_t v_size);
+diff --git a/ipc/mqueue.c b/ipc/mqueue.c
+index 216cad1ff0d0..557aa887996a 100644
+--- a/ipc/mqueue.c
++++ b/ipc/mqueue.c
+@@ -1577,6 +1577,7 @@ static const struct super_operations mqueue_super_ops = {
+ 
+ static const struct fs_context_operations mqueue_fs_context_ops = {
+ 	.free		= mqueue_fs_context_free,
++	.parse_param	= vfs_parse_sb_flag,
+ 	.get_tree	= mqueue_get_tree,
+ };
+ 
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index 88006be40ea3..f960e6149311 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -927,7 +927,11 @@ int cgroup1_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 	struct cgroup_fs_context *ctx = cgroup_fc2context(fc);
+ 	struct cgroup_subsys *ss;
+ 	struct fs_parse_result result;
+-	int opt, i;
++	int ret, opt, i;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
+ 
+ 	opt = fs_parse(fc, &cgroup1_fs_parameters, param, &result);
+ 	if (opt == -ENOPARAM) {
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index bf9dbffd46b1..93890285b510 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1834,7 +1834,11 @@ static int cgroup2_parse_param(struct fs_context *fc, struct fs_parameter *param
+ {
+ 	struct cgroup_fs_context *ctx = cgroup_fc2context(fc);
+ 	struct fs_parse_result result;
+-	int opt;
++	int ret, opt;
++
++	ret = vfs_parse_sb_flag(fc, param);
++	if (ret != -ENOPARAM)
++		return ret;
+ 
+ 	opt = fs_parse(fc, &cgroup2_fs_parameters, param, &result);
+ 	if (opt < 0)
+diff --git a/kernel/cgroup/cpuset.c b/kernel/cgroup/cpuset.c
+index 515525ff1cfd..025f6c6083a3 100644
+--- a/kernel/cgroup/cpuset.c
++++ b/kernel/cgroup/cpuset.c
+@@ -394,6 +394,7 @@ static int cpuset_get_tree(struct fs_context *fc)
+ }
+ 
+ static const struct fs_context_operations cpuset_fs_context_ops = {
++	.parse_param	= vfs_parse_sb_flag,
+ 	.get_tree	= cpuset_get_tree,
+ };
+ 
 -- 
-2.7.4
+2.21.0
 
