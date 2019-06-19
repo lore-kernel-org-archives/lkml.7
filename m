@@ -2,131 +2,68 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3203C43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34F0FC43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:29:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9280D208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:28:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u/yx0b7t"
+	by mail.kernel.org (Postfix) with ESMTP id 09C8B208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:29:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730514AbfFSV17 (ORCPT
+        id S1730523AbfFSV35 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 17:27:59 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:36118 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfFSV16 (ORCPT
+        Wed, 19 Jun 2019 17:29:57 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:40824 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfFSV35 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 17:27:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5XMySBjGKrkBnB1JxKQv1JEfL3b4e7/NmHEdLk+D6Sk=; b=u/yx0b7tXx7HhQUFDk+ANQZqr
-        xVXDrn7ydER6MENQoQxAilSRKf3BR3OxSnlePO5dLiNXegTJgyyGqalFkygOTdVbfGug3u1hxQ4Nx
-        hof629fVPl9+6mArrH4/4LlogJbeD2/7Cmqd8AYz1QkHDtbwCMpTCHgroPA0mT/cPn5SHBssZvx9d
-        sCDD8Ml3Yxdc/RoMIRvvd/urdngsGlftXKy7zETm+cWgJ9ZkywhaW9haIT1JHPXbiqoPOOojfd0UQ
-        NTUugcLE5QDyt7u1jCTIjm5xbzTO4jxWg4x+Vp7FM4fZBa1s9q8FdF6zyshUQPvAjn0qaN5hQYa+x
-        FFurFJ/+Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdi7X-0008L6-TE; Wed, 19 Jun 2019 21:27:56 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 3929220098E60; Wed, 19 Jun 2019 23:27:53 +0200 (CEST)
-Date:   Wed, 19 Jun 2019 23:27:53 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
- dir
-Message-ID: <20190619212753.GQ3419@hirez.programming.kicks-ass.net>
-References: <cover.1560890771.git.mchehab+samsung@kernel.org>
- <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
- <20190619114356.GP3419@hirez.programming.kicks-ass.net>
- <20190619101922.04340605@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619101922.04340605@coco.lan>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 19 Jun 2019 17:29:57 -0400
+Received: from localhost (unknown [144.121.20.163])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 375FD14771132;
+        Wed, 19 Jun 2019 14:29:56 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 17:29:55 -0400 (EDT)
+Message-Id: <20190619.172955.2027826462085142095.davem@davemloft.net>
+To:     mka@chromium.org
+Cc:     kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
+        alexander.h.duyck@redhat.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dianders@chromium.org
+Subject: Re: [PATCH] net/ipv4: fib_trie: Avoid cryptic ternary expressions
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190618211440.54179-1-mka@chromium.org>
+References: <20190618211440.54179-1-mka@chromium.org>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Jun 2019 14:29:56 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 10:19:22AM -0300, Mauro Carvalho Chehab wrote:
-> (c/c list cleaned)
+From: Matthias Kaehlcke <mka@chromium.org>
+Date: Tue, 18 Jun 2019 14:14:40 -0700
+
+> empty_child_inc/dec() use the ternary operator for conditional
+> operations. The conditions involve the post/pre in/decrement
+> operator and the operation is only performed when the condition
+> is *not* true. This is hard to parse for humans, use a regular
+> 'if' construct instead and perform the in/decrement separately.
 > 
-> Em Wed, 19 Jun 2019 13:43:56 +0200
-> Peter Zijlstra <peterz@infradead.org> escreveu:
+> This also fixes two warnings that are emitted about the value
+> of the ternary expression being unused, when building the kernel
+> with clang + "kbuild: Remove unnecessary -Wno-unused-value"
+> (https://lore.kernel.org/patchwork/patch/1089869/):
 > 
-> > On Tue, Jun 18, 2019 at 05:53:17PM -0300, Mauro Carvalho Chehab wrote:
-> > 
-> > >  .../{ => driver-api}/atomic_bitops.rst        |  2 -  
-> > 
-> > That's a .txt file, big fat NAK for making it an rst.
+> CC      net/ipv4/fib_trie.o
+> net/ipv4/fib_trie.c:351:2: error: expression result unused [-Werror,-Wunused-value]
+>         ++tn_info(n)->empty_children ? : ++tn_info(n)->full_children;
 > 
-> Rst is a text file. This one is parsed properly by Sphinx without
-> any changes.
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-In my tree it is a .txt file, I've not seen patches changing it. And I
-disagree, rst is just as much 'a text file' as .c is.
-
-> > >  .../{ => driver-api}/futex-requeue-pi.rst     |  2 -  
-> > 
-> > >  .../{ => driver-api}/gcc-plugins.rst          |  2 -  
-> > 
-> > >  Documentation/{ => driver-api}/kprobes.rst    |  2 -
-> > >  .../{ => driver-api}/percpu-rw-semaphore.rst  |  2 -  
-> > 
-> > More NAK for rst conversion
-> 
-> Again, those don't need any conversion. Those files already parse 
-> as-is by Sphinx, with no need for any change.
-
-And yet, they're a .txt file in my tree. And I've not seen a rename,
-just this move.
-
-> The only change here is that, on patch 1/22, the files that
-> aren't listed on an index file got a :orphan: added in order
-> to make this explicit. This patch removes it.
-
-I've no idea what :orphan: is. Text file don't have markup.
-
-> > >  Documentation/{ => driver-api}/pi-futex.rst   |  2 -
-> > >  .../{ => driver-api}/preempt-locking.rst      |  2 -  
-> > 
-> > >  Documentation/{ => driver-api}/rbtree.rst     |  2 -  
-> > 
-> > >  .../{ => driver-api}/robust-futex-ABI.rst     |  2 -
-> > >  .../{ => driver-api}/robust-futexes.rst       |  2 -  
-> > 
-> > >  .../{ => driver-api}/speculation.rst          |  8 +--
-> > >  .../{ => driver-api}/static-keys.rst          |  2 -  
-> > 
-> > >  .../{ => driver-api}/this_cpu_ops.rst         |  2 -  
-> > 
-> > >  Documentation/locking/rt-mutex.rst            |  2 +-  
-> > 
-> > NAK. None of the above have anything to do with driver-api.
-> 
-> Ok. Where do you think they should sit instead? core-api?
-
-Pretty much all of then are core-api I tihnk, with exception of the one
-that are ABI, which have nothing to do with API. And i've no idea where
-GCC plugins go, but it's definitely nothing to do with drivers.
-
-Many of the futex ones are about the sys_futex user API, which
-apparently we have Documentation/userspace-api/ for.
-
-Why are you doing this if you've no clue what they're on about?
-
-Just randomly moving files about isn't helpful.
-
+Applied to net-next, thanks.
