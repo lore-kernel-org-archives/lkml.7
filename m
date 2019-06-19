@@ -2,160 +2,87 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D94EEC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:15:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3217BC31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4BA721479
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:15:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07B8D205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:15:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560935749;
+	bh=ZRt8WI0QmB1e5ItbgKp6jhHixFxeiIvFtUk1FCwipcY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=X46K2aXwqZldE4l0dxuF/W+yvpfJvz+x/Di1AY7BUgDosSW3nfMtSKsAq/p8CJIA/
+	 tLJVDwUMLUwXDaubOKShskh+vyuBLtYpG/vcfTXJaEniJ59L0tJvBfAu99ysr1oY2O
+	 E0hS/nKc9o2q5Cwf7ZASyUVk5raUziBSaLMVrhGI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbfFSJPf (ORCPT
+        id S1731466AbfFSJPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:15:35 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:43174 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726971AbfFSJPe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:15:34 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 415A8A9C784478C4C47C;
-        Wed, 19 Jun 2019 17:15:32 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Jun 2019
- 17:15:30 +0800
-Subject: Re: [PATCH v2 1/2] ACPI/PPTT: Add support for ACPI 6.3 thread flag
-To:     Jeremy Linton <jeremy.linton@arm.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        <linux-arm-kernel@lists.infradead.org>
-References: <20190614223158.49575-1-jeremy.linton@arm.com>
- <20190614223158.49575-2-jeremy.linton@arm.com>
- <667f95c0-5aa9-f460-a49a-e6dfefc027d8@arm.com>
- <2d1b547f-f9ee-391c-c4f3-0232a08a86bc@arm.com>
- <718438d0-8648-897a-83e8-801146a0af86@arm.com>
- <f6f7f9bb-547d-3fd3-f3f8-1d55181f63d7@huawei.com>
- <11fb712f-b3c2-5491-89ee-ea7efb18ddd8@arm.com>
-CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <rjw@rjwysocki.net>, <sudeep.holla@arm.com>, <lenb@kernel.org>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <63f6c6a8-9d79-ae75-3c15-96bded9b14e4@huawei.com>
-Date:   Wed, 19 Jun 2019 10:15:24 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        Wed, 19 Jun 2019 05:15:47 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:41335 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726971AbfFSJPr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 05:15:47 -0400
+Received: by mail-ot1-f68.google.com with SMTP id 43so1434229otf.8;
+        Wed, 19 Jun 2019 02:15:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+djdJ0egkgp6daDlovvAzvZS5tBfJ50BkTgrjF5MG50=;
+        b=tSz+xBA9URqjEy0hb+UpfCO4+63MTnqCTEOauC6AOnZe/7Kcskf3sQ9kwhRSJB2llL
+         dUjX43sBXsKQ3lUnoGSnJ8I4w2DlA3aIx/lUpdwHOmecd3BIhjHb31tqxx1/7JfnzMQ6
+         IgTz5GLzempig2XK8hdeu2gc0kj11W6ZkzilA3ZUki+E+loPoQS8TNyK8Oeve/8NpH22
+         oYnubDpnX/qcIK2jv6NFcIfIDTTI92beSVnB4xm8O7AYOqLy0OqUl3WRycQCOHHpjtCT
+         tCH9P014oOJq9juhckrv5j+ITCyZJakB6T1yAZsbBVnemq2stqkSOg7KtWFE2H7hLE64
+         awXQ==
+X-Gm-Message-State: APjAAAWFcIAEeMtpggPN+hM723ngAVp3V5thgMkw4UdjIwgTRQgcjafX
+        7mq+cbbi+f4e+ncWVzsmdDnhaAx4SHphVhGGlJchHLub
+X-Google-Smtp-Source: APXvYqyVD2KuSejZtlg/XEAm9PCGlvwBLICR9kvCnZPa63+Breo2sFYqy95rmxMZm0PQLT0u/ljT+ZnNJvEBN+q9MFU=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr44684736oto.118.1560935746471;
+ Wed, 19 Jun 2019 02:15:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <11fb712f-b3c2-5491-89ee-ea7efb18ddd8@arm.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+References: <cover.1560163748.git.viresh.kumar@linaro.org> <3504053.Rmt1Mul0J4@kreacher>
+ <20190618112522.4odrysf7wmxgjlb2@vireshk-i7> <3176289.QFhGQadiPc@kreacher> <20190619063947.nj2awibmalrdccn2@vireshk-i7>
+In-Reply-To: <20190619063947.nj2awibmalrdccn2@vireshk-i7>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 19 Jun 2019 11:15:35 +0200
+Message-ID: <CAJZ5v0gXbDvSSfjpog=ycdTjSo8WVDyDXfD_zsW1SGP4gmS_eA@mail.gmail.com>
+Subject: Re: [PATCH V3 4/5] cpufreq: Register notifiers with the PM QoS framework
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Qais.Yousef@arm.com, Matthias Kaehlcke <mka@chromium.org>,
+        Juri Lelli <juri.lelli@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/06/2019 22:28, Jeremy Linton wrote:
-> Hi,
+On Wed, Jun 19, 2019 at 8:39 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
 >
-> On 6/18/19 12:23 PM, John Garry wrote:
->> On 18/06/2019 15:40, Valentin Schneider wrote:
->>> On 18/06/2019 15:21, Jeremy Linton wrote:
->>> [...]
->>>>>> + * Return: -ENOENT if the PPTT doesn't exist, the CPU cannot be
->>>>>> found or
->>>>>> + *       the table revision isn't new enough.
->>>>>> + * Otherwise returns flag value
->>>>>> + */
->>>>>
->>>>> Nit: strictly speaking we're not returning the flag value but its mask
->>>>> applied to the flags field. I don't think anyone will care about
->>>>> getting
->>>>> the actual flag value, but it should be made obvious in the doc:
->>>>
->>>> Or I clarify the code to actually do what the comments says. Maybe
->>>> that is what John G was also pointing out too?
->>>>
->>
->> No, I was just saying that the kernel topology can be broken without
->> this series.
->>
->>>
->>> Mmm I didn't find any reply from John regarding this in v1, but I
->>> wouldn't
->>> mind either way, as long as the doc & code are aligned.
->>>
->>
->> BTW, to me, function acpi_pptt_cpu_is_thread() seems to try to do too
->> much, i.e. check if the PPTT is new enough to support the thread flag
->> and also check if it is set for a specific cpu. I'd consider separate
->> functions here.
+> On 19-06-19, 00:23, Rafael J. Wysocki wrote:
+> > In patch [3/5] you could point notifiers for both min and max freq to the same
+> > notifier head.   Both of your notifiers end up calling cpufreq_update_policy()
+> > anyway.
 >
+> I tried it and the changes in qos.c file look fine. But I don't like at all how
+> cpufreq.c looks now. We only register for min-freq notifier now and that takes
+> care of max as well. What could have been better is if we could have registered
+> a freq-notifier instead of min/max, which isn't possible as well because of how
+> qos framework works.
+>
+> Honestly, the cpufreq changes look hacky to me :(
+>
+> What do you say.
 
-Hi,
+OK, leave it as is.  That's not a big deal.
 
-> ? Your suggesting replacing the
->
-
-I am not saying definitely that this should be changed, it's just that 
-acpi_pptt_cpu_is_thread() returning false, true, or "no entry" is not a 
-typical API format.
-
-How about acpi_pptt_support_thread_info(cpu) and 
-acpi_pptt_cpu_is_threaded(cpu), both returning false/true only?
-
-None of this is ideal.
-
-BTW, Have you audited which arm64 systems have MT bit set legitimately?
-
->
-> if (table->revision >= rev)
-
-I know that checking the table revision is not on the fast path, but it 
-seems unnecessarily inefficient to always read it this way, I mean 
-calling acpi_table_get().
-
-Can you have a static value for the table revision? Or is this just how 
-other table info is accessed in ACPI code?
-
->     cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
->
-> check with
->
-> if (revision_check(table, rev))
->     cpu_node = acpi_find_processor_node(table, acpi_cpu_id);
->
->
-> and a function like
->
-> static int revision_check(acpixxxx *table, int rev)
-> {
->     return (table->revision >= rev);
-> }
->
-> Although, frankly if one were to do this, it should probably be a macro
-> with the table type, and used in the dozen or so other places I found
-> doing similar checks (spcr, iort, etc).
->
-> Or something else?
->
->
->
->
-
-thanks,
-John
-
->>
->>> [...]
->>>
->>> .
->>>
->>
->>
->
->
-> .
->
-
-
+It is slightly awkward, but oh well.
