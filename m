@@ -2,173 +2,140 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DEDCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:42:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C927FC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:42:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 388C121783
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:42:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9902521783
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:42:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="iM3Ngn2x"
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Q5bY2sFh";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="W7qBgaaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729334AbfFSQmL (ORCPT
+        id S1729938AbfFSQm4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:42:11 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:50576 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfFSQmL (ORCPT
+        Wed, 19 Jun 2019 12:42:56 -0400
+Received: from mail180-24.suw31.mandrillapp.com ([198.2.180.24]:56391 "EHLO
+        mail180-24.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725843AbfFSQmz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:42:11 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JGZ3BA139193;
-        Wed, 19 Jun 2019 16:41:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=4T5a0glbRa2aBSKkc/pjnTjMsTPHECFT1E9bbL1l2HM=;
- b=iM3Ngn2x6aaNg+8wMaz2TYv3kwfBr7esbrJ8PsegJPNksN4Z/YjPTI3TmHcIUAH5xIxd
- gAnjdNn//nUURYK/24P/Mz+8CWzLw/ldkJ0Ah8cTKTN8TsQstYz7Wc1JokBHslvlpojt
- t58Ckn54FcLS6JnUQMgNT/8sCvOqKf+qXUPK2SC5pwHYaAG2DxzZEfDTOmnxSxjRlk17
- 81k1k3JZIHS9isv6MaXvl6eghbedIhy09UL0UJZ7M5tLa9EvLThKgTnTshAaPgND2Tmz
- VORmseouIshgIQ+DfXX2+2Cq67n27+huaukcohM59RMNDmLVIT4WZNeTT5o/4WBjQ22r Kg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t7809ckb0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 16:41:19 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JGeTfm168992;
-        Wed, 19 Jun 2019 16:41:18 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2t77ynxysy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 16:41:18 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5JGfFiP008310;
-        Wed, 19 Jun 2019 16:41:16 GMT
-Received: from [10.65.164.174] (/10.65.164.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Jun 2019 09:41:15 -0700
-Subject: Re: [PATCH v17 05/15] mm, arm64: untag user pointers in mm/gup.c
-To:     Andrey Konovalov <andreyknvl@google.com>,
-        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
-        linux-media@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <8f65548bef8544d49980a92d221b74440d544c1e.1560339705.git.andreyknvl@google.com>
-From:   Khalid Aziz <khalid.aziz@oracle.com>
-Organization: Oracle Corp
-Message-ID: <dbf2dd46-0240-f8a9-203c-4f1234c16825@oracle.com>
-Date:   Wed, 19 Jun 2019 10:41:12 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 12:42:55 -0400
+X-Greylist: delayed 900 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Jun 2019 12:42:54 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=fV7NQkOm47Fi2EjqYPKStwQJEWlNbrKyKdGaNA4YDHc=;
+ b=Q5bY2sFh3B5MqFCAkB0DD53mk0btrJsrX8O1tKvCe2+IlI3r0uzwTwduKO4bKCkyurmpjyY5US9x
+   FfeZbOdOQd48vkbroc1EpECJqgwYrPgUjeC86i5Rhg4TmVBdWnCMKeizXnUNHkBClnmmgX8GFL8E
+   CzlsHit3U6YntaskkAY=
+Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-24.suw31.mandrillapp.com id h19j0s22sc06 for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 16:27:53 +0000 (envelope-from <bounce-md_31050260.5d0a6289.v1-bf199a7d311746269764e1f8955aa275@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1560961673; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=fV7NQkOm47Fi2EjqYPKStwQJEWlNbrKyKdGaNA4YDHc=; 
+ b=W7qBgaaNz34EPnx48sOEFAXxcFbilh/31qdpg+aLcmxvNJhwGavd3T7rEQfKhxIyh9n+Xu
+ M/LOkpq9g1VinIo9jBl97WB34OIWLCn5HztLIViK1zp3XgNC2uFyKWGWE41JOx2uxKf9jBrA
+ flZ+mpJotM0momx802Um6eQphtI84=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Received: from [87.98.221.171] by mandrillapp.com id bf199a7d311746269764e1f8955aa275; Wed, 19 Jun 2019 16:27:53 +0000
+To:     Julia Lawall <julia.lawall@lip6.fr>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kbuild-all@01.org>
+Message-Id: <20190619162713.GA19859@deco.navytux.spb.ru>
+References: <alpine.DEB.2.20.1906191227430.3726@hadrien>
+In-Reply-To: <alpine.DEB.2.20.1906191227430.3726@hadrien>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.bf199a7d311746269764e1f8955aa275
+X-Mandrill-User: md_31050260
+Date:   Wed, 19 Jun 2019 16:27:53 +0000
 MIME-Version: 1.0
-In-Reply-To: <8f65548bef8544d49980a92d221b74440d544c1e.1560339705.git.andreyknvl@google.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190134
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190134
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 5:43 AM, Andrey Konovalov wrote:
-> This patch is a part of a series that extends arm64 kernel ABI to allow=
- to
-> pass tagged user pointers (with the top byte set to something else othe=
-r
-> than 0x00) as syscall arguments.
->=20
-> mm/gup.c provides a kernel interface that accepts user addresses and
-> manipulates user pages directly (for example get_user_pages, that is us=
-ed
-> by the futex syscall). Since a user can provided tagged addresses, we n=
-eed
-> to handle this case.
->=20
-> Add untagging to gup.c functions that use user addresses for vma lookup=
-s.
->=20
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+Hi Julia, everyone.
+
+On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
+> Hi,
+> 
+> Can you forward this patch to the people below if you think it is
+> appropriate?
+
+Yes, this patch is appropriate. It was actually part of
+git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable as
+it removes a chance for deadlock) to apply it. 
+
+Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+
+> Could I tell the kbuild people to add you to the CC list for
+> this semantic patch?
+
+Yes, sure. Please feel free to add me to CC list for stream_open.cocci
+related patches.
+
+Kirill
+
+
+> thanks,
+> julia
+> 
+> ---------- Forwarded message ----------
+> Date: Wed, 19 Jun 2019 18:23:18 +0800
+> From: kbuild test robot <lkp@intel.com>
+> To: kbuild@01.org
+> Cc: Julia Lawall <julia.lawall@lip6.fr>
+> Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
+> 
+> CC: kbuild-all@01.org
+> TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
+> CC: Logan Gunthorpe <logang@deltatee.com>
+> CC: Bjorn Helgaas <helgaas@kernel.org>
+> CC: linux-pci@vger.kernel.org
+> CC: linux-kernel@vger.kernel.org
+> 
+> From: kbuild test robot <lkp@intel.com>
+> 
+> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
+> 
+> Generated by: scripts/coccinelle/api/stream_open.cocci
+> 
+> Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 > ---
-
-Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
-
-
->  mm/gup.c | 4 ++++
->  1 file changed, 4 insertions(+)
->=20
-> diff --git a/mm/gup.c b/mm/gup.c
-> index ddde097cf9e4..c37df3d455a2 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -802,6 +802,8 @@ static long __get_user_pages(struct task_struct *ts=
-k, struct mm_struct *mm,
->  	if (!nr_pages)
->  		return 0;
-> =20
-> +	start =3D untagged_addr(start);
-> +
->  	VM_BUG_ON(!!pages !=3D !!(gup_flags & FOLL_GET));
-> =20
->  	/*
-> @@ -964,6 +966,8 @@ int fixup_user_fault(struct task_struct *tsk, struc=
-t mm_struct *mm,
->  	struct vm_area_struct *vma;
->  	vm_fault_t ret, major =3D 0;
-> =20
-> +	address =3D untagged_addr(address);
-> +
->  	if (unlocked)
->  		fault_flags |=3D FAULT_FLAG_ALLOW_RETRY;
-> =20
->=20
-
-
+> 
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
+> head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
+> commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
+> :::::: branch date: 6 days ago
+> :::::: commit date: 6 days ago
+> 
+> Please take the patch only if it's a positive warning. Thanks!
+> 
+>  switchtec.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> --- a/drivers/pci/switch/switchtec.c
+> +++ b/drivers/pci/switch/switchtec.c
+> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
+>  		return PTR_ERR(stuser);
+> 
+>  	filp->private_data = stuser;
+> -	nonseekable_open(inode, filp);
+> +	stream_open(inode, filp);
+> 
+>  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
+>
