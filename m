@@ -2,96 +2,141 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F8D4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25AD72177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560969410;
-	bh=ASPng6hEbz1DA8ra61scrwvKdhNdcvVtXH/fg2JLJ/s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=JMMW2Kyh56QqjqTqZu3ZdkJQxL3s2DbV0DtAzz9itxRCzSVzdJsBjYFNVgId8YKSz
-	 kiw8XH1ty7spRiARWX36hbUdcXBuktijnfBD2wRL8WGF2OT0+R/RE+dcpFQ3hArF7+
-	 9xTAoF6E5M2USwbtztSmoO95vD7+xKvuBYtuChZ4=
+	by mail.kernel.org (Postfix) with ESMTP id 6F49D214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="U90JMlza"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730272AbfFSSgs (ORCPT
+        id S1730318AbfFSSgu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 19 Jun 2019 14:36:50 -0400
+Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:38324 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730283AbfFSSgs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 14:36:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60548 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726109AbfFSSgq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:36:46 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A8B3F214AF;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 45863C00ED;
+        Wed, 19 Jun 2019 18:36:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1560969408; bh=HFU+VROCK0C6D+QU6j2ekGDFt1Sva007823auZeHX7Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=U90JMlzaF68mn6cNmL1fAgyYwzttuEXxtTYVHy6XI3r+YW2LO9ZYVgaboerGOuyNx
+         hsF5QGJWI2ihFvVzwAoXhf8umkIyS3uvZg6xaxjxVkgz4JqZTI7gNAKupXX5DMTfUS
+         8p8pbW7/Q3pr6Hv5S1qUIDhaF3ryI/bEqHc66HjRKzNsYqOJvBI3K3O3uThJ9gMfcM
+         IIj7wmeRbjZG01/oUJwOVAAlFORC4CTtEAOvgYHhUhF1DKp9GT2n95+CDJx7boeraI
+         Tc/TjzGXwWvQshIeaoaKb+4uzu3BIaz1tRqgRfy63CJktj1xXWog3S6YMf4UjPEtNy
+         G+kcjVaa0w7Hg==
+Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id C7598A0231;
         Wed, 19 Jun 2019 18:36:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560969406;
-        bh=ASPng6hEbz1DA8ra61scrwvKdhNdcvVtXH/fg2JLJ/s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=W1FLG9an4047zm9mVfDTVvrGzubs52CY5JRu9D+egtHOZdMOjWp4XXY1Uht+F4nbs
-         JiRzj5rZkAt0avcEaxw5PCfqtifX0K9Tss4ZgIMpiHnPse3iYGO8cAg6RGjh2o2qlY
-         3qiHh+MxSkbD7CpCZ44UvadIW8i2ZjUx6hTIfldA=
-Date:   Wed, 19 Jun 2019 20:36:43 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Raul Rangel <rrangel@chromium.org>
-Cc:     stable@vger.kernel.org, linux-mmc@vger.kernel.org,
-        djkurtz@google.com, adrian.hunter@intel.com, zwisler@chromium.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Chris Boot <bootc@bootc.net>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [stable/4.14.y PATCH 0/3] mmc: Fix a potential resource leak
- when shutting down request queue.
-Message-ID: <20190619183643.GB7018@kroah.com>
-References: <20190513175521.84955-1-rrangel@chromium.org>
- <20190514091933.GA27269@kroah.com>
- <20190619164625.GA85539@google.com>
- <20190619170917.GC10107@kroah.com>
- <20190619182304.GA98587@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619182304.GA98587@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by de02.synopsys.com (Postfix) with ESMTP id A020A3F217;
+        Wed, 19 Jun 2019 20:36:45 +0200 (CEST)
+From:   Vitor Soares <Vitor.Soares@synopsys.com>
+To:     linux-i3c@lists.infradead.org, Joao.Pinto@synopsys.com
+Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 2/3] i3c: add mixed limited bus mode
+Date:   Wed, 19 Jun 2019 20:36:32 +0200
+Message-Id: <4627348638396c6b3fbe3ee28b533ca15ea9f4fe.1560968688.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1560968688.git.vitor.soares@synopsys.com>
+References: <cover.1560968688.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1560968688.git.vitor.soares@synopsys.com>
+References: <cover.1560968688.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:23:04PM -0600, Raul Rangel wrote:
-> On Wed, Jun 19, 2019 at 07:09:17PM +0200, Greg Kroah-Hartman wrote:
-> > On Wed, Jun 19, 2019 at 10:46:25AM -0600, Raul Rangel wrote:
-> > > On Tue, May 14, 2019 at 11:19:34AM +0200, Greg Kroah-Hartman wrote:
-> > > > On Mon, May 13, 2019 at 11:55:18AM -0600, Raul E Rangel wrote:
-> > > > > I think we should cherry-pick 41e3efd07d5a02c80f503e29d755aa1bbb4245de
-> > > > > https://lore.kernel.org/patchwork/patch/856512/ into 4.14. It fixes a
-> > > > > potential resource leak when shutting down the request queue.
-> > > > 
-> > > > Potential meaning "it does happen", or "it can happen if we do this", or
-> > > > just "maybe it might happen, we really do not know?"
-> > > It does happen if the AMD SDHCI patches are cherry-picked into 4.14.
-> > > https://lkml.org/lkml/2019/5/1/398
-> > 
-> > Why are those patches somehow being required to be added to 4.14.y?  If
-> > they are not added, is all fine?
-> I was just thinking we would backport the patches to fix this AMD SDHCI
-> hardware bug, but I guess we don't need to.
+The i3c bus spec defines a bus configuration where i2c devices don't
+have a 50ns filter but support SCL running at SDR max rate (12.5MHz).
 
-Has anyone asked for those to be backported?  Does anyone require them
-to be?  What's keeping users from using a newer kernel that have this
-specific hardware issue?
+This patch introduces the limited bus mode so that users can use
+a higher speed in presence of i2c devices index 1.
 
-Trying to apply patches to a stable kernel due to an issue that is not
-even in that stable kernel is crazy.  No wonder I am totally confused...
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+---
+Changes in v4:
+  None
 
-thanks,
+Changes in v3:
+  None
 
-greg k-h
+Changes in v2:
+  Enhance commit message
+
+ drivers/i3c/master.c       | 5 +++++
+ include/linux/i3c/master.h | 5 +++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 14980db..76549f1 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -470,6 +470,7 @@ static int i3c_bus_init(struct i3c_bus *i3cbus)
+ static const char * const i3c_bus_mode_strings[] = {
+ 	[I3C_BUS_MODE_PURE] = "pure",
+ 	[I3C_BUS_MODE_MIXED_FAST] = "mixed-fast",
++	[I3C_BUS_MODE_MIXED_LIMITED] = "mixed-limited",
+ 	[I3C_BUS_MODE_MIXED_SLOW] = "mixed-slow",
+ };
+ 
+@@ -585,6 +586,7 @@ int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
+ 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+ 		break;
+ 	case I3C_BUS_MODE_MIXED_FAST:
++	case I3C_BUS_MODE_MIXED_LIMITED:
+ 		if (!i3cbus->scl_rate.i3c)
+ 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+ 		if (!i3cbus->scl_rate.i2c)
+@@ -2481,6 +2483,9 @@ int i3c_master_register(struct i3c_master_controller *master,
+ 				mode = I3C_BUS_MODE_MIXED_FAST;
+ 			break;
+ 		case I3C_LVR_I2C_INDEX(1):
++			if (mode < I3C_BUS_MODE_MIXED_LIMITED)
++				mode = I3C_BUS_MODE_MIXED_LIMITED;
++			break;
+ 		case I3C_LVR_I2C_INDEX(2):
+ 			if (mode < I3C_BUS_MODE_MIXED_SLOW)
+ 				mode = I3C_BUS_MODE_MIXED_SLOW;
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index f13fd8b..89ea461 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -250,12 +250,17 @@ struct i3c_device {
+  *			     the bus. The only impact in this mode is that the
+  *			     high SCL pulse has to stay below 50ns to trick I2C
+  *			     devices when transmitting I3C frames
++ * @I3C_BUS_MODE_MIXED_LIMITED: I2C devices without 50ns spike filter are
++ *				present on the bus. However they allows
++ *				compliance up to the maximum SDR SCL clock
++ *				frequency.
+  * @I3C_BUS_MODE_MIXED_SLOW: I2C devices without 50ns spike filter are present
+  *			     on the bus
+  */
+ enum i3c_bus_mode {
+ 	I3C_BUS_MODE_PURE,
+ 	I3C_BUS_MODE_MIXED_FAST,
++	I3C_BUS_MODE_MIXED_LIMITED,
+ 	I3C_BUS_MODE_MIXED_SLOW,
+ };
+ 
+-- 
+2.7.4
+
