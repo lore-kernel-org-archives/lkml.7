@@ -2,128 +2,136 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2160FC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:35:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F514C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01FA5208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:35:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2994920B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:35:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560933332;
+	bh=S2/gmCloutCQmeCj2igU219FBDpMIHnR4kTSnaQnoyQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=wXyn41doo9xpNegE3gIkGDvWWGJU+dFle30lD3T92t8PybeF29j9iv5NBm3Sz0fgv
+	 FFqzCU0A1x8+mOobeBpvpJqiAtEaKqb2kSF8lq6mWoHp+Gde2jJt6LZxCJDEEc+HtZ
+	 GQE9HDng6lrhZNuRIjZDtxrMu56+pNsvFeq2NDG0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731292AbfFSIfK convert rfc822-to-8bit (ORCPT
+        id S1731327AbfFSIfa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:35:10 -0400
-Received: from mga04.intel.com ([192.55.52.120]:58054 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730783AbfFSIfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:35:10 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 01:35:09 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="162147085"
-Received: from xxx.igk.intel.com (HELO xxx) ([10.237.93.170])
-  by orsmga003.jf.intel.com with ESMTP; 19 Jun 2019 01:35:05 -0700
-Date:   Wed, 19 Jun 2019 10:38:59 +0200
-From:   Amadeusz =?UTF-8?B?U8WCYXdpxYRza2k=?= 
-        <amadeuszx.slawinski@linux.intel.com>
-To:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-Cc:     alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Cezary Rojewski <cezary.rojewski@intel.com>,
-        Jie Yang <yang.jie@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v2 09/11] ASoC: Intel: hdac_hdmi: Set ops
- to NULL on remove
-Message-ID: <20190619103859.15bf51c5@xxx>
-In-Reply-To: <bd8855a7ab7a9958113631b76706120fd4427631.camel@linux.intel.com>
-References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
-        <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
-        <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
-        <20190618130015.0fc388b4@xxx>
-        <bd8855a7ab7a9958113631b76706120fd4427631.camel@linux.intel.com>
+        Wed, 19 Jun 2019 04:35:30 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37014 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730783AbfFSIfa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:35:30 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s20so18459269otp.4;
+        Wed, 19 Jun 2019 01:35:30 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K+aGgdCq18WEu7EQPUxRISqQBQ1QUiTsnK0wg2Fi8nU=;
+        b=AZeWNQC1MMLPIbILx9t/S0XkvKEQxXoS8SKx/GQTaxWYq9yXFYJXKwPmYSlda158Ql
+         EPWu0P4Whdd72zAufciBzlwIydT7HLJ57c5kpCG46SCw7LiF4YfqoUFoqGvVuEJ+s4ki
+         +umc7JOasatoxYt6H1o9jAYv3wu1gZtdP9XbsPhrbfrgExUBp7vQReYr5njYUDAD6fVy
+         JNXcqFZJp1G7TUSpCoOeFxTYjdliFD7Y6XV4bshlIH0GDq4Gpe3Tn5+It8RCrhqwmCva
+         wtmB1H5BM1H0IPenIHV3F9K6oZndFAT+EUJtI20aewZXsugOt0ERaDR+/Nu7aupl1fU6
+         xQlw==
+X-Gm-Message-State: APjAAAVnAm3c90YInB1qsYMapQzpcV3QZH5fZRVmvIOyxwU6PSVPlx20
+        vum60zpFaHt5dIfsC3As2gkoUcdV97ZY2ijLJhs=
+X-Google-Smtp-Source: APXvYqyN4AtDJW6N60l0QS5TUvuJdK74OUuvpF3lXn5+gy2GELjZ0UJfDiusOR1H1yQpaIqFIeM41kJBgNQMTYaVjAI=
+X-Received: by 2002:a9d:5d15:: with SMTP id b21mr911689oti.262.1560933329596;
+ Wed, 19 Jun 2019 01:35:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
+ <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com> <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+In-Reply-To: <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 19 Jun 2019 10:35:17 +0200
+Message-ID: <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 08:58:22 -0700
-Ranjani Sridharan <ranjani.sridharan@linux.intel.com> wrote:
+On Wed, Jun 19, 2019 at 1:52 AM Joel Fernandes <joelaf@google.com> wrote:
+>
+> On Tue, Jun 18, 2019 at 7:15 PM Tri Vo <trong@android.com> wrote:
+> [snip]
+> > > > > >
+> > > > > > Android userspace reading wakeup_sources is not ideal because:
+> > > > > > - Debugfs API is not stable, i.e. Android tools built on top of it are
+> > > > > > not guaranteed to be backward/forward compatible.
+> > > > > > - This file requires debugfs to be mounted, which itself is
+> > > > > > undesirable for security reasons.
+> > > > > >
+> > > > > > To address these problems, we want to contribute a way to expose these
+> > > > > > statistics that doesn't depend on debugfs.
+> > > > > >
+> > > > > > Some initial thoughts/questions: Should we expose the stats in sysfs?
+> > > > > > Or maybe implement eBPF-based solution? What do you think?
+> > > >
+> > > > We are going through Android's out-of-tree kernel dependencies along with
+> > > > userspace APIs that are not necessarily considered "stable and forever
+> > > > supported" upstream. The debugfs dependencies showed up on our radar as a
+> > > > result and so we are wondering if we should worry about changes in debugfs
+> > > > interface and hence the question(s) below.
+> > > >
+> > > > So, can we rely on /d/wakeup_sources to be considered a userspace API and
+> > > > hence maintained stable as we do for other /proc and /sys entries?
+> > > >
+> > > > If yes, then we will go ahead and add tests for this in LTP or
+> > > > somewhere else suitable.
+> > >
+> > > No, debugfs is not ABI.
+> > >
+> > > > If no, then we would love to hear suggestions for any changes that need to be
+> > > > made or we simply just move the debugfs entry into somewhere like
+> > > > /sys/power/ ?
+> > >
+> > > No, moving that entire file from debugfs into sysfs is not an option either.
+> > >
+> > > The statistics for the wakeup sources associated with devices are already there
+> > > under /sys/devices/.../power/ , but I guess you want all wakeup sources?
+> > >
+> > > That would require adding a kobject to struct wakeup_source and exposing
+> > > all of the statistics as separate attributes under it.  In which case it would be
+> > > good to replace the existing wakeup statistics under /sys/devices/.../power/
+> > > with symbolic links to the attributes under the wakeup_source kobject.
+> >
+> > Thanks for your input, Rafael! Your suggestion makes sense. I'll work
+> > on a patch for this.
+>
+> Does that entail making each wake up source, a new sysfs node under a
+> particular device, and then adding stats under that new node?
 
-> On Tue, 2019-06-18 at 13:00 +0200, Amadeusz Sławiński wrote:
-> > On Mon, 17 Jun 2019 13:51:42 -0700
-> > Ranjani Sridharan <ranjani.sridharan@linux.intel.com> wrote:
-> >   
-> > > On Mon, 2019-06-17 at 13:36 +0200, Amadeusz Sławiński wrote:  
-> > > > When we unload Skylake driver we may end up calling
-> > > > hdac_component_master_unbind(), it uses acomp->audio_ops, which
-> > > > we
-> > > > set
-> > > > in hdmi_codec_probe(), so we need to set it to NULL in
-> > > > hdmi_codec_remove(),
-> > > > otherwise we will dereference no longer existing pointer.    
-> > > 
-> > > Hi Amadeusz,
-> > > 
-> > > It looks like the audio_ops should be deleted
-> > > snd_hdac_acomp_exit().
-> > > Also, this doesnt seem to be the case with when the SOF driver is
-> > > removed.
-> > > Could you please give a bit more context on what error you see
-> > > when this happens?  
-> > 
-> > Hi,
-> > 
-> > I get Oops. This is what happens with all other patches in this
-> > series and only this one reverted:
-> > 
-> > root@APL:~# rmmod snd_soc_sst_bxt_rt298
-> > root@APL:~# rmmod snd_soc_hdac_hdmi
-> > root@APL:~# rmmod snd_soc_skl  
-> 
-> Thanks, Amadeusz. I think the order in which the drivers are removed
-> is what's causing the oops in your case. With SOF, the order we
-> remove is
-> 
-> 1. rmmod sof_pci_dev
-> 2. rmmod snd_soc_sst_bxt_rt298
-> 3. rmmod snd_soc_hdac_hdmi
-> 
+Not under a device, because there are wakeup source objects without
+associated devices.
 
-Well, there is nothing enforcing the order in which modules can be
-unloaded (and I see no reason to force it), as you can see from
-following excerpt, you can either start unloading from
-snd_soc_sst_bxt_rt298 or snd_soc_skl, and yes if you start from
-snd_soc_skl, there is no problem.
+It is conceivable to have a "wakeup_sources" directory under
+/sys/power/ and sysfs nodes for all wakeup sources in there.
 
-snd_soc_sst_bxt_rt298    40960  0
-snd_soc_hdac_hdmi      45056  1 snd_soc_sst_bxt_rt298
-snd_soc_dmic           16384  1
-snd_soc_rt298          65536  2 snd_soc_sst_bxt_rt298
-snd_soc_rt286          61440  0
-snd_soc_rl6347a        16384  2 snd_soc_rt298,snd_soc_rt286
-snd_soc_skl           372736  0
-snd_soc_sst_ipc        20480  1 snd_soc_skl
-snd_soc_sst_dsp        36864  1 snd_soc_skl
-snd_hda_ext_core       28672  2 snd_soc_hdac_hdmi,snd_soc_skl
-snd_hda_core          139264  3
-snd_hda_ext_core,snd_soc_hdac_hdmi,snd_soc_skl
-snd_soc_acpi_intel_match    53248  1 snd_soc_skl snd_soc_acpi
-16384  2 snd_soc_acpi_intel_match,snd_soc_skl snd_soc_core
-405504  6
-snd_soc_rt298,snd_soc_rt286,snd_soc_hdac_hdmi,snd_soc_skl,snd_soc_dmic,snd_soc_sst_bxt_rt298
-snd_compress           36864  2 snd_soc_core,snd_soc_skl
-snd_pcm_dmaengine      16384  1 snd_soc_core snd_pcm
-163840  10
-snd_soc_rt298,snd_soc_rt286,snd_hda_ext_core,snd_soc_hdac_hdmi,snd_compress,snd_soc_core,snd_soc_skl,snd_hda_core,snd_soc_sst_bxt_rt298,snd_pcm_dmaengine
-snd_timer              53248  1 snd_pcm
+Then, instead of exposing wakeup statistics directly under
+/sys/devices/.../power/, there can be symbolic links from there to the
+new wakeup source nodes under "wakeup_sources" (so as to avoid
+exposing the same data in two different places in sysfs, which may be
+confusing).
 
-Amadeusz
+Cheers!
