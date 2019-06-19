@@ -1,89 +1,87 @@
 Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9310FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B366C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:28:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75630214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:23:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0B1521734
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:28:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730203AbfFSSXK (ORCPT
+        id S1726628AbfFSS1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:23:10 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35952 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729659AbfFSSXJ (ORCPT
+        Wed, 19 Jun 2019 14:27:46 -0400
+Received: from smtprelay0009.hostedemail.com ([216.40.44.9]:45050 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726109AbfFSS1q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:23:09 -0400
-Received: by mail-io1-f68.google.com with SMTP id h6so526240ioh.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:23:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bCg0PxUUsvAJMl0OsP+eCKdKGJyA+gTCYYarz6iUG8Q=;
-        b=HbDubhpNVu7ENFZK9Ky5rk71UdVGMrZh+hwEWt2farqxK9UfcB9UXOwvJT9XwBJ/EW
-         JfcgKHOdq8hLSb6pCPCCFZqqhzzFqRr/1zB5RQaLTZpYw4WXBye8Klvq1udUJCYCdOQo
-         PdKUx/qwVhvuZTw15W9DrsnSLRlmDt3cignvt4d9VgQUb8hRXwP1ytGHqJV8eYOS2NhK
-         RVrhc3+lOzEmhY9tkju1kdXkmhmzV1MLr3OLaRrvCfhmSmymic4It0Hevhj3zTze2qKu
-         s50OkCj+DdBvjwz/fSC7G4sWF95EnvZHhNxiTsX/E0cFy5Tb4LSlvKPYJpzSFvTmyEL4
-         dOdw==
-X-Gm-Message-State: APjAAAVfThO+e1HaI8W7LkzPu1rjJbcvbMI4DyQMmg2+Z+eb4Keym1Ff
-        HByoAzDhRPsafsixV/FnZ5htGA==
-X-Google-Smtp-Source: APXvYqxHxmypQJeYzLb7QJDeP7k96N72SWAafQUJZuT5yiamhtx9tn2JFFjVgcIpCM8ez+a8G0nipg==
-X-Received: by 2002:a02:b016:: with SMTP id p22mr49908290jah.121.1560968588808;
-        Wed, 19 Jun 2019 11:23:08 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id r5sm19165770iom.42.2019.06.19.11.23.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 11:23:08 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 12:23:04 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, linux-mmc@vger.kernel.org,
-        djkurtz@google.com, adrian.hunter@intel.com, zwisler@chromium.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Chris Boot <bootc@bootc.net>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [stable/4.14.y PATCH 0/3] mmc: Fix a potential resource leak
- when shutting down request queue.
-Message-ID: <20190619182304.GA98587@google.com>
-References: <20190513175521.84955-1-rrangel@chromium.org>
- <20190514091933.GA27269@kroah.com>
- <20190619164625.GA85539@google.com>
- <20190619170917.GC10107@kroah.com>
+        Wed, 19 Jun 2019 14:27:46 -0400
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 7531D100E806B;
+        Wed, 19 Jun 2019 18:27:44 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: boats69_7da522d121463
+X-Filterd-Recvd-Size: 1956
+Received: from XPS-9350.home (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
+        (Authenticated sender: joe@perches.com)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Wed, 19 Jun 2019 18:27:43 +0000 (UTC)
+Message-ID: <d4b42858366e50f92b133ceb6399e9f16a7cef88.camel@perches.com>
+Subject: Re: [PATCH] MAINTAINERS: add CLANG/LLVM BUILD SUPPORT info
+From:   Joe Perches <joe@perches.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>,
+        akpm@linux-foundation.org
+Cc:     clang-built-linux@googlegroups.com, linux-kernel@vger.kernel.org
+Date:   Wed, 19 Jun 2019 11:27:42 -0700
+In-Reply-To: <20190619181844.57696-1-ndesaulniers@google.com>
+References: <20190619181844.57696-1-ndesaulniers@google.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619170917.GC10107@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 07:09:17PM +0200, Greg Kroah-Hartman wrote:
-> On Wed, Jun 19, 2019 at 10:46:25AM -0600, Raul Rangel wrote:
-> > On Tue, May 14, 2019 at 11:19:34AM +0200, Greg Kroah-Hartman wrote:
-> > > On Mon, May 13, 2019 at 11:55:18AM -0600, Raul E Rangel wrote:
-> > > > I think we should cherry-pick 41e3efd07d5a02c80f503e29d755aa1bbb4245de
-> > > > https://lore.kernel.org/patchwork/patch/856512/ into 4.14. It fixes a
-> > > > potential resource leak when shutting down the request queue.
-> > > 
-> > > Potential meaning "it does happen", or "it can happen if we do this", or
-> > > just "maybe it might happen, we really do not know?"
-> > It does happen if the AMD SDHCI patches are cherry-picked into 4.14.
-> > https://lkml.org/lkml/2019/5/1/398
-> 
-> Why are those patches somehow being required to be added to 4.14.y?  If
-> they are not added, is all fine?
-I was just thinking we would backport the patches to fix this AMD SDHCI
-hardware bug, but I guess we don't need to.
+On Wed, 2019-06-19 at 11:18 -0700, Nick Desaulniers wrote:
+> Add keyword support so that our mailing list gets cc'ed for clang/llvm
+> patches.
 
-Thanks
+You'd also possibly get cc'd on patches that merely mention
+clang or llvm like any change to clang-format.  It could be
+many files that aren't interesting.
+
+$ git grep -i -w -P --name-only '(?i:clang|llvm)' | wc -l
+134
+
+> diff --git a/MAINTAINERS b/MAINTAINERS
+[]
+> @@ -3940,6 +3940,14 @@ M:	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+>  S:	Maintained
+>  F:	.clang-format
+>  
+> +CLANG/LLVM BUILD SUPPORT
+> +L: clang-built-linux@googlegroups.com
+> +W: https://clangbuiltlinux.github.io/
+> +B: https://github.com/ClangBuiltLinux/linux/issues
+> +C: irc://chat.freenode.net/clangbuiltlinux
+> +S: Supported
+> +K: \b(?i:clang|llvm)\b
+> +
+
+Please use a single tab after each : like below
+
+CLANG/LLVM BUILD SUPPORT
+L:	clang-built-linux@googlegroups.com
+W:	https://clangbuiltlinux.github.io/
+B:	https://github.com/ClangBuiltLinux/linux/issues
+C:	irc://chat.freenode.net/clangbuiltlinux
+S:	Supported
+K:	\b(?i:clang|llvm)\b
+
+
