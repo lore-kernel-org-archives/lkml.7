@@ -6,39 +6,35 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC2EC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:50:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56B7DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:54:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 113BC214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:50:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33B932147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:54:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729167AbfFSOuy (ORCPT
+        id S1728049AbfFSOyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:50:54 -0400
-Received: from mga06.intel.com ([134.134.136.31]:30727 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfFSOuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:50:54 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 07:50:53 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="162065638"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga007.fm.intel.com with ESMTP; 19 Jun 2019 07:50:51 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id 8B59F162; Wed, 19 Jun 2019 17:50:50 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Darren Hart <dvhart@infradead.org>,
-        platform-driver-x86@vger.kernel.org,
-        Hans de Goede <hdegoede@redhat.com>,
-        linux-kernel@vger.kernel.org
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1] platform/x86: intel_int0002_vgpio: Get rid of custom ICPU() macro
-Date:   Wed, 19 Jun 2019 17:50:50 +0300
-Message-Id: <20190619145050.13876-1-andriy.shevchenko@linux.intel.com>
+        Wed, 19 Jun 2019 10:54:18 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:49013 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSOyS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 10:54:18 -0400
+Received: from mc-bl-xps13.lan (aaubervilliers-681-1-81-150.w90-88.abo.wanadoo.fr [90.88.23.150])
+        (Authenticated sender: maxime.chevallier@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 7875A240003;
+        Wed, 19 Jun 2019 14:54:10 +0000 (UTC)
+From:   Maxime Chevallier <maxime.chevallier@bootlin.com>
+To:     davem@davemloft.net
+Cc:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Antoine Tenart <antoine.tenart@bootlin.com>,
+        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
+        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
+        Alan Winkowski <walan@marvell.com>
+Subject: [PATCH net] net: mvpp2: prs: Don't override the sign bit in SRAM parser shift
+Date:   Wed, 19 Jun 2019 16:54:13 +0200
+Message-Id: <20190619145413.21852-1-maxime.chevallier@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -47,62 +43,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Replace custom grown macro with generic INTEL_CPU_FAM6() one.
+The Header Parser allows identifying various fields in the packet
+headers, used for for various kind of filtering and classification
+steps.
 
-No functional change intended.
+This is a re-entrant process, where the offset in the packet header
+depends on the previous lookup results. This offset is represented in
+the SRAM results of the TCAM, as a shift to be operated.
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+This shift can be negative in some cases, such as in IPv6 parsing.
+
+This commit prevents overriding the sign bit when setting the shift
+value, which could cause instabilities when parsing IPv6 flows.
+
+Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
+Suggested-by: Alan Winkowski <walan@marvell.com>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 ---
- drivers/platform/x86/intel_int0002_vgpio.c | 22 +++++++---------------
- 1 file changed, 7 insertions(+), 15 deletions(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
-index 1694a9aec77c..d9542c661ddc 100644
---- a/drivers/platform/x86/intel_int0002_vgpio.c
-+++ b/drivers/platform/x86/intel_int0002_vgpio.c
-@@ -51,17 +51,6 @@
- #define GPE0A_STS_PORT			0x420
- #define GPE0A_EN_PORT			0x428
- 
--#define BAYTRAIL			0x01
--#define CHERRYTRAIL			0x02
--
--#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data }
--
--static const struct x86_cpu_id int0002_cpu_ids[] = {
--	ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
--	ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
--	{}
--};
--
- /*
-  * As this is not a real GPIO at all, but just a hack to model an event in
-  * ACPI the get / set functions are dummy functions.
-@@ -157,6 +146,12 @@ static struct irq_chip int0002_cht_irqchip = {
- 	 */
- };
- 
-+static const struct x86_cpu_id int0002_cpu_ids[] = {
-+	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Bay Trail  */
-+	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry Trail */
-+	{}
-+};
-+
- static int int0002_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -210,10 +205,7 @@ static int int0002_probe(struct platform_device *pdev)
- 		return ret;
+diff --git a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
+index ae2240074d8e..5692c6087bbb 100644
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
+@@ -312,7 +312,8 @@ static void mvpp2_prs_sram_shift_set(struct mvpp2_prs_entry *pe, int shift,
  	}
  
--	if (cpu_id->driver_data == BAYTRAIL)
--		irq_chip = &int0002_byt_irqchip;
--	else
--		irq_chip = &int0002_cht_irqchip;
-+	irq_chip = (struct irq_chip *)cpu_id->driver_data;
+ 	/* Set value */
+-	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] = shift & MVPP2_PRS_SRAM_SHIFT_MASK;
++	pe->sram[MVPP2_BIT_TO_WORD(MVPP2_PRS_SRAM_SHIFT_OFFS)] |=
++		shift & MVPP2_PRS_SRAM_SHIFT_MASK;
  
- 	ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
- 				   IRQ_TYPE_NONE);
+ 	/* Reset and set operation */
+ 	mvpp2_prs_sram_bits_clear(pe, MVPP2_PRS_SRAM_OP_SEL_SHIFT_OFFS,
 -- 
 2.20.1
 
