@@ -6,33 +6,33 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47AD7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47323C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:15:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2545A21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2818621721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:15:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730026AbfFSSNt (ORCPT
+        id S1729838AbfFSSO6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:13:49 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:34229 "EHLO
+        Wed, 19 Jun 2019 14:14:58 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34242 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfFSSNs (ORCPT
+        with ESMTP id S1726197AbfFSSO6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:13:48 -0400
+        Wed, 19 Jun 2019 14:14:58 -0400
 Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
         by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
         (Exim 4.76)
         (envelope-from <colin.king@canonical.com>)
-        id 1hdf5K-0006Nc-2S; Wed, 19 Jun 2019 18:13:26 +0000
+        id 1hdf6c-0006Re-Uu; Wed, 19 Jun 2019 18:14:47 +0000
 From:   Colin King <colin.king@canonical.com>
 To:     Thomas Gleixner <tglx@linutronix.de>,
         Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
         "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/apic: fix integer overflow on 10 bit right shift of cpu_khz
-Date:   Wed, 19 Jun 2019 19:13:25 +0100
-Message-Id: <20190619181325.13574-1-colin.king@canonical.com>
+Subject: [PATCH][V2] x86/apic: fix integer overflow on 10 bit left shift of cpu_khz
+Date:   Wed, 19 Jun 2019 19:14:46 +0100
+Message-Id: <20190619181446.13635-1-colin.king@canonical.com>
 X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
@@ -44,7 +44,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Colin Ian King <colin.king@canonical.com>
 
-The right shift of unsigned int cpu_khz will overflow for large values
+The left shift of unsigned int cpu_khz will overflow for large values
 of cpu_khz, so cast it to a long long before shifting it to avoid
 overvlow.  For example, this can happen when cpu_khz is 4194305 (just
 less than 4.2 GHz).  Also wrap line to avoid checkpatch wide line
@@ -72,5 +72,9 @@ index 8956072f677d..31426126e5e0 100644
  				max_loops--;
  			}
 -- 
+
+V2: replace right with left in commit subject and message. Doh.
+
+--
 2.20.1
 
