@@ -2,104 +2,258 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C07D3C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7DCC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E5A2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DA3F2084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730073AbfFSQbe (ORCPT
+        id S1727134AbfFSQfF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:31:34 -0400
-Received: from smtprelay0234.hostedemail.com ([216.40.44.234]:46325 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725899AbfFSQbe (ORCPT
+        Wed, 19 Jun 2019 12:35:05 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.66]:18958 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725899AbfFSQfF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:31:34 -0400
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay05.hostedemail.com (Postfix) with ESMTP id D3FFA1801A0B4;
-        Wed, 19 Jun 2019 16:31:31 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-HE-Tag: cakes27_80e37c98d9d58
-X-Filterd-Recvd-Size: 3106
-Received: from XPS-9350 (cpe-23-242-196-136.socal.res.rr.com [23.242.196.136])
-        (Authenticated sender: joe@perches.com)
-        by omf09.hostedemail.com (Postfix) with ESMTPA;
-        Wed, 19 Jun 2019 16:31:25 +0000 (UTC)
-Message-ID: <9a000734375c0801fc16b71f4be1235f9b857772.camel@perches.com>
-Subject: Re: [PATCH v3 0/7] Hexdump Enhancements
-From:   Joe Perches <joe@perches.com>
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Date:   Wed, 19 Jun 2019 09:31:24 -0700
-In-Reply-To: <20190617020430.8708-1-alastair@au1.ibm.com>
-References: <20190617020430.8708-1-alastair@au1.ibm.com>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.30.5-0ubuntu0.18.10.1 
+        Wed, 19 Jun 2019 12:35:05 -0400
+Received: from [46.226.52.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-2.bemta.az-b.eu-west-1.aws.symcld.net id 19/BA-04517-4346A0D5; Wed, 19 Jun 2019 16:35:00 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRWlGSWpSXmKPExsVy8IPnUV2TFK5
+  YgxtzlCymPnzCZvFz0jQWi/tfjzJafLvSwWRxedccNgdWj52z7rJ7bFrVyeZx59oeNo9ntxex
+  eHzeJBfAGsWamZeUX5HAmrGn5yhLQbtVxc/Ok2wNjDMNuxg5OYQE1jNKdM+X72LkALIrJH4fS
+  AEJswkYSsx7854RJMwioCqx61YZSFhYIFRi0vrZbF2MXBwiApMZJea9mssGkmAWiJU4P28pC4
+  jNK+AgMfH/TiYIW1Di5MwnLBA1EhIHX7xghlilJbH8WCRIWELAXmL6+6tgYQkBfYnGY7EQYUO
+  J77O+sUDY5hIfjnewTGDkn4Vk6CwkQxcwMq1itEgqykzPKMlNzMzRNTQw0DU0NNI1tLTQNTQz
+  0Eus0k3SSy3VLU8tLtE11EssL9YrrsxNzknRy0st2cQIDOqUgmMLdjCuPfJa7xCjJAeTkiiv8
+  gfOWCG+pPyUyozE4oz4otKc1OJDjDIcHEoSvJHJXLFCgkWp6akVaZk5wAiDSUtw8CiJ8PYlAa
+  V5iwsSc4sz0yFSpxh1OdZuX7KIWYglLz8vVUqcdzJIkQBIUUZpHtwIWLRfYpSVEuZlZGBgEOI
+  pSC3KzSxBlX/FKM7BqCTMawlyCU9mXgncpldARzABHfFoKRvIESWJCCmpBqbdLzsyF61P4FOx
+  yc2LLdx1rULbvH1OfeG+1RfqV7Bms3nVyO20dP53OPBn+KyD8TbWq4MW/T4R+7P88rWIin6/b
+  7/4Nn5W827cbzIv0cfGb35MfQB3y3ExvQ4nDgZWdrG7Ln0SfzrLP9zdPDe69V3C5Koveb8STL
+  JTEucXBbvEa7bfPvd/jS2v+t7Yzm/K5zYmKx9aqfH3vYX+coOKu6+Wrpc4oZm+VeHERvlN243
+  fLrD+veaJk/eq1yd87qtMvFoRtvrOl2zNNba6dSHFx6tebmpkUD5p0zX59LcOlUM2Nxt3/Lun
+  7PbpkfX+yW5rF2l9WaXU9z59zaMgxml3Z24J/L+0Nm75syM/rok3LEpQYinOSDTUYi4qTgQAf
+  OFEgXEDAAA=
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-17.tower-282.messagelabs.com!1560962100!1308001!1
+X-Originating-IP: [193.240.73.197]
+X-SYMC-ESS-Client-Auth: outbound-route-from=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.43.9; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 14632 invoked from network); 19 Jun 2019 16:35:00 -0000
+Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
+  by server-17.tower-282.messagelabs.com with AES128-SHA256 encrypted SMTP; 19 Jun 2019 16:35:00 -0000
+Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
+ SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
+ 14.3.408.0; Wed, 19 Jun 2019 17:34:57 +0100
+Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22547)      id
+ A35B73FB46; Wed, 19 Jun 2019 17:34:57 +0100 (BST)
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+Date:   Wed, 19 Jun 2019 17:35:00 +0100
+Subject: [PATCH V3] regulator: da9061/62: Adjust LDO voltage selection minimum
+ value
+To:     Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Lee Jones" <lee.jones@linaro.org>,
+        Felix Riemann <Felix.Riemann@sma.de>
+CC:     Support Opensource <support.opensource@diasemi.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Message-ID: <20190619163457.A35B73FB46@swsrvapps-01.diasemi.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
+X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
+X-KSE-Antivirus-Interceptor-Info: scan successful
+X-KSE-Antivirus-Info: Clean, bases: 19/06/2019 15:11:00
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-06-17 at 12:04 +1000, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> Apologies for the large CC list, it's a heads up for those responsible
-> for subsystems where a prototype change in generic code causes a change
-> in those subsystems.
-> 
-> This series enhances hexdump.
+From: Felix Riemann <felix.riemann@sma.de>
 
-Still not a fan of these patches.
+According to the DA9061 and DA9062 datasheets the LDO voltage selection
+registers have a lower value of 0x02. This applies to voltage registers
+VLDO1_A, VLDO2_A, VLDO3_A and VLDO4_A. This linear offset of 0x02 was
+previously not observed by the driver, causing the LDO output voltage to
+be systematically lower by two steps (= 0.1V).
 
-> These improve the readability of the dumped data in certain situations
-> (eg. wide terminals are available, many lines of empty bytes exist, etc).
+This patch fixes the minimum linear selector offset by setting it to a
+value of 2 and increases the n_voltages by the same amount allowing
+voltages in the range 0x02 -> 0.9V to 0x38 -> 3.6V to be correctly
+selected. Also fixes an incorrect calculaton for the n_voltages value in
+the regulator LDO2.
 
-Changing hexdump's last argument from bool to int is odd.
+These fixes effect all LDO regulators for DA9061 and DA9062.
 
-Perhaps a new function should be added instead of changing
-the existing hexdump.
+Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Signed-off-by: Felix Riemann <felix.riemann@sma.de>
+---
 
-> The default behaviour of hexdump is unchanged, however, the prototype
-> for hex_dump_to_buffer() has changed, and print_hex_dump() has been
-> renamed to print_hex_dump_ext(), with a wrapper replacing it for
-> compatibility with existing code, which would have been too invasive to
-> change.
-> 
-> Hexdump selftests have be run & confirmed passed.
+Hi Mark,
 
+I've added my signed-off tag to the commit patch of V3.
+
+Regards,
+Steve
+
+ drivers/regulator/da9062-regulator.c | 40 +++++++++++++++++++++---------------
+ include/linux/mfd/da9062/registers.h |  3 +++
+ 2 files changed, 27 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
+index a02e048..1cadaae 100644
+--- a/drivers/regulator/da9062-regulator.c
++++ b/drivers/regulator/da9062-regulator.c
+@@ -493,12 +493,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (900))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO1_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO1_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO1_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO1_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO1_A,
+ 			__builtin_ffs((int)DA9062AA_LDO1_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -525,12 +526,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (600))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO2_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO2_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO2_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO2_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO2_A,
+ 			__builtin_ffs((int)DA9062AA_LDO2_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -557,12 +559,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (900))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO3_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO3_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO3_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO3_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO3_A,
+ 			__builtin_ffs((int)DA9062AA_LDO3_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -589,12 +592,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (900))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO4_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO4_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO4_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO4_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO4_A,
+ 			__builtin_ffs((int)DA9062AA_LDO4_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -769,12 +773,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (900))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO1_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO1_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO1_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO1_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO1_A,
+ 			__builtin_ffs((int)DA9062AA_LDO1_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -801,12 +806,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (600))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO2_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO2_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO2_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO2_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO2_A,
+ 			__builtin_ffs((int)DA9062AA_LDO2_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -833,12 +839,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (900))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO3_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO3_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO3_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO3_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO3_A,
+ 			__builtin_ffs((int)DA9062AA_LDO3_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+@@ -865,12 +872,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
+ 		.desc.ops = &da9062_ldo_ops,
+ 		.desc.min_uV = (900) * 1000,
+ 		.desc.uV_step = (50) * 1000,
+-		.desc.n_voltages = ((3600) - (900))/(50) + 1,
++		.desc.n_voltages = ((3600) - (900))/(50) + 1
++				+ DA9062AA_VLDO_A_MIN_SEL,
+ 		.desc.enable_reg = DA9062AA_LDO4_CONT,
+ 		.desc.enable_mask = DA9062AA_LDO4_EN_MASK,
+ 		.desc.vsel_reg = DA9062AA_VLDO4_A,
+ 		.desc.vsel_mask = DA9062AA_VLDO4_A_MASK,
+-		.desc.linear_min_sel = 0,
++		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
+ 		.sleep = REG_FIELD(DA9062AA_VLDO4_A,
+ 			__builtin_ffs((int)DA9062AA_LDO4_SL_A_MASK) - 1,
+ 			sizeof(unsigned int) * 8 -
+diff --git a/include/linux/mfd/da9062/registers.h b/include/linux/mfd/da9062/registers.h
+index fe04b70..090213a 100644
+--- a/include/linux/mfd/da9062/registers.h
++++ b/include/linux/mfd/da9062/registers.h
+@@ -797,6 +797,9 @@
+ #define DA9062AA_BUCK3_SL_A_SHIFT	7
+ #define DA9062AA_BUCK3_SL_A_MASK	BIT(7)
+ 
++/* DA9062AA_VLDO[1-4]_A common */
++#define DA9062AA_VLDO_A_MIN_SEL		2
++
+ /* DA9062AA_VLDO1_A = 0x0A9 */
+ #define DA9062AA_VLDO1_A_SHIFT		0
+ #define DA9062AA_VLDO1_A_MASK		0x3f
+-- 
+1.9.3
 
