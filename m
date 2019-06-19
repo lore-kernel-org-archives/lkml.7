@@ -2,219 +2,125 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20120C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAC4C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE35E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6717D217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:19:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qk3jX7/o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfFSQTt (ORCPT
+        id S1729924AbfFSQT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:19:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:47254 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725838AbfFSQTt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:19:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 2803A344;
-        Wed, 19 Jun 2019 09:19:48 -0700 (PDT)
-Received: from [10.1.195.43] (e107049-lin.cambridge.arm.com [10.1.195.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2D1D63F246;
-        Wed, 19 Jun 2019 09:19:47 -0700 (PDT)
-Subject: Re: [RFC PATCH 6/7] sched/cpufreq: Improve sugov_cpu_is_busy accuracy
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com
-References: <20190508174301.4828-1-douglas.raillard@arm.com>
- <20190508174301.4828-7-douglas.raillard@arm.com>
- <20190516125552.hol3rasllhveekxq@e110439-lin>
-From:   Douglas Raillard <douglas.raillard@arm.com>
-Organization: ARM
-Message-ID: <e908b2ab-5c86-5be1-d3f0-36f2b26973c5@arm.com>
-Date:   Wed, 19 Jun 2019 17:19:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 19 Jun 2019 12:19:56 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:43256 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725838AbfFSQTz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:19:55 -0400
+Received: by mail-ed1-f66.google.com with SMTP id e3so93850edr.10;
+        Wed, 19 Jun 2019 09:19:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6/70MdY/0tH5yuFXGbIsIIxbdNqF1Z4II/87UAeKzlM=;
+        b=Qk3jX7/otMjoix9fIHajqFF0BwJRqjAztAwca/uaSoluZurh4NgFEo+SLrgsMmNRjc
+         Svf9wOa0Gq++Wjo3My8zblJRzOM5HoLunWu4Vfgd6dt9/00FsuAEdmurnSiUW4BOGFg3
+         sGb9dSZJGj7aoo5lA3VViZA7XDb9Ndw9LRqmFS/jfV19PZp1KfhWt/U7oAsPxtX5AsAo
+         jmriVXFpA08JKYEjJ67oY6WcvVOBo/rz8BpbdJXIgbiIcbH4fWkiTXfqmfhFZcMubEtJ
+         mp/LElN5RTR7bFJ0JsS/8DqbwYjCDsN8fvKC8uSkkmxPfW+4F3MfIbIm5Db8dtM4Icjb
+         cgbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6/70MdY/0tH5yuFXGbIsIIxbdNqF1Z4II/87UAeKzlM=;
+        b=frau4AIItrYo/HdbXt52FdrzAL8K01J3AnPZIT/aRwBOnMhA0/BuHwVqmNmWPyolng
+         9EtARt1uljymSHUhfNBb1D4EBI2tk0emfKgDHgQYfjJlvvQzz5xc5vYXXm9p4OE2PQZI
+         AVlP8DVPdgfS3H8A6I5l53Xh0UbTiHsMV5SXjuuG18edaM/VpacOYH5s7jP7c8O+LJu9
+         Jr2TCEmtJC3xEy79rbxFqzTdqm2/CjvsGv8+RfKk32lzjhp113LxFYrYy42n3hcKuIh2
+         hGBtY2BBQ9wlx356RuOA/dHo7ZQJX6qb8dS3XZm90P7hbILk6dPl6l/GCIUSSecUiTdQ
+         4ybw==
+X-Gm-Message-State: APjAAAU+NnmO0QMdtFlc9f66ERX1dk3gZLwgahn86i4AJ9k9TN+nvBVl
+        79GmWdEVZXA9rgd0s9xg0Hg=
+X-Google-Smtp-Source: APXvYqyloM3q+6YhVKxzh2feNRKyW+L9adi/61z6PVaPdtSijqAYhpJuHMoZWaZ44GgKaSYENXImkQ==
+X-Received: by 2002:a50:8bfa:: with SMTP id n55mr100851735edn.9.1560961193617;
+        Wed, 19 Jun 2019 09:19:53 -0700 (PDT)
+Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id o22sm5871437edc.37.2019.06.19.09.19.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 09:19:53 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
+Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        kbuild test robot <lkp@intel.com>,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] drm/msm/dsi: Add parentheses to quirks check in dsi_phy_hw_v3_0_lane_settings
+Date:   Wed, 19 Jun 2019 09:19:13 -0700
+Message-Id: <20190619161913.102998-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <20190516125552.hol3rasllhveekxq@e110439-lin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB-large
-Content-Transfer-Encoding: 7bit
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Patrick,
+Clang warns:
 
-On 5/16/19 1:55 PM, Patrick Bellasi wrote:
-> On 08-May 18:43, douglas.raillard@arm.com wrote:
->> From: Douglas RAILLARD <douglas.raillard@arm.com>
->>
->> Avoid assuming a CPU is busy when it has begun being idle before
->> get_next_freq() is called. This is achieved by making sure the CPU will
->> not be detected as busy by other CPUs whenever its utilization is
->> decreasing.
-> 
-> If I understand it correctly, what you are after here is a "metric"
-> which tells you (in a shared performance domain) if a CPU has been
-> busy for a certain amount of time.
-> You do that by reworking the way idle_calls are accounted for the
-> sugov_update_single() case.
-> 
-> That approach could work but it looks a bit convoluted in the way it's
-> coded and it's also difficult to exclude there could be corner cases
-> with wired behaviors.
-> Isn't that why you "fix" the saved_idle_calls counter after all?
-> 
-> What about a different approach where we:
-> 
-> 1. we annotate the timestamp a CPU wakes up from IDLE (last_wakeup_time)
-> 
-> 2. we use that annotated last_wake_time and the rq->nr_running to
->     define the "cpu is busy" heuristic.
-> 
-> Looking at a sibling CPU, I think we can end up with two main cases:
-> 
-> 1. CPU's nr_running is == 0
->     then we don't consider busy that CPU
-> 
-> 2. CPU's nr_running is  > 0
->     then the CPU is busy iff
->        (current_time - last_wakeup_tim) >= busy_threshold
-> 
-> Notice that, when a CPU is active, its rq clock is periodically
-> updated, at least once per tick. Thus, provided a tick time is not too
-> long to declare busy a CPU, then the above logic should work.
-> 
-> Perhaps the busy_threshold can also be defined considering the PELT
-> dynamics and starting from an expected utilization increase converted
-> in time.
+drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: warning: logical not is
+only applied to the left hand side of this bitwise operator
+[-Wlogical-not-parentheses]
+        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
+            ^                 ~
+drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: note: add parentheses
+after the '!' to evaluate the bitwise operator first
+        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
+            ^
+             (                                               )
+drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: note: add parentheses
+around left hand side expression to silence this warning
+        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
+            ^
+            (                )
+1 warning generated.
 
-After experimenting with quite a few combinations, I managed to get a heuristic
-based on util_avg and util_est_enqueued that seems to work better in my case.
-Key differences are:
-* this new heuristic only really takes into account CFS signals
-  (current one based on idle calls takes into account everything that executes
-   on a given CPU.)
-* it will mark a CPU as busy less often, since it should only trigger when
-   there is a change in the utilization of a currently enqueued tasks.
-   Util changes due to enqueue/dequeue will not trigger it, which IMHO
-   is desirable, since we only want to bias frequency selection
-   when we know that we don't have precise utilization values for the
-   enqueued tasks (because the task has changed its behavior).
+Add parentheses around the bitwise AND so it is evaluated first then
+negated.
 
-That change will be part of v2 posting of this series.
-  
-> Could something like to above work or am I missing something?
-> 
->> Signed-off-by: Douglas RAILLARD <douglas.raillard@arm.com>
->> ---
->>   kernel/sched/cpufreq_schedutil.c | 42 ++++++++++++++++++++++++++++----
->>   1 file changed, 37 insertions(+), 5 deletions(-)
->>
->> diff --git a/kernel/sched/cpufreq_schedutil.c b/kernel/sched/cpufreq_schedutil.c
->> index a12b7e5bc028..ce4b90cafbb5 100644
->> --- a/kernel/sched/cpufreq_schedutil.c
->> +++ b/kernel/sched/cpufreq_schedutil.c
->> @@ -62,6 +62,7 @@ struct sugov_cpu {
->>   	/* The field below is for single-CPU policies only: */
->>   #ifdef CONFIG_NO_HZ_COMMON
->>   	unsigned long		saved_idle_calls;
->> +	unsigned long		previous_util;
->>   #endif
->>   };
->>   
->> @@ -181,14 +182,35 @@ static bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu)
->>   	return ret;
->>   }
->>   
->> -static void sugov_cpu_is_busy_update(struct sugov_cpu *sg_cpu)
->> +static void sugov_cpu_is_busy_update(struct sugov_cpu *sg_cpu,
->> +				     unsigned long util)
->>   {
->>   	unsigned long idle_calls = tick_nohz_get_idle_calls_cpu(sg_cpu->cpu);
->>   	sg_cpu->saved_idle_calls = idle_calls;
->> +
->> +	/*
->> +	 * Make sure that this CPU will not be immediately considered as busy in
->> +	 * cases where the CPU has already entered an idle state. In that case,
->> +	 * the number of idle_calls will not vary anymore until it exits idle,
->> +	 * which would lead sugov_cpu_is_busy() to say that this CPU is busy,
->> +	 * because it has not (re)entered idle since the last time we looked at
->> +	 * it.
->> +	 * Assuming cpu0 and cpu1 are in the same policy, that will make sure
->> +	 * this sequence of events leads to right cpu1 business status from
->> +	 * get_next_freq(cpu=1)
->> +	 * cpu0: [enter idle] -> [get_next_freq] -> [doing nothing] -> [wakeup]
->> +	 * cpu1:                ...              -> [get_next_freq] ->   ...
->> +	 */
->> +	if (util <= sg_cpu->previous_util)
->> +		sg_cpu->saved_idle_calls--;
->> +
->> +	sg_cpu->previous_util = util;
->>   }
->>   #else
->>   static inline bool sugov_cpu_is_busy(struct sugov_cpu *sg_cpu) { return false; }
->> -static void sugov_cpu_is_busy_update(struct sugov_cpu *sg_cpu) {}
->> +static void sugov_cpu_is_busy_update(struct sugov_cpu *sg_cpu
->> +				     unsigned long util)
->> +{}
->>   #endif /* CONFIG_NO_HZ_COMMON */
->>   
->>   /**
->> @@ -507,10 +529,9 @@ static void sugov_update_single(struct update_util_data *hook, u64 time,
->>   	if (!sugov_should_update_freq(sg_policy, time))
->>   		return;
->>   
->> -	busy = sugov_cpu_is_busy(sg_cpu);
->> -	sugov_cpu_is_busy_update(sg_cpu);
->> -
->>   	util = sugov_get_util(sg_cpu);
->> +	busy = sugov_cpu_is_busy(sg_cpu);
->> +	sugov_cpu_is_busy_update(sg_cpu, util);
->>   	max = sg_cpu->max;
->>   	util = sugov_iowait_apply(sg_cpu, time, util, max);
->>   	next_f = get_next_freq(sg_policy, util, max);
->> @@ -545,12 +566,15 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
->>   	struct cpufreq_policy *policy = sg_policy->policy;
->>   	unsigned long util = 0, max = 1;
->>   	unsigned int j;
->> +	unsigned long sg_cpu_util = 0;
->>   
->>   	for_each_cpu(j, policy->cpus) {
->>   		struct sugov_cpu *j_sg_cpu = &per_cpu(sugov_cpu, j);
->>   		unsigned long j_util, j_max;
->>   
->>   		j_util = sugov_get_util(j_sg_cpu);
->> +		if (j_sg_cpu == sg_cpu)
->> +			sg_cpu_util = j_util;
->>   		j_max = j_sg_cpu->max;
->>   		j_util = sugov_iowait_apply(j_sg_cpu, time, j_util, j_max);
->>   
->> @@ -560,6 +584,14 @@ static unsigned int sugov_next_freq_shared(struct sugov_cpu *sg_cpu, u64 time)
->>   		}
->>   	}
->>   
->> +	/*
->> +	 * Only update the business status if we are looking at the CPU for
->> +	 * which a utilization change triggered a call to get_next_freq(). This
->> +	 * way, we don't affect the "busy" status of CPUs that don't have any
->> +	 * change in utilization.
->> +	 */
->> +	sugov_cpu_is_busy_update(sg_cpu, sg_cpu_util);
->> +
->>   	return get_next_freq(sg_policy, util, max);
->>   }
->>   
->> -- 
->> 2.21.0
->>
-> 
+Fixes: 3dbbf8f09e83 ("drm/msm/dsi: Add old timings quirk for 10nm phy")
+Link: https://github.com/ClangBuiltLinux/linux/547
+Reported-by: kbuild test robot <lkp@intel.com>
+Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks,
-Douglas
+diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
+index eb28937f4b34..47403d4f2d28 100644
+--- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
++++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
+@@ -77,7 +77,7 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
+ 			      tx_dctrl[i]);
+ 	}
+ 
+-	if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
++	if (!(phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK)) {
+ 		/* Toggle BIT 0 to release freeze I/0 */
+ 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
+ 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
+-- 
+2.22.0
+
