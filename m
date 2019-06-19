@@ -2,183 +2,114 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97AECC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88859C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A52920652
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="TSsG1yj2"
+	by mail.kernel.org (Postfix) with ESMTP id 6466B20652
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:32:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732071AbfFSMcX (ORCPT
+        id S1732074AbfFSMcc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:32:23 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:34760 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731836AbfFSMcV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:32:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LjvptBJSgppkW9dCrF/wZfRlhQzkUo1rCIsKsLaP/3w=; b=TSsG1yj2JyC3lmEhxKXm8tcSn
-        KPdOkm5XZq0I9cnfi2jDGluxP2QI9NqA9OLWxqbjl7dmbTTzsfDrVn1Wn5zmi5sSSVCkH9oCRU8S3
-        7syAvWaalVUQNimV37V/XjBHZw+6jm4Wxr2lVMcIok79yyu72xWjpNZnTtfYT3fSCKY5AIN1A+laS
-        9lbJw+ufs904nI97nhVjGhOC5Oq8c5Mleot7UvmOup/lbsrDSbdrVzOtJlAXcIBZdUdj8V0t0EMRd
-        gn9jCbI+fcQowBpLx6FVWT9PDVCFQcdwmmqkrgMDU/BOh6AbrSpn2+sl8rjq6XdwisVRCkkPGQTY8
-        TxvmTwhpA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59820)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hdZl4-0000Jz-KG; Wed, 19 Jun 2019 13:32:10 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hdZl0-0001TG-M3; Wed, 19 Jun 2019 13:32:06 +0100
-Date:   Wed, 19 Jun 2019 13:32:06 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v2 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190619123206.zvc7gzt4ewxby2y2@shell.armlinux.org.uk>
-References: <1560933600-27626-1-git-send-email-pthombar@cadence.com>
- <1560933646-29852-1-git-send-email-pthombar@cadence.com>
- <20190619093146.yajbeht7mizm4hmr@shell.armlinux.org.uk>
- <CO2PR07MB24695C706292A16D71322DB5C1E50@CO2PR07MB2469.namprd07.prod.outlook.com>
+        Wed, 19 Jun 2019 08:32:32 -0400
+Received: from ozlabs.org ([203.11.71.1]:37007 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731738AbfFSMcb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:32:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TPV12z93z9sNC;
+        Wed, 19 Jun 2019 22:32:24 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Christoph Hellwig <hch@lst.de>, benh@kernel.crashing.org,
+        paulus@samba.org
+Cc:     Larry.Finger@lwfinger.net, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, aaro.koskinen@iki.fi
+Subject: Re: [PATCH] powerpc: enable a 30-bit ZONE_DMA for 32-bit pmac
+In-Reply-To: <20190619105039.GA10118@lst.de>
+References: <20190613082446.18685-1-hch@lst.de> <20190619105039.GA10118@lst.de>
+Date:   Wed, 19 Jun 2019 22:32:24 +1000
+Message-ID: <87tvcldacn.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CO2PR07MB24695C706292A16D71322DB5C1E50@CO2PR07MB2469.namprd07.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 11:23:01AM +0000, Parshuram Raju Thombare wrote:
-> >From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-> >
-> >On Wed, Jun 19, 2019 at 09:40:46AM +0100, Parshuram Thombare wrote:
-> >
-> >> This patch add support for SGMII interface) and
-> >
-> >> 2.5Gbps MAC in Cadence ethernet controller driver.
-> 
-> >>  	switch (state->interface) {
-> >
-> >> +	case PHY_INTERFACE_MODE_SGMII:
-> >
-> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
-> >
-> >> +			phylink_set(mask, 2500baseT_Full);
-> >
-> >
-> >
-> >This doesn't look correct to me.  SGMII as defined by Cisco only
-> >supports 1G, 100M and 10M speeds, not 2.5G.
-> 
-> Cadence MAC support 2.5G SGMII by using higher clock frequency.
+Christoph Hellwig <hch@lst.de> writes:
+> Any chance this could get picked up to fix the regression?
 
-Ok, so why not set 2.5GBASE-X too?  Does the MAC handle auto-detecting
-the SGMII/BASE-X speed itself or does it need to be programmed?  If it
-needs to be programmed, you need additional handling in the validate
-callback to deal with that.
+Was hoping Ben would Ack it. He's still powermac maintainer :)
 
-> >> +	case PHY_INTERFACE_MODE_2500BASEX:
-> >
-> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
-> >
-> >> +			phylink_set(mask, 2500baseX_Full);
-> >
-> >> +	/* fallthrough */
-> >
-> >> +	case PHY_INTERFACE_MODE_1000BASEX:
-> >
-> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
-> >
-> >> +			phylink_set(mask, 1000baseX_Full);
-> >
-> >> +		break;
-> >
-> >
-> >
-> >Please see how other drivers which use phylink deal with the validate()
-> >format, and please read the phylink documentation:
-> >
-> > * Note that the PHY may be able to transform from one connection
-> > * technology to another, so, eg, don't clear 1000BaseX just
-> > * because the MAC is unable to BaseX mode. This is more about
-> > * clearing unsupported speeds and duplex settings.
-> >
-> 
-> There are some configs used in this driver which limits MAC speed.
-> Above checks just to make sure this use case does not break.
+I guess he OK'ed it in the other thread, will add it to my queue.
 
-That's not what I'm saying.
+cheers
 
-By way of example, you're offering 1000BASE-T just because the MAC
-connection supports it.  However, the MAC doesn't _actually_ support
-1000BASE-T, it supports a connection to a PHY that _happens_ to
-convert the MAC connection to 1000BASE-T.  It could equally well
-convert the MAC connection to 1000BASE-X.
-
-So, only setting 1000BASE-X when you have a PHY connection using
-1000BASE-X is fundamentally incorrect.
-
-For example, you could have a MAC <-> PHY link using standard 1.25Gbps
-SGMII, and the PHY offers 1000BASE-T _and_ 1000BASE-X connections on
-a first-link-up basis.  An example of a PHY that does this are the
-Marvell 1G PHYs (eg, 88E151x).
-
-This point is detailed in the PHYLINK documentation, which I quoted
-above.
-
-> >> @@ -506,18 +563,26 @@ static void gem_mac_config(struct phylink_config
-> >*pl_config, unsigned int mode,
-> >>  		switch (state->speed) {
-> >> +		case SPEED_2500:
-> >> +			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
-> >> +				   gem_readl(bp, NCFGR));
-> >>  		}
-> >> -		macb_or_gem_writel(bp, NCFGR, reg);
-> >>
-> >>  		bp->speed = state->speed;
-> >>  		bp->duplex = state->duplex;
-> >
-> >
-> >
-> >This is not going to work for 802.3z nor SGMII properly when in-band
-> >negotiation is used.  We don't know ahead of time what the speed and
-> >duplex will be.  Please see existing drivers for examples showing
-> >how mac_config() should be implemented (there's good reason why its
-> >laid out as it is in those drivers.)
-> >
-> Ok, Here I will configure MAC only for FIXED and PHY mode.
-
-As you are not the only one who has made this error, I'm considering
-splitting mac_config() into mac_config_fixed() and mac_config_inband()
-so that it's clearer what is required.  Maybe even taking separate
-structures so that it's impossible to access members that should not
-be used.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+> On Thu, Jun 13, 2019 at 10:24:46AM +0200, Christoph Hellwig wrote:
+>> With the strict dma mask checking introduced with the switch to
+>> the generic DMA direct code common wifi chips on 32-bit powerbooks
+>> stopped working.  Add a 30-bit ZONE_DMA to the 32-bit pmac builds
+>> to allow them to reliably allocate dma coherent memory.
+>> 
+>> Fixes: 65a21b71f948 ("powerpc/dma: remove dma_nommu_dma_supported")
+>> Reported-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> ---
+>>  arch/powerpc/include/asm/page.h         | 7 +++++++
+>>  arch/powerpc/mm/mem.c                   | 3 ++-
+>>  arch/powerpc/platforms/powermac/Kconfig | 1 +
+>>  3 files changed, 10 insertions(+), 1 deletion(-)
+>> 
+>> diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
+>> index b8286a2013b4..0d52f57fca04 100644
+>> --- a/arch/powerpc/include/asm/page.h
+>> +++ b/arch/powerpc/include/asm/page.h
+>> @@ -319,6 +319,13 @@ struct vm_area_struct;
+>>  #endif /* __ASSEMBLY__ */
+>>  #include <asm/slice.h>
+>>  
+>> +/*
+>> + * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
+>> + */
+>> +#ifdef CONFIG_PPC32
+>> +#define ARCH_ZONE_DMA_BITS 30
+>> +#else
+>>  #define ARCH_ZONE_DMA_BITS 31
+>> +#endif
+>>  
+>>  #endif /* _ASM_POWERPC_PAGE_H */
+>> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+>> index cba29131bccc..2540d3b2588c 100644
+>> --- a/arch/powerpc/mm/mem.c
+>> +++ b/arch/powerpc/mm/mem.c
+>> @@ -248,7 +248,8 @@ void __init paging_init(void)
+>>  	       (long int)((top_of_ram - total_ram) >> 20));
+>>  
+>>  #ifdef CONFIG_ZONE_DMA
+>> -	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn, 0x7fffffffUL >> PAGE_SHIFT);
+>> +	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
+>> +			((1UL << ARCH_ZONE_DMA_BITS) - 1) >> PAGE_SHIFT);
+>>  #endif
+>>  	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
+>>  #ifdef CONFIG_HIGHMEM
+>> diff --git a/arch/powerpc/platforms/powermac/Kconfig b/arch/powerpc/platforms/powermac/Kconfig
+>> index f834a19ed772..c02d8c503b29 100644
+>> --- a/arch/powerpc/platforms/powermac/Kconfig
+>> +++ b/arch/powerpc/platforms/powermac/Kconfig
+>> @@ -7,6 +7,7 @@ config PPC_PMAC
+>>  	select PPC_INDIRECT_PCI if PPC32
+>>  	select PPC_MPC106 if PPC32
+>>  	select PPC_NATIVE
+>> +	select ZONE_DMA if PPC32
+>>  	default y
+>>  
+>>  config PPC_PMAC64
+>> -- 
+>> 2.20.1
+> ---end quoted text---
