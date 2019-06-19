@@ -7,70 +7,71 @@ X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D56C31E51
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:01:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA68C31E51
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:01:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB27F20673
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:01:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5CE920673
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:01:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HuDXGRU7"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="XA8ComtP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729647AbfFSDBa (ORCPT
+        id S1730237AbfFSDBg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 23:01:30 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:44992 "EHLO
+        Tue, 18 Jun 2019 23:01:36 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:45038 "EHLO
         userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSDBa (ORCPT
+        with ESMTP id S1726037AbfFSDBg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 23:01:30 -0400
+        Tue, 18 Jun 2019 23:01:36 -0400
 Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J2xYt0070365;
-        Wed, 19 Jun 2019 03:00:58 GMT
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J2xXmx070355;
+        Wed, 19 Jun 2019 03:01:17 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
  references : from : message-id : date : mime-version : in-reply-to :
  content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=PU/QrzBhX1uRODKyqt1OB2b+ZI2Y0GRQ2fyxY3ZZbo0=;
- b=HuDXGRU7GQwxXiFXtOKnyASfppsjV52cCnaFNBeV+I7vIMTLNUP5rmbhk0FL7p5TxcpJ
- FFSM34/PVM70T/rzInzVvcaEo2ET9J7PwBD2TTDBQwrKxTi+6VtUvb3SiilFLLgVFZeC
- aQOHB6Tdk/Tf+5LAmHZ2c8C2/Neu96Oe3NdSvxrUhimkdWXoZ+PNa7kSckbxtDcu5RGC
- OPq/gQGdQUP0C3urjtz/M6w+RKpPVW1JITRrnFRv0wyWbgVVf0X6VkZX4WTjvnPOOYSL
- Kq2LPogVFA5dHfqSZwu433L6yvwPPCl8LYFncAtg7slPyshJAGyqR9ktrNXBuc/NCCo2 rw== 
+ bh=7tyT0YcMicDx0xhFBdh7+OaH2yc89XO8q+cebhQ9PlY=;
+ b=XA8ComtPxAHsBCBAmlvOcy5PFm3bQ+bJxRwXbWIv1Jvmz6p60FLvq/JaykfI+i1vwAWK
+ RXbMjJM5jGKXOlxyq5wBsQxh9U3fE76irqfWhQAhnlQR+u/n/Yxj8qdQSU5RxYXL1QB/
+ wWg5LHmTFQqdPf07yCtLsJjCTpNJ1WWgvdiUddPDXClXYYYiriDzxIhYfcEgNNIUsVrc
+ M9FGHAwQs3U1QwDbr6dH9PPj6O01XR2gpjLcHk3E0TDB/8jyPwXRIyB7QjCd5ttV55zG
+ 8kqt+4QemoViH7qXXMh8OZ8tLEZetsRnOtwHGb54nPTtmfY0UN4ecyPD+JrBlSR+JMFn JA== 
 Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2130.oracle.com with ESMTP id 2t78098qva-1
+        by userp2130.oracle.com with ESMTP id 2t78098qwj-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:00:58 +0000
+        Wed, 19 Jun 2019 03:01:17 +0000
 Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J2vpmm044585;
-        Wed, 19 Jun 2019 02:58:57 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2t77yn2wew-1
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J31Cmq051398;
+        Wed, 19 Jun 2019 03:01:16 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2t77yn2xe6-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 02:58:57 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J2wuUd007233;
-        Wed, 19 Jun 2019 02:58:56 GMT
+        Wed, 19 Jun 2019 03:01:16 +0000
+Received: from abhmp0005.oracle.com (abhmp0005.oracle.com [141.146.116.11])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J31GfN030593;
+        Wed, 19 Jun 2019 03:01:16 GMT
 Received: from [10.156.74.184] (/10.156.74.184)
         by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 19:58:55 -0700
-Subject: Re: [RFC PATCH 14/16] xen/blk: gnttab, evtchn, xenbus API changes
+        with ESMTP ; Tue, 18 Jun 2019 20:01:15 -0700
+Subject: Re: [RFC PATCH 16/16] xen/grant-table: host_addr fixup in mapping on
+ xenhost_r0
 To:     Juergen Gross <jgross@suse.com>, linux-kernel@vger.kernel.org,
         xen-devel@lists.xenproject.org
 Cc:     pbonzini@redhat.com, boris.ostrovsky@oracle.com,
         konrad.wilk@oracle.com, sstabellini@kernel.org,
         joao.m.martins@oracle.com
 References: <20190509172540.12398-1-ankur.a.arora@oracle.com>
- <20190509172540.12398-15-ankur.a.arora@oracle.com>
- <1a4e2fe7-ed2d-05f1-9f2f-f0a940b30151@suse.com>
+ <20190509172540.12398-17-ankur.a.arora@oracle.com>
+ <a35ab9a8-4874-fbc8-0148-aa07543e8672@suse.com>
 From:   Ankur Arora <ankur.a.arora@oracle.com>
-Message-ID: <54f3f690-4e71-325a-6544-6867174a0f0c@oracle.com>
-Date:   Tue, 18 Jun 2019 19:59:39 -0700
+Message-ID: <11b62ba8-8aa2-9b84-c6fb-259d0548d753@oracle.com>
+Date:   Tue, 18 Jun 2019 20:02:01 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1a4e2fe7-ed2d-05f1-9f2f-f0a940b30151@suse.com>
+In-Reply-To: <a35ab9a8-4874-fbc8-0148-aa07543e8672@suse.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
 X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
  phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
@@ -87,26 +88,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 3:14 AM, Juergen Gross wrote:
+On 6/17/19 3:55 AM, Juergen Gross wrote:
 > On 09.05.19 19:25, Ankur Arora wrote:
->> For the most part, we now pass xenhost_t * as a parameter.
+>> Xenhost type xenhost_r0 does not support standard GNTTABOP_map_grant_ref
+>> semantics (map a gref onto a specified host_addr). That's because
+>> since the hypervisor is local (same address space as the caller of
+>> GNTTABOP_map_grant_ref), there is no external entity that could
+>> map an arbitrary page underneath an arbitrary address.
+>>
+>> To handle this, the GNTTABOP_map_grant_ref hypercall on xenhost_r0
+>> treats the host_addr as an OUT parameter instead of IN and expects the
+>> gnttab_map_refs() and similar to fixup any state that caches the
+>> value of host_addr from before the hypercall.
+>>
+>> Accordingly gnttab_map_refs() now adds two parameters, a fixup function
+>> and a pointer to cached maps to fixup:
+>>   int gnttab_map_refs(xenhost_t *xh, struct gnttab_map_grant_ref 
+>> *map_ops,
+>>               struct gnttab_map_grant_ref *kmap_ops,
+>> -            struct page **pages, unsigned int count)
+>> +            struct page **pages, gnttab_map_fixup_t map_fixup_fn,
+>> +            void **map_fixup[], unsigned int count)
+>>
+>> The reason we use a fixup function and not an additional mapping op
+>> in the xenhost_t is because, depending on the caller, what we are fixing
+>> might be different: blkback, netback for instance cache host_addr in
+>> via a struct page *, while __xenbus_map_ring() caches a phys_addr.
+>>
+>> This patch fixes up xen-blkback and xen-gntdev drivers.
+>>
+>> TODO:
+>>    - also rewrite gnttab_batch_map() and __xenbus_map_ring().
+>>    - modify xen-netback, scsiback, pciback etc
 >>
 >> Co-developed-by: Joao Martins <joao.m.martins@oracle.com>
 >> Signed-off-by: Ankur Arora <ankur.a.arora@oracle.com>
 > 
-> I don't see how this can be a patch on its own.
-Yes, the reason this was separate was that given this was an
-RFC, I didn't want to pollute the logic page with lots of
-mechanical changes.
-
-> 
-> The only way to be able to use a patch for each driver would be to
-> keep the original grant-, event- and xenbus-interfaces and add the
-> new ones taking xenhost * with a new name. The original interfaces
-> could then use xenhost_default and you can switch them to the new
-> interfaces one by one. The last patch could then remove the old
-> interfaces when there is no user left.
-Yes, this makes sense.
+> Without seeing the __xenbus_map_ring() modification it is impossible to
+> do a proper review of this patch.
+Will do in v2.
 
 Ankur
 
