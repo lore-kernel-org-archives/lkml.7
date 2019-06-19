@@ -2,96 +2,147 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093EBC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:11:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86B4CC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCB1F2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:11:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 604E02084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560946336;
+	bh=TMwJ26zRGdF5jTqdj2n57DToxLmfRu6Mk4q6KOGG5fM=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=nUHpDnGzCFPXA/9v1onBamvRoNMSWePxPp9HPCi5G+DVUtOU1hDs/ICUBbV7mPHdh
+	 /N/0oUYXwR4aUES2yMDcW0Vi/Z3+DemKlhBhDHOUHU2QG0D/s1+CvuhImmQDTcffLj
+	 RrR3KrBpEnPnUeGxi5BF8zJ9NqTOFeOASLR9+SFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731570AbfFSMLE (ORCPT
+        id S1731662AbfFSMMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:11:04 -0400
-Received: from foss.arm.com ([217.140.110.172]:36270 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727068AbfFSMLE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:11:04 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 103F7360;
-        Wed, 19 Jun 2019 05:11:03 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CD1263F738;
-        Wed, 19 Jun 2019 05:10:59 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 13:10:57 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Atish Patra <atish.patra@wdc.com>,
-        Russell King <linux@armlinux.org.uk>
-Cc:     linux-kernel@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
-        Anup Patel <anup@brainfault.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        devicetree@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-riscv@lists.infradead.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Otto Sabart <ottosabart@seberm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v7 4/7] arm: Use common cpu_topology structure and
- functions.
-Message-ID: <20190619121057.GE1360@e107155-lin>
-References: <20190617185920.29581-1-atish.patra@wdc.com>
- <20190617185920.29581-5-atish.patra@wdc.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617185920.29581-5-atish.patra@wdc.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        Wed, 19 Jun 2019 08:12:15 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:47274 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726999AbfFSMMO (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:12:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=KsVUVPFQSt4YdSE0JrBFYWec/Nl7s39JWoWi0hS5mGo=; b=Gzud2BYECkQY
+        UUEpjnMelyyubd5o1uU9C2CHaHEB+AvoqYdaZOlep0ECsp7VtB2vPpvrdeAEfbWAc8N457ugSGxsj
+        FY2t6vPNpkgsZGcl63Mao4kvE7OvrGaJ56GU084JEdo9xvDXQ6v15mKIfUYEEwvMP7NVhVOQsRUVB
+        Vwb8w=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hdZRd-0007Ci-4L; Wed, 19 Jun 2019 12:12:05 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id 933A144004F; Wed, 19 Jun 2019 13:12:04 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     alsa-devel@alsa-project.org,
+        Banajit Goswami <bgoswami@codeaurora.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Patrick Lai <plai@codeaurora.org>,
+        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        Takashi Iwai <tiwai@suse.com>
+Subject: Applied "ASoC: qcom: common: Fix NULL pointer in of parser" to the asoc tree
+In-Reply-To: <20190618052813.32523-1-bjorn.andersson@linaro.org>
+X-Patchwork-Hint: ignore
+Message-Id: <20190619121204.933A144004F@finisterre.sirena.org.uk>
+Date:   Wed, 19 Jun 2019 13:12:04 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Russell,
+The patch
 
-On Mon, Jun 17, 2019 at 11:59:17AM -0700, Atish Patra wrote:
-> Currently, ARM32 and ARM64 uses different data structures to represent
-> their cpu topologies. Since, we are moving the ARM64 topology to common
-> code to be used by other architectures, we can reuse that for ARM32 as
-> well.
-> 
-> Take this opprtunity to remove the redundant functions from ARM32 and
-> reuse the common code instead.
-> 
-> To: Russell King <linux@armlinux.org.uk>
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Tested-by: Sudeep Holla <sudeep.holla@arm.com> (on TC2)
-> Reviewed-by : Sudeep Holla <sudeep.holla@arm.com>
-> 
-> ---
-> Hi Russell,
-> Can we get a ACK for this patch ? We are hoping that the entire
-> series can be merged at one go.
+   ASoC: qcom: common: Fix NULL pointer in of parser
 
-It would be nice to get this in for v5.3 as it's almost there.
-Are you fine with these changes ?
+has been applied to the asoc tree at
 
---
-Regards,
-Sudeep
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 16395ceee11f8f8af764bac76adc20a43ba1a153 Mon Sep 17 00:00:00 2001
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Date: Mon, 17 Jun 2019 22:28:13 -0700
+Subject: [PATCH] ASoC: qcom: common: Fix NULL pointer in of parser
+
+A snd_soc_dai_link_component is allocated and associated with the first
+link, so when the code tries to assign the of_node of the second link's
+"cpu" member it dereferences a NULL pointer.
+
+Fix this by moving the allocation and assignement of
+snd_soc_dai_link_components into the loop, giving us one pair per link.
+
+Fixes: 1e36ea360ab9 ("ASoC: qcom: common: use modern dai_link style")
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ sound/soc/qcom/common.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/qcom/common.c b/sound/soc/qcom/common.c
+index c7a878507220..97488b5cc515 100644
+--- a/sound/soc/qcom/common.c
++++ b/sound/soc/qcom/common.c
+@@ -42,17 +42,17 @@ int qcom_snd_parse_of(struct snd_soc_card *card)
+ 	card->num_links = num_links;
+ 	link = card->dai_link;
+ 
+-	dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
+-	if (!dlc)
+-		return -ENOMEM;
++	for_each_child_of_node(dev->of_node, np) {
++		dlc = devm_kzalloc(dev, 2 * sizeof(*dlc), GFP_KERNEL);
++		if (!dlc)
++			return -ENOMEM;
+ 
+-	link->cpus	= &dlc[0];
+-	link->platforms	= &dlc[1];
++		link->cpus	= &dlc[0];
++		link->platforms	= &dlc[1];
+ 
+-	link->num_cpus		= 1;
+-	link->num_platforms	= 1;
++		link->num_cpus		= 1;
++		link->num_platforms	= 1;
+ 
+-	for_each_child_of_node(dev->of_node, np) {
+ 		cpu = of_get_child_by_name(np, "cpu");
+ 		platform = of_get_child_by_name(np, "platform");
+ 		codec = of_get_child_by_name(np, "codec");
+-- 
+2.20.1
+
