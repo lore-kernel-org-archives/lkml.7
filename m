@@ -2,81 +2,164 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B467DC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0DB1C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:04:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8EF1E21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6F821479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:04:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731249AbfFSIDx (ORCPT
+        id S1731256AbfFSIEs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:03:53 -0400
-Received: from retiisi.org.uk ([95.216.213.190]:45124 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726142AbfFSIDw (ORCPT
+        Wed, 19 Jun 2019 04:04:48 -0400
+Received: from twhmllg4.macronix.com ([122.147.135.202]:56678 "EHLO
+        TWHMLLG4.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbfFSIEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:03:52 -0400
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 4498F634C7B;
-        Wed, 19 Jun 2019 11:03:24 +0300 (EEST)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.89)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1hdVYy-0000zL-A5; Wed, 19 Jun 2019 11:03:24 +0300
-Date:   Wed, 19 Jun 2019 11:03:24 +0300
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Eugen.Hristev@microchip.com
-Cc:     hverkuil@xs4all.nl, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] media: atmel: atmel-isc: fix i386 build error
-Message-ID: <20190619080324.nc33gtuxzwpailmy@valkosipuli.retiisi.org.uk>
-References: <1560928828-31471-1-git-send-email-eugen.hristev@microchip.com>
+        Wed, 19 Jun 2019 04:04:47 -0400
+Received: from twhfmnt1.mxic.com.tw (twhfm1p2.macronix.com [172.17.20.92])
+        by TWHMLLG4.macronix.com with ESMTP id x5J84fX5040768;
+        Wed, 19 Jun 2019 16:04:41 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+Received: from MXML06C.mxic.com.tw (mxml06c.mxic.com.tw [172.17.14.55])
+        by Forcepoint Email with ESMTP id DF2DCF7716F0D9DE9D5B;
+        Wed, 19 Jun 2019 16:04:41 +0800 (CST)
+In-Reply-To: <20190618092901.3bdd9f61@collabora.com>
+References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
+        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
+        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
+        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
+        <20190617143510.4ded5728@xps13> <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
+        <20190618081436.5d488320@collabora.com> <20190618092901.3bdd9f61@collabora.com>
+To:     "Boris Brezillon" <boris.brezillon@collabora.com>
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        christophe.kerello@st.com, computersforpeace@gmail.com,
+        devicetree@vger.kernel.org, dwmw2@infradead.org,
+        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
+        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
+        mark.rutland@arm.com, "Miquel Raynal" <miquel.raynal@bootlin.com>,
+        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
+        stefan@agner.ch, zhengxunli@mxic.com.tw
+Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560928828-31471-1-git-send-email-eugen.hristev@microchip.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-KeepSent: 5EAF94EB:AE31CF59-4825841E:002A2C38;
+ type=4; name=$KeepSent
+X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
+Message-ID: <OF5EAF94EB.AE31CF59-ON4825841E.002A2C38-4825841E.002C60BF@mxic.com.tw>
+From:   masonccyang@mxic.com.tw
+Date:   Wed, 19 Jun 2019 16:04:43 +0800
+X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
+ 2019/06/19 PM 04:04:41,
+        Serialize complete at 2019/06/19 PM 04:04:41
+Content-Type: text/plain; charset="US-ASCII"
+X-MAIL: TWHMLLG4.macronix.com x5J84fX5040768
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Eugen,
 
-On Wed, Jun 19, 2019 at 07:24:41AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
-> 
-> ld: drivers/media/platform/atmel/atmel-isc-base.o:(.bss+0x0): multiple definition of `debug'; arch/x86/entry/entry_32.o:(.entry.text+0x21ac): first defined here
-> 
-> Changed module parameters to static.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
-> 
-> Hello Hans,
-> 
-> Sorry for this, it looks like i386 has a stray weird 'debug' symbol which
-> causes an error.
-> I changed the module parameters of the atmel-isc to 'static' but now they
-> cannot be accessed in the other module files.
-> Will have to create a get function to be used in the other files if needed
-> later. Any other way to make a symbol static to current module and not
-> current file ? It would be useful for other config variables as well.
-> I was not sure if you want to squash this over the faulty patch or add it
-> as a separate patch.
+Hi Boris,
 
-Please consider using dev_dbg() instead of a driver specific parameter for
-debug.
+> 
+> Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
+> 
+> On Tue, 18 Jun 2019 08:14:36 +0200
+> Boris Brezillon <boris.brezillon@collabora.com> wrote:
+> 
+> > > > > > > 
+> > > > > > > How to make all #CS keep high for NAND to enter 
+> > > > > > > low-power standby mode if driver don't use 
+"legacy.select_chip()" 
+> > > ? 
+> > > > > > 
+> > > > > > See commit 02b4a52604a4 ("mtd: rawnand: Make ->select_chip()  
+> > > optional 
+> > > > > > when ->exec_op() is implemented") which states:
+> > > > > > 
+> > > > > >         "When [->select_chip() is] not implemented, the core 
+is 
+> > > assuming 
+> > > > > >    the CS line is automatically asserted/deasserted by the 
+driver 
+> > > > > >    ->exec_op() implementation." 
+> > > > > > 
+> > > > > > Of course, the above is right only when the controller driver  
+ 
+> > > supports 
+> > > > > > the ->exec_op() interface. 
+> > > > > 
+> > > > > Currently, it seems that we will get the incorrect data and 
+error
+> > > > > operation due to CS in error toggling if CS line is controlled 
+in 
+> > > > > ->exec_op(). 
+> 
+> Oh, and please provide the modifications you added on top of this patch.
+> Right now we're speculating on what you've done which is definitely not
+> an efficient way to debug this sort of issues.
 
-For the patch:
+The patch is to add in beginning of ->exec_op() to control CS# low and 
+before return from ->exec_op() to control CS# High.
+i.e,.
+static in mxic_nand_exec_op( )
+{
+ cs_to_low();
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
 
--- 
-Sakari Ailus
+
+ cs_to_high();
+ return;
+}
+
+But for nand_onfi_detect(), 
+it calls nand_read_param_page_op() and then nand_read_data_op().
+mxic_nand_exec_op() be called twice for nand_onfi_detect() and
+driver will get incorrect ONFI parameter table data from 
+nand_read_data_op().
+
+thanks & best regards,
+Mason
+
+
+
+
+
+
+
+
+
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information 
+and/or personal data, which is protected by applicable laws. Please be 
+reminded that duplication, disclosure, distribution, or use of this e-mail 
+(and/or its attachments) or any part thereof is prohibited. If you receive 
+this e-mail in error, please notify us immediately and delete this mail as 
+well as its attachment(s) from your system. In addition, please be 
+informed that collection, processing, and/or use of personal data is 
+prohibited unless expressly permitted by personal data protection laws. 
+Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
+
+
+============================================================================
+
+CONFIDENTIALITY NOTE:
+
+This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
+
+Macronix International Co., Ltd.
+
+=====================================================================
+
