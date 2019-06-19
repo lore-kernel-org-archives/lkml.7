@@ -2,121 +2,131 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 399B0C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:29:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4E43C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DEDE2173E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:29:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="Mu7sgXi6"
+	by mail.kernel.org (Postfix) with ESMTP id 85D072177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfFSQ3F (ORCPT
+        id S1729960AbfFSQ3Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:29:05 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:41490 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729681AbfFSQ3F (ORCPT
+        Wed, 19 Jun 2019 12:29:25 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:40810 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726251AbfFSQ3Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:29:05 -0400
-Received: by mail-qk1-f193.google.com with SMTP id c11so11303547qkk.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 09:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qnUOwWGBCAXAVLri1Ul0fDjUeERWKjKVp0Rio+t6Mw0=;
-        b=Mu7sgXi6O1BEfTzeAxDFiZq9WYAU+8GuA+frzMgX9hRk0/2Eo2VPU9VKN7SPqn7GLw
-         BMmvCbBlMZt8BrrdyjrzJb5mIwmN+Un5ohC6uh52oLeiu3fM9lYGSfsBxw2N/in8YFn5
-         94JBdMTWXqhPkHC5ogDkAk30Vj3tK2OB7FH+D8RuRjkNrh4KSwvNzZkKLQDt1o6UXnKk
-         akxzg79p5LQYrNgI6wQWhEDCa4i3Wr2Q3GuDm1M6C6XhuTkbEI5dQ8Rzs09QxzMXG/yv
-         86i6u7h1UReQ+1KLg8ARX3o5vtg8COFFdiinD/3xnzFLxOpaxmET6WHLpP1penmwv6Fz
-         qw4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qnUOwWGBCAXAVLri1Ul0fDjUeERWKjKVp0Rio+t6Mw0=;
-        b=K0iGehx69wSUoM4yHovc1DrMlr26UxLcUI3b7BOaDSbnEeKdK1TpiWJS+//r5Zrvwf
-         /Sv/joX8DCpWWRwxJMvPmwG4VwBYN5eghCUqe98LmLx1bElDpNwSYG9rNK4GRXuvwBIR
-         2hLlfM+tgG3e+1jSyzRY3oN11p4BPAmRjkd8enrisUtr6ezvCQMKf/4JdpN/LmwGQ9xu
-         pqTBhaTMprNgzOHjjyajk0QV5plKUzzwlmXZQj+sBu2a0prx+jfH0R1krp8sBz8oxpGB
-         1nWLexWrhsGgSkKR88XRsJfGK0Bc5SUV1ZiEGTdOBEsFIzTxIU+0yihsr4G0Hqm58piU
-         nWBw==
-X-Gm-Message-State: APjAAAUT5ztssvD3eD52hcfXy5colpFhNVXVDd11J+HhuP7kTNGT2ZmT
-        xnzmdtgQCkMheBB2NEsxMBdiOA==
-X-Google-Smtp-Source: APXvYqxI2A2AbFb1+ZoFRIh7H3fg512a+PNV8rhMF80/TQ7Ui3RJ5j2fJJDqC3jWu2+hRHD8V09puw==
-X-Received: by 2002:a37:5444:: with SMTP id i65mr23556982qkb.263.1560961744340;
-        Wed, 19 Jun 2019 09:29:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id n5sm11854916qta.29.2019.06.19.09.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Jun 2019 09:29:03 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hddSJ-0001sf-Di; Wed, 19 Jun 2019 13:29:03 -0300
-Date:   Wed, 19 Jun 2019 13:29:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>,
-        Potnuri Bharat Teja <bharat@chelsio.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: use exact allocation for dma coherent memory
-Message-ID: <20190619162903.GF9360@ziepe.ca>
-References: <20190614134726.3827-1-hch@lst.de>
- <20190617082148.GF28859@kadam>
- <20190617083342.GA7883@lst.de>
+        Wed, 19 Jun 2019 12:29:25 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R991e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04426;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=8;SR=0;TI=SMTPD_---0TUccovW_1560961724;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TUccovW_1560961724)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 20 Jun 2019 00:28:47 +0800
+Subject: Re: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Vlastimil Babka <vbabka@suse.cz>, hughd@google.com,
+        kirill.shutemov@linux.intel.com, mhocko@suse.com,
+        rientjes@google.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
+ <4a07a6b8-8ff2-419c-eac8-3e7dc17670df@suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <5dde4380-68b4-66ee-2c3c-9b9da0c243ca@linux.alibaba.com>
+Date:   Wed, 19 Jun 2019 09:28:42 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617083342.GA7883@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <4a07a6b8-8ff2-419c-eac8-3e7dc17670df@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:33:42AM +0200, Christoph Hellwig wrote:
-> > drivers/infiniband/hw/cxgb4/qp.c
-> >    129  static int alloc_host_sq(struct c4iw_rdev *rdev, struct t4_sq *sq)
-> >    130  {
-> >    131          sq->queue = dma_alloc_coherent(&(rdev->lldi.pdev->dev), sq->memsize,
-> >    132                                         &(sq->dma_addr), GFP_KERNEL);
-> >    133          if (!sq->queue)
-> >    134                  return -ENOMEM;
-> >    135          sq->phys_addr = virt_to_phys(sq->queue);
-> >    136          dma_unmap_addr_set(sq, mapping, sq->dma_addr);
-> >    137          return 0;
-> >    138  }
-> > 
-> > Is this a bug?
-> 
-> Yes.  This will blow up badly on many platforms, as sq->queue
-> might be vmapped, ioremapped, come from a pool without page backing.
 
-Gah, this addr gets fed into io_remap_pfn_range/remap_pfn_range too..
 
-Potnuri, you should fix this.. 
+On 6/19/19 5:12 AM, Vlastimil Babka wrote:
+> On 6/13/19 6:44 AM, Yang Shi wrote:
+>> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+>> vma") introduced THPeligible bit for processes' smaps. But, when checking
+>> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+>> called to override the result from shmem_huge_enabled().  It may result
+>> in the anonymous vma's THP flag override shmem's.  For example, running a
+>> simple test which create THP for shmem, but with anonymous THP disabled,
+>> when reading the process's smaps, it may show:
+> ...
+>
+>> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+>> index 01d4eb0..6a13882 100644
+>> --- a/fs/proc/task_mmu.c
+>> +++ b/fs/proc/task_mmu.c
+>> @@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
+>>   
+>>   	__show_smap(m, &mss);
+>>   
+>> -	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
+>> +	seq_printf(m, "THPeligible:		%d\n",
+>> +		   transparent_hugepage_enabled(vma));
+>>   
+>>   	if (arch_pkeys_enabled())
+>>   		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
+>> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+>> index 4bc2552..36f0225 100644
+>> --- a/mm/huge_memory.c
+>> +++ b/mm/huge_memory.c
+>> @@ -65,10 +65,15 @@
+>>   
+>>   bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>>   {
+>> +	/* The addr is used to check if the vma size fits */
+>> +	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
+>> +
+>> +	if (!transhuge_vma_suitable(vma, addr))
+>> +		return false;
+> Sorry for replying rather late, and not in the v2 thread, but unlike
+> Hugh I'm not convinced that we should include vma size/alignment in the
+> test for reporting THPeligible, which was supposed to reflect
+> administrative settings and madvise hints. I guess it's mostly a matter
+> of personal feeling. But one objective distinction is that the admin
+> settings and madvise do have an exact binary result for the whole VMA,
+> while this check is more fuzzy - only part of the VMA's span might be
+> properly sized+aligned, and THPeligible will be 1 for the whole VMA.
 
-You probably need to use dma_mmap_from_dev_coherent() in the mmap ?
+I think THPeligible is used to tell us if the vma is suitable for 
+allocating THP. Both anonymous and shmem THP checks vma size/alignment 
+to decide to or not to allocate THP.
 
-Jason
+And, if vma size/alignment is not checked, THPeligible may show "true" 
+for even 4K mapping. This doesn't make too much sense either.
+
+>
+>>   	if (vma_is_anonymous(vma))
+>>   		return __transparent_hugepage_enabled(vma);
+>> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+>> -		return __transparent_hugepage_enabled(vma);
+>> +	if (vma_is_shmem(vma))
+>> +		return shmem_huge_enabled(vma);
+>>   
+>>   	return false;
+>>   }
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 1bb3b8d..a807712 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+>>   	loff_t i_size;
+>>   	pgoff_t off;
+>>   
+>> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+>> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+>> +		return false;
+>>   	if (shmem_huge == SHMEM_HUGE_FORCE)
+>>   		return true;
+>>   	if (shmem_huge == SHMEM_HUGE_DENY)
+>>
+
