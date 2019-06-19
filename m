@@ -2,331 +2,108 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 017D4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D3E21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:19:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6911821721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:19:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730139AbfFSSTJ (ORCPT
+        id S1730244AbfFSSTU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:19:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9694 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726109AbfFSSTJ (ORCPT
+        Wed, 19 Jun 2019 14:19:20 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:37460 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726109AbfFSSTT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:19:09 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JIHDLG127963
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:19:08 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7rn4m80n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:19:08 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Wed, 19 Jun 2019 19:19:07 +0100
-Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 19:19:04 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JIJ3uY39911830
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 18:19:03 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 01BBCB205F;
-        Wed, 19 Jun 2019 18:19:03 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C9974B2064;
-        Wed, 19 Jun 2019 18:19:02 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 18:19:02 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 8AC2D16C2FA6; Wed, 19 Jun 2019 11:19:03 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 11:19:03 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, frederic@kernel.org,
-        tglx@linutronix.de
-Subject: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline() lockdep
- complaint
-Reply-To: paulmck@linux.ibm.com
+        Wed, 19 Jun 2019 14:19:19 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TUfkZRu_1560968352;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TUfkZRu_1560968352)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 20 Jun 2019 02:19:15 +0800
+Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
+ correctly in mbind
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190618130253.GH3318@dhcp22.suse.cz>
+ <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
+ <20190618182848.GJ3318@dhcp22.suse.cz>
+ <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
+ <20190619052133.GB2968@dhcp22.suse.cz>
+ <21a0b20c-5b62-490e-ad8e-26b4b78ac095@suse.cz>
+ <687f4e57-5c50-7900-645e-6ef3a5c1c0c7@linux.alibaba.com>
+Message-ID: <55eb2ea9-2c74-87b1-4568-b620c7913e17@linux.alibaba.com>
+Date:   Wed, 19 Jun 2019 11:19:09 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19061918-0052-0000-0000-000003D2DD47
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011292; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01220329; UDB=6.00641952; IPR=6.01001471;
- MB=3.00027380; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-19 18:19:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061918-0053-0000-0000-000061620AF5
-Message-Id: <20190619181903.GA14233@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190149
+In-Reply-To: <687f4e57-5c50-7900-645e-6ef3a5c1c0c7@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Hearing no objections and given no test failures in multiple weeks of
-  rcutorture testing, I intend to submit this to the upcoming merge
-  window.  Thoughts? ]
 
-The TASKS03 and TREE04 rcutorture scenarios produce the following
-lockdep complaint:
 
-------------------------------------------------------------------------
+On 6/19/19 9:21 AM, Yang Shi wrote:
+>
+>
+> On 6/19/19 1:22 AM, Vlastimil Babka wrote:
+>> On 6/19/19 7:21 AM, Michal Hocko wrote:
+>>> On Tue 18-06-19 14:13:16, Yang Shi wrote:
+>>> [...]
+>>>> I used to have !__PageMovable(page), but it was removed since the
+>>>> aforementioned reason. I could add it back.
+>>>>
+>>>> For the temporary off LRU page, I did a quick search, it looks the 
+>>>> most
+>>>> paths have to acquire mmap_sem, so it can't race with us here. Page
+>>>> reclaim/compaction looks like the only race. But, since the mapping 
+>>>> should
+>>>> be preserved even though the page is off LRU temporarily unless the 
+>>>> page is
+>>>> reclaimed, so we should be able to exclude temporary off LRU pages by
+>>>> calling page_mapping() and page_anon_vma().
+>>>>
+>>>> So, the fix may look like:
+>>>>
+>>>> if (!PageLRU(head) && !__PageMovable(page)) {
+>>>>      if (!(page_mapping(page) || page_anon_vma(page)))
+>>>>          return -EIO;
+>>> This is getting even more muddy TBH. Is there any reason that we 
+>>> have to
+>>> handle this problem during the isolation phase rather the migration?
+>> I think it was already said that if pages can't be isolated, then
+>> migration phase won't process them, so they're just ignored.
+>
+> Yes，exactly.
+>
+>> However I think the patch is wrong to abort immediately when
+>> encountering such page that cannot be isolated (AFAICS). IMHO it should
+>> still try to migrate everything it can, and only then return -EIO.
+>
+> It is fine too. I don't see mbind semantics define how to handle such 
+> case other than returning -EIO.
 
-================================
-WARNING: inconsistent lock state
-5.2.0-rc1+ #513 Not tainted
---------------------------------
-inconsistent {IN-HARDIRQ-W} -> {HARDIRQ-ON-W} usage.
-migration/1/14 [HC0[0]:SC0[0]:HE1:SE1] takes:
-(____ptrval____) (tick_broadcast_lock){?...}, at: tick_broadcast_offline+0xf/0x70
-{IN-HARDIRQ-W} state was registered at:
-  lock_acquire+0xb0/0x1c0
-  _raw_spin_lock_irqsave+0x3c/0x50
-  tick_broadcast_switch_to_oneshot+0xd/0x40
-  tick_switch_to_oneshot+0x4f/0xd0
-  hrtimer_run_queues+0xf3/0x130
-  run_local_timers+0x1c/0x50
-  update_process_times+0x1c/0x50
-  tick_periodic+0x26/0xc0
-  tick_handle_periodic+0x1a/0x60
-  smp_apic_timer_interrupt+0x80/0x2a0
-  apic_timer_interrupt+0xf/0x20
-  _raw_spin_unlock_irqrestore+0x4e/0x60
-  rcu_nocb_gp_kthread+0x15d/0x590
-  kthread+0xf3/0x130
-  ret_from_fork+0x3a/0x50
-irq event stamp: 171
-hardirqs last  enabled at (171): [<ffffffff8a201a37>] trace_hardirqs_on_thunk+0x1a/0x1c
-hardirqs last disabled at (170): [<ffffffff8a201a53>] trace_hardirqs_off_thunk+0x1a/0x1c
-softirqs last  enabled at (0): [<ffffffff8a264ee0>] copy_process.part.56+0x650/0x1cb0
-softirqs last disabled at (0): [<0000000000000000>] 0x0
+By looking into the code, it looks not that easy as what I thought. 
+do_mbind() would check the return value of queue_pages_range(), it just 
+applies the policy and manipulates vmas as long as the return value is 0 
+(success), then migrate pages on the list. We could put the movable 
+pages on the list by not breaking immediately, but they will be ignored. 
+If we migrate the pages regardless of the return value, it may break the 
+policy since the policy will *not* be applied at all.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(tick_broadcast_lock);
-  <Interrupt>
-    lock(tick_broadcast_lock);
-
- *** DEADLOCK ***
-
-1 lock held by migration/1/14:
- #0: (____ptrval____) (clockevents_lock){+.+.}, at: tick_offline_cpu+0xf/0x30
-
-stack backtrace:
-CPU: 1 PID: 14 Comm: migration/1 Not tainted 5.2.0-rc1+ #513
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS Bochs 01/01/2011
-Call Trace:
- dump_stack+0x5e/0x8b
- print_usage_bug+0x1fc/0x216
- ? print_shortest_lock_dependencies+0x1b0/0x1b0
- mark_lock+0x1f2/0x280
- __lock_acquire+0x1e0/0x18f0
- ? __lock_acquire+0x21b/0x18f0
- ? _raw_spin_unlock_irqrestore+0x4e/0x60
- lock_acquire+0xb0/0x1c0
- ? tick_broadcast_offline+0xf/0x70
- _raw_spin_lock+0x33/0x40
- ? tick_broadcast_offline+0xf/0x70
- tick_broadcast_offline+0xf/0x70
- tick_offline_cpu+0x16/0x30
- take_cpu_down+0x7d/0xa0
- multi_cpu_stop+0xa2/0xe0
- ? cpu_stop_queue_work+0xc0/0xc0
- cpu_stopper_thread+0x6d/0x100
- smpboot_thread_fn+0x169/0x240
- kthread+0xf3/0x130
- ? sort_range+0x20/0x20
- ? kthread_cancel_delayed_work_sync+0x10/0x10
- ret_from_fork+0x3a/0x50
-
-------------------------------------------------------------------------
-
-To reproduce, run the following rcutorture test:
-
-        tools/testing/selftests/rcutorture/bin/kvm.sh --duration 5 --kconfig "CONFIG_DEBUG_LOCK_ALLOC=y CONFIG_PROVE_LOCKING=y" --configs "TASKS03 TREE04"
-
-It turns out that tick_broadcast_offline() was an innocent bystander.
-After all, interrupts are supposed to be disabled throughout
-take_cpu_down(), and therefore should have been disabled upon entry to
-tick_offline_cpu() and thus to tick_broadcast_offline().  This suggests
-that one of the CPU-hotplug notifiers was incorrectly enabling interrupts,
-and leaving them enabled on return.
-
-Some debugging code showed that the culprit was sched_cpu_dying().
-It had irqs enabled after return from sched_tick_stop().  Which in turn
-had irqs enabled after return from cancel_delayed_work_sync().  Which is a
-wrapper around __cancel_work_timer().  Which can sleep in the case where
-something else is concurrently trying to cancel the same delayed work,
-and as Thomas Gleixner pointed out on IRC, sleeping is a decidedly bad
-idea when you are invoked from take_cpu_down(), regardless of the state
-you leave interrupts in upon return.
-
-Code inspection located no reason why the delayed work absolutely
-needed to be canceled from sched_tick_stop():  The work is not
-bound to the outgoing CPU by design, given that the whole point is
-to collect statistics without disturbing the outgoing CPU.
-
-This commit therefore simply drops the cancel_delayed_work_sync() from
-sched_tick_stop().  Instead, a new ->state field is added to the tick_work
-structure so that the delayed-work handler function sched_tick_remote()
-can avoid reposting itself.  A cpu_is_offline() check is also added to
-sched_tick_remote() to avoid mucking with the state of an offlined CPU
-(though it does appear safe to do so).  The sched_tick_start() and
-sched_tick_stop() functions also update ->state, and sched_tick_start()
-also schedules the delayed work if ->state indicates that it is not
-already in flight.
-
-Signed-off-by: Paul E. McKenney <paulmck@linux.ibm.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Reviewed-by: Frederic Weisbecker <frederic@kernel.org>
-
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 102dfcf0a29a..8409c83aa5fa 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -3050,14 +3050,44 @@ void scheduler_tick(void)
- 
- struct tick_work {
- 	int			cpu;
-+	int			state;
- 	struct delayed_work	work;
- };
-+// Values for ->state, see diagram below.
-+#define TICK_SCHED_REMOTE_OFFLINE	0
-+#define TICK_SCHED_REMOTE_RUNNING	1
-+#define TICK_SCHED_REMOTE_OFFLINING	2
-+
-+// State diagram for ->state:
-+//
-+//
-+//      +----->OFFLINE--------------------------+
-+//      |                                       |
-+//      |                                       |
-+//      |                                       | sched_tick_start()
-+//      | sched_tick_remote()                   |
-+//      |                                       |
-+//      |                                       V
-+//      |                        +---------->RUNNING
-+//      |                        |              |
-+//      |                        |              |
-+//      |                        |              |
-+//      |     sched_tick_start() |              | sched_tick_stop()
-+//      |                        |              |
-+//      |                        |              |
-+//      |                        |              |
-+//      +--------------------OFFLINING<---------+
-+//
-+//
-+// Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
-+// and sched_tick_start() are happy to leave the state in RUNNING.
- 
- static struct tick_work __percpu *tick_work_cpu;
- 
- static void sched_tick_remote(struct work_struct *work)
- {
- 	struct delayed_work *dwork = to_delayed_work(work);
-+	int os;
- 	struct tick_work *twork = container_of(dwork, struct tick_work, work);
- 	int cpu = twork->cpu;
- 	struct rq *rq = cpu_rq(cpu);
-@@ -3077,7 +3107,7 @@ static void sched_tick_remote(struct work_struct *work)
- 
- 	rq_lock_irq(rq, &rf);
- 	curr = rq->curr;
--	if (is_idle_task(curr))
-+	if (is_idle_task(curr) || cpu_is_offline(cpu))
- 		goto out_unlock;
- 
- 	update_rq_clock(rq);
-@@ -3097,13 +3127,22 @@ static void sched_tick_remote(struct work_struct *work)
- 	/*
- 	 * Run the remote tick once per second (1Hz). This arbitrary
- 	 * frequency is large enough to avoid overload but short enough
--	 * to keep scheduler internal stats reasonably up to date.
-+	 * to keep scheduler internal stats reasonably up to date.  But
-+	 * first update state to reflect hotplug activity if required.
- 	 */
--	queue_delayed_work(system_unbound_wq, dwork, HZ);
-+	do {
-+		os = READ_ONCE(twork->state);
-+		WARN_ON_ONCE(os == TICK_SCHED_REMOTE_OFFLINE);
-+		if (os == TICK_SCHED_REMOTE_RUNNING)
-+			break;
-+	} while (cmpxchg(&twork->state, os, TICK_SCHED_REMOTE_OFFLINE) != os);
-+	if (os == TICK_SCHED_REMOTE_RUNNING)
-+		queue_delayed_work(system_unbound_wq, dwork, HZ);
- }
- 
- static void sched_tick_start(int cpu)
- {
-+	int os;
- 	struct tick_work *twork;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-@@ -3112,14 +3151,23 @@ static void sched_tick_start(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	twork->cpu = cpu;
--	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
--	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	do {
-+		os = READ_ONCE(twork->state);
-+		if (WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING))
-+			break;
-+		// Either idle or offline for a short period
-+	} while (cmpxchg(&twork->state, os, TICK_SCHED_REMOTE_RUNNING) != os);
-+	if (os == TICK_SCHED_REMOTE_OFFLINE) {
-+		twork->cpu = cpu;
-+		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
-+		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
-+	}
- }
- 
- #ifdef CONFIG_HOTPLUG_CPU
- static void sched_tick_stop(int cpu)
- {
-+	int os;
- 	struct tick_work *twork;
- 
- 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
-@@ -3128,7 +3176,13 @@ static void sched_tick_stop(int cpu)
- 	WARN_ON_ONCE(!tick_work_cpu);
- 
- 	twork = per_cpu_ptr(tick_work_cpu, cpu);
--	cancel_delayed_work_sync(&twork->work);
-+	// There cannot be competing actions, but don't rely on stop_machine.
-+	do {
-+		os = READ_ONCE(twork->state);
-+		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
-+		// Either idle or offline for a short period
-+	} while (cmpxchg(&twork->state, os, TICK_SCHED_REMOTE_OFFLINING) != os);
-+	// Don't cancel, as this would mess up the state machine.
- }
- #endif /* CONFIG_HOTPLUG_CPU */
- 
+>
+>
 
