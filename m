@@ -2,115 +2,139 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA370C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FB6C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:35:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23D4214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="UTNQ4lDM"
+	by mail.kernel.org (Postfix) with ESMTP id 2639A21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560969328;
+	bh=ZSXk5yQY5JgmMnKoJZp5pJgU23ioYLFdLftxt75KSUg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WrD4CV0+wtd29U3kCWl4J6OwmFlsg/0v9Ea/PZguLVmdMMXIuyQu2EThcEUVAbcoI
+	 ASK+PyPrcsukFdjSfLxvjHc3kH1K/n/iEA2Fl4PkRAQJhJM2O1Ixo3nip7Foh53ni/
+	 oPb/1PNEzo9OrJZSgRSHGpi9CpgcRr6MIu0Wvu6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730242AbfFSSdN (ORCPT
+        id S1729932AbfFSSf0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:33:13 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:37167 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFSSdN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:33:13 -0400
-Received: by mail-qt1-f194.google.com with SMTP id y57so209534qtk.4
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:33:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=digitalocean.com; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qmdp2hLc7f7LXlGpZWzREus9GL3q2Z2GGo4gIgm/xrg=;
-        b=UTNQ4lDMM4HOUZwz/VfVoBWVf9YyGjTc27oNXdkMUoFx+YvLAYq/PahbGAidF4op0x
-         6ADkzk5HjWEqAlcrNdPOCZFkMjM2Gegh3w6x3/7qSMw+z+lY20Gn93gLzGc68/TIxYpH
-         8KVLZH1Lg0cImTyKxEP04zb5/hheamoBeD7jI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qmdp2hLc7f7LXlGpZWzREus9GL3q2Z2GGo4gIgm/xrg=;
-        b=WlNgYfpiOICc9MYn0DqqTYJ06r1tQYF8rpW31sI1pETEqjYr4yt9jEVI98c4WDo3BJ
-         NsAoxV/rTdgfyfNQmwXWPwthsX5pP724KS82zN0oYxGPJgb9XmSMaRKZXW/YT37YiW/m
-         QNCk3zhYmKnJh9xtKnoESSUxMFpAZ9t/WY+CedOxvbTeUFrUADs4J4o7FloTWG6SIC8z
-         drVtolxkDHbKSH8o/7+0QsR5xd/s1PygJ8XOr3yvC7kAT3Q3nYffmVc4jskIMwi6+B5q
-         1ECmvOaBBHcK1eJpBnoTz+YxkJg4y+7g3NwaMvfZY8TLT9gvwi6Kc9fAL/t0//+2/KUr
-         GBvg==
-X-Gm-Message-State: APjAAAV3F5fL33+/x/cWn0xTIGs2giHTuEndy9xBCgdlonTUMudn3bJ+
-        dWKprawpeIUjFbTYD1Rial4Z4w==
-X-Google-Smtp-Source: APXvYqxPjcl2hWZP3R+bxalVB3SIb1aKDnmCr+tkSn8M7rbe2IFhnZU1zIJliIIbYegdX1zWks4CSQ==
-X-Received: by 2002:ac8:25ac:: with SMTP id e41mr21132667qte.101.1560969192340;
-        Wed, 19 Jun 2019 11:33:12 -0700 (PDT)
-Received: from sinkpad (mtlxpqak-1176247880.sdsl.bell.ca. [70.28.30.72])
-        by smtp.gmail.com with ESMTPSA id d123sm11973097qkb.94.2019.06.19.11.33.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 11:33:11 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 14:33:02 -0400
-From:   Julien Desfossez <jdesfossez@digitalocean.com>
-To:     Aubrey Li <aubrey.intel@gmail.com>
-Cc:     Subhra Mazumdar <subhra.mazumdar@oracle.com>,
-        Aaron Lu <aaron.lu@linux.alibaba.com>,
-        Vineeth Remanan Pillai <vpillai@digitalocean.com>,
-        Nishanth Aravamudan <naravamudan@digitalocean.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Paul Turner <pjt@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        =?iso-8859-1?Q?Fr=E9d=E9ric?= Weisbecker <fweisbec@gmail.com>,
-        Kees Cook <keescook@chromium.org>,
-        Greg Kerr <kerrnel@google.com>, Phil Auld <pauld@redhat.com>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Pawan Gupta <pawan.kumar.gupta@linux.intel.com>,
-        Paolo Bonzini <pbonzini@redhat.com>
-Subject: Re: [RFC PATCH v3 00/16] Core scheduling v3
-Message-ID: <20190619183302.GA6775@sinkpad>
-References: <cover.1559129225.git.vpillai@digitalocean.com>
- <CAERHkruDE-7R5K=2yRqCJRCpV87HkHzDYbQA2WQkruVYpG7t7Q@mail.gmail.com>
- <e8872bd9-1c6b-fb12-b535-3d37740a0306@linux.alibaba.com>
- <20190531210816.GA24027@sinkpad>
- <20190606152637.GA5703@sinkpad>
- <20190612163345.GB26997@sinkpad>
- <635c01b0-d8f3-561b-5396-10c75ed03712@oracle.com>
- <20190613032246.GA17752@sinkpad>
- <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
+        Wed, 19 Jun 2019 14:35:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59566 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfFSSf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 14:35:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 00F55214AF;
+        Wed, 19 Jun 2019 18:35:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560969325;
+        bh=ZSXk5yQY5JgmMnKoJZp5pJgU23ioYLFdLftxt75KSUg=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=02DXmPJFYgSNzzsFki+MxmAyHDdHNWPBCaKNAYd4HmV/t2wmOIklt9U7P+VZnV+Rz
+         bcdnh9SjtN/cdTKhJCLgKcpMi8Td9fVE85dyCBm75Kw9cbiFEO1ch+FKsLFoxb0vO+
+         TpaxZZffvoAfEd4dTfO5JMSWwT2iMvdrbggqfoI0=
+Date:   Wed, 19 Jun 2019 20:35:23 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@fb.com>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+Message-ID: <20190619183523.GA7018@kroah.com>
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com>
+ <4587569.x9DSL43cXO@kreacher>
+ <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
+ <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+ <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
+ <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
+ <20190619170750.GB10107@kroah.com>
+ <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAERHkrsMFjjBpPZS7jDhzbob4PSmiPj83OfqEeiKgaDAU3ajOA@mail.gmail.com>
-X-Mailer: Mutt 1.5.24 (2015-08-30)
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17-Jun-2019 10:51:27 AM, Aubrey Li wrote:
-> The result looks still unfair, and particularly, the variance is too high,
+On Wed, Jun 19, 2019 at 02:01:36PM -0400, Joel Fernandes wrote:
+> On Wed, Jun 19, 2019 at 1:07 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
+> > > > It is conceivable to have a "wakeup_sources" directory under
+> > > > /sys/power/ and sysfs nodes for all wakeup sources in there.
+> > >
+> > > One of the "issues" with this is, now if you have say 100 wake up
+> > > sources, with 10 entries each, then we're talking about a 1000 sysfs
+> > > files. Each one has to be opened, and read individually. This adds
+> > > overhead and it is more convenient to read from a single file. The
+> > > problem is this single file is not ABI. So the question I guess is,
+> > > how do we solve this in both an ABI friendly way while keeping the
+> > > overhead low.
+> >
+> > How much overhead?  Have you measured it, reading from virtual files is
+> > fast :)
+> 
+> I measured, and it is definitely not free. If you create and read a
+> 1000 files and just return a string back, it can take up to 11-13
+> milliseconds (did not lock CPU frequencies, was just looking for
+> average ball park). This is assuming that the counter reading is just
+> doing that, and nothing else is being done to return the sysfs data
+> which is probably not always true in practice.
+> 
+> Our display pipeline deadline is around 16ms at 60Hz. Conceivably, any
+> CPU scheduling competion reading sysfs can hurt the deadline. There's
+> also the question of power - we definitely have spent time in the past
+> optimizing other virtual files such as /proc/pid/smaps for this reason
+> where it spent lots of CPU time.
 
-I just want to confirm that I am also seeing the same issue with a
-similar setup. I also tried with the priority boost fix we previously
-posted, the results are slightly better, but we are still seeing a very
-high variance.
+smaps was "odd", but that was done after measurements were actually made
+to prove it was needed.  That hasn't happened yet :)
 
-On average, the results I get for 10 30-seconds runs are still much
-better than nosmt (both sysbench pinned on the same sibling) for the
-memory benchmark, and pretty similar for the CPU benchmark, but the high
-variance between runs is indeed concerning.
+And is there a reason you have to do this every 16ms?
 
-Still digging :-)
+> > And how often does this happen?  Does it _need_ to happen?
+> 
+> These are good questions and we should find out. I am not saying that
+> sysfs will not work, I am just saying we need to consider all the
+> things. I will let Tri look into this since he is working on it, I
+> don't know off the top.
+> 
+> > Parsing files is also hard, and not for sysfs files, you can't have it
+> > both ways.
+> 
+> I don't think we are concerned with a parsing issue here, or are
+> discussing it in this thread.
+> 
+> > So try it this way, and if there really is a performance issue, we can
+> > then talk about it...
+> 
+> Sure that sounds good to me, again I am not saying we should do sysfs.
+> But we should consider all the issues and chose the right solution.
 
-Thanks,
+Figure out who needs this, how often it needs it, and how many files
+really are going to be involved before we try to optimize anything.
 
-Julien
+thanks,
+
+greg k-h
