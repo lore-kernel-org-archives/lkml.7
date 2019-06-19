@@ -6,63 +6,62 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0648DC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 422E3C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:00:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D040E214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:00:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FE2C214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:00:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560970811;
-	bh=Mva4RFv1M0/5OCyHMcVJ2gu2vox17gPlwwMFPCzMWws=;
+	s=default; t=1560970815;
+	bh=4tS97Pr0ErmEJ0dmGIvn8yN7CXskzmYBi9RKCDD/s08=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=ye3R0wFclMIJseV1IMe20+vx5xk2RFD8Bs+ws2veYnTLCRuZLqG2PYgig244Dy/w9
-	 5SI0UStqClbwdLif7lFhW79gKSSPc0jG379H6jdG4uBDuQC7k9uyKYJUtHc3oooH98
-	 IIrLQdL/f9SUEnohVulbr0kFeKr3Hae1z+J7qIE0=
+	b=cnit4YLz9g4MR+Y7BPEXN+34Z/ddQTcoW+ImbPFwtaynMBaDbVa0SR46t5GX0FWJH
+	 PoeHS7rd2HCskuQPkQ1lO1DnzmNFK6dWcjB7Iusqao7e5i8So8lybS4IGfNo3jNr+q
+	 azLXlS85f6EP0+2l+xNXrm/8Fl7accE/pYyTpTxE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730437AbfFSTAK (ORCPT
+        id S1730468AbfFSTAN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:00:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46110 "EHLO mail.kernel.org"
+        Wed, 19 Jun 2019 15:00:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbfFSTAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726496AbfFSTAI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 15:00:08 -0400
-Subject: Re: [GIT PULL] apparmor bug fixes for v5.3-rc6
+Subject: Re: [GIT PULL] Power management fix for v5.2-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
         s=default; t=1560970807;
-        bh=Mva4RFv1M0/5OCyHMcVJ2gu2vox17gPlwwMFPCzMWws=;
+        bh=4tS97Pr0ErmEJ0dmGIvn8yN7CXskzmYBi9RKCDD/s08=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=QUccs7EgTevSBjKGRnVbe4FoVMhsgKUq2XUMREW1ehEGzpCdBtR7SQ8JLXGx8oLVJ
-         YkEKycGwwTbpp/lEheY/ML005sNhNDaLwaJhtrrP/JBrf1hy0iwXexno/3lu0xh7oC
-         L2hrUOrymArBb+RwpR8SJRM9UBkan0+5Pqd2WRPw=
+        b=LqRnENBAOgDXl4L9WT6B/fIPEo5qn6eZ7cBNIEG89mB9cZRMB7SHbKVQhZntHr1jS
+         2QP7V29Be0cDEBixDu6gwiuihQF5ylq6aWsFQ7ZfQW2xx/8N20f3FfW1TClseS6T0g
+         UJQu8rFoq5rdJj5GW30qM44FrtlFg/UYNya9WWjo=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <cfc8f629-4ffa-e64e-f23f-2f4cffca4f18@canonical.com>
-References: <cfc8f629-4ffa-e64e-f23f-2f4cffca4f18@canonical.com>
+In-Reply-To: <CAJZ5v0hbF4i-mJ6thnu8HRNcAXBrw4=vqQG+ikufB2z3q82F4g@mail.gmail.com>
+References: <CAJZ5v0hbF4i-mJ6thnu8HRNcAXBrw4=vqQG+ikufB2z3q82F4g@mail.gmail.com>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <cfc8f629-4ffa-e64e-f23f-2f4cffca4f18@canonical.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor
- tags/apparmor-pr-2019-06-18
-X-PR-Tracked-Commit-Id: 156e42996bd84eccb6acf319f19ce0cb140d00e3
+X-PR-Tracked-Message-Id: <CAJZ5v0hbF4i-mJ6thnu8HRNcAXBrw4=vqQG+ikufB2z3q82F4g@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.2-rc6
+X-PR-Tracked-Commit-Id: 3e26c5feed2add218046ecf91bab3cfa9bf762a6
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: c3c0d546d73ad53c85789154872b8c92d1f96ba1
-Message-Id: <156097080700.11094.10794040979648534918.pr-tracker-bot@kernel.org>
+X-PR-Merge-Commit-Id: abf02e2964b3aaf1d5197c5d7c671e771b0e109e
+Message-Id: <156097080742.11094.7724722899824028829.pr-tracker-bot@kernel.org>
 Date:   Wed, 19 Jun 2019 19:00:07 +0000
-To:     John Johansen <john.johansen@canonical.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
 Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKLM <linux-kernel@vger.kernel.org>,
-        "open list:SECURITY SUBSYSTEM" 
-        <linux-security-module@vger.kernel.org>
+        Linux PM <linux-pm@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Tue, 18 Jun 2019 18:44:31 -0700:
+The pull request you sent on Wed, 19 Jun 2019 11:51:19 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/jj/linux-apparmor tags/apparmor-pr-2019-06-18
+> git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm.git pm-5.2-rc6
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/c3c0d546d73ad53c85789154872b8c92d1f96ba1
+https://git.kernel.org/torvalds/c/abf02e2964b3aaf1d5197c5d7c671e771b0e109e
 
 Thank you!
 
