@@ -2,96 +2,99 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9532CC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:52:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8914C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 579BB20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:52:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6ED208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:53:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731906AbfFSMwl (ORCPT
+        id S1731916AbfFSMxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:52:41 -0400
-Received: from foss.arm.com ([217.140.110.172]:38310 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727002AbfFSMwk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:52:40 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 00E41360;
-        Wed, 19 Jun 2019 05:52:40 -0700 (PDT)
-Received: from [0.0.0.0] (e107985-lin.cambridge.arm.com [10.1.194.38])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 41A603F738;
-        Wed, 19 Jun 2019 05:52:38 -0700 (PDT)
-Subject: Re: [PATCH 1/8] sched: introduce task_se_h_load helper
-To:     Rik van Riel <riel@surriel.com>, peterz@infradead.org
-Cc:     mingo@redhat.com, linux-kernel@vger.kernel.org, kernel-team@fb.com,
-        morten.rasmussen@arm.com, tglx@linutronix.de,
-        dietmar.eggeman@arm.com, mgorman@techsingularity.com,
-        vincent.guittot@linaro.org
-References: <20190612193227.993-1-riel@surriel.com>
- <20190612193227.993-2-riel@surriel.com>
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-Message-ID: <55d914d2-fba2-48c0-e7ff-3c7337c8cf8e@arm.com>
-Date:   Wed, 19 Jun 2019 14:52:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 08:53:32 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:52193 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731576AbfFSMxc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:53:32 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MKKpV-1httFS3L4R-00LmVZ; Wed, 19 Jun 2019 14:53:17 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] netfilter: synproxy: fix nf_synproxy_ipv{4,6}_init() return code
+Date:   Wed, 19 Jun 2019 14:53:07 +0200
+Message-Id: <20190619125314.1005993-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190612193227.993-2-riel@surriel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:sHRKPJxI1zML8tYdc1cfhcMo3aUXVxAOGIhwNfIQjjwRunCOAsx
+ NHm/ktqi20sgAtTRnoNS3E45QBQpIjaZVx0+5T9JDOd12yuSjTMfuKf3I2WxHLaP7fgMW6m
+ OwZXXHliGncpKNm0YIe9lofpzzzFwQEKcW4afzoDhJsMbevSna3JBee75coK4Xtf9M6zYDI
+ ksMK9hUacXQ2WZJ8dL5kw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:SCWUrpyWP2Q=:ut0cProTqarHG0QCVTfh9D
+ MjpFumB3sMKmB4UQDW90OwoYEvXD6fN2P5u7C9ipmz67bnCj2+fgixTlHZWi50c5YEvc+Ar0s
+ 8ss2WW2QFYbWSNP3i72/7XdPkBZGA4mprtHQO4vNyu0B5D1bLM+NUG8E2vzfgaBZxN/Aa0oNd
+ 4JAmSW2hwHbQanQfSE0rZv990u2wg4KrBD/3M+bpjhkORv74ThiMRcHAWYB2L/VsCykY46tc8
+ Zd5FJH/nERhpZZnfoTb74nmUKip5BRjbqoZwsColXihClt81pbpfyG2jB1Wi+sVI1w7b51JKb
+ tpKvqT5+L1JlVoCBMtsmPp+RJu5SDDxgW6lBl4e+iesBvqIdQYtqkMTLgREf575P2cTLZewQ2
+ QFCXR+ikN+dfMGC9EWSwj266DhSLi09CMgXLyOgB51LsCpBoDGP6qvf3teeRebZydq6Ae0V26
+ zqmoMIBUch19Sy+HzSrh8dQDx+4T2X17Hky8gaAP1tYnhsCBzMLr+4+MX4P+YzxpNcXKFDIWB
+ pnCqDkDwWHX2ydF47Bw/dsS2NsggITOpih1wQXbijgiINj2u1n6xV/kBFRFhqk844L7d0CEL5
+ JQA+koiuVWPxlhVuCcjFXIpdUxzZzYA3vRY1xYK22sEaeS7MX4JORqyTpM3UkbZno0sYQtjZR
+ Fy1kLg9kgrx1ImoDpIc+WgpKE7sy+xLDdc0v2h+sfb60PtXAdFKYePZHNTIe2j3XO3WctYQ4l
+ nny3uTmIzSdnSB1+favdUtgwez9Lxjyv7snIvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/12/19 9:32 PM, Rik van Riel wrote:
-> Sometimes the hierarchical load of a sched_entity needs to be calculated.
-> Split out task_h_load into a task_se_h_load that takes a sched_entity pointer
-> as its argument, and a task_h_load wrapper that calls task_se_h_load.
-> 
-> No functional changes.
-> 
-> Signed-off-by: Rik van Riel <riel@surriel.com>
-> ---
->  kernel/sched/fair.c | 17 ++++++++++++++---
->  1 file changed, 14 insertions(+), 3 deletions(-)
-> 
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index f35930f5e528..df624f7a68e7 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -706,6 +706,7 @@ static u64 sched_vslice(struct cfs_rq *cfs_rq, struct sched_entity *se)
->  #ifdef CONFIG_SMP
->  
->  static int select_idle_sibling(struct task_struct *p, int prev_cpu, int cpu);
-> +static unsigned long task_se_h_load(struct sched_entity *se);
->  static unsigned long task_h_load(struct task_struct *p);
->  static unsigned long capacity_of(int cpu);
->  
-> @@ -7833,14 +7834,19 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
->  	}
->  }
->  
-> -static unsigned long task_h_load(struct task_struct *p)
-> +static unsigned long task_se_h_load(struct sched_entity *se)
->  {
-> -	struct cfs_rq *cfs_rq = task_cfs_rq(p);
-> +	struct cfs_rq *cfs_rq = cfs_rq_of(se);
->  
->  	update_cfs_rq_h_load(cfs_rq);
-> -	return div64_ul(p->se.avg.load_avg * cfs_rq->h_load,
-> +	return div64_ul(se->avg.load_avg * cfs_rq->h_load,
->  			cfs_rq_load_avg(cfs_rq) + 1);
->  }
+We return an uninitialized variable on success:
 
-I wonder if this is necessary. I placed a BUG_ON(!entity_is_task(se))
-into task_se_h_load() after I applied the whole patch-set and ran some
-taskgroup related testcases. It didn't hit.
+net/netfilter/nf_synproxy_core.c:793:6: error: variable 'err' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
+        if (snet->hook_ref4 == 0) {
+            ^~~~~~~~~~~~~~~~~~~~
 
-So why not use task_h_load(task_of(se)) instead?
+Initialize the return code to zero first.
 
-[...]
+Fixes: d7f9b2f18eae ("netfilter: synproxy: extract SYNPROXY infrastructure from {ipt, ip6t}_SYNPROXY")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ net/netfilter/nf_synproxy_core.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/net/netfilter/nf_synproxy_core.c b/net/netfilter/nf_synproxy_core.c
+index 50677285f82e..283686e972a0 100644
+--- a/net/netfilter/nf_synproxy_core.c
++++ b/net/netfilter/nf_synproxy_core.c
+@@ -788,7 +788,7 @@ static const struct nf_hook_ops ipv4_synproxy_ops[] = {
+ 
+ int nf_synproxy_ipv4_init(struct synproxy_net *snet, struct net *net)
+ {
+-	int err;
++	int err = 0;
+ 
+ 	if (snet->hook_ref4 == 0) {
+ 		err = nf_register_net_hooks(net, ipv4_synproxy_ops,
+@@ -1213,7 +1213,7 @@ static const struct nf_hook_ops ipv6_synproxy_ops[] = {
+ int
+ nf_synproxy_ipv6_init(struct synproxy_net *snet, struct net *net)
+ {
+-	int err;
++	int err = 0;
+ 
+ 	if (snet->hook_ref6 == 0) {
+ 		err = nf_register_net_hooks(net, ipv6_synproxy_ops,
+-- 
+2.20.0
+
