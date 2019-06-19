@@ -2,270 +2,102 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AFFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:46:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2456C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:46:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9394B2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:46:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N6ABCsSc"
+	by mail.kernel.org (Postfix) with ESMTP id C5D3F214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:46:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729990AbfFSRqs (ORCPT
+        id S1730088AbfFSRqu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 19 Jun 2019 13:46:50 -0400
+Received: from mail.us.es ([193.147.175.20]:41382 "EHLO mail.us.es"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729188AbfFSRqs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 13:46:48 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35256 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726047AbfFSRqr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:46:47 -0400
-Received: by mail-ot1-f66.google.com with SMTP id j19so20203531otq.2;
-        Wed, 19 Jun 2019 10:46:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8ZevpDDlCAGLTfjr+h0ZLFMxekqlpPh9j8cV6hobNH4=;
-        b=N6ABCsSck+i6soE736QGPnpvFL3Ru1HyAmA3jqvUbZmQx62A/ErE0+apKJqxwfQLAm
-         9jvUXbGMu7grIMvuq604dAAg5Kt4mA9Og+b4e1j0pQ/I9lrLwBoPHA0vG3UDyshK8I5y
-         +/RciXPu46OfUXcP7QTeH8XrAyGMrXth6Ja24B6DdNIr1D1YRAGUJPF0boIjn0VYu4F6
-         BWsnjPpQAKfz2ma/k72NDfxGHGtBqu5jjyWV9mneY/rYqIQTqvmkVckUlxz8SB5gr7j5
-         5cI1j6viwdA+g/hmc0LVY7C3Nd/6D554ZpfW20DaDRNaH6XyWmdj2aNmcSVvMvdWhFA7
-         VV/A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8ZevpDDlCAGLTfjr+h0ZLFMxekqlpPh9j8cV6hobNH4=;
-        b=j2RYyUIlJBV6Sl/2dLcGQyZ0WY2gxHqcWodCqfzi8nMA1iVIAfFV8dIFc+QiuxuHPh
-         gF4I4X8Pz6JDkHjfKZDu4PlcvGEvsynfvZKLqf5utGrKuKEZ3rSBjUOtgU4NII1ux4Z8
-         RzdpZUAu8N+SJWZE5c3ROMMsGfpPAHjsjar9cw51bR8XEFszEAw2BhiUjvFQSSOMjYEE
-         BahtznvxdhPQrnJi6cCoIsnhxeOKJJIkMB0b8VqlSCGHdZ+rJkpeL2WlO5rmkDzp4Zog
-         ndB4gQ1rm02Rw0PjjyhkDF2b1KBhq1qAfqlv/UJ5YznzK+dpFnANJ/Gklnpd+lTfYYLF
-         yJ0w==
-X-Gm-Message-State: APjAAAX46qnza3mjrrz/CyzT3DwMJtru9/bNvXYJaI6/7RXzK+qNKH0M
-        y0Qd7UnfOOsRvrrQqMi/d7nqL/zy5wfcmvSAz2ZmASEq
-X-Google-Smtp-Source: APXvYqxTaAoweepz0ZK6vEig/7ZKT3Duj0Ntx4NE8PlxuoumHORSCZLMvPiqYYMF1bw1mOOyaGQhQJMvZkp1GKhHnkg=
-X-Received: by 2002:a9d:5911:: with SMTP id t17mr20913774oth.159.1560966405949;
- Wed, 19 Jun 2019 10:46:45 -0700 (PDT)
+Received: from antivirus1-rhel7.int (unknown [192.168.2.11])
+        by mail.us.es (Postfix) with ESMTP id 6A441C1D52
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 19:46:46 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 5B381DA715
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 19:46:46 +0200 (CEST)
+Received: by antivirus1-rhel7.int (Postfix, from userid 99)
+        id 4A5B8DA70A; Wed, 19 Jun 2019 19:46:46 +0200 (CEST)
+Received: from antivirus1-rhel7.int (localhost [127.0.0.1])
+        by antivirus1-rhel7.int (Postfix) with ESMTP id 802E5DA704;
+        Wed, 19 Jun 2019 19:46:43 +0200 (CEST)
+Received: from 192.168.1.97 (192.168.1.97)
+ by antivirus1-rhel7.int (F-Secure/fsigk_smtp/550/antivirus1-rhel7.int);
+ Wed, 19 Jun 2019 19:46:43 +0200 (CEST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/antivirus1-rhel7.int)
+Received: from us.es (sys.soleta.eu [212.170.55.40])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: 1984lsi)
+        by entrada.int (Postfix) with ESMTPSA id 5225C4265A2F;
+        Wed, 19 Jun 2019 19:46:43 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 19:46:42 +0200
+X-SMTPAUTHUS: auth mail.us.es
+From:   Pablo Neira Ayuso <pablo@netfilter.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>,
+        wenxu <wenxu@ucloud.cn>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: Re: [PATCH] netfilter: synproxy: fix building syncookie calls
+Message-ID: <20190619174642.hvjvmfaptfdkmbpk@salvia>
+References: <20190619125500.1054426-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190617183738.14484-1-prsriva02@gmail.com> <20190617183738.14484-2-prsriva02@gmail.com>
-In-Reply-To: <20190617183738.14484-2-prsriva02@gmail.com>
-From:   prakhar srivastava <prsriva02@gmail.com>
-Date:   Wed, 19 Jun 2019 10:46:34 -0700
-Message-ID: <CAEFn8q+BU9aQxwHQZECZ2Kpn5Gb9qDAm8m7fkEHCq7wo7+9fpQ@mail.gmail.com>
-Subject: Re: [PATCH V9 1/3] IMA:Define a new hook to measure the kexec boot
- command line arguments
-To:     linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Mimi Zohar <zohar@linux.ibm.com>,
-        Roberto Sassu <roberto.sassu@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619125500.1054426-1-arnd@arndb.de>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:37 AM Prakhar Srivastava <prsriva02@gmail.com> wrote:
->
-> Currently during soft reboot(kexec_file_load) boot command line
-> arguments are not measured. Define hooks needed to measure kexec
-> command line arguments during soft reboot(kexec_file_load).
->
-> - A new ima hook ima_kexec_cmdline is defined to be called by the
-> kexec code.
-> - A new function process_buffer_measurement is defined to measure
-> the buffer hash into the IMA measurement list.
-> - A new func policy KEXEC_CMDLINE is defined to control the
->  measurement.[Suggested by Mimi]
->
-> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
-> ---
->  Documentation/ABI/testing/ima_policy |  1 +
->  include/linux/ima.h                  |  2 +
->  security/integrity/ima/ima.h         |  1 +
->  security/integrity/ima/ima_api.c     |  1 +
->  security/integrity/ima/ima_main.c    | 74 ++++++++++++++++++++++++++++
->  security/integrity/ima/ima_policy.c  |  7 +++
->  6 files changed, 86 insertions(+)
->
-> diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
-> index b383c1763610..fc376a323908 100644
-> --- a/Documentation/ABI/testing/ima_policy
-> +++ b/Documentation/ABI/testing/ima_policy
-> @@ -28,6 +28,7 @@ Description:
->                 base:   func:= [BPRM_CHECK][MMAP_CHECK][CREDS_CHECK][FILE_CHECK][MODULE_CHECK]
->                                 [FIRMWARE_CHECK]
->                                 [KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
-> +                               [KEXEC_CMDLINE]
->                         mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
->                                [[^]MAY_EXEC]
->                         fsmagic:= hex value
-> diff --git a/include/linux/ima.h b/include/linux/ima.h
-> index fd9f7cf4cdf5..b42f5a006042 100644
-> --- a/include/linux/ima.h
-> +++ b/include/linux/ima.h
-> @@ -26,6 +26,7 @@ extern int ima_read_file(struct file *file, enum kernel_read_file_id id);
->  extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
->                               enum kernel_read_file_id id);
->  extern void ima_post_path_mknod(struct dentry *dentry);
-> +extern void ima_kexec_cmdline(const void *buf, int size);
->
->  #ifdef CONFIG_IMA_KEXEC
->  extern void ima_add_kexec_buffer(struct kimage *image);
-> @@ -92,6 +93,7 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
->         return;
->  }
->
-> +static inline void ima_kexec_cmdline(const void *buf, int size) {}
->  #endif /* CONFIG_IMA */
->
->  #ifndef CONFIG_IMA_KEXEC
-> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-> index 18b48a6d0b80..a4ad1270bffa 100644
-> --- a/security/integrity/ima/ima.h
-> +++ b/security/integrity/ima/ima.h
-> @@ -185,6 +185,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
->         hook(KEXEC_KERNEL_CHECK)        \
->         hook(KEXEC_INITRAMFS_CHECK)     \
->         hook(POLICY_CHECK)              \
-> +       hook(KEXEC_CMDLINE)             \
->         hook(MAX_CHECK)
->  #define __ima_hook_enumify(ENUM)       ENUM,
->
-> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-> index 78eb11c7ac07..ea7d8cbf712f 100644
-> --- a/security/integrity/ima/ima_api.c
-> +++ b/security/integrity/ima/ima_api.c
-> @@ -176,6 +176,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
->   *             subj=, obj=, type=, func=, mask=, fsmagic=
->   *     subj,obj, and type: are LSM specific.
->   *     func: FILE_CHECK | BPRM_CHECK | CREDS_CHECK | MMAP_CHECK | MODULE_CHECK
-> + *     | KEXEC_CMDLINE
->   *     mask: contains the permission mask
->   *     fsmagic: hex value
->   *
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index af341a80118f..1e233417a7af 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -605,6 +605,80 @@ int ima_load_data(enum kernel_load_data_id id)
->         return 0;
->  }
->
-> +/*
-> + * process_buffer_measurement - Measure the buffer to ima log.
-> + * @buf: pointer to the buffer that needs to be added to the log.
-> + * @size: size of buffer(in bytes).
-> + * @eventname: event name to be used for the buffer entry.
-> + * @cred: a pointer to a credentials structure for user validation.
-> + * @secid: the secid of the task to be validated.
-> + *
-> + * Based on policy, the buffer is measured into the ima log.
-> + */
-> +static void process_buffer_measurement(const void *buf, int size,
-> +                                      const char *eventname,
-> +                                      const struct cred *cred, u32 secid)
-> +{
-> +       int ret = 0;
-> +       struct ima_template_entry *entry = NULL;
-> +       struct integrity_iint_cache iint = {};
-> +       struct ima_event_data event_data = {.iint = &iint };
-> +       struct ima_template_desc *template_desc = NULL;
-> +       struct {
-> +               struct ima_digest_data hdr;
-> +               char digest[IMA_MAX_DIGEST_SIZE];
-> +       } hash = {};
-> +       int violation = 0;
-> +       int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
-> +       int action = 0;
-> +
-> +       action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
-> +                               &template_desc);
-> +       if (!(action & IMA_MEASURE))
-> +               goto out;
-> +
-> +       event_data.filename = eventname;
-> +
-> +       iint.ima_hash = &hash.hdr;
-> +       iint.ima_hash->algo = ima_hash_algo;
-> +       iint.ima_hash->length = hash_digest_size[ima_hash_algo];
-> +
-> +       ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
-> +       if (ret < 0)
-> +               goto out;
-> +
-> +       ret = ima_alloc_init_template(&event_data, &entry, template_desc);
-> +       if (ret < 0)
-> +               goto out;
-> +
-> +       if (action & IMA_MEASURE)
-> +               ret = ima_store_template(entry, violation, NULL, buf, pcr);
-> +
-> +       if (ret < 0)
-> +               ima_free_template_entry(entry);
-> +
-> +out:
-> +       return;
-> +}
-> +
-> +/**
-> + * ima_kexec_cmdline - measure kexec cmdline boot args
-> + * @buf: pointer to buffer
-> + * @size: size of buffer
-> + *
-> + * Buffers can only be measured, not appraised.
-> + */
-> +void ima_kexec_cmdline(const void *buf, int size)
-> +{
-> +       u32 secid;
-> +
-> +       if (buf && size != 0) {
-> +               security_task_getsecid(current, &secid);
-> +               process_buffer_measurement(buf, size, "kexec-cmdline",
-> +                                          current_cred(), secid);
-> +       }
-> +}
-> +
->  static int __init init_ima(void)
->  {
->         int error;
-> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-> index fd9b01881d17..4e8bb7eecd08 100644
-> --- a/security/integrity/ima/ima_policy.c
-> +++ b/security/integrity/ima/ima_policy.c
-> @@ -292,6 +292,11 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
->  {
->         int i;
->
-> +       if (func == KEXEC_CMDLINE) {
-> +               if ((rule->flags & IMA_FUNC) && (rule->func == func))
-> +                       return true;
-> +               return false;
-> +       }
->         if ((rule->flags & IMA_FUNC) &&
->             (rule->func != func && func != POST_SETATTR))
->                 return false;
-> @@ -880,6 +885,8 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
->                                 entry->func = KEXEC_INITRAMFS_CHECK;
->                         else if (strcmp(args[0].from, "POLICY_CHECK") == 0)
->                                 entry->func = POLICY_CHECK;
-> +                       else if (strcmp(args[0].from, "KEXEC_CMDLINE") == 0)
-> +                               entry->func = KEXEC_CMDLINE;
->                         else
->                                 result = -EINVAL;
->                         if (!result)
-> --
-> 2.19.1
->
+On Wed, Jun 19, 2019 at 02:54:36PM +0200, Arnd Bergmann wrote:
+> When either CONFIG_IPV6 or CONFIG_SYN_COOKIES are disabled, the kernel
+> fails to build:
+> 
+> include/linux/netfilter_ipv6.h:180:9: error: implicit declaration of function '__cookie_v6_init_sequence'
+>       [-Werror,-Wimplicit-function-declaration]
+>         return __cookie_v6_init_sequence(iph, th, mssp);
+> include/linux/netfilter_ipv6.h:194:9: error: implicit declaration of function '__cookie_v6_check'
+>       [-Werror,-Wimplicit-function-declaration]
+>         return __cookie_v6_check(iph, th, cookie);
+> net/ipv6/netfilter.c:237:26: error: use of undeclared identifier '__cookie_v6_init_sequence'; did you mean 'cookie_init_sequence'?
+> net/ipv6/netfilter.c:238:21: error: use of undeclared identifier '__cookie_v6_check'; did you mean '__cookie_v4_check'?
+> 
+> Fix the IS_ENABLED() checks to match the function declaration
+> and definitions for these.
 
-Hi Mimi,
-Can you Ack this patch?
-I want to make sure this looks okay to you.
+I made this:
 
-Thanks,
-Prakhar Srivastava
+https://patchwork.ozlabs.org/patch/1117735/
+
+Basically it does:
+
++#endif
++#if IS_MODULE(CONFIG_IPV6) && defined(CONFIG_SYN_COOKIES)
+        .cookie_init_sequence   = __cookie_v6_init_sequence,
+        .cookie_v6_check        = __cookie_v6_check,
+ #endif
+
+If CONFIG_IPV6=n, then net/ipv6/netfilter.c is never compiled.
+
+Unless I'm missing anything, I'd prefer my patch because it's a bit
+less of ifdefs 8-)
+
+Thanks!
