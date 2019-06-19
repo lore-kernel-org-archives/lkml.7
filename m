@@ -2,164 +2,156 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C23B6C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8F30C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:07:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2F421880
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:07:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560956837;
-	bh=2Hs26H6sq/rBanLBrUY3STi9babTBtGpAswe+ybrkiA=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=yq4giqn/MS488ioSBGGu9kkYhjBL8b21g0x4sqFz7jrnd2R72FflOl/1Iw+2CGLOj
-	 6xFCBsulh08x7cmsNhnOWB4WrQxhQEByGqfHkNAMTPn83dA5FpTdpSuHJotyh66DB8
-	 VkJ18wklDFEM6BK/0ys7OFexUARfELUKPNIXY0mk=
+	by mail.kernel.org (Postfix) with ESMTP id A2A2921881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:07:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729693AbfFSPHQ (ORCPT
+        id S1730291AbfFSPHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726865AbfFSPHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:07:15 -0400
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91B732166E;
-        Wed, 19 Jun 2019 15:07:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560956834;
-        bh=2Hs26H6sq/rBanLBrUY3STi9babTBtGpAswe+ybrkiA=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vdYodJXkI5eElfgHeW2Mwn0tQfTT6Lw9KIWGUxoFp1RnXFximO4k8VRpSKHHblzPz
-         fRAMmGh7uv4hsmY2t47KB2MqzdctqV6bT/v5ZRogb9XQy+XCx86ql04B1S591c4qfP
-         HoQGXVwYD+zclDvv53Kos92anqE888fEtzxEUt+4=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: [PATCH v2 00/12] tracing/probe: Add multi-probes per event support
-Date:   Thu, 20 Jun 2019 00:07:09 +0900
-Message-Id: <156095682948.28024.14190188071338900568.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-User-Agent: StGit/0.17.1-dirty
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+        Wed, 19 Jun 2019 11:07:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18182 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729642AbfFSPHU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:07:20 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JF3EEF099408
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:07:19 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t7q1k9cya-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:07:19 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 19 Jun 2019 16:07:17 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Jun 2019 16:07:15 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JF7E0l34537948
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 15:07:14 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 846BE52052;
+        Wed, 19 Jun 2019 15:07:14 +0000 (GMT)
+Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E0C7E52050;
+        Wed, 19 Jun 2019 15:07:13 +0000 (GMT)
+Subject: Re: [PATCH 2/3] IMA:Define a new template field buf
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com
+In-Reply-To: <20190617183507.14160-3-prsriva02@gmail.com>
+References: <20190617183507.14160-1-prsriva02@gmail.com>
+         <20190617183507.14160-3-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Date:   Wed, 19 Jun 2019 09:54:26 -0400
+Mime-Version: 1.0
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061915-0028-0000-0000-0000037BB7E0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061915-0029-0000-0000-0000243BC627
+Message-Id: <1560952466.3975.40.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Mon, 2019-06-17 at 11:35 -0700, Prakhar Srivastava wrote:
+> A buffer(kexec boot command line arguments) measured into IMA
+> measuremnt list cannot be appraised, without already being
+> aware of the buffer contents. Since hashes are non-reversible,
+> raw buffer is needed for validation or regenerating hash for
+> appraisal/attestation.
+> 
+> Add support to store/read the buffer contents in HEX.
+> The kexec cmdline hash is stored in the "d-ng" field of the
+> template data,it can be verified using
+> sudo cat /sys/kernel/security/integrity/ima/ascii_runtime_measurements |
+>   grep  kexec-cmdline | cut -d' ' -f 6 | xxd -r -p | sha256sum
+> 
+> - Add two new fields to ima_event_data to hold the buf and
+> buf_len [Suggested by Roberto]
+> - Add a new temaplte field 'buf' to be used to store/read
+> the buffer data.[Suggested by Mimi]
+> - Updated process_buffer_meaurement to add the buffer to
+> ima_event_data. process_buffer_measurement added in
+> "Define a new IMA hook to measure the boot command line
+>  arguments"
+> - Add a new template policy name ima-buf to represent
+> 'd-ng|n-ng|buf'
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
+> Reviewed-by: Roberto Sassu <roberto.sassu@huawei.com>
+> Reviewed-by: James Morris <jamorris@linux.microsoft.com>
 
-This is the 2nd version of multi-probes per event support on ftrace
-and perf-tools.
+Thanks, looking much better.
 
-Previous version is here;
-https://lkml.org/lkml/2019/5/31/573
+>  
+>  /* IMA template field data definition */
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index ea7d8cbf712f..83ca99d65e4b 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -140,7 +140,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>  	struct ima_template_entry *entry;
+>  	struct inode *inode = file_inode(file);
+>  	struct ima_event_data event_data = {iint, file, filename, NULL, 0,
+> -					    cause};
+> +					    cause, NULL, 0};
+>  	int violation = 1;
+>  	int result;
+>  
+> @@ -296,7 +296,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint,
+>  	struct inode *inode = file_inode(file);
+>  	struct ima_template_entry *entry;
+>  	struct ima_event_data event_data = {iint, file, filename, xattr_value,
+> -					    xattr_len, NULL};
+> +					    xattr_len, NULL, NULL, 0};
+>  	int violation = 0;
+>  
+>  	if (iint->measured_pcrs & (0x1 << pcr))
+> diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+> index 993d0f1915ff..c8591406c0e2 100644
+> --- a/security/integrity/ima/ima_init.c
+> +++ b/security/integrity/ima/ima_init.c
+> @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
+>  	struct ima_template_entry *entry;
+>  	struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
+>  	struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
+> -					    NULL, 0, NULL};
+> +					    NULL, 0, NULL, NULL, 0};
+>  	int result = -ENOMEM;
+>  	int violation = 0;
+>  	struct {
+> 
 
->From this version, I omitted first 9 patches which has been picked
-to Steve's tree.
-In this version, I've fixed some bugs and hardened some unexpected
-error cases according to Steve's comment.
-Here are changes in this version:
+These changes shouldn't be necessary.  Please rebase these patches on
+top of the latest next-queued-testing branch (git remote update).  "IMA: support for per
+policy rule template formats" is still changing. 
 
- - [1/12] This have below changes. 
-    - Warn if the primary trace_probe does not exist.
-    - Fix enable_trace_kprobe() to not return error if the any probes
-      are "gone" state. If all probes have gone or any other error
-      reason, the event can not be enabled and return error.
-    - Fix trace_probe_enable() to roll back all enabled uprobe if
-      any one of uprobe is failed to enable.
- - [7/12] Swap the checking order of filename for avoiding unexpected
-     memory access.
+Minor nit.  When re-posting the patches please update the patch titles
+so that there is a space between the subsystem name and the patch
+title (eg. "ima: define ...").
 
+Mimi
 
-====
-For trace-event, we can insert same trace-event on several places
-on the code, and those can record similar information as a same event
-with same format.
-
-This series implements similar feature on probe-event. Since the probe
-event is based on the compiled binary, sometimes we find that the target
-source line is complied into several different addresses, e.g. inlined
-function, unrolled loop, etc. In those cases, it is useful to put a
-same probe-event on different addresses.
-
-With this series, we can append multi probes on one event as below
-
-  # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-  # echo p:testevent fork_idle r1=%ax r2=%cx >> kprobe_events
-  # kprobe_events
-  p:kprobes/testevent _do_fork r1=%ax r2=%dx
-  p:kprobes/testevent fork_idle r1=%ax r2=%cx
-
-This means testevent is hit on both of _do_fork and fork_idle.
-As you can see, the appended event must have same number of arguments
-and those must have same 'type' and 'name' as original one. This is like
-a function signature, it checks whether the appending event has the same
-type and name of event arguments and same probe type, but doesn't care
-about the assignment.
-
-So, below appending commands will be rejected.
-
-  # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-  # echo p:testevent fork_idle r1=%ax >> kprobe_events
-  (No 2nd argument)
-  # echo p:testevent fork_idle r1=%ax r2=%ax:x8 >> kprobe_events
-  (The type of 2nd argument is different)
-
-If one inlined code has an argument on a register, but another
-inlined code has fixed value (as a result of optimization),
-you can also specify the fixed immediate value, e.g.
-
-  # echo p:testevent _do_fork r1=%ax r2=%dx > kprobe_events
-  # echo p:testevent fork_idle r1=%ax r2=\1 >> kprobe_events
-
-
-Thank you,
-
----
-
-Masami Hiramatsu (12):
-      tracing/probe: Split trace_event related data from trace_probe
-      tracing/dynevent: Delete all matched events
-      tracing/dynevent: Pass extra arguments to match operation
-      tracing/kprobe: Add multi-probe per event support
-      tracing/uprobe: Add multi-probe per uprobe event support
-      tracing/kprobe: Add per-probe delete from event
-      tracing/uprobe: Add per-probe delete from event
-      tracing/probe: Add immediate parameter support
-      tracing/probe: Add immediate string parameter support
-      selftests/ftrace: Add a testcase for kprobe multiprobe event
-      selftests/ftrace: Add syntax error test for immediates
-      selftests/ftrace: Add syntax error test for multiprobe
-
-
- Documentation/trace/kprobetrace.rst                |    1 
- Documentation/trace/uprobetracer.rst               |    1 
- kernel/trace/trace.c                               |    8 -
- kernel/trace/trace_dynevent.c                      |   10 +
- kernel/trace/trace_dynevent.h                      |    7 -
- kernel/trace/trace_events_hist.c                   |    4 
- kernel/trace/trace_kprobe.c                        |  241 ++++++++++++++----
- kernel/trace/trace_probe.c                         |  176 +++++++++++--
- kernel/trace/trace_probe.h                         |   67 ++++-
- kernel/trace/trace_uprobe.c                        |  263 +++++++++++++++-----
- tools/testing/selftests/ftrace/test.d/functions    |    2 
- .../ftrace/test.d/kprobe/kprobe_multiprobe.tc      |   35 +++
- .../ftrace/test.d/kprobe/kprobe_syntax_errors.tc   |   15 +
- 13 files changed, 665 insertions(+), 165 deletions(-)
- create mode 100644 tools/testing/selftests/ftrace/test.d/kprobe/kprobe_multiprobe.tc
-
---
-Masami Hiramatsu (Linaro) <mhiramat@kernel.org>
