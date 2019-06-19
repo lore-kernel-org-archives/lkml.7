@@ -2,123 +2,148 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68526C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A08AC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DE69208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=aampusa.onmicrosoft.com header.i=@aampusa.onmicrosoft.com header.b="u/itsmQ+"
+	by mail.kernel.org (Postfix) with ESMTP id 6CF32208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731914AbfFSMzJ (ORCPT
+        id S1731941AbfFSMzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:55:09 -0400
-Received: from mail-eopbgr760104.outbound.protection.outlook.com ([40.107.76.104]:54358
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727129AbfFSMzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:55:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=aampusa.onmicrosoft.com; s=selector2-aampusa-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=r2H8fCVRsrWG3ksdD4lAqALAmVA/Kh6g1GgF9aPTMDA=;
- b=u/itsmQ+crgSMSJVMGAuaPo6ohXykLysAxtoXFBb5YDQDeXSSaQwL58UelHs8oktctQiw+ckrHMWPIBi+nuLwrVewctYH9mzMDFnvLWtKM3EEPZPXG5wGHW321y4aSInLqIruC7Gp3FheqMRfePUek1FezobhfozGMllbpNoQa8=
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com (52.132.10.149) by
- BL0PR07MB5746.namprd07.prod.outlook.com (20.177.243.33) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.13; Wed, 19 Jun 2019 12:55:04 +0000
-Received: from BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e]) by BL0PR07MB4115.namprd07.prod.outlook.com
- ([fe80::f064:5129:63c6:d3e%6]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
- 12:55:03 +0000
-From:   Ken Sloat <KSloat@aampglobal.com>
-To:     "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-CC:     Kasun Beddewela <KBeddewela@aampglobal.com>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Ken Sloat <KSloat@aampglobal.com>
-Subject: input: Device Tree Properties for Captouch Button Device Registers
-Thread-Topic: input: Device Tree Properties for Captouch Button Device
- Registers
-Thread-Index: AdUmniJSlNglerPZSFOVaVVYianGHA==
-Date:   Wed, 19 Jun 2019 12:55:03 +0000
-Message-ID: <BL0PR07MB4115574AA13B8F8C2E036644ADE50@BL0PR07MB4115.namprd07.prod.outlook.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=KSloat@aampglobal.com; 
-x-originating-ip: [100.3.71.115]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 00175fd7-bb48-44be-9cbd-08d6f4b5590d
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BL0PR07MB5746;
-x-ms-traffictypediagnostic: BL0PR07MB5746:
-x-microsoft-antispam-prvs: <BL0PR07MB574628AD12E9BF0EC7DAEF1EADE50@BL0PR07MB5746.namprd07.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 0073BFEF03
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(376002)(366004)(136003)(39850400004)(346002)(189003)(199004)(2906002)(66446008)(4744005)(7736002)(305945005)(86362001)(71200400001)(64756008)(66556008)(107886003)(33656002)(72206003)(5660300002)(55016002)(478600001)(8936002)(76116006)(81166006)(186003)(54906003)(6506007)(99286004)(71190400001)(7696005)(66476007)(486006)(476003)(6916009)(14454004)(316002)(74316002)(81156014)(73956011)(102836004)(25786009)(80792005)(52536014)(4326008)(8676002)(2351001)(66946007)(66066001)(53936002)(3846002)(5640700003)(1361003)(26005)(6436002)(256004)(9686003)(68736007)(2501003)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:BL0PR07MB5746;H:BL0PR07MB4115.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: aampglobal.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: hYB47VQQVMnqf9Ucf7o9YcqZqo9epKMrV18KrcKzlU4lGnjlRhlTTwnUDyEmo0JFWB7iRPGF5SqzsS7tRMZpxTSNReI5KdSiGIxCG4CG9vQZOs61tVIAGy/j0gb8B/ICJMlt4Ix0PZQtbrHv3Nc5LqrGadZaeyLxDD2rR1cqQSTsbY+iVHLY9EJKF2HFILUR8NPx1MrJpEvretuCjiEIRCrdL2meQWE7qR7uuKmnm5uAkqWNdCpA3nXc6UPywM7bMf8aXymfK7GEYYasKmwDQykqkR19+gjEFyCpmqVOsWBQBFpP6EHV+aRQl7FH4o6TzjHk4IFdbsChDbuQtdZw74zjCHsD8//ZkamknABalzprYc/t1HlaEYtBEAKTmli3R6ZaryzLh5E4UbscbraiK5q44Nm52dO5N693lMm7zxk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 19 Jun 2019 08:55:23 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:52609 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731770AbfFSMzW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:55:22 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1M2w4S-1hcUib3o9k-003KN8; Wed, 19 Jun 2019 14:55:06 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Florian Westphal <fw@strlen.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>,
+        wenxu <wenxu@ucloud.cn>, netfilter-devel@vger.kernel.org,
+        coreteam@netfilter.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH] netfilter: synproxy: fix building syncookie calls
+Date:   Wed, 19 Jun 2019 14:54:36 +0200
+Message-Id: <20190619125500.1054426-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-X-OriginatorOrg: aampglobal.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00175fd7-bb48-44be-9cbd-08d6f4b5590d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 12:55:03.9306
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: e20e3a66-8b9e-46e9-b859-cb654c1ec6ea
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: ken.sloat@aampglobal.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL0PR07MB5746
-X-MS-Exchange-CrossPremises-AuthAs: Internal
-X-MS-Exchange-CrossPremises-AuthMechanism: 04
-X-MS-Exchange-CrossPremises-AuthSource: BL0PR07MB4115.namprd07.prod.outlook.com
-X-MS-Exchange-CrossPremises-TransportTrafficType: Email
-X-MS-Exchange-CrossPremises-TransportTrafficSubType: 
-X-MS-Exchange-CrossPremises-SCL: 1
-X-MS-Exchange-CrossPremises-messagesource: StoreDriver
-X-MS-Exchange-CrossPremises-BCC: 
-X-MS-Exchange-CrossPremises-originalclientipaddress: 100.3.71.115
-X-MS-Exchange-CrossPremises-transporttraffictype: Email
-X-MS-Exchange-CrossPremises-transporttrafficsubtype: 
-X-MS-Exchange-CrossPremises-antispam-scancontext: DIR:Originating;SFV:NSPM;SKIP:0;
-X-MS-Exchange-CrossPremises-processed-by-journaling: Journal Agent
-X-OrganizationHeadersPreserved: BL0PR07MB5746.namprd07.prod.outlook.com
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:xZ3TMz67ZOJPH0ye7NMGfik9gT3NNsynu5AzNJdutOeiOL4FIS+
+ WAWs6+suEpnTzZ0LzUoZyVkCVr1RxNHd20j4ksTpwlFIPQxcMO5a9ZcyxLcotOgwe3uGlOB
+ 1rUhA3r55CeT4b39lG/fNvkOu+NH9MlldXRpHp+zIZHBl1jlpZXUFAeA7s2aAzOnrbYgInB
+ CM/7zqvrJ+PwsLR9lYTaA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:QNzBUpn2b2I=:HHSLfW4VycGyqlqjJGBf1q
+ fdgoN5ybxex4s6O5gaO7m7glXbbkeG+zpqnv/+J7PcPaAZsuJI4jX0awEBftE3tWXouk5AFBQ
+ 7wGCEYH8Krmv7DfRx/lRWw/NT2Ud9NaS89PZ30JNeHPpPcGcMoYvGOXp4wBoVFOuLXlwLPRaw
+ k6p4G94DRpiD1U2mzw5j0Gw0aQJHIG0IeC7kpwrmdgwc2Kf9+tu0wnUI3EzSHccyelPMn7fyo
+ LPlyIcZOUcjRrjhO+rBz1w03EOWL6TAFzMJMJYJkB3u0SaGz0OzeLyf82QM0o79WOxMRSIR1L
+ MT57jVBhuAdsTmoV+sesjbAgvjAHdSx1tOd+OmFFVTd/UNTEmKFSYA4EDlrB1IH0g9aaRX2bB
+ oV6debd+6899coOTyIyk95qQzAYbdhIe/Rpf5mpimOfki6Tefm9mP7xFoG4y4EjEl/OqbhzVC
+ 0SbQJc8NNXij6OMRadEflf+DZ2FgdNF7F6pCBV19bmV0Rzb87yl+hTeGvSphxSxvi5JobW5pC
+ Umgre0T3SfAhvELEsXFq4m51iCssETNixScH3NREJc4kHeexV+g3T96PfeTxk7o3KR2YcuA6R
+ PCrVKn+sFcl2xO7yqHKc2UWl1zjkegg8D+h3k5QkksWlDhU7slSUB9VMqbdRBRzpe+j3MpziH
+ dUf3TFpYKj0d7WmJnQ37eH7enuwxokIPfPARLkLtvkU/CBQiEF+Un91ncd7TjWboRs/r44J6/
+ C4qzRdDKXLFuITe/kDDoYHGEjFZ0JXQtp7bbFw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello Dmitry,
+When either CONFIG_IPV6 or CONFIG_SYN_COOKIES are disabled, the kernel
+fails to build:
 
-We have a new input driver we are currently working on and would like to su=
-bmit
-to the Linux kernel when we finish it. Specifically, this is a cap touch IC=
- which
-implements potentially multiple individual proximity and cap touch buttons =
-(which
-would be reported like key events as seems to be the standard). A couple of=
- questions:
+include/linux/netfilter_ipv6.h:180:9: error: implicit declaration of function '__cookie_v6_init_sequence'
+      [-Werror,-Wimplicit-function-declaration]
+        return __cookie_v6_init_sequence(iph, th, mssp);
+include/linux/netfilter_ipv6.h:194:9: error: implicit declaration of function '__cookie_v6_check'
+      [-Werror,-Wimplicit-function-declaration]
+        return __cookie_v6_check(iph, th, cookie);
+net/ipv6/netfilter.c:237:26: error: use of undeclared identifier '__cookie_v6_init_sequence'; did you mean 'cookie_init_sequence'?
+net/ipv6/netfilter.c:238:21: error: use of undeclared identifier '__cookie_v6_check'; did you mean '__cookie_v4_check'?
 
-1. What is the preferred/proper method to expose the many registers that
-these devices have via device tree?
+Fix the IS_ENABLED() checks to match the function declaration
+and definitions for these.
 
-These devices have dozens of registers, many of which might be needed depen=
-ding
-on the individual application. It wouldn't be useful in the majority of cas=
-es to provide
-default values in the driver as the registers are custom tuned to the indiv=
-idual application.
+Fixes: 3006a5224f15 ("netfilter: synproxy: remove module dependency on IPv6 SYNPROXY")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/netfilter_ipv6.h | 14 ++++++++------
+ net/ipv6/netfilter.c           |  2 ++
+ 2 files changed, 10 insertions(+), 6 deletions(-)
 
-2. Where should this device live? I am guessing in input/misc?
+diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
+index 1aa3a23744df..7beb681e1ce5 100644
+--- a/include/linux/netfilter_ipv6.h
++++ b/include/linux/netfilter_ipv6.h
+@@ -171,31 +171,33 @@ static inline u32 nf_ipv6_cookie_init_sequence(const struct ipv6hdr *iph,
+ 					       const struct tcphdr *th,
+ 					       u16 *mssp)
+ {
++#if IS_ENABLED(CONFIG_SYN_COOKIES)
+ #if IS_MODULE(CONFIG_IPV6)
+ 	const struct nf_ipv6_ops *v6_ops = nf_get_ipv6_ops();
+ 
+ 	if (v6_ops)
+ 		return v6_ops->cookie_init_sequence(iph, th, mssp);
+-
+-	return 0;
+-#else
++#elif IS_BUILTIN(CONFIG_IPV6)
+ 	return __cookie_v6_init_sequence(iph, th, mssp);
+ #endif
++#endif
++	return 0;
+ }
+ 
+ static inline int nf_cookie_v6_check(const struct ipv6hdr *iph,
+ 				     const struct tcphdr *th, __u32 cookie)
+ {
++#if IS_ENABLED(CONFIG_SYN_COOKIES)
+ #if IS_MODULE(CONFIG_IPV6)
+ 	const struct nf_ipv6_ops *v6_ops = nf_get_ipv6_ops();
+ 
+ 	if (v6_ops)
+ 		return v6_ops->cookie_v6_check(iph, th, cookie);
+-
+-	return 0;
+-#else
++#elif IS_BUILTIN(CONFIG_IPV6)
+ 	return __cookie_v6_check(iph, th, cookie);
+ #endif
++#endif
++	return 0;
+ }
+ 
+ __sum16 nf_ip6_checksum(struct sk_buff *skb, unsigned int hook,
+diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
+index dffb10fdc3e8..61819ed858b1 100644
+--- a/net/ipv6/netfilter.c
++++ b/net/ipv6/netfilter.c
+@@ -234,8 +234,10 @@ static const struct nf_ipv6_ops ipv6ops = {
+ 	.route_me_harder	= ip6_route_me_harder,
+ 	.dev_get_saddr		= ipv6_dev_get_saddr,
+ 	.route			= __nf_ip6_route,
++#if IS_ENABLED(CONFIG_SYN_COOKIES)
+ 	.cookie_init_sequence	= __cookie_v6_init_sequence,
+ 	.cookie_v6_check	= __cookie_v6_check,
++#endif
+ #endif
+ 	.route_input		= ip6_route_input,
+ 	.fragment		= ip6_fragment,
+-- 
+2.20.0
 
-Thanks,
-Ken Sloat
