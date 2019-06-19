@@ -2,154 +2,122 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D8EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 01:57:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5004C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 02:01:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6B22085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 01:57:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F47E2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 02:01:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BaZDV+wO"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QNw84ZnE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729835AbfFSB5u (ORCPT
+        id S1729775AbfFSCA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 21:57:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36916 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSB5t (ORCPT
+        Tue, 18 Jun 2019 22:00:59 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:47045 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726181AbfFSCA7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 21:57:49 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bh12so6486126plb.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 18:57:49 -0700 (PDT)
+        Tue, 18 Jun 2019 22:00:59 -0400
+Received: by mail-io1-f67.google.com with SMTP id i10so34366507iol.13;
+        Tue, 18 Jun 2019 19:00:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=DtzpsEMmA6y/VxThJKdgqPMw4atSdDvUpiSanqf0lPA=;
-        b=BaZDV+wO6ImusZDj4cQOtLE/OFaK6teBN6YPViixSjyaqIfOfVDmWt4qSgmzzhO+4l
-         rNjno/gyW56AzTXhsLEU2m80JQu5u3gt0iyt5S4gcCBEeJOPd73ZmQU9quFH24SI34JH
-         7WoKEt/tJYcpT7wPqtAlho2FcVvDYTAWp35Ceug20SqujuXlyrPHvtcfWKKrvQmJ0tFM
-         BzRDlhCHPWigZsI6exq4gGrgvxlaK5Oww/q5T9nIReszwzKWtRLtkhR3jyPmLz7FDJHN
-         sQQn9lqef32jdMlxDCVKz/4FoBQfawT+KNALwX4w7UqNsCT2KwdIQli5YuPEMO424jF2
-         3AVA==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eZlNqOfQ+cHNdJqkd29lNdR3i4fL4rmWEkZsMWK7znE=;
+        b=QNw84ZnE1KiYojVyUU/yiZRtsyrliaoOtKWJfomCUkjAb4lPsdOzr8nFSHca+BKKP5
+         k/g9VUI5/H0OCPDdDcYJzKXiDYSl34/pl9sz7yJOANe7Jhp7xnmEufeaEka7cIqxZ7fX
+         vPC4kh6m1Zhy7nGsEJDl4RVdMWrkHNC4Q84PXYF7SjVIVB5Gmd8byeBuO8rcGlXyaTk3
+         M/WP6fse4B1/mNityUHGYDbdviHeWsPeFe/jl/Z+HwbftY2B5rsX0P+JWzR4HVUpcWUq
+         tqf88V3g5sRr+QxZjiv+yIFYOPmzFWvXDqVGq5rgv+OlHwjpxwAp1aRPmHzsx+I/Qzd6
+         SDtg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=DtzpsEMmA6y/VxThJKdgqPMw4atSdDvUpiSanqf0lPA=;
-        b=gN3bzvt6BU8A3csStQCTl/tWGXd+AWsfobGLIa32j4VmKKuKMzOJ9e0ihtdnfg6Eix
-         XqCwuISXl7ssntllhWR5hpbzv9s2WQPwiZDweJXV0Oal7vsf51KexofbDHEjfEsGf6HZ
-         xLpA2pUKH/eicevC7KS/fq6fimfBbM4P0oBHz+1Y2dllHKvOuRfwmggHZJm8gKH5Yxs4
-         ZCsZYfXZ3oAoERmQgKxB7vnT9dsQdJjNWGGkIfVN6/PQBkBL4oEV+1uKJZz8RfpoHgww
-         oqjHLK9V3/xwJMfR5kjpseBRslgMV2wseLcqzjHp8fSXxYAHoVComqi+S4fqugf8Prd6
-         m4sg==
-X-Gm-Message-State: APjAAAUczosWCM1r0m6Od/IwJNjpmWsnZln+yMB5jtAVGi6aZh6INQXr
-        lxHaghJsTl85629NojUBwvc=
-X-Google-Smtp-Source: APXvYqzTSbLGX2f1sPruiEJLHqdG195QU1uWlsCYUFCHOYHVqgjZtiO1bcEion3Xsh87njq+2dMDlQ==
-X-Received: by 2002:a17:902:a5c5:: with SMTP id t5mr118819238plq.288.1560909469154;
-        Tue, 18 Jun 2019 18:57:49 -0700 (PDT)
-Received: from hari-Inspiron-1545 ([183.83.92.187])
-        by smtp.gmail.com with ESMTPSA id x26sm14327540pfq.69.2019.06.18.18.57.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 18 Jun 2019 18:57:48 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 07:27:43 +0530
-From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michael Straube <straube.linux@gmail.com>,
-        Mamta Shukla <mamtashukla555@gmail.com>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        Nishka Dasgupta <nishkadg.linux@gmail.com>,
-        Emanuel Bennici <benniciemanuel78@gmail.com>,
-        Puranjay Mohan <puranjay12@gmail.com>,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [Patch v3] staging: rtl8723bs: os_dep: ioctl_linux: make use of
- kzalloc
-Message-ID: <20190619015742.GA19278@hari-Inspiron-1545>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eZlNqOfQ+cHNdJqkd29lNdR3i4fL4rmWEkZsMWK7znE=;
+        b=lLXcwDRptqfAkG5GllGVjnK/xpxYjWBG0fDLFKRJQfxFEVrl9H21zyFtirtmoYCOIa
+         bxM/NWx+hy+2xG+5Xlrg6AdRtg8U7WOewOUor17la6vhmfmvucdYZXezF2bL0OowAffy
+         oZGrZ9QZFONADFPxkYno6E7fm364StwOaBRho3TrXIr3vNQoPY7z8sj+7YW3hSxQDkJe
+         0Ym5UZ3yHD4tqy8Rbc40MdMParAlVAGV8WliBeSNrZxpEo5UAQHe+NybCpfWCYr3E6YI
+         Ou/TV1MVbJ82st4FzFvTjFOnuWd/D+rqGs3xxZBc7K9WdpcSo5QQ1AfVcE5E8AvKKmYB
+         gVkA==
+X-Gm-Message-State: APjAAAVQH5iYna6t+ECxuan/DNiVR/aevcf4phzmPrcTBRqba9EndNu0
+        g2lfmcMUaWN1mtawsAEy76KzcSdXIJvjuDpxXes=
+X-Google-Smtp-Source: APXvYqyEiuU+7GuIyt/bjd4AKwc6h3oMsOokWeb7N8r8byr++x8C9goZvFRsvK9H6n9hm+wG6yHtKJZvAKV/uFbzEko=
+X-Received: by 2002:a6b:901:: with SMTP id t1mr5924618ioi.42.1560909658419;
+ Tue, 18 Jun 2019 19:00:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190618211440.54179-1-mka@chromium.org> <20190618230420.GA84107@archlinux-epyc>
+ <20190618232140.GW137143@google.com>
+In-Reply-To: <20190618232140.GW137143@google.com>
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+Date:   Tue, 18 Jun 2019 19:00:46 -0700
+Message-ID: <CAKgT0UfRxAMFun5fQbqwwppHArUXP=Z_GnVEJ3x2j6ODkD7UPA@mail.gmail.com>
+Subject: Re: [PATCH] net/ipv4: fib_trie: Avoid cryptic ternary expressions
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is a cleanup which replaces rtw_malloc(wep_total_len) with
-kzalloc() and removes the memset().
+On Tue, Jun 18, 2019 at 4:22 PM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Tue, Jun 18, 2019 at 04:04:20PM -0700, Nathan Chancellor wrote:
+> > On Tue, Jun 18, 2019 at 02:14:40PM -0700, Matthias Kaehlcke wrote:
+> > > empty_child_inc/dec() use the ternary operator for conditional
+> > > operations. The conditions involve the post/pre in/decrement
+> > > operator and the operation is only performed when the condition
+> > > is *not* true. This is hard to parse for humans, use a regular
+> > > 'if' construct instead and perform the in/decrement separately.
+> > >
+> > > This also fixes two warnings that are emitted about the value
+> > > of the ternary expression being unused, when building the kernel
+> > > with clang + "kbuild: Remove unnecessary -Wno-unused-value"
+> > > (https://lore.kernel.org/patchwork/patch/1089869/):
+> > >
+> > > CC      net/ipv4/fib_trie.o
+> > > net/ipv4/fib_trie.c:351:2: error: expression result unused [-Werror,-Wunused-value]
+> > >         ++tn_info(n)->empty_children ? : ++tn_info(n)->full_children;
+> > >
+> >
+> > As an FYI, this is also being fixed in clang:
+> >
+> > https://bugs.llvm.org/show_bug.cgi?id=42239
+> >
+> > https://reviews.llvm.org/D63369
+>
+> Great, thanks!
+>
+> In this case it was actually useful to get the warning, even though it
+> didn't point out the actual bug. I think in general it would be
+> preferable to avoid such constructs, even when they are correct. But
+> then again, it's the reviewers/maintainers task to avoid unnecessarily
+> cryptic code from slipping in, and this just happens to be one instance
+> where the compiler could have helped.
 
-The rtw_malloc() does GFP_ATOMIC allocations when in_atomic() is true.
-But as the comments for in_atomic() describe, the in_atomic() check
-should not be used in driver code.  The in_atomic() check is not
-accurate when preempt is disabled.
+So it took me a bit to remember/understand it as well since I haven't
+touched the code in over 4 years, however part of that is because the
+comment for this code is actually buried down in put_child.
+Essentially this is just meant to be an add w/ carry and a sub w/
+borrow to address a potential overflow if bits == KEYLENGTH.
 
-In this code we are not in IRQ context and we are not holding any
-spin_locks so GFP_KERNEL is safe.
-
-Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-----
-changes in v2: Replace rtw_zmalloc with kzalloc
-changes in v3: Add proper changelog
----
----
- drivers/staging/rtl8723bs/os_dep/ioctl_linux.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-index ea50ec424..e050f20 100644
---- a/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/ioctl_linux.c
-@@ -477,14 +477,12 @@ static int wpa_set_encryption(struct net_device *dev, struct ieee_param *param,
- 		if (wep_key_len > 0) {
- 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
- 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
--			pwep = rtw_malloc(wep_total_len);
-+			pwep = kzalloc(wep_total_len, GFP_KERNEL);
- 			if (pwep == NULL) {
- 				RT_TRACE(_module_rtl871x_ioctl_os_c, _drv_err_, (" wpa_set_encryption: pwep allocate fail !!!\n"));
- 				goto exit;
- 			}
- 
--			memset(pwep, 0, wep_total_len);
--
- 			pwep->KeyLength = wep_key_len;
- 			pwep->Length = wep_total_len;
- 
-@@ -2142,12 +2140,10 @@ static int rtw_wx_set_enc_ext(struct net_device *dev,
- 	int ret = 0;
- 
- 	param_len = sizeof(struct ieee_param) + pext->key_len;
--	param = rtw_malloc(param_len);
-+	param = kzalloc(param_len, GFP_KERNEL);
- 	if (param == NULL)
- 		return -1;
- 
--	memset(param, 0, param_len);
--
- 	param->cmd = IEEE_CMD_SET_ENCRYPTION;
- 	memset(param->sta_addr, 0xff, ETH_ALEN);
- 
-@@ -3513,14 +3509,12 @@ static int rtw_set_encryption(struct net_device *dev, struct ieee_param *param,
- 		if (wep_key_len > 0) {
- 			wep_key_len = wep_key_len <= 5 ? 5 : 13;
- 			wep_total_len = wep_key_len + FIELD_OFFSET(struct ndis_802_11_wep, KeyMaterial);
--			pwep = rtw_malloc(wep_total_len);
-+			pwep = kzalloc(wep_total_len, GFP_KERNEL);
- 			if (pwep == NULL) {
- 				DBG_871X(" r871x_set_encryption: pwep allocate fail !!!\n");
- 				goto exit;
- 			}
- 
--			memset(pwep, 0, wep_total_len);
--
- 			pwep->KeyLength = wep_key_len;
- 			pwep->Length = wep_total_len;
- 
--- 
-2.7.4
-
+If you want you can add:
+Fixes: 95f60ea3e99a ("fib_trie: Add collapse() and should_collapse() to resize")
+Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
