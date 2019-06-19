@@ -2,100 +2,399 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D72DC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:14:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74957C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:14:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4CED20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:14:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36881208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:14:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730890AbfFSFOB (ORCPT
+        id S1730284AbfFSFOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:14:01 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47099 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725881AbfFSFOA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:14:00 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 46F1560005;
-        Wed, 19 Jun 2019 05:13:54 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH 4/8] x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
-Date:   Wed, 19 Jun 2019 01:08:40 -0400
-Message-Id: <20190619050844.5294-5-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190619050844.5294-1-alex@ghiti.fr>
-References: <20190619050844.5294-1-alex@ghiti.fr>
+        Wed, 19 Jun 2019 01:14:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:41829 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfFSFOp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 01:14:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TCmw4yXwz9s4V;
+        Wed, 19 Jun 2019 15:14:40 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Cc:     linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/7] powerpc/ftrace: Additionally nop out the preceding mflr with -mprofile-kernel
+In-Reply-To: <72492bc769cd6f40a536e689fc3195570d07fd5c.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com> <72492bc769cd6f40a536e689fc3195570d07fd5c.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
+Date:   Wed, 19 Jun 2019 15:14:40 +1000
+Message-ID: <877e9idum7.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of mmap failure in top-down mode, there is no need to go through
-the whole address space again for the bottom-up fallback: the goal of this
-fallback is to find, as a last resort, space between the top-down mmap base
-and the stack, which is the only place not covered by the top-down mmap.
+Hi Naveen,
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
----
- arch/x86/mm/hugetlbpage.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Sorry I meant to reply to this earlier .. :/
 
-diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
-index fab095362c50..4b90339aef50 100644
---- a/arch/x86/mm/hugetlbpage.c
-+++ b/arch/x86/mm/hugetlbpage.c
-@@ -106,11 +106,12 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
- {
- 	struct hstate *h = hstate_file(file);
- 	struct vm_unmapped_area_info info;
-+	unsigned long mmap_base = get_mmap_base(0);
- 
- 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
- 	info.length = len;
- 	info.low_limit = PAGE_SIZE;
--	info.high_limit = get_mmap_base(0);
-+	info.high_limit = mmap_base;
- 
- 	/*
- 	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
-@@ -132,7 +133,7 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
- 	if (addr & ~PAGE_MASK) {
- 		VM_BUG_ON(addr != -ENOMEM);
- 		info.flags = 0;
--		info.low_limit = TASK_UNMAPPED_BASE;
-+		info.low_limit = mmap_base;
- 		info.high_limit = TASK_SIZE_LOW;
- 		addr = vm_unmapped_area(&info);
- 	}
--- 
-2.20.1
+"Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
+> With -mprofile-kernel, gcc emits 'mflr r0', followed by 'bl _mcount' to
+> enable function tracing and profiling. So far, with dynamic ftrace, we
+> used to only patch out the branch to _mcount(). However, mflr is
+> executed by the branch unit that can only execute one per cycle on
+> POWER9 and shared with branches, so it would be nice to avoid it where
+> possible.
+>
+> We cannot simply nop out the mflr either. When enabling function
+> tracing, there can be a race if tracing is enabled when some thread was
+> interrupted after executing a nop'ed out mflr. In this case, the thread
+> would execute the now-patched-in branch to _mcount() without having
+> executed the preceding mflr.
+>
+> To solve this, we now enable function tracing in 2 steps: patch in the
+> mflr instruction, use synchronize_rcu_tasks() to ensure all existing
+> threads make progress, and then patch in the branch to _mcount(). We
+> override ftrace_replace_code() with a powerpc64 variant for this
+> purpose.
 
+According to the ISA we're not allowed to patch mflr at runtime. See the
+section on "CMODX".
+
+I'm also not convinced the ordering between the two patches is
+guaranteed by the ISA, given that there's possibly no isync on the other
+CPU.
+
+But I haven't had time to dig into it sorry, hopefully later in the
+week?
+
+cheers
+
+> diff --git a/arch/powerpc/kernel/trace/ftrace.c b/arch/powerpc/kernel/trace/ftrace.c
+> index 517662a56bdc..5e2b29808af1 100644
+> --- a/arch/powerpc/kernel/trace/ftrace.c
+> +++ b/arch/powerpc/kernel/trace/ftrace.c
+> @@ -125,7 +125,7 @@ __ftrace_make_nop(struct module *mod,
+>  {
+>  	unsigned long entry, ptr, tramp;
+>  	unsigned long ip = rec->ip;
+> -	unsigned int op, pop;
+> +	unsigned int op;
+>  
+>  	/* read where this goes */
+>  	if (probe_kernel_read(&op, (void *)ip, sizeof(int))) {
+> @@ -160,8 +160,6 @@ __ftrace_make_nop(struct module *mod,
+>  
+>  #ifdef CONFIG_MPROFILE_KERNEL
+>  	/* When using -mkernel_profile there is no load to jump over */
+> -	pop = PPC_INST_NOP;
+> -
+>  	if (probe_kernel_read(&op, (void *)(ip - 4), 4)) {
+>  		pr_err("Fetching instruction at %lx failed.\n", ip - 4);
+>  		return -EFAULT;
+> @@ -169,26 +167,23 @@ __ftrace_make_nop(struct module *mod,
+>  
+>  	/* We expect either a mflr r0, or a std r0, LRSAVE(r1) */
+>  	if (op != PPC_INST_MFLR && op != PPC_INST_STD_LR) {
+> -		pr_err("Unexpected instruction %08x around bl _mcount\n", op);
+> +		pr_err("Unexpected instruction %08x before bl _mcount\n", op);
+>  		return -EINVAL;
+>  	}
+> -#else
+> -	/*
+> -	 * Our original call site looks like:
+> -	 *
+> -	 * bl <tramp>
+> -	 * ld r2,XX(r1)
+> -	 *
+> -	 * Milton Miller pointed out that we can not simply nop the branch.
+> -	 * If a task was preempted when calling a trace function, the nops
+> -	 * will remove the way to restore the TOC in r2 and the r2 TOC will
+> -	 * get corrupted.
+> -	 *
+> -	 * Use a b +8 to jump over the load.
+> -	 */
+>  
+> -	pop = PPC_INST_BRANCH | 8;	/* b +8 */
+> +	/* We should patch out the bl to _mcount first */
+> +	if (patch_instruction((unsigned int *)ip, PPC_INST_NOP)) {
+> +		pr_err("Patching NOP failed.\n");
+> +		return -EPERM;
+> +	}
+>  
+> +	/* then, nop out the preceding 'mflr r0' as an optimization */
+> +	if (op == PPC_INST_MFLR &&
+> +		patch_instruction((unsigned int *)(ip - 4), PPC_INST_NOP)) {
+> +		pr_err("Patching NOP failed.\n");
+> +		return -EPERM;
+> +	}
+> +#else
+>  	/*
+>  	 * Check what is in the next instruction. We can see ld r2,40(r1), but
+>  	 * on first pass after boot we will see mflr r0.
+> @@ -202,12 +197,25 @@ __ftrace_make_nop(struct module *mod,
+>  		pr_err("Expected %08x found %08x\n", PPC_INST_LD_TOC, op);
+>  		return -EINVAL;
+>  	}
+> -#endif /* CONFIG_MPROFILE_KERNEL */
+>  
+> -	if (patch_instruction((unsigned int *)ip, pop)) {
+> +	/*
+> +	 * Our original call site looks like:
+> +	 *
+> +	 * bl <tramp>
+> +	 * ld r2,XX(r1)
+> +	 *
+> +	 * Milton Miller pointed out that we can not simply nop the branch.
+> +	 * If a task was preempted when calling a trace function, the nops
+> +	 * will remove the way to restore the TOC in r2 and the r2 TOC will
+> +	 * get corrupted.
+> +	 *
+> +	 * Use a b +8 to jump over the load.
+> +	 */
+> +	if (patch_instruction((unsigned int *)ip, PPC_INST_BRANCH | 8)) {
+>  		pr_err("Patching NOP failed.\n");
+>  		return -EPERM;
+>  	}
+> +#endif /* CONFIG_MPROFILE_KERNEL */
+>  
+>  	return 0;
+>  }
+> @@ -421,6 +429,26 @@ static int __ftrace_make_nop_kernel(struct dyn_ftrace *rec, unsigned long addr)
+>  		return -EPERM;
+>  	}
+>  
+> +#ifdef CONFIG_MPROFILE_KERNEL
+> +	/* Nop out the preceding 'mflr r0' as an optimization */
+> +	if (probe_kernel_read(&op, (void *)(ip - 4), 4)) {
+> +		pr_err("Fetching instruction at %lx failed.\n", ip - 4);
+> +		return -EFAULT;
+> +	}
+> +
+> +	/* We expect either a mflr r0, or a std r0, LRSAVE(r1) */
+> +	if (op != PPC_INST_MFLR && op != PPC_INST_STD_LR) {
+> +		pr_err("Unexpected instruction %08x before bl _mcount\n", op);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (op == PPC_INST_MFLR &&
+> +		patch_instruction((unsigned int *)(ip - 4), PPC_INST_NOP)) {
+> +		pr_err("Patching NOP failed.\n");
+> +		return -EPERM;
+> +	}
+> +#endif
+> +
+>  	return 0;
+>  }
+>  
+> @@ -429,6 +457,7 @@ int ftrace_make_nop(struct module *mod,
+>  {
+>  	unsigned long ip = rec->ip;
+>  	unsigned int old, new;
+> +	int rc;
+>  
+>  	/*
+>  	 * If the calling address is more that 24 bits away,
+> @@ -439,7 +468,34 @@ int ftrace_make_nop(struct module *mod,
+>  		/* within range */
+>  		old = ftrace_call_replace(ip, addr, 1);
+>  		new = PPC_INST_NOP;
+> -		return ftrace_modify_code(ip, old, new);
+> +		rc = ftrace_modify_code(ip, old, new);
+> +#ifdef CONFIG_MPROFILE_KERNEL
+> +		if (rc)
+> +			return rc;
+> +
+> +		/*
+> +		 * For -mprofile-kernel, we patch out the preceding 'mflr r0'
+> +		 * instruction, as an optimization. It is important to nop out
+> +		 * the branch to _mcount() first, as a lone 'mflr r0' is
+> +		 * harmless.
+> +		 */
+> +		if (probe_kernel_read(&old, (void *)(ip - 4), 4)) {
+> +			pr_err("Fetching instruction at %lx failed.\n", ip - 4);
+> +			return -EFAULT;
+> +		}
+> +
+> +		/* We expect either a mflr r0, or a std r0, LRSAVE(r1) */
+> +		if (old != PPC_INST_MFLR && old != PPC_INST_STD_LR) {
+> +			pr_err("Unexpected instruction %08x before bl _mcount\n",
+> +					old);
+> +			return -EINVAL;
+> +		}
+> +
+> +		if (old == PPC_INST_MFLR)
+> +			rc = patch_instruction((unsigned int *)(ip - 4),
+> +					PPC_INST_NOP);
+> +#endif
+> +		return rc;
+>  	} else if (core_kernel_text(ip))
+>  		return __ftrace_make_nop_kernel(rec, addr);
+>  
+> @@ -567,6 +623,37 @@ __ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
+>  		return -EINVAL;
+>  	}
+>  
+> +#ifdef CONFIG_MPROFILE_KERNEL
+> +	/*
+> +	 * We could end up here without having called __ftrace_make_call_prep()
+> +	 * if function tracing is enabled before a module is loaded.
+> +	 *
+> +	 * ftrace_module_enable() --> ftrace_replace_code_rec() -->
+> +	 *	ftrace_make_call() --> __ftrace_make_call()
+> +	 *
+> +	 * In this scenario, the previous instruction will be a NOP. It is
+> +	 * safe to patch it with a 'mflr r0' since we know for a fact that
+> +	 * this code is not yet being run.
+> +	 */
+> +	ip -= MCOUNT_INSN_SIZE;
+> +
+> +	/* read where this goes */
+> +	if (probe_kernel_read(op, ip, MCOUNT_INSN_SIZE))
+> +		return -EFAULT;
+> +
+> +	/*
+> +	 * nothing to do if this is using the older -mprofile-kernel
+> +	 * instruction sequence
+> +	 */
+> +	if (op[0] != PPC_INST_NOP)
+> +		return 0;
+> +
+> +	if (patch_instruction((unsigned int *)ip, PPC_INST_MFLR)) {
+> +		pr_err("Patching MFLR failed.\n");
+> +		return -EPERM;
+> +	}
+> +#endif
+> +
+>  	return 0;
+>  }
+>  
+> @@ -863,6 +950,116 @@ void arch_ftrace_update_code(int command)
+>  	ftrace_modify_all_code(command);
+>  }
+>  
+> +#ifdef CONFIG_MPROFILE_KERNEL
+> +/* Returns 1 if we patched in the mflr */
+> +static int __ftrace_make_call_prep(struct dyn_ftrace *rec)
+> +{
+> +	void *ip = (void *)rec->ip - MCOUNT_INSN_SIZE;
+> +	unsigned int op[2];
+> +
+> +	/* read where this goes */
+> +	if (probe_kernel_read(op, ip, sizeof(op)))
+> +		return -EFAULT;
+> +
+> +	if (op[1] != PPC_INST_NOP) {
+> +		pr_err("Unexpected call sequence at %p: %x %x\n",
+> +							ip, op[0], op[1]);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * nothing to do if this is using the older -mprofile-kernel
+> +	 * instruction sequence
+> +	 */
+> +	if (op[0] != PPC_INST_NOP)
+> +		return 0;
+> +
+> +	if (patch_instruction((unsigned int *)ip, PPC_INST_MFLR)) {
+> +		pr_err("Patching MFLR failed.\n");
+> +		return -EPERM;
+> +	}
+> +
+> +	return 1;
+> +}
+> +
+> +/*
+> + * When enabling function tracing for -mprofile-kernel that uses a
+> + * 2-instruction sequence of 'mflr r0, bl _mcount()', we use a 2 step process:
+> + * 1. Patch in the 'mflr r0' instruction
+> + * 1a. synchronize_rcu_tasks() to ensure that any threads that had executed
+> + *     the earlier nop there make progress (and hence do not branch into
+> + *     ftrace without executing the preceding mflr)
+> + * 2. Patch in the branch to ftrace
+> + */
+> +void ftrace_replace_code(int mod_flags)
+> +{
+> +	int enable = mod_flags & FTRACE_MODIFY_ENABLE_FL;
+> +	int schedulable = mod_flags & FTRACE_MODIFY_MAY_SLEEP_FL;
+> +	int ret, failed, make_call = 0;
+> +	struct ftrace_rec_iter *iter;
+> +	struct dyn_ftrace *rec;
+> +
+> +	if (unlikely(!ftrace_enabled))
+> +		return;
+> +
+> +	for_ftrace_rec_iter(iter) {
+> +		rec = ftrace_rec_iter_record(iter);
+> +
+> +		if (rec->flags & FTRACE_FL_DISABLED)
+> +			continue;
+> +
+> +		failed = 0;
+> +		ret = ftrace_test_record(rec, enable);
+> +		if (ret == FTRACE_UPDATE_MAKE_CALL) {
+> +			failed = __ftrace_make_call_prep(rec);
+> +			if (failed < 0) {
+> +				ftrace_bug(failed, rec);
+> +				return;
+> +			} else if (failed == 1)
+> +				make_call++;
+> +		}
+> +
+> +		if (!failed) {
+> +			/* We can patch the record directly */
+> +			failed = ftrace_replace_code_rec(rec, enable);
+> +			if (failed) {
+> +				ftrace_bug(failed, rec);
+> +				return;
+> +			}
+> +		}
+> +
+> +		if (schedulable)
+> +			cond_resched();
+> +	}
+> +
+> +	if (!make_call)
+> +		/* No records needed patching a preceding mflr */
+> +		return;
+> +
+> +	synchronize_rcu_tasks();
+> +
+> +	for_ftrace_rec_iter(iter) {
+> +		rec = ftrace_rec_iter_record(iter);
+> +
+> +		if (rec->flags & FTRACE_FL_DISABLED)
+> +			continue;
+> +
+> +		ret = ftrace_test_record(rec, enable);
+> +		if (ret == FTRACE_UPDATE_MAKE_CALL)
+> +			failed = ftrace_replace_code_rec(rec, enable);
+> +
+> +		if (failed) {
+> +			ftrace_bug(failed, rec);
+> +			return;
+> +		}
+> +
+> +		if (schedulable)
+> +			cond_resched();
+> +	}
+> +
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_PPC64
+>  #define PACATOC offsetof(struct paca_struct, kernel_toc)
+>  
+> -- 
+> 2.22.0
