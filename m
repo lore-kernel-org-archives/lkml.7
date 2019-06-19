@@ -2,210 +2,147 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 138ECC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:24:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97DE4C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:25:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D373B208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:24:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UJvDZVNr"
+	by mail.kernel.org (Postfix) with ESMTP id 75A09208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:25:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731506AbfFSKYq (ORCPT
+        id S1731536AbfFSKZX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:24:46 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:52186 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfFSKYq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:24:46 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5JAObhd052264;
-        Wed, 19 Jun 2019 05:24:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560939877;
-        bh=Rf3pm+iq7urdERtn0NzlcXUHizrExgM7UOvr4JIifow=;
-        h=From:To:CC:Subject:Date;
-        b=UJvDZVNr7vlhA5aAnb5eqHMVVX5oRclFTC7caPuWum6vaBoQj26tXza4ugXG4Jngd
-         APJFWKioTPoMRhX7bHXHuDNmH4r6W1iIEfMNw5u8sDMfdauSGCbfKvn5Nj/WC7sC1m
-         s1B5KBtS9/DuLMC2EidVzLP4tOPR3JuaTy5IfdVk=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5JAObiE097632
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Jun 2019 05:24:37 -0500
-Received: from DLEE110.ent.ti.com (157.170.170.21) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 19
- Jun 2019 05:24:37 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE110.ent.ti.com
- (157.170.170.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 19 Jun 2019 05:24:37 -0500
-Received: from a0230074-OptiPlex-7010.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5JAOYY7059883;
-        Wed, 19 Jun 2019 05:24:35 -0500
-From:   Faiz Abbas <faiz_abbas@ti.com>
-To:     <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-omap@vger.kernel.org>
-CC:     <mark.rutland@arm.com>, <robh+dt@kernel.org>, <tony@atomide.com>,
-        <faiz_abbas@ti.com>, <robertcnelson@gmail.com>
-Subject: [PATCH] ARM: dts: am57xx: Disable voltage switching for SD card
-Date:   Wed, 19 Jun 2019 15:54:54 +0530
-Message-ID: <20190619102454.5097-1-faiz_abbas@ti.com>
-X-Mailer: git-send-email 2.19.2
+        Wed, 19 Jun 2019 06:25:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:60272 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbfFSKZW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:25:22 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0012360;
+        Wed, 19 Jun 2019 03:25:21 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C5B913F738;
+        Wed, 19 Jun 2019 03:27:07 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 3719D680120; Wed, 19 Jun 2019 11:25:20 +0100 (BST)
+Date:   Wed, 19 Jun 2019 11:25:20 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>
+Subject: Re: [PATCH] drm/komeda: Correct printk format specifier for "size_t"
+Message-ID: <20190619102520.GC17204@e110455-lin.cambridge.arm.com>
+References: <20190619074225.13521-1-james.qian.wang@arm.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20190619074225.13521-1-james.qian.wang@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If UHS speed modes are enabled, a compatible SD card switches down to
-1.8V during enumeration. If after this a software reboot/crash takes
-place and on-chip ROM tries to enumerate the SD card, the difference in
-IO voltages (host @ 3.3V and card @ 1.8V) may end up damaging the card.
+On Wed, Jun 19, 2019 at 08:42:45AM +0100, james qian wang (Arm Technology China) wrote:
+> Warnings popup when "make ARCH=i386"
+> 
+> In file included from include/drm/drm_mm.h:49,
+>                  from include/drm/drm_vma_manager.h:26,
+>                  from include/drm/drm_gem.h:40,
+>                  from drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c:9:
+> drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c: In function 'komeda_fb_afbc_size_check':
+> drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c:96:17: error: format '%lx' expects argument of type 'long unsigned int', but argument 3 has type 'size_t' {aka 'unsigned int'} [-Werror=format=]
+>    DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
+> 
+> That leads by misuse "%lx" as format speicifier for size_t, correct it
+> to "%zx"
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: james qian wang (Arm Technology China) <james.qian.wang@arm.com>
 
-The fix for this is to have support for power cycling the card in
-hardware (with a PORz/soft-reset line causing a power cycle of the
-card). Because the beaglebone X15 (rev A,B and C), am57xx-idks and
-am57xx-evms don't have this capability, disable voltage switching for
-these boards.
+Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
 
-The major effect of this is that the maximum supported speed
-mode is now high speed(50 MHz) down from SDR104(200 MHz).
+Best regards,
+Liviu
 
-commit 88a748419b84 ("ARM: dts: am57xx-idk: Remove support for voltage
-switching for SD card") did this only for idk boards. Do it for all
-affected boards.
+> ---
+>  .../gpu/drm/arm/display/komeda/komeda_framebuffer.c   | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
+> index abc8c0ccc053..3b0a70ed6aa0 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_framebuffer.c
+> @@ -43,8 +43,8 @@ komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
+>  	struct drm_framebuffer *fb = &kfb->base;
+>  	const struct drm_format_info *info = fb->format;
+>  	struct drm_gem_object *obj;
+> -	u32 alignment_w = 0, alignment_h = 0, alignment_header;
+> -	u32 n_blocks = 0, min_size = 0;
+> +	u32 alignment_w = 0, alignment_h = 0, alignment_header, n_blocks;
+> +	u64 min_size;
+>  
+>  	obj = drm_gem_object_lookup(file, mode_cmd->handles[0]);
+>  	if (!obj) {
+> @@ -93,7 +93,7 @@ komeda_fb_afbc_size_check(struct komeda_fb *kfb, struct drm_file *file,
+>  			       AFBC_SUPERBLK_ALIGNMENT);
+>  	min_size = kfb->afbc_size + fb->offsets[0];
+>  	if (min_size > obj->size) {
+> -		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%lx. min_size 0x%x.\n",
+> +		DRM_DEBUG_KMS("afbc size check failed, obj_size: 0x%zx. min_size 0x%llx.\n",
+>  			      obj->size, min_size);
+>  		goto check_failed;
+>  	}
+> @@ -114,7 +114,8 @@ komeda_fb_none_afbc_size_check(struct komeda_dev *mdev, struct komeda_fb *kfb,
+>  	struct drm_framebuffer *fb = &kfb->base;
+>  	const struct drm_format_info *info = fb->format;
+>  	struct drm_gem_object *obj;
+> -	u32 i, min_size, block_h;
+> +	u32 i, block_h;
+> +	u64 min_size;
+>  
+>  	if (komeda_fb_check_src_coords(kfb, 0, 0, fb->width, fb->height))
+>  		return -EINVAL;
+> @@ -137,7 +138,7 @@ komeda_fb_none_afbc_size_check(struct komeda_dev *mdev, struct komeda_fb *kfb,
+>  		min_size = komeda_fb_get_pixel_addr(kfb, 0, fb->height, i)
+>  			 - to_drm_gem_cma_obj(obj)->paddr;
+>  		if (obj->size < min_size) {
+> -			DRM_DEBUG_KMS("The fb->obj[%d] size: %ld lower than the minimum requirement: %d.\n",
+> +			DRM_DEBUG_KMS("The fb->obj[%d] size: 0x%zx lower than the minimum requirement: 0x%llx.\n",
+>  				      i, obj->size, min_size);
+>  			return -EINVAL;
+>  		}
+> -- 
+> 2.17.1
+> 
 
-Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
----
- arch/arm/boot/dts/am571x-idk.dts                | 7 +------
- arch/arm/boot/dts/am572x-idk.dts                | 7 +------
- arch/arm/boot/dts/am574x-idk.dts                | 7 +------
- arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi | 1 +
- arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts   | 7 +------
- arch/arm/boot/dts/am57xx-beagle-x15-revc.dts    | 7 +------
- 6 files changed, 6 insertions(+), 30 deletions(-)
-
-diff --git a/arch/arm/boot/dts/am571x-idk.dts b/arch/arm/boot/dts/am571x-idk.dts
-index 66116ad3f9f4..0a043908215c 100644
---- a/arch/arm/boot/dts/am571x-idk.dts
-+++ b/arch/arm/boot/dts/am571x-idk.dts
-@@ -178,14 +178,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50_rev20 &mmc1_iodelay_ddr50_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am572x-idk.dts b/arch/arm/boot/dts/am572x-idk.dts
-index 4f835222c266..8663a9416af6 100644
---- a/arch/arm/boot/dts/am572x-idk.dts
-+++ b/arch/arm/boot/dts/am572x-idk.dts
-@@ -19,14 +19,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am574x-idk.dts b/arch/arm/boot/dts/am574x-idk.dts
-index dc5141c35610..7935d70874ce 100644
---- a/arch/arm/boot/dts/am574x-idk.dts
-+++ b/arch/arm/boot/dts/am574x-idk.dts
-@@ -24,14 +24,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default_no_clk_pu>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_default>;
--	pinctrl-3 = <&mmc1_pins_hs>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_conf>;
--	pinctrl-6 = <&mmc1_pins_ddr50 &mmc1_iodelay_sdr104_conf>;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-index 2341a56ebab9..0cdfd2853ba8 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-common.dtsi
-@@ -433,6 +433,7 @@
- 
- 	bus-width = <4>;
- 	cd-gpios = <&gpio6 27 GPIO_ACTIVE_LOW>; /* gpio 219 */
-+	no-1-8-v;
- };
- 
- &mmc2 {
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-index 5a77b334923d..34c69965821b 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-revb1.dts
-@@ -19,14 +19,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev11_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev11_conf>;
- 	vmmc-supply = <&vdd_3v3>;
- 	vqmmc-supply = <&ldo1_reg>;
- };
-diff --git a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-index 17c41da3b55f..ccd99160bbdf 100644
---- a/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-+++ b/arch/arm/boot/dts/am57xx-beagle-x15-revc.dts
-@@ -19,14 +19,9 @@
- };
- 
- &mmc1 {
--	pinctrl-names = "default", "hs", "sdr12", "sdr25", "sdr50", "ddr50", "sdr104";
-+	pinctrl-names = "default", "hs";
- 	pinctrl-0 = <&mmc1_pins_default>;
- 	pinctrl-1 = <&mmc1_pins_hs>;
--	pinctrl-2 = <&mmc1_pins_sdr12>;
--	pinctrl-3 = <&mmc1_pins_sdr25>;
--	pinctrl-4 = <&mmc1_pins_sdr50>;
--	pinctrl-5 = <&mmc1_pins_ddr50 &mmc1_iodelay_ddr_rev20_conf>;
--	pinctrl-6 = <&mmc1_pins_sdr104 &mmc1_iodelay_sdr104_rev20_conf>;
- 	vmmc-supply = <&vdd_3v3>;
- 	vqmmc-supply = <&ldo1_reg>;
- };
 -- 
-2.19.2
-
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
