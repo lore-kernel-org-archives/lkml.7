@@ -2,113 +2,236 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E934C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:51:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6399C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:51:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 209D52084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:51:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560945079;
-	bh=I9GUMrpXQQ4kP+XRlQm8nsuNTpCDLDeTZGuUV6StNpU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ztHZHkQKEss+G2NC7nQKizLb15gPd1QfnwPtUd1KtJzpfBC8G0NXj5P3TxFpWE+nk
-	 BOXXlA3mQDCWKtgKFabMJRuhKFdNquIMSZlJ7Zj4/5Zj6kWtHo66BpX/n4l6FoSqp9
-	 /QRMNLhZB4ka07fSv2QTqkHRLzFGjPq4T9aaC2Xk=
+	by mail.kernel.org (Postfix) with ESMTP id ACD8B21783
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:51:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ijYFqy0d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731636AbfFSLvR (ORCPT
+        id S1731683AbfFSLvo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:51:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727244AbfFSLvR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:51:17 -0400
-Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14FB321530
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:51:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560945076;
-        bh=I9GUMrpXQQ4kP+XRlQm8nsuNTpCDLDeTZGuUV6StNpU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EmwB9jSneP5zvx+aO02e5ajh7HUMAmZwr7xBYZDziZHiVUbMqpfSn8oGPrp0ASWB1
-         sAvfxTB1iTWoia0261g0Sybv0xAczcIdmA2GuWCcWniP/g8jQtbG7aTs0gHCmOwBgQ
-         YLpwwQIAR7bV4++qpk+nQNV5GnVE/J+aFsVTa1nU=
-Received: by mail-wr1-f51.google.com with SMTP id x4so3045813wrt.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 04:51:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAVJ0hwn89+QR4Mlkk56KObNLgFngH3SDlMI/XxiXNN1Df1c1+qY
-        j+aF9muHcImhfXvIb9fcDthx2wRmuhSOQJjFye4=
-X-Google-Smtp-Source: APXvYqy+0U1Ub7AMCGJu+3bTvhBYfZ23ab1bs8cRs50+HW9TdRv1m5YTdwBFzYfP6I5ojcMFW3AyuYO4S1RyjAIIWQ0=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr4144332wro.343.1560945074589;
- Wed, 19 Jun 2019 04:51:14 -0700 (PDT)
+        Wed, 19 Jun 2019 07:51:44 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:2994 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfFSLvn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 07:51:43 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0a21cc0000>; Wed, 19 Jun 2019 04:51:40 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 19 Jun 2019 04:51:41 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 19 Jun 2019 04:51:41 -0700
+Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun
+ 2019 11:51:40 +0000
+Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Wed, 19 Jun 2019 11:51:41 +0000
+Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5d0a21ca0000>; Wed, 19 Jun 2019 04:51:40 -0700
+From:   Sameer Pujar <spujar@nvidia.com>
+To:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
+        <robh+dt@kernel.org>, <mark.rutland@arm.com>
+CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Sameer Pujar <spujar@nvidia.com>
+Subject: [PATCH v6 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
+Date:   Wed, 19 Jun 2019 17:21:21 +0530
+Message-ID: <1560945082-24554-1-git-send-email-spujar@nvidia.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-References: <20190321163623.20219-1-julien.grall@arm.com> <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com> <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
-In-Reply-To: <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Wed, 19 Jun 2019 19:51:03 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
-Message-ID: <CAJF2gTStSR7Jmu7=HaO5Wxz=Zn8A5-RD8ktori3oKEhM9vozAA@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, aou@eecs.berkeley.edu,
-        gary@garyguo.net, Atish.Patra@wdc.com, hch@infradead.org,
-        paul.walmsley@sifive.com, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com,
-        julien.thierry@arm.com, will.deacon@arm.com,
-        christoffer.dall@arm.com, james.morse@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560945101; bh=NCFJKw39pNrBM4JKSza0teZuVvu9uD2pLwcU88PBbr4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:Content-Type;
+        b=ijYFqy0dteaLz0ykFTjm2cT30R5B+YrzCPTH5hA9Rf+OHRvC+CTiBDWjhI0sBDJsI
+         gYqsaQ+yjA4wjdUi/cIHxeaaB4zM3DAJZVKmxeKHlanX7pusLR8FQuUBRg/HNndfTq
+         Z3311oqWPl6cJEZ6m18HtVTM9FUHJnrPe/j1AmDiV3XKQ0btj53QqEo7rj8+Fb+MY/
+         q+5lAAiYJSkCrnlPgcWJf8aF1pm+mUl5PaOgG3Bx1O8d21lJDf36P3fs6HDQVyPVSA
+         5/y88U/pIeZxPQHYAthueSQibvIJR94D9GzIGC6X8Yk08qkst+e4kiG5zvyoldkXKN
+         D6cqCMyB6v5gQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 4:54 PM Julien Grall <julien.grall@arm.com> wrote:
->
->
->
-> On 6/19/19 9:07 AM, Guo Ren wrote:
-> > Hi Julien,
->
-> Hi,
->
-> >
-> > You forgot CCing C-SKY folks :P
->
-> I wasn't aware you could be interested :).
->
-> >
-> > Move arm asid allocator code in a generic one is a agood idea, I've
-> > made a patchset for C-SKY and test is on processing, See:
-> > https://lore.kernel.org/linux-csky/1560930553-26502-1-git-send-email-guoren@kernel.org/
-> >
-> > If you plan to seperate it into generic one, I could co-work with you.
->
-> Was the ASID allocator work out of box on C-Sky?
-Almost done, but one question:
-arm64 remove the code in switch_mm:
-  cpumask_clear_cpu(cpu, mm_cpumask(prev));
-  cpumask_set_cpu(cpu, mm_cpumask(next));
+Add DT nodes for following devices on Tegra186 and Tegra194
+ * ACONNECT
+ * ADMA
+ * AGIC
 
-Why? Although arm64 cache operations could affect all harts with CTC
-method of interconnect, I think we should
-keep these code for primitive integrity in linux. Because cpu_bitmap
-is in mm_struct instead of mm->context.
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+---
+ changes in current revision
+   * updated ranges property for aconnect
+   * renamed agic node
 
-In current csky's patches I've also removed the codes the same as
-arm64, but I'll add it back at next version.
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
+ 2 files changed, 134 insertions(+)
 
-> If so, I can easily move the code in a generic place (maybe lib/asid.c).
-I think it's OK.
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 426ac0b..4bb765d 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -1295,4 +1295,71 @@
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&gic>;
+ 	};
++
++	aconnect {
++		compatible = "nvidia,tegra210-aconnect";
++		clocks = <&bpmp TEGRA186_CLK_APE>,
++			 <&bpmp TEGRA186_CLK_APB2APE>;
++		clock-names = "ape", "apb2ape";
++		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x02900000 0x0 0x02900000 0x200000>;
++		status = "disabled";
++
++		dma-controller@2930000 {
++			compatible = "nvidia,tegra186-adma";
++			reg = <0x02930000 0x20000>;
++			interrupt-parent = <&agic>;
++			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			#dma-cells = <1>;
++			clocks = <&bpmp TEGRA186_CLK_AHUB>;
++			clock-names = "d_audio";
++			status = "disabled";
++		};
++
++		agic: interrupt-controller@2a40000 {
++			compatible = "nvidia,tegra210-agic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x02a41000 0x1000>,
++			      <0x02a42000 0x2000>;
++			interrupts = <GIC_SPI 145
++				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&bpmp TEGRA186_CLK_APE>;
++			clock-names = "clk";
++			status = "disabled";
++		};
++	};
+ };
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index c77ca21..d6aee0d 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -1054,4 +1054,71 @@
+ 				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+ 		interrupt-parent = <&gic>;
+ 	};
++
++	aconnect {
++		compatible = "nvidia,tegra210-aconnect";
++		clocks = <&bpmp TEGRA194_CLK_APE>,
++			 <&bpmp TEGRA194_CLK_APB2APE>;
++		clock-names = "ape", "apb2ape";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x02900000 0x0 0x02900000 0x200000>;
++		status = "disabled";
++
++		dma-controller@2930000 {
++			compatible = "nvidia,tegra186-adma";
++			reg = <0x02930000 0x20000>;
++			interrupt-parent = <&agic>;
++			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
++				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
++			#dma-cells = <1>;
++			clocks = <&bpmp TEGRA194_CLK_AHUB>;
++			clock-names = "d_audio";
++			status = "disabled";
++		};
++
++		agic: interrupt-controller@2a40000 {
++			compatible = "nvidia,tegra210-agic";
++			#interrupt-cells = <3>;
++			interrupt-controller;
++			reg = <0x02a41000 0x1000>,
++			      <0x02a42000 0x2000>;
++			interrupts = <GIC_SPI 145
++				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
++			clocks = <&bpmp TEGRA194_CLK_APE>;
++			clock-names = "clk";
++			status = "disabled";
++		};
++	};
+ };
+-- 
+2.7.4
 
-Best Regards
- Guo Ren
