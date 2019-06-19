@@ -2,154 +2,223 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0556EC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04597C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:08:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C4F2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0A6D20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731426AbfFSJGu (ORCPT
+        id S1731406AbfFSJIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:06:50 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:39090 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731295AbfFSJGu (ORCPT
+        Wed, 19 Jun 2019 05:08:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:19466 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731295AbfFSJIW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:06:50 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6B88D27741D;
-        Wed, 19 Jun 2019 10:06:46 +0100 (BST)
-Date:   Wed, 19 Jun 2019 11:06:43 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     masonccyang@mxic.com.tw
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        christophe.kerello@st.com, computersforpeace@gmail.com,
-        devicetree@vger.kernel.org, dwmw2@infradead.org,
-        geert@linux-m68k.org, juliensu@mxic.com.tw, lee.jones@linaro.org,
-        liang.yang@amlogic.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        marcel.ziswiler@toradex.com, marek.vasut@gmail.com,
-        mark.rutland@arm.com, "Miquel Raynal" <miquel.raynal@bootlin.com>,
-        paul.burton@mips.com, richard@nod.at, robh+dt@kernel.org,
-        stefan@agner.ch, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND
- controller
-Message-ID: <20190619110643.523c1f56@collabora.com>
-In-Reply-To: <OF9EFE4BDE.3166D82B-ON4825841E.00307F51-4825841E.00310FB5@mxic.com.tw>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw>
-        <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13>
-        <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13>
-        <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-        <20190527144250.71908bd9@xps13>
-        <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
-        <20190617143510.4ded5728@xps13>
-        <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
-        <20190618081436.5d488320@collabora.com>
-        <20190618092901.3bdd9f61@collabora.com>
-        <OF5EAF94EB.AE31CF59-ON4825841E.002A2C38-4825841E.002C60BF@mxic.com.tw>
-        <20190619101519.391919ec@collabora.com>
-        <OF9EFE4BDE.3166D82B-ON4825841E.00307F51-4825841E.00310FB5@mxic.com.tw>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Jun 2019 05:08:22 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J97Yxt075377
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:08:22 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7gsvv9qv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:08:21 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <huntbag@linux.vnet.ibm.com>;
+        Wed, 19 Jun 2019 10:08:19 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Jun 2019 10:08:16 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J987US38142230
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 09:08:07 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B27A4203F;
+        Wed, 19 Jun 2019 09:08:15 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6BB342047;
+        Wed, 19 Jun 2019 09:08:13 +0000 (GMT)
+Received: from oc0383214508.ibm.com (unknown [9.124.35.103])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Jun 2019 09:08:13 +0000 (GMT)
+Subject: Re: [PATCH v2 1/1] cpuidle-powernv : forced wakeup for stop states
+To:     Nicholas Piggin <npiggin@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Cc:     daniel.lezcano@linaro.org, dja@axtens.net, ego@linux.vnet.ibm.com,
+        mpe@ellerman.id.au, rjw@rjwysocki.net
+References: <20190617095648.18847-1-huntbag@linux.vnet.ibm.com>
+ <20190617095648.18847-2-huntbag@linux.vnet.ibm.com>
+ <1560917320.mk5nn6r8jw.astroid@bobo.none>
+From:   Abhishek <huntbag@linux.vnet.ibm.com>
+Date:   Wed, 19 Jun 2019 14:38:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1560917320.mk5nn6r8jw.astroid@bobo.none>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19061909-0016-0000-0000-0000028A66E6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061909-0017-0000-0000-000032E7BC79
+Message-Id: <689a52a7-7bfc-7225-e563-ac07f7357e75@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Jun 2019 16:55:52 +0800
-masonccyang@mxic.com.tw wrote:
+Hi Nick,
 
-> Hi Boris,
-> 
-> > > > 
-> > > > Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND   
-> controller
-> > > > 
-> > > > On Tue, 18 Jun 2019 08:14:36 +0200
-> > > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > > >   
-> > > > > > > > > > 
-> > > > > > > > > > How to make all #CS keep high for NAND to enter 
-> > > > > > > > > > low-power standby mode if driver don't use   
-> > > "legacy.select_chip()"   
-> > > > > > ?   
-> > > > > > > > > 
-> > > > > > > > > See commit 02b4a52604a4 ("mtd: rawnand: Make   
-> ->select_chip()   
-> > > > > > optional   
-> > > > > > > > > when ->exec_op() is implemented") which states:
-> > > > > > > > > 
-> > > > > > > > >         "When [->select_chip() is] not implemented, the   
-> core 
-> > > is   
-> > > > > > assuming   
-> > > > > > > > >    the CS line is automatically asserted/deasserted by the   
->  
-> > > driver   
-> > > > > > > > >    ->exec_op() implementation."   
-> > > > > > > > > 
-> > > > > > > > > Of course, the above is right only when the controller   
-> driver 
-> > >   
-> > > > > > supports   
-> > > > > > > > > the ->exec_op() interface.   
-> > > > > > > > 
-> > > > > > > > Currently, it seems that we will get the incorrect data and    
-> 
-> > > error  
-> > > > > > > > operation due to CS in error toggling if CS line is   
-> controlled 
-> > > in   
-> > > > > > > > ->exec_op().   
-> > > > 
-> > > > Oh, and please provide the modifications you added on top of this   
-> patch.
-> > > > Right now we're speculating on what you've done which is definitely   
-> not
-> > > > an efficient way to debug this sort of issues.   
-> > > 
-> > > The patch is to add in beginning of ->exec_op() to control CS# low and   
-> 
-> > > before return from ->exec_op() to control CS# High.
-> > > i.e,.
-> > > static in mxic_nand_exec_op( )
-> > > {
-> > >  cs_to_low();
-> > > 
-> > > 
-> > > 
-> > >  cs_to_high();
-> > >  return;
-> > > }
-> > > 
-> > > But for nand_onfi_detect(), 
-> > > it calls nand_read_param_page_op() and then nand_read_data_op().
-> > > mxic_nand_exec_op() be called twice for nand_onfi_detect() and
-> > > driver will get incorrect ONFI parameter table data from 
-> > > nand_read_data_op().  
-> > 
-> > And I think it's valid to release the CE pin between
-> > read_param_page_op() (CMD(0xEC)+ADDR(0x0)) and read_data_op() (data
-> > cycles) if your chip is CE-dont-care compliant. So, either you have a
-> > problem with your controller driver (CS-related timings are incorrect)
-> > or your chip is not CE-dont-care compliant.  
-> 
-> Understood, I will try to fix it on my NFC driver.
+Thanks for the review. Some replies below.
 
-Before you do that, can you please try to understand where the problem
-comes from and explain it to us? Hacking the NFC driver is only
-meaningful if the problem is on the NFC side. If your NAND chip does
-not support when the CS pin goes high between read_param_page_op() and
-read_data_op() the problem should be fixed in the core.
+On 06/19/2019 09:53 AM, Nicholas Piggin wrote:
+> Abhishek Goel's on June 17, 2019 7:56 pm:
+>> Currently, the cpuidle governors determine what idle state a idling CPU
+>> should enter into based on heuristics that depend on the idle history on
+>> that CPU. Given that no predictive heuristic is perfect, there are cases
+>> where the governor predicts a shallow idle state, hoping that the CPU will
+>> be busy soon. However, if no new workload is scheduled on that CPU in the
+>> near future, the CPU may end up in the shallow state.
+>>
+>> This is problematic, when the predicted state in the aforementioned
+>> scenario is a shallow stop state on a tickless system. As we might get
+>> stuck into shallow states for hours, in absence of ticks or interrupts.
+>>
+>> To address this, We forcefully wakeup the cpu by setting the
+>> decrementer. The decrementer is set to a value that corresponds with the
+>> residency of the next available state. Thus firing up a timer that will
+>> forcefully wakeup the cpu. Few such iterations will essentially train the
+>> governor to select a deeper state for that cpu, as the timer here
+>> corresponds to the next available cpuidle state residency. Thus, cpu will
+>> eventually end up in the deepest possible state.
+>>
+>> Signed-off-by: Abhishek Goel <huntbag@linux.vnet.ibm.com>
+>> ---
+>>
+>> Auto-promotion
+>>   v1 : started as auto promotion logic for cpuidle states in generic
+>> driver
+>>   v2 : Removed timeout_needed and rebased the code to upstream kernel
+>> Forced-wakeup
+>>   v1 : New patch with name of forced wakeup started
+>>   v2 : Extending the forced wakeup logic for all states. Setting the
+>> decrementer instead of queuing up a hrtimer to implement the logic.
+>>
+>>   drivers/cpuidle/cpuidle-powernv.c | 38 +++++++++++++++++++++++++++++++
+>>   1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/cpuidle/cpuidle-powernv.c b/drivers/cpuidle/cpuidle-powernv.c
+>> index 84b1ebe212b3..bc9ca18ae7e3 100644
+>> --- a/drivers/cpuidle/cpuidle-powernv.c
+>> +++ b/drivers/cpuidle/cpuidle-powernv.c
+>> @@ -46,6 +46,26 @@ static struct stop_psscr_table stop_psscr_table[CPUIDLE_STATE_MAX] __read_mostly
+>>   static u64 default_snooze_timeout __read_mostly;
+>>   static bool snooze_timeout_en __read_mostly;
+>>   
+>> +static u64 forced_wakeup_timeout(struct cpuidle_device *dev,
+>> +				 struct cpuidle_driver *drv,
+>> +				 int index)
+>> +{
+>> +	int i;
+>> +
+>> +	for (i = index + 1; i < drv->state_count; i++) {
+>> +		struct cpuidle_state *s = &drv->states[i];
+>> +		struct cpuidle_state_usage *su = &dev->states_usage[i];
+>> +
+>> +		if (s->disabled || su->disable)
+>> +			continue;
+>> +
+>> +		return (s->target_residency + 2 * s->exit_latency) *
+>> +			tb_ticks_per_usec;
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> It would be nice to not have this kind of loop iteration in the
+> idle fast path. Can we add a flag or something to the idle state?
+Currently, we do not have any callback notification or some feedback that
+notifies the driver everytime some state is enabled/disabled. So we have
+to parse everytime to get the next enabled state. Are you suggesting to
+add something like next_enabled_state in cpuidle state structure itself
+which will be updated when a state is enabled or disabled?
+>> +
+>>   static u64 get_snooze_timeout(struct cpuidle_device *dev,
+>>   			      struct cpuidle_driver *drv,
+>>   			      int index)
+>> @@ -144,8 +164,26 @@ static int stop_loop(struct cpuidle_device *dev,
+>>   		     struct cpuidle_driver *drv,
+>>   		     int index)
+>>   {
+>> +	u64 dec_expiry_tb, dec, timeout_tb, forced_wakeup;
+>> +
+>> +	dec = mfspr(SPRN_DEC);
+>> +	timeout_tb = forced_wakeup_timeout(dev, drv, index);
+>> +	forced_wakeup = 0;
+>> +
+>> +	if (timeout_tb && timeout_tb < dec) {
+>> +		forced_wakeup = 1;
+>> +		dec_expiry_tb = mftb() + dec;
+>> +	}
+> The compiler probably can't optimise away the SPR manipulations so try
+> to avoid them if possible.
+Are you suggesting something like set_dec_before_idle?(in line with
+what you have suggested to do after idle, reset_dec_after_idle)
+>
+>> +
+>> +	if (forced_wakeup)
+>> +		mtspr(SPRN_DEC, timeout_tb);
+> This should just be put in the above 'if'.
+Fair point.
+>
+>> +
+>>   	power9_idle_type(stop_psscr_table[index].val,
+>>   			 stop_psscr_table[index].mask);
+>> +
+>> +	if (forced_wakeup)
+>> +		mtspr(SPRN_DEC, dec_expiry_tb - mftb());
+> This will sometimes go negative and result in another timer interrupt.
+>
+> It also breaks irq work (which can be set here by machine check I
+> believe.
+>
+> May need to implement some timer code to do this for you.
+>
+> static void reset_dec_after_idle(void)
+> {
+> 	u64 now;
+>          u64 *next_tb;
+>
+> 	if (test_irq_work_pending())
+> 		return;
+> 	now = mftb;
+> 	next_tb = this_cpu_ptr(&decrementers_next_tb);
+>
+> 	if (now >= *next_tb)
+> 		return;
+> 	set_dec(*next_tb - now);
+> 	if (test_irq_work_pending())
+> 		set_dec(1);
+> }
+>
+> Something vaguely like that. See timer_interrupt().
+Ah, Okay. Will go through timer_interrupt().
+> Thanks,
+> Nick
+Thanks,
+Abhishek
+
