@@ -2,104 +2,145 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 288D6C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:21:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 556FCC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:24:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F103B21881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:21:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjPmzkP7"
+	by mail.kernel.org (Postfix) with ESMTP id 2C2EE206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:24:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560950695;
+	bh=sVXWOdBjTXMk5XIEE6lZthOguUTmAYHznW2JtvJgFGg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2uGNJAn6a6wkx1F05A0sEKb43PKHtNZj6UxS9qNPsUI18K+QQfFclSX/5pgSAKPHt
+	 /lBXkX3jtjd8k2iL75IhVZKilmlyJPi9sg/h0aQR6qfz1WZgwSfytx6e+8JJi7r448
+	 9IA2x2PkZsJPqSEMax2A5X7C8qHl0bzw29qevdYo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730822AbfFSNVT (ORCPT
+        id S1729984AbfFSNYy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:21:19 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:36500 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfFSNVT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:21:19 -0400
-Received: by mail-lj1-f193.google.com with SMTP id i21so3254887ljj.3;
-        Wed, 19 Jun 2019 06:21:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=g18058N/C2pjcBGgjgbat4LbXOhva175NVhezQY00XQ=;
-        b=tjPmzkP70fAsA26NOsSJclg4L+TUZI/ysTww8TpmgX4bSxFk0ASk0tUeVxZuNORPdX
-         CaTllXz7jbARzX1I+8qPEuPUZEOsjB+KDB3Jb+fLCml0fPsBUa/FuOxzBwydfY2JK1Kp
-         r0PZhb5pEycAT29k5T34UFbUu18o+yFJN9b4J52B+vPAdP0nKwcLyrjY7GjDMTFsycmT
-         N9GdVXdkfxSFregeODQs8CG4BXAH6S4P610UDPJvTkt+UbskAb69T4eA/Df8KacxurAF
-         dDgMS2W8C2xv7HdoziJtd0uFWbPc1TJnRsgByjPlGasOqZiTdNTyIhJ51E1YWvH8+B2z
-         TEbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g18058N/C2pjcBGgjgbat4LbXOhva175NVhezQY00XQ=;
-        b=jkoV5sI/8R/qokOYvkk/VM0KcoqRvgS8fFW2OfJEdVWeeeM3xRtgaKugCwqXkcOKX3
-         oLCz/csOZFw5XirBopbdeOz8MIbIX/xI7osv1BYsjbDpQqK6E2uctcKZjhQqS+5uh2wF
-         aN3Vp267d4SJOrHF4mF5d4TJLqeTh7vIGXQecoFPaS5bx18y/vPryhE7iq47vY2cR0ln
-         PZD2vbLoCjWxDMTHw4JDLSxVYg5ZZzEEoxU9uGBkOJ+pbNad/IkIF2SvQl5qLqT0HB28
-         HJNiGRxETSetMye2UxijsYEDio2nURPB8VAJX/ITJoX2bEegCP1VjNJzA4c+yooIgjb5
-         PIqA==
-X-Gm-Message-State: APjAAAXYYBtZMBoddQj3Ue+tbit5NCdiQO/vU47uK/Gia61j+FVOiSbU
-        /GJKMJijxjADC6i75ehEAndksUEwQKU+cZj+BF8=
-X-Google-Smtp-Source: APXvYqyAMgmk6ys/VsOTesM/6z0KH2z75G1WFcyJbVadMJ+QdScEq8u41WtyiImcwlE2f5Aw7kaHsoWTLJ1vAaQzsSs=
-X-Received: by 2002:a2e:2c07:: with SMTP id s7mr26636418ljs.44.1560950476875;
- Wed, 19 Jun 2019 06:21:16 -0700 (PDT)
+        Wed, 19 Jun 2019 09:24:54 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34082 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726109AbfFSNYx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:24:53 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A63F2AD96;
+        Wed, 19 Jun 2019 13:24:51 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 15:24:50 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
+Message-ID: <20190619132450.GQ2968@dhcp22.suse.cz>
+References: <20190610111252.239156-1-minchan@kernel.org>
+ <20190610111252.239156-5-minchan@kernel.org>
 MIME-Version: 1.0
-References: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com> <1560864646-1468-2-git-send-email-robert.chiras@nxp.com>
-In-Reply-To: <1560864646-1468-2-git-send-email-robert.chiras@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Wed, 19 Jun 2019 10:21:29 -0300
-Message-ID: <CAOMZO5DwwL5+V4Eifskk=pKzpceRmk5bvdXNeCzZfU3jVwEhEA@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: Add support for
- Raydium RM67191 panel
-To:     Robert Chiras <robert.chiras@nxp.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190610111252.239156-5-minchan@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Robert,
+On Mon 10-06-19 20:12:51, Minchan Kim wrote:
+[...]
+> +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> +				unsigned long end, struct mm_walk *walk)
 
-On Tue, Jun 18, 2019 at 10:33 AM Robert Chiras <robert.chiras@nxp.com> wrote:
+Again the same question about a potential code reuse...
+[...]
+> +regular_page:
+> +	tlb_change_page_size(tlb, PAGE_SIZE);
+> +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> +	flush_tlb_batched_pending(mm);
+> +	arch_enter_lazy_mmu_mode();
+> +	for (; addr < end; pte++, addr += PAGE_SIZE) {
+> +		ptent = *pte;
+> +		if (!pte_present(ptent))
+> +			continue;
+> +
+> +		page = vm_normal_page(vma, addr, ptent);
+> +		if (!page)
+> +			continue;
+> +
+> +		if (isolate_lru_page(page))
+> +			continue;
+> +
+> +		isolated++;
+> +		if (pte_young(ptent)) {
+> +			ptent = ptep_get_and_clear_full(mm, addr, pte,
+> +							tlb->fullmm);
+> +			ptent = pte_mkold(ptent);
+> +			set_pte_at(mm, addr, pte, ptent);
+> +			tlb_remove_tlb_entry(tlb, pte, addr);
+> +		}
+> +		ClearPageReferenced(page);
+> +		test_and_clear_page_young(page);
+> +		list_add(&page->lru, &page_list);
+> +		if (isolated >= SWAP_CLUSTER_MAX) {
 
-> +Optional properties:
-> +- reset-gpios:         a GPIO spec for the RST_B GPIO pin
-> +- pinctrl-0            phandle to the pin settings for the reset pin
-> +- width-mm:            physical panel width [mm]
-> +- height-mm:           physical panel height [mm]
-> +- display-timings:     timings for the connected panel according to [1]
+Why do we need SWAP_CLUSTER_MAX batching? Especially when we need ...
+[...]
 
-Still not convinced we need the 'display-timings' property, even as an
-optional property. My understanding is that passing display timings in
-the devicetree is not encouraged.
+> +unsigned long reclaim_pages(struct list_head *page_list)
+> +{
+> +	int nid = -1;
+> +	unsigned long nr_reclaimed = 0;
+> +	LIST_HEAD(node_page_list);
+> +	struct reclaim_stat dummy_stat;
+> +	struct scan_control sc = {
+> +		.gfp_mask = GFP_KERNEL,
+> +		.priority = DEF_PRIORITY,
+> +		.may_writepage = 1,
+> +		.may_unmap = 1,
+> +		.may_swap = 1,
+> +	};
+> +
+> +	while (!list_empty(page_list)) {
+> +		struct page *page;
+> +
+> +		page = lru_to_page(page_list);
+> +		if (nid == -1) {
+> +			nid = page_to_nid(page);
+> +			INIT_LIST_HEAD(&node_page_list);
+> +		}
+> +
+> +		if (nid == page_to_nid(page)) {
+> +			list_move(&page->lru, &node_page_list);
+> +			continue;
+> +		}
+> +
+> +		nr_reclaimed += shrink_page_list(&node_page_list,
+> +						NODE_DATA(nid),
+> +						&sc, 0,
+> +						&dummy_stat, false);
 
-Last time you said you need to pass ''display-timings' to workaround
-the problem of connecting this panel to mx8m DCSS or eLCDIF.
-
-The panel timings come from the LCD manufacturer and it is agnostic to
-what display controller interface it is connected to.
-
-So I suggest making sure the timings passed in the driver are correct
-as per the vendor datasheet. If they are correct and one specific
-interface is not able to drive it, then probably it is a bug in this
-specific display controller interface or in the SoC clock driver.
+per-node batching in fact. Other than that nothing really jumped at me.
+Except for the shared page cache side channel timing aspect not being
+considered AFAICS. To be more specific. Pushing out a shared page cache
+is possible even now but this interface gives a much easier tool to
+evict shared state and perform all sorts of timing attacks. Unless I am
+missing something we should be doing something similar to mincore and
+ignore shared pages without a writeable access or at least document why
+we do not care.
+-- 
+Michal Hocko
+SUSE Labs
