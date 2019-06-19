@@ -8,119 +8,121 @@ X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9DB7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC434C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86A0C21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D3A720B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:41:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bhb1gZZb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eL+CRB0y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729225AbfFSAlF (ORCPT
+        id S1729496AbfFSAlL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 20:41:05 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:36988 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfFSAlE (ORCPT
+        Tue, 18 Jun 2019 20:41:11 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53704 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfFSAlK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 20:41:04 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t76so9209544oih.4
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 17:41:04 -0700 (PDT)
+        Tue, 18 Jun 2019 20:41:10 -0400
+Received: by mail-wm1-f68.google.com with SMTP id x15so5147617wmj.3;
+        Tue, 18 Jun 2019 17:41:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Hvb16bwt26ZSY/9MTVMzsIdzO3PPNSUm5rw22PlGA5w=;
-        b=Bhb1gZZbB9Oukl+AW9mAy9W1Uv/KamKBE6qxGrdZPk5xQFGgEf8MsmH33i+IbYTYgh
-         dJWCyqGzcMG8sv63hqXpWfOb6T81RT/Lg0J8zCq2rR9+PVSJuDLShwcZr9BZZhDHz8cA
-         1R4DVyBdcMhdyCP5/d0pM2kDH881nCXCzDLfiem9TImrkaSM3MU0n45bArHD0eOMjr0/
-         11jZpBfzDlpIriL2qH9Jx1y8BkPztdAOSoQPNrYwQR2XNdUH8WonOap/h5MpQVgtcVBC
-         bdSJ94kM48BkBK+H1e1BFJDl7VdwXvF0Fitq0Bf3e7IXCpWe0571wj86bAl6LvGA//Tl
-         i7Iw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4SHCjBMan004B+ijIlPx4Pn3xROU+n7uFgrQp2KsfSs=;
+        b=eL+CRB0yQi9G/o531hvb2YOujfgf1xcnevSWIFFukShk/sDef498WkAoHShxPC0m5T
+         rqVJ2SJmmL98sI2FQeVeYLw/N85A/Zud1WJ1MTjr0HoolcTeFcV6EHzwFE7mWNmpBldY
+         bIyiM9by8ogLGzdelWaDbzAAsKwCfAeIPeTSpagrI+6N9btBBid0mHUDvxGzdEmTifF7
+         GjmxXLlLfVfv78OSH1Wa5CXrNhb0WwRLUNpvqGyf2ft/h9xYqcMFtG+I4jUJc0Y0fJsn
+         qtPk/rLLEkEwbhZ8FwyzVDSpfmPI/OIXbw4u857NjtcZNrir+ke/9Oz1ZB9cIB20vfY1
+         8kFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Hvb16bwt26ZSY/9MTVMzsIdzO3PPNSUm5rw22PlGA5w=;
-        b=DRGYDJJ8dscvygMnNHNQCaEqwfAoGzeBLesEN2OU8Sac15Pds04/Hd3k5YCNjy5Knp
-         sME0X+GhAMZl/UX/SV/skhGQvmHUfHMNyaEpOapZin67qqpcZv1bDeviTRx0+LmhFD5x
-         4v4FRlUzilaneoJLBNx271V+bK3QAhO5ViSsxUqk+teVsUbACvvIdbjwbos9FYkj8ZjK
-         GRnHpgYZtHWhsYKDB5Bg8VTnu+6QrUedQsyXJRsqzARhQXMSa768+m6GQWYnahriRm5I
-         +tvWDc9+Q/OdipTlY5d9Nk8TLJEq/8+Yg2QGqCfvSPFamQG4YbH55czylWE5MGdcqI+R
-         oLMw==
-X-Gm-Message-State: APjAAAVdfbnBIxEkwCbLnLOskC1U8Vx5KdGDEJpZYas/dSXBJmZb5n9l
-        fznP8sHk05ps7bksSVXRE5Szb/FqcesB8BeEIorrnA==
-X-Google-Smtp-Source: APXvYqw8jNkakW1UJ89WijX4ik5BkmF1lF2awsusZtwAATQ/z3ml398kEGsWvALBAUZO0y6wvvBH9QiQ7rF31YYgGKQ=
-X-Received: by 2002:aca:51ce:: with SMTP id f197mr855473oib.33.1560904863876;
- Tue, 18 Jun 2019 17:41:03 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=4SHCjBMan004B+ijIlPx4Pn3xROU+n7uFgrQp2KsfSs=;
+        b=K2dUuDi79vUqAu0W06t7NuZkQ7Zde/yhEtl1mnGG8Z2swlxEULgQXEudDw0DhoFDix
+         zVs1+BBb68bFGyTNLa2ipAdifDPl1XWvBjpC9F92ndrTk82mLaQ4HN36cvwxWeiVUJ2J
+         JHRvlmpKsWsqilecA6mUpwGKV3GlZcNfNsTOJcpXZC+XgJEOxn+ewwcm2TYUuWR9y70w
+         dyKZo/SmXlx77b/+7+NeZlHwZ/sdqYNS8k5mSdvi2axnWGl//HOXSS4pQcGm43TN7wEd
+         ny5ic0nOWdF9iKqz/UZ5aFLoOhiQJTVTRwNKenf9mYtgk4OopVCInRU3y8D+mpOKv4AL
+         f91A==
+X-Gm-Message-State: APjAAAV83LmFJjGzt0HItD/wkrLxkZkNKCensHkLZ2imexhcC5azFSIC
+        CL8De1DTLGw6R8YYDr+9JChzAg7a
+X-Google-Smtp-Source: APXvYqyM5EDqjy/4xxrG+0PX2bsz4GstmJ3Q06xdocP3+YhT8u2Fk4bpcgwr500Dp8PQQLTiXPHvrA==
+X-Received: by 2002:a1c:a686:: with SMTP id p128mr157437wme.163.1560904867553;
+        Tue, 18 Jun 2019 17:41:07 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id n10sm15767722wrw.83.2019.06.18.17.41.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 17:41:06 -0700 (PDT)
+Subject: Re: [PATCH v3 3/8] clocksource/drivers/tegra: Set and use timer's
+ period
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190618140358.13148-1-digetx@gmail.com>
+ <20190618140358.13148-4-digetx@gmail.com>
+ <16c20c1b-d106-cb1e-6d67-bdd402ecf57f@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <17556fe2-8481-258a-9be9-2598da0a67eb@gmail.com>
+Date:   Wed, 19 Jun 2019 03:41:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <1560827581-8827-1-git-send-email-wanpengli@tencent.com>
-In-Reply-To: <1560827581-8827-1-git-send-email-wanpengli@tencent.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Wed, 19 Jun 2019 08:42:19 +0800
-Message-ID: <CANRm+Cw6nVOy=SZw1wrh=8+1fzOfaOZcoWBeKTa8n3UXZLik=g@mail.gmail.com>
-Subject: Re: [PATCH] sched/nohz: Optimize get nohz timer target
-To:     LKML <linux-kernel@vger.kernel.org>
-Cc:     Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Frederic Weisbecker <fweisbec@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <16c20c1b-d106-cb1e-6d67-bdd402ecf57f@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cc Frederic,
-On Tue, 18 Jun 2019 at 11:13, Wanpeng Li <kernellwp@gmail.com> wrote:
->
-> From: Wanpeng Li <wanpengli@tencent.com>
->
-> On a machine, cpu 0 is used for housekeeping, other 39 cpus are in
-> nohz_full mode. We can observe huge time burn in the loop for seaching
-> nearest busy housekeeper cpu by ftrace.
->
->   2)               |                        get_nohz_timer_target() {
->   2)   0.240 us    |                          housekeeping_test_cpu();
->   2)   0.458 us    |                          housekeeping_test_cpu();
->
->   ...
->
->   2)   0.292 us    |                          housekeeping_test_cpu();
->   2)   0.240 us    |                          housekeeping_test_cpu();
->   2)   0.227 us    |                          housekeeping_any_cpu();
->   2) + 43.460 us   |                        }
->
-> This patch optimizes the searching logic by finding a nearest housekeeper
-> cpu in the housekeeping cpumask, it can minimize the worst searching time
-> from ~44us to < 10us in my testing.
->
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-> ---
->  kernel/sched/core.c | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 83bd6bb..db550cf 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -548,11 +548,12 @@ int get_nohz_timer_target(void)
->
->         rcu_read_lock();
->         for_each_domain(cpu, sd) {
-> -               for_each_cpu(i, sched_domain_span(sd)) {
-> +               for_each_cpu_and(i, sched_domain_span(sd),
-> +                       housekeeping_cpumask(HK_FLAG_TIMER)) {
->                         if (cpu == i)
->                                 continue;
->
-> -                       if (!idle_cpu(i) && housekeeping_cpu(i, HK_FLAG_TIMER)) {
-> +                       if (!idle_cpu(i)) {
->                                 cpu = i;
->                                 goto unlock;
->                         }
-> --
-> 2.7.4
->
+18.06.2019 19:32, Jon Hunter пишет:
+> 
+> On 18/06/2019 15:03, Dmitry Osipenko wrote:
+>> The of_clk structure has a period field that is set up initially by
+>> timer_of_clk_init(), that period value need to be adjusted for a case of
+>> TIMER1-9 that are running at a fixed rate that doesn't match the clock's
+>> rate. Note that the period value is currently used only by some of the
+>> clocksource drivers internally and hence this is just a minor cleanup
+>> change that doesn't fix anything.
+>>
+>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>> ---
+>>  drivers/clocksource/timer-tegra.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/clocksource/timer-tegra.c b/drivers/clocksource/timer-tegra.c
+>> index ff5a4ccb5d52..e6221e070499 100644
+>> --- a/drivers/clocksource/timer-tegra.c
+>> +++ b/drivers/clocksource/timer-tegra.c
+>> @@ -71,9 +71,9 @@ static int tegra_timer_shutdown(struct clock_event_device *evt)
+>>  static int tegra_timer_set_periodic(struct clock_event_device *evt)
+>>  {
+>>  	void __iomem *reg_base = timer_of_base(to_timer_of(evt)); 
+>> +	unsigned long period = timer_of_period(to_timer_of(evt));
+>>  
+>> -	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER |
+>> -		       ((timer_of_rate(to_timer_of(evt)) / HZ) - 1),
+>> +	writel_relaxed(TIMER_PTV_EN | TIMER_PTV_PER | (period - 1),
+>>  		       reg_base + TIMER_PTV);
+>>  
+>>  	return 0;
+>> @@ -297,6 +297,7 @@ static int __init tegra_init_timer(struct device_node *np, bool tegra20,
+>>  		cpu_to->clkevt.rating = rating;
+>>  		cpu_to->clkevt.cpumask = cpumask_of(cpu);
+>>  		cpu_to->of_base.base = timer_reg_base + base;
+>> +		cpu_to->of_clk.period = rate / HZ;
+>>  		cpu_to->of_clk.rate = rate;
+>>  
+>>  		irq_set_status_flags(cpu_to->clkevt.irq, IRQ_NOAUTOEN);
+> 
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+
+Thanks!
