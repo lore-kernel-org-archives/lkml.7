@@ -2,134 +2,128 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9BAFC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:18:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8A6C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6DB421721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:18:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08EE321721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:19:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="p4QDjw+B"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aBXr1jsV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbfFSTSh (ORCPT
+        id S1730454AbfFSTTF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:18:37 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40286 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfFSTSh (ORCPT
+        Wed, 19 Jun 2019 15:19:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43778 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726449AbfFSTTE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:18:37 -0400
-Received: by mail-ed1-f65.google.com with SMTP id k8so870617eds.7;
-        Wed, 19 Jun 2019 12:18:35 -0700 (PDT)
+        Wed, 19 Jun 2019 15:19:04 -0400
+Received: by mail-wr1-f65.google.com with SMTP id p13so405702wru.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 12:19:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=2bx2Y/hN4Cn5kEf9/eyTDQFYiuK9AF+r04fSjxWQhMk=;
-        b=p4QDjw+Bv2jk955O2zyVMZTnM32O5HtfjIlCWhEuRixFfgSNTzxm3+9Db9HAM/EPC7
-         tstzPBCbIXrF3RFtaB3HizOyM9SWWt5HWYQ1tbvRzXAGpWpEr+vN/lwN01wRxeSBoK9W
-         bpQwqr1q1d1f9ppXB2he49kZel0QKKyW3o/HGDJHoFlPvbRsGP2jXnyhRVU6jG7uAoL1
-         W2tfcNoZVssnqHgVl3JGM4wEF7bn+UznJ1M8rf23rTk4h0kfbgRrJEPYSN4e43Cwk0qk
-         iYTnS7I/DRHzLihnqvb1zIqzOiPdryb4M+nAgN54VH8F8XwvS47EFgAOmNULEQvqm4f4
-         9EVA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=vbGrC613Mx9I72tXYJMhbBLz41UWVEnBEWP2gav1xeQ=;
+        b=aBXr1jsV1jbWttXEi3sHL8+qOgrX4SCK7Q3uVbbDXijKLs+hC8dMHeBclHmHaH6RMG
+         60Sikq/JtAo1788WW1xNUDDiZXT7CZ+qVyBbd62Fo7/fAn6hFgwGegqGpeknn2dB0yUf
+         7raHu/ONKbVQk+H9+fbOslfRAmfjkRsXWfKXkSytn2bBymBdjum5F8wEKkLXmPQi/YQM
+         X0KZqYHQsxRt94MBnne1YpVayCpgxK6N7chjzpeIKRdiV9Kzb1QXNtmpkTK7VxHX06lB
+         vaupuO9MA/NB0v/5tqVim2rAsJLyLDTKP1nJgwUtNCvVZKExW9sGtS8PKkfr5P6s6WYe
+         pqjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=2bx2Y/hN4Cn5kEf9/eyTDQFYiuK9AF+r04fSjxWQhMk=;
-        b=Zwi1PVFNgPhLD/O0ps03k8nWU0VPAC8/jTh71irI4QdQkte2r3DhE36arAo0VRwids
-         XQGkgzEbIgQBtnVmJCcS4MnTmHAbT03Mq7yTWEIj3NdCUf+k0ebwFU4zIQStftD3+Q9E
-         EibWoYh2ZTGzwjl2v6zBi0GgPQViFppaO7yw4qI6mdpXTVazB6nOOlzeDl9hyKWEjMWA
-         5ztedhHJSvJX91bCoZCvYkhMTygI5+Op4s7yDz+RyUJ+HDMMNSYM4o4zCTfQdZQaWMQ8
-         HeP7lukRISMIq7e63A8u10XxNxx6ro/F2+US2Sns9TOoAPdUn5CZdNPdp5II7doFxv2K
-         ATqw==
-X-Gm-Message-State: APjAAAW196fIHthhcaLp5w6mUxLFIMp+Th5rGtduXZW4zSTXeaJvQtkw
-        avVmtg8kA5Nt2U1sCWt6dlvd0vOuzokQKA==
-X-Google-Smtp-Source: APXvYqziPGp5grduRzW0xyDykY6Q2CiVE7PN5wKnvPzCIrZ9ZOacu6Eabu5qSgjYqicqN2+JvVA1GQ==
-X-Received: by 2002:a17:906:d052:: with SMTP id bo18mr26656411ejb.311.1560971915091;
-        Wed, 19 Jun 2019 12:18:35 -0700 (PDT)
-Received: from localhost.localdomain ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id j30sm3394270edb.8.2019.06.19.12.18.34
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 12:18:34 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>
-Cc:     linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        kbuild test robot <lkp@intel.com>,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v2] drm/msm/dsi: Add parentheses to quirks check in dsi_phy_hw_v3_0_lane_settings
-Date:   Wed, 19 Jun 2019 12:17:23 -0700
-Message-Id: <20190619191722.25811-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190619161913.102998-1-natechancellor@gmail.com>
-References: <20190619161913.102998-1-natechancellor@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vbGrC613Mx9I72tXYJMhbBLz41UWVEnBEWP2gav1xeQ=;
+        b=A1sHHqwv8nPZz0EvhYgAozD+j23zdawkaAU/iuJxMYG1NTsN8IHX8pIiyX75A9ntK4
+         FoNvqHQMhlcdprHNvHb21uzgB8z55pKcfT2b03+3qxx60qjr84BxElJgZz0MINidyn1e
+         KlhmIv0DO7yuoZhL92XrtvHdYdN0I/jnfq6m4z3MF+i60ea7rOUHkfvFcCJtQvaZ+JYR
+         g1FcDqVAcwk8xz1cf49ceGv7QWuu6BskIwNJwXemiU567vErgaOAD1mhalpNIGT33h3L
+         2h/FcOzDl7rm8O9P2un9wL8WQF2HhN0pQ3qS6fR7s0kbJHj93VJPwOi3twY+1JcuQ5RP
+         yysg==
+X-Gm-Message-State: APjAAAXx4iLZ/9y8fGXMDnuDdU8z/wNaAv6+o24gYWdX7EH5AGNeKIpG
+        4W7JEBlUGq2xxWMKQGz6xbdGTBocu/SFWwype9O6
+X-Google-Smtp-Source: APXvYqzpL3l1WIqajnOtkCbtEf+ZBROZneTV4UfC6rTgSLtpIqrDjIMSBhzB2YWe0R2HLSHUurnOCdjUz96H3tPb7GI=
+X-Received: by 2002:a5d:680d:: with SMTP id w13mr920295wru.141.1560971942128;
+ Wed, 19 Jun 2019 12:19:02 -0700 (PDT)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190619174556.21194-1-puranjay12@gmail.com>
+In-Reply-To: <20190619174556.21194-1-puranjay12@gmail.com>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Wed, 19 Jun 2019 14:18:49 -0500
+Message-ID: <CAErSpo6SnVVufzTeChiM+k7YcNebPcmabKS5EQR-mP-HYz1aGw@mail.gmail.com>
+Subject: Re: [PATCH] net: fddi: skfp: Include generic PCI definitions from pci_regs.h
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Clang warns:
+On Wed, Jun 19, 2019 at 12:46 PM Puranjay Mohan <puranjay12@gmail.com> wrote:
+>
+> Include the generic PCI definitions from include/uapi/linux/pci_regs.h
+> change PCI_REV_ID to PCI_REVISION_ID to make it compatible with the
+> generic define.
+> This driver uses only one generic PCI define.
 
-drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: warning: logical not is
-only applied to the left hand side of this bitwise operator
-[-Wlogical-not-parentheses]
-        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
-            ^                 ~
-drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: note: add parentheses
-after the '!' to evaluate the bitwise operator first
-        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
-            ^
-             (                                               )
-drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c:80:6: note: add parentheses
-around left hand side expression to silence this warning
-        if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
-            ^
-            (                )
-1 warning generated.
+1) Start every sentence with a capital letter.
 
-Add parentheses around the bitwise AND so it is evaluated first then
-negated.
+2) Use a period at the end of every sentence.
 
-Fixes: 3dbbf8f09e83 ("drm/msm/dsi: Add old timings quirk for 10nm phy")
-Link: https://github.com/ClangBuiltLinux/linux/issues/547
-Reported-by: kbuild test robot <lkp@intel.com>
-Reviewed-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Reviewed-by: Sean Paul <sean@poorly.run>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+3) Use a blank line between paragraphs.  A short line (like "generic
+define" above) *suggests* a new paragraph, but it's ambiguous, which
+makes it hard to read.
 
-v1 -> v2:
+4) This patch must build correctly by itself.  I didn't try it, but
+I'm a little suspicious that including pci_regs.h will cause
+redefinition of PCI_STATUS and other #defines that are the same
+between pci_regs.h and skfbi.h.  You could either combine the two
+patches, or make the first patch simply rename PCI_REV_ID to
+PCI_REVISION_ID in skfbi.h and drvfbi.c  Then the second patch could
+add the #include of pci_regs.h and remove the corresponding #defines
+from skfbi.h.  Maybe a third patch would remove all the other unused
+PCI_* definitions.  Arguably the second and third could be combined.
+But it's much easier for a maintainer to squash patches together than
+to split them apart, so err on the side of splitting them up.
 
-* Fix broken link (thanks to Sean for pointing it out)
-* Add Sean's reviewed-by
-
- drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-index eb28937f4b34..47403d4f2d28 100644
---- a/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-+++ b/drivers/gpu/drm/msm/dsi/phy/dsi_phy_10nm.c
-@@ -77,7 +77,7 @@ static void dsi_phy_hw_v3_0_lane_settings(struct msm_dsi_phy *phy)
- 			      tx_dctrl[i]);
- 	}
- 
--	if (!phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK) {
-+	if (!(phy->cfg->quirks & V3_0_0_10NM_OLD_TIMINGS_QUIRK)) {
- 		/* Toggle BIT 0 to release freeze I/0 */
- 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x05);
- 		dsi_phy_write(lane_base + REG_DSI_10nm_PHY_LN_TX_DCTRL(3), 0x04);
--- 
-2.22.0
-
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  drivers/net/fddi/skfp/drvfbi.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
+> index bdd5700e71fa..38f6d943385d 100644
+> --- a/drivers/net/fddi/skfp/drvfbi.c
+> +++ b/drivers/net/fddi/skfp/drvfbi.c
+> @@ -20,6 +20,7 @@
+>  #include "h/supern_2.h"
+>  #include "h/skfbiinc.h"
+>  #include <linux/bitrev.h>
+> +#include <uapi/linux/pci_regs.h>
+>
+>  #ifndef        lint
+>  static const char ID_sccs[] = "@(#)drvfbi.c    1.63 99/02/11 (C) SK " ;
+> @@ -127,7 +128,7 @@ static void card_start(struct s_smc *smc)
+>          *       at very first before any other initialization functions is
+>          *       executed.
+>          */
+> -       rev_id = inp(PCI_C(PCI_REV_ID)) ;
+> +       rev_id = inp(PCI_C(PCI_REVISION_ID)) ;
+>         if ((rev_id & 0xf0) == SK_ML_ID_1 || (rev_id & 0xf0) == SK_ML_ID_2) {
+>                 smc->hw.hw_is_64bit = TRUE ;
+>         } else {
+> --
+> 2.21.0
+>
