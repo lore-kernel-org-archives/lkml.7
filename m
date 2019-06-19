@@ -2,121 +2,95 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF024C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:19:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 75E56C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:21:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84A7C2080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:19:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uhoiB4WI"
+	by mail.kernel.org (Postfix) with ESMTP id 53B472080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:21:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731418AbfFSITZ (ORCPT
+        id S1731270AbfFSIVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:19:25 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39051 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731065AbfFSITY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:19:24 -0400
-Received: by mail-wr1-f65.google.com with SMTP id x4so2300844wrt.6;
-        Wed, 19 Jun 2019 01:19:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=w7YoFXh1SKzUVoqeWemB28LJQhu4fSQVWGlc5kaxjqk=;
-        b=uhoiB4WISm7cnAHZVjTtkxf28QkDNSnWYzIOH4TuQmjjGQTfEEG8t2RLpP5gR+hRXq
-         TLlGQ8IY0CpdFnnwR29f3ZVNUwilevo1nlo4pADA1ADsPe9SNOyDGXFOrMtEZzFpm8rd
-         jP7R78kPDYUMWjquZ0hB6utrtGtK42PNODrQxUgH/LhTu5VVh/9CsgyJQ6K0bDftmX6S
-         zaicIQ8hjbiV9mVKJX2ciuqjmKSRGzw/vNK1WizAWKQU6VkRmiCBsbxCXPnETZgwEFx2
-         MI7o1BIw85O84EXPk0pLbbsHYcaWgCBoXNdWYLKIuldjx5dwUyPAFIYNKd5PR7gJCctv
-         5tVQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=w7YoFXh1SKzUVoqeWemB28LJQhu4fSQVWGlc5kaxjqk=;
-        b=rifty/lK6zvybEgxNyctX9Xot1O4LJmOE4n9Inaq0uM8pqInJ5W5LuHSSAmTtH67la
-         fV+y5GPBiEQSMoS4sMm5HuZH/ICezTuuBNuRY2C++5IxyPtd/Nsm3oO5WbpGgT4RTh47
-         rhkv89O3U6Z6OVpGOz88dgCJGqogEnU+Zd9zKzgbTLsKQnuSPsJqjvIGTJxZ5k1wZ2CV
-         ctUlOgt9Cw0YJPktG94RxexG8x5vQCJpgwMkSoBAMc7xGOIQs/DU+E+/uATIl5b9UmYb
-         w5FcxOvfxszspBVceRZ5sAuBYe6Ny5XilJB+wVGLtqp6vIwTEMNFVYjLruSdOVrEB0ND
-         kxtw==
-X-Gm-Message-State: APjAAAXyXmxuwz1QkAAs5FoDuDeICG+Fyvt1MmO48dgwEvKdx8kih6at
-        DsEnFPuEgyHXSAMLlVKa390=
-X-Google-Smtp-Source: APXvYqz0pT52tEUcfHZEaz4vcMQTlUIwMh/yoGLUdIJma7jANtGGX0ZNZM+mmDWwVNXz//QpuwYbJg==
-X-Received: by 2002:adf:fc4f:: with SMTP id e15mr41286940wrs.2.1560932362281;
-        Wed, 19 Jun 2019 01:19:22 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id y19sm844637wmc.21.2019.06.19.01.19.21
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 01:19:21 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 10:19:20 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Dmitry Osipenko <digetx@gmail.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Peter De Schrijver <pdeschrijver@nvidia.com>,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 8/8] clocksource/drivers/tegra: Set up maximum-ticks
- limit properly
-Message-ID: <20190619081920.GI3187@ulmo>
-References: <20190618140358.13148-1-digetx@gmail.com>
- <20190618140358.13148-9-digetx@gmail.com>
+        Wed, 19 Jun 2019 04:21:45 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49250 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726142AbfFSIVp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:21:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 853F1AF30;
+        Wed, 19 Jun 2019 08:21:43 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 502821E0492; Wed, 19 Jun 2019 10:21:41 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 10:21:41 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Kent Overstreet <kent.overstreet@gmail.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Dave Chinner <dchinner@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-bcache@vger.kernel.org,
+        "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Zach Brown <zach.brown@ni.com>, Jens Axboe <axboe@kernel.dk>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Tejun Heo <tj@kernel.org>
+Subject: Re: bcachefs status update (it's done cooking; let's get this sucker
+ merged)
+Message-ID: <20190619082141.GA32409@quack2.suse.cz>
+References: <20190610191420.27007-1-kent.overstreet@gmail.com>
+ <CAHk-=wi0iMHcO5nsYug06fV3-8s8fz7GDQWCuanefEGq6mHH1Q@mail.gmail.com>
+ <20190611011737.GA28701@kmo-pixel>
+ <20190611043336.GB14363@dread.disaster.area>
+ <20190612162144.GA7619@kmo-pixel>
+ <20190612230224.GJ14308@dread.disaster.area>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nEsDIrWrg+hrB7l1"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190618140358.13148-9-digetx@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190612230224.GJ14308@dread.disaster.area>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu 13-06-19 09:02:24, Dave Chinner wrote:
+> On Wed, Jun 12, 2019 at 12:21:44PM -0400, Kent Overstreet wrote:
+> > This would simplify things a lot and eliminate a really nasty corner case - page
+> > faults trigger readahead. Even if the buffer and the direct IO don't overlap,
+> > readahead can pull in pages that do overlap with the dio.
+> 
+> Page cache readahead needs to be moved under the filesystem IO
+> locks. There was a recent thread about how readahead can race with
+> hole punching and other fallocate() operations because page cache
+> readahead bypasses the filesystem IO locks used to serialise page
+> cache invalidation.
+> 
+> e.g. Readahead can be directed by userspace via fadvise, so we now
+> have file->f_op->fadvise() so that filesystems can lock the inode
+> before calling generic_fadvise() such that page cache instantiation
+> and readahead dispatch can be serialised against page cache
+> invalidation. I have a patch for XFS sitting around somewhere that
+> implements the ->fadvise method.
+> 
+> I think there are some other patches floating around to address the
+> other readahead mechanisms to only be done under filesytem IO locks,
+> but I haven't had time to dig into it any further. Readahead from
+> page faults most definitely needs to be under the MMAPLOCK at
+> least so it serialises against fallocate()...
 
---nEsDIrWrg+hrB7l1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I have patch to make madvise(MADV_WILLNEED) go through ->fadvise() as
+well. I'll post it soon since the rest of the series isn't really dependent
+on it.
 
-On Tue, Jun 18, 2019 at 05:03:58PM +0300, Dmitry Osipenko wrote:
-> Tegra's timer has 29 bits for the counter and for the "load" register
-> which sets counter to a load-value. The counter's value is lower than
-> the actual value by 1 because it starts to decrement after one tick,
-> hence the maximum number of ticks that hardware can handle equals to
-> 29 bits + 1.
->=20
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/clocksource/timer-tegra.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---nEsDIrWrg+hrB7l1
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0J8AgACgkQ3SOs138+
-s6EPEBAAn10gbUkVsBHDIrBFkwk3KyI/V6bofbaJQUM7laLFxcPxtchlHGg815Mf
-fPIMSvscd6p0ASJwpG7FuIwHT0Wn16ZlwmKt+txnr96lne/hGy4TCG2U4ajG7uho
-Oz4aRFpahRRB7yW9jBb4kfr7AKNAMFDeGEAcT8L+e1f7tfgpqT9+ZOImh6t9yfWs
-xfeH0EYBDCwz4by5qz4TLJ575rgbFycX8GADCjA0VL2FIbnU3G9c34UsLIO6OMPn
-EV5O+MGIjzfadAD0IdVkX1nURSYya1SvgCp167/dnzM6IBaBzQTfSJ8tMtEBCJJN
-JockM2EqDiw8EytGKfWABIgCyKDwFT5gA2Ci4JTfr865Cufl5EwKJNpxQ52jyJoF
-ZX3vnvsDx7pkiusralho+1HsP4J6D9fqULD6NmNNN7yzGHvMNt3o48B2MpHh3J5k
-ygnXuxYMRKNP4kvBMhgXMDso+lWlt3iMfUysOvI0+RR7hQUCYujEJCDkNp19awf/
-OtV5+xplrPqCqknrJ6t5hsSPqaX6Z2IJ7FCesK6XY9K0YywqzVwe/+HH0ktsRN6I
-9O7r2P5yyBDtz0TGn8XkQoZ7BbtqUY629/xyF4vfYdpiUtMX3hmrh2Zbz+HEM7rY
-ONbzVV/EJj40JmRJi4glPLIC2T2yEe3QqD1PqiQxREm4kBIpwEU=
-=4r44
------END PGP SIGNATURE-----
-
---nEsDIrWrg+hrB7l1--
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
