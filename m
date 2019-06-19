@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B07C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CB1C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CFC520B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B82482147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:11:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730575AbfFSFKT (ORCPT
+        id S1730656AbfFSFLn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:10:19 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:59159 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSFKS (ORCPT
+        Wed, 19 Jun 2019 01:11:43 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50481 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725854AbfFSFLm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:10:18 -0400
+        Wed, 19 Jun 2019 01:11:42 -0400
 X-Originating-IP: 79.86.19.127
 Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
         (Authenticated sender: alex@ghiti.fr)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id C1E8920008;
-        Wed, 19 Jun 2019 05:10:11 +0000 (UTC)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id DC9AB60010;
+        Wed, 19 Jun 2019 05:11:16 +0000 (UTC)
 From:   Alexandre Ghiti <alex@ghiti.fr>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
@@ -46,9 +46,9 @@ Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
         linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linux-mm@kvack.org,
         Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH 1/8] s390: Start fallback of top-down mmap at mm->mmap_base
-Date:   Wed, 19 Jun 2019 01:08:37 -0400
-Message-Id: <20190619050844.5294-2-alex@ghiti.fr>
+Subject: [PATCH 2/8] sh: Start fallback of top-down mmap at mm->mmap_base
+Date:   Wed, 19 Jun 2019 01:08:38 -0400
+Message-Id: <20190619050844.5294-3-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190619050844.5294-1-alex@ghiti.fr>
 References: <20190619050844.5294-1-alex@ghiti.fr>
@@ -66,14 +66,14 @@ and the stack, which is the only place not covered by the top-down mmap.
 
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 ---
- arch/s390/mm/mmap.c | 2 +-
+ arch/sh/mm/mmap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
-index cbc718ba6d78..4a222969843b 100644
---- a/arch/s390/mm/mmap.c
-+++ b/arch/s390/mm/mmap.c
-@@ -166,7 +166,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+diff --git a/arch/sh/mm/mmap.c b/arch/sh/mm/mmap.c
+index 6a1a1297baae..4c7da92473dd 100644
+--- a/arch/sh/mm/mmap.c
++++ b/arch/sh/mm/mmap.c
+@@ -135,7 +135,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
  	if (addr & ~PAGE_MASK) {
  		VM_BUG_ON(addr != -ENOMEM);
  		info.flags = 0;
@@ -81,7 +81,7 @@ index cbc718ba6d78..4a222969843b 100644
 +		info.low_limit = mm->mmap_base;
  		info.high_limit = TASK_SIZE;
  		addr = vm_unmapped_area(&info);
- 		if (addr & ~PAGE_MASK)
+ 	}
 -- 
 2.20.1
 
