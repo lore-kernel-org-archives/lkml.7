@@ -2,102 +2,172 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90101C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 02:28:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24941C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 02:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60BFC20863
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 02:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560911312;
-	bh=XvkpPw8BXpPDu9amDNuyJZsuc2wbO0WNrMlsTLLzL5c=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=bjL+e+ZnydTFsyOaf3I4Uy2eDiQR2dXskZCPlRcP7LHYkgnRbM0zEyuL9My2E8i0y
-	 Ghqsj8nzhzPg5C1JVDWrWf45OE1rdp/RUQTAAiKzYbOl6LQ8w+FphRZGMC+GdC5+k6
-	 CuOMlLx1dQFzBRgBZlWZizrwZ1/KKEaf6JPIoIzQ=
+	by mail.kernel.org (Postfix) with ESMTP id EC13C2085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 02:30:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czkRtXS/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730128AbfFSC2a (ORCPT
+        id S1729983AbfFSCaQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 22:28:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37248 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726047AbfFSC22 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 22:28:28 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 482132085A;
-        Wed, 19 Jun 2019 02:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560911307;
-        bh=XvkpPw8BXpPDu9amDNuyJZsuc2wbO0WNrMlsTLLzL5c=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=V7ZarNRNjZeC7nSF/Oa8yUc/U4yM06bihFmjCW4QFcrDEhnSYGiLhQlS4tejgreY5
-         unpVjWCYb/tV+o9qBm5Jo1Z8fsa7Zze0OeFpVEm9F+fBV9XxHEXmyCxVcgzKLbBObt
-         F/O/At+hnDDOQPrevDm+dio3Ukd2F4a1HLpvM2+4=
-Date:   Wed, 19 Jun 2019 11:28:22 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>
-Subject: Re: [PATCH 10/21] tracing/probe: Split trace_event related data
- from trace_probe
-Message-Id: <20190619112822.60db3d69a09e0288f9168421@kernel.org>
-In-Reply-To: <20190618171115.2c58fde6@gandalf.local.home>
-References: <155931578555.28323.16360245959211149678.stgit@devnote2>
-        <155931589667.28323.6107724588059072406.stgit@devnote2>
-        <20190617215643.05a33541@oasis.local.home>
-        <20190619011409.1a459906c14b8c851a5eb518@kernel.org>
-        <20190618122322.6875b643@gandalf.local.home>
-        <20190618171115.2c58fde6@gandalf.local.home>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 18 Jun 2019 22:30:16 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39553 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfFSCaQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 22:30:16 -0400
+Received: by mail-pl1-f193.google.com with SMTP id b7so6516515pls.6
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 19:30:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=Hp7DHtibmJwvDlg9A4mEprONZytCRnxVVBzTxg8OHYo=;
+        b=czkRtXS/k/PIDvk0gtpQpNB5VZxZherTZ9PRlTPnBwnjA/igg0LR2lOuUP5WT/rYgs
+         Gp1so9Gfkp3mc6xC98nyHT6g4S+KnaR7bsDuxWN8+Y+rTzjObM+F9BgKArgSmZR13TGs
+         uWGbx0LO/wo7UOWRlkSEaVcqH+1lKM7fG8tFV4gPNhPJJcpUbqzMQl0OxxSPfQOc7CbG
+         rmrD0WP57rpXBIK62Gkq9J4Zc2r8rNgBuf/x9v93yHfJrFcNTCyxrcDzyidZa41Sa5n8
+         nga8JQ9Pij0H46ixiXryHy8D2VI1/UK6brZpGaUe+ykruxDtpM0RGm+HhWkhVpVQqmkn
+         ffmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=Hp7DHtibmJwvDlg9A4mEprONZytCRnxVVBzTxg8OHYo=;
+        b=ecdK21anaiySi7qvMpOPifLeFayUE71DY/AT7cLyN1RPZgfDAyCLMevlnJMzo8f6wG
+         ZiD8As9m1DLYAMTebsoVlDsaEcHUY1Ka5woKfF11aRFGvilj6YdNaGP/KJf0A1nHYGdw
+         rvmPX9M5vpuSZUh2Jk1SFRk9IRAXzcPKaDOw/A7FBrrKUQwPk8N6SWNZyl/6AcjCITTD
+         bS+iTBgL2+1414vLEOVEIr9LW9rTurPsL22Y6u0uiy44XVGinDEcYxCk/KPtaAeBD02v
+         lO2saZvNXpe0hhOagjn5FGyxVaWnG87V4YqI2wcLwp3mHfwD4zSM6kTLDWnW7wzjqVKI
+         II1A==
+X-Gm-Message-State: APjAAAVkFi2ZZoGvH443/hT52myXnIqxZV5yXdzzCOjHuDyYQyEbRSvc
+        yGKNxd1wbND1dxDqYZPxzMYQP5d0
+X-Google-Smtp-Source: APXvYqyHuCR/eXIW2UITGM18yxwMTR+iDtanNqySjG6vDTWCzZqFLXXb4U4Pay9MxueOrk3QofwtBg==
+X-Received: by 2002:a17:902:bd0a:: with SMTP id p10mr41544490pls.134.1560911415555;
+        Tue, 18 Jun 2019 19:30:15 -0700 (PDT)
+Received: from hari-Inspiron-1545 ([183.83.92.187])
+        by smtp.gmail.com with ESMTPSA id f186sm21041254pfb.5.2019.06.18.19.30.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 18 Jun 2019 19:30:14 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 08:00:10 +0530
+From:   Hariprasad Kelam <hariprasad.kelam@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] staging: rtl8723bs: hal: odm_RegConfig8723B: fix Lines
+ should not end with a '('
+Message-ID: <20190619023010.GA21587@hari-Inspiron-1545>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 17:11:15 -0400
-Steven Rostedt <rostedt@goodmis.org> wrote:
+this patch fixes below issue reported by checkpatch.pl
 
-> On Tue, 18 Jun 2019 12:23:22 -0400
-> Steven Rostedt <rostedt@goodmis.org> wrote:
-> 
-> > > Oops, good catch!
-> > > This part is related to caller (ftrace/perf) so should be more careful.
-> > > Usually, kprobe enablement should not fail. If one of them has
-> > > gone (like a probe on unloaded module), it can be fail but that
-> > > should be ignored. I would like to add some additional check so that
-> > > - If all kprobes are on the module which is unloaded, enablement
-> > >   must be failed and return error.
-> > > - If any kprobe is enabled, and others are on non-exist modules,
-> > >   it should succeeded and return OK.
-> > > - If any kprobe caused an error not because of unloaded module,
-> > >   all other enablement should be canceled and return error.
-> > > 
-> > > Is that OK for you?
-> > >   
-> > 
-> > Sounds good to me.
-> 
-> BTW,
-> 
-> I pulled in patches 1-9 and I'm starting to test them now.
+CHECK: Lines should not end with a '('
+CHECK: Lines should not end with a '('
 
-Thanks! Should I send 10-21 patches in v2?
+Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
+---
+ drivers/staging/rtl8723bs/hal/odm_RegConfig8723B.h | 61 ++++++++++------------
+ 1 file changed, 28 insertions(+), 33 deletions(-)
 
-Thank you,
-
-
-
-
+diff --git a/drivers/staging/rtl8723bs/hal/odm_RegConfig8723B.h b/drivers/staging/rtl8723bs/hal/odm_RegConfig8723B.h
+index 12dfc58..07b5859 100644
+--- a/drivers/staging/rtl8723bs/hal/odm_RegConfig8723B.h
++++ b/drivers/staging/rtl8723bs/hal/odm_RegConfig8723B.h
+@@ -7,51 +7,46 @@
+ #ifndef __INC_ODM_REGCONFIG_H_8723B
+ #define __INC_ODM_REGCONFIG_H_8723B
+ 
+-void odm_ConfigRFReg_8723B(
+-	PDM_ODM_T pDM_Odm,
+-	u32 Addr,
+-	u32 Data,
+-	ODM_RF_RADIO_PATH_E RF_PATH,
+-	u32 RegAddr
++void odm_ConfigRFReg_8723B(PDM_ODM_T pDM_Odm,
++			   u32 Addr,
++			   u32 Data,
++			   ODM_RF_RADIO_PATH_E RF_PATH,
++			   u32 RegAddr
+ );
+ 
+ void odm_ConfigRF_RadioA_8723B(PDM_ODM_T pDM_Odm, u32 Addr, u32 Data);
+ 
+ void odm_ConfigMAC_8723B(PDM_ODM_T pDM_Odm, u32 Addr, u8 Data);
+ 
+-void odm_ConfigBB_AGC_8723B(
+-	PDM_ODM_T pDM_Odm,
+-	u32 Addr,
+-	u32 Bitmask,
+-	u32 Data
++void odm_ConfigBB_AGC_8723B(PDM_ODM_T pDM_Odm,
++			    u32 Addr,
++			    u32 Bitmask,
++			    u32 Data
+ );
+ 
+-void odm_ConfigBB_PHY_REG_PG_8723B(
+-	PDM_ODM_T pDM_Odm,
+-	u32 Band,
+-	u32 RfPath,
+-	u32 TxNum,
+-	u32 Addr,
+-	u32 Bitmask,
+-	u32 Data
++void odm_ConfigBB_PHY_REG_PG_8723B(PDM_ODM_T pDM_Odm,
++				   u32 Band,
++				   u32 RfPath,
++				   u32 TxNum,
++				   u32 Addr,
++				   u32 Bitmask,
++				   u32 Data
+ );
+ 
+-void odm_ConfigBB_PHY_8723B(
+-	PDM_ODM_T pDM_Odm,
+-	u32 Addr,
+-	u32 Bitmask,
+-	u32 Data
++void odm_ConfigBB_PHY_8723B(PDM_ODM_T pDM_Odm,
++			    u32 Addr,
++			    u32 Bitmask,
++			    u32 Data
+ );
+ 
+-void odm_ConfigBB_TXPWR_LMT_8723B(
+-	PDM_ODM_T pDM_Odm,
+-	u8 *Regulation,
+-	u8 *Band,
+-	u8 *Bandwidth,
+-	u8 *RateSection,
+-	u8 *RfPath,
+-	u8 *Channel,
+-	u8 *PowerLimit
++void odm_ConfigBB_TXPWR_LMT_8723B(PDM_ODM_T pDM_Odm,
++				  u8 *Regulation,
++				  u8 *Band,
++				  u8 *Bandwidth,
++				  u8 *RateSection,
++				  u8 *RfPath,
++				  u8 *Channel,
++				  u8 *PowerLimit
+ );
+ 
+ #endif
 -- 
-Masami Hiramatsu <mhiramat@kernel.org>
+2.7.4
+
