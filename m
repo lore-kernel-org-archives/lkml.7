@@ -2,174 +2,107 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_GREY autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CA8C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:47:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC2EC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09C29214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:47:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 113BC214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:50:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbfFSOrW convert rfc822-to-8bit (ORCPT
+        id S1729167AbfFSOuy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:47:22 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37725 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfFSOrW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:47:22 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so38830986iok.4;
-        Wed, 19 Jun 2019 07:47:21 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=QEYP9H4UymVw8xeOjLOrHSZwO8yB1IyVK9g6mOUClEU=;
-        b=awhLPtgopr+4ipq4QGLSnzpBOsiO/E3KRM5BO2RDogh0gmE9vPpnGpnREaopIaFz9U
-         92g7145c0vArK5Kz92ZmB9ObTSZT3sDP8P/ZP3+BUJc/Au5bbbB4jxd4w7YzBCbnw18q
-         1o/5nZJrCP+cipOVETnPosiSBakU5nBBWwOHUTeNR/UekJXD83Vx0LuKgDTzx45mlgfo
-         ZxZGRrXH83/pwO47lZB8VcyOlHOchDo4nlc4HFPqzUQXI2kqt7O7rkkecidlatdBy2rK
-         D082u4D6OgRHsUHeBiC59T3WY71kqXuB455Q/hJt+ozmQ/boZdFWytaA3ntfZ5NaWnwL
-         ODcw==
-X-Gm-Message-State: APjAAAXaU3lezvrof7zo5M1E765owV1tz0S4m+6cFtJI/Pfz3rs0r/bq
-        SGlp+qH5mnHkKHj+0CJzK/JKUNYW/lyUQ52UMlo=
-X-Google-Smtp-Source: APXvYqxdMhOY/OZfjrMw6aAQiGZSCIplwo88vxdNupVG/0q9Pnjea0rgjppRWyCM2id1UYNso7aGg/xGyuV0xhH7q1w=
-X-Received: by 2002:a5d:9a04:: with SMTP id s4mr33496209iol.19.1560955641157;
- Wed, 19 Jun 2019 07:47:21 -0700 (PDT)
+        Wed, 19 Jun 2019 10:50:54 -0400
+Received: from mga06.intel.com ([134.134.136.31]:30727 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725899AbfFSOuy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 10:50:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 07:50:53 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="162065638"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga007.fm.intel.com with ESMTP; 19 Jun 2019 07:50:51 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1003)
+        id 8B59F162; Wed, 19 Jun 2019 17:50:50 +0300 (EEST)
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Darren Hart <dvhart@infradead.org>,
+        platform-driver-x86@vger.kernel.org,
+        Hans de Goede <hdegoede@redhat.com>,
+        linux-kernel@vger.kernel.org
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: [PATCH v1] platform/x86: intel_int0002_vgpio: Get rid of custom ICPU() macro
+Date:   Wed, 19 Jun 2019 17:50:50 +0300
+Message-Id: <20190619145050.13876-1-andriy.shevchenko@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <CADcCL0irokZ8Xp7S3eBV728qpL5yipwW+=2QvwiZrixqSdtBog@mail.gmail.com>
-In-Reply-To: <CADcCL0irokZ8Xp7S3eBV728qpL5yipwW+=2QvwiZrixqSdtBog@mail.gmail.com>
-From:   Francis Deslauriers <francis.deslauriers@efficios.com>
-Date:   Wed, 19 Jun 2019 10:47:05 -0400
-Message-ID: <CADcCL0gpbfk28_E1otW0Ttz0Osot3CYymh=t5fVR77WrqoU6uQ@mail.gmail.com>
-Subject: Re: Tracing Summit 2019: Announcement and Call for Proposals, August
- 20th, 2019, San Diego, CA
-To:     diamon-discuss@lists.linuxfoundation.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-perf-users@vger.kernel.org,
-        linux-trace-devel@vger.kernel.org,
-        linux-trace-users@vger.kernel.org, linuxtools-dev@eclipse.org,
-        lttng-dev <lttng-dev@lists.lttng.org>, lwn@lwn.net,
-        tracecompass-dev@eclipse.org
-Cc:     info@tracingsummit.org,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
-This is a friendly reminder that the deadline for submitting talk
-proposals for the Tracing Summit 2019 [1] is coming up soon (July
-1st). Submit you talk today through this form:
-https://forms.gle/L6mR2ZN3Nt7bUxY98.
+Replace custom grown macro with generic INTEL_CPU_FAM6() one.
 
-The Tracing Summit 2019 will be held in San Diego, California on
-August 20th, 2019, at the Hilton San Diego Bayfront, co-located with
-the Open Source Summit & Embedded Linux Conference North America 2019
+No functional change intended.
 
-This year tickets are $100 and seating is limited to 100 people. To
-register, you can add the Tracing Summit as an addon to your Open
-Source Summit ticket or use this link to register solely for the
-Tracing Summit:
-https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx.
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+---
+ drivers/platform/x86/intel_int0002_vgpio.c | 22 +++++++---------------
+ 1 file changed, 7 insertions(+), 15 deletions(-)
 
-We are actively looking for sponsors to support the Tracing Summit.
-Contact us at info@tracingsummit.org.
-
-More info: https://tracingsummit.org/wiki/TracingSummit2019
-
-Thank you,
-
-On behalf of the Diagnostic and Monitoring Workgroup,
-Tracing Summit organizers
-
-Le mar. 16 avr. 2019, à 11 h 54, Francis Deslauriers
-<francis.deslauriers@efficios.com> a écrit :
->
-> Hi all,
->
-> This is a Call for Proposals for the Tracing Summit 2019 [0] which
-> will be held in San Diego, California, USA at the Hilton San Diego
-> Bayfront, co-located with the Open Source Summit & Embedded Linux
-> Conference North America 2019 [1] on August 20th, 2019.
->
-> You can subscribe to our mailing list ot get the latest info on the event: [2]
->
-> The Tracing Summit is single-day, single-track conference on the topic
-> of tracing. The event focuses on the field of software and hardware
-> tracing, gathering developers and end-users of tracing and trace
-> analysis tools. The main goal of the Tracing Summit is to provide
-> space for discussion between people of the various areas that benefit
-> from tracing, namely parallel, distributed and/or real-time systems,
-> as well as kernel development.
->
-> We are welcoming 30 minute presentations from both end users and
-> developers, on topics covering, but not limited to:
-> -Investigation workflow of Real-Time, latency, and throughput issues,
-> -Trace collection and extraction,
-> -Trace filtering,
-> -Trace aggregation,
-> -Trace formats,
-> -Tracing multi-core systems,
-> -Trace abstraction,
-> -Trace modeling,
-> -Automated trace analysis (e.g. dependency analysis),
-> -Tracing large clusters and distributed systems,
-> -Hardware-level tracing (e.g. DSP, GPU, bare-metal),
-> -Trace visualisation,
-> -Interaction between debugging and tracing,
-> -Tracing remote control,
-> -Analysis of large trace datasets,
-> -Cloud trace collection and analysis,
-> -Integration between trace tools,
-> -Live tracing & monitoring,
-> -Programmable tracing (e.g. eBPF).
->
-> Those can cover recently available technologies, ongoing work, and yet
-> non-existing technologies (which are compellingly interesting to
-> end-users). Please understand that this open forum is not the proper
-> place to present sales or marketing pitches, nor technologies which
-> are prevented from being freely used in open source.
->
-> * Submit you talk today using this form: https://forms.gle/L6mR2ZN3Nt7bUxY98 *
->
-> The submission deadline is July 1st 2019 at 23:59 EST.
->
-> This year tickets are $100 and seating is limited to 100 people. To
-> register, you can add the Tracing Summit as an addon to your Open
-> Source Summit ticket [3] or use this link [4] to register solely for
-> the Tracing Summit.
->
-> The Tracing Summit is sponsored by EfficiOS. We are actively looking
-> for sponsors to support the Tracing Summit. Contact us at
-> info@tracingsummit.org.
->
-> Please send any query about this conference to info@tracingsummit.org.
->
-> This event is organized by Francis Deslauriers and Mathieu Desnoyers
-> on the behalf of the Linux Foundation Diagnostic and Monitoring
-> Workgroup [5].
->
-> [0] : https://tracingsummit.org
-> [1]: https://events.linuxfoundation.org/events/open-source-summit-north-america-2019
-> [2]: http://eepurl.com/goakfv
-> [3]: https://www.cvent.com/events/open-source-summit-embedded-linux-conference-north-america-2019/registration-0ed1330c38bd4845be29b91c9d2444ce.aspx?fqp=true
-> [4]: https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx?fqp=true
-> [5]: https://diamon.org
->
-> --
-> Francis Deslauriers
-> Computer Engineer
-> EfficiOS inc.
-
-
-
+diff --git a/drivers/platform/x86/intel_int0002_vgpio.c b/drivers/platform/x86/intel_int0002_vgpio.c
+index 1694a9aec77c..d9542c661ddc 100644
+--- a/drivers/platform/x86/intel_int0002_vgpio.c
++++ b/drivers/platform/x86/intel_int0002_vgpio.c
+@@ -51,17 +51,6 @@
+ #define GPE0A_STS_PORT			0x420
+ #define GPE0A_EN_PORT			0x428
+ 
+-#define BAYTRAIL			0x01
+-#define CHERRYTRAIL			0x02
+-
+-#define ICPU(model, data) { X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, data }
+-
+-static const struct x86_cpu_id int0002_cpu_ids[] = {
+-	ICPU(INTEL_FAM6_ATOM_SILVERMONT, BAYTRAIL), /* Valleyview, Bay Trail  */
+-	ICPU(INTEL_FAM6_ATOM_AIRMONT, CHERRYTRAIL), /* Braswell, Cherry Trail */
+-	{}
+-};
+-
+ /*
+  * As this is not a real GPIO at all, but just a hack to model an event in
+  * ACPI the get / set functions are dummy functions.
+@@ -157,6 +146,12 @@ static struct irq_chip int0002_cht_irqchip = {
+ 	 */
+ };
+ 
++static const struct x86_cpu_id int0002_cpu_ids[] = {
++	INTEL_CPU_FAM6(ATOM_SILVERMONT, int0002_byt_irqchip),	/* Valleyview, Bay Trail  */
++	INTEL_CPU_FAM6(ATOM_AIRMONT, int0002_cht_irqchip),	/* Braswell, Cherry Trail */
++	{}
++};
++
+ static int int0002_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -210,10 +205,7 @@ static int int0002_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
+-	if (cpu_id->driver_data == BAYTRAIL)
+-		irq_chip = &int0002_byt_irqchip;
+-	else
+-		irq_chip = &int0002_cht_irqchip;
++	irq_chip = (struct irq_chip *)cpu_id->driver_data;
+ 
+ 	ret = gpiochip_irqchip_add(chip, irq_chip, 0, handle_edge_irq,
+ 				   IRQ_TYPE_NONE);
 -- 
-Francis Deslauriers
-Computer Engineer
-EfficiOS inc.
+2.20.1
+
