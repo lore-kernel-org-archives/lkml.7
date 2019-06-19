@@ -2,99 +2,108 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8914C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B4BFC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D6ED208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F3EA214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731916AbfFSMxc (ORCPT
+        id S1731769AbfFSMzB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:53:32 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:52193 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731576AbfFSMxc (ORCPT
+        Wed, 19 Jun 2019 08:55:01 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:35556 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfFSMzA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:53:32 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MKKpV-1httFS3L4R-00LmVZ; Wed, 19 Jun 2019 14:53:17 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] netfilter: synproxy: fix nf_synproxy_ipv{4,6}_init() return code
-Date:   Wed, 19 Jun 2019 14:53:07 +0200
-Message-Id: <20190619125314.1005993-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 19 Jun 2019 08:55:00 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c6so1743173wml.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:54:58 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=oUKHb/HhBZ0gnG9oANdx2Pjudz3ATWiOMMw4XgDgVpU=;
+        b=JvQfrphQXkVWSfIagw/eBDh5vH/gwWNHVDnQS2v6akb5SoGE2fQ3UVb1sSazTnndY/
+         qrtwpDkv/FLSG44A3/cs9jCzlsHNg0JBCziwhiOvgKyma0R6ELEDp2I2yHAtsfC4Y2oT
+         SQxGvvHcpD0hhJ1SMYbeorXpO/aF2caQ+EVnVuXGCpoDF7Ghyk/YvdL3QuCtCAx4GC7Z
+         BGPvdbSRwAIaMujOlZppnbxlUkDX851Wqou/2VKpwzHhK5sHq013fnBa0Qdjg2LnDI7j
+         PLynTKeGEzs+ptB4IuVLPW7eZpy0bx6ek7fWT+m9UFMSIlZ7LlAC25bPdICzqa8BkG/6
+         NSHg==
+X-Gm-Message-State: APjAAAWWig+5G2fleSxo856a3ZHU7JcB8sPKBqqEmXLRGmu2NN9qW4Y4
+        0hdbbPNB3OfDDV018bmxrulS3Q==
+X-Google-Smtp-Source: APXvYqw3i0VpSjIBS+93VI0Apn4ELLqPvHfMOQQF7nzI3bFhxPrXEygph6zjfl8uXvwK80wNW3qTeA==
+X-Received: by 2002:a1c:4956:: with SMTP id w83mr8147505wma.67.1560948898067;
+        Wed, 19 Jun 2019 05:54:58 -0700 (PDT)
+Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
+        by smtp.gmail.com with ESMTPSA id l12sm42800918wrb.81.2019.06.19.05.54.56
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 05:54:57 -0700 (PDT)
+From:   Miklos Szeredi <mszeredi@redhat.com>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
+        linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 05/13] vfs: don't parse "silent" option
+Date:   Wed, 19 Jun 2019 14:54:52 +0200
+Message-Id: <20190619125452.28303-1-mszeredi@redhat.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:sHRKPJxI1zML8tYdc1cfhcMo3aUXVxAOGIhwNfIQjjwRunCOAsx
- NHm/ktqi20sgAtTRnoNS3E45QBQpIjaZVx0+5T9JDOd12yuSjTMfuKf3I2WxHLaP7fgMW6m
- OwZXXHliGncpKNm0YIe9lofpzzzFwQEKcW4afzoDhJsMbevSna3JBee75coK4Xtf9M6zYDI
- ksMK9hUacXQ2WZJ8dL5kw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:SCWUrpyWP2Q=:ut0cProTqarHG0QCVTfh9D
- MjpFumB3sMKmB4UQDW90OwoYEvXD6fN2P5u7C9ipmz67bnCj2+fgixTlHZWi50c5YEvc+Ar0s
- 8ss2WW2QFYbWSNP3i72/7XdPkBZGA4mprtHQO4vNyu0B5D1bLM+NUG8E2vzfgaBZxN/Aa0oNd
- 4JAmSW2hwHbQanQfSE0rZv990u2wg4KrBD/3M+bpjhkORv74ThiMRcHAWYB2L/VsCykY46tc8
- Zd5FJH/nERhpZZnfoTb74nmUKip5BRjbqoZwsColXihClt81pbpfyG2jB1Wi+sVI1w7b51JKb
- tpKvqT5+L1JlVoCBMtsmPp+RJu5SDDxgW6lBl4e+iesBvqIdQYtqkMTLgREf575P2cTLZewQ2
- QFCXR+ikN+dfMGC9EWSwj266DhSLi09CMgXLyOgB51LsCpBoDGP6qvf3teeRebZydq6Ae0V26
- zqmoMIBUch19Sy+HzSrh8dQDx+4T2X17Hky8gaAP1tYnhsCBzMLr+4+MX4P+YzxpNcXKFDIWB
- pnCqDkDwWHX2ydF47Bw/dsS2NsggITOpih1wQXbijgiINj2u1n6xV/kBFRFhqk844L7d0CEL5
- JQA+koiuVWPxlhVuCcjFXIpdUxzZzYA3vRY1xYK22sEaeS7MX4JORqyTpM3UkbZno0sYQtjZR
- Fy1kLg9kgrx1ImoDpIc+WgpKE7sy+xLDdc0v2h+sfb60PtXAdFKYePZHNTIe2j3XO3WctYQ4l
- nny3uTmIzSdnSB1+favdUtgwez9Lxjyv7snIvA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We return an uninitialized variable on success:
+While this is a standard option as documented in mount(8), it is ignored by
+most filesystems.  So reject, unless filesystem explicitly wants to handle
+it.
 
-net/netfilter/nf_synproxy_core.c:793:6: error: variable 'err' is used uninitialized whenever 'if' condition is false [-Werror,-Wsometimes-uninitialized]
-        if (snet->hook_ref4 == 0) {
-            ^~~~~~~~~~~~~~~~~~~~
+The exception is unconverted filesystems, where it is unknown if the
+filesystem handles this or not.
 
-Initialize the return code to zero first.
+Any implementation, such as mount(8) that needs to parse this option
+without failing should simply ignore the return value from fsconfig().
 
-Fixes: d7f9b2f18eae ("netfilter: synproxy: extract SYNPROXY infrastructure from {ipt, ip6t}_SYNPROXY")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- net/netfilter/nf_synproxy_core.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Changes:
+ - v1 didn't return on matching option in legacy_parse_param()
+ 
+ fs/fs_context.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nf_synproxy_core.c b/net/netfilter/nf_synproxy_core.c
-index 50677285f82e..283686e972a0 100644
---- a/net/netfilter/nf_synproxy_core.c
-+++ b/net/netfilter/nf_synproxy_core.c
-@@ -788,7 +788,7 @@ static const struct nf_hook_ops ipv4_synproxy_ops[] = {
+diff --git a/fs/fs_context.c b/fs/fs_context.c
+index 49636e541293..bd8f8ab8358b 100644
+--- a/fs/fs_context.c
++++ b/fs/fs_context.c
+@@ -51,7 +51,6 @@ static const struct constant_table common_clear_sb_flag[] = {
+ 	{ "nolazytime",	SB_LAZYTIME },
+ 	{ "nomand",	SB_MANDLOCK },
+ 	{ "rw",		SB_RDONLY },
+-	{ "silent",	SB_SILENT },
+ };
  
- int nf_synproxy_ipv4_init(struct synproxy_net *snet, struct net *net)
- {
--	int err;
-+	int err = 0;
+ /*
+@@ -535,6 +534,15 @@ static int legacy_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 	if (ret != -ENOPARAM)
+ 		return ret;
  
- 	if (snet->hook_ref4 == 0) {
- 		err = nf_register_net_hooks(net, ipv4_synproxy_ops,
-@@ -1213,7 +1213,7 @@ static const struct nf_hook_ops ipv6_synproxy_ops[] = {
- int
- nf_synproxy_ipv6_init(struct synproxy_net *snet, struct net *net)
- {
--	int err;
-+	int err = 0;
- 
- 	if (snet->hook_ref6 == 0) {
- 		err = nf_register_net_hooks(net, ipv6_synproxy_ops,
++	if (strcmp(param->key, "silent") == 0) {
++		if (param->type != fs_value_is_flag)
++			return invalf(fc, "%s: Unexpected value for '%s'",
++				      fc->fs_type->name, param->key);
++
++		fc->sb_flags |= SB_SILENT;
++		return 0;
++	}
++
+ 	if (strcmp(param->key, "source") == 0) {
+ 		if (param->type != fs_value_is_string)
+ 			return invalf(fc, "VFS: Legacy: Non-string source");
 -- 
-2.20.0
+2.21.0
 
