@@ -2,104 +2,154 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2414C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E700C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:59:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B051020B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D66620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:59:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731329AbfFSJ5s (ORCPT
+        id S1731420AbfFSJ7Y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:57:48 -0400
-Received: from smtp.nue.novell.com ([195.135.221.5]:33332 "EHLO
-        smtp.nue.novell.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfFSJ5s (ORCPT
-        <rfc822;groupwise-linux-kernel@vger.kernel.org:0:0>);
-        Wed, 19 Jun 2019 05:57:48 -0400
-Received: from [10.160.4.48] (charybdis.suse.de [149.44.162.66])
-        by smtp.nue.novell.com with ESMTP (TLS encrypted); Wed, 19 Jun 2019 11:57:46 +0200
-Subject: Re: [PATCH] scsi: scsi_sysfs.c: Hide wwid sdev attr if VPD is not
- supported
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        linux-scsi@vger.kernel.org
-References: <20190612020828.8140-1-marcos.souza.org@gmail.com>
- <yq1muieuu17.fsf@oracle.com> <850765d7-da85-3fc1-7bf4-f0edcb63f8d8@suse.com>
- <20190619095208.GB26980@continental>
-From:   Hannes Reinecke <hare@suse.com>
-Message-ID: <fcd8914f-c27a-f950-d10c-d8752265526e@suse.com>
-Date:   Wed, 19 Jun 2019 11:57:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 05:59:24 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:60470 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731178AbfFSJ7V (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 05:59:21 -0400
+Received: from 79.184.254.20.ipv4.supernova.orange.pl (79.184.254.20) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id a564063612c784c5; Wed, 19 Jun 2019 11:59:18 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 20/22] docs: extcon: move it to acpi dir and convert it to ReST
+Date:   Wed, 19 Jun 2019 11:59:18 +0200
+Message-ID: <4701210.Ilfu9VLqBR@kreacher>
+In-Reply-To: <b6d199c3e7c8c868acbb313a1a516ea8aed042ee.1560891322.git.mchehab+samsung@kernel.org>
+References: <cover.1560891322.git.mchehab+samsung@kernel.org> <b6d199c3e7c8c868acbb313a1a516ea8aed042ee.1560891322.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190619095208.GB26980@continental>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 11:52 AM, Marcos Paulo de Souza wrote:
-> On Wed, Jun 19, 2019 at 08:34:56AM +0200, Hannes Reinecke wrote:
->> On 6/19/19 5:35 AM, Martin K. Petersen wrote:
->>>
->>> Marcos,
->>>
->>>> WWID composed from VPD data from device, specifically page 0x83. So,
->>>> when a device does not have VPD support, for example USB storage
->>>> devices where VPD is specifically disabled, a read into <blk
->>>> device>/device/wwid file will always return ENXIO. To avoid this,
->>>> change the scsi_sdev_attr_is_visible function to hide wwid sysfs file
->>>> when the devices does not support VPD.
->>>
->>> Not a big fan of attribute files that come and go.
->>>
->>> Why not just return an empty string? Hannes?
->>>
->> Actually, the intention of the 'wwid' attribute was to have a common
->> place where one could look up the global id.
->> As such it actually serves a dual purpose, namely indicating that there
->> _is_ a global ID _and_ that this kernel (version) has support for 'wwid'
->> attribute. This is to resolve one big issue we have to udev nowadays,
->> which is figuring out if a specific sysfs attribute is actually
->> supported on this particular kernel.
->> Dynamic attributes are 'nicer' on a conceptual level, but make the above
->> test nearly impossible, as we now have _two_ possibilities why a
->> specific attribute is not present.
->> So making 'wwid' conditional would actually defeat its very purpose, and
->> we should leave it blank if not supported.
+On Tuesday, June 18, 2019 11:05:44 PM CEST Mauro Carvalho Chehab wrote:
+> The intel-int3496.txt file is a documentation for an ACPI driver.
 > 
-> My intention was to apply the same approach used for VPD pages, which currently
-> also hides the attributes if not supported by the device. So, if vpd pages are
-> hidden, there is no usage for wwid. But I also like the idea of the vpd pages
-> being blank if not supported by the device.
+> There's no reason to keep it on a separate directory.
 > 
-Not quite.
-As outlined above, the non-existence of the vpd sysfs attribute doesn't
-automatically imply that the device doesn't support VPD pages; we might
-as well running on older kernels simply not supporting VPD pages in sysfs.
-The whole idea of the wwid is that the attribute is _always_ present, so
-we don't have to out-guess the kernel here; if the kernel supports the
-wwid attribute it will be present, full stop.
+> So, instead of keeping it on some random location, move it
+> to a sub-directory inside the ACPI documentation dir.
+> 
+> For now, keep it with .txt extension, in order to avoid
+> Sphinx build noise. A later patch should change it to .rst
+> and movin it to be together with other acpi docs.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-(Background: we do was to avoid doing I/O from uevents, as the events
-are handled asynchronously, so by the time the event is handled the
-device might not be accesible anymore, leading to a stuck udev process.)
+Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Cheers,
+Or please let me know if you want me to pick up this one.
 
-Hannes
--- 
-Dr. Hannes Reinecke		               zSeries & Storage
-hare@suse.com			               +49 911 74053 688
-SUSE LINUX GmbH, Maxfeldstr. 5, 90409 Nürnberg
-GF: F. Imendörffer, J. Smithard, D. Upmanyu, G. Norton
-HRB 21284 (AG Nürnberg)
+> ---
+>  .../acpi/extcon-intel-int3496.rst}                 | 14 ++++++++++----
+>  Documentation/firmware-guide/acpi/index.rst        |  1 +
+>  MAINTAINERS                                        |  6 +++---
+>  3 files changed, 14 insertions(+), 7 deletions(-)
+>  rename Documentation/{extcon/intel-int3496.txt => firmware-guide/acpi/extcon-intel-int3496.rst} (66%)
+> 
+> diff --git a/Documentation/extcon/intel-int3496.txt b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+> similarity index 66%
+> rename from Documentation/extcon/intel-int3496.txt
+> rename to Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+> index 8155dbc7fad3..5137ca834b54 100644
+> --- a/Documentation/extcon/intel-int3496.txt
+> +++ b/Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+> @@ -1,5 +1,6 @@
+> +=====================================================
+>  Intel INT3496 ACPI device extcon driver documentation
+> ------------------------------------------------------
+> +=====================================================
+>  
+>  The Intel INT3496 ACPI device extcon driver is a driver for ACPI
+>  devices with an acpi-id of INT3496, such as found for example on
+> @@ -13,15 +14,20 @@ between an USB host and an USB peripheral controller.
+>  The ACPI devices exposes this functionality by returning an array with up
+>  to 3 gpio descriptors from its ACPI _CRS (Current Resource Settings) call:
+>  
+> -Index 0: The input gpio for the id-pin, this is always present and valid
+> -Index 1: The output gpio for enabling Vbus output from the device to the otg
+> +=======  =====================================================================
+> +Index 0  The input gpio for the id-pin, this is always present and valid
+> +Index 1  The output gpio for enabling Vbus output from the device to the otg
+>           port, write 1 to enable the Vbus output (this gpio descriptor may
+>           be absent or invalid)
+> -Index 2: The output gpio for muxing of the data pins between the USB host and
+> +Index 2  The output gpio for muxing of the data pins between the USB host and
+>           the USB peripheral controller, write 1 to mux to the peripheral
+>           controller
+> +=======  =====================================================================
+>  
+>  There is a mapping between indices and GPIO connection IDs as follows
+> +
+> +	======= =======
+>  	id	index 0
+>  	vbus	index 1
+>  	mux	index 2
+> +	======= =======
+> diff --git a/Documentation/firmware-guide/acpi/index.rst b/Documentation/firmware-guide/acpi/index.rst
+> index ae609eec4679..90c90d42d9ad 100644
+> --- a/Documentation/firmware-guide/acpi/index.rst
+> +++ b/Documentation/firmware-guide/acpi/index.rst
+> @@ -24,3 +24,4 @@ ACPI Support
+>     acpi-lid
+>     lpit
+>     video_extension
+> +   extcon-intel-int3496
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index e07cbd44d48a..b7c81bd0f8e8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -321,7 +321,7 @@ F:	drivers/pnp/pnpacpi/
+>  F:	include/linux/acpi.h
+>  F:	include/linux/fwnode.h
+>  F:	include/acpi/
+> -F:	Documentation/acpi/
+> +F:	Documentation/firmware-guide/acpi/
+>  F:	Documentation/ABI/testing/sysfs-bus-acpi
+>  F:	Documentation/ABI/testing/configfs-acpi
+>  F:	drivers/pci/*acpi*
+> @@ -4881,7 +4881,7 @@ S:	Maintained
+>  F:	Documentation/
+>  F:	scripts/kernel-doc
+>  X:	Documentation/ABI/
+> -X:	Documentation/acpi/
+> +X:	Documentation/firmware-guide/acpi/
+>  X:	Documentation/devicetree/
+>  X:	Documentation/i2c/
+>  X:	Documentation/media/
+> @@ -6057,7 +6057,7 @@ S:	Maintained
+>  F:	drivers/extcon/
+>  F:	include/linux/extcon/
+>  F:	include/linux/extcon.h
+> -F:	Documentation/extcon/
+> +F:	Documentation/firmware-guide/acpi/extcon-intel-int3496.rst
+>  F:	Documentation/devicetree/bindings/extcon/
+>  
+>  EXYNOS DP DRIVER
+> 
+
+
+
+
