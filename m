@@ -2,142 +2,200 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1928CC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:23:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 756BAC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:26:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE5A2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:23:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 476B620B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:26:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731337AbfFSIW7 (ORCPT
+        id S1731285AbfFSI0C convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:22:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49818 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731259AbfFSIW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:22:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8DE2CAF30;
-        Wed, 19 Jun 2019 08:22:57 +0000 (UTC)
-Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
- correctly in mbind
-To:     Michal Hocko <mhocko@kernel.org>,
-        Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190618130253.GH3318@dhcp22.suse.cz>
- <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
- <20190618182848.GJ3318@dhcp22.suse.cz>
- <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
- <20190619052133.GB2968@dhcp22.suse.cz>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <21a0b20c-5b62-490e-ad8e-26b4b78ac095@suse.cz>
-Date:   Wed, 19 Jun 2019 10:22:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20190619052133.GB2968@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8
+        Wed, 19 Jun 2019 04:26:02 -0400
+Received: from mga04.intel.com ([192.55.52.120]:57670 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731143AbfFSI0C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:26:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 01:26:01 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="335124305"
+Received: from fmsmsx106.amr.corp.intel.com ([10.18.124.204])
+  by orsmga005.jf.intel.com with ESMTP; 19 Jun 2019 01:26:01 -0700
+Received: from fmsmsx113.amr.corp.intel.com (10.18.116.7) by
+ FMSMSX106.amr.corp.intel.com (10.18.124.204) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Jun 2019 01:26:01 -0700
+Received: from hasmsx105.ger.corp.intel.com (10.184.198.19) by
+ FMSMSX113.amr.corp.intel.com (10.18.116.7) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 19 Jun 2019 01:26:00 -0700
+Received: from hasmsx108.ger.corp.intel.com ([169.254.9.33]) by
+ HASMSX105.ger.corp.intel.com ([169.254.1.210]) with mapi id 14.03.0439.000;
+ Wed, 19 Jun 2019 11:25:58 +0300
+From:   "Winkler, Tomas" <tomas.winkler@intel.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] mei: no need to check return value of debugfs_create
+ functions
+Thread-Topic: [PATCH v2] mei: no need to check return value of
+ debugfs_create functions
+Thread-Index: AQHVIITgZhaqailFO0mEapB/rDMGv6airg1g
+Date:   Wed, 19 Jun 2019 08:25:58 +0000
+Message-ID: <5B8DA87D05A7694D9FA63FD143655C1B9DC4B6C4@hasmsx108.ger.corp.intel.com>
+References: <20190611183357.GA32008@kroah.com>
+ <20190611183816.GA952@kroah.com>
+In-Reply-To: <20190611183816.GA952@kroah.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.184.70.11]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 7:21 AM, Michal Hocko wrote:
-> On Tue 18-06-19 14:13:16, Yang Shi wrote:
-> [...]
->>
->> I used to have !__PageMovable(page), but it was removed since the
->> aforementioned reason. I could add it back.
->>
->> For the temporary off LRU page, I did a quick search, it looks the most
->> paths have to acquire mmap_sem, so it can't race with us here. Page
->> reclaim/compaction looks like the only race. But, since the mapping should
->> be preserved even though the page is off LRU temporarily unless the page is
->> reclaimed, so we should be able to exclude temporary off LRU pages by
->> calling page_mapping() and page_anon_vma().
->>
->> So, the fix may look like:
->>
->> if (!PageLRU(head) && !__PageMovable(page)) {
->>     if (!(page_mapping(page) || page_anon_vma(page)))
->>         return -EIO;
 > 
-> This is getting even more muddy TBH. Is there any reason that we have to
-> handle this problem during the isolation phase rather the migration?
+> When calling debugfs functions, there is no need to ever check the return
+> value.  The function can work or not, but the code logic should never do
+> something different based on this.
 
-I think it was already said that if pages can't be isolated, then
-migration phase won't process them, so they're just ignored.
-However I think the patch is wrong to abort immediately when
-encountering such page that cannot be isolated (AFAICS). IMHO it should
-still try to migrate everything it can, and only then return -EIO.
+Maybe need to mention that API has changed in patch ' ff9fb72bc07705c00795ca48631f7fffe24d2c6b' in 5.0 
+and create_dir() doesn't return NULL but ERR_PTR() and proper checking is done inside the debugfs functions.
+Not sure how critical is that but, but this should go probably to stable 5.0+ as well. 
+Ack otherwise. 
+> 
+> Cc: Tomas Winkler <tomas.winkler@intel.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> ---
+> v2: break the patch up properly
+> 
+>  drivers/misc/mei/debugfs.c | 47 +++++++++-----------------------------
+>  drivers/misc/mei/main.c    |  8 +------
+>  drivers/misc/mei/mei_dev.h |  7 ++----
+>  3 files changed, 14 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/misc/mei/debugfs.c b/drivers/misc/mei/debugfs.c index
+> 0970142bcace..df6bf8b81936 100644
+> --- a/drivers/misc/mei/debugfs.c
+> +++ b/drivers/misc/mei/debugfs.c
+> @@ -233,47 +233,22 @@ void mei_dbgfs_deregister(struct mei_device *dev)
+>   *
+>   * @dev: the mei device structure
+>   * @name: the mei device name
+> - *
+> - * Return: 0 on success, <0 on failure.
+>   */
+> -int mei_dbgfs_register(struct mei_device *dev, const char *name)
+> +void mei_dbgfs_register(struct mei_device *dev, const char *name)
+>  {
+> -	struct dentry *dir, *f;
+> +	struct dentry *dir;
+> 
+>  	dir = debugfs_create_dir(name, NULL);
+> -	if (!dir)
+> -		return -ENOMEM;
+> -
+>  	dev->dbgfs_dir = dir;
+> 
+> -	f = debugfs_create_file("meclients", S_IRUSR, dir,
+> -				dev, &mei_dbgfs_fops_meclients);
+> -	if (!f) {
+> -		dev_err(dev->dev, "meclients: registration failed\n");
+> -		goto err;
+> -	}
+> -	f = debugfs_create_file("active", S_IRUSR, dir,
+> -				dev, &mei_dbgfs_fops_active);
+> -	if (!f) {
+> -		dev_err(dev->dev, "active: registration failed\n");
+> -		goto err;
+> -	}
+> -	f = debugfs_create_file("devstate", S_IRUSR, dir,
+> -				dev, &mei_dbgfs_fops_devstate);
+> -	if (!f) {
+> -		dev_err(dev->dev, "devstate: registration failed\n");
+> -		goto err;
+> -	}
+> -	f = debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR,
+> dir,
+> -				&dev->allow_fixed_address,
+> -				&mei_dbgfs_fops_allow_fa);
+> -	if (!f) {
+> -		dev_err(dev->dev, "allow_fixed_address: registration
+> failed\n");
+> -		goto err;
+> -	}
+> -	return 0;
+> -err:
+> -	mei_dbgfs_deregister(dev);
+> -	return -ENODEV;
+> +	debugfs_create_file("meclients", S_IRUSR, dir, dev,
+> +			    &mei_dbgfs_fops_meclients);
+> +	debugfs_create_file("active", S_IRUSR, dir, dev,
+> +			    &mei_dbgfs_fops_active);
+> +	debugfs_create_file("devstate", S_IRUSR, dir, dev,
+> +			    &mei_dbgfs_fops_devstate);
+> +	debugfs_create_file("allow_fixed_address", S_IRUSR | S_IWUSR, dir,
+> +			    &dev->allow_fixed_address,
+> +			    &mei_dbgfs_fops_allow_fa);
+>  }
+> 
+> diff --git a/drivers/misc/mei/main.c b/drivers/misc/mei/main.c index
+> ad02097d7fee..f894d1f8a53e 100644
+> --- a/drivers/misc/mei/main.c
+> +++ b/drivers/misc/mei/main.c
+> @@ -984,16 +984,10 @@ int mei_register(struct mei_device *dev, struct
+> device *parent)
+>  		goto err_dev_create;
+>  	}
+> 
+> -	ret = mei_dbgfs_register(dev, dev_name(clsdev));
+> -	if (ret) {
+> -		dev_err(clsdev, "cannot register debugfs ret = %d\n", ret);
+> -		goto err_dev_dbgfs;
+> -	}
+> +	mei_dbgfs_register(dev, dev_name(clsdev));
+> 
+>  	return 0;
+> 
+> -err_dev_dbgfs:
+> -	device_destroy(mei_class, devno);
+>  err_dev_create:
+>  	cdev_del(&dev->cdev);
+>  err_dev_add:
+> diff --git a/drivers/misc/mei/mei_dev.h b/drivers/misc/mei/mei_dev.h index
+> fca832fcac57..f71a023aed3c 100644
+> --- a/drivers/misc/mei/mei_dev.h
+> +++ b/drivers/misc/mei/mei_dev.h
+> @@ -718,13 +718,10 @@ bool mei_hbuf_acquire(struct mei_device *dev);
+> bool mei_write_is_idle(struct mei_device *dev);
+> 
+>  #if IS_ENABLED(CONFIG_DEBUG_FS)
+> -int mei_dbgfs_register(struct mei_device *dev, const char *name);
+> +void mei_dbgfs_register(struct mei_device *dev, const char *name);
+>  void mei_dbgfs_deregister(struct mei_device *dev);  #else -static inline int
+> mei_dbgfs_register(struct mei_device *dev, const char *name) -{
+> -	return 0;
+> -}
+> +static inline void mei_dbgfs_register(struct mei_device *dev, const
+> +char *name) {}
+>  static inline void mei_dbgfs_deregister(struct mei_device *dev) {}  #endif /*
+> CONFIG_DEBUG_FS */
+> 
+> --
+> 2.22.0
+
