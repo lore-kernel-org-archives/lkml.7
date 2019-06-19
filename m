@@ -2,149 +2,159 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C96C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DF1BC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D42C721721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:10:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="q2WfLwCC"
+	by mail.kernel.org (Postfix) with ESMTP id D891621744
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:10:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbfFSTKh (ORCPT
+        id S1730453AbfFSTKz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:10:37 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45842 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726265AbfFSTKh (ORCPT
+        Wed, 19 Jun 2019 15:10:55 -0400
+Received: from linux.microsoft.com ([13.77.154.182]:36214 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727068AbfFSTKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:10:37 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so370762wre.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 12:10:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UFheggzxmMplOeeQYmoI5B0vCJ1cyWY14SZKvEdIZeI=;
-        b=q2WfLwCClZoa+WhRbyKt/Y+TgErSvoQ/t5ka8vLOi11eKndyFdaMIphrq5wGGRpPx0
-         w74c0Bd6HbL1fwpWqUKNj6kHbJyjS9bevT3l+au26572bSk6OLA9tz3vCKl5B7lQ3YMp
-         59fj8s9I0t80eOe2RdRSoMCtic8jR1S6+NI4lJVCt/kVnhsRgdsGPkuzdO0vwRS7HGGZ
-         fWL021Josk7Je+oTIjDlgfo2c+0SBwY9f/Hm7/+V4w+t6Vym486kIGSe5Aiypxhs8oIn
-         XkN6ASaGDOG/TSsv0EbPrdzGLx+NVycg/i6oOwCLGJQap5BpUh3MBTqYafhQpd18vQ27
-         D7Lg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UFheggzxmMplOeeQYmoI5B0vCJ1cyWY14SZKvEdIZeI=;
-        b=a7w0PPUMKiUlmhPzTPYl68hkiWsOi8RHJiZoPysPiLssQG6dKNBZgPVxABp5LQRH8g
-         FlTob1LCNp9bBibjLlIvBaX7jAG5KzclYLVGE4Hat2W0ggAEgLwi8i3NnVHACK2Nc07s
-         KIRYrWyLTwuejlukzW7nSYpceLFQbE6SUpPtixELNrCMYNn4fNobBN9dC3FvG1h4/081
-         BWzbgOvTZzQSghSqahPOTgdrqUcjkLhGuLmzCZTGgPABGX9xykxgqUlECL/QvkDaiXjL
-         eWYccUQY6VeEIcEU//48kE5jbwT/SDjyHa2hMhQd0fJx5qw4HJhOdC8uh6gN/gkr/p4X
-         gSEg==
-X-Gm-Message-State: APjAAAV99k3ZcUYPh8AgcxugF7zw4k5Fkhdwc5E/ro7bRw5bxeQAsYdO
-        o5iWweuJ9O5ip9qKgTGHqONTUMMAXTmieKcIBD/b
-X-Google-Smtp-Source: APXvYqzXZlrQCF4QZiuxDbGDLIvTOXeukxMx+PQ/5nfVH3ZEWFzwBQjV68ETEYVe1v6+Rjh1FKW41QrqKc5YBvCYJxs=
-X-Received: by 2002:adf:dfc4:: with SMTP id q4mr14402268wrn.54.1560971434605;
- Wed, 19 Jun 2019 12:10:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190619174643.21456-1-puranjay12@gmail.com>
-In-Reply-To: <20190619174643.21456-1-puranjay12@gmail.com>
-From:   Bjorn Helgaas <bhelgaas@google.com>
-Date:   Wed, 19 Jun 2019 14:10:22 -0500
-Message-ID: <CAErSpo7-AjCAc8pGpTftd7U-W2kjp1jfbPzk3SOa=Bg5-d6W5w@mail.gmail.com>
-Subject: Re: [PATCH] net: fddi: skfp: remove generic PCI defines from skfbi.h
-To:     Puranjay Mohan <puranjay12@gmail.com>
-Cc:     Shuah Khan <skhan@linuxfoundation.org>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 19 Jun 2019 15:10:54 -0400
+Received: from jaskaran-Intel-Server-Board-S1200V3RPS-UEFI-Development-Kit.corp.microsoft.com (unknown [131.107.160.238])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 27B2620B7194;
+        Wed, 19 Jun 2019 12:10:53 -0700 (PDT)
+From:   Jaskaran Khurana <jaskarankhurana@linux.microsoft.com>
+To:     linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org
+Cc:     agk@redhat.com, snitzer@redhat.com, dm-devel@redhat.com,
+        jmorris@namei.org, scottsh@microsoft.com, ebiggers@google.com,
+        mpatocka@redhat.com, gmazyland@gmail.com
+Subject: [RFC PATCH v5 0/1] Add dm verity root hash pkcs7 sig validation. 
+Date:   Wed, 19 Jun 2019 12:10:47 -0700
+Message-Id: <20190619191048.20365-1-jaskarankhurana@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:48 PM Puranjay Mohan <puranjay12@gmail.com> wrote:
->
-> skfbi.h defines its own copies of PCI_COMMAND, PCI_STATUS, etc.
-> remove them in favor of the generic definitions in
-> include/uapi/linux/pci_regs.h
+This patch set adds in-kernel pkcs7 signature checking for the roothash of
+the dm-verity hash tree.
+The verification is to support cases where the roothash is not secured by
+Trusted Boot, UEFI Secureboot or similar technologies.
+One of the use cases for this is for dm-verity volumes mounted after boot,
+the root hash provided during the creation of the dm-verity volume has to
+be secure and thus in-kernel validation implemented here will be used
+before we trust the root hash and allow the block device to be created.
 
-1) Since you're sending several related patches, send them as a
-"series" with a cover letter, e.g.,
+Why we are doing validation in the Kernel?
 
-  [PATCH v2 0/2] Use PCI generic definitions instead of private duplicates
-  [PATCH v2 1/2] Include generic PCI definitions
-  [PATCH v2 2/2] Remove unused private PCI definitions
+The reason is to still be secure in cases where the attacker is able to
+compromise the user mode application in which case the user mode validation
+could not have been trusted.
+The root hash signature validation in the kernel along with existing
+dm-verity implementation gives a higher level of confidence in the
+executable code or the protected data. Before allowing the creation of
+the device mapper block device the kernel code will check that the detached
+pkcs7 signature passed to it validates the roothash and the signature is
+trusted by builtin keys set at kernel creation. The kernel should be
+secured using Verified boot, UEFI Secure Boot or similar technologies so we
+can trust it.
 
-Patches 1/2 and 2/2 should be replies to the 0/2 cover letter.  "git
-send-email" will do this for you if you figure out the right options.
+What about attacker mounting non dm-verity volumes to run executable
+code?
 
-2) Make sure all your subject lines match.  One started with "Include"
-and the other with "remove".  They should both be capitalized.
+This verification can be used to have a security architecture where a LSM
+can enforce this verification for all the volumes and by doing this it can
+ensure that all executable code runs from signed and trusted dm-verity
+volumes.
 
-3) Start sentences with a capital letter, i.e., "Remove them" above.
+Further patches will be posted that build on this and enforce this
+verification based on policy for all the volumes on the system.
 
-4) This commit log needs to explicitly say that you're removing
-*unused* symbols.  Since they're unused, you don't even need to refer
-to pci_regs.h.
+How are these changes tested?
 
-5) "git grep PCI_ drivers/net/fddi/skfp" says there are many more
-unused PCI symbols than just the ones below.  I would just remove them
-all at once.
+To generate and sign the roothash, dump the roothash returned by 
+veritysetup format in a text file, say roothash.txt and then sign using
+the openssl command:
 
-6) Obviously you should compile this to make sure it builds.  It must
-build cleanly after every patch, not just at the end.  I assume you've
-done this already.
+openssl smime -sign -nocerts -noattr -binary -in <roothash.txt> 
+-inkey <keyfile> -signer <certfile> -outform der -out <out_sigfile>
 
-7) Please cc: linux-pci@vger.kernel.org since you're making PCI-related changes.
+To pass the roothash signature to dm-verity, veritysetup part of cryptsetup
+library was modified to take a optional root-hash-sig parameter.
 
-> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> ---
->  drivers/net/fddi/skfp/h/skfbi.h | 23 -----------------------
->  1 file changed, 23 deletions(-)
->
-> diff --git a/drivers/net/fddi/skfp/h/skfbi.h b/drivers/net/fddi/skfp/h/skfbi.h
-> index 89557457b352..ed144a8e78d1 100644
-> --- a/drivers/net/fddi/skfp/h/skfbi.h
-> +++ b/drivers/net/fddi/skfp/h/skfbi.h
-> @@ -27,29 +27,6 @@
->  /*
->   * Configuration Space header
->   */
-> -#define        PCI_VENDOR_ID   0x00    /* 16 bit       Vendor ID */
-> -#define        PCI_DEVICE_ID   0x02    /* 16 bit       Device ID */
-> -#define        PCI_COMMAND     0x04    /* 16 bit       Command */
-> -#define        PCI_STATUS      0x06    /* 16 bit       Status */
-> -#define        PCI_REV_ID      0x08    /*  8 bit       Revision ID */
-> -#define        PCI_CLASS_CODE  0x09    /* 24 bit       Class Code */
-> -#define        PCI_CACHE_LSZ   0x0c    /*  8 bit       Cache Line Size */
-> -#define        PCI_LAT_TIM     0x0d    /*  8 bit       Latency Timer */
-> -#define        PCI_HEADER_T    0x0e    /*  8 bit       Header Type */
-> -#define        PCI_BIST        0x0f    /*  8 bit       Built-in selftest */
-> -#define        PCI_BASE_1ST    0x10    /* 32 bit       1st Base address */
-> -#define        PCI_BASE_2ND    0x14    /* 32 bit       2nd Base address */
-> -/* Byte 18..2b:        Reserved */
-> -#define        PCI_SUB_VID     0x2c    /* 16 bit       Subsystem Vendor ID */
-> -#define        PCI_SUB_ID      0x2e    /* 16 bit       Subsystem ID */
-> -#define        PCI_BASE_ROM    0x30    /* 32 bit       Expansion ROM Base Address */
-> -/* Byte 34..33:        Reserved */
-> -#define PCI_CAP_PTR    0x34    /*  8 bit (ML)  Capabilities Ptr */
-> -/* Byte 35..3b:        Reserved */
-> -#define        PCI_IRQ_LINE    0x3c    /*  8 bit       Interrupt Line */
-> -#define        PCI_IRQ_PIN     0x3d    /*  8 bit       Interrupt Pin */
-> -#define        PCI_MIN_GNT     0x3e    /*  8 bit       Min_Gnt */
-> -#define        PCI_MAX_LAT     0x3f    /*  8 bit       Max_Lat */
->  /* Device Dependent Region */
->  #define        PCI_OUR_REG     0x40    /* 32 bit (DV)  Our Register */
->  #define        PCI_OUR_REG_1   0x40    /* 32 bit (ML)  Our Register 1 */
-> --
-> 2.21.0
->
+Commandline used to test the changes:
+
+Use the signature file from above step as a parameter to veritysetup.
+
+veritysetup open  <data_device> <name> <hash_device> <root_hash>
+ --root-hash-sig=<root_hash_pkcs7_detached_sig>
+
+The changes for veritysetup are in a topic branch for now at:
+https://github.com/jaskarankhurana/veritysetup/tree/veritysetup_add_sig
+
+Set kernel commandline dm_verity.verify_sig=1 or 2 for check/force
+dm-verity to do root hash signature validation.
+
+Changelog:
+
+v5 (since previous):
+  - Code review feedback given by Milan Broz.
+  - Remove the Kconfig for root hash verification and instead add a
+    commandline parameter(dm_verity.verify_sig) that determines whether to
+    check or enforce root hash signature validation.
+  - Fixed a small issue when dm-verity was built sepaerately as a module.
+  - Added the openssl commandline that can be used to sign the roothash
+    in the cover letter.
+
+v4:
+  - Code review feedback given by Milan Broz.
+  - Add documentation about the root hash signature parameter.
+  - Bump up the dm-verity target version.
+  - Provided way to sign and test with veritysetup in cover letter.
+
+v3:
+  - Code review feedback given by Sasha Levin.
+  - Removed EXPORT_SYMBOL_GPL since this was not required.
+  - Removed "This file is released under the GPLv2" since we have SPDX
+    identifier.
+  - Inside verity_verify_root_hash changed EINVAL to ENOKEY when the key
+    descriptor is not specified but due to force option being set it is
+    expected.
+  - Moved CONFIG check to inside verity_verify_get_sig_from_key.
+     (Did not move the sig_opts_cleanup to inside verity_dtr as the
+     sig_opts do not need to be allocated for the entire duration the block
+     device is active unlike the verity structure, note verity_dtr is
+     called      only if verity_ctr fails or after the lifetime of the
+     block device.)
+
+v2:
+  - Code review feedback to pass the signature binary blob as a key that
+    can be looked up in the kernel and be used to verify the roothash.
+    [Suggested by Milan Broz]
+  - Made the code related change suggested in review of v1.
+    [Suggested by Balbir Singh]
+
+v1:
+  - Add kconfigs to control dm-verity root has signature verification and
+    use the signature if specified to verify the root hash.
+
+
+Jaskaran Khurana (1):
+  Adds in-kernel pkcs7 sig check dmverity roothash
+
+ Documentation/device-mapper/verity.txt |   7 ++
+ drivers/md/Kconfig                     |   1 +
+ drivers/md/Makefile                    |   2 +-
+ drivers/md/dm-verity-target.c          |  36 ++++++-
+ drivers/md/dm-verity-verify-sig.c      | 139 +++++++++++++++++++++++++
+ drivers/md/dm-verity-verify-sig.h      |  37 +++++++
+ 6 files changed, 216 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/md/dm-verity-verify-sig.c
+ create mode 100644 drivers/md/dm-verity-verify-sig.h
+
+-- 
+2.17.1
+
