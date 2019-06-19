@@ -2,255 +2,272 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F35AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 625C0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B63F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:14:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560960858;
-	bh=qvYJ37G81vpMNRuFHZV8eOlrsI6YMfHh9YVOIZm8o+8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=AFHawrAS6/urhzumRlYuSjvlOQI3VF3EkRCedhPB6k/ibQGIyU0MixRlVHj+fSLby
-	 XcwAgocHWWPd37M4rEt8XGRh0w9Dflsuf1O+xtpSzmDcVIq6/glbnnqAZYEpvfHLgN
-	 fpRkTocMxbG1H72w77j7A8ZPOUxa1IlMrXLD59yU=
+	by mail.kernel.org (Postfix) with ESMTP id 3C48A217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:15:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729998AbfFSQOQ (ORCPT
+        id S1729701AbfFSQPY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:14:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44360 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725838AbfFSQOQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:14:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=3eraVqWtpZLyTcjgmBauqkwW5bVB+oBWLY1vHSUU8qU=; b=i/u/aMC7jxEnmQ85IyRjmuNTz
-        QATUL4AHXrTW+voHWJhGiunPTBIobFdS9HDjNKMVIzGlpquXhqAOxnkwIvpL8YIuBj/Y0Jpk8BSTH
-        imKGoyf0rMx7JGdxtB+aJISoWrG3PQR41Ir+Ej1h9iXusUBE6dn/cJeNGfz6jxPMA2HbU1W0VtLtc
-        L3OWlQp8BxiOxThA3jmQ2TOAJ2/FpSmTqf5AUpcvnF4A+vHgJxUiyCpOCj8rXWkUO6N6fSTEveFDu
-        VOLcLP88V+6ot4I3JftT8LBHMlRQAkVMoTpic6/WfmkMJu43aQx9WVSPfxNzFFHttrpPGi1EeCe8r
-        VYMLmQ1Cg==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hddDy-0006T1-4b; Wed, 19 Jun 2019 16:14:14 +0000
-Date:   Wed, 19 Jun 2019 13:14:08 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>
-Subject: Re: [PATCH 04/14] ABI: better identificate tables
-Message-ID: <20190619131408.26b45c3b@coco.lan>
-In-Reply-To: <20190619150207.GA19346@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
-        <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
-        <20190619125135.GG25248@localhost>
-        <20190619105633.7f7315a5@coco.lan>
-        <20190619150207.GA19346@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Jun 2019 12:15:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:47098 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725838AbfFSQPY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:15:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8935D344;
+        Wed, 19 Jun 2019 09:15:23 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D3173F246;
+        Wed, 19 Jun 2019 09:15:23 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 0DFD5682413; Wed, 19 Jun 2019 17:15:22 +0100 (BST)
+Date:   Wed, 19 Jun 2019 17:15:21 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: Re: [PATCH] drm/komeda: Adds power management support
+Message-ID: <20190619161521.GD17204@e110455-lin.cambridge.arm.com>
+References: <1560750919-32255-1-git-send-email-lowry.li@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560750919-32255-1-git-send-email-lowry.li@arm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, 19 Jun 2019 17:02:07 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+Hi Lowry,
 
-> On Wed, Jun 19, 2019 at 10:56:33AM -0300, Mauro Carvalho Chehab wrote:
-> > Hi Johan,
-> > 
-> > Em Wed, 19 Jun 2019 14:51:35 +0200
-> > Johan Hovold <johan@kernel.org> escreveu:
-> >   
-> > > On Thu, Jun 13, 2019 at 11:04:10PM -0300, Mauro Carvalho Chehab wrote:  
-> > > > From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> > > > 
-> > > > When parsing via script, it is important to know if the script
-> > > > should consider a description as a literal block that should
-> > > > be displayed as-is, or if the description can be considered
-> > > > as a normal text.
-> > > > 
-> > > > Change descriptions to ensure that the preceding line of a table
-> > > > ends with a colon. That makes easy to identify the need of a
-> > > > literal block.    
-> > > 
-> > > In the cover letter you say that the first four patches of this series,
-> > > including this one, "fix some ABI descriptions that are violating the
-> > > syntax described at Documentation/ABI/README". This seems a bit harsh,
-> > > given that it's you that is now *introducing* a new syntax requirement
-> > > to assist your script.  
-> > 
-> > Yeah, what's there at the cover letter doesn't apply to this specific
-> > patch. The thing is that I wrote this series a lot of time ago (2016/17).
-> > 
-> > I revived those per a request at KS ML, as we still need to expose the
-> > ABI content on some book that will be used by userspace people.
-> > 
-> > So, I just rebased it on the top of curent Kernel, add a cover letter
-> > with the things I remembered and re-sent.
-> > 
-> > In the specific case of this patch, the ":" there actually makes sense
-> > for someone that it is reading it as a text file, and it is an easy
-> > hack to make it parse better.
-> >   
-> > > Specifically, this new requirement isn't documented anywhere AFAICT, so
-> > > how will anyone adding new ABI descriptions learn about it?  
-> > 
-> > Yeah, either that or provide an alternative to "Description" tag, to be
-> > used with more complex ABI descriptions.
-> > 
-> > One of the things that occurred to me, back on 2017, is that we should
-> > have a way to to specify that an specific ABI description would have
-> > a rich format. Something like:
-> > 
-> > What:		/sys/bus/usb/devices/<busnum>-<devnum>:<config num>.<interface num>/<hid-bus>:<vendor-id>:<product-id>.<num>/pyra/roccatpyra<minor>/actual_cpi
-> > Date:		August 2010
-> > Contact:	Stefan Achatz <erazor_de@users.sourceforge.net>
-> > RST-Description:
-> > 		It is possible to switch the cpi setting of the mouse with the
-> > 		press of a button.
-> > 		When read, this file returns the raw number of the actual cpi
-> > 		setting reported by the mouse. This number has to be further
-> > 		processed to receive the real dpi value:
-> > 
-> > 		===== =====
-> > 		VALUE DPI
-> > 		===== =====
-> > 		1     400
-> > 		2     800
-> > 		4     1600
-> > 		===== =====
-> > 
-> > With that, the script will know that the description contents will be using
-> > the ReST markup, and parse it accordingly. Right now, what it does, instead,
-> > is to place the description on a code-block, e. g. it will produce this
-> > output for the description:
-> > 
-> > ::
-> > 
-> > 		It is possible to switch the cpi setting of the mouse with the
-> > 		press of a button.
-> > 		When read, this file returns the raw number of the actual cpi
-> > 		setting reported by the mouse. This number has to be further
-> > 		processed to receive the real dpi value:
-> > 
-> > 		VALUE DPI
-> > 		1     400
-> > 		2     800
-> > 		4     1600
-> > 
-> > 
-> > Greg, 
-> > 
-> > what do you think?  
+On Mon, Jun 17, 2019 at 06:55:49AM +0100, Lowry Li (Arm Technology China) wrote:
+> Adds runtime and system power management support in KMS kernel driver.
 > 
-> I don't know when "Description" and "RST-Description" would be used.
-> Why not just parse "Description" like rst text and if things are "messy"
-> we fix them up as found, like you did with the ":" here?  It doesn't
-> have to be complex, we can always fix them up after-the-fact if new
-> stuff gets added that doesn't quite parse properly.
+> Depends on:
+> - https://patchwork.freedesktop.org/series/61650/
+> - https://patchwork.freedesktop.org/series/60083/
 > 
-> Just like we do for most kernel-doc formatting :)
+> Signed-off-by: Lowry Li (Arm Technology China) <lowry.li@arm.com>
+> ---
+>  drivers/gpu/drm/arm/display/komeda/komeda_crtc.c |  2 +
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.c  | 30 +++++++++++++
+>  drivers/gpu/drm/arm/display/komeda/komeda_dev.h  |  2 +
+>  drivers/gpu/drm/arm/display/komeda/komeda_drv.c  | 54 ++++++++++++++++++++++--
+>  4 files changed, 85 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> index 66c5e0d..1b4ea8a 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_crtc.c
+> @@ -257,6 +257,7 @@ void komeda_crtc_handle_event(struct komeda_crtc   *kcrtc,
+>  komeda_crtc_atomic_enable(struct drm_crtc *crtc,
+>  			  struct drm_crtc_state *old)
+>  {
+> +	pm_runtime_get_sync(crtc->dev->dev);
+>  	komeda_crtc_prepare(to_kcrtc(crtc));
+>  	drm_crtc_vblank_on(crtc);
+>  	komeda_crtc_do_flush(crtc, old);
+> @@ -330,6 +331,7 @@ void komeda_crtc_handle_event(struct komeda_crtc   *kcrtc,
+>  
+>  	drm_crtc_vblank_off(crtc);
+>  	komeda_crtc_unprepare(kcrtc);
+> +	pm_runtime_put(crtc->dev->dev);
+>  }
+>  
+>  static void
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> index 405c64d..edd0943 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
+> @@ -308,3 +308,33 @@ void komeda_dev_destroy(struct komeda_dev *mdev)
+>  
+>  	devm_kfree(dev, mdev);
+>  }
+> +
+> +int komeda_dev_resume(struct komeda_dev *mdev)
+> +{
+> +	int ret = 0;
+> +
+> +	if (mdev->iommu && mdev->funcs->connect_iommu) {
+> +		ret = mdev->funcs->connect_iommu(mdev);
+> +		if (ret < 0) {
+> +			DRM_ERROR("connect iommu failed.\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return mdev->funcs->enable_irq(mdev);
+> +}
+> +
+> +int komeda_dev_suspend(struct komeda_dev *mdev)
+> +{
+> +	int ret = 0;
+> +
+> +	if (mdev->iommu && mdev->funcs->disconnect_iommu) {
+> +		ret = mdev->funcs->disconnect_iommu(mdev);
+> +		if (ret < 0) {
+> +			DRM_ERROR("disconnect iommu failed.\n");
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	return mdev->funcs->disable_irq(mdev);
+> +}
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> index d1c86b6..096f9f7 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
+> @@ -207,4 +207,6 @@ struct komeda_dev {
+>  
+>  struct komeda_dev *dev_to_mdev(struct device *dev);
+>  
+> +int komeda_dev_resume(struct komeda_dev *mdev);
+> +int komeda_dev_suspend(struct komeda_dev *mdev);
+>  #endif /*_KOMEDA_DEV_H_*/
+> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
+> index cfa5068..aa4cef1 100644
+> --- a/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
+> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_drv.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/kernel.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/component.h>
+> +#include <linux/pm_runtime.h>
+>  #include <drm/drm_of.h>
+>  #include "komeda_dev.h"
+>  #include "komeda_kms.h"
+> @@ -32,6 +33,9 @@ static void komeda_unbind(struct device *dev)
+>  		return;
+>  
+>  	komeda_kms_detach(mdrv->kms);
+> +
+> +	pm_runtime_disable(dev);
+> +
+>  	komeda_dev_destroy(mdrv->mdev);
+>  
+>  	dev_set_drvdata(dev, NULL);
+> @@ -52,6 +56,9 @@ static int komeda_bind(struct device *dev)
+>  		err = PTR_ERR(mdrv->mdev);
+>  		goto free_mdrv;
+>  	}
+> +	dev_set_drvdata(dev, mdrv);
+> +
+> +	pm_runtime_enable(dev);
+>  
+>  	mdrv->kms = komeda_kms_attach(mdrv->mdev);
+>  	if (IS_ERR(mdrv->kms)) {
+> @@ -59,11 +66,10 @@ static int komeda_bind(struct device *dev)
+>  		goto destroy_mdev;
+>  	}
+>  
+> -	dev_set_drvdata(dev, mdrv);
+> -
+>  	return 0;
+>  
+>  destroy_mdev:
+> +	pm_runtime_disable(dev);
+>  	komeda_dev_destroy(mdrv->mdev);
+>  
+>  free_mdrv:
+> @@ -134,13 +140,55 @@ static int komeda_platform_remove(struct platform_device *pdev)
+>  
+>  MODULE_DEVICE_TABLE(of, komeda_of_match);
+>  
+> +static int komeda_rt_pm_suspend(struct device *dev)
+> +{
+> +	dev_info(dev, "%s\n", __func__);
+> +	return 0;
+> +}
+> +
+> +static int komeda_rt_pm_resume(struct device *dev)
+> +{
+> +	dev_info(dev, "%s\n", __func__);
+> +	return 0;
+> +}
 
-Works for me. Yet, I guess I tried that, back on 2017. 
 
-If I'm not mistaken, the initial patchset to solve the broken things 
-won't be small, and will be require a lot of attention in order to
-identify what's broken and where.
+Useful only for debugging? I think you've missed an opportunity here to turn
+off clocks and disable interrupts.
 
-Btw, one thing is to pass at ReST validation. Another thing is to
-produce something that people can read. 
+> +
+> +static int __maybe_unused komeda_pm_suspend(struct device *dev)
+> +{
+> +	struct komeda_drv *mdrv = dev_get_drvdata(dev);
+> +	struct drm_device *drm = &mdrv->kms->base;
+> +	int res;
+> +
+> +	dev_info(dev, "%s\n", __func__);
+> +	res = drm_mode_config_helper_suspend(drm);
+> +
+> +	komeda_dev_suspend(mdrv->mdev);
+> +
+> +	return res;
+> +}
+> +
+> +static int __maybe_unused komeda_pm_resume(struct device *dev)
+> +{
+> +	struct komeda_drv *mdrv = dev_get_drvdata(dev);
+> +	struct drm_device *drm = &mdrv->kms->base;
+> +
+> +	dev_info(dev, "%s\n", __func__);
 
-Right now, the pertinent logic at the script I wrote (scripts/get_abi.pl)
-is here:
+I don't see the point of printing all these message on suspend/resume. Please
+convert them to DRM_DEBUG() if you want to have some sort of notices in the
+kernel log, otherwise please remove them.
 
-                if (!($desc =~ /^\s*$/)) {
-                        if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-                                # put everything inside a code block
-                                $desc =~ s/\n/\n /g;
+Best regards,
+Liviu
 
-                                print "::\n\n";
-                                print " $desc\n\n";
-                        } else {
-                                # Escape any special chars from description
-                                $desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
 
-                                print "$desc\n\n";
-                        }
-                }
+> +	komeda_dev_resume(mdrv->mdev);
+> +
+> +	return drm_mode_config_helper_resume(drm);
+> +}
+> +
+> +static const struct dev_pm_ops komeda_pm_ops = {
+> +	SET_SYSTEM_SLEEP_PM_OPS(komeda_pm_suspend, komeda_pm_resume)
+> +	SET_RUNTIME_PM_OPS(komeda_rt_pm_suspend, komeda_rt_pm_resume, NULL)
+> +};
+> +
+>  static struct platform_driver komeda_platform_driver = {
+>  	.probe	= komeda_platform_probe,
+>  	.remove	= komeda_platform_remove,
+>  	.driver	= {
+>  		.name = "komeda",
+>  		.of_match_table	= komeda_of_match,
+> -		.pm = NULL,
+> +		.pm = &komeda_pm_ops,
+>  	},
+>  };
+>  
+> -- 
+> 1.9.1
+> 
 
-If it discovers something weird enough, it just places everything
-into a comment block. Otherwise, it assumes that it is a plain
-text and that any special characters should be escaped.
-
-If the above block is replaced by a simple:
-
-		print "$desc\n\n";
-
-The description content will be handled as a ReST file.
-
-I don't have any time right now to do this change and to handle the
-warnings that will start to popup.
-
-Btw, a single replace there is enough to show the amount of problems that
-it will rise, as it will basically break Sphinx build with:
-
-	reading sources... [  1%] admin-guide/abi-testing
-	reST markup error:
-	get_abi.pl rest --dir $srctree/Documentation/ABI/testing:45261: (SEVERE/4) Missing matching underline for section title overline.
-	
-	==========================
-	PCIe Device AER statistics
-	These attributes show up under all the devices that are AER capable. These
-
-Thanks,
-Mauro
-
-diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index 7bc619b6890c..e75f441afdcd 100755
---- a/scripts/get_abi.pl
-+++ b/scripts/get_abi.pl
-@@ -288,18 +288,18 @@ sub output_rest {
- 		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
- 
- 		if (!($desc =~ /^\s*$/)) {
--			if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
--				# put everything inside a code block
--				$desc =~ s/\n/\n /g;
-+#			if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-+#				# put everything inside a code block
-+#				$desc =~ s/\n/\n /g;
- 
--				print "::\n\n";
--				print " $desc\n\n";
--			} else {
--				# Escape any special chars from description
--				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
-+#				print "::\n\n";
-+#				print " $desc\n\n";
-+#			} else {
-+#				# Escape any special chars from description
-+#				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
- 
- 				print "$desc\n\n";
--			}
-+#			}
- 		} else {
- 			print "DESCRIPTION MISSING for $what\n\n" if (!$data{$what}->{is_file});
- 		}
-
+-- 
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
