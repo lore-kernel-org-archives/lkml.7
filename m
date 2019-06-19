@@ -2,191 +2,117 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E04C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF40C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:36:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 399972084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 984042084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:36:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ITt4xmst"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="EDamHHKF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbfFSQfN (ORCPT
+        id S1728572AbfFSQg6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:35:13 -0400
-Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51273 "EHLO
-        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725899AbfFSQfM (ORCPT
+        Wed, 19 Jun 2019 12:36:58 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:38422 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSQg5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:35:12 -0400
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.nyi.internal (Postfix) with ESMTP id 1E3F3223AD;
-        Wed, 19 Jun 2019 12:35:11 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute3.internal (MEProxy); Wed, 19 Jun 2019 12:35:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=QWszy1
-        QIZnq1jTGoaVFxRLAtJXpnXGB4FyzDJyOceJ0=; b=ITt4xmstYiV1EbvbS00vri
-        3GD/I46andthTRF0WUtHJblgiDmB857RUr7BD7mvEmsLEl1Qvr6GbFrZMPvG0qWi
-        o3N3G/Thig+ItN7LBJ0MiPomXApVTdUccKE4FxIgn/syoLQGhDLMz4Q8GV4HmJOZ
-        trXuebsm22ZzLwNVGeIYWR/ISO41IUW75nDZv+w6EyYwe6+PxkjxhRNORQcDFKy+
-        Fi+8gIyN80F9XdgMoSlfyTNW4VIqmdDNNQw8ptggFh/JCOBm+SPMMR6KiVN8z9xn
-        eYAfu6oxdithER5xHhdf8NhkXIQfxiD+LNSavT+Sv4xbLmueDZMRD/HEKe7x6y5A
-        ==
-X-ME-Sender: <xms:PWQKXYVnTu53V7EkhYPmUZmYT0JAHOPcpWO1gogp4icu8hteJmvKTg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddvgdejlecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkughoucfu
-    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucffohhmrghinh
-    epthgvshhtshdrnhgvthdpghhoohdrghhlpdgrphhpshhpohhtrdgtohhmnecukfhppedu
-    leefrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstg
-    hhsehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:PWQKXTd4LMijvR3frMovsmHVL-5JeNGcrq8i5eQMOxHeRC75ergFZg>
-    <xmx:PWQKXUsst1a2aP06I4Mptvl9Y3PJWqiWTE8xf2EftiUqjHPjdAgnxg>
-    <xmx:PWQKXS9ojuIe2HPaawGzFYB0QyxRnpj_Ug5et8jei_hKgBelqttgGA>
-    <xmx:P2QKXXv_1UsVIDG3nDd46QsweVjP8bdxHEUTTqt5yeVs34p5wRf7xw>
-Received: from localhost (unknown [193.47.165.251])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 4F3E938008D;
-        Wed, 19 Jun 2019 12:35:09 -0400 (EDT)
-Date:   Wed, 19 Jun 2019 19:35:07 +0300
-From:   Ido Schimmel <idosch@idosch.org>
-To:     syzbot <syzbot+382566d339d52cd1a204@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, dsahern@gmail.com, idosch@mellanox.com,
-        jiri@mellanox.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
-Subject: Re: general protection fault in call_fib6_multipath_entry_notifiers
-Message-ID: <20190619163507.GA2080@splinter>
-References: <0000000000004237d7058baf24e3@google.com>
+        Wed, 19 Jun 2019 12:36:57 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n11so20656046qtl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 09:36:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DzpNw7iMfHgKemdLUrfJxvdy9KGKJSIkCkr6aus8rCA=;
+        b=EDamHHKFiI7TTHkw3d71MrV0NdBwB6F1R0bV3XkjGbuH5mQMYmiVlZa63N43certmw
+         GaIE2u+163Cb4BhvTpbwTBxOWcLAcGEeI/3LO9nZ2D3hphDdktczve9XtPtWbb/zjdgx
+         QuoJYZuWKxQ1Q1HWKQMOXlDG8688RHVxOe9ZrXX0wEZogGnlfFfLqDn8V5Dbs8IQvczi
+         yQX28xdFN722tg0xFkBas291DRO6iaiEm0BDaeD7B2Eul7XBDtVnG/ZeKQsPeS/6vBSl
+         FO7l2jZl3LYlQIBoVhkk/uCuTaMtyaMfsLTID0dqUBuf/FNrb2Plto9Q3eXvKdPYCYXn
+         mxug==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DzpNw7iMfHgKemdLUrfJxvdy9KGKJSIkCkr6aus8rCA=;
+        b=akkODdHTJ3WQdGY5RtRcVJ8cy/3gKI8YPyuG+8fv8kwPemZax2wU2nbhxQ26FVeNfn
+         TpDlkUhcYxdIKHIlQXgBT06R0sNI+RQU4mYqJlTdBtog5KdOHtnd3AzHuEkJoGnsZV8B
+         fPmynDfPj9fV7JqLXtFRtHTAKx+CV2W5EJ/InE3Fm7EegQqXOhmyvM35vP6wbY+lU4Kn
+         Ks59NpLKUSwBBjkDY74Lj3Yv7JVEcrivi7i8imrfqLgIY2agEyRiODgAYrl0nnuv9RtM
+         edvw/UhYYHdEYcg8EoKck15j9Hd4HKRUPmnkhwDcNGnGCaddCuqKm+9ah9iDdYVa7/t2
+         Uhkw==
+X-Gm-Message-State: APjAAAWIaepiJst1RAE8uCIaXgMPlagRzRRMvp/Q1bmk70Pvw9NlzrN2
+        GgnilfOzCDskzCNRS7KZeld0Tw==
+X-Google-Smtp-Source: APXvYqzqHRHHrr8SACyRyLxcASgrxSvjDf6v3XwfN8DQX4ZVR7KLVzKliqO65H7tJkj2zv0u+29foQ==
+X-Received: by 2002:a0c:d24d:: with SMTP id o13mr34947576qvh.86.1560962216870;
+        Wed, 19 Jun 2019 09:36:56 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id r36sm11720396qte.71.2019.06.19.09.36.56
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 09:36:56 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1hddZv-0001vf-QN; Wed, 19 Jun 2019 13:36:55 -0300
+Date:   Wed, 19 Jun 2019 13:36:55 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: dev_pagemap related cleanups v2
+Message-ID: <20190619163655.GG9360@ziepe.ca>
+References: <20190617122733.22432-1-hch@lst.de>
+ <CAPcyv4hBUJB2RxkDqHkfEGCupDdXfQSrEJmAdhLFwnDOwt8Lig@mail.gmail.com>
+ <20190619094032.GA8928@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <0000000000004237d7058baf24e3@google.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190619094032.GA8928@lst.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 08:47:07AM -0700, syzbot wrote:
-> Hello,
+On Wed, Jun 19, 2019 at 11:40:32AM +0200, Christoph Hellwig wrote:
+> On Tue, Jun 18, 2019 at 12:47:10PM -0700, Dan Williams wrote:
+> > > Git tree:
+> > >
+> > >     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
+> > >
+> > > Gitweb:
+> > >
+> > >     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-devmem-cleanup.2
 > 
-> syzbot found the following crash on:
+> > 
+> > Attached is my incremental fixups on top of this series, with those
+> > integrated you can add:
 > 
-> HEAD commit:    39f58860 net/mlx5: add missing void argument to function m..
-> git tree:       net-next
-> console output: https://syzkaller.appspot.com/x/log.txt?x=115eb99ea00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=4937094fc643655f
-> dashboard link: https://syzkaller.appspot.com/bug?extid=382566d339d52cd1a204
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=120c9e11a00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120c3d21a00000
-> 
-> The bug was bisected to:
-> 
-> commit ebee3cad835f7fe7250213225cf6d62c7cf3b2ca
-> Author: Ido Schimmel <idosch@mellanox.com>
-> Date:   Tue Jun 18 15:12:48 2019 +0000
-> 
->     ipv6: Add IPv6 multipath notifications for add / replace
-> 
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1529970aa00000
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1729970aa00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1329970aa00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+382566d339d52cd1a204@syzkaller.appspotmail.com
-> Fixes: ebee3cad835f ("ipv6: Add IPv6 multipath notifications for add /
-> replace")
-> 
-> kasan: CONFIG_KASAN_INLINE enabled
-> kasan: GPF could be caused by NULL-ptr deref or user memory access
-> general protection fault: 0000 [#1] PREEMPT SMP KASAN
-> CPU: 0 PID: 9190 Comm: syz-executor149 Not tainted 5.2.0-rc5+ #38
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> Google 01/01/2011
-> RIP: 0010:call_fib6_multipath_entry_notifiers+0xd1/0x1a0
+> I've folded your incremental bits in and pushed out a new
+> hmm-devmem-cleanup.3 to the repo above.  Let me know if I didn't mess
+> up anything else.  I'll wait for a few more comments and Jason's
+> planned rebase of the hmm branch before reposting.
 
-Did not consider the case where RTA_MULTIPATH does not encode valid
-nexthop information in which case 'rt_notif' can be NULL. Will send a
-fix after I run some tests.
+I said I wouldn't rebase the hmm.git (as it needs to go to DRM, AMD
+and RDMA git trees)..
 
-> net/ipv6/ip6_fib.c:396
-> Code: 8b b5 30 ff ff ff 48 c7 85 68 ff ff ff 00 00 00 00 48 c7 85 70 ff ff
-> ff 00 00 00 00 89 45 88 4c 89 e0 48 c1 e8 03 4c 89 65 80 <42> 80 3c 28 00 0f
-> 85 9a 00 00 00 48 b8 00 00 00 00 00 fc ff df 4d
-> RSP: 0018:ffff88809788f2c0 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: 1ffff11012f11e59 RCX: 00000000ffffffff
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: ffff88809788f390 R08: ffff88809788f8c0 R09: 000000000000000c
-> R10: ffff88809788f5d8 R11: ffff88809788f527 R12: 0000000000000000
-> R13: dffffc0000000000 R14: ffff88809788f8c0 R15: ffffffff89541d80
-> FS:  000055555632c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000080 CR3: 000000009ba7c000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  ip6_route_multipath_add+0xc55/0x1490 net/ipv6/route.c:5094
->  inet6_rtm_newroute+0xed/0x180 net/ipv6/route.c:5208
->  rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5219
->  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
->  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5237
->  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
->  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
->  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1917
->  sock_sendmsg_nosec net/socket.c:646 [inline]
->  sock_sendmsg+0xd7/0x130 net/socket.c:665
->  ___sys_sendmsg+0x803/0x920 net/socket.c:2286
->  __sys_sendmsg+0x105/0x1d0 net/socket.c:2324
->  __do_sys_sendmsg net/socket.c:2333 [inline]
->  __se_sys_sendmsg net/socket.c:2331 [inline]
->  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2331
->  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
->  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> RIP: 0033:0x4401f9
-> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
-> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
-> 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-> RSP: 002b:00007ffc09fd0028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
-> RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
-> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
-> R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
-> Modules linked in:
-> ---[ end trace 77949df4cfac115c ]---
-> RIP: 0010:call_fib6_multipath_entry_notifiers+0xd1/0x1a0
-> net/ipv6/ip6_fib.c:396
-> Code: 8b b5 30 ff ff ff 48 c7 85 68 ff ff ff 00 00 00 00 48 c7 85 70 ff ff
-> ff 00 00 00 00 89 45 88 4c 89 e0 48 c1 e8 03 4c 89 65 80 <42> 80 3c 28 00 0f
-> 85 9a 00 00 00 48 b8 00 00 00 00 00 fc ff df 4d
-> RSP: 0018:ffff88809788f2c0 EFLAGS: 00010246
-> RAX: 0000000000000000 RBX: 1ffff11012f11e59 RCX: 00000000ffffffff
-> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: ffff88809788f390 R08: ffff88809788f8c0 R09: 000000000000000c
-> R10: ffff88809788f5d8 R11: ffff88809788f527 R12: 0000000000000000
-> R13: dffffc0000000000 R14: ffff88809788f8c0 R15: ffffffff89541d80
-> FS:  000055555632c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 0000000020000080 CR3: 000000009ba7c000 CR4: 00000000001406f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> 
-> 
-> ---
-> This bug is generated by a bot. It may contain errors.
-> See https://goo.gl/tpsmEJ for more information about syzbot.
-> syzbot engineers can be reached at syzkaller@googlegroups.com.
-> 
-> syzbot will keep track of this bug report. See:
-> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> syzbot can test patches for this bug, for details see:
-> https://goo.gl/tpsmEJ#testing-patches
+Instead I will merge v5.2-rc5 to the tree before applying this series.
+
+I've understood this to be Linus's prefered workflow.
+
+So, please send the next iteration of this against either
+plainv5.2-rc5 or v5.2-rc5 merged with hmm.git and I'll sort it out.
+
+Jason
