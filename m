@@ -2,144 +2,132 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
 	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BCD9C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:32:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A149C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:32:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6ABC214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:32:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32899214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:32:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dX61wv1r"
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="E8/O5Tlh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729993AbfFSSb7 (ORCPT
+        id S1730159AbfFSScH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:31:59 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:46914 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFSSb7 (ORCPT
+        Wed, 19 Jun 2019 14:32:07 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37637 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfFSScG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:31:59 -0400
-Received: by mail-io1-f65.google.com with SMTP id i10so667369iol.13;
-        Wed, 19 Jun 2019 11:31:59 -0700 (PDT)
+        Wed, 19 Jun 2019 14:32:06 -0400
+Received: by mail-ot1-f66.google.com with SMTP id s20so32824otp.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:32:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=WMAEpKDX0ogkoHoItqe3dZiuD+RgqX5fNQGojqqQ+m0=;
-        b=dX61wv1rD/FtO6rpV6JFPhv3rQvNOnQsUMpmsNt6UjgmAF83pjGN7O/YEL+kDVPNJ6
-         ipjCbinx+ckvI3NxIxobenamca2R//qNGj8XC4xeMxusEgCJENOJQCi1BkK5VsmypDcz
-         trPdnl4Su8L/5PLX1a/669gpbCWhpxnCNpSlNFdPjznkmM3ZQntsEMbHcCfiwJyv8rlQ
-         4iTrh9HGij2mvbxXWkliK4gS/xrAEut4E7SROSFtUmO8NGrcbUvCjB+YagT8ttPZfsYi
-         HG2xhNOefM0a7fW4yqs4tS2DVstDBvx/pzbcoPH3Gb2AoC0a+o/67hwNtooWi2bpSk1A
-         zJHw==
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=wO9u4EvDoBIegIfL8MLoH5Q9wxbjVMWquYjqBDeWjN4=;
+        b=E8/O5TlhA1d+ayZUTgQslx4ZiA+Q027+bw2+Xp9uCtbeVn264NHS8BdKeYVAXlPEW2
+         SNzA3SwsMvflcnUPUChz0KfpziO4Sevl6hSzELWVLn/k/NwLWBLxz0vuVtLjYdiRtj6N
+         A2Pp/YUBu2ZZk2btgrD9dJY8Ag4lLkcohkieR+T5f8qDvyyvG9VL4iuocMjuZRea/MSV
+         /2A90dLrRuM6MT7iYt6+EUsXgzDw0HkDRdsSTsArePyqjfOTEuxn9gdRx1lFSh7+HXC9
+         vbC3NQGEgAEv4mrM1d6AH/k2s3oqULwuG3anvWRDkWt1uLBuqbroTXWHG3Atwzto6QfG
+         hzYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=WMAEpKDX0ogkoHoItqe3dZiuD+RgqX5fNQGojqqQ+m0=;
-        b=IRprO76qCHQdqaCEREbz8uOj1U2O418ACFvoEewHOXTbuarhr2dq8GvaHkFmnL48gY
-         joSt7qbFpzK3l4BTREWzOINIcgZnU3uNkzWZE1U1e753Z1on9OHaesgoIGYsH8Jh3SPf
-         jesTIvWraQlU/JD9NMhYibrAppLUarU59JGq7h1XCnjWL4nAaZ+nEYyqmiWDGz9ZaHo/
-         CoVODMiPJXN7q5uHsj85Q/p+yBOtlS3MXmmfjI0jyLsesnd9GJsrPRmgLmneljNbZJMP
-         hM6qNcu4ucf2tZxjW49C1u7DRX/iV0YHqh1t2T5p2Jftmg6EcLqO0CxHP3DXNXUqiBPQ
-         dNvg==
-X-Gm-Message-State: APjAAAUsNDTFEGuEJSHQ2rDBIKqCdgdhLcl7YRJeVQERbs5CdOfTl6ts
-        Nv4JVEroENLeQEu8MLSVuVUYlWV3vNWdFHuk5Zp5GDx9bWU=
-X-Google-Smtp-Source: APXvYqw0wnrrKQ5ayH2r9SOjtBVnoF/FXrtE+70SanrXw9QFMgs4nmqRGQHO+fNIGrZukcu8q5Fv3pAa6l/lennmW30=
-X-Received: by 2002:a6b:dc17:: with SMTP id s23mr2768340ioc.56.1560969118497;
- Wed, 19 Jun 2019 11:31:58 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=wO9u4EvDoBIegIfL8MLoH5Q9wxbjVMWquYjqBDeWjN4=;
+        b=JKNEMb9RcWqgomdWRuo3pT4hK4fdqANXJnGjmHaF8+HtZwb0iRWTH3y5oFSWLGGmFI
+         KsI53iPnf+p4psf3X4R6G5YlEFp9Eego6iAMsHhOTNgugSMNp1bj2lfoF+KZQ0/+BVXa
+         45q2t33C2wUV/jCJLC0VUAzCI4I1iK9haebLyNyEvSEXitOYFFUCgB5zi/AmRIWoAB13
+         0yAUx3p8mUOYljnTlEfUbh8HwmdIIJ7Ts0emBn3+sf7mP1FOLXPMXUgVf/LB7twDVnry
+         BEuR3/Lo8ZH2oPjJYbTiJ3BOceSY/0LsJwLgytBeEs7idLMOy/zNJmyXwX2QmekI9H2t
+         ECYA==
+X-Gm-Message-State: APjAAAWRewyrMUQKm8vnYRvPpL5bBg22fD+qeeIL98Cgv8ksyynD5KqO
+        roiPmlCxoqth5Iyr6zGtL4AqmzEisJtvggN1jB+83w==
+X-Google-Smtp-Source: APXvYqyOklUba5DnE7uTOw3xbq3z/vy6a1VPKHBI9C95LnZnP/utPhUOBZGGZR5pP8ostOSRSSNgeJah2UNFySrz31A=
+X-Received: by 2002:a9d:7a45:: with SMTP id z5mr1589758otm.197.1560969125109;
+ Wed, 19 Jun 2019 11:32:05 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190619174556.21194-1-puranjay12@gmail.com> <e49daf89-1bf0-77e8-c71f-ec0802f25f6c@linuxfoundation.org>
- <20190619182122.GA4827@arch>
-In-Reply-To: <20190619182122.GA4827@arch>
-From:   Puranjay Mohan <puranjay12@gmail.com>
-Date:   Thu, 20 Jun 2019 00:01:46 +0530
-Message-ID: <CANk7y0h8gC6JR=FWXQC=vYWrPxFT2KFwi6zQaThjhzAMwG9gGw@mail.gmail.com>
-Subject: Fwd: [PATCH] net: fddi: skfp: Include generic PCI definitions from pci_regs.h
-To:     Shuah Khan <skhan@linuxfoundation.org>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
+ <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
+ <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+ <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
+ <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
+ <20190619170750.GB10107@kroah.com> <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
+In-Reply-To: <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
+From:   Tri Vo <trong@android.com>
+Date:   Wed, 19 Jun 2019 11:31:54 -0700
+Message-ID: <CANA+-vDvepXj_+6eLKD06J5ezP2jKZ5uTntST-kM3=ZLDMCWCg@mail.gmail.com>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@fb.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:04:19PM -0600, Shuah Khan wrote:
-> On 6/19/19 11:45 AM, Puranjay Mohan wrote:
-> > Include the generic PCI definitions from include/uapi/linux/pci_regs.h
-> > change PCI_REV_ID to PCI_REVISION_ID to make it compatible with the
-> > generic define.
-> > This driver uses only one generic PCI define.
+On Wed, Jun 19, 2019 at 11:01 AM Joel Fernandes <joelaf@google.com> wrote:
+>
+> On Wed, Jun 19, 2019 at 1:07 PM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
 > >
-> > Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
-> > ---
-> >   drivers/net/fddi/skfp/drvfbi.c | 3 ++-
-> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
+> > > > It is conceivable to have a "wakeup_sources" directory under
+> > > > /sys/power/ and sysfs nodes for all wakeup sources in there.
+> > >
+> > > One of the "issues" with this is, now if you have say 100 wake up
+> > > sources, with 10 entries each, then we're talking about a 1000 sysfs
+> > > files. Each one has to be opened, and read individually. This adds
+> > > overhead and it is more convenient to read from a single file. The
+> > > problem is this single file is not ABI. So the question I guess is,
+> > > how do we solve this in both an ABI friendly way while keeping the
+> > > overhead low.
 > >
-> > diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
-> > index bdd5700e71fa..38f6d943385d 100644
-> > --- a/drivers/net/fddi/skfp/drvfbi.c
-> > +++ b/drivers/net/fddi/skfp/drvfbi.c
-> > @@ -20,6 +20,7 @@
-> >   #include "h/supern_2.h"
-> >   #include "h/skfbiinc.h"
-> >   #include <linux/bitrev.h>
-> > +#include <uapi/linux/pci_regs.h>
-> >   #ifndef   lint
-> >   static const char ID_sccs[] = "@(#)drvfbi.c       1.63 99/02/11 (C) SK " ;
-> > @@ -127,7 +128,7 @@ static void card_start(struct s_smc *smc)
-> >      *       at very first before any other initialization functions is
-> >      *       executed.
-> >      */
-> > -   rev_id = inp(PCI_C(PCI_REV_ID)) ;
-> > +   rev_id = inp(PCI_C(PCI_REVISION_ID)) ;
-> >     if ((rev_id & 0xf0) == SK_ML_ID_1 || (rev_id & 0xf0) == SK_ML_ID_2) {
-> >             smc->hw.hw_is_64bit = TRUE ;
-> >     } else {
-> >
+> > How much overhead?  Have you measured it, reading from virtual files is
+> > fast :)
 >
-> Why not delete the PCI_REV_ID define in:
+> I measured, and it is definitely not free. If you create and read a
+> 1000 files and just return a string back, it can take up to 11-13
+> milliseconds (did not lock CPU frequencies, was just looking for
+> average ball park). This is assuming that the counter reading is just
+> doing that, and nothing else is being done to return the sysfs data
+> which is probably not always true in practice.
 >
-> drivers/net/fddi/skfp/h/skfbi.h
+> Our display pipeline deadline is around 16ms at 60Hz. Conceivably, any
+> CPU scheduling competion reading sysfs can hurt the deadline. There's
+> also the question of power - we definitely have spent time in the past
+> optimizing other virtual files such as /proc/pid/smaps for this reason
+> where it spent lots of CPU time.
 >
-I have removed all generic  PCI definitions from skfbi.h in the next
-patch which I have sent, I wanted to keep it organised by sending two
-patches
+> > And how often does this happen?  Does it _need_ to happen?
+>
+> These are good questions and we should find out. I am not saying that
+> sysfs will not work, I am just saying we need to consider all the
+> things. I will let Tri look into this since he is working on it, I
+> don't know off the top.
 
-> It looks like this header has duplicate PCI config space header defines,
-> not just this one. Some of them are slightly different names:
->
-> e.g:
->
-> #define PCI_CACHE_LSZ   0x0c    /*  8 bit       Cache Line Size */
->
-> Looks like it defines the standard PCI config space instead of
-> including and using the standard defines from uapi/linux/pci_regs.h
->
-It defines many duplicate definitions in skfbi.h, but only uses one of
-them, hence they are removed in the next patch as told by bjorn.
-It uses only one generic PCI define in driver code, i.e. PCI_REV_ID, it
-has been replaced by PCI_REVISION_ID to make it work with the define
-included with uapi/linux/pci_regs.h
-> Something to look into.
->
-> thanks,
-> -- Shuah
->
->
->
->
->
-
-
--- 
-Thanks and Regards
-
-Yours Truly,
-
-Puranjay Mohan
+There are really two use cases for wakeup_sources in Android:
+(1) As Sandeep pointed out, it's used to plot history of wakeup
+sources. This use case might actually be performance sensitive. I'll
+check with our internal Android teams and loop back here.
+(2) wakeup_sources information is included in bugreports.
+Reading/parsing wakeup_sources in this case only happens when
+generating a bugreport, so not particularly sensitive to overhead.
