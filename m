@@ -2,261 +2,122 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C078EC48BE0
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:53:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A42B9C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F2E82147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:53:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="PBQvRmU9"
+	by mail.kernel.org (Postfix) with ESMTP id 624D221537
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730452AbfFSUx1 (ORCPT
+        id S1730409AbfFSU5J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 16:53:27 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:44385 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfFSUx1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 16:53:27 -0400
-Received: by mail-qt1-f196.google.com with SMTP id x47so692957qtk.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:53:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=r1JW72QZvFM97mG3byq8Xb6t+u2a6sidb0hhLRwcOmU=;
-        b=PBQvRmU97QmDiSH6VHDaVQhPepePHrPHYlwwQ/KedfmWFuxP7nUwqp4/gHO2vD8PXY
-         SW9GabxMpnd0/VDvqluCZBrgba4B+TZYn77dps9SRIWk2FLlws4+lPZaBGwxR9ZgjM2C
-         7xwslkwmmsnwnPue83IhaipYL5eRyUk5+oWTnWae3b1fwgku785VXUP54Ar7RnMV4R3m
-         RE9tyi1FcCXdjUJTubVkJobdiO0q/NrOpxhXAtRsHS/dMms3Qj4rgqvYQf5xhyi07dpw
-         TqZPdrr43X0vGiK+pke37NhAY8QZWb7anvOlUJl9WUNKa1+r9pA81Myq6CsYzOWv+tym
-         apsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=r1JW72QZvFM97mG3byq8Xb6t+u2a6sidb0hhLRwcOmU=;
-        b=m4SQzka5YFpAD1W5vQRBcHeetANnNzKpSOgnqb7JRvPHaAn14Rk9bh4d4RxdyrKEeB
-         Ql+FUAbBC28rY4FOuYpc8P+Pzrngruwy+saNZcvkLSmn44K/6tTAuxnJNMqv1x8l9OYj
-         mC9Ncut6KV56AD6kzJ2D2zPE1O31RTMnxXRFKT5Kz2UQdQy3Yf323W6P/TCd8IOJrS7Z
-         jUmwLb8QbpmsI+OV+wCoT214bESu0bVjXOFYktvJ7iTVRNkXywdCXqe/ujQsIdYAVkxA
-         ohx5aNeoBhHK2KR4LEEz1XTPK+lobEkMtWBFQz/vqX56bqtVAKpm+KqEdNRXcY5ybhIN
-         CBxA==
-X-Gm-Message-State: APjAAAWKxm9RcEeEjyJtof1UWnICF4iTU3L0dn8h+iRgv5Y8ifWKKnTL
-        z3oeA0ptXNH2oPOmj57829c74Q==
-X-Google-Smtp-Source: APXvYqzoYanqwMwE8GB/pmwJLxlLQcRHAuhdcsBEYsWD0YJ/kIjmSl19ksNIX8BZAxajAHkqRUDi9g==
-X-Received: by 2002:a0c:acab:: with SMTP id m40mr19419150qvc.52.1560977605321;
-        Wed, 19 Jun 2019 13:53:25 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id g2sm8477275qkm.31.2019.06.19.13.53.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 13:53:24 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     guro@fb.com, vdavydov.dev@gmail.com, hannes@cmpxchg.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/slab: fix an use-after-free in kmemcg_workfn()
-Date:   Wed, 19 Jun 2019 16:52:53 -0400
-Message-Id: <1560977573-10715-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 19 Jun 2019 16:57:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38236 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726244AbfFSU5J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 16:57:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A385B30C1330;
+        Wed, 19 Jun 2019 20:57:06 +0000 (UTC)
+Received: from ovpn-112-53.rdu2.redhat.com (ovpn-112-53.rdu2.redhat.com [10.10.112.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DACED608A7;
+        Wed, 19 Jun 2019 20:56:59 +0000 (UTC)
+Message-ID: <414bc504bf62ea8de2ad195c00ce64dc0acb773c.camel@redhat.com>
+Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
+From:   Dan Williams <dcbw@redhat.com>
+To:     Arnd Bergmann <arnd@arndb.de>,
+        Johannes Berg <johannes@sipsolutions.net>
+Cc:     Alex Elder <elder@linaro.org>,
+        Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>,
+        abhishek.esse@gmail.com, Ben Chan <benchan@google.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
+        DTML <devicetree@vger.kernel.org>,
+        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
+        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-arm-msm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
+        syadagir@codeaurora.org
+Date:   Wed, 19 Jun 2019 15:56:58 -0500
+In-Reply-To: <CAK8P3a3r95gXMdq7s9GF=37v6t4kR+-2iyC6bnmUDVuM+bn80Q@mail.gmail.com>
+References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
+         <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
+         <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
+         <fc0d08912bc10ad089eb74034726308375279130.camel@redhat.com>
+         <36bca57c999f611353fd9741c55bb2a7@codeaurora.org>
+         <153fafb91267147cf22e2bf102dd822933ec823a.camel@redhat.com>
+         <CAK8P3a2Y+tcL1-V57dtypWHndNT3eDJdcKj29c_v+k8o1HHQig@mail.gmail.com>
+         <f4249aa5f5acdd90275eda35aa16f3cfb29d29be.camel@redhat.com>
+         <CAK8P3a2nzZKtshYfomOOSYkqx5HdU15Wr9b+3va0B1euNhFOAg@mail.gmail.com>
+         <dbb32f185d2c3a654083ee0a7188379e1f88d899.camel@sipsolutions.net>
+         <d533b708-c97a-710d-1138-3ae79107f209@linaro.org>
+         <abdfc6b3a9981bcdef40f85f5442a425ce109010.camel@sipsolutions.net>
+         <CAK8P3a3ksrFTo2+dLB+doLeY+kPP7rYxv2O7BwvjYgK2cwCTuQ@mail.gmail.com>
+         <97cbfb3723607c95d78e25785262ae7b0acdb11c.camel@sipsolutions.net>
+         <CAK8P3a29+JKbDdS9ikhgaKa-AJ1qd1sDMTAfzivGh5wN4VL88A@mail.gmail.com>
+         <54a5acb6cf26ebc6447f8ebcbdcb8e0eed693ab3.camel@sipsolutions.net>
+         <CAK8P3a3r95gXMdq7s9GF=37v6t4kR+-2iyC6bnmUDVuM+bn80Q@mail.gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 19 Jun 2019 20:57:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "mm: rework non-root kmem_cache lifecycle
-management" [1] introduced an use-after-free below because
-kmemcg_workfn() may call slab_kmem_cache_release() which has already
-freed the whole kmem_cache. Fix it by removing the bogus NULL assignment
-and checkings that will not work with SLUB_DEBUG poisoning anyway.
+On Tue, 2019-06-18 at 23:06 +0200, Arnd Bergmann wrote:
+> On Tue, Jun 18, 2019 at 10:39 PM Johannes Berg
+> <johannes@sipsolutions.net> wrote:
+> > On Tue, 2019-06-18 at 22:33 +0200, Arnd Bergmann wrote:
+> > It seems to me though that this is far more complex than what I'm
+> > proposing? What I'm proposing there doesn't even need any userspace
+> > involvement, as long as all the pieces are in the different sub-
+> > drivers,
+> > they'd fall out automatically.
+> > 
+> > And realistically, the wwan_device falls out anyway at some point,
+> > the
+> > only question is if we really make one specific driver be the
+> > "owner" of
+> > it. I'm suggesting that we don't, and just make its lifetime depend
+> > on
+> > the links to parts it has (unless something like IPA actually wants
+> > to
+> > be an owner).
+> 
+> My feeling so far is that having the wwan_device be owned by a device
+> gives a nicer abstraction model that is also simpler for the common
+> case. A device driver like ipa would end up with a probe() function
+> that does does wwan_device_alloc/wwan_device_register, corresponding
+> to alloc_etherdev/register_netdev, and then communicates through
+> callbacks.
+> 
+> I agree the compound device case would get more complex by
+> shoehorning it into this model, but that can be a valid tradeoff
+> if it's the exceptional case rather than the common one.
 
-[1] https://lore.kernel.org/patchwork/patch/1087376/
+In my experience, the compound device model is by far the most
+prevalent for regular Linux distros or anything *not* running on an SoC
+with an integrated modem.
 
-BUG kmem_cache (Tainted: G    B   W        ): Poison overwritten
-INFO: 0x(____ptrval____)-0x(____ptrval____). First byte 0x0 instead of
-0x6b
-INFO: Allocated in create_cache+0x6c/0x1bc age=2653 cpu=154 pid=1599
-	kmem_cache_alloc+0x514/0x568
-	create_cache+0x6c/0x1bc
-	memcg_create_kmem_cache+0xfc/0x11c
-	memcg_kmem_cache_create_func+0x40/0x170
-	process_one_work+0x4e0/0xa54
-	worker_thread+0x498/0x650
-	kthread+0x1b8/0x1d4
-	ret_from_fork+0x10/0x18
-INFO: Freed in slab_kmem_cache_release+0x3c/0x48 age=255 cpu=7 pid=1505
-	slab_kmem_cache_release+0x3c/0x48
-	kmem_cache_release+0x1c/0x28
-	kobject_cleanup+0x134/0x288
-	kobject_put+0x5c/0x68
-	sysfs_slab_release+0x2c/0x38
-	shutdown_cache+0x190/0x234
-	kmemcg_cache_shutdown_fn+0x1c/0x34
-	kmemcg_workfn+0x44/0x68
-	process_one_work+0x4e0/0xa54
-	worker_thread+0x498/0x650
-	kthread+0x1b8/0x1d4
-	ret_from_fork+0x10/0x18
-INFO: Slab 0x(____ptrval____) objects=64 used=64 fp=0x(____ptrval____)
-flags=0x17ffffffc000200
-INFO: Object 0x(____ptrval____) @offset=11601272640106456192
-fp=0x(____ptrval____)
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb bb bb bb bb bb bb bb
-bb  ................
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 00 00 00 00 00 00 00 00
-kkkkkkkk........
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b 6b
-kkkkkkkkkkkkkkkk
-Object (____ptrval____): 6b 6b 6b 6b 6b 6b 6b a5
-kkkkkkk.
-Redzone (____ptrval____): bb bb bb bb bb bb bb bb
-........
-Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-5a  ZZZZZZZZZZZZZZZZ
-Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-5a  ZZZZZZZZZZZZZZZZ
-Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-5a  ZZZZZZZZZZZZZZZZ
-Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a 5a
-5a  ZZZZZZZZZZZZZZZZ
-Padding (____ptrval____): 5a 5a 5a 5a 5a 5a 5a 5a
-ZZZZZZZZ
-CPU: 193 PID: 1557 Comm: kworker/193:1 Tainted: G    B   W
-5.2.0-rc5-next-20190619+ #8
-Hardware name: HPE Apollo 70             /C01_APACHE_MB         , BIOS
-L50_5.13_1.0.9 03/01/2019
-Workqueue: memcg_kmem_cache memcg_kmem_cache_create_func
-Call trace:
- dump_backtrace+0x0/0x268
- show_stack+0x20/0x2c
- dump_stack+0xb4/0x108
- print_trailer+0x274/0x298
- check_bytes_and_report+0xc4/0x118
- check_object+0x2fc/0x36c
- alloc_debug_processing+0x154/0x240
- ___slab_alloc+0x710/0xa68
- kmem_cache_alloc+0x514/0x568
- create_cache+0x6c/0x1bc
- memcg_create_kmem_cache+0xfc/0x11c
- memcg_kmem_cache_create_func+0x40/0x170
- process_one_work+0x4e0/0xa54
- worker_thread+0x498/0x650
- kthread+0x1b8/0x1d4
- ret_from_fork+0x10/0x18
-FIX kmem_cache: Restoring 0x(____ptrval____)-0x(____ptrval____)=0x6b
+But it's also quite common for Android, no? drivers/net/ethernet/msm/
+has rmnet and IPA ethernet drivers while arch/arm/mach-msm/ has various
+SMD-related control channel drivers like smd_tty.c and smd_qmi.c and
+smd_nmea.c. At least that's how I remember older SMD-based devices
+being in the 8xxx and 9xxx time.
 
-FIX kmem_cache: Marking all objects used
+Ideally those setups can benefit from this framework as well, without
+having to write entirely new composite drivers for those devices.
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/slab_common.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index 91e8c739dc97..bb8aec6d8744 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -714,10 +714,7 @@ static void kmemcg_workfn(struct work_struct *work)
- 	get_online_mems();
- 
- 	mutex_lock(&slab_mutex);
--
- 	s->memcg_params.work_fn(s);
--	s->memcg_params.work_fn = NULL;
--
- 	mutex_unlock(&slab_mutex);
- 
- 	put_online_mems();
-@@ -753,7 +750,6 @@ static void kmemcg_cache_shutdown(struct percpu_ref *percpu_ref)
- 	if (s->memcg_params.root_cache->memcg_params.dying)
- 		goto unlock;
- 
--	WARN_ON(s->memcg_params.work_fn);
- 	s->memcg_params.work_fn = kmemcg_cache_shutdown_fn;
- 	INIT_WORK(&s->memcg_params.work, kmemcg_workfn);
- 	queue_work(memcg_kmem_cache_wq, &s->memcg_params.work);
-@@ -784,7 +780,6 @@ static void kmemcg_cache_deactivate(struct kmem_cache *s)
- 	if (s->memcg_params.root_cache->memcg_params.dying)
- 		goto unlock;
- 
--	WARN_ON_ONCE(s->memcg_params.work_fn);
- 	s->memcg_params.work_fn = kmemcg_cache_deactivate_after_rcu;
- 	call_rcu(&s->memcg_params.rcu_head, kmemcg_rcufn);
- unlock:
--- 
-1.8.3.1
+Dan
 
