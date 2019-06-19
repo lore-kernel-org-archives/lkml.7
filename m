@@ -2,109 +2,104 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC27C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 288D6C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:21:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE82A2166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F103B21881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:21:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tjPmzkP7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731966AbfFSNUY (ORCPT
+        id S1730822AbfFSNVT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:20:24 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:39181 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfFSNUX (ORCPT
+        Wed, 19 Jun 2019 09:21:19 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36500 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726330AbfFSNVT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:20:23 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mj7yt-1iIg1X2nOH-00fBKk; Wed, 19 Jun 2019 15:20:02 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Jiri Kosina <jikos@kernel.org>, Jens Axboe <axboe@kernel.dk>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Robert Elliott <elliott@hpe.com>,
-        Keith Busch <kbusch@kernel.org>,
-        Hannes Reinecke <hare@suse.de>, Omar Sandoval <osandov@fb.com>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andy Whitcroft <apw@canonical.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] [RESEND] floppy: fix harmless clang build warning
-Date:   Wed, 19 Jun 2019 15:19:44 +0200
-Message-Id: <20190619131959.2055400-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 19 Jun 2019 09:21:19 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i21so3254887ljj.3;
+        Wed, 19 Jun 2019 06:21:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=g18058N/C2pjcBGgjgbat4LbXOhva175NVhezQY00XQ=;
+        b=tjPmzkP70fAsA26NOsSJclg4L+TUZI/ysTww8TpmgX4bSxFk0ASk0tUeVxZuNORPdX
+         CaTllXz7jbARzX1I+8qPEuPUZEOsjB+KDB3Jb+fLCml0fPsBUa/FuOxzBwydfY2JK1Kp
+         r0PZhb5pEycAT29k5T34UFbUu18o+yFJN9b4J52B+vPAdP0nKwcLyrjY7GjDMTFsycmT
+         N9GdVXdkfxSFregeODQs8CG4BXAH6S4P610UDPJvTkt+UbskAb69T4eA/Df8KacxurAF
+         dDgMS2W8C2xv7HdoziJtd0uFWbPc1TJnRsgByjPlGasOqZiTdNTyIhJ51E1YWvH8+B2z
+         TEbw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=g18058N/C2pjcBGgjgbat4LbXOhva175NVhezQY00XQ=;
+        b=jkoV5sI/8R/qokOYvkk/VM0KcoqRvgS8fFW2OfJEdVWeeeM3xRtgaKugCwqXkcOKX3
+         oLCz/csOZFw5XirBopbdeOz8MIbIX/xI7osv1BYsjbDpQqK6E2uctcKZjhQqS+5uh2wF
+         aN3Vp267d4SJOrHF4mF5d4TJLqeTh7vIGXQecoFPaS5bx18y/vPryhE7iq47vY2cR0ln
+         PZD2vbLoCjWxDMTHw4JDLSxVYg5ZZzEEoxU9uGBkOJ+pbNad/IkIF2SvQl5qLqT0HB28
+         HJNiGRxETSetMye2UxijsYEDio2nURPB8VAJX/ITJoX2bEegCP1VjNJzA4c+yooIgjb5
+         PIqA==
+X-Gm-Message-State: APjAAAXYYBtZMBoddQj3Ue+tbit5NCdiQO/vU47uK/Gia61j+FVOiSbU
+        /GJKMJijxjADC6i75ehEAndksUEwQKU+cZj+BF8=
+X-Google-Smtp-Source: APXvYqyAMgmk6ys/VsOTesM/6z0KH2z75G1WFcyJbVadMJ+QdScEq8u41WtyiImcwlE2f5Aw7kaHsoWTLJ1vAaQzsSs=
+X-Received: by 2002:a2e:2c07:: with SMTP id s7mr26636418ljs.44.1560950476875;
+ Wed, 19 Jun 2019 06:21:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:9sLIhj4RYRE24WCHm3szMo8GZJ4FomoOvzRvWEJj02wygrg65IH
- 3/dU9k856rxtHNK3t4/hslHZyQJzy2g2X2ZTJf3XPB8w6RP7FX5Rw5hg2/9g1Z+0020tmKu
- 15F86/OrwblahiJQngqOmErumRAcMWRWPua/ZruSOPNeT9OVZBl5p5qTJ2O6ELfIGrGsezq
- 1OG08rxDPlmc7iqo7gt8A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ytyqrxA5jJA=:AgNeAiNF5GoxUuYp/hzPZs
- CO+U7Y8oJyRl5CTNKZ/25bkcDyvJzmUTmOQTKWWg7iWCdpnkC9UOHH1q4DR+bsH6gLeL2vmOn
- sY4dHITnPoHaKPjmB7bXx0HdKV8KbMagCOsIX9/pbPMfBPGDkmYmLafqbrkqU1Qi65zUdoI+k
- UThpwAElzGMSdcaLyrOxldYJXLi9w34VasizMbNgGzIoQ3e9rqBzdIU76WfQ9RfmyuvREmcvC
- wJSj3B6jLXRMcm+94AQqlEcxBMQTNF4FieTXgKwOy0tQPgfBQMIgIdgVgy5iLXqTf/EjLR2GW
- 9dkA284SkCt7r/U5WmTDX9PXVWW55fFFMgKUQM1LQklBwiWvWF4mg7LsSaRwV0f3iWAX+JM4y
- v2LvjAyIWPZBYlAl7FXzmHQfCpwBCgXeJwKwESMOoPck0M+JBtuSRMHdaEoMbLeXcvdDQmx/q
- +kYfKW0kg0ELVIyaLBSJlkPx4ilBTWMDEy/ueJ4k/jcjkG52ncuVtXAFzRoBHApnNCsXqz8Vv
- PdUt+leRK92fTojDjxVLn2wtYxEqt1tNPGt9GiIlG1/NhRNhHXe7G/MwtbgN2CWFa6Is986/z
- NGOVbSJyDXFnuJGQh/DH3yQ+hfwppVPSjtVEbNHNB5zdpItXJ698crNVzr0RGi96XSuOz7wDM
- YGavkGSNfvpeYZ6Kbm0RXwUpV2bW7BLizKBn8wMXzCE1qG1Vc0Q0vVS+cOchrFOzFaUsFTPjo
- jqL7c+P3BwdBOv8NU1a9jSBjOd6UAXbBc25APQ==
+References: <1560864646-1468-1-git-send-email-robert.chiras@nxp.com> <1560864646-1468-2-git-send-email-robert.chiras@nxp.com>
+In-Reply-To: <1560864646-1468-2-git-send-email-robert.chiras@nxp.com>
+From:   Fabio Estevam <festevam@gmail.com>
+Date:   Wed, 19 Jun 2019 10:21:29 -0300
+Message-ID: <CAOMZO5DwwL5+V4Eifskk=pKzpceRmk5bvdXNeCzZfU3jVwEhEA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: display: panel: Add support for
+ Raydium RM67191 panel
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        DRI mailing list <dri-devel@lists.freedesktop.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-clang warns about unusual code in floppy.c that looks like it
-was intended to be a bit mask operation, checking for a specific
-bit in the UDP->cmos variable (FLOPPY1_TYPE expands to '4' on
-ARM):
+Hi Robert,
 
-drivers/block/floppy.c:3902:17: error: use of logical '&&' with constant operand [-Werror,-Wconstant-logical-operand]
-        if (!UDP->cmos && FLOPPY1_TYPE)
-                       ^  ~~~~~~~~~~~~
-drivers/block/floppy.c:3902:17: note: use '&' for a bitwise operation
-        if (!UDP->cmos && FLOPPY1_TYPE)
+On Tue, Jun 18, 2019 at 10:33 AM Robert Chiras <robert.chiras@nxp.com> wrote:
 
-The check here is redundant anyway, if FLOPPY1_TYPE is zero, then
-assigning it to a zero UDP->cmos field does not change anything,
-so removing the extra check here has no effect other than shutting
-up the warning.
+> +Optional properties:
+> +- reset-gpios:         a GPIO spec for the RST_B GPIO pin
+> +- pinctrl-0            phandle to the pin settings for the reset pin
+> +- width-mm:            physical panel width [mm]
+> +- height-mm:           physical panel height [mm]
+> +- display-timings:     timings for the connected panel according to [1]
 
-On x86, this will no longer read a hardware register, as the
-FLOPPY1_TYPE macro is not expanded if UDP->cmos is already
-zero, but the result is the same.
+Still not convinced we need the 'display-timings' property, even as an
+optional property. My understanding is that passing display timings in
+the devicetree is not encouraged.
 
-Cc: Robert Elliott <elliott@hpe.com>
-Cc: Keith Busch <kbusch@kernel.org>
-Link: https://patchwork.kernel.org/patch/10851841/
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
-The original patch did not get merged since there was some
-discussion (see link), but as far as I can tell, the outcome
-was that it's harmless so I just summarized the findings
-above. The patch is unchanged from March.
----
- drivers/block/floppy.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Last time you said you need to pass ''display-timings' to workaround
+the problem of connecting this panel to mx8m DCSS or eLCDIF.
 
-diff --git a/drivers/block/floppy.c b/drivers/block/floppy.c
-index 9fb9b312ab6b..b933a7eea52b 100644
---- a/drivers/block/floppy.c
-+++ b/drivers/block/floppy.c
-@@ -3900,7 +3900,7 @@ static void __init config_types(void)
- 	if (!UDP->cmos)
- 		UDP->cmos = FLOPPY0_TYPE;
- 	drive = 1;
--	if (!UDP->cmos && FLOPPY1_TYPE)
-+	if (!UDP->cmos)
- 		UDP->cmos = FLOPPY1_TYPE;
- 
- 	/* FIXME: additional physical CMOS drive detection should go here */
--- 
-2.20.0
+The panel timings come from the LCD manufacturer and it is agnostic to
+what display controller interface it is connected to.
 
+So I suggest making sure the timings passed in the driver are correct
+as per the vendor datasheet. If they are correct and one specific
+interface is not able to drive it, then probably it is a bug in this
+specific display controller interface or in the SoC clock driver.
