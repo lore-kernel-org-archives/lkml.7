@@ -2,87 +2,102 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3217BC31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6746DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:17:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07B8D205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:15:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560935749;
-	bh=ZRt8WI0QmB1e5ItbgKp6jhHixFxeiIvFtUk1FCwipcY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=X46K2aXwqZldE4l0dxuF/W+yvpfJvz+x/Di1AY7BUgDosSW3nfMtSKsAq/p8CJIA/
-	 tLJVDwUMLUwXDaubOKShskh+vyuBLtYpG/vcfTXJaEniJ59L0tJvBfAu99ysr1oY2O
-	 E0hS/nKc9o2q5Cwf7ZASyUVk5raUziBSaLMVrhGI=
+	by mail.kernel.org (Postfix) with ESMTP id 3D301205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:17:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731466AbfFSJPr (ORCPT
+        id S1731472AbfFSJRP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:15:47 -0400
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:41335 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726971AbfFSJPr (ORCPT
+        Wed, 19 Jun 2019 05:17:15 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39152 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730996AbfFSJRO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:15:47 -0400
-Received: by mail-ot1-f68.google.com with SMTP id 43so1434229otf.8;
-        Wed, 19 Jun 2019 02:15:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+djdJ0egkgp6daDlovvAzvZS5tBfJ50BkTgrjF5MG50=;
-        b=tSz+xBA9URqjEy0hb+UpfCO4+63MTnqCTEOauC6AOnZe/7Kcskf3sQ9kwhRSJB2llL
-         dUjX43sBXsKQ3lUnoGSnJ8I4w2DlA3aIx/lUpdwHOmecd3BIhjHb31tqxx1/7JfnzMQ6
-         IgTz5GLzempig2XK8hdeu2gc0kj11W6ZkzilA3ZUki+E+loPoQS8TNyK8Oeve/8NpH22
-         oYnubDpnX/qcIK2jv6NFcIfIDTTI92beSVnB4xm8O7AYOqLy0OqUl3WRycQCOHHpjtCT
-         tCH9P014oOJq9juhckrv5j+ITCyZJakB6T1yAZsbBVnemq2stqkSOg7KtWFE2H7hLE64
-         awXQ==
-X-Gm-Message-State: APjAAAWFcIAEeMtpggPN+hM723ngAVp3V5thgMkw4UdjIwgTRQgcjafX
-        7mq+cbbi+f4e+ncWVzsmdDnhaAx4SHphVhGGlJchHLub
-X-Google-Smtp-Source: APXvYqyVD2KuSejZtlg/XEAm9PCGlvwBLICR9kvCnZPa63+Breo2sFYqy95rmxMZm0PQLT0u/ljT+ZnNJvEBN+q9MFU=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr44684736oto.118.1560935746471;
- Wed, 19 Jun 2019 02:15:46 -0700 (PDT)
+        Wed, 19 Jun 2019 05:17:14 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id 2284B286272
+Subject: Re: [PATCH 3/4] backlight: pwm_bl: Set scale type for CIE 1931 curves
+To:     Matthias Kaehlcke <mka@chromium.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Daniel Thompson <daniel.thompson@linaro.org>,
+        Jingoo Han <jingoohan1@gmail.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Douglas Anderson <dianders@chromium.org>,
+        Brian Norris <briannorris@chromium.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>
+References: <20190613194326.180889-1-mka@chromium.org>
+ <20190613194326.180889-4-mka@chromium.org>
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Message-ID: <3ef89251-146c-c4e4-91c8-19ae855824ac@collabora.com>
+Date:   Wed, 19 Jun 2019 11:17:07 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <cover.1560163748.git.viresh.kumar@linaro.org> <3504053.Rmt1Mul0J4@kreacher>
- <20190618112522.4odrysf7wmxgjlb2@vireshk-i7> <3176289.QFhGQadiPc@kreacher> <20190619063947.nj2awibmalrdccn2@vireshk-i7>
-In-Reply-To: <20190619063947.nj2awibmalrdccn2@vireshk-i7>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 19 Jun 2019 11:15:35 +0200
-Message-ID: <CAJZ5v0gXbDvSSfjpog=ycdTjSo8WVDyDXfD_zsW1SGP4gmS_eA@mail.gmail.com>
-Subject: Re: [PATCH V3 4/5] cpufreq: Register notifiers with the PM QoS framework
-To:     Viresh Kumar <viresh.kumar@linaro.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Qais.Yousef@arm.com, Matthias Kaehlcke <mka@chromium.org>,
-        Juri Lelli <juri.lelli@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190613194326.180889-4-mka@chromium.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 8:39 AM Viresh Kumar <viresh.kumar@linaro.org> wrote:
->
-> On 19-06-19, 00:23, Rafael J. Wysocki wrote:
-> > In patch [3/5] you could point notifiers for both min and max freq to the same
-> > notifier head.   Both of your notifiers end up calling cpufreq_update_policy()
-> > anyway.
->
-> I tried it and the changes in qos.c file look fine. But I don't like at all how
-> cpufreq.c looks now. We only register for min-freq notifier now and that takes
-> care of max as well. What could have been better is if we could have registered
-> a freq-notifier instead of min/max, which isn't possible as well because of how
-> qos framework works.
->
-> Honestly, the cpufreq changes look hacky to me :(
->
-> What do you say.
+Hi Matthias,
 
-OK, leave it as is.  That's not a big deal.
+On 13/6/19 21:43, Matthias Kaehlcke wrote:
+> For backlight curves calculated with the CIE 1931 algorithm set
+> the brightness scale type property accordingly. This makes the
+> scale type available to userspace via the 'scale' sysfs attribute.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
 
-It is slightly awkward, but oh well.
+Tested on Samsung Chromebook Plus which uses the CIE 1931 algorithm.
+
+Tested-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+
+> ---
+>  drivers/video/backlight/pwm_bl.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+> index fb45f866b923..f067fe7aa35d 100644
+> --- a/drivers/video/backlight/pwm_bl.c
+> +++ b/drivers/video/backlight/pwm_bl.c
+> @@ -553,6 +553,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+>  		goto err_alloc;
+>  	}
+>  
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +
+>  	if (data->levels) {
+>  		/*
+>  		 * For the DT case, only when brightness levels is defined
+> @@ -591,6 +593,8 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+>  
+>  			pb->levels = data->levels;
+>  		}
+> +
+> +		props.scale = BACKLIGHT_SCALE_CIE1931;
+>  	} else {
+>  		/*
+>  		 * That only happens for the non-DT case, where platform data
+> @@ -601,7 +605,6 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+>  
+>  	pb->lth_brightness = data->lth_brightness * (state.period / pb->scale);
+>  
+> -	memset(&props, 0, sizeof(struct backlight_properties));
+>  	props.type = BACKLIGHT_RAW;
+>  	props.max_brightness = data->max_brightness;
+>  	bl = backlight_device_register(dev_name(&pdev->dev), &pdev->dev, pb,
+> 
