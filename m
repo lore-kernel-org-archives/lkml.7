@@ -2,107 +2,129 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81C3DC31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D0E5C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 573CE21874
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA68721880
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:05:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="IOlJAYb/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fU0DJtyN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729827AbfFSPFA (ORCPT
+        id S1729923AbfFSPFI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:05:00 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:61383 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726428AbfFSPFA (ORCPT
+        Wed, 19 Jun 2019 11:05:08 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39768 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726238AbfFSPFI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:05:00 -0400
-Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JF1doV024433;
-        Wed, 19 Jun 2019 17:04:30 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : references
- : cc : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=pmo1Bv+ES9tIvk0vtUKa8hC+z8yY1GRb510dQ0/+90Q=;
- b=IOlJAYb/oqA9f2QUTJJmwqoMPmAYrRr/f32Fu04/AM4HGOA8va0zctT+WjGZRLaSLcJA
- XKXJXaHQMZLhCwvJkjIYeR6cpMuATUB1G0WCoY+ZiNXXGtpUyAEUPAITiKKpBb2G2iqf
- u5l/Ub/ySXFkSxxdgrI7y1esXOgCgBIKLEhPOxUYr42LluLOY7HoZ9/cBDnuimJj3hJc
- n0XowaEZ1sFiHHRlLj9YZ9AEJyl7JLCnvZ0gYYK6VK+OWIIwZ7LbzvFOfXgOBg/wBC6J
- BrI6ziGDfLc0FWrDgTQQZaGeCo0kx3773cgl6Dzx3wkDEljZ+j6+3y33fB3zBNe822qK mw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t781a4jbv-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 17:04:30 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3BD9834;
-        Wed, 19 Jun 2019 15:04:30 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1AB4E2AED;
-        Wed, 19 Jun 2019 15:04:30 +0000 (GMT)
-Received: from [10.48.0.167] (10.75.127.48) by SFHDAG5NODE3.st.com
- (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun
- 2019 17:04:29 +0200
-Subject: Re: [PATCH 0/5] iio: adc: stm32-dfsdm: fix and improve output data
- managementiio: adc: stm32-dfsdm: fix and improve output data management
-To:     Olivier Moysan <olivier.moysan@st.com>
-References: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
-CC:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
-        <pmeerw@pmeerw.net>, <mcoquelin.stm32@gmail.com>,
-        <alexandre.torgue@st.com>, <linux-iio@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <benjamin.gaignard@st.com>
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-Message-ID: <5a7c1aed-16fa-d13f-b1b4-7847319f62ec@st.com>
-Date:   Wed, 19 Jun 2019 17:04:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 11:05:08 -0400
+Received: by mail-ua1-f68.google.com with SMTP id j8so10173460uan.6;
+        Wed, 19 Jun 2019 08:05:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pkwqFDU1m9y1SmwwSPbuxARBXbcsz4Hg+ImtIjkxe0I=;
+        b=fU0DJtyNLrcixK/O0KvTyH0V+rJYMHK4QbYcOjT2Rh7QaHKwWZOt+i3x+KCpYcfPVe
+         /ifw9OBIcAIwu0gj3TlxpRPlmtzmnNdySQvWwbR7E3+WQWLRc6A4icFLP5pupx82L+4K
+         GjG7iQvhlJi5aPBzh2l1p5k44weDEcw0zJHTLqTx6hMNG5bkDtHRrTD0ajwbF47PvVvB
+         1+RMqBuvg1de+T4WXa44lUd0lF42/Sf2Kqb8mqtmqoUoTToWxAAX6qeumOA/DdjL9W2D
+         atuV1iDF4pnKrsCvPOYsoUKV/RlDsYZjwv8KtKUHaqlYGtw+ek1WErJN8v/kIHXqN1+7
+         T3/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pkwqFDU1m9y1SmwwSPbuxARBXbcsz4Hg+ImtIjkxe0I=;
+        b=DVFv1xuwwzCLM42DYZVrkKgx+0ykSGA3YraB7h09H0Nhej0hWBGEG1XMdHTEtYa8Ri
+         pzSsSziVCgWK9w2X8v7DiNkZK+M3VfRHcl+u26WLaQuWpDIUKyt9RgNJXQkOSyL3ZBqA
+         PtsmAJhn7oW9NGvCmzg+Pdpsf9/r7QMuO4dzqKDTeu52hCslHLyLHrHvALN3naHR3ib8
+         W9stPb//Ik00uymV/yr+0K8+tgDNMd6bUYnbrRePXD4ynQ6ItlisPECZIKmzBpJzbFmq
+         3vikrtNtagYzU+mV3is3r5HZ+k7GQVA1C52VW/AgjRD+fIuoB9c8ljRLgQm80IHbqUrF
+         2ePw==
+X-Gm-Message-State: APjAAAVbrXaP5FzpMi+Edn1S81x08KJV53BGqRgIw+PmigSGswHzfu0Z
+        /GEaYDbVHM9GC0HggVb9ssYqPUwUT1AhWV1yC0A=
+X-Google-Smtp-Source: APXvYqwK/xA+axdU8X8NLuJu0qn2jf1SXM8PkR8+V9KMrB2p3kYXqlcm7OSWbUsoqisq6XlVx7wqtBrHHdaDOCqLpxs=
+X-Received: by 2002:a67:e419:: with SMTP id d25mr6657505vsf.196.1560956706613;
+ Wed, 19 Jun 2019 08:05:06 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.75.127.48]
-X-ClientProxiedBy: SFHDAG1NODE2.st.com (10.75.127.2) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_09:,,
- signatures=0
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+ <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+ <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
+ <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com> <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
+In-Reply-To: <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Wed, 19 Jun 2019 20:34:55 +0530
+Message-ID: <CAOuPNLhZhgN26rquLQq9zHBct1QxK-7hXAza0xk-0QooPGYLNw@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/19 3:03 PM, Olivier Moysan wrote:
-> This patch-set provides some fixes and improvements regarding output data format
-> for STM32 DFSDM.
-> - Fix output data resolution and saturation management in continuous mode
-> - Fix data type
-> - Apply same processing on data in continuous and triggered mode
-> - Add fast mode support to get better resolution for output data
-> - Add a comment about 16 bits data transfers
-> 
-> Olivier Moysan (5):
->   iio: adc: stm32-dfsdm: fix output resolution
->   iio: adc: stm32-dfsdm: fix data type
->   iio: adc: stm32-dfsdm: manage data resolution in trigger mode
->   iio: adc: stm32-dfsdm: add fast mode support
->   iio: adc: stm32-dfsdm: add comment for 16 bits record
+On Wed, Jun 19, 2019 at 7:14 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> On Wed, Jun 19, 2019 at 10:33 AM Pintu Agarwal <pintu.ping@gmail.com> wrote:
+>
+> > You can think that the version I am using right now is almost 4.9 itself.
+>
+> "almost 4.9" does not help, sorry.
+>
+> > Upgrading again to higher kernel version is again difficult, also
+> > customer does not want it.
+>
+> dw-hdmi is well supported on i.MX6 with mainline, so you could simply try that.
+>
+> Try booting 5.1.11 on your custom board with a very minimal dts with
+> HDMI support.
+>
+Okay. I will surely try it on another IMX6 fresh board.
+With 5.1.11 you mean the kernel from mainline kernel.org
+Or, is there a separate kernel repo for imx6. If yes, please let me know.
 
-Hi Olivier,
+> Then you can test suspend/resume and see if HDMI hangs or not.
+>
+By this suspend/resume, you mean "suspend-to-ram" or "suspend-to-disk" ?
 
-For the series,
-Acked-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-
-Thanks,
-Best Regards,
-Fabrice
-> 
->  drivers/iio/adc/stm32-dfsdm-adc.c | 233 +++++++++++++++++++++++++++++++-------
->  drivers/iio/adc/stm32-dfsdm.h     |  24 +++-
->  2 files changed, 208 insertions(+), 49 deletions(-)
-> 
+> > Another approach I tried is, installing hdmi {dw-hdmi.ko,
+> > dw_hdmi-imx.ko} as a module, just after the resume.
+> > With this also system hangs during installation of dw_hdmi-imx.ko at
+> > below location:
+> >
+> > imx_drm_driver_load(..)
+> > |
+> > |--> component_bind_all(...)
+> >      |
+> >      |-> component_bind(ipu)
+> >          |
+> >          |
+> >          ipu_drm_bind(..)
+> >          |
+> >          |-> ipu_crtc_init(..)
+> >              |
+> >              |-> ipu_plane_irq(..)
+> >              |
+> >              | ----> << __HANGS HERE__ >>
+>
+> I am not able to reproduce this hang. As I mentioned yesterday
+> suspend/resume is working just fine.
+>
+This scenario is not with suspend/resume.
+This hang is, when we make hdmi as a loadable module (.ko) and trying
+to install it after resume.
+In this case, suspend/resume will not come into picture. Not sure why
+it still hangs.
+Do you have any clue for this scenario?
