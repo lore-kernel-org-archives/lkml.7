@@ -2,167 +2,97 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7E2C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:38:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCBEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91ECE21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:38:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D129020B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MworLe62"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HN7jxVcz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729598AbfFSAiU (ORCPT
+        id S1729674AbfFSAi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 20:38:20 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:38955 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726023AbfFSAiR (ORCPT
+        Tue, 18 Jun 2019 20:38:58 -0400
+Received: from mail-ed1-f47.google.com ([209.85.208.47]:33841 "EHLO
+        mail-ed1-f47.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726023AbfFSAi6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 20:38:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 196so8600459pgc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 17:38:16 -0700 (PDT)
+        Tue, 18 Jun 2019 20:38:58 -0400
+Received: by mail-ed1-f47.google.com with SMTP id s49so24449566edb.1;
+        Tue, 18 Jun 2019 17:38:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=Bl4ZB5AKo3Ojo0KbLAkYeawsDDC/1j35REkKvkzHQM0=;
-        b=MworLe621CZHwckohZ2C4nmq/YIMa1LI0E8FN1pI8fMmJvLNo2DEEveri1heBM/hJD
-         1K4CKSNqVayTjkso6YQDeD1CoHCb1XzRVnDnSGnd5Dd8sWiuNyzVoFJ3qX4L1QVVZqG1
-         kWDD5BhDR3uD/zaa2hOgqsSodTpCy8rEYwq+t6XqfHYtIfZAK5huEGB2xXYHQtTvf62A
-         E9sbtnjpUwh6L7xQ/vMWeWlhvevL/NYGQZG9di0qdtGPk5ZU9GUnhD+kUCjut+knshN9
-         fw243ECi61MReDKY83ml3sDWoU9d7KafH5MxYrsHPjXHusm2ogVg90ddhWyezegqm2p0
-         aoSQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bzqQ+p0cZVycGM5xoroio2oFHWU/EFJ7b4KcGZXlaeg=;
+        b=HN7jxVczRQw8BuODliUaJx1krrC5u0bSv6wNlzTeiaqxI5/WxtVswZ3/DAWD3LA5YL
+         Y4gfFvi+vdPHwY/bthNBq0K4X5A4wkbn/CJSKU+yQF80lHT3Ml2rM1UgkGs9mKdS6+ht
+         VHyufg+NObVes7lMGYtjCZKxeMJOMk4tXMNWgWvvSjy71Wq2AEHIByUOIvEz0cBuZ/Xn
+         hl8/zmqnKCTgz4hPtyq1O7QGfbDe+sgnz5pfCJzXH3iX1/1YxGLL1miyo79m1tQDcX75
+         UeICZSDBK3SsYI9YBBDuXE6F98sbyGg7BrtQoadRSa3hewpRQkIPWgF+Rf69Nxd44/Ua
+         2Dvg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=Bl4ZB5AKo3Ojo0KbLAkYeawsDDC/1j35REkKvkzHQM0=;
-        b=sURbd6jK5eMT2Zl2ZtTnm3Yu611hwrygr1KgGyBcToKeB+1KNS96Uyy52P+0KOktwQ
-         lkaRrbMR9mJRX6XK9PdCViJ1jT9RF1r6DWoMHm6hy99iKtKxhn/tuwVUK5o3lnSNb/CR
-         y5mAw+DRQqS2tc/Z8U9XNp/sKqce63geBw+u5327cWyz9Yr8EkVhf0JEG88Yc/hPEPoU
-         CuD6wEQLfca6f6/5BYdw0FNGMsayPtRfUcMLG8Z/TYVtOlTCu4E9zcUrb7SV0ua/ZpJo
-         f7YKYNhTM7NBhiRm8bMqvzd1unvVQpQAsstEZtTxHjbvzVadlLmZwSC/6b9eTlpxEP7+
-         7yTw==
-X-Gm-Message-State: APjAAAX8D/Fr2p9VwU8IDke4NKVJ/Ukb5kJ8/0Qm7KWIKJY+CrFCUHZZ
-        abH2JWC2CjOwFFQ87BhRotY=
-X-Google-Smtp-Source: APXvYqxdQXfcEw5nDEvmxOBSuO3mvsAjfKKWbCMNtwtt2e0y4vACYU+tMrqg8cgMJN4pLqXNzSZcfQ==
-X-Received: by 2002:a63:1658:: with SMTP id 24mr4422453pgw.167.1560904696454;
-        Tue, 18 Jun 2019 17:38:16 -0700 (PDT)
-Received: from localhost.localdomain (c-98-210-58-162.hsd1.ca.comcast.net. [98.210.58.162])
-        by smtp.gmail.com with ESMTPSA id x26sm14217860pfq.69.2019.06.18.17.38.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 18 Jun 2019 17:38:16 -0700 (PDT)
-From:   Shobhit Kukreti <shobhitkukreti@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Bastien Nocera <hadess@hadess.net>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Larry Finger <Larry.Finger@lwfinger.net>,
-        Joe Perches <joe@perches.com>, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Shobhit Kukreti <shobhitkukreti@gmail.com>
-Subject: [PATCH v4 3/3] staging: rtl8723bs: Fix Indentation Error: code indent should use tabs where possible
-Date:   Tue, 18 Jun 2019 17:37:34 -0700
-Message-Id: <e111358b9aca77380a9d93f11e971079600869a3.1560903975.git.shobhitkukreti@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1560903975.git.shobhitkukreti@gmail.com>
-References: <20190618070019.GA20601@kroah.com>
- <cover.1560903975.git.shobhitkukreti@gmail.com>
-In-Reply-To: <cover.1560903975.git.shobhitkukreti@gmail.com>
-References: <cover.1560903975.git.shobhitkukreti@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bzqQ+p0cZVycGM5xoroio2oFHWU/EFJ7b4KcGZXlaeg=;
+        b=bMDrGpGyRinb958rmRD+SfWzQnwkI7kPx0STyP88utqpjuQ2Vx2ckVnMv/JVlZjY0/
+         rr35q+pYRKXQHByl0qaV+yEpKtfIecCAwoBp8mEdip+3Hvhl9xr+Dt3a6znfwmiX4S2k
+         hiR4chahwlbrDVheyixQVC+7v9+tn3bYyN2+lwTd56oP+HJIwTe+oB8GGdyySEtCxcqz
+         ob/ZUJHUZ8Vbk8oyTQ28I6CaxA8OeMeC5decS0yipGoxI6ro3LVX7WpMejtaA/9kxRmT
+         HGdsJBqUD4+4lxs4GeQftf9fJhgoA8wsFbsIzLO4rgWIrEAZveufpvtQa0ioz5m4ba6L
+         zH9w==
+X-Gm-Message-State: APjAAAVHWTSQAbf9iuuqPJ0SE1dNEk8tCLyuDnAy9qKbpqRK6cH6cSwa
+        njOTMFOIZB358y3p7X/O7OVpBmivYTd8E/62bJM=
+X-Google-Smtp-Source: APXvYqz2nfPfBq4jE5jWuxHzrHdBZZE1KQ51bus1GR9GIax2909JzFg58fQoGJ5fTXlFX/pPbOunF2yaU9+f9tl+EgY=
+X-Received: by 2002:a50:9153:: with SMTP id f19mr21543708eda.70.1560904736103;
+ Tue, 18 Jun 2019 17:38:56 -0700 (PDT)
+MIME-Version: 1.0
+References: <CAF=yD-+pNrAo1wByHY6f5AZCq8xT0FDMKM-WzPkfZ36Jxj4mNg@mail.gmail.com>
+ <20190618173906.GB3649@kroah.com> <CA+FuTSdrphico4044QTD_-8VbanFFJx0FJuH+vVMfuHqbphkjw@mail.gmail.com>
+ <20190618.184409.2227845117139305004.davem@davemloft.net>
+In-Reply-To: <20190618.184409.2227845117139305004.davem@davemloft.net>
+From:   Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Date:   Tue, 18 Jun 2019 20:38:19 -0400
+Message-ID: <CAF=yD-JPxx8EQ6ezs5dm+hsXQc8BVTLU8RnMLcw8qYR=OcU8XQ@mail.gmail.com>
+Subject: Re: 4.19: udpgso_bench_tx: setsockopt zerocopy: Unknown error 524
+To:     David Miller <davem@davemloft.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Network Development <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Fred Klassen <fklassen@appneta.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Resolve indentation errors which were caused by a mix of space and tabs
-for indentation. Previous patch to fix if-else brace styles revealed
-the indentation error
+On Tue, Jun 18, 2019 at 6:44 PM David Miller <davem@davemloft.net> wrote:
+>
+> From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+> Date: Tue, 18 Jun 2019 14:58:26 -0400
+>
+> > I see that in similar such cases that use the test harness
+> > (ksft_test_result_skip) the overall test returns success as long as
+> > all individual cases return either success or skip.
+> >
+> > I think it's preferable to return KSFT_SKIP if any of the cases did so
+> > (and none returned an error). I'll do that unless anyone objects.
+>
+> I guess this is a question of semantics.
+>
+> I mean, if you report skip at the top level does that mean that all
+> sub tests were skipped?  People may think so... :)
 
-Signed-off-by: Shobhit Kukreti <shobhitkukreti@gmail.com>
----
- drivers/staging/rtl8723bs/os_dep/recv_linux.c |  6 ++---
- drivers/staging/rtl8723bs/os_dep/sdio_intf.c  | 36 +++++++++++++--------------
- 2 files changed, 21 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/staging/rtl8723bs/os_dep/recv_linux.c b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-index 746f074..643cacc 100644
---- a/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-+++ b/drivers/staging/rtl8723bs/os_dep/recv_linux.c
-@@ -202,9 +202,9 @@ void rtw_handle_tkip_mic_err(struct adapter *padapter, u8 bgroup)
- 
- 	memset(&ev, 0x00, sizeof(ev));
- 	if (bgroup) {
--	    ev.flags |= IW_MICFAILURE_GROUP;
-+		ev.flags |= IW_MICFAILURE_GROUP;
- 	} else {
--	    ev.flags |= IW_MICFAILURE_PAIRWISE;
-+		ev.flags |= IW_MICFAILURE_PAIRWISE;
- 	}
- 
- 	ev.src_addr.sa_family = ARPHRD_ETHER;
-@@ -297,7 +297,7 @@ int rtw_recv_indicatepkt(struct adapter *padapter, union recv_frame *precv_frame
- 
- 	RT_TRACE(_module_recv_osdep_c_, _drv_info_, ("\n rtw_recv_indicatepkt :after rtw_os_recv_indicate_pkt!!!!\n"));
- 
--        return _SUCCESS;
-+	return _SUCCESS;
- 
- _recv_indicatepkt_drop:
- 
-diff --git a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-index 9c408d9..540a7ee 100644
---- a/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-+++ b/drivers/staging/rtl8723bs/os_dep/sdio_intf.c
-@@ -100,26 +100,26 @@ static int sdio_alloc_irq(struct dvobj_priv *dvobj)
- 
- static void sdio_free_irq(struct dvobj_priv *dvobj)
- {
--    struct sdio_data *psdio_data;
--    struct sdio_func *func;
--    int err;
--
--    if (dvobj->irq_alloc) {
--        psdio_data = &dvobj->intf_data;
--        func = psdio_data->func;
--
--        if (func) {
--            sdio_claim_host(func);
--            err = sdio_release_irq(func);
--            if (err) {
-+	struct sdio_data *psdio_data;
-+	struct sdio_func *func;
-+	int err;
-+
-+	if (dvobj->irq_alloc) {
-+		psdio_data = &dvobj->intf_data;
-+		func = psdio_data->func;
-+
-+		if (func) {
-+			sdio_claim_host(func);
-+			err = sdio_release_irq(func);
-+			if (err) {
- 				dvobj->drv_dbg.dbg_sdio_free_irq_error_cnt++;
- 				DBG_871X_LEVEL(_drv_err_,"%s: sdio_release_irq FAIL(%d)!\n", __func__, err);
--            } else
--		dvobj->drv_dbg.dbg_sdio_free_irq_cnt++;
--            sdio_release_host(func);
--        }
--        dvobj->irq_alloc = 0;
--    }
-+			} else
-+				dvobj->drv_dbg.dbg_sdio_free_irq_cnt++;
-+			sdio_release_host(func);
-+		}
-+		dvobj->irq_alloc = 0;
-+	}
- }
- 
- #ifdef CONFIG_GPIO_WAKEUP
--- 
-2.7.4
-
+Yes, it's not ideal. Erring on the side of caution? Unlike pass, it is
+a signal that an admin may or may not choose to act on. I run a
+selected subset of tests from tools/testing that are all expected to
+pass, so if one returns skip, I would want to take a closer look.
