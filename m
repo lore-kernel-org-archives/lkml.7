@@ -2,108 +2,120 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E991FC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E173C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:27:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA962085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:25:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="g1it1Ete"
+	by mail.kernel.org (Postfix) with ESMTP id DC0822085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560986819;
+	bh=aeIGhnIG/rBxxw4KF19P61LURj7axLBMnCmhRx9Hm00=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=TdKiyZUimBHIWMw2CMpVPU2JPsOh/GqwRe570dfDjCKVZ261bcG8DF9DVbMoSlIl9
+	 vT3sVGocypW36NRRgu5XbJntwchOpbruhDNN5cmVDOTPCctM8LUgLr/Kgd75VSTM80
+	 xT/vkBn2HDspJFVd4sNHGOEiBmILvKeVxjk2msa8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730809AbfFSXZZ (ORCPT
+        id S1730827AbfFSX0u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 19:25:25 -0400
-Received: from mail-yb1-f202.google.com ([209.85.219.202]:42647 "EHLO
-        mail-yb1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726298AbfFSXZZ (ORCPT
+        Wed, 19 Jun 2019 19:26:50 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:37092 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726298AbfFSX0u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 19:25:25 -0400
-Received: by mail-yb1-f202.google.com with SMTP id c3so1075485ybo.9
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 16:25:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=2Xe5CNu50mksX/zEQQqGlLiWQgOuxvE/hS5GIpxigKA=;
-        b=g1it1EteZ/NGeK69zsjfHOTg9qZMabcBis5hFjOrlB2l+EFid2XH43a/H1Q98WQaN4
-         EuaSsBaTPlqXmMYUHUth9G/bMVvlH6pFOoOKmzO5ypBeVy38P7a0Es8xFNAKHTRaabbw
-         8raai+S+rVgHmvNm9WwaNFbh3CDbHzBDR0yc8D2i20C+AGY93ETkj7ecEaSTfenjJLSd
-         fcu2WQVp0NMDR3iKV/rnrn6v8WivwS78j6PGG20RxN0RiXWs5GoTqxJGDi9W1+QRi9g4
-         d0z67gIh/nncaGZD0tfYFyUqwU/UD9ePElOit5dKhGB4YOjiUpRTPlAbsW+SCWdDRbSB
-         Q3KA==
+        Wed, 19 Jun 2019 19:26:50 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 19so501103pfa.4;
+        Wed, 19 Jun 2019 16:26:50 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=2Xe5CNu50mksX/zEQQqGlLiWQgOuxvE/hS5GIpxigKA=;
-        b=GHIjonJGXzCeASrOjdVNl9Db7O5wUH5+1esSTd06K7Y/o4szikWYdd7WaaTiehguV4
-         O+RqkA3GGs7Aq1X8Djo6mAaGpAMWKGoHutoF40wY+TuT4vcCgLbblTCfZBm4MlkMWbSy
-         TJZPnt6QjkHz+dBY4NwW/JZcb5TtjWxrH+sCE418MSpjrybQVlGds4yYrElIIEd1XB8T
-         4StsfGbZEKlwBJkaRp5iao8R2fuIINBApgxCj0+8nn1yyGNcNoab1SVq0z0O9TJcAsN7
-         GsC1xBCTK2al35KZpQqrSzSyGyIfxFogG8F1Hznedu+5UDEY8/g9QGp3B9huiS2Oi9ze
-         7hvQ==
-X-Gm-Message-State: APjAAAXq6twPQyx9wMOrQjQ4odeVPTk3OHIEZH0xp2xTcJBZ9XBhyEWl
-        7Adf6BoMnIy4CqYVJZScbmrq7Qlwvo3Prw==
-X-Google-Smtp-Source: APXvYqx0Ajd3n7T85uM4Bzn0REZs50Wj6xVympn1t8+jBERmV3VKWhN1SE1iCxw29OAeOkbSedQJqpGRdieoww==
-X-Received: by 2002:a0d:c485:: with SMTP id g127mr43382535ywd.405.1560986723899;
- Wed, 19 Jun 2019 16:25:23 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 16:25:14 -0700
-Message-Id: <20190619232514.58994-1-shakeelb@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-Subject: [PATCH] slub: Don't panic for memcg kmem cache creation failure
-From:   Shakeel Butt <shakeelb@google.com>
-To:     Johannes Weiner <hannes@cmpxchg.org>,
-        Christoph Lameter <cl@linux.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Roman Gushchin <guro@fb.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc:     cgroups@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Shakeel Butt <shakeelb@google.com>,
-        Dave Hansen <dave.hansen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VoHSdmKyib3uRO7GJhghBEXGKbxkfPFAuXTbi71TT84=;
+        b=GSRkg1mE/cLWT4P6HAYuWSN5mTalv99P675VO2yNhUk9dGnHx9BG36++acLgOjcOAi
+         w1m0vB21NLTLxEIDNDEZuPc+QbGHNjAJCR7YTtfmPSY3ynMycXLuK3fX5roSeXWngdpn
+         6mS+hqSlq+FY5sNnYIaeP10mKAZGdtZqxWHAOTwDCZ/o4Poqgct0T87X/cEPb3xxAZ7u
+         JSZZ4lmC1T2YA4qmEaJjCx2F/jNGvCjK0TcLkXwAY/0vWJ/FnI+GdZMcE5AWp5XFj2br
+         +ebuZhdc7Gnfd2xQBP8PIWVvmdASqYLRLOUsQ/+1z34akeaSd3hld69IBmBRLx+OG1qG
+         126g==
+X-Gm-Message-State: APjAAAXmcaW3vGxZVHj1rcLrCRcpYCyMSHCSEhAa6O8KS6t5TR09ZKeg
+        VRuJvRCj1lGxPLKtreSC5DU=
+X-Google-Smtp-Source: APXvYqzWY+iJV2rJ7oMbWcuY1EtaQxtptLnB3/bb0lhh1VnU5z0Trfb87t5lzXcgwQ3uU8K2iRlR8A==
+X-Received: by 2002:a17:90a:d3d7:: with SMTP id d23mr12995731pjw.26.1560986809433;
+        Wed, 19 Jun 2019 16:26:49 -0700 (PDT)
+Received: from 42.do-not-panic.com (42.do-not-panic.com. [157.230.128.187])
+        by smtp.gmail.com with ESMTPSA id s5sm18464056pgj.60.2019.06.19.16.26.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 16:26:47 -0700 (PDT)
+Received: by 42.do-not-panic.com (Postfix, from userid 1000)
+        id 2CDD14075D; Wed, 19 Jun 2019 23:26:47 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 23:26:47 +0000
+From:   Luis Chamberlain <mcgrof@kernel.org>
+To:     Takashi Iwai <tiwai@suse.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Shuah Khan <shuah@kernel.org>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH v2.5 2/3] firmware: Add support for loading compressed
+ files
+Message-ID: <20190619232646.GE19023@42.do-not-panic.com>
+References: <20190611122626.28059-1-tiwai@suse.de>
+ <20190611122626.28059-3-tiwai@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190611122626.28059-3-tiwai@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently for CONFIG_SLUB, if a memcg kmem cache creation is failed and
-the corresponding root kmem cache has SLAB_PANIC flag, the kernel will
-be crashed. This is unnecessary as the kernel can handle the creation
-failures of memcg kmem caches. Additionally CONFIG_SLAB does not
-implement this behavior. So, to keep the behavior consistent between
-SLAB and SLUB, removing the panic for memcg kmem cache creation
-failures. The root kmem cache creation failure for SLAB_PANIC correctly
-panics for both SLAB and SLUB.
+Sorry for the late review... Ah!
 
-Reported-by: Dave Hansen <dave.hansen@intel.com>
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
----
- mm/slub.c | 4 ----
- 1 file changed, 4 deletions(-)
+On Tue, Jun 11, 2019 at 02:26:25PM +0200, Takashi Iwai wrote:
+> @@ -354,7 +454,12 @@ module_param_string(path, fw_path_para, sizeof(fw_path_para), 0644);
+>  MODULE_PARM_DESC(path, "customized firmware image search path with a higher priority than default path");
+>  
+>  static int
+> -fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv)
+> +fw_get_filesystem_firmware(struct device *device, struct fw_priv *fw_priv,
+> +			   const char *suffix,
+> +			   int (*decompress)(struct device *dev,
+> +					     struct fw_priv *fw_priv,
+> +					     size_t in_size,
+> +					     const void *in_buffer))
 
-diff --git a/mm/slub.c b/mm/slub.c
-index 6a5174b51cd6..84c6508e360d 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -3640,10 +3640,6 @@ static int kmem_cache_open(struct kmem_cache *s, slab_flags_t flags)
- 
- 	free_kmem_cache_nodes(s);
- error:
--	if (flags & SLAB_PANIC)
--		panic("Cannot create slab %s size=%u realsize=%u order=%u offset=%u flags=%lx\n",
--		      s->name, s->size, s->size,
--		      oo_order(s->oo), s->offset, (unsigned long)flags);
- 	return -EINVAL;
- }
- 
--- 
-2.22.0.410.gd8fdbe21b5-goog
+I *think* this could be cleaner, I'll elaborate below.
 
+> @@ -645,7 +768,13 @@ _request_firmware(const struct firmware **firmware_p, const char *name,
+>  	if (ret <= 0) /* error or already assigned */
+>  		goto out;
+>  
+> -	ret = fw_get_filesystem_firmware(device, fw->priv);
+> +	ret = fw_get_filesystem_firmware(device, fw->priv, "", NULL);
+> +#ifdef CONFIG_FW_LOADER_COMPRESS
+> +	if (ret == -ENOENT)
+> +		ret = fw_get_filesystem_firmware(device, fw->priv, ".xz",
+> +						 fw_decompress_xz);
+> +#endif
+
+Hrm, and let more #ifdef'ery.
+
+And so if someone wants to add bzip, we'd add yet-another if else on the
+return value of this call... and yet more #ifdefs.
+
+We already have a list of paths supported. It seems what we need instead
+is a list of supported suffixes, and a respective structure which then
+has its set of callbacks for posthandling.
+
+This way, this could all be handled inside fw_get_filesystem_firmware()
+neatly, and we can just strive towards avoiding #ifdef'ery.
+
+Since I'm late to review, this could be done in the future, but I do
+think something along these lines would make the code more maintainable
+and extensible.
+
+  Luis
