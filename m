@@ -2,219 +2,156 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08346C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:52:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21FE8C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:56:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C96B721670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:52:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AfBwy2Bc"
+	by mail.kernel.org (Postfix) with ESMTP id D22442166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:56:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560952599;
+	bh=CrgsIQOlnZ6WGQUTaZ94BputxQ7/aGD8YS1CVN4baqo=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pHC5vi5tgxwBor0NswfhthRbBJsNBocKEHF02TIUR/iiYsNbm76j5LjIMG4Li3saY
+	 KGcjlfCrHyvH6ioymRSukD0cR+cLDqnkgmdqg31zaDw8oAw0SQUToB+N7sSpBJz8aV
+	 8KPyNfmQ/d/IHo3aXgNCej6QwLZvzqwXVSIgWe/k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfFSNwu (ORCPT
+        id S1727069AbfFSN4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:52:50 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:33485 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726089AbfFSNwr (ORCPT
+        Wed, 19 Jun 2019 09:56:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:47314 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFSN4i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:52:47 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h10so3389012ljg.0;
-        Wed, 19 Jun 2019 06:52:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DFctamkDGs1zT54jgQyZrp5pqG/m8G/kk3RAHHlgQf0=;
-        b=AfBwy2Bct/54LvC5feVV9dI8qd9jT01l0vtWnH5vhKchdEEL7JkTD5zZnS+LayzDnp
-         8wa4O5UIa11k0jcN5pws0beXaF59Dm5+AD50t5+of8v4KR7rYfPR61sRKxP0b+IQcZiH
-         UpHOeSflykjih0JgWv7WFG3K511Yoe/DlVg/goLZvuKwEv1uOpk87zWUgJYXe3s4cNff
-         yyjaNEoeZGDXtfNXDIwKWmW5Lqi2G7GNjwk8DWSUwksrQcHA1H/LUsMa5hgKLgcP4Cu9
-         FMyqJMmHtAkdvGWyvXQHZNL4nqRVuxH0VPY1aSXjLFFqnyO6Z+r3gN/sxwyUFi2tI5KC
-         fuxQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DFctamkDGs1zT54jgQyZrp5pqG/m8G/kk3RAHHlgQf0=;
-        b=BPes5f3WbIPTg0Ooohpuk7op4XDHNOnoBxLiWv1ysEhHAr8YqUMXkphSMsOJrga70d
-         BqGhdguTn56o1UYDnnzz7kKJeXvmCHTIPehnU7wthRk0eKMMrleR4VPb/683VP+MGoNa
-         6qbIfcCIZHCPglK7xjNZcS2rwFtKmDXX5TClcBa4k4JDW1z0FxjhJdCqET/DLnsBthY3
-         8cP3TFnAaxOmAM/vZFkWRPqVjeNbR5hRP7pxloXEP59UBylS5O3S+6NHfcQ17PjoMo3E
-         MlQqHmlnoTO5q0HDWWQuD5Uwsf8BIDn5iv0Q2PdjlDfLeQLQdf8WoQFSrFfG4y8+oaZ7
-         kFjw==
-X-Gm-Message-State: APjAAAUH2WtfGiLnY6esf02ZcygXXxoBNb6ua6evlY4HMPFv6Z7x7Tlj
-        FQ7vOWeTbzTMjX3wcPb5rpD0Z7Oo
-X-Google-Smtp-Source: APXvYqwaCmL4vUPhKCtG13nXluc/+jnN+v5YVrq/Lal0xZjYADIFu3+6KUxLKTIhOK6ksZtknbROcQ==
-X-Received: by 2002:a2e:8847:: with SMTP id z7mr4147836ljj.51.1560952363921;
-        Wed, 19 Jun 2019 06:52:43 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id l15sm3464173ljh.0.2019.06.19.06.52.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 06:52:42 -0700 (PDT)
-Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
- granularity
-To:     Jon Hunter <jonathanh@nvidia.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Laxman Dewangan <ldewangan@nvidia.com>,
-        Vinod Koul <vkoul@kernel.org>,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190613210849.10382-1-digetx@gmail.com>
- <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
- <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
- <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
- <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
- <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
- <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
- <c7e4d99a-f02f-e7a2-a4c2-81496ee54d24@nvidia.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <1de7d185-54c3-be83-cb37-4f2fd009253f@gmail.com>
-Date:   Wed, 19 Jun 2019 16:52:42 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 19 Jun 2019 09:56:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=vs3lq9W8ecN8AOibEdB+lMHYvJb+tdRA2lymEIS3aZY=; b=qv5azAkUbWT/qFwdLJJ7OVUiR
+        KTot7UkL3UrUVK8a4Wwr7UwiPLCW4rAIf6l2RTgs8ru578UpYp9BaRkDsPGLeyshBJaie55vvKQ6B
+        7Ap7+MglsrD9N1sDuT7n/9Al1nxDo76qDeiLvdJKdPxcpO3MBE3jOEr66ljzYJwzZ+QxFVLOiUWIZ
+        qNwFwTPvw+Q2ophHAY8SH4TOj90jMyddUJBgEJDoBvIlPisCEYToZ47OO4JxM8k6YgmxKJttk3aho
+        e/K1ChlXz+8hMq2HpwWf+1a01w0tXcjo59q5t9uXXMqsoh3hlHa5RS4HUxZkrf+UIG6uxe1kr+h0B
+        +BNm5kRKg==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdb4n-00028r-8f; Wed, 19 Jun 2019 13:56:37 +0000
+Date:   Wed, 19 Jun 2019 10:56:33 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>
+Subject: Re: [PATCH 04/14] ABI: better identificate tables
+Message-ID: <20190619105633.7f7315a5@coco.lan>
+In-Reply-To: <20190619125135.GG25248@localhost>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+        <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
+        <20190619125135.GG25248@localhost>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <c7e4d99a-f02f-e7a2-a4c2-81496ee54d24@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.06.2019 15:22, Jon Hunter пишет:
+Hi Johan,
+
+Em Wed, 19 Jun 2019 14:51:35 +0200
+Johan Hovold <johan@kernel.org> escreveu:
+
+> On Thu, Jun 13, 2019 at 11:04:10PM -0300, Mauro Carvalho Chehab wrote:
+> > From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+> > 
+> > When parsing via script, it is important to know if the script
+> > should consider a description as a literal block that should
+> > be displayed as-is, or if the description can be considered
+> > as a normal text.
+> > 
+> > Change descriptions to ensure that the preceding line of a table
+> > ends with a colon. That makes easy to identify the need of a
+> > literal block.  
 > 
-> On 19/06/2019 12:10, Dmitry Osipenko wrote:
->> 19.06.2019 13:55, Jon Hunter пишет:
->>>
->>> On 19/06/2019 11:27, Dmitry Osipenko wrote:
->>>> 19.06.2019 13:04, Jon Hunter пишет:
->>>>>
->>>>> On 19/06/2019 00:27, Dmitry Osipenko wrote:
->>>>>> 19.06.2019 1:22, Ben Dooks пишет:
->>>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
->>>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
->>>>>>>> of data, hence it can report transfer's residual with more fidelity which
->>>>>>>> may be required in cases like audio playback. In particular this fixes
->>>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
->>>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
->>>>>>>> on Tegra20 and Tegra30 devices.
->>>>>>>>
->>>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
->>>>>>>>
->>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>>>>>>> ---
->>>>>>>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
->>>>>>>>   1 file changed, 28 insertions(+), 7 deletions(-)
->>>>>>>>
->>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
->>>>>>>> index 79e9593815f1..c5af8f703548 100644
->>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
->>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
->>>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
->>>>>>>>       return 0;
->>>>>>>>   }
->>>>>>>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
->>>>>>>> +                          struct tegra_dma_sg_req *sg_req,
->>>>>>>> +                          struct tegra_dma_desc *dma_desc,
->>>>>>>> +                          unsigned int residual)
->>>>>>>> +{
->>>>>>>> +    unsigned long status, wcount = 0;
->>>>>>>> +
->>>>>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
->>>>>>>> +        return residual;
->>>>>>>> +
->>>>>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
->>>>>>>> +
->>>>>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
->>>>>>>> +
->>>>>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
->>>>>>>> +        wcount = status;
->>>>>>>> +
->>>>>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
->>>>>>>> +        return residual - sg_req->req_len;
->>>>>>>> +
->>>>>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
->>>>>>>> +}
->>>>>>>
->>>>>>> I am unfortunately nowhere near my notes, so can't completely
->>>>>>> review this. I think the complexity of my patch series is due
->>>>>>> to an issue with the count being updated before the EOC IRQ
->>>>>>> is actually flagged (and most definetly before it gets to the
->>>>>>> CPU IRQ handler).
->>>>>>>
->>>>>>> The test system I was using, which i've not really got any
->>>>>>> access to at the moment would show these internal inconsistent
->>>>>>> states every few hours, however it was moving 48kHz 8ch 16bit
->>>>>>> TDM data.
->>>>>>>
->>>>>>> Thanks for looking into this, I am not sure if I am going to
->>>>>>> get any time to look into this within the next couple of
->>>>>>> months.
->>>>>>
->>>>>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
->>>>>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
->>>>>> anything going wrong.
->>>>>>
->>>>>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
->>>>>> vs EOC? Assuming the cyclic transfer mode.
->>>>>
->>>>> I can't say that I am. However, for the case of cyclic transfer, given
->>>>> that the next transfer is always programmed into the registers before
->>>>> the last one completes, I could see that by the time the interrupt is
->>>>> serviced that the DMA has moved on to the next transfer (which I assume
->>>>> would reset the count).
->>>>>
->>>>> Interestingly, our downstream kernel implemented a change to avoid the
->>>>> count appearing to move backwards. I am curious if this also works,
->>>>> which would be a lot simpler that what Ben has implemented and may
->>>>> mitigate that race condition that Ben is describing.
->>>>>
->>>>> Cheers
->>>>> Jon
->>>>>
->>>>> [0]
->>>>> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
->>>>>
->>>>
->>>> The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
->>>> tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
->>>> doesn't check whether the dma_desc is *the active* transfer and not a pending!
->>>
->>> I agree that it should check to see if it is active. I assume that what
->>> this patch is doing is not updating the dma position if it appears to
->>> have gone backwards, implying we have moved on to the next buffer. Yes
->>> this is still probably not as accurate as Ben's implementation because
->>> most likely we have finished that transfer and this patch would report
->>> that it is not quite finished.
->>>
->>> If Ben's patch works for you then why not go with this?
->>
->> Because I'm doubtful that it is really the case and not something else. It will be very odd
->> if hardware updates words count and sets EOC asynchronously, I'd call it as a faulty design
->> and thus a bug that need to worked around in software if that's really happening.
-> 
-> I don't see it that way. Probably as soon as the EOC happens, if there
-> is another transfer queued up, the next transfer will start and count
-> gets reset. So if you happen to asynchronously read the count at the
-> very end of the transfer, then it is possible you are doing so at the
-> same time that the EOC occurs but before the ISR has been triggered.
+> In the cover letter you say that the first four patches of this series,
+> including this one, "fix some ABI descriptions that are violating the
+> syntax described at Documentation/ABI/README". This seems a bit harsh,
+> given that it's you that is now *introducing* a new syntax requirement
+> to assist your script.
 
-In our case we can't read out EOC status and words count asynchronously because the
-interrupt status and words count are within the same hardware register on pre-T114 and on
-T114+ we're reading words count register and only then the status register. ISR has nothing
-to do with it, if you're taking about tegra_dma_isr.
+Yeah, what's there at the cover letter doesn't apply to this specific
+patch. The thing is that I wrote this series a lot of time ago (2016/17).
 
-Ben claims that the words count may get updated in hardware before EOC bit is set in the
-status register.
+I revived those per a request at KS ML, as we still need to expose the
+ABI content on some book that will be used by userspace people.
 
+So, I just rebased it on the top of curent Kernel, add a cover letter
+with the things I remembered and re-sent.
+
+In the specific case of this patch, the ":" there actually makes sense
+for someone that it is reading it as a text file, and it is an easy
+hack to make it parse better.
+
+> Specifically, this new requirement isn't documented anywhere AFAICT, so
+> how will anyone adding new ABI descriptions learn about it?
+
+Yeah, either that or provide an alternative to "Description" tag, to be
+used with more complex ABI descriptions.
+
+One of the things that occurred to me, back on 2017, is that we should
+have a way to to specify that an specific ABI description would have
+a rich format. Something like:
+
+What:		/sys/bus/usb/devices/<busnum>-<devnum>:<config num>.<interface num>/<hid-bus>:<vendor-id>:<product-id>.<num>/pyra/roccatpyra<minor>/actual_cpi
+Date:		August 2010
+Contact:	Stefan Achatz <erazor_de@users.sourceforge.net>
+RST-Description:
+		It is possible to switch the cpi setting of the mouse with the
+		press of a button.
+		When read, this file returns the raw number of the actual cpi
+		setting reported by the mouse. This number has to be further
+		processed to receive the real dpi value:
+
+		===== =====
+		VALUE DPI
+		===== =====
+		1     400
+		2     800
+		4     1600
+		===== =====
+
+With that, the script will know that the description contents will be using
+the ReST markup, and parse it accordingly. Right now, what it does, instead,
+is to place the description on a code-block, e. g. it will produce this
+output for the description:
+
+::
+
+		It is possible to switch the cpi setting of the mouse with the
+		press of a button.
+		When read, this file returns the raw number of the actual cpi
+		setting reported by the mouse. This number has to be further
+		processed to receive the real dpi value:
+
+		VALUE DPI
+		1     400
+		2     800
+		4     1600
+
+
+Greg, 
+
+what do you think?
+
+Thanks,
+Mauro
