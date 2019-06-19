@@ -2,75 +2,56 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CCC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D72DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C554B208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OW2v0Muf"
+	by mail.kernel.org (Postfix) with ESMTP id E4CED20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:14:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730852AbfFSFNU (ORCPT
+        id S1730890AbfFSFOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:13:20 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:43984 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfFSFNT (ORCPT
+        Wed, 19 Jun 2019 01:14:01 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:47099 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725881AbfFSFOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:13:19 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p13so1778462wru.10;
-        Tue, 18 Jun 2019 22:13:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=9guZEDssE8I+Ozz4TU41/U7IQZOO1+3LKJDr7vi/5Ig=;
-        b=OW2v0Mufw9VUMtEQX0EIYMhdF6CFGIbVcMLAKreHYZkGp2OyuSAfASx/K+buOjywda
-         Dk6qy5lfj9BrOmNUZl8p3cKJhYMkjPokGwuXVK6EsSXD9p4uhxX/orHbR2WjAjNgEbcS
-         VMUmfHMO6pK1C8PqH53BeGopVDQr4MsKWW4ZhvihkaJIxYd1aLloqGLIN9IflPdrF+Al
-         K7KRXKaG/oGSStyrstgrltAQBz7LhiLZFOy4fXG2+pTjQkXdffJItdA2mcrSEdkjfUWp
-         GSvHKJBu3v29Bi2p2ENmLZHSdjCxcuk7eJEpq2HcGfO7+y0z2RuNhWxr0WmxVi5kIqzm
-         zpcg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=9guZEDssE8I+Ozz4TU41/U7IQZOO1+3LKJDr7vi/5Ig=;
-        b=KE/SSLVmsq8xWqo+dGrFnFkWLIXAPhhfRCDl84ajtcCqpOwp+Y4dbeeT1qxYFssc7j
-         qs/KYupTeX3waCRUFiDh/JEnHW4SgJY2mr3TSYiuOhGSG3onotAa8qex8LCbSZS3SNqT
-         tkUme/yMr7lGBo/n1me3QYMCEL/DU7LG9iDrYphh8QH2G2OLj07nDGeJnDblf3imEvdn
-         h3alWSCrYrhSLJeKzZB8ksJUDQg5+y6mBda2NNh/Ubhfx3FazrHXqR8IK/CIlyzRVqnI
-         Ob88xGYsX3agFVhNGBP5xy+Prjm6OAhZcBq+757krrPaSuVBCUb670mFVqUQsWwku4P2
-         C0ug==
-X-Gm-Message-State: APjAAAWTcu1QT5lHGo9hOLeCAHxL/hg46U4XjL4gWL1WKozJHFWv+Baz
-        rlAw2r+Ypu442qmqynyFWg0fC2iI
-X-Google-Smtp-Source: APXvYqxGBww6ssn1q6Cc/uBn6zveGVb+IPhy76VqGDZJSXuEch6xRNKIOwbG51zvq8ngpGJrw8nuoA==
-X-Received: by 2002:adf:f442:: with SMTP id f2mr17524212wrp.275.1560921196964;
-        Tue, 18 Jun 2019 22:13:16 -0700 (PDT)
-Received: from blackbox.darklights.net (p200300F133C20E000CE01247662D4005.dip0.t-ipconnect.de. [2003:f1:33c2:e00:ce0:1247:662d:4005])
-        by smtp.googlemail.com with ESMTPSA id f204sm301596wme.18.2019.06.18.22.13.15
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 22:13:16 -0700 (PDT)
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-To:     colin.king@canonical.com
-Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        kernel-janitors@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        peppe.cavallaro@st.com
-Subject: RE: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array call
-Date:   Wed, 19 Jun 2019 07:13:08 +0200
-Message-Id: <20190619051308.23582-1-martin.blumenstingl@googlemail.com>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190617165836.4673-1-colin.king@canonical.com>
-References: <20190617165836.4673-1-colin.king@canonical.com>
+        Wed, 19 Jun 2019 01:14:00 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 46F1560005;
+        Wed, 19 Jun 2019 05:13:54 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH 4/8] x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
+Date:   Wed, 19 Jun 2019 01:08:40 -0400
+Message-Id: <20190619050844.5294-5-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190619050844.5294-1-alex@ghiti.fr>
+References: <20190619050844.5294-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,35 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+In case of mmap failure in top-down mode, there is no need to go through
+the whole address space again for the bottom-up fallback: the goal of this
+fallback is to find, as a last resort, space between the top-down mmap base
+and the stack, which is the only place not covered by the top-down mmap.
 
-> Currently the call to device_property_read_u32_array is not error checked
-> leading to potential garbage values in the delays array that are then used
-> in msleep delays.  Add a sanity check to the property fetching.
-> 
-> Addresses-Coverity: ("Uninitialized scalar variable")
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-I have also sent a patch [0] to fix initialize the array.
-can you please look at my patch so we can work out which one to use?
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/x86/mm/hugetlbpage.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-my concern is that the "snps,reset-delays-us" property is optional,
-the current dt-bindings documentation states that it's a required
-property. in reality it isn't, there are boards (two examples are
-mentioned in my patch: [0]) without it.
+diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+index fab095362c50..4b90339aef50 100644
+--- a/arch/x86/mm/hugetlbpage.c
++++ b/arch/x86/mm/hugetlbpage.c
+@@ -106,11 +106,12 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
+ {
+ 	struct hstate *h = hstate_file(file);
+ 	struct vm_unmapped_area_info info;
++	unsigned long mmap_base = get_mmap_base(0);
+ 
+ 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
+ 	info.length = len;
+ 	info.low_limit = PAGE_SIZE;
+-	info.high_limit = get_mmap_base(0);
++	info.high_limit = mmap_base;
+ 
+ 	/*
+ 	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
+@@ -132,7 +133,7 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
+ 	if (addr & ~PAGE_MASK) {
+ 		VM_BUG_ON(addr != -ENOMEM);
+ 		info.flags = 0;
+-		info.low_limit = TASK_UNMAPPED_BASE;
++		info.low_limit = mmap_base;
+ 		info.high_limit = TASK_SIZE_LOW;
+ 		addr = vm_unmapped_area(&info);
+ 	}
+-- 
+2.20.1
 
-so I believe that the resulting behavior has to be:
-1. don't delay if this property is missing (instead of delaying for
-   <garbage value> ms)
-2. don't error out if this property is missing
-
-your patch covers #1, can you please check whether #2 is also covered?
-I tested case #2 when submitting my patch and it worked fine (even
-though I could not reproduce the garbage values which are being read
-on some boards)
-
-
-Thank you!
-Martin
-
-
-[0] https://lkml.org/lkml/2019/4/19/638
