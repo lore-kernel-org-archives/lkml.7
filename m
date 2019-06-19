@@ -2,160 +2,98 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37F4BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:25:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C7E5C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:25:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 165E7208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:25:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFF9E208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:25:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560947158;
+	bh=xkXkM6pk3D1wt75LNn+sl1QCrk+nTkgt9CiNrQc2iLY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=IE/YsrlIZ0HP+ZSLD/EtVuVbf+jWOT70mjxYEITWidG7MWvjCbSoa/w8/jC2pM5Yr
+	 1wEOLFncgW004jS+kdz32JWwK9Q3aT4l8K+xYEfZQbj2HQ1EfekcAqUN38yPUrMC8T
+	 rz17m33RUEMzRhstReEVTfyBnH1FAun7zm9dWHds=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731777AbfFSMZA (ORCPT
+        id S1731705AbfFSMZ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:25:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:48556 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727134AbfFSMZA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:25:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 2F7F4AEC5;
-        Wed, 19 Jun 2019 12:24:58 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 47FC01E434D; Wed, 19 Jun 2019 14:24:57 +0200 (CEST)
-Date:   Wed, 19 Jun 2019 14:24:57 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Zhangjs Jinshui <leozhangjs@gmail.com>
-Cc:     Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
-        adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhangjs <zachary@baishancloud.com>
-Subject: Re: [PATCH] ext4: make __ext4_get_inode_loc plug
-Message-ID: <20190619122457.GF27954@quack2.suse.cz>
-References: <20190617155712.51339-1-leozhangjs@gmail.com>
- <20190619110836.GC32409@quack2.suse.cz>
- <8BF438AD-0EA2-4F15-B565-A171E3AB13FA@gmail.com>
+        Wed, 19 Jun 2019 08:25:56 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45918 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfFSMZ4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:25:56 -0400
+Received: by mail-ot1-f65.google.com with SMTP id x21so19024328otq.12;
+        Wed, 19 Jun 2019 05:25:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t636JR0WhKBOeLD0UwHYBIKxLtvPrJCBGRwoWUBCtFY=;
+        b=fizbzBOfmYcQZQGreojAqxPK2D3h0RYGNlD6HW4e+a+0+cQzIQY2swEWzrymtXxqrW
+         v2q4wTkUmpPjqgeV95riS488ty6kYdNZVpPHA5GOfbbBlnr+9Ao9kUeDQlvu9yJ4OhYf
+         lq6R5Vox0iAFY3NmqWz5XgNymj/2+pTqs1h4sdjk9wfH5PAv/6QzLhTYroaNAEBsjc0N
+         FEDtoSjwTY28rHeHItDDAoz/B3kNPiKm16jG7lQTCN0wQHHfRmAqI3lQwLGDZSlH88Fi
+         xm52lKb0l3whfr07to+yA+JY4I5iszxq80j+jinfXWcgim2CxBZL1o9bY5WCO6BCpAM5
+         w0Mg==
+X-Gm-Message-State: APjAAAX4pWJSkrelwkFUq5CTfmusGXMpxRQieF3LR5ONmAjs/hqv4B59
+        uFTv6wi/Jx3eQtf5gTAi+bSeCVtYJ4RInqpVI6k=
+X-Google-Smtp-Source: APXvYqy02yoWKMqt5h/YXcJjrxDjMFc91cJ/bUD9qVVWG6Usl1FN1ytOlSfXptOi2wc94asLYWkrKF21cp3FkaNK5GI=
+X-Received: by 2002:a9d:6959:: with SMTP id p25mr45214408oto.118.1560947155377;
+ Wed, 19 Jun 2019 05:25:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <8BF438AD-0EA2-4F15-B565-A171E3AB13FA@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1560944014.git.viresh.kumar@linaro.org> <4008d21f166accfb28180eb804cb8ebda6da4f4d.1560944014.git.viresh.kumar@linaro.org>
+In-Reply-To: <4008d21f166accfb28180eb804cb8ebda6da4f4d.1560944014.git.viresh.kumar@linaro.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 19 Jun 2019 14:25:44 +0200
+Message-ID: <CAJZ5v0iR8oBZ2mM2vdHzTBNcjsHa6QtJmN+Q17Q8ZD-ny3qy3w@mail.gmail.com>
+Subject: Re: [PATCH 3/6] cpufreq: Remove the has_target() check from notifier handler
+To:     Viresh Kumar <viresh.kumar@linaro.org>
+Cc:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-06-19 19:34:00, Zhangjs Jinshui wrote:
-> You can blktrace
-> 
->   8,80  31       11     0.296373038 2885275  Q  RA 8279571464 + 8 [xxxx]
->   8,80  31       12     0.296374017 2885275  G  RA 8279571464 + 8 [xxxx]
->   8,80  31       13     0.296375468 2885275  I  RA 8279571464 + 8 [xxxx]
->   8,80  31       14     0.296382099  3886  D  RA 8279571464 + 8 [kworker/31:1H]
->   8,80  31       15     0.296391907 2885275  Q  RA 8279571472 + 8 [xxxx]
->   8,80  31       16     0.296392275 2885275  G  RA 8279571472 + 8 [xxxx]
->   8,80  31       17     0.296393305 2885275  I  RA 8279571472 + 8 [xxxx]
->   8,80  31       18     0.296395844  3886  D  RA 8279571472 + 8 [kworker/31:1H]
->   8,80  31       19     0.296399685 2885275  Q  RA 8279571480 + 8 [xxxx]
->   8,80  31       20     0.296400025 2885275  G  RA 8279571480 + 8 [xxxx]
->   8,80  31       21     0.296401232 2885275  I  RA 8279571480 + 8 [xxxx]
->   8,80  31       22     0.296403422  3886  D  RA 8279571480 + 8 [kworker/31:1H]
->   8,80  31       23     0.296407375 2885275  Q  RA 8279571488 + 8 [xxxx]
->   8,80  31       24     0.296407721 2885275  G  RA 8279571488 + 8 [xxxx]
->   8,80  31       25     0.296408904 2885275  I  RA 8279571488 + 8 [xxxx]
->   8,80  31       26     0.296411127  3886  D  RA 8279571488 + 8 [kworker/31:1H]
->   8,80  31       27     0.296414779 2885275  Q  RA 8279571496 + 8 [xxxx]
->   8,80  31       28     0.296415119 2885275  G  RA 8279571496 + 8 [xxxx]
->   8,80  31       29     0.296415744 2885275  I  RA 8279571496 + 8 [xxxx]
->   8,80  31       30     0.296417779  3886  D  RA 8279571496 + 8 [kworker/31:1H]
-> 
-> these RA io were caused by ext4_inode_readahead_blks, there are all not merged becourse of the unplugged state.
-> the backtrace shows below, was traced by systemtap ioblock.request filtered by "opf & 1 << 19"
-> 
->  0xffffffff8136fb20 : generic_make_request+0x0/0x2f0 [kernel]
->  0xffffffff8136fe7e : submit_bio+0x6e/0x130 [kernel]
->  0xffffffff812971e6 : submit_bh_wbc+0x156/0x190 [kernel]
->  0xffffffff81297bca : ll_rw_block+0x6a/0xb0 [kernel]
->  0xffffffff81297cc0 : __breadahead+0x40/0x70 [kernel]
->  0xffffffffa0392c9a : __ext4_get_inode_loc+0x37a/0x3d0 [ext4]
->  0xffffffffa0396a6c : ext4_iget+0x8c/0xc00 [ext4]
->  0xffffffffa03ad98a : ext4_lookup+0xca/0x1d0 [ext4]
->  0xffffffff8126b814 : path_openat+0xcb4/0x1250 [kernel]
->  0xffffffff8126dc41 : do_filp_open+0x91/0x100 [kernel]
->  0xffffffff8125ad86 : do_sys_open+0x126/0x210 [kernel]
->  0xffffffff81003864 : do_syscall_64+0x74/0x1a0 [kernel]
->  0xffffffff81800081 : entry_SYSCALL_64_after_hwframe+0x3d/0xa2 [kernel]
-> 
-> I have patched it on online servers, It can improved the performance.
+On Wed, Jun 19, 2019 at 1:35 PM Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>
+> cpufreq_notify_transition() is only called for has_target() type driver
+> and not for set_policy type, and the check is simply redundant. Remove
+> it.
 
-Ah, OK, directory lookup code... Makes sense. Thanks for sharing!
+Ah, OK
 
-								Honza
+So this patch removes a check introduced by the previous one. :-)
 
-> 
-> > 在 2019年6月19日，19:08，Jan Kara <jack@suse.cz> 写道：
-> > 
-> > On Mon 17-06-19 23:57:12, jinshui zhang wrote:
-> >> From: zhangjs <zachary@baishancloud.com <mailto:zachary@baishancloud.com>>
-> >> 
-> >> If the task is unplugged when called, the inode_readahead_blks may not be merged, 
-> >> these will cause small pieces of io, It should be plugged.
-> >> 
-> >> Signed-off-by: zhangjs <zachary@baishancloud.com <mailto:zachary@baishancloud.com>>
-> > 
-> > Out of curiosity, on which path do you see __ext4_get_inode_loc() being
-> > called without IO already plugged?
-> > 
-> > Otherwise the patch looks good to me. You can add:
-> > 
-> > Reviewed-by: Jan Kara <jack@suse.cz <mailto:jack@suse.cz>>
-> > 
-> > 								Honza
-> > 
-> >> ---
-> >> fs/ext4/inode.c | 6 ++++++
-> >> 1 file changed, 6 insertions(+)
-> >> 
-> >> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> >> index c7f77c6..8fe046b 100644
-> >> --- a/fs/ext4/inode.c
-> >> +++ b/fs/ext4/inode.c
-> >> @@ -4570,6 +4570,7 @@ static int __ext4_get_inode_loc(struct inode *inode,
-> >> 	struct buffer_head	*bh;
-> >> 	struct super_block	*sb = inode->i_sb;
-> >> 	ext4_fsblk_t		block;
-> >> +	struct blk_plug		plug;
-> >> 	int			inodes_per_block, inode_offset;
-> >> 
-> >> 	iloc->bh = NULL;
-> >> @@ -4654,6 +4655,8 @@ static int __ext4_get_inode_loc(struct inode *inode,
-> >> 		}
-> >> 
-> >> make_io:
-> >> +		blk_start_plug(&plug);
-> >> +
-> >> 		/*
-> >> 		 * If we need to do any I/O, try to pre-readahead extra
-> >> 		 * blocks from the inode table.
-> >> @@ -4688,6 +4691,9 @@ static int __ext4_get_inode_loc(struct inode *inode,
-> >> 		get_bh(bh);
-> >> 		bh->b_end_io = end_buffer_read_sync;
-> >> 		submit_bh(REQ_OP_READ, REQ_META | REQ_PRIO, bh);
-> >> +
-> >> +		blk_finish_plug(&plug);
-> >> +
-> >> 		wait_on_buffer(bh);
-> >> 		if (!buffer_uptodate(bh)) {
-> >> 			EXT4_ERROR_INODE_BLOCK(inode, block,
-> >> -- 
-> >> 1.8.3.1
-> >> 
-> > -- 
-> > Jan Kara <jack@suse.com <mailto:jack@suse.com>>
-> > SUSE Labs, CR
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Please merge them together.
+
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+>  drivers/cpufreq/cpufreq.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+> index e59194c2c613..41ac701e324f 100644
+> --- a/drivers/cpufreq/cpufreq.c
+> +++ b/drivers/cpufreq/cpufreq.c
+> @@ -359,7 +359,7 @@ static void cpufreq_notify_transition(struct cpufreq_policy *policy,
+>                  * which is not equal to what the cpufreq core thinks is
+>                  * "old frequency".
+>                  */
+> -               if (has_target() && policy->cur && policy->cur != freqs->old) {
+> +               if (policy->cur && policy->cur != freqs->old) {
+>                         pr_debug("Warning: CPU frequency is %u, cpufreq assumed %u kHz\n",
+>                                  freqs->old, policy->cur);
+>                         freqs->old = policy->cur;
+> --
+> 2.21.0.rc0.269.g1a574e7a288b
+>
