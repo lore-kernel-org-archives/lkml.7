@@ -2,112 +2,87 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A70E7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE0BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:53:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D64208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:52:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="J76s7YUK"
+	by mail.kernel.org (Postfix) with ESMTP id B7097215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:53:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729867AbfFSRwm (ORCPT
+        id S1730121AbfFSRxj convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:52:42 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:46707 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFSRwl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:52:41 -0400
-Received: by mail-pl1-f196.google.com with SMTP id e5so100587pls.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:52:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JPh979OTEDBlqzDsha7tZRbPvm/W8T1Wq4fFMxgOKCw=;
-        b=J76s7YUKSydhifETM39Ra9xqyqSDYhxzCJ8pt1NbE6vBQzrBx0wywICvMob6i2OngJ
-         yTLzAz2Mhoiv49XA5rWlJ9N2nA2RokV7fttXzt2fSapVyzWhmeRCQ/dPhNy6ZV42KxvF
-         Qnkr3LEpu85AxfItu7v7+DK+z+C4+0JaukWuQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=JPh979OTEDBlqzDsha7tZRbPvm/W8T1Wq4fFMxgOKCw=;
-        b=cLK4sGGp4ig6XCUrLWotCMG8qjmzQXCXqDBHYtfgilQVkUyzqOYUVvyAzuxDfIJFfe
-         KaxieyRxCDcpxdZ/gO7Qx17hlvS7CIk6o/1u3h3KyogaYIMBwjHEX9rQaJjpAjXszMBL
-         Ob89al4+8NQyhmn0evx2CknKA3U++ZMBzHKycItktI8xrsEM3STDd3f5l1UzqD7gEH19
-         LYrE6wgzLhaHZzyiQNV6Fl4/Leexzts4fNhIrO03RwSXpYAakGI59JylZ3DZBxn8WliF
-         HzdGV+TFOEJxgKXEMjs0o7JEDZjsAOE7j7e3QJWMrdmPSlr6rcXcCetPbPAXWr062o1l
-         efQQ==
-X-Gm-Message-State: APjAAAW7xyAuKELR2Aj1bBLpYiaPWWYWl5AT8V4IR40flbo0YdDL9GSC
-        eZnAiE4xETe+TnNYO3fibQbLsU16BJM=
-X-Google-Smtp-Source: APXvYqyRjxchfLX9OSQjCZluovaPf7iMErEJ69AWLt4/j9kWBwlmF7FXXOPzzy70wsXcdi0lScLGgA==
-X-Received: by 2002:a17:902:44a4:: with SMTP id l33mr40835768pld.174.1560966760531;
-        Wed, 19 Jun 2019 10:52:40 -0700 (PDT)
-Received: from ravisadineni0.mtv.corp.google.com ([2620:15c:202:1:98d2:1663:78dd:3593])
-        by smtp.gmail.com with ESMTPSA id c130sm11905368pfc.184.2019.06.19.10.52.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Jun 2019 10:52:40 -0700 (PDT)
-From:   Ravi Chandra Sadineni <ravisadineni@chromium.org>
-To:     rjw@rjwysocki.net, len.brown@intel.com, pavel@ucw.cz,
-        gregkh@linuxfoundation.org, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, tbroch@google.com,
-        ravisadineni@chromium.org, rajatja@google.com
-Subject: [PATCH] power: Do not clear events_check_enabled in pm_wakeup_pending()
-Date:   Wed, 19 Jun 2019 10:51:42 -0700
-Message-Id: <20190619175142.237794-1-ravisadineni@chromium.org>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 13:53:39 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28092 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726109AbfFSRxj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:53:39 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 10:53:38 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,393,1557212400"; 
+   d="scan'208";a="150675667"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga007.jf.intel.com with ESMTP; 19 Jun 2019 10:53:38 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.32]) by
+ ORSMSX104.amr.corp.intel.com ([169.254.4.70]) with mapi id 14.03.0439.000;
+ Wed, 19 Jun 2019 10:53:37 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     Qian Cai <cai@lca.pw>, "bp@alien8.de" <bp@alien8.de>
+CC:     "ard.biesheuvel@linaro.org" <ard.biesheuvel@linaro.org>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "dvhart@infradead.org" <dvhart@infradead.org>,
+        "andy@infradead.org" <andy@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "hpa@zytor.com" <hpa@zytor.com>, "x86@kernel.org" <x86@kernel.org>,
+        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
+        "platform-driver-x86@vger.kernel.org" 
+        <platform-driver-x86@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] x86/efi: fix a -Wtype-limits compilation warning
+Thread-Topic: [PATCH v2] x86/efi: fix a -Wtype-limits compilation warning
+Thread-Index: AQHVJscrIoiFrvq5WUaaeJ1Am5nx9KajQcjQ
+Date:   Wed, 19 Jun 2019 17:53:37 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F4F787D4B@ORSMSX114.amr.corp.intel.com>
+References: <1560966464-27644-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1560966464-27644-1-git-send-email-cai@lca.pw>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNTllMWE0MzEtMGUxMi00NDE2LWFjOTktN2U2YmYxMTBmMWM1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiMHk2d0w4QnFPaXVtTVJUNFZpVTJHVERLWDhlTXJvcVUwdlFkc3FIZGtPYnlMOHNKUWFERkRJaXh5T0RwdTFNeSJ9
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-events_check_enabled bool is set when wakeup_count sysfs attribute
-is written. User level daemon is expected to write this attribute
-just before suspend.
+> Compiling a kernel with W=1 generates this warning,
+> 
+> arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
+> expression >= 0 is always true [-Wtype-limits]
+> 
+> Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running EFI
+> runtime services")
+> Signed-off-by: Qian Cai <cai@lca.pw>
+> ---
+> 
+> v2: Add a "Fixes" tag.
 
-When this boolean is set, calls to pm_wakeup_event() will result in
-increment of per device and global wakeup count that helps in
-identifying the wake source. global wakeup count is also used by
-pm_wakeup_pending() to identify if there are any pending events that
-should result in an suspend abort.
+Makes sense.
+Thanks for the fix Qian Cai.
 
-Currently calls to pm_wakeup_pending() also clears events_check_enabled.
-This can be a problem when there are multiple wake events or when the
-suspend is aborted due to an interrupt on a shared interrupt line.
-For example an Mfd device can create several platform devices which
-might fetch the state on resume in the driver resume method and increment
-the wakeup count if needed. But if events_check_enabled is cleared before
-resume methods get to execute, wakeup count will not be incremented. Thus
-let us not reset the bool here.
-
-Note that events_check_enabled is also cleared in suspend.c/enter_state()
-on every resume at the end.
-
-Signed-off-by: Ravi Chandra Sadineni <ravisadineni@chromium.org>
----
- drivers/base/power/wakeup.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/base/power/wakeup.c b/drivers/base/power/wakeup.c
-index 5b2b6a05a4f3..88aade871589 100644
---- a/drivers/base/power/wakeup.c
-+++ b/drivers/base/power/wakeup.c
-@@ -838,7 +838,6 @@ bool pm_wakeup_pending(void)
- 
- 		split_counters(&cnt, &inpr);
- 		ret = (cnt != saved_count || inpr > 0);
--		events_check_enabled = !ret;
- 	}
- 	raw_spin_unlock_irqrestore(&events_lock, flags);
- 
--- 
-2.20.1
-
+Regards,
+Sai
