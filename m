@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9227FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B628C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F49D214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 72148214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="U90JMlza"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="hD8EbPEH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730318AbfFSSgu (ORCPT
+        id S1730376AbfFSSgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:36:50 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.61.142]:38324 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730283AbfFSSgs (ORCPT
+        Wed, 19 Jun 2019 14:36:52 -0400
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:58594 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730259AbfFSSgs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 14:36:48 -0400
-Received: from mailhost.synopsys.com (unknown [10.225.0.210])
+Received: from mailhost.synopsys.com (mdc-mailhost1.synopsys.com [10.225.0.209])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 45863C00ED;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8451EC0CA5;
         Wed, 19 Jun 2019 18:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560969408; bh=HFU+VROCK0C6D+QU6j2ekGDFt1Sva007823auZeHX7Q=;
+        t=1560969408; bh=EEQco8VIvM4ja0VFlebpMmAQZMtk0LILbpJ86r/bqog=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=U90JMlzaF68mn6cNmL1fAgyYwzttuEXxtTYVHy6XI3r+YW2LO9ZYVgaboerGOuyNx
-         hsF5QGJWI2ihFvVzwAoXhf8umkIyS3uvZg6xaxjxVkgz4JqZTI7gNAKupXX5DMTfUS
-         8p8pbW7/Q3pr6Hv5S1qUIDhaF3ryI/bEqHc66HjRKzNsYqOJvBI3K3O3uThJ9gMfcM
-         IIj7wmeRbjZG01/oUJwOVAAlFORC4CTtEAOvgYHhUhF1DKp9GT2n95+CDJx7boeraI
-         Tc/TjzGXwWvQshIeaoaKb+4uzu3BIaz1tRqgRfy63CJktj1xXWog3S6YMf4UjPEtNy
-         G+kcjVaa0w7Hg==
-Received: from de02.synopsys.com (de02.internal.synopsys.com [10.225.17.21])
-        by mailhost.synopsys.com (Postfix) with ESMTP id C7598A0231;
+        b=hD8EbPEH5bdQ7YX0IJiAxqnXw4jwn1l9kf1uTgaMlQstcyQ4PbdnJCQxTebJgfoRP
+         vZ+gzUekjSM1ODd0DbSW6/fodcLkzQn42a2iYH4JgibwsDyG1TchiM7Rze7c7W82lu
+         9wY9+0Q9Fv7fg1mW4QiBW1vHfZ+FVIGAbCJqhgP+zWI2Dox80ntnvIDui0NGeFztHJ
+         ctovOVSM3uqPNFKSkzB6VQkJ4CzBtpwCSq/0mwuEwTZkU+ciU/c76Qh5GUwIaiDZye
+         1j1npYcCQsYDVLJOgZ82fM5gAsyHV8fMblgEwmfropVHdDYvKWenq5ideCd/iKJCTt
+         FRO0eA/rKk3bQ==
+Received: from de02.synopsys.com (germany.internal.synopsys.com [10.225.17.21])
+        by mailhost.synopsys.com (Postfix) with ESMTP id 107FFA0060;
         Wed, 19 Jun 2019 18:36:45 +0000 (UTC)
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by de02.synopsys.com (Postfix) with ESMTP id A020A3F217;
+        by de02.synopsys.com (Postfix) with ESMTP id 8D08F3F214;
         Wed, 19 Jun 2019 20:36:45 +0200 (CEST)
 From:   Vitor Soares <Vitor.Soares@synopsys.com>
 To:     linux-i3c@lists.infradead.org, Joao.Pinto@synopsys.com
 Cc:     Vitor Soares <Vitor.Soares@synopsys.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 2/3] i3c: add mixed limited bus mode
-Date:   Wed, 19 Jun 2019 20:36:32 +0200
-Message-Id: <4627348638396c6b3fbe3ee28b533ca15ea9f4fe.1560968688.git.vitor.soares@synopsys.com>
+        stable@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 1/3] i3c: fix i2c and i3c scl rate by bus mode
+Date:   Wed, 19 Jun 2019 20:36:31 +0200
+Message-Id: <e63b4bbcdb5261b7c72f85d6964280c671d6e5f0.1560968688.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1560968688.git.vitor.soares@synopsys.com>
 References: <cover.1560968688.git.vitor.soares@synopsys.com>
@@ -62,80 +62,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The i3c bus spec defines a bus configuration where i2c devices don't
-have a 50ns filter but support SCL running at SDR max rate (12.5MHz).
+Currently the I3C framework limits SCL frequency to FM speed when
+dealing with a mixed slow bus, even if all I2C devices are FM+ capable.
 
-This patch introduces the limited bus mode so that users can use
-a higher speed in presence of i2c devices index 1.
+The core was also not accounting for I3C speed limitations when
+operating in mixed slow mode and was erroneously using FM+ speed as the
+max I2C speed when operating in mixed fast mode.
 
+Fixes: 3a379bbcea0a ("i3c: Add core I3C infrastructure")
 Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: <stable@vger.kernel.org>
 Cc: <linux-kernel@vger.kernel.org>
 ---
 Changes in v4:
-  None
+  Print i2c-scl and i3c-scl unconditionally when in debug mode
 
 Changes in v3:
-  None
+  Change dev_warn() to dev_dbg()
 
 Changes in v2:
   Enhance commit message
+  Add dev_warn() in case user-defined i2c rate doesn't match LVR constraint
+  Add dev_warn() in case user-defined i3c rate lower than i2c rate
 
- drivers/i3c/master.c       | 5 +++++
- include/linux/i3c/master.h | 5 +++++
- 2 files changed, 10 insertions(+)
+ drivers/i3c/master.c | 52 +++++++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 39 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 14980db..76549f1 100644
+index 5f4bd52..14980db 100644
 --- a/drivers/i3c/master.c
 +++ b/drivers/i3c/master.c
-@@ -470,6 +470,7 @@ static int i3c_bus_init(struct i3c_bus *i3cbus)
- static const char * const i3c_bus_mode_strings[] = {
- 	[I3C_BUS_MODE_PURE] = "pure",
- 	[I3C_BUS_MODE_MIXED_FAST] = "mixed-fast",
-+	[I3C_BUS_MODE_MIXED_LIMITED] = "mixed-limited",
- 	[I3C_BUS_MODE_MIXED_SLOW] = "mixed-slow",
+@@ -91,6 +91,12 @@ void i3c_bus_normaluse_unlock(struct i3c_bus *bus)
+ 	up_read(&bus->lock);
+ }
+ 
++static struct i3c_master_controller *
++i3c_bus_to_i3c_master(struct i3c_bus *i3cbus)
++{
++	return container_of(i3cbus, struct i3c_master_controller, bus);
++}
++
+ static struct i3c_master_controller *dev_to_i3cmaster(struct device *dev)
+ {
+ 	return container_of(dev, struct i3c_master_controller, dev);
+@@ -565,20 +571,39 @@ static const struct device_type i3c_masterdev_type = {
+ 	.groups	= i3c_masterdev_groups,
  };
  
-@@ -585,6 +586,7 @@ int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
- 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
- 		break;
- 	case I3C_BUS_MODE_MIXED_FAST:
-+	case I3C_BUS_MODE_MIXED_LIMITED:
- 		if (!i3cbus->scl_rate.i3c)
- 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
- 		if (!i3cbus->scl_rate.i2c)
-@@ -2481,6 +2483,9 @@ int i3c_master_register(struct i3c_master_controller *master,
- 				mode = I3C_BUS_MODE_MIXED_FAST;
- 			break;
- 		case I3C_LVR_I2C_INDEX(1):
-+			if (mode < I3C_BUS_MODE_MIXED_LIMITED)
-+				mode = I3C_BUS_MODE_MIXED_LIMITED;
-+			break;
- 		case I3C_LVR_I2C_INDEX(2):
- 			if (mode < I3C_BUS_MODE_MIXED_SLOW)
- 				mode = I3C_BUS_MODE_MIXED_SLOW;
-diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-index f13fd8b..89ea461 100644
---- a/include/linux/i3c/master.h
-+++ b/include/linux/i3c/master.h
-@@ -250,12 +250,17 @@ struct i3c_device {
-  *			     the bus. The only impact in this mode is that the
-  *			     high SCL pulse has to stay below 50ns to trick I2C
-  *			     devices when transmitting I3C frames
-+ * @I3C_BUS_MODE_MIXED_LIMITED: I2C devices without 50ns spike filter are
-+ *				present on the bus. However they allows
-+ *				compliance up to the maximum SDR SCL clock
-+ *				frequency.
-  * @I3C_BUS_MODE_MIXED_SLOW: I2C devices without 50ns spike filter are present
-  *			     on the bus
-  */
- enum i3c_bus_mode {
- 	I3C_BUS_MODE_PURE,
- 	I3C_BUS_MODE_MIXED_FAST,
-+	I3C_BUS_MODE_MIXED_LIMITED,
- 	I3C_BUS_MODE_MIXED_SLOW,
- };
+-int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode)
++int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
++		     unsigned long max_i2c_scl_rate)
+ {
+-	i3cbus->mode = mode;
+ 
+-	if (!i3cbus->scl_rate.i3c)
+-		i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
++	struct i3c_master_controller *master = i3c_bus_to_i3c_master(i3cbus);
+ 
+-	if (!i3cbus->scl_rate.i2c) {
+-		if (i3cbus->mode == I3C_BUS_MODE_MIXED_SLOW)
+-			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
+-		else
+-			i3cbus->scl_rate.i2c = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
++	i3cbus->mode = mode;
++
++	switch (i3cbus->mode) {
++	case I3C_BUS_MODE_PURE:
++		if (!i3cbus->scl_rate.i3c)
++			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
++		break;
++	case I3C_BUS_MODE_MIXED_FAST:
++		if (!i3cbus->scl_rate.i3c)
++			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
++		if (!i3cbus->scl_rate.i2c)
++			i3cbus->scl_rate.i2c = max_i2c_scl_rate;
++		break;
++	case I3C_BUS_MODE_MIXED_SLOW:
++		if (!i3cbus->scl_rate.i2c)
++			i3cbus->scl_rate.i2c = max_i2c_scl_rate;
++		if (!i3cbus->scl_rate.i3c ||
++		    i3cbus->scl_rate.i3c > i3cbus->scl_rate.i2c)
++			i3cbus->scl_rate.i3c = i3cbus->scl_rate.i2c;
++		break;
++	default:
++		return -EINVAL;
+ 	}
+ 
++	dev_dbg(&master->dev, "i2c-scl = %ld Hz i3c-scl = %ld Hz\n",
++		i3cbus->scl_rate.i2c, i3cbus->scl_rate.i3c);
++
+ 	/*
+ 	 * I3C/I2C frequency may have been overridden, check that user-provided
+ 	 * values are not exceeding max possible frequency.
+@@ -1966,9 +1991,6 @@ of_i3c_master_add_i2c_boardinfo(struct i3c_master_controller *master,
+ 	/* LVR is encoded in reg[2]. */
+ 	boardinfo->lvr = reg[2];
+ 
+-	if (boardinfo->lvr & I3C_LVR_I2C_FM_MODE)
+-		master->bus.scl_rate.i2c = I3C_BUS_I2C_FM_SCL_RATE;
+-
+ 	list_add_tail(&boardinfo->node, &master->boardinfo.i2c);
+ 	of_node_get(node);
+ 
+@@ -2417,6 +2439,7 @@ int i3c_master_register(struct i3c_master_controller *master,
+ 			const struct i3c_master_controller_ops *ops,
+ 			bool secondary)
+ {
++	unsigned long i2c_scl_rate = I3C_BUS_I2C_FM_PLUS_SCL_RATE;
+ 	struct i3c_bus *i3cbus = i3c_master_get_bus(master);
+ 	enum i3c_bus_mode mode = I3C_BUS_MODE_PURE;
+ 	struct i2c_dev_boardinfo *i2cbi;
+@@ -2466,9 +2489,12 @@ int i3c_master_register(struct i3c_master_controller *master,
+ 			ret = -EINVAL;
+ 			goto err_put_dev;
+ 		}
++
++		if (i2cbi->lvr & I3C_LVR_I2C_FM_MODE)
++			i2c_scl_rate = I3C_BUS_I2C_FM_SCL_RATE;
+ 	}
+ 
+-	ret = i3c_bus_set_mode(i3cbus, mode);
++	ret = i3c_bus_set_mode(i3cbus, mode, i2c_scl_rate);
+ 	if (ret)
+ 		goto err_put_dev;
  
 -- 
 2.7.4
