@@ -2,42 +2,44 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FF73C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:22:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E76A9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:22:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 702F220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:22:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3CE62173E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:22:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730408AbfFSTWZ (ORCPT
+        id S1730491AbfFSTW2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:22:25 -0400
+        Wed, 19 Jun 2019 15:22:28 -0400
 Received: from mga14.intel.com ([192.55.52.115]:30133 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726265AbfFSTWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:22:24 -0400
+        id S1726265AbfFSTW0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 15:22:26 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 12:22:24 -0700
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 12:22:26 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
-   d="scan'208";a="358707784"
+   d="scan'208";a="358707797"
 Received: from otc-icl-cdi-210.jf.intel.com ([10.54.55.28])
-  by fmsmga006.fm.intel.com with ESMTP; 19 Jun 2019 12:22:24 -0700
+  by fmsmga006.fm.intel.com with ESMTP; 19 Jun 2019 12:22:26 -0700
 From:   kan.liang@linux.intel.com
 To:     peterz@infradead.org, acme@kernel.org, mingo@redhat.com,
         linux-kernel@vger.kernel.org
 Cc:     tglx@linutronix.de, jolsa@kernel.org, eranian@google.com,
         alexander.shishkin@linux.intel.com, ak@linux.intel.com,
         Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH V2 0/8] TopDown metrics support for Icelake
-Date:   Wed, 19 Jun 2019 12:21:55 -0700
-Message-Id: <20190619192203.3885-1-kan.liang@linux.intel.com>
+Subject: [PATCH V2 1/8] perf/x86/intel: Set correct mask for TOPDOWN.SLOTS
+Date:   Wed, 19 Jun 2019 12:21:56 -0700
+Message-Id: <20190619192203.3885-2-kan.liang@linux.intel.com>
 X-Mailer: git-send-email 2.14.5
+In-Reply-To: <20190619192203.3885-1-kan.liang@linux.intel.com>
+References: <20190619192203.3885-1-kan.liang@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -45,79 +47,57 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Kan Liang <kan.liang@linux.intel.com>
 
-Icelake has support for measuring the level 1 TopDown metrics
-directly in hardware. This is implemented by an additional METRICS
-register, and a new Fixed Counter 3 that measures pipeline SLOTS.
+TOPDOWN.SLOTS(0x0400) is not a generic event. It is only available on
+fixed counter3.
 
-Four TopDown metric events as separate perf events, which map to
-internal METRICS register, are exposed. They are topdown-retiring,
-topdown-bad-spec, topdown-fe-bound and topdown-be-bound.
-Those events do not exist in hardware, but can be allocated by the
-scheduler. The value of TopDown metric events can be calculated by
-multiplying the METRICS (percentage) register with SLOTS fixed counter.
+Don't extend its mask to generic counters.
 
-New in Icelake
-- Do not require generic counters. This allows to collect TopDown always
-  in addition to other events.
-- Measuring TopDown per thread/process instead of only per core
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
 
-Limitation
-- To get accurate result and avoid reading the METRICS register multiple
-  times, the TopDown metrics events and SLOTS event have to be in the
-  same group.
-- METRICS and SLOTS registers have to be cleared after each read by SW.
-  That is to prevent the lose of precision and a known side effect of
-  METRICS register.
-- Cannot do sampling read SLOTS and TopDown metric events
+New for V2
 
-Please refer SDM Vol3, 18.3.9.3 Performance Metrics for the details of
-TopDown metrics.
+ arch/x86/events/intel/core.c      | 6 ++++--
+ arch/x86/include/asm/perf_event.h | 5 +++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
 
-Key changes since V1:
-- Remove variables for reg_idx and enabled_events[] array.
-  The reg_idx can be calculated by idx in runtime.
-  Using existing active_mask to replace enabled_events.
-- Choose value 47 for the fixed index of BTS.
-- Support OVF_PERF_METRICS overflow bit in PMI handler
-- Drops the caching mechanism and related variables
-  New mechanism is to update all active slots/metrics events for the
-  first slots/metrics events in a group. For each group reading, it
-  still only read the slots/perf_metrics MSR once
-- Disable PMU for read of topdown events to avoid the NMI issue
-- Move RDPMC support to a separate patch
-- Using event=0x00,umask=0x1X for topdown metrics events
-- Drop the patch which add REMOVE transaction
-  We can indicate x86_pmu_stop() by checking
-  (event && !test_bit(event->hw.idx, cpuc->active_mask)),
-  which is a good place to save the slots/metrics MSR vaule
-
-Andi Kleen (3):
-  perf/x86/intel: Export TopDown events for Icelake
-  perf, tools, stat: Support new per thread TopDown metrics
-  perf, tools: Add documentation for topdown metrics
-
-Kan Liang (5):
-  perf/x86/intel: Set correct mask for TOPDOWN.SLOTS
-  perf/x86/intel: Basic support for metrics counters
-  perf/x86/intel: Support hardware TopDown metrics
-  perf/x86/intel: Support per thread RDPMC TopDown metrics
-  perf/x86/intel: Disable sampling read slots and topdown
-
- arch/x86/events/core.c                 |  35 +++-
- arch/x86/events/intel/core.c           | 356 +++++++++++++++++++++++++++++++--
- arch/x86/events/perf_event.h           |  33 +++
- arch/x86/include/asm/msr-index.h       |   3 +
- arch/x86/include/asm/perf_event.h      |  54 ++++-
- include/linux/perf_event.h             |   3 +
- tools/perf/Documentation/perf-stat.txt |   9 +-
- tools/perf/Documentation/topdown.txt   | 223 +++++++++++++++++++++
- tools/perf/builtin-stat.c              |  24 +++
- tools/perf/util/stat-shadow.c          |  89 +++++++++
- tools/perf/util/stat.c                 |   4 +
- tools/perf/util/stat.h                 |   8 +
- 12 files changed, 821 insertions(+), 20 deletions(-)
- create mode 100644 tools/perf/Documentation/topdown.txt
-
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 4377bf6a6f82..f30d02830921 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -5066,12 +5066,14 @@ __init int intel_pmu_init(void)
+ 
+ 	if (x86_pmu.event_constraints) {
+ 		/*
+-		 * event on fixed counter2 (REF_CYCLES) only works on this
++		 * event on fixed counter2 (REF_CYCLES) and
++		 * fixed counter3 (TOPDOWN.SLOTS) only work on this
+ 		 * counter, so do not extend mask to generic counters
+ 		 */
+ 		for_each_event_constraint(c, x86_pmu.event_constraints) {
+ 			if (c->cmask == FIXED_EVENT_FLAGS
+-			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES) {
++			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_REF_CYCLES
++			    && c->idxmsk64 != INTEL_PMC_MSK_FIXED_SLOTS) {
+ 				c->idxmsk64 |= (1ULL << x86_pmu.num_counters) - 1;
+ 			}
+ 			c->idxmsk64 &=
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 1392d5e6e8d6..457d35a75ad3 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -167,6 +167,11 @@ struct x86_pmu_capability {
+ #define INTEL_PMC_IDX_FIXED_REF_CYCLES	(INTEL_PMC_IDX_FIXED + 2)
+ #define INTEL_PMC_MSK_FIXED_REF_CYCLES	(1ULL << INTEL_PMC_IDX_FIXED_REF_CYCLES)
+ 
++/* TOPDOWN.SLOTS: */
++#define MSR_ARCH_PERFMON_FIXED_CTR3	0x30c
++#define INTEL_PMC_IDX_FIXED_SLOTS	(INTEL_PMC_IDX_FIXED + 3)
++#define INTEL_PMC_MSK_FIXED_SLOTS	(1ULL << INTEL_PMC_IDX_FIXED_SLOTS)
++
+ /*
+  * We model BTS tracing as another fixed-mode PMC.
+  *
 -- 
 2.14.5
 
