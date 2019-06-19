@@ -2,104 +2,151 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7004AC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:06:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8940C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4943220B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:06:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Z0zS/GZQ"
+	by mail.kernel.org (Postfix) with ESMTP id 7F430206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:08:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731209AbfFSKGT (ORCPT
+        id S1731347AbfFSKIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:06:19 -0400
-Received: from ozlabs.org ([203.11.71.1]:48295 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726959AbfFSKGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:06:19 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TLFM4FRCz9s7h;
-        Wed, 19 Jun 2019 20:06:15 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560938776;
-        bh=NQWnQbn9ruPrlyTKLaenXzcl811ZqmMgk2/3HM89J+A=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Z0zS/GZQTWn2wiVSG1xN799YKt1XgewhSXZ+Ie8LPs8Nn3i0RVAB/PjOS4WT5JlbB
-         Oz2laSae9HZqqQyfdZsE4EJZqN8kp6c6JRThrscww4H6fk+aC0DQEazaUIK0zqGIU7
-         KByWoBmJ8EjaZbfgPrQ9gHmyqSRrW35gIwlgUFBWQluAB/c76d5k9Hb9takIpYoF+U
-         SUmQlmh3mVIQMv0Wmy07bExOK6x89Qd+ew25F7Px5EU16qy6i9NL9Qs0/ymo1F+yKw
-         46U0VpvNw8lWmBQWuD3zHoDfLFegdSJiqcTk4WG57fLaATh5EtgvMVv0KWDfyzI4Sx
-         Sostm7cmXIykg==
-Date:   Wed, 19 Jun 2019 20:06:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: linux-next: build failure after merge of the akpm-current tree
-Message-ID: <20190619200608.69474286@canb.auug.org.au>
+        Wed, 19 Jun 2019 06:08:23 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:37137 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfFSKIW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:08:22 -0400
+Received: from 94.197.121.33.threembb.co.uk ([94.197.121.33] helo=[192.168.43.158])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hdXVq-00022U-Mu; Wed, 19 Jun 2019 11:08:18 +0100
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+ <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
+ <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <0f797be6-9b80-7c31-44ef-0df68d36252e@codethink.co.uk>
+Date:   Wed, 19 Jun 2019 11:08:17 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/cS_b5m3u4YGfN21kfl4VTik"; protocol="application/pgp-signature"
+In-Reply-To: <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/cS_b5m3u4YGfN21kfl4VTik
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 19/06/2019 11:04, Jon Hunter wrote:
+> 
+> On 19/06/2019 00:27, Dmitry Osipenko wrote:
+>> 19.06.2019 1:22, Ben Dooks пишет:
+>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>>> of data, hence it can report transfer's residual with more fidelity which
+>>>> may be required in cases like audio playback. In particular this fixes
+>>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>>> based on the original work that was made by Ben Dooks [1]. It was tested
+>>>> on Tegra20 and Tegra30 devices.
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>>>
+>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>    drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>>>    1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>> index 79e9593815f1..c5af8f703548 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>>        return 0;
+>>>>    }
+>>>>    +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>>>> +                          struct tegra_dma_sg_req *sg_req,
+>>>> +                          struct tegra_dma_desc *dma_desc,
+>>>> +                          unsigned int residual)
+>>>> +{
+>>>> +    unsigned long status, wcount = 0;
+>>>> +
+>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>> +        return residual;
+>>>> +
+>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>> +
+>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>> +
+>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +        wcount = status;
+>>>> +
+>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>> +        return residual - sg_req->req_len;
+>>>> +
+>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>> +}
+>>>
+>>> I am unfortunately nowhere near my notes, so can't completely
+>>> review this. I think the complexity of my patch series is due
+>>> to an issue with the count being updated before the EOC IRQ
+>>> is actually flagged (and most definetly before it gets to the
+>>> CPU IRQ handler).
+>>>
+>>> The test system I was using, which i've not really got any
+>>> access to at the moment would show these internal inconsistent
+>>> states every few hours, however it was moving 48kHz 8ch 16bit
+>>> TDM data.
+>>>
+>>> Thanks for looking into this, I am not sure if I am going to
+>>> get any time to look into this within the next couple of
+>>> months.
+>>
+>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
+>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
+>> anything going wrong.
+>>
+>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
+>> vs EOC? Assuming the cyclic transfer mode.
+> 
+> I can't say that I am. However, for the case of cyclic transfer, given
+> that the next transfer is always programmed into the registers before
+> the last one completes, I could see that by the time the interrupt is
+> serviced that the DMA has moved on to the next transfer (which I assume
+> would reset the count).
+> 
+> Interestingly, our downstream kernel implemented a change to avoid the
+> count appearing to move backwards. I am curious if this also works,
+> which would be a lot simpler that what Ben has implemented and may
+> mitigate that race condition that Ben is describing.
 
-Hi all,
+That might be the same thing we saw. IIRC it looks like the DMA has
+moved on, but the count gets re-set before the EOC? I can't see that
+git site so can't comment.
 
-After merging the akpm-current tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+The only way to prove this would be to spend time running this up
+with tracing (which is how we found the issue) and analysing the
+output (it's also why we adding the kernel tracing in earlier
+patches)
 
-In file included from usr/include/linux/byteorder/big_endian.hdrtest.c:1:
-./usr/include/linux/byteorder/big_endian.h:6:2: error: #error "Unsupported =
-endianness, check your toolchain"
- #error "Unsupported endianness, check your toolchain"
-  ^~~~~
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
 
-Caused by commit
-
-  1ac94caaee11 ("byteorder: sanity check toolchain vs kernel endianness")
-
-Presumably exposed by commit
-
-  b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-=
-contained")
-
-from the kbuild tree.
-
-I have reverted 1ac94caaee11 (and its following fixup) for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/cS_b5m3u4YGfN21kfl4VTik
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0KCRAACgkQAVBC80lX
-0GzYdwf6AmUgQCAIHGO6IoZEy11yHbgenWP6uaetHH3EWO+cWmiUV0WNwfrUYIGv
-c/QRT7c66Ul1kIGyRJaXo0Pn0IgNiwBF1ioQrK9oqELjObHBfHmEv5CX/frEOOlo
-Q3/iP0l7wZhPvoiRe/c/QSSOvmbKyxQKOWaqqxCKoTZgIrgsli5dpNUsybk5SPW+
-wSaz1ghy2Ej01rLqwoGY+vVxuSK3AECtCZJWQm0UpbO5/gzvtkuDAPflblEZ+0xX
-TU4t08sSoQP3pdby9A8NR7RVU0wiB7+nhB4ynukYoWA6k2gzyxmPzXTQlLPGd8fY
-VyvEY6+dMCQ8z0L3Z2xTeiRegxODmQ==
-=Gy5k
------END PGP SIGNATURE-----
-
---Sig_/cS_b5m3u4YGfN21kfl4VTik--
+https://www.codethink.co.uk/privacy.html
