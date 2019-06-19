@@ -2,61 +2,61 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A155CC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:27:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C38C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:28:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AAEC215EA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:27:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99E6D215EA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:28:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKnkGBzw"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qEmVluxm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731056AbfFSF16 (ORCPT
+        id S1731071AbfFSF2B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:27:58 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43840 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731000AbfFSF1w (ORCPT
+        Wed, 19 Jun 2019 01:28:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38035 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731028AbfFSF1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:27:52 -0400
-Received: by mail-pf1-f193.google.com with SMTP id i189so9009801pfg.10
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:27:52 -0700 (PDT)
+        Wed, 19 Jun 2019 01:27:55 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v11so8971480pgl.5
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:27:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1kqfNfq2UBNDicaf5X51z/Q4e+iOBdOxSEncrwbn1+g=;
-        b=VKnkGBzwHQed1BokAjAHwbkD/TQscY7KgmLWz4WdOquEFfqFRAZMniBRgtbwAGhdCZ
-         CWEPO8uqUbasup+P9Un0t7HUaoDCoAqyb7iGAUnlARMggtNed+AzAombOeiZS0J/ZV5C
-         IMWe3vhqlOvDoNU7ugT2zAnE5JR93SzAlkEqDuHL3grfWAg9Jt/zEG50YpJuJjpBgNUo
-         dpgh3dZpBHZaT9CvzHUQzydshxWMwsCnjUzrrgIA7hCDxVChUnZFT0xcc1D8Zm/u/RCz
-         SgS1TFbGHqq2waIaDKgFAS79RyMfBCwTbEBA4ibAuYCr/npcF2zEnZFyxH4wlrJUuGdE
-         wS4w==
+        bh=HLH0lqvZF2YW47kF82c+4eI137sw7vALgNnez8nJtAo=;
+        b=qEmVluxmK/18OQ+++SpHWnGDCghiUyUaW14rwQjiPOLI5J4BeYe4D1gCQuG5NyvqXN
+         qwCRgux/LCIMpoAp+VNhY01o8kStEkjtw0OW1JelbTj++ZKv8Lwuo4Q1LkcJYyp2WoWt
+         gODUNatTlmb/Kqe9OYCrQN6s3EGk4DpGHx//kS5fXN8kIOiSZr316AUv+c0NC+1s8enS
+         Ud7+1sYqow2wwTvUKaNbSE1AJzsBv33ET0g3lmPh7oiLEDy0kmb6hEsyvRf4pxvgsisO
+         26a/8KSibKbxMimvGU7lNlS1/p4uaGZnk47necXS2AU+9c286QVCZHtHT25yIOjTROPR
+         j1pA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1kqfNfq2UBNDicaf5X51z/Q4e+iOBdOxSEncrwbn1+g=;
-        b=G0H5HBxQu/LEsh1v4xtnOY4Pn/oDHh9OHf1wg/lEuIUmf5tRcJBAonnjmmyjMJSXm1
-         yBkR+fHbjXtJ8ubrZjs5IxHtCI9z/v5JNf3XsQqnh5ojlfCcn5KksgUrbTi6WrMz+Vlv
-         6hcJMldhATNAGn999KiiHgSdFlbQ4+lpodwm0oifWsMlRkv/v1LqEilVHGtyqcB2pzOo
-         H181gWihAamJb6CEnm82QhKnquTw+gerkXFD6YtQkr0D3Cg/zZqIqUbWUOOd4J64Mf+7
-         qCUpt9Q3ys6dGl8kN29qKSjo638cSPKRvZqFwIk8/6xMGjIC7AZkrrdWUWwKOqUktGb5
-         65+A==
-X-Gm-Message-State: APjAAAX2qsr04Ucx8OZfFkCXY/tZNf7gLx4vyzLsAoCrGHSfYIJe8+PQ
-        UDuRVmbx6/nklMySI9L6xb0=
-X-Google-Smtp-Source: APXvYqzriyZXGK0wY5cBfBCHFDASRS5djuRj1Oe3WfuNFONcc9OeF9VJ2Cz2byzINYz71aJ1lkXkWw==
-X-Received: by 2002:a62:28b:: with SMTP id 133mr1226137pfc.251.1560922071770;
-        Tue, 18 Jun 2019 22:27:51 -0700 (PDT)
+        bh=HLH0lqvZF2YW47kF82c+4eI137sw7vALgNnez8nJtAo=;
+        b=Em9onqevK+fCydSLCCAjJAY1kTTPRNkcvc3mSnkIllXM6oui/2uOAah/7SMnLV5rUA
+         wze4W44Y4Z2gq+pPTebhmhKgb5UIFN4wIXAaFG5aBP7Rk7hIhfiytS/k8xPhX5/LSQ0h
+         w1fsed63MU1mjO8AkPcKB2B5ECK2ZXwP/D/bG/CjeXXxfgZ3eiRwqjpPoCmOVDf9pAYs
+         cp+EWEfV4c4tHcTBlkIb5vaP86HICYNpTIFdBS/Ra2Eo1N0I3tVYi4u3cuM8yvXBesta
+         ChHfNm0LVQal4SvUApjE4x03bMb9Wwl7gi0UsxzBOsUp5XiROBBqfKfPkZ7VY+1edfPd
+         5sLw==
+X-Gm-Message-State: APjAAAX8GJeUyKRee7NP9xv0iWP3BkcLyLlaOjBQnBd1QhCCPbP7Mkg9
+        DVZpFgdZSVBFiZLbetc9qDo=
+X-Google-Smtp-Source: APXvYqwEo/5VnxgZr65e8cL5i0qkfqYPmZ0/fI74F+U4KjS3UH+04Mf40Dg1QxYprFHJRxYt5LoSrg==
+X-Received: by 2002:a63:145f:: with SMTP id 31mr6055673pgu.320.1560922074652;
+        Tue, 18 Jun 2019 22:27:54 -0700 (PDT)
 Received: from localhost.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id l44sm534742pje.29.2019.06.18.22.27.50
+        by smtp.gmail.com with ESMTPSA id l44sm534742pje.29.2019.06.18.22.27.53
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 22:27:51 -0700 (PDT)
+        Tue, 18 Jun 2019 22:27:53 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     dri-devel@lists.freedesktop.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -69,9 +69,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Chris Healy <cphealy@gmail.com>,
         Lucas Stach <l.stach@pengutronix.de>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v6 13/15] drm/bridge: tc358767: Drop unnecessary 8 byte buffer
-Date:   Tue, 18 Jun 2019 22:27:14 -0700
-Message-Id: <20190619052716.16831-14-andrew.smirnov@gmail.com>
+Subject: [PATCH v6 15/15] drm/bridge: tc358767: Add support for address-only I2C transfers
+Date:   Tue, 18 Jun 2019 22:27:16 -0700
+Message-Id: <20190619052716.16831-16-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190619052716.16831-1-andrew.smirnov@gmail.com>
 References: <20190619052716.16831-1-andrew.smirnov@gmail.com>
@@ -82,9 +82,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-tc_get_display_props() never reads more than a byte via AUX, so
-there's no need to reserve 8 for that purpose. No function change
-intended.
+Transfer size of zero means a request to do an address-only
+transfer. Since the HW support this, we probably shouldn't be just
+ignoring such requests. While at it allow DP_AUX_I2C_MOT flag to pass
+through, since it is supported by the HW as well.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
@@ -99,50 +100,102 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: dri-devel@lists.freedesktop.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/gpu/drm/bridge/tc358767.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/bridge/tc358767.c | 42 +++++++++++++++++++++++--------
+ 1 file changed, 31 insertions(+), 11 deletions(-)
 
 diff --git a/drivers/gpu/drm/bridge/tc358767.c b/drivers/gpu/drm/bridge/tc358767.c
-index 7cc26e26f371..f0baf6d7ca80 100644
+index 3f8a15390813..7b8e19d6cf29 100644
 --- a/drivers/gpu/drm/bridge/tc358767.c
 +++ b/drivers/gpu/drm/bridge/tc358767.c
-@@ -645,8 +645,7 @@ static int tc_aux_link_setup(struct tc_data *tc)
- static int tc_get_display_props(struct tc_data *tc)
- {
- 	int ret;
--	/* temp buffer */
--	u8 tmp[8];
-+	u8 reg;
+@@ -145,6 +145,8 @@
  
- 	/* Read DP Rx Link Capability */
- 	ret = drm_dp_link_probe(&tc->aux, &tc->link.base);
-@@ -662,21 +661,21 @@ static int tc_get_display_props(struct tc_data *tc)
- 		tc->link.base.num_lanes = 2;
+ /* AUX channel */
+ #define DP0_AUXCFG0		0x0660
++#define DP0_AUXCFG0_BSIZE	GENMASK(11, 8)
++#define DP0_AUXCFG0_ADDR_ONLY	BIT(4)
+ #define DP0_AUXCFG1		0x0664
+ #define AUX_RX_FILTER_EN		BIT(16)
+ 
+@@ -326,6 +328,18 @@ static int tc_aux_read_data(struct tc_data *tc, void *data, size_t size)
+ 	return size;
+ }
+ 
++static u32 tc_auxcfg0(struct drm_dp_aux_msg *msg, size_t size)
++{
++	u32 auxcfg0 = msg->request;
++
++	if (size)
++		auxcfg0 |= FIELD_PREP(DP0_AUXCFG0_BSIZE, size - 1);
++	else
++		auxcfg0 |= DP0_AUXCFG0_ADDR_ONLY;
++
++	return auxcfg0;
++}
++
+ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 			       struct drm_dp_aux_msg *msg)
+ {
+@@ -335,9 +349,6 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	u32 auxstatus;
+ 	int ret;
+ 
+-	if (size == 0)
+-		return 0;
+-
+ 	ret = tc_aux_wait_busy(tc);
+ 	if (ret)
+ 		return ret;
+@@ -348,9 +359,11 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 		break;
+ 	case DP_AUX_NATIVE_WRITE:
+ 	case DP_AUX_I2C_WRITE:
+-		ret = tc_aux_write_data(tc, msg->buffer, size);
+-		if (ret < 0)
+-			return ret;
++		if (size) {
++			ret = tc_aux_write_data(tc, msg->buffer, size);
++			if (ret < 0)
++				return ret;
++		}
+ 		break;
+ 	default:
+ 		return -EINVAL;
+@@ -361,8 +374,7 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 	if (ret)
+ 		return ret;
+ 	/* Start transfer */
+-	ret = regmap_write(tc->regmap, DP0_AUXCFG0,
+-			   ((size - 1) << 8) | request);
++	ret = regmap_write(tc->regmap, DP0_AUXCFG0, tc_auxcfg0(msg, size));
+ 	if (ret)
+ 		return ret;
+ 
+@@ -376,14 +388,22 @@ static ssize_t tc_aux_transfer(struct drm_dp_aux *aux,
+ 
+ 	if (auxstatus & AUX_TIMEOUT)
+ 		return -ETIMEDOUT;
+-
+-	size = FIELD_GET(AUX_BYTES, auxstatus);
++	/*
++	 * For some reason address-only DP_AUX_I2C_WRITE (MOT), still
++	 * reports 1 byte transferred in its status. To deal we that
++	 * we ignore aux_bytes field if we know that this was an
++	 * address-only transfer
++	 */
++	if (size)
++		size = FIELD_GET(AUX_BYTES, auxstatus);
+ 	msg->reply = FIELD_GET(AUX_STATUS, auxstatus);
+ 
+ 	switch (request) {
+ 	case DP_AUX_NATIVE_READ:
+ 	case DP_AUX_I2C_READ:
+-		return tc_aux_read_data(tc, msg->buffer, size);
++		if (size)
++			return tc_aux_read_data(tc, msg->buffer, size);
++		break;
  	}
  
--	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAX_DOWNSPREAD, tmp);
-+	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAX_DOWNSPREAD, &reg);
- 	if (ret < 0)
- 		goto err_dpcd_read;
--	tc->link.spread = tmp[0] & DP_MAX_DOWNSPREAD_0_5;
-+	tc->link.spread = reg & DP_MAX_DOWNSPREAD_0_5;
- 
--	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAIN_LINK_CHANNEL_CODING, tmp);
-+	ret = drm_dp_dpcd_readb(&tc->aux, DP_MAIN_LINK_CHANNEL_CODING, &reg);
- 	if (ret < 0)
- 		goto err_dpcd_read;
- 
- 	tc->link.scrambler_dis = false;
- 	/* read assr */
--	ret = drm_dp_dpcd_readb(&tc->aux, DP_EDP_CONFIGURATION_SET, tmp);
-+	ret = drm_dp_dpcd_readb(&tc->aux, DP_EDP_CONFIGURATION_SET, &reg);
- 	if (ret < 0)
- 		goto err_dpcd_read;
--	tc->link.assr = tmp[0] & DP_ALTERNATE_SCRAMBLER_RESET_ENABLE;
-+	tc->link.assr = reg & DP_ALTERNATE_SCRAMBLER_RESET_ENABLE;
- 
- 	dev_dbg(tc->dev, "DPCD rev: %d.%d, rate: %s, lanes: %d, framing: %s\n",
- 		tc->link.base.revision >> 4, tc->link.base.revision & 0x0f,
+ 	return size;
 -- 
 2.21.0
 
