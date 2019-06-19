@@ -2,402 +2,773 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9B0C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:47:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CD96C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D53321670
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:47:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 274FF21670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:51:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="yz1Nc6WP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730761AbfFSNrI convert rfc822-to-8bit (ORCPT
+        id S1727129AbfFSNvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:47:08 -0400
-Received: from mail-oln040092254085.outbound.protection.outlook.com ([40.92.254.85]:14083
-        "EHLO APC01-PU1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726047AbfFSNrI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:47:08 -0400
-Received: from SG2APC01FT024.eop-APC01.prod.protection.outlook.com
- (10.152.250.51) by SG2APC01HT223.eop-APC01.prod.protection.outlook.com
- (10.152.251.199) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1987.11; Wed, 19 Jun
- 2019 13:47:00 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM (10.152.250.57) by
- SG2APC01FT024.mail.protection.outlook.com (10.152.250.185) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1987.11 via Frontend Transport; Wed, 19 Jun 2019 13:47:00 +0000
-Received: from SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::8c3b:f424:c69d:527e]) by SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- ([fe80::8c3b:f424:c69d:527e%3]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
- 13:47:00 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v6 1/4] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Thread-Topic: [PATCH v6 1/4] PCI: Consider alignment of hot-added bridges when
- distributing available resources
-Thread-Index: AQHVEKrwZ8ZhpR4YvEesf8rGWnkYA6afvpeAgAPxFIA=
-Date:   Wed, 19 Jun 2019 13:47:00 +0000
-Message-ID: <SL2P216MB0187526E3B79F6251231F97380E50@SL2P216MB0187.KORP216.PROD.OUTLOOK.COM>
-References: <20190522222928.2964-1-nicholas.johnson-opensource@outlook.com.au>
- <PS2P216MB0642C7A485649D2D787A1C6F80000@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
- <20190617093513.GN2640@lahna.fi.intel.com>
-In-Reply-To: <20190617093513.GN2640@lahna.fi.intel.com>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0192.ausprd01.prod.outlook.com
- (2603:10c6:10:52::36) To SL2P216MB0187.KORP216.PROD.OUTLOOK.COM
- (2603:1096:100:22::19)
-x-incomingtopheadermarker: OriginalChecksum:47992E5ED99851BD8F1622CCAF958E701B1190B5FC117CF456DCD4285C547944;UpperCasedChecksum:ED6AFFBD2A12D55F86A5900342CDCA73CB514F474295305DA8BAFFD557BA6FE4;SizeAsReceived:7924;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [Uw0hYmXdcGRczyN3JoH5jaQuHkeYy9L8XMAr2z56HSFsuFsHF862yfJjMt4RSGOkybxzri5kwdA=]
-x-microsoft-original-message-id: <20190619214649.GB12283@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(5050001)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(2017031322404)(2017031323274)(2017031324274)(1601125500)(1603101475)(1701031045);SRVR:SG2APC01HT223;
-x-ms-traffictypediagnostic: SG2APC01HT223:
-x-microsoft-antispam-message-info: v++VkpRNbXw0MDUc4HezIaIMayNBpMvJjF7WvnVRcjeJi57Q6Exg1bgaQqZvDVmtnUUGQJlnTUUipSQEYFFbC1WgiFsUijzV+j/Qeco1We4GcrEn/sBFDW+Hs/wEW5OUm30BdTN6fQNwVeijRjMkW8GNFyn+amQUYbzZGMuj1FAwZAlUpy2tV/Q2OGHJjU2o
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <B2C64DD018C21B48A30BF26EC2056865@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Wed, 19 Jun 2019 09:51:10 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:41081 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFSNvK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:51:10 -0400
+Received: by mail-io1-f65.google.com with SMTP id w25so38211168ioc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 06:51:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=4KvIMxAkx5u/hSQtKOR3WZvhAepua+AAqaRsKPbaTY0=;
+        b=yz1Nc6WP0GfftVlRYpT2FjPMgrZGtP8+/8bs+e/QUHNHRfsfndzMIfSqItcS9cAsrT
+         n7yqHJcrNnV+vissj1I2NYeFf6PnDqh7CHVuh520nguI90gkdey4B4fl1U3wiunWoB6d
+         4veLRj91iFH7Nu45PhkNpN3c9lj/TM1SQyMcwPTlKe7eCitnsbOa3zKFjnKN2Sw4Zk7Z
+         MChCxyLGSGgUmzK2HRjtyybVLJzjk8a/gwYfEiwN8E2Wi8L6LDOBUAEfkPBLQv5EIHZY
+         6JX16BjBl5tfk1v9VsfzembpDi7x/wIJhSy93DzbY/9IEBE6pXOS0/KMn0gr37DiJQM1
+         GHVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=4KvIMxAkx5u/hSQtKOR3WZvhAepua+AAqaRsKPbaTY0=;
+        b=Copw/X2IlqsxXCSS8PTqwbWrvbUG0ofOZcwGpzlyYwsP7BIZQtM91YZXqe/VcpQxLq
+         Nz+ZuwkbytIVrVJge6bzwau0deMBJnSLlNltwb4BixoTUax/EJzV5+x8j0zUPCdyJ+RP
+         32NVjrvY3xj69TrViqy1NhgPII1nW6SC8QQxiMuKgAgUcZ7J669BVF9Tpnin7FiBSFS0
+         IMpryzTbp2vFH6/PeU6VAq9gjBhXwVGWZCGCrP016u+p9TKaZoaoGQ2BI0/SJn965azT
+         S3V/FDD7hWCAipypN3WtSrsGcwizHyyVOPKaYJfqLrhmJigyowfUrPXzva/sbjFVCnjc
+         gh/w==
+X-Gm-Message-State: APjAAAV3VVPYyv75DFWGkOdIwkivqmG074kyR3HPeiC47DTs8iYQwgI4
+        ngLKkEZwvqYoOyd3+vXaJZUporbPjnGeIdH5gIZM7P/vspw=
+X-Google-Smtp-Source: APXvYqw9Sa7sUTqH5b56Sn0daJHFpH6GjHD9oXL7u87K7Gwja3yLvVCZWTY3tXpkY8ydehcW1vFsY3bV31DVDU2BU+Q=
+X-Received: by 2002:a6b:8bd1:: with SMTP id n200mr73467003iod.134.1560952268231;
+ Wed, 19 Jun 2019 06:51:08 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 82f743e6-6a9a-46a6-751d-08d6f4bc9a4d
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 13:47:00.2472
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SG2APC01HT223
+References: <20190515131741.17294-1-fparent@baylibre.com> <20190515131741.17294-5-fparent@baylibre.com>
+ <20190603093704.GJ4797@dell>
+In-Reply-To: <20190603093704.GJ4797@dell>
+From:   Fabien Parent <fparent@baylibre.com>
+Date:   Wed, 19 Jun 2019 15:50:57 +0200
+Message-ID: <CAOwMV_wwerBHWKsGyLCLCuj_PTB7nCNQD+3nggJRSrEqj7OCdg@mail.gmail.com>
+Subject: Re: [PATCH v3 4/5] mfd: mt6397: Add support for MT6392 pmic
+To:     Lee Jones <lee.jones@linaro.org>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        DTML <devicetree@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Again, I am re-sending my previous response with reply-all instead of 
-plain reply. Mika, you can ignore this as you have already seen it. For 
-everybody else, everything below the line should be exactly the same as 
-I copied it over. 
-_______________________________________________________________________________
-
-
-On Mon, Jun 17, 2019 at 12:35:13PM +0300, mika.westerberg@linux.intel.com wrote:
-> On Wed, May 22, 2019 at 02:30:44PM +0000, Nicholas Johnson wrote:
-> > Rewrite pci_bus_distribute_available_resources to better handle bridges
-> > with different resource alignment requirements. Pass more details
-> > arguments recursively to track the resource start and end addresses
-> > relative to the initial hotplug bridge. This is especially useful for
-> > Thunderbolt with native PCI enumeration, enabling external graphics
-> > cards and other devices with bridge alignment higher than 0x100000
->  
-> Instead of 0x100000 you could say 1MB here.
-My train of thought is 1MB is sometimes means base-10 but then again, 
-that is probably outside of the kernel world. I can change it to 1MB.
-
-> 
-> > bytes.
-> > 
-> > Change extend_bridge_window to resize the actual resource, rather than
-> > using add_list and dev_res->add_size. If an additional resource entry
-> > exists for the given resource, zero out the add_size field to avoid it
-> > interfering. Because add_size is considered optional when allocating,
-> > using add_size could cause issues in some cases, because successful
-> > resource distribution requires sizes to be guaranteed. Such cases
-> > include hot-adding nested hotplug bridges in one enumeration, and
-> > potentially others which are yet to be encountered.
-> > 
-> > Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-> 
-> The logic makes sense to me but since you probably need to spin another
-> revision anyway please find a couple of additional comments below.
-> 
+On Mon, Jun 3, 2019 at 11:37 AM Lee Jones <lee.jones@linaro.org> wrote:
+>
+> On Wed, 15 May 2019, Fabien Parent wrote:
+>
+> > Update the MT6397 MFD driver to support the MT6392 PMIC.
+> >
+> > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > > ---
-> >  drivers/pci/setup-bus.c | 169 ++++++++++++++++++++--------------------
-> >  1 file changed, 84 insertions(+), 85 deletions(-)
-> > 
-> > diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-> > index 0cdd5ff38..1b5b851ca 100644
-> > --- a/drivers/pci/setup-bus.c
-> > +++ b/drivers/pci/setup-bus.c
-> > @@ -1835,12 +1835,10 @@ static void extend_bridge_window(struct pci_dev *bridge, struct resource *res,
-> >  }
-> >  
-> >  static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> > -					    struct list_head *add_list,
-> > -					    resource_size_t available_io,
-> > -					    resource_size_t available_mmio,
-> > -					    resource_size_t available_mmio_pref)
-> > +	struct list_head *add_list, struct resource io,
-> > +	struct resource mmio, struct resource mmio_pref)
-> >  {
-> > -	resource_size_t remaining_io, remaining_mmio, remaining_mmio_pref;
-> > +	resource_size_t io_per_hp, mmio_per_hp, mmio_pref_per_hp, align;
-> >  	unsigned int normal_bridges = 0, hotplug_bridges = 0;
-> >  	struct resource *io_res, *mmio_res, *mmio_pref_res;
-> >  	struct pci_dev *dev, *bridge = bus->self;
-> > @@ -1850,29 +1848,36 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> >  	mmio_pref_res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
-> >  
-> >  	/*
-> > -	 * Update additional resource list (add_list) to fill all the
-> > -	 * extra resource space available for this port except the space
-> > -	 * calculated in __pci_bus_size_bridges() which covers all the
-> > -	 * devices currently connected to the port and below.
-> > +	 * The alignment of this bridge is yet to be considered, hence it must
-> > +	 * be done now before extending its bridge window. A single bridge
-> > +	 * might not be able to occupy the whole parent region if the alignment
-> > +	 * differs - for example, an external GPU at the end of a Thunderbolt
-> > +	 * daisy chain.
-> 
-> As Bjorn also commented there is nothing Thunderbolt specific here so I
-> would leave it out of the comment because it is kind of confusing.
-Okay, I can remove "A single bridge.... daisy chain".
-Please correct me if that is not what you meant.
-
-> 
-> >  	 */
-> > -	extend_bridge_window(bridge, io_res, add_list, available_io);
-> > -	extend_bridge_window(bridge, mmio_res, add_list, available_mmio);
-> > -	extend_bridge_window(bridge, mmio_pref_res, add_list,
-> > -			     available_mmio_pref);
-> > +	align = pci_resource_alignment(bridge, io_res);
-> > +	if (!io_res->parent && align)
-> > +		io.start = ALIGN(io.start, align);
+> >
+> > V3:
+> >       * No change
+> >
+> > V2:
+> >       * Pass IRQ comain to fix invalid MFD devices IRQs.
+> >       * Remove resources and mfd cells for device we don't support.
+> >       * Rename IRQ names to follow what's done for MT6397.
+> >
+> > ---
+> >  drivers/mfd/mt6397-core.c            |  55 +++
+> >  include/linux/mfd/mt6392/core.h      |  42 +++
+> >  include/linux/mfd/mt6392/registers.h | 487 +++++++++++++++++++++++++++
+> >  3 files changed, 584 insertions(+)
+> >  create mode 100644 include/linux/mfd/mt6392/core.h
+> >  create mode 100644 include/linux/mfd/mt6392/registers.h
+> >
+> > diff --git a/drivers/mfd/mt6397-core.c b/drivers/mfd/mt6397-core.c
+> > index ab24e176ef44..e46c0533d187 100644
+> > --- a/drivers/mfd/mt6397-core.c
+> > +++ b/drivers/mfd/mt6397-core.c
+> > @@ -18,17 +18,35 @@
+> >  #include <linux/of_irq.h>
+> >  #include <linux/regmap.h>
+> >  #include <linux/mfd/core.h>
+> > +#include <linux/mfd/mt6392/core.h>
+> >  #include <linux/mfd/mt6397/core.h>
+> >  #include <linux/mfd/mt6323/core.h>
+> > +#include <linux/mfd/mt6392/registers.h>
+> >  #include <linux/mfd/mt6397/registers.h>
+> >  #include <linux/mfd/mt6323/registers.h>
+> >
+> > +#define MT6392_RTC_BASE              0x8000
+> > +#define MT6392_RTC_SIZE              0x3e
+> >  #define MT6397_RTC_BASE              0xe000
+> >  #define MT6397_RTC_SIZE              0x3e
+> >
+> >  #define MT6323_CID_CODE              0x23
+> >  #define MT6391_CID_CODE              0x91
+> >  #define MT6397_CID_CODE              0x97
+> > +#define MT6392_CID_CODE              0x92
 > > +
-> > +	align = pci_resource_alignment(bridge, mmio_res);
-> > +	if (!mmio_res->parent && align)
-> > +		mmio.start = ALIGN(mmio.start, align);
+> > +static const struct resource mt6392_rtc_resources[] =3D {
+> > +     {
+> > +             .start =3D MT6392_RTC_BASE,
+> > +             .end   =3D MT6392_RTC_BASE + MT6392_RTC_SIZE,
+> > +             .flags =3D IORESOURCE_MEM,
+> > +     },
+> > +     {
+> > +             .start =3D MT6392_IRQ_RTC,
+> > +             .end   =3D MT6392_IRQ_RTC,
+> > +             .flags =3D IORESOURCE_IRQ,
+> > +     },
+> > +};
+>
+> Why aren't you using the the DEFINE_RES_* helpers here.
+
+Fixed in v4
+
+>
+> >  static const struct resource mt6397_rtc_resources[] =3D {
+> >       {
+> > @@ -48,11 +66,33 @@ static const struct resource mt6323_keys_resources[=
+] =3D {
+> >       DEFINE_RES_IRQ(MT6323_IRQ_STATUS_FCHRKEY),
+> >  };
+> >
+> > +static const struct resource mt6392_keys_resources[] =3D {
+> > +     DEFINE_RES_IRQ(MT6392_IRQ_PWRKEY),
+> > +     DEFINE_RES_IRQ(MT6392_IRQ_FCHRKEY),
+> > +};
 > > +
-> > +	align = pci_resource_alignment(bridge, mmio_pref_res);
-> > +	if (!mmio_pref_res->parent && align)
-> > +		mmio_pref.start = ALIGN(mmio_pref.start, align);
-> >  
-> >  	/*
-> > -	 * Calculate the total amount of extra resource space we can
-> > -	 * pass to bridges below this one.  This is basically the
-> > -	 * extra space reduced by the minimal required space for the
-> > -	 * non-hotplug bridges.
-> > +	 * Update the resources to fill as much remaining resource space in the
-> > +	 * parent bridge as possible, while considering alignment.
-> >  	 */
-> > -	remaining_io = available_io;
-> > -	remaining_mmio = available_mmio;
-> > -	remaining_mmio_pref = available_mmio_pref;
-> > +	extend_bridge_window(bridge, io_res, add_list, resource_size(&io));
-> > +	extend_bridge_window(bridge, mmio_res, add_list, resource_size(&mmio));
-> > +	extend_bridge_window(bridge, mmio_pref_res, add_list,
-> > +		resource_size(&mmio_pref));
-> 
-> Please write it like it was originally (e.g align the second line to the
-> opening bracket):
-> 
-> 	extend_bridge_window(bridge, mmio_pref_res, add_list, resource_size(&mmio_pref));
-Can do. The style of handling line overflows is still throwing me.
-
-> 
-> >  
-> >  	/*
-> >  	 * Calculate how many hotplug bridges and normal bridges there
-> > -	 * are on this bus.  We will distribute the additional available
-> > +	 * are on this bus. We will distribute the additional available
-> >  	 * resources between hotplug bridges.
-> >  	 */
-> >  	for_each_pci_bridge(dev, bus) {
-> > @@ -1882,104 +1887,98 @@ static void pci_bus_distribute_available_resources(struct pci_bus *bus,
-> >  			normal_bridges++;
-> >  	}
-> >  
-> > +	/*
-> > +	 * There is only one bridge on the bus so it gets all possible
-> > +	 * resources which it can then distribute to the possible
-> > +	 * hotplug bridges below.
-> > +	 */
-> > +	if (hotplug_bridges + normal_bridges == 1) {
-> > +		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> > +		if (dev->subordinate)
-> > +			pci_bus_distribute_available_resources(dev->subordinate,
-> > +				add_list, io, mmio, mmio_pref);
-> > +		return;
-> > +	}
+> >  static const struct resource mt6397_keys_resources[] =3D {
+> >       DEFINE_RES_IRQ(MT6397_IRQ_PWRKEY),
+> >       DEFINE_RES_IRQ(MT6397_IRQ_HOMEKEY),
+> >  };
+> >
+> > +static const struct mfd_cell mt6392_devs[] =3D {
+> > +     {
+> > +             .name =3D "mt6392-regulator",
+> > +             .of_compatible =3D "mediatek,mt6392-regulator",
+> > +     }, {
+> > +             .name =3D "mt6397-rtc",
+> > +             .num_resources =3D ARRAY_SIZE(mt6392_rtc_resources),
+> > +             .resources =3D mt6392_rtc_resources,
+> > +             .of_compatible =3D "mediatek,mt6392-rtc",
+> > +     }, {
+> > +             .name =3D "mtk-pmic-keys",
+> > +             .num_resources =3D ARRAY_SIZE(mt6392_keys_resources),
+> > +             .resources =3D mt6392_keys_resources,
+> > +             .of_compatible =3D "mediatek,mt6392-keys"
+> > +     },
+> > +};
 > > +
-> > +	/*
-> > +	 * Reduce the available resource space by what the
-> > +	 * bridge and devices below it occupy.
-> > +	 */
-> >  	for_each_pci_bridge(dev, bus) {
-> > -		const struct resource *res;
-> > +		struct resource *res;
-> > +		resource_size_t used_size;
-> 
-> Here order these in "reverse christmas tree" like:
-> 
-> 		resource_size_t used_size;
-> 		struct resource *res;
-That seems reasonable.
-
-> 
-> >  
-> >  		if (dev->is_hotplug_bridge)
-> >  			continue;
-> >  
-> > -		/*
-> > -		 * Reduce the available resource space by what the
-> > -		 * bridge and devices below it occupy.
-> > -		 */
-> >  		res = &dev->resource[PCI_BRIDGE_RESOURCES + 0];
-> > -		if (!res->parent && available_io > resource_size(res))
-> > -			remaining_io -= resource_size(res);
-> > +		align = pci_resource_alignment(dev, res);
-> > +		align = align ? ALIGN(io.start, align) - io.start : 0;
-> > +		used_size = align + resource_size(res);
-> > +		if (!res->parent && used_size <= resource_size(&io))
-> > +			io.start += used_size;
-> >  
-> >  		res = &dev->resource[PCI_BRIDGE_RESOURCES + 1];
-> > -		if (!res->parent && available_mmio > resource_size(res))
-> > -			remaining_mmio -= resource_size(res);
-> > +		align = pci_resource_alignment(dev, res);
-> > +		align = align ? ALIGN(mmio.start, align) - mmio.start : 0;
-> > +		used_size = align + resource_size(res);
-> > +		if (!res->parent && used_size <= resource_size(&mmio))
-> > +			mmio.start += used_size;
-> >  
-> >  		res = &dev->resource[PCI_BRIDGE_RESOURCES + 2];
-> > -		if (!res->parent && available_mmio_pref > resource_size(res))
-> > -			remaining_mmio_pref -= resource_size(res);
-> > +		align = pci_resource_alignment(dev, res);
-> > +		align = align ? ALIGN(mmio_pref.start, align) -
-> > +				mmio_pref.start : 0;
-> > +		used_size = align + resource_size(res);
-> > +		if (!res->parent && used_size <= resource_size(&mmio_pref))
-> > +			mmio_pref.start += used_size;
-> >  	}
-> >  
-> > -	/*
-> > -	 * There is only one bridge on the bus so it gets all available
-> > -	 * resources which it can then distribute to the possible hotplug
-> > -	 * bridges below.
-> > -	 */
-> > -	if (hotplug_bridges + normal_bridges == 1) {
-> > -		dev = list_first_entry(&bus->devices, struct pci_dev, bus_list);
-> > -		if (dev->subordinate) {
-> > -			pci_bus_distribute_available_resources(dev->subordinate,
-> > -				add_list, available_io, available_mmio,
-> > -				available_mmio_pref);
-> > -		}
-> > +	if (!hotplug_bridges)
-> >  		return;
-> > -	}
-> >  
-> >  	/*
-> > -	 * Go over devices on this bus and distribute the remaining
-> > -	 * resource space between hotplug bridges.
-> > +	 * Distribute any remaining resources equally between
-> > +	 * the hotplug-capable downstream ports.
-> >  	 */
-> > -	for_each_pci_bridge(dev, bus) {
-> > -		resource_size_t align, io, mmio, mmio_pref;
-> > -		struct pci_bus *b;
-> > +	io_per_hp = div64_ul(resource_size(&io), hotplug_bridges);
-> > +	mmio_per_hp = div64_ul(resource_size(&mmio), hotplug_bridges);
-> > +	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
-> > +		hotplug_bridges);
-> 
-> Here also write it like:
-> 
-> 	mmio_pref_per_hp = div64_ul(resource_size(&mmio_pref),
-> 				    hotplug_bridges);
-Okay.
-
-> 
-> >  
-> > -		b = dev->subordinate;
-> > -		if (!b || !dev->is_hotplug_bridge)
-> > +	for_each_pci_bridge(dev, bus) {
-> > +		if (!dev->subordinate || !dev->is_hotplug_bridge)
-> >  			continue;
-> >  
-> > -		/*
-> > -		 * Distribute available extra resources equally between
-> > -		 * hotplug-capable downstream ports taking alignment into
-> > -		 * account.
-> > -		 *
-> > -		 * Here hotplug_bridges is always != 0.
-> > -		 */
-> > -		align = pci_resource_alignment(bridge, io_res);
-> > -		io = div64_ul(available_io, hotplug_bridges);
-> > -		io = min(ALIGN(io, align), remaining_io);
-> > -		remaining_io -= io;
-> > -
-> > -		align = pci_resource_alignment(bridge, mmio_res);
-> > -		mmio = div64_ul(available_mmio, hotplug_bridges);
-> > -		mmio = min(ALIGN(mmio, align), remaining_mmio);
-> > -		remaining_mmio -= mmio;
-> > +		io.end = io.start + io_per_hp - 1;
-> > +		mmio.end = mmio.start + mmio_per_hp - 1;
-> > +		mmio_pref.end = mmio_pref.start + mmio_pref_per_hp - 1;
-> >  
-> > -		align = pci_resource_alignment(bridge, mmio_pref_res);
-> > -		mmio_pref = div64_ul(available_mmio_pref, hotplug_bridges);
-> > -		mmio_pref = min(ALIGN(mmio_pref, align), remaining_mmio_pref);
-> > -		remaining_mmio_pref -= mmio_pref;
-> > +		pci_bus_distribute_available_resources(dev->subordinate,
-> > +			add_list, io, mmio, mmio_pref);
-> 
-> Ditto.
-Okay.
-
-> 
-> >  
-> > -		pci_bus_distribute_available_resources(b, add_list, io, mmio,
-> > -						       mmio_pref);
-> > +		io.start = io.end + 1;
-> > +		mmio.start = mmio.end + 1;
-> > +		mmio_pref.start = mmio_pref.end + 1;
-> >  	}
-> >  }
-> >  
-> >  static void pci_bridge_distribute_available_resources(struct pci_dev *bridge,
-> >  						     struct list_head *add_list)
-> >  {
-> > -	resource_size_t available_io, available_mmio, available_mmio_pref;
-> > -	const struct resource *res;
-> > +	struct resource io_res, mmio_res, mmio_pref_res;
-> >  
-> >  	if (!bridge->is_hotplug_bridge)
-> >  		return;
-> >  
-> > +	io_res = bridge->resource[PCI_BRIDGE_RESOURCES + 0];
-> > +	mmio_res = bridge->resource[PCI_BRIDGE_RESOURCES + 1];
-> > +	mmio_pref_res = bridge->resource[PCI_BRIDGE_RESOURCES + 2];
+> >  static const struct mfd_cell mt6323_devs[] =3D {
+> >       {
+> >               .name =3D "mt6323-regulator",
+> > @@ -327,6 +367,20 @@ static int mt6397_probe(struct platform_device *pd=
+ev)
+> >                                          0, pmic->irq_domain);
+> >               break;
+> >
+> > +     case MT6392_CID_CODE:
+> > +             pmic->int_con[0] =3D MT6392_INT_CON0;
+> > +             pmic->int_con[1] =3D MT6392_INT_CON1;
+> > +             pmic->int_status[0] =3D MT6392_INT_STATUS0;
+> > +             pmic->int_status[1] =3D MT6392_INT_STATUS1;
+> > +             ret =3D mt6397_irq_init(pmic);
+> > +             if (ret)
+> > +                     return ret;
 > > +
-> >  	/* Take the initial extra resources from the hotplug port */
-> > -	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 0];
-> > -	available_io = resource_size(res);
-> > -	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 1];
-> > -	available_mmio = resource_size(res);
-> > -	res = &bridge->resource[PCI_BRIDGE_RESOURCES + 2];
-> > -	available_mmio_pref = resource_size(res);
-> >  
-> >  	pci_bus_distribute_available_resources(bridge->subordinate,
-> > -					       add_list, available_io,
-> > -					       available_mmio,
-> > -					       available_mmio_pref);
-> > +		add_list, io_res, mmio_res, mmio_pref_res);
-> >  }
-> >  
-> >  void pci_assign_unassigned_bridge_resources(struct pci_dev *bridge)
-> > -- 
-> > 2.20.1
-> > 
+> > +             ret =3D devm_mfd_add_devices(&pdev->dev, -1, mt6392_devs,
+>
+> Please use the defines, instead of -1.
+
+Fixed in v4
+>
+> > +                                        ARRAY_SIZE(mt6392_devs), NULL,
+> > +                                        0, pmic->irq_domain);
+> > +             break;
+> > +
+> >       default:
+> >               dev_err(&pdev->dev, "unsupported chip: %d\n", id);
+> >               return -ENODEV;
+> > @@ -343,6 +397,7 @@ static int mt6397_probe(struct platform_device *pde=
+v)
+> >  static const struct of_device_id mt6397_of_match[] =3D {
+> >       { .compatible =3D "mediatek,mt6397" },
+> >       { .compatible =3D "mediatek,mt6323" },
+> > +     { .compatible =3D "mediatek,mt6392" },
+> >       { }
+> >  };
+> >  MODULE_DEVICE_TABLE(of, mt6397_of_match);
+> > diff --git a/include/linux/mfd/mt6392/core.h b/include/linux/mfd/mt6392=
+/core.h
+> > new file mode 100644
+> > index 000000000000..7575a79ea052
+> > --- /dev/null
+> > +++ b/include/linux/mfd/mt6392/core.h
+> > @@ -0,0 +1,42 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (c) 2019 MediaTek Inc.
+> > + * Author: Chen Zhong <chen.zhong@mediatek.com>
+> > + */
+> > +
+> > +#ifndef __MFD_MT6392_CORE_H__
+> > +#define __MFD_MT6392_CORE_H__
+> > +
+> > +enum MT6392_IRQ_numbers {
+> > +     MT6392_IRQ_SPKL_AB =3D 0,
+> > +     MT6392_IRQ_SPKL,
+> > +     MT6392_IRQ_BAT_L,
+> > +     MT6392_IRQ_BAT_H,
+> > +     MT6392_IRQ_WATCHDOG,
+> > +     MT6392_IRQ_PWRKEY,
+> > +     MT6392_IRQ_THR_L,
+> > +     MT6392_IRQ_THR_H,
+> > +     MT6392_IRQ_VBATON_UNDET,
+> > +     MT6392_IRQ_BVALID_DET,
+> > +     MT6392_IRQ_CHRDET,
+> > +     MT6392_IRQ_OV,
+> > +     MT6392_IRQ_LDO =3D 16,
+> > +     MT6392_IRQ_FCHRKEY,
+> > +     MT6392_IRQ_RELEASE_PWRKEY,
+> > +     MT6392_IRQ_RELEASE_FCHRKEY,
+> > +     MT6392_IRQ_RTC,
+> > +     MT6392_IRQ_VPROC,
+> > +     MT6392_IRQ_VSYS,
+> > +     MT6392_IRQ_VCORE,
+> > +     MT6392_IRQ_TYPE_C_CC,
+> > +     MT6392_IRQ_TYPEC_H_MAX,
+> > +     MT6392_IRQ_TYPEC_H_MIN,
+> > +     MT6392_IRQ_TYPEC_L_MAX,
+> > +     MT6392_IRQ_TYPEC_L_MIN,
+> > +     MT6392_IRQ_THR_MAX,
+> > +     MT6392_IRQ_THR_MIN,
+> > +     MT6392_IRQ_NAG_C_DLTV,
+> > +     MT6392_IRQ_NR,
+> > +};
+> > +
+> > +#endif /* __MFD_MT6392_CORE_H__ */
+> > diff --git a/include/linux/mfd/mt6392/registers.h b/include/linux/mfd/m=
+t6392/registers.h
+> > new file mode 100644
+> > index 000000000000..f02b478fc418
+> > --- /dev/null
+> > +++ b/include/linux/mfd/mt6392/registers.h
+> > @@ -0,0 +1,487 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (c) 2019 MediaTek Inc.
+> > + * Author: Chen Zhong <chen.zhong@mediatek.com>
+> > + */
+> > +
+> > +#ifndef __MFD_MT6392_REGISTERS_H__
+> > +#define __MFD_MT6392_REGISTERS_H__
+> > +
+> > +/* PMIC Registers */
+> > +#define MT6392_CHR_CON0                         0x0000
+> > +#define MT6392_CHR_CON1                         0x0002
+> > +#define MT6392_CHR_CON2                         0x0004
+> > +#define MT6392_CHR_CON3                         0x0006
+> > +#define MT6392_CHR_CON4                         0x0008
+> > +#define MT6392_CHR_CON5                         0x000A
+> > +#define MT6392_CHR_CON6                         0x000C
+> > +#define MT6392_CHR_CON7                         0x000E
+> > +#define MT6392_CHR_CON8                         0x0010
+> > +#define MT6392_CHR_CON9                         0x0012
+> > +#define MT6392_CHR_CON10                        0x0014
+> > +#define MT6392_CHR_CON11                        0x0016
+> > +#define MT6392_CHR_CON12                        0x0018
+> > +#define MT6392_CHR_CON13                        0x001A
+> > +#define MT6392_CHR_CON14                        0x001C
+> > +#define MT6392_CHR_CON15                        0x001E
+> > +#define MT6392_CHR_CON16                        0x0020
+> > +#define MT6392_CHR_CON17                        0x0022
+> > +#define MT6392_CHR_CON18                        0x0024
+> > +#define MT6392_CHR_CON19                        0x0026
+> > +#define MT6392_CHR_CON20                        0x0028
+> > +#define MT6392_CHR_CON21                        0x002A
+> > +#define MT6392_CHR_CON22                        0x002C
+> > +#define MT6392_CHR_CON23                        0x002E
+> > +#define MT6392_CHR_CON24                        0x0030
+> > +#define MT6392_CHR_CON25                        0x0032
+> > +#define MT6392_CHR_CON26                        0x0034
+> > +#define MT6392_CHR_CON27                        0x0036
+> > +#define MT6392_CHR_CON28                        0x0038
+> > +#define MT6392_CHR_CON29                        0x003A
+> > +#define MT6392_STRUP_CON0                       0x003C
+> > +#define MT6392_STRUP_CON2                       0x003E
+> > +#define MT6392_STRUP_CON3                       0x0040
+> > +#define MT6392_STRUP_CON4                       0x0042
+> > +#define MT6392_STRUP_CON5                       0x0044
+> > +#define MT6392_STRUP_CON6                       0x0046
+> > +#define MT6392_STRUP_CON7                       0x0048
+> > +#define MT6392_STRUP_CON8                       0x004A
+> > +#define MT6392_STRUP_CON9                       0x004C
+> > +#define MT6392_STRUP_CON10                      0x004E
+> > +#define MT6392_STRUP_CON11                      0x0050
+> > +#define MT6392_SPK_CON0                         0x0052
+> > +#define MT6392_SPK_CON1                         0x0054
+> > +#define MT6392_SPK_CON2                         0x0056
+> > +#define MT6392_SPK_CON6                         0x005E
+> > +#define MT6392_SPK_CON7                         0x0060
+> > +#define MT6392_SPK_CON8                         0x0062
+> > +#define MT6392_SPK_CON9                         0x0064
+> > +#define MT6392_SPK_CON10                        0x0066
+> > +#define MT6392_SPK_CON11                        0x0068
+> > +#define MT6392_SPK_CON12                        0x006A
+> > +#define MT6392_STRUP_CON12                      0x006E
+> > +#define MT6392_STRUP_CON13                      0x0070
+> > +#define MT6392_STRUP_CON14                      0x0072
+> > +#define MT6392_STRUP_CON15                      0x0074
+> > +#define MT6392_STRUP_CON16                      0x0076
+> > +#define MT6392_STRUP_CON17                      0x0078
+> > +#define MT6392_STRUP_CON18                      0x007A
+> > +#define MT6392_STRUP_CON19                      0x007C
+> > +#define MT6392_STRUP_CON20                      0x007E
+> > +#define MT6392_CID                              0x0100
+> > +#define MT6392_TOP_CKPDN0                       0x0102
+> > +#define MT6392_TOP_CKPDN0_SET                   0x0104
+> > +#define MT6392_TOP_CKPDN0_CLR                   0x0106
+> > +#define MT6392_TOP_CKPDN1                       0x0108
+> > +#define MT6392_TOP_CKPDN1_SET                   0x010A
+> > +#define MT6392_TOP_CKPDN1_CLR                   0x010C
+> > +#define MT6392_TOP_CKPDN2                       0x010E
+> > +#define MT6392_TOP_CKPDN2_SET                   0x0110
+> > +#define MT6392_TOP_CKPDN2_CLR                   0x0112
+> > +#define MT6392_TOP_RST_CON                      0x0114
+> > +#define MT6392_TOP_RST_CON_SET                  0x0116
+> > +#define MT6392_TOP_RST_CON_CLR                  0x0118
+> > +#define MT6392_TOP_RST_MISC                     0x011A
+> > +#define MT6392_TOP_RST_MISC_SET                 0x011C
+> > +#define MT6392_TOP_RST_MISC_CLR                 0x011E
+> > +#define MT6392_TOP_CKCON0                       0x0120
+> > +#define MT6392_TOP_CKCON0_SET                   0x0122
+> > +#define MT6392_TOP_CKCON0_CLR                   0x0124
+> > +#define MT6392_TOP_CKCON1                       0x0126
+> > +#define MT6392_TOP_CKCON1_SET                   0x0128
+> > +#define MT6392_TOP_CKCON1_CLR                   0x012A
+> > +#define MT6392_TOP_CKTST0                       0x012C
+> > +#define MT6392_TOP_CKTST1                       0x012E
+> > +#define MT6392_TOP_CKTST2                       0x0130
+> > +#define MT6392_TEST_OUT                         0x0132
+> > +#define MT6392_TEST_CON0                        0x0134
+> > +#define MT6392_TEST_CON1                        0x0136
+> > +#define MT6392_EN_STATUS0                       0x0138
+> > +#define MT6392_EN_STATUS1                       0x013A
+> > +#define MT6392_OCSTATUS0                        0x013C
+> > +#define MT6392_OCSTATUS1                        0x013E
+> > +#define MT6392_PGSTATUS                         0x0140
+> > +#define MT6392_CHRSTATUS                        0x0142
+> > +#define MT6392_TDSEL_CON                        0x0144
+> > +#define MT6392_RDSEL_CON                        0x0146
+> > +#define MT6392_SMT_CON0                         0x0148
+> > +#define MT6392_SMT_CON1                         0x014A
+> > +#define MT6392_DRV_CON0                         0x0152
+> > +#define MT6392_DRV_CON1                         0x0154
+> > +#define MT6392_INT_CON0                         0x0160
+> > +#define MT6392_INT_CON0_SET                     0x0162
+> > +#define MT6392_INT_CON0_CLR                     0x0164
+> > +#define MT6392_INT_CON1                         0x0166
+> > +#define MT6392_INT_CON1_SET                     0x0168
+> > +#define MT6392_INT_CON1_CLR                     0x016A
+> > +#define MT6392_INT_MISC_CON                     0x016C
+> > +#define MT6392_INT_MISC_CON_SET                 0x016E
+> > +#define MT6392_INT_MISC_CON_CLR                 0x0170
+> > +#define MT6392_INT_STATUS0                      0x0172
+> > +#define MT6392_INT_STATUS1                      0x0174
+> > +#define MT6392_OC_GEAR_0                        0x0176
+> > +#define MT6392_OC_GEAR_1                        0x0178
+> > +#define MT6392_OC_GEAR_2                        0x017A
+> > +#define MT6392_OC_CTL_VPROC                     0x017C
+> > +#define MT6392_OC_CTL_VSYS                      0x017E
+> > +#define MT6392_OC_CTL_VCORE                     0x0180
+> > +#define MT6392_FQMTR_CON0                       0x0182
+> > +#define MT6392_FQMTR_CON1                       0x0184
+> > +#define MT6392_FQMTR_CON2                       0x0186
+> > +#define MT6392_RG_SPI_CON                       0x0188
+> > +#define MT6392_DEW_DIO_EN                       0x018A
+> > +#define MT6392_DEW_READ_TEST                    0x018C
+> > +#define MT6392_DEW_WRITE_TEST                   0x018E
+> > +#define MT6392_DEW_CRC_SWRST                    0x0190
+> > +#define MT6392_DEW_CRC_EN                       0x0192
+> > +#define MT6392_DEW_CRC_VAL                      0x0194
+> > +#define MT6392_DEW_DBG_MON_SEL                  0x0196
+> > +#define MT6392_DEW_CIPHER_KEY_SEL               0x0198
+> > +#define MT6392_DEW_CIPHER_IV_SEL                0x019A
+> > +#define MT6392_DEW_CIPHER_EN                    0x019C
+> > +#define MT6392_DEW_CIPHER_RDY                   0x019E
+> > +#define MT6392_DEW_CIPHER_MODE                  0x01A0
+> > +#define MT6392_DEW_CIPHER_SWRST                 0x01A2
+> > +#define MT6392_DEW_RDDMY_NO                     0x01A4
+> > +#define MT6392_DEW_RDATA_DLY_SEL                0x01A6
+> > +#define MT6392_CLK_TRIM_CON0                    0x01A8
+> > +#define MT6392_BUCK_CON0                        0x0200
+> > +#define MT6392_BUCK_CON1                        0x0202
+> > +#define MT6392_BUCK_CON2                        0x0204
+> > +#define MT6392_BUCK_CON3                        0x0206
+> > +#define MT6392_BUCK_CON4                        0x0208
+> > +#define MT6392_BUCK_CON5                        0x020A
+> > +#define MT6392_VPROC_CON0                       0x020C
+> > +#define MT6392_VPROC_CON1                       0x020E
+> > +#define MT6392_VPROC_CON2                       0x0210
+> > +#define MT6392_VPROC_CON3                       0x0212
+> > +#define MT6392_VPROC_CON4                       0x0214
+> > +#define MT6392_VPROC_CON5                       0x0216
+> > +#define MT6392_VPROC_CON7                       0x021A
+> > +#define MT6392_VPROC_CON8                       0x021C
+> > +#define MT6392_VPROC_CON9                       0x021E
+> > +#define MT6392_VPROC_CON10                      0x0220
+> > +#define MT6392_VPROC_CON11                      0x0222
+> > +#define MT6392_VPROC_CON12                      0x0224
+> > +#define MT6392_VPROC_CON13                      0x0226
+> > +#define MT6392_VPROC_CON14                      0x0228
+> > +#define MT6392_VPROC_CON15                      0x022A
+> > +#define MT6392_VPROC_CON18                      0x0230
+> > +#define MT6392_VSYS_CON0                        0x0232
+> > +#define MT6392_VSYS_CON1                        0x0234
+> > +#define MT6392_VSYS_CON2                        0x0236
+> > +#define MT6392_VSYS_CON3                        0x0238
+> > +#define MT6392_VSYS_CON4                        0x023A
+> > +#define MT6392_VSYS_CON5                        0x023C
+> > +#define MT6392_VSYS_CON7                        0x0240
+> > +#define MT6392_VSYS_CON8                        0x0242
+> > +#define MT6392_VSYS_CON9                        0x0244
+> > +#define MT6392_VSYS_CON10                       0x0246
+> > +#define MT6392_VSYS_CON11                       0x0248
+> > +#define MT6392_VSYS_CON12                       0x024A
+> > +#define MT6392_VSYS_CON13                       0x024C
+> > +#define MT6392_VSYS_CON14                       0x024E
+> > +#define MT6392_VSYS_CON15                       0x0250
+> > +#define MT6392_VSYS_CON18                       0x0256
+> > +#define MT6392_BUCK_OC_CON0                     0x0258
+> > +#define MT6392_BUCK_OC_CON1                     0x025A
+> > +#define MT6392_BUCK_OC_CON2                     0x025C
+> > +#define MT6392_BUCK_OC_CON3                     0x025E
+> > +#define MT6392_BUCK_OC_CON4                     0x0260
+> > +#define MT6392_BUCK_OC_VPROC_CON0               0x0262
+> > +#define MT6392_BUCK_OC_VCORE_CON0               0x0264
+> > +#define MT6392_BUCK_OC_VSYS_CON0                0x0266
+> > +#define MT6392_BUCK_ANA_MON_CON0                0x0268
+> > +#define MT6392_BUCK_EFUSE_OC_CON0               0x026A
+> > +#define MT6392_VCORE_CON0                       0x0300
+> > +#define MT6392_VCORE_CON1                       0x0302
+> > +#define MT6392_VCORE_CON2                       0x0304
+> > +#define MT6392_VCORE_CON3                       0x0306
+> > +#define MT6392_VCORE_CON4                       0x0308
+> > +#define MT6392_VCORE_CON5                       0x030A
+> > +#define MT6392_VCORE_CON7                       0x030E
+> > +#define MT6392_VCORE_CON8                       0x0310
+> > +#define MT6392_VCORE_CON9                       0x0312
+> > +#define MT6392_VCORE_CON10                      0x0314
+> > +#define MT6392_VCORE_CON11                      0x0316
+> > +#define MT6392_VCORE_CON12                      0x0318
+> > +#define MT6392_VCORE_CON13                      0x031A
+> > +#define MT6392_VCORE_CON14                      0x031C
+> > +#define MT6392_VCORE_CON15                      0x031E
+> > +#define MT6392_VCORE_CON18                      0x0324
+> > +#define MT6392_BUCK_K_CON0                      0x032A
+> > +#define MT6392_BUCK_K_CON1                      0x032C
+> > +#define MT6392_BUCK_K_CON2                      0x032E
+> > +#define MT6392_ANALDO_CON0                      0x0400
+> > +#define MT6392_ANALDO_CON1                      0x0402
+> > +#define MT6392_ANALDO_CON2                      0x0404
+> > +#define MT6392_ANALDO_CON3                      0x0406
+> > +#define MT6392_ANALDO_CON4                      0x0408
+> > +#define MT6392_ANALDO_CON6                      0x040C
+> > +#define MT6392_ANALDO_CON7                      0x040E
+> > +#define MT6392_ANALDO_CON8                      0x0410
+> > +#define MT6392_ANALDO_CON10                     0x0412
+> > +#define MT6392_ANALDO_CON15                     0x0414
+> > +#define MT6392_ANALDO_CON16                     0x0416
+> > +#define MT6392_ANALDO_CON17                     0x0418
+> > +#define MT6392_ANALDO_CON21                     0x0420
+> > +#define MT6392_ANALDO_CON22                     0x0422
+> > +#define MT6392_ANALDO_CON23                     0x0424
+> > +#define MT6392_ANALDO_CON24                     0x0426
+> > +#define MT6392_ANALDO_CON25                     0x0428
+> > +#define MT6392_ANALDO_CON26                     0x042A
+> > +#define MT6392_ANALDO_CON27                     0x042C
+> > +#define MT6392_ANALDO_CON28                     0x042E
+> > +#define MT6392_ANALDO_CON29                     0x0430
+> > +#define MT6392_DIGLDO_CON0                      0x0500
+> > +#define MT6392_DIGLDO_CON2                      0x0502
+> > +#define MT6392_DIGLDO_CON3                      0x0504
+> > +#define MT6392_DIGLDO_CON5                      0x0506
+> > +#define MT6392_DIGLDO_CON6                      0x0508
+> > +#define MT6392_DIGLDO_CON7                      0x050A
+> > +#define MT6392_DIGLDO_CON8                      0x050C
+> > +#define MT6392_DIGLDO_CON10                     0x0510
+> > +#define MT6392_DIGLDO_CON11                     0x0512
+> > +#define MT6392_DIGLDO_CON12                     0x0514
+> > +#define MT6392_DIGLDO_CON15                     0x051A
+> > +#define MT6392_DIGLDO_CON20                     0x0524
+> > +#define MT6392_DIGLDO_CON21                     0x0526
+> > +#define MT6392_DIGLDO_CON23                     0x0528
+> > +#define MT6392_DIGLDO_CON24                     0x052A
+> > +#define MT6392_DIGLDO_CON26                     0x052C
+> > +#define MT6392_DIGLDO_CON27                     0x052E
+> > +#define MT6392_DIGLDO_CON28                     0x0530
+> > +#define MT6392_DIGLDO_CON29                     0x0532
+> > +#define MT6392_DIGLDO_CON30                     0x0534
+> > +#define MT6392_DIGLDO_CON31                     0x0536
+> > +#define MT6392_DIGLDO_CON32                     0x0538
+> > +#define MT6392_DIGLDO_CON33                     0x053A
+> > +#define MT6392_DIGLDO_CON36                     0x0540
+> > +#define MT6392_DIGLDO_CON41                     0x0546
+> > +#define MT6392_DIGLDO_CON44                     0x054C
+> > +#define MT6392_DIGLDO_CON47                     0x0552
+> > +#define MT6392_DIGLDO_CON48                     0x0554
+> > +#define MT6392_DIGLDO_CON49                     0x0556
+> > +#define MT6392_DIGLDO_CON50                     0x0558
+> > +#define MT6392_DIGLDO_CON51                     0x055A
+> > +#define MT6392_DIGLDO_CON52                     0x055C
+> > +#define MT6392_DIGLDO_CON53                     0x055E
+> > +#define MT6392_DIGLDO_CON54                     0x0560
+> > +#define MT6392_DIGLDO_CON55                     0x0562
+> > +#define MT6392_DIGLDO_CON56                     0x0564
+> > +#define MT6392_DIGLDO_CON57                     0x0566
+> > +#define MT6392_DIGLDO_CON58                     0x0568
+> > +#define MT6392_DIGLDO_CON59                     0x056A
+> > +#define MT6392_DIGLDO_CON60                     0x056C
+> > +#define MT6392_DIGLDO_CON61                     0x056E
+> > +#define MT6392_DIGLDO_CON62                     0x0570
+> > +#define MT6392_DIGLDO_CON63                     0x0572
+> > +#define MT6392_EFUSE_CON0                       0x0600
+> > +#define MT6392_EFUSE_CON1                       0x0602
+> > +#define MT6392_EFUSE_CON2                       0x0604
+> > +#define MT6392_EFUSE_CON3                       0x0606
+> > +#define MT6392_EFUSE_CON4                       0x0608
+> > +#define MT6392_EFUSE_CON5                       0x060A
+> > +#define MT6392_EFUSE_CON6                       0x060C
+> > +#define MT6392_EFUSE_VAL_0_15                   0x060E
+> > +#define MT6392_EFUSE_VAL_16_31                  0x0610
+> > +#define MT6392_EFUSE_VAL_32_47                  0x0612
+> > +#define MT6392_EFUSE_VAL_48_63                  0x0614
+> > +#define MT6392_EFUSE_VAL_64_79                  0x0616
+> > +#define MT6392_EFUSE_VAL_80_95                  0x0618
+> > +#define MT6392_EFUSE_VAL_96_111                 0x061A
+> > +#define MT6392_EFUSE_VAL_112_127                0x061C
+> > +#define MT6392_EFUSE_VAL_128_143                0x061E
+> > +#define MT6392_EFUSE_VAL_144_159                0x0620
+> > +#define MT6392_EFUSE_VAL_160_175                0x0622
+> > +#define MT6392_EFUSE_VAL_176_191                0x0624
+> > +#define MT6392_EFUSE_VAL_192_207                0x0626
+> > +#define MT6392_EFUSE_VAL_208_223                0x0628
+> > +#define MT6392_EFUSE_VAL_224_239                0x062A
+> > +#define MT6392_EFUSE_VAL_240_255                0x062C
+> > +#define MT6392_EFUSE_VAL_256_271                0x062E
+> > +#define MT6392_EFUSE_VAL_272_287                0x0630
+> > +#define MT6392_EFUSE_VAL_288_303                0x0632
+> > +#define MT6392_EFUSE_VAL_304_319                0x0634
+> > +#define MT6392_EFUSE_VAL_320_335                0x0636
+> > +#define MT6392_EFUSE_VAL_336_351                0x0638
+> > +#define MT6392_EFUSE_VAL_352_367                0x063A
+> > +#define MT6392_EFUSE_VAL_368_383                0x063C
+> > +#define MT6392_EFUSE_VAL_384_399                0x063E
+> > +#define MT6392_EFUSE_VAL_400_415                0x0640
+> > +#define MT6392_EFUSE_VAL_416_431                0x0642
+> > +#define MT6392_RTC_MIX_CON0                     0x0644
+> > +#define MT6392_RTC_MIX_CON1                     0x0646
+> > +#define MT6392_EFUSE_VAL_432_447                0x0648
+> > +#define MT6392_EFUSE_VAL_448_463                0x064A
+> > +#define MT6392_EFUSE_VAL_464_479                0x064C
+> > +#define MT6392_EFUSE_VAL_480_495                0x064E
+> > +#define MT6392_EFUSE_VAL_496_511                0x0650
+> > +#define MT6392_EFUSE_DOUT_0_15                  0x0652
+> > +#define MT6392_EFUSE_DOUT_16_31                 0x0654
+> > +#define MT6392_EFUSE_DOUT_32_47                 0x0656
+> > +#define MT6392_EFUSE_DOUT_48_63                 0x0658
+> > +#define MT6392_EFUSE_DOUT_64_79                 0x065A
+> > +#define MT6392_EFUSE_DOUT_80_95                 0x065C
+> > +#define MT6392_EFUSE_DOUT_96_111                0x065E
+> > +#define MT6392_EFUSE_DOUT_112_127               0x0660
+> > +#define MT6392_EFUSE_DOUT_128_143               0x0662
+> > +#define MT6392_EFUSE_DOUT_144_159               0x0664
+> > +#define MT6392_EFUSE_DOUT_160_175               0x0666
+> > +#define MT6392_EFUSE_DOUT_176_191               0x0668
+> > +#define MT6392_EFUSE_DOUT_192_207               0x066A
+> > +#define MT6392_EFUSE_DOUT_208_223               0x066C
+> > +#define MT6392_EFUSE_DOUT_224_239               0x066E
+> > +#define MT6392_EFUSE_DOUT_240_255               0x0670
+> > +#define MT6392_EFUSE_DOUT_256_271               0x0672
+> > +#define MT6392_EFUSE_DOUT_272_287               0x0674
+> > +#define MT6392_EFUSE_DOUT_288_303               0x0676
+> > +#define MT6392_EFUSE_DOUT_304_319               0x0678
+> > +#define MT6392_EFUSE_DOUT_320_335               0x067A
+> > +#define MT6392_EFUSE_DOUT_336_351               0x067C
+> > +#define MT6392_EFUSE_DOUT_352_367               0x067E
+> > +#define MT6392_EFUSE_DOUT_368_383               0x0680
+> > +#define MT6392_EFUSE_DOUT_384_399               0x0682
+> > +#define MT6392_EFUSE_DOUT_400_415               0x0684
+> > +#define MT6392_EFUSE_DOUT_416_431               0x0686
+> > +#define MT6392_EFUSE_DOUT_432_447               0x0688
+> > +#define MT6392_EFUSE_DOUT_448_463               0x068A
+> > +#define MT6392_EFUSE_DOUT_464_479               0x068C
+> > +#define MT6392_EFUSE_DOUT_480_495               0x068E
+> > +#define MT6392_EFUSE_DOUT_496_511               0x0690
+> > +#define MT6392_EFUSE_CON7                       0x0692
+> > +#define MT6392_EFUSE_CON8                       0x0694
+> > +#define MT6392_EFUSE_CON9                       0x0696
+> > +#define MT6392_AUXADC_ADC0                      0x0700
+> > +#define MT6392_AUXADC_ADC1                      0x0702
+> > +#define MT6392_AUXADC_ADC2                      0x0704
+> > +#define MT6392_AUXADC_ADC3                      0x0706
+> > +#define MT6392_AUXADC_ADC4                      0x0708
+> > +#define MT6392_AUXADC_ADC5                      0x070A
+> > +#define MT6392_AUXADC_ADC6                      0x070C
+> > +#define MT6392_AUXADC_ADC7                      0x070E
+> > +#define MT6392_AUXADC_ADC8                      0x0710
+> > +#define MT6392_AUXADC_ADC9                      0x0712
+> > +#define MT6392_AUXADC_ADC10                     0x0714
+> > +#define MT6392_AUXADC_ADC11                     0x0716
+> > +#define MT6392_AUXADC_ADC12                     0x0718
+> > +#define MT6392_AUXADC_ADC13                     0x071A
+> > +#define MT6392_AUXADC_ADC14                     0x071C
+> > +#define MT6392_AUXADC_ADC15                     0x071E
+> > +#define MT6392_AUXADC_ADC16                     0x0720
+> > +#define MT6392_AUXADC_ADC17                     0x0722
+> > +#define MT6392_AUXADC_ADC18                     0x0724
+> > +#define MT6392_AUXADC_ADC19                     0x0726
+> > +#define MT6392_AUXADC_ADC20                     0x0728
+> > +#define MT6392_AUXADC_ADC21                     0x072A
+> > +#define MT6392_AUXADC_ADC22                     0x072C
+> > +#define MT6392_AUXADC_STA0                      0x072E
+> > +#define MT6392_AUXADC_STA1                      0x0730
+> > +#define MT6392_AUXADC_RQST0                     0x0732
+> > +#define MT6392_AUXADC_RQST0_SET                 0x0734
+> > +#define MT6392_AUXADC_RQST0_CLR                 0x0736
+> > +#define MT6392_AUXADC_CON0                      0x0738
+> > +#define MT6392_AUXADC_CON0_SET                  0x073A
+> > +#define MT6392_AUXADC_CON0_CLR                  0x073C
+> > +#define MT6392_AUXADC_CON1                      0x073E
+> > +#define MT6392_AUXADC_CON2                      0x0740
+> > +#define MT6392_AUXADC_CON3                      0x0742
+> > +#define MT6392_AUXADC_CON4                      0x0744
+> > +#define MT6392_AUXADC_CON5                      0x0746
+> > +#define MT6392_AUXADC_CON6                      0x0748
+> > +#define MT6392_AUXADC_CON7                      0x074A
+> > +#define MT6392_AUXADC_CON8                      0x074C
+> > +#define MT6392_AUXADC_CON9                      0x074E
+> > +#define MT6392_AUXADC_CON10                     0x0750
+> > +#define MT6392_AUXADC_CON11                     0x0752
+> > +#define MT6392_AUXADC_CON12                     0x0754
+> > +#define MT6392_AUXADC_CON13                     0x0756
+> > +#define MT6392_AUXADC_CON14                     0x0758
+> > +#define MT6392_AUXADC_CON15                     0x075A
+> > +#define MT6392_AUXADC_CON16                     0x075C
+> > +#define MT6392_AUXADC_AUTORPT0                  0x075E
+> > +#define MT6392_AUXADC_LBAT0                     0x0760
+> > +#define MT6392_AUXADC_LBAT1                     0x0762
+> > +#define MT6392_AUXADC_LBAT2                     0x0764
+> > +#define MT6392_AUXADC_LBAT3                     0x0766
+> > +#define MT6392_AUXADC_LBAT4                     0x0768
+> > +#define MT6392_AUXADC_LBAT5                     0x076A
+> > +#define MT6392_AUXADC_LBAT6                     0x076C
+> > +#define MT6392_AUXADC_THR0                      0x076E
+> > +#define MT6392_AUXADC_THR1                      0x0770
+> > +#define MT6392_AUXADC_THR2                      0x0772
+> > +#define MT6392_AUXADC_THR3                      0x0774
+> > +#define MT6392_AUXADC_THR4                      0x0776
+> > +#define MT6392_AUXADC_THR5                      0x0778
+> > +#define MT6392_AUXADC_THR6                      0x077A
+> > +#define MT6392_AUXADC_EFUSE0                    0x077C
+> > +#define MT6392_AUXADC_EFUSE1                    0x077E
+> > +#define MT6392_AUXADC_EFUSE2                    0x0780
+> > +#define MT6392_AUXADC_EFUSE3                    0x0782
+> > +#define MT6392_AUXADC_EFUSE4                    0x0784
+> > +#define MT6392_AUXADC_EFUSE5                    0x0786
+> > +#define MT6392_AUXADC_NAG_0                     0x0788
+> > +#define MT6392_AUXADC_NAG_1                     0x078A
+> > +#define MT6392_AUXADC_NAG_2                     0x078C
+> > +#define MT6392_AUXADC_NAG_3                     0x078E
+> > +#define MT6392_AUXADC_NAG_4                     0x0790
+> > +#define MT6392_AUXADC_NAG_5                     0x0792
+> > +#define MT6392_AUXADC_NAG_6                     0x0794
+> > +#define MT6392_AUXADC_NAG_7                     0x0796
+> > +#define MT6392_AUXADC_NAG_8                     0x0798
+> > +#define MT6392_AUXADC_TYPEC_H_1                 0x079A
+> > +#define MT6392_AUXADC_TYPEC_H_2                 0x079C
+> > +#define MT6392_AUXADC_TYPEC_H_3                 0x079E
+> > +#define MT6392_AUXADC_TYPEC_H_4                 0x07A0
+> > +#define MT6392_AUXADC_TYPEC_H_5                 0x07A2
+> > +#define MT6392_AUXADC_TYPEC_H_6                 0x07A4
+> > +#define MT6392_AUXADC_TYPEC_H_7                 0x07A6
+> > +#define MT6392_AUXADC_TYPEC_L_1                 0x07A8
+> > +#define MT6392_AUXADC_TYPEC_L_2                 0x07AA
+> > +#define MT6392_AUXADC_TYPEC_L_3                 0x07AC
+> > +#define MT6392_AUXADC_TYPEC_L_4                 0x07AE
+> > +#define MT6392_AUXADC_TYPEC_L_5                 0x07B0
+> > +#define MT6392_AUXADC_TYPEC_L_6                 0x07B2
+> > +#define MT6392_AUXADC_TYPEC_L_7                 0x07B4
+> > +#define MT6392_AUXADC_NAG_9                     0x07B6
+> > +#define MT6392_TYPE_C_PHY_RG_0                  0x0800
+> > +#define MT6392_TYPE_C_PHY_RG_CC_RESERVE_CSR     0x0802
+> > +#define MT6392_TYPE_C_VCMP_CTRL                 0x0804
+> > +#define MT6392_TYPE_C_CTRL                      0x0806
+> > +#define MT6392_TYPE_C_CC_SW_CTRL                0x080a
+> > +#define MT6392_TYPE_C_CC_VOL_PERIODIC_MEAS_VAL  0x080c
+> > +#define MT6392_TYPE_C_CC_VOL_DEBOUCE_CNT_VAL    0x080e
+> > +#define MT6392_TYPE_C_DRP_SRC_CNT_VAL_0         0x0810
+> > +#define MT6392_TYPE_C_DRP_SNK_CNT_VAL_0         0x0814
+> > +#define MT6392_TYPE_C_DRP_TRY_CNT_VAL_0         0x0818
+> > +#define MT6392_TYPE_C_CC_SRC_DEFAULT_DAC_VAL    0x0820
+> > +#define MT6392_TYPE_C_CC_SRC_15_DAC_VAL         0x0822
+> > +#define MT6392_TYPE_C_CC_SRC_30_DAC_VAL         0x0824
+> > +#define MT6392_TYPE_C_CC_SNK_DAC_VAL_0          0x0828
+> > +#define MT6392_TYPE_C_CC_SNK_DAC_VAL_1          0x082a
+> > +#define MT6392_TYPE_C_INTR_EN_0                 0x0830
+> > +#define MT6392_TYPE_C_INTR_EN_2                 0x0834
+> > +#define MT6392_TYPE_C_INTR_0                    0x0838
+> > +#define MT6392_TYPE_C_INTR_2                    0x083C
+> > +#define MT6392_TYPE_C_CC_STATUS                 0x0840
+> > +#define MT6392_TYPE_C_PWR_STATUS                0x0842
+> > +#define MT6392_TYPE_C_PHY_RG_CC1_RESISTENCE_0   0x0844
+> > +#define MT6392_TYPE_C_PHY_RG_CC1_RESISTENCE_1   0x0846
+> > +#define MT6392_TYPE_C_PHY_RG_CC2_RESISTENCE_0   0x0848
+> > +#define MT6392_TYPE_C_PHY_RG_CC2_RESISTENCE_1   0x084a
+> > +#define MT6392_TYPE_C_CC_SW_FORCE_MODE_ENABLE_0 0x0860
+> > +#define MT6392_TYPE_C_CC_SW_FORCE_MODE_VAL_0    0x0864
+> > +#define MT6392_TYPE_C_CC_SW_FORCE_MODE_VAL_1    0x0866
+> > +#define MT6392_TYPE_C_CC_SW_FORCE_MODE_ENABLE_1 0x0868
+> > +#define MT6392_TYPE_C_CC_SW_FORCE_MODE_VAL_2    0x086c
+> > +#define MT6392_TYPE_C_CC_DAC_CALI_CTRL          0x0870
+> > +#define MT6392_TYPE_C_CC_DAC_CALI_RESULT        0x0872
+> > +#define MT6392_TYPE_C_DEBUG_PORT_SELECT_0       0x0880
+> > +#define MT6392_TYPE_C_DEBUG_PORT_SELECT_1       0x0882
+> > +#define MT6392_TYPE_C_DEBUG_MODE_SELECT         0x0884
+> > +#define MT6392_TYPE_C_DEBUG_OUT_READ_0          0x0888
+> > +#define MT6392_TYPE_C_DEBUG_OUT_READ_1          0x088a
+> > +#define MT6392_TYPE_C_SW_DEBUG_PORT_0           0x088c
+> > +#define MT6392_TYPE_C_SW_DEBUG_PORT_1           0x088e
+>
+> Are these all totally unique to this device?
+>
+> Or is it worth creating a new common file?
+
+I compared with mt6323, mt6397, and mt6358 (from the ML), there is
+some similarities with mt6323, but it is quite different from some
+other like the mt6358.
+
+> > +#endif /* __MFD_MT6392_REGISTERS_H__ */
+>
+> --
+> Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+> Linaro Services Technical Lead
+> Linaro.org =E2=94=82 Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
