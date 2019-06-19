@@ -2,123 +2,162 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1BCFC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:37:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 469CAC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B52F2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:37:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 114702075E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:42:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="xnKt3ae7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731225AbfFSHhB (ORCPT
+        id S1731170AbfFSHmu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:37:01 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:54836 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSHg5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:36:57 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x5J7aIhW016432;
-        Wed, 19 Jun 2019 15:36:18 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id AEE003E5F394D6571948;
-        Wed, 19 Jun 2019 15:36:18 +0800 (CST)
-In-Reply-To: <2671d488-82a1-8720-d9a1-03554d955a38@gmail.com>
-References: <1558423174-10748-1-git-send-email-masonccyang@mxic.com.tw> <1558423174-10748-4-git-send-email-masonccyang@mxic.com.tw> <0e2994d6-6efc-9f36-f681-609199f20b9f@cogentembedded.com> <20190603130428.GX4797@dell> <02addf64-9f6e-ccc1-2f94-8983456e3ebc@cogentembedded.com> <OFDA7648A0.F1733EA5-ON48258411.002946DF-48258411.002A2F0D@mxic.com.tw> <2671d488-82a1-8720-d9a1-03554d955a38@gmail.com>
-To:     "Marek Vasut" <marek.vasut@gmail.com>
-Cc:     bbrezillon@kernel.org, broonie@kernel.org,
-        devicetree@vger.kernel.org,
-        "Geert Uytterhoeven" <geert+renesas@glider.be>,
-        "Simon Horman" <horms@verge.net.au>, juliensu@mxic.com.tw,
-        "Lee Jones" <lee.jones@linaro.org>, linux-kernel@vger.kernel.org,
-        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
-        mark.rutland@arm.com, miquel.raynal@bootlin.com,
-        robh+dt@kernel.org,
-        "Sergei Shtylyov" <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF
- controller bindings
+        Wed, 19 Jun 2019 03:42:50 -0400
+Received: from mail-eopbgr80050.outbound.protection.outlook.com ([40.107.8.50]:16515
+        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725946AbfFSHmt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 03:42:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=peQSzoDWwW9i55UHswzIecsFCoN+YXX8Y3FXqQN8ryk=;
+ b=xnKt3ae7N2xCjzHO6pIlysXCiuSZIhEmBA8vgyFZb9OQa7JhzxftQJFxM5O+qd5/wuh6n+rRnaUIf1BcXxLfnVsx2iHtSRl4hjEYw0eiWxxnhXsFw+QPXRTU+w7TwVkj2qiSNxnUfPQEgjeTlroKCzyw2EcnY2QHl1Cd/dGEJas=
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
+ VE1PR08MB4862.eurprd08.prod.outlook.com (10.255.113.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Wed, 19 Jun 2019 07:42:45 +0000
+Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358]) by VE1PR08MB5006.eurprd08.prod.outlook.com
+ ([fe80::206b:5cf6:97e:1358%7]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
+ 07:42:45 +0000
+From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "sean@poorly.run" <sean@poorly.run>,
+        "arnd@arndb.de" <arnd@arndb.de>
+CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
+        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
+        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
+        nd <nd@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        Ben Davis <Ben.Davis@arm.com>,
+        "Oscar Zhang (Arm Technology China)" <Oscar.Zhang@arm.com>,
+        "Channing Chen (Arm Technology China)" <Channing.Chen@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Subject: [PATCH] drm/komeda: Correct printk format specifier for "size_t"
+Thread-Topic: [PATCH] drm/komeda: Correct printk format specifier for "size_t"
+Thread-Index: AQHVJnKVyoEvbn4ar0KHP3NUwbidVQ==
+Date:   Wed, 19 Jun 2019 07:42:45 +0000
+Message-ID: <20190619074225.13521-1-james.qian.wang@arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: HK2PR02CA0188.apcprd02.prod.outlook.com
+ (2603:1096:201:21::24) To VE1PR08MB5006.eurprd08.prod.outlook.com
+ (2603:10a6:803:113::31)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=james.qian.wang@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 31649ace-e81a-48c3-e91e-08d6f489b7e0
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VE1PR08MB4862;
+x-ms-traffictypediagnostic: VE1PR08MB4862:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VE1PR08MB48625D8D735B81B72849AA16B3E50@VE1PR08MB4862.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0073BFEF03
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(39860400002)(136003)(396003)(199004)(189003)(66556008)(26005)(6436002)(8676002)(81166006)(103116003)(14454004)(81156014)(50226002)(6486002)(55236004)(6506007)(2201001)(53936002)(186003)(86362001)(5660300002)(6116002)(1076003)(386003)(2906002)(3846002)(256004)(64756008)(110136005)(6512007)(8936002)(66476007)(478600001)(2501003)(73956011)(36756003)(66446008)(68736007)(54906003)(99286004)(102836004)(7736002)(71190400001)(52116002)(66066001)(71200400001)(2616005)(476003)(486006)(305945005)(25786009)(4326008)(66946007)(316002);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB4862;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: +9icAsqMqSz5oj2fToXIeXKjzBC1G73uc8AUhaKlrjuErS0cBvF9/8sKDkOKHcoQiZTHmXOM+lNdAFzI/WP52EoEe9Q0yg9S2jumj1ylHlyP+VbibvzI4ywvucshcIhbHVj5N8D/d5TzoEGuwXYOh7l/euQN9zIFH1Q0op+SAgZM0PUCNAVVmuBi3OqFbum08+NU44kxrhtdI3i5i/l8OGlpiGmYruNVwV3NgIetyVCA1YvRHPcPEouIAS8b7tNFqlMASq+nHIix0+jBBPOko6V97Zk80eu1/rtpNb0ukQNr/mru/++N+uO+jH7uTXewcehSzBcFHuF246gUm5k0RyBbj3xmhp+vaVtO4LnXQBDlcKZAMAbu9OSVMR5CzPH8/Czfzs2OpXX3OvUqktwUU5CE59nHd9dxvmd0hhAm+ao=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-KeepSent: E8CD77A1:CDBE040B-4825841E:00288DA8;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFE8CD77A1.CDBE040B-ON4825841E.00288DA8-4825841E.0029C76F@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 19 Jun 2019 15:36:20 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/19 PM 03:36:18,
-        Serialize complete at 2019/06/19 PM 03:36:18
-Content-Type: text/plain; charset="US-ASCII"
-X-MAIL: TWHMLLG3.macronix.com x5J7aIhW016432
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 31649ace-e81a-48c3-e91e-08d6f489b7e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 07:42:45.5829
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: james.qian.wang@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB4862
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-Hi Marek, 
-
-> Subject
-> 
-> Re: [PATCH v13 3/3] dt-bindings: mfd: Document Renesas R-Car Gen3 RPC-IF 
-
-> controller bindings
-> 
-> On 6/6/19 9:40 AM, masonccyang@mxic.com.tw wrote:
-> [...]
-> 
-> > RPC-IF works either in SPI or HyperFlash is decided by external 
-hardware 
-> > pins 
-> > configuration and it can NOT switch it's operation mode in the run 
-time. 
-> > This is not like my understanding of MFD.
-> 
-> Which external hardware pins decide the RPC configuration ?
-> 
-> It seems to me like PHYCNT register, PHYMEM bitfield, selects what
-> device is connected, and then a couple of other bits control the
-> communication, but I see nothing which would be tied to any external
-> configuration pins.
-> 
-
-You may refer to R-Car D3 Draak Eva. board hardware manual 
-and start-up guide, i.e., 
-Table 2.12 Pin Multiplexing of R-Car D3 Mode setting pins and
-set by hardware switch 1, 2, 3, 13, 31 and 10 to configure
-booting from SPI mode or HyperFlash mode.
-
-thanks & best regards,
-Mason
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+V2FybmluZ3MgcG9wdXAgd2hlbiAibWFrZSBBUkNIPWkzODYiDQoNCkluIGZpbGUgaW5jbHVkZWQg
+ZnJvbSBpbmNsdWRlL2RybS9kcm1fbW0uaDo0OSwNCiAgICAgICAgICAgICAgICAgZnJvbSBpbmNs
+dWRlL2RybS9kcm1fdm1hX21hbmFnZXIuaDoyNiwNCiAgICAgICAgICAgICAgICAgZnJvbSBpbmNs
+dWRlL2RybS9kcm1fZ2VtLmg6NDAsDQogICAgICAgICAgICAgICAgIGZyb20gZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYzo5Og0KZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYzogSW4gZnVuY3Rp
+b24gJ2tvbWVkYV9mYl9hZmJjX3NpemVfY2hlY2snOg0KZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYzo5NjoxNzogZXJyb3I6IGZvcm1hdCAnJWx4
+JyBleHBlY3RzIGFyZ3VtZW50IG9mIHR5cGUgJ2xvbmcgdW5zaWduZWQgaW50JywgYnV0IGFyZ3Vt
+ZW50IDMgaGFzIHR5cGUgJ3NpemVfdCcge2FrYSAndW5zaWduZWQgaW50J30gWy1XZXJyb3I9Zm9y
+bWF0PV0NCiAgIERSTV9ERUJVR19LTVMoImFmYmMgc2l6ZSBjaGVjayBmYWlsZWQsIG9ial9zaXpl
+OiAweCVseC4gbWluX3NpemUgMHgleC5cbiIsDQoNClRoYXQgbGVhZHMgYnkgbWlzdXNlICIlbHgi
+IGFzIGZvcm1hdCBzcGVpY2lmaWVyIGZvciBzaXplX3QsIGNvcnJlY3QgaXQNCnRvICIlengiDQoN
+ClJlcG9ydGVkLWJ5OiBrYnVpbGQgdGVzdCByb2JvdCA8bGtwQGludGVsLmNvbT4NClNpZ25lZC1v
+ZmYtYnk6IGphbWVzIHFpYW4gd2FuZyAoQXJtIFRlY2hub2xvZ3kgQ2hpbmEpIDxqYW1lcy5xaWFu
+LndhbmdAYXJtLmNvbT4NCi0tLQ0KIC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21l
+ZGFfZnJhbWVidWZmZXIuYyAgIHwgMTEgKysrKysrLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgNiBp
+bnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYyBiL2RyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmMNCmluZGV4IGFiYzhj
+MGNjYzA1My4uM2IwYTcwZWQ2YWEwIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9k
+aXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJt
+L2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYw0KQEAgLTQzLDggKzQzLDgg
+QEAga29tZWRhX2ZiX2FmYmNfc2l6ZV9jaGVjayhzdHJ1Y3Qga29tZWRhX2ZiICprZmIsIHN0cnVj
+dCBkcm1fZmlsZSAqZmlsZSwNCiAJc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqZmIgPSAma2ZiLT5i
+YXNlOw0KIAljb25zdCBzdHJ1Y3QgZHJtX2Zvcm1hdF9pbmZvICppbmZvID0gZmItPmZvcm1hdDsN
+CiAJc3RydWN0IGRybV9nZW1fb2JqZWN0ICpvYmo7DQotCXUzMiBhbGlnbm1lbnRfdyA9IDAsIGFs
+aWdubWVudF9oID0gMCwgYWxpZ25tZW50X2hlYWRlcjsNCi0JdTMyIG5fYmxvY2tzID0gMCwgbWlu
+X3NpemUgPSAwOw0KKwl1MzIgYWxpZ25tZW50X3cgPSAwLCBhbGlnbm1lbnRfaCA9IDAsIGFsaWdu
+bWVudF9oZWFkZXIsIG5fYmxvY2tzOw0KKwl1NjQgbWluX3NpemU7DQogDQogCW9iaiA9IGRybV9n
+ZW1fb2JqZWN0X2xvb2t1cChmaWxlLCBtb2RlX2NtZC0+aGFuZGxlc1swXSk7DQogCWlmICghb2Jq
+KSB7DQpAQCAtOTMsNyArOTMsNyBAQCBrb21lZGFfZmJfYWZiY19zaXplX2NoZWNrKHN0cnVjdCBr
+b21lZGFfZmIgKmtmYiwgc3RydWN0IGRybV9maWxlICpmaWxlLA0KIAkJCSAgICAgICBBRkJDX1NV
+UEVSQkxLX0FMSUdOTUVOVCk7DQogCW1pbl9zaXplID0ga2ZiLT5hZmJjX3NpemUgKyBmYi0+b2Zm
+c2V0c1swXTsNCiAJaWYgKG1pbl9zaXplID4gb2JqLT5zaXplKSB7DQotCQlEUk1fREVCVUdfS01T
+KCJhZmJjIHNpemUgY2hlY2sgZmFpbGVkLCBvYmpfc2l6ZTogMHglbHguIG1pbl9zaXplIDB4JXgu
+XG4iLA0KKwkJRFJNX0RFQlVHX0tNUygiYWZiYyBzaXplIGNoZWNrIGZhaWxlZCwgb2JqX3NpemU6
+IDB4JXp4LiBtaW5fc2l6ZSAweCVsbHguXG4iLA0KIAkJCSAgICAgIG9iai0+c2l6ZSwgbWluX3Np
+emUpOw0KIAkJZ290byBjaGVja19mYWlsZWQ7DQogCX0NCkBAIC0xMTQsNyArMTE0LDggQEAga29t
+ZWRhX2ZiX25vbmVfYWZiY19zaXplX2NoZWNrKHN0cnVjdCBrb21lZGFfZGV2ICptZGV2LCBzdHJ1
+Y3Qga29tZWRhX2ZiICprZmIsDQogCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgKmZiID0gJmtmYi0+
+YmFzZTsNCiAJY29uc3Qgc3RydWN0IGRybV9mb3JtYXRfaW5mbyAqaW5mbyA9IGZiLT5mb3JtYXQ7
+DQogCXN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqOw0KLQl1MzIgaSwgbWluX3NpemUsIGJsb2Nr
+X2g7DQorCXUzMiBpLCBibG9ja19oOw0KKwl1NjQgbWluX3NpemU7DQogDQogCWlmIChrb21lZGFf
+ZmJfY2hlY2tfc3JjX2Nvb3JkcyhrZmIsIDAsIDAsIGZiLT53aWR0aCwgZmItPmhlaWdodCkpDQog
+CQlyZXR1cm4gLUVJTlZBTDsNCkBAIC0xMzcsNyArMTM4LDcgQEAga29tZWRhX2ZiX25vbmVfYWZi
+Y19zaXplX2NoZWNrKHN0cnVjdCBrb21lZGFfZGV2ICptZGV2LCBzdHJ1Y3Qga29tZWRhX2ZiICpr
+ZmIsDQogCQltaW5fc2l6ZSA9IGtvbWVkYV9mYl9nZXRfcGl4ZWxfYWRkcihrZmIsIDAsIGZiLT5o
+ZWlnaHQsIGkpDQogCQkJIC0gdG9fZHJtX2dlbV9jbWFfb2JqKG9iaiktPnBhZGRyOw0KIAkJaWYg
+KG9iai0+c2l6ZSA8IG1pbl9zaXplKSB7DQotCQkJRFJNX0RFQlVHX0tNUygiVGhlIGZiLT5vYmpb
+JWRdIHNpemU6ICVsZCBsb3dlciB0aGFuIHRoZSBtaW5pbXVtIHJlcXVpcmVtZW50OiAlZC5cbiIs
+DQorCQkJRFJNX0RFQlVHX0tNUygiVGhlIGZiLT5vYmpbJWRdIHNpemU6IDB4JXp4IGxvd2VyIHRo
+YW4gdGhlIG1pbmltdW0gcmVxdWlyZW1lbnQ6IDB4JWxseC5cbiIsDQogCQkJCSAgICAgIGksIG9i
+ai0+c2l6ZSwgbWluX3NpemUpOw0KIAkJCXJldHVybiAtRUlOVkFMOw0KIAkJfQ0KLS0gDQoyLjE3
+LjENCg0K
