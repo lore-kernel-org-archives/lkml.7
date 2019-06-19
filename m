@@ -2,152 +2,184 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FC56C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:49:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C961C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:50:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EDC52084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:49:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05AF52084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:50:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="UxKdEHpJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbfFSJtI convert rfc822-to-8bit (ORCPT
+        id S1731441AbfFSJux (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:49:08 -0400
-Received: from szxga01-in.huawei.com ([45.249.212.187]:6938 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731186AbfFSJtH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:49:07 -0400
-Received: from DGGEMM401-HUB.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 55BFF979A653C45FD5B1;
-        Wed, 19 Jun 2019 17:49:05 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM401-HUB.china.huawei.com (10.3.20.209) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Wed, 19 Jun 2019 17:49:04 +0800
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 19 Jun 2019 17:49:04 +0800
-Received: from dggeme763-chm.china.huawei.com ([10.6.66.36]) by
- dggeme763-chm.china.huawei.com ([10.6.66.36]) with mapi id 15.01.1591.008;
- Wed, 19 Jun 2019 17:49:04 +0800
-From:   linmiaohe <linmiaohe@huawei.com>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-CC:     "kadlec@blackhole.kfki.hu" <kadlec@blackhole.kfki.hu>,
-        "fw@strlen.de" <fw@strlen.de>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "kuznet@ms2.inr.ac.ru" <kuznet@ms2.inr.ac.ru>,
-        "yoshfuji@linux-ipv6.org" <yoshfuji@linux-ipv6.org>,
-        "netfilter-devel@vger.kernel.org" <netfilter-devel@vger.kernel.org>,
-        "coreteam@netfilter.org" <coreteam@netfilter.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dsahern@gmail.com" <dsahern@gmail.com>,
-        Mingfangsen <mingfangsen@huawei.com>
-Subject: Re: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Topic: [PATCH v3] net: netfilter: Fix rpfilter dropping vrf packets by
- mistake
-Thread-Index: AdUmfDnLJBRdmfpcd0eT0vsD259sjw==
-Date:   Wed, 19 Jun 2019 09:49:04 +0000
-Message-ID: <30442ee669c44d9db01fb374b73fd2dd@huawei.com>
-Accept-Language: en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.184.189.20]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 19 Jun 2019 05:50:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60366 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfFSJux (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 05:50:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=MbgPWobC8/fDBy4WkE0A0yRvyYgfjJzRd9Ukcexabjs=; b=UxKdEHpJNtjfbdVRcfWQ0nNpt
+        o5RcsM2AyU0zTW+bRRDCmLQM1dybm7TXoTSDcDwJ5CMCZsJxpLHGqoFF+uwdbnTYY16BEIYxVrBdL
+        jxD2hpDqfGvw1hbc/NTOjdRq1EHm4QDWpvaf0B0+Eepq8VOyDN4oFvZn2hWtPELNJtheX1uRZc831
+        mLOb7k3LsZq+EE/8igKlmxKc52ZmOpaxSbKqhl7dzh7flqGzeXNAfRHpBFiH9iCUL4DxX3fFCcuy/
+        lCjN9Eukex+izdonu+6uXa3kse9YWu3/aty45ywCe+q7oI/CjYro+XbVsK4nBrBtP7+NrjNjgTd6x
+        qOXbuy7MA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdXEr-00073x-2O; Wed, 19 Jun 2019 09:50:45 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 15605201F98FB; Wed, 19 Jun 2019 11:50:43 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 11:50:43 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Oleg Nesterov <oleg@redhat.com>
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Daniel Bristot de Oliveira <bristot@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>, jack@suse.com,
+        Waiman Long <longman@redhat.com>,
+        Davidlohr Bueso <dave@stgolabs.net>
+Subject: Re: [RT WARNING] DEBUG_LOCKS_WARN_ON(rt_mutex_owner(lock) !=
+ current) with fsfreeze (4.19.25-rt16)
+Message-ID: <20190619095043.GT3402@hirez.programming.kicks-ass.net>
+References: <20190326093421.GA29508@localhost.localdomain>
+ <20190419085627.GI4742@localhost.localdomain>
+ <20190430125130.uw7mhdnsoqr2v3gf@linutronix.de>
+ <20190430132811.GB2589@hirez.programming.kicks-ass.net>
+ <20190501170953.GB2650@hirez.programming.kicks-ass.net>
+ <20190502100932.GA7323@redhat.com>
+ <20190502114258.GB7323@redhat.com>
+ <20190503145059.GC2606@hirez.programming.kicks-ass.net>
+ <20190506165009.GA28959@redhat.com>
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506165009.GA28959@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/6/18 23:58, Pablo Neira Ayuso wrote:
-> On Thu, Apr 25, 2019 at 09:43:53PM +0800, linmiaohe wrote:
->> From: Miaohe Lin <linmiaohe@huawei.com>
->>
->> When firewalld is enabled with ipv4/ipv6 rpfilter, vrf
->> ipv4/ipv6 packets will be dropped because in device is vrf but out 
->> device is an enslaved device. So failed with the check of the 
->> rpfilter.
->>
->> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
->> ---
->> --- a/net/ipv4/netfilter/ipt_rpfilter.c
->> +++ b/net/ipv4/netfilter/ipt_rpfilter.c
->> @@ -81,6 +81,7 @@ static bool rpfilter_mt(const struct sk_buff *skb, struct xt_action_param *par)
->>  	flow.flowi4_mark = info->flags & XT_RPFILTER_VALID_MARK ? skb->mark : 0;
->>  	flow.flowi4_tos = RT_TOS(iph->tos);
->>  	flow.flowi4_scope = RT_SCOPE_UNIVERSE;
->> +	flow.flowi4_oif = l3mdev_master_ifindex_rcu(xt_in(par));
->>
->>  	return rpfilter_lookup_reverse(xt_net(par), &flow, xt_in(par),
->> --- a/net/ipv6/netfilter/ip6t_rpfilter.c
->> +++ b/net/ipv6/netfilter/ip6t_rpfilter.c
->> @@ -58,7 +58,9 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
->>  	if (rpfilter_addr_linklocal(&iph->saddr)) {
->>  		lookup_flags |= RT6_LOOKUP_F_IFACE;
->>  		fl6.flowi6_oif = dev->ifindex;
->> -	} else if ((flags & XT_RPFILTER_LOOSE) == 0)
->> +	} else if (((flags & XT_RPFILTER_LOOSE) == 0) ||
->> +		   (netif_is_l3_master(dev)) ||
->> +		   (netif_is_l3_slave(dev)))
->>  		fl6.flowi6_oif = dev->ifindex;
->>
->>  	rt = (void *)ip6_route_lookup(net, &fl6, skb, lookup_flags); @@
->> -73,6 +75,12 @@ static bool rpfilter_lookup_reverse6(struct net *net, const struct sk_buff *skb,
->>  		goto out;
->>  	}
->>
->> +	if (netif_is_l3_master(dev)) {
->> +		dev = dev_get_by_index_rcu(dev_net(dev), IP6CB(skb)->iif);
->> +		if (!dev)
->> +			goto out;
->> +	}
+Sorry, I seem to have missed this email.
+
+On Mon, May 06, 2019 at 06:50:09PM +0200, Oleg Nesterov wrote:
+> On 05/03, Peter Zijlstra wrote:
+> >
+> > -static void lockdep_sb_freeze_release(struct super_block *sb)
+> > -{
+> > -	int level;
+> > -
+> > -	for (level = SB_FREEZE_LEVELS - 1; level >= 0; level--)
+> > -		percpu_rwsem_release(sb->s_writers.rw_sem + level, 0, _THIS_IP_);
+> > -}
+> > -
+> > -/*
+> > - * Tell lockdep we are holding these locks before we call ->unfreeze_fs(sb).
+> > - */
+> > -static void lockdep_sb_freeze_acquire(struct super_block *sb)
+> > -{
+> > -	int level;
+> > -
+> > -	for (level = 0; level < SB_FREEZE_LEVELS; ++level)
+> > -		percpu_rwsem_acquire(sb->s_writers.rw_sem + level, 0, _THIS_IP_);
+> > +	percpu_down_write_non_owner(sb->s_writers.rw_sem + level-1);
+> >  }
 > 
-> So, for the l3 device cases this makes:
+> I'd suggest to not change fs/super.c, keep these helpers, and even not introduce
+> xxx_write_non_owner().
 > 
-> #1 ip6_route_lookup() to fetch the route, using the device in xt_in()
->    (the _LOOSE flag is ignored for the l3 device case).
+> freeze_super() takes other locks, it calls sync_filesystem(), freeze_fs(), lockdep
+> should know that this task holds SB_FREEZE_XXX locks for writing.
+
+Bah, I so hate these games. But OK, I suppose.
+
+> > @@ -80,14 +83,8 @@ int __percpu_down_read(struct percpu_rw_
+> >  	 * and reschedule on the preempt_enable() in percpu_down_read().
+> >  	 */
+> >  	preempt_enable_no_resched();
+> > -
+> > -	/*
+> > -	 * Avoid lockdep for the down/up_read() we already have them.
+> > -	 */
+> > -	__down_read(&sem->rw_sem);
+> > +	wait_event(sem->waiters, !atomic_read(&sem->block));
+> >  	this_cpu_inc(*sem->read_count);
 > 
-> #2 If this is a l3dev master, then you make a global lookup for the
->    device using IP6CB(skb)->iif.
+> Argh, this looks racy :/
 > 
-> #3 You check if route matches with the device, using the new device
->    from the lookup:
+> Suppose that sem->block == 0 when wait_event() is called, iow the writer released
+> the lock.
 > 
->    if (rt->rt6i_idev->dev == dev ...
-> 
-> If there is no other way to fix this, OK, that's fair enough.
-> 
-> Still this fix looks a bit tricky to me.
-> 
-> And this assymmetric between the IPv4 and IPv6 codebase looks rare.
-> 
-> Probably someone can explain me this in more detail? I'd appreciate.
-> 
-> Thanks!
-> 
-    Thanks for your reply. I will try to explain this in more detail.
-    Vrf device will pass through netfilter hook twice. One with skb->dev=l3mdev
-Slave device and another one with skb->dev=l3mdev master deivce.
-    If a device is an l3mdev,  l3mdev_master_ifindex_rcu will return l3mdev
-master device ifindex otherwise 0 . So for non l3mdev cases,  v4 version is
-as same as the previous one. And for l3mdev cases,  flow.flowi4_oif
-will be l3mdev master device ifindex, so we can do a fib lookup in l3mdev
-domain as expected. Since fib_info_nh_uses_dev help us handle the case with
-dev=l3mdev slave or master and  XT_RPFILTER_LOOSE do not lookup route
-table, we finish v4.
-    For v6 version we need to set fl6.flowi6_oif as we are supposed to lookup 
-fib in l3mdev domain even in XT_RPFILTER_LOOSE mode.
-    And fib result rt->rt6i_idev->dev is l3mdev slave device, we need change
-dev to enslaved l3mdev device when dev passed in is l3mdev master device.
-    The key is l3mdev will pass through netfilter hook twice with skb dev is l3mdev slave
-and master . And we need to set flowi6_oif as fib lookup should in the l3mdev
-domain.
-    Thanks a lot. Have a good day!
+> Now suppose that this __percpu_down_read() races with another percpu_down_write().
+> The new writer can set sem->block == 1 and call readers_active_check() in between,
+> after wait_event() and before this_cpu_inc(*sem->read_count).
+
+
+CPU0			CPU1			CPU2
+
+percpu_up_write()
+  sem->block = 0;
+
+			__percpu_down_read()
+			  wait_event(, !sem->block);
+
+						percpu_down_write()
+						  wait_event_exclusive(, xchg(sem->block,1)==0);
+						  readers_active_check()
+
+			  this_cpu_inc();
+
+			  *whoopsy* reader while write owned.
+
+
+
+I suppose we can 'patch' that by checking blocking again after we've
+incremented, something like the below.
+
+But looking at percpu_down_write() we have two wait_event*() on the same
+queue back to back, which is 'odd' at best. Let me ponder that a little
+more.
+
+
+---
+
+--- a/kernel/locking/percpu-rwsem.c
++++ b/kernel/locking/percpu-rwsem.c
+@@ -61,6 +61,7 @@ int __percpu_down_read(struct percpu_rw_
+ 	 * writer missed them.
+ 	 */
+ 
++again:
+ 	smp_mb(); /* A matches D */
+ 
+ 	/*
+@@ -87,7 +88,13 @@ int __percpu_down_read(struct percpu_rw_
+ 	wait_event(sem->waiters, !atomic_read_acquire(&sem->block));
+ 	this_cpu_inc(*sem->read_count);
+ 	preempt_disable();
+-	return 1;
++
++	/*
++	 * percpu_down_write() could've set ->blocked right after we've seen it
++	 * 0 but missed our this_cpu_inc(), which is exactly the condition we
++	 * get called for from percpu_down_read().
++	 */
++	goto again;
+ }
+ EXPORT_SYMBOL_GPL(__percpu_down_read);
+ 
+
