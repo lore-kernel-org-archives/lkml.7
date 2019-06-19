@@ -2,193 +2,179 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.6 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A0EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1762C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B15CB21881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78582204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="YyOH4Qlo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbfFSPrJ (ORCPT
+        id S1730032AbfFSPrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:47:09 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:55140 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727584AbfFSPrI (ORCPT
+        Wed, 19 Jun 2019 11:47:22 -0400
+Received: from esa3.microchip.iphmx.com ([68.232.153.233]:60784 "EHLO
+        esa3.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727144AbfFSPrT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:47:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id n8so21715122ioo.21
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:47:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=hHZuSqbZ2UJO3F7wlo6ZhKddlrieBiNbmp48U00E8fw=;
-        b=I7845FEGktBDh2o0Zi59Ox+PbAviSXUcyKJFHv9RATcLrScYYITdFUA9yIPTDciyTC
-         yJ36zntRSpvM7NgBpw0Qv2erh/kWyJQK0umQV2PbX7SpqYKXkkoleuUw3BMFbBRrYArx
-         lhyvhcFIhXol05RUhe/ChRJJcghcHmgtPmqds1AculZqJzk1GZqAgISlYa92P9WpiIGB
-         d7j/aOHpiP7gj1lsxVk5Y7J37uGTbfmBfrDHMrLGgjpIJvsEGiuUAyp1av7c04LprC0T
-         YSf1T3bKWUatKCk5bAKN1EN1xxGPUIMEi5xDyp/ihQs3XZVOfeXM+07/gbp9OAnZirUF
-         eeXw==
-X-Gm-Message-State: APjAAAVlS9SbNtt1iYbeu/WoNohMXCH6OnxD9J9fCs9CqeqFHctBv79X
-        +2/Foj18mQmlAiPuKhEUUI4fdFhuC2eiRzdqYQV1CGhjOK5R
-X-Google-Smtp-Source: APXvYqwhGg/njNrbsjgF+X1iruI5O5ZpW2m9d6clI7bswQPMf3AcspTNW93k7VEime5skQC4mXueAFfu0Wb6Z06/DJQ1OjXATx0T
+        Wed, 19 Jun 2019 11:47:19 -0400
+Received-SPF: Pass (esa3.microchip.iphmx.com: domain of
+  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
+  permitted sender) identity=mailfrom;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="Tudor.Ambarus@microchip.com";
+  x-conformance=spf_only; x-record-type="v=spf1";
+  x-record-text="v=spf1 mx a:ushub1.microchip.com
+  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
+  a:mx2.microchip.iphmx.com include:servers.mcsv.net
+  include:mktomail.com include:spf.protection.outlook.com ~all"
+Received-SPF: None (esa3.microchip.iphmx.com: no sender
+  authenticity information available from domain of
+  postmaster@email.microchip.com) identity=helo;
+  client-ip=198.175.253.82; receiver=esa3.microchip.iphmx.com;
+  envelope-from="Tudor.Ambarus@microchip.com";
+  x-sender="postmaster@email.microchip.com";
+  x-conformance=spf_only
+Authentication-Results: esa3.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="38238273"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa3.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 19 Jun 2019 08:47:17 -0700
+Received: from chn-vm-ex03.mchp-main.com (10.10.87.152) by
+ chn-vm-ex04.mchp-main.com (10.10.87.151) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 19 Jun 2019 08:47:16 -0700
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.87.152) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 19 Jun 2019 08:47:16 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DG+5zvZ34mn24jD49CkdDFdIjKvgTfrAodPxU4EeaIY=;
+ b=YyOH4QloXVBvdCHPAA/d7jGfHfWjjI4NP2XvnWSG2DLzZ8i466fqx9S/ZkAxQFh7s6Oqmzke5BxO6AyphKg9+ORStIqnKYENCrplPkd1EVeAX4LU0x5qmBPzSod4O36yAk5D+EEuOpnIz/KxatgMcXJEaNKh1xUINYE2TqDwETs=
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com (10.175.98.146) by
+ BN6PR11MB1666.namprd11.prod.outlook.com (10.172.18.8) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Wed, 19 Jun 2019 15:47:13 +0000
+Received: from BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e581:f807:acdc:cb36]) by BN6PR11MB1842.namprd11.prod.outlook.com
+ ([fe80::e581:f807:acdc:cb36%9]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
+ 15:47:13 +0000
+From:   <Tudor.Ambarus@microchip.com>
+To:     <geert@linux-m68k.org>
+CC:     <marek.vasut+renesas@gmail.com>, <marek.vasut@gmail.com>,
+        <vigneshr@ti.com>, <jonas@norrbonn.se>, <dwmw2@infradead.org>,
+        <computersforpeace@gmail.com>, <miquel.raynal@bootlin.com>,
+        <richard@nod.at>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-renesas-soc@vger.kernel.org>
+Subject: Re: [PATCH] mtd: spi-nor: use 16-bit WRR command when QE is set on
+ spansion flashes
+Thread-Topic: [PATCH] mtd: spi-nor: use 16-bit WRR command when QE is set on
+ spansion flashes
+Thread-Index: AQHVH1UacBq0FintGkWJpZVpCwLZ0KaWIrmAgA0LGgA=
+Date:   Wed, 19 Jun 2019 15:47:13 +0000
+Message-ID: <02babf5a-2a50-848c-27d9-9f810078cbcf@microchip.com>
+References: <c57fe97b-ad4a-874e-663f-7f3a737824c9@microchip.com>
+ <20190610062351.24405-1-tudor.ambarus@microchip.com>
+ <CAMuHMdW3=fzFvt+ZmC2B6qf0zEwfvV--HVEoxa06Tk=a=Q1cWA@mail.gmail.com>
+In-Reply-To: <CAMuHMdW3=fzFvt+ZmC2B6qf0zEwfvV--HVEoxa06Tk=a=Q1cWA@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: VI1PR07CA0308.eurprd07.prod.outlook.com
+ (2603:10a6:800:130::36) To BN6PR11MB1842.namprd11.prod.outlook.com
+ (2603:10b6:404:101::18)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [94.177.32.154]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b824cbc4-294c-423a-8a55-08d6f4cd65b8
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BN6PR11MB1666;
+x-ms-traffictypediagnostic: BN6PR11MB1666:
+x-microsoft-antispam-prvs: <BN6PR11MB1666066CAFDF361E4E4711F4F0E50@BN6PR11MB1666.namprd11.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:238;
+x-forefront-prvs: 0073BFEF03
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(346002)(366004)(39860400002)(376002)(199004)(189003)(31686004)(66946007)(73956011)(6116002)(3846002)(66066001)(486006)(14454004)(66476007)(64756008)(66446008)(66556008)(81166006)(81156014)(68736007)(36756003)(476003)(8676002)(2616005)(446003)(305945005)(8936002)(7736002)(11346002)(2906002)(186003)(26005)(53936002)(6436002)(5660300002)(25786009)(386003)(53546011)(71190400001)(6506007)(6916009)(71200400001)(102836004)(14444005)(256004)(86362001)(7416002)(4326008)(99286004)(6486002)(478600001)(316002)(54906003)(72206003)(31696002)(76176011)(6512007)(52116002)(6246003)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR11MB1666;H:BN6PR11MB1842.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: I1e78FJNFKV4ZY2dNGHT3kBFvhb0A0hbYqmaP60LJ1wK33RT06MPDGAZYWw05FJELxE5Hxss72iFRugNVvfs1Q5U4M/xI1vQjPjlk32sGGCKQu0GmFeLfR4Y3xbB/FJVbhlGSLO5yA0b27QltmOllLv/6gQs4jDVXKRp6VtE+foT+xj9aJzvxo5xWz/v8sWWTgPicf5CgQ7wam62SXACAGnxx6SToTchifc2kG0R5X8If/qNBtxVODcIXjK8U6L3Ew8/dFGxvyS9yP5T3K3nPxZ7IF4JdnSLoC4x+Wz5aRo6WBXl+vjv6LNxuRGvVs2B+h/wlWto/RkBalOeDv/3WjsJzYITVYPigFRNnhNzLsl7lBzb9CPmdIbQm2iwO0WAyYOPxzqotZk8IG8pg17X6ts/2d/Ij29Sp0aFa+QWbcs=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <A6F23B43FA1BA24EBDE89ED9FC6645B3@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a02:22c6:: with SMTP id o189mr8090464jao.35.1560959227952;
- Wed, 19 Jun 2019 08:47:07 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 08:47:07 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004a8875058baf24f7@google.com>
-Subject: KASAN: use-after-free Read in brnf_exit_net
-From:   syzbot <syzbot+43a3fa52c0d9c5c94f41@syzkaller.appspotmail.com>
-To:     a.hajda@samsung.com, airlied@linux.ie, airlied@redhat.com,
-        alexander.deucher@amd.com, bridge@lists.linux-foundation.org,
-        christian.koenig@amd.com, coreteam@netfilter.org, daniel@ffwll.ch,
-        davem@davemloft.net, dri-devel@lists.freedesktop.org,
-        enric.balletbo@collabora.com, fw@strlen.de, harry.wentland@amd.com,
-        heiko@sntech.de, intel-gfx@lists.freedesktop.org,
-        jani.nikula@linux.intel.com, jerry.zhang@amd.com, jonas@kwiboo.se,
-        joonas.lahtinen@linux.intel.com, kadlec@netfilter.org,
-        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, marc.zyngier@arm.com,
-        maxime.ripard@bootlin.com, narmstrong@baylibre.com,
-        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
-        nikolay@cumulusnetworks.com, pablo@netfilter.org,
-        patrik.r.jakobsson@gmail.com, rodrigo.vivi@intel.com,
-        roopa@cumulusnetworks.com, sam@ravnborg.org, sean@poorly.run,
-        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: b824cbc4-294c-423a-8a55-08d6f4cd65b8
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 15:47:13.6343
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tudor.ambarus@microchip.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR11MB1666
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    1c6b4050 Add linux-next specific files for 20190618
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=10126209a00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=3c614278993de456
-dashboard link: https://syzkaller.appspot.com/bug?extid=43a3fa52c0d9c5c94f41
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16291176a00000
-
-The bug was bisected to:
-
-commit b38d37a08ec4b19a9b9ec3a1ff5566781fcae1f1
-Author: Stephen Rothwell <sfr@canb.auug.org.au>
-Date:   Tue Jun 18 04:19:55 2019 +0000
-
-     Merge remote-tracking branch 'drm/drm-next'
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=146f914ea00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=166f914ea00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=126f914ea00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+43a3fa52c0d9c5c94f41@syzkaller.appspotmail.com
-Fixes: b38d37a08ec4 ("Merge remote-tracking branch 'drm/drm-next'")
-
-==================================================================
-BUG: KASAN: use-after-free in br_netfilter_sysctl_exit_net  
-net/bridge/br_netfilter_hooks.c:1121 [inline]
-BUG: KASAN: use-after-free in brnf_exit_net+0x38c/0x3a0  
-net/bridge/br_netfilter_hooks.c:1141
-Read of size 8 at addr ffff8880a4078d60 by task kworker/u4:4/8749
-
-CPU: 0 PID: 8749 Comm: kworker/u4:4 Not tainted 5.2.0-rc5-next-20190618 #17
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: netns cleanup_net
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
-  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
-  kasan_report+0x12/0x20 mm/kasan/common.c:614
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  br_netfilter_sysctl_exit_net net/bridge/br_netfilter_hooks.c:1121 [inline]
-  brnf_exit_net+0x38c/0x3a0 net/bridge/br_netfilter_hooks.c:1141
-  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
-  cleanup_net+0x3fb/0x960 net/core/net_namespace.c:553
-  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
-  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
-  kthread+0x354/0x420 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-
-Allocated by task 11374:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
-  __do_kmalloc mm/slab.c:3645 [inline]
-  __kmalloc+0x15c/0x740 mm/slab.c:3654
-  kmalloc include/linux/slab.h:552 [inline]
-  kzalloc include/linux/slab.h:743 [inline]
-  __register_sysctl_table+0xc7/0xef0 fs/proc/proc_sysctl.c:1327
-  register_net_sysctl+0x29/0x30 net/sysctl_net.c:121
-  br_netfilter_sysctl_init_net net/bridge/br_netfilter_hooks.c:1105 [inline]
-  brnf_init_net+0x379/0x6a0 net/bridge/br_netfilter_hooks.c:1126
-  ops_init+0xb3/0x410 net/core/net_namespace.c:130
-  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
-  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
-  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:103
-  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:202
-  ksys_unshare+0x444/0x980 kernel/fork.c:2822
-  __do_sys_unshare kernel/fork.c:2890 [inline]
-  __se_sys_unshare kernel/fork.c:2888 [inline]
-  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2888
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 9:
-  save_stack+0x23/0x90 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
-  __cache_free mm/slab.c:3417 [inline]
-  kfree+0x10a/0x2c0 mm/slab.c:3746
-  __rcu_reclaim kernel/rcu/rcu.h:215 [inline]
-  rcu_do_batch kernel/rcu/tree.c:2092 [inline]
-  invoke_rcu_callbacks kernel/rcu/tree.c:2310 [inline]
-  rcu_core+0xcc7/0x1500 kernel/rcu/tree.c:2291
-  __do_softirq+0x25c/0x94c kernel/softirq.c:292
-
-The buggy address belongs to the object at ffff8880a4078d40
-  which belongs to the cache kmalloc-512 of size 512
-The buggy address is located 32 bytes inside of
-  512-byte region [ffff8880a4078d40, ffff8880a4078f40)
-The buggy address belongs to the page:
-page:ffffea0002901e00 refcount:1 mapcount:0 mapping:ffff8880aa400a80  
-index:0xffff8880a40785c0
-flags: 0x1fffc0000000200(slab)
-raw: 01fffc0000000200 ffffea0001d636c8 ffffea0001b07308 ffff8880aa400a80
-raw: ffff8880a40785c0 ffff8880a40780c0 0000000100000004 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff8880a4078c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a4078c80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
-> ffff8880a4078d00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
-                                                        ^
-  ffff8880a4078d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8880a4078e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+SGksIEdlZXJ0LA0KDQpPbiAwNi8xMS8yMDE5IDExOjM1IEFNLCBHZWVydCBVeXR0ZXJob2V2ZW4g
+d3JvdGU6DQo+IEhpIFR1ZG9yLA0KPiANCj4gT24gTW9uLCBKdW4gMTAsIDIwMTkgYXQgODoyNCBB
+TSA8VHVkb3IuQW1iYXJ1c0BtaWNyb2NoaXAuY29tPiB3cm90ZToNCj4+IEZyb206IFR1ZG9yIEFt
+YmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCj4+DQo+PiBTUEkgbWVtb3J5IGRl
+dmljZXMgZnJvbSBkaWZmZXJlbnQgbWFudWZhY3R1cmVycyBoYXZlIHdpZGVseQ0KPj4gZGlmZmVy
+ZW50IGNvbmZpZ3VyYXRpb25zIGZvciBTdGF0dXMsIENvbnRyb2wgYW5kIENvbmZpZ3VyYXRpb24N
+Cj4+IHJlZ2lzdGVycy4gSkVERUMgMjE2QyBkZWZpbmVzIGEgbmV3IG1hcCBmb3IgdGhlc2UgY29t
+bW9uIHJlZ2lzdGVyDQo+PiBiaXRzIGFuZCB0aGVpciBmdW5jdGlvbnMsIGFuZCBkZXNjcmliZXMg
+aG93IHRoZSBpbmRpdmlkdWFsIGJpdHMgbWF5DQo+PiBiZSBhY2Nlc3NlZCBmb3IgYSBzcGVjaWZp
+YyBkZXZpY2UuIEZvciB0aGUgSkVERUMgMjE2QiBjb21wbGlhbnQNCj4+IGZsYXNoZXMsIHdlIGNh
+biBwYXJ0aWFsbHkgZGVkdWNlIFN0YXR1cyBhbmQgQ29uZmlndXJhdGlvbiByZWdpc3RlcnMNCj4+
+IGZ1bmN0aW9ucyBieSBpbnNwZWN0aW5nIHRoZSAxNnRoIERXT1JEIG9mIEJGUFQuIE9sZGVyIGZs
+YXNoZXMgdGhhdA0KPj4gZG9uJ3QgZGVjbGFyZSB0aGUgU0ZEUCB0YWJsZXMgKFNQQU5TSU9OIEZM
+NTEyU0FJRkcxIDMxMVFRMDYzIEEgwqkxMQ0KPj4gU1BBTlNJT04pIGxldCB0aGUgc29mdHdhcmUg
+ZGVjaWRlIGhvdyB0byBpbnRlcmFjdCB3aXRoIHRoZXNlIHJlZ2lzdGVycy4NCj4+DQo+PiBUaGUg
+Y29tbWl0IGRjYjRiMjJlZWFmNCAoInNwaS1ub3I6IHMyNWZsNTEycyBzdXBwb3J0cyByZWdpb24g
+bG9ja2luZyIpDQo+PiB1bmNvdmVyZWQgYSBwcm9iZSBlcnJvciBmb3IgczI1Zmw1MTJzLCB3aGVu
+IHRoZSBRVUFEIGJpdCBDUlsxXSB3YXMgc2V0DQo+PiBpbiB0aGUgYm9vdGxvYWRlci4gV2hlbiB0
+aGlzIGJpdCBpcyBzZXQsIG9ubHkgdGhlIFdyaXRlIFJlZ2lzdGVyDQo+PiBXUlIgY29tbWFuZCBm
+b3JtYXQgd2l0aCAxNiBkYXRhIGJpdHMgbWF5IGJlIHVzZWQsIFdSUiB3aXRoIDggYml0cw0KPj4g
+aXMgbm90IHJlY29nbml6ZWQgYW5kIGhlbmNlIHRoZSBlcnJvciB3aGVuIHRyeWluZyB0byBjbGVh
+ciB0aGUgYmxvY2sNCj4+IHByb3RlY3Rpb24gYml0cy4NCj4+DQo+PiBGaXggdGhlIGFib3ZlIGJ5
+IHVzaW5nIDE2LWJpdHMgV1JSIGNvbW1hbmQgd2hlbiBRdWFkIGJpdCBpcyBzZXQuDQo+Pg0KPj4g
+QmFja3dhcmQgY29tcGF0aWJpbGl0eSBzaG91bGQgYmUgZmluZS4gVGhlIG5ld2x5IGludHJvZHVj
+ZWQNCj4+IHNwaV9ub3Jfc3BhbnNpb25fY2xlYXJfc3JfYnAoKSBpcyB0aWdodGx5IGNvdXBsZWQg
+d2l0aCB0aGUNCj4+IHNwYW5zaW9uX3F1YWRfZW5hYmxlKCkgZnVuY3Rpb24uIEJvdGggYXNzdW1l
+IHRoYXQgdGhlIFdyaXRlIFJlZ2lzdGVyDQo+PiB3aXRoIDE2IGJpdHMsIHRvZ2V0aGVyIHdpdGgg
+dGhlIFJlYWQgQ29uZmlndXJhdGlvbiBSZWdpc3RlciAoMzVoKQ0KPj4gaW5zdHJ1Y3Rpb25zIGFy
+ZSBzdXBwb3J0ZWQuDQo+Pg0KPj4gUmVwb3J0ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2Vl
+cnRAbGludXgtbTY4ay5vcmc+DQo+PiBTaWduZWQtb2ZmLWJ5OiBUdWRvciBBbWJhcnVzIDx0dWRv
+ci5hbWJhcnVzQG1pY3JvY2hpcC5jb20+DQo+PiAtLS0NCj4+IEdlZXJ0LCBKb25hcywNCj4+DQo+
+PiBUaGlzIHBhdGNoIGlzIGNvbXBpbGUtdGVzdGVkIG9ubHkuIEkgZG9uJ3QgaGF2ZSB0aGUgZmxh
+c2gsIEkgbmVlZCB5b3VyDQo+PiBoZWxwIGZvciB0ZXN0aW5nIHRoaXMuDQo+IA0KPiBUaGFua3Ms
+IHRoaXMgcmV2aXZlcyBhY2Nlc3MgdG8gdGhlIHMyNWZsNTEycyBvbiBLb2Vsc2NoLg0KPiANCj4g
+Rml4ZXM6IGRjYjRiMjJlZWFmNDRmOTEgKCJzcGktbm9yOiBzMjVmbDUxMnMgc3VwcG9ydHMgcmVn
+aW9uIGxvY2tpbmciKQ0KDQpJIGRpZG4ndCBhZGQgdGhlIEZpeGVzIHRhZyBiZWNhdXNlIHRoaXMg
+Y29tbWl0IGhlbHBlZCB1cyBkaXNjb3ZlciBhIGNhc2UgdGhhdA0KaGFzIG5vdCBiZWVuIHRha2Vu
+IGludG8gY29uc2lkZXJhdGlvbiBiZWZvcmUuIEl0IGRpZG4ndCBpbnRyb2R1Y2UgYSBidWcsIGJ1
+dA0KcmF0aGVyIHJldmVhbGVkIG9uZS4gSG93ZXZlciwgaXQncyBub3QgdGhlIHRpbWUgdG8gd2Fs
+ayBvdmVyIHRoaXMgdGhpbiBsaW5lLCBzbw0KSSdsbCBhZGQgaXQsIHRoYW5rcyENCg0KPiBUZXN0
+ZWQtYnk6IEdlZXJ0IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIuYmU+SGkgVHVk
+b3IsDQo+IA0KPiBUd28gcXVlc3Rpb25zIGJlbG93Li4uDQo+IA0KPj4gLS0tIGEvZHJpdmVycy9t
+dGQvc3BpLW5vci9zcGktbm9yLmMNCj4+ICsrKyBiL2RyaXZlcnMvbXRkL3NwaS1ub3Ivc3BpLW5v
+ci5jDQo+IA0KPj4gK3N0YXRpYyBpbnQgc3BpX25vcl9zcGFuc2lvbl9jbGVhcl9zcl9icChzdHJ1
+Y3Qgc3BpX25vciAqbm9yKQ0KPj4gK3sNCj4gDQo+IFsuLi5dDQo+IA0KPj4gKyAgICAgICAgKiBX
+aGVuIHRoZSBjb25maWd1cmF0aW9uIHJlZ2lzdGVyIFFVQUQgYml0IENSWzFdIGlzIDEsIG9ubHkN
+Cj4+ICsgICAgICAgICogdGhlIFdSUiBjb21tYW5kIGZvcm1hdCB3aXRoIDE2IGRhdGEgYml0cyBt
+YXkgYmUgdXNlZC4NCj4gDQo+IHMvV1JSL1dSU1IvPw0KDQpTMjVGTDUxMlMgbmFtZWQgaXQgIldy
+aXRlIFJlZ2lzdGVycyIgY29tbWFuZCBhbmQgY2hvc2UgdGhlICJXUlIiIGFjcm9ueW0uDQpKRVNE
+MjE2RCBuYW1lcyBpdCAiV3JpdGUgUmVnaXN0ZXIiIGNvbW1hbmQgYW5kIGRvZXNuJ3Qgc3VnZ2Vz
+dCBhbiBhY3JvbnltLiBJJ2xsDQpzLyJXUlIiLyJXcml0ZSBSZWdpc3RlciBjb21tYW5kIiwgdG8g
+dXNlIHRoZSBKRVNEMjE2RCBuYW1pbmcgYW5kIGF2b2lkIGNvbmZ1c2lvbi4NCg0KSSBhbHNvIGZv
+cmdvdCB0byBkZXNjcmliZSBpbnQgKCpjbGVhcl9zcl9icCksIHYyIHdpbGwgZm9sbG93LiBXaWxs
+IGtlZXAgdGhlIFItYg0KYW5kIFQtYiB0YWdzIHNpbmNlIEknbGwganVzdCB1cGRhdGUgY29tbWVu
+dHMuDQoNCnRhDQo=
