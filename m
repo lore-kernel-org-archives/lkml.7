@@ -2,350 +2,199 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F292BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:09:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20958C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2E2D208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:09:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6C0D21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:10:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="fWazkw0T"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vhJ+TrmC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731635AbfFSLJK (ORCPT
+        id S1731607AbfFSLKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:09:10 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:46242 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727076AbfFSLJJ (ORCPT
+        Wed, 19 Jun 2019 07:10:10 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:42387 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfFSLKK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:09:09 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d4so26581536edr.13
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 04:09:07 -0700 (PDT)
+        Wed, 19 Jun 2019 07:10:10 -0400
+Received: by mail-lf1-f67.google.com with SMTP id y13so11776272lfh.9;
+        Wed, 19 Jun 2019 04:10:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Y4GSKeCxJOgBNmn285dQtmwkYvSlROxIywFguE4X2O8=;
-        b=fWazkw0TX0zMESV9BeuzYc7r57HbzPWhl2QefHRfXlkuYhZXTAMe3lHCoH4S4uHslg
-         eUp+EKWZ9cM7q1bKimUB89IjflyIj1R0vMKgj7WiFygkrSyKa77wqIYaeaKchjlE+SVw
-         VhMNlHvU2/iLMeCEH1kJaUcnov8MRHZq9sjGQ=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=agVmxRNzCuCx+wKLmyH141AlxoV2jzZrMRtDmJLMRdo=;
+        b=vhJ+TrmCMqjiAGAqb/+xR/4OF+fxEXIy9HJyCHGXIabdhdxz0rv2kWtwfU1DaIMXMd
+         xj51bgU6RsdkacKIi5dExfStZq2IAwXBbjKYTEzbhM8bMnS/SJUsyOfdMoVJlrSduO7c
+         mOZeM/bu8FRGzv+vWX6S4ZHN/y1cLKZ2+KdG1LTFXXrgK7CK2e/ZpiEtKB5UyeqorHxN
+         7QReUEWCJoKhRbfeBnk4pBK/dz7c1HCVUyePPLA/VjGHf1d+TVgwvbKskIUPnTN5KypV
+         lKRa+NDdkbDlo+xNSUc+2kkQR9KSkZpF69fCfJ43/dlHxvqN5VjlFikyorEoVqdGvDCG
+         1U7w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=Y4GSKeCxJOgBNmn285dQtmwkYvSlROxIywFguE4X2O8=;
-        b=rBftaA3De2S8LLzbmzMudGqJ08mlgD4ye2UQFhe70+6Ci7LUJwG7L5ry8OLNzpaZ5d
-         WsCtlSWMCR5YqvgNEAQQQ2KVr+r7BDxyBUDCgqJ5UI5H10dcAkHqtPlFxn9au/KiC3gJ
-         NCx1xkYEuhKZG1gYiF5oFyoFdcgwL2uVEDCOwI1Qn9p5zAECfkxwVimjCaF2Pm06CDr5
-         0hXAZB0LlS9dh10BKerU7KEmLGQNPRDmdPbuoyaNM7ftp42GmqoNXp2jBCfaIP52cIFR
-         +LNxsUrwUUv7mob+ujbZR5KnA4hg5qy96HiV01fdb3G0QyAEMHoDxwANqDI67I9RIt9C
-         xzBw==
-X-Gm-Message-State: APjAAAWFRcDyL1oAsktnMFweuJDkwRmnxU+zWG5F0ZQTlsTpcZPoqKHu
-        ktAlfHT6Co0pY3gafj8OufaaYQ==
-X-Google-Smtp-Source: APXvYqxN7fRiV5hi8HTQ63ymgdaFtW6z8GpHO8Q8ACquWKrp1cDzhV6vjBBRbkYE36i801HPT+hUcA==
-X-Received: by 2002:aa7:d30b:: with SMTP id p11mr92006989edq.23.1560942546910;
-        Wed, 19 Jun 2019 04:09:06 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id g18sm5421605edh.13.2019.06.19.04.09.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 04:09:06 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 13:09:02 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>
-Subject: Re: [PATCH v3 08/12] drm/virtio: rework virtio_gpu_execbuffer_ioctl
- fencing
-Message-ID: <20190619110902.GO12905@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>,
-        "open list:VIRTIO GPU DRIVER" <virtualization@lists.linux-foundation.org>
-References: <20190619090420.6667-1-kraxel@redhat.com>
- <20190619090420.6667-9-kraxel@redhat.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=agVmxRNzCuCx+wKLmyH141AlxoV2jzZrMRtDmJLMRdo=;
+        b=XJvUs5xtRywJOaCGhVlvR6mAbopKZOmEDlNd2elP7UKIolDQSADr2pDboW0DitvFoE
+         yxuk7Hc5ITci7PepzbCBfpsonEBuovriuK+soMPo3gLdBlC9oZ9RiVtG7MvC8HHvQirP
+         lnyruxckGP67fOx3oG40vNebmVvEpp+UskfjbKsRypI1p5y5T6K58DNclG9CBuJ54vwT
+         dvrdX5GVX/HBDOd6XNk/mIv8cDlosSxQ6GNx6XOjPRT3YxCOG8uJ1Ko4CwSE7C9RHNaJ
+         y1CrOOwMg0mUaMbIvodrjdayTZXk6iOpIh5f9tl4CI7PuEweUd9xaurKkQu8YHlHU8A7
+         ndgA==
+X-Gm-Message-State: APjAAAU7XesdxWhgspbXD1T4/xGr6+a3Tz/IiHZpg5mneBUu9gTMCIMU
+        SgaJveJFymYE+NfCyMCcHAIjusT/
+X-Google-Smtp-Source: APXvYqyoZrUHug/s8P72I46vuiR40PXLFVO9StkFPFjwlMt9GF2bXKQK359OiFAP6F7foXvQgumMWg==
+X-Received: by 2002:a19:5e4e:: with SMTP id z14mr43970008lfi.11.1560942606802;
+        Wed, 19 Jun 2019 04:10:06 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id g5sm3050493ljj.69.2019.06.19.04.10.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 04:10:06 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+ <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
+ <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+ <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
+ <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
+Date:   Wed, 19 Jun 2019 14:10:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619090420.6667-9-kraxel@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-5-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 11:04:16AM +0200, Gerd Hoffmann wrote:
-> Use gem reservation helpers and direct reservation_object_* calls
-> instead of ttm.
+19.06.2019 13:55, Jon Hunter пишет:
 > 
-> v3: Also attach the array of gem objects to the virtio command buffer,
-> so we can drop the object references in the completion callback.  Needed
-> because ttm fence helpers grab a reference for us, but gem helpers
-> don't.
+> On 19/06/2019 11:27, Dmitry Osipenko wrote:
+>> 19.06.2019 13:04, Jon Hunter пишет:
+>>>
+>>> On 19/06/2019 00:27, Dmitry Osipenko wrote:
+>>>> 19.06.2019 1:22, Ben Dooks пишет:
+>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>>>>> of data, hence it can report transfer's residual with more fidelity which
+>>>>>> may be required in cases like audio playback. In particular this fixes
+>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
+>>>>>> on Tegra20 and Tegra30 devices.
+>>>>>>
+>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>>>>>
+>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>> ---
+>>>>>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>>>>>   1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>>>
+>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>>>> index 79e9593815f1..c5af8f703548 100644
+>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>>>>       return 0;
+>>>>>>   }
+>>>>>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>>>>>> +                          struct tegra_dma_sg_req *sg_req,
+>>>>>> +                          struct tegra_dma_desc *dma_desc,
+>>>>>> +                          unsigned int residual)
+>>>>>> +{
+>>>>>> +    unsigned long status, wcount = 0;
+>>>>>> +
+>>>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>> +        return residual;
+>>>>>> +
+>>>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>> +
+>>>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>> +
+>>>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>> +        wcount = status;
+>>>>>> +
+>>>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>> +        return residual - sg_req->req_len;
+>>>>>> +
+>>>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>> +}
+>>>>>
+>>>>> I am unfortunately nowhere near my notes, so can't completely
+>>>>> review this. I think the complexity of my patch series is due
+>>>>> to an issue with the count being updated before the EOC IRQ
+>>>>> is actually flagged (and most definetly before it gets to the
+>>>>> CPU IRQ handler).
+>>>>>
+>>>>> The test system I was using, which i've not really got any
+>>>>> access to at the moment would show these internal inconsistent
+>>>>> states every few hours, however it was moving 48kHz 8ch 16bit
+>>>>> TDM data.
+>>>>>
+>>>>> Thanks for looking into this, I am not sure if I am going to
+>>>>> get any time to look into this within the next couple of
+>>>>> months.
+>>>>
+>>>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
+>>>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
+>>>> anything going wrong.
+>>>>
+>>>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
+>>>> vs EOC? Assuming the cyclic transfer mode.
+>>>
+>>> I can't say that I am. However, for the case of cyclic transfer, given
+>>> that the next transfer is always programmed into the registers before
+>>> the last one completes, I could see that by the time the interrupt is
+>>> serviced that the DMA has moved on to the next transfer (which I assume
+>>> would reset the count).
+>>>
+>>> Interestingly, our downstream kernel implemented a change to avoid the
+>>> count appearing to move backwards. I am curious if this also works,
+>>> which would be a lot simpler that what Ben has implemented and may
+>>> mitigate that race condition that Ben is describing.
+>>>
+>>> Cheers
+>>> Jon
+>>>
+>>> [0]
+>>> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>
+>>
+>> The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
+>> tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
+>> doesn't check whether the dma_desc is *the active* transfer and not a pending!
 > 
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-
-I think this looks reasonable now, but since it now touches virtio
-lifetime management I'm not sure I can convince myself of its correctness.
-I didn't spot anything fundamentally wrong with the remaining patches, so
-on 8-12:
-
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-
-But I think you want someone with clue about virtio to double-check stuff
-doesn't get leaked or the driver oopses somewhere. Specifically I'm not
-sure whether you have some more traps lurking around buffer destruction,
-since ttm keeps stuff on the lru for longer than just until all the fences
-are signalled.
-
-Also, I strongly recommend you do a very basic igt to exercise this, i.e.
-allocate some buffers, submit them in a dummby op, then close the entire
-drmfd. The old version should at least have tripped over kasan, maybe even
-oopses somewhere.
--Daniel
-
-> ---
->  drivers/gpu/drm/virtio/virtgpu_drv.h   |  6 ++-
->  drivers/gpu/drm/drm_gem_array_helper.c |  2 +
->  drivers/gpu/drm/virtio/virtgpu_ioctl.c | 62 +++++++++++---------------
->  drivers/gpu/drm/virtio/virtgpu_vq.c    | 16 ++++---
->  4 files changed, 43 insertions(+), 43 deletions(-)
+> I agree that it should check to see if it is active. I assume that what
+> this patch is doing is not updating the dma position if it appears to
+> have gone backwards, implying we have moved on to the next buffer. Yes
+> this is still probably not as accurate as Ben's implementation because
+> most likely we have finished that transfer and this patch would report
+> that it is not quite finished.
 > 
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_drv.h b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> index 77ac69a8e6cc..573173c35c48 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_drv.h
-> +++ b/drivers/gpu/drm/virtio/virtgpu_drv.h
-> @@ -33,6 +33,7 @@
->  
->  #include <drm/drmP.h>
->  #include <drm/drm_gem.h>
-> +#include <drm/drm_gem_array_helper.h>
->  #include <drm/drm_atomic.h>
->  #include <drm/drm_encoder.h>
->  #include <drm/drm_fb_helper.h>
-> @@ -115,9 +116,9 @@ struct virtio_gpu_vbuffer {
->  
->  	char *resp_buf;
->  	int resp_size;
-> -
->  	virtio_gpu_resp_cb resp_cb;
->  
-> +	struct drm_gem_object_array *objs;
->  	struct list_head list;
->  };
->  
-> @@ -301,7 +302,8 @@ void virtio_gpu_cmd_context_detach_resource(struct virtio_gpu_device *vgdev,
->  					    uint32_t resource_id);
->  void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
->  			   void *data, uint32_t data_size,
-> -			   uint32_t ctx_id, struct virtio_gpu_fence *fence);
-> +			   uint32_t ctx_id, struct virtio_gpu_fence *fence,
-> +			   struct drm_gem_object_array *objs);
->  void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
->  					  uint32_t resource_id, uint32_t ctx_id,
->  					  uint64_t offset, uint32_t level,
-> diff --git a/drivers/gpu/drm/drm_gem_array_helper.c b/drivers/gpu/drm/drm_gem_array_helper.c
-> index d35c77c4a02d..fde6c2e63253 100644
-> --- a/drivers/gpu/drm/drm_gem_array_helper.c
-> +++ b/drivers/gpu/drm/drm_gem_array_helper.c
-> @@ -57,6 +57,7 @@ drm_gem_array_from_handles(struct drm_file *drm_file, u32 *handles, u32 nents)
->  	}
->  	return objs;
->  }
-> +EXPORT_SYMBOL(drm_gem_array_from_handles);
->  
->  /**
->   * drm_gem_array_put_free -- put gem objects and free array.
-> @@ -74,3 +75,4 @@ void drm_gem_array_put_free(struct drm_gem_object_array *objs)
->  	}
->  	drm_gem_array_free(objs);
->  }
-> +EXPORT_SYMBOL(drm_gem_array_put_free);
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_ioctl.c b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> index 5cffd2e54c04..21ebf5cdb8bc 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_ioctl.c
-> @@ -105,14 +105,11 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
->  	struct drm_virtgpu_execbuffer *exbuf = data;
->  	struct virtio_gpu_device *vgdev = dev->dev_private;
->  	struct virtio_gpu_fpriv *vfpriv = drm_file->driver_priv;
-> -	struct drm_gem_object *gobj;
->  	struct virtio_gpu_fence *out_fence;
-> -	struct virtio_gpu_object *qobj;
->  	int ret;
->  	uint32_t *bo_handles = NULL;
->  	void __user *user_bo_handles = NULL;
-> -	struct list_head validate_list;
-> -	struct ttm_validate_buffer *buflist = NULL;
-> +	struct drm_gem_object_array *buflist = NULL;
->  	int i;
->  	struct ww_acquire_ctx ticket;
->  	struct sync_file *sync_file;
-> @@ -155,15 +152,10 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
->  			return out_fence_fd;
->  	}
->  
-> -	INIT_LIST_HEAD(&validate_list);
->  	if (exbuf->num_bo_handles) {
-> -
->  		bo_handles = kvmalloc_array(exbuf->num_bo_handles,
-> -					   sizeof(uint32_t), GFP_KERNEL);
-> -		buflist = kvmalloc_array(exbuf->num_bo_handles,
-> -					   sizeof(struct ttm_validate_buffer),
-> -					   GFP_KERNEL | __GFP_ZERO);
-> -		if (!bo_handles || !buflist) {
-> +					    sizeof(uint32_t), GFP_KERNEL);
-> +		if (!bo_handles) {
->  			ret = -ENOMEM;
->  			goto out_unused_fd;
->  		}
-> @@ -175,25 +167,22 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
->  			goto out_unused_fd;
->  		}
->  
-> -		for (i = 0; i < exbuf->num_bo_handles; i++) {
-> -			gobj = drm_gem_object_lookup(drm_file, bo_handles[i]);
-> -			if (!gobj) {
-> -				ret = -ENOENT;
-> -				goto out_unused_fd;
-> -			}
-> -
-> -			qobj = gem_to_virtio_gpu_obj(gobj);
-> -			buflist[i].bo = &qobj->tbo;
-> -
-> -			list_add(&buflist[i].head, &validate_list);
-> +		buflist = drm_gem_array_from_handles(drm_file, bo_handles,
-> +						     exbuf->num_bo_handles);
-> +		if (!buflist) {
-> +			ret = -ENOENT;
-> +			goto out_unused_fd;
->  		}
->  		kvfree(bo_handles);
->  		bo_handles = NULL;
->  	}
->  
-> -	ret = virtio_gpu_object_list_validate(&ticket, &validate_list);
-> -	if (ret)
-> -		goto out_free;
-> +	if (buflist) {
-> +		ret = drm_gem_lock_reservations(buflist->objs, buflist->nents,
-> +						&ticket);
-> +		if (ret)
-> +			goto out_unused_fd;
-> +	}
->  
->  	buf = memdup_user(u64_to_user_ptr(exbuf->command), exbuf->size);
->  	if (IS_ERR(buf)) {
-> @@ -219,25 +208,26 @@ static int virtio_gpu_execbuffer_ioctl(struct drm_device *dev, void *data,
->  		fd_install(out_fence_fd, sync_file->file);
->  	}
->  
-> +	if (buflist) {
-> +		for (i = 0; i < exbuf->num_bo_handles; i++)
-> +			reservation_object_add_excl_fence(buflist->objs[i]->resv,
-> +							  &out_fence->f);
-> +		drm_gem_unlock_reservations(buflist->objs, buflist->nents,
-> +					    &ticket);
-> +	}
-> +
->  	virtio_gpu_cmd_submit(vgdev, buf, exbuf->size,
-> -			      vfpriv->ctx_id, out_fence);
-> -
-> -	ttm_eu_fence_buffer_objects(&ticket, &validate_list, &out_fence->f);
-> -
-> -	/* fence the command bo */
-> -	virtio_gpu_unref_list(&validate_list);
-> -	kvfree(buflist);
-> +			      vfpriv->ctx_id, out_fence, buflist);
->  	return 0;
->  
->  out_memdup:
->  	kfree(buf);
->  out_unresv:
-> -	ttm_eu_backoff_reservation(&ticket, &validate_list);
-> -out_free:
-> -	virtio_gpu_unref_list(&validate_list);
-> +	drm_gem_unlock_reservations(buflist->objs, buflist->nents, &ticket);
->  out_unused_fd:
->  	kvfree(bo_handles);
-> -	kvfree(buflist);
-> +	if (buflist)
-> +		drm_gem_array_put_free(buflist);
->  
->  	if (out_fence_fd >= 0)
->  		put_unused_fd(out_fence_fd);
-> diff --git a/drivers/gpu/drm/virtio/virtgpu_vq.c b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> index 6c1a90717535..6efea4fca012 100644
-> --- a/drivers/gpu/drm/virtio/virtgpu_vq.c
-> +++ b/drivers/gpu/drm/virtio/virtgpu_vq.c
-> @@ -191,7 +191,7 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work)
->  	} while (!virtqueue_enable_cb(vgdev->ctrlq.vq));
->  	spin_unlock(&vgdev->ctrlq.qlock);
->  
-> -	list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
-> +	list_for_each_entry(entry, &reclaim_list, list) {
->  		resp = (struct virtio_gpu_ctrl_hdr *)entry->resp_buf;
->  
->  		trace_virtio_gpu_cmd_response(vgdev->ctrlq.vq, resp);
-> @@ -218,14 +218,18 @@ void virtio_gpu_dequeue_ctrl_func(struct work_struct *work)
->  		}
->  		if (entry->resp_cb)
->  			entry->resp_cb(vgdev, entry);
-> -
-> -		list_del(&entry->list);
-> -		free_vbuf(vgdev, entry);
->  	}
->  	wake_up(&vgdev->ctrlq.ack_queue);
->  
->  	if (fence_id)
->  		virtio_gpu_fence_event_process(vgdev, fence_id);
-> +
-> +	list_for_each_entry_safe(entry, tmp, &reclaim_list, list) {
-> +		if (entry->objs)
-> +			drm_gem_array_put_free(entry->objs);
-> +		list_del(&entry->list);
-> +		free_vbuf(vgdev, entry);
-> +	}
->  }
->  
->  void virtio_gpu_dequeue_cursor_func(struct work_struct *work)
-> @@ -939,7 +943,8 @@ void virtio_gpu_cmd_transfer_from_host_3d(struct virtio_gpu_device *vgdev,
->  
->  void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
->  			   void *data, uint32_t data_size,
-> -			   uint32_t ctx_id, struct virtio_gpu_fence *fence)
-> +			   uint32_t ctx_id, struct virtio_gpu_fence *fence,
-> +			   struct drm_gem_object_array *objs)
->  {
->  	struct virtio_gpu_cmd_submit *cmd_p;
->  	struct virtio_gpu_vbuffer *vbuf;
-> @@ -949,6 +954,7 @@ void virtio_gpu_cmd_submit(struct virtio_gpu_device *vgdev,
->  
->  	vbuf->data_buf = data;
->  	vbuf->data_size = data_size;
-> +	vbuf->objs = objs;
->  
->  	cmd_p->hdr.type = cpu_to_le32(VIRTIO_GPU_CMD_SUBMIT_3D);
->  	cmd_p->hdr.ctx_id = cpu_to_le32(ctx_id);
-> -- 
-> 2.18.1
-> 
+> If Ben's patch works for you then why not go with this?
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Because I'm doubtful that it is really the case and not something else. It will be very odd
+if hardware updates words count and sets EOC asynchronously, I'd call it as a faulty design
+and thus a bug that need to worked around in software if that's really happening.
