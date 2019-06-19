@@ -2,148 +2,177 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A08AC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E12F0C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CF32208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BAED9208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:55:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731941AbfFSMzX (ORCPT
+        id S1731945AbfFSMzu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:55:23 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:52609 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731770AbfFSMzW (ORCPT
+        Wed, 19 Jun 2019 08:55:50 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:41584 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfFSMzu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:55:22 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1M2w4S-1hcUib3o9k-003KN8; Wed, 19 Jun 2019 14:55:06 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        wenxu <wenxu@ucloud.cn>, netfilter-devel@vger.kernel.org,
-        coreteam@netfilter.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH] netfilter: synproxy: fix building syncookie calls
-Date:   Wed, 19 Jun 2019 14:54:36 +0200
-Message-Id: <20190619125500.1054426-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Wed, 19 Jun 2019 08:55:50 -0400
+Received: from 92.40.248.88.threembb.co.uk ([92.40.248.88] helo=[192.168.43.158])
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1hda7t-0005rZ-UF; Wed, 19 Jun 2019 13:55:46 +0100
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+ <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
+ <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+ <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
+ <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
+ <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+Message-ID: <2e355ba0-2a77-3b39-7cec-cf580cd609b4@codethink.co.uk>
+Date:   Wed, 19 Jun 2019 13:55:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:xZ3TMz67ZOJPH0ye7NMGfik9gT3NNsynu5AzNJdutOeiOL4FIS+
- WAWs6+suEpnTzZ0LzUoZyVkCVr1RxNHd20j4ksTpwlFIPQxcMO5a9ZcyxLcotOgwe3uGlOB
- 1rUhA3r55CeT4b39lG/fNvkOu+NH9MlldXRpHp+zIZHBl1jlpZXUFAeA7s2aAzOnrbYgInB
- CM/7zqvrJ+PwsLR9lYTaA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:QNzBUpn2b2I=:HHSLfW4VycGyqlqjJGBf1q
- fdgoN5ybxex4s6O5gaO7m7glXbbkeG+zpqnv/+J7PcPaAZsuJI4jX0awEBftE3tWXouk5AFBQ
- 7wGCEYH8Krmv7DfRx/lRWw/NT2Ud9NaS89PZ30JNeHPpPcGcMoYvGOXp4wBoVFOuLXlwLPRaw
- k6p4G94DRpiD1U2mzw5j0Gw0aQJHIG0IeC7kpwrmdgwc2Kf9+tu0wnUI3EzSHccyelPMn7fyo
- LPlyIcZOUcjRrjhO+rBz1w03EOWL6TAFzMJMJYJkB3u0SaGz0OzeLyf82QM0o79WOxMRSIR1L
- MT57jVBhuAdsTmoV+sesjbAgvjAHdSx1tOd+OmFFVTd/UNTEmKFSYA4EDlrB1IH0g9aaRX2bB
- oV6debd+6899coOTyIyk95qQzAYbdhIe/Rpf5mpimOfki6Tefm9mP7xFoG4y4EjEl/OqbhzVC
- 0SbQJc8NNXij6OMRadEflf+DZ2FgdNF7F6pCBV19bmV0Rzb87yl+hTeGvSphxSxvi5JobW5pC
- Umgre0T3SfAhvELEsXFq4m51iCssETNixScH3NREJc4kHeexV+g3T96PfeTxk7o3KR2YcuA6R
- PCrVKn+sFcl2xO7yqHKc2UWl1zjkegg8D+h3k5QkksWlDhU7slSUB9VMqbdRBRzpe+j3MpziH
- dUf3TFpYKj0d7WmJnQ37eH7enuwxokIPfPARLkLtvkU/CBQiEF+Un91ncd7TjWboRs/r44J6/
- C4qzRdDKXLFuITe/kDDoYHGEjFZ0JXQtp7bbFw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When either CONFIG_IPV6 or CONFIG_SYN_COOKIES are disabled, the kernel
-fails to build:
+On 19/06/2019 12:10, Dmitry Osipenko wrote:
+> 19.06.2019 13:55, Jon Hunter пишет:
+>>
+>> On 19/06/2019 11:27, Dmitry Osipenko wrote:
+>>> 19.06.2019 13:04, Jon Hunter пишет:
+>>>>
+>>>> On 19/06/2019 00:27, Dmitry Osipenko wrote:
+>>>>> 19.06.2019 1:22, Ben Dooks пишет:
+>>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>>>>>> of data, hence it can report transfer's residual with more fidelity which
+>>>>>>> may be required in cases like audio playback. In particular this fixes
+>>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
+>>>>>>> on Tegra20 and Tegra30 devices.
+>>>>>>>
+>>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>>>>>>
+>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>> ---
+>>>>>>>    drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>>>>>>    1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>>>>> index 79e9593815f1..c5af8f703548 100644
+>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>>>>>        return 0;
+>>>>>>>    }
+>>>>>>>    +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>>>>>>> +                          struct tegra_dma_sg_req *sg_req,
+>>>>>>> +                          struct tegra_dma_desc *dma_desc,
+>>>>>>> +                          unsigned int residual)
+>>>>>>> +{
+>>>>>>> +    unsigned long status, wcount = 0;
+>>>>>>> +
+>>>>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>>> +        return residual;
+>>>>>>> +
+>>>>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>>> +
+>>>>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>>> +
+>>>>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>> +        wcount = status;
+>>>>>>> +
+>>>>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>>> +        return residual - sg_req->req_len;
+>>>>>>> +
+>>>>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>>> +}
+>>>>>>
+>>>>>> I am unfortunately nowhere near my notes, so can't completely
+>>>>>> review this. I think the complexity of my patch series is due
+>>>>>> to an issue with the count being updated before the EOC IRQ
+>>>>>> is actually flagged (and most definetly before it gets to the
+>>>>>> CPU IRQ handler).
+>>>>>>
+>>>>>> The test system I was using, which i've not really got any
+>>>>>> access to at the moment would show these internal inconsistent
+>>>>>> states every few hours, however it was moving 48kHz 8ch 16bit
+>>>>>> TDM data.
+>>>>>>
+>>>>>> Thanks for looking into this, I am not sure if I am going to
+>>>>>> get any time to look into this within the next couple of
+>>>>>> months.
+>>>>>
+>>>>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
+>>>>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
+>>>>> anything going wrong.
+>>>>>
+>>>>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
+>>>>> vs EOC? Assuming the cyclic transfer mode.
+>>>>
+>>>> I can't say that I am. However, for the case of cyclic transfer, given
+>>>> that the next transfer is always programmed into the registers before
+>>>> the last one completes, I could see that by the time the interrupt is
+>>>> serviced that the DMA has moved on to the next transfer (which I assume
+>>>> would reset the count).
+>>>>
+>>>> Interestingly, our downstream kernel implemented a change to avoid the
+>>>> count appearing to move backwards. I am curious if this also works,
+>>>> which would be a lot simpler that what Ben has implemented and may
+>>>> mitigate that race condition that Ben is describing.
+>>>>
+>>>> Cheers
+>>>> Jon
+>>>>
+>>>> [0]
+>>>> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>>
+>>>
+>>> The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
+>>> tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
+>>> doesn't check whether the dma_desc is *the active* transfer and not a pending!
+>>
+>> I agree that it should check to see if it is active. I assume that what
+>> this patch is doing is not updating the dma position if it appears to
+>> have gone backwards, implying we have moved on to the next buffer. Yes
+>> this is still probably not as accurate as Ben's implementation because
+>> most likely we have finished that transfer and this patch would report
+>> that it is not quite finished.
+>>
+>> If Ben's patch works for you then why not go with this?
+> 
+> Because I'm doubtful that it is really the case and not something else. It will be very odd
+> if hardware updates words count and sets EOC asynchronously, I'd call it as a faulty design
+> and thus a bug that need to worked around in software if that's really happening.
 
-include/linux/netfilter_ipv6.h:180:9: error: implicit declaration of function '__cookie_v6_init_sequence'
-      [-Werror,-Wimplicit-function-declaration]
-        return __cookie_v6_init_sequence(iph, th, mssp);
-include/linux/netfilter_ipv6.h:194:9: error: implicit declaration of function '__cookie_v6_check'
-      [-Werror,-Wimplicit-function-declaration]
-        return __cookie_v6_check(iph, th, cookie);
-net/ipv6/netfilter.c:237:26: error: use of undeclared identifier '__cookie_v6_init_sequence'; did you mean 'cookie_init_sequence'?
-net/ipv6/netfilter.c:238:21: error: use of undeclared identifier '__cookie_v6_check'; did you mean '__cookie_v4_check'?
+Unfortunately someone designed hardware which does not update all the
+state in one go. Find the designer and make them explain why they did
+this.
 
-Fix the IS_ENABLED() checks to match the function declaration
-and definitions for these.
-
-Fixes: 3006a5224f15 ("netfilter: synproxy: remove module dependency on IPv6 SYNPROXY")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- include/linux/netfilter_ipv6.h | 14 ++++++++------
- net/ipv6/netfilter.c           |  2 ++
- 2 files changed, 10 insertions(+), 6 deletions(-)
-
-diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
-index 1aa3a23744df..7beb681e1ce5 100644
---- a/include/linux/netfilter_ipv6.h
-+++ b/include/linux/netfilter_ipv6.h
-@@ -171,31 +171,33 @@ static inline u32 nf_ipv6_cookie_init_sequence(const struct ipv6hdr *iph,
- 					       const struct tcphdr *th,
- 					       u16 *mssp)
- {
-+#if IS_ENABLED(CONFIG_SYN_COOKIES)
- #if IS_MODULE(CONFIG_IPV6)
- 	const struct nf_ipv6_ops *v6_ops = nf_get_ipv6_ops();
- 
- 	if (v6_ops)
- 		return v6_ops->cookie_init_sequence(iph, th, mssp);
--
--	return 0;
--#else
-+#elif IS_BUILTIN(CONFIG_IPV6)
- 	return __cookie_v6_init_sequence(iph, th, mssp);
- #endif
-+#endif
-+	return 0;
- }
- 
- static inline int nf_cookie_v6_check(const struct ipv6hdr *iph,
- 				     const struct tcphdr *th, __u32 cookie)
- {
-+#if IS_ENABLED(CONFIG_SYN_COOKIES)
- #if IS_MODULE(CONFIG_IPV6)
- 	const struct nf_ipv6_ops *v6_ops = nf_get_ipv6_ops();
- 
- 	if (v6_ops)
- 		return v6_ops->cookie_v6_check(iph, th, cookie);
--
--	return 0;
--#else
-+#elif IS_BUILTIN(CONFIG_IPV6)
- 	return __cookie_v6_check(iph, th, cookie);
- #endif
-+#endif
-+	return 0;
- }
- 
- __sum16 nf_ip6_checksum(struct sk_buff *skb, unsigned int hook,
-diff --git a/net/ipv6/netfilter.c b/net/ipv6/netfilter.c
-index dffb10fdc3e8..61819ed858b1 100644
---- a/net/ipv6/netfilter.c
-+++ b/net/ipv6/netfilter.c
-@@ -234,8 +234,10 @@ static const struct nf_ipv6_ops ipv6ops = {
- 	.route_me_harder	= ip6_route_me_harder,
- 	.dev_get_saddr		= ipv6_dev_get_saddr,
- 	.route			= __nf_ip6_route,
-+#if IS_ENABLED(CONFIG_SYN_COOKIES)
- 	.cookie_init_sequence	= __cookie_v6_init_sequence,
- 	.cookie_v6_check	= __cookie_v6_check,
-+#endif
- #endif
- 	.route_input		= ip6_route_input,
- 	.fragment		= ip6_fragment,
 -- 
-2.20.0
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
 
+https://www.codethink.co.uk/privacy.html
