@@ -2,117 +2,174 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B31AC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:19:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF415C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:19:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F031F21743
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560950369;
-	bh=HmTzpFsOGnof5zeRmfVW5I3xbLfNXwyO1Vd0vkhYxcI=;
-	h=Date:From:To:Subject:In-Reply-To:References:List-ID:From;
-	b=pevbQttj74y7WfujTNC8foDxlBPbAqjuoulXFpqggmLBGTfFopiuFd3gZAKbUDJMD
-	 Wb6LAhVMOBfUb6nuY7HDC+zq2m+V0FM6WN7KZWR9kuJTz52ysMEopqCAyK4tMqhZ60
-	 Sx5pKP4yoBklRAqMpDHT9J36w362l+fz+Icqwc4w=
+	by mail.kernel.org (Postfix) with ESMTP id 9FC532166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:19:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731799AbfFSNT1 (ORCPT
+        id S1731830AbfFSNTa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:19:27 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41652 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726518AbfFSNT0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:19:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:
-        Date:Sender:Reply-To:Cc:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=enh7bl+ZxtCNZahENTVUATMuvV2PoiZCx+Kx0tLEQaw=; b=Kr8dO+mJQItzeFRoa+XrWjaxK
-        gxUaCZCEGKifi3deIdGTCCX0ciZdqBxSxhcwil6aLbl7xkMiFQ/mA8DY931XJUKnnP4ufE0ZdnnIm
-        gg5BKrLLYparVAKkpWVZFdzC8vdTbN0t3yJgrlqMDasJrKWQFTCMrXQLBphgEL56XDSZHWWJ6JnQ9
-        W5ZsfB3LX39EGRzdBXgDmxT63thYXtKBOw2SbTTn8RD5b1q1QZhEgpqaVW/JNwFjNZVzHDmpS2Sdz
-        fWjlhdZ9g7eZstLTeyVv3ZU4LkMqzHCBPcbROdJE9Xz/TM5CyW529G/BPvtJyktoAuFWOT5TXvFKr
-        FsmbQB85w==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdaUo-0000KD-7U; Wed, 19 Jun 2019 13:19:26 +0000
-Date:   Wed, 19 Jun 2019 10:19:22 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
- dir
-Message-ID: <20190619101922.04340605@coco.lan>
-In-Reply-To: <20190619114356.GP3419@hirez.programming.kicks-ass.net>
-References: <cover.1560890771.git.mchehab+samsung@kernel.org>
-        <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
-        <20190619114356.GP3419@hirez.programming.kicks-ass.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Jun 2019 09:19:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36626 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726518AbfFSNT2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:19:28 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AE5A61796;
+        Wed, 19 Jun 2019 13:19:27 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 956615D71A;
+        Wed, 19 Jun 2019 13:19:24 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+ Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+ Kingdom.
+ Registered in England and Wales under Company Registration No. 3798903
+Subject: [PATCH 05/10] keys: Break bits out of key_unlink() [ver #3]
+From:   David Howells <dhowells@redhat.com>
+To:     keyrings@vger.kernel.org, ebiggers@kernel.org
+Cc:     dhowells@redhat.com, linux-security-module@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 19 Jun 2019 14:19:23 +0100
+Message-ID: <156095036385.9363.921620306060848348.stgit@warthog.procyon.org.uk>
+In-Reply-To: <156095032052.9363.8954337545422131435.stgit@warthog.procyon.org.uk>
+References: <156095032052.9363.8954337545422131435.stgit@warthog.procyon.org.uk>
+User-Agent: StGit/unknown-version
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 19 Jun 2019 13:19:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(c/c list cleaned)
+Break bits out of key_unlink() into helper functions so that they can be
+used in implementing key_move().
 
-Em Wed, 19 Jun 2019 13:43:56 +0200
-Peter Zijlstra <peterz@infradead.org> escreveu:
+Signed-off-by: David Howells <dhowells@redhat.com>
+---
 
-> On Tue, Jun 18, 2019 at 05:53:17PM -0300, Mauro Carvalho Chehab wrote:
-> 
-> >  .../{ => driver-api}/atomic_bitops.rst        |  2 -  
-> 
-> That's a .txt file, big fat NAK for making it an rst.
+ security/keys/keyring.c |   88 ++++++++++++++++++++++++++++++++++++-----------
+ 1 file changed, 67 insertions(+), 21 deletions(-)
 
-Rst is a text file. This one is parsed properly by Sphinx without
-any changes.
+diff --git a/security/keys/keyring.c b/security/keys/keyring.c
+index ca6694ba1773..6990c7761eaa 100644
+--- a/security/keys/keyring.c
++++ b/security/keys/keyring.c
+@@ -1382,6 +1382,65 @@ int key_link(struct key *keyring, struct key *key)
+ }
+ EXPORT_SYMBOL(key_link);
+ 
++/*
++ * Lock a keyring for unlink.
++ */
++static int __key_unlink_lock(struct key *keyring)
++	__acquires(&keyring->sem)
++{
++	if (keyring->type != &key_type_keyring)
++		return -ENOTDIR;
++
++	down_write(&keyring->sem);
++	return 0;
++}
++
++/*
++ * Begin the process of unlinking a key from a keyring.
++ */
++static int __key_unlink_begin(struct key *keyring, struct key *key,
++			      struct assoc_array_edit **_edit)
++{
++	struct assoc_array_edit *edit;
++
++	BUG_ON(*_edit != NULL);
++	
++	edit = assoc_array_delete(&keyring->keys, &keyring_assoc_array_ops,
++				  &key->index_key);
++	if (IS_ERR(edit))
++		return PTR_ERR(edit);
++
++	if (!edit)
++		return -ENOENT;
++
++	*_edit = edit;
++	return 0;
++}
++
++/*
++ * Apply an unlink change.
++ */
++static void __key_unlink(struct key *keyring, struct key *key,
++			 struct assoc_array_edit **_edit)
++{
++	assoc_array_apply_edit(*_edit);
++	*_edit = NULL;
++	key_payload_reserve(keyring, keyring->datalen - KEYQUOTA_LINK_BYTES);
++}
++
++/*
++ * Finish unlinking a key from to a keyring.
++ */
++static void __key_unlink_end(struct key *keyring,
++			     struct key *key,
++			     struct assoc_array_edit *edit)
++	__releases(&keyring->sem)
++{
++	if (edit)
++		assoc_array_cancel_edit(edit);
++	up_write(&keyring->sem);
++}
++
+ /**
+  * key_unlink - Unlink the first link to a key from a keyring.
+  * @keyring: The keyring to remove the link from.
+@@ -1401,33 +1460,20 @@ EXPORT_SYMBOL(key_link);
+  */
+ int key_unlink(struct key *keyring, struct key *key)
+ {
+-	struct assoc_array_edit *edit;
++	struct assoc_array_edit *edit = NULL;
+ 	int ret;
+ 
+ 	key_check(keyring);
+ 	key_check(key);
+ 
+-	if (keyring->type != &key_type_keyring)
+-		return -ENOTDIR;
+-
+-	down_write(&keyring->sem);
+-
+-	edit = assoc_array_delete(&keyring->keys, &keyring_assoc_array_ops,
+-				  &key->index_key);
+-	if (IS_ERR(edit)) {
+-		ret = PTR_ERR(edit);
+-		goto error;
+-	}
+-	ret = -ENOENT;
+-	if (edit == NULL)
+-		goto error;
+-
+-	assoc_array_apply_edit(edit);
+-	key_payload_reserve(keyring, keyring->datalen - KEYQUOTA_LINK_BYTES);
+-	ret = 0;
++	ret = __key_unlink_lock(keyring);
++	if (ret < 0)
++		return ret;
+ 
+-error:
+-	up_write(&keyring->sem);
++	ret = __key_unlink_begin(keyring, key, &edit);
++	if (ret == 0)
++		__key_unlink(keyring, key, &edit);
++	__key_unlink_end(keyring, key, edit);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(key_unlink);
 
-> 
-> >  .../{ => driver-api}/futex-requeue-pi.rst     |  2 -  
-> 
-> >  .../{ => driver-api}/gcc-plugins.rst          |  2 -  
-> 
-> >  Documentation/{ => driver-api}/kprobes.rst    |  2 -
-> >  .../{ => driver-api}/percpu-rw-semaphore.rst  |  2 -  
-> 
-> More NAK for rst conversion
-
-Again, those don't need any conversion. Those files already parse 
-as-is by Sphinx, with no need for any change.
-
-The only change here is that, on patch 1/22, the files that
-aren't listed on an index file got a :orphan: added in order
-to make this explicit. This patch removes it.
-
-> 
-> >  Documentation/{ => driver-api}/pi-futex.rst   |  2 -
-> >  .../{ => driver-api}/preempt-locking.rst      |  2 -  
-> 
-> >  Documentation/{ => driver-api}/rbtree.rst     |  2 -  
-> 
-> >  .../{ => driver-api}/robust-futex-ABI.rst     |  2 -
-> >  .../{ => driver-api}/robust-futexes.rst       |  2 -  
-> 
-> >  .../{ => driver-api}/speculation.rst          |  8 +--
-> >  .../{ => driver-api}/static-keys.rst          |  2 -  
-> 
-> >  .../{ => driver-api}/this_cpu_ops.rst         |  2 -  
-> 
-> >  Documentation/locking/rt-mutex.rst            |  2 +-  
-> 
-> NAK. None of the above have anything to do with driver-api.
-
-Ok. Where do you think they should sit instead? core-api?
-
-Thanks,
-Mauro
