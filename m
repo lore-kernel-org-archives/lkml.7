@@ -2,69 +2,114 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15812C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:40:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD742C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:41:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9C1D2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:40:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAB6A2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:41:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731092AbfFSGkj (ORCPT
+        id S1731097AbfFSGlh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 02:40:39 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:39020 "EHLO deadmen.hmeau.com"
+        Wed, 19 Jun 2019 02:41:37 -0400
+Received: from mga14.intel.com ([192.55.52.115]:57632 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725881AbfFSGkj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 02:40:39 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hdUGl-0003qn-Ho; Wed, 19 Jun 2019 14:40:31 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hdUGh-0005pC-Mx; Wed, 19 Jun 2019 14:40:27 +0800
-Date:   Wed, 19 Jun 2019 14:40:27 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Steffen Klassert <steffen.klassert@secunet.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] [v2] ipsec: select crypto ciphers for xfrm_algo
-Message-ID: <20190619064027.qlvdfmohlp3zmtx6@gondor.apana.org.au>
-References: <20190618112227.3322313-1-arnd@arndb.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190618112227.3322313-1-arnd@arndb.de>
-User-Agent: NeoMutt/20170113 (1.7.2)
+        id S1725892AbfFSGlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 02:41:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 23:41:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="150518994"
+Received: from wvoon-ilbpg2.png.intel.com ([10.88.227.88])
+  by orsmga007.jf.intel.com with ESMTP; 18 Jun 2019 23:41:33 -0700
+From:   Voon Weifeng <weifeng.voon@intel.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jose Abreu <joabreu@synopsys.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Ong Boon Leong <boon.leong.ong@intel.com>,
+        Voon Weifeng <weifeng.voon@intel.com>
+Subject: [net v1] net: stmmac: set IC bit when transmitting frames with HW timestamp
+Date:   Wed, 19 Jun 2019 22:41:48 +0800
+Message-Id: <1560955308-15190-1-git-send-email-weifeng.voon@intel.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 01:22:13PM +0200, Arnd Bergmann wrote:
-> kernelci.org reports failed builds on arc because of what looks
-> like an old missed 'select' statement:
-> 
-> net/xfrm/xfrm_algo.o: In function `xfrm_probe_algs':
-> xfrm_algo.c:(.text+0x1e8): undefined reference to `crypto_has_ahash'
-> 
-> I don't see this in randconfig builds on other architectures, but
-> it's fairly clear we want to select the hash code for it, like we
-> do for all its other users. As Herbert points out, CRYPTO_BLKCIPHER
-> is also required even though it has not popped up in build tests.
-> 
-> Fixes: 17bc19702221 ("ipsec: Use skcipher and ahash when probing algorithms")
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  net/xfrm/Kconfig | 2 ++
->  1 file changed, 2 insertions(+)
+From: Roland Hii <roland.king.guan.hii@intel.com>
 
-Acked-by: Herbert Xu <herbert@gondor.apana.org.au>
+When transmitting certain PTP frames, e.g. SYNC and DELAY_REQ, the
+PTP daemon, e.g. ptp4l, is polling the driver for the frame transmit
+hardware timestamp. The polling will most likely timeout if the tx
+coalesce is enabled due to the Interrupt-on-Completion (IC) bit is
+not set in tx descriptor for those frames.
+
+This patch will ignore the tx coalesce parameter and set the IC bit
+when transmitting PTP frames which need to report out the frame
+transmit hardware timestamp to user space.
+
+Fixes: f748be531d70 ("net: stmmac: Rework coalesce timer and fix multi-queue races")
+Signed-off-by: Roland Hii <roland.king.guan.hii@intel.com>
+Signed-off-by: Ong Boon Leong <boon.leong.ong@intel.com>
+Signed-off-by: Voon Weifeng <weifeng.voon@intel.com>
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 06dd51f47cfd..06358fe5b245 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2947,12 +2947,15 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	/* Manage tx mitigation */
+ 	tx_q->tx_count_frames += nfrags + 1;
+-	if (priv->tx_coal_frames <= tx_q->tx_count_frames) {
++	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
++	    !(priv->synopsys_id >= DWMAC_CORE_4_00 &&
++	    (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++	    priv->hwts_tx_en)) {
++		stmmac_tx_timer_arm(priv, queue);
++	} else {
++		tx_q->tx_count_frames = 0;
+ 		stmmac_set_tx_ic(priv, desc);
+ 		priv->xstats.tx_set_ic_bit++;
+-		tx_q->tx_count_frames = 0;
+-	} else {
+-		stmmac_tx_timer_arm(priv, queue);
+ 	}
+ 
+ 	skb_tx_timestamp(skb);
+@@ -3166,12 +3169,15 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	 * element in case of no SG.
+ 	 */
+ 	tx_q->tx_count_frames += nfrags + 1;
+-	if (priv->tx_coal_frames <= tx_q->tx_count_frames) {
++	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
++	    !(priv->synopsys_id >= DWMAC_CORE_4_00 &&
++	    (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++	    priv->hwts_tx_en)) {
++		stmmac_tx_timer_arm(priv, queue);
++	} else {
++		tx_q->tx_count_frames = 0;
+ 		stmmac_set_tx_ic(priv, desc);
+ 		priv->xstats.tx_set_ic_bit++;
+-		tx_q->tx_count_frames = 0;
+-	} else {
+-		stmmac_tx_timer_arm(priv, queue);
+ 	}
+ 
+ 	skb_tx_timestamp(skb);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+1.9.1
+
