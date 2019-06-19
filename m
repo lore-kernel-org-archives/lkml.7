@@ -2,74 +2,110 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC47FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8025C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:43:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9946A2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:41:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560966099;
-	bh=ESmPDJyL52kdVl/UYapErd7HEurwkbOUPTEo2KJNGYs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0imbFZtXLcNLcuJbH8qHdDK6Xsx1qFtpLgYx8QbJ7DqGtlbclpcTzaooGKWMnGGxf
-	 fBlH2LcdPTZnpgKAf/NpNn2oH8S+XIqhV5pddOONQhsQvWYSztpFqnGgTZszv0atbz
-	 7h++8L0hPJZNF2bIdhUuBt7ABBN32gvKZA55yBEo=
+	by mail.kernel.org (Postfix) with ESMTP id 912A1214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:43:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dRA0MPSU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730419AbfFSRli (ORCPT
+        id S1726484AbfFSRnj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:41:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39238 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbfFSRlh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:41:37 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A4A8220645;
-        Wed, 19 Jun 2019 17:41:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560966097;
-        bh=ESmPDJyL52kdVl/UYapErd7HEurwkbOUPTEo2KJNGYs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=D0cuQM+VxywFQ0FkmDCdRxpNkixTWaj56EEjXp0JI4osyAE+m9SOcVRO7HRMKg24u
-         ozbhJnJbEFR7sItxZPF1qVbw9L8i5f5PRXd5cjaAu1Q+odR9fxe/T3Sxh6bJX5sAoi
-         klmDPwz8k8DxEAn2Btt9FmpPTS1s5hTy5PPIqUtA=
-Date:   Wed, 19 Jun 2019 19:41:34 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Ravi Chandra Sadineni <ravisadineni@chromium.org>
-Cc:     len.brown@intel.com, pavel@ucw.cz, linux-pm@vger.kernel.org,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Todd Broch <tbroch@google.com>, Rajat Jain <rajatja@google.com>
-Subject: Re: [PATCH] power: Do not clear events_check_enabled in
- pm_wakeup_pending()
-Message-ID: <20190619174134.GA9441@kroah.com>
-References: <20190607003735.212291-1-ravisadineni@chromium.org>
- <CAEZbON5oRSnOHQrzPcapd=XrK4_ngAY-7hTzxMOyO+=rWJB1bA@mail.gmail.com>
+        Wed, 19 Jun 2019 13:43:39 -0400
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:36269 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726047AbfFSRni (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:43:38 -0400
+Received: by mail-qk1-f195.google.com with SMTP id g18so82273qkl.3;
+        Wed, 19 Jun 2019 10:43:38 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Q0JtMg6VhqJs+xdBOj+B5yb628OP/AHnMJJ6w0rRy8Y=;
+        b=dRA0MPSUYUgio2i0/xFlKR6/ytiP2KHIs74EMKP8Y2xu1Lds82bjlV9JEEUxkUL6O6
+         vYEjRjuT3d1e3ViIBnLqWS3Kb+seHaICTofRvYvJ0aSGDZSck5to/Dd0nsNpBQPfLgLK
+         9S4rAFeHuqNdhaYKAbYmLRW9DWTxQFQFFY0PMXj2O3fT10iCgecEj9NjN2q8LwLc/A1G
+         PNcwGOMuCfcKy+5WJG/dpQ2NDXqYUGD0Bnqo5btM36gKkk9tZgg/ntq7TBUkY3GZvTFY
+         /bFqHOna8C+99xOh70lgGRDi41OygSgFH7CZ22tuG0ATDRhMyNAkWDzMyiYUhzqBi1ob
+         A5sQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Q0JtMg6VhqJs+xdBOj+B5yb628OP/AHnMJJ6w0rRy8Y=;
+        b=tHKRoiow3XaAsI/2CnvU002kDARDdFhf8xbf9uRwB/ccn+WBv9M10T30YpeSRlynDD
+         AH+EtnH8KHErAQy4VAIlRLu/sDQ5KcktKegxeYIAwlWZ2juWKauQfk0g90wqxaHWDDo4
+         SooLzOrjsmJaXQaOLDsu2if0bW0omcG+0IcVJBUBtHtbzncbjGJd/Pg+VnBc4rRByKaS
+         KXFDBwZqTgJebOfwBN7NUYObqgoJqfos7YoXvLwFShNicdJ7c2+Z1W7V2wMfez/T01AB
+         QnV+p7k0DKaaFCP9JRbV4qwkjTPROmktaMfyGKIlfVVU2Uc0dVaDh15XGh8maYHP86X2
+         aqDw==
+X-Gm-Message-State: APjAAAVKP+3dzDBkdJLlMM2K59Q/s88aczj9F+/xjO7+TAkCqaA+C9up
+        j4wG9QYLaqFp/nnD7R1PMzceqNIB7Ge8ig2nb0o=
+X-Google-Smtp-Source: APXvYqwv177/wAgsGwcVsblmEBoK8ORUDAhFxShro/2cIePx9XNclQuxtyZ0nCZnfOGmgxp7ZE8fFI2FJBaOBWybgDo=
+X-Received: by 2002:a05:620a:147:: with SMTP id e7mr99959130qkn.247.1560966217540;
+ Wed, 19 Jun 2019 10:43:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAEZbON5oRSnOHQrzPcapd=XrK4_ngAY-7hTzxMOyO+=rWJB1bA@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190619160207.GA26960@embeddedor>
+In-Reply-To: <20190619160207.GA26960@embeddedor>
+From:   Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date:   Wed, 19 Jun 2019 10:43:26 -0700
+Message-ID: <CAEf4BzY+1-G4Kn1NNEX7iy51rcC4-yV-XWjAdaRTMH-6i-LB3g@mail.gmail.com>
+Subject: Re: [PATCH][bpf] bpf: verifier: add break statement in switch
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Networking <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 11:23:31AM -0700, Ravi Chandra Sadineni wrote:
-> Hi,
-> 
-> Just wanted to check if this o.k.
+On Wed, Jun 19, 2019 at 9:02 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> Notice that in this case, it's much clearer to explicitly add a break
+> rather than letting the code to fall through. It also avoid potential
+> future fall-through warnings[1].
+>
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+>
+> [1] https://lore.kernel.org/patchwork/patch/1087056/
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> ---
 
-You seem to have forgoten to send this to the maintainer of this file :(
+Acked-by: Andrii Nakryiko <andriin@fb.com>
 
-Please use scripts/get_maintainer.pl and resend it, remembering to send
-it to Rafael next time :)
-
-thanks,
-
-greg k-h
+>  kernel/bpf/verifier.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/kernel/bpf/verifier.c b/kernel/bpf/verifier.c
+> index d2c8a6677ac4..0acf7c569ec6 100644
+> --- a/kernel/bpf/verifier.c
+> +++ b/kernel/bpf/verifier.c
+> @@ -5365,6 +5365,7 @@ static int check_return_code(struct bpf_verifier_env *env)
+>                 if (env->prog->expected_attach_type == BPF_CGROUP_UDP4_RECVMSG ||
+>                     env->prog->expected_attach_type == BPF_CGROUP_UDP6_RECVMSG)
+>                         range = tnum_range(1, 1);
+> +               break;
+>         case BPF_PROG_TYPE_CGROUP_SKB:
+>         case BPF_PROG_TYPE_CGROUP_SOCK:
+>         case BPF_PROG_TYPE_SOCK_OPS:
+> --
+> 2.21.0
+>
