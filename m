@@ -2,106 +2,102 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 145D5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:29:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D69AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:29:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C2421897
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:29:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36CE721721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:29:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y7rttnEu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729533AbfFSP3r (ORCPT
+        id S1729730AbfFSP3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:29:47 -0400
-Received: from foss.arm.com ([217.140.110.172]:45134 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727250AbfFSP3r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:29:47 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EF1DA344;
-        Wed, 19 Jun 2019 08:29:45 -0700 (PDT)
-Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E94C3F246;
-        Wed, 19 Jun 2019 08:29:41 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 16:29:39 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Andrey Konovalov <andreyknvl@google.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-rdma@vger.kernel.org, linux-media@vger.kernel.org,
-        kvm@vger.kernel.org,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Yishai Hadas <yishaih@mellanox.com>,
-        Felix Kuehling <Felix.Kuehling@amd.com>,
-        Alexander Deucher <Alexander.Deucher@amd.com>,
-        Christian Koenig <Christian.Koenig@amd.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jens Wiklander <jens.wiklander@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Leon Romanovsky <leon@kernel.org>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Khalid Aziz <khalid.aziz@oracle.com>, enh <enh@google.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Evgeniy Stepanov <eugenis@google.com>,
-        Lee Smith <Lee.Smith@arm.com>,
-        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
-        Jacob Bramley <Jacob.Bramley@arm.com>,
-        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Kevin Brodsky <kevin.brodsky@arm.com>,
-        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
-Subject: Re: [PATCH v17 03/15] arm64: Introduce prctl() options to control
- the tagged user addresses ABI
-Message-ID: <20190619152938.GD25211@arrakis.emea.arm.com>
-References: <cover.1560339705.git.andreyknvl@google.com>
- <a7a2933bea5fe57e504891b7eec7e9432e5e1c1a.1560339705.git.andreyknvl@google.com>
- <CAAeHK+xvtqALY9DESF048mR17Po=W++QwWOUOOeSXKgriVTC-w@mail.gmail.com>
+        Wed, 19 Jun 2019 11:29:55 -0400
+Received: from mail-ua1-f43.google.com ([209.85.222.43]:45039 "EHLO
+        mail-ua1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729072AbfFSP3z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:29:55 -0400
+Received: by mail-ua1-f43.google.com with SMTP id 8so10232237uaz.11;
+        Wed, 19 Jun 2019 08:29:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=p/M/MdVKSBbEyQpOuBlGD0n0hZOgEXMkP9werjym1kU=;
+        b=Y7rttnEu4X/xs5P8VoqirKxMc8abp/Ffn2cY4SPGAuTXmywUiodyBNOeT11/Unyb+W
+         Nss+BVncGMwlKKiHB+DF5/tepokgRwowzfcj4oYOizwEBahCd/L6WMod8RIDu3vk8IPr
+         xBBoYVdNn9wg9Pzh/jw8qdmvZKeTYyI2Q601x56gWhYOiS5GF7eZIj2PpLg13jQsG+iS
+         eFOLiEygOCCcTYacS+nukDOXVNntyuKXC16Xt/16YKYSJ5eJio/aDMZNdrMV29ZqJdIy
+         viKKAXW7m9MIQu8c0shcS2koFV5+1FOn3RCtImQ9Z3XPpoEYZDzjhJ34D/OLkBaLz4o8
+         Qgcw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=p/M/MdVKSBbEyQpOuBlGD0n0hZOgEXMkP9werjym1kU=;
+        b=UfF0u7yhkahooBrCLpVDlh4XKGgkmEZyyXw8IBvbOY5ycfu2xk1PDQRfL9JP9ByJXv
+         5vs2okZ+8mrAcrh0tZ5iStHCLf29z3eajYsFAc8c12TTITHnpR9DheVD62vXdOPNVcBD
+         If4g1D8QvigmGRycYPKXANXDyg2c6J5orfHIA7LFfrG1TPz7d8MhEX6vawJj//4fd6AM
+         4ow9d0Rrn3iEA3AF8u4B8tEnyqu5ci72TN/bls0C4NPm3cTzC8HmygpPxBTzlWtYWIO5
+         iZ3JHYesMl5JhV2b8NLXptidn+rVK4KPfCaC68/L43mVljYB1+xksN4mwjGg4jm4lvBu
+         sMcg==
+X-Gm-Message-State: APjAAAX6tdEbJ+55sg+BVUWVw8ijQwHLaLPFhrdvqLxpA0uV/rENIcEM
+        /qHw2QOc/SleXDt/lDPKFRMUJln46HSX9wBueGY=
+X-Google-Smtp-Source: APXvYqwdunp3E1MkOo+Jv92LDWCZ38UHwuQbzZQi//6yPp05VefWYpDLQVZFpk91w7iw0sBRrf6kaNyb/5fbo3aSgS8=
+X-Received: by 2002:a67:320c:: with SMTP id y12mr870390vsy.30.1560958194322;
+ Wed, 19 Jun 2019 08:29:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAAeHK+xvtqALY9DESF048mR17Po=W++QwWOUOOeSXKgriVTC-w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+ <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+ <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
+ <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
+ <CAOMZO5ADK1L5UMM9XZetHvmjTvmvUg99G7VPdeXitgpctGLCkw@mail.gmail.com>
+ <CAOuPNLhZhgN26rquLQq9zHBct1QxK-7hXAza0xk-0QooPGYLNw@mail.gmail.com> <CAOMZO5BsJWTw0nCeUboam4kuKyCO3N_Ch5ZW8k5Y9KFtQBanhQ@mail.gmail.com>
+In-Reply-To: <CAOMZO5BsJWTw0nCeUboam4kuKyCO3N_Ch5ZW8k5Y9KFtQBanhQ@mail.gmail.com>
+From:   Pintu Agarwal <pintu.ping@gmail.com>
+Date:   Wed, 19 Jun 2019 20:59:43 +0530
+Message-ID: <CAOuPNLjrAU_C_TUKFMs1d0eGsw=AxuG6d6FhNHtHFwVhfYZGgA@mail.gmail.com>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+To:     Fabio Estevam <festevam@gmail.com>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>,
+        linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 04:45:02PM +0200, Andrey Konovalov wrote:
-> On Wed, Jun 12, 2019 at 1:43 PM Andrey Konovalov <andreyknvl@google.com> wrote:
-> > From: Catalin Marinas <catalin.marinas@arm.com>
-> >
-> > It is not desirable to relax the ABI to allow tagged user addresses into
-> > the kernel indiscriminately. This patch introduces a prctl() interface
-> > for enabling or disabling the tagged ABI with a global sysctl control
-> > for preventing applications from enabling the relaxed ABI (meant for
-> > testing user-space prctl() return error checking without reconfiguring
-> > the kernel). The ABI properties are inherited by threads of the same
-> > application and fork()'ed children but cleared on execve().
-> >
-> > The PR_SET_TAGGED_ADDR_CTRL will be expanded in the future to handle
-> > MTE-specific settings like imprecise vs precise exceptions.
-> >
-> > Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-> 
-> Catalin, would you like to do the requested changes to this patch
-> yourself and send it to me or should I do that?
+On Wed, Jun 19, 2019 at 8:41 PM Fabio Estevam <festevam@gmail.com> wrote:
+>
+> > > Then you can test suspend/resume and see if HDMI hangs or not.
+> > >
+> > By this suspend/resume, you mean "suspend-to-ram" or "suspend-to-disk" ?
+>
+> I tested with "echo mem > /sys/power/state"
+>
+hmm. That's what I said. This is runtime suspend, and it works for me also.
+I am talking about hibernation:
+# echo disk > /sys/power/state  (with some customization)
 
-I'll send you an updated version this week.
+> > This scenario is not with suspend/resume.
+> > This hang is, when we make hdmi as a loadable module (.ko) and trying
+> > to install it after resume.
+> > In this case, suspend/resume will not come into picture. Not sure why
+> > it still hangs.
+> > Do you have any clue for this scenario?
+>
+> I haven't tried this one.
+>
+> Please test it with 5.1.11 and if it fails, please report.
 
--- 
-Catalin
+Okay will check this on latest kernel. Thanks.
