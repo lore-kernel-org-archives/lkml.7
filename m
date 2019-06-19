@@ -2,136 +2,149 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26A7BC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:16:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9768BC43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:25:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2C9C21537
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:16:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="UMKHysbw"
+	by mail.kernel.org (Postfix) with ESMTP id 694082085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 23:25:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbfFSXQa (ORCPT
+        id S1730701AbfFSXZE convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 19:16:30 -0400
-Received: from ushosting.nmnhosting.com ([66.55.73.32]:42028 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726251AbfFSXQ3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 19:16:29 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 5F37E2DC005B;
-        Wed, 19 Jun 2019 19:16:28 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1560986188;
-        bh=P+nFrCYIAy9nbAT3inDjyh5Nu1AGlpkuYDjYYSTo8SU=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=UMKHysbwL4zdfy50KqutmgBEIg3sB7A1AG+8ItwZQtNEjbw3/kefwvZoa3HJ/qPue
-         FtHy3iQpmn+NaSFA3Mu2gOfCMETJuOCnHShThOrTrRi0524godGZCgjbLwEXdIrujV
-         xDt+bXPG551xLU30DowKCzCX4sh2ZLCYlpwKny3nSfu6TdTO04XxEEAerz4PtGaObB
-         mK5WkSsuK3ES4PAPxgZb+pSYtoFroMpH18T3PLybvLGSjfjyn/CtIMs+blM8XYmdPJ
-         TvkZW6Ca8pzYT9RsBfJRAJWjf4qfNG6J0j+xJvEaD7SP/MIMGo1VZ5d/zw4b3FdeYt
-         JetXAd65Zd6yavahdde3VtkKoryPECl8+glQZ+N2eRG9ycQ1RafCdpTqdv72F0hGkL
-         4apz6zp0SeF0J1KA9qT4u68PJKa7dlMEnKXEomd5VE+2hLj+H2XT6HltLJdB5+pK9G
-         cMe1+bLK+ayAWxIXuyZ1/r/oJ5pzAFraInvomTVKBkCfLFy8CdlSIihUmPfej/4psJ
-         72/lVeYRJl+IifxxJ9hEA9A+QWlY8W986ROsAQ5xOTxmaRzXMnnZRdFLVPZt5axFGD
-         EQ+IOd3b5ZUWjk3U7T3wAvcchJQaqLNw/Njxg2yMVkYsKSYnAMuX4DYn+A7LJX3oLF
-         sv3nSS3HZsRxp6mS1j36fWkI=
-Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5JNFxcT078663
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 20 Jun 2019 09:16:14 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-Message-ID: <c68cb819257f251cbb66f8998a95c31cebe2d72e.camel@d-silva.org>
-Subject: Re: [PATCH v3 0/7] Hexdump Enhancements
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     Joe Perches <joe@perches.com>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Date:   Thu, 20 Jun 2019 09:15:58 +1000
-In-Reply-To: <9a000734375c0801fc16b71f4be1235f9b857772.camel@perches.com>
-References: <20190617020430.8708-1-alastair@au1.ibm.com>
-         <9a000734375c0801fc16b71f4be1235f9b857772.camel@perches.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 19 Jun 2019 19:25:04 -0400
+Received: from mga05.intel.com ([192.55.52.43]:52805 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfFSXZE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 19:25:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 16:25:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
+   d="scan'208";a="358347851"
+Received: from orsmsx105.amr.corp.intel.com ([10.22.225.132])
+  by fmsmga005.fm.intel.com with ESMTP; 19 Jun 2019 16:25:03 -0700
+Received: from orsmsx104.amr.corp.intel.com ([169.254.4.70]) by
+ ORSMSX105.amr.corp.intel.com ([169.254.2.207]) with mapi id 14.03.0439.000;
+ Wed, 19 Jun 2019 16:25:03 -0700
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH] ixgbe: Avoid NULL pointer dereference
+ with VF on non-IPsec hw
+Thread-Topic: [Intel-wired-lan] [PATCH] ixgbe: Avoid NULL pointer
+ dereference with VF on non-IPsec hw
+Thread-Index: AQHVEPVK2teFE49vDEOaYdpdm/c7lqajymiQ
+Date:   Wed, 19 Jun 2019 23:25:02 +0000
+Message-ID: <26D9FDECA4FBDD4AADA65D8E2FC68A4A1D3F8D78@ORSMSX104.amr.corp.intel.com>
+References: <20190522232258.10353-1-dann.frazier@canonical.com>
+In-Reply-To: <20190522232258.10353-1-dann.frazier@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiMmU1Zjc0YTQtZGI5MS00Y2M4LTlhZmEtMWJlNTc1NjJlNDhiIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoieGNhOFwvaTUwZDZjOUE1TVJ6cE5WZG1tVFRrbEtEQWhXQ2Y5cGZ6aEFjMno2a1BORDZuMzVDcDJEbmFkYmFzSWYifQ==
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.138]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Thu, 20 Jun 2019 09:16:24 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-19 at 09:31 -0700, Joe Perches wrote:
-> On Mon, 2019-06-17 at 12:04 +1000, Alastair D'Silva wrote:
-> > From: Alastair D'Silva <alastair@d-silva.org>
-> > 
-> > Apologies for the large CC list, it's a heads up for those
-> > responsible
-> > for subsystems where a prototype change in generic code causes a
-> > change
-> > in those subsystems.
-> > 
-> > This series enhances hexdump.
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of dann frazier
+> Sent: Wednesday, May 22, 2019 4:23 PM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S. Miller
+> <davem@davemloft.net>; Shannon Nelson <shannon.nelson@oracle.com>
+> Cc: netdev@vger.kernel.org; intel-wired-lan@lists.osuosl.org; linux-
+> kernel@vger.kernel.org
+> Subject: [Intel-wired-lan] [PATCH] ixgbe: Avoid NULL pointer dereference
+> with VF on non-IPsec hw
 > 
-> Still not a fan of these patches.
-
-I'm afraid there's not too much action I can take on that, I'm happy to
-address specific issues though.
-
+> An ipsec structure will not be allocated if the hardware does not support
+> offload. Fixes the following Oops:
 > 
-> > These improve the readability of the dumped data in certain
-> > situations
-> > (eg. wide terminals are available, many lines of empty bytes exist,
-> > etc).
+> [  191.045452] Unable to handle kernel NULL pointer dereference at virtual
+> address 0000000000000000 [  191.054232] Mem abort info:
+> [  191.057014]   ESR = 0x96000004
+> [  191.060057]   Exception class = DABT (current EL), IL = 32 bits
+> [  191.065963]   SET = 0, FnV = 0
+> [  191.069004]   EA = 0, S1PTW = 0
+> [  191.072132] Data abort info:
+> [  191.074999]   ISV = 0, ISS = 0x00000004
+> [  191.078822]   CM = 0, WnR = 0
+> [  191.081780] user pgtable: 4k pages, 48-bit VAs, pgdp = 0000000043d9e467 [
+> 191.088382] [0000000000000000] pgd=0000000000000000 [  191.093252]
+> Internal error: Oops: 96000004 [#1] SMP [  191.098119] Modules linked in:
+> vhost_net vhost tap vfio_pci vfio_virqfd vfio_iommu_type1 vfio
+> xt_CHECKSUM iptable_mangle ipt_MASQUERADE iptable_nat nf_nat_ipv4
+> nf_nat xt_conntrack nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4
+> ipt_REJECT nf_reject_ipv4 xt_tcpudp bridge stp llc ebtable_filter devlink
+> ebtables ip6table_filter ip6_tables iptable_filter bpfilter ipmi_ssif
+> nls_iso8859_1 input_leds joydev ipmi_si hns_roce_hw_v2 ipmi_devintf
+> hns_roce ipmi_msghandler cppc_cpufreq sch_fq_codel ib_iser rdma_cm
+> iw_cm ib_cm ib_core iscsi_tcp libiscsi_tcp libiscsi scsi_transport_iscsi
+> ip_tables x_tables autofs4 ses enclosure btrfs zstd_compress raid10 raid456
+> async_raid6_recov async_memcpy async_pq async_xor async_tx xor
+> hid_generic usbhid hid raid6_pq libcrc32c raid1 raid0 multipath linear ixgbevf
+> hibmc_drm ttm [  191.168607]  drm_kms_helper aes_ce_blk aes_ce_cipher
+> syscopyarea crct10dif_ce sysfillrect ghash_ce qla2xxx sysimgblt sha2_ce
+> sha256_arm64 hisi_sas_v3_hw fb_sys_fops sha1_ce uas nvme_fc mpt3sas
+> ixgbe drm hisi_sas_main nvme_fabrics usb_storage hclge scsi_transport_fc
+> ahci libsas hnae3 raid_class libahci xfrm_algo scsi_transport_sas mdio
+> aes_neon_bs aes_neon_blk crypto_simd cryptd aes_arm64 [  191.202952]
+> CPU: 94 PID: 0 Comm: swapper/94 Not tainted 4.19.0-rc1+ #11 [  191.209553]
+> Hardware name: Huawei D06 /D06, BIOS Hisilicon D06 UEFI RC0 - V1.20.01
+> 04/26/2019 [  191.218064] pstate: 20400089 (nzCv daIf +PAN -UAO) [
+> 191.222873] pc : ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe] [  191.228093] lr :
+> ixgbe_msg_task+0x2d0/0x1088 [ixgbe] [  191.233044] sp : ffff000009b3bcd0 [
+> 191.236346] x29: ffff000009b3bcd0 x28: 0000000000000000 [  191.241647] x27:
+> ffff000009628000 x26: 0000000000000000 [  191.246946] x25: ffff803f652d7600
+> x24: 0000000000000004 [  191.252246] x23: ffff803f6a718900 x22:
+> 0000000000000000 [  191.257546] x21: 0000000000000000 x20:
+> 0000000000000000 [  191.262845] x19: 0000000000000000 x18:
+> 0000000000000000 [  191.268144] x17: 0000000000000000 x16:
+> 0000000000000000 [  191.273443] x15: 0000000000000000 x14:
+> 0000000100000026 [  191.278742] x13: 0000000100000025 x12:
+> ffff8a5f7fbe0df0 [  191.284042] x11: 000000010000000b x10:
+> 0000000000000040 [  191.289341] x9 : 0000000000001100 x8 : ffff803f6a824fd8
+> [  191.294640] x7 : ffff803f6a825098 x6 : 0000000000000001 [  191.299939] x5 :
+> ffff000000f0ffc0 x4 : 0000000000000000 [  191.305238] x3 : ffff000028c00000 x2
+> : ffff803f652d7600 [  191.310538] x1 : 0000000000000000 x0 : ffff000000f205f0 [
+> 191.315838] Process swapper/94 (pid: 0, stack limit = 0x00000000addfed5a) [
+> 191.322613] Call trace:
+> [  191.325055]  ixgbe_ipsec_vf_clear+0x60/0xd0 [ixgbe] [  191.329927]
+> ixgbe_msg_task+0x2d0/0x1088 [ixgbe] [  191.334536]
+> ixgbe_msix_other+0x274/0x330 [ixgbe] [  191.339233]
+> __handle_irq_event_percpu+0x78/0x270
+> [  191.343924]  handle_irq_event_percpu+0x40/0x98 [  191.348355]
+> handle_irq_event+0x50/0xa8 [  191.352180]  handle_fasteoi_irq+0xbc/0x148
+> [  191.356263]  generic_handle_irq+0x34/0x50 [  191.360259]
+> __handle_domain_irq+0x68/0xc0 [  191.364343]  gic_handle_irq+0x84/0x180
+> [  191.368079]  el1_irq+0xe8/0x180 [  191.371208]  arch_cpu_idle+0x30/0x1a8
+> [  191.374860]  do_idle+0x1dc/0x2a0 [  191.378077]
+> cpu_startup_entry+0x2c/0x30 [  191.381988]
+> secondary_start_kernel+0x150/0x1e0
+> [  191.386506] Code: 6b15003f 54000320 f1404a9f 54000060 (79400260)
 > 
-> Changing hexdump's last argument from bool to int is odd.
-> 
+> Fixes: eda0333ac2930 ("ixgbe: add VF IPsec management")
+> Signed-off-by: dann frazier <dann.frazier@canonical.com>
+> ---
+>  drivers/net/ethernet/intel/ixgbe/ixgbe_ipsec.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Think of it as replacing a single boolean with many booleans.
-
-> Perhaps a new function should be added instead of changing
-> the existing hexdump.
-> 
-
-There's only a handful of consumers, I don't think there is a value-add 
-in creating more wrappers vs updating the existing callers.
-
--- 
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva    
-Twitter: @EvilDeece
-blog: http://alastair.d-silva.org
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
 
