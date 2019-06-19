@@ -2,181 +2,198 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ED28C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:01:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A0CC31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:02:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A0E820B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:01:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="Cqxp1Ob7"
+	by mail.kernel.org (Postfix) with ESMTP id 60F6820B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:02:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731549AbfFSKBR (ORCPT
+        id S1731373AbfFSKCN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:01:17 -0400
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:60463 "EHLO
-        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfFSKBQ (ORCPT
+        Wed, 19 Jun 2019 06:02:13 -0400
+Received: from mail.sensor-technik.de ([80.150.181.156]:40079 "EHLO
+        mail.sensor-technik.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfFSKCN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:01:16 -0400
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190619100114euoutp0188716ebfb6980cd325e4d41fe4352ae5~pkUXMEd3m0287502875euoutp01c
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:01:14 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20190619100114euoutp0188716ebfb6980cd325e4d41fe4352ae5~pkUXMEd3m0287502875euoutp01c
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1560938474;
-        bh=+5Aoi9KusrDIevbz701jCID7pa2iYGWJAx0tkxsUsaU=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=Cqxp1Ob7vCTqgYhcChErG/Ouc9Qh2EaLV8Ac0THGlOa7Xj/9q3X+RJu1UxW5mz5yp
-         nq09w7x14cBoXGW5TWtaWMCYMau7zy9+GaOppvHjW59fy9KmTWMgKE08e59AyBltjd
-         c+jZ/Ti0nNtUzKLI1wb18QX+DqUi6Gm33krWQesQ=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190619100113eucas1p1685d5fcb85feeb41af812d7b1e65c533~pkUWILYHC0885208852eucas1p17;
-        Wed, 19 Jun 2019 10:01:13 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4E.44.04377.9E70A0D5; Wed, 19
-        Jun 2019 11:01:13 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190619100112eucas1p25eb0476f1b1dc1bb80c3662c3528c254~pkUVTw3YT0942809428eucas1p2d;
-        Wed, 19 Jun 2019 10:01:12 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190619100112eusmtrp1124545bd7f52fa019bebe98b7452f910~pkUVFfwp73261132611eusmtrp15;
-        Wed, 19 Jun 2019 10:01:12 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-d7-5d0a07e9a40f
-Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
-        eusmgms1.samsung.com (EUCPMTA) with SMTP id 9F.85.04146.8E70A0D5; Wed, 19
-        Jun 2019 11:01:12 +0100 (BST)
-Received: from [106.120.50.25] (unknown [106.120.50.25]) by
-        eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190619100111eusmtip242ed98c0f3f696e11dec29ab5b2bf902~pkUUHPMIF2666626666eusmtip2_;
-        Wed, 19 Jun 2019 10:01:11 +0000 (GMT)
-Subject: Re: [RFT 01/10] dt-bindings: gpu: mali: Add Samsung compatibles for
- Midgard and Utgard
-To:     Krzysztof Kozlowski <krzk@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Sylwester Nawrocki <s.nawrocki@samsung.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Olof Johansson <olof@lixom.net>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org
-Cc:     Joseph Kogut <joseph.kogut@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        Wed, 19 Jun 2019 06:02:13 -0400
+X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Jun 2019 06:02:11 EDT
+Received: from stwz1.stww2k.local (HELO stwz1.sensor-technik.de) ([172.25.209.3])
+  by mail.sensor-technik.de with ESMTP; 19 Jun 2019 11:55:05 +0200
+Received: from stwz1.stww2k.local (localhost [127.0.0.1])
+        by stwz1.sensor-technik.de (Postfix) with ESMTP id 0C143B5ABC;
+        Wed, 19 Jun 2019 11:55:05 +0200 (CEST)
+Received: from mail.sensor-technik.de (stwex1.stww2k.local [172.25.2.103])
+        by stwz1.sensor-technik.de (Postfix) with ESMTP id 70A19B5AAC;
+        Wed, 19 Jun 2019 11:54:49 +0200 (CEST)
+Received: from STWEX1.stww2k.local (172.25.2.106) by STWEX1.stww2k.local
+ (172.25.2.106) with Microsoft SMTP Server (TLS) id 15.0.1263.5; Wed, 19 Jun
+ 2019 11:54:48 +0200
+Received: from STWEX1.stww2k.local ([172.25.5.24]) by STWEX1.stww2k.local
+ ([172.25.5.24]) with mapi id 15.00.1263.000; Wed, 19 Jun 2019 11:54:48 +0200
+From:   Waibel Georg <Georg.Waibel@sensor-technik.de>
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Support Opensource <support.opensource@diasemi.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        "Mark Brown" <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>,
+        "Krzysztof Kozlowski" <krzk@kernel.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>
-From:   Marek Szyprowski <m.szyprowski@samsung.com>
-Message-ID: <9d16d4f7-8353-e0f0-a005-1b04457d70f0@samsung.com>
-Date:   Wed, 19 Jun 2019 12:01:10 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
-        Thunderbird/60.7.1
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>
+Subject: [PATCH] gpio: Fix return value mismatch of function
+ gpiod_get_from_of_node()
+Thread-Topic: [PATCH] gpio: Fix return value mismatch of function
+  gpiod_get_from_of_node()
+Thread-Index: AQHVJoPK/trACdRS0kWwbOAIe3gb9A==
+Date:   Wed, 19 Jun 2019 09:54:48 +0000
+Message-ID: <1560938081892.33415@sensor-technik.de>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [172.30.230.15]
+x-c2processedorg: 71f8fb5e-29e9-40bb-a2d4-613e155b19df
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-In-Reply-To: <20190618190534.4951-2-krzk@kernel.org>
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SWUwTURT1zU6lOBaVG9xLNGoUxfUZl7gmY9RojB9GJDrKBIxs6YDrhwuu
-        pW74AVaQiqKmqSAVATFFi0BFkyJCBDQKCkhcCEIrLlSRMqj8nXPuue+cmzyO1FxlArmdMfGS
-        LkaM0jIqKr/8h3PaB1YVNiPRHoBPOysI/Cu5nMW5qTk0br9uQLjW3UrjnvzzJM4oddK45ms7
-        g5MbzlHYcMJD47NNn0hcWXmbxdamFzTuMLyhcXVRGoNTK4sJnFVbReCqJyvxk1oXg4/ZSln8
-        6PMJGv9+kUthc5EH4Q8dj6klIFguW5DQ/TMZCe11x1jB1mWihHvG16xgNZ9ihIKuRlpoSHIQ
-        wp1rB4Wax0do4UyeGQku65j1vptVC8OlqJ27Jd30xdtUkfU2OxX33m9v+c8k4hDK9NUjHw74
-        2WA4+x7pkYrT8DcRvGp5TSvEjSC3uZhUiAvB97yjzN+VmsIkShncQJDjcfaTNgSZZXba6/Ln
-        RXB12ljvYBhfT0OBNbHPRfJXETy9cLjvLYYPAX2bvg+r+cXw5WEFoUccR/ETwH0qzisP57dA
-        amErpViGQsXF5j7s01ujx9lJeDHJj4WCtjRSwQHwsjmD8GYB38jB+eff+nuvgJS6DFbB/vDR
-        kdePR/X2MVDKQiKCt85brEIMCKqPpCLFtQAeOapobzuSnww5RdMVeSnUd5gZrwy8H9S1DVVK
-        +EFyfgqpyGo4eVyjuCeC0ZH9L9b+7Dl5DmmNA04zDjjHOOAc4/9cE6LMKEBKkKMjJHlmjLQn
-        WBaj5YSYiOAdsdFW1Pt1n/52uAtRkWd7CeI5pPVV8y4uTEOLu+V90SUIOFI7TD040SdMow4X
-        9+2XdLFbdQlRklyCRnKUNkB9YFBjqIaPEOOlXZIUJ+n+TgnOJ/AQmjvi22hPaJch1HJ3FYR0
-        7yFbUsYvlS7pMyoMl8zy+Enpsya0N4R3L1MV7xoXu/bCZHHWukrLopsH7Ku3nJmXeSX9flm8
-        /+E12ZM2NQzpKU3PCeo8Onx+1wbLjaypJtW86rQVp3W27JGDjrsfBJqso5cHLTDdamqZc3l9
-        3Meywe/Sv7du1FJypBgyhdTJ4h+XsRu4tgMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0hTYRjHe89lO1MXp9PEF0mtRQRdVmdqvqYuPxgcqCioKErTpQcnuR3b
-        mXb70DDE3Kx0H8KGaBeNGEFNy1JYpZW3SJuZpl2s7KKoWXkBL2lbK/Db732e/+/heeGhcOYu
-        GUxlGEy80aDNVEr8iGdzTe/XD0j9kjbaukLRubYWDP22NUqRs+QWiUavFwLUPf6NRPM1xTgq
-        f9JGos6JUQmy9RURqDB/lkQX+odw1N5+W4qq+rtI9LPwPYle1pVKUEn7AwxVdrsx5G7dilq7
-        xyQoz/VEih4P55NorstJIEfdLECDP5uJeMjdLLsJuJlpG+BGX+dJOdfkZYKrtb+TclWOAgl3
-        b/IDyfVZmzCuuuI019mcS3Ln7zgAN1YVuivggCrWKGSb+OU6QTTFKQ+ySK1io5FKHRGtYsOj
-        kjarI5UbNLFpfGZGDm/coElR6Xpc9UTW18XHG6etmBlcDbAAGQXpCNh530pYgB/F0JUAzj19
-        CHyNZbDlopn08VI422WR+EJDAHa4S/+GltJaOPbLJfU2FHQPCXsrhnDvA6evAdhjLZf6FKdH
-        cbpwryKhWWgZ8c6SUXJaA388asEsgKIIehUcL8jylgPpRPiw/g3hiyyBLZc+/2WZZ9f5tl+Y
-        l3F6Eyyr/oj7OAzeGyn9x0Gw93M5VgQY+wLdvkCxL1DsC5TLgHAABZ8t6tP1IqsStXox25Cu
-        ShX0VcBzMjWNU9X3QYdzdwOgKaAMkOsmqCSG1OaIJ/QNAFK4UiH3PyNLYuRp2hMneaOQbMzO
-        5MUGEOn5WzEeHJgqeA7QYEpmI9koFM1GhUeFb0LKIPlZuj6RodO1Jv4Iz2fxxv8eRsmCzSDh
-        hrWOKDJMr9MNpsYrruwwzwSl0+I2NDUY96X/mIrCE2pt/st3L4p8e8vY/DVgS5h72LFz+9qI
-        8AGBeZV79G2ikMgcnq0dOci8WM24zcK+45oVCUWHavwqhOcxIEuREzKgDklNiWj6fqo4c2+f
-        Rv2GjLE+/zQyvPI6t2e/o1xJiDotuwY3ito/yg4JmkgDAAA=
-X-CMS-MailID: 20190619100112eucas1p25eb0476f1b1dc1bb80c3662c3528c254
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c
-References: <20190618190534.4951-1-krzk@kernel.org>
-        <CGME20190618190551epcas2p38f3c93da2a05117c7741468bb5a7784c@epcas2p3.samsung.com>
-        <20190618190534.4951-2-krzk@kernel.org>
+X-TBoneOriginalFrom: Waibel Georg <Georg.Waibel@sensor-technik.de>
+X-TBoneOriginalTo: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
+        <bgolaszewski@baylibre.com>, Support Opensource
+        <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, "Mark
+ Brown" <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, "Krzysztof
+ Kozlowski" <krzk@kernel.org>, Bartlomiej Zolnierkiewicz
+        <b.zolnierkie@samsung.com>, "linux-gpio@vger.kernel.org"
+        <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+        <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org"
+        <linux-samsung-soc@vger.kernel.org>
+X-TBoneDomainSigned: false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Krzysztof,
+In case the requested gpio property is not found in the device tree, some
+callers of gpiod_get_from_of_node() expect a return value of NULL, others
+expect -ENOENT.
+In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
+Currently it gets a NULL, which breaks the loop that tries all
+gpio_suffixes. The result is that a gpio property is not found, even
+though it is there.
 
-On 2019-06-18 21:05, Krzysztof Kozlowski wrote:
-> Add vendor compatibles for specific implementation of Mali Utgard
-> (Exynos3250, Exynos4-family) and Midgard (Exynos5433, Exynos7).
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->   Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt | 1 +
->   Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt  | 1 +
->   2 files changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> index e5ad3b2afe17..9b298edec5b2 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.txt
-> @@ -17,6 +17,7 @@ Required properties:
->     * which must be preceded by one of the following vendor specifics:
->       + "allwinner,sun50i-h6-mali"
->       + "amlogic,meson-gxm-mali"
-> +    + "samsung,exynos5433-mali"
->       + "rockchip,rk3288-mali"
->       + "rockchip,rk3399-mali"
->   
-> diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> index ae63f09fda7d..519018cb860b 100644
-> --- a/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> +++ b/Documentation/devicetree/bindings/gpu/arm,mali-utgard.txt
-> @@ -17,6 +17,7 @@ Required properties:
->         + amlogic,meson8b-mali
->         + amlogic,meson-gxbb-mali
->         + amlogic,meson-gxl-mali
-> +      + samsung,exynos3250-mali
-I would prefer 'samsung,exynos4-mali', because historically Exynos4 was 
-the first SoC with Mali400 and such prefix is already used for many hw 
-blocks.
->         + rockchip,rk3036-mali
->         + rockchip,rk3066-mali
->         + rockchip,rk3188-mali
+This patch changes gpiod_get_from_of_node() to return -ENOENT instead
+of NULL when the requested gpio property is not found in the device
+tree. Additionally it modifies all calling functions to properly
+evaluate the return value.
 
-Best regards
+Another approach would be to leave the return value of
+gpiod_get_from_of_node() as is and fix the bug in
+devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
+to be reworked. The effort would be the same as with the chosen solution.
+
+Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
+---
+ drivers/gpio/gpiolib.c                 | 6 +-----
+ drivers/regulator/da9211-regulator.c   | 2 ++
+ drivers/regulator/s2mps11.c            | 4 +++-
+ drivers/regulator/s5m8767.c            | 4 +++-
+ drivers/regulator/tps65090-regulator.c | 7 ++++---
+ 5 files changed, 13 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index e013d417a936..be1d1d2f8aaa 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -4244,8 +4244,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
+  *
+  * Returns:
+  * On successful request the GPIO pin is configured in accordance with
+- * provided @dflags. If the node does not have the requested GPIO
+- * property, NULL is returned.
++ * provided @dflags.
+  *
+  * In case of error an ERR_PTR() is returned.
+  */
+@@ -4267,9 +4266,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
+ 					index, &flags);
+ 
+ 	if (!desc || IS_ERR(desc)) {
+-		/* If it is not there, just return NULL */
+-		if (PTR_ERR(desc) == -ENOENT)
+-			return NULL;
+ 		return desc;
+ 	}
+ 
+diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
+index da37b4ccd834..0309823d2c72 100644
+--- a/drivers/regulator/da9211-regulator.c
++++ b/drivers/regulator/da9211-regulator.c
+@@ -289,6 +289,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
+ 				  0,
+ 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
+ 				  "da9211-enable");
++		if (IS_ERR(pdata->gpiod_ren[n]))
++			pdata->gpiod_ren[n] = NULL;
+ 		n++;
+ 	}
+ 
+diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
+index 134c62db36c5..b518a81f75a3 100644
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
+ 				0,
+ 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
+ 				"s2mps11-regulator");
+-		if (IS_ERR(gpio[reg])) {
++		if (PTR_ERR(gpio[reg]) == -ENOENT)
++			gpio[reg] = NULL;
++		else if (IS_ERR(gpio[reg])) {
+ 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
+ 				reg, rdata[reg].name);
+ 			continue;
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index bb9d1a083299..6ca27e9d5ef7 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
+ 			0,
+ 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
+ 			"s5m8767");
+-		if (IS_ERR(rdata->ext_control_gpiod))
++		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
++			rdata->ext_control_gpiod = NULL;
++		else if (IS_ERR(rdata->ext_control_gpiod))
+ 			return PTR_ERR(rdata->ext_control_gpiod);
+ 
+ 		rdata->id = i;
+diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
+index ca39b3d55123..10ea4b5a0f55 100644
+--- a/drivers/regulator/tps65090-regulator.c
++++ b/drivers/regulator/tps65090-regulator.c
+@@ -371,11 +371,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
+ 								    "dcdc-ext-control-gpios", 0,
+ 								    gflags,
+ 								    "tps65090");
+-			if (IS_ERR(rpdata->gpiod))
+-				return ERR_CAST(rpdata->gpiod);
+-			if (!rpdata->gpiod)
++			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
+ 				dev_err(&pdev->dev,
+ 					"could not find DCDC external control GPIO\n");
++				rpdata->gpiod = NULL;
++			} else if (IS_ERR(rpdata->gpiod))
++				return ERR_CAST(rpdata->gpiod);
+ 		}
+ 
+ 		if (of_property_read_u32(tps65090_matches[idx].of_node,
 -- 
-Marek Szyprowski, PhD
-Samsung R&D Institute Poland
+2.21.0
 
