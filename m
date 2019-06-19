@@ -2,104 +2,103 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 616DDC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:02:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D40BC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:03:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AAF20665
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:02:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 704F720B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:03:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Xdp6jmAI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730784AbfFSGCq (ORCPT
+        id S1730923AbfFSGDJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 02:02:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22168 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725866AbfFSGCq (ORCPT
+        Wed, 19 Jun 2019 02:03:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:48726 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725866AbfFSGDI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 02:02:46 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J627wV124765
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 02:02:44 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7ephhuq0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 02:02:44 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Wed, 19 Jun 2019 07:02:35 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 07:02:32 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J62Ndg33882608
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 06:02:23 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44450A4055;
-        Wed, 19 Jun 2019 06:02:31 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A1C66A4051;
-        Wed, 19 Jun 2019 06:02:29 +0000 (GMT)
-Received: from [9.124.31.60] (unknown [9.124.31.60])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 06:02:29 +0000 (GMT)
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Subject: Re: [PATCH 4/5] Powerpc/hw-breakpoint: Optimize disable path
-To:     Michael Neuling <mikey@neuling.org>
-Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        npiggin@gmail.com, christophe.leroy@c-s.fr,
-        naveen.n.rao@linux.vnet.ibm.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
- <20190618042732.5582-5-ravi.bangoria@linux.ibm.com>
- <ab7e5fac2a1ea78181900f5df7411b1f51b65eb9.camel@neuling.org>
-Date:   Wed, 19 Jun 2019 11:32:28 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 19 Jun 2019 02:03:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J5x9E5005962;
+        Wed, 19 Jun 2019 06:03:00 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=fPuaHyuoIZdDjft/e+uZtMrJ1AQaUg3H7A6qexguayA=;
+ b=Xdp6jmAIDA9gQIaHvu7BwfB+YVlf6RCzPuoJGagELUGOF8qqQ+2SmaQxYY2vnu0vfeTa
+ AW1u/aH0WvN16qt56kJ97K9hp6a3u5v1twzbIE9yKHTajlDWLGIw9oUgrdROyrcspip3
+ iLXR3IIyLD1ri564nFrCHARhMeH3rygRcj7NonC3gJUIwB5net+tiiJJV2BhacwwHYrX
+ MLY7Ph51+CahFF1l5btLy+zcphFtL2t1M6HGV7ZrdVvy3PPojDeG10WmENmI+BhDAh+D
+ YMahWKm2jkv1mIJ64HP+23tj1nP3MW6AZLhIeRpDk5t84r2Q3X3Ce9yAgL0n04wlWRxU /g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t7809987f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 06:03:00 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J618QG126352;
+        Wed, 19 Jun 2019 06:03:00 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2t77ymvqtq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 06:03:00 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J62wxS019790;
+        Wed, 19 Jun 2019 06:02:58 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 23:02:57 -0700
+Date:   Wed, 19 Jun 2019 09:02:50 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Jon Mason <jdmason@kudzu.us>, Dave Jiang <dave.jiang@intel.com>,
+        Allen Hubbe <allenbh@gmail.com>, linux-ntb@googlegroups.com,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] NTB: test: remove a duplicate check
+Message-ID: <20190619060250.GH18776@kadam>
+References: <20190619053205.GA10452@mwanda>
+ <2f4dea74-d78e-8b53-8dec-df8dc032759c@deltatee.com>
 MIME-Version: 1.0
-In-Reply-To: <ab7e5fac2a1ea78181900f5df7411b1f51b65eb9.camel@neuling.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061906-0016-0000-0000-0000028A5A0F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061906-0017-0000-0000-000032E7AE7E
-Message-Id: <c4efb3e1-acb7-df2a-513d-02004d487cae@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=361 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190049
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2f4dea74-d78e-8b53-8dec-df8dc032759c@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=941
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190048
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=994 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190048
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's not a huge deal obviously but your commit was a6bed7a54165 ("NTB:
+Introduce NTB MSI Test Client") but you know that if I had sent a patch
+called ("NTB: remove a duplicate check") people would have correctly
+complained because the patch prefix is too vague.
 
+What I'm saying is we do this all the time:
 
-On 6/18/19 11:45 AM, Michael Neuling wrote:
-> On Tue, 2019-06-18 at 09:57 +0530, Ravi Bangoria wrote:
->> Directly setting dawr and dawrx with 0 should be enough to
->> disable watchpoint. No need to reset individual bits in
->> variable and then set in hw.
-> 
-> This seems like a pointless optimisation to me. 
-> 
-> I'm all for adding more code/complexity if it buys us some performance, but I
-> can't imagine this is a fast path (nor have you stated any performance
-> benefits). 
+[PATCH] NTB: add a new foobazle driver
 
-This gets called from sched_switch. I expected the improvement when
-we switch from monitored process to non-monitored process. With such
-scenario, I tried to measure the difference in execution time of
-set_dawr but I don't see any improvement. So I'll drop the patch.
+But it should be:
+
+[PATCH] NTB: foobazle: add a new foobazle driver
+
+Then I can just copy and paste your patch prefix instead of trying
+invent one.
+
+regards,
+dan carpenter
 
