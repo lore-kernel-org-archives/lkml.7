@@ -2,161 +2,106 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE7DFC31E5F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:34:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F8BC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:35:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9772D21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:34:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89E582080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:35:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hB4pf4B4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="POTxE52t"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bUp01ufs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731659AbfFSLez (ORCPT
+        id S1731666AbfFSLf3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:34:55 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:39786 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731625AbfFSLey (ORCPT
+        Wed, 19 Jun 2019 07:35:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52796 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfFSLf2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:34:54 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4D4EC609CD; Wed, 19 Jun 2019 11:34:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560944093;
-        bh=+py4XI3i/cm9QGyA40QRB2rUzMIk0lUgUsy44TbCmWI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hB4pf4B4OVpXEy8l93z1fgXcfIzXEaYqXqo/3dmAmjp1/zMY3f02pl3NA4yCo9ol1
-         KZp5OOel0kSD3A6ZryQuKv9l/pvJd+0gy6G3OJ2FmBoGuhg/uP/oiF/A1sgztMJ/yu
-         YiBctFwxPkSA+kzm7LASiX2qvMbN1yubpFLvAHcs=
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 2CB59607CA;
-        Wed, 19 Jun 2019 11:34:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560944092;
-        bh=+py4XI3i/cm9QGyA40QRB2rUzMIk0lUgUsy44TbCmWI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=POTxE52tKhsJG+vjMMNQ2p5oRrP+rRaljcWwUC+A3JSkr2rvpJkYoNu7dQ5Rbcsht
-         k4vLDVDs9rwMOBNIjUYJ0Lm6n5s7nZ1nC8Na0jAJIHFNwgQYjpc9a7DX0kd8qNNpGE
-         tHQz0lokvIsUj+drqbfqt3Bs3FBPjsP8SyrLYI+c=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 2CB59607CA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-Received: by mail-ed1-f49.google.com with SMTP id i11so26764786edq.0;
-        Wed, 19 Jun 2019 04:34:52 -0700 (PDT)
-X-Gm-Message-State: APjAAAW42Zna0ZRjk/Kp9HbyqfvlBnhsCO29Dt7dI119lKSELY1011An
-        p4B+OCb6B8L9sLKhejafMcMxZNAm7K5dQHcIkUs=
-X-Google-Smtp-Source: APXvYqya/0GsL2StjgEiJLMyA9HmzxvSn4wjNxl+SCuHsa6xu0jYQ1AeSFdShTd/4VbcCeyO9S26gYnaP2uFrJFcOnE=
-X-Received: by 2002:a50:b36e:: with SMTP id r43mr76818996edd.106.1560944091001;
- Wed, 19 Jun 2019 04:34:51 -0700 (PDT)
+        Wed, 19 Jun 2019 07:35:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Bn5wuVuw5ttFYjKna5TVBWWZTz9A7nw6FCqvrm2qUhk=; b=bUp01ufsXgdhKtEN+BMzw3BnX
+        qbpa3RCFVUzYH/bN6jaQJ3qNOnofXBOoQ6nrHS2bsnVfGGJZIgruFIX/49OoGYt+gPmyTGu2l57zg
+        5Ldv9cHUXg62QxrLLmuzFBQweFUq/jiPjZ2TlBJS+khPEcMPVt4nkj3vMgmcrSVkIodwLK33D8CkL
+        h8XVlTUsBRnZgz/gg4/riDTv984g8aKrW4olO52/YLh5VTepUY+a/xgkrxuebLkgRB7sA2OJb4tGH
+        QuajXADdl0a0hoVUhEs1/5Jp9LWPgJhmJ31Zjk1XWyqd1nC2Yksc1GHF+JocsSnyOUDXy4d+yT3W/
+        tCzzISpbQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdYrt-0004jS-R3; Wed, 19 Jun 2019 11:35:09 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 56CEB20796503; Wed, 19 Jun 2019 13:35:08 +0200 (CEST)
+Date:   Wed, 19 Jun 2019 13:35:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
+        rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net
+Subject: Re: [RFC][PATCH] module: Propagate MODULE_STATE_COMING notifier
+ errors
+Message-ID: <20190619113508.GP3463@hirez.programming.kicks-ass.net>
+References: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
+ <alpine.LSU.2.21.1906191251380.23337@pobox.suse.cz>
+ <20190619112350.GN3419@hirez.programming.kicks-ass.net>
+ <20190619113324.GO3463@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-References: <20190612071554.13573-1-vivek.gautam@codeaurora.org>
- <20190612071554.13573-2-vivek.gautam@codeaurora.org> <20190618175536.GI4270@fuggles.cambridge.arm.com>
-In-Reply-To: <20190618175536.GI4270@fuggles.cambridge.arm.com>
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-Date:   Wed, 19 Jun 2019 17:04:39 +0530
-X-Gmail-Original-Message-ID: <CAFp+6iEwN6jeEGNxKVU5_i5NxdEbuF2ZggegEJZ1Rq6F=H34jg@mail.gmail.com>
-Message-ID: <CAFp+6iEwN6jeEGNxKVU5_i5NxdEbuF2ZggegEJZ1Rq6F=H34jg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/4] firmware: qcom_scm-64: Add atomic version of qcom_scm_call
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        "robh+dt" <robh+dt@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Andy Gross <agross@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619113324.GO3463@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:25 PM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Wed, Jun 12, 2019 at 12:45:51PM +0530, Vivek Gautam wrote:
-> > There are scnenarios where drivers are required to make a
-> > scm call in atomic context, such as in one of the qcom's
-> > arm-smmu-500 errata [1].
-> >
-> > [1] ("https://source.codeaurora.org/quic/la/kernel/msm-4.9/commit/
-> >       drivers/iommu/arm-smmu.c?h=CogSystems-msm-49/
-> >       msm-4.9&id=da765c6c75266b38191b38ef086274943f353ea7")
-> >
-> > Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> > Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >  drivers/firmware/qcom_scm-64.c | 136 ++++++++++++++++++++++++++++-------------
-> >  1 file changed, 92 insertions(+), 44 deletions(-)
-> >
-> > diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-> > index 91d5ad7cf58b..b6dca32c5ac4 100644
-> > --- a/drivers/firmware/qcom_scm-64.c
-> > +++ b/drivers/firmware/qcom_scm-64.c
+On Wed, Jun 19, 2019 at 01:33:24PM +0200, Peter Zijlstra wrote:
+> How's something like so:
+> 
+> diff --git a/kernel/module.c b/kernel/module.c
+> index 80c7c09584cf..eba6560c89da 100644
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3631,16 +3631,28 @@ static int complete_formation(struct module *mod, struct load_info *info)
+>  
+>  static int prepare_coming_module(struct module *mod)
+>  {
+> -	int err;
+> +	struct blocking_notifier_head *nh = &module_notify_list;
+> +	int err, nr;
+>  
+>  	ftrace_module_enable(mod);
+>  	err = klp_module_coming(mod);
+>  	if (err)
+>  		return err;
+>  
+> -	blocking_notifier_call_chain(&module_notify_list,
+> -				     MODULE_STATE_COMING, mod);
+> -	return 0;
+> +	if (!rcu_access_pointer(nh->head))
+> +		return 0;
+> +
+> +	down_read(&nh->rwsem);
+> +	ret = notifier_call_chain(&nh->head, MODULE_STATE_COMING, mod, -1, &nr);
+> +	if (ret & NOTIFIER_STOP_MASK)
 
-[snip]
+It compiles _lots_ better with s/ret/err/ on.
 
-> > +
-> > +static void qcom_scm_call_do(const struct qcom_scm_desc *desc,
-> > +                          struct arm_smccc_res *res, u32 fn_id,
-> > +                          u64 x5, bool atomic)
-> > +{
->
-> Maybe pass in the call type (ARM_SMCCC_FAST_CALL vs ARM_SMCCC_STD_CALL)
-> instead of "bool atomic"? Would certainly make the callsites easier to
-> understand.
-
-Sure, will do that.
-
->
-> > +     int retry_count = 0;
-> > +
-> > +     if (!atomic) {
-> > +             do {
-> > +                     mutex_lock(&qcom_scm_lock);
-> > +
-> > +                     __qcom_scm_call_do(desc, res, fn_id, x5,
-> > +                                        ARM_SMCCC_STD_CALL);
-> > +
-> > +                     mutex_unlock(&qcom_scm_lock);
-> > +
-> > +                     if (res->a0 == QCOM_SCM_V2_EBUSY) {
-> > +                             if (retry_count++ > QCOM_SCM_EBUSY_MAX_RETRY)
-> > +                                     break;
-> > +                             msleep(QCOM_SCM_EBUSY_WAIT_MS);
-> > +                     }
-> > +             }  while (res->a0 == QCOM_SCM_V2_EBUSY);
-> > +     } else {
-> > +             __qcom_scm_call_do(desc, res, fn_id, x5, ARM_SMCCC_FAST_CALL);
-> > +     }
->
-> Is it safe to make concurrent FAST calls?
-
-I better add a spinlock here.
-
-Thanks & regards
-Vivek
-
->
-> Will
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-
-
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+> +		notifier_call_chain(&nh->head, MODULE_STATE_GOING, mod, nr, NULL);
+> +	up_read(&nh->rwsem);
+> +
+> +	err = notifier_to_err(err);
+> +	if (err)
+> +		klp_module_going(mod);
+> +
+> +	return err;
+>  }
+>  
+>  static int unknown_module_param_cb(char *param, char *val, const char *modname,
