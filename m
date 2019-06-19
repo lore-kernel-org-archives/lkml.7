@@ -2,193 +2,311 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D0BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D2C0C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8613D21855
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DE3217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:47:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="3mOkbOhl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730391AbfFSQq7 (ORCPT
+        id S1730426AbfFSQrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:46:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58300 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729659AbfFSQq5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:46:57 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5ACC32F8BD6;
-        Wed, 19 Jun 2019 16:46:56 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E376A608A7;
-        Wed, 19 Jun 2019 16:46:52 +0000 (UTC)
-Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
- Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
- Kingdom.
- Registered in England and Wales under Company Registration No. 3798903
-Subject: [PATCH 2/9] keys: Cache the hash value to avoid lots of
- recalculation [ver #4]
-From:   David Howells <dhowells@redhat.com>
-To:     ebiederm@xmission.com, keyrings@vger.kernel.org
-Cc:     linux-cifs@vger.kernel.org, linux-nfs@vger.kernel.org,
-        netdev@vger.kernel.org, linux-afs@lists.infradead.org,
-        dhowells@redhat.com, dwalsh@redhat.com, vgoyal@redhat.com,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 19 Jun 2019 17:46:52 +0100
-Message-ID: <156096281212.28733.9247715375574699449.stgit@warthog.procyon.org.uk>
-In-Reply-To: <156096279115.28733.8761881995303698232.stgit@warthog.procyon.org.uk>
-References: <156096279115.28733.8761881995303698232.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 19 Jun 2019 12:47:09 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54990 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726518AbfFSQrI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:47:08 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JGhjWl155566;
+        Wed, 19 Jun 2019 16:46:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : from : to :
+ cc : references : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=qusBZmUrIraq40u5N2NLdGl6YAsSyS9aTyEvugUt21g=;
+ b=3mOkbOhlBhirjqM80aK6s+wRkh63tDNK1RaC8xSpawtTEs22m3XRqKFCk5ZcVxQMeWWG
+ oRqUIvbznqi8D/D4MfvNkUkTBObbb4xfdaZ+9y+7KCIERhSCf6fxDDTVjDvV7P4EcaLQ
+ 4ZoMmuup5lX7IGS8rh6szCE52BCuQdLriDGNSBTner55/rw1yPgc4xaDRa4nb2Y3jhO3
+ JZBwISQ+4KZBRUU7ULX20bWmFi/EyzzMzXYgNNh/5zIapfvldsDZjRNNQzsEdP4praRm
+ fnPHRUIEeAD5QVV8LOtA3Ajj+V7lRKrReZleJwOMtbES5LrqqDoDLwtauDb4vj2fYUoh lg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2t7809ckcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 16:46:26 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JGjFFn117750;
+        Wed, 19 Jun 2019 16:46:25 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t7rdwrdpr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 16:46:25 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5JGkK2N016173;
+        Wed, 19 Jun 2019 16:46:21 GMT
+Received: from [10.65.164.174] (/10.65.164.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Jun 2019 16:46:20 +0000
+Subject: Re: [PATCH v17 04/15] mm, arm64: untag user pointers passed to memory
+ syscalls
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <f9b50767d639b7116aa986dc67f158131b8d4169.1560339705.git.andreyknvl@google.com>
+ <a5e0e465-89d5-91d0-c6a4-39674269bbf2@oracle.com>
+Organization: Oracle Corp
+Message-ID: <c4bdd767-eb3f-6668-0f49-4aaf4bc7689d@oracle.com>
+Date:   Wed, 19 Jun 2019 10:46:17 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 19 Jun 2019 16:46:56 +0000 (UTC)
+In-Reply-To: <a5e0e465-89d5-91d0-c6a4-39674269bbf2@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190135
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190135
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Cache the hash of the key's type and description in the index key so that
-we're not recalculating it every time we look at a key during a search.
-The hash function does a bunch of multiplications, so evading those is
-probably worthwhile - especially as this is done for every key examined
-during a search.
+On 6/19/19 9:55 AM, Khalid Aziz wrote:
+> On 6/12/19 5:43 AM, Andrey Konovalov wrote:
+>> This patch is a part of a series that extends arm64 kernel ABI to allo=
+w to
+>> pass tagged user pointers (with the top byte set to something else oth=
+er
+>> than 0x00) as syscall arguments.
+>>
+>> This patch allows tagged pointers to be passed to the following memory=
 
-This also allows the methods used by assoc_array to get chunks of index-key
-to be simplified.
+>> syscalls: get_mempolicy, madvise, mbind, mincore, mlock, mlock2, mprot=
+ect,
+>> mremap, msync, munlock, move_pages.
+>>
+>> The mmap and mremap syscalls do not currently accept tagged addresses.=
 
-Signed-off-by: David Howells <dhowells@redhat.com>
----
+>> Architectures may interpret the tag as a background colour for the
+>> corresponding vma.
+>>
+>> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+>> ---
+>=20
+> Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
+>=20
+>=20
 
- include/linux/key.h      |    3 +++
- security/keys/internal.h |    8 +-------
- security/keys/key.c      |    2 +-
- security/keys/keyring.c  |   28 ++++++++++++++++++++--------
- 4 files changed, 25 insertions(+), 16 deletions(-)
+I would also recommend updating commit log for all the patches in this
+series that are changing files under mm/ as opposed to arch/arm64 to not
+reference arm64 kernel ABI since the change applies to every
+architecture. So something along the lines of "This patch is part of a
+series that extends kernel ABI to allow......."
 
-diff --git a/include/linux/key.h b/include/linux/key.h
-index 86ccc2d010f6..fb2debcacea0 100644
---- a/include/linux/key.h
-+++ b/include/linux/key.h
-@@ -86,6 +86,8 @@ struct keyring_list;
- struct keyring_name;
- 
- struct keyring_index_key {
-+	/* [!] If this structure is altered, the union in struct key must change too! */
-+	unsigned long		hash;			/* Hash value */
- 	union {
- 		struct {
- #ifdef __LITTLE_ENDIAN /* Put desc_len at the LSB of x */
-@@ -213,6 +215,7 @@ struct key {
- 	union {
- 		struct keyring_index_key index_key;
- 		struct {
-+			unsigned long	hash;
- 			unsigned long	len_desc;
- 			struct key_type	*type;		/* type of key */
- 			char		*description;
-diff --git a/security/keys/internal.h b/security/keys/internal.h
-index ee71c72fc5f0..4305414795ae 100644
---- a/security/keys/internal.h
-+++ b/security/keys/internal.h
-@@ -89,13 +89,7 @@ extern spinlock_t key_serial_lock;
- extern struct mutex key_construction_mutex;
- extern wait_queue_head_t request_key_conswq;
- 
--
--static inline void key_set_index_key(struct keyring_index_key *index_key)
--{
--	size_t n = min_t(size_t, index_key->desc_len, sizeof(index_key->desc));
--	memcpy(index_key->desc, index_key->description, n);
--}
--
-+extern void key_set_index_key(struct keyring_index_key *index_key);
- extern struct key_type *key_type_lookup(const char *type);
- extern void key_type_put(struct key_type *ktype);
- 
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 0a3828f15f57..9d52f2472a09 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -285,12 +285,12 @@ struct key *key_alloc(struct key_type *type, const char *desc,
- 	key->index_key.description = kmemdup(desc, desclen + 1, GFP_KERNEL);
- 	if (!key->index_key.description)
- 		goto no_memory_3;
-+	key->index_key.type = type;
- 	key_set_index_key(&key->index_key);
- 
- 	refcount_set(&key->usage, 1);
- 	init_rwsem(&key->sem);
- 	lockdep_set_class(&key->sem, &type->lock_class);
--	key->index_key.type = type;
- 	key->user = user;
- 	key->quotalen = quotalen;
- 	key->datalen = type->def_datalen;
-diff --git a/security/keys/keyring.c b/security/keys/keyring.c
-index ebf52077598f..a5ee3b4d2eb8 100644
---- a/security/keys/keyring.c
-+++ b/security/keys/keyring.c
-@@ -168,7 +168,7 @@ static u64 mult_64x32_and_fold(u64 x, u32 y)
- /*
-  * Hash a key type and description.
-  */
--static unsigned long hash_key_type_and_desc(const struct keyring_index_key *index_key)
-+static void hash_key_type_and_desc(struct keyring_index_key *index_key)
- {
- 	const unsigned level_shift = ASSOC_ARRAY_LEVEL_STEP;
- 	const unsigned long fan_mask = ASSOC_ARRAY_FAN_MASK;
-@@ -206,10 +206,22 @@ static unsigned long hash_key_type_and_desc(const struct keyring_index_key *inde
- 	 * zero for keyrings and non-zero otherwise.
- 	 */
- 	if (index_key->type != &key_type_keyring && (hash & fan_mask) == 0)
--		return hash | (hash >> (ASSOC_ARRAY_KEY_CHUNK_SIZE - level_shift)) | 1;
--	if (index_key->type == &key_type_keyring && (hash & fan_mask) != 0)
--		return (hash + (hash << level_shift)) & ~fan_mask;
--	return hash;
-+		hash |= (hash >> (ASSOC_ARRAY_KEY_CHUNK_SIZE - level_shift)) | 1;
-+	else if (index_key->type == &key_type_keyring && (hash & fan_mask) != 0)
-+		hash = (hash + (hash << level_shift)) & ~fan_mask;
-+	index_key->hash = hash;
-+}
-+
-+/*
-+ * Finalise an index key to include a part of the description actually in the
-+ * index key and to add in the hash too.
-+ */
-+void key_set_index_key(struct keyring_index_key *index_key)
-+{
-+	size_t n = min_t(size_t, index_key->desc_len, sizeof(index_key->desc));
-+	memcpy(index_key->desc, index_key->description, n);
-+
-+	hash_key_type_and_desc(index_key);
- }
- 
- /*
-@@ -227,7 +239,7 @@ static unsigned long keyring_get_key_chunk(const void *data, int level)
- 	level /= ASSOC_ARRAY_KEY_CHUNK_SIZE;
- 	switch (level) {
- 	case 0:
--		return hash_key_type_and_desc(index_key);
-+		return index_key->hash;
- 	case 1:
- 		return index_key->x;
- 	case 2:
-@@ -280,8 +292,8 @@ static int keyring_diff_objects(const void *object, const void *data)
- 	int level, i;
- 
- 	level = 0;
--	seg_a = hash_key_type_and_desc(a);
--	seg_b = hash_key_type_and_desc(b);
-+	seg_a = a->hash;
-+	seg_b = b->hash;
- 	if ((seg_a ^ seg_b) != 0)
- 		goto differ;
- 	level += ASSOC_ARRAY_KEY_CHUNK_SIZE / 8;
+--
+Khalid
+
+
+>>  mm/madvise.c   | 2 ++
+>>  mm/mempolicy.c | 3 +++
+>>  mm/migrate.c   | 2 +-
+>>  mm/mincore.c   | 2 ++
+>>  mm/mlock.c     | 4 ++++
+>>  mm/mprotect.c  | 2 ++
+>>  mm/mremap.c    | 7 +++++++
+>>  mm/msync.c     | 2 ++
+>>  8 files changed, 23 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/madvise.c b/mm/madvise.c
+>> index 628022e674a7..39b82f8a698f 100644
+>> --- a/mm/madvise.c
+>> +++ b/mm/madvise.c
+>> @@ -810,6 +810,8 @@ SYSCALL_DEFINE3(madvise, unsigned long, start, siz=
+e_t, len_in, int, behavior)
+>>  	size_t len;
+>>  	struct blk_plug plug;
+>> =20
+>> +	start =3D untagged_addr(start);
+>> +
+>>  	if (!madvise_behavior_valid(behavior))
+>>  		return error;
+>> =20
+>> diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+>> index 01600d80ae01..78e0a88b2680 100644
+>> --- a/mm/mempolicy.c
+>> +++ b/mm/mempolicy.c
+>> @@ -1360,6 +1360,7 @@ static long kernel_mbind(unsigned long start, un=
+signed long len,
+>>  	int err;
+>>  	unsigned short mode_flags;
+>> =20
+>> +	start =3D untagged_addr(start);
+>>  	mode_flags =3D mode & MPOL_MODE_FLAGS;
+>>  	mode &=3D ~MPOL_MODE_FLAGS;
+>>  	if (mode >=3D MPOL_MAX)
+>> @@ -1517,6 +1518,8 @@ static int kernel_get_mempolicy(int __user *poli=
+cy,
+>>  	int uninitialized_var(pval);
+>>  	nodemask_t nodes;
+>> =20
+>> +	addr =3D untagged_addr(addr);
+>> +
+>>  	if (nmask !=3D NULL && maxnode < nr_node_ids)
+>>  		return -EINVAL;
+>> =20
+>> diff --git a/mm/migrate.c b/mm/migrate.c
+>> index f2ecc2855a12..d22c45cf36b2 100644
+>> --- a/mm/migrate.c
+>> +++ b/mm/migrate.c
+>> @@ -1616,7 +1616,7 @@ static int do_pages_move(struct mm_struct *mm, n=
+odemask_t task_nodes,
+>>  			goto out_flush;
+>>  		if (get_user(node, nodes + i))
+>>  			goto out_flush;
+>> -		addr =3D (unsigned long)p;
+>> +		addr =3D (unsigned long)untagged_addr(p);
+>> =20
+>>  		err =3D -ENODEV;
+>>  		if (node < 0 || node >=3D MAX_NUMNODES)
+>> diff --git a/mm/mincore.c b/mm/mincore.c
+>> index c3f058bd0faf..64c322ed845c 100644
+>> --- a/mm/mincore.c
+>> +++ b/mm/mincore.c
+>> @@ -249,6 +249,8 @@ SYSCALL_DEFINE3(mincore, unsigned long, start, siz=
+e_t, len,
+>>  	unsigned long pages;
+>>  	unsigned char *tmp;
+>> =20
+>> +	start =3D untagged_addr(start);
+>> +
+>>  	/* Check the start address: needs to be page-aligned.. */
+>>  	if (start & ~PAGE_MASK)
+>>  		return -EINVAL;fixup_user_fault
+>> diff --git a/mm/mlock.c b/mm/mlock.c
+>> index 080f3b36415b..e82609eaa428 100644
+>> --- a/mm/mlock.c
+>> +++ b/mm/mlock.c
+>> @@ -674,6 +674,8 @@ static __must_check int do_mlock(unsigned long sta=
+rt, size_t len, vm_flags_t fla
+>>  	unsigned long lock_limit;
+>>  	int error =3D -ENOMEM;
+>> =20
+>> +	start =3D untagged_addr(start);
+>> +
+>>  	if (!can_do_mlock())
+>>  		return -EPERM;
+>> =20
+>> @@ -735,6 +737,8 @@ SYSCALL_DEFINE2(munlock, unsigned long, start, siz=
+e_t, len)
+>>  {
+>>  	int ret;
+>> =20
+>> +	start =3D untagged_addr(start);
+>> +
+>>  	len =3D PAGE_ALIGN(len + (offset_in_page(start)));
+>>  	start &=3D PAGE_MASK;
+>> =20
+>> diff --git a/mm/mprotect.c b/mm/mprotect.c
+>> index bf38dfbbb4b4..19f981b733bc 100644
+>> --- a/mm/mprotect.c
+>> +++ b/mm/mprotect.c
+>> @@ -465,6 +465,8 @@ static int do_mprotect_pkey(unsigned long start, s=
+ize_t len,
+>>  	const bool rier =3D (current->personality & READ_IMPLIES_EXEC) &&
+>>  				(prot & PROT_READ);
+>> =20
+>> +	start =3D untagged_addr(start);
+>> +
+>>  	prot &=3D ~(PROT_GROWSDOWN|PROT_GROWSUP);
+>>  	if (grows =3D=3D (PROT_GROWSDOWN|PROT_GROWSUP)) /* can't be both */
+>>  		return -EINVAL;
+>> diff --git a/mm/mremap.c b/mm/mremap.c
+>> index fc241d23cd97..64c9a3b8be0a 100644
+>> --- a/mm/mremap.c
+>> +++ b/mm/mremap.c
+>> @@ -606,6 +606,13 @@ SYSCALL_DEFINE5(mremap, unsigned long, addr, unsi=
+gned long, old_len,
+>>  	LIST_HEAD(uf_unmap_early);
+>>  	LIST_HEAD(uf_unmap);
+>> =20
+>> +	/*
+>> +	 * Architectures may interpret the tag passed to mmap as a backgroun=
+d
+>> +	 * colour for the corresponding vma. For mremap we don't allow tagge=
+d
+>> +	 * new_addr to preserve similar behaviour to mmap.
+>> +	 */
+>> +	addr =3D untagged_addr(addr);
+>> +
+>>  	if (flags & ~(MREMAP_FIXED | MREMAP_MAYMOVE))
+>>  		return ret;
+>> =20
+>> diff --git a/mm/msync.c b/mm/msync.c
+>> index ef30a429623a..c3bd3e75f687 100644
+>> --- a/mm/msync.c
+>> +++ b/mm/msync.c
+>> @@ -37,6 +37,8 @@ SYSCALL_DEFINE3(msync, unsigned long, start, size_t,=
+ len, int, flags)
+>>  	int unmapped_error =3D 0;
+>>  	int error =3D -EINVAL;
+>> =20
+>> +	start =3D untagged_addr(start);
+>> +
+>>  	if (flags & ~(MS_ASYNC | MS_INVALIDATE | MS_SYNC))
+>>  		goto out;
+>>  	if (offset_in_page(start))
+>>
+>=20
+>=20
+
 
