@@ -2,187 +2,102 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C430BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:48:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C24C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:49:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F93A20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:48:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB98620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:49:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="AoR8MaaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731346AbfFSIsu convert rfc822-to-8bit (ORCPT
+        id S1731370AbfFSItF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:48:50 -0400
-Received: from twhmllg3.macronix.com ([122.147.135.201]:11116 "EHLO
-        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730418AbfFSIsu (ORCPT
+        Wed, 19 Jun 2019 04:49:05 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:11144 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730418AbfFSItF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:48:50 -0400
-Received: from twhfmlp1.macronix.com (twhfm1p1.macronix.com [172.17.20.91])
-        by TWHMLLG3.macronix.com with ESMTP id x5J8mg1Q004932;
-        Wed, 19 Jun 2019 16:48:42 +0800 (GMT-8)
-        (envelope-from masonccyang@mxic.com.tw)
-Received: from MXML06C.mxic.com.tw (mxml06c.macronix.com [172.17.14.55])
-        by Forcepoint Email with ESMTP id 6458BBF1EB3AC5549737;
-        Wed, 19 Jun 2019 16:48:43 +0800 (CST)
-In-Reply-To: <20190619100904.6b759377@xps13>
-References: <1555320234-15802-1-git-send-email-masonccyang@mxic.com.tw> <1555320234-15802-3-git-send-email-masonccyang@mxic.com.tw>
-        <20190512151820.4f2dd9da@xps13> <OF074A1F06.5C1A58BE-ON482583FD.0031CD95-482583FD.003437AD@mxic.com.tw>
-        <20190520142333.390091d5@xps13> <OFADC47344.0F9941B2-ON48258403.002336E3-48258403.003141F0@mxic.com.tw>
-        <20190527144250.71908bd9@xps13> <OFE923A8E5.50375C30-ON48258409.0009AE1B-48258409.00119767@mxic.com.tw>
-        <20190617143510.4ded5728@xps13> <OF1C1397B4.241DC339-ON4825841D.000482A2-4825841D.0007B67E@mxic.com.tw>
-        <20190618081436.5d488320@collabora.com> <20190618092901.3bdd9f61@collabora.com>
-        <OF5EAF94EB.AE31CF59-ON4825841E.002A2C38-4825841E.002C60BF@mxic.com.tw> <20190619100904.6b759377@xps13>
-To:     "Miquel Raynal" <miquel.raynal@bootlin.com>
-Cc:     bbrezillon@kernel.org,
-        "Boris Brezillon" <boris.brezillon@collabora.com>,
-        broonie@kernel.org, christophe.kerello@st.com,
-        computersforpeace@gmail.com, devicetree@vger.kernel.org,
-        dwmw2@infradead.org, geert@linux-m68k.org, juliensu@mxic.com.tw,
-        lee.jones@linaro.org, liang.yang@amlogic.com,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        linux-spi@vger.kernel.org, marcel.ziswiler@toradex.com,
-        marek.vasut@gmail.com, mark.rutland@arm.com, paul.burton@mips.com,
-        richard@nod.at, robh+dt@kernel.org, stefan@agner.ch,
-        zhengxunli@mxic.com.tw
-Subject: Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND controller
+        Wed, 19 Jun 2019 04:49:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d09f6ff0001>; Wed, 19 Jun 2019 01:49:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Wed, 19 Jun 2019 01:49:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Wed, 19 Jun 2019 01:49:04 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun
+ 2019 08:49:01 +0000
+Subject: Re: [PATCH 4.14 00/53] 4.14.128-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20190617210745.104187490@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <c4c6c3f5-2117-2db2-58a8-1a84143dc034@nvidia.com>
+Date:   Wed, 19 Jun 2019 09:49:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-X-KeepSent: ACBC7B27:1732CFB6-4825841E:0030075C;
- type=4; name=$KeepSent
-X-Mailer: Lotus Notes Release 8.5.3FP4 SHF90 June 10, 2013
-Message-ID: <OFACBC7B27.1732CFB6-ON4825841E.0030075C-4825841E.0030689C@mxic.com.tw>
-From:   masonccyang@mxic.com.tw
-Date:   Wed, 19 Jun 2019 16:48:44 +0800
-X-MIMETrack: Serialize by Router on MXML06C/TAIWAN/MXIC(Release 9.0.1FP10 HF265|July 25, 2018) at
- 2019/06/19 PM 04:48:43,
-        Serialize complete at 2019/06/19 PM 04:48:43
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 8BIT
-X-MAIL: TWHMLLG3.macronix.com x5J8mg1Q004932
+In-Reply-To: <20190617210745.104187490@linuxfoundation.org>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1560934143; bh=/hqGATOT8SsZioJs/Xm1JvzpFqqC73xcdKMgy8UNLw4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=AoR8MaaESzze/gzOuAPxTMHwmpqJPFYAcOFAWy6qbmwMgmscm/yTStoutjslOj0Sw
+         VSpolnOh0+cC1BhLQ6D/aWY1lDJSDgSBt7uPsz4LcaDHyEzr9VXwysiqx9KaHJMz7p
+         SqHnTXF1SV31uttCQ3VhBmnoRP9iviq7bufDgAiZK6j/hLooKxn7C92UQGA5BjSeJx
+         An6zk54bsfRRfKNzyjRuk2ICcux52SxdMVgcMlSJDmBcyJMMMEim8/g766ziuPc8N2
+         4VuTQQo/SpiLbZkiauaDHwBW6BSfAtJlgHNwWf+0ZstTRHe+k3cUpLlZwh4D/0j9J/
+         HwsrwDtvkqTeg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-Hi Miquel,
-
-> > > 
-> > > Re: [PATCH v3 2/4] mtd: rawnand: Add Macronix MX25F0A NAND 
-controller
-> > > 
-> > > On Tue, 18 Jun 2019 08:14:36 +0200
-> > > Boris Brezillon <boris.brezillon@collabora.com> wrote:
-> > > 
-> > > > > > > > > 
-> > > > > > > > > How to make all #CS keep high for NAND to enter 
-> > > > > > > > > low-power standby mode if driver don't use 
-> > "legacy.select_chip()" 
-> > > > > ? 
-> > > > > > > > 
-> > > > > > > > See commit 02b4a52604a4 ("mtd: rawnand: Make 
-->select_chip() 
-> > > > > optional 
-> > > > > > > > when ->exec_op() is implemented") which states:
-> > > > > > > > 
-> > > > > > > >         "When [->select_chip() is] not implemented, the 
-core 
-> > is 
-> > > > > assuming 
-> > > > > > > >    the CS line is automatically asserted/deasserted by the 
- 
-> > driver 
-> > > > > > > >    ->exec_op() implementation." 
-> > > > > > > > 
-> > > > > > > > Of course, the above is right only when the controller 
-driver 
-> > 
-> > > > > supports 
-> > > > > > > > the ->exec_op() interface. 
-> > > > > > > 
-> > > > > > > Currently, it seems that we will get the incorrect data and  
-
-> > error
-> > > > > > > operation due to CS in error toggling if CS line is 
-controlled 
-> > in 
-> > > > > > > ->exec_op(). 
-> > > 
-> > > Oh, and please provide the modifications you added on top of this 
-patch.
-> > > Right now we're speculating on what you've done which is definitely 
-not
-> > > an efficient way to debug this sort of issues. 
-> > 
+On 17/06/2019 22:09, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.14.128 release.
+> There are 53 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> We really need to see the datasheet of the NAND chip which has a
-> problem and how this LPM mode is advertized to understand what the
-> chip expects and eventually how to work-around it.
-
-okay, got it and thanks.
-
+> Responses should be made by Wed 19 Jun 2019 09:06:21 PM UTC.
+> Anything received after that time might be too late.
 > 
-> > The patch is to add in beginning of ->exec_op() to control CS# low and 
-
-> > before return from ->exec_op() to control CS# High.
-> > i.e,.
-> > static in mxic_nand_exec_op( )
-> > {
-> >  cs_to_low();
-> > 
-> > 
-> > 
-> >  cs_to_high();
-> >  return;
-> > }
-> > 
-> > But for nand_onfi_detect(), 
-> > it calls nand_read_param_page_op() and then nand_read_data_op().
-> > mxic_nand_exec_op() be called twice for nand_onfi_detect()
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.128-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+> and the diffstat can be found below.
 > 
-> Yes, this is expected and usually chips don't care.
-
-got it and I will try to fix it on my NFC driver.
-
+> thanks,
 > 
-> > and
-> > driver will get incorrect ONFI parameter table data from 
-> > nand_read_data_op().
-> > 
-> 
-> Thanks,
-> Miquèl
+> greg k-h
 
-best regards,
-Mason
+I am still waiting on the test results for 4.14-128-rc1. The builds are
+all passing, but waiting for the tests to complete. We have been having
+some issues with our test farm this week and so the results are delayed,
+but should be available later today, I hope.
 
-CONFIDENTIALITY NOTE:
+Cheers
+Jon
 
-This e-mail and any attachments may contain confidential information 
-and/or personal data, which is protected by applicable laws. Please be 
-reminded that duplication, disclosure, distribution, or use of this e-mail 
-(and/or its attachments) or any part thereof is prohibited. If you receive 
-this e-mail in error, please notify us immediately and delete this mail as 
-well as its attachment(s) from your system. In addition, please be 
-informed that collection, processing, and/or use of personal data is 
-prohibited unless expressly permitted by personal data protection laws. 
-Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
-
-
-============================================================================
-
-CONFIDENTIALITY NOTE:
-
-This e-mail and any attachments may contain confidential information and/or personal data, which is protected by applicable laws. Please be reminded that duplication, disclosure, distribution, or use of this e-mail (and/or its attachments) or any part thereof is prohibited. If you receive this e-mail in error, please notify us immediately and delete this mail as well as its attachment(s) from your system. In addition, please be informed that collection, processing, and/or use of personal data is prohibited unless expressly permitted by personal data protection laws. Thank you for your attention and cooperation.
-
-Macronix International Co., Ltd.
-
-=====================================================================
-
+-- 
+nvpublic
