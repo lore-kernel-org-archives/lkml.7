@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62BA9C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DFADC31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C87820B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 04A8F20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:04:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="0xenS9bc"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="C+5wGk3M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbfFSNEf (ORCPT
+        id S1731951AbfFSNEh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:04:35 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:63798 "EHLO
+        Wed, 19 Jun 2019 09:04:37 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:21770 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731894AbfFSNEe (ORCPT
+        by vger.kernel.org with ESMTP id S1731893AbfFSNEe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 09:04:34 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCu1vs023624;
-        Wed, 19 Jun 2019 15:04:03 +0200
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCuBJM023659;
+        Wed, 19 Jun 2019 15:04:01 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : subject :
  date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=1RIed4PSnLNoF/Qg8Sp7JJ0Sajo64o3gdxbSWUs/b4M=;
- b=0xenS9bcGVcF8713j77nhv9uVF0N+3rssP3bIA4M00CmyUSAdrwem78TNJJNHfTMdReb
- hibMRJP0HII90WclTnhXFen799MWDD/raHoZnqsHbOBbPWUJFplV8tYCsdK8h7BOWAgB
- xk1FVwbkGYx828MwMagijwfaNOg1olBktgZfIZ5utfW8B/d5l+iFdSI+juK5e5c9iuKR
- x4dpT76VUixZ5pa0Yz+5LRtRPnSyXKu7GCWx+etdZhJt7Ei2O0LF3lXSLgV/jD/V4e1U
- Rs27nGZcFT54Z0W4601g8h6Ui5MHlqxcEanwRD+C6rqGePLtRs9XHJiNAg7pWbj8FW+J cA== 
+ bh=C0tl/h814D0dle+nbGO9SjbYs9XOpojrEDl6X9DrGZk=;
+ b=C+5wGk3MVghtvj2ZPqHqBd879zWEVlGy1+cHcWHfZJLamn5UpaeJmy76ZytA6VbsysO2
+ wux/QZZQWvad9ncNuWbKycEIZ5VTNtlIFpHb8NROBbs3Ef+n8EDgmBUKzijO7FMDYNXo
+ Ung3f4qZmquXtoya/lHjHlSpRujkcTr46nF97aXbZxZHqA2GGS0hgsI5NYGgNrCleTPI
+ SVl8lSHSfHlivocxiKtIooseqkw+O+q1JGnhjoO6CS9xLVljcSwPSrVA9b432Uufh087
+ Avjl83tOnvAbxtkEisTzNd+H/gXMapOHcAh9FSEWdIHCOJ9089S5SyfW6Vhr9kA7WnBi /A== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t7813c0aq-1
+        by mx07-00178001.pphosted.com with ESMTP id 2t7813c0ah-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 15:04:03 +0200
+        Wed, 19 Jun 2019 15:04:01 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DC7D638;
-        Wed, 19 Jun 2019 13:04:02 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3BE8938;
+        Wed, 19 Jun 2019 13:03:59 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id B5A452834;
-        Wed, 19 Jun 2019 13:04:02 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1D6B92835;
+        Wed, 19 Jun 2019 13:03:59 +0000 (GMT)
 Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
  (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun
- 2019 15:04:02 +0200
+ 2019 15:03:59 +0200
 Received: from localhost (10.201.23.16) by Webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun 2019 15:04:02
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 19 Jun 2019 15:03:58
  +0200
 From:   Olivier Moysan <olivier.moysan@st.com>
 To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
@@ -60,9 +60,9 @@ To:     <jic23@kernel.org>, <knaack.h@gmx.de>, <lars@metafoo.de>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-kernel@vger.kernel.org>, <benjamin.gaignard@st.com>,
         <olivier.moysan@st.com>
-Subject: [PATCH 5/5] iio: adc: stm32-dfsdm: add comment for 16 bits record
-Date:   Wed, 19 Jun 2019 15:03:51 +0200
-Message-ID: <1560949431-22948-6-git-send-email-olivier.moysan@st.com>
+Subject: [PATCH 3/5] iio: adc: stm32-dfsdm: manage data resolution in trigger mode
+Date:   Wed, 19 Jun 2019 15:03:49 +0200
+Message-ID: <1560949431-22948-4-git-send-email-olivier.moysan@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
 References: <1560949431-22948-1-git-send-email-olivier.moysan@st.com>
@@ -76,29 +76,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a comment on DMA configuration for 16 bits record.
+Add output sample resolution management in scan mode.
+Add stm32_dfsdm_process_data() function to share sample
+processing between continuous and trigger modes.
 
 Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
 ---
- drivers/iio/adc/stm32-dfsdm-adc.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/iio/adc/stm32-dfsdm-adc.c | 41 ++++++++++++++++++++++++++-------------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
 
 diff --git a/drivers/iio/adc/stm32-dfsdm-adc.c b/drivers/iio/adc/stm32-dfsdm-adc.c
-index d855a605eab6..ee1e0569d0e1 100644
+index 6b90a40882f2..5b19a88412a6 100644
 --- a/drivers/iio/adc/stm32-dfsdm-adc.c
 +++ b/drivers/iio/adc/stm32-dfsdm-adc.c
-@@ -918,6 +918,11 @@ static void stm32_dfsdm_dma_buffer_done(void *data)
- static int stm32_dfsdm_adc_dma_start(struct iio_dev *indio_dev)
+@@ -779,6 +779,30 @@ static unsigned int stm32_dfsdm_adc_dma_residue(struct stm32_dfsdm_adc *adc)
+ 	return 0;
+ }
+ 
++static inline void stm32_dfsdm_process_data(struct stm32_dfsdm_adc *adc,
++					    s32 *buffer)
++{
++	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
++	struct stm32_dfsdm_filter_osr *flo = &fl->flo;
++	unsigned int i = adc->nconv;
++	s32 *ptr = buffer;
++
++	while (i--) {
++		/* Mask 8 LSB that contains the channel ID */
++		*ptr &= 0xFFFFFF00;
++		/* Convert 2^(n-1) sample to 2^(n-1)-1 to avoid wrap-around */
++		if (*ptr > flo->max)
++			*ptr -= 1;
++		/*
++		 * Samples from filter are retrieved with 23 bits resolution
++		 * or less. Shift left to align MSB on 24 bits.
++		 */
++		*ptr <<= flo->lshift;
++
++		ptr++;
++	}
++}
++
+ static irqreturn_t stm32_dfsdm_adc_trigger_handler(int irq, void *p)
  {
+ 	struct iio_poll_func *pf = p;
+@@ -787,7 +811,9 @@ static irqreturn_t stm32_dfsdm_adc_trigger_handler(int irq, void *p)
+ 	int available = stm32_dfsdm_adc_dma_residue(adc);
+ 
+ 	while (available >= indio_dev->scan_bytes) {
+-		u32 *buffer = (u32 *)&adc->rx_buf[adc->bufi];
++		s32 *buffer = (s32 *)&adc->rx_buf[adc->bufi];
++
++		stm32_dfsdm_process_data(adc, buffer);
+ 
+ 		iio_push_to_buffers_with_timestamp(indio_dev, buffer,
+ 						   pf->timestamp);
+@@ -806,8 +832,6 @@ static void stm32_dfsdm_dma_buffer_done(void *data)
+ {
+ 	struct iio_dev *indio_dev = data;
  	struct stm32_dfsdm_adc *adc = iio_priv(indio_dev);
-+	/*
-+	 * The DFSDM supports half-word transfers. However, for 16 bits record,
-+	 * 4 bytes buswidth is kept, to avoid losing samples LSBs when left
-+	 * shift is required.
-+	 */
- 	struct dma_slave_config config = {
- 		.src_addr = (dma_addr_t)adc->dfsdm->phys_base,
- 		.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
+-	struct stm32_dfsdm_filter *fl = &adc->dfsdm->fl_list[adc->fl_id];
+-	struct stm32_dfsdm_filter_osr *flo = &fl->flo;
+ 	int available = stm32_dfsdm_adc_dma_residue(adc);
+ 	size_t old_pos;
+ 
+@@ -832,16 +856,7 @@ static void stm32_dfsdm_dma_buffer_done(void *data)
+ 	while (available >= indio_dev->scan_bytes) {
+ 		s32 *buffer = (s32 *)&adc->rx_buf[adc->bufi];
+ 
+-		/* Mask 8 LSB that contains the channel ID */
+-		*buffer &= 0xFFFFFF00;
+-		/* Convert 2^(n-1) sample to 2^(n-1)-1 to avoid wrap-around */
+-		if (*buffer > flo->max)
+-			*buffer -= 1;
+-		/*
+-		 * Samples from filter are retrieved with 23 bits resolution
+-		 * or less. Shift left to align MSB on 24 bits.
+-		 */
+-		*buffer <<= flo->lshift;
++		stm32_dfsdm_process_data(adc, buffer);
+ 
+ 		available -= indio_dev->scan_bytes;
+ 		adc->bufi += indio_dev->scan_bytes;
 -- 
 2.7.4
 
