@@ -2,209 +2,103 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E043AC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:02:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46B5C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACBF021783
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:02:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560956555;
-	bh=i4/m3cIIMx/tLIWnle/7SzNdGXGSZwSyGBjeAJGPYwQ=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=yTBgYIov5ZnoPTn6BmXXMquO5DcK5xqMh9Fi3CCbP8Mbw/obpFCqEQNW9VnJYfpxv
-	 C5Yb//gk5PXlkOGFlvQScLaHY3EKueRGrf92xa5rOgMUwy3zLfn1cqE6yDuiMo0k99
-	 +CC4sF8ihS2skVUzoentUJPm5YyygEDUsCVdtfI4=
+	by mail.kernel.org (Postfix) with ESMTP id 8A3D321874
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:04:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="oAFnIERq";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="KhgbnI6H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729369AbfFSPCe (ORCPT
+        id S1729806AbfFSPEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:02:34 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50968 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfFSPCe (ORCPT
+        Wed, 19 Jun 2019 11:04:11 -0400
+Received: from out2-smtp.messagingengine.com ([66.111.4.26]:56789 "EHLO
+        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729670AbfFSPEL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:02:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FDFL6FNwMO+N2Z7jWsOhRNSUjHzRNRrq16HYq8Dyh38=; b=H02KpYZ7ruYvHwfH7uxOGeNVR
-        31p9TXM4uwYkgvcddya5pywozyXwJCwoPGcsHKtaDMTTJPFiDpIqnYZ+rKRpTcWF0XmZe0MZbbLzi
-        RAeeF5C+uyoN5Vzbcb7URPbiCV7cH/x0c9gERr8CMbnTbXUwV09cdQViE3GrP83nq/3zr11kMHsL9
-        hU6MBkOm2YeWN/7qgK5nJxuyzgZq9xzNE3PI5EQ4ykwIDhMplp+TyQweP/oE6JXy7RzUT9psv6pf4
-        t0/oY/z4zS3mMoQrQHmhKOsIfNdyrsy2AgSgK5lGK7zRde24ZDtMo7UY+bXrq0CwDiEWsjTuM3YBA
-        pc5i6WViQ==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdc6b-0008Kr-9b; Wed, 19 Jun 2019 15:02:33 +0000
-Date:   Wed, 19 Jun 2019 12:02:29 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
- dir
-Message-ID: <20190619120229.78ce6e07@coco.lan>
-In-Reply-To: <20190619081353.75762028@lwn.net>
-References: <cover.1560890771.git.mchehab+samsung@kernel.org>
-        <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
-        <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com>
-        <20190619072218.4437f891@coco.lan>
-        <20190619104239.GM3419@hirez.programming.kicks-ass.net>
-        <20190619081353.75762028@lwn.net>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Wed, 19 Jun 2019 11:04:11 -0400
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailout.nyi.internal (Postfix) with ESMTP id BCB6B21FDF;
+        Wed, 19 Jun 2019 11:04:09 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Wed, 19 Jun 2019 11:04:09 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
+        date:from:to:cc:subject:message-id:references:mime-version
+        :content-type:in-reply-to; s=fm1; bh=bByssVIB1EYoVBDtjxIgtcfTwUo
+        glLh/NnUiLiEfkX0=; b=oAFnIERq3L6VDbDxgRBBWjQ3xY8j90qhh8vJHUTGZLB
+        CDK1/u6VgadXtYMWVQPAYl3Quw/McWO8vaTywD5voBB4W8OWaAo0H7BxugSmHeJV
+        RDvBpDn/SctaSD/bTizzqKdmjh37q1c7WJVUYZc1ylKPWkOQEcGUQxbbdgXgB5kF
+        77rjm6vwX6TfTsX51Y3o+j8R446XRr7/jJpZ+MvXr5DE+6LDnqOE3vCd7uncKb8B
+        UH7oFOdRCsolueXNhohrcxqJvDZCSufOHt9zPJwSH4UPu3XJhU0dojb1GvUExo4S
+        +pSFxGcEIUdYxAJNKx5W01lQbMZdk7mb0jdHbzJKMMg==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=bByssV
+        IB1EYoVBDtjxIgtcfTwUoglLh/NnUiLiEfkX0=; b=KhgbnI6HfVWgDdDXLGSBZu
+        97dInziUuc/uOJvVd4riwn0K1f+viDCRp2UVytIwUbJhYRdv5z+QkO5VC2f4GXYq
+        vhGnKUsASfQ3bJuKMi6jN2/Wnad+VViEIpC7HH58eezowtjLjYJa69ovdUa/Frvq
+        RY2KriZeJiiiY/wB9qXkA7JTzUk3MiHWb2sMAY912YrjaXFDXvjcWA8niiYcfLDh
+        bZSsLuJZIdxZfsY6ra8cL9tz0e3VYUsm1z87IJYnj5xB/r6v6d0SB4yeSis7wxUO
+        rXf2bjH43FJbrEHHYpqSKWJX4iRrVZ7Cc3xqL4+3D+puoIUP9hBavWxpdLOwiwKA
+        ==
+X-ME-Sender: <xms:6U4KXXAPRUrSpmonf1WRmD5QzscjnUFx_TWVM9csytjNyxeYVTvcSA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddvgdehkecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
+    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
+    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
+    lhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:6U4KXb7Nnl0Ge13Rmi0udpXmPHguTqGX_flvhiLe9SKd07EGtpn-Hw>
+    <xmx:6U4KXapZrks3Q3sdLyQXcrwqCJI7hAF28FnXPW-1UfmDav6hWdRY7g>
+    <xmx:6U4KXe9pZOoKj8fQ9ccN7c5oHzMFR6HfCHcoFe5Qpfi5V44Gbp-KIA>
+    <xmx:6U4KXU5Z0zlnbhiGMIx1it26ccBG8_Dqki0dDwlmNt-4-9YFHV0G4g>
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        by mail.messagingengine.com (Postfix) with ESMTPA id E37AE380085;
+        Wed, 19 Jun 2019 11:04:08 -0400 (EDT)
+Date:   Wed, 19 Jun 2019 17:04:06 +0200
+From:   Greg KH <greg@kroah.com>
+To:     Pintu Agarwal <pintu.ping@gmail.com>
+Cc:     Fabio Estevam <festevam@gmail.com>, linux-pm@vger.kernel.org,
+        open list <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Kernelnewbies <kernelnewbies@kernelnewbies.org>
+Subject: Re: [IMX] [DRM]: suspend/resume support
+Message-ID: <20190619150406.GB19346@kroah.com>
+References: <CAOuPNLiBA9VjEoG_D2y2O5mKiqsDNW1VZXOk1eWXpGY+h86acg@mail.gmail.com>
+ <CAOMZO5BcLaS0gXUPi6oN6vjqagS5yf+rHh+EUjmi-Wi1OX7vqQ@mail.gmail.com>
+ <CAOuPNLgEEfDca4aeT1+q8GfUfGzbJ4x6JwGf-ROB1pgpXUBHSw@mail.gmail.com>
+ <CAOMZO5BY8JcLNMCRCC_d=emy8HR6kE=dB9f5qfZ=ci_c+Jak0w@mail.gmail.com>
+ <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOuPNLjYhkP_kL+q-ZpiDZMMpOHrU88BFBc2agtnCzXt8dihOg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jon,
+On Wed, Jun 19, 2019 at 07:03:39PM +0530, Pintu Agarwal wrote:
+> You can think that the version I am using right now is almost 4.9 itself.
+> Upgrading again to higher kernel version is again difficult, also
+> customer does not want it.
 
-Em Wed, 19 Jun 2019 08:13:53 -0600
-Jonathan Corbet <corbet@lwn.net> escreveu:
+They don't want a secure and supported kernel over the lifetime of their
+device?  That sounds really odd.  Never create a new device using the
+4.9.y kernel tree unless you have someone else doing the support for it
+(i.e. a SoC vendor that you are paying support from).
 
-> On Wed, 19 Jun 2019 12:42:39 +0200
-> Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > No, the other way around, Sphinx can recognize local files and treat
-> > them special. That way we keep the text readable.
-> > 
-> > Same with that :c:func:'foo' crap, that needs to die, and Sphinx needs
-> > to be taught about foo().  
-> 
-> I did a patch to make that latter part happen, but haven't been able to
-> find the time to address the comments and get it out there.  It definitely
-> cleaned up the source files a lot and is worth doing.  Will try to get
-> back to it soon.
+good luck!
 
-See my comment. Yeah, the :c:func:'foo' (the version you merged at the automarkup
-branch) has currently a bug, when there's something like:
-
-	func()
-	======
-
-or when func() is inside a table.
-
-Solving the table case would be a lot better if the plugin could run the
-existing table parser and only then handle the cross-reference replacements,
-but I've no idea how flexible the Sphinx plugins can be.
-
-> 
-> The local file links should be easy to do; we shouldn't need to add any
-> markup for those.
-
-Yeah, those are easy - except if someone adds a Documentation/* link 
-inside a table or inside a topic header.
-
-Running a modified version of your tool shows just two new warnings:
-
-	Documentation/translations/ja_JP/howto.rst:176: WARNING: undefined label: :doc: (if the link has no caption the label must precede a section header)         
-	Documentation/translations/zh_CN/process/submitting-drivers.rst:25: WARNING: unknown document: ../../../Documentation/translations/zh_CN/process/submitting-patches
-
-The first one is because of this:
-
-	:Ref:`Documentation/process/kernel-docs.rst <kernel_docs>`
-
-(my parser didn't consider upper-case tags - a simple fix at a regex should
-fix this)
-
-The second one is because the URL is wrong. It is pointing to:
-
-	Documentation/Documentation/translations/zh_CN/process/submitting-patches
-
-at Chinese translation.
-
-So, at least the way our documentation is, the plugin seems to be working
-as expected.
-
-As a reference, I'm enclosing the diff against your patch:
-
-    commit 6231d7456e87bd3e11f892709945887bd55a8a20 (docs/automarkup)
-    Author: Jonathan Corbet <corbet@lwn.net>
-    Date:   Thu Apr 25 07:55:07 2019 -0600
-
-        Docs: An initial automarkup extension for sphinx
-    
-        Rather than fill our text files with :c:func:`function()` syntax, just do
-        the markup via a hook into the sphinx build process.  As is always the
-        case, the real problem is detecting the situations where this markup should
-        *not* be done.
-    
-        Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-
-Thanks,
-Mauro
-
--
-
-diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
-index 39c8f4d5af82..60dad596c790 100644
---- a/Documentation/sphinx/automarkup.py
-+++ b/Documentation/sphinx/automarkup.py
-@@ -9,6 +9,7 @@
- from __future__ import print_function
- import re
- import sphinx
-+#import sys		# Just for debug
- 
- #
- # Regex nastiness.  Of course.
-@@ -31,10 +32,26 @@ RE_literal = re.compile(r'^(\s*)(.*::\s*|\.\.\s+code-block::.*)$')
- #
- RE_whitesp = re.compile(r'^(\s*)')
- 
-+#
-+# Get a documentation reference
-+#
-+RE_doc_links = re.compile(r'\bDocumentation/([\w\d\-\_\/]+)\.rst\b')
-+
-+#
-+# Doc link false-positives
-+#
-+RE_false_doc_links = re.compile(r':ref:`\s*Documentation/[\w\d\-\_\/]+\.rst')
-+
- def MangleFile(app, docname, text):
-     ret = [ ]
-     previous = ''
-     literal = False
-+
-+    rel_dir = ''
-+
-+    for depth in range(0, docname.count('/')):
-+        rel_dir += "../"
-+
-     for line in text[0].split('\n'):
-         #
-         # See if we might be ending a literal block, as denoted by
-@@ -63,7 +80,18 @@ def MangleFile(app, docname, text):
-         # Normal line - perform substitutions.
-         #
-         else:
--            ret.append(RE_function.sub(r'\1:c:func:`\2`\3', line))
-+#            new_line = RE_function.sub(r'\1:c:func:`\2`\3', line)
-+            new_line = line
-+
-+            if not RE_false_doc_links.search(new_line):
-+                new_line = RE_doc_links.sub(r':doc:`' + rel_dir + r'\1`', new_line)
-+
-+ #           # Just for debug - should be removed on production
-+ #           if new_line != line:
-+ #               print ("===>" + new_line, file=sys.stderr)
-+
-+            ret.append(new_line)
-+
-         #
-         # Might we be starting a literal block?  If so make note of
-         # the fact.
-
-
+greg k-h
