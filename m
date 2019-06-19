@@ -1,150 +1,113 @@
 Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.5 required=3.0 tests=FSL_HELO_FAKE,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8547BC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24F85C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6527C21537
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2F0821783
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:46:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="eEIpXOcP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730217AbfFSQqc (ORCPT
+        id S1730253AbfFSQqh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:46:32 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:34964 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfFSQqc (ORCPT
+        Wed, 19 Jun 2019 12:46:37 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:38167 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfFSQqe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:46:32 -0400
-Received: by mail-io1-f65.google.com with SMTP id m24so104503ioo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 09:46:31 -0700 (PDT)
+        Wed, 19 Jun 2019 12:46:34 -0400
+Received: by mail-ot1-f67.google.com with SMTP id d17so20006877oth.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 09:46:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dAeca+NaeasgKg8wLjwxe/d8KFhZwiNtk4NpQn2oH10=;
+        b=eEIpXOcPgh/FQm8AcRovuq2bVonIAGIxG4O8hqog+t2sNo8lmrfYIpq/+3PFypMTty
+         siI4svCj0XFFk8DvueW2Zz7Zvoia5aS+WjHA2V9kjitsGk2Dr7OrDOGRxd+jgBEHrThr
+         EHGL3vlgHvvthlk8Gfj633B1vbDSWX+nCllo+CoYhKFeZWAJNLlFWMmdziVMMg2G+cne
+         9LkPYCnW/ZVKV1OTMMtvp9jixEL4J8gu4orI34DCJ30mCCAblY3ezSDjxZuDDDsPUqbB
+         ZHR6EtInNGpbX74S1TmPO0TGeYVW9GToDYCY1yWZmGb6+1NQToWu8/vN0HJQG43y5Q4m
+         K3fw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=18Kg5MWKnGyDk/Hk0hs3jQay0Br3d6t8dYYP1QSodXI=;
-        b=DT0RdVXn2dKNzpYbMJfT8D70c2HjbwHWd7+GGMcDkus+rqAqHuKU8UOQsg6LcdFrtf
-         nHPuuhcYDsmi/1Bg8z3grKm8d4oE+xUL6YatmCRzZQLnpm167xBezLvgaikgKr3hwOUg
-         ZfOoTKvqBDeYBf7P/bdfGfvKmZ7AKj2tHngt3+KRaJ6AtAOgHSnc0XpBfcdyCcfHDWI/
-         ylIgIM0VRWYaxgYc19dseRY6P9tzD+yk5eUuhN/708c3Rnaa2Epjq2uatMJZAW1b9vm7
-         /jw5R5KRAv3Jn4DiV8l/BLAQy1KGUlq0KMFY2NEK5WGbK6oG+HNlsi8ntsZg+Qtfi3I3
-         4e3Q==
-X-Gm-Message-State: APjAAAVTQQt2sezry3PwDwcCuAlHKD4BB3peudTXmZUsT4S7q4Yzt7mq
-        4gGw2Df0YSQyYXFJR0RD9ccTzQ==
-X-Google-Smtp-Source: APXvYqwlrenhz7SGY4ppdH5b4KqvGgeKH2qtdHOslNv0XodC4c1mNe523GdL5Na20VfbkbwdPmjrRA==
-X-Received: by 2002:a5d:8195:: with SMTP id u21mr15862298ion.260.1560962791001;
-        Wed, 19 Jun 2019 09:46:31 -0700 (PDT)
-Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id t19sm13739147iog.41.2019.06.19.09.46.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 09:46:29 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 10:46:25 -0600
-From:   Raul Rangel <rrangel@chromium.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     stable@vger.kernel.org, linux-mmc@vger.kernel.org,
-        djkurtz@google.com, adrian.hunter@intel.com, zwisler@chromium.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-kernel@vger.kernel.org, Chris Boot <bootc@bootc.net>,
-        =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [stable/4.14.y PATCH 0/3] mmc: Fix a potential resource leak
- when shutting down request queue.
-Message-ID: <20190619164625.GA85539@google.com>
-References: <20190513175521.84955-1-rrangel@chromium.org>
- <20190514091933.GA27269@kroah.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dAeca+NaeasgKg8wLjwxe/d8KFhZwiNtk4NpQn2oH10=;
+        b=e83JwncyGeKdXDG1qyhcfuWbxkBxFa3wbqHDVrAbACJTqLXridFkBYzwM4+FP9VUIs
+         OSLkfNB884Z/oYu1m+coHe1Q2ZahUuSImaFOibqUs8TTedifitqgiyMeEhILIqF5Pfal
+         sjUxmtrFsg9SwEtnkpF0ndj82Zg6y1z4tOzID6aVBT9hAcXiZ5gYLueyDCukWj74t+WP
+         CyG97Cis7gDi3EeNmHWg//EMKCZgNsP5zpj5PzV7Ms/AM4uXvmffd/3K6DiZxhwy6MM4
+         DULBeFdbsBdTYiIBFhVFu7UkD2wir8tLeJ7gTZd9ADyRMr2VK+W8mu+EITJZmV2Kv5tH
+         SnzQ==
+X-Gm-Message-State: APjAAAVH+G7P8v+uXlDYmkH1syQE2IK5QiEwugwLG2GApwLqCTmw7WyP
+        jPjCy8ZfW6vUh5xvco5UfYZzaHqv/1J/cdC/b1+oyQ==
+X-Google-Smtp-Source: APXvYqxu7jzERtujGtRB1JUPTrrSRxaJnnRx7A59gFxSd7DNSrReLEw7sHQTmTBvokQEtVRT1Qlvl4tg5ll4Z2fBIRs=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr9700022oto.207.1560962794186;
+ Wed, 19 Jun 2019 09:46:34 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190514091933.GA27269@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190617122733.22432-1-hch@lst.de> <CAPcyv4hBUJB2RxkDqHkfEGCupDdXfQSrEJmAdhLFwnDOwt8Lig@mail.gmail.com>
+ <20190619094032.GA8928@lst.de> <20190619163655.GG9360@ziepe.ca>
+In-Reply-To: <20190619163655.GG9360@ziepe.ca>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 19 Jun 2019 09:46:23 -0700
+Message-ID: <CAPcyv4hYtQdg0DTYjrJxCNXNjadBSWQ5QaMJYsA-QSribKuwrQ@mail.gmail.com>
+Subject: Re: dev_pagemap related cleanups v2
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ben Skeggs <bskeggs@redhat.com>, Linux MM <linux-mm@kvack.org>,
+        nouveau@lists.freedesktop.org,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        linux-pci@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 14, 2019 at 11:19:34AM +0200, Greg Kroah-Hartman wrote:
-> On Mon, May 13, 2019 at 11:55:18AM -0600, Raul E Rangel wrote:
-> > I think we should cherry-pick 41e3efd07d5a02c80f503e29d755aa1bbb4245de
-> > https://lore.kernel.org/patchwork/patch/856512/ into 4.14. It fixes a
-> > potential resource leak when shutting down the request queue.
-> 
-> Potential meaning "it does happen", or "it can happen if we do this", or
-> just "maybe it might happen, we really do not know?"
-It does happen if the AMD SDHCI patches are cherry-picked into 4.14.
-https://lkml.org/lkml/2019/5/1/398
-It can be mitigated by changing the line in the patch with
-`mmc_detect_change(host, 0)` to mmc_detect_change(host, 200)`, but
-that's just a workaround to play with the timing so the race condition
-doesn't happen.
-> 
-> > Once this patch is applied, there is a potential for a null pointer dereference.
-> > That's what the second patch fixes.
-> 
-> What is the git id of that upstream fix?
-So there is no specific upstream fix. There was a large patch set that
-migrated mmc to using blk-mq, so the bug just kind of went away.
-https://lwn.net/Articles/739774/ or 0fbfd12518303e9b32ac9fd231439459eac848f9
+On Wed, Jun 19, 2019 at 9:37 AM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Wed, Jun 19, 2019 at 11:40:32AM +0200, Christoph Hellwig wrote:
+> > On Tue, Jun 18, 2019 at 12:47:10PM -0700, Dan Williams wrote:
+> > > > Git tree:
+> > > >
+> > > >     git://git.infradead.org/users/hch/misc.git hmm-devmem-cleanup.2
+> > > >
+> > > > Gitweb:
+> > > >
+> > > >     http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/hmm-devmem-cleanup.2
+> >
+> > >
+> > > Attached is my incremental fixups on top of this series, with those
+> > > integrated you can add:
+> >
+> > I've folded your incremental bits in and pushed out a new
+> > hmm-devmem-cleanup.3 to the repo above.  Let me know if I didn't mess
+> > up anything else.  I'll wait for a few more comments and Jason's
+> > planned rebase of the hmm branch before reposting.
+>
+> I said I wouldn't rebase the hmm.git (as it needs to go to DRM, AMD
+> and RDMA git trees)..
+>
+> Instead I will merge v5.2-rc5 to the tree before applying this series.
+>
+> I've understood this to be Linus's prefered workflow.
+>
+> So, please send the next iteration of this against either
+> plainv5.2-rc5 or v5.2-rc5 merged with hmm.git and I'll sort it out.
 
-> 
-> > The third patch is just an optimization to stop processing earlier.
-> 
-> That's not how stable kernels work :(
-Oops, I guess we can ignore that patch. It just prevents mmc_init_request
-from being called, but it doesn't matter since the 2nd patch actually
-checks for NULL now.
-> 
-> > See https://patchwork.kernel.org/patch/10925469/ for the initial motivation.
-> 
-> I don't understand the motivation from that link at all :(
-> 
-> > This commit applies to v4.14.116. It is already included in 4.19. 4.19 doesn't
-> > suffer from the null pointer dereference because later commits migrate the mmc
-> > stack to blk-mq.
-> 
-> What are those later commits?
-Commit 0fbfd12518303e9b32ac9fd231439459eac848f9 specifically deletes the
-code for the 2nd patch. As I said above, the NULL pointer dereference
-just kind of went away as part of the blk-mq migration, so there is no
-upstream fix :(
-
-> 
-> > I tested this patch set by randomly connecting/disconnecting the SD
-> > card. I got over 189650 itarations without a problem.
-> 
-> And if you do not have these patches, on 4.14.y, how many iterations
-> cause a problem?  If you just apply the first patch, does that work?
-If I apply the AMD SDHCI patches and nothing else, then I can cause a
-resource leak within 10 iterations. If I apply just the first patch then
-I can cause a NULL pointer error within 10 iterations. If I apply both 1
-and 2, then everything works as expected and I can't cause a problem.
-> 
-> _EVERY_ time we take a patch that is not upstream, something usually is
-> broken and needs to be fixed.  We have a long long long history of this,
-> so if you want to have a patch that is not upstream applied to a stable
-> kernel release, you need a whole lot of justification and explanation
-> and begging.  And you need to be around to fix the fallout for when it
-> breaks :)
-
-It also looks like 2361bfb055f948eac6583fa3c75a014da84fe554 includes a
-fix for 41e3efd07d5a02c80f503e29d755aa1bbb4245de, so that would need to
-be cherry picked in.
-
-I guess I should have included a fixes: line in my second patch.
-
-So to summarize:
-- cherry-pick 41e3efd07d5a02c80f503e29d755aa1bbb4245de
-- cherry-pick 2361bfb055f948eac6583fa3c75a014da84fe554
-- apply 2nd patch but add to commit message:
-  Fixes: 41e3efd07d5a ("mmc: block: Simplify cleaning up the queue")
-- Ignore patch 3 since it's an optimization.
-> 
-> thanks,
-> 
-> greg k-h
-Thanks again for your time, and sorry for the really late response!
-
-Raul
+Just make sure that when you backmerge v5.2-rc5 you have a clear
+reason in the merge commit message about why you needed to do it.
+While needless rebasing is top of the pet peeve list, second place, as
+I found out, is mystery merges without explanations.
