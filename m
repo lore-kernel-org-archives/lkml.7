@@ -2,146 +2,162 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3620C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBA9FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:16:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C12E020665
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA1C220657
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:16:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730135AbfFSRPK convert rfc822-to-8bit (ORCPT
+        id S1730039AbfFSRQl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:15:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30112 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726265AbfFSRPJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:15:09 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JHC3uU172612
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:15:08 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t7r2p3xhk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 13:15:08 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <naveen.n.rao@linux.vnet.ibm.com>;
-        Wed, 19 Jun 2019 18:15:06 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 18:15:03 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JHF2qf45809886
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 17:15:02 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 541C452059;
-        Wed, 19 Jun 2019 17:15:02 +0000 (GMT)
-Received: from localhost (unknown [9.85.70.229])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id F01395204F;
-        Wed, 19 Jun 2019 17:15:01 +0000 (GMT)
-Date:   Wed, 19 Jun 2019 22:44:56 +0530
-From:   "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-Subject: Re: [PATCH 4/7] powerpc/ftrace: Additionally nop out the preceding
- mflr with -mprofile-kernel
-To:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-References: <cover.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <72492bc769cd6f40a536e689fc3195570d07fd5c.1560868106.git.naveen.n.rao@linux.vnet.ibm.com>
-        <877e9idum7.fsf@concordia.ellerman.id.au>
-        <1560927184.kqsg9x9bd1.astroid@bobo.none>
-        <1560935530.70niyxru6o.naveen@linux.ibm.com>
-        <1560939496.ovo51ph4i4.astroid@bobo.none>
-In-Reply-To: <1560939496.ovo51ph4i4.astroid@bobo.none>
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19061917-0016-0000-0000-0000028A95A4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061917-0017-0000-0000-000032E7EDD6
-Message-Id: <1560961996.5xzl76c7fj.naveen@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190139
+        Wed, 19 Jun 2019 13:16:41 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53976 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726251AbfFSRQl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:16:41 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52BE4821C3;
+        Wed, 19 Jun 2019 17:16:35 +0000 (UTC)
+Received: from llong.com (dhcp-17-85.bos.redhat.com [10.18.17.85])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 15C105D71B;
+        Wed, 19 Jun 2019 17:16:29 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Shakeel Butt <shakeelb@google.com>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH v2] mm, memcg: Add a memcg_slabinfo debugfs file
+Date:   Wed, 19 Jun 2019 13:16:21 -0400
+Message-Id: <20190619171621.26209-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 19 Jun 2019 17:16:40 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Nicholas Piggin wrote:
-> Naveen N. Rao's on June 19, 2019 7:53 pm:
->> Nicholas Piggin wrote:
->>> Michael Ellerman's on June 19, 2019 3:14 pm:
->>>> 
->>>> I'm also not convinced the ordering between the two patches is
->>>> guaranteed by the ISA, given that there's possibly no isync on the other
->>>> CPU.
->>> 
->>> Will they go through a context synchronizing event?
->>> 
->>> synchronize_rcu_tasks() should ensure a thread is scheduled away, but
->>> I'm not actually sure it guarantees CSI if it's kernel->kernel. Could
->>> do a smp_call_function to do the isync on each CPU to be sure.
->> 
->> Good point. Per 
->> Documentation/RCU/Design/Requirements/Requirements.html#Tasks RCU:
->> "The solution, in the form of Tasks RCU, is to have implicit read-side 
->> critical sections that are delimited by voluntary context switches, that 
->> is, calls to schedule(), cond_resched(), and synchronize_rcu_tasks(). In 
->> addition, transitions to and from userspace execution also delimit 
->> tasks-RCU read-side critical sections."
->> 
->> I suppose transitions to/from userspace, as well as calls to schedule() 
->> result in context synchronizing instruction being executed. But, if some 
->> tasks call cond_resched() and synchronize_rcu_tasks(), we probably won't 
->> have a CSI executed.
->> 
->> Also:
->> "In CONFIG_PREEMPT=n kernels, trampolines cannot be preempted, so these 
->> APIs map to call_rcu(), synchronize_rcu(), and rcu_barrier(), 
->> respectively."
->> 
->> In this scenario as well, I think we won't have a CSI executed in case 
->> of cond_resched().
->> 
->> Should we enhance patch_instruction() to handle that?
-> 
-> Well, not sure. Do we have many post-boot callers of it? Should
-> they take care of their own synchronization requirements?
+There are concerns about memory leaks from extensive use of memory
+cgroups as each memory cgroup creates its own set of kmem caches. There
+is a possiblity that the memcg kmem caches may remain even after the
+memory cgroups have been offlined. Therefore, it will be useful to show
+the status of each of memcg kmem caches.
 
-Kprobes and ftrace are the two users (along with anything else that may 
-use jump labels).
+This patch introduces a new <debugfs>/memcg_slabinfo file which is
+somewhat similar to /proc/slabinfo in format, but lists only information
+about kmem caches that have child memcg kmem caches. Information
+available in /proc/slabinfo are not repeated in memcg_slabinfo.
 
-Looking at this from the CMODX perspective: the main example quoted of 
-an erratic behavior is when any variant of the patched instruction 
-causes an exception.
+A portion of a sample output of the file was:
 
-With ftrace, I think we are ok since we only ever patch a 'nop' or a 
-'bl' (and the 'mflr' now), none of which should cause an exception. As 
-such, the existing patch_instruction() should suffice.
+  # <name> <css_id[:dead]> <active_objs> <num_objs> <active_slabs> <num_slabs>
+  rpc_inode_cache   root          13     51      1      1
+  rpc_inode_cache     48           0      0      0      0
+  fat_inode_cache   root           1     45      1      1
+  fat_inode_cache     41           2     45      1      1
+  xfs_inode         root         770    816     24     24
+  xfs_inode           92          22     34      1      1
+  xfs_inode           88:dead      1     34      1      1
+  xfs_inode           89:dead     23     34      1      1
+  xfs_inode           85           4     34      1      1
+  xfs_inode           84           9     34      1      1
 
-However, with kprobes, we patch a 'trap' (or a branch in case of 
-optprobes) on most instructions. I wonder if we should be issuing an 
-'isync' on all cpus in this case. Or, even if that is sufficient or 
-necessary.
+The css id of the memcg is also listed. If a memcg is not online,
+the tag ":dead" will be attached as shown above.
 
+Suggested-by: Shakeel Butt <shakeelb@google.com>
+Signed-off-by: Waiman Long <longman@redhat.com>
+---
+ mm/slab_common.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 57 insertions(+)
 
-Thanks,
-Naveen
-
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index 58251ba63e4a..2bca1558a722 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -17,6 +17,7 @@
+ #include <linux/uaccess.h>
+ #include <linux/seq_file.h>
+ #include <linux/proc_fs.h>
++#include <linux/debugfs.h>
+ #include <asm/cacheflush.h>
+ #include <asm/tlbflush.h>
+ #include <asm/page.h>
+@@ -1498,6 +1499,62 @@ static int __init slab_proc_init(void)
+ 	return 0;
+ }
+ module_init(slab_proc_init);
++
++#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_MEMCG_KMEM)
++/*
++ * Display information about kmem caches that have child memcg caches.
++ */
++static int memcg_slabinfo_show(struct seq_file *m, void *unused)
++{
++	struct kmem_cache *s, *c;
++	struct slabinfo sinfo;
++
++	mutex_lock(&slab_mutex);
++	seq_puts(m, "# <name> <css_id[:dead]> <active_objs> <num_objs>");
++	seq_puts(m, " <active_slabs> <num_slabs>\n");
++	list_for_each_entry(s, &slab_root_caches, root_caches_node) {
++		/*
++		 * Skip kmem caches that don't have any memcg children.
++		 */
++		if (list_empty(&s->memcg_params.children))
++			continue;
++
++		memset(&sinfo, 0, sizeof(sinfo));
++		get_slabinfo(s, &sinfo);
++		seq_printf(m, "%-17s root      %6lu %6lu %6lu %6lu\n",
++			   cache_name(s), sinfo.active_objs, sinfo.num_objs,
++			   sinfo.active_slabs, sinfo.num_slabs);
++
++		for_each_memcg_cache(c, s) {
++			struct cgroup_subsys_state *css;
++			char *dead = "";
++
++			css = &c->memcg_params.memcg->css;
++			if (!(css->flags & CSS_ONLINE))
++				dead = ":dead";
++
++			memset(&sinfo, 0, sizeof(sinfo));
++			get_slabinfo(c, &sinfo);
++			seq_printf(m, "%-17s %4d%5s %6lu %6lu %6lu %6lu\n",
++				   cache_name(c), css->id, dead,
++				   sinfo.active_objs, sinfo.num_objs,
++				   sinfo.active_slabs, sinfo.num_slabs);
++		}
++	}
++	mutex_unlock(&slab_mutex);
++	return 0;
++}
++DEFINE_SHOW_ATTRIBUTE(memcg_slabinfo);
++
++static int __init memcg_slabinfo_init(void)
++{
++	debugfs_create_file("memcg_slabinfo", S_IFREG | S_IRUGO,
++			    NULL, NULL, &memcg_slabinfo_fops);
++	return 0;
++}
++
++late_initcall(memcg_slabinfo_init);
++#endif /* CONFIG_DEBUG_FS && CONFIG_MEMCG_KMEM */
+ #endif /* CONFIG_SLAB || CONFIG_SLUB_DEBUG */
+ 
+ static __always_inline void *__do_krealloc(const void *p, size_t new_size,
+-- 
+2.18.1
 
