@@ -2,62 +2,199 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 073E4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:19:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1ACC31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:21:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE35D21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:19:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4630921734
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:21:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730472AbfFSTTp convert rfc822-to-8bit (ORCPT
+        id S1730283AbfFSTVt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:19:45 -0400
-Received: from mail.fireflyinternet.com ([109.228.58.192]:63786 "EHLO
-        fireflyinternet.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726449AbfFSTTp (ORCPT
+        Wed, 19 Jun 2019 15:21:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20752 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729659AbfFSTVs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:19:45 -0400
-X-Default-Received-SPF: pass (skip=forwardok (res=PASS)) x-ip-name=78.156.65.138;
-Received: from localhost (unverified [78.156.65.138]) 
-        by fireflyinternet.com (Firefly Internet (M1)) with ESMTP (TLS) id 16957649-1500050 
-        for multiple; Wed, 19 Jun 2019 20:19:36 +0100
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-From:   Chris Wilson <chris@chris-wilson.co.uk>
-In-Reply-To: <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com>
-Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
-References: <CAHk-=whEQPvLpDbx+WR4Q4jf2FxXjf_zTX3uLy_6ZzHtgTV4LA@mail.gmail.com>
- <156094799629.21217.4574572565333265288@skylake-alporthouse-com>
- <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com>
-Message-ID: <156097197830.664.13418742301997062555@skylake-alporthouse-com>
-User-Agent: alot/0.6
-Subject: Re: NMI hardlock stacktrace deadlock [was Re: Linux 5.2-rc5]
-Date:   Wed, 19 Jun 2019 20:19:38 +0100
+        Wed, 19 Jun 2019 15:21:48 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JJH5MO129644
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 15:21:47 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7tqhs6fm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 15:21:47 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 19 Jun 2019 20:21:45 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Jun 2019 20:21:42 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JJLXqn35324182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 19:21:33 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C01342056;
+        Wed, 19 Jun 2019 19:21:41 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B271142042;
+        Wed, 19 Jun 2019 19:21:40 +0000 (GMT)
+Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Jun 2019 19:21:40 +0000 (GMT)
+Subject: Re: [PATCH 1/3] IMA:Define a new hook to measure the kexec boot
+ command line arguments
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     Prakhar Srivastava <prsriva02@gmail.com>,
+        linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     roberto.sassu@huawei.com
+Date:   Wed, 19 Jun 2019 15:21:40 -0400
+In-Reply-To: <20190617183507.14160-2-prsriva02@gmail.com>
+References: <20190617183507.14160-1-prsriva02@gmail.com>
+         <20190617183507.14160-2-prsriva02@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061919-0012-0000-0000-0000032AA63D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061919-0013-0000-0000-00002163C8AE
+Message-Id: <1560972100.3975.72.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=11 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Linus Torvalds (2019-06-19 19:49:37)
-> On Wed, Jun 19, 2019 at 5:40 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
-> >
-> > I haven't bisected this, but with the merge of rc5 into our CI we
-> > started hitting an issue that resulted in a oops and the NMI watchdog
-> > firing as we dumped the ftrace.
+On Mon, 2019-06-17 at 11:35 -0700, Prakhar Srivastava wrote:
+> Currently during soft reboot(kexec_file_load) boot command line
+> arguments are not measured. Define hooks needed to measure kexec
+> command line arguments during soft reboot(kexec_file_load).
 > 
-> Do you have the oops itself at all?
+> - A new ima hook ima_kexec_cmdline is defined to be called by the
+> kexec code.
+> - A new function process_buffer_measurement is defined to measure
+> the buffer hash into the IMA measurement list.
+> - A new func policy KEXEC_CMDLINE is defined to control the
+>  measurement.[Suggested by Mimi]
+> 
+> Signed-off-by: Prakhar Srivastava <prsriva02@gmail.com>
 
-An example at
-https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_6310/fi-kbl-x1275/dmesg0.log
-https://intel-gfx-ci.01.org/tree/drm-tip/CI_DRM_6310/fi-kbl-x1275/boot0.log
+With minor changes below, 
+     Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
 
-The bug causing the oops is clearly a driver problem. The rc5 fallout
-just seems to be because of some shrinker changes affecting some object
-reaping that were unfortunately still active. What perturbed the CI
-team was the machine failed to panic & reboot.
--Chris
+> ---
+
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index af341a80118f..1e233417a7af 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -605,6 +605,80 @@ int ima_load_data(enum kernel_load_data_id id)
+>  	return 0;
+>  }
+>  
+> +/*
+> + * process_buffer_measurement - Measure the buffer to ima log.
+> + * @buf: pointer to the buffer that needs to be added to the log.
+> + * @size: size of buffer(in bytes).
+> + * @eventname: event name to be used for the buffer entry.
+> + * @cred: a pointer to a credentials structure for user validation.
+> + * @secid: the secid of the task to be validated.
+> + *
+> + * Based on policy, the buffer is measured into the ima log.
+> + */
+> +static void process_buffer_measurement(const void *buf, int size,
+> +				       const char *eventname,
+> +				       const struct cred *cred, u32 secid)
+> +{
+> +	int ret = 0;
+> +	struct ima_template_entry *entry = NULL;
+> +	struct integrity_iint_cache iint = {};
+> +	struct ima_event_data event_data = {.iint = &iint };
+> +	struct ima_template_desc *template_desc = NULL;
+> +	struct {
+> +		struct ima_digest_data hdr;
+> +		char digest[IMA_MAX_DIGEST_SIZE];
+> +	} hash = {};
+> +	int violation = 0;
+> +	int pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+> +	int action = 0;
+> +
+> +	action = ima_get_action(NULL, cred, secid, 0, KEXEC_CMDLINE, &pcr,
+> +				&template_desc);
+> +	if (!(action & IMA_MEASURE))
+> +		goto out;
+
+"out:" is a simple return, no freeing memory.  Just return here.
+
+> +
+> +	event_data.filename = eventname;
+
+No need to initialize even_data.filename, here initialize it when it
+is defined.
+
+> +
+> +	iint.ima_hash = &hash.hdr;
+> +	iint.ima_hash->algo = ima_hash_algo;
+> +	iint.ima_hash->length = hash_digest_size[ima_hash_algo];
+> +
+> +	ret = ima_calc_buffer_hash(buf, size, iint.ima_hash);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	ret = ima_alloc_init_template(&event_data, &entry, template_desc);
+> +	if (ret < 0)
+> +		goto out;
+> +
+> +	if (action & IMA_MEASURE)
+
+Why is this test needed again?
+
+Mimi
+
+> +		ret = ima_store_template(entry, violation, NULL, buf, pcr);
+> +
+> +	if (ret < 0)
+> +		ima_free_template_entry(entry);
+> +
+> +out:
+> +	return;
+> +}
+> +
+> +/**
+> + * ima_kexec_cmdline - measure kexec cmdline boot args
+> + * @buf: pointer to buffer
+> + * @size: size of buffer
+> + *
+> + * Buffers can only be measured, not appraised.
+> + */
+> +void ima_kexec_cmdline(const void *buf, int size)
+> +{
+> +	u32 secid;
+> +
+> +	if (buf && size != 0) {
+> +		security_task_getsecid(current, &secid);
+> +		process_buffer_measurement(buf, size, "kexec-cmdline",
+> +					   current_cred(), secid);
+> +	}
+> +}
+> +
+>  static int __init init_ima(void)
+>  {
+>  	int error;
+> 
+
