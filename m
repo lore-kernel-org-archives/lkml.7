@@ -2,102 +2,348 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 265A0C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:48:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D8E6C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008D5214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:48:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36911214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:49:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="fMqNpV6g"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GW8nrYT3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730342AbfFSRsL (ORCPT
+        id S1729955AbfFSRt5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:48:11 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43752 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730259AbfFSRsI (ORCPT
+        Wed, 19 Jun 2019 13:49:57 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:35688 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726332AbfFSRt5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:48:08 -0400
-Received: by mail-qt1-f193.google.com with SMTP id w17so14569720qto.10
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:48:07 -0700 (PDT)
+        Wed, 19 Jun 2019 13:49:57 -0400
+Received: by mail-io1-f67.google.com with SMTP id m24so376934ioo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:49:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=dXV7QK2jBvzrpKqZ0H44fgbNkrbzKwjaMLPe99U+Pk0=;
-        b=fMqNpV6gaqU3mDpG5fcUKQPTEEQa6ArYNQPiTQZxCa9HznA1vPxmBUT7ZednAsRb07
-         ELjqYp7VwmrsS6Tdc5aaPT6LwigvoioQ+AyxlYqz7ssKx+Qe5HVAeBLOoN8roZ7JIVkm
-         oX8YYwHPfoWiaoTRzGFIOrfUgV74QegXaFy4FKbxkZfXv/wdx+y4LLatYy8BbELL94Mv
-         Gt58clfIrnqHPMubWDqk1GCixWRgFB78LLU1pMqKb9VEr9/RuDncFLPjNZ7RpQFRdSDj
-         Hs32oRB8WW4vkNQ9qij8Wgv/iImFxEqDILjQrpegAJbEjae0x10RvoyCfxN6ZpOfra8m
-         zR2Q==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=bmLaCWt5UCH3YXBEmMBN+/+tS5kXmSuF3wP3XuQD49w=;
+        b=GW8nrYT3hnch00JV9geW9v2U4EcUTvUQqklHcdGkMTDPjwLHjXTK+HUjpkyElUcNAk
+         Y+n5/o4kr/7NCjPzCvCy89PdWWHg6QOvAF8jHkuseDTySqOD0/C7HUbj3C1crVGHOYEw
+         Fc+xbJ39sZVfYhKiqg5gfyC3WfzsBc2p3EdSCKrZIcPsjfZbPqkABDOHCGGEZFIDYPRR
+         eNshs+1zPIF8a3zxs3arBF2f0k+WsGGr6lbIOiU9QakQqDIBnkBxOxjcrOv7s+KPcstA
+         VXtXwri7RLydgiJlnmCWk6LQnbm0NARUbURfQwEeRRL8wg5RBdU/3OoaML59AatSPrvx
+         LWNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=dXV7QK2jBvzrpKqZ0H44fgbNkrbzKwjaMLPe99U+Pk0=;
-        b=Pjb0JAR1rGlLH+rcgTELKaVoBZ8RLxTn8VRh6EH7khiDgpbeTQWF/tDztoI4wzMBjH
-         6+vmXFA5FW+YAf0ghVhHj3xtegUXNStmYw0E8Qw3YGSJxoC+SMTG9XC+MVsipNnhYkGN
-         IDnoeXCDBY5bZf9Qw1aV3TFEfMrQ8Npw13WPUSMrjWDyxtZlSKEzEhE6LX+cHkb5i5MY
-         McuJuhxiQO++X2o59plSG9r7doiWI7KbL9keKEp4MAfOAudCa0GlazqS4jldBcUfc8Ou
-         zyNgjPdwMqfdlFGfl/bpRTTt10k02UlqYAqYCM7w4oRF4GzqiZ/qkQTKQGI7w5aPOVir
-         junQ==
-X-Gm-Message-State: APjAAAWKJ4iHdACbEDX/iBu++JjnusIJtBYIoNJLm0/Nj2a+V6GWxeXx
-        T4Iw7mdBFLtciq0P/MKsrHf6LA==
-X-Google-Smtp-Source: APXvYqxywbv89LKe+7245WNQEyekTjsbFuLid+Nh9MmrzRaYzzhINqQ8eJdFHR8/g0lGeWI+UPJNQQ==
-X-Received: by 2002:ac8:2a69:: with SMTP id l38mr39177182qtl.212.1560966487512;
-        Wed, 19 Jun 2019 10:48:07 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f25sm14278803qta.81.2019.06.19.10.48.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 10:48:07 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     bp@alien8.de
-Cc:     ard.biesheuvel@linaro.org, akpm@linux-foundation.org,
-        dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de,
-        mingo@redhat.com, sai.praneeth.prakhya@intel.com, hpa@zytor.com,
-        x86@kernel.org, linux-efi@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Qian Cai <cai@lca.pw>
-Subject: [PATCH v2] x86/efi: fix a -Wtype-limits compilation warning
-Date:   Wed, 19 Jun 2019 13:47:44 -0400
-Message-Id: <1560966464-27644-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=bmLaCWt5UCH3YXBEmMBN+/+tS5kXmSuF3wP3XuQD49w=;
+        b=bcAk6mSbiVdEVOes66D/iyNbu9oxve6AjTx0WltiDQ493kGirJW8XRdJlIYur3M0PF
+         qjFeRAjkW0+3+EdtmzAwf8JlmcLHfI2ZrDSZh5NwKTUOxb/3afVk4fjaqBVqd2E/My/v
+         919z9Ev/SJe3ThXpYxr1ZJi5bV1/WHhwCrgjFZwuILDVitwgOMSgJ3fgucsI6eHS87uE
+         4yVyBow5KNEJbwtgiCb/SJ69WUQWQIhiBMVf+KATQVf3q+Gy0H7qdv5QGl7V+IlS2Ahz
+         76LfBeP5mKUgMAmPl6WNzsDRfAuKxWNJyvJinIVQmZRx/uM1sX8GcqOPUGrypLYGg03V
+         aFPg==
+X-Gm-Message-State: APjAAAU9cLN2cr07kgO35PdsnRQWQkXqZc1iBKN5VWlTcWAa5Cdgjf1g
+        6lXs40ppaP+fhm9DrVLnbQYyAsgJ7dJE/f98yhMpVQ==
+X-Google-Smtp-Source: APXvYqyDXf/rLJTkinFSKjWI6OcHc6C9BZFfI9H7BwpF2w1mPjKjkIm8Usoy8JL2pmtWWwahcBfnYN5wjzXSEAmulIg=
+X-Received: by 2002:a6b:7d49:: with SMTP id d9mr24556639ioq.50.1560966595680;
+ Wed, 19 Jun 2019 10:49:55 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190617150024.11787-1-leo.yan@linaro.org>
+In-Reply-To: <20190617150024.11787-1-leo.yan@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 19 Jun 2019 11:49:44 -0600
+Message-ID: <CANLsYkyMW=WG+=yWTLSyMT3JXqd_2kvsrx9c-EwCoKEnRZvErA@mail.gmail.com>
+Subject: Re: [PATCH] perf cs-etm: Improve completeness for kernel address space
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiling a kernel with W=1 generates this warning,
+Hi Leo,
 
-arch/x86/platform/efi/quirks.c:731:16: warning: comparison of unsigned
-expression >= 0 is always true [-Wtype-limits]
+On Mon, 17 Jun 2019 at 09:00, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> Arm and arm64 architecture reserve some memory regions prior to the
+> symbol '_stext' and these memory regions later will be used by device
+> module and BPF jit.  The current code misses to consider these memory
+> regions thus any address in the regions will be taken as user space
+> mode, but perf cannot find the corresponding dso with the wrong CPU
+> mode so we misses to generate samples for device module and BPF
+> related trace data.
+>
+> This patch parse the link scripts to get the memory size prior to start
+> address and reduce this size from 'etmq->etm->kernel_start', then can
+> get a fixed up kernel start address which contain memory regions for
+> device module and BPF.  Finally, cs_etm__cpu_mode() can return right
+> mode for these memory regions and perf can successfully generate
+> samples.
+>
+> The reason for parsing the link scripts is Arm architecture changes text
+> offset dependent on different platforms, which define multiple text
+> offsets in $kernel/arch/arm/Makefile.  This offset is decided when build
+> kernel and the final value is extended in the link script, so we can
+> extract the used value from the link script.  We use the same way to
+> parse arm64 link script as well.  If fail to find the link script, the
+> pre start memory size is assumed as zero, in this case it has no any
+> change caused with this patch.
+>
+> Below is detailed info for testing this patch:
+>
+> - Build LLVM/Clang 8.0 or later version;
+>
+> - Configure perf with ~/.perfconfig:
+>
+>   root@debian:~# cat ~/.perfconfig
+>   # this file is auto-generated.
+>   [llvm]
+>           clang-path =3D /mnt/build/llvm-build/build/install/bin/clang
+>           kbuild-dir =3D /mnt/linux-kernel/linux-cs-dev/
+>           clang-opt =3D "-DLINUX_VERSION_CODE=3D0x50200 -g"
+>           dump-obj =3D true
+>
+>   [trace]
+>           show_zeros =3D yes
+>           show_duration =3D no
+>           no_inherit =3D yes
+>           show_timestamp =3D no
+>           show_arg_names =3D no
+>           args_alignment =3D 40
+>           show_prefix =3D yes
+>
+> - Run 'perf trace' command with eBPF event:
+>
+>   root@debian:~# perf trace -e string \
+>       -e $kernel/tools/perf/examples/bpf/augmented_raw_syscalls.c
+>
+> - Read eBPF program memory mapping in kernel:
+>
+>   root@debian:~# echo 1 > /proc/sys/net/core/bpf_jit_kallsyms
+>   root@debian:~# cat /proc/kallsyms | grep -E "bpf_prog_.+_sys_[enter|exi=
+t]"
+>   ffff000000086a84 t bpf_prog_f173133dc38ccf87_sys_enter  [bpf]
+>   ffff000000088618 t bpf_prog_c1bd85c092d6e4aa_sys_exit   [bpf]
+>
+> - Launch any program which accesses file system frequently so can hit
+>   the system calls trace flow with eBPF event;
+>
+> - Capture CoreSight trace data with filtering eBPF program:
+>
+>   root@debian:~# perf record -e cs_etm/@20070000.etr/ \
+>           --filter 'filter 0xffff000000086a84/0x800' -a sleep 5s
+>
+> - Annotate for symbol 'bpf_prog_f173133dc38ccf87_sys_enter':
+>
+>   root@debian:~# perf report
+>   Then select 'branches' samples and press 'a' to annotate symbol
+>   'bpf_prog_f173133dc38ccf87_sys_enter', press 'P' to print to the
+>   bpf_prog_f173133dc38ccf87_sys_enter.annotation file:
+>
+>   root@debian:~# cat bpf_prog_f173133dc38ccf87_sys_enter.annotation
+>
+>   bpf_prog_f173133dc38ccf87_sys_enter() bpf_prog_f173133dc38ccf87_sys_ent=
+er
+>   Event: branches
+>
+>   Percent      int sys_enter(struct syscall_enter_args *args)
+>                  stp  x29, x30, [sp, #-16]!
+>
+>                 int key =3D 0;
+>                  mov  x29, sp
+>
+>                        augmented_args =3D bpf_map_lookup_elem(&augmented_=
+filename_map, &key);
+>                  stp  x19, x20, [sp, #-16]!
+>
+>                        augmented_args =3D bpf_map_lookup_elem(&augmented_=
+filename_map, &key);
+>                  stp  x21, x22, [sp, #-16]!
+>
+>                  stp  x25, x26, [sp, #-16]!
+>
+>                 return bpf_get_current_pid_tgid();
+>                  mov  x25, sp
+>
+>                 return bpf_get_current_pid_tgid();
+>                  mov  x26, #0x0                         // #0
+>
+>                  sub  sp, sp, #0x10
+>
+>                 return bpf_map_lookup_elem(pids, &pid) !=3D NULL;
+>                  add  x19, x0, #0x0
+>
+>                  mov  x0, #0x0                          // #0
+>
+>                  mov  x10, #0xfffffffffffffff8          // #-8
+>
+>                 if (pid_filter__has(&pids_filtered, getpid()))
+>                  str  w0, [x25, x10]
+>
+>                 probe_read(&augmented_args->args, sizeof(augmented_args->=
+args), args);
+>                  add  x1, x25, #0x0
+>
+>                 probe_read(&augmented_args->args, sizeof(augmented_args->=
+args), args);
+>                  mov  x10, #0xfffffffffffffff8          // #-8
+>
+>                 syscall =3D bpf_map_lookup_elem(&syscalls, &augmented_arg=
+s->args.syscall_nr);
+>                  add  x1, x1, x10
+>
+>                 syscall =3D bpf_map_lookup_elem(&syscalls, &augmented_arg=
+s->args.syscall_nr);
+>                  mov  x0, #0xffff8009ffffffff           // #-140694538682=
+369
+>
+>                  movk x0, #0x6698, lsl #16
+>
+>                  movk x0, #0x3e00
+>
+>                  mov  x10, #0xffffffffffff1040          // #-61376
+>
+>                 if (syscall =3D=3D NULL || !syscall->enabled)
+>                  movk x10, #0x1023, lsl #16
+>
+>                 if (syscall =3D=3D NULL || !syscall->enabled)
+>                  movk x10, #0x0, lsl #32
+>
+>                 loop_iter_first()
+>     3.69       =E2=86=92 blr  bpf_prog_f173133dc38ccf87_sys_enter
+>                 loop_iter_first()
+>                  add  x7, x0, #0x0
+>
+>                 loop_iter_first()
+>                  add  x20, x7, #0x0
+>
+>                 int size =3D probe_read_str(&augmented_filename->value, f=
+ilename_len, filename_arg);
+>                  mov  x0, #0x1                          // #1
+>
+>   [...]
+>
+> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+> Cc: coresight@lists.linaro.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  tools/perf/Makefile.config | 24 ++++++++++++++++++++++++
+>  tools/perf/util/cs-etm.c   | 26 +++++++++++++++++++++++++-
+>  2 files changed, 49 insertions(+), 1 deletion(-)
+>
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index 51dd00f65709..4776c2c1fb6d 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -418,6 +418,30 @@ ifdef CORESIGHT
+>      endif
+>      LDFLAGS +=3D $(LIBOPENCSD_LDFLAGS)
+>      EXTLIBS +=3D $(OPENCSDLIBS)
+> +    ifneq ($(wildcard $(srctree)/arch/arm64/kernel/vmlinux.lds),)
+> +      # Extract info from lds:
+> +      #  . =3D ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)=
+) + (0x08000000))) + (0x08000000))) + 0x00080000;
+> +      # ARM64_PRE_START_SIZE :=3D (0x08000000 + 0x08000000 + 0x00080000)
+> +      ARM64_PRE_START_SIZE :=3D $(shell egrep ' \. \=3D \({8}0x[0-9a-fA-=
+F]+\){2}' \
+> +        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
+> +        sed -e 's/[(|)|.|=3D|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//=
+' | \
+> +        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
+> +    else
+> +      ARM64_PRE_START_SIZE :=3D 0
+> +    endif
+> +    CFLAGS +=3D -DARM64_PRE_START_SIZE=3D"$(ARM64_PRE_START_SIZE)"
+> +    ifneq ($(wildcard $(srctree)/arch/arm/kernel/vmlinux.lds),)
+> +      # Extract info from lds:
+> +      #   . =3D ((0xC0000000)) + 0x00208000;
+> +      # ARM_PRE_START_SIZE :=3D 0x00208000
+> +      ARM_PRE_START_SIZE :=3D $(shell egrep ' \. \=3D \({2}0x[0-9a-fA-F]=
++\){2}' \
+> +        $(srctree)/arch/arm/kernel/vmlinux.lds | \
+> +        sed -e 's/[(|)|.|=3D|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//=
+' | \
+> +        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
+> +    else
+> +      ARM_PRE_START_SIZE :=3D 0
+> +    endif
+> +    CFLAGS +=3D -DARM_PRE_START_SIZE=3D"$(ARM_PRE_START_SIZE)"
+>      $(call detected,CONFIG_LIBOPENCSD)
+>      ifdef CSTRACE_RAW
+>        CFLAGS +=3D -DCS_DEBUG_RAW
+> diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> index 0c7776b51045..ae831f836c70 100644
+> --- a/tools/perf/util/cs-etm.c
+> +++ b/tools/perf/util/cs-etm.c
+> @@ -613,10 +613,34 @@ static void cs_etm__free(struct perf_session *sessi=
+on)
+>  static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+>  {
+>         struct machine *machine;
+> +       u64 fixup_kernel_start =3D 0;
+> +       const char *arch;
+>
+>         machine =3D etmq->etm->machine;
+> +       arch =3D perf_env__arch(machine->env);
+>
+> -       if (address >=3D etmq->etm->kernel_start) {
+> +       /*
+> +        * Since arm and arm64 specify some memory regions prior to
+> +        * 'kernel_start', kernel addresses can be less than 'kernel_star=
+t'.
+> +        *
+> +        * For arm architecture, the 16MB virtual memory space prior to
+> +        * 'kernel_start' is allocated to device modules, a PMD table if
+> +        * CONFIG_HIGHMEM is enabled and a PGD table.
+> +        *
+> +        * For arm64 architecture, the root PGD table, device module memo=
+ry
+> +        * region and BPF jit region are prior to 'kernel_start'.
+> +        *
+> +        * To reflect the complete kernel address space, compensate these
+> +        * pre-defined regions for kernel start address.
+> +        */
+> +       if (!strcmp(arch, "arm64"))
+> +               fixup_kernel_start =3D etmq->etm->kernel_start -
+> +                                    ARM64_PRE_START_SIZE;
+> +       else if (!strcmp(arch, "arm"))
+> +               fixup_kernel_start =3D etmq->etm->kernel_start -
+> +                                    ARM_PRE_START_SIZE;
 
-Fixes: 3425d934fc03 ("efi/x86: Handle page faults occurring while running EFI runtime services")
-Signed-off-by: Qian Cai <cai@lca.pw>
----
+I will test your work but from a quick look wouldn't it be better to
+have a single define name here?  From looking at the modifications you
+did to Makefile.config there doesn't seem to be a reason to have two.
 
-v2: Add a "Fixes" tag.
+Thanks,
+Mathieu
 
- arch/x86/platform/efi/quirks.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 632b83885867..3b9fd679cea9 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -728,7 +728,7 @@ void efi_recover_from_page_fault(unsigned long phys_addr)
- 	 * Address range 0x0000 - 0x0fff is always mapped in the efi_pgd, so
- 	 * page faulting on these addresses isn't expected.
- 	 */
--	if (phys_addr >= 0x0000 && phys_addr <= 0x0fff)
-+	if (phys_addr <= 0x0fff)
- 		return;
- 
- 	/*
--- 
-1.8.3.1
-
+> +
+> +       if (address >=3D fixup_kernel_start) {
+>                 if (machine__is_host(machine))
+>                         return PERF_RECORD_MISC_KERNEL;
+>                 else
+> --
+> 2.17.1
+>
