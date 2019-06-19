@@ -6,50 +6,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 312E8C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:30:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAC0C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 119E321530
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:30:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C5F121873
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731880AbfFSMas (ORCPT
+        id S1731935AbfFSMa7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:30:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50840 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731898AbfFSMaq (ORCPT
+        Wed, 19 Jun 2019 08:30:59 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39806 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731859AbfFSMao (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:30:46 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c66so1588649wmf.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:45 -0700 (PDT)
+        Wed, 19 Jun 2019 08:30:44 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so3187659wrt.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 05:30:43 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=z4INWegdUTe8Q6ns0c8f39S93Wy18nSWojE+tUkgp2w=;
-        b=dmcHhDdGipAdmz/1MG7f4Ebjq8eJXFiz/14wjsDXSmoX1BRzeRdt2PJBya7G36QwlE
-         GgdxlfaRJA6ch0awPlzHe3vlSQQemxVxaycr5VmZ53QovjDPjp2Qh41afFp33nliKWnr
-         unmD2Hr2MBopJFayVifiKD+ApO/JGZGVjNwobfG0UhjWwPJM4D0R7uChYOqwkyDcotDQ
-         jXRJHjslfR/hoWwX45TishLQ64c+QPmkbnyU1VF4o7bIb2Ms1zDof7vZmbNZx4APxq2Q
-         /UznDeZ94T3iIqMF67xvHiBRLU3zPkWKoElEy3na0XpmlYMofx1Od269bBVcmV2i4aYN
-         7FqA==
-X-Gm-Message-State: APjAAAXzN7x1fX3WN/vbwH3t30u6jlXsFzGS+x8Ij0MsrNSdyDUb7Dxf
-        xvQlOowWnkCC9vnqP5pnVNNexQ==
-X-Google-Smtp-Source: APXvYqwjHs6lmB/m746hPFbtEy06SjhOEIMC6yffNLPHqQEgXE5XeQUFxlR0BzlXmc26vAqECvSlhg==
-X-Received: by 2002:a7b:c74a:: with SMTP id w10mr7804571wmk.99.1560947444548;
-        Wed, 19 Jun 2019 05:30:44 -0700 (PDT)
+        bh=1nQV+HbwwVC5JDcFHvgQnxZlAQ2DeroGpuSkk8jd0Tk=;
+        b=JY+DN3K+8z6qR5EaaN4BIxFx9ZQ298uAIsuCNuiD6d/NzXy3lbNZPNFYmanSgN2ekv
+         WulNdyCfsr6Y7lUELObOYb4G42SpjkWkqzBlDf06+9u6foaxXi3RlNoxYWIMCYBQdgGu
+         J+rM63CsY3fsdtxzERsLnUeF9b8HOpFEQ5rWSX3TMEvpjFrGeB+qanMNMxaTGCXlbbT8
+         nN7h73l+vQrnd9/7/rJDC+NgxFLOtHDIhNMVd4byuwwKPGOXQhrnFPYpjtzg/uiaDuja
+         3jK+jDSYNfobUPLDVWeuPBMcoC8GGRUyGWXT7MD/Bq42/bKplidvvWsaFHzencF3Wt2D
+         h5cA==
+X-Gm-Message-State: APjAAAUFSLTKhIUXrT0QKdApEUxGyOGGJVaQ0UMvxB4EA3/DHa36evHP
+        2HmWTLVnqb3pQi78l7eI3WWfYg==
+X-Google-Smtp-Source: APXvYqzHsHTMP8Vjwh/pAfZnm0GsX3Los4ghw0Tsr9S1GdEGtjlvPbrdctjrtSZCkpbDaeO0HjA9Bg==
+X-Received: by 2002:a5d:4908:: with SMTP id x8mr18266350wrq.290.1560947442583;
+        Wed, 19 Jun 2019 05:30:42 -0700 (PDT)
 Received: from miu.piliscsaba.redhat.com (catv-212-96-48-140.catv.broadband.hu. [212.96.48.140])
-        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.42
+        by smtp.gmail.com with ESMTPSA id 11sm1837513wmd.23.2019.06.19.05.30.41
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 05:30:43 -0700 (PDT)
+        Wed, 19 Jun 2019 05:30:42 -0700 (PDT)
 From:   Miklos Szeredi <mszeredi@redhat.com>
 To:     David Howells <dhowells@redhat.com>
 Cc:     Al Viro <viro@zeniv.linux.org.uk>, Ian Kent <raven@themaw.net>,
         linux-api@vger.kernel.org, linux-fsdevel@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 12/13] fusectl: don't ignore options
-Date:   Wed, 19 Jun 2019 14:30:18 +0200
-Message-Id: <20190619123019.30032-12-mszeredi@redhat.com>
+Subject: [PATCH 11/13] cgroup: don't ignore options
+Date:   Wed, 19 Jun 2019 14:30:17 +0200
+Message-Id: <20190619123019.30032-11-mszeredi@redhat.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190619123019.30032-1-mszeredi@redhat.com>
 References: <20190619123019.30032-1-mszeredi@redhat.com>
@@ -61,8 +61,8 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 The options "sync", "async", "dirsync", "lazytime", "nolazytime", "mand"
-and "nomand" make no sense for the fusectl filesystem.  If these options
-are supplied to fsconfig(FSCONFIG_SET_FLAG), then return -EINVAL instead of
+and "nomand" make no sense for the cgroup filesystem.  If these options are
+supplied to fsconfig(FSCONFIG_SET_FLAG), then return -EINVAL instead of
 silently ignoring the option.
 
 Any implementation, such as mount(8) that needs to parse this option
@@ -70,22 +70,36 @@ without failing should simply ignore the return value from fsconfig().
 
 Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 ---
- fs/fuse/control.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/cgroup/cgroup-v1.c | 2 +-
+ kernel/cgroup/cgroup.c    | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/fs/fuse/control.c b/fs/fuse/control.c
-index c35013ed7f65..f3aab288929f 100644
---- a/fs/fuse/control.c
-+++ b/fs/fuse/control.c
-@@ -351,7 +351,7 @@ static int fuse_ctl_get_tree(struct fs_context *fc)
+diff --git a/kernel/cgroup/cgroup-v1.c b/kernel/cgroup/cgroup-v1.c
+index f960e6149311..1f50d59f7f4e 100644
+--- a/kernel/cgroup/cgroup-v1.c
++++ b/kernel/cgroup/cgroup-v1.c
+@@ -929,7 +929,7 @@ int cgroup1_parse_param(struct fs_context *fc, struct fs_parameter *param)
+ 	struct fs_parse_result result;
+ 	int ret, opt, i;
  
- static const struct fs_context_operations fuse_ctl_context_ops = {
- 	.get_tree	= fuse_ctl_get_tree,
--	.parse_param	= vfs_parse_fs_param,
-+	.parse_param	= vfs_parse_ro_rw,
- };
+-	ret = vfs_parse_sb_flag(fc, param);
++	ret = vfs_parse_ro_rw(fc, param);
+ 	if (ret != -ENOPARAM)
+ 		return ret;
  
- static int fuse_ctl_init_fs_context(struct fs_context *fc)
+diff --git a/kernel/cgroup/cgroup.c b/kernel/cgroup/cgroup.c
+index 93890285b510..f2e86b3942b3 100644
+--- a/kernel/cgroup/cgroup.c
++++ b/kernel/cgroup/cgroup.c
+@@ -1836,7 +1836,7 @@ static int cgroup2_parse_param(struct fs_context *fc, struct fs_parameter *param
+ 	struct fs_parse_result result;
+ 	int ret, opt;
+ 
+-	ret = vfs_parse_sb_flag(fc, param);
++	ret = vfs_parse_ro_rw(fc, param);
+ 	if (ret != -ENOPARAM)
+ 		return ret;
+ 
 -- 
 2.21.0
 
