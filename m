@@ -2,343 +2,705 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD138C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:40:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15040C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:41:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8818F20B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:40:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4A1520B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:41:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bkHc0kui"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="ljawazHK";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="XCYFphmE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731353AbfFSIko (ORCPT
+        id S1731369AbfFSIlB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:40:44 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:44877 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731243AbfFSIkm (ORCPT
+        Wed, 19 Jun 2019 04:41:01 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:31916 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730996AbfFSIlA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:41:00 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J8XYnE026457;
+        Wed, 19 Jun 2019 01:40:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=proofpoint;
+ bh=0KwALgwTJe7rU+rOJPk6HwR98+jrQNV4FsyXBfXuDqY=;
+ b=ljawazHKs1lqa2zstexn5TInf/pqBdhELsn6P5qDFTaMUwKxUivYw3/xP98BIVAod0/u
+ ZKcGtwIrXtuMjz9ekaw6alzSfyiA1Mssz0ZnVnA/UNF0Rplb9eHZcQ7Id9gVQyF/CaAR
+ xrmD3HfXsbQu2P9r6hNG+/ksVV/cytCm9fg6p6UlUTU4P02notN0ILmnWbHFoicRnMk6
+ XzvHsxGbsGiUPA4c8/+rji/fXik+foSfRz5CX1TqZQ0HMc5PAIa+wSUjy6xfXZQ6DqvW
+ iHBgseBybHfJ+oqXYNTj8C2O/Q1onDuNVmN6s5bM95kRDIxh5S57kCbpx7x2Hj3vfcpV eA== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam04-co1-obe.outbound.protection.outlook.com (mail-co1nam04lp2054.outbound.protection.outlook.com [104.47.45.54])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2t7byx1gwf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jun 2019 01:40:49 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0KwALgwTJe7rU+rOJPk6HwR98+jrQNV4FsyXBfXuDqY=;
+ b=XCYFphmEuuEwiKttM+cq0YTC91f1bf2wxMaFSKmx0hWphxe+R0jOmcgtTWrwiNAClQUQsNCl7cMBKyyJSNSkEGSLt7ujRLrJCNLbvqqjS585NezW8t/DRF0iHYtBIK9+IAFDa5VuDfT8qNFph0iu6zajyWSDB33cJs1AO/UoyzQ=
+Received: from DM6PR07CA0008.namprd07.prod.outlook.com (2603:10b6:5:94::21) by
+ BN8PR07MB6964.namprd07.prod.outlook.com (2603:10b6:408:d6::13) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.10; Wed, 19 Jun 2019 08:40:46 +0000
+Received: from BY2NAM05FT055.eop-nam05.prod.protection.outlook.com
+ (2a01:111:f400:7e52::208) by DM6PR07CA0008.outlook.office365.com
+ (2603:10b6:5:94::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.17 via Frontend
+ Transport; Wed, 19 Jun 2019 08:40:46 +0000
+Received-SPF: SoftFail (protection.outlook.com: domain of transitioning
+ cadence.com discourages use of 199.43.4.28 as permitted sender)
+Received: from rmmaillnx1.cadence.com (199.43.4.28) by
+ BY2NAM05FT055.mail.protection.outlook.com (10.152.100.192) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2008.7 via Frontend Transport; Wed, 19 Jun 2019 08:40:45 +0000
+Received: from maileu3.global.cadence.com (maileu3.cadence.com [10.160.88.99])
+        by rmmaillnx1.cadence.com (8.14.4/8.14.4) with ESMTP id x5J8efcN003355
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
         Wed, 19 Jun 2019 04:40:42 -0400
-Received: by mail-lj1-f196.google.com with SMTP id k18so2365514ljc.11;
-        Wed, 19 Jun 2019 01:40:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ggY2MCN9eEhZzHkSnMf15nL3w/c4sxJTNqaElL0A0Yo=;
-        b=bkHc0kuiyNMYqlPDQChVlYK+BZaNuApalR/DA9PUzLOg4dwc5yQ2HYuFt4I1sPA1Jf
-         G+TsJ2L2fH8ywdHewgPnCrf+OOc1XRrbHcdRdNBYnunIbXRAOjjiby5WNzlZASk0IPNA
-         WI4ufUK/8w6z96TReNC73/s2qFWGSCW+XsFRNthvzBSgz9McKU5vHq88Fjo4/uVSAhC/
-         k9mDMv+BEOAuEgQi0BhG7I3ffGQWJgjtZUWzfNm5o0BzPZnxrTNTZJSxLAR5vODsbGY6
-         D9RGrsRKn7jRLbt0hvJgbcw3X/17XF2H9k7EbIjl5Z+7aXzQUtl3oo9lM7tnN0cpQKK5
-         w2Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ggY2MCN9eEhZzHkSnMf15nL3w/c4sxJTNqaElL0A0Yo=;
-        b=egFA7k0O41w4sQZADnTJZPk6fuG5bM9l4AyCQA3XhzFbNaoT4aKxJNP0T0Y1XerHfu
-         VcLjm3dp+F3KGQ/UwbKhhr2fjB9juPc69b1r1Sa3AGi1fMvfIJRzio61CRVVChEezDBc
-         ebbZcXliu873XGltFHB7YDi+ku4g0jw0uM/eovfhDs8jeMh0zXsC2AEeHjcD9snIUmRT
-         F2vMUcsKFvj+4KzGQaOl/dybTiSoLd4zK6cCU+XKTXgY69oKnCeY1y3Sma254O0vKe/U
-         kyqvNMEARPFgGdIloRq/QxrAfHvQa5U4XK4OBAhFlwYEFyLJtvGeGUstQXdMGN8tYTxD
-         Zcfw==
-X-Gm-Message-State: APjAAAUurkXOteEI6SaufFIZS7jkORk9UnvbJ/VHrSL3IU/xM81hajLw
-        5fqjCw8bQcB6g/Umm4s4YH4do0Ma
-X-Google-Smtp-Source: APXvYqzk4yxg5hNMQylGroX5At/uSO+pDui6xu7wtywqzTvxyAK9qwpLtwOz8JB6jQYEtprF+Rkcsw==
-X-Received: by 2002:a2e:5b1b:: with SMTP id p27mr54826454ljb.97.1560933639255;
-        Wed, 19 Jun 2019 01:40:39 -0700 (PDT)
-Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
-        by smtp.googlemail.com with ESMTPSA id g4sm1932793lfb.31.2019.06.19.01.40.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 01:40:38 -0700 (PDT)
-Subject: Re: [PATCH V3 02/17] pinctrl: tegra: add suspend and resume support
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Stephen Warren <swarren@wwwdotorg.org>, jonathanh@nvidia.com,
-        tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com,
-        linus.walleij@linaro.org, stefan@agner.ch, mark.rutland@arm.com,
-        pdeschrijver@nvidia.com, pgaikwad@nvidia.com, sboyd@kernel.org,
-        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
-        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
-        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
-        devicetree@vger.kernel.org
-References: <1560843991-24123-1-git-send-email-skomatineni@nvidia.com>
- <1560843991-24123-3-git-send-email-skomatineni@nvidia.com>
- <7706a287-44b7-3ad6-37ff-47e97172a798@gmail.com>
- <a23ffbae-dd85-c023-7aae-3b81e0b17ebc@gmail.com>
- <fd415362-7479-6f98-c8db-1b7758fd3f1d@wwwdotorg.org>
- <e53bf16a-681e-da31-1e9c-4ed2a24ed3a6@nvidia.com>
- <cff9b6a2-dc33-d03b-9945-799b158deb07@nvidia.com>
- <232324b1-c0eb-ba1b-0fd0-31fcbd701e07@gmail.com> <20190619083127.GL3187@ulmo>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <995011d5-784a-81b0-d413-78c8aaf86056@gmail.com>
-Date:   Wed, 19 Jun 2019 11:40:37 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+X-CrossPremisesHeadersFilteredBySendConnector: maileu3.global.cadence.com
+Received: from maileu3.global.cadence.com (10.160.88.99) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3; Wed, 19 Jun 2019 10:40:39 +0200
+Received: from lvlogina.cadence.com (10.165.176.102) by
+ maileu3.global.cadence.com (10.160.88.99) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 19 Jun 2019 10:40:39 +0200
+Received: from lvlogina.cadence.com (localhost.localdomain [127.0.0.1])
+        by lvlogina.cadence.com (8.14.4/8.14.4) with ESMTP id x5J8edtw029819;
+        Wed, 19 Jun 2019 09:40:39 +0100
+From:   Parshuram Thombare <pthombar@cadence.com>
+To:     <andrew@lunn.ch>, <nicolas.ferre@microchip.com>,
+        <davem@davemloft.net>, <f.fainelli@gmail.com>
+CC:     <linux@armlinux.org.uk>, <netdev@vger.kernel.org>,
+        <hkallweit1@gmail.com>, <linux-kernel@vger.kernel.org>,
+        <rafalc@cadence.com>, <aniljoy@cadence.com>, <piotrs@cadence.com>,
+        <pthombar@cadence.com>
+Subject: [PATCH v2 1/5] net: macb: add phylink support
+Date:   Wed, 19 Jun 2019 09:40:36 +0100
+Message-ID: <1560933636-29684-1-git-send-email-pthombar@cadence.com>
+X-Mailer: git-send-email 2.2.2
+In-Reply-To: <1560933600-27626-1-git-send-email-pthombar@cadence.com>
+References: <1560933600-27626-1-git-send-email-pthombar@cadence.com>
 MIME-Version: 1.0
-In-Reply-To: <20190619083127.GL3187@ulmo>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-OrganizationHeadersPreserved: maileu3.global.cadence.com
+X-EOPAttributedMessage: 0
+X-Forefront-Antispam-Report: CIP:199.43.4.28;IPV:CAL;SCL:-1;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(39860400002)(376002)(396003)(136003)(2980300002)(36092001)(199004)(189003)(47776003)(36756003)(110136005)(53416004)(68736007)(81166006)(77096007)(26005)(8936002)(50226002)(336012)(54906003)(11346002)(186003)(53936002)(4326008)(446003)(476003)(126002)(81156014)(426003)(7126003)(486006)(8676002)(316002)(508600001)(76176011)(2616005)(26826003)(7696005)(69596002)(51416003)(6666004)(16586007)(14444005)(76130400001)(30864003)(48376002)(356004)(2906002)(86362001)(5660300002)(70586007)(5024004)(70206006)(50466002)(305945005)(2201001)(107886003);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR07MB6964;H:rmmaillnx1.cadence.com;FPR:;SPF:SoftFail;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 4dc04433-7ef3-4690-7d1b-08d6f491d293
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328);SRVR:BN8PR07MB6964;
+X-MS-TrafficTypeDiagnostic: BN8PR07MB6964:
+X-Microsoft-Antispam-PRVS: <BN8PR07MB6964BB7A1DBD30435EFE7A6FC1E50@BN8PR07MB6964.namprd07.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:311;
+X-Forefront-PRVS: 0073BFEF03
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 2c5y69B/yMSV2GIKFNELv04/xE4xb+FlstdinpMNZr59VwElGYGblfdvMK88hGys3ax/31auRrqfYmkEZOMBdevwlej/zztbE/Pm+eqerXbgOG7Se5LX97E+qZf9AvKCH9dT00t8pg+DeZtgxFLCBIlI2+WkFhmDb0cLD5UYKwjbGyDjsMuSkQHnArDg8wGUjp+zIHRyKuq6edkYCU16MqqKM2rCo//J3HfkPtDjglr3C6vKnj30ZFoQkwBNEUoD77piNi5U3lyo5bjPNZFx79SWqF03mDaDULt3eAFB0rk7icZv4NpQOPvmS4le+JwbZA5EgBMpX3INKKpFa1OxnYXkHrMz2gHlqiScGUOEJzn8oncq1XRKktodCvScxuWkwID3BupUS7vIVkLCM0UQ0JKG13Jwh9DND6Bp2YXSy18=
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jun 2019 08:40:45.7318
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 4dc04433-7ef3-4690-7d1b-08d6f491d293
+X-MS-Exchange-CrossTenant-Id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=d36035c5-6ce6-4662-a3dc-e762e61ae4c9;Ip=[199.43.4.28];Helo=[rmmaillnx1.cadence.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR07MB6964
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-19.06.2019 11:31, Thierry Reding пишет:
-> On Tue, Jun 18, 2019 at 11:00:05PM +0300, Dmitry Osipenko wrote:
->> 18.06.2019 20:34, Sowjanya Komatineni пишет:
->>>
->>> On 6/18/19 9:50 AM, Sowjanya Komatineni wrote:
->>>>
->>>> On 6/18/19 8:41 AM, Stephen Warren wrote:
->>>>> On 6/18/19 3:30 AM, Dmitry Osipenko wrote:
->>>>>> 18.06.2019 12:22, Dmitry Osipenko пишет:
->>>>>>> 18.06.2019 10:46, Sowjanya Komatineni пишет:
->>>>>>>> This patch adds suspend and resume support for Tegra pinctrl driver
->>>>>>>> and registers them to syscore so the pinmux settings are restored
->>>>>>>> before the devices resume.
->>>>>>>>
->>>>>>>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->>>>>>>> ---
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra.c    | 62 ++++++++++++++++++++++++++++++++
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra.h    |  5 +++
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra114.c |  1 +
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra124.c |  1 +
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra20.c  |  1 +
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra210.c | 13 +++++++
->>>>>>>>   drivers/pinctrl/tegra/pinctrl-tegra30.c  |  1 +
->>>>>>>>   7 files changed, 84 insertions(+)
->>>>>>>>
->>>>>>>> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>>> b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>>> index 34596b246578..ceced30d8bd1 100644
->>>>>>>> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>>> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->>>>>>>> @@ -20,11 +20,16 @@
->>>>>>>>   #include <linux/pinctrl/pinmux.h>
->>>>>>>>   #include <linux/pinctrl/pinconf.h>
->>>>>>>>   #include <linux/slab.h>
->>>>>>>> +#include <linux/syscore_ops.h>
->>>>>>>>     #include "../core.h"
->>>>>>>>   #include "../pinctrl-utils.h"
->>>>>>>>   #include "pinctrl-tegra.h"
->>>>>>>>   +#define EMMC2_PAD_CFGPADCTRL_0            0x1c8
->>>>>>>> +#define EMMC4_PAD_CFGPADCTRL_0            0x1e0
->>>>>>>> +#define EMMC_DPD_PARKING            (0x1fff << 14)
->>>>>>>> +
->>>>>>>>   static inline u32 pmx_readl(struct tegra_pmx *pmx, u32 bank, u32 reg)
->>>>>>>>   {
->>>>>>>>       return readl(pmx->regs[bank] + reg);
->>>>>>>> @@ -619,6 +624,48 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>>>>>>>               pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>>>>>>>           }
->>>>>>>>       }
->>>>>>>> +
->>>>>>>> +    if (pmx->soc->has_park_padcfg) {
->>>>>>>> +        val = pmx_readl(pmx, 0, EMMC2_PAD_CFGPADCTRL_0);
->>>>>>>> +        val &= ~EMMC_DPD_PARKING;
->>>>>>>> +        pmx_writel(pmx, val, 0, EMMC2_PAD_CFGPADCTRL_0);
->>>>>>>> +
->>>>>>>> +        val = pmx_readl(pmx, 0, EMMC4_PAD_CFGPADCTRL_0);
->>>>>>>> +        val &= ~EMMC_DPD_PARKING;
->>>>>>>> +        pmx_writel(pmx, val, 0, EMMC4_PAD_CFGPADCTRL_0);
->>>>>>>> +    }
->>>>>>>> +}
->>>>>>>
->>>>>>> Is there any reason why parked_bit can't be changed to parked_bitmask like I was
->>>>>>> asking in a comment to v2?
->>>>>>>
->>>>>>> I suppose that it's more preferable to keep pinctrl-tegra.c platform-agnostic for
->>>>>>> consistency when possible, hence adding platform specifics here should be discouraged.
->>>>>>> And then the parked_bitmask will also result in a proper hardware description in the code.
->>>>>>>
->>>>>>
->>>>>> I'm now also vaguely recalling that Stephen Warren had some kind of a "code generator"
->>>>>> for the pinctrl drivers. So I guess all those tables were auto-generated initially.
->>>>>>
->>>>>> Stephen, maybe you could adjust the generator to take into account the bitmask (of
->>>>>> course if that's a part of the generated code) and then re-gen it all for Sowjanya?
->>>>>
->>>>> https://github.com/NVIDIA/tegra-pinmux-scripts holds the scripts that generate
->>>>> tegra-pinctrlNNN.c. See soc-to-kernel-pinctrl-driver.py. IIRC, tegra-pinctrl.c (the core
->>>>> file) isn't auto-generated. Sowjanya is welcome to send a patch to that repo if the code
->>>>> needs to be updated.
->>>>
->>>>
->>>> Hi Dmitry,
->>>>
->>>> Just want to be clear on my understanding of your request.
->>>>
->>>> "change parked_bit to parked_bitmask" are you requested to change parked_bit of PINGROUP
->>>> and DRV_PINGROUP to use bitmask value rather than bit position inorder to have parked bit
->>>> configuration for EMMC PADs as well to happen by masking rather than checking for
->>>> existence of parked_bit?
->>>>
->>>> Trying to understand the reason/benefit for changing parked_bit to parked_bitmask.
->>> Also, Park bits in CFGPAD registers are not common for all CFGPAD registers. Park bits are
->>> available only for EMMC and also those bits are used for something else on other CFGPAD
->>> registers so bitmask can't be common and this also need an update to DRV_PINGROUP macro args
->>> just only to handle EMMC parked_bitmask. So not sure of the benefit in using bitmask rather
->>
->> Hi Sowjanya,
->>
->> The main motivation is to describe hardware properly in the drivers. Why to make a
->> hacky-looking workaround while you can make things properly? Especially if that doesn't take
->> much effort.
->>
->> Stephen, thank you very much for the pointer to the script. Looks like it should be easy to
->> modify the script accordingly to the required change.
->>
->> Sowjanya, below is a draft of the change that I'm suggesting. I see this as two separate
->> patches: first converts drivers to use parked_bitmask, second adds suspend-resume support.
->>
->> Please note that in the end it's up to you and Tegra/PINCTRL maintainers to decide if this
->> is a worthwhile change that I'm suggesting. In my opinion it is much better to have a
->> generic solution rather than to have a special quirk solely for T210.
->>
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> index 34596b246578..4150da74bd44 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
->> @@ -613,9 +613,9 @@ static void tegra_pinctrl_clear_parked_bits(struct tegra_pmx *pmx)
->>
->>  	for (i = 0; i < pmx->soc->ngroups; ++i) {
->>  		g = &pmx->soc->groups[i];
->> -		if (g->parked_bit >= 0) {
->> +		if (g->parked_bitmask != -1) {
->>  			val = pmx_readl(pmx, g->mux_bank, g->mux_reg);
->> -			val &= ~(1 << g->parked_bit);
->> +			val &= ~g->parked_bitmask;
->>  			pmx_writel(pmx, val, g->mux_bank, g->mux_reg);
->>  		}
->>  	}
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.h b/drivers/pinctrl/tegra/pinctrl-tegra.h
->> index 287702660783..875eb7a1d838 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra.h
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra.h
->> @@ -96,7 +96,7 @@ struct tegra_function {
->>   * @tri_reg:		Tri-state register offset.
->>   * @tri_bank:		Tri-state register bank.
->>   * @tri_bit:		Tri-state register bit.
->> - * @parked_bit:		Parked register bit. -1 if unsupported.
->> + * @parked_bitmask:	Parked register bitmask. -1 if unsupported.
-> 
-> If we're already moving to a bitmask, wouldn't it be easier to just make
-> 0 the case where it is unsupported?
-> 
->>   * @einput_bit:		Enable-input register bit.
->>   * @odrain_bit:		Open-drain register bit.
->>   * @lock_bit:		Lock register bit.
->> @@ -146,7 +146,7 @@ struct tegra_pingroup {
->>  	s32 mux_bit:6;
->>  	s32 pupd_bit:6;
->>  	s32 tri_bit:6;
->> -	s32 parked_bit:6;
->> +	s32 parked_bitmask:26;
-> 
-> If we make parked_bitmask == 0 the case for "unsupported" we could make
-> this u32 while at it.
-> 
->>  	s32 einput_bit:6;
->>  	s32 odrain_bit:6;
->>  	s32 lock_bit:6;
->> diff --git a/drivers/pinctrl/tegra/pinctrl-tegra210.c b/drivers/pinctrl/tegra/pinctrl-tegra210.c
->> index 0b56ad5c9c1c..d2ba13466e06 100644
->> --- a/drivers/pinctrl/tegra/pinctrl-tegra210.c
->> +++ b/drivers/pinctrl/tegra/pinctrl-tegra210.c
->> @@ -1302,7 +1302,7 @@ static struct tegra_function tegra210_functions[] = {
->>  		.lock_bit = 7,						\
->>  		.ioreset_bit = -1,					\
->>  		.rcv_sel_bit = PINGROUP_BIT_##e_io_hv(10),		\
->> -		.parked_bit = 5,					\
->> +		.parked_bitmask = BIT(5),				\
->>  		.hsm_bit = PINGROUP_BIT_##hsm(9),			\
->>  		.schmitt_bit = 12,					\
->>  		.drvtype_bit = PINGROUP_BIT_##drvtype(13),		\
->> @@ -1320,7 +1320,7 @@ static struct tegra_function tegra210_functions[] = {
->>  	}
->>
->>  #define DRV_PINGROUP(pg_name, r, drvdn_b, drvdn_w, drvup_b, drvup_w,	\
->> -		     slwr_b, slwr_w, slwf_b, slwf_w)			\
->> +		     slwr_b, slwr_w, slwf_b, slwf_w, prk_mask)		\
->>  	{								\
->>  		.name = "drive_" #pg_name,				\
->>  		.pins = drive_##pg_name##_pins,				\
->> @@ -1335,7 +1335,7 @@ static struct tegra_function tegra210_functions[] = {
->>  		.rcv_sel_bit = -1,					\
->>  		.drv_reg = DRV_PINGROUP_REG(r),				\
->>  		.drv_bank = 0,						\
->> -		.parked_bit = -1,					\
->> +		.parked_bitmask = prk_mask,				\
->>  		.hsm_bit = -1,						\
->>  		.schmitt_bit = -1,					\
->>  		.lpmd_bit = -1,						\
->> @@ -1516,31 +1516,31 @@ static const struct tegra_pingroup tegra210_groups[] = {
->>  	PINGROUP(pz5,                  SOC,        RSVD1,  RSVD2, RSVD3, 0x3290, N,   N,       N,
->>      -1,    -1,      -1,      -1,      -1,      -1,     -1,     -1,     -1),
->>
->>  	/* pg_name, r, drvdn_b, drvdn_w, drvup_b, drvup_w, slwr_b, slwr_w, slwf_b, slwf_w */
->> -	DRV_PINGROUP(pa6,    0x9c0, 12, 5,  20, 5,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pcc7,   0x9c4, 12, 5,  20, 5,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pe6,    0x9c8, 12, 5,  20, 5,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pe7,    0x9cc, 12, 5,  20, 5,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(ph6,    0x9d0, 12, 5,  20, 5,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pk0,    0x9d4, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk1,    0x9d8, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk2,    0x9dc, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk3,    0x9e0, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk4,    0x9e4, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk5,    0x9e8, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk6,    0x9ec, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pk7,    0x9f0, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pl0,    0x9f4, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pl1,    0x9f8, -1, -1, -1, -1, 28, 2,  30, 2),
->> -	DRV_PINGROUP(pz0,    0x9fc, 12, 7,  20, 7,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pz1,    0xa00, 12, 7,  20, 7,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pz2,    0xa04, 12, 7,  20, 7,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pz3,    0xa08, 12, 7,  20, 7,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pz4,    0xa0c, 12, 7,  20, 7,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(pz5,    0xa10, 12, 7,  20, 7,  -1, -1, -1, -1),
->> -	DRV_PINGROUP(sdmmc1, 0xa98, 12, 7,  20, 7,  28, 2,  30, 2),
->> -	DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2),
->> -	DRV_PINGROUP(sdmmc3, 0xab0, 12, 7,  20, 7,  28, 2,  30, 2),
->> -	DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2),
->> +	DRV_PINGROUP(pa6,    0x9c0, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pcc7,   0x9c4, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pe6,    0x9c8, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pe7,    0x9cc, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(ph6,    0x9d0, 12, 5,  20, 5,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pk0,    0x9d4, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk1,    0x9d8, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk2,    0x9dc, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk3,    0x9e0, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk4,    0x9e4, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk5,    0x9e8, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk6,    0x9ec, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pk7,    0x9f0, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pl0,    0x9f4, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pl1,    0x9f8, -1, -1, -1, -1, 28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(pz0,    0x9fc, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pz1,    0xa00, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pz2,    0xa04, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pz3,    0xa08, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pz4,    0xa0c, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(pz5,    0xa10, 12, 7,  20, 7,  -1, -1, -1, -1, -1),
->> +	DRV_PINGROUP(sdmmc1, 0xa98, 12, 7,  20, 7,  28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(sdmmc2, 0xa9c, 2,  6,  8,  6,  28, 2,  30, 2, 0x7ffc000),
->> +	DRV_PINGROUP(sdmmc3, 0xab0, 12, 7,  20, 7,  28, 2,  30, 2, -1),
->> +	DRV_PINGROUP(sdmmc4, 0xab4, 2,  6,  8,  6,  28, 2,  30, 2, 0x7ffc000),
-> 
-> Might be worth adding a new DRV_PINGROUP_PARK (or whatever) macro that
-> takes the additional parameter. that way we could avoid the extra churn.
+This patch replace phylib API's by phylink API's.
 
-Sounds like a very good call! +1
+Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
+---
+ drivers/net/ethernet/cadence/Kconfig     |   2 +-
+ drivers/net/ethernet/cadence/macb.h      |   3 +
+ drivers/net/ethernet/cadence/macb_main.c | 312 +++++++++++++----------
+ 3 files changed, 182 insertions(+), 135 deletions(-)
+
+diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
+index 1766697c9c5a..d71411a71587 100644
+--- a/drivers/net/ethernet/cadence/Kconfig
++++ b/drivers/net/ethernet/cadence/Kconfig
+@@ -22,7 +22,7 @@ if NET_VENDOR_CADENCE
+ config MACB
+ 	tristate "Cadence MACB/GEM support"
+ 	depends on HAS_DMA
+-	select PHYLIB
++	select PHYLINK
+ 	---help---
+ 	  The Cadence MACB ethernet interface is found on many Atmel AT32 and
+ 	  AT91 parts.  This driver also supports the Cadence GEM (Gigabit
+diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
+index 00ee5e8e0ff0..35ed13236c8b 100644
+--- a/drivers/net/ethernet/cadence/macb.h
++++ b/drivers/net/ethernet/cadence/macb.h
+@@ -14,6 +14,7 @@
+ #include <linux/ptp_clock_kernel.h>
+ #include <linux/net_tstamp.h>
+ #include <linux/interrupt.h>
++#include <linux/phylink.h>
+ 
+ #if defined(CONFIG_ARCH_DMA_ADDR_T_64BIT) || defined(CONFIG_MACB_USE_HWSTAMP)
+ #define MACB_EXT_DESC
+@@ -1227,6 +1228,8 @@ struct macb {
+ 	u32	rx_intr_mask;
+ 
+ 	struct macb_pm_data pm_data;
++	struct phylink *pl;
++	struct phylink_config pl_config;
+ };
+ 
+ #ifdef CONFIG_MACB_USE_HWSTAMP
+diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
+index c545c5b435d8..830af86d3c65 100644
+--- a/drivers/net/ethernet/cadence/macb_main.c
++++ b/drivers/net/ethernet/cadence/macb_main.c
+@@ -39,6 +39,7 @@
+ #include <linux/tcp.h>
+ #include <linux/iopoll.h>
+ #include <linux/pm_runtime.h>
++#include <linux/phylink.h>
+ #include "macb.h"
+ 
+ /* This structure is only used for MACB on SiFive FU540 devices */
+@@ -438,115 +439,150 @@ static void macb_set_tx_clk(struct clk *clk, int speed, struct net_device *dev)
+ 		netdev_err(dev, "adjusting tx_clk failed.\n");
+ }
+ 
+-static void macb_handle_link_change(struct net_device *dev)
++static void gem_phylink_validate(struct phylink_config *pl_config,
++				 unsigned long *supported,
++				 struct phylink_link_state *state)
+ {
+-	struct macb *bp = netdev_priv(dev);
+-	struct phy_device *phydev = dev->phydev;
+-	unsigned long flags;
+-	int status_change = 0;
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
++	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
++
++	switch (state->interface) {
++	case PHY_INTERFACE_MODE_GMII:
++	case PHY_INTERFACE_MODE_RGMII:
++		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
++			phylink_set(mask, 1000baseT_Full);
++			phylink_set(mask, 1000baseX_Full);
++			if (!(bp->caps & MACB_CAPS_NO_GIGABIT_HALF)) {
++				phylink_set(mask, 1000baseT_Half);
++				phylink_set(mask, 1000baseT_Half);
++			}
++		}
++	/* fallthrough */
++	case PHY_INTERFACE_MODE_MII:
++	case PHY_INTERFACE_MODE_RMII:
++		phylink_set(mask, 10baseT_Half);
++		phylink_set(mask, 10baseT_Full);
++		phylink_set(mask, 100baseT_Half);
++		phylink_set(mask, 100baseT_Full);
++		break;
++	default:
++		break;
++	}
+ 
+-	spin_lock_irqsave(&bp->lock, flags);
++	bitmap_and(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
++	bitmap_and(state->advertising, state->advertising, mask,
++		   __ETHTOOL_LINK_MODE_MASK_NBITS);
++}
+ 
+-	if (phydev->link) {
+-		if ((bp->speed != phydev->speed) ||
+-		    (bp->duplex != phydev->duplex)) {
+-			u32 reg;
++static int gem_phylink_mac_link_state(struct phylink_config *pl_config,
++				      struct phylink_link_state *state)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
+ 
+-			reg = macb_readl(bp, NCFGR);
+-			reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
+-			if (macb_is_gem(bp))
+-				reg &= ~GEM_BIT(GBE);
++	state->speed = bp->speed;
++	state->duplex = bp->duplex;
++	state->link = bp->link;
++	return 1;
++}
+ 
+-			if (phydev->duplex)
+-				reg |= MACB_BIT(FD);
+-			if (phydev->speed == SPEED_100)
+-				reg |= MACB_BIT(SPD);
+-			if (phydev->speed == SPEED_1000 &&
+-			    bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+-				reg |= GEM_BIT(GBE);
++static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
++			   const struct phylink_link_state *state)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
++	unsigned long flags;
+ 
+-			macb_or_gem_writel(bp, NCFGR, reg);
++	spin_lock_irqsave(&bp->lock, flags);
+ 
+-			bp->speed = phydev->speed;
+-			bp->duplex = phydev->duplex;
+-			status_change = 1;
+-		}
+-	}
++	if (bp->speed != state->speed ||
++	    bp->duplex != state->duplex) {
++		u32 reg;
+ 
+-	if (phydev->link != bp->link) {
+-		if (!phydev->link) {
+-			bp->speed = 0;
+-			bp->duplex = -1;
++		reg = macb_readl(bp, NCFGR);
++		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
++		if (macb_is_gem(bp))
++			reg &= ~GEM_BIT(GBE);
++		if (state->duplex)
++			reg |= MACB_BIT(FD);
++
++		switch (state->speed) {
++		case SPEED_1000:
++			reg |= GEM_BIT(GBE);
++			break;
++		case SPEED_100:
++			reg |= MACB_BIT(SPD);
++			break;
++		default:
++			break;
+ 		}
+-		bp->link = phydev->link;
++		macb_or_gem_writel(bp, NCFGR, reg);
++
++		bp->speed = state->speed;
++		bp->duplex = state->duplex;
+ 
+-		status_change = 1;
++		if (state->link)
++			macb_set_tx_clk(bp->tx_clk, state->speed, netdev);
+ 	}
+ 
+ 	spin_unlock_irqrestore(&bp->lock, flags);
++}
+ 
+-	if (status_change) {
+-		if (phydev->link) {
+-			/* Update the TX clock rate if and only if the link is
+-			 * up and there has been a link change.
+-			 */
+-			macb_set_tx_clk(bp->tx_clk, phydev->speed, dev);
++static void gem_mac_link_up(struct phylink_config *pl_config, unsigned int mode,
++			    phy_interface_t interface, struct phy_device *phy)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
+ 
+-			netif_carrier_on(dev);
+-			netdev_info(dev, "link up (%d/%s)\n",
+-				    phydev->speed,
+-				    phydev->duplex == DUPLEX_FULL ?
+-				    "Full" : "Half");
+-		} else {
+-			netif_carrier_off(dev);
+-			netdev_info(dev, "link down\n");
+-		}
+-	}
++	bp->link = 1;
++	/* Enable TX and RX */
++	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
++}
++
++static void gem_mac_link_down(struct phylink_config *pl_config,
++			      unsigned int mode, phy_interface_t interface)
++{
++	struct net_device *netdev = to_net_dev(pl_config->dev);
++	struct macb *bp = netdev_priv(netdev);
++
++	bp->link = 0;
++	/* Disable TX and RX */
++	macb_writel(bp, NCR,
++		    macb_readl(bp, NCR) & ~(MACB_BIT(RE) | MACB_BIT(TE)));
+ }
+ 
++static const struct phylink_mac_ops gem_phylink_ops = {
++	.validate = gem_phylink_validate,
++	.mac_link_state = gem_phylink_mac_link_state,
++	.mac_config = gem_mac_config,
++	.mac_link_up = gem_mac_link_up,
++	.mac_link_down = gem_mac_link_down,
++};
++
+ /* based on au1000_eth. c*/
+ static int macb_mii_probe(struct net_device *dev)
+ {
+ 	struct macb *bp = netdev_priv(dev);
+ 	struct phy_device *phydev;
+ 	struct device_node *np;
+-	int ret, i;
++	int ret;
+ 
+ 	np = bp->pdev->dev.of_node;
+ 	ret = 0;
+ 
+-	if (np) {
+-		if (of_phy_is_fixed_link(np)) {
+-			bp->phy_node = of_node_get(np);
+-		} else {
+-			bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
+-			/* fallback to standard phy registration if no
+-			 * phy-handle was found nor any phy found during
+-			 * dt phy registration
+-			 */
+-			if (!bp->phy_node && !phy_find_first(bp->mii_bus)) {
+-				for (i = 0; i < PHY_MAX_ADDR; i++) {
+-					phydev = mdiobus_scan(bp->mii_bus, i);
+-					if (IS_ERR(phydev) &&
+-					    PTR_ERR(phydev) != -ENODEV) {
+-						ret = PTR_ERR(phydev);
+-						break;
+-					}
+-				}
+-
+-				if (ret)
+-					return -ENODEV;
+-			}
+-		}
++	bp->pl_config.dev = &dev->dev;
++	bp->pl_config.type = PHYLINK_NETDEV;
++	bp->pl = phylink_create(&bp->pl_config, of_fwnode_handle(np),
++				bp->phy_interface, &gem_phylink_ops);
++	if (IS_ERR(bp->pl)) {
++		netdev_err(dev,
++			   "error creating PHYLINK: %ld\n", PTR_ERR(bp->pl));
++		return PTR_ERR(bp->pl);
+ 	}
+ 
+-	if (bp->phy_node) {
+-		phydev = of_phy_connect(dev, bp->phy_node,
+-					&macb_handle_link_change, 0,
+-					bp->phy_interface);
+-		if (!phydev)
+-			return -ENODEV;
+-	} else {
++	ret = phylink_of_phy_connect(bp->pl, np, 0);
++	if (ret == -ENODEV && bp->mii_bus) {
+ 		phydev = phy_find_first(bp->mii_bus);
+ 		if (!phydev) {
+ 			netdev_err(dev, "no PHY found\n");
+@@ -554,29 +590,18 @@ static int macb_mii_probe(struct net_device *dev)
+ 		}
+ 
+ 		/* attach the mac to the phy */
+-		ret = phy_connect_direct(dev, phydev, &macb_handle_link_change,
+-					 bp->phy_interface);
++		ret = phylink_connect_phy(bp->pl, phydev);
+ 		if (ret) {
+ 			netdev_err(dev, "Could not attach to PHY\n");
+ 			return ret;
+ 		}
+ 	}
+ 
+-	/* mask with MAC supported features */
+-	if (macb_is_gem(bp) && bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+-		phy_set_max_speed(phydev, SPEED_1000);
+-	else
+-		phy_set_max_speed(phydev, SPEED_100);
+-
+-	if (bp->caps & MACB_CAPS_NO_GIGABIT_HALF)
+-		phy_remove_link_mode(phydev,
+-				     ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
+-
+ 	bp->link = 0;
+ 	bp->speed = 0;
+ 	bp->duplex = -1;
+ 
+-	return 0;
++	return ret;
+ }
+ 
+ static int macb_mii_init(struct macb *bp)
+@@ -604,17 +629,7 @@ static int macb_mii_init(struct macb *bp)
+ 	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
+ 
+ 	np = bp->pdev->dev.of_node;
+-	if (np && of_phy_is_fixed_link(np)) {
+-		if (of_phy_register_fixed_link(np) < 0) {
+-			dev_err(&bp->pdev->dev,
+-				"broken fixed-link specification %pOF\n", np);
+-			goto err_out_free_mdiobus;
+-		}
+-
+-		err = mdiobus_register(bp->mii_bus);
+-	} else {
+-		err = of_mdiobus_register(bp->mii_bus, np);
+-	}
++	err = of_mdiobus_register(bp->mii_bus, np);
+ 
+ 	if (err)
+ 		goto err_out_free_fixed_link;
+@@ -630,7 +645,6 @@ static int macb_mii_init(struct macb *bp)
+ err_out_free_fixed_link:
+ 	if (np && of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+-err_out_free_mdiobus:
+ 	of_node_put(bp->phy_node);
+ 	mdiobus_free(bp->mii_bus);
+ err_out:
+@@ -2422,7 +2436,7 @@ static int macb_open(struct net_device *dev)
+ 	netif_carrier_off(dev);
+ 
+ 	/* if the phy is not yet register, retry later*/
+-	if (!dev->phydev) {
++	if (!bp->pl) {
+ 		err = -EAGAIN;
+ 		goto pm_exit;
+ 	}
+@@ -2444,7 +2458,7 @@ static int macb_open(struct net_device *dev)
+ 	macb_init_hw(bp);
+ 
+ 	/* schedule a link state check */
+-	phy_start(dev->phydev);
++	phylink_start(bp->pl);
+ 
+ 	netif_tx_start_all_queues(dev);
+ 
+@@ -2471,8 +2485,8 @@ static int macb_close(struct net_device *dev)
+ 	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
+ 		napi_disable(&queue->napi);
+ 
+-	if (dev->phydev)
+-		phy_stop(dev->phydev);
++	if (bp->pl)
++		phylink_stop(bp->pl);
+ 
+ 	spin_lock_irqsave(&bp->lock, flags);
+ 	macb_reset_hw(bp);
+@@ -3161,6 +3175,29 @@ static int gem_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *cmd)
+ 	return ret;
+ }
+ 
++static int gem_ethtool_get_link_ksettings(struct net_device *netdev,
++					  struct ethtool_link_ksettings *cmd)
++{
++	struct macb *bp = netdev_priv(netdev);
++
++	if (!bp->pl)
++		return -ENOTSUPP;
++
++	return phylink_ethtool_ksettings_get(bp->pl, cmd);
++}
++
++static int
++gem_ethtool_set_link_ksettings(struct net_device *netdev,
++			       const struct ethtool_link_ksettings *cmd)
++{
++	struct macb *bp = netdev_priv(netdev);
++
++	if (!bp->pl)
++		return -ENOTSUPP;
++
++	return phylink_ethtool_ksettings_set(bp->pl, cmd);
++}
++
+ static const struct ethtool_ops macb_ethtool_ops = {
+ 	.get_regs_len		= macb_get_regs_len,
+ 	.get_regs		= macb_get_regs,
+@@ -3168,8 +3205,8 @@ static const struct ethtool_ops macb_ethtool_ops = {
+ 	.get_ts_info		= ethtool_op_get_ts_info,
+ 	.get_wol		= macb_get_wol,
+ 	.set_wol		= macb_set_wol,
+-	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
+-	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
++	.get_link_ksettings     = gem_ethtool_get_link_ksettings,
++	.set_link_ksettings     = gem_ethtool_set_link_ksettings,
+ 	.get_ringparam		= macb_get_ringparam,
+ 	.set_ringparam		= macb_set_ringparam,
+ };
+@@ -3182,8 +3219,8 @@ static const struct ethtool_ops gem_ethtool_ops = {
+ 	.get_ethtool_stats	= gem_get_ethtool_stats,
+ 	.get_strings		= gem_get_ethtool_strings,
+ 	.get_sset_count		= gem_get_sset_count,
+-	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
+-	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
++	.get_link_ksettings     = gem_ethtool_get_link_ksettings,
++	.set_link_ksettings     = gem_ethtool_set_link_ksettings,
+ 	.get_ringparam		= macb_get_ringparam,
+ 	.set_ringparam		= macb_set_ringparam,
+ 	.get_rxnfc			= gem_get_rxnfc,
+@@ -3192,17 +3229,16 @@ static const struct ethtool_ops gem_ethtool_ops = {
+ 
+ static int macb_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+ {
+-	struct phy_device *phydev = dev->phydev;
+ 	struct macb *bp = netdev_priv(dev);
+ 
+ 	if (!netif_running(dev))
+ 		return -EINVAL;
+ 
+-	if (!phydev)
++	if (!bp->pl)
+ 		return -ENODEV;
+ 
+ 	if (!bp->ptp_info)
+-		return phy_mii_ioctl(phydev, rq, cmd);
++		return phylink_mii_ioctl(bp->pl, rq, cmd);
+ 
+ 	switch (cmd) {
+ 	case SIOCSHWTSTAMP:
+@@ -3210,7 +3246,7 @@ static int macb_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
+ 	case SIOCGHWTSTAMP:
+ 		return bp->ptp_info->get_hwtst(dev, rq);
+ 	default:
+-		return phy_mii_ioctl(phydev, rq, cmd);
++		return phylink_mii_ioctl(bp->pl, rq, cmd);
+ 	}
+ }
+ 
+@@ -3710,7 +3746,7 @@ static int at91ether_open(struct net_device *dev)
+ 			     MACB_BIT(HRESP));
+ 
+ 	/* schedule a link state check */
+-	phy_start(dev->phydev);
++	phylink_start(lp->pl);
+ 
+ 	netif_start_queue(dev);
+ 
+@@ -4183,13 +4219,12 @@ static int macb_probe(struct platform_device *pdev)
+ 	struct clk *tsu_clk = NULL;
+ 	unsigned int queue_mask, num_queues;
+ 	bool native_io;
+-	struct phy_device *phydev;
+ 	struct net_device *dev;
+ 	struct resource *regs;
+ 	void __iomem *mem;
+ 	const char *mac;
+ 	struct macb *bp;
+-	int err, val;
++	int err, val, phy_mode;
+ 
+ 	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	mem = devm_ioremap_resource(&pdev->dev, regs);
+@@ -4310,12 +4345,12 @@ static int macb_probe(struct platform_device *pdev)
+ 		macb_get_hwaddr(bp);
+ 	}
+ 
+-	err = of_get_phy_mode(np);
+-	if (err < 0)
++	phy_mode = of_get_phy_mode(np);
++	if (phy_mode < 0)
+ 		/* not found in DT, MII by default */
+ 		bp->phy_interface = PHY_INTERFACE_MODE_MII;
+ 	else
+-		bp->phy_interface = err;
++		bp->phy_interface = phy_mode;
+ 
+ 	/* IP specific init */
+ 	err = init(pdev);
+@@ -4326,8 +4361,6 @@ static int macb_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto err_out_free_netdev;
+ 
+-	phydev = dev->phydev;
+-
+ 	netif_carrier_off(dev);
+ 
+ 	err = register_netdev(dev);
+@@ -4339,7 +4372,8 @@ static int macb_probe(struct platform_device *pdev)
+ 	tasklet_init(&bp->hresp_err_tasklet, macb_hresp_error_task,
+ 		     (unsigned long)bp);
+ 
+-	phy_attached_info(phydev);
++	if (dev->phydev)
++		phy_attached_info(dev->phydev);
+ 
+ 	netdev_info(dev, "Cadence %s rev 0x%08x at 0x%08lx irq %d (%pM)\n",
+ 		    macb_is_gem(bp) ? "GEM" : "MACB", macb_readl(bp, MID),
+@@ -4351,7 +4385,9 @@ static int macb_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_out_unregister_mdio:
+-	phy_disconnect(dev->phydev);
++	rtnl_lock();
++	phylink_disconnect_phy(bp->pl);
++	rtnl_unlock();
+ 	mdiobus_unregister(bp->mii_bus);
+ 	of_node_put(bp->phy_node);
+ 	if (np && of_phy_is_fixed_link(np))
+@@ -4385,13 +4421,18 @@ static int macb_remove(struct platform_device *pdev)
+ 
+ 	if (dev) {
+ 		bp = netdev_priv(dev);
+-		if (dev->phydev)
+-			phy_disconnect(dev->phydev);
++		if (bp->pl) {
++			rtnl_lock();
++			phylink_disconnect_phy(bp->pl);
++			rtnl_unlock();
++		}
+ 		mdiobus_unregister(bp->mii_bus);
+ 		if (np && of_phy_is_fixed_link(np))
+ 			of_phy_deregister_fixed_link(np);
+ 		dev->phydev = NULL;
+ 		mdiobus_free(bp->mii_bus);
++		if (bp->pl)
++			phylink_destroy(bp->pl);
+ 
+ 		unregister_netdev(dev);
+ 		pm_runtime_disable(&pdev->dev);
+@@ -4434,8 +4475,9 @@ static int __maybe_unused macb_suspend(struct device *dev)
+ 		for (q = 0, queue = bp->queues; q < bp->num_queues;
+ 		     ++q, ++queue)
+ 			napi_disable(&queue->napi);
+-		phy_stop(netdev->phydev);
+-		phy_suspend(netdev->phydev);
++		phylink_stop(bp->pl);
++		if (netdev->phydev)
++			phy_suspend(netdev->phydev);
+ 		spin_lock_irqsave(&bp->lock, flags);
+ 		macb_reset_hw(bp);
+ 		spin_unlock_irqrestore(&bp->lock, flags);
+@@ -4483,9 +4525,11 @@ static int __maybe_unused macb_resume(struct device *dev)
+ 		for (q = 0, queue = bp->queues; q < bp->num_queues;
+ 		     ++q, ++queue)
+ 			napi_enable(&queue->napi);
+-		phy_resume(netdev->phydev);
+-		phy_init_hw(netdev->phydev);
+-		phy_start(netdev->phydev);
++		if (netdev->phydev) {
++			phy_resume(netdev->phydev);
++			phy_init_hw(netdev->phydev);
++		}
++		phylink_start(bp->pl);
+ 	}
+ 
+ 	bp->macbgem_ops.mog_init_rings(bp);
+-- 
+2.17.1
+
