@@ -2,124 +2,90 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B2FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F71BC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFA8921721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 218EE206E0
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:37:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560969446;
+	bh=95Ds7C2wKCMMw0fd/HdFqLE/x2khbNigM8ixnjFhKJ4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=lejK3EqkGOi1zIszU3jsT7VeG80ofbhQr0Ph9hHd90ZaE+bFSCz8PiWuA9qr005xk
+	 LBeCtOOUxsL2/bgV9E5eV9RwwB3zjsimvjU2HfjUSCeGF+AHTg5oXzybzqj21IFtfA
+	 VIWqVUJvUgib28NUVi5QHKs7J3b0cFK8ERVbRaOo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbfFSShN (ORCPT
+        id S1730475AbfFSShY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:37:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33066 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726109AbfFSShN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:37:13 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JIWuhK141669
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:37:11 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7te485ms-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:37:11 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 19 Jun 2019 19:37:09 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 19:37:08 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JIawso35062266
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 18:36:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 349D5A4040;
-        Wed, 19 Jun 2019 18:37:07 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 92462A404D;
-        Wed, 19 Jun 2019 18:37:06 +0000 (GMT)
-Received: from dhcp-9-31-103-88.watson.ibm.com (unknown [9.31.103.88])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 18:37:06 +0000 (GMT)
-Subject: Re: [PATCH 2/3] IMA:Define a new template field buf
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     prakhar srivastava <prsriva02@gmail.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org
-Date:   Wed, 19 Jun 2019 14:37:06 -0400
-In-Reply-To: <CAEFn8qK9Tg99PA_=Ukm=CwSE6ajjUL2FxLs0ZiVdGLvG_baK_A@mail.gmail.com>
-References: <20190617183507.14160-1-prsriva02@gmail.com>
-         <20190617183507.14160-3-prsriva02@gmail.com>
-         <1560952466.3975.40.camel@linux.ibm.com>
-         <CAEFn8qK9Tg99PA_=Ukm=CwSE6ajjUL2FxLs0ZiVdGLvG_baK_A@mail.gmail.com>
+        Wed, 19 Jun 2019 14:37:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33074 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726449AbfFSShY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 14:37:24 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 436512166E
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 18:37:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560969443;
+        bh=95Ds7C2wKCMMw0fd/HdFqLE/x2khbNigM8ixnjFhKJ4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wO4aGZI4+hS2AaLZ1361JwG+pUMS/03SPBq7ttY1RY0Ns8gtFYkfOfcV5QZicC9oR
+         tuwVqKRDu9Fvpz2oeRqFQnTYFI3pjY72IY0eAD3gaQccyGHIom5l7/xzFQtci7bMRU
+         C8vGgwAp1kEzJ9g4RhBWGL17KlBD9+HfVSDd1LOc=
+Received: by mail-ua1-f48.google.com with SMTP id o2so429198uae.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:37:23 -0700 (PDT)
+X-Gm-Message-State: APjAAAX6Y7Ylw2/o/TNCjhtGvRB7kgFW5a5U/IXBPvZhT8IdxwjEkjSQ
+        +rABpbToTevHhcccKgGJsqClDzVPtWf9tP4VqTs=
+X-Google-Smtp-Source: APXvYqz4qoLmngiblq9f8JGM3uWaEAeA7oqqArdc0nb6oPoYl1Njc6DMqGw5VDUHJPM1zF9JjvGjCvBVTi3QrbYy7dk=
+X-Received: by 2002:a67:f482:: with SMTP id o2mr3877942vsn.129.1560969442452;
+ Wed, 19 Jun 2019 11:37:22 -0700 (PDT)
+MIME-Version: 1.0
+References: <502d5b36-e0d0-ffcc-5dd4-35db9d033561@computerix.info> <20190609184013.GA11237@probook>
+In-Reply-To: <20190609184013.GA11237@probook>
+From:   Ross Zwisler <zwisler@kernel.org>
+Date:   Wed, 19 Jun 2019 12:37:11 -0600
+X-Gmail-Original-Message-ID: <CAOxpaSXKXRcZi0KnQz_6SxajZ6Nv61Bjm5xmG0Ydw3Madv0-tQ@mail.gmail.com>
+Message-ID: <CAOxpaSXKXRcZi0KnQz_6SxajZ6Nv61Bjm5xmG0Ydw3Madv0-tQ@mail.gmail.com>
+Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
+To:     Johannes Hirte <johannes.hirte@datenkhaos.de>
+Cc:     Klaus Kusche <klaus.kusche@computerix.info>, keescook@chromium.org,
+        bp@suse.de, samitolvanen@google.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Guenter Roeck <groeck@google.com>,
+        Ross Zwisler <zwisler@google.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061918-4275-0000-0000-00000343D828
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061918-4276-0000-0000-000038540473
-Message-Id: <1560969426.3975.64.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-19 at 11:08 -0700, prakhar srivastava wrote:
-> <snip>
-> > >       if (iint->measured_pcrs & (0x1 << pcr))
-> > > diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
-> > > index 993d0f1915ff..c8591406c0e2 100644
-> > > --- a/security/integrity/ima/ima_init.c
-> > > +++ b/security/integrity/ima/ima_init.c
-> > > @@ -50,7 +50,7 @@ static int __init ima_add_boot_aggregate(void)
-> > >       struct ima_template_entry *entry;
-> > >       struct integrity_iint_cache tmp_iint, *iint = &tmp_iint;
-> > >       struct ima_event_data event_data = {iint, NULL, boot_aggregate_name,
-> > > -                                         NULL, 0, NULL};
-> > > +                                         NULL, 0, NULL, NULL, 0};
-> > >       int result = -ENOMEM;
-> > >       int violation = 0;
-> > >       struct {
-> > >
+On Sun, Jun 9, 2019 at 1:00 PM Johannes Hirte
+<johannes.hirte@datenkhaos.de> wrote:
+> On 2019 Jun 09, Klaus Kusche wrote:
+> > Hello,
 > >
-> > These changes shouldn't be necessary.  Please rebase these patches on
-> > top of the latest next-queued-testing branch (git remote update).  "IMA: support for per
-> > policy rule template formats" is still changing.
+> > Same problem for linux 5.1.7:
+> > Kernel building fails with the same relocation error.
 > >
-> > Minor nit.  When re-posting the patches please update the patch titles
-> > so that there is a space between the subsystem name and the patch
-> > title (eg. "ima: define ...").
+> > 5.1.5 does not have the problem, builds fine for me.
 > >
-> I believe the above event_data changes are needed, to store/read the
-> buffer length and buffer itself. The only exception will be if needed will be to
-> remove ima-buf as a template instead used a template_fmt in the policy
-> with KEXEC_CMDLINE from the "IMA: support for per
->  policy rule template formats" is still changing.".
-> In my view even ima-buf is needed as it simplifies the usage.
-> 
-> Please let me know if I misunderstood your comment.
+> > Is there anything I can do to investigate the problem?
+> >
+>
+> Please try linux 5.1.8. The problematic patch was reverted there.
 
-The tip of next-queued-testing branch is commit 687d57f90461 ("IMA:
-support for per policy rule template formats").  The current code is:
+I'm having this same issue with v5.2-rc5 using an older version of gcc
+(4.9.2).  If I use a more recent version of gcc (7.3.0) it works fine.
 
-        struct ima_event_data event_data = { .iint = iint,
-                                             .filename = boot_aggregate_name };
+Reverting this patch allows gcc v4.9.2 to build kernel v5.2-rc5 successfully.
 
-Mimi
+You said in this chain that you were reverting this patch in stable
+kernels.  Are you going to revert it in tip-of-tree as well?
 
+- Ross
