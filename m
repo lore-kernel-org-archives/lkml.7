@@ -2,179 +2,101 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C585C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:36:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B13C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F80620B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:36:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772FA20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:36:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nikanor-nu.20150623.gappssmtp.com header.i=@nikanor-nu.20150623.gappssmtp.com header.b="1auTgZY3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECyT4hmQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731038AbfFSGgQ (ORCPT
+        id S1731054AbfFSGgl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 02:36:16 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44154 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730791AbfFSGgP (ORCPT
+        Wed, 19 Jun 2019 02:36:41 -0400
+Received: from mail-pf1-f181.google.com ([209.85.210.181]:45150 "EHLO
+        mail-pf1-f181.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726628AbfFSGgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 02:36:15 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so11163028lfm.11
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 23:36:14 -0700 (PDT)
+        Wed, 19 Jun 2019 02:36:40 -0400
+Received: by mail-pf1-f181.google.com with SMTP id r1so9117305pfq.12
+        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 23:36:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=nikanor-nu.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Tw9Y/vwN/nARE1RA9Z2C9HCqwYacrU1B+FDIn0dtVZQ=;
-        b=1auTgZY3XXASfEB5dbWR7cin7TUrizNMayAe8EJtU+g2xVhoj90JKlrRoa7NhUs96r
-         cIZ/6gso0BtyhVAysHmSYMPB53TJC9qwJmi2HuUwAlhqGILlA7rWM+u+ORxfRfEDUzUM
-         ztcLvl6IiYfLhcWUpgDogw0rmQqBRURhPoNLV7/bfnWNBWkpHZ3t/N1WmRC3ZUBYajib
-         96vS8sUYOsSzRsNui60qrgQMlRkkcu5fLtYt9vvU3b/pXUqS0P1DRDEOuIVwtkr3pvSc
-         AXU4YluwYPU6RJ1/Vyd5SVa4fJIHhTMzdl1pOPPu7EfPSxyeuOzQ7VYGRNnIMOWLfHHe
-         Jhvg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7hSEJgaNQ9TMaenqDYNV1rOFRRbekhYP1C35BGZnzIk=;
+        b=ECyT4hmQ2TVUla0rWPI6s2jkMG691PcNBgN5UZC8rlJxhjIopsi+2ZU1rkQg/4hBJ/
+         1DRRnfgKrREBYLmEqtJej1QPvx1WT15tUyGcSsD/piEfS7u1KfGH3/3IFnVCBKvk/+ox
+         cwBmuKH7l0vufmNyYI+z0XM12eOViOl7ifEeswyY1IPxXawzGkRSqWv/NWqM1GmzSOvn
+         Q9ez1tGX1A62fxOvxYvauaAuO/nJxZy7C4BNh3IpckmnTN93Dvo/7wnfwZMtB4i46JjW
+         tz3wadamPlVz7T4xrM5duHtFHLs6SB2BNmvELhflwl++z7T1y2HIGfcONj3Z3mvp8yKs
+         eTMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Tw9Y/vwN/nARE1RA9Z2C9HCqwYacrU1B+FDIn0dtVZQ=;
-        b=CP0hM7ORw70XQs0ntBres9oHK7NqY1XcCvNmWa54Ak6nzQRw96b7lGelhJnUzL+qtt
-         dx1ty6oM+qAMpww6Ywc2s6pbSI0MZYjC0xj4bW65dWpWDHaPqBWoMoZYHWq3pyVF99Bm
-         2Twd2CA2Nq8mhtqUPmGDXRa1fFPvrLwlWUx2b7whsqQ+mDRmEAgZ84DBF6y8J3DJ9Ykk
-         RrP3H+7YwmheiL8Ko7/384fQr2Lmu/1fmAxALuMYlTxOQ9HRsAcfOMf8uk/Wy6Xbbos6
-         MI+B9xxTSfF4+YgGlMHgmWBBGP1pyA8+uefwkZsPV67i1b+NR8bnQlgfPl75HeI2pzbD
-         cjww==
-X-Gm-Message-State: APjAAAU20wDaJlS64OFOae35SMDGKAdTaLojxFKUcEqW7jp3opQT+pCs
-        MHcKISS+bZbpvEvJWY4XyzCwrw==
-X-Google-Smtp-Source: APXvYqy+AzgrU3SgLVZV/xfKl7uw0PejMMFf2xkI77ypcplvwpkZ2YdESYQkxrOcTs8eRRvafxeqPg==
-X-Received: by 2002:ac2:5189:: with SMTP id u9mr60649520lfi.189.1560926173626;
-        Tue, 18 Jun 2019 23:36:13 -0700 (PDT)
-Received: from dev.nikanor.nu (78-72-133-4-no161.tbcn.telia.com. [78.72.133.4])
-        by smtp.gmail.com with ESMTPSA id k82sm2933092ljb.84.2019.06.18.23.36.12
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7hSEJgaNQ9TMaenqDYNV1rOFRRbekhYP1C35BGZnzIk=;
+        b=FEA4euPanyhPduiFMEGDRVtiV0XxAInPbKy3GM7obo3wf/V7hAlN8JW1xF1rC+8PgL
+         L1f37E7pMd1UO535Ux/f1V1XpbI8CmUkfQSzOK330F9Qyz8BiDCgaoSjofrXfZ5TOyV/
+         kyXamJhpZCnGojAgBAOQFFVtguCeh01Rk3HV6ovRa537066wVBtuhgVkAAC8Grv33Yry
+         j2qR/nM+YYg3xoigoGN0Iel49O8Y0Ru21jUEHcxjtZvooew5nOivFalSUX5ZBUUCzfvy
+         BLKtuz+131xEMpuWUI1VgBwj1V6gQZLOKOVhYmCg3WsPegqbQoFLBE7JaRrvAiTgl+ee
+         7ACg==
+X-Gm-Message-State: APjAAAXV4t1v8nJ+X9FCGU4nNsYWlEP18rFwBuSJfzvUzFxw4ddY0WK/
+        QuTT2+ESSCs7OsBan4ESzTw=
+X-Google-Smtp-Source: APXvYqyMWG1Y5CrVeT1G27wZCx7bmh+a8QBDE1WUW1wdkHv4qQJVDts0GqKH1NBdty/xYviDGi2KWg==
+X-Received: by 2002:a62:778d:: with SMTP id s135mr53470023pfc.204.1560926200153;
+        Tue, 18 Jun 2019 23:36:40 -0700 (PDT)
+Received: from localhost ([175.223.10.253])
+        by smtp.gmail.com with ESMTPSA id d132sm18688001pfd.61.2019.06.18.23.36.38
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 23:36:13 -0700 (PDT)
-From:   =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
-To:     gregkh@linuxfoundation.org
-Cc:     dan.carpenter@oracle.com, jeremy@azazel.net,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Simon=20Sandstr=C3=B6m?= <simon@nikanor.nu>
-Subject: [PATCH] staging: kpc2000: simplify error handling in kp2000_pcie_probe
-Date:   Wed, 19 Jun 2019 08:36:07 +0200
-Message-Id: <20190619063607.20722-1-simon@nikanor.nu>
-X-Mailer: git-send-email 2.20.1
+        Tue, 18 Jun 2019 23:36:39 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 15:36:35 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc:     Ilia Mirkin <imirkin@alum.mit.edu>,
+        Ben Skeggs <bskeggs@redhat.com>,
+        David Airlie <airlied@linux.ie>,
+        nouveau <nouveau@lists.freedesktop.org>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: nouveau: DRM: GPU lockup - switching to software fbcon
+Message-ID: <20190619063635.GA576@jagdpanzerIV>
+References: <20190614024957.GA9645@jagdpanzerIV>
+ <20190619050811.GA15221@jagdpanzerIV>
+ <CAKb7UvhdN=RUdfrnWswT4ANK5UwPcM-upDP85=84zsCF+a5-bg@mail.gmail.com>
+ <20190619054826.GA2059@jagdpanzerIV>
+ <CAKb7UvgkEXtmJV67EXeBctgaOxM1D91fBbKw9oFMUaB1ZViZQg@mail.gmail.com>
+ <20190619062714.GA11457@jagdpanzerIV>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619062714.GA11457@jagdpanzerIV>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We can get rid of a few iounmaps in the middle of the function by
-re-ordering the error handling labels and adding two new labels.
+On (06/19/19 15:27), Sergey Senozhatsky wrote:
+> [..]
+> 
+> > If all else fails, just remove nouveau_dri.so and/or boot with
+> > nouveau.noaccel=1 -- should be perfect.
+> 
+> Can give it a try.
 
-Signed-off-by: Simon Sandström <simon@nikanor.nu>
----
+That has some impact on system responsiveness:
 
-This change has not been tested besides by compiling. It might be good
-took take an extra look to make sure that I got everything right.
+ CPU%		COMM
+ 339.7		firefox
 
-Also, this change was proposed by Dan Carpenter. Should I add anything
-in the commit message to show this?
+Which is slightly less than perfect :)
 
-- Simon
-
- drivers/staging/kpc2000/kpc2000/core.c | 22 ++++++++++------------
- 1 file changed, 10 insertions(+), 12 deletions(-)
-
-diff --git a/drivers/staging/kpc2000/kpc2000/core.c b/drivers/staging/kpc2000/kpc2000/core.c
-index 610ea549d240..cb05cca687e1 100644
---- a/drivers/staging/kpc2000/kpc2000/core.c
-+++ b/drivers/staging/kpc2000/kpc2000/core.c
-@@ -351,12 +351,11 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 
- 	err = pci_request_region(pcard->pdev, REG_BAR, KP_DRIVER_NAME_KP2000);
- 	if (err) {
--		iounmap(pcard->regs_bar_base);
- 		dev_err(&pcard->pdev->dev,
- 			"probe: failed to acquire PCI region (%d)\n",
- 			err);
- 		err = -ENODEV;
--		goto err_disable_device;
-+		goto err_unmap_regs;
- 	}
- 
- 	pcard->regs_base_resource.start = reg_bar_phys_addr;
-@@ -374,7 +373,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 		dev_err(&pcard->pdev->dev,
- 			"probe: DMA_BAR could not remap memory to virtual space\n");
- 		err = -ENODEV;
--		goto err_unmap_regs;
-+		goto err_release_regs;
- 	}
- 	dev_dbg(&pcard->pdev->dev,
- 		"probe: DMA_BAR virt hardware address start [%p]\n",
-@@ -384,11 +383,10 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 
- 	err = pci_request_region(pcard->pdev, DMA_BAR, "kp2000_pcie");
- 	if (err) {
--		iounmap(pcard->dma_bar_base);
- 		dev_err(&pcard->pdev->dev,
- 			"probe: failed to acquire PCI region (%d)\n", err);
- 		err = -ENODEV;
--		goto err_unmap_regs;
-+		goto err_unmap_dma;
- 	}
- 
- 	pcard->dma_base_resource.start = dma_bar_phys_addr;
-@@ -400,7 +398,7 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	pcard->sysinfo_regs_base = pcard->regs_bar_base;
- 	err = read_system_regs(pcard);
- 	if (err)
--		goto err_unmap_dma;
-+		goto err_release_dma;
- 
- 	// Disable all "user" interrupts because they're not used yet.
- 	writeq(0xFFFFFFFFFFFFFFFF,
-@@ -438,14 +436,14 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	if (err) {
- 		dev_err(&pcard->pdev->dev,
- 			"CANNOT use DMA mask %0llx\n", DMA_BIT_MASK(64));
--		goto err_unmap_dma;
-+		goto err_release_dma;
- 	}
- 	dev_dbg(&pcard->pdev->dev,
- 		"Using DMA mask %0llx\n", dma_get_mask(PCARD_TO_DEV(pcard)));
- 
- 	err = pci_enable_msi(pcard->pdev);
- 	if (err < 0)
--		goto err_unmap_dma;
-+		goto err_release_dma;
- 
- 	rv = request_irq(pcard->pdev->irq, kp2000_irq_handler, IRQF_SHARED,
- 			 pcard->name, pcard);
-@@ -478,14 +476,14 @@ static int kp2000_pcie_probe(struct pci_dev *pdev,
- 	free_irq(pcard->pdev->irq, pcard);
- err_disable_msi:
- 	pci_disable_msi(pcard->pdev);
-+err_release_dma:
-+	pci_release_region(pdev, DMA_BAR);
- err_unmap_dma:
- 	iounmap(pcard->dma_bar_base);
--	pci_release_region(pdev, DMA_BAR);
--	pcard->dma_bar_base = NULL;
-+err_release_regs:
-+	pci_release_region(pdev, REG_BAR);
- err_unmap_regs:
- 	iounmap(pcard->regs_bar_base);
--	pci_release_region(pdev, REG_BAR);
--	pcard->regs_bar_base = NULL;
- err_disable_device:
- 	pci_disable_device(pcard->pdev);
- err_remove_ida:
--- 
-2.20.1
-
+	-ss
