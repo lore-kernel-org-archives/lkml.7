@@ -2,106 +2,98 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F8BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:35:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67B94C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E582080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:35:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EE02080C
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:35:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="bUp01ufs"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tRaeF7GL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731666AbfFSLf3 (ORCPT
+        id S1731676AbfFSLft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:35:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52796 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726826AbfFSLf2 (ORCPT
+        Wed, 19 Jun 2019 07:35:49 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43842 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfFSLft (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:35:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Bn5wuVuw5ttFYjKna5TVBWWZTz9A7nw6FCqvrm2qUhk=; b=bUp01ufsXgdhKtEN+BMzw3BnX
-        qbpa3RCFVUzYH/bN6jaQJ3qNOnofXBOoQ6nrHS2bsnVfGGJZIgruFIX/49OoGYt+gPmyTGu2l57zg
-        5Ldv9cHUXg62QxrLLmuzFBQweFUq/jiPjZ2TlBJS+khPEcMPVt4nkj3vMgmcrSVkIodwLK33D8CkL
-        h8XVlTUsBRnZgz/gg4/riDTv984g8aKrW4olO52/YLh5VTepUY+a/xgkrxuebLkgRB7sA2OJb4tGH
-        QuajXADdl0a0hoVUhEs1/5Jp9LWPgJhmJ31Zjk1XWyqd1nC2Yksc1GHF+JocsSnyOUDXy4d+yT3W/
-        tCzzISpbQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdYrt-0004jS-R3; Wed, 19 Jun 2019 11:35:09 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 56CEB20796503; Wed, 19 Jun 2019 13:35:08 +0200 (CEST)
-Date:   Wed, 19 Jun 2019 13:35:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net
-Subject: Re: [RFC][PATCH] module: Propagate MODULE_STATE_COMING notifier
- errors
-Message-ID: <20190619113508.GP3463@hirez.programming.kicks-ass.net>
-References: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
- <alpine.LSU.2.21.1906191251380.23337@pobox.suse.cz>
- <20190619112350.GN3419@hirez.programming.kicks-ass.net>
- <20190619113324.GO3463@hirez.programming.kicks-ass.net>
+        Wed, 19 Jun 2019 07:35:49 -0400
+Received: by mail-pl1-f195.google.com with SMTP id cl9so7100300plb.10
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 04:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xTnYfqTb0OBC2laN/lIv6dOgEAubgbEVPliB3a16uOM=;
+        b=tRaeF7GL6QCrXnAixdhrtY1QzqXVvyFk9x5FcLD5r/8ehKDD62SYjbXqBpzZdmSAoB
+         XMifUtRyH2BEKQoE9NA96VG7h75HPB/yKZcLlZnKkAVlINTnkjLlXHMzMTv6lT5MTmvb
+         KvpIMZzJkrV+QmFMVQj33idXwLkn0pbT7HL41cgPm0i9cRnZlbQFMU/SIuUJAGP/KFSz
+         1e/wK5tpK7AhUtVINDYQ8xldmk/rH9fnh12pCw6oprOlnu6Z54nZLIHSMPt2KuGKH+co
+         IVqmChrM3Rj++F89aO65fv1VnLzr6YOqvE/nalsQF/4/336JUmTxj3nLXSgLFHhW7XTc
+         hzjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xTnYfqTb0OBC2laN/lIv6dOgEAubgbEVPliB3a16uOM=;
+        b=d67p2F6vkiENw6OEoLU/XQXmR+Va96qlleG4O6Hfn36/rWlhbNTBdJWiX88zRL9XLH
+         ISEk+/Kb3gm9bJJ89oNPHUX80M6b6oM3+A0eVn02oyo5eiakXt6gCcTp9FFSwS6p+O3z
+         P59kXQYdqVT0Fdy/mf9++SAVg+yPIommkRtRvu/TAAW51bJqrDDcEFvDXUsGZ2r2BDpZ
+         iaGe3T5NofCGpqku/2ExBqINHnZxjxHv8sSThY7Zu5ak3yTbt2h5HII5gklAJKJhCS4b
+         tzLZx3nZU1cxdPUI9E8P/A1QmrjiAhiX/VO/mjAWTI1cOZ5rBbxREUghVljp4dbW1W2n
+         Csrw==
+X-Gm-Message-State: APjAAAX52suXrutNWTH70/NyO98jmnwmmwv79K69tZUtZNXF2vEskqlc
+        pOgMOedi3lETPAkFl3VyNcHuSA==
+X-Google-Smtp-Source: APXvYqy8HanHBVPi2DgQgsCccD876Sg8jjuYxE3b1d0PRm0weiWf70PqoZuCINDZCou8yW8BM8qaJw==
+X-Received: by 2002:a17:902:9897:: with SMTP id s23mr51526563plp.47.1560944148634;
+        Wed, 19 Jun 2019 04:35:48 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id c130sm10691784pfc.184.2019.06.19.04.35.47
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 04:35:48 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/6] cpufreq: cleanups
+Date:   Wed, 19 Jun 2019 17:05:36 +0530
+Message-Id: <cover.1560944014.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619113324.GO3463@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 01:33:24PM +0200, Peter Zijlstra wrote:
-> How's something like so:
-> 
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 80c7c09584cf..eba6560c89da 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -3631,16 +3631,28 @@ static int complete_formation(struct module *mod, struct load_info *info)
->  
->  static int prepare_coming_module(struct module *mod)
->  {
-> -	int err;
-> +	struct blocking_notifier_head *nh = &module_notify_list;
-> +	int err, nr;
->  
->  	ftrace_module_enable(mod);
->  	err = klp_module_coming(mod);
->  	if (err)
->  		return err;
->  
-> -	blocking_notifier_call_chain(&module_notify_list,
-> -				     MODULE_STATE_COMING, mod);
-> -	return 0;
-> +	if (!rcu_access_pointer(nh->head))
-> +		return 0;
-> +
-> +	down_read(&nh->rwsem);
-> +	ret = notifier_call_chain(&nh->head, MODULE_STATE_COMING, mod, -1, &nr);
-> +	if (ret & NOTIFIER_STOP_MASK)
+Hi Rafael,
 
-It compiles _lots_ better with s/ret/err/ on.
+I accumulated these while reworking the freq-constraint series and it
+would be nice if these can get in before I send the next version of
+freq-constraint stuff.
 
-> +		notifier_call_chain(&nh->head, MODULE_STATE_GOING, mod, nr, NULL);
-> +	up_read(&nh->rwsem);
-> +
-> +	err = notifier_to_err(err);
-> +	if (err)
-> +		klp_module_going(mod);
-> +
-> +	return err;
->  }
->  
->  static int unknown_module_param_cb(char *param, char *val, const char *modname,
+These are mostly cleanups and code consolidation for better management
+of code. Compile and boot tested only.
+
+Thanks.
+
+Viresh Kumar (6):
+  cpufreq: Remove the redundant !setpolicy check
+  cpufreq: Replace few CPUFREQ_CONST_LOOPS checks with has_target()
+  cpufreq: Remove the has_target() check from notifier handler
+  cpufreq: Use has_target() instead of !setpolicy
+  cpufreq: Reuse cpufreq_update_current_freq() in __cpufreq_get()
+  cpufreq: Avoid calling cpufreq_verify_current_freq() from
+    handle_update()
+
+ drivers/cpufreq/cpufreq.c | 115 +++++++++++++++++---------------------
+ 1 file changed, 52 insertions(+), 63 deletions(-)
+
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
