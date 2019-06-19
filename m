@@ -2,95 +2,116 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB093C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:06:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F036C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:06:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0C2E21881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:06:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1881921874
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:06:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="uxSUY3Zx"
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="yEAuqHd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfFSPGE (ORCPT
+        id S1730155AbfFSPGH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:06:04 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:40112 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730052AbfFSPGD (ORCPT
+        Wed, 19 Jun 2019 11:06:07 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41805 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730110AbfFSPGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:06:03 -0400
-Received: by mail-lf1-f68.google.com with SMTP id a9so12402791lff.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:06:01 -0700 (PDT)
+        Wed, 19 Jun 2019 11:06:05 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s21so3605914lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:06:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=lixom-net.20150623.gappssmtp.com; s=20150623;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=qo3e63HL3BzDtfqkQiaY62IQlXV/H1BFP1jalf87HMc=;
-        b=uxSUY3ZxDLYKi6tP3oJ+OgL02Da5xhLsw2kgcnf8dWSKkxZx49Yn1Rf2dhRqASNOR/
-         uyih413YiGOdufoC2Snp1BzgYJC7TdUj02oLV4BzEw0y0Eqp8FHEJwShX4bIIR46JIGY
-         e28m8kq6Bl4T6bkFAW0JExXNp4chY1fjQG+WkQc3TekfEdcDkJoVxe9T01/Yx2RHNolX
-         u4BEJARBt+s9uJLbn3LzlBSwkWaaiLSonuChC6KyJDxUz79E5vJ1FPIk7jYsRIM2E8d5
-         /yWbFFNvtSTqaW1eELAl9/WAgUqgbHmU56MWfH0+/mFNHV15iBrJhe1ME2/XCjKbefMx
-         YL+Q==
+        bh=CLJF5UoD0PkktcnwFEog1D4I3y+sELYQ4QMuolgvp6s=;
+        b=yEAuqHd/teD0bEa7Wvv7EtSMZmX8mb6QsDEE3Aerx0LAnx2E4q6Gw+E4oHeMkrbx4X
+         L+xDstCW0A1lRuwgSgfSXAYw+P8g9iFRxygf80S2I3D385MHj3PSi2CAKckN85Rcml/M
+         GibXtG1D5ovltPNE9NE9LU3HTHrveAE9Y2fReaVv2Gb9J4bLzc9RbfZnHJrhUjp8Gu4z
+         j0P7DZ1TPe0OjdPmch+r7FGd7w0u69YMAmiqJ9fpNqsS3DWd8X9mG8TlP+DXaTKcVDhI
+         aNbhxe/mhawugb1K+RNV+ZFx1xApKMhMXwOVZIL8ylN8hNFDdEHyThk8HvrWIzdbfzbZ
+         xFkQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qo3e63HL3BzDtfqkQiaY62IQlXV/H1BFP1jalf87HMc=;
-        b=I1YEyAT2gzczSmMClPLnGvr9+BeInqCCpk+Oh9w32/qEbTXDTsA+2ZLZLsNdp1yOxl
-         zqbuV7SyTfagRL7VecrRukphxMAez1iFQcFrigQoqGW+gLwsG0VuEXj/hGbM3Df47dO3
-         NTpG6dQuc7gtIoGfS374d0KMYzepj6ZodOEidQ1xfomRz5DHA/mqeCMzjTaBJiupfAiS
-         /DOzep2s79jV/hrKB24iVajV1EV6VzP7Sal7JuOEvfSkNWX+k+Shz+QierqE2IsjZhnA
-         aRfDJZJ9O61ZvBNOJFNzVCoXFEUrzlGDT9qadYQvASiu9quVbJJfo1hq7IIT9DdzX85Y
-         EgVA==
-X-Gm-Message-State: APjAAAXZSvdsgk9XA6JQcUs6Bz0pW2QjcsnGx8xQdxspiSzqGW0MqF4m
-        DPuTz9DL2I+ShFyZfnX88Z52qQ==
-X-Google-Smtp-Source: APXvYqx2OQTjYY91I+p4ttJwT1ZdJWsfYL5Dxi2KwgLxgOydHZgkuJM1ooIblOIa8NRl8LMbuo6YMA==
-X-Received: by 2002:ac2:494f:: with SMTP id o15mr33066277lfi.84.1560956760977;
-        Wed, 19 Jun 2019 08:06:00 -0700 (PDT)
+        bh=CLJF5UoD0PkktcnwFEog1D4I3y+sELYQ4QMuolgvp6s=;
+        b=XQY1VUxraAb97dMR/D14AqYzQLghNSQMZKq4/uSUOztdWb7wf+gfqqXV2ZbUssGVFc
+         9PXTQm93XsnfhqY2lb0FUEjZd20681i90fDrcyc9TZMBvlqhEy/BWLPjj5Xs5QKU38JN
+         GHYfQV89kcs+fJTPFzeP7Rk/n4Ba9kVsumsH0KNZF3X0nFdEMpYsuRTRE85gfPMyfNmd
+         WscsxY3FHzvrwYP1vKoXI8ZZizr3zOgdhC+9q5mXI4M1Bupxu8FfAFxW/FVCRCUdmX9Z
+         fwymim9aPC6MvbZXgVUMv7v8mtrPhXpjdzBNTDA/yl0kYnmhJp5w8DbVV8/6ouYf3NjE
+         JTHQ==
+X-Gm-Message-State: APjAAAUovMlFmtUY9ZFjQ/Xx2aJP/Z6KFThrT6aHmD+autbfD1QDn8Sh
+        j2L0iGL6WVaw0/rejfpSChKaIQ==
+X-Google-Smtp-Source: APXvYqyMLO96BhAhlytIE+Ka8kFdXOnwnlt/Y3Ev1WHd9s/vwbPB0/i4dHhJQ2MiOCAxa7GBxsCb+A==
+X-Received: by 2002:a2e:9155:: with SMTP id q21mr35693704ljg.198.1560956763090;
+        Wed, 19 Jun 2019 08:06:03 -0700 (PDT)
 Received: from localhost (h85-30-9-151.cust.a3fiber.se. [85.30.9.151])
-        by smtp.gmail.com with ESMTPSA id g14sm3001223lja.23.2019.06.19.08.05.59
+        by smtp.gmail.com with ESMTPSA id t12sm3132540ljj.26.2019.06.19.08.06.01
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Jun 2019 08:06:00 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 07:11:12 -0700
+        Wed, 19 Jun 2019 08:06:01 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 07:12:30 -0700
 From:   Olof Johansson <olof@lixom.net>
-To:     Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-kernel@vger.kernel.org, arm@kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "moderated list:ARM64 PORT (AARCH64 ARCHITECTURE)" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH 2/2] arm64: defconfig: add Panfrost driver
-Message-ID: <20190619141112.lvw2ibyrqr53livv@localhost>
-References: <20190604112003.31813-1-tomeu.vizoso@collabora.com>
- <20190604112003.31813-2-tomeu.vizoso@collabora.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     arm@kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-aspeed@lists.ozlabs.org, linux-omap@vger.kernel.org
+Subject: Re: [PATCH v3] ARM: configs: Remove useless UEVENT_HELPER_PATH
+Message-ID: <20190619141230.rtgeunr23gybv7u2@localhost>
+References: <20190604185229.7393-1-krzk@kernel.org>
+ <CAJKOXPd4LVFGgonbsuxii-5Fu5wWhxU9yotLHw+OXsPcxYw_3g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190604112003.31813-2-tomeu.vizoso@collabora.com>
+In-Reply-To: <CAJKOXPd4LVFGgonbsuxii-5Fu5wWhxU9yotLHw+OXsPcxYw_3g@mail.gmail.com>
 User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 01:20:02PM +0200, Tomeu Vizoso wrote:
-> With the goal of making it easier for CI services such as KernelCI to
-> run tests for it.
+On Thu, Jun 13, 2019 at 04:53:53PM +0200, Krzysztof Kozlowski wrote:
+> On Tue, 4 Jun 2019 at 20:52, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> >
+> > Remove the CONFIG_UEVENT_HELPER_PATH because:
+> > 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
+> >    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
+> >    made default to 'n',
+> > 2. It is not recommended (help message: "This should not be used today
+> >    [...] creates a high system load") and was kept only for ancient
+> >    userland,
+> > 3. Certain userland specifically requests it to be disabled (systemd
+> >    README: "Legacy hotplug slows down the system and confuses udev").
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > For vexpress:
+> > Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > ---
+> >
+> > Changes since v2:
+> > 1. Remove unrelated files.
+> > 2. Add Geert's ack.
+> >
+> > Changes sice v3:
+> > 1. Change also mini2440_defconfig.
+> > 2. Add more acks.
 > 
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+> Hi Arnd and Olof,
+> 
+> Do you want to apply it directly or maybe I can send it along with
+> other my defconfig pull request?
 
-Applied, thanks!
+Oh, just saw v3, since it didn't thread with v2.
 
+Applied already with the equivalent fixups, so we're good.
 
 -Olof
