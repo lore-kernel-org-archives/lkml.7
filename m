@@ -2,140 +2,135 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EBE5C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63C59C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:16:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B83B206E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D97920823
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 08:16:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M3qgtyV4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731313AbfFSIQg (ORCPT
+        id S1731324AbfFSIQu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 04:16:36 -0400
-Received: from shell.v3.sk ([90.176.6.54]:46808 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731064AbfFSIQf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 04:16:35 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 4D0BACA051;
-        Wed, 19 Jun 2019 10:16:32 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 6FoiRkUxAFLs; Wed, 19 Jun 2019 10:16:27 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id AB0BBCA044;
-        Wed, 19 Jun 2019 10:16:26 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id VuwPrubCZcNl; Wed, 19 Jun 2019 10:16:25 +0200 (CEST)
-Received: from belphegor (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id C4553CA01B;
-        Wed, 19 Jun 2019 10:16:24 +0200 (CEST)
-Message-ID: <f70270d3d67b276bcde7caa6891d655c78ad128f.camel@v3.sk>
-Subject: Re: [PATCH v5 02/10] [media] marvell-ccic: fix DMA s/g desc number
- calculation
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Jacopo Mondi <jacopo@jmondi.org>
-Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>,
-        Libin Yang <lbyang@marvell.com>,
-        Albert Wang <twang13@marvell.com>,
-        Sakari Ailus <sakari.ailus@iki.fi>
-Date:   Wed, 19 Jun 2019 10:16:23 +0200
-In-Reply-To: <20190614094128.miryq2wfzoewjoyn@uno.localdomain>
-References: <20190505140031.9636-1-lkundrak@v3.sk>
-         <20190505140031.9636-3-lkundrak@v3.sk>
-         <20190614094128.miryq2wfzoewjoyn@uno.localdomain>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Wed, 19 Jun 2019 04:16:50 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44385 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731213AbfFSIQt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:16:49 -0400
+Received: by mail-pg1-f196.google.com with SMTP id n2so9202248pgp.11;
+        Wed, 19 Jun 2019 01:16:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=v129+ZmLYPT0Qs610F/+KFD490TqCFT77Vj5+nBNN28=;
+        b=M3qgtyV4AQr65r2pR1XmxMysyqRVsRmXoqrZFpp9C6zTvsQyKmyphn+6AiqPxTOdAH
+         GCRRu24W/izWtCCzJFP6u6UQieHtTtp0qqTrZexVYMkd7yTbbrh8vgbSrR4Kn4Vdg9+A
+         QWg4sDNEf3lZe8+jA3hazKFgNMOAfdapUL9f3l+tdDT6CC4rd8MbUMPM+ZLX2NeF9rLt
+         etQbZ+g8R4qczgqml/JlfBZM4KSiK0a4+k2efumXahIGq6HnPrLUjXEGfg91nT0xgt6l
+         URrAu1aqdjXKyeUckE/effvcdPFBchJe7vjkuPnRqTprmS0TxjeCBmt3mAclkLSoXOfi
+         jxQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=v129+ZmLYPT0Qs610F/+KFD490TqCFT77Vj5+nBNN28=;
+        b=AmD9B1b7xlMziihkS0WSYzdbAutrJpSGWFHW7Qb9mDPb1V3L407cGQcdzBCkxAeDYJ
+         G3r06BIkTigMc9WBkjVQigm83a0wZ3TKGGC1Gua+KT0tQfnQ/oBrOymhCGWLTUPkyryF
+         RYlymmgdks/FZV/yXNZQOYeTwy6Wfkf8k60oEb+afdadTgy70KfAfHweKyS5e18fkD0x
+         wGOvK7v1R/T4e5l8kgMNZ8mSMuzP9bPO7U9fZg9icWSybuAw7gmW8orHp8rv3pRnzWyY
+         BSmqOiEGUec2YuMEKTa7OdTr9GgGcVJiU8D94X2tR5U/lgS12j85l60vC9NrUFJ/F5jd
+         AJyw==
+X-Gm-Message-State: APjAAAUUdmTB3AbrbciIIa1dOR+JripUyBaNAq3zXafpi2CL60fyJ6pv
+        SBGGCz0axizjKYZKWVv2ccg=
+X-Google-Smtp-Source: APXvYqy46mmCmfahU0kewqo7z+Wo2ByFUBKVQhnj602dEah1sJEMMpRJq+iwu/9ERzcbE0ZNLHP96A==
+X-Received: by 2002:a63:80c8:: with SMTP id j191mr6962738pgd.442.1560932208474;
+        Wed, 19 Jun 2019 01:16:48 -0700 (PDT)
+Received: from localhost.localdomain ([163.152.162.99])
+        by smtp.gmail.com with ESMTPSA id u1sm15769414pgr.94.2019.06.19.01.16.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 01:16:48 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 17:16:42 +0900
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] usbip: Implement map_urb_for_dma function for vhci to
+ skip dma mapping
+Message-ID: <20190619081641.GA2387@localhost.localdomain>
+References: <20190618142817.16844-1-suwan.kim027@gmail.com>
+ <Pine.LNX.4.44L0.1906181129450.1659-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <Pine.LNX.4.44L0.1906181129450.1659-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-06-14 at 11:41 +0200, Jacopo Mondi wrote:
-> Hi Lubomir,
+On Tue, Jun 18, 2019 at 11:30:34AM -0400, Alan Stern wrote:
+> On Tue, 18 Jun 2019, Suwan Kim wrote:
 > 
-> On Sun, May 05, 2019 at 04:00:23PM +0200, Lubomir Rintel wrote:
-> > The commit d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-> > left dma_desc_nent unset. It previously contained the number of DMA
-> > descriptors as returned from dma_map_sg().
+> > vhci doesn’t do dma for remote device. Actually, the real dma
+> > operation is done by network card driver. So, vhci doesn’t use and
+> > need dma address of transfer buffer of urb.
 > > 
-> > We can now (since the commit referred to above) obtain the same value from
-> > the sg_table and drop dma_desc_nent altogether.
+> > But hcd provides dma mapping function by defualt in usb_hcd_submit_urb()
+> > and it causes unnecessary dma mapping which will be done again at
+> > NIC driver and it wastes CPU cycles. So, implement map_urb_for_dma
+> > function for vhci in order to skip the dma mapping procedure.
 > > 
-> > Tested on OLPC XO-1.75 machine. Doesn't affect the OLPC XO-1's Cafe
-> > driver, since that one doesn't do DMA.
-> > 
-> > Fixes: d790b7eda953df474f470169ebdf111c02fa7a2d
-> 
-> Could you use the proper 'fixes' format here?
-> Fixes: d790b7eda953 ("[media] vb2-dma-sg: move dma_(un)map_sg here")
-> 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
 > > ---
-> >  drivers/media/platform/marvell-ccic/mcam-core.c | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >  drivers/usb/usbip/vhci_hcd.c | 8 ++++++++
+> >  1 file changed, 8 insertions(+)
 > > 
-> > diff --git a/drivers/media/platform/marvell-ccic/mcam-core.c b/drivers/media/platform/marvell-ccic/mcam-core.c
-> > index f1b301810260a..d97f39bde9bd6 100644
-> > --- a/drivers/media/platform/marvell-ccic/mcam-core.c
-> > +++ b/drivers/media/platform/marvell-ccic/mcam-core.c
-> > @@ -200,7 +200,6 @@ struct mcam_vb_buffer {
-> >  	struct list_head queue;
-> >  	struct mcam_dma_desc *dma_desc;	/* Descriptor virtual address */
-> >  	dma_addr_t dma_desc_pa;		/* Descriptor physical address */
-> > -	int dma_desc_nent;		/* Number of mapped descriptors */
-> >  };
-> > 
-> >  static inline struct mcam_vb_buffer *vb_to_mvb(struct vb2_v4l2_buffer *vb)
-> > @@ -608,9 +607,11 @@ static void mcam_dma_contig_done(struct mcam_camera *cam, int frame)
-> >  static void mcam_sg_next_buffer(struct mcam_camera *cam)
-> >  {
-> >  	struct mcam_vb_buffer *buf;
-> > +	struct sg_table *sg_table;
-> > 
-> >  	buf = list_first_entry(&cam->buffers, struct mcam_vb_buffer, queue);
-> >  	list_del_init(&buf->queue);
-> > +	sg_table = vb2_dma_sg_plane_desc(&buf->vb_buf.vb2_buf, 0);
-> >  	/*
-> >  	 * Very Bad Not Good Things happen if you don't clear
-> >  	 * C1_DESC_ENA before making any descriptor changes.
-> > @@ -618,7 +619,7 @@ static void mcam_sg_next_buffer(struct mcam_camera *cam)
-> >  	mcam_reg_clear_bit(cam, REG_CTRL1, C1_DESC_ENA);
-> >  	mcam_reg_write(cam, REG_DMA_DESC_Y, buf->dma_desc_pa);
-> >  	mcam_reg_write(cam, REG_DESC_LEN_Y,
-> > -			buf->dma_desc_nent*sizeof(struct mcam_dma_desc));
-> > +			sg_table->nents*sizeof(struct mcam_dma_desc));
+> > diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+> > index 667d9c0ec905..9df4d9e36788 100644
+> > --- a/drivers/usb/usbip/vhci_hcd.c
+> > +++ b/drivers/usb/usbip/vhci_hcd.c
+> > @@ -1287,6 +1287,13 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
+> >  	return 0;
+> >  }
+> >  
+> > +static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
+> > +			    gfp_t mem_flags)
+> > +{
+> > +	dev_dbg(hcd->self.controller, "vhci does not map urb for dma\n");
+> > +	return 0;
+> > +}
+> > +
+> >  static const struct hc_driver vhci_hc_driver = {
+> >  	.description	= driver_name,
+> >  	.product_desc	= driver_desc,
+> > @@ -1302,6 +1309,7 @@ static const struct hc_driver vhci_hc_driver = {
+> >  	.urb_dequeue	= vhci_urb_dequeue,
+> >  
+> >  	.get_frame_number = vhci_get_frame_number,
+> > +	.map_urb_for_dma = vhci_map_urb_for_dma,
+> >  
+> >  	.hub_status_data = vhci_hub_status,
+> >  	.hub_control    = vhci_hub_control,
 > 
-> Space betwen operators (it was there already, I know).
-> 
-> Apart for that, patch seems fine to me:
-> Reviewed-by: Jacopo Mondi <jacopo@jmondi.org>
+> If the goal is to avoid wasting CPU cycles, you probably should have a 
+> vhci_unmap_urb_for_dma routine as well.
 
-This has been already applied to media_tree.git, with the Fixes: tag
-corrected by Mauro Chehab.
+I missed that. Thank you for pointing it out.
+I will send v2 including unmap function.
 
-I suppose I can't make changes anymore and the space-between-operators
-things is not worth fixing up in a separate commit?
+Regards
 
-> Thanks
->    j
-> >  	mcam_reg_write(cam, REG_DESC_LEN_U, 0);
-> >  	mcam_reg_write(cam, REG_DESC_LEN_V, 0);
-> >  	mcam_reg_set_bit(cam, REG_CTRL1, C1_DESC_ENA);
-> > 
-
-Thank you
-Lubo
-
+Suwan Kim
