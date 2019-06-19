@@ -2,82 +2,118 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6783C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:13:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8422C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5A29208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:13:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51F5421670
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:15:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560953734;
+	bh=9//fCv7R84M7FMNljtswEpVZYQad844yoyk1YittZlQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=WOWudfUC0vjd8hZO+LDXFNHOpuoQhhz/DqZmz2iQyE/Ucr1Rl3gVLcIXY9HXbz0qB
+	 N2GJ2zgDnYyeClxFzRHck6L82BMHXMSdSnSwnowikk7nZ3aZFk05MUz/VrlvtkeFvo
+	 s8Aaysk6EwsrawSJQP41Ec/z6rFWb/TuCLqxpxdg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfFSON0 (ORCPT
+        id S1729157AbfFSOPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:13:26 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:34712 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfFSONZ (ORCPT
+        Wed, 19 Jun 2019 10:15:32 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34808 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSOPc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:13:25 -0400
-Received: from localhost (unknown [144.121.20.163])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 9F5FB15224149;
-        Wed, 19 Jun 2019 07:13:24 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 10:13:23 -0400 (EDT)
-Message-Id: <20190619.101323.1146505723758856038.davem@davemloft.net>
-To:     sfr@canb.auug.org.au
-Cc:     netdev@vger.kernel.org, linux-next@vger.kernel.org,
-        linux-kernel@vger.kernel.org, ldir@darbyshire-bryant.me.uk,
-        yamada.masahiro@socionext.com
-Subject: Re: linux-next: build failure after merge of the net-next tree
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190619132326.1846345b@canb.auug.org.au>
-References: <20190619132326.1846345b@canb.auug.org.au>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Wed, 19 Jun 2019 10:15:32 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NBYZM4x4vonQf9U9PegTdJ8Gr3lWbvulPmcaW6blw1o=; b=dPqOh1g1u6+Gx0sBalb5rkX2u
+        wIbBMtAEdIsAee3Ub7W9KYWOgt2mtCWo8S4Q3A8BuyYcZpFXJIBFKLK93DcM0OgM4m/inlhuMxd4i
+        xv4bXL13yE2S6AOwvmz7dbVWGoNRlTOpVocD4rVyrbv1GF1YVK56MDdeJUJ2TJdyUU/i7LDzPPxwk
+        q5bBzKUGnZGKBhiO1stiWprfqZmaUIaVdpkulYzUlK2rGWSYmI7ne0f+vptRKQfKdDsKioHcQ3HVY
+        ZLJmnIxZLL9Wg8XwEkfcleJ+3FQYhKRtXa8W53asUfOJcitK/KfLJc7dkOM7cGkK88AajNUpeKd7M
+        OSliQfZFw==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdbN5-0002AD-M9; Wed, 19 Jun 2019 14:15:32 +0000
+Date:   Wed, 19 Jun 2019 11:15:28 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     David Howells <dhowells@redhat.com>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
+ dir
+Message-ID: <20190619111528.3e2665e3@coco.lan>
+In-Reply-To: <11422.1560951550@warthog.procyon.org.uk>
+References: <20190619072218.4437f891@coco.lan>
+        <cover.1560890771.git.mchehab+samsung@kernel.org>
+        <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
+        <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com>
+        <11422.1560951550@warthog.procyon.org.uk>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 19 Jun 2019 07:13:25 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi David,
 
-I've fixed this as follows, thanks:
+Em Wed, 19 Jun 2019 14:39:10 +0100
+David Howells <dhowells@redhat.com> escreveu:
 
-====================
-From 23cdf8752b26d4edbd60a6293bca492d83192d4d Mon Sep 17 00:00:00 2001
-From: "David S. Miller" <davem@davemloft.net>
-Date: Wed, 19 Jun 2019 10:12:58 -0400
-Subject: [PATCH] act_ctinfo: Don't use BIT() in UAPI headers.
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > > > -Documentation/nommu-mmap.rst
+> > > > +Documentation/driver-api/nommu-mmap.rst    
+> 
+> Why is this moving to Documentation/driver-api?  
 
-Use _BITUL() instead.
+Good point. I tried to do my best with those document renames, but
+I'm pretty sure some of them ended by going to the wrong place - or
+at least there are arguments in favor of moving it to different
+places :-)
 
-Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-Signed-off-by: David S. Miller <davem@davemloft.net>
----
- include/uapi/linux/tc_act/tc_ctinfo.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+The driver-api ended to be where most of the stuff has been moved,
+as this is the main kAPI dir (there is also a core-api dir for kAPI too).
 
-diff --git a/include/uapi/linux/tc_act/tc_ctinfo.h b/include/uapi/linux/tc_act/tc_ctinfo.h
-index da803e05a89b..32337304fbe5 100644
---- a/include/uapi/linux/tc_act/tc_ctinfo.h
-+++ b/include/uapi/linux/tc_act/tc_ctinfo.h
-@@ -27,8 +27,8 @@ enum {
- #define TCA_CTINFO_MAX (__TCA_CTINFO_MAX - 1)
- 
- enum {
--	CTINFO_MODE_DSCP	= BIT(0),
--	CTINFO_MODE_CPMARK	= BIT(1)
-+	CTINFO_MODE_DSCP	= _BITUL(0),
-+	CTINFO_MODE_CPMARK	= _BITUL(1)
- };
- 
- #endif
--- 
-2.20.1
+I tend to place there stuff that has a mix of kAPI and uAPI at
+driver-api, as usually such documents are written assuming that
+the one that would be reading it is a Kernel developer.
 
+> It's less to do with drivers
+> than with the userspace mapping interface.  Documentation/vm/ would seem a
+> better home.
+> 
+> Or should we institute a Documentation/uapi/?  Though that might be seen to
+> overlap with man2.  Actually, should this be in man7?
+
+Actually, there is an userspace-api dir too. While the logs show that
+this was created back on 2017, I only noticed it very recently.
+
+Re-checking the file, I see your point: there are lots of
+userspace-relevant contents there. Yet, it also mentions kAPI internals,
+like a reference for file and vm ops (at "Providing shareable character
+device support" session):
+
+	file->f_op->get_unmapped_area()
+	file->f_op->mmap()
+	vm_ops->close()
+
+It is up to MM people and Jon to decide where to place it.
+
+In any case, the best (long term) seems to split it on separate files, 
+one with kAPI and another one with uAPI (just like may other subsystem
+specific docs).
+
+Thanks,
+Mauro
