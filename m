@@ -2,119 +2,189 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B3CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:07:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 954D5C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:16:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A621820863
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:07:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QISWmhKm"
+	by mail.kernel.org (Postfix) with ESMTP id 772AB20863
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725913AbfFSAHF (ORCPT
+        id S1728905AbfFSAP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 20:07:05 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:36221 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726007AbfFSAHF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 20:07:05 -0400
-Received: by mail-pg1-f195.google.com with SMTP id f21so8570038pgi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 17:07:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=GQXaooy3YTQO/7dhNz5IloaGMVtvq8OISjNBJivVZk8=;
-        b=QISWmhKmDdfZzkXDJE6OzYJ7fuHyi4jZQkR4GwS7QDM8X/tZAk41MVJTWQY6eHW2lO
-         WOYnQ1BQTPLTE3eknm53dYv9AvyasKMMGsPEBStbDfxZIH2prIu9Ytmt8eeqHkVM+bvm
-         DvpIU4M7ujQL6vMPUs5Ho9z9gYlAhCpXwYGFrD5XNnv7YqkCmEUs8Rf0cwDy/qMfkyt1
-         zti+RIx+roo+Ok7+YhRy9J9Knie6tb8Iyuh6vlqF+55jva5V7OapBWtAK2AIEz/TGQw7
-         8NsHzIv5o7krpsJT295ejNFqvaV4w0gLHRHbI9mF8aoGuTCXUJ6q33i7H1Z/n+6spkA3
-         NSUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=GQXaooy3YTQO/7dhNz5IloaGMVtvq8OISjNBJivVZk8=;
-        b=mOWd4TvXprhUQa6mjArai3T7+lpy+Z2ZkY6ejEFIrOuEIqXAmpqKwMFYhiUgkuqkUA
-         AXxckn4d72nMrXsGUOYJIuIhcC4mDk3C0IwH4qjxvQ4XE8hZQVq9SMSlV7cDXkZ9bdZi
-         TB96XVTFdwS2vadcFuq1fd1dfv7+ecoaJjhgipeoExjS+7EYGCXbPBeRHwrMl3Y0Tbiq
-         uF1ooMrULr9eMqgBgBsEc3YmITuxKW+uURMGwWKBIp80Gd39UGrkE4Hfo/9tKyUVH8CN
-         QIbfoYc6pkljUWuzxe8IZZawIP2MY2E/oAdVep6TJ9LTZ80Ss+TqH3HPdPtBrZ2xzTkD
-         fnQA==
-X-Gm-Message-State: APjAAAVJc+nUxsioF76yFckCxtFxiYMwMb/j0a3SANSnic18OYF0lllW
-        kO+s8XMMKTdY5U515wOG9dvXIQ==
-X-Google-Smtp-Source: APXvYqz5ltPufYbUT+ecfpkCtqsZC1ypLVG6bKP028wuxw3yyPlrrxm4ZnTOE+kOsARleDrxVvQ5ww==
-X-Received: by 2002:aa7:8752:: with SMTP id g18mr7086261pfo.201.1560902824089;
-        Tue, 18 Jun 2019 17:07:04 -0700 (PDT)
-Received: from minitux (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id c26sm15772646pfr.71.2019.06.18.17.07.02
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 17:07:03 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 17:07:01 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     Andy Gross <agross@kernel.org>,
-        David Brown <david.brown@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        MSM <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org,
-        lkml <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: Add Dragonboard 845c
-Message-ID: <20190619000701.GI4814@minitux>
-References: <20190618211945.27431-1-bjorn.andersson@linaro.org>
- <CAOCk7Nq7X=3LdzQF83J1QDRnrQtWmjRcySyLZ-3M321HtHxHfg@mail.gmail.com>
+        Tue, 18 Jun 2019 20:15:57 -0400
+Received: from mga02.intel.com ([134.134.136.20]:6548 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725988AbfFSAP5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 20:15:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Jun 2019 17:15:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,390,1557212400"; 
+   d="scan'208";a="153637382"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga008.jf.intel.com with ESMTP; 18 Jun 2019 17:15:56 -0700
+Date:   Tue, 18 Jun 2019 17:19:08 -0700
+From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc:     "peter.maydell@linaro.org" <peter.maydell@linaro.org>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "ashok.raj@intel.com" <ashok.raj@intel.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        Marc Zyngier <Marc.Zyngier@arm.com>,
+        Will Deacon <Will.Deacon@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Vincent Stehle <Vincent.Stehle@arm.com>,
+        Robin Murphy <Robin.Murphy@arm.com>,
+        "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>,
+        "eric.auger.pro@gmail.com" <eric.auger.pro@gmail.com>,
+        "Liu, Yi L" <yi.l.liu@intel.com>, jacob.jun.pan@linux.intel.com
+Subject: Re: [PATCH v8 26/29] vfio-pci: Register an iommu fault handler
+Message-ID: <20190618171908.76284cd7@jacob-builder>
+In-Reply-To: <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
+References: <20190526161004.25232-1-eric.auger@redhat.com>
+        <20190526161004.25232-27-eric.auger@redhat.com>
+        <20190603163139.70fe8839@x1.home>
+        <10dd60d9-4af0-c0eb-08c9-a0db7ee1925e@redhat.com>
+        <20190605154553.0d00ad8d@jacob-builder>
+        <2753d192-1c46-d78e-c425-0c828e48cde2@arm.com>
+        <20190606132903.064f7ac4@jacob-builder>
+        <dc051424-67d7-02ff-9b8e-0d7a8a4e59eb@arm.com>
+        <20190607104301.6b1bbd74@jacob-builder>
+        <e02b024f-6ebc-e8fa-c30c-5bf3f4b164d6@arm.com>
+        <20190610143134.7bff96e9@jacob-builder>
+        <905f130b-02dc-6971-8d5b-ce87d9bc96a4@arm.com>
+        <20190612115358.0d90b322@jacob-builder>
+        <77405d39-81a4-d9a8-5d35-27602199867a@arm.com>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOCk7Nq7X=3LdzQF83J1QDRnrQtWmjRcySyLZ-3M321HtHxHfg@mail.gmail.com>
-User-Agent: Mutt/1.12.0 (2019-05-25)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 18 Jun 14:27 PDT 2019, Jeffrey Hugo wrote:
+On Tue, 18 Jun 2019 15:04:36 +0100
+Jean-Philippe Brucker <jean-philippe.brucker@arm.com> wrote:
 
-> On Tue, Jun 18, 2019 at 3:21 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-[..]
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845-db845c.dts b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > new file mode 100644
-> > index 000000000000..71bd717a4251
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845-db845c.dts
-> > @@ -0,0 +1,557 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2019, Linaro Ltd.
-> > + */
-> > +
-> > +/dts-v1/;
-> > +
-> > +#include <dt-bindings/gpio/gpio.h>
-> > +#include <dt-bindings/pinctrl/qcom,pmic-gpio.h>
-> > +#include <dt-bindings/regulator/qcom,rpmh-regulator.h>
-> > +#include "sdm845.dtsi"
-> > +#include "pm8998.dtsi"
-> > +#include "pmi8998.dtsi"
-> > +
-> > +/ {
-> > +       model = "Thundercomm Dragonboard 845c";
-> > +       compatible = "thundercomm,db845c", "qcom,sdm845";
+> On 12/06/2019 19:53, Jacob Pan wrote:
+> >>> You are right, the worst case of the spurious PS is to terminate
+> >>> the group prematurely. Need to know the scope of the HW damage in
+> >>> case of mdev where group IDs can be shared among mdevs belong to
+> >>> the same PF.    
+> >>
+> >> But from the IOMMU fault API point of view, the full page request
+> >> is identified by both PRGI and PASID. Given that each mdev has its
+> >> own set of PASIDs, it should be easy to isolate page responses per
+> >> mdev. 
+> > On Intel platform, devices sending page request with private data
+> > must receive page response with matching private data. If we solely
+> > depend on PRGI and PASID, we may send stale private data to the
+> > device in those incorrect page response. Since private data may
+> > represent PF device wide contexts, the consequence of sending page
+> > response with wrong private data may affect other mdev/PASID.
+> > 
+> > One solution we are thinking to do is to inject the sequence #(e.g.
+> > ktime raw mono clock) as vIOMMU private data into to the guest.
+> > Guest would return this fake private data in page response, then
+> > host will send page response back to the device that matches PRG1
+> > and PASID and private_data.
+> > 
+> > This solution does not expose HW context related private data to the
+> > guest but need to extend page response in iommu uapi.
+> > 
+> > /**
+> >  * struct iommu_page_response - Generic page response information
+> >  * @version: API version of this structure
+> >  * @flags: encodes whether the corresponding fields are valid
+> >  *         (IOMMU_FAULT_PAGE_RESPONSE_* values)
+> >  * @pasid: Process Address Space ID
+> >  * @grpid: Page Request Group Index
+> >  * @code: response code from &enum iommu_page_response_code
+> >  * @private_data: private data for the matching page request
+> >  */
+> > struct iommu_page_response {
+> > #define IOMMU_PAGE_RESP_VERSION_1	1
+> > 	__u32	version;
+> > #define IOMMU_PAGE_RESP_PASID_VALID	(1 << 0)
+> > #define IOMMU_PAGE_RESP_PRIVATE_DATA	(1 << 1)
+> > 	__u32	flags;
+> > 	__u32	pasid;
+> > 	__u32	grpid;
+> > 	__u32	code;
+> > 	__u32	padding;
+> > 	__u64	private_data[2];
+> > };
+> > 
+> > There is also the change needed for separating storage for the real
+> > and fake private data.
+> > 
+> > Sorry for the last minute change, did not realize the HW
+> > implications.
+> > 
+> > I see this as a future extension due to limited testing,   
 > 
-> Is "thundercomm" a legal vendor prefix?
+> I'm wondering how we deal with:
+> (1) old userspace that won't fill the new private_data field in
+> page_response. A new kernel still has to support it.
+> (2) old kernel that won't recognize the new PRIVATE_DATA flag.
+> Currently iommu_page_response() rejects page responses with unknown
+> flags.
 > 
+> I guess we'll need a two-way negotiation, where userspace queries
+> whether the kernel supports the flag (2), and the kernel learns
+> whether it should expect the private data to come back (1).
+> 
+I am not sure case (1) exist in that there is no existing user space
+supports PRQ w/o private data. Am I missing something?
 
-Following the other board vendors, yes. But you're right in that it
-should be added to vendor-prefixes.yaml as well.
+For VT-d emulation, private data is always part of the scalable mode
+PASID capability. If vIOMMU query host supports PASID and scalable
+mode, it will always support private data once PRQ is enabled.
 
-Given the review feedback on v2 I've merged this revision for v5.3.
+So I think we only need to negotiate (2) which should be covered by
+VT-d PASID cap.
 
-Regards,
-Bjorn
+> > perhaps for
+> > now, can you add paddings similar to page request? Make it 64B as
+> > well.  
+> 
+> I don't think padding is necessary, because iommu_page_response is
+> sent by userspace to the kernel, unlike iommu_fault which is
+> allocated by userspace and filled by the kernel.
+> 
+> Page response looks a lot more like existing VFIO mechanisms, so I
+> suppose we'll wrap the iommu_page_response structure and include an
+> argsz parameter at the top:
+> 
+> 	struct vfio_iommu_page_response {
+> 		u32 argsz;
+> 		struct iommu_page_response pr;
+> 	};
+> 
+> 	struct vfio_iommu_page_response vpr = {
+> 		.argsz = sizeof(vpr),
+> 		.pr = ...
+> 		...
+> 	};
+> 
+> 	ioctl(devfd, VFIO_IOMMU_PAGE_RESPONSE, &vpr);
+> 
+> In that case supporting private data can be done by simply appending a
+> field at the end (plus the negotiation above).
+> 
+Do you mean at the end of struct vfio_iommu_page_response{}? or at
+the end of that seems struct iommu_page_response{}?
+
+The consumer of the private data is iommu driver not vfio. So I think
+you want to add the new field at the end of struct iommu_page_response,
+right?
+I think that would work, just to clarify.
