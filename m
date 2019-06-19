@@ -2,209 +2,175 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE03BC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:36:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41C11C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:36:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0E66208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:36:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18B04208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:36:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fOgBcyWW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731447AbfFSKg0 (ORCPT
+        id S1731540AbfFSKgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:36:26 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46748 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726826AbfFSKgZ (ORCPT
+        Wed, 19 Jun 2019 06:36:47 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41893 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726826AbfFSKgr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:36:25 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JAYt4W011755
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 06:36:25 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7h6df16d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 06:36:24 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Wed, 19 Jun 2019 11:36:22 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 11:36:18 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JAaGwx43974834
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 10:36:17 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C834511C066;
-        Wed, 19 Jun 2019 10:36:16 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 833E711C054;
-        Wed, 19 Jun 2019 10:36:16 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.171.67])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 10:36:16 +0000 (GMT)
-Subject: Re: [PATCH] ocxl: Allow contexts to be attached with a NULL mm
-To:     Andrew Donnellan <ajd@linux.ibm.com>,
-        "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Nicholas Piggin <npiggin@gmail.com>
-References: <20190617044152.13707-1-alastair@au1.ibm.com>
- <81f8951e-a095-3e13-4229-6475f6a8d4a5@linux.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Wed, 19 Jun 2019 12:36:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 06:36:47 -0400
+Received: by mail-lj1-f196.google.com with SMTP id s21so2725673lji.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:36:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=+vEo5ld3iyjHBFwUuEjWL+Gba8QM9jKd32c5zWkOfXU=;
+        b=fOgBcyWWXD9P2VTaJp8pVqhCFDQL68ehA5gqT0yPI6bQbj514Ee+DULCsd6Dp3ZbOh
+         DGSZXVuG7lYeqbUXZs93eOiIBvJGV33/slmAioY+QScWze4CArTSsWfog5HCd1bAHP+m
+         WcHckthzkDjRHUnW8VFUHgqW2PUMrX46gUTcn8tQaddFvyHyWodiAbX5yapFWHi9eaAe
+         j4FjHZ8pEns9hMWJQQ4ufug3wGHPTiAHYNiwGWjxAf3BlekJ/hzkgCYmRi5M1kvl9yZm
+         NTEgNM0PZAGqI0KG/meyH4d7ejAAlEARet0RWBIMNpvTlBFYCIoAw4kXpFj6O9qUwUJA
+         A3Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=+vEo5ld3iyjHBFwUuEjWL+Gba8QM9jKd32c5zWkOfXU=;
+        b=GqC/cPFRtU4oOdlqq+V6/DOtiKp+2Kl88knjipNASHyn7BMQp6JbCBV8FZwsyoIT5a
+         Ve1sDCGV9CuN6pgRS/uKrCnkBg4RREqOLeYBmP+kEN5nziQIeFRGxQb9K1zg+eEn4Vkv
+         Z3KweZzJxeRj/yUrzLKjoGR2qQEdWqGra4J9eW2o184ZPM/7qFEPs41cPhzRVpoqbIM2
+         EKzenaHWF3D8PoPnmQKczR4h1I6XcALaNSQjgoNGFQeQwzqYyQ68ATYFoiAfa2z3QWYu
+         KWDHKogiAx/LAqWohgLUXdv2t/K8qnx70VCqFfYwC9dZPiP+8Ib7OOtmz998IOqIkA/m
+         qXLA==
+X-Gm-Message-State: APjAAAW1JuzQNXiqpGr8jGpU+m8/Gb5/CfNF1OP2aTaNLrKYoEwMNHfJ
+        oO/NpXNZJe5QNoJ1BU35Us8=
+X-Google-Smtp-Source: APXvYqy2z2pzaeKHA9hb6yNgYbbhdvOfcA4iWRJnQjmbNVPRzTzd9ruwFCZMUQXHwqCqKwOAy9ozAQ==
+X-Received: by 2002:a2e:82c5:: with SMTP id n5mr27228732ljh.175.1560940604841;
+        Wed, 19 Jun 2019 03:36:44 -0700 (PDT)
+Received: from pc636 ([37.139.158.167])
+        by smtp.gmail.com with ESMTPSA id v14sm2624011lfb.50.2019.06.19.03.36.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 03:36:43 -0700 (PDT)
+From:   Uladzislau Rezki <urezki@gmail.com>
+X-Google-Original-From: Uladzislau Rezki <urezki@pc636>
+Date:   Wed, 19 Jun 2019 12:36:36 +0200
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Uladzislau Rezki <urezki@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Roman Penyaev <rpenyaev@suse.de>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Roman Gushchin <guro@fb.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Garnier <thgarnie@google.com>,
+        Oleksiy Avramchenko <oleksiy.avramchenko@sonymobile.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, Tejun Heo <tj@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/vmalloc: avoid bogus -Wmaybe-uninitialized warning
+Message-ID: <20190619103636.rzjca5jxofc5anjw@pc636>
+References: <20190618092650.2943749-1-arnd@arndb.de>
+ <CAJWu+oqzd8MJqusRV0LAK=Xnm7VSRSu3QbNZ-j5h9_MbzcFhhg@mail.gmail.com>
+ <20190618140622.bbak3is7yv32hfjn@pc636>
+ <20190618135920.9dd7bdc78fc0ce33ee65d99c@linux-foundation.org>
 MIME-Version: 1.0
-In-Reply-To: <81f8951e-a095-3e13-4229-6475f6a8d4a5@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061910-0012-0000-0000-0000032A768C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061910-0013-0000-0000-000021639726
-Message-Id: <682c9b63-7edd-eb4e-8d6f-2bfdd36453e4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=888 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190088
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618135920.9dd7bdc78fc0ce33ee65d99c@linux-foundation.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 18/06/2019 à 03:50, Andrew Donnellan a écrit :
-> On 17/6/19 2:41 pm, Alastair D'Silva wrote:
->> From: Alastair D'Silva <alastair@d-silva.org>
->>
->> If an OpenCAPI context is to be used directly by a kernel driver, there
->> may not be a suitable mm to use.
->>
->> The patch makes the mm parameter to ocxl_context_attach optional.
->>
->> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+On Tue, Jun 18, 2019 at 01:59:20PM -0700, Andrew Morton wrote:
+> On Tue, 18 Jun 2019 16:06:22 +0200 Uladzislau Rezki <urezki@gmail.com> wrote:
 > 
-> The one issue I can see here is that using mm == NULL bypasses our 
-> method of enabling/disabling global TLBIs in mm_context_add_copro().
+> > On Tue, Jun 18, 2019 at 09:40:28AM -0400, Joel Fernandes wrote:
+> > > On Tue, Jun 18, 2019 at 5:27 AM Arnd Bergmann <arnd@arndb.de> wrote:
+> > > >
+> > > > gcc gets confused in pcpu_get_vm_areas() because there are too many
+> > > > branches that affect whether 'lva' was initialized before it gets
+> > > > used:
+> > > >
+> > > > mm/vmalloc.c: In function 'pcpu_get_vm_areas':
+> > > > mm/vmalloc.c:991:4: error: 'lva' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+> > > >     insert_vmap_area_augment(lva, &va->rb_node,
+> > > >     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > >      &free_vmap_area_root, &free_vmap_area_list);
+> > > >      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > > > mm/vmalloc.c:916:20: note: 'lva' was declared here
+> > > >   struct vmap_area *lva;
+> > > >                     ^~~
+> > > >
+> > > > Add an intialization to NULL, and check whether this has changed
+> > > > before the first use.
+> > > >
+> > > > Fixes: 68ad4a330433 ("mm/vmalloc.c: keep track of free blocks for vmap allocation")
+> > > > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > > > ---
+> > > >  mm/vmalloc.c | 9 +++++++--
+> > > >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > > >
+> > > > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > > > index a9213fc3802d..42a6f795c3ee 100644
+> > > > --- a/mm/vmalloc.c
+> > > > +++ b/mm/vmalloc.c
+> > > > @@ -913,7 +913,12 @@ adjust_va_to_fit_type(struct vmap_area *va,
+> > > >         unsigned long nva_start_addr, unsigned long size,
+> > > >         enum fit_type type)
+> > > >  {
+> > > > -       struct vmap_area *lva;
+> > > > +       /*
+> > > > +        * GCC cannot always keep track of whether this variable
+> > > > +        * was initialized across many branches, therefore set
+> > > > +        * it NULL here to avoid a warning.
+> > > > +        */
+> > > > +       struct vmap_area *lva = NULL;
+> > > 
+> > > Fair enough, but is this 5-line comment really needed here?
+> > > 
+> > How it is rewritten now, probably not. I would just set it NULL and
+> > leave the comment, but that is IMHO. Anyway
+> > 
 > 
-> Discussing this privately with Alastair and Fred - this should be fine, 
-> but perhaps we should document that.
-
-
-So indeed we should be fine. I confirmed with Nick that kernel space 
-invalidations are already global today.
-Nick mentioned that we should still be fine tomorrow, but in the distant 
-future, we could imagine local usage of some part of the kernel space. 
-It will require some work, but it would be best to add a comment in one 
-of the kernel invalidation function (for example 
-radix__flush_tlb_kernel_range()) that if a kernel invalidation ever 
-becomes local, then clients of the nest MMU may need some work.
-
-A few more comments below.
-
-
->> ---
->>   drivers/misc/ocxl/context.c |  9 ++++++---
->>   drivers/misc/ocxl/link.c    | 12 ++++++++----
->>   2 files changed, 14 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
->> index bab9c9364184..994563a078eb 100644
->> --- a/drivers/misc/ocxl/context.c
->> +++ b/drivers/misc/ocxl/context.c
->> @@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, 
->> u64 dsisr)
->>   int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct 
->> mm_struct *mm)
->>   {
->>       int rc;
->> +    unsigned long pidr = 0;
->>       // Locks both status & tidr
->>       mutex_lock(&ctx->status_mutex);
->> @@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, 
->> u64 amr, struct mm_struct *mm)
->>           goto out;
->>       }
->> -    rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
->> -            mm->context.id, ctx->tidr, amr, mm,
->> -            xsl_fault_error, ctx);
->> +    if (mm)
->> +        pidr = mm->context.id;
->> +
->> +    rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, 
->> ctx->tidr,
->> +                  amr, mm, xsl_fault_error, ctx);
->>       if (rc)
->>           goto out;
->> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
->> index cce5b0d64505..43542f124807 100644
->> --- a/drivers/misc/ocxl/link.c
->> +++ b/drivers/misc/ocxl/link.c
->> @@ -523,7 +523,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, 
->> u32 pidr, u32 tidr,
->>       pe->amr = cpu_to_be64(amr);
->>       pe->software_state = cpu_to_be32(SPA_PE_VALID);
->> -    mm_context_add_copro(mm);
->> +    if (mm)
->> +        mm_context_add_copro(mm);
-
-
-Same as above, we should add a comment here in the driver code that a 
-kernel context is ok because invalidations are global.
-
-
-We also need a new check in xsl_fault_handler(). A valid kernel address 
-shouldn't fault, but it's still possible for the FPGA to try accessing a 
-bogus kernel address. In which case, xsl_fault_handler() would be 
-entered, with a valid fault context. We'll find pe_data in the tree 
-based on the valid pe_handle, but pe_data->mm will be NULL. In that, we 
-can return early, acknowledging the interrupt with ADDRESS_ERROR value 
-(like we do if pe_data is not found in the tree).
-
-   Fred
-
-
->>       /*
->>        * Barrier is to make sure PE is visible in the SPA before it
->>        * is used by the device. It also helps with the global TLBI
->> @@ -546,7 +547,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, 
->> u32 pidr, u32 tidr,
->>        * have a reference on mm_users. Incrementing mm_count solves
->>        * the problem.
->>        */
->> -    mmgrab(mm);
->> +    if (mm)
->> +        mmgrab(mm);
->>       trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, 
->> tidr);
->>   unlock:
->>       mutex_unlock(&spa->spa_lock);
->> @@ -652,8 +654,10 @@ int ocxl_link_remove_pe(void *link_handle, int 
->> pasid)
->>       if (!pe_data) {
->>           WARN(1, "Couldn't find pe data when removing PE\n");
->>       } else {
->> -        mm_context_remove_copro(pe_data->mm);
->> -        mmdrop(pe_data->mm);
->> +        if (pe_data->mm) {
->> +            mm_context_remove_copro(pe_data->mm);
->> +            mmdrop(pe_data->mm);
->> +        }
->>           kfree_rcu(pe_data, rcu);
->>       }
->>   unlock:
->>
+> I agree - given that the patch does this:
 > 
+> @@ -972,7 +977,7 @@ adjust_va_to_fit_type(struct vmap_area *
+>  	if (type != FL_FIT_TYPE) {
+>  		augment_tree_propagate_from(va);
+>  
+> -		if (type == NE_FIT_TYPE)
+> +		if (lva)
+>  			insert_vmap_area_augment(lva, &va->rb_node,
+>  				&free_vmap_area_root, &free_vmap_area_list);
+>  	}
+> 
+> the comment simply isn't relevant any more.  Although I guess this
+> might be a bit helpful:
+> 
+> @@ -977,7 +972,7 @@ adjust_va_to_fit_type(struct vmap_area *
+>  	if (type != FL_FIT_TYPE) {
+>  		augment_tree_propagate_from(va);
+>  
+> -		if (lva)
+> +		if (lva)	/* type == NE_FIT_TYPE */
+>  			insert_vmap_area_augment(lva, &va->rb_node,
+>  				&free_vmap_area_root, &free_vmap_area_list);
+>  	}
+> 
+That comment makes it much clear, thanks!
 
+--
+Vlad Rezki
