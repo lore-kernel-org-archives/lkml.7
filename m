@@ -2,59 +2,97 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AF37C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:32:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5168FC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:32:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AD1121743
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:32:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3188C20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 13:32:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730749AbfFSNcC (ORCPT
+        id S1730972AbfFSNc2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 09:32:02 -0400
-Received: from mail.excellent-customer-service.com ([185.216.140.110]:44565
-        "EHLO chulaseafood.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730340AbfFSNcC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 09:32:02 -0400
-X-Greylist: delayed 3619 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Jun 2019 09:32:01 EDT
-To:     linux-kernel@vger.kernel.org
-Subject: =?UTF-8?B?ICAgICAgIHF1ZXN0aW9u4oCm?=
-Message-ID: <d6cf54db0cdd76a705cd1dcd659f8e42@airkinglimited.com>
-Date:   Wed, 19 Jun 2019 13:36:24 +0200
-From:   "Laura" <ansitaksi@verizon.net>
-Reply-To: turisnig@sina.com
+        Wed, 19 Jun 2019 09:32:28 -0400
+Received: from foss.arm.com ([217.140.110.172]:39914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727129AbfFSNc2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 09:32:28 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 520DB344;
+        Wed, 19 Jun 2019 06:32:27 -0700 (PDT)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C838B3F738;
+        Wed, 19 Jun 2019 06:32:26 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 14:32:25 +0100
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     arm@kernel.org, Paul Walmsley <paul@pwsan.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ARM: omap2: remove incorrect __init annotation
+Message-ID: <20190619133224.GX20984@e119886-lin.cambridge.arm.com>
+References: <20190619130529.1502322-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619130529.1502322-1-arnd@arndb.de>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Jun 19, 2019 at 03:04:54PM +0200, Arnd Bergmann wrote:
+> omap3xxx_prm_enable_io_wakeup() is marked __init, but its caller is not, so
+> we get a warning with clang-8:
+> 
+> WARNING: vmlinux.o(.text+0x343c8): Section mismatch in reference from the function omap3xxx_prm_late_init() to the function .init.text:omap3xxx_prm_enable_io_wakeup()
+> The function omap3xxx_prm_late_init() references
+> the function __init omap3xxx_prm_enable_io_wakeup().
+> This is often because omap3xxx_prm_late_init lacks a __init
+> annotation or the annotation of omap3xxx_prm_enable_io_wakeup is wrong.
+> 
 
-Can you direct me to the owner/decision maker?   We’d like to send you
-more clients to help you grow your business.
+That's unfortunate, both omap3xxx_prm_enable_io_wakeup and
+omap3xxx_prm_late_init are only ever called at init time (by prm_late_init
+which is also __init annotated). However the omap3xxx_prm_ll_data
+structure containing the late_init has a life beyond init. Otherwise I
+would have suggested annotating omap3xxx_prm_late_init.
 
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-
-We can deliver to you real time, exclusive and consistent leads of people
-looking for your business.
-
-
-
-Who would be the right person to call, and what is the best number to reach
-them on?
-
-
-
-Thank you!
-
-
-
-Laura Gevins
-
+> When building with gcc, omap3xxx_prm_enable_io_wakeup() is always
+> inlined, so we never noticed in the past.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  arch/arm/mach-omap2/prm3xxx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/mach-omap2/prm3xxx.c b/arch/arm/mach-omap2/prm3xxx.c
+> index 05858f966f7d..dfa65fc2c82b 100644
+> --- a/arch/arm/mach-omap2/prm3xxx.c
+> +++ b/arch/arm/mach-omap2/prm3xxx.c
+> @@ -433,7 +433,7 @@ static void omap3_prm_reconfigure_io_chain(void)
+>   * registers, and omap3xxx_prm_reconfigure_io_chain() must be called.
+>   * No return value.
+>   */
+> -static void __init omap3xxx_prm_enable_io_wakeup(void)
+> +static void omap3xxx_prm_enable_io_wakeup(void)
+>  {
+>  	if (prm_features & PRM_HAS_IO_WAKEUP)
+>  		omap2_prm_set_mod_reg_bits(OMAP3430_EN_IO_MASK, WKUP_MOD,
+> -- 
+> 2.20.0
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
