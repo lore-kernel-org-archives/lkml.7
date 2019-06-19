@@ -2,146 +2,184 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC16C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1B5C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AC1205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45C4C205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:27:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="NHTEMx1G"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JY8aSeEX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731424AbfFSK1b (ORCPT
+        id S1731530AbfFSK1f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:27:31 -0400
-Received: from onstation.org ([52.200.56.107]:36936 "EHLO onstation.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726826AbfFSK1a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:27:30 -0400
-Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id B2E0F3E93E;
-        Wed, 19 Jun 2019 10:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1560940049;
-        bh=MOk9vBejJD3LU6pvBKkl0HAgBqxiYYl+m7zxPntItDs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=NHTEMx1GjbaN2+J57y71Lmw6cyCTUTc//Df/6nc1PdjAadKR4+knfGiGK8xtnYs30
-         XDLg4JB15+XvEgUXz37mMkzC1zuBgI0BbRr1mVUZWdfg+iV3SafJuDg9hrxPnHTe+D
-         imbxp7cXdi7boHKky3/3zJvkePfad63ao+kCLYe0=
-Date:   Wed, 19 Jun 2019 06:27:28 -0400
-From:   Brian Masney <masneyb@onstation.org>
-To:     bjorn.andersson@linaro.org, agross@kernel.org,
-        david.brown@linaro.org, robdclark@gmail.com, sean@poorly.run,
-        robh+dt@kernel.org
-Cc:     airlied@linux.ie, daniel@ffwll.ch, mark.rutland@arm.com,
-        jonathan@marek.ca, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v2 5/6] soc: qcom: add OCMEM driver
-Message-ID: <20190619102728.GA894@onstation.org>
-References: <20190619023209.10036-1-masneyb@onstation.org>
- <20190619023209.10036-6-masneyb@onstation.org>
+        Wed, 19 Jun 2019 06:27:35 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:39018 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726959AbfFSK1c (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:27:32 -0400
+Received: by mail-lf1-f68.google.com with SMTP id p24so11696175lfo.6;
+        Wed, 19 Jun 2019 03:27:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Wy23WVAFMNzzYY79+Ss7U5VUGCY1fAwe+Ks92MNYJcA=;
+        b=JY8aSeEXXwnaubHzeAGt4qebktJ0cmPLFPzARE+Xle/C/sUzJ0zJHpuWALRO/CVo6T
+         mRfJI2UxQfLXsgvAaElJNTAr05q04d+pIdT5okiByUrb7pql3XIbK/GkEki7ZlP2xNSe
+         22CmcKvFcV9nqetBeu2NC2Iod8kkt6SKdFejVhMBYITNEKBo2kP3tSNxLd35ZERw3ncC
+         o10OeU7j8Kr1u6gb5GFoBpKHfFHhPPR0JNKtMdlgYo+z7o3B7rI3/Ziofj6JkYY5VEdr
+         hxxOpqpZzI4L8WGZSLseI0HL0VR1UbZIwVnxmuN9FpbghD7ENf8sZUDDqvffBdBJEWG4
+         m8zg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Wy23WVAFMNzzYY79+Ss7U5VUGCY1fAwe+Ks92MNYJcA=;
+        b=F1w3XR+9Wa4qAneYokf9mhWYBJIziK8xDltI6KlQYcQi2ddJjMt8zU9jYewJ9lUDSP
+         46STGa5xO0WF446FkqAzcwmLrJtOxizYA3UIWLcKflkX0EQivpSLr0H5vmsVh8vE/K+L
+         jUzQ2lN55OoSYaX9D+IGa1MgJFYxzvsEcYPSndtwbkCaUqKSPgiIhJCRpDjxIcnf80jq
+         Mxbgey28OQfSmHf+Pz9GL1gDiIHu8GnZPwg2d13mcBOOTgbi/zx+Z3ySW26VGOgYg9Oi
+         DE/H10w/u0RFm7lMwvc3HUCX5OrPNHjXi6bBzXoXHwxMmvFydU+ZlvC6r61mQTF/F2jH
+         f0Dw==
+X-Gm-Message-State: APjAAAWKevBog/jst+kqOkDU3+gB6zdhIvujjpOjk9gV3ohUzOQqYIGT
+        tcscJjAeBg+ZNnhDXyHKSsnARK3X
+X-Google-Smtp-Source: APXvYqxlbjExaeGdlE6PVLq80Nomu52hXD4OgLr0wrQ/P9LFDDrVlz6eBFZaXHC4lbT9DqcirmxewA==
+X-Received: by 2002:a19:bec1:: with SMTP id o184mr31363372lff.86.1560940049495;
+        Wed, 19 Jun 2019 03:27:29 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id q2sm2594636lfj.25.2019.06.19.03.27.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 03:27:28 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+ <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
+ <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
+Date:   Wed, 19 Jun 2019 13:27:27 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619023209.10036-6-masneyb@onstation.org>
+In-Reply-To: <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:32:08PM -0400, Brian Masney wrote:
-> +++ b/include/soc/qcom/ocmem.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * The On Chip Memory (OCMEM) allocator allows various clients to allocate
-> + * memory from OCMEM based on performance, latency and power requirements.
-> + * This is typically used by the GPU, camera/video, and audio components on
-> + * some Snapdragon SoCs.
-> + *
-> + * Copyright (C) 2019 Brian Masney <masneyb@onstation.org>
-> + * Copyright (C) 2015 Red Hat. Author: Rob Clark <robdclark@gmail.com>
-> + */
-> +
-> +#ifndef __OCMEM_H__
-> +#define __OCMEM_H__
-> +
-> +enum ocmem_client {
-> +	/* GMEM clients */
-> +	OCMEM_GRAPHICS = 0x0,
-> +	/*
-> +	 * TODO add more once ocmem_allocate() is clever enough to
-> +	 * deal with multiple clients.
-> +	 */
-> +	OCMEM_CLIENT_MAX,
-> +};
-> +
-> +struct ocmem;
-> +
-> +struct ocmem_buf {
-> +	unsigned long offset;
-> +	unsigned long addr;
-> +	unsigned long len;
-> +};
-> +
-> +#if IS_ENABLED(CONFIG_QCOM_OCMEM)
-> +
-> +struct ocmem *of_get_ocmem(struct device *dev);
-> +struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem, enum ocmem_client client,
-> +				 unsigned long size);
-> +void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-> +		struct ocmem_buf *buf);
-> +
-> +#else /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
-> +
-> +static inline struct ocmem *of_get_ocmem(struct device *dev)
-> +{
-> +	return NULL;
+19.06.2019 13:04, Jon Hunter пишет:
+> 
+> On 19/06/2019 00:27, Dmitry Osipenko wrote:
+>> 19.06.2019 1:22, Ben Dooks пишет:
+>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>>> of data, hence it can report transfer's residual with more fidelity which
+>>>> may be required in cases like audio playback. In particular this fixes
+>>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>>> based on the original work that was made by Ben Dooks [1]. It was tested
+>>>> on Tegra20 and Tegra30 devices.
+>>>>
+>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>>>
+>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>> ---
+>>>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>>>   1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>> index 79e9593815f1..c5af8f703548 100644
+>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>>       return 0;
+>>>>   }
+>>>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>>>> +                          struct tegra_dma_sg_req *sg_req,
+>>>> +                          struct tegra_dma_desc *dma_desc,
+>>>> +                          unsigned int residual)
+>>>> +{
+>>>> +    unsigned long status, wcount = 0;
+>>>> +
+>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>> +        return residual;
+>>>> +
+>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>> +
+>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>> +
+>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>> +        wcount = status;
+>>>> +
+>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>> +        return residual - sg_req->req_len;
+>>>> +
+>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>> +}
+>>>
+>>> I am unfortunately nowhere near my notes, so can't completely
+>>> review this. I think the complexity of my patch series is due
+>>> to an issue with the count being updated before the EOC IRQ
+>>> is actually flagged (and most definetly before it gets to the
+>>> CPU IRQ handler).
+>>>
+>>> The test system I was using, which i've not really got any
+>>> access to at the moment would show these internal inconsistent
+>>> states every few hours, however it was moving 48kHz 8ch 16bit
+>>> TDM data.
+>>>
+>>> Thanks for looking into this, I am not sure if I am going to
+>>> get any time to look into this within the next couple of
+>>> months.
+>>
+>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
+>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
+>> anything going wrong.
+>>
+>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
+>> vs EOC? Assuming the cyclic transfer mode.
+> 
+> I can't say that I am. However, for the case of cyclic transfer, given
+> that the next transfer is always programmed into the registers before
+> the last one completes, I could see that by the time the interrupt is
+> serviced that the DMA has moved on to the next transfer (which I assume
+> would reset the count).
+> 
+> Interestingly, our downstream kernel implemented a change to avoid the
+> count appearing to move backwards. I am curious if this also works,
+> which would be a lot simpler that what Ben has implemented and may
+> mitigate that race condition that Ben is describing.
+> 
+> Cheers
+> Jon
+> 
+> [0]
+> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+> 
 
-This, along with ocmem_allocate() below, need to return ERR_PTR(-ENOSYS).
-adreno_gpu_ocmem_init() needs to check for this error code:
+The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
+tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
+doesn't check whether the dma_desc is *the active* transfer and not a pending!
 
-        ocmem = of_get_ocmem(dev);
-        if (IS_ERR(ocmem)) {
-                if (PTR_ERR(ocmem) == -ENXIO || PTR_ERR(ocmem) == -ENOSYS) {
-                        /*
-                         * Return success since either the ocmem property was
-                         * not specified in device tree, or ocmem support is
-                         * not compiled into the kernel.
-                         */
-                        return 0;
-                }
-
-                return PTR_ERR(ocmem);
-        }
-
-Brian
-
-
-
-> +}
-> +
-> +static inline struct ocmem_buf *ocmem_allocate(struct ocmem *ocmem,
-> +					       enum ocmem_client client,
-> +					       unsigned long size)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline void ocmem_free(struct ocmem *ocmem, enum ocmem_client client,
-> +			      struct ocmem_buf *buf)
-> +{
-> +}
-> +
-> +#endif /* IS_ENABLED(CONFIG_QCOM_OCMEM) */
-> +
-> +#endif /* __OCMEM_H__ */
-> -- 
-> 2.20.1
+Jon, thanks for the pointer anyway! I'll try to catch the case that Ben is describing by
+adding some extra debug checks, will come back with a report after thorough testing.
