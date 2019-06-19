@@ -2,198 +2,109 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87A0CC31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:02:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4DA0C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:02:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F6820B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:02:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DA7921479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:02:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=prevas.se header.i=@prevas.se header.b="ZGvkIJ+c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731373AbfFSKCN convert rfc822-to-8bit (ORCPT
+        id S1731527AbfFSKCS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:02:13 -0400
-Received: from mail.sensor-technik.de ([80.150.181.156]:40079 "EHLO
-        mail.sensor-technik.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726479AbfFSKCN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:02:13 -0400
-X-Greylist: delayed 426 seconds by postgrey-1.27 at vger.kernel.org; Wed, 19 Jun 2019 06:02:11 EDT
-Received: from stwz1.stww2k.local (HELO stwz1.sensor-technik.de) ([172.25.209.3])
-  by mail.sensor-technik.de with ESMTP; 19 Jun 2019 11:55:05 +0200
-Received: from stwz1.stww2k.local (localhost [127.0.0.1])
-        by stwz1.sensor-technik.de (Postfix) with ESMTP id 0C143B5ABC;
-        Wed, 19 Jun 2019 11:55:05 +0200 (CEST)
-Received: from mail.sensor-technik.de (stwex1.stww2k.local [172.25.2.103])
-        by stwz1.sensor-technik.de (Postfix) with ESMTP id 70A19B5AAC;
-        Wed, 19 Jun 2019 11:54:49 +0200 (CEST)
-Received: from STWEX1.stww2k.local (172.25.2.106) by STWEX1.stww2k.local
- (172.25.2.106) with Microsoft SMTP Server (TLS) id 15.0.1263.5; Wed, 19 Jun
- 2019 11:54:48 +0200
-Received: from STWEX1.stww2k.local ([172.25.5.24]) by STWEX1.stww2k.local
- ([172.25.5.24]) with mapi id 15.00.1263.000; Wed, 19 Jun 2019 11:54:48 +0200
-From:   Waibel Georg <Georg.Waibel@sensor-technik.de>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "Mark Brown" <broonie@kernel.org>,
-        Sangbeom Kim <sbkim73@samsung.com>,
-        "Krzysztof Kozlowski" <krzk@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>
-Subject: [PATCH] gpio: Fix return value mismatch of function
- gpiod_get_from_of_node()
-Thread-Topic: [PATCH] gpio: Fix return value mismatch of function
-  gpiod_get_from_of_node()
-Thread-Index: AQHVJoPK/trACdRS0kWwbOAIe3gb9A==
-Date:   Wed, 19 Jun 2019 09:54:48 +0000
-Message-ID: <1560938081892.33415@sensor-technik.de>
-Accept-Language: de-DE, en-US
-Content-Language: de-DE
+        Wed, 19 Jun 2019 06:02:18 -0400
+Received: from mail-eopbgr40122.outbound.protection.outlook.com ([40.107.4.122]:51326
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726479AbfFSKCR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:02:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=prevas.se;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0R3/DfLeWtBK0rONwx/vvXic/zkqzi9q3WzjJjlOcDs=;
+ b=ZGvkIJ+cVRc1MuoI75Qi1fKG3QEb3Baw4c0ddAivhav1zjUe+1A7GsRX0/68XdYcEO7dzVTGfKZQavon5ls8d5uNAA1gg3zd6ENWwAmCkcRoBra3/wF0rBpKNXhJnBkkW4k4iXdqVQY1HU526W/EhZh1bSOzhrtEFpX+dQKQrfY=
+Received: from AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM (10.255.30.92) by
+ AM0PR10MB2450.EURPRD10.PROD.OUTLOOK.COM (20.177.110.225) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.11; Wed, 19 Jun 2019 10:02:13 +0000
+Received: from AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::4c4f:7a8e:cfcc:5d5a]) by AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::4c4f:7a8e:cfcc:5d5a%6]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
+ 10:02:13 +0000
+From:   Rasmus Villemoes <rasmus.villemoes@prevas.dk>
+To:     Andrew Lunn <andrew@lunn.ch>,
+        Vivien Didelot <vivien.didelot@gmail.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+CC:     Rasmus Villemoes <Rasmus.Villemoes@prevas.se>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH net] net: dsa: mv88e6xxx: fix shift of FID bits in
+ mv88e6185_g1_vtu_loadpurge()
+Thread-Topic: [PATCH net] net: dsa: mv88e6xxx: fix shift of FID bits in
+ mv88e6185_g1_vtu_loadpurge()
+Thread-Index: AQHVJoYRfeUHVxjOPU6bwM7pmbWvXQ==
+Date:   Wed, 19 Jun 2019 10:02:13 +0000
+Message-ID: <20190619100203.11749-1-rasmus.villemoes@prevas.dk>
+Accept-Language: en-US
+Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [172.30.230.15]
-x-c2processedorg: 71f8fb5e-29e9-40bb-a2d4-613e155b19df
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+x-clientproxiedby: HE1PR0102CA0064.eurprd01.prod.exchangelabs.com
+ (2603:10a6:7:7d::41) To AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM
+ (2603:10a6:208:160::28)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Rasmus.Villemoes@prevas.se; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [81.216.59.226]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ded65fa4-4417-4312-1b7c-08d6f49d3354
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM0PR10MB2450;
+x-ms-traffictypediagnostic: AM0PR10MB2450:
+x-microsoft-antispam-prvs: <AM0PR10MB2450E7189F5D4399357A1D368AE50@AM0PR10MB2450.EURPRD10.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:5516;
+x-forefront-prvs: 0073BFEF03
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(366004)(396003)(39850400004)(376002)(136003)(199004)(189003)(3846002)(6116002)(5660300002)(25786009)(6436002)(6486002)(8936002)(8976002)(71190400001)(4326008)(71200400001)(53936002)(14444005)(256004)(2906002)(4744005)(6512007)(36756003)(1076003)(99286004)(66556008)(64756008)(66446008)(73956011)(66946007)(305945005)(66066001)(52116002)(74482002)(7736002)(66476007)(81166006)(81156014)(26005)(186003)(14454004)(2616005)(476003)(486006)(102836004)(8676002)(50226002)(6506007)(68736007)(316002)(386003)(44832011)(110136005)(54906003)(42882007)(72206003)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0PR10MB2450;H:AM0PR10MB3027.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: prevas.se does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: r02zuaGvRfOM6onJfAVE7iK6odJjkWbLUmcELT+lRcE57X35edCkQK2KCqiWtqNcfnaoWpvwa5NRqq+oKHmJBJI8epj/5UyOsa2IT9HcOwEft8WtoEHwCxxmp63X//zymfr0D4HfMycgWOx/LZ2rDOSTrido/ZpnVcMqCWPO9yH4dO9HR4yc0Ydyk2Gki/wvOpq7Nwi4sMU1hNMKld5b/jgATiQsGYg9mren5Yt8JeaMzvhAEmn5Sd7ImxDZKnj7JILUIFZrPQn8jk5I35q7RIWz65KeiV3a452DVt7HSv2MqUhn9im8kWWsctLHW9hKcnSHYivBxvg3a0oMxcRBUA4zeH9tdkjyqp1gQQJvCb8i+Hzbp8jXnffVtks10c4rlJNJ7AzaUD0URgABEB0KJC8pVObQSmdBZVg8dyGCqSg=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-TBoneOriginalFrom: Waibel Georg <Georg.Waibel@sensor-technik.de>
-X-TBoneOriginalTo: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski
-        <bgolaszewski@baylibre.com>, Support Opensource
-        <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>, "Mark
- Brown" <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, "Krzysztof
- Kozlowski" <krzk@kernel.org>, Bartlomiej Zolnierkiewicz
-        <b.zolnierkie@samsung.com>, "linux-gpio@vger.kernel.org"
-        <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-        <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org"
-        <linux-samsung-soc@vger.kernel.org>
-X-TBoneDomainSigned: false
+X-OriginatorOrg: prevas.dk
+X-MS-Exchange-CrossTenant-Network-Message-Id: ded65fa4-4417-4312-1b7c-08d6f49d3354
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 10:02:13.2663
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d350cf71-778d-4780-88f5-071a4cb1ed61
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Rasmus.Villemoes@prevas.dk
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR10MB2450
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case the requested gpio property is not found in the device tree, some
-callers of gpiod_get_from_of_node() expect a return value of NULL, others
-expect -ENOENT.
-In particular devm_fwnode_get_index_gpiod_from_child() expects -ENOENT.
-Currently it gets a NULL, which breaks the loop that tries all
-gpio_suffixes. The result is that a gpio property is not found, even
-though it is there.
-
-This patch changes gpiod_get_from_of_node() to return -ENOENT instead
-of NULL when the requested gpio property is not found in the device
-tree. Additionally it modifies all calling functions to properly
-evaluate the return value.
-
-Another approach would be to leave the return value of
-gpiod_get_from_of_node() as is and fix the bug in
-devm_fwnode_get_index_gpiod_from_child(). Other callers would still need
-to be reworked. The effort would be the same as with the chosen solution.
-
-Signed-off-by: Georg Waibel <georg.waibel@sensor-technik.de>
----
- drivers/gpio/gpiolib.c                 | 6 +-----
- drivers/regulator/da9211-regulator.c   | 2 ++
- drivers/regulator/s2mps11.c            | 4 +++-
- drivers/regulator/s5m8767.c            | 4 +++-
- drivers/regulator/tps65090-regulator.c | 7 ++++---
- 5 files changed, 13 insertions(+), 10 deletions(-)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index e013d417a936..be1d1d2f8aaa 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -4244,8 +4244,7 @@ EXPORT_SYMBOL_GPL(gpiod_get_index);
-  *
-  * Returns:
-  * On successful request the GPIO pin is configured in accordance with
-- * provided @dflags. If the node does not have the requested GPIO
-- * property, NULL is returned.
-+ * provided @dflags.
-  *
-  * In case of error an ERR_PTR() is returned.
-  */
-@@ -4267,9 +4266,6 @@ struct gpio_desc *gpiod_get_from_of_node(struct device_node *node,
- 					index, &flags);
- 
- 	if (!desc || IS_ERR(desc)) {
--		/* If it is not there, just return NULL */
--		if (PTR_ERR(desc) == -ENOENT)
--			return NULL;
- 		return desc;
- 	}
- 
-diff --git a/drivers/regulator/da9211-regulator.c b/drivers/regulator/da9211-regulator.c
-index da37b4ccd834..0309823d2c72 100644
---- a/drivers/regulator/da9211-regulator.c
-+++ b/drivers/regulator/da9211-regulator.c
-@@ -289,6 +289,8 @@ static struct da9211_pdata *da9211_parse_regulators_dt(
- 				  0,
- 				  GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				  "da9211-enable");
-+		if (IS_ERR(pdata->gpiod_ren[n]))
-+			pdata->gpiod_ren[n] = NULL;
- 		n++;
- 	}
- 
-diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
-index 134c62db36c5..b518a81f75a3 100644
---- a/drivers/regulator/s2mps11.c
-+++ b/drivers/regulator/s2mps11.c
-@@ -821,7 +821,9 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
- 				0,
- 				GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 				"s2mps11-regulator");
--		if (IS_ERR(gpio[reg])) {
-+		if (PTR_ERR(gpio[reg]) == -ENOENT)
-+			gpio[reg] = NULL;
-+		else if (IS_ERR(gpio[reg])) {
- 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
- 				reg, rdata[reg].name);
- 			continue;
-diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
-index bb9d1a083299..6ca27e9d5ef7 100644
---- a/drivers/regulator/s5m8767.c
-+++ b/drivers/regulator/s5m8767.c
-@@ -574,7 +574,9 @@ static int s5m8767_pmic_dt_parse_pdata(struct platform_device *pdev,
- 			0,
- 			GPIOD_OUT_HIGH | GPIOD_FLAGS_BIT_NONEXCLUSIVE,
- 			"s5m8767");
--		if (IS_ERR(rdata->ext_control_gpiod))
-+		if (PTR_ERR(rdata->ext_control_gpiod) == -ENOENT)
-+			rdata->ext_control_gpiod = NULL;
-+		else if (IS_ERR(rdata->ext_control_gpiod))
- 			return PTR_ERR(rdata->ext_control_gpiod);
- 
- 		rdata->id = i;
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index ca39b3d55123..10ea4b5a0f55 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -371,11 +371,12 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 								    "dcdc-ext-control-gpios", 0,
- 								    gflags,
- 								    "tps65090");
--			if (IS_ERR(rpdata->gpiod))
--				return ERR_CAST(rpdata->gpiod);
--			if (!rpdata->gpiod)
-+			if (PTR_ERR(rpdata->gpiod) == -ENOENT) {
- 				dev_err(&pdev->dev,
- 					"could not find DCDC external control GPIO\n");
-+				rpdata->gpiod = NULL;
-+			} else if (IS_ERR(rpdata->gpiod))
-+				return ERR_CAST(rpdata->gpiod);
- 		}
- 
- 		if (of_property_read_u32(tps65090_matches[idx].of_node,
--- 
-2.21.0
-
+VGhlIGNvbW1lbnQgaXMgY29ycmVjdCwgYnV0IHRoZSBjb2RlIGVuZHMgdXAgbW92aW5nIHRoZSBi
+aXRzIGZvdXINCnBsYWNlcyB0b28gZmFyLCBpbnRvIHRoZSBWVFVPcCBmaWVsZC4NCg0KRml4ZXM6
+IDExZWE4MDlmMWE3NCAobmV0OiBkc2E6IG12ODhlNnh4eDogc3VwcG9ydCAyNTYgZGF0YWJhc2Vz
+KQ0KU2lnbmVkLW9mZi1ieTogUmFzbXVzIFZpbGxlbW9lcyA8cmFzbXVzLnZpbGxlbW9lc0BwcmV2
+YXMuZGs+DQotLS0NCiBkcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDFfdnR1LmMgfCAy
+ICstDQogMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pDQoNCmRp
+ZmYgLS1naXQgYS9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDFfdnR1LmMgYi9kcml2
+ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDFfdnR1LmMNCmluZGV4IDRmN2I1MjJlNWU1OS4u
+NzY0Mzc4ZGNiYzBjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9uZXQvZHNhL212ODhlNnh4eC9nbG9i
+YWwxX3Z0dS5jDQorKysgYi9kcml2ZXJzL25ldC9kc2EvbXY4OGU2eHh4L2dsb2JhbDFfdnR1LmMN
+CkBAIC00NzMsNyArNDczLDcgQEAgaW50IG12ODhlNjE4NV9nMV92dHVfbG9hZHB1cmdlKHN0cnVj
+dCBtdjg4ZTZ4eHhfY2hpcCAqY2hpcCwNCiAJCSAqIFZUVSBEQk51bVs3OjRdIGFyZSBsb2NhdGVk
+IGluIFZUVSBPcGVyYXRpb24gMTE6OA0KIAkJICovDQogCQlvcCB8PSBlbnRyeS0+ZmlkICYgMHgw
+MDBmOw0KLQkJb3AgfD0gKGVudHJ5LT5maWQgJiAweDAwZjApIDw8IDg7DQorCQlvcCB8PSAoZW50
+cnktPmZpZCAmIDB4MDBmMCkgPDwgNDsNCiAJfQ0KIA0KIAlyZXR1cm4gbXY4OGU2eHh4X2cxX3Z0
+dV9vcChjaGlwLCBvcCk7DQotLSANCjIuMjAuMQ0KDQo=
