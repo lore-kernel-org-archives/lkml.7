@@ -2,70 +2,213 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B74CBC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA02DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 945882080C
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1B120B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:02:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CIBJwDBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731379AbfFSJAL (ORCPT
+        id S1731366AbfFSJCT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:00:11 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:47495 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731136AbfFSJAK (ORCPT
+        Wed, 19 Jun 2019 05:02:19 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:43955 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731093AbfFSJCT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:00:10 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hdWRr-0007xa-98; Wed, 19 Jun 2019 09:00:07 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Theodore Ts'o <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        linux-ext4@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ext4: remove redundant assignment to node
-Date:   Wed, 19 Jun 2019 10:00:06 +0100
-Message-Id: <20190619090007.26962-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 05:02:19 -0400
+Received: by mail-lf1-f66.google.com with SMTP id j29so11472792lfk.10;
+        Wed, 19 Jun 2019 02:02:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=yWwpiutcc4O/t9KgTZGKnGpiJgTk9zBVn3mGAJTjgoU=;
+        b=CIBJwDBzBen+SPePjZkigXXoUxEYKDeCPotyb0V4bmBMt8glSpB8ye4tdhqt5spg3/
+         K6M7Xvh9rDBGqXypJ8NIXYy+Gl9tSqz5mMfwxjcPI1EH2gBB+WhBXqzq3nl9SnDbvMXb
+         jegKKqDa6GVQOtBCyASXP/tlceWC/MDy443+FpVhKz3prHRDGsaoljJ5iy1n0KsxzRXa
+         br5qVpc8Pokl38VVwvNe3TSvSvwEbZMJQrllzy/TdoclrrVDfguYRf8lNwVQ5ygUXwIF
+         H3Anocrn17Wr7z8P3n16H1sPqCYW+jtelw4JXEKaU6pBSm/Hs8MS5ojcCXTeEGrD5kJ8
+         FtWA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yWwpiutcc4O/t9KgTZGKnGpiJgTk9zBVn3mGAJTjgoU=;
+        b=RuNR+eQ/CWd2K/k4ImUCEKk9qsKQlFWAGWHIvlQJD3zlfKKYCULusB4tEUmBunW13F
+         8LNVukPa5/dEH1SgNveG4OKUAYc/VL03Xq/UBUPMJQSGUyyIy9PnQ+fYpWuo/aVOYOKy
+         UprxB3nWoW4Tnv6ZIXWX1/H7qpeRWN0LKTcaVA1yUKKjMeMIGLbg4APF1SagjRshNtSF
+         89SKTPbLQrqMZbhPMR3w93f2H6rfjwqEXHe9118qssv5kDohFGgrS8St5y7OZgyck37F
+         txKXRN04Tv+kq3dNZ/yjiNLjjCXW7rN+Q8yKprM19l8TMD9M3Cas8kDn0DoCR4tPCd9+
+         j5tQ==
+X-Gm-Message-State: APjAAAWgbok3Q5EqDNMokV8jFissiov6/sVjeVAI3fjRT/KWyP1ukUqa
+        OPtHFnGNN3JxVTaDGnM42Oc=
+X-Google-Smtp-Source: APXvYqzZ3u2fGhA9Tao2EhYXUqNT8qQ5rXuGJHgKa02W8ZzSJ2nk9p9VzOyAdpuYCgFgN+ZcQuoMTQ==
+X-Received: by 2002:ac2:5ec6:: with SMTP id d6mr16873706lfq.131.1560934935057;
+        Wed, 19 Jun 2019 02:02:15 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id x19sm3012903ljb.6.2019.06.19.02.02.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 02:02:14 -0700 (PDT)
+Subject: Re: [PATCH V2] i2c: tegra: disable irq in tegra_i2c_xfer_msg
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Bitan Biswas <bbiswas@nvidia.com>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>, linux-i2c@vger.kernel.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Rosin <peda@axentia.se>, Wolfram Sang <wsa@the-dreams.de>
+Cc:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+References: <1560847368-16069-1-git-send-email-bbiswas@nvidia.com>
+ <cda89c10-c597-ce90-98dd-5cc13ee9b83d@gmail.com>
+ <d29aa32d-55ef-c98b-00cd-f836bf003662@nvidia.com>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <698b4903-0580-8a68-88f8-fba3e2cbe6c7@gmail.com>
+Date:   Wed, 19 Jun 2019 12:02:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <d29aa32d-55ef-c98b-00cd-f836bf003662@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+19.06.2019 11:58, Jon Hunter пишет:
+> 
+> On 18/06/2019 19:26, Dmitry Osipenko wrote:
+>> 18.06.2019 11:42, Bitan Biswas пишет:
+>>> tegra_i2c_xfer_msg initiates the I2C transfer in DMA
+>>> or PIO mode. It involves steps that need FIFO register
+>>> access, DMA API calls like dma_sync_single_for_device, etc.
+>>> Tegra I2C ISR has calls to tegra_i2c_empty_rx_fifo in PIO mode
+>>> and in DMA/PIO mode writes different I2C registers including
+>>> I2C interrupt status. ISR cannot start processing
+>>> before the preparation step at tegra_i2c_xfer_msg is complete.
+>>> Hence, a synchronization between ISR and tegra_i2c_xfer_msg
+>>> is in place today using spinlock.
+>>
+>> Please use full 75 chars per-line, this should make commit message to look better.
+>>
+>>> Spinlock busy waits and can add avoidable delays.
+>>>
+>>> In this patch needed synchronization is achieved by disabling
+>>> I2C interrupt during preparation step and enabling interrupt
+>>> once preparation is over and spinlock is no longer needed.
+>>>
+>>> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>>> ---
+>>>  drivers/i2c/busses/i2c-tegra.c | 17 ++++++++---------
+>>>  1 file changed, 8 insertions(+), 9 deletions(-)
+>>>
+>>> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+>>> index 6fb545e..ccc7fae 100644
+>>> --- a/drivers/i2c/busses/i2c-tegra.c
+>>> +++ b/drivers/i2c/busses/i2c-tegra.c
+>>> @@ -240,7 +240,6 @@ struct tegra_i2c_hw_feature {
+>>>   * @bus_clk_rate: current I2C bus clock rate
+>>>   * @clk_divisor_non_hs_mode: clock divider for non-high-speed modes
+>>>   * @is_multimaster_mode: track if I2C controller is in multi-master mode
+>>> - * @xfer_lock: lock to serialize transfer submission and processing
+>>>   * @tx_dma_chan: DMA transmit channel
+>>>   * @rx_dma_chan: DMA receive channel
+>>>   * @dma_phys: handle to DMA resources
+>>> @@ -270,8 +269,6 @@ struct tegra_i2c_dev {
+>>>  	u32 bus_clk_rate;
+>>>  	u16 clk_divisor_non_hs_mode;
+>>>  	bool is_multimaster_mode;
+>>> -	/* xfer_lock: lock to serialize transfer submission and processing */
+>>> -	spinlock_t xfer_lock;
+>>>  	struct dma_chan *tx_dma_chan;
+>>>  	struct dma_chan *rx_dma_chan;
+>>>  	dma_addr_t dma_phys;
+>>> @@ -835,7 +832,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>>>  
+>>>  	status = i2c_readl(i2c_dev, I2C_INT_STATUS);
+>>>  
+>>> -	spin_lock(&i2c_dev->xfer_lock);
+>>>  	if (status == 0) {
+>>>  		dev_warn(i2c_dev->dev, "irq status 0 %08x %08x %08x\n",
+>>>  			 i2c_readl(i2c_dev, I2C_PACKET_TRANSFER_STATUS),
+>>> @@ -935,7 +931,6 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>>>  
+>>>  	complete(&i2c_dev->msg_complete);
+>>>  done:
+>>> -	spin_unlock(&i2c_dev->xfer_lock);
+>>>  	return IRQ_HANDLED;
+>>>  }
+>>>  
+>>> @@ -1054,7 +1049,6 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>>>  	u32 packet_header;
+>>>  	u32 int_mask;
+>>>  	unsigned long time_left;
+>>> -	unsigned long flags;
+>>>  	size_t xfer_size;
+>>>  	u32 *buffer = NULL;
+>>>  	int err = 0;
+>>> @@ -1085,7 +1079,10 @@ static int tegra_i2c_xfer_msg(struct tegra_i2c_dev *i2c_dev,
+>>>  	 */
+>>>  	xfer_time += DIV_ROUND_CLOSEST(((xfer_size * 9) + 2) * MSEC_PER_SEC,
+>>>  					i2c_dev->bus_clk_rate);
+>>> -	spin_lock_irqsave(&i2c_dev->xfer_lock, flags);
+>>> +	if (!i2c_dev->irq_disabled) {
+>>> +		disable_irq_nosync(i2c_dev->irq);
+>>> +		i2c_dev->irq_disabled = true;
+>>> +	}
+>>
+>> 1) Peter correctly pointed out in the other email that the disabling should be synced.
+>> But see more below in 3.
+>>
+>> 2) i2c_dev->irq_disabled == true can't ever be the case here because tegra_i2c_init()
+>> re-enables interrupt in a case of error condition. Hence interrupt always enabled at
+>> the beginning of the transfer.
+>>
+>> 3) In my previous answer I was suggesting to request IRQ in a disabled state, this
+>> will allow to remove i2c_dev->irq_disabled completely.
+>>
+>> Then the tegra_i2c_xfer_msg() will have to enable IRQ after completion of the
+>> transfer-preparation process and disable IRQ once transfer is done (both success and
+>> failure cases). This is actually not a bad additional motivation for this patch, to
+>> keep CPU's interrupt disabled while idling and not to only rely on interrupt masking
+>> of the I2C hardware.
+>>
+>> 4) ISR should simply return IRQ_NONE when interrupt status is 0 and allow kernel core
+>> to disable the faulty interrupt itself. There will be "unhandled interrupt" error
+>> message in KMSG log, following the disabling.
+>>
+>> 5) In order to request IRQ in a disabled state, the IRQ_NOAUTOEN flag need to be set
+>> before the requesting, like this:
+>>
+>>     irq_set_status_flags(irq, IRQ_NOAUTOEN);
+>>
+>>     devm_request_irq(&pdev->dev, irq...);
+>>
+>> In a result of combining 3-5, both i2c_dev->irq_disabled and i2c_dev->irq variables
+>> become obsolete and could be removed in addition to xfer_lock. That all is a good
+>> cleanup in my opinion.
+> 
+> I see, so basically you are simplifying the code by waiting to enable
+> the interrupt until the transfer is ready and hence you can eliminate
+> the need for the spinlock. OK, that would make sense. This really needs
+> to be describe better in the changelog.
+> 
+> Also what about the tegra_i2c_unmask/mask_irq? Can these be eliminated?
 
-Pointer 'node' is assigned a value that is never read, node is
-later overwritten when it re-assigned a different value inside
-the while-loop.  The assignment is redundant and can be removed.
+Probably, yes.
 
-Addresses-Coverity: ("Unused value")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- fs/ext4/extents_status.c | 1 -
- 1 file changed, 1 deletion(-)
+> Finally, what about tegra_i2c_issue_bus_clear()? This requires
+> interrupts as well.
 
-diff --git a/fs/ext4/extents_status.c b/fs/ext4/extents_status.c
-index 023a3eb3afa3..7521de2dcf3a 100644
---- a/fs/ext4/extents_status.c
-+++ b/fs/ext4/extents_status.c
-@@ -1317,7 +1317,6 @@ static int es_do_reclaim_extents(struct ext4_inode_info *ei, ext4_lblk_t end,
- 	es = __es_tree_search(&tree->root, ei->i_es_shrink_lblk);
- 	if (!es)
- 		goto out_wrap;
--	node = &es->rb_node;
- 	while (*nr_to_scan > 0) {
- 		if (es->es_lblk > end) {
- 			ei->i_es_shrink_lblk = end + 1;
--- 
-2.20.1
-
+Good points! Bitan, please take this all into account.
