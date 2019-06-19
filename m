@@ -2,90 +2,94 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A7D2C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039F1C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:44:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D2E42064A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:42:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NyIsIIb+"
+	by mail.kernel.org (Postfix) with ESMTP id C8CC821530
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:44:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560941043;
+	bh=uqCTXHrCel4Y6/6/wUj2WViVXt+GgvlSaCIe0fO/Cp8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=pQkuOQozHaf5dIE+z+cn8Hu5Nr6tO+ZN+Cxb1My+t4PvT8VWQeywGJThy4lUFFOB/
+	 2HNzLQTTqSVaFiqiT8Nm3ZSi3rdVCkyAWbVdZZCLLvSaXyFL2qWNuSptUpE3YP4FM5
+	 vP25ry1SsmksE8764CMKV2QkYGfyVoMkg+j6W5kE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfFSKmV (ORCPT
+        id S1731399AbfFSKoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:42:21 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:33396 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfFSKmV (ORCPT
+        Wed, 19 Jun 2019 06:44:02 -0400
+Received: from casper.infradead.org ([85.118.1.10]:45556 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfFSKoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:42:21 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h19so4325256wme.0
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 03:42:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=TT2nK9A47FLcAVPWjohBdM0YSA12JZIvgdjlygMunHY=;
-        b=NyIsIIb+uVSx90RcZzFhDtYTjpvPlbj+hShSLfVTuJIpwMvZ/ktBguPb0h4gANFzoi
-         hvLO9eK3+HcdDVGQqD4g6tfj30LVmL361dA7To7DiQGi0nM1Zm1pvX7plq+6FOH7NmAr
-         /O+kiyQUl0JxHCQQcIUjmJvlZIDtqcyTcqHWD7j+mEn55FSdIUa+BgKm50iEvucQFs6s
-         enAOJmxl4UVjU7zLox6+cqbLZeNCNPM24D74OHDh2chnsVpkFDOlc4Nn8zllc0AlalEC
-         VdJcgCpHGQZ2WOKypxHA5wiou0C8wvRHblDGY4Y9c8KsQ+vcp7r5s5pobRcx7rLVlV03
-         1hZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=TT2nK9A47FLcAVPWjohBdM0YSA12JZIvgdjlygMunHY=;
-        b=ECLTpIp7foOMvHfwKvmNAQUVVXtcDdSndLAnAa6E46POrsy7/pKP1CyI2uKwjZHEMc
-         hhGYNabINHVi2AP+agp5B05ip+Er4hLhmIKitlYu58ASvWtkl/DM+dhfvaPbKvixGVba
-         J2i+3UTLClLHp5bbjLMejqff8brH17USqRQyD6RTf7YcRrv75oy9ha1Xht7FMQ3gc1Tc
-         On5xMwsAfV6nhhxbPdunMtItQKGX+Fvq0G+PmDe5p6yT2aEcj0NVs4IKHtAXjGM+4QVi
-         B1bCLffgDU2uxNMlDRDBFq8mDtTH6piXXYU2EyZ5iqWwC5iH/pDfbiP1+FJpSfJKtuIb
-         qxFQ==
-X-Gm-Message-State: APjAAAUgGdB0t4ajtUIWoMqyvBbSbLwG8p3X4iBqKF+qgSLeZWZqpPak
-        ynQYNPmD5bFgtylioJ1h6rfeBHrE
-X-Google-Smtp-Source: APXvYqwZTMniWreXGV97t4naAESnNM/rCdLIobReK3BHsdELYGgUuiUhiov95Ols8kq0IrJru4hIaQ==
-X-Received: by 2002:a1c:6c08:: with SMTP id h8mr8069991wmc.62.1560940939330;
-        Wed, 19 Jun 2019 03:42:19 -0700 (PDT)
-Received: from arch-x1c3 ([2a00:5f00:102:0:9665:9cff:feee:aa4d])
-        by smtp.gmail.com with ESMTPSA id w2sm16821493wrr.31.2019.06.19.03.42.18
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 03:42:18 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 11:40:14 +0100
-From:   Emil Velikov <emil.l.velikov@gmail.com>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>,
-        "open list:VIRTIO GPU DRIVER" 
-        <virtualization@lists.linux-foundation.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 11/12] drm/virtio: switch from ttm to gem shmem helpers
-Message-ID: <20190619104014.GB1896@arch-x1c3>
-References: <20190619090420.6667-1-kraxel@redhat.com>
- <20190619090420.6667-12-kraxel@redhat.com>
+        Wed, 19 Jun 2019 06:44:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=WKW/0TRPIb29ZUwqdiEIWuQ61spuUdkZV5X/uIQH8S0=; b=t84WOhRQC7YxmEGug4+IeE6ZG2
+        f+hoPyDbMpZ1t1RdL04ORAisWEtnBm7TBzZCei4viOpDDvy0Bz37Dzse0a6sB91zznwDqLFIavFPZ
+        L2+aMBp0o3rBIpixd9Gbfy2CXTASqIiKw/0YX1jH4qmI2yIxEVvhclGLgH9oz2oQfnMjq5r3Ma7FH
+        VPBesNLK0jlZm/X+Azr5T27AVvWUO6/aNwXoUAVTdV9RvkWs8SrgtucdWogeS+Xl0RSaxeOX7X+4Y
+        bTSgdODUhdMY6pcuFbSLEtjyuA2CUsklO6h4/EoWuCbjvgnNaiwS5whTX9PyKRUDIjnU/OmVMIVdt
+        t6pOk19w==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdY4M-0003f9-Vr; Wed, 19 Jun 2019 10:43:59 +0000
+Date:   Wed, 19 Jun 2019 07:43:52 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v1 20/22] docs: extcon: move it to acpi dir and convert
+ it to ReST
+Message-ID: <20190619074352.79993138@coco.lan>
+In-Reply-To: <4701210.Ilfu9VLqBR@kreacher>
+References: <cover.1560891322.git.mchehab+samsung@kernel.org>
+        <b6d199c3e7c8c868acbb313a1a516ea8aed042ee.1560891322.git.mchehab+samsung@kernel.org>
+        <4701210.Ilfu9VLqBR@kreacher>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619090420.6667-12-kraxel@redhat.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gerd,
+Em Wed, 19 Jun 2019 11:59:18 +0200
+"Rafael J. Wysocki" <rjw@rjwysocki.net> escreveu:
 
-On 2019/06/19, Gerd Hoffmann wrote:
+> On Tuesday, June 18, 2019 11:05:44 PM CEST Mauro Carvalho Chehab wrote:
+> > The intel-int3496.txt file is a documentation for an ACPI driver.
+> > 
+> > There's no reason to keep it on a separate directory.
+> > 
+> > So, instead of keeping it on some random location, move it
+> > to a sub-directory inside the ACPI documentation dir.
+> > 
+> > For now, keep it with .txt extension, in order to avoid
+> > Sphinx build noise. A later patch should change it to .rst
+> > and movin it to be together with other acpi docs.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
+> 
+> Acked-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+> 
+> Or please let me know if you want me to pick up this one.
 
-> -static void virtio_gpu_init_ttm_placement(struct virtio_gpu_object *vgbo)
-> +static const struct drm_gem_object_funcs v3d_gem_funcs = {
-s/v3d/virtio/g
+Feel free to pick it.
 
-Doubt I'll have the time for a proper review - just this and the 1/12 nits :-\
 
-HTH
-Emil
+Thanks,
+Mauro
