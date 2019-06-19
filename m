@@ -2,89 +2,104 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ED0C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:05:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7004AC31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:06:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB0120B1F
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4943220B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 10:06:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Z0zS/GZQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731582AbfFSKFC (ORCPT
+        id S1731209AbfFSKGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 06:05:02 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50048 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726959AbfFSKFC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 06:05:02 -0400
-Received: from p5b06daab.dip0.t-ipconnect.de ([91.6.218.171] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hdXSI-0002d2-1J; Wed, 19 Jun 2019 12:04:38 +0200
-Date:   Wed, 19 Jun 2019 12:04:36 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Tim Chen <tim.c.chen@linux.intel.com>
-cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mark Gross <mgross@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-Subject: Re: [PATCH v4] Documentation: Add section about CPU vulnerabilities
- for Spectre
-In-Reply-To: <20190618212457.9764-1-tim.c.chen@linux.intel.com>
-Message-ID: <alpine.DEB.2.21.1906191204060.1765@nanos.tec.linutronix.de>
-References: <20190618212457.9764-1-tim.c.chen@linux.intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 19 Jun 2019 06:06:19 -0400
+Received: from ozlabs.org ([203.11.71.1]:48295 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726959AbfFSKGT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 06:06:19 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TLFM4FRCz9s7h;
+        Wed, 19 Jun 2019 20:06:15 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560938776;
+        bh=NQWnQbn9ruPrlyTKLaenXzcl811ZqmMgk2/3HM89J+A=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Z0zS/GZQTWn2wiVSG1xN799YKt1XgewhSXZ+Ie8LPs8Nn3i0RVAB/PjOS4WT5JlbB
+         Oz2laSae9HZqqQyfdZsE4EJZqN8kp6c6JRThrscww4H6fk+aC0DQEazaUIK0zqGIU7
+         KByWoBmJ8EjaZbfgPrQ9gHmyqSRrW35gIwlgUFBWQluAB/c76d5k9Hb9takIpYoF+U
+         SUmQlmh3mVIQMv0Wmy07bExOK6x89Qd+ew25F7Px5EU16qy6i9NL9Qs0/ymo1F+yKw
+         46U0VpvNw8lWmBQWuD3zHoDfLFegdSJiqcTk4WG57fLaATh5EtgvMVv0KWDfyzI4Sx
+         Sostm7cmXIykg==
+Date:   Wed, 19 Jun 2019 20:06:08 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: linux-next: build failure after merge of the akpm-current tree
+Message-ID: <20190619200608.69474286@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/cS_b5m3u4YGfN21kfl4VTik"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019, Tim Chen wrote:
+--Sig_/cS_b5m3u4YGfN21kfl4VTik
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> Add documentation for Spectre vulnerability and the mitigation mechanisms:
-> 
-> - Explain the problem and risks
-> - Document the mitigation mechanisms
-> - Document the command line controls
-> - Document the sysfs files
-> 
-> Co-developed-by: Andi Kleen <ak@linux.intel.com>
-> Signed-off-by: Andi Kleen <ak@linux.intel.com>
-> Co-developed-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Signed-off-by: Tim Chen <tim.c.chen@linux.intel.com>
-> Cc: stable@vger.kernel.org
+Hi all,
 
-Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+After merging the akpm-current tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-Renders nicely now. Good work!
+In file included from usr/include/linux/byteorder/big_endian.hdrtest.c:1:
+./usr/include/linux/byteorder/big_endian.h:6:2: error: #error "Unsupported =
+endianness, check your toolchain"
+ #error "Unsupported endianness, check your toolchain"
+  ^~~~~
 
-Thanks,
+Caused by commit
 
-	tglx
+  1ac94caaee11 ("byteorder: sanity check toolchain vs kernel endianness")
+
+Presumably exposed by commit
+
+  b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-=
+contained")
+
+from the kbuild tree.
+
+I have reverted 1ac94caaee11 (and its following fixup) for today.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/cS_b5m3u4YGfN21kfl4VTik
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0KCRAACgkQAVBC80lX
+0GzYdwf6AmUgQCAIHGO6IoZEy11yHbgenWP6uaetHH3EWO+cWmiUV0WNwfrUYIGv
+c/QRT7c66Ul1kIGyRJaXo0Pn0IgNiwBF1ioQrK9oqELjObHBfHmEv5CX/frEOOlo
+Q3/iP0l7wZhPvoiRe/c/QSSOvmbKyxQKOWaqqxCKoTZgIrgsli5dpNUsybk5SPW+
+wSaz1ghy2Ej01rLqwoGY+vVxuSK3AECtCZJWQm0UpbO5/gzvtkuDAPflblEZ+0xX
+TU4t08sSoQP3pdby9A8NR7RVU0wiB7+nhB4ynukYoWA6k2gzyxmPzXTQlLPGd8fY
+VyvEY6+dMCQ8z0L3Z2xTeiRegxODmQ==
+=Gy5k
+-----END PGP SIGNATURE-----
+
+--Sig_/cS_b5m3u4YGfN21kfl4VTik--
