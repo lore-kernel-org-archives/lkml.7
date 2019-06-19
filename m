@@ -2,128 +2,152 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A1B4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:25:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C44FC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C82D2085A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:25:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E9162085A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 00:34:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hSDnD8Ga"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tIZk7NtZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729337AbfFSAZA (ORCPT
+        id S1729285AbfFSAev (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 20:25:00 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:47026 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729050AbfFSAY7 (ORCPT
+        Tue, 18 Jun 2019 20:34:51 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:39949 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725988AbfFSAev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 20:24:59 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 81so8587370pfy.13;
-        Tue, 18 Jun 2019 17:24:59 -0700 (PDT)
+        Tue, 18 Jun 2019 20:34:51 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e8so16485968otl.7;
+        Tue, 18 Jun 2019 17:34:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=asl8nEGPBFR80gDIdoz4WOZJFFMieyc8VT4m7EGPaHs=;
-        b=hSDnD8Ga5CgNeqzWpzg4YsI+aMuTNejgx1vMs/XrR+3yXlnnAPC5lsFmPvmmydEwK9
-         vQjGXGkP0mSnSzSalp088CxRt51DMPIKGotHumqrI5blaHsNZilFO3zbZsle+z2RwZ8H
-         ce44IuUS6x1bUaU+IRLHCzfOYsoD9FFZQEGwQLnP0lXo76RmTqtOLwA/aN7nRWiatKV7
-         XiztcCnpKM/+gJhTeSvNbL0rtGHuzdadYDXM1WAuBW793hnEfPhLoRNbvMqtLIAol7jQ
-         O+lGoMRr1BjlpbGmUBOTecSNB5IY8XaF3Lhu5rDyZQL85d859KfHL5JsJN3dI+16mlgi
-         usXg==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZXR7tAPaEkwGsGkQZyrZdvvi0BeI2lp41nwHf5CBMnU=;
+        b=tIZk7NtZsCu5f5iH8jH7Sa9+vz4sThRbI8n900KepBBMPO2KBKQ4P0tmwTLwU+t4c0
+         iEbUWDIPY/MBKqIEUNWjnEKN/vHeUN9U9LUMOHm41ETRZ2S1HBBvgkBjRF9ReJjfIhFq
+         YiHSgQsCcRgDQ/PJOsxP5TEMBXgCZMFZVXRK4EvagCy+O4FBmQDyqRmHeP0yw3vcjL5b
+         LSDJM7RVbToEUj/1LDk+K9x7/qEZ/yh3k3hcAiGmPEUrIf+Xm4COAT8BuRH/TtVRr19D
+         BkjvlVpM3qYoErrvF3tXVWK4wMZaLwLftJywBnznYDxLJkE5nqUN87pGVHKp2dwivtNk
+         j7WA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=asl8nEGPBFR80gDIdoz4WOZJFFMieyc8VT4m7EGPaHs=;
-        b=Adoa20ME3siptSKnuNXhsGAFh9HzpG8c3FOsJI4c9HELihxtuU30bybkyeo8AN05N2
-         eMWyqWc/U7zprUAUtyPnZjroxAZynwhgdAYzwEnDCIDQtiq2Ayvyal2ATJa1u9HK5Bjx
-         OY+2EDJhwWRjOJtbjUV5758RV7V/Gj2MbAC4gzZglg1cnzabpeNkYOcaLYLu8WkPFXoJ
-         19oofWUOUy5ipaH/i+EMDErb5d2GvMwIAKwJ0Y9Q5GpMZNSm1Gqh+VVLMcb06IGH7Zf6
-         RXvUrgnL5KBirD/PzxNJzlkKFE8NrkIqVBFtEI9zinTXykQf7ZIaGVodA9tuuVkPDfbx
-         gNVQ==
-X-Gm-Message-State: APjAAAW/+2g4rrYhZ2CuUKhN0gopbvNnVbbpgH/wiVxkdAW5PnGeMAZ0
-        ViGWvxpeGsRtK0T7fumtEnhBSz0G
-X-Google-Smtp-Source: APXvYqxe1ImPm+jGw2cV1RSoD72mFDmuzAzflBCt2DKZxHhaH/uhtMOeF/HDQUjgO9eRu6MpsCQRjA==
-X-Received: by 2002:aa7:8641:: with SMTP id a1mr3893757pfo.177.1560903898911;
-        Tue, 18 Jun 2019 17:24:58 -0700 (PDT)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id 11sm272733pfw.33.2019.06.18.17.24.58
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 18 Jun 2019 17:24:58 -0700 (PDT)
-Date:   Tue, 18 Jun 2019 17:24:56 -0700
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     Tim Schumacher <timschumi@gmx.de>
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH resend] Input: iforce - Add the Saitek R440 Force Wheel
-Message-ID: <20190619002456.GD62571@dtor-ws>
-References: <20190612140903.20058-1-timschumi@gmx.de>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZXR7tAPaEkwGsGkQZyrZdvvi0BeI2lp41nwHf5CBMnU=;
+        b=ALIVh11S7t/lyFaeU6jDkShP+skQYsr99xTWJpt4Gdt6eif7CBnCYxMF8hW9fHPV2K
+         lWlzySeSnD2aONFNe8HLxXudtoLIjxMR6NSZnZIE8o27L3cW1G/CqhmlXqSAwSjlg5Oz
+         3CdfN1JjIxotHQX0bmOIlG0UmKkxjm6zM6/QO8+JlAjne3of9kSJ06DsfrGpn3GOftDk
+         9I7iTtM1E0BztIcDf/ikqjzlGZm3vJb01mMjJeeBPGYyAo9HfnB1b1c9csPNZek1k4c1
+         AoNe3U9CeOGkdE+VtlQCcsX83ngmyOeTiKRrPbQwCMKna+w3kT2aDL+cPzMjLk27KarU
+         UpBw==
+X-Gm-Message-State: APjAAAXD/ZYdJiPfj5AncUXeh558lEjNgSRcU2R+KJsLGGuQaWvA+g7C
+        RTI8cryAqHsiE/WFD3LfcdRv4Mazz/5zQQvZTDzCnt4y
+X-Google-Smtp-Source: APXvYqyLWELQU60MDNt3lIlb8HFuSYqw22oFeQKzWoTpxaujCa+AaNrf8aiXAq7J85SDUVP0OwkvWPK4s7kqYrhLRmw=
+X-Received: by 2002:a9d:2c47:: with SMTP id f65mr69195620otb.185.1560904490828;
+ Tue, 18 Jun 2019 17:34:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190612140903.20058-1-timschumi@gmx.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1560770687-23227-1-git-send-email-wanpengli@tencent.com>
+ <1560770687-23227-3-git-send-email-wanpengli@tencent.com> <20190618133541.GA3932@amt.cnet>
+In-Reply-To: <20190618133541.GA3932@amt.cnet>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Wed, 19 Jun 2019 08:36:06 +0800
+Message-ID: <CANRm+Cz0v1VfDaCCWX+5RzCusTV7g9Hwr+OLGDRijeyqFx=Kzw@mail.gmail.com>
+Subject: Re: [PATCH v4 2/5] KVM: LAPIC: inject lapic timer interrupt by posted interrupt
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 04:09:03PM +0200, Tim Schumacher wrote:
-> Signed-off-by: Tim Schumacher <timschumi@gmx.de>
+On Tue, 18 Jun 2019 at 21:36, Marcelo Tosatti <mtosatti@redhat.com> wrote:
+>
+> On Mon, Jun 17, 2019 at 07:24:44PM +0800, Wanpeng Li wrote:
+> > From: Wanpeng Li <wanpengli@tencent.com>
+> >
+> > Dedicated instances are currently disturbed by unnecessary jitter due
+> > to the emulated lapic timers fire on the same pCPUs which vCPUs residen=
+t.
+> > There is no hardware virtual timer on Intel for guest like ARM. Both
+> > programming timer in guest and the emulated timer fires incur vmexits.
+> > This patch tries to avoid vmexit which is incurred by the emulated
+> > timer fires in dedicated instance scenario.
+> >
+> > When nohz_full is enabled in dedicated instances scenario, the emulated
+> > timers can be offload to the nearest busy housekeeping cpus since APICv
+> > is really common in recent years. The guest timer interrupt is injected
+> > by posted-interrupt which is delivered by housekeeping cpu once the emu=
+lated
+> > timer fires.
+> >
+> > The host admin should fine tuned, e.g. dedicated instances scenario w/
+> > nohz_full cover the pCPUs which vCPUs resident, several pCPUs surplus
+> > for busy housekeeping, disable mwait/hlt/pause vmexits to keep in non-r=
+oot
+> > mode, ~3% redis performance benefit can be observed on Skylake server.
+> >
+> > w/o patch:
+> >
+> >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time   Av=
+g time
+> >
+> > EXTERNAL_INTERRUPT    42916    49.43%   39.30%   0.47us   106.09us   0.=
+71us ( +-   1.09% )
+> >
+> > w/ patch:
+> >
+> >             VM-EXIT  Samples  Samples%  Time%   Min Time  Max Time     =
+    Avg time
+> >
+> > EXTERNAL_INTERRUPT    6871     9.29%     2.96%   0.44us    57.88us   0.=
+72us ( +-   4.02% )
+> >
+> > Cc: Paolo Bonzini <pbonzini@redhat.com>
+> > Cc: Radim Kr=C4=8Dm=C3=A1=C5=99 <rkrcmar@redhat.com>
+> > Cc: Marcelo Tosatti <mtosatti@redhat.com>
+> > Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
+> > ---
+> >  arch/x86/kvm/lapic.c            | 33 ++++++++++++++++++++++++++-------
+> >  arch/x86/kvm/lapic.h            |  1 +
+> >  arch/x86/kvm/vmx/vmx.c          |  3 ++-
+> >  arch/x86/kvm/x86.c              |  5 +++++
+> >  arch/x86/kvm/x86.h              |  2 ++
+> >  include/linux/sched/isolation.h |  2 ++
+> >  kernel/sched/isolation.c        |  6 ++++++
+> >  7 files changed, 44 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
+> > index 87ecb56..9ceeee5 100644
+> > --- a/arch/x86/kvm/lapic.c
+> > +++ b/arch/x86/kvm/lapic.c
+> > @@ -122,6 +122,13 @@ static inline u32 kvm_x2apic_id(struct kvm_lapic *=
+apic)
+> >       return apic->vcpu->vcpu_id;
+> >  }
+> >
+> > +bool posted_interrupt_inject_timer(struct kvm_vcpu *vcpu)
+> > +{
+> > +     return pi_inject_timer && kvm_vcpu_apicv_active(vcpu) &&
+> > +             kvm_hlt_in_guest(vcpu->kvm);
+> > +}
+> > +EXPORT_SYMBOL_GPL(posted_interrupt_inject_timer);
+>
+> Paolo, can you explain the reasoning behind this?
+>
+> Should not be necessary...
 
-Applied, thank you.
-
-> ---
-> Please note that I do NOT own this device.
-> 
-> I'm adding this based on the fact that this is an iforce-based
-> device and that the Windows driver for the R440 works for the
-> Logitech WingMan Formula Force after replacing the device/vendor
-> IDs (I got the vendor/device IDs from there as well).
-> 
-> Please don't add this patch if adding devices based on that is
-> not ok.
-> 
-> This patch is a resend of the patch I sent back in November,
-> which apparently went unnoticed.
-> ---
->  drivers/input/joystick/iforce/iforce-main.c | 1 +
->  drivers/input/joystick/iforce/iforce-usb.c  | 1 +
->  2 files changed, 2 insertions(+)
-> 
-> diff --git a/drivers/input/joystick/iforce/iforce-main.c b/drivers/input/joystick/iforce/iforce-main.c
-> index 55f5b7bb4cac..e000e7d5b4c1 100644
-> --- a/drivers/input/joystick/iforce/iforce-main.c
-> +++ b/drivers/input/joystick/iforce/iforce-main.c
-> @@ -55,6 +55,7 @@ static struct iforce_device iforce_device[] = {
->  	{ 0x05ef, 0x8888, "AVB Top Shot Force Feedback Racing Wheel",	btn_wheel, abs_wheel, ff_iforce }, //?
->  	{ 0x061c, 0xc0a4, "ACT LABS Force RS",                          btn_wheel, abs_wheel, ff_iforce }, //?
->  	{ 0x061c, 0xc084, "ACT LABS Force RS",				btn_wheel, abs_wheel, ff_iforce },
-> +	{ 0x06a3, 0xff04, "Saitek R440 Force Wheel",			btn_wheel, abs_wheel, ff_iforce }, //?
->  	{ 0x06f8, 0x0001, "Guillemot Race Leader Force Feedback",	btn_wheel, abs_wheel, ff_iforce }, //?
->  	{ 0x06f8, 0x0001, "Guillemot Jet Leader Force Feedback",	btn_joystick, abs_joystick_rudder, ff_iforce },
->  	{ 0x06f8, 0x0004, "Guillemot Force Feedback Racing Wheel",	btn_wheel, abs_wheel, ff_iforce }, //?
-> diff --git a/drivers/input/joystick/iforce/iforce-usb.c b/drivers/input/joystick/iforce/iforce-usb.c
-> index f1569ae8381b..afbcd1a522d4 100644
-> --- a/drivers/input/joystick/iforce/iforce-usb.c
-> +++ b/drivers/input/joystick/iforce/iforce-usb.c
-> @@ -202,6 +202,7 @@ static const struct usb_device_id iforce_usb_ids[] = {
->  	{ USB_DEVICE(0x05ef, 0x8888) },		/* AVB Top Shot FFB Racing Wheel */
->  	{ USB_DEVICE(0x061c, 0xc0a4) },         /* ACT LABS Force RS */
->  	{ USB_DEVICE(0x061c, 0xc084) },         /* ACT LABS Force RS */
-> +	{ USB_DEVICE(0x06a3, 0xff04) },		/* Saitek R440 Force Wheel */
->  	{ USB_DEVICE(0x06f8, 0x0001) },		/* Guillemot Race Leader Force Feedback */
->  	{ USB_DEVICE(0x06f8, 0x0003) },		/* Guillemot Jet Leader Force Feedback */
->  	{ USB_DEVICE(0x06f8, 0x0004) },		/* Guillemot Force Feedback Racing Wheel */
-> --
-> 2.22.0
-> 
-
--- 
-Dmitry
+Here some new discussions:
+https://lkml.org/lkml/2019/6/13/1423
+https://lkml.org/lkml/2019/6/13/1420
