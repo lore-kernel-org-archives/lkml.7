@@ -2,132 +2,101 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32FA5C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDF88C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D1B8217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:06:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="X1G1dO6s"
+	by mail.kernel.org (Postfix) with ESMTP id 8C6A7217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560964075;
+	bh=ZZakWFV3wpQ3D41JL/BfSJA1Zh1XLt3/4zsXV7Va1Hs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PsroRjATTpxKu6Zi3+jwbn9Biig0FNfoINc7Qi/bRnAQZ7pXGFJjrPeyOxTX9ZMy3
+	 n2gZvMvPTP27zPcTVUptALQ4UenTm33O/xzzlkJIjqKsqHW+R4wj8q8DvqLAoFZGkK
+	 E2xmH5Q1Pdw+pG2C6x+lOJXGu4Zamqou1L4ePuXo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbfFSRGz (ORCPT
+        id S1729825AbfFSRHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:06:55 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45421 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730020AbfFSRGy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:06:54 -0400
-Received: by mail-oi1-f195.google.com with SMTP id m206so11134246oib.12
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:06:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0p/XIwpXKqn06m+RPTTcvCNox7E/RmmojiCAJ5y+urI=;
-        b=X1G1dO6s3hbPvvZxcZOiIHvHuDoK3U48uQPPR5MSfaahW+qB1h5ikRxyrv0TQ20ja0
-         HICDctS0WB3ZfGIRg+H0iIVCOFaWPrqH49VvmlQYs54j8X67guXIqTf09+c1rckymzbV
-         CCA0ucFlLTdXNabe+3SVVYtFDnUivT7Subor5zWzFNMMilwCMtKka4LlKaWkWMhvonJS
-         tbQ0whFMH1pwYpXuToAxQMqnJ70T9W7U+F9PYM7voXqcBD6Atro+SbJN3pT9PRBmjh0M
-         wTtxFqXTPr6YUGMkMtavqPHD+DBwSSuZ8kCju0CBrKYoI1Cd1zI68zp/6pDA/7ySsNxR
-         +jJA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0p/XIwpXKqn06m+RPTTcvCNox7E/RmmojiCAJ5y+urI=;
-        b=DFLBd6+QusDceelscCShAi/oeBoLF8oZ6uKSQYW8jhPBN5vOsf7XfeA21Ozk5qSXW7
-         P15iZCKV+qoBMYxHus0P3B3Ic8KpT1sSfVr839dm6AHZx6wRoqsk8FJxB5dGo0GdobH2
-         Yp+GLRQ1cicg0brD5l2FmOExewn0tx520Z9DYWqkUb7SMzVu5pYQoTU/smJdMIcC1l63
-         C/UxYUIjhkN2Nex9D9axxi2aJ1o3lDNyEc98mX5Eb/19IuWDqooPV36pYIzyEgPvMZRR
-         Tpb3rKYlOAAx0WSvol6IZM2l7UoXogugRHlEb/D4Q+dukjtjv66KVU1hG7EDFMxiEgDh
-         4tKA==
-X-Gm-Message-State: APjAAAX5rQNCIcR84g/lqx/DM8mD+pqqPBrAFoLKJkpzdbA6zhK8F1Ci
-        gCcGHnyfyOzy6Ym2x9WBdW6pEes6gZLIhBLhTCDFcQ==
-X-Google-Smtp-Source: APXvYqzPQ7hGf38RJ89R10lUDX088z06TMvhN9nJMBhLW66oBHW/MYhv7ngyJ6+CXJ7guXzYDqNBTWN5jhwDowX/HFE=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr3358584oih.73.1560964014171;
- Wed, 19 Jun 2019 10:06:54 -0700 (PDT)
+        Wed, 19 Jun 2019 13:07:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54222 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726322AbfFSRHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:07:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FCC52084E;
+        Wed, 19 Jun 2019 17:07:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560964072;
+        bh=ZZakWFV3wpQ3D41JL/BfSJA1Zh1XLt3/4zsXV7Va1Hs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BO2NJ4gV8/ZsImJxX7Kk/YMxssdJZkjdLTLCVGdqLXU4vhIj/NJAO/8y4Eivd5AqX
+         YLZB76XuHz/XXqNCjp3q+0pdlwmm02Pxb05DPimNT+IgAhAqibfVh676U2FVshVfmP
+         gb4eKSQRJFqL34YdwjihtWah3/tBogVaYlzLUpC4=
+Date:   Wed, 19 Jun 2019 19:07:50 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Joel Fernandes <joelaf@google.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Tri Vo <trong@android.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Sandeep Patil <sspatil@android.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Hridya Valsaraju <hridya@google.com>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        "Cc: Android Kernel" <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Alexei Starovoitov <ast@fb.com>
+Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
+Message-ID: <20190619170750.GB10107@kroah.com>
+References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
+ <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
+ <20190618182502.GC203031@google.com>
+ <4587569.x9DSL43cXO@kreacher>
+ <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
+ <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
+ <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
+ <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
 MIME-Version: 1.0
-References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156092356065.979959.6681003754765958296.stgit@dwillia2-desk3.amr.corp.intel.com>
- <877e9hk06d.fsf@linux.ibm.com>
-In-Reply-To: <877e9hk06d.fsf@linux.ibm.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 Jun 2019 10:06:43 -0700
-Message-ID: <CAPcyv4gZfLoG2tOGFWK56rr1vadF71+ny951brtunbPUNW-W1w@mail.gmail.com>
-Subject: Re: [PATCH v10 12/13] libnvdimm/pfn: Fix fsdax-mode namespace
- info-block zero-fields
-To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 9:30 AM Aneesh Kumar K.V
-<aneesh.kumar@linux.ibm.com> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
->
-> > At namespace creation time there is the potential for the "expected to
-> > be zero" fields of a 'pfn' info-block to be filled with indeterminate
-> > data. While the kernel buffer is zeroed on allocation it is immediately
-> > overwritten by nd_pfn_validate() filling it with the current contents of
-> > the on-media info-block location. For fields like, 'flags' and the
-> > 'padding' it potentially means that future implementations can not rely
-> > on those fields being zero.
-> >
-> > In preparation to stop using the 'start_pad' and 'end_trunc' fields for
-> > section alignment, arrange for fields that are not explicitly
-> > initialized to be guaranteed zero. Bump the minor version to indicate it
-> > is safe to assume the 'padding' and 'flags' are zero. Otherwise, this
-> > corruption is expected to benign since all other critical fields are
-> > explicitly initialized.
-> >
-> > Note The cc: stable is about spreading this new policy to as many
-> > kernels as possible not fixing an issue in those kernels. It is not
-> > until the change titled "libnvdimm/pfn: Stop padding pmem namespaces to
-> > section alignment" where this improper initialization becomes a problem.
-> > So if someone decides to backport "libnvdimm/pfn: Stop padding pmem
-> > namespaces to section alignment" (which is not tagged for stable), make
-> > sure this pre-requisite is flagged.
->
-> Don't we need a change like below in this patch?
->
-> modified   drivers/nvdimm/pfn_devs.c
-> @@ -452,10 +452,11 @@ int nd_pfn_validate(struct nd_pfn *nd_pfn, const char *sig)
->         if (memcmp(pfn_sb->parent_uuid, parent_uuid, 16) != 0)
->                 return -ENODEV;
->
-> -       if (__le16_to_cpu(pfn_sb->version_minor) < 1) {
-> -               pfn_sb->start_pad = 0;
-> -               pfn_sb->end_trunc = 0;
-> -       }
-> +       if ((__le16_to_cpu(pfn_sb->version_minor) < 1) ||
-> +           (__le16_to_cpu(pfn_sb->version_minor) >= 3)) {
-> +                       pfn_sb->start_pad = 0;
-> +                       pfn_sb->end_trunc = 0;
-> +               }
+On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
+> > It is conceivable to have a "wakeup_sources" directory under
+> > /sys/power/ and sysfs nodes for all wakeup sources in there.
+> 
+> One of the "issues" with this is, now if you have say 100 wake up
+> sources, with 10 entries each, then we're talking about a 1000 sysfs
+> files. Each one has to be opened, and read individually. This adds
+> overhead and it is more convenient to read from a single file. The
+> problem is this single file is not ABI. So the question I guess is,
+> how do we solve this in both an ABI friendly way while keeping the
+> overhead low.
 
-No, this kills off start_pad and end_trunc permanently.
+How much overhead?  Have you measured it, reading from virtual files is
+fast :)
 
-> IIUC we want to force the start_pad and end_truc to zero if the pfn_sb
-> minor version number >= 3. So once we have this patch backported and
-> older kernel finds a pfn_sb with minor version 3, it will ignore the
-> start_pad read from the nvdimm and overwrite that with zero here.
-> This patch doesn't enforce that right? After the next patch we can have
-> values other than 0 in pfn_sb->start_pad?
+And how often does this happen?  Does it _need_ to happen?
 
-The reason for the version bump is for the kernel to safely assume
-that uninitialized fields default to zero, but it's otherwise a nop
-when the implementation is explicitly initializing every field by
-default.
+Parsing files is also hard, and not for sysfs files, you can't have it
+both ways.
+
+So try it this way, and if there really is a performance issue, we can
+then talk about it...
+
+thanks,
+
+greg k-h
