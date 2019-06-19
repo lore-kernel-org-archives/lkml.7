@@ -2,183 +2,96 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B68C4C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:40:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F06C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:41:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FCB120645
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:40:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EF3B2147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:41:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="k16j+97H";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kleMmKW0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ogP3Zy3t"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730456AbfFSRki (ORCPT
+        id S1730236AbfFSRla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:40:38 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38914 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730224AbfFSRkg (ORCPT
+        Wed, 19 Jun 2019 13:41:30 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41409 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729659AbfFSRla (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:40:36 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 78D3561B7E; Wed, 19 Jun 2019 17:40:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560966034;
-        bh=3g9wLryrQ2F10ZSjtE5svtR7JJ802mUzznx1+lwmBzs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=k16j+97HKeRzrK2dBga+ebAtQTXtxl0uthMtVMONMf/w9PvQiBR3zFrN8R9BCQBZu
-         i7BbsW9mYNAJRiuJmchVuqQklJAwHAFc0F1FXoFstBVFq7rWlKPPOlDrIopgV4Oc1n
-         0p+SqFJzhTDzxMcnJqa5VcE51i6sjk9OqXCENVO0=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D85FB618EA;
-        Wed, 19 Jun 2019 17:40:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560966030;
-        bh=3g9wLryrQ2F10ZSjtE5svtR7JJ802mUzznx1+lwmBzs=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kleMmKW0cdmDe0Y3kyJmC0sfObgfizGuc5eh8tpwyhr9krvCDvVkTtuU13eoKcbAP
-         zhj2SEhIKm/wIrRhf23XD6KrqRcstL8hpTMx8cKoFV2tc1u5z1wGiTxd81DOx3mfO7
-         plBfFAhGOC4cwTIs2QcG1QQOS/okDiobs6Ilbucs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D85FB618EA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        benjamin.tissoires@redhat.com, jikos@kernel.org,
-        hdegoede@redhat.com, bjorn.andersson@linaro.org, agross@kernel.org,
-        lee.jones@linaro.org, xnox@ubuntu.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-input@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
- <20190612214636.GA40779@dtor-ws>
- <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
- <20190619171010.24c25oenpmjpiayw@penguin>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <8cd10509-6a67-7c5b-9139-89bdcaa35f3f@codeaurora.org>
-Date:   Wed, 19 Jun 2019 11:40:28 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 13:41:30 -0400
+Received: by mail-pl1-f195.google.com with SMTP id m7so100011pls.8
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:41:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+TIWmFG9D6KuYaPFIMfBgrrfumRxehwTCrylwENN8xU=;
+        b=ogP3Zy3tnbLA3NRbrm8pfcXaJEJp4mx7LgYEInZBCECHgHYG2R6gOOeTzB9sArGh/8
+         ZLxrMSPp0DuvAwLzLoqVDXbLLtJFzdRQI5yHswt7FVbzgzusC8aj9lzhMm6eU0Jjp3hO
+         Wd4rGk8YJqq7zMH8YdE0vDIS+Ey36+/dsv5XmxIawSfzvtlswqgh9dvg1cQY6y5g+fd7
+         Ljm6TTu4lb5w9MZijiRtayY+n+kwjLm8v2qNLVZeW4RrYwSJNtrwMJjRiVbH/VLi7wLA
+         qlL91n+rf2jZMSWVyNzB/ccbhQ3qUOwFXKUyD3L6U5Xhsld0FKLR4gAsh27v5/ONYaAf
+         7vlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+TIWmFG9D6KuYaPFIMfBgrrfumRxehwTCrylwENN8xU=;
+        b=JJzuVLlYWb0Cq1nA/LVTKmrHB9drALW4KGZW1S5rxtu/7EdNotWbXQwZj0aYAPyOoV
+         un5bEk2TmLwgsBwmk1rVkAZWc0YWQesv1wGPO8YjcsPHG9xnqVx7sQo/DSYoO0gjTXE2
+         oCvp4xJOiGtlKD9f4JDxRsQ2YjoYjBVyghbcJMKfwgtCrO+MB6PsIRptroXPxCbdYj+Y
+         svhdIbRD2jz5qPs5mObRJnfRs0aGkIBkY/qQ5JmM3yY+PfjLg3N0pIrR8vfKvqfeosLX
+         XHulX4qcTUxrpGp93BYUzWA35jkfXEsz7BHOXtZJ6w+Nb8887SoPWxFjltw3pIU8l5OX
+         jGfQ==
+X-Gm-Message-State: APjAAAWQhj5X9kNXM4sxv0nSh4tieetXN8lrHTuXCI33bjSUpvofk/OZ
+        1Mt1sNlsmV1rdJ624XIwLC9Mr3a6FnXdxWI3esmXQg==
+X-Google-Smtp-Source: APXvYqy+enr3Ts5pw8yfp3XBlK7WV6lAGqKMLC8GD484atRHugjWP233gEQrAu2FKMbtShYw2c3OSlB5XWLQw93/s54=
+X-Received: by 2002:a17:902:b696:: with SMTP id c22mr115353335pls.119.1560966089069;
+ Wed, 19 Jun 2019 10:41:29 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190619171010.24c25oenpmjpiayw@penguin>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190618211440.54179-1-mka@chromium.org> <20190618230420.GA84107@archlinux-epyc>
+ <CAKwvOd=i2qsEO90cHn-Zvgd7vbhK5Z4RH89gJGy=Cjzbi9QRMA@mail.gmail.com> <f22006fedb0204ad05858609bc9d3ed0abc6078e.camel@perches.com>
+In-Reply-To: <f22006fedb0204ad05858609bc9d3ed0abc6078e.camel@perches.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 19 Jun 2019 10:41:17 -0700
+Message-ID: <CAKwvOdkJCt7Du01e3LreLdpREPuZXWYnUad6WzqwO_o4i0yk7A@mail.gmail.com>
+Subject: Re: [PATCH] net/ipv4: fib_trie: Avoid cryptic ternary expressions
+To:     Joe Perches <joe@perches.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Alexander Duyck <alexander.h.duyck@redhat.com>,
+        netdev@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Nathan Huckleberry <nhuck@google.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Nathan Chancellor <natechancellor@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/19/2019 11:10 AM, Dmitry Torokhov wrote:
-> On Wed, Jun 12, 2019 at 04:20:42PM -0600, Jeffrey Hugo wrote:
->> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
->>> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
->>>> There needs to be coordination between hid-quirks and the elan_i2c driver
->>>> about which devices are handled by what drivers.  Currently, both use
->>>> whitelists, which results in valid devices being unhandled by default,
->>>> when they should not be rejected by hid-quirks.  This is quickly becoming
->>>> an issue.
->>>>
->>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
->>>> which is now in a header file that hid-quirks can access, use that to
->>>> implement a blacklist in hid-quirks so that only the devices that need to
->>>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
->>>> handled by default.
->>>>
->>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->>>> ---
->>>>    drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
->>>>    1 file changed, 16 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
->>>> index e5ca6fe2ca57..bd81bb090222 100644
->>>> --- a/drivers/hid/hid-quirks.c
->>>> +++ b/drivers/hid/hid-quirks.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/export.h>
->>>>    #include <linux/slab.h>
->>>>    #include <linux/mutex.h>
->>>> +#include <linux/input/elan-i2c-ids.h>
->>>>    #include "hid-ids.h"
->>>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->>>>    bool hid_ignore(struct hid_device *hdev)
->>>>    {
->>>> +	int i;
->>>> +
->>>>    	if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->>>>    		return false;
->>>>    	if (hdev->quirks & HID_QUIRK_IGNORE)
->>>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
->>>>    		break;
->>>>    	case USB_VENDOR_ID_ELAN:
->>>>    		/*
->>>> -		 * Many Elan devices have a product id of 0x0401 and are handled
->>>> -		 * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
->>>> -		 * is not (and cannot be) handled by that driver ->
->>>> -		 * Ignore all 0x0401 devs except for the ELAN0800 dev.
->>>> +		 * Blacklist of everything that gets handled by the elan_i2c
->>>> +		 * input driver.  This avoids disabling valid touchpads and
->>>> +		 * other ELAN devices.
->>>>    		 */
->>>> -		if (hdev->product == 0x0401 &&
->>>> -		    strncmp(hdev->name, "ELAN0800", 8) != 0)
->>>> -			return true;
->>>> -		/* Same with product id 0x0400 */
->>>> -		if (hdev->product == 0x0400 &&
->>>> -		    strncmp(hdev->name, "QTEC0001", 8) != 0)
->>>> -			return true;
->>>> +		if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
->>>> +			for (i = 0; strlen(elan_acpi_id[i].id); ++i)
->>>> +				if (!strncmp(hdev->name, elan_acpi_id[i].id,
->>>> +					     strlen(elan_acpi_id[i].id)))
->>>> +					return true;
->>>> +			for (i = 0; strlen(elan_of_match[i].name); ++i)
->>>> +				if (!strncmp(hdev->name, elan_of_match[i].name,
->>>> +					     strlen(elan_of_match[i].name)))
->>>> +					return true;
->>>
->>> Do we really need to blacklist the OF case here? I thought that in ACPI
->>> case we have clashes as HID gets matched by elan_i2c and CID is matched
->>> by i2c-hid, but I do not believe we'll run into the same situation on OF
->>> systems.
->>
->> I think its the safer approach.
->>
->> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will end
->> up running through this (kind of the whole reason why this series exists).
->> The vendor and product ids will still match, so we'll end up going through
->> the lists to see if the hdev->name (the compatible string) will match the
->> blacklist.  "hid-over-i2c" won't match the blacklist, but if there is a more
->> specific compatible, it might.
->>
->> In that case, not matching OF would work, however how it could break today
->> is if both "hid-over-i2c" and "elan,ekth3000" were listed for the same
->> device, and elan_i2c was not compiled.  In that case, if we skip the OF part
->> of the black list, hid-quirks will not reject the device, and you'll
->> probably have some odd behavior instead of the obvious "the device doesn't
->> work because the correct driver isn't present" behavior.
->>
->> While that scenario might be far fetched since having both "hid-over-i2c"
->> and "elan,ekth3000" probably violates the OF bindings, its still safer to
->> include the OF case in the blacklist against future scenarios.
-> 
-> Yes, I believe it is quite far fetched. We are talking about someone
-> setting compatible sting to something that is decidedly not compatible.
-> I.e. we know that devices driven by elan_i2c are not compatible with
-> hi-over-i2c driver/protocol, so why do we expect that they both will be
-> specified in the same compatible string? I know ACPI case is messier in
-> this regard as 2 drivers look at the different data items when
-> evaluating whether they should bind to the device, but here we are
-> dealing with the same string.
+On Wed, Jun 19, 2019 at 2:36 AM Joe Perches <joe@perches.com> wrote:
+>
+> On Tue, 2019-06-18 at 16:23 -0700, Nick Desaulniers wrote:
+> > As a side note, I'm going to try to see if MAINTAINERS and
+> > scripts/get_maintainers.pl supports regexes on the commit messages in
+> > order to cc our mailing list
+>
+> Neither.  Why should either?
 
-Alright.  Sounds like you really want the DT matching dropped, so I'll 
-update the series with a new version ASAP that drops that.
+Looks like `K:` is exactly what I'm looking for.  Joe, how does:
+https://github.com/ClangBuiltLinux/linux/commit/a0a64b8d65c4e7e033f49e48cc610d6e4002927e
+look?  Is there a maintainer for MAINTAINERS or do I just send the
+patch to Linus?
+
+-- 
+Thanks,
+~Nick Desaulniers
