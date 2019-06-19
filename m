@@ -2,138 +2,140 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F743C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:01:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1C1C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D9402166E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:01:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="t0FlsK0r"
+	by mail.kernel.org (Postfix) with ESMTP id C2F1E2166E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:04:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560967464;
+	bh=x5KiDzUgSK7qZcJ/as2Il4NNuMtV1bicMfPBCU1HXB4=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=xp2157ZC/iuHRKoo9ZaWunalWjF0qKi0mns0a+AB/79NEIUQbZnOPNm8tFEz92LFh
+	 yiMjY0izDV59PSVjwhzONcITEWHWKtfuLJSqRHgN03DsqQthOHeSPhaCXvkWuB3Qn2
+	 3GVs28ii0ZYNege27o7wqEAbTzC2iv5DSWedDqg4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726865AbfFSSBt (ORCPT
+        id S1729098AbfFSSEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:01:49 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36394 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFSSBt (ORCPT
+        Wed, 19 Jun 2019 14:04:23 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:37380 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfFSSEW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:01:49 -0400
-Received: by mail-qt1-f195.google.com with SMTP id p15so91460qtl.3
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:01:49 -0700 (PDT)
+        Wed, 19 Jun 2019 14:04:22 -0400
+Received: by mail-io1-f66.google.com with SMTP id e5so120056iok.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=czuVT35co/UKsceghDoTiQ4oToGLTSbKhMCQO4t0nUE=;
-        b=t0FlsK0r8Bx/f9E7kd+SWF3OofIkorm0DUUph6+DeKYxZhH1U3WrRKGKsUCk/Pyopt
-         ZCT4v3iUv9Slj1G3/LFS8XXYQScHawo96l+KvR62BUI+LZW4DW0mmeWApJs9FDNP++8I
-         hFpVtgUjorb6GvON/zvOaNk274fAgQ610pRPN2d8a4ZKqk8kp+mg4CWTC6mpLM86PjQ8
-         XQAQR8lUeFq+t9e937A5exioDrUzLZyGlsUA3MmCnYYQGGAAR8l4OPQOKfPU5Y4qSyMC
-         eK0t9B/HM1zZyai4w8BO0Uovj73EoB72CeT5TBW4CNjFngXdTBAOLDwWPhtfkUyXyZmW
-         reXg==
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=bY2Pdgxjl8QBtsjUINphEntPK3jfC/Ak6GNxyygmigo=;
+        b=VkybdO5szSQoqsCVNU3CNvztJwBLITMX5WwtErnOYPP33xZQZA9gVzz6aeV21kCbn5
+         ObwWjqDCTa2/Bb2qCTbAbK6xqxkdiHO/Mwj3z8YEH/KyXQrkohwjDJjxkKABz0ZhAhkW
+         RpTbQvkIB8kS8Zn2Qbo1olUPr8yqDON/ekOis=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=czuVT35co/UKsceghDoTiQ4oToGLTSbKhMCQO4t0nUE=;
-        b=l+QIlCo8o3Haw055+4wZrAW65Ae4sFf9VwD7P1swqHG9hw4dBTDw1rKO8ZvD+DGP0c
-         xcIN6CFwjsjuWWa/0NE31bFYCbEW/nCSwdz5XI9Er5Rg252FxoJ1FEIDOXv1Z7VNjqs8
-         vKTuawCXAqZFNj9kJutqTEvCS6amCv/JjSzQobFKFli1hAp/tGZCqJWa2tEl9/r4xEnG
-         s14thX/0DnMWrfwhnnsYK+1B856EeMbh3T8p9x102QZpyya9Ftl2+KY9Dz1RdDMVw7Vb
-         d43cUbNFzdtp6Q+mhE7l46pZdfU1jzdB7Zmix0U0YhkFQ+tihjlkgNfWrSHeTSp/K5YZ
-         Gntw==
-X-Gm-Message-State: APjAAAW23p+KWiaXjdyFWqrBxdDqpjSWA1cUHHhuZ+o7n/EQ0EDmhRsE
-        pGFpLK8+ExGXlhtKdCqwLTM2e+/CIucmZwtRd2MwVg==
-X-Google-Smtp-Source: APXvYqxeZ4O/kaqZoo3nciU9wlzuTKsySBSeoLaF/GcKUrg0k12S8Nc/w6joJpYVh9NOpJ72bTjl+T69A/gi1ERuRUk=
-X-Received: by 2002:ac8:1ba9:: with SMTP id z38mr18306346qtj.176.1560967308199;
- Wed, 19 Jun 2019 11:01:48 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=bY2Pdgxjl8QBtsjUINphEntPK3jfC/Ak6GNxyygmigo=;
+        b=W3mTvAVbdUeDVH8TpmNvcFRePcH6OwljMNfHBNuFXn8fVKU2Ffp/WjrWhKFmZKQQLb
+         zvmXJJYqt/7LbtveAui1HjoBNwry2BsPVfADuG6iULMXXDh2IVGSXVTQ6427ApPeh/ic
+         QEe+uvsxrMqPlFPRrq9wTR1ssfyX3trvqE09YthVYuTxPwY7b0c3ZYXXZB3UIErxWWZW
+         ayHVVRzeQbka0Y9mKhAaaphYT9TfH4AwzM2rWCkldCOq5Rz952vp4MxpyXx8J7HsFB2K
+         dXOBivysP/+wztkGvWEkDuvt3d76zuZQoPSPC+7I/kdQNaxYqHY11LNaKOSgY9w7Gtf5
+         lpEQ==
+X-Gm-Message-State: APjAAAXN+rOMlb9CVnu6h/YNykoWxYQ2mHNhzBceGHkc+GQCq4JFaRpe
+        VhEs4GcvRKJaEIc2zKJcD5eoZkg59oM=
+X-Google-Smtp-Source: APXvYqw4Tz4USEoEvxV705R5eyOixcvvXbf7l0fifGzCyJPxmQS1jpqwotommwl09kmMHgcdPEDAXg==
+X-Received: by 2002:a6b:b40b:: with SMTP id d11mr3987486iof.122.1560967461187;
+        Wed, 19 Jun 2019 11:04:21 -0700 (PDT)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id y20sm17970542iol.34.2019.06.19.11.04.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 11:04:20 -0700 (PDT)
+Subject: Re: [PATCH] net: fddi: skfp: Include generic PCI definitions from
+ pci_regs.h
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20190619174556.21194-1-puranjay12@gmail.com>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <e49daf89-1bf0-77e8-c71f-ec0802f25f6c@linuxfoundation.org>
+Date:   Wed, 19 Jun 2019 12:04:19 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
- <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
- <20190618182502.GC203031@google.com> <4587569.x9DSL43cXO@kreacher>
- <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
- <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
- <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
- <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com> <20190619170750.GB10107@kroah.com>
-In-Reply-To: <20190619170750.GB10107@kroah.com>
-From:   Joel Fernandes <joelaf@google.com>
-Date:   Wed, 19 Jun 2019 14:01:36 -0400
-Message-ID: <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
-Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sandeep Patil <sspatil@android.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190619174556.21194-1-puranjay12@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 1:07 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
-> > > It is conceivable to have a "wakeup_sources" directory under
-> > > /sys/power/ and sysfs nodes for all wakeup sources in there.
-> >
-> > One of the "issues" with this is, now if you have say 100 wake up
-> > sources, with 10 entries each, then we're talking about a 1000 sysfs
-> > files. Each one has to be opened, and read individually. This adds
-> > overhead and it is more convenient to read from a single file. The
-> > problem is this single file is not ABI. So the question I guess is,
-> > how do we solve this in both an ABI friendly way while keeping the
-> > overhead low.
->
-> How much overhead?  Have you measured it, reading from virtual files is
-> fast :)
+On 6/19/19 11:45 AM, Puranjay Mohan wrote:
+> Include the generic PCI definitions from include/uapi/linux/pci_regs.h
+> change PCI_REV_ID to PCI_REVISION_ID to make it compatible with the
+> generic define.
+> This driver uses only one generic PCI define.
+> 
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>   drivers/net/fddi/skfp/drvfbi.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
+> index bdd5700e71fa..38f6d943385d 100644
+> --- a/drivers/net/fddi/skfp/drvfbi.c
+> +++ b/drivers/net/fddi/skfp/drvfbi.c
+> @@ -20,6 +20,7 @@
+>   #include "h/supern_2.h"
+>   #include "h/skfbiinc.h"
+>   #include <linux/bitrev.h>
+> +#include <uapi/linux/pci_regs.h>
+>   
+>   #ifndef	lint
+>   static const char ID_sccs[] = "@(#)drvfbi.c	1.63 99/02/11 (C) SK " ;
+> @@ -127,7 +128,7 @@ static void card_start(struct s_smc *smc)
+>   	 *	 at very first before any other initialization functions is
+>   	 *	 executed.
+>   	 */
+> -	rev_id = inp(PCI_C(PCI_REV_ID)) ;
+> +	rev_id = inp(PCI_C(PCI_REVISION_ID)) ;
+>   	if ((rev_id & 0xf0) == SK_ML_ID_1 || (rev_id & 0xf0) == SK_ML_ID_2) {
+>   		smc->hw.hw_is_64bit = TRUE ;
+>   	} else {
+> 
 
-I measured, and it is definitely not free. If you create and read a
-1000 files and just return a string back, it can take up to 11-13
-milliseconds (did not lock CPU frequencies, was just looking for
-average ball park). This is assuming that the counter reading is just
-doing that, and nothing else is being done to return the sysfs data
-which is probably not always true in practice.
+Why not delete the PCI_REV_ID define in:
 
-Our display pipeline deadline is around 16ms at 60Hz. Conceivably, any
-CPU scheduling competion reading sysfs can hurt the deadline. There's
-also the question of power - we definitely have spent time in the past
-optimizing other virtual files such as /proc/pid/smaps for this reason
-where it spent lots of CPU time.
+drivers/net/fddi/skfp/h/skfbi.h
 
-> And how often does this happen?  Does it _need_ to happen?
+It looks like this header has duplicate PCI config space header defines,
+not just this one. Some of them are slightly different names:
 
-These are good questions and we should find out. I am not saying that
-sysfs will not work, I am just saying we need to consider all the
-things. I will let Tri look into this since he is working on it, I
-don't know off the top.
+e.g:
 
-> Parsing files is also hard, and not for sysfs files, you can't have it
-> both ways.
+#define PCI_CACHE_LSZ   0x0c    /*  8 bit       Cache Line Size */
 
-I don't think we are concerned with a parsing issue here, or are
-discussing it in this thread.
+Looks like it defines the standard PCI config space instead of
+including and using the standard defines from uapi/linux/pci_regs.h
 
-> So try it this way, and if there really is a performance issue, we can
-> then talk about it...
+Something to look into.
 
-Sure that sounds good to me, again I am not saying we should do sysfs.
-But we should consider all the issues and chose the right solution.
+thanks,
+-- Shuah
 
-thanks!
 
- - Joel
+
+
+
