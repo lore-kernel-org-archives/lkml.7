@@ -2,82 +2,97 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09CEBC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:20:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74FADC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3973208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:20:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4934F20B1F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:21:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560921697;
+	bh=+s6nKRILHFX4fMOMEPuBZlWd0ZCOVTD3EzDFIVTGCHE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=nn4XMHBD5JJY9E0OynyYHRovxeliQQnPn1bhDJtPsVF8ryZSdTWC8VamKV3vtqRPb
+	 mhv10tHk7nz4KJ7xYrAD8m6HC3aszMCc9ozEKlAeZ7WajriZBqwjedkfSUlGwF7s9X
+	 rmhOy77khiVtR3JgQKJDz0Sb96xvS1I6gt3oRN1I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728195AbfFSFUa (ORCPT
+        id S1730555AbfFSFVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:20:30 -0400
-Received: from mail-ua1-f54.google.com ([209.85.222.54]:42148 "EHLO
-        mail-ua1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSFUa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:20:30 -0400
-Received: by mail-ua1-f54.google.com with SMTP id a97so8458598uaa.9
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:20:29 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k0PXc5nauUb4o3lsnx5Ny3+HWZRzLpYvPScpFb82/ck=;
-        b=Hy94K/l1LhCMhuveTHnfhrJecHpfBb2pH8mIRv3nrJvplcZJ2i2mwy+JrAlj3VO+53
-         JsczCrehocZpE0H6ZQ6bTwNihCg0cvPGF8RlYGecPdICgOP7s1zdYfk5mzNbwkJZSlFy
-         RM7kWhp9p8CtENx3J2iKN5JPE69CnxAfR5OTbuQtm2O1bLL3SiVSnSE7XUKBTqtq9IjR
-         jLisTuWYi5zYJ6fIw8GUrT2H4Wbyk1tjZ26TorE4gAm27tRw8De0PmYR1a/RI1O81e+8
-         anHGIlhzFt8v2FoAoiVWI9PyxUmQSbJnFbHbtu34kLSf8eV9cI8kW7t3mWRP4gCt8XoK
-         /N1Q==
-X-Gm-Message-State: APjAAAV25mmOOBAWuuc+HW9DFiANqMPo+pztwXGPZ4HRhbpRy3RLb0c9
-        6LYfxCyNiPPe5cIP2yRfqrV7+OPWlQUjseArFuU=
-X-Google-Smtp-Source: APXvYqwRf/92/Ddb/2Bf0CEDUV+3cymdzw6KRPCQW0cUpqPq5iMiVwt1kNX1Y0ekGtWsdMUxoCjbkmMVKH8avR8MfbI=
-X-Received: by 2002:a9f:31a2:: with SMTP id v31mr13080252uad.15.1560921628950;
- Tue, 18 Jun 2019 22:20:28 -0700 (PDT)
+        Wed, 19 Jun 2019 01:21:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45088 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725854AbfFSFVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 01:21:35 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 60E36AE04;
+        Wed, 19 Jun 2019 05:21:34 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 07:21:33 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yang Shi <yang.shi@linux.alibaba.com>
+Cc:     akpm@linux-foundation.org, vbabka@suse.cz,
+        mgorman@techsingularity.net, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
+ correctly in mbind
+Message-ID: <20190619052133.GB2968@dhcp22.suse.cz>
+References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190618130253.GH3318@dhcp22.suse.cz>
+ <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
+ <20190618182848.GJ3318@dhcp22.suse.cz>
+ <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
 MIME-Version: 1.0
-References: <20190614024957.GA9645@jagdpanzerIV> <20190619050811.GA15221@jagdpanzerIV>
-In-Reply-To: <20190619050811.GA15221@jagdpanzerIV>
-From:   Ilia Mirkin <imirkin@alum.mit.edu>
-Date:   Wed, 19 Jun 2019 01:20:17 -0400
-Message-ID: <CAKb7UvhdN=RUdfrnWswT4ANK5UwPcM-upDP85=84zsCF+a5-bg@mail.gmail.com>
-Subject: Re: nouveau: DRM: GPU lockup - switching to software fbcon
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Ben Skeggs <bskeggs@redhat.com>, David Airlie <airlied@linux.ie>,
-        nouveau <nouveau@lists.freedesktop.org>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 1:08 AM Sergey Senozhatsky
-<sergey.senozhatsky.work@gmail.com> wrote:
->
-> On (06/14/19 11:50), Sergey Senozhatsky wrote:
-> > dmesg
-> >
-> >  nouveau 0000:01:00.0: DRM: GPU lockup - switching to software fbcon
-> >  nouveau 0000:01:00.0: fifo: SCHED_ERROR 0a [CTXSW_TIMEOUT]
-> >  nouveau 0000:01:00.0: fifo: runlist 0: scheduled for recovery
-> >  nouveau 0000:01:00.0: fifo: channel 5: killed
-> >  nouveau 0000:01:00.0: fifo: engine 6: scheduled for recovery
-> >  nouveau 0000:01:00.0: fifo: engine 0: scheduled for recovery
-> >  nouveau 0000:01:00.0: firefox[476]: channel 5 killed!
-> >  nouveau 0000:01:00.0: firefox[476]: failed to idle channel 5 [firefox[476]]
-> >
-> > It lockups several times a day. Twice in just one hour today.
-> > Can we fix this?
->
-> Unusable
+On Tue 18-06-19 14:13:16, Yang Shi wrote:
+[...]
+> > > > > Change migrate_page_add() to check if the page is movable or not, if it
+> > > > > is unmovable, just return -EIO.  We don't have to check non-LRU movable
+> > > > > pages since just zsmalloc and virtio-baloon support this.  And, they
+> > > > > should be not able to reach here.
+> > > > You are not checking whether the page is movable, right? You only rely
+> > > > on PageLRU check which is not really an equivalent thing. There are
+> > > > movable pages which are not LRU and also pages might be off LRU
+> > > > temporarily for many reasons so this could lead to false positives.
+> > > I'm supposed non-LRU movable pages could not reach here. Since most of them
+> > > are not mmapable, i.e. virtio-balloon, zsmalloc. zram device is mmapable,
+> > > but the page fault to that vma would end up allocating user space pages
+> > > which are on LRU. If I miss something please let me know.
+> > That might be true right now but it is a very subtle assumption that
+> > might break easily in the future. The point is still that even LRU pages
+> > might be isolated from the LRU list temporarily and you do not want this
+> > to cause the failure easily.
+> 
+> I used to have !__PageMovable(page), but it was removed since the
+> aforementioned reason. I could add it back.
+> 
+> For the temporary off LRU page, I did a quick search, it looks the most
+> paths have to acquire mmap_sem, so it can't race with us here. Page
+> reclaim/compaction looks like the only race. But, since the mapping should
+> be preserved even though the page is off LRU temporarily unless the page is
+> reclaimed, so we should be able to exclude temporary off LRU pages by
+> calling page_mapping() and page_anon_vma().
+> 
+> So, the fix may look like:
+> 
+> if (!PageLRU(head) && !__PageMovable(page)) {
+>     if (!(page_mapping(page) || page_anon_vma(page)))
+>         return -EIO;
 
-Are you using a GTX 660 by any chance? You've provided rather minimal
-system info.
-
-  -ilia
+This is getting even more muddy TBH. Is there any reason that we have to
+handle this problem during the isolation phase rather the migration?
+-- 
+Michal Hocko
+SUSE Labs
