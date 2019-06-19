@@ -5,59 +5,60 @@ X-Spam-Level:
 X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47C53C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:43:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AFC5C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:43:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02AFB2075E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4809A21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:43:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="caxducxX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z8d5TC2o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731217AbfFSHnU (ORCPT
+        id S1731238AbfFSHnW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:43:20 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38492 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725946AbfFSHnT (ORCPT
+        Wed, 19 Jun 2019 03:43:22 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42212 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731187AbfFSHnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:43:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id s15so620195wmj.3;
-        Wed, 19 Jun 2019 00:43:14 -0700 (PDT)
+        Wed, 19 Jun 2019 03:43:20 -0400
+Received: by mail-wr1-f67.google.com with SMTP id x17so2166610wrl.9;
+        Wed, 19 Jun 2019 00:43:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id;
         bh=Adcr10UeqAe+Bb0IaDYg7VcUvqeXYymighOgZdeVEK0=;
-        b=caxducxX7PV6jsPJSHuhsGUWagdYBRY6pX31nucFls82co/VtMXpKcPUfCuWNJJ0MU
-         W4IzHov5qoIjO2nEoc3ulHp2I+gmhkRC4lAGdFQGT1BMDSFgji6jLZa9ldEHDsogFnqI
-         xmY18YQ3WL/hmAlM0fzzpEo/mjvE+hvoR87BX6Yubvm0i9oAgmzo8HrMjGB7Rg4K5DzL
-         JM1PuL5NYKcNMz8faN7EhEvvRRFwxMO7MBKVliZb46co4uqq+5BG6rhcAmnaijWpYAsE
-         SbkrGRPLK/dtkaR8SkbhybLRPd/CgZsK4xWfj6qOTo6AuG42vfLPyMMXF6mW/DK3QXpd
-         lKVA==
+        b=Z8d5TC2oTGs7s6gdPdB3ighhA9ecP+X5zcxUu5RLjknHDL2xUusFzk5+FQPn26tAyq
+         6bWsXJC40TMWE5ABWU1Ad6EsdixQPaSMwyHOd5n3j5eqYbQGVjZqmMRrRK+scOPBS5XB
+         5qDTl5oLdwHQpSL87ZGKjpEx3ddcb/ndil+yAzOPh709jVW9oq7V1yHTG/E6S7coIivh
+         zQLR3hUusoLjW20hiEQeY1UIs42Fl21hgrO28YFXqaMbN4UxEVW5M8Laon4wf6f+vNPE
+         /RkK48gVtf6P6SsS6jcVp8Vnwn7ULQUXhPNgm+0izRg7cExb1XkIwggsSk1Auo3dGqqx
+         vhbQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id;
         bh=Adcr10UeqAe+Bb0IaDYg7VcUvqeXYymighOgZdeVEK0=;
-        b=rVVpE8aU5T6S77CclkFtYJ7B9cOezQO3tKO/yb4FqGUE6+FntG78XlI/k3cv2+lucF
-         XS3Pc2nGRHIte0Ko952fRGMwmANjmpsnQ1MZg5kVp8RLqkR3GXoMXqEwHdCRA1tDcPas
-         IT3jnFZnNG4zBISxMkn6JJGEHrDCDqnzBs/5qPUI93VswsEWEv4PWUE+P6dGIQYLpuOL
-         6Lh9sJwhPLBZojcw1C5QHi0sqyncXGhhFay1FTaNg7H0QuShnuofMo327ghZyAv1s4gh
-         K/3EgveSZZep3vs2DXR3uKaxPLX1+T/zN01WwNd/ufR8LDzLsqLRCKmUo9Gm4C77yIL1
-         tHkg==
-X-Gm-Message-State: APjAAAX/aaRtQNfq+orj6mu2fAI5aicSFhFCWlA2zbDnjDSI6rPD6k7h
-        KjPtQnKY/P4JLLtUnRsjS8k=
-X-Google-Smtp-Source: APXvYqyXXdtUC16vcDx+Z7OCFfsxHwELx+VnwR7AbiVWG/TYtZOaerGMSjHpobBYsSGIjA4jtiGLEA==
-X-Received: by 2002:a1c:dc45:: with SMTP id t66mr7155684wmg.63.1560930193178;
-        Wed, 19 Jun 2019 00:43:13 -0700 (PDT)
+        b=ElbrGbxYHDw++OzgI2yPoO+smyk4V1/IK3/lMVca5orM/H5u3Zfifi4J4SAk2ImUgj
+         Pt4eO3JLdH3BMl0oACUcIEBCB7RCfWNH/p6fgDN+H/kDWG7HBgypre3RCAbF7siz8+J2
+         lwwQdYTKkoHMMvztSyWckBmGJUYLI21PXCYPZ2uWg+s/RwEY01CsTo9QPQNfP7Z7g0BH
+         RjdEekNGpa7dn5YF3xdI4pAVUcqNkhH9Q0IpM0NaQgYS94FRFWJwPZJ3dcC9I0as2mTb
+         35SAjO8ta9NgyevkRA6jzcWvfmdLLjD0FfrskciDDgPOkAlodeOXlBBvKsjdDhFDd7a9
+         MiYA==
+X-Gm-Message-State: APjAAAW1tCXdkhmxWhl0fUrq4Xen7S17J/CcZ4drLFMZo9rYcG3W4QTr
+        lOnTogBet7Z+qOUK+HkBU/s=
+X-Google-Smtp-Source: APXvYqycgQxt++WmfZ94LGdZplmgnryEumwqIoHLZ8mrWTw6TwUU9PavpDbQb1DpAILCWHgjO0ovTg==
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr68835836wrm.218.1560930194867;
+        Wed, 19 Jun 2019 00:43:14 -0700 (PDT)
 Received: from localhost ([193.47.161.132])
-        by smtp.gmail.com with ESMTPSA id f12sm23984841wrg.5.2019.06.19.00.43.11
+        by smtp.gmail.com with ESMTPSA id 32sm35570654wra.35.2019.06.19.00.43.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Jun 2019 00:43:12 -0700 (PDT)
+        Wed, 19 Jun 2019 00:43:14 -0700 (PDT)
 From:   Oliver Graute <oliver.graute@gmail.com>
-To:     mail@example.com
-Cc:     Oliver Graute <oliver.graute@kococonnector.com>,
+To:     sboyd@kernel.org
+Cc:     mturquette@baylibre.com,
+        Oliver Graute <oliver.graute@kococonnector.com>,
         Shawn Guo <shawnguo@kernel.org>,
         Sascha Hauer <s.hauer@pengutronix.de>,
         Pengutronix Kernel Team <kernel@pengutronix.de>,
@@ -70,8 +71,8 @@ Cc:     Oliver Graute <oliver.graute@kococonnector.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         devicetree@vger.kernel.org
 Subject: [PATCHv2] clk: add imx8 clk defines
-Date:   Wed, 19 Jun 2019 09:34:13 +0200
-Message-Id: <20190619073420.28426-1-oliver.graute@gmail.com>
+Date:   Wed, 19 Jun 2019 09:39:52 +0200
+Message-Id: <20190619074000.30852-1-oliver.graute@gmail.com>
 X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
