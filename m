@@ -2,237 +2,130 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47866C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E02ABC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:41:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DE4421881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3AF221881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IasK3Q2d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729876AbfFSPkG (ORCPT
+        id S1729885AbfFSPlM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:40:06 -0400
-Received: from mga01.intel.com ([192.55.52.88]:30190 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbfFSPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:40:04 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 08:40:04 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="243346760"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2019 08:40:03 -0700
-Date:   Wed, 19 Jun 2019 08:43:16 -0700
-From:   Jacob Pan <jacob.jun.pan@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Stephane Eranian <eranian@google.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jan Kiszka <jan.kiszka@siemens.com>,
-        Ricardo Neri <ricardo.neri@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Wincy Van <fanwenyi0529@gmail.com>,
-        Ashok Raj <ashok.raj@intel.com>, x86 <x86@kernel.org>,
-        Andi Kleen <andi.kleen@intel.com>,
-        Borislav Petkov <bp@suse.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
-        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Juergen Gross <jgross@suse.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Philippe Ombredanne <pombredanne@nexb.com>,
-        jacob.jun.pan@intel.com
-Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
- remampping table entry for watchdog
-Message-ID: <20190619084316.71ce5477@jacob-builder>
-In-Reply-To: <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
-References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
-        <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
-        <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
-        <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de>
-        <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
-        <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 19 Jun 2019 11:41:12 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43968 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726839AbfFSPlM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:41:12 -0400
+Received: by mail-pf1-f195.google.com with SMTP id i189so9975728pfg.10;
+        Wed, 19 Jun 2019 08:41:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkiWE/zp1jKsrQI1Q/KB+EfF9ySaqYmDKlecitQY2q8=;
+        b=IasK3Q2dzh9JkLOqt7ZBHvPQPADVvU4ZUITgyCdLoyZqug28NxK1MQrI0EFgX3mo+C
+         HtXnQSnhskx8pVPRR/06ExunX+ork4XkS/01gn/Lc1dneohLRWs5zaK9G0Ys4Zoc6P0e
+         BYdFP3iq3W0BFeggmAvIyYjnryYearr+WECJg3gFHV/PWOqVJ1N8xsqrwhHEyasNf0gy
+         iKLc2btANa924FtL2CYfZwEzRdC2QUoN/1OIfktShivCeICvZdVr6e2dkqAwiq+0w2XY
+         I72ZnbK0XUFRq/gIbZFoh7BHz2IfIGkD8jszT0+EIkDCXU/hBcnHc2hO1cl86M0la2gH
+         y8xQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=QkiWE/zp1jKsrQI1Q/KB+EfF9ySaqYmDKlecitQY2q8=;
+        b=NtjdHQqeQVw4P7HFoN54ZcxHKbwXZyRaYjrhW5Iafh1SB7kP8PkIgZcx3udAOur16M
+         AFtAweRfhbwvQ7z8U7fJH0p3DG0qoLzD2qwgAWje3cpRWZ1O8rfIaTSrx98Ip9KLR6sO
+         stdXmEudj9QH9cQm22ZQheTdx69IM/784bKJhun6V/m2yBMHloGdf2BniuhVxAuZgtZl
+         EDuQyxzu3jvROdQ+K3bfCGyghiG4qs1neAR3rp2aqLU7j9OAu5WCLKAkcphQBF5oOWcN
+         MV6rYUpxsAdPX/yhSCzPWu9GQGqSG3cyNYx5USEHmt2V05vo3WeqIjQEoVYWPXEujy14
+         mgHA==
+X-Gm-Message-State: APjAAAWETTk7S9PHRIv7qbhUY9gNqtNyp65hT2vTXMLljC50wKMADmx5
+        IUgb/6PCL4TUl1yydBPze8c=
+X-Google-Smtp-Source: APXvYqwcTU2aL/9y/rjim5bCbUsnDIM5QBVqan2+nXDiqUpYU7ZAFkgSGbSK2RyRvr3oBekFECwRlA==
+X-Received: by 2002:a17:90a:aa0a:: with SMTP id k10mr12094988pjq.43.1560958871261;
+        Wed, 19 Jun 2019 08:41:11 -0700 (PDT)
+Received: from localhost.localdomain ([125.142.23.13])
+        by smtp.googlemail.com with ESMTPSA id 85sm20966823pgb.52.2019.06.19.08.41.09
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 08:41:10 -0700 (PDT)
+From:   Suwan Kim <suwan.kim027@gmail.com>
+To:     shuah@kernel.org, valentina.manea.m@gmail.com,
+        gregkh@linuxfoundation.org
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stern@rowland.harvard.edu, Suwan Kim <suwan.kim027@gmail.com>
+Subject: [PATCH v2] usbip: Skip DMA mapping and unmapping for urb at vhci
+Date:   Thu, 20 Jun 2019 00:40:41 +0900
+Message-Id: <20190619154041.30363-1-suwan.kim027@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019 01:08:06 +0200 (CEST)
-Thomas Gleixner <tglx@linutronix.de> wrote:
+vhci doesn’t do dma for remote device. Actually, the real dma
+operation is done by network card driver. So, vhci doesn’t use and
+need dma address of transfer buffer of urb.
 
-> Stephane,
-> 
-> On Mon, 17 Jun 2019, Stephane Eranian wrote:
-> > On Mon, Jun 17, 2019 at 1:25 AM Thomas Gleixner
-> > <tglx@linutronix.de> wrote:  
-> > > Great that there is no trace of any mail from Andi or Stephane
-> > > about this on LKML. There is no problem with talking offlist
-> > > about this stuff, but then you should at least provide a
-> > > rationale for those who were not part of the private conversation.
-> > >  
-> > Let me add some context to this whole patch series. The pressure on
-> > the core PMU counters is increasing as more people want to use them
-> > to measure always more events. When the PMU is overcommitted, i.e.,
-> > more events than counters for them, there is multiplexing. It comes
-> > with an overhead that is too high for certain applications. One way
-> > to avoid this is to lower the multiplexing frequency, which is by
-> > default 1ms, but that comes with loss of accuracy. Another approach
-> > is to measure only a small number of events at a time and use
-> > multiple runs, but then you lose consistent event view. Another
-> > approach is to push for increasing the number of counters. But
-> > getting new hardware counters takes time. Short term, we can
-> > investigate what it would take to free one cycle-capable counter
-> > which is commandeered by the hard lockup detector on all X86
-> > processors today. The functionality of the watchdog, being able to
-> > get a crash dump on kernel deadlocks, is important and we cannot
-> > simply disable it. At scale, many bugs are exposed and thus
-> > machines deadlock. Therefore, we want to investigate what it would
-> > take to move the detector to another NMI-capable source, such as
-> > the HPET because the detector does not need high low granularity
-> > timer and interrupts only every 2s.  
-> 
-> I'm well aware about the reasons for this.
-> 
-> > Furthermore, recent Intel erratum, e.g., the TSX issue forcing the
-> > TFA code in perf_events, have increased the pressure even more with
-> > only 3 generic counters left. Thus, it is time to look at
-> > alternative ways of getting a hard lockup detector (NMI watchdog)
-> > from another NMI source than the PMU. To that extent, I have been
-> > discussing about alternatives.
-> >
-> > Intel suggested using the HPET and Ricardo has been working on
-> > producing this patch series. It is clear from your review
-> > that the patches have issues, but I am hoping that they can be
-> > resolved with constructive feedback knowing what the end goal is.  
-> 
-> Well, I gave constructive feedback from the very first version on. But
-> essential parts of that feedback have been ignored for whatever
-> reasons.
-> 
-> > As for the round-robin changes, yes, we discussed this as an
-> > alternative to avoid overloading CPU0 with handling all of the work
-> > to broadcasting IPI to 100+ other CPUs.  
-> 
-> I can understand the reason why you don't want to do that, but again,
-> I said way before this was tried that changing affinity from NMI
-> context with the IOMMU cannot work by just calling into the iommu
-> code and it needs some deep investigation with the IOMMU wizards
-> whether a preallocated entry can be used lockless (including the
-> subsequently required flush).
-> 
-> The outcome is that the change was implemented by simply calling into
-> functions which I told that they cannot be called from NMI context.
-> 
-> Unless this problem is not solved and I doubt it can be solved after
-> talking to IOMMU people and studying manuals, 
-I agree. modify irte might be done with cmpxchg_double() but the queued
-invalidation interface for IRTE cache flush is shared with DMA and
-requires holding a spinlock for enque descriptors, QI tail update etc.
+But hcd provides dma mapping and unmapping function by defualt and
+it causes unnecessary dma mapping and unmapping which will be done
+again at the NIC driver and it wastes CPU cycles. So, implement
+map_urb_for_dma and unmap_urb_for_dma function for vhci in order to
+skip the dma mapping and unmapping procedure.
 
-Also, reserving & manipulating IRTE slot for hpet via backdoor might not
-be needed if the HPET PCI BDF (found in ACPI) can be utilized. But it
-might need more work to add a fake PCI device for HPET.
+Signed-off-by: Suwan Kim <suwan.kim027@gmail.com>
+---
+v2 
+ - Rename the subject of the patch
+ - Add unmap_urb_for_dma function according to Alan's comment
+---
+ drivers/usb/usbip/vhci_hcd.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-> the round robin
-> mechanics in the current form are not going to happen. We'd need a
-> SMI based lockup detector to debug the resulting livelock wreckage.
-> 
-> There are two possible options:
-> 
->   1) Back to the IPI approach
-> 
->      The probem with broadcast is that it sends IPIs one by one to
-> each online CPU, which sums up with a large number of CPUs.
-> 
->      The interesting question is why the kernel does not utilize the
-> all excluding self destination shorthand for this. The SDM is not
-> giving any information.
-> 
->      But there is a historic commit which is related and gives a hint:
-> 
->         commit e77deacb7b078156fcadf27b838a4ce1a65eda04
->         Author: Keith Owens <kaos@sgi.com>
->         Date:   Mon Jun 26 13:59:56 2006 +0200
-> 
->         [PATCH] x86_64: Avoid broadcasting NMI IPIs
->     
->         On some i386/x86_64 systems, sending an NMI IPI as a
-> broadcast will reset the system.  This seems to be a BIOS bug which
-> affects machines where one or more cpus are not under OS control.  It
->     	occurs on HT systems with a version of the OS that is not
-> compiled without HT support.  It also occurs when a system is booted
-> with max_cpus=n where 2 <= n < cpus known to the BIOS.  The fix is to
->     	always send NMI IPI as a mask instead of as a broadcast.
-> 
->     I can see the issue with max_cpus and that'd be trivial to solve
-> by disabling the HPET watchdog when maxcpus < num_present_cpus is on
-> the command line (That's broken anyway with respect to MCEs. See the
-> stupid dance we need to do for 'nosmt').
-> 
->     Though the HT part of the changelog is unparseable garbage but
-> might be a cryptic hint to the 'nosmt' mess. Though back then we did
-> not have a way to disable the siblings (or did we?). Weird...
-> 
->     It definitely would be worthwhile to experiment with that. if we
-> could use shorthands (also for regular IPIs) that would be a great
->     improvement in general and would nicely solve that NMI issue.
-> Beware of the dragons though.
-> 
->   2) Delegate round robin to irq_work
-> 
->     Use the same mechanism as perf for stuff which needs to be done
-> outside of NMI context.
-> 
->     That can solve the issue, but the drawback is that in case the
-> NMI hits a locked up interrupt disabled region the affinity stays on
-> the same CPU as the regular IPI which kicks the irq work is not going
-> to be handled.  Might not be a big issue as we could detect the
-> situation that the IPI comes back to the same CPU. Not pretty and
-> lots of nasty corner case and race condition handling.
-> 
->     There is another issue with that round robin scheme as I pointed
-> out to Ricardo:
-> 
->       With a small watchdog threshold and tons of CPUs the time to
-> switch the affinity becomes short. That brings the HPET reprogramming
-> (in case of oneshot) into the SMI endagered zone and aside of that it
->       will eat performance as well because with lets say 1 second
-> threshold and 1000 CPUs we are going to flush the interrupt remapping
->       table/entry once per millisecond. No idea how big the penalty
-> is, but it's certainly not free.
-> 
->     One possible way out would be to use a combined approach of
-> building CPU groups (lets say 8) where one of the CPUs gets the NMI
-> and IPIs the other 7 and then round robins to the next group. Whether
-> that's any better, I can't tell.
-> 
-> Sorry that I can't come up with the magic cure and just can provide
-> more questions than answers.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
-> 
-> 
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
+diff --git a/drivers/usb/usbip/vhci_hcd.c b/drivers/usb/usbip/vhci_hcd.c
+index 667d9c0ec905..e26ce22c1b0f 100644
+--- a/drivers/usb/usbip/vhci_hcd.c
++++ b/drivers/usb/usbip/vhci_hcd.c
+@@ -1287,6 +1287,18 @@ static int vhci_free_streams(struct usb_hcd *hcd, struct usb_device *udev,
+ 	return 0;
+ }
+ 
++static int vhci_map_urb_for_dma(struct usb_hcd *hcd, struct urb *urb,
++			    gfp_t mem_flags)
++{
++	dev_dbg(&hcd->self.root_hub->dev, "vhci does not map for dma\n");
++	return 0;
++}
++
++static void vhci_unmap_urb_for_dma(struct usb_hcd *hcd, struct urb *urb)
++{
++	dev_dbg(&hcd->self.root_hub->dev, "vhci does not unmap for dma\n");
++}
++
+ static const struct hc_driver vhci_hc_driver = {
+ 	.description	= driver_name,
+ 	.product_desc	= driver_desc,
+@@ -1303,6 +1315,9 @@ static const struct hc_driver vhci_hc_driver = {
+ 
+ 	.get_frame_number = vhci_get_frame_number,
+ 
++	.map_urb_for_dma = vhci_map_urb_for_dma,
++	.unmap_urb_for_dma = vhci_unmap_urb_for_dma,
++
+ 	.hub_status_data = vhci_hub_status,
+ 	.hub_control    = vhci_hub_control,
+ 	.bus_suspend	= vhci_bus_suspend,
+-- 
+2.20.1
 
-[Jacob Pan]
