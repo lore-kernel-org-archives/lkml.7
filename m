@@ -2,108 +2,107 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7836C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60454C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A042C21530
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:14:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560946486;
-	bh=5CLEtH/34vRJw/s7GWbRpPMdnWZ/d7bZwgPY8fMzgFQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zO3M2CJusmmmHLj29Or4huRKYKDa3c8e0ykJmFsipapLEiLd/dS/Tan2QrdI5wY+9
-	 sKUQ2Hpry5acELMzdVVfgXGXJHpAURmw9kcG6iCrDztPnYE+vDjHcHyC7OQPxsLXim
-	 F0EL+HxztEqve4ev3c2gC8O5LMB5EnKR4RiM1EUY=
+	by mail.kernel.org (Postfix) with ESMTP id 40D1821530
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbfFSMOp (ORCPT
+        id S1731732AbfFSMPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:14:45 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:51448 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfFSMOo (ORCPT
+        Wed, 19 Jun 2019 08:15:48 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:40502 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727457AbfFSMPr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:14:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=k3P3++6GQiP2ImSaOTC4gPs5tYB1KrKrlADh55M4Y7c=; b=GLoxLkGT3DKYUTbegAR4dtLvl
-        JAcOZ35M+taNnvlktiRr/9cbCSk4qpR/PmFqAoCqDXh//hiD5SZ/ynCIud2p0Hd/FMTUNsYa+qiIS
-        NKWiVYV6bxLxxM2DoLQCNcZfdjWSFUQK/qNwEbUZxmd1Y41Khiv3C6QLu3DgXsKGS/4zU=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hdZUA-0007EJ-9X; Wed, 19 Jun 2019 12:14:42 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id D7BDC440046; Wed, 19 Jun 2019 13:14:41 +0100 (BST)
-Date:   Wed, 19 Jun 2019 13:14:41 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     "Enrico Weigelt, metux IT consult" <info@metux.net>
-Cc:     linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org
-Subject: Re: [PATCH 1/3] include: linux: spi: more helpers for declaring spi
- drivers
-Message-ID: <20190619121441.GS5316@sirena.org.uk>
-Mail-Followup-To: "Enrico Weigelt, metux IT consult" <info@metux.net>,
-        linux-kernel@vger.kernel.org, linus.walleij@linaro.org,
-        bgolaszewski@baylibre.com, linux-gpio@vger.kernel.org,
-        linux-spi@vger.kernel.org
-References: <1560796840-18207-1-git-send-email-info@metux.net>
+        Wed, 19 Jun 2019 08:15:47 -0400
+Received: from localhost.localdomain (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id B3B9C2607B4;
+        Wed, 19 Jun 2019 13:15:45 +0100 (BST)
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Sakari Ailus <sakari.ailus@iki.fi>, linux-media@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Tomasz Figa <tfiga@chromium.org>,
+        Nicolas Dufresne <nicolas@ndufresne.ca>, kernel@collabora.com,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Ezequiel Garcia <ezequiel@collabora.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        linux-rockchip@lists.infradead.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH 2/9] media: hantro: Move copy_metadata() before doing a decode operation
+Date:   Wed, 19 Jun 2019 14:15:33 +0200
+Message-Id: <20190619121540.29320-3-boris.brezillon@collabora.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190619121540.29320-1-boris.brezillon@collabora.com>
+References: <20190619121540.29320-1-boris.brezillon@collabora.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="6s/G0Ait2f6IH9MX"
-Content-Disposition: inline
-In-Reply-To: <1560796840-18207-1-git-send-email-info@metux.net>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Some decoders use intra slice/frame references. The capture buffer
+pointed by these references might be new and thus have invalid
+timestamp which prevents the decoder logic from retrieving the
+vb2_buffer object based on the output buf timestamp.
+Copy all metadata (including the timestamp) before starting the decode
+operation.
 
---6s/G0Ait2f6IH9MX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Suggested-by: Jonas Karlman <jonas@kwiboo.se>
+Signed-off-by: Boris Brezillon <boris.brezillon@collabora.com>
+---
+ drivers/staging/media/hantro/hantro_drv.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-On Mon, Jun 17, 2019 at 08:40:38PM +0200, Enrico Weigelt, metux IT consult wrote:
+diff --git a/drivers/staging/media/hantro/hantro_drv.c b/drivers/staging/media/hantro/hantro_drv.c
+index ab0aa7408a7d..28b0fed89dcb 100644
+--- a/drivers/staging/media/hantro/hantro_drv.c
++++ b/drivers/staging/media/hantro/hantro_drv.c
+@@ -109,8 +109,6 @@ static void hantro_job_finish(struct hantro_dev *vpu,
+ 	src->sequence = ctx->sequence_out++;
+ 	dst->sequence = ctx->sequence_cap++;
+ 
+-	v4l2_m2m_buf_copy_metadata(src, dst, true);
+-
+ 	ret = ctx->buf_finish(ctx, &dst->vb2_buf, bytesused);
+ 	if (ret)
+ 		result = VB2_BUF_STATE_ERROR;
+@@ -154,8 +152,12 @@ void hantro_watchdog(struct work_struct *work)
+ static void device_run(void *priv)
+ {
+ 	struct hantro_ctx *ctx = priv;
++	struct vb2_v4l2_buffer *src, *dst;
+ 	int ret;
+ 
++	src = v4l2_m2m_next_src_buf(ctx->fh.m2m_ctx);
++	dst = v4l2_m2m_next_dst_buf(ctx->fh.m2m_ctx);
++
+ 	ret = clk_bulk_enable(ctx->dev->variant->num_clocks, ctx->dev->clocks);
+ 	if (ret)
+ 		goto err_cancel_job;
+@@ -163,6 +165,8 @@ static void device_run(void *priv)
+ 	if (ret < 0)
+ 		goto err_cancel_job;
+ 
++	v4l2_m2m_buf_copy_metadata(src, dst, true);
++
+ 	ctx->codec_ops->run(ctx);
+ 	return;
+ 
+-- 
+2.20.1
 
-> +/* subsys_spi_driver() - Helper macro for drivers that don't do
-> + * anything special in module init/exit.  This eliminates a lot of
-> + * boilerplate.  Each module may only use this macro once, and
-> + * calling it replaces subsys_initcall() and module_exit()
-> + */
-> +#define subsys_spi_driver(__spi_driver) \
-
-I'm not convinced we want to be encouraging anyone to be using
-subsys_initcall() for SPI drivers in the first place - my guess would be
-that with deferred probing none of that is needed anyway and the driver
-could just use module_spi_driver().  Certainly if the drivers do
-actually need subsys_initcall() I'd like to understand why before going
-forward with something like this, and ideally we'd be able to remove the
-need.
-
---6s/G0Ait2f6IH9MX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0KJzAACgkQJNaLcl1U
-h9DeUQf+PgOAkyo4pT4LasAHcsQL8bXxE3hqloJcMpaFpRgnSp4/I5Pc/Jg04XCu
-CI2k7QnDLDIcUq1FlrI+eVvb0SKhzeEkIfJyaL8dX1kRPea2n9WbP0ZF5GcnQQ2d
-ZidAKFQNB7eSWEhgPUIvkNHIvGm7TUNST35PbhZCd+j4ACcErdrKhGpZPm2hmHRN
-7T7nUtkLFL5YvCH8QqdPLUzg2Co6BFik3jiseCAIi1PH4+zIA9QPi3g47VDPQ6aF
-nTUg51S5Y4aduklIOTW8G+D47tUTsjFiKb3g2ZqUz1wbgmJlyd6q48h4lR55gSj8
-xJYmx5diMemXIks5Ksr1Ny2mhGsXqg==
-=szr+
------END PGP SIGNATURE-----
-
---6s/G0Ait2f6IH9MX--
