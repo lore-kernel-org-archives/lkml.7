@@ -2,694 +2,282 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 259D8C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:22:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7F4DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:26:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A844E206BF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:22:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9BA8C206BF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:26:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="DEgnUsQo"
+	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="zIgPZI9+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731434AbfFSJW2 (ORCPT
+        id S1731397AbfFSJ0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:22:28 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60516 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730996AbfFSJW1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:22:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pAwimO5Lo/uvB3CsSC/tQ6L9pFDwH53vNS5t+MNMajU=; b=DEgnUsQoWVd+ekhNjNBhNrONi
-        zbc3prJsmG0eDt6IimumV0RzDBi3uQFF+ceL9H0LxOYRarKcBu0rlfT/oCWbhawCzPCV9vQfqp5Hs
-        4p2E+tCthbl2ogFS//2kxSVKMMEUJfygrwGDU7kSvX/BRC1F3U9RJ9MScYsBLIIzhoRZiqHMajOIT
-        0aD2+rsVz29ALvKbCpcHB3VjsNhzfldSGbwSRvnxyuWHM0OCs4XC5nCQlst2ymkKF9UdAuOQUqebr
-        xNAds/mTAC0AUs0G8Hg1umbc4xNEea8EC8PRoEc2iGFi02rq1/vwO71fnnr8j4Ri1zwzbbHeYXmpJ
-        W+4Q+Gx+Q==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:59816)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hdWnJ-0007q2-K4; Wed, 19 Jun 2019 10:22:17 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hdWnF-0001ME-GN; Wed, 19 Jun 2019 10:22:13 +0100
-Date:   Wed, 19 Jun 2019 10:22:13 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Thombare <pthombar@cadence.com>
-Cc:     andrew@lunn.ch, nicolas.ferre@microchip.com, davem@davemloft.net,
-        f.fainelli@gmail.com, netdev@vger.kernel.org, hkallweit1@gmail.com,
-        linux-kernel@vger.kernel.org, rafalc@cadence.com,
-        aniljoy@cadence.com, piotrs@cadence.com
-Subject: Re: [PATCH v2 1/5] net: macb: add phylink support
-Message-ID: <20190619092213.32fpgehe74qhln5z@shell.armlinux.org.uk>
-References: <1560933600-27626-1-git-send-email-pthombar@cadence.com>
- <1560933636-29684-1-git-send-email-pthombar@cadence.com>
+        Wed, 19 Jun 2019 05:26:47 -0400
+Received: from mail-eopbgr70043.outbound.protection.outlook.com ([40.107.7.43]:39044
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726865AbfFSJ0q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 05:26:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=aFWKzl+lbkb2ueUNcj99pcIf5u2xDqcc7UBWYcXz1Uw=;
+ b=zIgPZI9+KzgXtKfuB0+seZO6a9zTgdn7U3/E82B9D+GacZJwUsKOsraflhptnO0h2xLwYXdYn0mSHVXVSm/+q2c5NPfPcFAJuvTqhCl0XnExeYfTqUcdeihm7O7mNVzwAFI92g/uykCTkJBeExn75USzHjJnqriIxX3Vupuhlps=
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com (52.133.246.150) by
+ VI1PR08MB3261.eurprd08.prod.outlook.com (52.134.30.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.12; Wed, 19 Jun 2019 09:26:32 +0000
+Received: from VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b]) by VI1PR08MB5488.eurprd08.prod.outlook.com
+ ([fe80::e9f4:59c8:9be1:910b%4]) with mapi id 15.20.1987.014; Wed, 19 Jun 2019
+ 09:26:32 +0000
+From:   "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "maarten.lankhorst@linux.intel.com" 
+        <maarten.lankhorst@linux.intel.com>,
+        "seanpaul@chromium.org" <seanpaul@chromium.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        Brian Starkey <Brian.Starkey@arm.com>
+CC:     "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
+        "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
+        Ayan Halder <Ayan.Halder@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        nd <nd@arm.com>
+Subject: [PATCH] drm/komeda: Adds output-color format/depth support
+Thread-Topic: [PATCH] drm/komeda: Adds output-color format/depth support
+Thread-Index: AQHVJoEVPYjDhuWz6UWhEkSkCc30oA==
+Date:   Wed, 19 Jun 2019 09:26:32 +0000
+Message-ID: <1560936357-21876-1-git-send-email-lowry.li@arm.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [113.29.88.7]
+x-clientproxiedby: SLXP216CA0072.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:100:5::34) To VI1PR08MB5488.eurprd08.prod.outlook.com
+ (2603:10a6:803:137::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Lowry.Li@arm.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.9.1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: ed61cbcc-7779-4384-7da2-08d6f4983798
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:VI1PR08MB3261;
+x-ms-traffictypediagnostic: VI1PR08MB3261:
+nodisclaimer: True
+x-microsoft-antispam-prvs: <VI1PR08MB326189614885EB348BAA50C49FE50@VI1PR08MB3261.eurprd08.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 0073BFEF03
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(366004)(396003)(39860400002)(346002)(136003)(189003)(199004)(64756008)(2906002)(66946007)(66476007)(66556008)(66446008)(6512007)(8676002)(316002)(73956011)(6486002)(6116002)(2501003)(186003)(102836004)(68736007)(6636002)(6436002)(50226002)(81156014)(110136005)(7736002)(54906003)(3846002)(305945005)(53936002)(26005)(81166006)(36756003)(256004)(14454004)(2616005)(66066001)(55236004)(5660300002)(14444005)(4326008)(476003)(2201001)(6506007)(386003)(25786009)(8936002)(86362001)(478600001)(486006)(99286004)(72206003)(71190400001)(71200400001)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR08MB3261;H:VI1PR08MB5488.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ECqGo7Gyep3rAUTt44njZypUwa/w++j5OFzTXqmYL7DTEqhKscp3tUzhR7OnDsodsVieeZq762W7/E1bniKBLYxuFfxQFEKiWVCqXTxMd1Jy6OrOf5qYkpdwpDrRL71LCbjz7FMwf6GL7iD/291QFJacOm/QTimshHAazrMefh/6CxX2rRounerzUmli1hnhdd9wA5kMfe3HAbWjFI2xv6LR7U9knHK2wu3zvrUrZwflHvi9NzFvgeAsaeFs5qKtaJAgvzIPdC7wGVHMlJQfNaQE6EcMCa3s428UiE+bodCLjQHntO3YkohrATdun7dNCjSK+kArnu1kDgzrLV28f9sdD4NYzbFNryyu6h98LbNYVy6nl2XQ1YaQSwuqEaZPc1VQm5ze/AFHGpIhDpzKhbXaG/6alvje822/70TEB9c=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560933636-29684-1-git-send-email-pthombar@cadence.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: ed61cbcc-7779-4384-7da2-08d6f4983798
+X-MS-Exchange-CrossTenant-originalarrivaltime: 19 Jun 2019 09:26:32.7593
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Lowry.Li@arm.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR08MB3261
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 09:40:36AM +0100, Parshuram Thombare wrote:
-> This patch replace phylib API's by phylink API's.
-> 
-> Signed-off-by: Parshuram Thombare <pthombar@cadence.com>
-> ---
->  drivers/net/ethernet/cadence/Kconfig     |   2 +-
->  drivers/net/ethernet/cadence/macb.h      |   3 +
->  drivers/net/ethernet/cadence/macb_main.c | 312 +++++++++++++----------
->  3 files changed, 182 insertions(+), 135 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/cadence/Kconfig b/drivers/net/ethernet/cadence/Kconfig
-> index 1766697c9c5a..d71411a71587 100644
-> --- a/drivers/net/ethernet/cadence/Kconfig
-> +++ b/drivers/net/ethernet/cadence/Kconfig
-> @@ -22,7 +22,7 @@ if NET_VENDOR_CADENCE
->  config MACB
->  	tristate "Cadence MACB/GEM support"
->  	depends on HAS_DMA
-> -	select PHYLIB
-> +	select PHYLINK
->  	---help---
->  	  The Cadence MACB ethernet interface is found on many Atmel AT32 and
->  	  AT91 parts.  This driver also supports the Cadence GEM (Gigabit
-> diff --git a/drivers/net/ethernet/cadence/macb.h b/drivers/net/ethernet/cadence/macb.h
-> index 00ee5e8e0ff0..35ed13236c8b 100644
-> --- a/drivers/net/ethernet/cadence/macb.h
-> +++ b/drivers/net/ethernet/cadence/macb.h
-> @@ -14,6 +14,7 @@
->  #include <linux/ptp_clock_kernel.h>
->  #include <linux/net_tstamp.h>
->  #include <linux/interrupt.h>
-> +#include <linux/phylink.h>
->  
->  #if defined(CONFIG_ARCH_DMA_ADDR_T_64BIT) || defined(CONFIG_MACB_USE_HWSTAMP)
->  #define MACB_EXT_DESC
-> @@ -1227,6 +1228,8 @@ struct macb {
->  	u32	rx_intr_mask;
->  
->  	struct macb_pm_data pm_data;
-> +	struct phylink *pl;
-> +	struct phylink_config pl_config;
->  };
->  
->  #ifdef CONFIG_MACB_USE_HWSTAMP
-> diff --git a/drivers/net/ethernet/cadence/macb_main.c b/drivers/net/ethernet/cadence/macb_main.c
-> index c545c5b435d8..830af86d3c65 100644
-> --- a/drivers/net/ethernet/cadence/macb_main.c
-> +++ b/drivers/net/ethernet/cadence/macb_main.c
-> @@ -39,6 +39,7 @@
->  #include <linux/tcp.h>
->  #include <linux/iopoll.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/phylink.h>
->  #include "macb.h"
->  
->  /* This structure is only used for MACB on SiFive FU540 devices */
-> @@ -438,115 +439,150 @@ static void macb_set_tx_clk(struct clk *clk, int speed, struct net_device *dev)
->  		netdev_err(dev, "adjusting tx_clk failed.\n");
->  }
->  
-> -static void macb_handle_link_change(struct net_device *dev)
-> +static void gem_phylink_validate(struct phylink_config *pl_config,
-> +				 unsigned long *supported,
-> +				 struct phylink_link_state *state)
->  {
-> -	struct macb *bp = netdev_priv(dev);
-> -	struct phy_device *phydev = dev->phydev;
-> -	unsigned long flags;
-> -	int status_change = 0;
-> +	struct net_device *netdev = to_net_dev(pl_config->dev);
-> +	struct macb *bp = netdev_priv(netdev);
-> +	__ETHTOOL_DECLARE_LINK_MODE_MASK(mask) = { 0, };
-> +
-> +	switch (state->interface) {
-> +	case PHY_INTERFACE_MODE_GMII:
-> +	case PHY_INTERFACE_MODE_RGMII:
-> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE) {
-> +			phylink_set(mask, 1000baseT_Full);
-> +			phylink_set(mask, 1000baseX_Full);
-> +			if (!(bp->caps & MACB_CAPS_NO_GIGABIT_HALF)) {
-> +				phylink_set(mask, 1000baseT_Half);
-> +				phylink_set(mask, 1000baseT_Half);
-> +			}
-> +		}
-> +	/* fallthrough */
-> +	case PHY_INTERFACE_MODE_MII:
-> +	case PHY_INTERFACE_MODE_RMII:
-> +		phylink_set(mask, 10baseT_Half);
-> +		phylink_set(mask, 10baseT_Full);
-> +		phylink_set(mask, 100baseT_Half);
-> +		phylink_set(mask, 100baseT_Full);
-> +		break;
-> +	default:
-> +		break;
-> +	}
->  
-> -	spin_lock_irqsave(&bp->lock, flags);
-> +	bitmap_and(supported, supported, mask, __ETHTOOL_LINK_MODE_MASK_NBITS);
-> +	bitmap_and(state->advertising, state->advertising, mask,
-> +		   __ETHTOOL_LINK_MODE_MASK_NBITS);
-
-Consider using linkmode_and() here.
-
-> +}
->  
-> -	if (phydev->link) {
-> -		if ((bp->speed != phydev->speed) ||
-> -		    (bp->duplex != phydev->duplex)) {
-> -			u32 reg;
-> +static int gem_phylink_mac_link_state(struct phylink_config *pl_config,
-> +				      struct phylink_link_state *state)
-> +{
-> +	struct net_device *netdev = to_net_dev(pl_config->dev);
-> +	struct macb *bp = netdev_priv(netdev);
->  
-> -			reg = macb_readl(bp, NCFGR);
-> -			reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
-> -			if (macb_is_gem(bp))
-> -				reg &= ~GEM_BIT(GBE);
-> +	state->speed = bp->speed;
-> +	state->duplex = bp->duplex;
-> +	state->link = bp->link;
-
-You can't read from the hardware what the actual MAC is doing?
-
-> +	return 1;
-> +}
->  
-> -			if (phydev->duplex)
-> -				reg |= MACB_BIT(FD);
-> -			if (phydev->speed == SPEED_100)
-> -				reg |= MACB_BIT(SPD);
-> -			if (phydev->speed == SPEED_1000 &&
-> -			    bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
-> -				reg |= GEM_BIT(GBE);
-> +static void gem_mac_config(struct phylink_config *pl_config, unsigned int mode,
-> +			   const struct phylink_link_state *state)
-> +{
-> +	struct net_device *netdev = to_net_dev(pl_config->dev);
-> +	struct macb *bp = netdev_priv(netdev);
-> +	unsigned long flags;
->  
-> -			macb_or_gem_writel(bp, NCFGR, reg);
-> +	spin_lock_irqsave(&bp->lock, flags);
->  
-> -			bp->speed = phydev->speed;
-> -			bp->duplex = phydev->duplex;
-> -			status_change = 1;
-> -		}
-> -	}
-> +	if (bp->speed != state->speed ||
-> +	    bp->duplex != state->duplex) {
-
-Please read the updated phylink documentation - state->{speed,duplex}
-are not always valid depending on the negotiation mode.
-
-> +		u32 reg;
->  
-> -	if (phydev->link != bp->link) {
-> -		if (!phydev->link) {
-> -			bp->speed = 0;
-> -			bp->duplex = -1;
-> +		reg = macb_readl(bp, NCFGR);
-> +		reg &= ~(MACB_BIT(SPD) | MACB_BIT(FD));
-> +		if (macb_is_gem(bp))
-> +			reg &= ~GEM_BIT(GBE);
-> +		if (state->duplex)
-> +			reg |= MACB_BIT(FD);
-> +
-> +		switch (state->speed) {
-> +		case SPEED_1000:
-> +			reg |= GEM_BIT(GBE);
-> +			break;
-> +		case SPEED_100:
-> +			reg |= MACB_BIT(SPD);
-> +			break;
-> +		default:
-> +			break;
->  		}
-> -		bp->link = phydev->link;
-> +		macb_or_gem_writel(bp, NCFGR, reg);
-> +
-> +		bp->speed = state->speed;
-> +		bp->duplex = state->duplex;
->  
-> -		status_change = 1;
-> +		if (state->link)
-> +			macb_set_tx_clk(bp->tx_clk, state->speed, netdev);
->  	}
->  
->  	spin_unlock_irqrestore(&bp->lock, flags);
-> +}
->  
-> -	if (status_change) {
-> -		if (phydev->link) {
-> -			/* Update the TX clock rate if and only if the link is
-> -			 * up and there has been a link change.
-> -			 */
-> -			macb_set_tx_clk(bp->tx_clk, phydev->speed, dev);
-> +static void gem_mac_link_up(struct phylink_config *pl_config, unsigned int mode,
-> +			    phy_interface_t interface, struct phy_device *phy)
-> +{
-> +	struct net_device *netdev = to_net_dev(pl_config->dev);
-> +	struct macb *bp = netdev_priv(netdev);
->  
-> -			netif_carrier_on(dev);
-> -			netdev_info(dev, "link up (%d/%s)\n",
-> -				    phydev->speed,
-> -				    phydev->duplex == DUPLEX_FULL ?
-> -				    "Full" : "Half");
-> -		} else {
-> -			netif_carrier_off(dev);
-> -			netdev_info(dev, "link down\n");
-> -		}
-> -	}
-> +	bp->link = 1;
-> +	/* Enable TX and RX */
-> +	macb_writel(bp, NCR, macb_readl(bp, NCR) | MACB_BIT(RE) | MACB_BIT(TE));
-> +}
-> +
-> +static void gem_mac_link_down(struct phylink_config *pl_config,
-> +			      unsigned int mode, phy_interface_t interface)
-> +{
-> +	struct net_device *netdev = to_net_dev(pl_config->dev);
-> +	struct macb *bp = netdev_priv(netdev);
-> +
-> +	bp->link = 0;
-> +	/* Disable TX and RX */
-> +	macb_writel(bp, NCR,
-> +		    macb_readl(bp, NCR) & ~(MACB_BIT(RE) | MACB_BIT(TE)));
->  }
->  
-> +static const struct phylink_mac_ops gem_phylink_ops = {
-> +	.validate = gem_phylink_validate,
-> +	.mac_link_state = gem_phylink_mac_link_state,
-> +	.mac_config = gem_mac_config,
-> +	.mac_link_up = gem_mac_link_up,
-> +	.mac_link_down = gem_mac_link_down,
-> +};
-> +
->  /* based on au1000_eth. c*/
->  static int macb_mii_probe(struct net_device *dev)
->  {
->  	struct macb *bp = netdev_priv(dev);
->  	struct phy_device *phydev;
->  	struct device_node *np;
-> -	int ret, i;
-> +	int ret;
->  
->  	np = bp->pdev->dev.of_node;
->  	ret = 0;
->  
-> -	if (np) {
-> -		if (of_phy_is_fixed_link(np)) {
-> -			bp->phy_node = of_node_get(np);
-> -		} else {
-> -			bp->phy_node = of_parse_phandle(np, "phy-handle", 0);
-> -			/* fallback to standard phy registration if no
-> -			 * phy-handle was found nor any phy found during
-> -			 * dt phy registration
-> -			 */
-> -			if (!bp->phy_node && !phy_find_first(bp->mii_bus)) {
-> -				for (i = 0; i < PHY_MAX_ADDR; i++) {
-> -					phydev = mdiobus_scan(bp->mii_bus, i);
-> -					if (IS_ERR(phydev) &&
-> -					    PTR_ERR(phydev) != -ENODEV) {
-> -						ret = PTR_ERR(phydev);
-> -						break;
-> -					}
-> -				}
-> -
-> -				if (ret)
-> -					return -ENODEV;
-> -			}
-> -		}
-> +	bp->pl_config.dev = &dev->dev;
-> +	bp->pl_config.type = PHYLINK_NETDEV;
-> +	bp->pl = phylink_create(&bp->pl_config, of_fwnode_handle(np),
-> +				bp->phy_interface, &gem_phylink_ops);
-> +	if (IS_ERR(bp->pl)) {
-> +		netdev_err(dev,
-> +			   "error creating PHYLINK: %ld\n", PTR_ERR(bp->pl));
-> +		return PTR_ERR(bp->pl);
->  	}
-
-At this point bp->pl can never be NULL.
-
->  
-> -	if (bp->phy_node) {
-> -		phydev = of_phy_connect(dev, bp->phy_node,
-> -					&macb_handle_link_change, 0,
-> -					bp->phy_interface);
-> -		if (!phydev)
-> -			return -ENODEV;
-> -	} else {
-> +	ret = phylink_of_phy_connect(bp->pl, np, 0);
-> +	if (ret == -ENODEV && bp->mii_bus) {
->  		phydev = phy_find_first(bp->mii_bus);
->  		if (!phydev) {
->  			netdev_err(dev, "no PHY found\n");
-> @@ -554,29 +590,18 @@ static int macb_mii_probe(struct net_device *dev)
->  		}
->  
->  		/* attach the mac to the phy */
-> -		ret = phy_connect_direct(dev, phydev, &macb_handle_link_change,
-> -					 bp->phy_interface);
-> +		ret = phylink_connect_phy(bp->pl, phydev);
->  		if (ret) {
->  			netdev_err(dev, "Could not attach to PHY\n");
->  			return ret;
->  		}
->  	}
->  
-> -	/* mask with MAC supported features */
-> -	if (macb_is_gem(bp) && bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
-> -		phy_set_max_speed(phydev, SPEED_1000);
-> -	else
-> -		phy_set_max_speed(phydev, SPEED_100);
-> -
-> -	if (bp->caps & MACB_CAPS_NO_GIGABIT_HALF)
-> -		phy_remove_link_mode(phydev,
-> -				     ETHTOOL_LINK_MODE_1000baseT_Half_BIT);
-> -
->  	bp->link = 0;
->  	bp->speed = 0;
->  	bp->duplex = -1;
->  
-> -	return 0;
-> +	return ret;
->  }
->  
->  static int macb_mii_init(struct macb *bp)
-> @@ -604,17 +629,7 @@ static int macb_mii_init(struct macb *bp)
->  	dev_set_drvdata(&bp->dev->dev, bp->mii_bus);
->  
->  	np = bp->pdev->dev.of_node;
-> -	if (np && of_phy_is_fixed_link(np)) {
-> -		if (of_phy_register_fixed_link(np) < 0) {
-> -			dev_err(&bp->pdev->dev,
-> -				"broken fixed-link specification %pOF\n", np);
-> -			goto err_out_free_mdiobus;
-> -		}
-> -
-> -		err = mdiobus_register(bp->mii_bus);
-> -	} else {
-> -		err = of_mdiobus_register(bp->mii_bus, np);
-> -	}
-> +	err = of_mdiobus_register(bp->mii_bus, np);
->  
->  	if (err)
->  		goto err_out_free_fixed_link;
-> @@ -630,7 +645,6 @@ static int macb_mii_init(struct macb *bp)
->  err_out_free_fixed_link:
->  	if (np && of_phy_is_fixed_link(np))
->  		of_phy_deregister_fixed_link(np);
-> -err_out_free_mdiobus:
->  	of_node_put(bp->phy_node);
->  	mdiobus_free(bp->mii_bus);
->  err_out:
-> @@ -2422,7 +2436,7 @@ static int macb_open(struct net_device *dev)
->  	netif_carrier_off(dev);
->  
->  	/* if the phy is not yet register, retry later*/
-> -	if (!dev->phydev) {
-> +	if (!bp->pl) {
-
-So this check is unnecessary.
-
->  		err = -EAGAIN;
->  		goto pm_exit;
->  	}
-> @@ -2444,7 +2458,7 @@ static int macb_open(struct net_device *dev)
->  	macb_init_hw(bp);
->  
->  	/* schedule a link state check */
-> -	phy_start(dev->phydev);
-> +	phylink_start(bp->pl);
->  
->  	netif_tx_start_all_queues(dev);
->  
-> @@ -2471,8 +2485,8 @@ static int macb_close(struct net_device *dev)
->  	for (q = 0, queue = bp->queues; q < bp->num_queues; ++q, ++queue)
->  		napi_disable(&queue->napi);
->  
-> -	if (dev->phydev)
-> -		phy_stop(dev->phydev);
-> +	if (bp->pl)
-> +		phylink_stop(bp->pl);
-
-Ditto.
-
->  
->  	spin_lock_irqsave(&bp->lock, flags);
->  	macb_reset_hw(bp);
-> @@ -3161,6 +3175,29 @@ static int gem_set_rxnfc(struct net_device *netdev, struct ethtool_rxnfc *cmd)
->  	return ret;
->  }
->  
-> +static int gem_ethtool_get_link_ksettings(struct net_device *netdev,
-> +					  struct ethtool_link_ksettings *cmd)
-> +{
-> +	struct macb *bp = netdev_priv(netdev);
-> +
-> +	if (!bp->pl)
-> +		return -ENOTSUPP;
-
-Ditto.
-
-> +
-> +	return phylink_ethtool_ksettings_get(bp->pl, cmd);
-> +}
-> +
-> +static int
-> +gem_ethtool_set_link_ksettings(struct net_device *netdev,
-> +			       const struct ethtool_link_ksettings *cmd)
-> +{
-> +	struct macb *bp = netdev_priv(netdev);
-> +
-> +	if (!bp->pl)
-> +		return -ENOTSUPP;
-
-Ditto.
-
-> +
-> +	return phylink_ethtool_ksettings_set(bp->pl, cmd);
-> +}
-> +
->  static const struct ethtool_ops macb_ethtool_ops = {
->  	.get_regs_len		= macb_get_regs_len,
->  	.get_regs		= macb_get_regs,
-> @@ -3168,8 +3205,8 @@ static const struct ethtool_ops macb_ethtool_ops = {
->  	.get_ts_info		= ethtool_op_get_ts_info,
->  	.get_wol		= macb_get_wol,
->  	.set_wol		= macb_set_wol,
-> -	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
-> -	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
-> +	.get_link_ksettings     = gem_ethtool_get_link_ksettings,
-> +	.set_link_ksettings     = gem_ethtool_set_link_ksettings,
->  	.get_ringparam		= macb_get_ringparam,
->  	.set_ringparam		= macb_set_ringparam,
->  };
-> @@ -3182,8 +3219,8 @@ static const struct ethtool_ops gem_ethtool_ops = {
->  	.get_ethtool_stats	= gem_get_ethtool_stats,
->  	.get_strings		= gem_get_ethtool_strings,
->  	.get_sset_count		= gem_get_sset_count,
-> -	.get_link_ksettings     = phy_ethtool_get_link_ksettings,
-> -	.set_link_ksettings     = phy_ethtool_set_link_ksettings,
-> +	.get_link_ksettings     = gem_ethtool_get_link_ksettings,
-> +	.set_link_ksettings     = gem_ethtool_set_link_ksettings,
->  	.get_ringparam		= macb_get_ringparam,
->  	.set_ringparam		= macb_set_ringparam,
->  	.get_rxnfc			= gem_get_rxnfc,
-> @@ -3192,17 +3229,16 @@ static const struct ethtool_ops gem_ethtool_ops = {
->  
->  static int macb_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
->  {
-> -	struct phy_device *phydev = dev->phydev;
->  	struct macb *bp = netdev_priv(dev);
->  
->  	if (!netif_running(dev))
->  		return -EINVAL;
->  
-> -	if (!phydev)
-> +	if (!bp->pl)
->  		return -ENODEV;
-
-Ditto.
-
->  
->  	if (!bp->ptp_info)
-> -		return phy_mii_ioctl(phydev, rq, cmd);
-> +		return phylink_mii_ioctl(bp->pl, rq, cmd);
->  
->  	switch (cmd) {
->  	case SIOCSHWTSTAMP:
-> @@ -3210,7 +3246,7 @@ static int macb_ioctl(struct net_device *dev, struct ifreq *rq, int cmd)
->  	case SIOCGHWTSTAMP:
->  		return bp->ptp_info->get_hwtst(dev, rq);
->  	default:
-> -		return phy_mii_ioctl(phydev, rq, cmd);
-> +		return phylink_mii_ioctl(bp->pl, rq, cmd);
->  	}
->  }
->  
-> @@ -3710,7 +3746,7 @@ static int at91ether_open(struct net_device *dev)
->  			     MACB_BIT(HRESP));
->  
->  	/* schedule a link state check */
-> -	phy_start(dev->phydev);
-> +	phylink_start(lp->pl);
->  
->  	netif_start_queue(dev);
->  
-> @@ -4183,13 +4219,12 @@ static int macb_probe(struct platform_device *pdev)
->  	struct clk *tsu_clk = NULL;
->  	unsigned int queue_mask, num_queues;
->  	bool native_io;
-> -	struct phy_device *phydev;
->  	struct net_device *dev;
->  	struct resource *regs;
->  	void __iomem *mem;
->  	const char *mac;
->  	struct macb *bp;
-> -	int err, val;
-> +	int err, val, phy_mode;
->  
->  	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	mem = devm_ioremap_resource(&pdev->dev, regs);
-> @@ -4310,12 +4345,12 @@ static int macb_probe(struct platform_device *pdev)
->  		macb_get_hwaddr(bp);
->  	}
->  
-> -	err = of_get_phy_mode(np);
-> -	if (err < 0)
-> +	phy_mode = of_get_phy_mode(np);
-> +	if (phy_mode < 0)
->  		/* not found in DT, MII by default */
->  		bp->phy_interface = PHY_INTERFACE_MODE_MII;
->  	else
-> -		bp->phy_interface = err;
-> +		bp->phy_interface = phy_mode;
-
-The phy interface mode is managed by phylink - and there are phys out
-there that dynamically change their link mode.  You may wish to update
-the link mode in your mac_config() implementation too.
-
->  
->  	/* IP specific init */
->  	err = init(pdev);
-> @@ -4326,8 +4361,6 @@ static int macb_probe(struct platform_device *pdev)
->  	if (err)
->  		goto err_out_free_netdev;
->  
-> -	phydev = dev->phydev;
-> -
->  	netif_carrier_off(dev);
->  
->  	err = register_netdev(dev);
-> @@ -4339,7 +4372,8 @@ static int macb_probe(struct platform_device *pdev)
->  	tasklet_init(&bp->hresp_err_tasklet, macb_hresp_error_task,
->  		     (unsigned long)bp);
->  
-> -	phy_attached_info(phydev);
-> +	if (dev->phydev)
-> +		phy_attached_info(dev->phydev);
-
-phylink already prints information about the attached phy, why do we
-need another print here?
-
->  
->  	netdev_info(dev, "Cadence %s rev 0x%08x at 0x%08lx irq %d (%pM)\n",
->  		    macb_is_gem(bp) ? "GEM" : "MACB", macb_readl(bp, MID),
-> @@ -4351,7 +4385,9 @@ static int macb_probe(struct platform_device *pdev)
->  	return 0;
->  
->  err_out_unregister_mdio:
-> -	phy_disconnect(dev->phydev);
-> +	rtnl_lock();
-> +	phylink_disconnect_phy(bp->pl);
-> +	rtnl_unlock();
->  	mdiobus_unregister(bp->mii_bus);
->  	of_node_put(bp->phy_node);
->  	if (np && of_phy_is_fixed_link(np))
-> @@ -4385,13 +4421,18 @@ static int macb_remove(struct platform_device *pdev)
->  
->  	if (dev) {
->  		bp = netdev_priv(dev);
-> -		if (dev->phydev)
-> -			phy_disconnect(dev->phydev);
-> +		if (bp->pl) {
-> +			rtnl_lock();
-> +			phylink_disconnect_phy(bp->pl);
-> +			rtnl_unlock();
-> +		}
->  		mdiobus_unregister(bp->mii_bus);
->  		if (np && of_phy_is_fixed_link(np))
->  			of_phy_deregister_fixed_link(np);
->  		dev->phydev = NULL;
->  		mdiobus_free(bp->mii_bus);
-> +		if (bp->pl)
-> +			phylink_destroy(bp->pl);
->  
->  		unregister_netdev(dev);
->  		pm_runtime_disable(&pdev->dev);
-> @@ -4434,8 +4475,9 @@ static int __maybe_unused macb_suspend(struct device *dev)
->  		for (q = 0, queue = bp->queues; q < bp->num_queues;
->  		     ++q, ++queue)
->  			napi_disable(&queue->napi);
-> -		phy_stop(netdev->phydev);
-> -		phy_suspend(netdev->phydev);
-> +		phylink_stop(bp->pl);
-> +		if (netdev->phydev)
-> +			phy_suspend(netdev->phydev);
-
-When the attached phy is stopped, the state machine suspends the phy.
-Why do we need an explicit call to phy_suspend() here, bypassing
-phylink?
-
->  		spin_lock_irqsave(&bp->lock, flags);
->  		macb_reset_hw(bp);
->  		spin_unlock_irqrestore(&bp->lock, flags);
-> @@ -4483,9 +4525,11 @@ static int __maybe_unused macb_resume(struct device *dev)
->  		for (q = 0, queue = bp->queues; q < bp->num_queues;
->  		     ++q, ++queue)
->  			napi_enable(&queue->napi);
-> -		phy_resume(netdev->phydev);
-> -		phy_init_hw(netdev->phydev);
-> -		phy_start(netdev->phydev);
-> +		if (netdev->phydev) {
-> +			phy_resume(netdev->phydev);
-> +			phy_init_hw(netdev->phydev);
-> +		}
-> +		phylink_start(bp->pl);
-
-When the phy is started, the phy state machine will resume the phy.
-Same question as above.
-
->  	}
->  
->  	bp->macbgem_ops.mog_init_rings(bp);
-> -- 
-> 2.17.1
-> 
-> 
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+U2V0cyBjb2xvcl9kZXB0aCBhY2NvcmRpbmcgdG8gY29ubmVjdG9yLT5icGMuDQpBZGRzIGEgbmV3
+IG9wdGlvbmFsIERUIGF0dHJpYnV0ZSAiY29sb3ItZm9ybWF0IiB0byByZXByZXNlbnQgYQ0KcHJl
+ZmVycmVkIGNvbG9yIGZvcm1hdHMgZm9yIGEgc3BlY2lmaWMgcGlwZWxpbmUsIGFuZCB0aGUgc2Vs
+ZWN0IG9yZGVyDQppczoNCglZQ1JDQjQyMCA+IFlDUkNCNDIyID4gWUNSQ0I0NDQgPiBSR0I0NDQN
+ClRoZSBjb2xvci1mb3JtYXQgY2FuIGJlIGFueW9uZSBvZiB0aGVzZSA0IGZvcm1hdCwgb25lIGNv
+bG9yLWZvcm1hdCBub3QNCm9ubHkgcmVwcmVzZW50IG9uZSBmb3JtYXQsIGJ1dCBhbHNvIGluY2x1
+ZGUgdGhlIGxvd2VyIGZvcm1hdHMsIGxpa2UNCg0KY29sb3ItZm9ybWF0ICAgICAgICAgcHJlZmVy
+cmVkX2NvbG9yX2Zvcm1hdHMNCllDUkNCNDIwICAgICAgICBZQ1JDQjQyMCA+IFlDUkNCNDIyID4g
+WUNSQ0I0NDQgPiBSR0I0NDQNCllDUkNCNDIyICAgICAgICBZQ1JDQjQyMiA+IFlDUkNCNDQ0ID4g
+UkdCNDQ0DQpZQ1JDQjQ0NCAgICAgICAgWUNSQ0I0NDQgPiBSR0I0NDQNClJHQjQ0NCAgICAgICAg
+ICBSR0I0NDQNCg0KVGhlbiB0aGUgZmluYWwgY29sb3JfZm9ybWF0IGlzIGNhbGN1bGF0ZWQgYnkg
+MyBzdGVwczoNCjEuIGNhbGN1bGF0ZSBIVyBhdmFpbGFibGUgZm9ybWF0cy4NCiAgYXZhaWxfZm9y
+bWF0cyA9IGNvbm5lY3Rvcl9jb2xvcl9mb3JtYXRzICYgaW1wcm9jLT5jb2xvcl9mb3JtYXRzOw0K
+Mi4gZmlsdGVyIG91dCB1bi1wcmVmZXJyZWQgZm9ybWF0Lg0KICBhdmFpbF9mb3JtYXRzICY9IHBy
+ZWZlcnJlZF9jb2xvcl9mb3JtYXRzOw0KMy4gc2VsZWN0IHRoZSBmaW5hbCBmb3JtYXQgYWNjb3Jk
+aW5nIHRvIHRoZSBwcmVmZXJyZWQgb3JkZXIuDQogIGNvbG9yX2Zvcm1hdCA9IEJJVChfX2Zscyhh
+dmFsX2Zvcm1hdHMpKTsNCg0KU2lnbmVkLW9mZi1ieTogTG93cnkgTGkgKEFybSBUZWNobm9sb2d5
+IENoaW5hKSA8bG93cnkubGlAYXJtLmNvbT4NCi0tLQ0KIC4uLi9ncHUvZHJtL2FybS9kaXNwbGF5
+L2tvbWVkYS9kNzEvZDcxX2NvbXBvbmVudC5jIHwgMTQgKysrKysrKystLQ0KIGRyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2NydGMuYyAgIHwgMjcgKysrKysrKysrKysr
+KysrKysrDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmMg
+ICAgfCAzMiArKysrKysrKysrKysrKysrKysrKystDQogZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfa21zLmggICAgfCAgMiArKw0KIC4uLi9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaCAgIHwgIDMgKysNCiAuLi4vZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYyB8IDMxICsrKysrKysrKysrKysrKysr
+KysrKw0KIC4uLi9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV93Yl9jb25uZWN0b3IuYyAg
+IHwgIDUgKysrKw0KIDcgZmlsZXMgY2hhbmdlZCwgMTExIGluc2VydGlvbnMoKyksIDMgZGVsZXRp
+b25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRh
+L2Q3MS9kNzFfY29tcG9uZW50LmMgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRh
+L2Q3MS9kNzFfY29tcG9uZW50LmMNCmluZGV4IDAxZGQ0MjYuLjUxMzU1NzcgMTAwNjQ0DQotLS0g
+YS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMN
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25l
+bnQuYw0KQEAgLTk1NSw2ICs5NTUsNyBAQCBzdGF0aWMgdm9pZCBkNzFfaW1wcm9jX3VwZGF0ZShz
+dHJ1Y3Qga29tZWRhX2NvbXBvbmVudCAqYywNCiAJCQkgICAgICAgdG9fZDcxX2lucHV0X2lkKHN0
+YXRlLCBpbmRleCkpOw0KIA0KIAltYWxpZHBfd3JpdGUzMihyZWcsIEJMS19TSVpFLCBIVl9TSVpF
+KHN0LT5oc2l6ZSwgc3QtPnZzaXplKSk7DQorCW1hbGlkcF93cml0ZTMyKHJlZywgSVBTX0RFUFRI
+LCBzdC0+Y29sb3JfZGVwdGgpOw0KIA0KIAlpZiAoY3J0Y19zdC0+Y29sb3JfbWdtdF9jaGFuZ2Vk
+KSB7DQogCQltYXNrIHw9IElQU19DVFJMX0ZUIHwgSVBTX0NUUkxfUkdCOw0KQEAgLTk3NCw4ICs5
+NzUsMTcgQEAgc3RhdGljIHZvaWQgZDcxX2ltcHJvY191cGRhdGUoc3RydWN0IGtvbWVkYV9jb21w
+b25lbnQgKmMsDQogCQl9DQogCX0NCiANCi0JaWYgKG1hc2spDQotCQltYWxpZHBfd3JpdGUzMl9t
+YXNrKHJlZywgQkxLX0NPTlRST0wsIG1hc2ssIGN0cmwpOw0KKwltYXNrIHw9IElQU19DVFJMX1lV
+ViB8IElQU19DVFJMX0NIRDQyMiB8IElQU19DVFJMX0NIRDQyMDsNCisNCisJLyogY29uZmlnIGNv
+bG9yIGZvcm1hdCAqLw0KKwlpZiAoc3QtPmNvbG9yX2Zvcm1hdCA9PSBEUk1fQ09MT1JfRk9STUFU
+X1lDUkNCNDIwKQ0KKwkJY3RybCB8PSBJUFNfQ1RSTF9ZVVYgfCBJUFNfQ1RSTF9DSEQ0MjIgfCBJ
+UFNfQ1RSTF9DSEQ0MjA7DQorCWVsc2UgaWYgKHN0LT5jb2xvcl9mb3JtYXQgPT0gRFJNX0NPTE9S
+X0ZPUk1BVF9ZQ1JDQjQyMikNCisJCWN0cmwgfD0gSVBTX0NUUkxfWVVWIHwgSVBTX0NUUkxfQ0hE
+NDIyOw0KKwllbHNlIGlmIChzdC0+Y29sb3JfZm9ybWF0ID09IERSTV9DT0xPUl9GT1JNQVRfWUNS
+Q0I0NDQpDQorCQljdHJsIHw9IElQU19DVFJMX1lVVjsNCisNCisJbWFsaWRwX3dyaXRlMzJfbWFz
+ayhyZWcsIEJMS19DT05UUk9MLCBtYXNrLCBjdHJsKTsNCiB9DQogDQogc3RhdGljIHZvaWQgZDcx
+X2ltcHJvY19kdW1wKHN0cnVjdCBrb21lZGFfY29tcG9uZW50ICpjLCBzdHJ1Y3Qgc2VxX2ZpbGUg
+KnNmKQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29t
+ZWRhX2NydGMuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Ny
+dGMuYw0KaW5kZXggY2M2NTgyZi4uYWU2Nzg5NCAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2Ry
+bS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2NydGMuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJt
+L2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfY3J0Yy5jDQpAQCAtMTgsNiArMTgsMzMgQEANCiAj
+aW5jbHVkZSAia29tZWRhX2Rldi5oIg0KICNpbmNsdWRlICJrb21lZGFfa21zLmgiDQogDQordm9p
+ZCBrb21lZGFfY3J0Y19nZXRfY29sb3JfY29uZmlnKHN0cnVjdCBkcm1fY3J0Y19zdGF0ZSAqY3J0
+Y19zdCwNCisJCQkJICB1MzIgKmNvbG9yX2RlcHRocywgdTMyICpjb2xvcl9mb3JtYXRzKQ0KK3sN
+CisJc3RydWN0IGRybV9jb25uZWN0b3IgKmNvbm47DQorCXN0cnVjdCBkcm1fY29ubmVjdG9yX3N0
+YXRlICpjb25uX3N0Ow0KKwl1MzIgY29ubl9jb2xvcl9mb3JtYXRzID0gfjB1Ow0KKwlpbnQgaSwg
+bWluX2JwYyA9IDMxLCBjb25uX2JwYyA9IDA7DQorDQorCWZvcl9lYWNoX25ld19jb25uZWN0b3Jf
+aW5fc3RhdGUoY3J0Y19zdC0+c3RhdGUsIGNvbm4sIGNvbm5fc3QsIGkpIHsNCisJCWlmIChjb25u
+X3N0LT5jcnRjICE9IGNydGNfc3QtPmNydGMpDQorCQkJY29udGludWU7DQorDQorCQljb25uX2Jw
+YyA9IGNvbm4tPmRpc3BsYXlfaW5mby5icGMgPyBjb25uLT5kaXNwbGF5X2luZm8uYnBjIDogODsN
+CisJCWNvbm5fY29sb3JfZm9ybWF0cyAmPSBjb25uLT5kaXNwbGF5X2luZm8uY29sb3JfZm9ybWF0
+czsNCisNCisJCWlmIChjb25uX2JwYyA8IG1pbl9icGMpDQorCQkJbWluX2JwYyA9IGNvbm5fYnBj
+Ow0KKwl9DQorDQorCS8qIGNvbm5lY3RvciBkb2Vzbid0IGNvbmZpZyBhbnkgY29sb3JfZm9ybWF0
+LCB1c2UgUkdCNDQ0IGFzIGRlZmF1bHQgKi8NCisJaWYgKGNvbm5fY29sb3JfZm9ybWF0cyA9PSAw
+KQ0KKwkJY29ubl9jb2xvcl9mb3JtYXRzID0gRFJNX0NPTE9SX0ZPUk1BVF9SR0I0NDQ7DQorDQor
+CSpjb2xvcl9kZXB0aHMgPSBHRU5NQVNLKGNvbm5fYnBjLCAwKTsNCisJKmNvbG9yX2Zvcm1hdHMg
+PSBjb25uX2NvbG9yX2Zvcm1hdHM7DQorfQ0KKw0KIHN0YXRpYyB2b2lkIGtvbWVkYV9jcnRjX3Vw
+ZGF0ZV9jbG9ja19yYXRpbyhzdHJ1Y3Qga29tZWRhX2NydGNfc3RhdGUgKmtjcnRjX3N0KQ0KIHsN
+CiAJdTY0IHB4bGNsaywgYWNsazsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rp
+c3BsYXkva29tZWRhL2tvbWVkYV9kZXYuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9r
+b21lZGEva29tZWRhX2Rldi5jDQppbmRleCA1OTFkYTFlLi5hMDlkZTQ1IDEwMDY0NA0KLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZGV2LmMNCisrKyBiL2Ry
+aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2Rldi5jDQpAQCAtMTAyLDEy
+ICsxMDIsMzQgQEAgc3RhdGljIHZvaWQga29tZWRhX2RlYnVnZnNfaW5pdChzdHJ1Y3Qga29tZWRh
+X2RldiAqbWRldikNCiAJLmF0dHJzID0ga29tZWRhX3N5c2ZzX2VudHJpZXMsDQogfTsNCiANCitz
+dGF0aWMgaW50IHRvX2NvbG9yX2Zvcm1hdChjb25zdCBjaGFyICpzdHIpDQorew0KKwlpbnQgZm9y
+bWF0Ow0KKw0KKwlpZiAoIXN0cm5jbXAoc3RyLCAiUkdCNDQ0IiwgNykpIHsNCisJCWZvcm1hdCA9
+IERSTV9DT0xPUl9GT1JNQVRfUkdCNDQ0Ow0KKwl9IGVsc2UgaWYgKCFzdHJuY21wKHN0ciwgIllD
+UkNCNDQ0IiwgOSkpIHsNCisJCWZvcm1hdCA9IERSTV9DT0xPUl9GT1JNQVRfWUNSQ0I0NDQ7DQor
+CX0gZWxzZSBpZiAoIXN0cm5jbXAoc3RyLCAiWUNSQ0I0MjIiLCA5KSkgew0KKwkJZm9ybWF0ID0g
+RFJNX0NPTE9SX0ZPUk1BVF9ZQ1JDQjQyMjsNCisJfSBlbHNlIGlmICghc3RybmNtcChzdHIsICJZ
+Q1JDQjQyMCIsIDkpKSB7DQorCQlmb3JtYXQgPSBEUk1fQ09MT1JfRk9STUFUX1lDUkNCNDIwOw0K
+Kwl9IGVsc2Ugew0KKwkJRFJNX1dBUk4oImludmFsaWQgY29sb3JfZm9ybWF0OiAlcywgcGxlYXNl
+IHNldCBpdCB0byBSR0I0NDQsIFlDUkNCNDQ0LCBZQ1JDQjQyMiBvciBZQ1JDQjQyMFxuIiwNCisJ
+CQkgc3RyKTsNCisJCWZvcm1hdCA9IERSTV9DT0xPUl9GT1JNQVRfUkdCNDQ0Ow0KKwl9DQorDQor
+CXJldHVybiBmb3JtYXQ7DQorfQ0KKw0KIHN0YXRpYyBpbnQga29tZWRhX3BhcnNlX3BpcGVfZHQo
+c3RydWN0IGtvbWVkYV9kZXYgKm1kZXYsIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQogew0KIAlz
+dHJ1Y3Qga29tZWRhX3BpcGVsaW5lICpwaXBlOw0KIAlzdHJ1Y3QgY2xrICpjbGs7DQogCXUzMiBw
+aXBlX2lkOw0KLQlpbnQgcmV0ID0gMDsNCisJaW50IHJldCA9IDAsIGNvbG9yX2Zvcm1hdDsNCisJ
+Y29uc3QgY2hhciAqc3RyOw0KIA0KIAlyZXQgPSBvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgInJl
+ZyIsICZwaXBlX2lkKTsNCiAJaWYgKHJldCAhPSAwIHx8IHBpcGVfaWQgPj0gbWRldi0+bl9waXBl
+bGluZXMpDQpAQCAtMTIyLDYgKzE0NCwxNCBAQCBzdGF0aWMgaW50IGtvbWVkYV9wYXJzZV9waXBl
+X2R0KHN0cnVjdCBrb21lZGFfZGV2ICptZGV2LCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KIAl9
+DQogCXBpcGUtPnB4bGNsayA9IGNsazsNCiANCisJLyogZmV0Y2ggRFQgY29uZmlndXJlZCBjb2xv
+ci1mb3JtYXQsIGlmIG5vdCBzZXQsIHVzZSBSR0I0NDQgKi8NCisJaWYgKCFvZl9wcm9wZXJ0eV9y
+ZWFkX3N0cmluZyhucCwgImNvbG9yLWZvcm1hdCIsICZzdHIpKQ0KKwkJY29sb3JfZm9ybWF0ID0g
+dG9fY29sb3JfZm9ybWF0KHN0cik7DQorCWVsc2UNCisJCWNvbG9yX2Zvcm1hdCA9IERSTV9DT0xP
+Ul9GT1JNQVRfUkdCNDQ0Ow0KKw0KKwlwaXBlLT5pbXByb2MtPnByZWZlcnJlZF9jb2xvcl9mb3Jt
+YXRzID0gKGNvbG9yX2Zvcm1hdCA8PCAxKSAtIDE7DQorDQogCS8qIGVudW0gcG9ydHMgKi8NCiAJ
+cGlwZS0+b2Zfb3V0cHV0X2xpbmtzWzBdID0NCiAJCW9mX2dyYXBoX2dldF9yZW1vdGVfbm9kZShu
+cCwgS09NRURBX09GX1BPUlRfT1VUUFVULCAwKTsNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
+cm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9rbXMuaCBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5oDQppbmRleCBjZjIxMjJiLi5kYzFkNDM2IDEwMDY0
+NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmgN
+CisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5oDQpA
+QCAtMTgwLDYgKzE4MCw4IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBoYXNfZmxpcF9oKHUzMiByb3Qp
+DQogCQlyZXR1cm4gISEocm90YXRpb24gJiBEUk1fTU9ERV9SRUZMRUNUX1gpOw0KIH0NCiANCit2
+b2lkIGtvbWVkYV9jcnRjX2dldF9jb2xvcl9jb25maWcoc3RydWN0IGRybV9jcnRjX3N0YXRlICpj
+cnRjX3N0LA0KKwkJCQkgIHUzMiAqY29sb3JfZGVwdGhzLCB1MzIgKmNvbG9yX2Zvcm1hdHMpOw0K
+IHVuc2lnbmVkIGxvbmcga29tZWRhX2NydGNfZ2V0X2FjbGsoc3RydWN0IGtvbWVkYV9jcnRjX3N0
+YXRlICprY3J0Y19zdCk7DQogDQogaW50IGtvbWVkYV9rbXNfc2V0dXBfY3J0Y3Moc3RydWN0IGtv
+bWVkYV9rbXNfZGV2ICprbXMsIHN0cnVjdCBrb21lZGFfZGV2ICptZGV2KTsNCmRpZmYgLS1naXQg
+YS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZS5oIGIv
+ZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaA0KaW5k
+ZXggOWE1ZmMzNS4uOWU4NDIzMiAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlz
+cGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0v
+ZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lLmgNCkBAIC0zMTcsNiArMzE3LDggQEAgc3Ry
+dWN0IGtvbWVkYV9zcGxpdHRlcl9zdGF0ZSB7DQogc3RydWN0IGtvbWVkYV9pbXByb2Mgew0KIAlz
+dHJ1Y3Qga29tZWRhX2NvbXBvbmVudCBiYXNlOw0KIAl1MzIgc3VwcG9ydGVkX2NvbG9yX2Zvcm1h
+dHM7ICAvKiBEUk1fUkdCL1lVVjQ0NC9ZVVY0MjAqLw0KKwkvKiB0aGUgcHJlZmVycmVkIG9yZGVy
+IGlzIGZyb20gTVNCIHRvIExTQiBZVVY0MjAgLS0+IFJHQjQ0NCAqLw0KKwl1MzIgcHJlZmVycmVk
+X2NvbG9yX2Zvcm1hdHM7DQogCXUzMiBzdXBwb3J0ZWRfY29sb3JfZGVwdGhzOyAvKiBCSVQoOCkg
+fCBCSVQoMTApKi8NCiAJdTggc3VwcG9ydHNfZGVnYW1tYSA6IDE7DQogCXU4IHN1cHBvcnRzX2Nz
+YyA6IDE7DQpAQCAtMzI1LDYgKzMyNyw3IEBAIHN0cnVjdCBrb21lZGFfaW1wcm9jIHsNCiANCiBz
+dHJ1Y3Qga29tZWRhX2ltcHJvY19zdGF0ZSB7DQogCXN0cnVjdCBrb21lZGFfY29tcG9uZW50X3N0
+YXRlIGJhc2U7DQorCXU4IGNvbG9yX2Zvcm1hdCwgY29sb3JfZGVwdGg7DQogCXUxNiBoc2l6ZSwg
+dnNpemU7DQogCXUzMiBmZ2FtbWFfY29lZmZzW0tPTUVEQV9OX0dBTU1BX0NPRUZGU107DQogCXUz
+MiBjdG1fY29lZmZzW0tPTUVEQV9OX0NUTV9DT0VGRlNdOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
+Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5lX3N0YXRlLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQpp
+bmRleCA3OTZjYWU2Li40NTIzZDI4IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL2FybS9k
+aXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYw0KKysrIGIvZHJpdmVycy9ncHUv
+ZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYw0KQEAgLTc0Myw2
+ICs3NDMsNyBAQCB2b2lkIHBpcGVsaW5lX2NvbXBvc2l0aW9uX3NpemUoc3RydWN0IGtvbWVkYV9j
+cnRjX3N0YXRlICprY3J0Y19zdCwNCiAJCSAgICAgICBzdHJ1Y3Qga29tZWRhX2RhdGFfZmxvd19j
+ZmcgKmRmbG93KQ0KIHsNCiAJc3RydWN0IGRybV9jcnRjICpjcnRjID0ga2NydGNfc3QtPmJhc2Uu
+Y3J0YzsNCisJc3RydWN0IGRybV9jcnRjX3N0YXRlICpjcnRjX3N0ID0gJmtjcnRjX3N0LT5iYXNl
+Ow0KIAlzdHJ1Y3Qga29tZWRhX2NvbXBvbmVudF9zdGF0ZSAqY19zdDsNCiAJc3RydWN0IGtvbWVk
+YV9pbXByb2Nfc3RhdGUgKnN0Ow0KIA0KQEAgLTc1Niw2ICs3NTcsMzYgQEAgdm9pZCBwaXBlbGlu
+ZV9jb21wb3NpdGlvbl9zaXplKHN0cnVjdCBrb21lZGFfY3J0Y19zdGF0ZSAqa2NydGNfc3QsDQog
+CXN0LT5oc2l6ZSA9IGRmbG93LT5pbl93Ow0KIAlzdC0+dnNpemUgPSBkZmxvdy0+aW5faDsNCiAN
+CisJaWYgKGRybV9hdG9taWNfY3J0Y19uZWVkc19tb2Rlc2V0KGNydGNfc3QpKSB7DQorCQl1MzIg
+b3V0cHV0X2RlcHRocywgb3V0cHV0X2Zvcm1hdHM7DQorCQl1MzIgYXZhaWxfZGVwdGhzLCBhdmFp
+bF9mb3JtYXRzOw0KKw0KKwkJa29tZWRhX2NydGNfZ2V0X2NvbG9yX2NvbmZpZyhjcnRjX3N0LCAm
+b3V0cHV0X2RlcHRocywNCisJCQkJCSAgICAgJm91dHB1dF9mb3JtYXRzKTsNCisNCisJCWF2YWls
+X2RlcHRocyA9IG91dHB1dF9kZXB0aHMgJiBpbXByb2MtPnN1cHBvcnRlZF9jb2xvcl9kZXB0aHM7
+DQorCQlpZiAoYXZhaWxfZGVwdGhzID09IDApIHsNCisJCQlEUk1fREVCVUdfQVRPTUlDKCJObyBh
+dmFpbGFibGUgY29sb3IgZGVwdGhzLCBjb25uIGRlcHRoczogMHgleCAmIGRpc3BsYXk6IDB4JXhc
+biIsDQorCQkJCQkgb3V0cHV0X2RlcHRocywNCisJCQkJCSBpbXByb2MtPnN1cHBvcnRlZF9jb2xv
+cl9kZXB0aHMpOw0KKwkJCXJldHVybiAtRUlOVkFMOw0KKwkJfQ0KKw0KKwkJYXZhaWxfZm9ybWF0
+cyA9IG91dHB1dF9mb3JtYXRzICYNCisJCQkJaW1wcm9jLT5zdXBwb3J0ZWRfY29sb3JfZm9ybWF0
+cyAmDQorCQkJCWltcHJvYy0+cHJlZmVycmVkX2NvbG9yX2Zvcm1hdHM7DQorCQlpZiAoYXZhaWxf
+Zm9ybWF0cyA9PSAwKSB7DQorCQkJRFJNX0RFQlVHX0FUT01JQygiTm8gYXZhaWxhYmxlIGNvbG9y
+X2Zvcm1hdHMsIGNvbm4gZm9ybWF0cyAweCV4ICYgZGlzcGxheTogMHgleCAmIHByZWZlcnJlZDog
+MHgleFxuIiwNCisJCQkJCSBvdXRwdXRfZm9ybWF0cywNCisJCQkJCSBpbXByb2MtPnN1cHBvcnRl
+ZF9jb2xvcl9mb3JtYXRzLA0KKwkJCQkJIGltcHJvYy0+cHJlZmVycmVkX2NvbG9yX2Zvcm1hdHMp
+Ow0KKwkJCXJldHVybiAtRUlOVkFMOw0KKwkJfQ0KKw0KKwkJc3QtPmNvbG9yX2RlcHRoID0gX19m
+bHMoYXZhaWxfZGVwdGhzKTsNCisJCXN0LT5jb2xvcl9mb3JtYXQgPSBCSVQoX19mbHMoYXZhaWxf
+Zm9ybWF0cykpOw0KKwl9DQorDQogCWlmIChrY3J0Y19zdC0+YmFzZS5jb2xvcl9tZ210X2NoYW5n
+ZWQpIHsNCiAJCWRybV9sdXRfdG9fZmdhbW1hX2NvZWZmcyhrY3J0Y19zdC0+YmFzZS5nYW1tYV9s
+dXQsDQogCQkJCQkgc3QtPmZnYW1tYV9jb2VmZnMpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1
+L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3diX2Nvbm5lY3Rvci5jIGIvZHJpdmVycy9n
+cHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfd2JfY29ubmVjdG9yLmMNCmluZGV4IDRl
+MjZiMjcuLjZjNDM0NjIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkv
+a29tZWRhL2tvbWVkYV93Yl9jb25uZWN0b3IuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL2FybS9k
+aXNwbGF5L2tvbWVkYS9rb21lZGFfd2JfY29ubmVjdG9yLmMNCkBAIC0xNDksNiArMTQ5LDcgQEAg
+c3RhdGljIGludCBrb21lZGFfd2JfY29ubmVjdG9yX2FkZChzdHJ1Y3Qga29tZWRhX2ttc19kZXYg
+KmttcywNCiAJc3RydWN0IGtvbWVkYV9kZXYgKm1kZXYgPSBrbXMtPmJhc2UuZGV2X3ByaXZhdGU7
+DQogCXN0cnVjdCBrb21lZGFfd2JfY29ubmVjdG9yICprd2JfY29ubjsNCiAJc3RydWN0IGRybV93
+cml0ZWJhY2tfY29ubmVjdG9yICp3Yl9jb25uOw0KKwlzdHJ1Y3QgZHJtX2Rpc3BsYXlfaW5mbyAq
+aW5mbzsNCiAJdTMyICpmb3JtYXRzLCBuX2Zvcm1hdHMgPSAwOw0KIAlpbnQgZXJyOw0KIA0KQEAg
+LTE3OCw2ICsxNzksMTAgQEAgc3RhdGljIGludCBrb21lZGFfd2JfY29ubmVjdG9yX2FkZChzdHJ1
+Y3Qga29tZWRhX2ttc19kZXYgKmttcywNCiANCiAJZHJtX2Nvbm5lY3Rvcl9oZWxwZXJfYWRkKCZ3
+Yl9jb25uLT5iYXNlLCAma29tZWRhX3diX2Nvbm5faGVscGVyX2Z1bmNzKTsNCiANCisJaW5mbyA9
+ICZrd2JfY29ubi0+YmFzZS5iYXNlLmRpc3BsYXlfaW5mbzsNCisJaW5mby0+YnBjID0gX19mbHMo
+a2NydGMtPm1hc3Rlci0+aW1wcm9jLT5zdXBwb3J0ZWRfY29sb3JfZGVwdGhzKTsNCisJaW5mby0+
+Y29sb3JfZm9ybWF0cyA9IGtjcnRjLT5tYXN0ZXItPmltcHJvYy0+c3VwcG9ydGVkX2NvbG9yX2Zv
+cm1hdHM7DQorDQogCWtjcnRjLT53Yl9jb25uID0ga3diX2Nvbm47DQogDQogCXJldHVybiAwOw0K
+LS0gDQoxLjkuMQ0KDQo=
