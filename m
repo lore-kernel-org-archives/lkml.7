@@ -2,146 +2,104 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42239C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1854BC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10108208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Dz/lb8Th"
+	by mail.kernel.org (Postfix) with ESMTP id EBDC4214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 11:12:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbfFSLLV (ORCPT
+        id S1731639AbfFSLMP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 07:11:21 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:46012 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727242AbfFSLLV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 07:11:21 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JB9FdF161262;
-        Wed, 19 Jun 2019 11:11:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
- mime-version : subject : from : in-reply-to : date : cc :
- content-transfer-encoding : message-id : references : to;
- s=corp-2018-07-02; bh=2E/xxyfxilbbJIBxuSFlUUT7YrP/B/T+4iRiiUse0uo=;
- b=Dz/lb8ThJSFobMJU0TB4MmL622Uy0SZPG63RkWrvfUCtqefpQMO+MIH7PCANsDOw+60/
- Jd/fpkdEAR48P61ssb9HAdtVriFFGB66v9gEFJAWhdHUxnxz//NL9RMerWVUtiVcO2d3
- 7X4fBwW2aqEC5Bx5CbGdOdIUHoXnchWSjkrnexMhXDQK+aA2uMA9Xkrhkwtduqd8pu7j
- tsZgetqVU+2aacvtP+RyO9uOFyFr6y8NQc6qInx4BlenQoKphiWe5L8+QiMqjuTcfj+7
- XMd5wq2uAm5s3LGRrgvjnyZYtHndateU0SUJmCWGC9kWZo0pADPvYfsTSdLQvmxX9oIL Pw== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2t7809aqp9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 11:11:04 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JB997K119535;
-        Wed, 19 Jun 2019 11:11:03 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2t77yn1cqh-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 11:11:03 +0000
-Received: from abhmp0001.oracle.com (abhmp0001.oracle.com [141.146.116.7])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5JBB1iY005512;
-        Wed, 19 Jun 2019 11:11:01 GMT
-Received: from [192.168.14.112] (/109.64.216.174)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 19 Jun 2019 04:11:01 -0700
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 11.1 \(3445.4.7\))
-Subject: Re: [PATCH v2] KVM: x86: Modify struct kvm_nested_state to have
- explicit fields for data
-From:   Liran Alon <liran.alon@oracle.com>
-In-Reply-To: <e2800277-4d44-5caa-1122-c36487f6e6bb@redhat.com>
-Date:   Wed, 19 Jun 2019 14:10:58 +0300
-Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <C8A35660-C78F-4EBB-BCAF-8C9BCC9D323C@oracle.com>
-References: <1560875046-26279-1-git-send-email-pbonzini@redhat.com>
- <D2867F96-6B8D-4A1D-9F6F-CF0F171614BC@oracle.com>
- <e2800277-4d44-5caa-1122-c36487f6e6bb@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-X-Mailer: Apple Mail (2.3445.4.7)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=997
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190094
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190094
+        Wed, 19 Jun 2019 07:12:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60606 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727076AbfFSLMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 07:12:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 15634AE74;
+        Wed, 19 Jun 2019 11:12:14 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 13:12:12 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Peter Zijlstra <peterz@infradead.org>
+cc:     Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org,
+        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
+        rostedt@goodmis.org, ast@kernel.org, daniel@iogearbox.net
+Subject: Re: [RFC][PATCH] module: Propagate MODULE_STATE_COMING notifier
+ errors
+In-Reply-To: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
+Message-ID: <alpine.LSU.2.21.1906191251380.23337@pobox.suse.cz>
+References: <20190617090335.GX3436@hirez.programming.kicks-ass.net>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, 17 Jun 2019, Peter Zijlstra wrote:
 
+> 
+> Some module notifiers; such as jump_label_module_notifier(),
+> tracepoint_module_notify(); can fail the MODULE_STATE_COMING callback
+> (due to -ENOMEM for example). However module.c:prepare_coming_module()
+> ignores all such errors, even though this function can already fail due
+> to klp_module_coming().
 
-> On 19 Jun 2019, at 13:45, Paolo Bonzini <pbonzini@redhat.com> wrote:
->=20
-> On 19/06/19 00:36, Liran Alon wrote:
->>=20
->>=20
->>> On 18 Jun 2019, at 19:24, Paolo Bonzini <pbonzini@redhat.com> wrote:
->>>=20
->>> From: Liran Alon <liran.alon@oracle.com>
->>>=20
->>> Improve the KVM_{GET,SET}_NESTED_STATE structs by detailing the =
-format
->>> of VMX nested state data in a struct.
->>>=20
->>> In order to avoid changing the ioctl values of
->>> KVM_{GET,SET}_NESTED_STATE, there is a need to preserve
->>> sizeof(struct kvm_nested_state). This is done by defining the data
->>> struct as "data.vmx[0]". It was the most elegant way I found to
->>> preserve struct size while still keeping struct readable and easy to
->>> maintain. It does have a misfortunate side-effect that now it has to =
-be
->>> accessed as "data.vmx[0]" rather than just "data.vmx".
->>>=20
->>> Because we are already modifying these structs, I also modified the
->>> following:
->>> * Define the "format" field values as macros.
->>> * Rename vmcs_pa to vmcs12_pa for better readability.
->>>=20
->>> Signed-off-by: Liran Alon <liran.alon@oracle.com>
->>> [Remove SVM stubs, add KVM_STATE_NESTED_VMX_VMCS12_SIZE. - Paolo]
->>=20
->> 1) Why should we remove SVM stubs? I think it makes the interface =
-intention more clear.
->> Do you see any disadvantage of having them?
->=20
-> In its current state I think it would not require any state apart from
-> the global flags, because MSRs can be extracted independent of
-> KVM_GET_NESTED_STATE; this may change as things are cleaned up, but if
-> that remains the case there would be no need for SVM structs at all.
+It does, but there is no change from the pre-prepare_coming_module() 
+times. Coming notifiers were called in complete_formation(), their return 
+values happily ignored and going notifiers not called to clean up even 
+before.
 
-Hmm yes I see your point. Ok I agree.
+> Therefore, propagate the notifier error and ensure we call the GOING
+> notifier when we do fail, to ensure cleanup for all notifiers that
+> didn't fail. Auditing all notifiers to make sure calling GOING without
+> COMING first is OK found no obvious problems with that, but it did find
+> a whole bunch of issues with return values, so clean those up too.
 
->=20
->> 2) What is the advantage of defining a separate =
-KVM_STATE_NESTED_VMX_VMCS12_SIZE
->> rather than just moving VMCS12_SIZE to userspace header?
->=20
-> It's just for namespace cleanliness.  I'm keeping VMCS12_SIZE for the
-> arch/x86/kvm/vmx/ code because it's shorter and we're used to it, but
-> userspace headers should use a more specific name.
+Jessica, do you know why coming notifiers do not return errors without 
+this patch (or to be precise, blocking_notifier_call_chain() return value 
+is not taken into the account)? We have come across the issue couple of 
+times already and I think there was a reason, but I cannot remember 
+anything and the code does not help either.
 
-Ok then.
-I will submit my next version of QEMU patches according to this version =
-of the headers.
+Also the situation around the return values themselves is not completely 
+clear. If there is no NOTIFY_STOP_MASK set, only the return value of the 
+last notifier called is returned, so good that you checked, Peter.
+ 
+> --- a/kernel/module.c
+> +++ b/kernel/module.c
+> @@ -3638,9 +3638,10 @@ static int prepare_coming_module(struct module *mod)
+>  	if (err)
+>  		return err;
+>  
+> -	blocking_notifier_call_chain(&module_notify_list,
+> -				     MODULE_STATE_COMING, mod);
+> -	return 0;
+> +	ret = blocking_notifier_call_chain(&module_notify_list,
+> +					   MODULE_STATE_COMING, mod);
+> +	ret = notifier_to_errno(ret);
+> +	return ret;
+>  }
+>  
+>  static int unknown_module_param_cb(char *param, char *val, const char *modname,
+> @@ -3780,7 +3781,7 @@ static int load_module(struct load_info *info, const char __user *uargs,
+>  
+>  	err = prepare_coming_module(mod);
+>  	if (err)
+> -		goto bug_cleanup;
+> +		goto coming_cleanup;
 
-Reviewed-by: Liran Alon <liran.alon@oracle.com>
+Not good. klp_module_going() is not prepared to be called without 
+klp_module_coming() succeeding. "Funny" things might happen.
 
->=20
-> Paolo
+Also destroy_params() might be called without parse_args() first now.
 
+So it calls for more fine-grained error handling.
+
+Miroslav
