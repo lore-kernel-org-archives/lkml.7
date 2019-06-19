@@ -2,101 +2,107 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C29C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98EC1C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D6B208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ar7HMxac"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFF92147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:31:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560947498;
+	bh=zYSek47GtRxIiyiTqpLwRIT0/soRvhGEvD4P78UzuQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1TvTa+8fQbHoVCAVk1A9QKbGsi4++yKSPb3f86Ea5gszmVsVqDprK5J571J5hhzCl
+	 /pKR+UZZ8WjoskCpPdXbH5Sqpdk3ggMtNG5VSmtDETtyp7C+LXyBu2qh9NB5RytD5I
+	 cro6a4IIM9+wuUV47wpV7JXmyGhweH72jcjQUQIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfFSMbb (ORCPT
+        id S1732028AbfFSMbh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:31:31 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:1545 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731976AbfFSMb0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:31:26 -0400
-Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCQNaW013623;
-        Wed, 19 Jun 2019 14:30:55 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=kxAUn6YKO/6reWm+S4P6PSKzShP240Rigo7ZQoE8C8M=;
- b=Ar7HMxacmbYTf5gEF8rpp907cGkQmoofbHV19CJ0Hr2/E9baYNAfy6tMHFBRX93GYGh5
- xswIqwZUXSVAt1Rv+YCY9d4J2r4/vzuYnaG57C9amNcCOvy++MlwKpUg0OwygIPmmJVG
- ijZ/YBnE1X9QSXps+3lv3SbuDIIuuUaHxZp6edTfBGO/bEpB9bHNtOXFBBkLTPM6S77N
- Z/hJloy+zPpflVsemzEvgM+xvOdvA65AYq9EXlQ8F2NVFZu5raRbqQ8fhRWCmkEJ16tz
- AvCyFM5UlNsOUpJ1mcbCEyeFcNO7dYQiJrJD+J9qVHSi6MZa0TojAVYDRc3wiuIOfhnH nw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2t781uux8t-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Wed, 19 Jun 2019 14:30:55 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1233634;
-        Wed, 19 Jun 2019 12:30:55 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E500D27A5;
-        Wed, 19 Jun 2019 12:30:54 +0000 (GMT)
-Received: from localhost (10.75.127.44) by SFHDAG5NODE3.st.com (10.75.127.15)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 19 Jun 2019 14:30:54
- +0200
-From:   Fabrice Gasnier <fabrice.gasnier@st.com>
-To:     <jic23@kernel.org>, <robh+dt@kernel.org>, <alexandre.torgue@st.com>
-CC:     <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
-        <lars@metafoo.de>, <knaack.h@gmx.de>, <pmeerw@pmeerw.net>,
-        <fabrice.gasnier@st.com>, <linux-iio@vger.kernel.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 5/5] ARM: dts: stm32: add missing vdda-supply to adc on stm32h743i-eval
-Date:   Wed, 19 Jun 2019 14:29:58 +0200
-Message-ID: <1560947398-11592-6-git-send-email-fabrice.gasnier@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
-References: <1560947398-11592-1-git-send-email-fabrice.gasnier@st.com>
+        Wed, 19 Jun 2019 08:31:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58524 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731999AbfFSMbc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:31:32 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7683421655;
+        Wed, 19 Jun 2019 12:31:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560947491;
+        bh=zYSek47GtRxIiyiTqpLwRIT0/soRvhGEvD4P78UzuQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=FLJRZqKfP9LmIP/EJ7sG7OmLlB7qDHKBHV9DTDHTnEvBy67DUYJjeIm7Tstzia2uk
+         s0hi8spx8K9FpufwIP5atMokVINriGXENZd2PH/X5AbP4FCvpETXXF2MT7LPVF2ifw
+         y7o2c54pnFsYazeirvm6XGW9Z/ZY3IZiyYg6wQJQ=
+Date:   Wed, 19 Jun 2019 14:31:28 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     "Rantala, Tommi T. (Nokia - FI/Espoo)" <tommi.t.rantala@nokia.com>
+Cc:     "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 4.14] perf machine: Guard against NULL in machine__exit()
+Message-ID: <20190619123128.GA23334@kroah.com>
+References: <20190619120030.6099-1-tommi.t.rantala@nokia.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG4NODE2.st.com (10.75.127.11) To SFHDAG5NODE3.st.com
- (10.75.127.15)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
- signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619120030.6099-1-tommi.t.rantala@nokia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add missing vdda-supply required by STM32 ADC.
+On Wed, Jun 19, 2019 at 12:00:46PM +0000, Rantala, Tommi T. (Nokia - FI/Espoo) wrote:
+> From: Arnaldo Carvalho de Melo <acme@redhat.com>
+> 
+> commit 4a2233b194c77ae1ea8304cb7c00b551de4313f0 upstream.
+> 
+> A recent fix for 'perf trace' introduced a bug where
+> machine__exit(trace->host) could be called while trace->host was still
+> NULL, so make this more robust by guarding against NULL, just like
+> free() does.
+> 
+> The problem happens, for instance, when !root users try to run 'perf
+> trace':
+> 
+>   [acme@jouet linux]$ trace
+>   Error:	No permissions to read /sys/kernel/debug/tracing/events/raw_syscalls/sys_(enter|exit)
+>   Hint:	Try 'sudo mount -o remount,mode=755 /sys/kernel/debug/tracing'
+> 
+>   perf: Segmentation fault
+>   Obtained 7 stack frames.
+>   [0x4f1b2e]
+>   /lib64/libc.so.6(+0x3671f) [0x7f43a1dd971f]
+>   [0x4f3fec]
+>   [0x47468b]
+>   [0x42a2db]
+>   /lib64/libc.so.6(__libc_start_main+0xe9) [0x7f43a1dc3509]
+>   [0x42a6c9]
+>   Segmentation fault (core dumped)
+>   [acme@jouet linux]$
+> 
+> Cc: Adrian Hunter <adrian.hunter@intel.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Andrei Vagin <avagin@openvz.org>
+> Cc: David Ahern <dsahern@gmail.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Vasily Averin <vvs@virtuozzo.com>
+> Cc: Wang Nan <wangnan0@huawei.com>
+> Fixes: 33974a414ce2 ("perf trace: Call machine__exit() at exit")
+> Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Signed-off-by: Tommi Rantala <tommi.t.rantala@nokia.com>
+> ---
+>  tools/perf/util/machine.c | 3 +++
+>  1 file changed, 3 insertions(+)
 
-Fixes: 090992a9ca54 ("ARM: dts: stm32: enable ADC on stm32h743i-eval
-board")
+Now applied, thanks.
 
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
----
- arch/arm/boot/dts/stm32h743i-eval.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/stm32h743i-eval.dts b/arch/arm/boot/dts/stm32h743i-eval.dts
-index ab78ad5..e4d3c58 100644
---- a/arch/arm/boot/dts/stm32h743i-eval.dts
-+++ b/arch/arm/boot/dts/stm32h743i-eval.dts
-@@ -87,6 +87,7 @@
- };
- 
- &adc_12 {
-+	vdda-supply = <&vdda>;
- 	vref-supply = <&vdda>;
- 	status = "okay";
- 	adc1: adc@0 {
--- 
-2.7.4
-
+greg k-h
