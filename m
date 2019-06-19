@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0751C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62C2DC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:04:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C457E2147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BF6B21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:04:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfFSHET (ORCPT
+        id S1731155AbfFSHEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:04:19 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:34063 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSHER (ORCPT
+        Wed, 19 Jun 2019 03:04:22 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32985 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731118AbfFSHEV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:04:17 -0400
-Received: by mail-pg1-f196.google.com with SMTP id p10so9128022pgn.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 00:04:17 -0700 (PDT)
+        Wed, 19 Jun 2019 03:04:21 -0400
+Received: by mail-pf1-f193.google.com with SMTP id x15so9175840pfq.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 00:04:21 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
          :mime-version:content-transfer-encoding;
-        bh=7/8RVwwpSyiRMCTGZS64tnDjssYAeJ0LgQZ9r//r+qE=;
-        b=ejowrUoaDpO+7iO8TarHS6mW+JqurABzR7zR3mPSN7kwMqFsZUYViUuUDKESUJH6BM
-         JaCOL0pz2GydG05zqvQvXRrg8rCz2r+DDkrnJHdXuEuVXIPCAJPbKhi7oOVaj68AqqA7
-         LqqxfnYM+8+DX1o4rl2DwuSZAK5RxHvJ4DRM0swpOD+KcnTsRoWvCkynSwgyf5AmcXIi
-         Pvkkqzf/PVCBbYSIMgj1X6yc/W5GpqAThBYJ5GWpAWsm4Aqkm9clur4zB2ZmS8fx/W07
-         4DjczMpgaAdI3wTRPUmWe7G1t9zUYxLnXJs61hmN+26WR53i4Y0SGKfK6Cts1ntg1iBD
-         4DfQ==
-X-Gm-Message-State: APjAAAWx6hSFlBfO1YAX78cstA6zhBl9h6O09//peku60R6HLgwiFwUy
-        f3Ry5oqWn7bgbs7rFPvbWpv75w==
-X-Google-Smtp-Source: APXvYqyU93GnXfOMPxiWzkmGi33H3j+hQkODkg0SsE+Md9DOd3Z+gKFS7f34Ev/hIAuIXkD2oWnH+Q==
-X-Received: by 2002:a17:90a:3590:: with SMTP id r16mr9702251pjb.44.1560927856852;
-        Wed, 19 Jun 2019 00:04:16 -0700 (PDT)
+        bh=GRtGy7EtU8jAUy4yjm+riLlSPb0h7m/0LVZFMRonxGc=;
+        b=mlRxdRXyZpQX/7PePompFthb6sPVAsTP+PGk6HHyOFeNXVLrjNw9K/l1JnGKQOQavE
+         3248AtV9OPKb7AspfolrS0EYydjYFdtjfDWr++OxHaFn9u0GSv9RqAlpkX/iLhUcZRZb
+         6igLOZ/PXR4jYdRpdonErADvqLhWLHtB0BXV+JI+QlCrc/Ipb1wYU1ILuhf4JdPTcbP3
+         NzAJyLYAB1NC4zSvLJ6NB08bYQwC347hIZheixgQfNL1nUR7zXFFxJPDoCWONhfqR8tY
+         mK7LHqW/P1ulBnWPSbhrgsF4ej/h4W961eKLWxWKV0N2Cq3AY0PVytMl+g6K0dPafIok
+         KHmA==
+X-Gm-Message-State: APjAAAUl7yWq4uFxoUMyevBMig41KjETFl4HPytQeYPGbzgX85TQbcyX
+        Cf1Y4uiLu2Y6L1NSiP5c/H3yrg==
+X-Google-Smtp-Source: APXvYqyRdGXM+Smc3hV/EoxiTjkWKnX1cbCHAGS/7j+K5uF7RUjeUIGPuiQ6LZuMklZ2vjFNydYcfA==
+X-Received: by 2002:a63:5b1d:: with SMTP id p29mr6212374pgb.297.1560927860195;
+        Wed, 19 Jun 2019 00:04:20 -0700 (PDT)
 Received: from localhost (amx-tls3.starhub.net.sg. [203.116.164.13])
-        by smtp.gmail.com with ESMTPSA id l7sm20331564pfl.9.2019.06.19.00.04.15
+        by smtp.gmail.com with ESMTPSA id v23sm17622559pff.185.2019.06.19.00.04.19
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 00:04:16 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 00:04:16 -0700 (PDT)
-X-Google-Original-Date: Wed, 19 Jun 2019 00:03:19 PDT (-0700)
-Subject:     Re: [PATCH 3/3] riscv: defconfig: enable SOC_SIFIVE
-In-Reply-To: <1560799790-20287-4-git-send-email-lollivier@baylibre.com>
+        Wed, 19 Jun 2019 00:04:19 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 00:04:19 -0700 (PDT)
+X-Google-Original-Date: Wed, 19 Jun 2019 00:03:34 PDT (-0700)
+Subject:     Re: [PATCH 2/3] riscv: select SiFive platform drivers with SOC_SIFIVE
+In-Reply-To: <1560799790-20287-3-git-send-email-lollivier@baylibre.com>
 CC:     Paul Walmsley <paul.walmsley@sifive.com>, lollivier@baylibre.com,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org,
         devicetree@vger.kernel.org, khilman@baylibre.com
 From:   Palmer Dabbelt <palmer@sifive.com>
 To:     lollivier@baylibre.com
-Message-ID: <mhng-81fd3887-519a-4a3b-8486-22d4d5441c9b@palmer-si-x1e>
+Message-ID: <mhng-e248d181-8676-4355-9825-d06049606d85@palmer-si-x1e>
 Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
@@ -60,46 +60,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 12:29:50 PDT (-0700), lollivier@baylibre.com wrote:
-> Enable SOC_SIFIVE so the default upstream config is bootable on the SiFive
-> Unleashed Board.
-> And have basic support for future boards based on the same SoC.
+On Mon, 17 Jun 2019 12:29:49 PDT (-0700), lollivier@baylibre.com wrote:
+> On selection of SOC_SIFIVE select the corresponding platform drivers.
 >
 > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 > ---
->  arch/riscv/configs/defconfig | 6 +-----
->  1 file changed, 1 insertion(+), 5 deletions(-)
+>  arch/riscv/Kconfig.socs | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
-> diff --git a/arch/riscv/configs/defconfig b/arch/riscv/configs/defconfig
-> index 4f02967e55de..6e3e37aa8fd1 100644
-> --- a/arch/riscv/configs/defconfig
-> +++ b/arch/riscv/configs/defconfig
-> @@ -12,6 +12,7 @@ CONFIG_CHECKPOINT_RESTORE=y
->  CONFIG_BLK_DEV_INITRD=y
->  CONFIG_EXPERT=y
->  CONFIG_BPF_SYSCALL=y
-> +CONFIG_SOC_SIFIVE=y
->  CONFIG_SMP=y
->  CONFIG_MODULES=y
->  CONFIG_MODULE_UNLOAD=y
-> @@ -49,8 +50,6 @@ CONFIG_SERIAL_8250=y
->  CONFIG_SERIAL_8250_CONSOLE=y
->  CONFIG_SERIAL_OF_PLATFORM=y
->  CONFIG_SERIAL_EARLYCON_RISCV_SBI=y
-> -CONFIG_SERIAL_SIFIVE=y
-> -CONFIG_SERIAL_SIFIVE_CONSOLE=y
->  CONFIG_HVC_RISCV_SBI=y
->  # CONFIG_PTP_1588_CLOCK is not set
->  CONFIG_DRM=y
-> @@ -66,9 +65,6 @@ CONFIG_USB_OHCI_HCD_PLATFORM=y
->  CONFIG_USB_STORAGE=y
->  CONFIG_USB_UAS=y
->  CONFIG_VIRTIO_MMIO=y
-> -CONFIG_CLK_SIFIVE=y
-> -CONFIG_CLK_SIFIVE_FU540_PRCI=y
-> -CONFIG_SIFIVE_PLIC=y
->  CONFIG_EXT4_FS=y
->  CONFIG_EXT4_FS_POSIX_ACL=y
->  CONFIG_AUTOFS4_FS=y
+> diff --git a/arch/riscv/Kconfig.socs b/arch/riscv/Kconfig.socs
+> index 60dae1b5f276..536c0ef4aee8 100644
+> --- a/arch/riscv/Kconfig.socs
+> +++ b/arch/riscv/Kconfig.socs
+> @@ -2,6 +2,11 @@ menu "SoC selection"
+>
+>  config SOC_SIFIVE
+>         bool "SiFive SoCs"
+> +       select SERIAL_SIFIVE
+> +       select SERIAL_SIFIVE_CONSOLE
+> +       select CLK_SIFIVE
+> +       select CLK_SIFIVE_FU540_PRCI
+> +       select SIFIVE_PLIC
+>         help
+>           This enables support for SiFive SoC platform hardware.
 
 Reviewed-by: Palmer Dabbelt <palmer@sifive.com>
