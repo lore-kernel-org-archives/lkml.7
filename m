@@ -2,146 +2,197 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 587EBC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:39:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E95CC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FA61218B8
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560958770;
-	bh=WaYHEYR24dBvpFriPb85xlubTWnDsx57kJGx1C0IQfU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=tybljMksPvxbroIABFdsJ+HhKdmKnn2ULJZ+kPtGyfgHadMQqkCPLiZxxhKzvS/FD
-	 +v/UoMEsfKDDVTWbW3fFCMlMXDZk1h1s36l800D4bXfFgi6fU2Rpl7FcCSnG+RCSmJ
-	 Z1E0S6XRDQeljUMPw/1rtCB/pFbL+T5WimWGiS2Q=
+	by mail.kernel.org (Postfix) with ESMTP id DC35521881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KzSJtbNs";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AOXyrESb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfFSPj2 (ORCPT
+        id S1729732AbfFSPkC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:39:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33638 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfFSPj2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:39:28 -0400
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
+        Wed, 19 Jun 2019 11:40:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37526 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSPkC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:40:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4836560300; Wed, 19 Jun 2019 15:40:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560958800;
+        bh=N7OYhxJf4HieDElspvISZS06uvWIa6aZs0RQzxGXlFw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=KzSJtbNsOFKEL2Fn7y6uxBTqGbhwDR5SFtOyOdCNwGDGfrHNBQoWptwJItgbT9UbY
+         Y5sIDfaGBfOwZiorqyv/J19mtNkgTmMtQdM2UByYRNNN8FKWuNeNrrumVIjLDXNQNC
+         UnqT2Ha0GGvHyD5iWkIUzZsAyLcMkZDpEzyPZZ58=
+Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C9C7F2189D;
-        Wed, 19 Jun 2019 15:39:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560958766;
-        bh=WaYHEYR24dBvpFriPb85xlubTWnDsx57kJGx1C0IQfU=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ec2qSgJPEitHCtwxZQj8xBNYbdAsg9rd5kyiYDY/25svddOyHLDUc2iWFnO+wW05Y
-         cfMMzD9r0VBTisATyKEYC8cFXi36WbEfBoC8cD6m7OU/Ix6ofv6cn4VSTfLVohnStM
-         pGxX7BYCAAHBgVSNQl6qJvQ610ZT/W4xr0/LEOwo=
-Received: by mail-qt1-f182.google.com with SMTP id x2so20465822qtr.0;
-        Wed, 19 Jun 2019 08:39:26 -0700 (PDT)
-X-Gm-Message-State: APjAAAUcyHrh8zWNCy00Xg5z3254PJi94ldtp8RhPl7ArTeyN0l9CJYm
-        RMc68YPpmBSHdUJeqOlpLrIW0axRZSrF3FrYsw==
-X-Google-Smtp-Source: APXvYqw4DWymb4slhuXRl7SeCy5AlAAvR7Dq0DK3jgNlknl4uwGa87e3I3xFTnQKGHkX2uVKnKOVUA4BCXvFs8EBqXA=
-X-Received: by 2002:ac8:3908:: with SMTP id s8mr105351232qtb.224.1560958766037;
- Wed, 19 Jun 2019 08:39:26 -0700 (PDT)
-MIME-Version: 1.0
-References: <CAK7LNARHHXv5Tu4BHN1avKOExS6HmPfd2c0ELZiQaxtmETOsDw@mail.gmail.com>
- <20190619125948.GA27090@kroah.com>
-In-Reply-To: <20190619125948.GA27090@kroah.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Wed, 19 Jun 2019 09:39:13 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
-Message-ID: <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
-Subject: Re: SPDX conversion under scripts/dtc/ of Linux Kernel
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linux-spdx@vger.kernel.org,
-        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        (Authenticated sender: jhugo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6286E60850;
+        Wed, 19 Jun 2019 15:39:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1560958799;
+        bh=N7OYhxJf4HieDElspvISZS06uvWIa6aZs0RQzxGXlFw=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AOXyrESbQfXfIszltxu3JVMVMxIhqIRrmSvIvxz5LEUst3PaE6xkZ95dHsURHsgGi
+         YN7LK0nGinFaRgSj46bqQOze8GJAFpjY6wv+i8C7okau93fAlE+/dIX5OoCV/SdX6+
+         F9/1gg+WzU+hY8k4/9YFHpOVrL1DY1fBa0JDcEOg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6286E60850
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
+Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
+To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Andy Gross <agross@kernel.org>,
+        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
         DTML <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Frank Rowand <frowand.list@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
+ <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
+ <20190612214636.GA40779@dtor-ws>
+ <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
+ <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
+From:   Jeffrey Hugo <jhugo@codeaurora.org>
+Message-ID: <e480240e-993b-5f09-f29c-7b5c57a67260@codeaurora.org>
+Date:   Wed, 19 Jun 2019 09:39:57 -0600
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 6:59 AM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> On Wed, Jun 19, 2019 at 07:23:19PM +0900, Masahiro Yamada wrote:
-> > Hi.
-> >
-> > In this development cycle of Linux kernel,
-> > lots of files were converted to use SPDX
-> > instead of the license boilerplate.
-> >
-> > However.
-> >
-> > Some files were imported from a different project,
-> > and are periodically synchronized with the upstream.
-> > Have we discussed what to do about this case?
-> >
-> >
-> > For example, scripts/dtc/ is the case.
-> >
-> > The files in scripts/dtc/ are synced with the upstream
-> > device tree compiler.
-> >
-> > Rob Herring periodically runs scripts/dtc/update-dtc-source.sh
-> > to import outcome from the upstream.
-> >
-> >
-> > The upstream DTC has not adopted SPDX yet.
-> >
-> > Some files in Linux (e.g. scripts/dtc/dtc.c)
-> > have been converted to SPDX.
-> >
-> > So, they are out of sync now.
-> >
-> > The license boilerplate will come back
-> > when Rob runs scripts/dtc/update-dtc-source.sh
-> > next time.
+On 6/13/2019 2:55 AM, Benjamin Tissoires wrote:
+> On Thu, Jun 13, 2019 at 12:20 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
+>>
+>> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
+>>> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
+>>>> There needs to be coordination between hid-quirks and the elan_i2c driver
+>>>> about which devices are handled by what drivers.  Currently, both use
+>>>> whitelists, which results in valid devices being unhandled by default,
+>>>> when they should not be rejected by hid-quirks.  This is quickly becoming
+>>>> an issue.
+>>>>
+>>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
+>>>> which is now in a header file that hid-quirks can access, use that to
+>>>> implement a blacklist in hid-quirks so that only the devices that need to
+>>>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
+>>>> handled by default.
+>>>>
+>>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+>>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+>>>> ---
+>>>>    drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
+>>>>    1 file changed, 16 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
+>>>> index e5ca6fe2ca57..bd81bb090222 100644
+>>>> --- a/drivers/hid/hid-quirks.c
+>>>> +++ b/drivers/hid/hid-quirks.c
+>>>> @@ -16,6 +16,7 @@
+>>>>    #include <linux/export.h>
+>>>>    #include <linux/slab.h>
+>>>>    #include <linux/mutex.h>
+>>>> +#include <linux/input/elan-i2c-ids.h>
+>>>>
+>>>>    #include "hid-ids.h"
+>>>>
+>>>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
+>>>>
+>>>>    bool hid_ignore(struct hid_device *hdev)
+>>>>    {
+>>>> +    int i;
+>>>> +
+>>>>       if (hdev->quirks & HID_QUIRK_NO_IGNORE)
+>>>>               return false;
+>>>>       if (hdev->quirks & HID_QUIRK_IGNORE)
+>>>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
+>>>>               break;
+>>>>       case USB_VENDOR_ID_ELAN:
+>>>>               /*
+>>>> -             * Many Elan devices have a product id of 0x0401 and are handled
+>>>> -             * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
+>>>> -             * is not (and cannot be) handled by that driver ->
+>>>> -             * Ignore all 0x0401 devs except for the ELAN0800 dev.
+>>>> +             * Blacklist of everything that gets handled by the elan_i2c
+>>>> +             * input driver.  This avoids disabling valid touchpads and
+>>>> +             * other ELAN devices.
+>>>>                */
+>>>> -            if (hdev->product == 0x0401 &&
+>>>> -                strncmp(hdev->name, "ELAN0800", 8) != 0)
+>>>> -                    return true;
+>>>> -            /* Same with product id 0x0400 */
+>>>> -            if (hdev->product == 0x0400 &&
+>>>> -                strncmp(hdev->name, "QTEC0001", 8) != 0)
+>>>> -                    return true;
+>>>> +            if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
+>>>> +                    for (i = 0; strlen(elan_acpi_id[i].id); ++i)
+>>>> +                            if (!strncmp(hdev->name, elan_acpi_id[i].id,
+>>>> +                                         strlen(elan_acpi_id[i].id)))
+>>>> +                                    return true;
+>>>> +                    for (i = 0; strlen(elan_of_match[i].name); ++i)
+>>>> +                            if (!strncmp(hdev->name, elan_of_match[i].name,
+>>>> +                                         strlen(elan_of_match[i].name)))
+>>>> +                                    return true;
+>>>
+>>> Do we really need to blacklist the OF case here? I thought that in ACPI
+>>> case we have clashes as HID gets matched by elan_i2c and CID is matched
+>>> by i2c-hid, but I do not believe we'll run into the same situation on OF
+>>> systems.
+>>
+>> I think its the safer approach.
+>>
+>> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will
+>> end up running through this (kind of the whole reason why this series
+>> exists).  The vendor and product ids will still match, so we'll end up
+>> going through the lists to see if the hdev->name (the compatible string)
+>> will match the blacklist.  "hid-over-i2c" won't match the blacklist, but
+>> if there is a more specific compatible, it might.
+>>
+>> In that case, not matching OF would work, however how it could break
+>> today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the
+>> same device, and elan_i2c was not compiled.  In that case, if we skip
+>> the OF part of the black list, hid-quirks will not reject the device,
+>> and you'll probably have some odd behavior instead of the obvious "the
+>> device doesn't work because the correct driver isn't present" behavior.
+>>
+>> While that scenario might be far fetched since having both
+>> "hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings,
+>> its still safer to include the OF case in the blacklist against future
+>> scenarios.
+>>
+>>
+> 
+> Dmitry, if you are happy with Jeffrey's answer, feel free to take this
+> through your tree and add:
+> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> 
+> I don't expect any major conflicts given on where the code is located.
 
-Already has. It just happened and is in next. The policy is everything
-is upstream first and any changes to dtc in the kernel are rejected.
+Ping?
 
-> >
-> > What shall we do?
-> >
-> > [1] Convert upstream DTC to SPDX
-> >
-> > This will be a happy solution if it is acceptable in DTC.
-> > Since we cannot push the decision of the kernel to a different
-> > project, this is totally up to David Gibson.
->
-> That's fine with me :)
+Dmitry, are you happy with things?  I would really like to see this 
+queued for 5.3, and it seems like the window to do so is rapidly closing.
 
-I'll do the work if David is okay with it.
-
-> > [2] Change scripts/dtc/update-dtc-source.sh to
-> >     take care of the license block somehow
->
-> That would also be good.
->
-> > [3] Go back to license boilerplate, and keep the files
-> >     synced with the upstream
-> >     (and scripts/dtc/ should be excluded from the
-> >      SPDX conversion tool.)
->
-> nothing is being excluded from the SPDX conversions, sorry.  The goal is
-> to do this for every file in the kernel tree.  Otherwise it's pointless.
->
-> > Or, what else?
->
-> Rob remembers to keep those first lines of the files intact when doing
-> the next sync?
-
-Patches to the import script are welcome. The only thing I have to
-remember running the script is to add any new files. Otherwise, it's
-scripted so I don't have to remember anything.
-
-Rob
