@@ -2,207 +2,181 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFD6EC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238BFC31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60FF214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560946362;
-	bh=NAR5e2T0Bu0IXN/1pBzm9vyI/lTeIXek/zrMuU88qw4=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=ReM0nmxCjlnQzNm9cpXl3+ZZGuVDRc+BRkep3UsM5p7LMtYoPmIg2XKStlozbMYLc
-	 /E6z3/8DN32xbmWEx6eG+Kjj1rrfygIAAyFBBPI4o5vwk3E2FgnyQ3rZk4sK5rrwI6
-	 JKfmak9TloYSaxUI7TdWR1Nj4GlBj0Vs4Z/l04TU=
+	by mail.kernel.org (Postfix) with ESMTP id EBD2C2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 12:12:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731707AbfFSMMl (ORCPT
+        id S1731726AbfFSMMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 08:12:41 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:48024 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfFSMMl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:12:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Vx8I+bsO0Nrv82AoF/3bhniSe8YwVZKW+Vv3Am/EV04=; b=PAAtCXycd2bE
-        771GayGvNaRqpb57uVu37MPQrWFPpn1jTPq5pv9/TkWF4Yp3bZI1H0+nRgCA9YZXquiezEkO8s9Ts
-        rfjRPVyLsBc+gqfSlnsRnHTHyVZ4GYgpjQMZq6iwWC+CZgzuP3xzi2JlsvIZDC0XQvCHnWcrSFCnJ
-        243KA=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hdZRc-0007CN-Os; Wed, 19 Jun 2019 12:12:04 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id 5633D440046; Wed, 19 Jun 2019 13:12:04 +0100 (BST)
-From:   Mark Brown <broonie@kernel.org>
-To:     Ben Zhang <benzh@chromium.org>
-Cc:     alsa-devel@alsa-project.org,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Fletcher Woodruff <fletcherw@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Oder Chiou <oder_chiou@realtek.com>,
-        Ross Zwisler <zwisler@chromium.org>,
-        Takashi Iwai <tiwai@suse.com>
-Subject: Applied "ASoC: rt5677: handle concurrent interrupts" to the asoc tree
-In-Reply-To: <20190618234555.188955-3-fletcherw@chromium.org>
-X-Patchwork-Hint: ignore
-Message-Id: <20190619121204.5633D440046@finisterre.sirena.org.uk>
-Date:   Wed, 19 Jun 2019 13:12:04 +0100 (BST)
+        Wed, 19 Jun 2019 08:12:55 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45818 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731711AbfFSMMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 08:12:55 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 1536FAC54;
+        Wed, 19 Jun 2019 12:12:53 +0000 (UTC)
+Subject: Re: [v3 PATCH 2/2] mm: thp: fix false negative of shmem vma's THP
+ eligibility
+To:     Yang Shi <yang.shi@linux.alibaba.com>, hughd@google.com,
+        kirill.shutemov@linux.intel.com, mhocko@suse.com,
+        rientjes@google.com, akpm@linux-foundation.org
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1560401041-32207-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4a07a6b8-8ff2-419c-eac8-3e7dc17670df@suse.cz>
+Date:   Wed, 19 Jun 2019 14:12:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <1560401041-32207-3-git-send-email-yang.shi@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 6/13/19 6:44 AM, Yang Shi wrote:
+> The commit 7635d9cbe832 ("mm, thp, proc: report THP eligibility for each
+> vma") introduced THPeligible bit for processes' smaps. But, when checking
+> the eligibility for shmem vma, __transparent_hugepage_enabled() is
+> called to override the result from shmem_huge_enabled().  It may result
+> in the anonymous vma's THP flag override shmem's.  For example, running a
+> simple test which create THP for shmem, but with anonymous THP disabled,
+> when reading the process's smaps, it may show:
 
-   ASoC: rt5677: handle concurrent interrupts
+...
 
-has been applied to the asoc tree at
+> diff --git a/fs/proc/task_mmu.c b/fs/proc/task_mmu.c
+> index 01d4eb0..6a13882 100644
+> --- a/fs/proc/task_mmu.c
+> +++ b/fs/proc/task_mmu.c
+> @@ -796,7 +796,8 @@ static int show_smap(struct seq_file *m, void *v)
+>  
+>  	__show_smap(m, &mss);
+>  
+> -	seq_printf(m, "THPeligible:    %d\n", transparent_hugepage_enabled(vma));
+> +	seq_printf(m, "THPeligible:		%d\n",
+> +		   transparent_hugepage_enabled(vma));
+>  
+>  	if (arch_pkeys_enabled())
+>  		seq_printf(m, "ProtectionKey:  %8u\n", vma_pkey(vma));
+> diff --git a/mm/huge_memory.c b/mm/huge_memory.c
+> index 4bc2552..36f0225 100644
+> --- a/mm/huge_memory.c
+> +++ b/mm/huge_memory.c
+> @@ -65,10 +65,15 @@
+>  
+>  bool transparent_hugepage_enabled(struct vm_area_struct *vma)
+>  {
+> +	/* The addr is used to check if the vma size fits */
+> +	unsigned long addr = (vma->vm_end & HPAGE_PMD_MASK) - HPAGE_PMD_SIZE;
+> +
+> +	if (!transhuge_vma_suitable(vma, addr))
+> +		return false;
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.3
+Sorry for replying rather late, and not in the v2 thread, but unlike
+Hugh I'm not convinced that we should include vma size/alignment in the
+test for reporting THPeligible, which was supposed to reflect
+administrative settings and madvise hints. I guess it's mostly a matter
+of personal feeling. But one objective distinction is that the admin
+settings and madvise do have an exact binary result for the whole VMA,
+while this check is more fuzzy - only part of the VMA's span might be
+properly sized+aligned, and THPeligible will be 1 for the whole VMA.
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From df9091e9d3f4500bc6fb15f5d2a1c2614f67004c Mon Sep 17 00:00:00 2001
-From: Ben Zhang <benzh@chromium.org>
-Date: Tue, 18 Jun 2019 17:45:55 -0600
-Subject: [PATCH] ASoC: rt5677: handle concurrent interrupts
-
-The rt5677 driver writes to the IRQ control register within the IRQ
-handler in order to flip the polarity of the interrupts that have been
-signalled.  If an interrupt fires in the interval between the
-regmap_read and the regmap_write, it will not trigger a new call to
-rt5677_irq.
-
-Add a bounded loop to rt5677_irq that keeps checking interrupts until
-none are seen, so that any interrupts that are signalled in that
-interval are correctly handled.
-
-Signed-off-by: Ben Zhang <benzh@chromium.org>
-Signed-off-by: Fletcher Woodruff <fletcherw@chromium.org>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/codecs/rt5677.c | 71 +++++++++++++++++++++++++--------------
- 1 file changed, 45 insertions(+), 26 deletions(-)
-
-diff --git a/sound/soc/codecs/rt5677.c b/sound/soc/codecs/rt5677.c
-index b5ae61ff87af..202af7135f07 100644
---- a/sound/soc/codecs/rt5677.c
-+++ b/sound/soc/codecs/rt5677.c
-@@ -5072,38 +5072,57 @@ static const struct rt5677_irq_desc rt5677_irq_descs[] = {
- static irqreturn_t rt5677_irq(int unused, void *data)
- {
- 	struct rt5677_priv *rt5677 = data;
--	int ret = 0, i, reg_irq, virq;
-+	int ret = 0, loop, i, reg_irq, virq;
- 	bool irq_fired = false;
- 
- 	mutex_lock(&rt5677->irq_lock);
--	/* Read interrupt status */
--	ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
--	if (ret) {
--		dev_err(rt5677->dev, "failed reading IRQ status: %d\n", ret);
--		goto exit;
--	}
- 
--	for (i = 0; i < RT5677_IRQ_NUM; i++) {
--		if (reg_irq & rt5677_irq_descs[i].status_mask) {
--			irq_fired = true;
--			virq = irq_find_mapping(rt5677->domain, i);
--			if (virq)
--				handle_nested_irq(virq);
--
--			/* Clear the interrupt by flipping the polarity of the
--			 * interrupt source line that fired
--			 */
--			reg_irq ^= rt5677_irq_descs[i].polarity_mask;
-+	/*
-+	 * Loop to handle interrupts until the last i2c read shows no pending
-+	 * irqs. The interrupt line is shared by multiple interrupt sources.
-+	 * After the regmap_read() below, a new interrupt source line may
-+	 * become high before the regmap_write() finishes, so there isn't a
-+	 * rising edge on the shared interrupt line for the new interrupt. Thus,
-+	 * the loop is needed to avoid missing irqs.
-+	 *
-+	 * A safeguard of 20 loops is used to avoid hanging in the irq handler
-+	 * if there is something wrong with the interrupt status update. The
-+	 * interrupt sources here are audio jack plug/unplug events which
-+	 * shouldn't happen at a high frequency for a long period of time.
-+	 * Empirically, more than 3 loops have never been seen.
-+	 */
-+	for (loop = 0; loop < 20; loop++) {
-+		/* Read interrupt status */
-+		ret = regmap_read(rt5677->regmap, RT5677_IRQ_CTRL1, &reg_irq);
-+		if (ret) {
-+			dev_err(rt5677->dev, "failed reading IRQ status: %d\n",
-+				ret);
-+			goto exit;
- 		}
--	}
- 
--	if (!irq_fired)
--		goto exit;
--
--	ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
--	if (ret) {
--		dev_err(rt5677->dev, "failed updating IRQ status: %d\n", ret);
--		goto exit;
-+		irq_fired = false;
-+		for (i = 0; i < RT5677_IRQ_NUM; i++) {
-+			if (reg_irq & rt5677_irq_descs[i].status_mask) {
-+				irq_fired = true;
-+				virq = irq_find_mapping(rt5677->domain, i);
-+				if (virq)
-+					handle_nested_irq(virq);
-+
-+				/* Clear the interrupt by flipping the polarity
-+				 * of the interrupt source line that fired
-+				 */
-+				reg_irq ^= rt5677_irq_descs[i].polarity_mask;
-+			}
-+		}
-+		if (!irq_fired)
-+			goto exit;
-+
-+		ret = regmap_write(rt5677->regmap, RT5677_IRQ_CTRL1, reg_irq);
-+		if (ret) {
-+			dev_err(rt5677->dev, "failed updating IRQ status: %d\n",
-+				ret);
-+			goto exit;
-+		}
- 	}
- exit:
- 	mutex_unlock(&rt5677->irq_lock);
--- 
-2.20.1
+>  	if (vma_is_anonymous(vma))
+>  		return __transparent_hugepage_enabled(vma);
+> -	if (vma_is_shmem(vma) && shmem_huge_enabled(vma))
+> -		return __transparent_hugepage_enabled(vma);
+> +	if (vma_is_shmem(vma))
+> +		return shmem_huge_enabled(vma);
+>  
+>  	return false;
+>  }
+> diff --git a/mm/shmem.c b/mm/shmem.c
+> index 1bb3b8d..a807712 100644
+> --- a/mm/shmem.c
+> +++ b/mm/shmem.c
+> @@ -3872,6 +3872,9 @@ bool shmem_huge_enabled(struct vm_area_struct *vma)
+>  	loff_t i_size;
+>  	pgoff_t off;
+>  
+> +	if ((vma->vm_flags & VM_NOHUGEPAGE) ||
+> +	    test_bit(MMF_DISABLE_THP, &vma->vm_mm->flags))
+> +		return false;
+>  	if (shmem_huge == SHMEM_HUGE_FORCE)
+>  		return true;
+>  	if (shmem_huge == SHMEM_HUGE_DENY)
+> 
 
