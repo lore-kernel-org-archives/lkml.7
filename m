@@ -2,106 +2,90 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C815C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 229DDC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:49:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD8F8208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:47:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kQIh5jOa";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="EYJPfomC"
+	by mail.kernel.org (Postfix) with ESMTP id E5D10208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560970198;
+	bh=QKxLot8/E2V/fQOyN5u0PQBBzUH5F4+hvyzu6bS8Lgw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=x7znMoOjZvUCPDvzW/EG7XM8qSMHNEEDcZLjx+Gli0rpmpwX4yFAGhX86YoYS28fG
+	 eEubS6i4vFiA3nfTN9me8O6lOAokiNvCE43q4YiddOx2kN5+raI6wukjS2mXSMsUeB
+	 /XPXx4fryQ7cmXmb9KJdhIkJMKJuD/VisWgCXGro=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbfFSSro (ORCPT
+        id S1730120AbfFSSt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:47:44 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:52672 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726175AbfFSSro (ORCPT
+        Wed, 19 Jun 2019 14:49:56 -0400
+Received: from mail-lf1-f51.google.com ([209.85.167.51]:37955 "EHLO
+        mail-lf1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfFSSt4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:47:44 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BFC886063F; Wed, 19 Jun 2019 18:47:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560970062;
-        bh=1yZ8gW4omtDGb+oqxDGLEnHBunqq4YkklbYTCwDXY3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=kQIh5jOa/cXWbooFqk3WCsn70ABRuoV0jnfVYeJSkyHfIFkju+3qmGPNMdevfks3e
-         f2aBzUFDFi1wJmBElItePeSJlBzfqspKFXRjp/1g9ElfshPGiseUjQG0rTGega79Xr
-         IfBUZMyHrJlFlYzC6kSekM3CXRd102LAksKVSjrU=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id DADCA6063F;
-        Wed, 19 Jun 2019 18:47:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560970061;
-        bh=1yZ8gW4omtDGb+oqxDGLEnHBunqq4YkklbYTCwDXY3U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=EYJPfomCH0dyi8k+h1DqgHcD2V+VGlCjTr2UW5kMNzdEfu1KOLIsNdJLhoktaOzmA
-         m/h33t+EefNSvWuAkeKELMtnzWcc+qBxt8d9cgJtkGZ48T9SKBFnd9AXK8qipv82lA
-         v0cg/okvJwlKbZsTmYQvUj8EwjwxzJTMZbjQGxjY=
+        Wed, 19 Jun 2019 14:49:56 -0400
+Received: by mail-lf1-f51.google.com with SMTP id b11so437278lfa.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:49:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=378Cde6kcMf0bqQ1dYoYk4w22PmpZlsWKQPT5oGA8ts=;
+        b=gaXISUjEs3o0/7TwFAJf+mOTNyVN7fzbPd5XNzl/4QlOdvEIfIUz41AZYiscW3Y3R3
+         oz4i8p5pbqDZRsUMu+l6fNgpaI4lGq62d71ywkZsrCg5BM14NU0QAvVCSHYKmQtOEGPt
+         gxtuERESbsNawPCF5wc5cNJy5ALFC/ljiDaoQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=378Cde6kcMf0bqQ1dYoYk4w22PmpZlsWKQPT5oGA8ts=;
+        b=H5E3/f3Z6qcqSDcezfM8FlHhiNQLlVEJsVLH2g0pTZwhm1wEIfWCnS9CfHouIiGv+Y
+         dtkUCOrT2J/YaMIPgRQpWNHQ9EwzHJv2op106t0dzDN4jds0jMSUk4J4LQoHRHPUJZ69
+         jYL3aObUG8S+PSeSvJoDZqkbLXdmC4NSEiN+xWUpJielvyjPrS5/8w85K96BQUBUlUS+
+         /54zZyWcJd6z0ba3/2AAbfg385exyDmGmU2hSgdS4Ob9vDkA52C22aWNOiGmwKXNhN4c
+         B/XuOZJ6I1wv1NzkgH6iEwrvjPhpE4A8SpvbcDwMaVM/K7lBn+nfJuO4Y31ZqiCiB0Sf
+         nViA==
+X-Gm-Message-State: APjAAAVYk3g0t374oHlGctHCbpXebYbsy26icFINa5GtJVPLuC+8lZXR
+        6EAISpnY8qdzZdkk8S8qIYlneyK6zRs=
+X-Google-Smtp-Source: APXvYqwtrjf6HU8BKBzo2Puiyexux7kov6J0iM7IJI0x25GYdwHZZZPIVZH7WbeP3/MJI/hIRMig6A==
+X-Received: by 2002:ac2:410a:: with SMTP id b10mr575515lfi.175.1560970194088;
+        Wed, 19 Jun 2019 11:49:54 -0700 (PDT)
+Received: from mail-lf1-f51.google.com (mail-lf1-f51.google.com. [209.85.167.51])
+        by smtp.gmail.com with ESMTPSA id v4sm3209307lji.103.2019.06.19.11.49.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 11:49:53 -0700 (PDT)
+Received: by mail-lf1-f51.google.com with SMTP id y198so450351lfa.1
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:49:53 -0700 (PDT)
+X-Received: by 2002:ac2:50c4:: with SMTP id h4mr8139468lfm.61.1560970193012;
+ Wed, 19 Jun 2019 11:49:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 19 Jun 2019 12:47:41 -0600
-From:   Subash Abhinov Kasiviswanathan <subashab@codeaurora.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Johannes Berg <johannes@sipsolutions.net>,
-        Alex Elder <elder@linaro.org>, abhishek.esse@gmail.com,
-        Ben Chan <benchan@google.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        cpratapa@codeaurora.org, David Miller <davem@davemloft.net>,
-        Dan Williams <dcbw@redhat.com>,
-        DTML <devicetree@vger.kernel.org>,
-        Eric Caruso <ejcaruso@google.com>, evgreen@chromium.org,
-        Ilias Apalodimas <ilias.apalodimas@linaro.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-arm-msm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-soc@vger.kernel.org, Networking <netdev@vger.kernel.org>,
-        syadagir@codeaurora.org
-Subject: Re: [PATCH v2 00/17] net: introduce Qualcomm IPA driver
-In-Reply-To: <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
-References: <380a6185-7ad1-6be0-060b-e6e5d4126917@linaro.org>
- <a94676381a5ca662c848f7a725562f721c43ce76.camel@sipsolutions.net>
- <CAK8P3a0kV-i7BJJ2X6C=5n65rSGfo8fUiC4J_G-+M8EctYKbkg@mail.gmail.com>
- <066e9b39f937586f0f922abf801351553ec2ba1d.camel@sipsolutions.net>
- <b3686626-e2d8-bc9c-6dd0-9ebb137715af@linaro.org>
- <b23a83c18055470c5308fcd1eed018056371fc1d.camel@sipsolutions.net>
- <CAK8P3a1FeUQR3pgoQxHoRK05JGORyR+TFATVQiijLWtFKTv6OQ@mail.gmail.com>
- <613cdfde488eb23d7207c7ba6258662702d04840.camel@sipsolutions.net>
- <CAK8P3a2onXpxiE4y9PzRwuPM2dh=h_BKz7Eb0=LLPgBbZoK1bQ@mail.gmail.com>
- <6c70950d0c78bc02a3d016918ec3929e@codeaurora.org>
- <CAK8P3a3e+U85yHTeE4dHa4okLVHgBd8Kke9=FytzvMwz+wB0sQ@mail.gmail.com>
-Message-ID: <2926e45fd7ff62fd7c4af9b338bf0caa@codeaurora.org>
-X-Sender: subashab@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <CAHk-=whEQPvLpDbx+WR4Q4jf2FxXjf_zTX3uLy_6ZzHtgTV4LA@mail.gmail.com>
+ <156094799629.21217.4574572565333265288@skylake-alporthouse-com>
+In-Reply-To: <156094799629.21217.4574572565333265288@skylake-alporthouse-com>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Wed, 19 Jun 2019 11:49:37 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com>
+Message-ID: <CAHk-=wjhJNKVfHgwd0QX_bq769sxfP4jvfy0dd-WtFMfdivMwg@mail.gmail.com>
+Subject: Re: NMI hardlock stacktrace deadlock [was Re: Linux 5.2-rc5]
+To:     Chris Wilson <chris@chris-wilson.co.uk>
+Cc:     Linux List Kernel Mailing <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> There is a n:1 relationship between rmnet and IPA.
->> rmnet does the de-muxing to multiple netdevs based on the mux id
->> in the MAP header for RX packets and vice versa.
-> 
-> Oh, so you mean that even though IPA supports multiple channels
-> and multiple netdev instances for a physical device, all the
-> rmnet devices end up being thrown into a single channel in IPA?
-> 
-> What are the other channels for in IPA? I understand that there
-> is one channel for commands that is separate, while the others
-> are for network devices, but that seems to make no sense if
-> we only use a single channel for rmnet data.
-> 
+On Wed, Jun 19, 2019 at 5:40 AM Chris Wilson <chris@chris-wilson.co.uk> wrote:
+>
+> I haven't bisected this, but with the merge of rc5 into our CI we
+> started hitting an issue that resulted in a oops and the NMI watchdog
+> firing as we dumped the ftrace.
 
-AFAIK, the other channels are for use cases like tethering.
-There is only a single channel which is used for RX
-data which is then de-muxed using rmnet.
+Do you have the oops itself at all?
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+           Linus
