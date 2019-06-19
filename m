@@ -2,97 +2,152 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8783C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:45:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C355CC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:48:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1A4B2084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:45:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YSQsPBde"
+	by mail.kernel.org (Postfix) with ESMTP id A34FA2084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 09:48:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731529AbfFSJpR (ORCPT
+        id S1731579AbfFSJsv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 05:45:17 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:46062 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726958AbfFSJpQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 05:45:16 -0400
-Received: by mail-qt1-f196.google.com with SMTP id j19so19027637qtr.12;
-        Wed, 19 Jun 2019 02:45:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6yzdUzmo404LE41DAFTy9JSL/AHqS+IofJkeqyqlqXM=;
-        b=YSQsPBdeVFqPO4k13m19F3LD8n08NG8MIn8ioPb1XG58y0cb9sh9s2inNUBQZ2ViiW
-         An/UM8unZjM82w8J4wrfPZPqVnewNa4/p2kqYw4lmUwb8t2Ib7GzvWX8+9+/fUynGDHS
-         aC58zCRNqpWGrVgy/NHjasLEfX/AOTqda4pdvgAaoQ8lbR3Vid4PEdOl5XUtGeusLODS
-         avj2sCcioN0Wu9HJH+cIbWogVYUqSqVt4KoJ67zJDnoMqYh6m+B3vt5Y2tcSL+XSsmzk
-         1haaRyFLLB7R1mo2H8v1rlQgauVDYGIz/GoYDwaFeCPNPuV8OdIK/Bz/lTXznSw6pJjt
-         9pgA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6yzdUzmo404LE41DAFTy9JSL/AHqS+IofJkeqyqlqXM=;
-        b=lWJM60FVDLDJ10zJS1sCtSb5EECE2/TgliNXkcdtcVqMcpUCGlq69KYE+jBr6ZORv+
-         XoV8xHWzbWMNWGHD/ikK4cOqJJg2ti/DjgqzkfvcwSXYJmH4SHPZ9NO5KECF+4NseY8q
-         c0ePKS95V04xWaLPheSj5seqG4uoKkyVx7SwRL3+JTvg5Rya3NLcmuxO7GQlM/oBxFgX
-         OhNj2vpPwZinRkxGCr4kAbE/lTErnYD3PKUK8XSDlOZWRUET4Xrkmqwc+WPyLpYCyWXp
-         cEiSjQo3HPggGVIIjoe57co6STDgGi7eN8YQgSmsWck8qKtmn7d5GYnhQRIcGHXt9oMK
-         DRHg==
-X-Gm-Message-State: APjAAAUYHhGJe+CvxLODT8fv+aYOt4TKg6GtlV9cUVXg6Jrpv01Ee4HF
-        KDw0Am8i5aUpudZ4AnIGq+pqdfs6Lls=
-X-Google-Smtp-Source: APXvYqwkgLAF0LrMgAIKw/7vQrmKnZS+4+KL47Na2ywBqsjuimj4HEiHz7IiwfCRl6Qfje+SSMtOww==
-X-Received: by 2002:aed:33e6:: with SMTP id v93mr105873713qtd.157.1560937515388;
-        Wed, 19 Jun 2019 02:45:15 -0700 (PDT)
-Received: from continental ([186.212.50.252])
-        by smtp.gmail.com with ESMTPSA id t197sm9802121qke.2.2019.06.19.02.45.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 02:45:14 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 06:45:43 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: [PATCH 1/2] scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk
- Cruzer Blade
-Message-ID: <20190619094540.GA26980@continental>
-References: <20190618013146.21961-1-marcos.souza.org@gmail.com>
- <20190618013146.21961-2-marcos.souza.org@gmail.com>
- <yq1r27quuod.fsf@oracle.com>
+        Wed, 19 Jun 2019 05:48:51 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:43392 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726958AbfFSJsu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 05:48:50 -0400
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9CE4EEB9E44137C3E136;
+        Wed, 19 Jun 2019 17:48:45 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS406-HUB.china.huawei.com
+ (10.3.19.206) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Jun 2019
+ 17:48:37 +0800
+Subject: PCI host bridge hotplug test question (was Re: [PATCH v2] bus:
+ hisi_lpc: Don't use devm_kzalloc() to allocate logical PIO range)
+To:     Bjorn Helgaas <bhelgaas@google.com>
+References: <1560507893-42553-1-git-send-email-john.garry@huawei.com>
+ <CAErSpo6jRVDaVvH+9XvzUoEUbHi9_6u+5PcVGVDAmre6Qd0WeQ@mail.gmail.com>
+ <CAErSpo6qaMc1O7vgcuCwdDbe4QBcOw83wd7PbuUVS+7GDPgK9Q@mail.gmail.com>
+ <82840955-6365-0b95-6d69-8a2f7c7880af@huawei.com>
+ <CAErSpo5cqJCZjt6QqMNZ6_n=G-_WxFeERnsESOMxsdr1P-6JLg@mail.gmail.com>
+ <9e8b6971-3189-9d4b-de9a-ff09f859f4f6@huawei.com>
+ <CAErSpo4DemDWtnP2Gtram9tfQ0CaN9Na9_Gxk6Qk+nG5+JLuzA@mail.gmail.com>
+ <539835d3-770c-285c-0c49-ae15ceaa3079@huawei.com>
+ <CAErSpo576mVAFkF69bxaTpyxELXEG+z_m7CmUE3WGqfCmy57uQ@mail.gmail.com>
+CC:     <xuwei5@huawei.com>, <linuxarm@huawei.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Joe Perches <joe@perches.com>, <linux-pci@kernel.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        "Mika Westerberg" <mika.westerberg@linux.intel.com>,
+        Jiang Liu <jiang.liu@linux.intel.com>,
+        "liudongdong (C)" <liudongdong3@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <3ada51e7-7cb9-e1e8-7ab7-859799232aa5@huawei.com>
+Date:   Wed, 19 Jun 2019 10:48:32 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <yq1r27quuod.fsf@oracle.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <CAErSpo576mVAFkF69bxaTpyxELXEG+z_m7CmUE3WGqfCmy57uQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 11:21:22PM -0400, Martin K. Petersen wrote:
-> 
-> Marcos,
-> 
-> > Currently, all USB devices skip VPD pages, even when the device
-> > supports them (SPC-3 and later), but some of them support VPD, like
-> > Cruzer Blade.
-> 
-> What's your confidence level wrt. all Cruzer Blades handling this
-> correctly? How many devices have you tested this change with?
+On 18/06/2019 18:50, Bjorn Helgaas wrote:
+> [+cc Rafael, Mika, Jiang, linux-pci for ACPI host bridge hotplug test question]
+>
+> On Tue, Jun 18, 2019 at 3:44 AM John Garry <john.garry@huawei.com> wrote:
+>
+>>>>> Could you just move the logic_pio_register_range() call farther down
+>>>>> in hisi_lpc_probe()?  IIUC, once logic_pio_register_range() returns,
+>>>>> an inb() with the right port number will try to access that port, so
+>>>>> we should be prepared for that, i.e., maybe this in the wrong order to
+>>>>> begin with?
+>>>>
+>>>> No, unfortunately we can't. The reason is that we need the logical PIO
+>>>> base for that range before we enumerate the children of that host. We
+>>>> need that base address for "translating" the child bus addresses to
+>>>> logical PIO addresses.
+>
+>>> Ah, yeah, that makes sense.  I think.  We do assume that we know all
+>>> the MMIO and I/O port translations before enumerating devices.  It's
+>>> *conceivable* that could be changed someday since we don't actually
+>>> need the translations until a driver claims the device,
+>>
+>> We actually need them before a driver claims the device.
+>>
+>> The reason is that when we create that child platform device we set the
+>> device's IORESOURCE_IO resources according to the translated logic PIO
+>> addresses, and not the host bus address. This is what makes the host
+>> transparent to the child device driver.
+>
+> I think you need it to set pdev->resource[], which is currently done
+> long before the driver claims the device (though one could imagine
+> delaying it even as far as pci_enable_device()-time).  I don't think
+> the translation is actually *used* until the driver claims the device
+> because only the driver knows how to do any inb/outb to the device.
+>
+> But of course, that's all speculative and doesn't change what you need
+> to do now.  The current code assumes we know the translations during
+> enumeration, so you need to do the logic_pio registration before
+> enumerating.
+>
+>>> and it would
+>>> gain some flexibility if we didn't have to program the host bridge
+>>> windows until we know how much space is required.  But I don't see
+>>> that happening anytime soon.
+>
+>> My problem is that I need to ensure that the new logical PIO unregister
+>> function works ok for hot-pluggable host bridges. I need to get some way
+>> to test this. Advice?
+>
 
-I've tested three Cruzer Blades that I have at hand, and all  of them have VPD
-support, and also checked with a friend of mine that also have one. I can't say
-about "all others" but so far, 4/4 devices that I tested have VPD. (They were all
-SPC-3 or SPC-4 compliant).
+Hi Bjorn,
 
-> 
-> -- 
-> Martin K. Petersen	Oracle Linux Engineering
+> Good question.  The ACPI host bridge driver (drivers/acpi/pci_root.c)
+> should support hotplug, but I'm not sure if there's a manual way to
+> trigger it via sysfs or something similar.  If there is, and you have
+> a machine with more than one host bridge, you might be able to remove
+> one that leads to non-essential devices.
+
+For one of our earlier boards I don't think that it had any essential 
+devices on the host bridge. But I need to find out about possibility of 
+removal. Hmmm.
+
+>
+> Bjorn
+>
+
+Further to the topic of supporting hotplug and unregistering IO port 
+regions, we don't even release IO port regions in the error path of PCI 
+host enumeration. We have pci_register_io_range(), but no unregister 
+equivalent.
+
+Looking at the history here, pci_register_io_range() was originally in 
+OF code. And in the OF code, calling pci_register_io_range() is a 
+side-effect of parsing the device tree. As such, I can see why there was 
+no unregister function.
+
+It would be worth noting this discussion, where the same was mentioned:
+https://lore.kernel.org/linux-pci/20180403140410.GE27789@ulmo/
+
+The tegra PCI host probe can defer, but, since there is no tidy-up of 
+pci_register_io_range() when deferring, we need to ensure that the port 
+IO management code can handle re-attempts to register the same range.
+
+It looks like this can be cleaned up also.
+
+Thanks,
+John
+
+> .
+>
+
+
