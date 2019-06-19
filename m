@@ -2,135 +2,92 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04331C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:24:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20BF8C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:26:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDA482084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:24:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB4992187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:26:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="oseLVwfI"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Wbeo0/Gj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729572AbfFSPYv (ORCPT
+        id S1729095AbfFSP0A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:24:51 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39425 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726839AbfFSPYu (ORCPT
+        Wed, 19 Jun 2019 11:26:00 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:32936 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSPZ7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:24:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id b7so7383947pls.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:24:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=odHa8sQ/yoaX5QNk1w5aCWhCcWp4r/WrYr5KNweyAwg=;
-        b=oseLVwfIYfkp7YRYL1YYK06mWuJObguNhqL0xaC83Gr3+3RNwOzBWJCA5qdtYBxt9o
-         uzTxc7AkoUGpNHSxVRRbNwU68ufxuCyX800EEZzrQEhDutq8FfYYWkmPYLuJ16//fWrd
-         wQtqfjC4mcC4pexLJKQvQNonTNtddUlQBZMxTBopnGN8sjKYdEivd++yJTims6EefuE8
-         cdwYmrnoVE9QnikKLNLE7VT4b607cWdngCOFJX+wWrnwx9ieHgCYnECQ9plRtfqLEF7b
-         c7wQhOa50GM20ccP9W9B5CBaT+Gq1uHSepvFEJMU+/XDdWJRI8UZOmrt3LL94BdsNdaX
-         VncA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=odHa8sQ/yoaX5QNk1w5aCWhCcWp4r/WrYr5KNweyAwg=;
-        b=XhFNmzfBChEyf1TYwT9U6HQzE/vgoICI3b5Y5+jJwpK81UEV70X7PpkvN4JiqHwWud
-         dzWpq9qFjK2dtexT4ZDeWFs0AOnJYjwMVYH5SltrLoo9YWiiDzdD05/a/LYQ05HpGyQW
-         tStelhSPqaVN75fJoCr6rOtIXheEozRbskTWloRQrtAoGvqtF/sUmOscl/sZN3PfsQM3
-         euKdbXoXNvp82xRq5vb1yKGqbLItHXbnSi4y9wkGtfsk8+EanbvgvyqpWOIekWHe+9/k
-         pdN7iqedC/nETxmtK2GCW4z784s6dvXXNkulPvz1oSBwV0jJbaZKi/BeY1O1dgO+uLYO
-         KBYw==
-X-Gm-Message-State: APjAAAXuEEYLlWEbwZEpR/O2CK6IdjmRDl/7dZe1/kY8DHjhOgMJ4R3F
-        FnspIdPQMJQnRz5GvbnxOQvJXADInkfdDDgw8cHJ9g==
-X-Google-Smtp-Source: APXvYqx6p4EUG2WDQGbkLweEA9sgYlt7d+JS+6S5T4a3dp4Kcp71sE2625Q2NhVdzG6nl561DiDISbPyed+z5/EcWuc=
-X-Received: by 2002:a17:902:8609:: with SMTP id f9mr111244987plo.252.1560957890006;
- Wed, 19 Jun 2019 08:24:50 -0700 (PDT)
+        Wed, 19 Jun 2019 11:25:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:Subject:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=d8aXCguNgTqbV5pDoBNS5CU4aqTfyHwDbRs3q64aIs8=; b=Wbeo0/Gj1oFmKjRwH3XeTL0k2w
+        0conPB9aFVcwreHV2qEcFQ9WQ0hhkdN2T9ckKLHZ4TIjUIlaC3pJ2H/egy59vfQEr3S+oZne7xQ9I
+        i3vVp1GBO6ZZ6PyWV0EeEvwlNUL8iHqaKZlfZEcFQ5+Aguu8uxMZcGtT4VMcrsOEEXC6tBmHJ7tO6
+        yzlvt8pM8mfzFpifsfLhG0gVfh/m1J8Jnd4/uI/twTHUZQH3Qj163g88YxUHlVsXmXsPzr06/O1s/
+        6nXt0VFsVr1t+obJ5E0lqDRD0Scg28WYkem8GOodJVOOHx7KNUFr07q3Wlk6xoJjHG3ZTVTM4lyAP
+        dsGgqWgg==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=midway.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdcTA-0001sj-S6; Wed, 19 Jun 2019 15:25:54 +0000
+Subject: Re: [PATCH] docs: fb: Add TER16x32 to the available font names
+To:     Takashi Iwai <tiwai@suse.de>, Jonathan Corbet <corbet@lwn.net>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-doc@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190619053943.6320-1-tiwai@suse.de>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <0bfb2789-158c-5e78-1621-2aaefea08d80@infradead.org>
+Date:   Wed, 19 Jun 2019 08:25:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <b3761c6479a49b60316325ebc22da904e36d4538.1556813333.git.andreyknvl@google.com>
- <20190502163907.GA14995@kroah.com> <CAAeHK+w9xGtaQ5oSCq-=1YNk_11T2Tz9LKehkL7ZsAz-XwKajw@mail.gmail.com>
- <20190619114458.52474694@coco.lan>
-In-Reply-To: <20190619114458.52474694@coco.lan>
-From:   Andrey Konovalov <andreyknvl@google.com>
-Date:   Wed, 19 Jun 2019 17:24:38 +0200
-Message-ID: <CAAeHK+z_f5ugKEpKmfi3qqYE3_OZcTzmZYJaPn2c=hUK64VyJw@mail.gmail.com>
-Subject: Re: [PATCH] media: pvrusb2: use a different format for warnings
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        linux-media@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Mike Isely <isely@pobox.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com>,
-        syzbot <syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190619053943.6320-1-tiwai@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 4:45 PM Mauro Carvalho Chehab
-<mchehab@kernel.org> wrote:
->
-> Em Wed, 19 Jun 2019 16:30:01 +0200
-> Andrey Konovalov <andreyknvl@google.com> escreveu:
->
-> > On Thu, May 2, 2019 at 6:39 PM Greg Kroah-Hartman
-> > <gregkh@linuxfoundation.org> wrote:
-> > >
-> > > On Thu, May 02, 2019 at 06:09:26PM +0200, Andrey Konovalov wrote:
-> > > > When the pvrusb2 driver detects that there's something wrong with the
-> > > > device, it prints a warning message. Right now those message are
-> > > > printed in two different formats:
-> > > >
-> > > > 1. ***WARNING*** message here
-> > > > 2. WARNING: message here
-> > > >
-> > > > There's an issue with the second format. Syzkaller recognizes it as a
-> > > > message produced by a WARN_ON(), which is used to indicate a bug in the
-> > > > kernel. However pvrusb2 prints those warnings to indicate an issue with
-> > > > the device, not the bug in the kernel.
-> > > >
-> > > > This patch changes the pvrusb2 driver to consistently use the first
-> > > > warning message format. This will unblock syzkaller testing of this
-> > > > driver.
-> > > >
-> > > > Reported-by: syzbot+af8f8d2ac0d39b0ed3a0@syzkaller.appspotmail.com
-> > > > Reported-by: syzbot+170a86bf206dd2c6217e@syzkaller.appspotmail.com
-> > > > Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
-> > >
-> > > Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >
-> > I don't think I see this patch picked up anywhere. Should this fix go
-> > through the USB or some media tree?
->
-> Media drivers go via the media tree. You should notice that we are
-> currently receiving around 100 patches per week there. It may take
-> some time for people to review, but the patches are queued at
-> patchwork, so sooner or later someone will review and apply, if nobody
-> did it already:
->
->         https://patchwork.linuxtv.org/project/linux-media/list/
->
-> That's said, I'm not seeing this patch there:
->
->         https://patchwork.linuxtv.org/project/linux-media/list/?series=&submitter=&state=*&q=pvrusb2&archive=&delegate=
->
-> It sounds that, for whatever reason, the patch never arrived
-> patchwork. Please re-submit it and check if media patchwork got it.
+On 6/18/19 10:39 PM, Takashi Iwai wrote:
+> The new font is available since recently.
+> 
+> Signed-off-by: Takashi Iwai <tiwai@suse.de>
 
-OK, done!
+Acked-by: Randy Dunlap <rdunlap@infradead.org>
 
->
-> If not, perhaps you just found a bug with patchwork 2.1 :-)
-> (we upgraded from version 1.0 to 2.1 at the beginning of this
-> month)
-> Thanks,
-> Mauro
+Thanks.
+
+> ---
+>  Documentation/fb/fbcon.rst | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/fb/fbcon.rst b/Documentation/fb/fbcon.rst
+> index cfb9f7c38f18..1da65b9000de 100644
+> --- a/Documentation/fb/fbcon.rst
+> +++ b/Documentation/fb/fbcon.rst
+> @@ -82,7 +82,7 @@ C. Boot options
+>  
+>  	Select the initial font to use. The value 'name' can be any of the
+>  	compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
+> -	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
+> +	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, TER16x32, VGA8x16, VGA8x8.
+>  
+>  	Note, not all drivers can handle font with widths not divisible by 8,
+>  	such as vga16fb.
+> 
+
+
+-- 
+~Randy
