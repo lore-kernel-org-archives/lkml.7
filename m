@@ -2,91 +2,111 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B954C46477
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:57:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A2C1C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 549FC20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:57:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C0FB20823
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:58:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="FF6UGkhS"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NCv3ZoWA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfFSH5K (ORCPT
+        id S1731287AbfFSH6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:57:10 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41886 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731260AbfFSH5J (ORCPT
+        Wed, 19 Jun 2019 03:58:02 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40006 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726142AbfFSH6C (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:57:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=O9PX4Evk9ozBEp0+hOqHmr/yxryDhmYRUg7Ro6SH9UI=; b=FF6UGkhSjGG997X0qq7M0m91t
-        IvKA3fuh/rw4lUT3Om9KPynfH6Rut/mKt18gfYyZaImUJL21usi2rVlgL9tdDF/mRcGySqtDij9ST
-        thDDaue3m6Sj581sfYa2ysp4Z3Yx+SgRv2tytQCED29VZMaTi/jTifts1f7/VPRnSal8w0eHSG8Ia
-        QGpMt3RZIbsD5e0AUq8Dv5y5Y5oKS6LWlQyzzp/b56JmFJRaj/+ByXEq9dNzS2/y66oM3E0pWmPDH
-        T2xtsuH28GZqHrZlP9PvkbKEv8m+mjdSgOTrkjIKrgqowqeIf8T9HoF4GUcKDrtc3X3ZAeFge8y7u
-        8PUe00bAw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdVSs-0006qJ-Bi; Wed, 19 Jun 2019 07:57:06 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id BE75920A4E0CD; Wed, 19 Jun 2019 09:57:03 +0200 (CEST)
-Date:   Wed, 19 Jun 2019 09:57:03 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "# 3.4.x" <stable@vger.kernel.org>
-Subject: Re: [PATCH] ubsan: mark ubsan_type_mismatch_common inline
-Message-ID: <20190619075703.GK3419@hirez.programming.kicks-ass.net>
-References: <20190617123109.667090-1-arnd@arndb.de>
- <20190617140210.GB3436@hirez.programming.kicks-ass.net>
- <CAK8P3a3iwWOkMBL-H3h5aSaHKjKWFce22rvydvVE=3uMfeOhVg@mail.gmail.com>
- <fc10bc69-0628-59eb-c243-9cd1dd3b47a4@virtuozzo.com>
- <20190618135911.GR3436@hirez.programming.kicks-ass.net>
- <CAK8P3a1ZgSYMuD0Xy_fxTqzPhg=U6rqG2Lcfc+3Bni=ZijiE3A@mail.gmail.com>
+        Wed, 19 Jun 2019 03:58:02 -0400
+Received: by mail-lj1-f196.google.com with SMTP id a21so2267893ljh.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 00:58:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=UYXQ8ORQAtuliQYo9/TvRwHxArXDs2AP/hpE8FcllZk=;
+        b=NCv3ZoWAGJtU7GIADPpPY3/1luv0podsGDANGlNUgxCq6hj3bdfpRh1yHBmWoNpPHG
+         kAE8ed9fToOV/cTtHWp0D+V9Jb8avi5LQI5pZOd+XXwxUYlmopjhMzPDa63SSrvTkycA
+         ADLQvHuYghv3jU6NM4n1lZPp9uVpbCk/3dLZys1NRdN5TRQmtzW75qIbImXTXAnM2Rct
+         /TbMb6BOhGZsu6fZMd7f2JACUIdCbk9qBos/WwikaZ+Gv2RzUwLP56X/ScCTHVVaLtCM
+         SMWnhyRrv9VxUkL/iAWtP6TJ5oAkHTl/AIUuVC9hRYva9A91Oq1LAcJ6NAxllzYZZeQG
+         0Agg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=UYXQ8ORQAtuliQYo9/TvRwHxArXDs2AP/hpE8FcllZk=;
+        b=nYZrbXNK37K6ieb351tWgilcIhrtdfGLYZ2OG6UHlZCIS9Xfu2GHWnKVT2Zf4MZnGd
+         IbpdzY7tp7bUwxvicMgzikeg2T9qcnpAS0aVR+ivliMo8nAkIWSj5m2jx6yw3NIIP2ZB
+         xmS50nMD30cMYtIMI2HP3EjfiM9i13Hmu1Jkt0CMvyt05KGll0ZH3pYjnu11LdBEvBNt
+         JxjNIOl2Pe+yyOJHutjxDQQr7KV3jeueIBog6W7skmYbPSivjuoicYGUFdLrwjuMMarf
+         hfMvFeTTfljDExevnSksUECn70iWb+OCotFdByEFoBUhP2qL1/WownXDYSpi39N8Jxpb
+         DmGg==
+X-Gm-Message-State: APjAAAWrPvV36XbUCsfrCoZ54twPXINsvaokkPez6i+bTSQOVHdlaxVb
+        E2MkWXiVWckEwevzisOz1I813lpOKsHNmF69hcTcApwttxE=
+X-Google-Smtp-Source: APXvYqwO7kM+IPzZZWHTy4NJqVwYpImHEjNOFU1wjg54Z/smwwYuX0kB/6CJlJDWBcgz1AFTUM+rKeBYM/4nFCVyWng=
+X-Received: by 2002:a2e:5d46:: with SMTP id r67mr35872518ljb.187.1560931080308;
+ Wed, 19 Jun 2019 00:58:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a1ZgSYMuD0Xy_fxTqzPhg=U6rqG2Lcfc+3Bni=ZijiE3A@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190108143713.15120-1-anders.roxell@linaro.org>
+ <20190110081615.GD5213@ulmo> <CADYN=9LtpcJMbcUHN0Eg4bsYoX7f+xm_KiJ_3fE15-5k6mwC5g@mail.gmail.com>
+In-Reply-To: <CADYN=9LtpcJMbcUHN0Eg4bsYoX7f+xm_KiJ_3fE15-5k6mwC5g@mail.gmail.com>
+From:   Anders Roxell <anders.roxell@linaro.org>
+Date:   Wed, 19 Jun 2019 09:57:49 +0200
+Message-ID: <CADYN=9KUXdnmpEHRY7CGCpQa3H4C0M=a3wyNueXkgpssSdik6A@mail.gmail.com>
+Subject: Re: [PATCH] mailbox: tegra-hsp: mark PM functions as __maybe_unused
+To:     Thierry Reding <thierry.reding@gmail.com>
+Cc:     jassisinghbrar@gmail.com, jonathanh@nvidia.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 05:06:39PM +0200, Arnd Bergmann wrote:
-> On Tue, Jun 18, 2019 at 3:59 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> > On Tue, Jun 18, 2019 at 04:27:45PM +0300, Andrey Ryabinin wrote:
-> > > On 6/18/19 3:56 PM, Arnd Bergmann wrote:
-> > > > On Mon, Jun 17, 2019 at 4:02 PM Peter Zijlstra <peterz@infradead.org> wrote:
-> 
-> > > I guess this:
-> > > ccflags-y += $(DISABLE_STACKLEAK_PLUGIN)
+On Wed, 19 Jun 2019 at 09:56, Anders Roxell <anders.roxell@linaro.org> wrot=
+e:
+>
+> On Thu, 10 Jan 2019 at 09:16, Thierry Reding <thierry.reding@gmail.com> w=
+rote:
 > >
-> > Or more specifically this, I guess:
+> > On Tue, Jan 08, 2019 at 03:37:13PM +0100, Anders Roxell wrote:
+> > > Without CONFIG_PM_SLEEP, we get annoying warnings about unused
+> > > functions:
+> > >
+> > > drivers/mailbox/tegra-hsp.c:782:12: warning: =E2=80=98tegra_hsp_resum=
+e=E2=80=99 defined but not used [-Wunused-function]
+> > >  static int tegra_hsp_resume(struct device *dev)
+> > >             ^~~~~~~~~~~~~~~~
+> > >
+> > > Mark them as __maybe_unused to shut up the warning and silently drop =
+the
+> > > functions without having to add ugly #ifdefs.
+> > >
+> > > Fixes: 9a63f0f40599 ("mailbox: tegra-hsp: Add suspend/resume support"=
+)
+> > > Signed-off-by: Anders Roxell <anders.roxell@linaro.org>
+> > > ---
+> > >  drivers/mailbox/tegra-hsp.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
 > >
-> > CFLAGS_ubsan.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector) $(DISABLE_STACKLEAK_PLUGIN)
-> >
-> > we'd not want to exclude all of lib/ from stackleak I figure.
-> >
-> > Of these two options, I think I prefer the latter, because a smaller
-> > whitelist is a better whitelist and since we already disable
-> > stack protector, it is only consistent to also disable stack leak.
-> 
-> Ok, sounds good to me. Can you send that upstream then, or should
-> I write it up as a proper patch?
+> > Acked-by: Thierry Reding <treding@nvidia.com>
+>
+> Will this be picked up ?
 
-If you could verify it actually works that would be great, I haven't
-tried to construct a failing .config yet.
+its already solved.
+
+Sorry for the noice. =3D/
+
+Anders
+
+>
+> Cheers,
+> Anders
