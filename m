@@ -2,104 +2,68 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36410C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95162C46477
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:39:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10F5F218A3
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:38:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 743A1217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:39:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729987AbfFSQix (ORCPT
+        id S1730052AbfFSQj5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:38:53 -0400
-Received: from mga03.intel.com ([134.134.136.65]:12523 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725843AbfFSQix (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:38:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 09:38:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
-   d="scan'208";a="358246562"
-Received: from black.fi.intel.com ([10.237.72.28])
-  by fmsmga005.fm.intel.com with ESMTP; 19 Jun 2019 09:38:44 -0700
-Received: by black.fi.intel.com (Postfix, from userid 1003)
-        id F18A814B; Wed, 19 Jun 2019 19:38:43 +0300 (EEST)
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Miguel Ojeda Sandonis <miguel.ojeda.sandonis@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Mans Rullgard <mans@mansr.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: [PATCH v1 1/2] kernel.h: Update comment about simple_strto<foo>() functions
-Date:   Wed, 19 Jun 2019 19:38:42 +0300
-Message-Id: <20190619163843.26918-1-andriy.shevchenko@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 19 Jun 2019 12:39:57 -0400
+Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:56916 "EHLO
+        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726091AbfFSQj4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 12:39:56 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R181e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TUccqUw_1560962390;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TUccqUw_1560962390)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 20 Jun 2019 00:39:52 +0800
+Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
+ correctly in mbind
+To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190618130253.GH3318@dhcp22.suse.cz>
+ <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
+ <2c30d86f-43e4-f43c-411d-c916fb1de44e@suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <68b67faf-d1c3-bc36-3db4-c86c6dfd8f11@linux.alibaba.com>
+Date:   Wed, 19 Jun 2019 09:39:48 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
+In-Reply-To: <2c30d86f-43e4-f43c-411d-c916fb1de44e@suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There were discussions in the past about use cases for
-simple_strto<foo>() functions and in some rare cases they have a benefit
-on kstrto<foo>() ones.
 
-Update a comment to reduce confusing about special use cases.
 
-Suggested-by: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
----
- include/linux/kernel.h | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+On 6/19/19 1:18 AM, Vlastimil Babka wrote:
+> On 6/18/19 7:06 PM, Yang Shi wrote:
+>> The BUG_ON was removed by commit
+>> d44d363f65780f2ac2ec672164555af54896d40d ("mm: don't assume anonymous
+>> pages have SwapBacked flag") since 4.12.
+> Perhaps that commit should be sent to stable@ ? Although with
+> VM_BUG_ON() this is less critical than plain BUG_ON().
 
-diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-index 74b1ee9027f5..e156b8b41d05 100644
---- a/include/linux/kernel.h
-+++ b/include/linux/kernel.h
-@@ -331,8 +331,7 @@ int __must_check kstrtoll(const char *s, unsigned int base, long long *res);
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Used as a replacement for the simple_strtoull. Return code must be checked.
- */
- static inline int __must_check kstrtoul(const char *s, unsigned int base, unsigned long *res)
- {
-@@ -360,8 +359,7 @@ static inline int __must_check kstrtoul(const char *s, unsigned int base, unsign
-  * @res: Where to write the result of the conversion on success.
-  *
-  * Returns 0 on success, -ERANGE on overflow and -EINVAL on parsing error.
-- * Used as a replacement for the obsolete simple_strtoull. Return code must
-- * be checked.
-+ * Used as a replacement for the simple_strtoull. Return code must be checked.
-  */
- static inline int __must_check kstrtol(const char *s, unsigned int base, long *res)
- {
-@@ -437,7 +435,15 @@ static inline int __must_check kstrtos32_from_user(const char __user *s, size_t
- 	return kstrtoint_from_user(s, count, base, res);
- }
- 
--/* Obsolete, do not use.  Use kstrto<foo> instead */
-+/*
-+ * Use kstrto<foo> instead.
-+ *
-+ * NOTE: The simple_strto<foo> does not check for overflow and,
-+ *	 depending on the input, may give interesting results.
-+ *
-+ * Use these functions if and only if the code will need in place
-+ * conversion and otherwise looks very ugly. Keep in mind above caveat.
-+ */
- 
- extern unsigned long simple_strtoul(const char *,char **,unsigned int);
- extern long simple_strtol(const char *,char **,unsigned int);
--- 
-2.20.1
+I don't think we have to. I agree it is less critical,  VM_DEBUG should 
+be not enabled for production environment.
+
+And, it doesn't actually break anything since split_huge_page would just 
+return error, and those unmovable pages are silently ignored by isolate.
+
 
