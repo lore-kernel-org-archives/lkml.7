@@ -2,139 +2,119 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FB6C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:35:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CB7C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2639A21734
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:35:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560969328;
-	bh=ZSXk5yQY5JgmMnKoJZp5pJgU23ioYLFdLftxt75KSUg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WrD4CV0+wtd29U3kCWl4J6OwmFlsg/0v9Ea/PZguLVmdMMXIuyQu2EThcEUVAbcoI
-	 ASK+PyPrcsukFdjSfLxvjHc3kH1K/n/iEA2Fl4PkRAQJhJM2O1Ixo3nip7Foh53ni/
-	 oPb/1PNEzo9OrJZSgRSHGpi9CpgcRr6MIu0Wvu6M=
+	by mail.kernel.org (Postfix) with ESMTP id 99C4F21734
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:36:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfFSSf0 (ORCPT
+        id S1730080AbfFSSgm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:35:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59566 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726175AbfFSSf0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:35:26 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        Wed, 19 Jun 2019 14:36:42 -0400
+Received: from hosting.gsystem.sk ([212.5.213.30]:40510 "EHLO
+        hosting.gsystem.sk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726109AbfFSSgm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 14:36:42 -0400
+Received: from [192.168.0.2] (188-167-68-178.dynamic.chello.sk [188.167.68.178])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00F55214AF;
-        Wed, 19 Jun 2019 18:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560969325;
-        bh=ZSXk5yQY5JgmMnKoJZp5pJgU23ioYLFdLftxt75KSUg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=02DXmPJFYgSNzzsFki+MxmAyHDdHNWPBCaKNAYd4HmV/t2wmOIklt9U7P+VZnV+Rz
-         bcdnh9SjtN/cdTKhJCLgKcpMi8Td9fVE85dyCBm75Kw9cbiFEO1ch+FKsLFoxb0vO+
-         TpaxZZffvoAfEd4dTfO5JMSWwT2iMvdrbggqfoI0=
-Date:   Wed, 19 Jun 2019 20:35:23 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Joel Fernandes <joelaf@google.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Tri Vo <trong@android.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Sandeep Patil <sspatil@android.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        "Cc: Android Kernel" <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Alexei Starovoitov <ast@fb.com>
-Subject: Re: Alternatives to /sys/kernel/debug/wakeup_sources
-Message-ID: <20190619183523.GA7018@kroah.com>
-References: <CANA+-vCThdRivg7nrMK5QoFu8SGUzEVSvSyp0H2CPyy9==Tqog@mail.gmail.com>
- <CANA+-vARQ9Ao=W1oEArrAQ0sqh757orq=-=kytdVPhstm-3E9w@mail.gmail.com>
- <20190618182502.GC203031@google.com>
- <4587569.x9DSL43cXO@kreacher>
- <CANA+-vCMK6u1n9gXf2+v5dFn_tGfr1PT8d7W4d2BCzw+B-HvYw@mail.gmail.com>
- <CAJWu+oo7kwmEyMXQN0yfswV2=J-Fa9QybhAUx-SOGG_ipsBErQ@mail.gmail.com>
- <CAJZ5v0gvzCx-7qS9qkxB=sGKjQJKMR7yCc21f=_vqrbZxMSWNg@mail.gmail.com>
- <CAJWu+oqSgcBVhDY7CjWpNQrK=XiKAb5S-YSp=6-UM--UFmKvGQ@mail.gmail.com>
- <20190619170750.GB10107@kroah.com>
- <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
+        by hosting.gsystem.sk (Postfix) with ESMTPSA id 2E7187A0318;
+        Wed, 19 Jun 2019 20:36:41 +0200 (CEST)
+From:   Ondrej Zary <linux@zary.sk>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Subject: Re: [PATCH] scsi: fdomain: fix building pcmcia front-end
+Date:   Wed, 19 Jun 2019 20:36:37 +0200
+User-Agent: KMail/1.9.10
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190617111937.2355936-1-arnd@arndb.de> <yq1v9x2uv2a.fsf@oracle.com>
+In-Reply-To: <yq1v9x2uv2a.fsf@oracle.com>
+X-KMail-QuotePrefix: > 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Content-Disposition: inline
-In-Reply-To: <CAJWu+ookFTYGfSvJ3otpFQixG2kbkJGOqf7HHUeYNQAQv2Cskw@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Message-Id: <201906192036.37384.linux@zary.sk>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 02:01:36PM -0400, Joel Fernandes wrote:
-> On Wed, Jun 19, 2019 at 1:07 PM Greg Kroah-Hartman
-> <gregkh@linuxfoundation.org> wrote:
-> >
-> > On Wed, Jun 19, 2019 at 12:53:12PM -0400, Joel Fernandes wrote:
-> > > > It is conceivable to have a "wakeup_sources" directory under
-> > > > /sys/power/ and sysfs nodes for all wakeup sources in there.
-> > >
-> > > One of the "issues" with this is, now if you have say 100 wake up
-> > > sources, with 10 entries each, then we're talking about a 1000 sysfs
-> > > files. Each one has to be opened, and read individually. This adds
-> > > overhead and it is more convenient to read from a single file. The
-> > > problem is this single file is not ABI. So the question I guess is,
-> > > how do we solve this in both an ABI friendly way while keeping the
-> > > overhead low.
-> >
-> > How much overhead?  Have you measured it, reading from virtual files is
-> > fast :)
+On Wednesday 19 June 2019 05:13:01 Martin K. Petersen wrote:
 > 
-> I measured, and it is definitely not free. If you create and read a
-> 1000 files and just return a string back, it can take up to 11-13
-> milliseconds (did not lock CPU frequencies, was just looking for
-> average ball park). This is assuming that the counter reading is just
-> doing that, and nothing else is being done to return the sysfs data
-> which is probably not always true in practice.
+> Arnd,
 > 
-> Our display pipeline deadline is around 16ms at 60Hz. Conceivably, any
-> CPU scheduling competion reading sysfs can hurt the deadline. There's
-> also the question of power - we definitely have spent time in the past
-> optimizing other virtual files such as /proc/pid/smaps for this reason
-> where it spent lots of CPU time.
+> > Move the common support outside of the SCSI_LOWLEVEL section.
+> > Alternatively, we could move all of SCSI_LOWLEVEL_PCMCIA into
+> > SCSI_LOWLEVEL. This would be more sensible, but might cause surprises
+> > for users that have SCSI_LOWLEVEL disabled.
+> 
+> It seems messy to me that PCMCIA lives outside of the LOWLEVEL section.
+> 
+> Given that the number of users that rely on PCMCIA for their system disk
+> is probably pretty low, I think I'm leaning towards cleaning things up
+> instead of introducing a nonsensical top level option.
+> 
+> Or even better: Get rid of SCSI_FDOMAIN as a user-visible option and
+> select it if either of the PCI/ISA/PCMCIA drivers are enabled.
 
-smaps was "odd", but that was done after measurements were actually made
-to prove it was needed.  That hasn't happened yet :)
+SCSI_FDOMAIN is not an user-visible option. PCI/ISA/PCMCIA drivers select it:
 
-And is there a reason you have to do this every 16ms?
+Symbol: PCMCIA_FDOMAIN [=m]
+Type  : tristate
+Prompt: Future Domain PCMCIA support
+  Location:
+    -> Device Drivers
+      -> SCSI device support
+        -> PCMCIA SCSI adapter support (SCSI_LOWLEVEL_PCMCIA [=y])
+  Defined at drivers/scsi/pcmcia/Kconfig:22
+  Depends on: SCSI_LOWLEVEL_PCMCIA [=y] && SCSI [=y] && PCMCIA [=m] && m && MODULES [=y]
+  Selects: SCSI_FDOMAIN [=m]
 
-> > And how often does this happen?  Does it _need_ to happen?
-> 
-> These are good questions and we should find out. I am not saying that
-> sysfs will not work, I am just saying we need to consider all the
-> things. I will let Tri look into this since he is working on it, I
-> don't know off the top.
-> 
-> > Parsing files is also hard, and not for sysfs files, you can't have it
-> > both ways.
-> 
-> I don't think we are concerned with a parsing issue here, or are
-> discussing it in this thread.
-> 
-> > So try it this way, and if there really is a performance issue, we can
-> > then talk about it...
-> 
-> Sure that sounds good to me, again I am not saying we should do sysfs.
-> But we should consider all the issues and chose the right solution.
 
-Figure out who needs this, how often it needs it, and how many files
-really are going to be involved before we try to optimize anything.
+Symbol: SCSI_FDOMAIN [=m]
+Type  : tristate
+  Defined at drivers/scsi/Kconfig:666
+  Depends on: SCSI_LOWLEVEL [=y] && SCSI [=y]
+  Selected by [m]:
+  - SCSI_FDOMAIN_PCI [=m] && SCSI_LOWLEVEL [=y] && PCI [=y] && SCSI [=y]
+  - SCSI_FDOMAIN_ISA [=m] && SCSI_LOWLEVEL [=y] && ISA [=y] && SCSI [=y]
+  - PCMCIA_FDOMAIN [=m] && SCSI_LOWLEVEL_PCMCIA [=y] && SCSI [=y] && PCMCIA [=m] && m && MODULES [=y]
 
-thanks,
 
-greg k-h
+Symbol: SCSI_FDOMAIN_ISA [=m]
+Type  : tristate
+Prompt: Future Domain 16xx ISA SCSI support
+  Location:
+    -> Device Drivers
+      -> SCSI device support
+        -> SCSI low-level drivers (SCSI_LOWLEVEL [=y])
+  Defined at drivers/scsi/Kconfig:687
+  Depends on: SCSI_LOWLEVEL [=y] && ISA [=y] && SCSI [=y]
+  Selects: CHECK_SIGNATURE [=y] && SCSI_FDOMAIN [=m]
+
+
+Symbol: SCSI_FDOMAIN_PCI [=m]
+Type  : tristate
+Prompt: Future Domain TMC-3260/AHA-2920A PCI SCSI support
+  Location:
+    -> Device Drivers
+      -> SCSI device support
+        -> SCSI low-level drivers (SCSI_LOWLEVEL [=y])
+  Defined at drivers/scsi/Kconfig:670
+  Depends on: SCSI_LOWLEVEL [=y] && PCI [=y] && SCSI [=y]
+  Selects: SCSI_FDOMAIN [=m]
+
+
+
+-- 
+Ondrej Zary
