@@ -2,97 +2,142 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3932C31E51
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:21:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91A15C31E5D
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:23:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 983802084B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:21:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B6C620863
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 03:23:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="SJLZ2/h/"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rM9Lv4Vp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730193AbfFSDVc (ORCPT
+        id S1730341AbfFSDXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 18 Jun 2019 23:21:32 -0400
-Received: from aserp2120.oracle.com ([141.146.126.78]:57452 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfFSDVb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 18 Jun 2019 23:21:31 -0400
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3Jloc192264;
-        Wed, 19 Jun 2019 03:21:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=dNGfXrVODZeLUeOs+59qJ6aLAWrKQNwrxAmhW8FAz68=;
- b=SJLZ2/h/Z6M0QPFbuJOwfaCNIKpp0RflobvfjPe9EMUHRlr0+bqwWLtEcYfGDry91ZNh
- 7jrBY1hHvduUZQrHpB6FQeDW4RKyVFCvFxHUm0RyhefFlm51naWXReJYNj6qVPMOl9sN
- 8OTR7ZVAaEa0dY9i5MLLDyITH4buQSQtOiMwr5cVQA0rhpHofHTfQ7NlfKOLJrO6VhcR
- cWA8sfkrFpjapqRnMxMScm4r/T3v7c+Hi2HiPGG77c1qdkmD7myueBY1otSOHpmSiv8f
- VlDhEwg6V/zM8HvBWQ6aSS6Myd4PHQg/bGMeuqlQedzJJI3G9QGk8qSH8GTWp+ZrMioq Xw== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2t78098shu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:21:26 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J3LLAW089444;
-        Wed, 19 Jun 2019 03:21:26 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t77yn34qj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 03:21:26 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J3LPcm009737;
-        Wed, 19 Jun 2019 03:21:26 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 18 Jun 2019 20:21:25 -0700
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: Re: [PATCH 1/2] scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk Cruzer Blade
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190618013146.21961-1-marcos.souza.org@gmail.com>
-        <20190618013146.21961-2-marcos.souza.org@gmail.com>
-Date:   Tue, 18 Jun 2019 23:21:22 -0400
-In-Reply-To: <20190618013146.21961-2-marcos.souza.org@gmail.com> (Marcos Paulo
-        de Souza's message of "Mon, 17 Jun 2019 22:31:45 -0300")
-Message-ID: <yq1r27quuod.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Tue, 18 Jun 2019 23:23:31 -0400
+Received: from ozlabs.org ([203.11.71.1]:36817 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfFSDXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 18 Jun 2019 23:23:31 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45T9Jb4zWRz9s4V;
+        Wed, 19 Jun 2019 13:23:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560914608;
+        bh=XNdIJ2ZE/J4YNi6lmuA5/rpiKhu8nYiFcyeg4wJYpek=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rM9Lv4VpP8jRohc5sxUugCj1OaqbVBnRh3qUa/5qBX1yn2KykFnz6v1iYeGTHySK+
+         x009DMMi0EvQwkU0oXE3nIW6xhmX+s0WA0U62Hht8GfaR9PTHjKFnDUHSOsVShcNwB
+         /0zMkScIPnVfMUnnebOmOXb3YVRmcIhFm25YhiYk3FMVF7n9MkxhsbSLFGYjQTNpI+
+         25IeIagQ78m0g7BvONlBAw3tq3tF+2Cle27IMLhNBGS2ll+4XdTjS5jUfVmzI19M9Q
+         BTSyX15IhMP0ikt6E3Cmo0QS4GiAUmH7kqhZKG5p+rCOFou6jG6y9IkqMTCQkRanKN
+         C1lM5PbtDLRFw==
+Date:   Wed, 19 Jun 2019 13:23:26 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kevin Darbyshire-Bryant <ldir@darbyshire-bryant.me.uk>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: linux-next: build failure after merge of the net-next tree
+Message-ID: <20190619132326.1846345b@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=963
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906190026
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906190026
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Oe8kv/g+2rA5hJ_o/risALj"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/Oe8kv/g+2rA5hJ_o/risALj
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Marcos,
+Hi all,
 
-> Currently, all USB devices skip VPD pages, even when the device
-> supports them (SPC-3 and later), but some of them support VPD, like
-> Cruzer Blade.
+After merging the net-next tree, today's linux-next build (x86_64
+allmodconfig) failed like this:
 
-What's your confidence level wrt. all Cruzer Blades handling this
-correctly? How many devices have you tested this change with?
+In file included from usr/include/linux/tc_act/tc_ctinfo.hdrtest.c:1:
+./usr/include/linux/tc_act/tc_ctinfo.h:30:21: error: implicit declaration o=
+f function 'BIT' [-Werror=3Dimplicit-function-declaration]
+  CTINFO_MODE_DSCP =3D BIT(0),
+                     ^~~
+./usr/include/linux/tc_act/tc_ctinfo.h:30:2: error: enumerator value for 'C=
+TINFO_MODE_DSCP' is not an integer constant
+  CTINFO_MODE_DSCP =3D BIT(0),
+  ^~~~~~~~~~~~~~~~
+./usr/include/linux/tc_act/tc_ctinfo.h:32:1: error: enumerator value for 'C=
+TINFO_MODE_CPMARK' is not an integer constant
+ };
+ ^
 
--- 
-Martin K. Petersen	Oracle Linux Engineering
+Caused by commit
+
+  24ec483cec98 ("net: sched: Introduce act_ctinfo action")
+
+Presumably exposed by commit
+
+  b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-=
+contained")
+
+from the kbuild tree.
+
+I have applied the following (obvious) patch for today.
+
+From: Stephen Rothwell <sfr@canb.auug.org.au>
+Date: Wed, 19 Jun 2019 13:15:22 +1000
+Subject: [PATCH] net: sched: don't use BIT() in uapi headers
+
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ include/uapi/linux/tc_act/tc_ctinfo.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/include/uapi/linux/tc_act/tc_ctinfo.h b/include/uapi/linux/tc_=
+act/tc_ctinfo.h
+index da803e05a89b..6166c62dd7dd 100644
+--- a/include/uapi/linux/tc_act/tc_ctinfo.h
++++ b/include/uapi/linux/tc_act/tc_ctinfo.h
+@@ -27,8 +27,8 @@ enum {
+ #define TCA_CTINFO_MAX (__TCA_CTINFO_MAX - 1)
+=20
+ enum {
+-	CTINFO_MODE_DSCP	=3D BIT(0),
+-	CTINFO_MODE_CPMARK	=3D BIT(1)
++	CTINFO_MODE_DSCP	=3D (1UL << 0),
++	CTINFO_MODE_CPMARK	=3D (1UL << 1)
+ };
+=20
+ #endif
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Oe8kv/g+2rA5hJ_o/risALj
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0Jqq4ACgkQAVBC80lX
+0GyVIgf/VbrXFbohWE6yqO7OKKSo9BQo0IpNZQBM1Ivy3Ohdj6mLaAKBc+gZ2JXa
+ELRGN9ZQprRInANOywYU9w0+PN08rNXxR9uIZZWkDJXKoMg4bA/vLjT1OYsh/Pwj
+T2rj/4R7jal8HOvV5A3VvT5BJ9ga4ysasn7Hyq44afXJzIc35hcTFO1K3wv8R4ha
+g0Ex3LqE6nZzABvw8jEX2Aj/3NRThg2vt++DjumFWJqSrr/CqdeluVwrfO8GvvxI
+J5e/VPt9gqwO7pe7Ye2CKyJ2N/2r7ctyfh+sRJdu8Eaqu2mLFAlnHkNWlyasvTVZ
+tSzKgLsGxjLHCQEBqzCI1CRKzlbYiQ==
+=q3GV
+-----END PGP SIGNATURE-----
+
+--Sig_/Oe8kv/g+2rA5hJ_o/risALj--
