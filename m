@@ -2,117 +2,110 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F370DC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:02:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BC78C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:02:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0957205F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:02:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F27020679
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 14:02:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727028AbfFSOCT (ORCPT
+        id S1728385AbfFSOCb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 10:02:19 -0400
-Received: from skedge03.snt-world.com ([91.208.41.68]:42462 "EHLO
-        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfFSOCT (ORCPT
+        Wed, 19 Jun 2019 10:02:31 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.18]:30200 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725893AbfFSOCa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 10:02:19 -0400
-Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by skedge03.snt-world.com (Postfix) with ESMTPS id AC1FB67A5A7;
-        Wed, 19 Jun 2019 16:02:15 +0200 (CEST)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
- (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 19 Jun
- 2019 16:02:15 +0200
-Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
- sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 19 Jun 2019 16:02:15 +0200
-From:   Schrempf Frieder <frieder.schrempf@kontron.de>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-CC:     Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Richard Weinberger <richard@nod.at>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Chuanhong Guo <gch981213@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        "Peter Pan" <peterpandong@micron.com>
-Subject: Re: [PATCH] mtd: spinand: fix error read return value
-Thread-Topic: [PATCH] mtd: spinand: fix error read return value
-Thread-Index: AQHVJqDuYWC929vPOUKAUCynvqWA3aai2+yAgAAEfAA=
-Date:   Wed, 19 Jun 2019 14:02:14 +0000
-Message-ID: <99279437-54a6-c81d-aad2-231009f18cfc@kontron.de>
-References: <1560950005-8868-1-git-send-email-liaoweixiong@allwinnertech.com>
- <20190619154611.3bfc007b@collabora.com>
-In-Reply-To: <20190619154611.3bfc007b@collabora.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.25.9.193]
-x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <15DD44F8384FA94BAC65908A2BFF103D@snt-world.com>
-Content-Transfer-Encoding: base64
+        Wed, 19 Jun 2019 10:02:30 -0400
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id B358C3D1F7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 09:02:29 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id dbAThfcYU2qH7dbAThpYxz; Wed, 19 Jun 2019 09:02:29 -0500
+X-Authority-Reason: nr=8
+Received: from cablelink-187-160-61-213.pcs.intercable.net ([187.160.61.213]:49078 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hdbAS-001mAC-H7; Wed, 19 Jun 2019 09:02:28 -0500
+Date:   Wed, 19 Jun 2019 09:02:27 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] scsi: mvsas: Use struct_size() in kzalloc()
+Message-ID: <20190619140227.GA9877@embeddedor>
 MIME-Version: 1.0
-X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: AC1FB67A5A7.A231B
-X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
-X-SnT-MailScanner-SpamCheck: 
-X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, boris.brezillon@collabora.com,
-        computersforpeace@gmail.com, dwmw2@infradead.org,
-        frieder.schrempf@exceet.de, gch981213@gmail.com,
-        liaoweixiong@allwinnertech.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, peron.clem@gmail.com,
-        peterpandong@micron.com, richard@nod.at, vigneshr@ti.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.160.61.213
+X-Source-L: No
+X-Exim-ID: 1hdbAS-001mAC-H7
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: cablelink-187-160-61-213.pcs.intercable.net (embeddedor) [187.160.61.213]:49078
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 4
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMTkuMDYuMTkgMTU6NDYsIEJvcmlzIEJyZXppbGxvbiB3cm90ZToNCj4gSGkgbGlhb3dlaXhp
-b25nLA0KPiANCj4gT24gV2VkLCAxOSBKdW4gMjAxOSAyMToxMzoyNCArMDgwMA0KPiBsaWFvd2Vp
-eGlvbmcgPGxpYW93ZWl4aW9uZ0BhbGx3aW5uZXJ0ZWNoLmNvbT4gd3JvdGU6DQo+IA0KPj4gSW4g
-ZnVuY3Rpb24gc3BpbmFuZF9tdGRfcmVhZCwgaWYgdGhlIGxhc3QgcGFnZSB0byByZWFkIG9jY3Vy
-cyBiaXRmbGlwLA0KPj4gdGhpcyBmdW5jdGlvbiB3aWxsIHJldHVybiBlcnJvciB2YWx1ZSBiZWNh
-dXNlIHZlcmlhYmxlIHJldCBub3QgZXF1YWwgdG8gMC4NCj4gDQo+IEFjdHVhbGx5LCB0aGF0J3Mg
-ZXhhY3RseSB3aGF0IHRoZSBNVEQgY29yZSBleHBlY3RzIChzZWUgWzFdKSwgc28geW91J3JlDQo+
-IHRoZSBvbmUgaW50cm9kdWNpbmcgYSByZWdyZXNzaW9uIGhlcmUuDQoNClRvIG1lIGl0IGxvb2tz
-IGxpa2UgdGhlIHBhdGNoIGRlc2NyaXB0aW9uIGlzIHNvbWV3aGF0IGluY29ycmVjdCwgYnV0IHRo
-ZSANCmZpeCBpdHNlbGYgbG9va3Mgb2theSwgdW5sZXNzIEknbSBnZXR0aW5nIGl0IHdyb25nLg0K
-DQpJbiBjYXNlIG9mIHRoZSBsYXN0IHBhZ2UgY29udGFpbmluZyBiaXRmbGlwcyAocmV0ID4gMCks
-IA0Kc3BpbmFuZF9tdGRfcmVhZCgpIHdpbGwgcmV0dXJuIHRoYXQgbnVtYmVyIG9mIGJpdGZsaXBz
-IGZvciB0aGUgbGFzdCANCnBhZ2UuIEJ1dCB0byBtZSBpdCBsb29rcyBsaWtlIGl0IHNob3VsZCBp
-bnN0ZWFkIHJldHVybiBtYXhfYml0ZmxpcHMgbGlrZSANCml0IGRvZXMgd2hlbiB0aGUgbGFzdCBw
-YWdlIHJlYWQgcmV0dXJucyB3aXRoIDAuDQoNCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBsaWFvd2Vp
-eGlvbmcgPGxpYW93ZWl4aW9uZ0BhbGx3aW5uZXJ0ZWNoLmNvbT4NCj4+IC0tLQ0KPj4gICBkcml2
-ZXJzL210ZC9uYW5kL3NwaS9jb3JlLmMgfCAyICstDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGlu
-c2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL210
-ZC9uYW5kL3NwaS9jb3JlLmMgYi9kcml2ZXJzL210ZC9uYW5kL3NwaS9jb3JlLmMNCj4+IGluZGV4
-IDU1NmJmZGIuLjZiOTM4OGQgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL210ZC9uYW5kL3NwaS9j
-b3JlLmMNCj4+ICsrKyBiL2RyaXZlcnMvbXRkL25hbmQvc3BpL2NvcmUuYw0KPj4gQEAgLTUxMSwx
-MiArNTExLDEyIEBAIHN0YXRpYyBpbnQgc3BpbmFuZF9tdGRfcmVhZChzdHJ1Y3QgbXRkX2luZm8g
-Km10ZCwgbG9mZl90IGZyb20sDQo+PiAgIAkJaWYgKHJldCA9PSAtRUJBRE1TRykgew0KPj4gICAJ
-CQllY2NfZmFpbGVkID0gdHJ1ZTsNCj4+ICAgCQkJbXRkLT5lY2Nfc3RhdHMuZmFpbGVkKys7DQo+
-PiAtCQkJcmV0ID0gMDsNCj4+ICAgCQl9IGVsc2Ugew0KPj4gICAJCQltdGQtPmVjY19zdGF0cy5j
-b3JyZWN0ZWQgKz0gcmV0Ow0KPj4gICAJCQltYXhfYml0ZmxpcHMgPSBtYXhfdCh1bnNpZ25lZCBp
-bnQsIG1heF9iaXRmbGlwcywgcmV0KTsNCj4+ICAgCQl9DQo+PiAgIA0KPj4gKwkJcmV0ID0gMDsN
-Cj4+ICAgCQlvcHMtPnJldGxlbiArPSBpdGVyLnJlcS5kYXRhbGVuOw0KPj4gICAJCW9wcy0+b29i
-cmV0bGVuICs9IGl0ZXIucmVxLm9vYmxlbjsNCj4+ICAgCX0NCj4gDQo+IFsxXWh0dHBzOi8vZWxp
-eGlyLmJvb3RsaW4uY29tL2xpbnV4L2xhdGVzdC9zb3VyY2UvZHJpdmVycy9tdGQvbXRkY29yZS5j
-I0wxMjA5DQo+IA0KPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18NCj4gTGludXggTVREIGRpc2N1c3Npb24gbWFpbGluZyBsaXN0DQo+IGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtbXRkLw0KPiA=
+One of the more common cases of allocation size calculations is finding
+the size of a structure that has a zero-sized array at the end, along
+with memory for some number of elements for that array. For example:
+
+struct mvs_info {
+        ...
+        struct mvs_slot_info slot_info[0];
+};
+
+instance = kzalloc(sizeof(sizeof(*mvi) + count * sizeof(struct mvs_slot_info),
+                   GFP_KERNEL);
+
+Instead of leaving these open-coded and prone to type mistakes, we can
+now use the new struct_size() helper:
+
+instance = kzalloc(struct_size(mvi, slot_info, count), GFP_KERNEL);
+
+This code was detected with the help of Coccinelle.
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/scsi/mvsas/mv_init.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/scsi/mvsas/mv_init.c b/drivers/scsi/mvsas/mv_init.c
+index da719b0694dc..3f2022fd2335 100644
+--- a/drivers/scsi/mvsas/mv_init.c
++++ b/drivers/scsi/mvsas/mv_init.c
+@@ -350,9 +350,9 @@ static struct mvs_info *mvs_pci_alloc(struct pci_dev *pdev,
+ 	struct mvs_info *mvi = NULL;
+ 	struct sas_ha_struct *sha = SHOST_TO_SAS_HA(shost);
+ 
+-	mvi = kzalloc(sizeof(*mvi) +
+-		(1L << mvs_chips[ent->driver_data].slot_width) *
+-		sizeof(struct mvs_slot_info), GFP_KERNEL);
++	mvi = kzalloc(struct_size(mvi, slot_info,
++		      1L << mvs_chips[ent->driver_data].slot_width),
++		      GFP_KERNEL);
+ 	if (!mvi)
+ 		return NULL;
+ 
+-- 
+2.21.0
+
