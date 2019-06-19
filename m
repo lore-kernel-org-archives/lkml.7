@@ -2,168 +2,112 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CF72C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20B3DC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:22:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 564942175B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:22:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WPhIzrHu"
+	by mail.kernel.org (Postfix) with ESMTP id 01D4F217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:22:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730280AbfFSRWd (ORCPT
+        id S1730324AbfFSRWj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:22:33 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:37995 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730195AbfFSRW0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:22:26 -0400
-Received: by mail-io1-f65.google.com with SMTP id j6so323223ioa.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 10:22:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=PDc3/t6pQgXRlrbpZdKVEwq+X2f/5QLw6zNH6ghEEMo=;
-        b=WPhIzrHu8MmV20787TkEtOfYm8/d2xp1ifATc3YV0/Rsg0RGf7SNVNtMk1uBr3yM3O
-         ZzONv6mp3+uKgsCWGg7j7qWkPxVOAYs+9VPxean7qbw9ydspDA8iJKMeRoICmmyuPYCL
-         Gs68n8T05do8PZDva2U27cwXM3i99K4Y387kg=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=PDc3/t6pQgXRlrbpZdKVEwq+X2f/5QLw6zNH6ghEEMo=;
-        b=TTYJ+54x9AblnZd1HCfZmvY87asKICydMkpr6yPk67FXFRdSaJjauIBANUmkbDcn6D
-         +Ut03onLg58VZ7cdHoN5bN7QNzQIW0dYw4jYfgLYB/GeM1s1roQSjdKVJ3laUQpt7+Qk
-         wiR5HXJZC9DocHov6bhfjRLcCCc2MB7fQJWiINToLq4Z8ZUxOI5fIUCXPnkluZcqVJsr
-         Pn7Z/Q9itntPrY7dpzXfG2nkYteoWkwWI8VOcgmLv180oSyttUTAdwFLzaIuf+1tF7ID
-         Al4Qj1ab3XmuwHadg5L2fpSBcMfN7FC9bCK/AAsbpnKM8pPES6WkacLNU/rL6C/9maE9
-         kCmw==
-X-Gm-Message-State: APjAAAXML5JhJAqlanqj/fU672NTJbalK1z9kz8p7DuVh3dK/HZUXVAR
-        G2F5QAbnksHaxvaDL7Z2d5OEGMyzVbM=
-X-Google-Smtp-Source: APXvYqyww/nXaKClg6oe4jKe1+QWUCyNtR9Nkjre2Tn+D5wwr4oCZC/khTMy8wbQr3InQ0out2BhWw==
-X-Received: by 2002:a6b:cf17:: with SMTP id o23mr3506984ioa.176.1560964945770;
-        Wed, 19 Jun 2019 10:22:25 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id u26sm22681456iol.1.2019.06.19.10.22.24
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 10:22:25 -0700 (PDT)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>
-Subject: [PATCH 3/3] ext4: use jbd2_inode dirty range scoping
-Date:   Wed, 19 Jun 2019 11:21:56 -0600
-Message-Id: <20190619172156.105508-4-zwisler@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190619172156.105508-1-zwisler@google.com>
-References: <20190619172156.105508-1-zwisler@google.com>
+        Wed, 19 Jun 2019 13:22:39 -0400
+Received: from foss.arm.com ([217.140.110.172]:49830 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730294AbfFSRWg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:22:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BF272344;
+        Wed, 19 Jun 2019 10:22:35 -0700 (PDT)
+Received: from [10.1.196.105] (eglon.cambridge.arm.com [10.1.196.105])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E19CF3F246;
+        Wed, 19 Jun 2019 10:22:34 -0700 (PDT)
+Subject: Re: [PATCH 12/21] EDAC, ghes: Add support for legacy API counters
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     Borislav Petkov <bp@alien8.de>, Tony Luck <tony.luck@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <20190529084344.28562-1-rrichter@marvell.com>
+ <20190529084344.28562-13-rrichter@marvell.com>
+ <92eda11f-dad9-bb2b-3a87-80b6c8d8e228@arm.com>
+ <20190612184058.2plbdweri6bjmppr@rric.localdomain>
+From:   James Morse <james.morse@arm.com>
+Message-ID: <c08290d8-3690-efa9-3bc7-37f8b1fdbfd4@arm.com>
+Date:   Wed, 19 Jun 2019 18:22:32 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190612184058.2plbdweri6bjmppr@rric.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the newly introduced jbd2_inode dirty range scoping to prevent us
-from waiting forever when trying to complete a journal transaction.
+Hi Robert,
 
-Signed-off-by: Ross Zwisler <zwisler@google.com>
----
- fs/ext4/ext4_jbd2.h   | 12 ++++++------
- fs/ext4/inode.c       | 13 ++++++++++---
- fs/ext4/move_extent.c |  3 ++-
- 3 files changed, 18 insertions(+), 10 deletions(-)
+On 12/06/2019 19:41, Robert Richter wrote:
+> On 29.05.19 16:13:02, James Morse wrote:
+>> On 29/05/2019 09:44, Robert Richter wrote:
+>>> The ghes driver is not able yet to count legacy API counters in sysfs,
+>>> e.g.:
+>>>
+>>>  /sys/devices/system/edac/mc/mc0/csrow2/ce_count
+>>>  /sys/devices/system/edac/mc/mc0/csrow2/ch0_ce_count
+>>>  /sys/devices/system/edac/mc/mc0/csrow2/ch1_ce_count
+>>>
+>>> Make counting csrows/channels generic so that the ghes driver can use
+>>> it too.
+>>
+>> What for?
+> 
+> With EDAC_LEGACY_SYSFS enabled those counters are exposed to sysfs,
+> but the numbers are wrong (all zero).
 
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 75a5309f22315..ef8fcf7d0d3b3 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -361,20 +361,20 @@ static inline int ext4_journal_force_commit(journal_t *journal)
- }
- 
- static inline int ext4_jbd2_inode_add_write(handle_t *handle,
--					    struct inode *inode)
-+		struct inode *inode, loff_t start_byte, loff_t length)
- {
- 	if (ext4_handle_valid(handle))
--		return jbd2_journal_inode_add_write(handle,
--						    EXT4_I(inode)->jinode);
-+		return jbd2_journal_inode_ranged_write(handle,
-+				EXT4_I(inode)->jinode, start_byte, length);
- 	return 0;
- }
- 
- static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
--					   struct inode *inode)
-+		struct inode *inode, loff_t start_byte, loff_t length)
- {
- 	if (ext4_handle_valid(handle))
--		return jbd2_journal_inode_add_wait(handle,
--						   EXT4_I(inode)->jinode);
-+		return jbd2_journal_inode_ranged_wait(handle,
-+				EXT4_I(inode)->jinode, start_byte, length);
- 	return 0;
- }
- 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index c7f77c6430085..27fec5c594459 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -731,10 +731,16 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
- 		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
- 		    !ext4_is_quota_file(inode) &&
- 		    ext4_should_order_data(inode)) {
-+			loff_t start_byte =
-+				(loff_t)map->m_lblk << inode->i_blkbits;
-+			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
-+
- 			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
--				ret = ext4_jbd2_inode_add_wait(handle, inode);
-+				ret = ext4_jbd2_inode_add_wait(handle, inode,
-+						start_byte, length);
- 			else
--				ret = ext4_jbd2_inode_add_write(handle, inode);
-+				ret = ext4_jbd2_inode_add_write(handle, inode,
-+						start_byte, length);
- 			if (ret)
- 				return ret;
- 		}
-@@ -4085,7 +4091,8 @@ static int __ext4_block_zero_page_range(handle_t *handle,
- 		err = 0;
- 		mark_buffer_dirty(bh);
- 		if (ext4_should_order_data(inode))
--			err = ext4_jbd2_inode_add_write(handle, inode);
-+			err = ext4_jbd2_inode_add_write(handle, inode, from,
-+					length);
- 	}
- 
- unlock:
-diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
-index 1083a9f3f16a1..c7ded4e2adff5 100644
---- a/fs/ext4/move_extent.c
-+++ b/fs/ext4/move_extent.c
-@@ -390,7 +390,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
- 
- 	/* Even in case of data=writeback it is reasonable to pin
- 	 * inode to transaction, to prevent unexpected data loss */
--	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
-+	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
-+			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
- 
- unlock_pages:
- 	unlock_page(pagep[0]);
--- 
-2.22.0.410.gd8fdbe21b5-goog
+Excellent, so its legacy and broken.
 
+
+>> Is this for an arm64 system? Surely we don't have any systems that used to work with these
+>> legacy counters. Aren't they legacy because we want new software to stop using them!
+> 
+> The option is to support legacy userland. If we want to provide a> similar "user experience" as for x86 the counters should be correct.
+
+The flip-side is arm64 doesn't have the same baggage. These counters have never worked
+with this driver (even on x86).
+
+This ghes driver also probes on HPE Server platform, so the architecture isn't really
+relevant. (I was curious why Marvell care).
+
+
+> Of course it is not a real mapping to csrows, but it makes that i/f
+> work.
+
+(...which stinks)
+
+
+> In any case, this patch cleans up code as old API's counter code is
+> isolated and moved to common code. Making the counter's work for ghes
+> is actually a side-effect here. The cleanup is a prerequisit for
+> follow on patches.
+
+I'm all for removing/warning-its-broken it when ghes_edac is in use. But the convincing
+argument is debian ships a 'current' version of edac-utils that predates 199747106934,
+(that made all this fake csrow stuff deprecated), and debian's popcon says ~1000 people
+have it installed.
+
+
+If you want it fixed, please don't do it as a side effect of cleanup. Fixes need to be a
+small separate series that can be backported. (unless we're confident no-one uses it, in
+which case, why fix it?)
+
+
+
+Thanks,
+
+James
