@@ -2,197 +2,237 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E95CC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47866C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC35521881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KzSJtbNs";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AOXyrESb"
+	by mail.kernel.org (Postfix) with ESMTP id 1DE4421881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:40:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfFSPkC (ORCPT
+        id S1729876AbfFSPkG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:40:02 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:37526 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725899AbfFSPkC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:40:02 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4836560300; Wed, 19 Jun 2019 15:40:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560958800;
-        bh=N7OYhxJf4HieDElspvISZS06uvWIa6aZs0RQzxGXlFw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=KzSJtbNsOFKEL2Fn7y6uxBTqGbhwDR5SFtOyOdCNwGDGfrHNBQoWptwJItgbT9UbY
-         Y5sIDfaGBfOwZiorqyv/J19mtNkgTmMtQdM2UByYRNNN8FKWuNeNrrumVIjLDXNQNC
-         UnqT2Ha0GGvHyD5iWkIUzZsAyLcMkZDpEzyPZZ58=
-Received: from [10.226.58.28] (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: jhugo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 6286E60850;
-        Wed, 19 Jun 2019 15:39:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1560958799;
-        bh=N7OYhxJf4HieDElspvISZS06uvWIa6aZs0RQzxGXlFw=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AOXyrESbQfXfIszltxu3JVMVMxIhqIRrmSvIvxz5LEUst3PaE6xkZ95dHsURHsgGi
-         YN7LK0nGinFaRgSj46bqQOze8GJAFpjY6wv+i8C7okau93fAlE+/dIX5OoCV/SdX6+
-         F9/1gg+WzU+hY8k4/9YFHpOVrL1DY1fBa0JDcEOg=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 6286E60850
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=jhugo@codeaurora.org
-Subject: Re: [PATCH v6 2/5] HID: quirks: Refactor ELAN 400 and 401 handling
-To:     Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Andy Gross <agross@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, xnox@ubuntu.com,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        MSM <linux-arm-msm@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-References: <20190612212604.32089-1-jeffrey.l.hugo@gmail.com>
- <20190612212721.32195-1-jeffrey.l.hugo@gmail.com>
- <20190612214636.GA40779@dtor-ws>
- <84e7d83f-e133-0281-612a-94d8c4319040@codeaurora.org>
- <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
-From:   Jeffrey Hugo <jhugo@codeaurora.org>
-Message-ID: <e480240e-993b-5f09-f29c-7b5c57a67260@codeaurora.org>
-Date:   Wed, 19 Jun 2019 09:39:57 -0600
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 11:40:06 -0400
+Received: from mga01.intel.com ([192.55.52.88]:30190 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729753AbfFSPkE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:40:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 08:40:04 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="243346760"
+Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
+  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2019 08:40:03 -0700
+Date:   Wed, 19 Jun 2019 08:43:16 -0700
+From:   Jacob Pan <jacob.jun.pan@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Stephane Eranian <eranian@google.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jan Kiszka <jan.kiszka@siemens.com>,
+        Ricardo Neri <ricardo.neri@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Wincy Van <fanwenyi0529@gmail.com>,
+        Ashok Raj <ashok.raj@intel.com>, x86 <x86@kernel.org>,
+        Andi Kleen <andi.kleen@intel.com>,
+        Borislav Petkov <bp@suse.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        "Ravi V. Shankar" <ravi.v.shankar@intel.com>,
+        Ricardo Neri <ricardo.neri-calderon@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Juergen Gross <jgross@suse.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        iommu@lists.linux-foundation.org,
+        Philippe Ombredanne <pombredanne@nexb.com>,
+        jacob.jun.pan@intel.com
+Subject: Re: [RFC PATCH v4 20/21] iommu/vt-d: hpet: Reserve an interrupt
+ remampping table entry for watchdog
+Message-ID: <20190619084316.71ce5477@jacob-builder>
+In-Reply-To: <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
+References: <1558660583-28561-1-git-send-email-ricardo.neri-calderon@linux.intel.com>
+        <1558660583-28561-21-git-send-email-ricardo.neri-calderon@linux.intel.com>
+        <alpine.DEB.2.21.1906162049300.1760@nanos.tec.linutronix.de>
+        <alpine.DEB.2.21.1906171007360.1760@nanos.tec.linutronix.de>
+        <CABPqkBTai76Bgb4E61tF-mJUkFNxVa4B8M2bxTEYVgBsuAANNQ@mail.gmail.com>
+        <alpine.DEB.2.21.1906172343120.1963@nanos.tec.linutronix.de>
+Organization: OTC
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <CAO-hwJJUivfzFj-Downqt8nY3iTwF8-oq_iBqs1Dxyx92HdYPw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/13/2019 2:55 AM, Benjamin Tissoires wrote:
-> On Thu, Jun 13, 2019 at 12:20 AM Jeffrey Hugo <jhugo@codeaurora.org> wrote:
->>
->> On 6/12/2019 3:46 PM, Dmitry Torokhov wrote:
->>> On Wed, Jun 12, 2019 at 02:27:21PM -0700, Jeffrey Hugo wrote:
->>>> There needs to be coordination between hid-quirks and the elan_i2c driver
->>>> about which devices are handled by what drivers.  Currently, both use
->>>> whitelists, which results in valid devices being unhandled by default,
->>>> when they should not be rejected by hid-quirks.  This is quickly becoming
->>>> an issue.
->>>>
->>>> Since elan_i2c has a maintained whitelist of what devices it will handle,
->>>> which is now in a header file that hid-quirks can access, use that to
->>>> implement a blacklist in hid-quirks so that only the devices that need to
->>>> be handled by elan_i2c get rejected by hid-quirks, and everything else is
->>>> handled by default.
->>>>
->>>> Suggested-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
->>>> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
->>>> ---
->>>>    drivers/hid/hid-quirks.c | 27 ++++++++++++++++-----------
->>>>    1 file changed, 16 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/hid/hid-quirks.c b/drivers/hid/hid-quirks.c
->>>> index e5ca6fe2ca57..bd81bb090222 100644
->>>> --- a/drivers/hid/hid-quirks.c
->>>> +++ b/drivers/hid/hid-quirks.c
->>>> @@ -16,6 +16,7 @@
->>>>    #include <linux/export.h>
->>>>    #include <linux/slab.h>
->>>>    #include <linux/mutex.h>
->>>> +#include <linux/input/elan-i2c-ids.h>
->>>>
->>>>    #include "hid-ids.h"
->>>>
->>>> @@ -914,6 +915,8 @@ static const struct hid_device_id hid_mouse_ignore_list[] = {
->>>>
->>>>    bool hid_ignore(struct hid_device *hdev)
->>>>    {
->>>> +    int i;
->>>> +
->>>>       if (hdev->quirks & HID_QUIRK_NO_IGNORE)
->>>>               return false;
->>>>       if (hdev->quirks & HID_QUIRK_IGNORE)
->>>> @@ -978,18 +981,20 @@ bool hid_ignore(struct hid_device *hdev)
->>>>               break;
->>>>       case USB_VENDOR_ID_ELAN:
->>>>               /*
->>>> -             * Many Elan devices have a product id of 0x0401 and are handled
->>>> -             * by the elan_i2c input driver. But the ACPI HID ELAN0800 dev
->>>> -             * is not (and cannot be) handled by that driver ->
->>>> -             * Ignore all 0x0401 devs except for the ELAN0800 dev.
->>>> +             * Blacklist of everything that gets handled by the elan_i2c
->>>> +             * input driver.  This avoids disabling valid touchpads and
->>>> +             * other ELAN devices.
->>>>                */
->>>> -            if (hdev->product == 0x0401 &&
->>>> -                strncmp(hdev->name, "ELAN0800", 8) != 0)
->>>> -                    return true;
->>>> -            /* Same with product id 0x0400 */
->>>> -            if (hdev->product == 0x0400 &&
->>>> -                strncmp(hdev->name, "QTEC0001", 8) != 0)
->>>> -                    return true;
->>>> +            if ((hdev->product == 0x0401 || hdev->product == 0x0400)) {
->>>> +                    for (i = 0; strlen(elan_acpi_id[i].id); ++i)
->>>> +                            if (!strncmp(hdev->name, elan_acpi_id[i].id,
->>>> +                                         strlen(elan_acpi_id[i].id)))
->>>> +                                    return true;
->>>> +                    for (i = 0; strlen(elan_of_match[i].name); ++i)
->>>> +                            if (!strncmp(hdev->name, elan_of_match[i].name,
->>>> +                                         strlen(elan_of_match[i].name)))
->>>> +                                    return true;
->>>
->>> Do we really need to blacklist the OF case here? I thought that in ACPI
->>> case we have clashes as HID gets matched by elan_i2c and CID is matched
->>> by i2c-hid, but I do not believe we'll run into the same situation on OF
->>> systems.
->>
->> I think its the safer approach.
->>
->> On an OF system, such as patch 3 in the series, the "hid-over-i2c" will
->> end up running through this (kind of the whole reason why this series
->> exists).  The vendor and product ids will still match, so we'll end up
->> going through the lists to see if the hdev->name (the compatible string)
->> will match the blacklist.  "hid-over-i2c" won't match the blacklist, but
->> if there is a more specific compatible, it might.
->>
->> In that case, not matching OF would work, however how it could break
->> today is if both "hid-over-i2c" and "elan,ekth3000" were listed for the
->> same device, and elan_i2c was not compiled.  In that case, if we skip
->> the OF part of the black list, hid-quirks will not reject the device,
->> and you'll probably have some odd behavior instead of the obvious "the
->> device doesn't work because the correct driver isn't present" behavior.
->>
->> While that scenario might be far fetched since having both
->> "hid-over-i2c" and "elan,ekth3000" probably violates the OF bindings,
->> its still safer to include the OF case in the blacklist against future
->> scenarios.
->>
->>
+On Tue, 18 Jun 2019 01:08:06 +0200 (CEST)
+Thomas Gleixner <tglx@linutronix.de> wrote:
+
+> Stephane,
 > 
-> Dmitry, if you are happy with Jeffrey's answer, feel free to take this
-> through your tree and add:
-> Acked-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+> On Mon, 17 Jun 2019, Stephane Eranian wrote:
+> > On Mon, Jun 17, 2019 at 1:25 AM Thomas Gleixner
+> > <tglx@linutronix.de> wrote:  
+> > > Great that there is no trace of any mail from Andi or Stephane
+> > > about this on LKML. There is no problem with talking offlist
+> > > about this stuff, but then you should at least provide a
+> > > rationale for those who were not part of the private conversation.
+> > >  
+> > Let me add some context to this whole patch series. The pressure on
+> > the core PMU counters is increasing as more people want to use them
+> > to measure always more events. When the PMU is overcommitted, i.e.,
+> > more events than counters for them, there is multiplexing. It comes
+> > with an overhead that is too high for certain applications. One way
+> > to avoid this is to lower the multiplexing frequency, which is by
+> > default 1ms, but that comes with loss of accuracy. Another approach
+> > is to measure only a small number of events at a time and use
+> > multiple runs, but then you lose consistent event view. Another
+> > approach is to push for increasing the number of counters. But
+> > getting new hardware counters takes time. Short term, we can
+> > investigate what it would take to free one cycle-capable counter
+> > which is commandeered by the hard lockup detector on all X86
+> > processors today. The functionality of the watchdog, being able to
+> > get a crash dump on kernel deadlocks, is important and we cannot
+> > simply disable it. At scale, many bugs are exposed and thus
+> > machines deadlock. Therefore, we want to investigate what it would
+> > take to move the detector to another NMI-capable source, such as
+> > the HPET because the detector does not need high low granularity
+> > timer and interrupts only every 2s.  
 > 
-> I don't expect any major conflicts given on where the code is located.
+> I'm well aware about the reasons for this.
+> 
+> > Furthermore, recent Intel erratum, e.g., the TSX issue forcing the
+> > TFA code in perf_events, have increased the pressure even more with
+> > only 3 generic counters left. Thus, it is time to look at
+> > alternative ways of getting a hard lockup detector (NMI watchdog)
+> > from another NMI source than the PMU. To that extent, I have been
+> > discussing about alternatives.
+> >
+> > Intel suggested using the HPET and Ricardo has been working on
+> > producing this patch series. It is clear from your review
+> > that the patches have issues, but I am hoping that they can be
+> > resolved with constructive feedback knowing what the end goal is.  
+> 
+> Well, I gave constructive feedback from the very first version on. But
+> essential parts of that feedback have been ignored for whatever
+> reasons.
+> 
+> > As for the round-robin changes, yes, we discussed this as an
+> > alternative to avoid overloading CPU0 with handling all of the work
+> > to broadcasting IPI to 100+ other CPUs.  
+> 
+> I can understand the reason why you don't want to do that, but again,
+> I said way before this was tried that changing affinity from NMI
+> context with the IOMMU cannot work by just calling into the iommu
+> code and it needs some deep investigation with the IOMMU wizards
+> whether a preallocated entry can be used lockless (including the
+> subsequently required flush).
+> 
+> The outcome is that the change was implemented by simply calling into
+> functions which I told that they cannot be called from NMI context.
+> 
+> Unless this problem is not solved and I doubt it can be solved after
+> talking to IOMMU people and studying manuals, 
+I agree. modify irte might be done with cmpxchg_double() but the queued
+invalidation interface for IRTE cache flush is shared with DMA and
+requires holding a spinlock for enque descriptors, QI tail update etc.
 
-Ping?
+Also, reserving & manipulating IRTE slot for hpet via backdoor might not
+be needed if the HPET PCI BDF (found in ACPI) can be utilized. But it
+might need more work to add a fake PCI device for HPET.
 
-Dmitry, are you happy with things?  I would really like to see this 
-queued for 5.3, and it seems like the window to do so is rapidly closing.
+> the round robin
+> mechanics in the current form are not going to happen. We'd need a
+> SMI based lockup detector to debug the resulting livelock wreckage.
+> 
+> There are two possible options:
+> 
+>   1) Back to the IPI approach
+> 
+>      The probem with broadcast is that it sends IPIs one by one to
+> each online CPU, which sums up with a large number of CPUs.
+> 
+>      The interesting question is why the kernel does not utilize the
+> all excluding self destination shorthand for this. The SDM is not
+> giving any information.
+> 
+>      But there is a historic commit which is related and gives a hint:
+> 
+>         commit e77deacb7b078156fcadf27b838a4ce1a65eda04
+>         Author: Keith Owens <kaos@sgi.com>
+>         Date:   Mon Jun 26 13:59:56 2006 +0200
+> 
+>         [PATCH] x86_64: Avoid broadcasting NMI IPIs
+>     
+>         On some i386/x86_64 systems, sending an NMI IPI as a
+> broadcast will reset the system.  This seems to be a BIOS bug which
+> affects machines where one or more cpus are not under OS control.  It
+>     	occurs on HT systems with a version of the OS that is not
+> compiled without HT support.  It also occurs when a system is booted
+> with max_cpus=n where 2 <= n < cpus known to the BIOS.  The fix is to
+>     	always send NMI IPI as a mask instead of as a broadcast.
+> 
+>     I can see the issue with max_cpus and that'd be trivial to solve
+> by disabling the HPET watchdog when maxcpus < num_present_cpus is on
+> the command line (That's broken anyway with respect to MCEs. See the
+> stupid dance we need to do for 'nosmt').
+> 
+>     Though the HT part of the changelog is unparseable garbage but
+> might be a cryptic hint to the 'nosmt' mess. Though back then we did
+> not have a way to disable the siblings (or did we?). Weird...
+> 
+>     It definitely would be worthwhile to experiment with that. if we
+> could use shorthands (also for regular IPIs) that would be a great
+>     improvement in general and would nicely solve that NMI issue.
+> Beware of the dragons though.
+> 
+>   2) Delegate round robin to irq_work
+> 
+>     Use the same mechanism as perf for stuff which needs to be done
+> outside of NMI context.
+> 
+>     That can solve the issue, but the drawback is that in case the
+> NMI hits a locked up interrupt disabled region the affinity stays on
+> the same CPU as the regular IPI which kicks the irq work is not going
+> to be handled.  Might not be a big issue as we could detect the
+> situation that the IPI comes back to the same CPU. Not pretty and
+> lots of nasty corner case and race condition handling.
+> 
+>     There is another issue with that round robin scheme as I pointed
+> out to Ricardo:
+> 
+>       With a small watchdog threshold and tons of CPUs the time to
+> switch the affinity becomes short. That brings the HPET reprogramming
+> (in case of oneshot) into the SMI endagered zone and aside of that it
+>       will eat performance as well because with lets say 1 second
+> threshold and 1000 CPUs we are going to flush the interrupt remapping
+>       table/entry once per millisecond. No idea how big the penalty
+> is, but it's certainly not free.
+> 
+>     One possible way out would be to use a combined approach of
+> building CPU groups (lets say 8) where one of the CPUs gets the NMI
+> and IPIs the other 7 and then round robins to the next group. Whether
+> that's any better, I can't tell.
+> 
+> Sorry that I can't come up with the magic cure and just can provide
+> more questions than answers.
+> 
+> Thanks,
+> 
+> 	tglx
+> 
+> 
+> 
+> _______________________________________________
+> iommu mailing list
+> iommu@lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
 
+[Jacob Pan]
