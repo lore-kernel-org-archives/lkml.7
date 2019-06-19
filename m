@@ -2,87 +2,79 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C286EC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6C92C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:36:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64B92084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96E802084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:36:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731180AbfFSHer (ORCPT
+        id S1731202AbfFSHgI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:34:47 -0400
-Received: from mail5.windriver.com ([192.103.53.11]:48350 "EHLO mail5.wrs.com"
+        Wed, 19 Jun 2019 03:36:08 -0400
+Received: from foss.arm.com ([217.140.110.172]:53664 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725854AbfFSHeq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:34:46 -0400
-Received: from ALA-HCB.corp.ad.wrs.com (ala-hcb.corp.ad.wrs.com [147.11.189.41])
-        by mail5.wrs.com (8.15.2/8.15.2) with ESMTPS id x5J7X9OX014063
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Wed, 19 Jun 2019 00:33:24 -0700
-Received: from pek-lpggp2 (128.224.153.75) by ALA-HCB.corp.ad.wrs.com
- (147.11.189.41) with Microsoft SMTP Server id 14.3.439.0; Wed, 19 Jun 2019
- 00:32:58 -0700
-Received: by pek-lpggp2 (Postfix, from userid 20544)    id BAE5E72061C; Wed, 19
- Jun 2019 15:15:20 +0800 (CST)
-From:   Jiping Ma <jiping.ma2@windriver.com>
-To:     <jbaron@akamai.com>
-CC:     <linux-edac@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <mchehab@kernel.org>, <bp@alien8.de>, <jiping.ma2@windriver.com>
-Subject: [PATCH] EDAC, ie31200: Add Intel Corporation 3rd Gen Core processor
-Date:   Wed, 19 Jun 2019 15:15:18 +0800
-Message-ID: <1560928518-243100-2-git-send-email-jiping.ma2@windriver.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1560928518-243100-1-git-send-email-jiping.ma2@windriver.com>
-References: <1560928518-243100-1-git-send-email-jiping.ma2@windriver.com>
+        id S1725854AbfFSHgH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 03:36:07 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 14CB6344;
+        Wed, 19 Jun 2019 00:36:07 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 103953F246;
+        Wed, 19 Jun 2019 00:36:05 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 08:36:01 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Palmer Dabbelt <palmer@sifive.com>
+Cc:     linux-riscv@lists.infradead.org,
+        Paul Walmsley <paul.walmsley@sifive.com>, marco@decred.org,
+        me@carlosedp.com, joel@sing.id.au, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] RISC-V: Break load reservations during switch_to
+Message-ID: <20190619073600.GA29918@lakrids.cambridge.arm.com>
+References: <20190607222222.15300-1-palmer@sifive.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607222222.15300-1-palmer@sifive.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-3rd Gen Core seems to work just like Skylake.
+On Fri, Jun 07, 2019 at 03:22:22PM -0700, Palmer Dabbelt wrote:
+> The comment describes why in detail.  This was found because QEMU never
+> gives up load reservations, the issue is unlikely to manifest on real
+> hardware.
+> 
+> Thanks to Carlos Eduardo for finding the bug!
 
-Signed-off-by: Jiping Ma <jiping.ma2@windriver.com>
----
- drivers/edac/ie31200_edac.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> @@ -330,6 +330,17 @@ ENTRY(__switch_to)
+>  	add   a3, a0, a4
+>  	add   a4, a1, a4
+>  	REG_S ra,  TASK_THREAD_RA_RA(a3)
+> +	/*
+> +	 * The Linux ABI allows programs to depend on load reservations being
+> +	 * broken on context switches, but the ISA doesn't require that the
+> +	 * hardware ever breaks a load reservation.  The only way to break a
+> +	 * load reservation is with a store conditional, so we emit one here.
+> +	 * Since nothing ever takes a load reservation on TASK_THREAD_RA_RA we
+> +	 * know this will always fail, but just to be on the safe side this
+> +	 * writes the same value that was unconditionally written by the
+> +	 * previous instruction.
+> +	 */
 
-diff --git a/drivers/edac/ie31200_edac.c b/drivers/edac/ie31200_edac.c
-index aac9b9b..1445336 100644
---- a/drivers/edac/ie31200_edac.c
-+++ b/drivers/edac/ie31200_edac.c
-@@ -19,6 +19,7 @@
-  * 0c08: Xeon E3-1200 v3 Processor DRAM Controller
-  * 1918: Xeon E3-1200 v5 Skylake Host Bridge/DRAM Registers
-  * 5918: Xeon E3-1200 Xeon E3-1200 v6/7th Gen Core Processor Host Bridge/DRAM Registers
-+ * 0154: 3rd Gen Core processor DRAM Controller
-  *
-  * Based on Intel specification:
-  * http://www.intel.com/content/dam/www/public/us/en/documents/datasheets/xeon-e3-1200v3-vol-2-datasheet.pdf
-@@ -59,6 +60,7 @@
- #define PCI_DEVICE_ID_INTEL_IE31200_HB_7 0x0c08
- #define PCI_DEVICE_ID_INTEL_IE31200_HB_8 0x1918
- #define PCI_DEVICE_ID_INTEL_IE31200_HB_9 0x5918
-+#define PCI_DEVICE_ID_INTEL_IE31200_HB_10 0x0154
- 
- #define IE31200_DIMMS			4
- #define IE31200_RANKS			8
-@@ -569,6 +571,9 @@ static void ie31200_remove_one(struct pci_dev *pdev)
- 		PCI_VEND_DEV(INTEL, IE31200_HB_9), PCI_ANY_ID, PCI_ANY_ID, 0, 0,
- 		IE31200},
- 	{
-+		PCI_VEND_DEV(INTEL, IE31200_HB_10), PCI_ANY_ID, PCI_ANY_ID, 0, 0
-+		, IE31200},
-+	{
- 		0,
- 	}            /* 0 terminated list. */
- };
--- 
-1.9.1
+I suspect that you need to do the same as 32-bit ARM, and clear this in
+your exception return path, rather than in __switch_to, since handlers
+for interrupts and other exceptions could leave a dangling reservation.
 
+For ARM, the architecture permits a store-exclusive to succeed even if
+the address differed from the load-exclusive. I don't know if the same
+applies here, but regardless I believe the case above applies if an IRQ
+is taken from kernel context, since the handler can manipulate the same
+variable as the interrupted code.
+
+Thanks,
+Mark.
