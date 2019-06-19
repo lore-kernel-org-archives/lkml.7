@@ -2,121 +2,154 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60AB2C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:56:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661FEC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:58:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DDF8214AF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:56:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43C2E214AF
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 18:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K09sKTfz"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PzA2VQsl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfFSS4q (ORCPT
+        id S1730367AbfFSS6B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 14:56:46 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34379 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726109AbfFSS4p (ORCPT
+        Wed, 19 Jun 2019 14:58:01 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:36066 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfFSS6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 14:56:45 -0400
-Received: by mail-pl1-f196.google.com with SMTP id i2so202378plt.1;
-        Wed, 19 Jun 2019 11:56:45 -0700 (PDT)
+        Wed, 19 Jun 2019 14:58:01 -0400
+Received: by mail-io1-f65.google.com with SMTP id h6so14311ioh.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 11:58:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=OkzFZAuud0Hfdg+gFLkDdFw2KlS0o4maAGobdQqqxOw=;
-        b=K09sKTfzk/1V1FVb91KhHBhulMdP9dNiW6yCmG1LmZh0tzpexURLjG/yaLbz0FfkoG
-         UXr+4qqSEzDqDYENevwQmTYDbrOBIDNHLIieLlfKQCjBD44KXcipKhl2bOUgqGzNBCvr
-         3bO75bXzvM7Ae5tjrDiogwG4DzrlyAbgfT61ScataheFtrDfDX2tiI04bDGVJPVqkycV
-         tdy/tkT1zZup0CmFnE5myLMDyAXBWjN0vgLk6SSF8sczFWxO8mqA6tyrb4sAFNUxAp5C
-         sY37aK1w4F6aveM/j7giDolEiIDnja2EiD99h8XYRuP+Q55t7W8UO5dPfkm0IwbU/sR8
-         bdAw==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XJdb/lVfbtfXiEjreTu1uEKBsL/x987CWFxEJNc1reM=;
+        b=PzA2VQslHqTpTK/yrooQb5dubV00UqUxhsaLXfJbWWOprZJ4T13OxZ62666+8sRErZ
+         iZIO5vNsUQLZOllSFo11v7RfK+SwXwtGISW8lNNsqIbvHZl/N1zVCufz483uPR8fc8c6
+         Xse3SNO3LEvBwpmwKLf0BNHMzPCmtgfHpLmI9vzYsBvkBxLLmpdjUqy+pFDRRRPlpVs9
+         twP2cTVAABBthEJUOr483gT36o4vCvw8wPIxzJm5tHBwFO+Q7m84soyqq6X/ukK0qSON
+         cyvWOO0hLvVG+JQKctOUx5daZKNSE6stKiBTCy3jWVxyHOAKkJhd+SpAbKEGps9KedGC
+         dUow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OkzFZAuud0Hfdg+gFLkDdFw2KlS0o4maAGobdQqqxOw=;
-        b=DVSS0dKtZF+VL25XzhkYz8pLi8RBnF+vbTvDSCqIKhjvBU7IAk6ATItc9LnB2+PVFE
-         qZ4Y7rJG/GsNw7CbyHoIvE41kFqpQcvLufQtZ/QYGnGAylcx6OlDxn+YdmHSjgDDHffn
-         cA+1YmiwAZEd0ozL3h00jzkjUglWKuF0umP/XitFwuL6PPe2t7xZu7Fkxaf3R2Yk1hvt
-         S8Ma85KdrqiHpklAWznebsG6h1IvXiNvbvuO6WeOr1j5OHjM5lD0qY1egWD/753Qd6mc
-         UqHWENrpkedbcS7E/PR/1DJGF2AGsim8FLZXBvTO1gaW6/VJLrxRzuBvIbbNTDKXIaYK
-         CZ5A==
-X-Gm-Message-State: APjAAAU1xMt6Uj5ap6uj0R1FXjWNUJMBxrElcvWrCEiLgwRkl9e6vgC+
-        iRwwDu0hU/O3CWvJrEH3Syg=
-X-Google-Smtp-Source: APXvYqxqdyV3MHM7B6JUL4lVQy99pP4kEfyZIwn/ip1Zpfjp5DnHT/byaPd6NIZ2CtYIS7swafeFfw==
-X-Received: by 2002:a17:902:b187:: with SMTP id s7mr29283066plr.309.1560970605062;
-        Wed, 19 Jun 2019 11:56:45 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id b26sm21627842pfo.129.2019.06.19.11.56.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 11:56:44 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org, jorge.ramirez-ortiz@linaro.org
-Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] regulator: qcom_spmi: Fix math of spmi_regulator_set_voltage_time_sel
-Date:   Wed, 19 Jun 2019 11:56:36 -0700
-Message-Id: <20190619185636.10831-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XJdb/lVfbtfXiEjreTu1uEKBsL/x987CWFxEJNc1reM=;
+        b=mUmToiyOz2Lt3rw9lh5pth54RJfd3BAoIzpTOBlycr5JEVOnGm6xk9jeUJefFkytMM
+         wU72WU8pNWDoeio7RR9Rspsuiy2qrKSEma0sT6TKobldnlL82E2Aw7HejojpFlcExt/7
+         nVrDe4eN6vXppJwHbSJZ7p/8plZ6rug5lD+ka+pDurXIbQWH+PcbjjRcYzAhbpqSTYyM
+         PLpwN7vuYgWAitz/OxO8MBoaj+qdx49101GIfa0fWFtM9KlPml8yIvVNNagOs+/iRAjZ
+         649OH00Ogv7tJPDxgTUF/36kw7/cLs9I8qBHcx8n0YZqDFWrbBy6Lj+C/ZFyM26Z6Cl/
+         yk4g==
+X-Gm-Message-State: APjAAAWtBJLf/K7NIt5I3N4v3Wg9CamDafgz6YdxFMHQBg+vM9hZKtGi
+        RvwqYbPsO4N3JQXuqfJWfP3czWXCKwG9mrG8aVqyLw==
+X-Google-Smtp-Source: APXvYqxCJnwm2yKlOywLCJTfIbxN2wDW69hqz/fGxfknmnuqbHNleaEdSbJhKharc5aNmMSg+35m5KMd37kPyEd5SW8=
+X-Received: by 2002:a6b:4101:: with SMTP id n1mr2855343ioa.138.1560970679336;
+ Wed, 19 Jun 2019 11:57:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <0000000000001c03bf058baf488a@google.com>
+In-Reply-To: <0000000000001c03bf058baf488a@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 19 Jun 2019 20:57:45 +0200
+Message-ID: <CACT4Y+ZarLOBUUAnp7AMRuicCpOTc-t89wE3G4HNCzRO82w0jQ@mail.gmail.com>
+Subject: Re: BUG: unable to handle kernel paging request in hrtimer_interrupt
+To:     syzbot <syzbot+037e18398ba8c655a652@syzkaller.appspotmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>, bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-spmi_regulator_set_voltage_time_sel() calculates the amount of delay
-needed as the result of setting a new voltage.  Essentially this is the
-absolute difference of the old and new voltages, divided by the slew rate.
+On Wed, Jun 19, 2019 at 5:57 PM syzbot
+<syzbot+037e18398ba8c655a652@syzkaller.appspotmail.com> wrote:
+>
+> Hello,
+>
+> syzbot found the following crash on:
+>
+> HEAD commit:    29f785ff Merge branch 'fixes' of git://git.kernel.org/pub/..
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=10539ceaa00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=037e18398ba8c655a652
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16da8cc9a00000
+>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+037e18398ba8c655a652@syzkaller.appspotmail.com
 
-The implementation of spmi_regulator_set_voltage_time_sel() is wrong.
+The same bpf plague bug...
++bpf mailing list
 
-It attempts to calculate the difference in voltages by using the
-difference in selectors and multiplying by the voltage step between
-selectors.  This ignores the possibility that the old and new selectors
-might be from different ranges, which have different step values.  Also,
-the difference between the selectors may encapsulate N ranges inbetween,
-so a summation of each selector change from old to new would be needed.
-
-Lets avoid all of that complexity, and just get the actual voltage
-represented by both the old and new selector, and use those to directly
-compute the voltage delta.  This is more straight forward, and has the
-side benifit of avoiding issues with regulator implementations that don't
-have hardware register support to get the current configured range.
-
-Fixes: e92a4047419c ("regulator: Add QCOM SPMI regulator driver")
-Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reported-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/regulator/qcom_spmi-regulator.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-index 13f83be50076..877df33e0246 100644
---- a/drivers/regulator/qcom_spmi-regulator.c
-+++ b/drivers/regulator/qcom_spmi-regulator.c
-@@ -813,14 +813,10 @@ static int spmi_regulator_set_voltage_time_sel(struct regulator_dev *rdev,
- 		unsigned int old_selector, unsigned int new_selector)
- {
- 	struct spmi_regulator *vreg = rdev_get_drvdata(rdev);
--	const struct spmi_voltage_range *range;
- 	int diff_uV;
- 
--	range = spmi_regulator_find_range(vreg);
--	if (!range)
--		return -EINVAL;
--
--	diff_uV = abs(new_selector - old_selector) * range->step_uV;
-+	diff_uV = abs(spmi_regulator_common_list_voltage(rdev, new_selector) -
-+		      spmi_regulator_common_list_voltage(rdev, old_selector));
- 
- 	return DIV_ROUND_UP(diff_uV, vreg->slew_rate);
- }
--- 
-2.17.1
-
+> kernel tried to execute NX-protected page - exploit attempt? (uid: 0)
+> BUG: unable to handle page fault for address: ffff88807a92fb10
+> #PF: supervisor instruction fetch in kernel mode
+> #PF: error_code(0x0011) - permissions violation
+> PGD b401067 P4D b401067 PUD 80000000400001e3
+> Thread overran stack, or stack corrupted
+> Oops: 0011 [#1] PREEMPT SMP KASAN
+> CPU: 1 PID: 9205 Comm: syz-executor.0 Not tainted 5.2.0-rc5+ #2
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:0xffff88807a92fb10
+> Code: ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff ff ff 40 8c f0 89 80
+> 88 ff ff 00 00 00 00 00 00 00 00 a0 a9 1d 8b ff ff ff ff <40> fb 92 7a 80
+> 88 ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff
+> RSP: 0018:ffff8880ae909e10 EFLAGS: 00010006
+> RAX: ffff88807a92fb10 RBX: 0000000000000000 RCX: ffffffff816162e2
+> RDX: 0000000000010000 RSI: ffffffff81615cdf RDI: ffff88807a92fab8
+> RBP: ffff8880ae909f08 R08: ffff888092914180 R09: ffffed1015d26c70
+> R10: ffffed1015d26c6f R11: ffff8880ae93637b R12: ffff8880ae926d80
+> R13: ffffffff8b1da9a0 R14: ffff88807a92fab8 R15: dffffc0000000000
+> FS:  0000555557401940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffff88807a92fb10 CR3: 000000009016a000 CR4: 00000000001406e0
+> Call Trace:
+>   <IRQ>
+>   hrtimer_interrupt+0x314/0x770 kernel/time/hrtimer.c:1509
+>   local_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1041 [inline]
+>   smp_apic_timer_interrupt+0x111/0x550 arch/x86/kernel/apic/apic.c:1066
+>   apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+>   </IRQ>
+> Modules linked in:
+> CR2: ffff88807a92fb10
+> ---[ end trace f7934f1b1fe3f476 ]---
+> RIP: 0010:0xffff88807a92fb10
+> Code: ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff ff ff 40 8c f0 89 80
+> 88 ff ff 00 00 00 00 00 00 00 00 a0 a9 1d 8b ff ff ff ff <40> fb 92 7a 80
+> 88 ff ff 15 b8 0d 86 ff ff ff ff 00 b5 0d 86 ff ff
+> RSP: 0018:ffff8880ae909e10 EFLAGS: 00010006
+> RAX: ffff88807a92fb10 RBX: 0000000000000000 RCX: ffffffff816162e2
+> RDX: 0000000000010000 RSI: ffffffff81615cdf RDI: ffff88807a92fab8
+> RBP: ffff8880ae909f08 R08: ffff888092914180 R09: ffffed1015d26c70
+> R10: ffffed1015d26c6f R11: ffff8880ae93637b R12: ffff8880ae926d80
+> R13: ffffffff8b1da9a0 R14: ffff88807a92fab8 R15: dffffc0000000000
+> FS:  0000555557401940(0000) GS:ffff8880ae900000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: ffff88807a92fb10 CR3: 000000009016a000 CR4: 00000000001406e0
+>
+>
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+>
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
+>
+> --
+> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/0000000000001c03bf058baf488a%40google.com.
+> For more options, visit https://groups.google.com/d/optout.
