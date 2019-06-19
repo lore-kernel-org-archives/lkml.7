@@ -2,114 +2,110 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EB4C31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:36:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC67C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:36:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E206B2189E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:36:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34B242187F
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:36:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="shPcVD/R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729253AbfFSPf7 (ORCPT
+        id S1729582AbfFSPgE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:35:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51578 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726428AbfFSPf6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:35:58 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 38A3A31628E3;
-        Wed, 19 Jun 2019 15:35:58 +0000 (UTC)
-Received: from warthog.procyon.org.uk (ovpn-120-57.rdu2.redhat.com [10.10.120.57])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0C11F1001E81;
-        Wed, 19 Jun 2019 15:35:56 +0000 (UTC)
-Subject: [PATCH 0/6] keys: request_key() improvements [ver #2]
-From:   David Howells <dhowells@redhat.com>
-To:     keyrings@vger.kernel.org
-Cc:     dhowells@redhat.com, linux-afs@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 19 Jun 2019 16:35:56 +0100
-Message-ID: <156095855610.25264.16666970456822465537.stgit@warthog.procyon.org.uk>
-User-Agent: StGit/unknown-version
+        Wed, 19 Jun 2019 11:36:04 -0400
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:37822 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726428AbfFSPgA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:36:00 -0400
+Received: by mail-yw1-f65.google.com with SMTP id 186so8466025ywo.4
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:35:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dwSXE2HJvCidsxfi3LfOlPWV76WiyrJo+zGle1/Posk=;
+        b=shPcVD/RnA32q5R954zhbHbCNmUv9WV3y1RqIyqvsdpscKxDrx898pdEDLhp5LN0to
+         DbXYXu+gvach7KLfWm2FSbsVhYhvyvmXGjhENsRkiMKSnzsr2EcXvlHfynmEaSSmHkie
+         5Yts8FyiwXSFtBQH6RFnmuWPot9WB3/pECxotkeyoOEWY/zSS12ndpAUC0/eRSSv0R9U
+         yZ3R5iGCjfEkm/U8Cqn+k5IXrPvpygVj1VJXilucmRW00bBqpvtpm69ynGQS7hLw53mK
+         vTA414ToCI8UTtvUA421mNTNbwrVbYtIQ7ja94Ya4nfK98Lsk+qkHykltGKqlw+41fs5
+         JPBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dwSXE2HJvCidsxfi3LfOlPWV76WiyrJo+zGle1/Posk=;
+        b=d+38NmZneiBChFmJAfUjRafTlqdkDXjhQmKRXX84smHPSZWPxn/cAhvRZ9ifjgyxyC
+         dBCfR/sv/2dUYu0QDU6oqOdVkMQhAPLdTthqcuNS3BzPvHIBhoFDiAJRzlHAn/OzSL1x
+         Lzq+lJ6VwJbCW7G/mf8xPz9cdt0nzv57x5LXu4hetl6XnlEWeinZOvwuzSGP9qipxtnP
+         RdMfh8Y3W8/ppEQP+d7CS+gk9LGuGlKt+10tEnIESLDppQuE/oCwlFiooL6sXIZa0TAv
+         uICLg5cOwHekjfP0wMe3s9qKsd6BPmkBLrPY88K732TXZc2rHykId7VK6gsiJ554zA0c
+         tHYA==
+X-Gm-Message-State: APjAAAUoGbR14rPeZxQC0PjldJJRDJtM451yqmZzdZ+Pswi4FdwGCF2P
+        tq0Qa3zUY05cOh4cJPpvL15mZCK4dJdW4R2zoLw9iw==
+X-Google-Smtp-Source: APXvYqxkP5tURjFEv1pLRgOMle49c6W6qB/eYRu2b+HirEU7vb0z2HAUJr63bUo2XJQhzwumW474OnOIqm7cAPB2g2Y=
+X-Received: by 2002:a81:3a0f:: with SMTP id h15mr70130882ywa.34.1560958558977;
+ Wed, 19 Jun 2019 08:35:58 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 19 Jun 2019 15:35:58 +0000 (UTC)
+References: <20190619144610.12520-1-longman@redhat.com> <CALvZod5yHbtYe2x3TGQKGtxjvTDpAGjvSc8Pvphbn00pdRfs2g@mail.gmail.com>
+ <20831975-590f-ecab-53db-5d7e6b1a053f@redhat.com>
+In-Reply-To: <20831975-590f-ecab-53db-5d7e6b1a053f@redhat.com>
+From:   Shakeel Butt <shakeelb@google.com>
+Date:   Wed, 19 Jun 2019 08:35:47 -0700
+Message-ID: <CALvZod6T31z2P+wdUz3LVYO3dTSbOc89cKDn=8LKpN+ZovL8jw@mail.gmail.com>
+Subject: Re: [PATCH] mm, memcg: Add a memcg_slabinfo debugfs file
+To:     Waiman Long <longman@redhat.com>
+Cc:     Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 8:30 AM Waiman Long <longman@redhat.com> wrote:
+>
+> On 6/19/19 11:18 AM, Shakeel Butt wrote:
+> > On Wed, Jun 19, 2019 at 7:46 AM Waiman Long <longman@redhat.com> wrote:
+> >> There are concerns about memory leaks from extensive use of memory
+> >> cgroups as each memory cgroup creates its own set of kmem caches. There
+> >> is a possiblity that the memcg kmem caches may remain even after the
+> >> memory cgroup removal. Therefore, it will be useful to show how many
+> >> memcg caches are present for each of the kmem caches.
+> >>
+> >> This patch introduces a new <debugfs>/memcg_slabinfo file which is
+> >> somewhat similar to /proc/slabinfo in format, but lists only slabs that
+> >> are in memcg kmem caches. Information available in /proc/slabinfo are
+> >> not repeated in memcg_slabinfo.
+> >>
+> > At Google, we have an interface /proc/slabinfo_full which shows each
+> > kmem cache (root and memcg) on a separate line i.e. no accumulation.
+> > This interface has helped us a lot for debugging zombies and memory
+> > leaks. The name of the memcg kmem caches include the memcg name, css
+> > id and "dead" for offlined memcgs. I think these extra information is
+> > much more useful for debugging. What do you think?
+> >
+> > Shakeel
+>
+> Yes, I think that can be a good idea. My only concern is that it can be
+> very verbose. Will work on a v2 patch.
+>
 
-Here's a fix and some improvements for request_key() intended for the next
-merge window:
+Yes, it is very verbose but it is only for debugging and normal users
+should not be (continuously) reading that interface.
 
- (1) Fix the lack of a Link permission check on a key found by
-     request_key(), thereby enabling request_key() to link keys that don't
-     grant this permission to the target keyring (which must still grant
-     Write permission).
-
-     Note that the key must be in the caller's keyrings already to be
-     found.
-
- (2) Invalidate used request_key authentication keys rather than revoking
-     them, so that they get cleaned up immediately rather than hanging
-     around till the expiry time is passed.
-
- (3) Move the RCU locks outwards from the keyring search functions so that
-     a request_key_rcu() can be provided.  This can be called in RCU mode,
-     so it can't sleep and can't upcall - but it can be called from
-     LOOKUP_RCU pathwalk mode.
-
- (4) Cache the latest positive result of request_key*() temporarily in
-     task_struct so that filesystems that make a lot of request_key() calls
-     during pathwalk can take advantage of it to avoid having to redo the
-     searching.
-
-     It is assumed that the key just found is likely to be used multiple
-     times in each step in an RCU pathwalk, and is likely to be reused for
-     the next step too.
-
-     Note that the cleanup of the cache is done on TIF_NOTIFY_RESUME, just
-     before userspace resumes, and on exit.
-
-The patches can be found on the following branch:
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/dhowells/linux-fs.git/log/?h=keys-request
-
-and this depends on keys-misc.
-
-David
----
-David Howells (6):
-      keys: Fix request_key() lack of Link perm check on found key
-      keys: Invalidate used request_key authentication keys
-      keys: Move the RCU locks outwards from the keyring search functions
-      keys: Provide request_key_rcu()
-      keys: Cache result of request_key*() temporarily in task_struct
-      keys: Kill off request_key_async{,_with_auxdata}
-
-
- Documentation/security/keys/core.rst        |   38 ++-----
- Documentation/security/keys/request-key.rst |   33 +++----
- include/keys/request_key_auth-type.h        |    1 
- include/linux/key.h                         |   14 +--
- include/linux/sched.h                       |    5 +
- include/linux/tracehook.h                   |    7 +
- kernel/cred.c                               |    9 ++
- security/keys/Kconfig                       |   17 +++
- security/keys/internal.h                    |    6 +
- security/keys/key.c                         |    4 -
- security/keys/keyring.c                     |   16 ++-
- security/keys/proc.c                        |    4 +
- security/keys/process_keys.c                |   41 ++++----
- security/keys/request_key.c                 |  137 ++++++++++++++++++---------
- security/keys/request_key_auth.c            |   60 +++++++-----
- 15 files changed, 228 insertions(+), 164 deletions(-)
-
+Shakeel
