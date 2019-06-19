@@ -2,104 +2,104 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB3DC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:58:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 616DDC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:02:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 763E9208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:58:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E6zaAPAk"
+	by mail.kernel.org (Postfix) with ESMTP id 39AAF20665
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 06:02:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730622AbfFSF6V (ORCPT
+        id S1730784AbfFSGCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:58:21 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34026 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725866AbfFSF6U (ORCPT
+        Wed, 19 Jun 2019 02:02:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22168 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725866AbfFSGCq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:58:20 -0400
-Received: by mail-wr1-f67.google.com with SMTP id k11so1929157wrl.1
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:58:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=v4Lzw69YqCGNT6d2yGg/IWB5HqmTYETWg/4G3e5GhcM=;
-        b=E6zaAPAk1Z4K4tmdwrtkSOWC8nlnur95mxOoftmD56qCT5EXSvT6ycZbg/68lt02Db
-         ANOwmUrYS8w8CEoIGQyyTc12+p7JBLChyKkAGMBvUm8921rg/86HOIoKnjA/G/R8389n
-         OoRBu8SGvOjLJEhFA5uz6sPHwF/dhWNcH3R0aTlwJJfsHcOcmikrhYmCu1usEJe4lyTZ
-         xN3ITGXrDBQodz+8qRz101FS4z+SouBbcBG9U+21yiSi6xIqsHcDAxzY3T1rlTCMg0y8
-         ZGVDqtC6xipnmbNjTRJy0KVXGSMHUadcSXGoWZ7EkPIigPG06rZDh1hvsXAdJMmzfXJ2
-         CxaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=v4Lzw69YqCGNT6d2yGg/IWB5HqmTYETWg/4G3e5GhcM=;
-        b=n43kBWGS3u7TmWD7cCJBEY58bynrl7YB6Qeopswt8POjWS2FAfn7G32sLWUGvHk8Rr
-         8jxY0nsdl2hN7WF86YH7mKHx0mQ1Qc8v2BJFIEMpHmY7DQI5oVLasoRF6XySHji5Dq5X
-         tpm1jARqXo0gPYT3RhtixPGYAwbplGq+ImDxH3lQUYR3ZYDEs4kiCFhmWQQLaIpjYz4C
-         tAKyMxOrOg/5aqr5dgsD1LO36TrCG4YMHtTDfndOg0v//0N/9BpQ/uDnUuJlkLb23f2o
-         JCZ9ekh55femmUf/aNSnTPmEIMBebnJiaFDTE5EIdOnT0a6bDJbve9b1TRNbLtrAIglD
-         a4pQ==
-X-Gm-Message-State: APjAAAVtUnEj4rux2C+RtLgdvovjCtYg73H/rBEl6O9tXHg+mnHWu1XU
-        178HKGs57OVEA9+WsDgvtNdvrA==
-X-Google-Smtp-Source: APXvYqwCLJB9gv/cQEHgS6YpUkbFLxhQLp+LQAxMubEfU+V09+07SkfNFDSXxJ+QjUIfsER9MWzsng==
-X-Received: by 2002:a5d:4950:: with SMTP id r16mr39947594wrs.136.1560923898554;
-        Tue, 18 Jun 2019 22:58:18 -0700 (PDT)
-Received: from dell ([2.27.35.243])
-        by smtp.gmail.com with ESMTPSA id o126sm592028wmo.1.2019.06.18.22.58.17
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 18 Jun 2019 22:58:18 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 06:58:16 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] mfd: stmfx: Fix an endian bug in stmfx_irq_handler()
-Message-ID: <20190619055816.GF18371@dell>
-References: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
- <20190617190605.GA21332@mwanda>
- <20190618081645.GM16364@dell>
- <CAHk-=wghW+AKvRGevUiVWwTqWObygSZSdq6Dz2ad81H73VeuRQ@mail.gmail.com>
+        Wed, 19 Jun 2019 02:02:46 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5J627wV124765
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 02:02:44 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7ephhuq0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 02:02:44 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
+        Wed, 19 Jun 2019 07:02:35 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Jun 2019 07:02:32 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5J62Ndg33882608
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 06:02:23 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44450A4055;
+        Wed, 19 Jun 2019 06:02:31 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1C66A4051;
+        Wed, 19 Jun 2019 06:02:29 +0000 (GMT)
+Received: from [9.124.31.60] (unknown [9.124.31.60])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Jun 2019 06:02:29 +0000 (GMT)
+From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+Subject: Re: [PATCH 4/5] Powerpc/hw-breakpoint: Optimize disable path
+To:     Michael Neuling <mikey@neuling.org>
+Cc:     mpe@ellerman.id.au, benh@kernel.crashing.org, paulus@samba.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        npiggin@gmail.com, christophe.leroy@c-s.fr,
+        naveen.n.rao@linux.vnet.ibm.com,
+        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
+References: <20190618042732.5582-1-ravi.bangoria@linux.ibm.com>
+ <20190618042732.5582-5-ravi.bangoria@linux.ibm.com>
+ <ab7e5fac2a1ea78181900f5df7411b1f51b65eb9.camel@neuling.org>
+Date:   Wed, 19 Jun 2019 11:32:28 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <ab7e5fac2a1ea78181900f5df7411b1f51b65eb9.camel@neuling.org>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAHk-=wghW+AKvRGevUiVWwTqWObygSZSdq6Dz2ad81H73VeuRQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19061906-0016-0000-0000-0000028A5A0F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061906-0017-0000-0000-000032E7AE7E
+Message-Id: <c4efb3e1-acb7-df2a-513d-02004d487cae@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=361 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190049
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 18 Jun 2019, Linus Torvalds wrote:
 
-> On Tue, Jun 18, 2019 at 1:16 AM Lee Jones <lee.jones@linaro.org> wrote:
-> >
-> > > Reported-by: Linus Torvalds <torvalds@linux-foundation.org>
-> >
-> > Ideally we can get a review too.
+
+On 6/18/19 11:45 AM, Michael Neuling wrote:
+> On Tue, 2019-06-18 at 09:57 +0530, Ravi Bangoria wrote:
+>> Directly setting dawr and dawrx with 0 should be enough to
+>> disable watchpoint. No need to reset individual bits in
+>> variable and then set in hw.
 > 
-> Looks fine to me, but obviously somebody should actually _test_ it too.
+> This seems like a pointless optimisation to me. 
+> 
+> I'm all for adding more code/complexity if it buys us some performance, but I
+> can't imagine this is a fast path (nor have you stated any performance
+> benefits). 
 
-Amelie, would you be so kind?
+This gets called from sched_switch. I expected the improvement when
+we switch from monitored process to non-monitored process. With such
+scenario, I tried to measure the difference in execution time of
+set_dawr but I don't see any improvement. So I'll drop the patch.
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
