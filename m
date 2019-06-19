@@ -2,120 +2,111 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F5D9C31E5D
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CCC31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB14208CB
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C554B208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="II958DAu"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="OW2v0Muf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730780AbfFSFNK (ORCPT
+        id S1730852AbfFSFNU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:13:10 -0400
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:39274 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725893AbfFSFNK (ORCPT
+        Wed, 19 Jun 2019 01:13:20 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:43984 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfFSFNT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:13:10 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5J5D001013940;
-        Wed, 19 Jun 2019 00:13:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1560921180;
-        bh=J6ZCI/2KmQ5LK0Mv5p/l9j+MOvVdtitQkF5T0OA9KNM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=II958DAuFXjUTn2oepUcE9v5bpwTOgEZWYd76cFtmQdEpkODdZUqJw4Cai4pNc+nc
-         /fwFeMM50EdobnoFT5AjMXksweYF/cGWZmIFTvS/+AUpd7VJFZLERMw4mCoqv7y/jD
-         eUgl5NBdgTUVBlHerLSblKCEhpSMTRWQWzxnqM4I=
-Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5J5D0ZO125667
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 19 Jun 2019 00:13:00 -0500
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE112.ent.ti.com
- (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 19
- Jun 2019 00:13:00 -0500
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 19 Jun 2019 00:12:59 -0500
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5J5CuGm012093;
-        Wed, 19 Jun 2019 00:12:56 -0500
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Vidya Sagar <vidyas@nvidia.com>
-CC:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
-        <bhelgaas@google.com>, <Jisheng.Zhang@synaptics.com>,
-        <thierry.reding@gmail.com>, <linux-pci@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <20190502170426.28688-1-vidyas@nvidia.com>
- <20190503112338.GA25649@e121166-lin.cambridge.arm.com>
- <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
- <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
- <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
- <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
- <20190618142821.GC9002@e121166-lin.cambridge.arm.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <69e79afa-16c7-a00c-653d-e4155999660f@ti.com>
-Date:   Wed, 19 Jun 2019 10:41:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 01:13:19 -0400
+Received: by mail-wr1-f68.google.com with SMTP id p13so1778462wru.10;
+        Tue, 18 Jun 2019 22:13:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=9guZEDssE8I+Ozz4TU41/U7IQZOO1+3LKJDr7vi/5Ig=;
+        b=OW2v0Mufw9VUMtEQX0EIYMhdF6CFGIbVcMLAKreHYZkGp2OyuSAfASx/K+buOjywda
+         Dk6qy5lfj9BrOmNUZl8p3cKJhYMkjPokGwuXVK6EsSXD9p4uhxX/orHbR2WjAjNgEbcS
+         VMUmfHMO6pK1C8PqH53BeGopVDQr4MsKWW4ZhvihkaJIxYd1aLloqGLIN9IflPdrF+Al
+         K7KRXKaG/oGSStyrstgrltAQBz7LhiLZFOy4fXG2+pTjQkXdffJItdA2mcrSEdkjfUWp
+         GSvHKJBu3v29Bi2p2ENmLZHSdjCxcuk7eJEpq2HcGfO7+y0z2RuNhWxr0WmxVi5kIqzm
+         zpcg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=9guZEDssE8I+Ozz4TU41/U7IQZOO1+3LKJDr7vi/5Ig=;
+        b=KE/SSLVmsq8xWqo+dGrFnFkWLIXAPhhfRCDl84ajtcCqpOwp+Y4dbeeT1qxYFssc7j
+         qs/KYupTeX3waCRUFiDh/JEnHW4SgJY2mr3TSYiuOhGSG3onotAa8qex8LCbSZS3SNqT
+         tkUme/yMr7lGBo/n1me3QYMCEL/DU7LG9iDrYphh8QH2G2OLj07nDGeJnDblf3imEvdn
+         h3alWSCrYrhSLJeKzZB8ksJUDQg5+y6mBda2NNh/Ubhfx3FazrHXqR8IK/CIlyzRVqnI
+         Ob88xGYsX3agFVhNGBP5xy+Prjm6OAhZcBq+757krrPaSuVBCUb670mFVqUQsWwku4P2
+         C0ug==
+X-Gm-Message-State: APjAAAWTcu1QT5lHGo9hOLeCAHxL/hg46U4XjL4gWL1WKozJHFWv+Baz
+        rlAw2r+Ypu442qmqynyFWg0fC2iI
+X-Google-Smtp-Source: APXvYqxGBww6ssn1q6Cc/uBn6zveGVb+IPhy76VqGDZJSXuEch6xRNKIOwbG51zvq8ngpGJrw8nuoA==
+X-Received: by 2002:adf:f442:: with SMTP id f2mr17524212wrp.275.1560921196964;
+        Tue, 18 Jun 2019 22:13:16 -0700 (PDT)
+Received: from blackbox.darklights.net (p200300F133C20E000CE01247662D4005.dip0.t-ipconnect.de. [2003:f1:33c2:e00:ce0:1247:662d:4005])
+        by smtp.googlemail.com with ESMTPSA id f204sm301596wme.18.2019.06.18.22.13.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 18 Jun 2019 22:13:16 -0700 (PDT)
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To:     colin.king@canonical.com
+Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
+        kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        peppe.cavallaro@st.com
+Subject: RE: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array call
+Date:   Wed, 19 Jun 2019 07:13:08 +0200
+Message-Id: <20190619051308.23582-1-martin.blumenstingl@googlemail.com>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190617165836.4673-1-colin.king@canonical.com>
+References: <20190617165836.4673-1-colin.king@canonical.com>
 MIME-Version: 1.0
-In-Reply-To: <20190618142821.GC9002@e121166-lin.cambridge.arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Lorenzo,
+Hi Colin,
 
-On 18/06/19 7:58 PM, Lorenzo Pieralisi wrote:
-> On Tue, Jun 18, 2019 at 04:21:17PM +0530, Vidya Sagar wrote:
+> Currently the call to device_property_read_u32_array is not error checked
+> leading to potential garbage values in the delays array that are then used
+> in msleep delays.  Add a sanity check to the property fetching.
 > 
-> [...]
-> 
->>> 2) It is not related to this patch but I fail to see the reasoning
->>>     behind the __ in __dw_pci_read_dbi(), there is no no-underscore
->>>     equivalent so its definition is somewhat questionable, maybe
->>>     we should clean-it up (for dbi2 alike).
->> Separate no-underscore versions are present in pcie-designware.h for
->> each width (i.e. l/w/b) as inline and are calling __ versions passing
->> size as argument.
-> 
-> I understand - the __ prologue was added in b50b2db266d8 maybe
-> Kishon can help us understand the __ rationale.
-> 
-> I am happy to merge it as is, I was just curious about the
-> __ annotation (not related to this patch).
+> Addresses-Coverity: ("Uninitialized scalar variable")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+I have also sent a patch [0] to fix initialize the array.
+can you please look at my patch so we can work out which one to use?
 
-In commit b50b2db266d8a8c303e8d88590 ("PCI: dwc: all: Modify dbi accessors to
-take dbi_base as argument"), dbi accessors was modified to take dbi_base as
-argument (since we wanted to write to dbics2 address space). We didn't want to
-change all the drivers invoking dbi accessors to pass the dbi_base. So we added
-"__" variant to take dbi_base as argument and the drivers continued to invoke
-existing dbi accessors which in-turn invoked "__" version with dbi_base as
-argument.
+my concern is that the "snps,reset-delays-us" property is optional,
+the current dt-bindings documentation states that it's a required
+property. in reality it isn't, there are boards (two examples are
+mentioned in my patch: [0]) without it.
 
-I agree there could be some cleanup since in commit
-a509d7d9af5ebf86ffbefa98e49761d ("PCI: dwc: all: Modify dbi accessors to access
-data of 4/2/1 bytes"), we modified __dw_pcie_readl_dbi() to
-__dw_pcie_write_dbi() when it could have been directly modified to
-dw_pcie_write_dbi().
+so I believe that the resulting behavior has to be:
+1. don't delay if this property is missing (instead of delaying for
+   <garbage value> ms)
+2. don't error out if this property is missing
 
-Thanks
-Kishon
+your patch covers #1, can you please check whether #2 is also covered?
+I tested case #2 when submitting my patch and it worked fine (even
+though I could not reproduce the garbage values which are being read
+on some boards)
+
+
+Thank you!
+Martin
+
+
+[0] https://lkml.org/lkml/2019/4/19/638
