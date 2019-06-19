@@ -2,201 +2,111 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 748F1C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:29:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C33B6C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4189B20823
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:29:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97CC620823
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:30:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mobiveil.co.in header.i=@mobiveil.co.in header.b="06W/Y3cS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="kMtb4Gdn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbfFSF3F (ORCPT
+        id S1730925AbfFSFac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:29:05 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39101 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730337AbfFSF3E (ORCPT
+        Wed, 19 Jun 2019 01:30:32 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:54638 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726195AbfFSFab (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:29:04 -0400
-Received: by mail-lj1-f193.google.com with SMTP id v18so1924091ljh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 18 Jun 2019 22:29:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=mobiveil.co.in; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uCUAPV+QexPTMtFpELNiq1RlIWLicRq4oH7TLWUppok=;
-        b=06W/Y3cSZGK9qGdIkrRKae6GS83CtZgvcpLyiEYX/CH8oiz2QMNEnRHq9tkOe8Vhlv
-         AaYmyZRoz+2JGbAkSTfAL+lYDZe+EKPXLD87Ug+rDiga9JVBb1lAfYm/OHzqIe7QQ4sg
-         GNFRhx6EP/7BdHkzpUDQfWkORZMvcOicpDZ60=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uCUAPV+QexPTMtFpELNiq1RlIWLicRq4oH7TLWUppok=;
-        b=ZIJPSzORzqOgLant+3MaUs5zwrI8awgzo2cvxTzqTOaDsb9lMxQuiUbIdBTtQTA6ok
-         rKstcolYw5wBZAe5e/wFnHdZMjm3idysOETswU1+m9OkkdzXtyqv00cJWKQ/oOJ6vi5c
-         3Mx83CHfaCdg+PKFOSlVbiEZcSjZvR8+cW/+ESmsoEMy9bdyVUH888Z7AxF8mUAj03un
-         5NgvcL6e5Uuubt7CMOyFb0BuITaMuMbD5vT33/ofzil604BlN6jp0ipVRoInSC2QVjEk
-         1SxlmBiD/PQ0e2KvdeQucC+vGGhSC7xck2Wowst3AubHSxgGy0I2M/jH9+mo71+85TIp
-         92VQ==
-X-Gm-Message-State: APjAAAUf6mHHSKEJAyttR/xbQanPVJegufB7cMqmQxhdC5gTNq61HLxj
-        gvbzJvxJqdhyPlm7o3xlQqQrMWzUXtBBMaaZUGLJdE2N60de3KRbKA25e+PiAXJzqnQMzV+15t9
-        Ui8cw6nndx0p7z4PV0U7TyeEgXgKP3F0j6g==
-X-Google-Smtp-Source: APXvYqzKCWyYVYljVoUu5JGomTGSMvq1652NRLfxnluH9rE+ab0jIubi+Ogd2Mw26Jaq0Y4Uxj/yFkRHTtCXrWX8zDQ=
-X-Received: by 2002:a2e:9bc6:: with SMTP id w6mr22630705ljj.156.1560922141583;
- Tue, 18 Jun 2019 22:29:01 -0700 (PDT)
+        Wed, 19 Jun 2019 01:30:31 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J5O27q176930;
+        Wed, 19 Jun 2019 05:30:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2018-07-02;
+ bh=buhWTROSF4QaiBD0PrOB0xejan9MPIV0yZA5jFiSTQ0=;
+ b=kMtb4Gdn2i40OcM675R7t0kdiM3vs9UjF8SABFF70VdrVdTA9sQLC5EJKpJ4FTo7re/w
+ TH63yAuRQ0UsD4WyrIpEowSOP+0LHKFaT6bkF6jbGwOy1B4POEdmiF9pD4J6+F7vrF6J
+ bh/+nSoEZ1RSnaB3i4FibkDUf4ogts4IvsqOXohv+o4tIIDgUgvXeSTtnrjZK1esEcFk
+ 5LqWs+9i1GmTzR93rcUFsrYGu3J6t+moc/nhfO62RisId5MoBDh6yFNuT4TEmPs5a2B5
+ mfZ71S5SiaUUDk7paeQqfG2wSGV2bGgG8lZaCx3xw0zKlQq0QjtpglD0QOwXEriFMtP5 zw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t780994cw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 05:30:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5J5TEwV068317;
+        Wed, 19 Jun 2019 05:30:23 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2t77ymvdq1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 05:30:23 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5J5UK2g002327;
+        Wed, 19 Jun 2019 05:30:20 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 18 Jun 2019 22:30:19 -0700
+Date:   Wed, 19 Jun 2019 08:30:12 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nick Crews <ncrews@chromium.org>,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] platform/chrome: wilco_ec: fix null pointer
+ dereference on failed kzalloc
+Message-ID: <20190619053012.GM28859@kadam>
+References: <20190618153924.19491-1-colin.king@canonical.com>
 MIME-Version: 1.0
-References: <20190412083635.33626-1-Zhiqiang.Hou@nxp.com> <20190412083635.33626-11-Zhiqiang.Hou@nxp.com>
- <20190612150819.GD15747@redmoon> <CAKnKUHFMH6=ox=qdaUR1kNEhETDCVyu3jQZEj+taEbbMRBRuYA@mail.gmail.com>
- <20190614104351.GA29955@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20190614104351.GA29955@e121166-lin.cambridge.arm.com>
-From:   Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-Date:   Wed, 19 Jun 2019 10:58:49 +0530
-Message-ID: <CAKnKUHHTAsjMoMkqaWq5z6r30JUGCpxSaYwyp8AuE3H5R0vBig@mail.gmail.com>
-Subject: Re: [PATCHv5 10/20] PCI: mobiveil: Fix the INTx process errors
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     "Z.q. Hou" <zhiqiang.hou@nxp.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "l.subrahmanya@mobiveil.co.in" <l.subrahmanya@mobiveil.co.in>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190618153924.19491-1-colin.king@canonical.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190043
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9292 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190043
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 4:14 PM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Fri, Jun 14, 2019 at 12:38:51PM +0530, Karthikeyan Mitran wrote:
-> > Hi Lorenzo and Hou Zhiqiang
-> >  PAB_INTP_AMBA_MISC_STAT does have other status in the higher bits, it
-> > should have been masked before checking for the status
->
-> You are the maintainer for this driver, so if there is something to be
-> changed you must post a patch to that extent, I do not understand what
-> the above means, write the code to fix it, I won't do it.
->
-> I am getting a bit annoyed with this Mobiveil driver so either you guys
-> sort this out or I will have to remove it from the kernel.
->
-> > Acked-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
->
-> Ok I assume this means you tested it but according to what you
-> say above, are there still issues with this code path ? Should
-> we update the patch ?
-Tested-by: Karthikeyan Mitran <m.karthikeyan@mobiveil.co.in>
-This patch fixes the INTx status extraction and handling,
-I don't see any need to update this patch.
->
-> Moreover:
->
-> https://kernelnewbies.org/PatchCulture
->
-> Please read it and never top-post.
-Thank you very much, for the information.
+On Tue, Jun 18, 2019 at 04:39:24PM +0100, Colin King wrote:
+> diff --git a/drivers/platform/chrome/wilco_ec/event.c b/drivers/platform/chrome/wilco_ec/event.c
+> index c975b76e6255..e251a989b152 100644
+> --- a/drivers/platform/chrome/wilco_ec/event.c
+> +++ b/drivers/platform/chrome/wilco_ec/event.c
+> @@ -112,8 +112,11 @@ module_param(queue_size, int, 0644);
+>  static struct ec_event_queue *event_queue_new(int capacity)
+>  {
+>  	size_t entries_size = sizeof(struct ec_event *) * capacity;
+> -	struct ec_event_queue *q = kzalloc(sizeof(*q) + entries_size,
+> -					   GFP_KERNEL);
+> +	struct ec_event_queue *q;
+> +
+> +	q = kzalloc(sizeof(*q) + entries_size, GFP_KERNEL);
+> +	if (!q)
+> +		return NULL;
 
->
-> Thanks,
-> Lorenzo
->
-> > On Wed, Jun 12, 2019 at 8:38 PM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > >
-> > > On Fri, Apr 12, 2019 at 08:36:12AM +0000, Z.q. Hou wrote:
-> > > > From: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > >
-> > > > In the loop block, there is not code to update the loop key,
-> > > > this patch updates the loop key by re-read the INTx status
-> > > > register.
-> > > >
-> > > > This patch also add the clearing of the handled INTx status.
-> > > >
-> > > > Note: Need MV to test this fix.
-> > >
-> > > This means INTX were never tested and current code handling them is,
-> > > AFAICS, an infinite loop which is very very bad.
-> > >
-> > > This is a gross bug and must be fixed as soon as possible.
-> > >
-> > > I want Karthikeyan ACK and Tested-by on this patch.
-> > >
-> > > Lorenzo
-> > >
-> > > > Fixes: 9af6bcb11e12 ("PCI: mobiveil: Add Mobiveil PCIe Host Bridge IP driver")
-> > > > Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> > > > Reviewed-by: Minghuan Lian <Minghuan.Lian@nxp.com>
-> > > > Reviewed-by: Subrahmanya Lingappa <l.subrahmanya@mobiveil.co.in>
-> > > > ---
-> > > > V5:
-> > > >  - Corrected and retouched the subject and changelog.
-> > > >
-> > > >  drivers/pci/controller/pcie-mobiveil.c | 13 +++++++++----
-> > > >  1 file changed, 9 insertions(+), 4 deletions(-)
-> > > >
-> > > > diff --git a/drivers/pci/controller/pcie-mobiveil.c b/drivers/pci/controller/pcie-mobiveil.c
-> > > > index 4ba458474e42..78e575e71f4d 100644
-> > > > --- a/drivers/pci/controller/pcie-mobiveil.c
-> > > > +++ b/drivers/pci/controller/pcie-mobiveil.c
-> > > > @@ -361,6 +361,7 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > > >       /* Handle INTx */
-> > > >       if (intr_status & PAB_INTP_INTX_MASK) {
-> > > >               shifted_status = csr_readl(pcie, PAB_INTP_AMBA_MISC_STAT);
-> > > > +             shifted_status &= PAB_INTP_INTX_MASK;
-> > > >               shifted_status >>= PAB_INTX_START;
-> > > >               do {
-> > > >                       for_each_set_bit(bit, &shifted_status, PCI_NUM_INTX) {
-> > > > @@ -372,12 +373,16 @@ static void mobiveil_pcie_isr(struct irq_desc *desc)
-> > > >                                       dev_err_ratelimited(dev, "unexpected IRQ, INT%d\n",
-> > > >                                                           bit);
-> > > >
-> > > > -                             /* clear interrupt */
-> > > > -                             csr_writel(pcie,
-> > > > -                                        shifted_status << PAB_INTX_START,
-> > > > +                             /* clear interrupt handled */
-> > > > +                             csr_writel(pcie, 1 << (PAB_INTX_START + bit),
-> > > >                                          PAB_INTP_AMBA_MISC_STAT);
-> > > >                       }
-> > > > -             } while ((shifted_status >> PAB_INTX_START) != 0);
-> > > > +
-> > > > +                     shifted_status = csr_readl(pcie,
-> > > > +                                                PAB_INTP_AMBA_MISC_STAT);
-> > > > +                     shifted_status &= PAB_INTP_INTX_MASK;
-> > > > +                     shifted_status >>= PAB_INTX_START;
-> > > > +             } while (shifted_status != 0);
-> > > >       }
-> > > >
-> > > >       /* read extra MSI status register */
-> > > > --
-> > > > 2.17.1
-> > > >
-> >
-> >
-> >
-> >
+We have a new struct_size() macro designed for these allocations.
 
--- 
-Mobiveil INC., CONFIDENTIALITY NOTICE: This e-mail message, including any 
-attachments, is for the sole use of the intended recipient(s) and may 
-contain proprietary confidential or privileged information or otherwise be 
-protected by law. Any unauthorized review, use, disclosure or distribution 
-is prohibited. If you are not the intended recipient, please notify the 
-sender and destroy all copies and the original message.
+	q = kzalloc(struct_size(q, entries, capacity), GFP_KERNEL);
+
+The advantage is that it checks for integer overflows.
+
+regards,
+dan carpenter
+
