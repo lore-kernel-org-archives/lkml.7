@@ -2,171 +2,231 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A69BAC43613
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:54:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73902C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:56:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707D1208CA
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:54:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40D7C208CA
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:56:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="WBbtV67P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vWL/b9BR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730757AbfFSVyH (ORCPT
+        id S1730665AbfFSV4Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 17:54:07 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:38840 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726246AbfFSVyH (ORCPT
+        Wed, 19 Jun 2019 17:56:16 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:39465 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726246AbfFSV4Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 17:54:07 -0400
-Received: by mail-oi1-f195.google.com with SMTP id v186so549078oie.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 14:54:06 -0700 (PDT)
+        Wed, 19 Jun 2019 17:56:16 -0400
+Received: by mail-lf1-f67.google.com with SMTP id p24so806461lfo.6;
+        Wed, 19 Jun 2019 14:56:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JrmPkmGlWIDmfFJHcUBHoDgjBA4Uq/PsSzropCIymmw=;
-        b=WBbtV67PxlzWF1EF3D6ymPFrOUmHY0N0WW50GNMKS5/RKjY/r32FX/pN++Js56UrJW
-         f/s7KDuhhbquot8VyWdYdbu1K4N6mZUSD30XrAOyqxYOcnWlBG3Rj2ZKM+tPxujVXYB1
-         lWBLXB0NfhGXLAp7U1ISHE/MOSc+mHZlYUWYqZ3OMl+Ypm4Rxl/7aE4WuAkQ8OqkUUrb
-         PgyCZA2GRtAs+sU1e0zD09j1iJl5H+Ff+Y5OV59gAlbHUKH00ZFnw4huGYE6vsTIzxrS
-         Xhg+kRwWUcOvamuVw/0FKyGf4fVEibUff2E2RH/Q1BcNXHe6UPy+167cFU99QhZNgxI7
-         RK0w==
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:references:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=5O1FV8+B+L9riSW3t9VErhl/8bqt/6TXw2Ym602mYSk=;
+        b=vWL/b9BR5zOoXg+nqsahUsG03rYnF4V3nE/7CEYXMnvBdP21voEPeSp4WUbR+ZFW/E
+         317YFl7wg8HQ3etGO7QzVL4x1u8+TY8SZeYxFXM7Kd7xiTrZTyyaz7GPv1MxFf1LqGRZ
+         VKS/dI+R0RzgXG2WCEYtDhcwC+GEgEbf5YwQi7OgMeOjgVXh+DDheB4fdeRLPVG8vldP
+         dkjO24iiSYZCRrhfHylgLUkDBK6Lr7MobiNmSUD3psNGuzX82VJ93ZoGzvwPzTNznA7b
+         Gyl5P67EmmQHOZTnDNiL8Z2x4s8W1sY8si9l9Z6cvqlIA4JXHB5a06zzufZepGNgOYEL
+         U2Lg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JrmPkmGlWIDmfFJHcUBHoDgjBA4Uq/PsSzropCIymmw=;
-        b=hyk0wbsSdLFtAMx1/VQXAK5PF9NaYORtDsk4mZqbrLDDrp/HfFAnRBEAKstacYHPIG
-         a6UY8DBxW8oOo3L8fKgfD8mXHoy3yc0aGt03D0aEhQuYicjDsMWDVwmaCu/X2X+4MvWF
-         HajTvedMsBJ5qXOU6iqsium3b1ucKP6j8z3hlmFk/jvXYGSolY42RhVRSPq/Vv578Ab+
-         MqnR53AGNAZT84soTeCH5bLF3hIScPPXANgctLBIDNJPqzlz2fHKqfBh9thkMIqoMieA
-         gRRIdjn4xRxusuYOQmMTjRTtzBABiqD9atOGmHRlgQzIDUh4nsbjv6Lj8PK20Df1leZv
-         FnGQ==
-X-Gm-Message-State: APjAAAWBMQv6zf1p9IWeRijoO4QCPuf0fxzPcdCFQZIW6AfOovl+8rff
-        L/qtQS28V3CY7a+yY1GnZuPNKBK1uB9xax7SfEqz2A==
-X-Google-Smtp-Source: APXvYqxcjUnD4FIHV2bGaEcKpzuyLnsiNdvlDaM+9QH4AEKqN4Y/h5h0tSXn91LvSGHhJ7SPRgQdZkHoTuGUd9kflFo=
-X-Received: by 2002:aca:1304:: with SMTP id e4mr4306999oii.149.1560981245880;
- Wed, 19 Jun 2019 14:54:05 -0700 (PDT)
+        h=x-gm-message-state:subject:from:to:cc:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=5O1FV8+B+L9riSW3t9VErhl/8bqt/6TXw2Ym602mYSk=;
+        b=P6yNpJAQFAadIG2hxgDicNaWr6HeWBekuajSHNpY507Bn/3+uX52OxRHT70xPuk+4a
+         QUPEd9YM2PH6jXhkY67Et1Xt1KE+x0SFJuTLwQi/mocKE5DLAPR1bR6feNUn/imtjWJM
+         1UhYna6d23rR5OSjB8oAtskSv5fEN0Y7WVc3JbP/CPLj6I7K/BT/Gh9Gi+np80yf09Qg
+         tQG7IV5TYcPoQ0ZCDUDew9KVgn/cmc6bqTKk6mViIiOUsYIOL3bmSLq8xL3DgH+DbuM6
+         aP979ed7fO18a2PmpvH0je+3ACh3GkrNHYbBJCkjk3++naZ7uurIHkoPTzEuJXBcPGGd
+         rhMw==
+X-Gm-Message-State: APjAAAVI43hqE4AY6SSZdFCv4t9IxuIKjte5/2uFdKilrV0AKGDe1e9u
+        h5KJTmNdkPNns/OmYSrkhRrxmH+B
+X-Google-Smtp-Source: APXvYqymyOzhDCHB5bLsTkfZz6UY7m4PQGBq0/wwPbz8qJXJcL0bZKMZWdM46xUx69PgP9W/gZsuog==
+X-Received: by 2002:a19:6703:: with SMTP id b3mr64158134lfc.153.1560981372050;
+        Wed, 19 Jun 2019 14:56:12 -0700 (PDT)
+Received: from [192.168.2.145] (ppp91-79-162-197.pppoe.mtu-net.ru. [91.79.162.197])
+        by smtp.googlemail.com with ESMTPSA id f16sm3188232lfc.81.2019.06.19.14.56.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 14:56:10 -0700 (PDT)
+Subject: Re: [PATCH v1] dmaengine: tegra-apb: Support per-burst residue
+ granularity
+From:   Dmitry Osipenko <digetx@gmail.com>
+To:     Jon Hunter <jonathanh@nvidia.com>,
+        Ben Dooks <ben.dooks@codethink.co.uk>,
+        Laxman Dewangan <ldewangan@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>
+Cc:     dmaengine@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190613210849.10382-1-digetx@gmail.com>
+ <f2290604-12f4-019b-47e7-4e4e29a433d4@codethink.co.uk>
+ <7354d471-95e1-ffcd-db65-578e9aa425ac@gmail.com>
+ <1db9bac2-957d-3c0a-948a-429bc59f1b72@nvidia.com>
+ <c8bccb6e-27f8-d6c8-cfdb-10ab5ae98b26@gmail.com>
+ <49d087fe-a634-4a53-1caa-58a0e52ef1ba@nvidia.com>
+ <73d5cdb7-0462-944a-1f9a-3dc02f179385@gmail.com>
+ <c7e4d99a-f02f-e7a2-a4c2-81496ee54d24@nvidia.com>
+ <1de7d185-54c3-be83-cb37-4f2fd009253f@gmail.com>
+Message-ID: <c2e2e476-2bae-9661-6445-56390b58b3bb@gmail.com>
+Date:   Thu, 20 Jun 2019 00:56:09 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-References: <20190613045903.4922-1-namit@vmware.com> <20190613045903.4922-4-namit@vmware.com>
- <20190617215750.8e46ae846c09cd5c1f22fdf9@linux-foundation.org>
- <98464609-8F5A-47B9-A64E-2F67809737AD@vmware.com> <8072D878-BBF2-47E4-B4C9-190F379F6221@vmware.com>
- <CAErSpo5eiweMk2rfT81Kwnpd=MZsOa01prPo_rAFp-MZ9F2xdQ@mail.gmail.com>
-In-Reply-To: <CAErSpo5eiweMk2rfT81Kwnpd=MZsOa01prPo_rAFp-MZ9F2xdQ@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Wed, 19 Jun 2019 14:53:54 -0700
-Message-ID: <CAPcyv4iAbWnWUT2d2VhnvuHvJE0-Vxgbf1TYtOPjkR6j3qROtw@mail.gmail.com>
-Subject: Re: [PATCH 3/3] resource: Introduce resource cache
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Nadav Amit <namit@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kleen, Andi" <andi.kleen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1de7d185-54c3-be83-cb37-4f2fd009253f@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ add Andi ]
+19.06.2019 16:52, Dmitry Osipenko пишет:
+> 19.06.2019 15:22, Jon Hunter пишет:
+>>
+>> On 19/06/2019 12:10, Dmitry Osipenko wrote:
+>>> 19.06.2019 13:55, Jon Hunter пишет:
+>>>>
+>>>> On 19/06/2019 11:27, Dmitry Osipenko wrote:
+>>>>> 19.06.2019 13:04, Jon Hunter пишет:
+>>>>>>
+>>>>>> On 19/06/2019 00:27, Dmitry Osipenko wrote:
+>>>>>>> 19.06.2019 1:22, Ben Dooks пишет:
+>>>>>>>> On 13/06/2019 22:08, Dmitry Osipenko wrote:
+>>>>>>>>> Tegra's APB DMA engine updates words counter after each transferred burst
+>>>>>>>>> of data, hence it can report transfer's residual with more fidelity which
+>>>>>>>>> may be required in cases like audio playback. In particular this fixes
+>>>>>>>>> audio stuttering during playback in a chromiuim web browser. The patch is
+>>>>>>>>> based on the original work that was made by Ben Dooks [1]. It was tested
+>>>>>>>>> on Tegra20 and Tegra30 devices.
+>>>>>>>>>
+>>>>>>>>> [1] https://lore.kernel.org/lkml/20190424162348.23692-1-ben.dooks@codethink.co.uk/
+>>>>>>>>>
+>>>>>>>>> Inspired-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>>>>>>>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+>>>>>>>>> ---
+>>>>>>>>>   drivers/dma/tegra20-apb-dma.c | 35 ++++++++++++++++++++++++++++-------
+>>>>>>>>>   1 file changed, 28 insertions(+), 7 deletions(-)
+>>>>>>>>>
+>>>>>>>>> diff --git a/drivers/dma/tegra20-apb-dma.c b/drivers/dma/tegra20-apb-dma.c
+>>>>>>>>> index 79e9593815f1..c5af8f703548 100644
+>>>>>>>>> --- a/drivers/dma/tegra20-apb-dma.c
+>>>>>>>>> +++ b/drivers/dma/tegra20-apb-dma.c
+>>>>>>>>> @@ -797,12 +797,36 @@ static int tegra_dma_terminate_all(struct dma_chan *dc)
+>>>>>>>>>       return 0;
+>>>>>>>>>   }
+>>>>>>>>>   +static unsigned int tegra_dma_update_residual(struct tegra_dma_channel *tdc,
+>>>>>>>>> +                          struct tegra_dma_sg_req *sg_req,
+>>>>>>>>> +                          struct tegra_dma_desc *dma_desc,
+>>>>>>>>> +                          unsigned int residual)
+>>>>>>>>> +{
+>>>>>>>>> +    unsigned long status, wcount = 0;
+>>>>>>>>> +
+>>>>>>>>> +    if (!list_is_first(&sg_req->node, &tdc->pending_sg_req))
+>>>>>>>>> +        return residual;
+>>>>>>>>> +
+>>>>>>>>> +    if (tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>>>> +        wcount = tdc_read(tdc, TEGRA_APBDMA_CHAN_WORD_TRANSFER);
+>>>>>>>>> +
+>>>>>>>>> +    status = tdc_read(tdc, TEGRA_APBDMA_CHAN_STATUS);
+>>>>>>>>> +
+>>>>>>>>> +    if (!tdc->tdma->chip_data->support_separate_wcount_reg)
+>>>>>>>>> +        wcount = status;
+>>>>>>>>> +
+>>>>>>>>> +    if (status & TEGRA_APBDMA_STATUS_ISE_EOC)
+>>>>>>>>> +        return residual - sg_req->req_len;
+>>>>>>>>> +
+>>>>>>>>> +    return residual - get_current_xferred_count(tdc, sg_req, wcount);
+>>>>>>>>> +}
+>>>>>>>>
+>>>>>>>> I am unfortunately nowhere near my notes, so can't completely
+>>>>>>>> review this. I think the complexity of my patch series is due
+>>>>>>>> to an issue with the count being updated before the EOC IRQ
+>>>>>>>> is actually flagged (and most definetly before it gets to the
+>>>>>>>> CPU IRQ handler).
+>>>>>>>>
+>>>>>>>> The test system I was using, which i've not really got any
+>>>>>>>> access to at the moment would show these internal inconsistent
+>>>>>>>> states every few hours, however it was moving 48kHz 8ch 16bit
+>>>>>>>> TDM data.
+>>>>>>>>
+>>>>>>>> Thanks for looking into this, I am not sure if I am going to
+>>>>>>>> get any time to look into this within the next couple of
+>>>>>>>> months.
+>>>>>>>
+>>>>>>> I'll try to add some debug checks to try to catch the case where count is updated before EOC
+>>>>>>> is set. Thank you very much for the clarification of the problem. So far I haven't spotted
+>>>>>>> anything going wrong.
+>>>>>>>
+>>>>>>> Jon / Laxman, are you aware about the possibility to get such inconsistency of words count
+>>>>>>> vs EOC? Assuming the cyclic transfer mode.
+>>>>>>
+>>>>>> I can't say that I am. However, for the case of cyclic transfer, given
+>>>>>> that the next transfer is always programmed into the registers before
+>>>>>> the last one completes, I could see that by the time the interrupt is
+>>>>>> serviced that the DMA has moved on to the next transfer (which I assume
+>>>>>> would reset the count).
+>>>>>>
+>>>>>> Interestingly, our downstream kernel implemented a change to avoid the
+>>>>>> count appearing to move backwards. I am curious if this also works,
+>>>>>> which would be a lot simpler that what Ben has implemented and may
+>>>>>> mitigate that race condition that Ben is describing.
+>>>>>>
+>>>>>> Cheers
+>>>>>> Jon
+>>>>>>
+>>>>>> [0]
+>>>>>> https://nv-tegra.nvidia.com/gitweb/?p=linux-4.4.git;a=commit;h=c7bba40c6846fbf3eaad35c4472dcc7d8bbc02e5
+>>>>>>
+>>>>>
+>>>>> The downstream patch doesn't check for EOC and has no comments about it, so it's hard to
+>>>>> tell if it's intentional. Secondly, looks like the downstream patch is mucked up because it
+>>>>> doesn't check whether the dma_desc is *the active* transfer and not a pending!
+>>>>
+>>>> I agree that it should check to see if it is active. I assume that what
+>>>> this patch is doing is not updating the dma position if it appears to
+>>>> have gone backwards, implying we have moved on to the next buffer. Yes
+>>>> this is still probably not as accurate as Ben's implementation because
+>>>> most likely we have finished that transfer and this patch would report
+>>>> that it is not quite finished.
+>>>>
+>>>> If Ben's patch works for you then why not go with this?
+>>>
+>>> Because I'm doubtful that it is really the case and not something else. It will be very odd
+>>> if hardware updates words count and sets EOC asynchronously, I'd call it as a faulty design
+>>> and thus a bug that need to worked around in software if that's really happening.
+>>
+>> I don't see it that way. Probably as soon as the EOC happens, if there
+>> is another transfer queued up, the next transfer will start and count
+>> gets reset. So if you happen to asynchronously read the count at the
+>> very end of the transfer, then it is possible you are doing so at the
+>> same time that the EOC occurs but before the ISR has been triggered.
+> 
+> In our case we can't read out EOC status and words count asynchronously because the
+> interrupt status and words count are within the same hardware register on pre-T114 and on
+> T114+ we're reading words count register and only then the status register. ISR has nothing
+> to do with it, if you're taking about tegra_dma_isr.
+> 
+> Ben claims that the words count may get updated in hardware before EOC bit is set in the
+> status register.
+> 
 
-On Wed, Jun 19, 2019 at 6:00 AM Bjorn Helgaas <bhelgaas@google.com> wrote:
->
-> On Tue, Jun 18, 2019 at 12:40 AM Nadav Amit <namit@vmware.com> wrote:
-> >
-> > > On Jun 17, 2019, at 10:33 PM, Nadav Amit <namit@vmware.com> wrote:
-> > >
-> > >> On Jun 17, 2019, at 9:57 PM, Andrew Morton <akpm@linux-foundation.or=
-g> wrote:
-> > >>
-> > >> On Wed, 12 Jun 2019 21:59:03 -0700 Nadav Amit <namit@vmware.com> wro=
-te:
-> > >>
-> > >>> For efficient search of resources, as needed to determine the memor=
-y
-> > >>> type for dax page-faults, introduce a cache of the most recently us=
-ed
-> > >>> top-level resource. Caching the top-level should be safe as ranges =
-in
-> > >>> that level do not overlap (unlike those of lower levels).
-> > >>>
-> > >>> Keep the cache per-cpu to avoid possible contention. Whenever a res=
-ource
-> > >>> is added, removed or changed, invalidate all the resources. The
-> > >>> invalidation takes place when the resource_lock is taken for write,
-> > >>> preventing possible races.
-> > >>>
-> > >>> This patch provides relatively small performance improvements over =
-the
-> > >>> previous patch (~0.5% on sysbench), but can benefit systems with ma=
-ny
-> > >>> resources.
-> > >>
-> > >>> --- a/kernel/resource.c
-> > >>> +++ b/kernel/resource.c
-> > >>> @@ -53,6 +53,12 @@ struct resource_constraint {
-> > >>>
-> > >>> static DEFINE_RWLOCK(resource_lock);
-> > >>>
-> > >>> +/*
-> > >>> + * Cache of the top-level resource that was most recently use by
-> > >>> + * find_next_iomem_res().
-> > >>> + */
-> > >>> +static DEFINE_PER_CPU(struct resource *, resource_cache);
-> > >>
-> > >> A per-cpu cache which is accessed under a kernel-wide read_lock look=
-s a
-> > >> bit odd - the latency getting at that rwlock will swamp the benefit =
-of
-> > >> isolating the CPUs from each other when accessing resource_cache.
-> > >>
-> > >> On the other hand, if we have multiple CPUs running
-> > >> find_next_iomem_res() concurrently then yes, I see the benefit.  Has
-> > >> the benefit of using a per-cpu cache (rather than a kernel-wide one)
-> > >> been quantified?
-> > >
-> > > No. I am not sure how easy it would be to measure it. On the other ha=
-nder
-> > > the lock is not supposed to be contended (at most cases). At the time=
- I saw
-> > > numbers that showed that stores to =E2=80=9Cexclusive" cache lines ca=
-n be as
-> > > expensive as atomic operations [1]. I am not sure how up to date thes=
-e
-> > > numbers are though. In the benchmark I ran, multiple CPUs ran
-> > > find_next_iomem_res() concurrently.
-> > >
-> > > [1] http://sigops.org/s/conferences/sosp/2013/papers/p33-david.pdf
-> >
-> > Just to clarify - the main motivation behind the per-cpu variable is no=
-t
-> > about contention, but about the fact the different processes/threads th=
-at
-> > run concurrently might use different resources.
->
-> IIUC, the underlying problem is that dax relies heavily on ioremap(),
-> and ioremap() on x86 takes too long because it relies on
-> find_next_iomem_res() via the __ioremap_caller() ->
-> __ioremap_check_mem() -> walk_mem_res() path.
->
-> The fact that x86 is the only arch that does this much work in
-> ioremap() makes me wonder.  Is there something unique about x86
-> mapping attributes that requires this extra work, or is there some way
-> this could be reworked to avoid searching the resource map in the
-> first place?
+I made a test setup where several millions test-runs were made, checking
+the EOC vs words count wraparound in a cyclic transfer mode (polling
+words count until EOC is set) with different buffer sizes (buffer size =
+period, single SG nent) and different burst configurations. Result is
+good, the case Ben describes never happens on T30 nor on T20. So I'm
+confident now that hardware is fine and likely that Ben was experiencing
+some other problem.
 
-The underlying issue is that the x86-PAT implementation wants to
-ensure that conflicting mappings are not set up for the same physical
-address. This is mentioned in the developer manuals as problematic on
-some cpus. Andi, is lookup_memtype() and track_pfn_insert() still
-relevant?
+Jon, please take a look at the v2. It should be good to go!
