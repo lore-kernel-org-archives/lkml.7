@@ -2,164 +2,209 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B533C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E043AC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:02:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D8EA21855
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACBF021783
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:02:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560956534;
-	bh=yfxdDVL/L5lNeV3SeQ7WR171eTNKD9P+ikTOSH+xc1s=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cBQYNIwH650ff+Y8w6gVR/PnuYwu40clDFKBLyN7VuJ85ZyKuawv2XGQXCF6rBg6p
-	 WJsHqWHvtBTHJJBlPUu2E8yXTSiJ/yo4TJ8rJKdoFSKwQh/rx6IyspVRRKtyvGVuSD
-	 RgblyrW5pIkLipzQBL8nMNWcldD+PNYFzaukgn7w=
+	s=default; t=1560956555;
+	bh=i4/m3cIIMx/tLIWnle/7SzNdGXGSZwSyGBjeAJGPYwQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=yTBgYIov5ZnoPTn6BmXXMquO5DcK5xqMh9Fi3CCbP8Mbw/obpFCqEQNW9VnJYfpxv
+	 C5Yb//gk5PXlkOGFlvQScLaHY3EKueRGrf92xa5rOgMUwy3zLfn1cqE6yDuiMo0k99
+	 +CC4sF8ihS2skVUzoentUJPm5YyygEDUsCVdtfI4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbfFSPCL (ORCPT
+        id S1729369AbfFSPCe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:02:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55892 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725899AbfFSPCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:02:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3F412183F;
-        Wed, 19 Jun 2019 15:02:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560956530;
-        bh=yfxdDVL/L5lNeV3SeQ7WR171eTNKD9P+ikTOSH+xc1s=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=MliQoUrKGz0uikxExyDjZMWCoS7+rjh9EwaO98Jwv+ImdfIwscw8hUsGkEDL4Gx4P
-         tYIASjvTrcgRzT9GASiutDMJwIaViXugwlbugykfuW/FNAvla3cgErYjQXEWbZBlui
-         Xp3gbNjrxIJtraqotk+fvCHVExeUK/bZvZLfPUxY=
-Date:   Wed, 19 Jun 2019 17:02:07 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
+        Wed, 19 Jun 2019 11:02:34 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50968 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725899AbfFSPCe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:02:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FDFL6FNwMO+N2Z7jWsOhRNSUjHzRNRrq16HYq8Dyh38=; b=H02KpYZ7ruYvHwfH7uxOGeNVR
+        31p9TXM4uwYkgvcddya5pywozyXwJCwoPGcsHKtaDMTTJPFiDpIqnYZ+rKRpTcWF0XmZe0MZbbLzi
+        RAeeF5C+uyoN5Vzbcb7URPbiCV7cH/x0c9gERr8CMbnTbXUwV09cdQViE3GrP83nq/3zr11kMHsL9
+        hU6MBkOm2YeWN/7qgK5nJxuyzgZq9xzNE3PI5EQ4ykwIDhMplp+TyQweP/oE6JXy7RzUT9psv6pf4
+        t0/oY/z4zS3mMoQrQHmhKOsIfNdyrsy2AgSgK5lGK7zRde24ZDtMo7UY+bXrq0CwDiEWsjTuM3YBA
+        pc5i6WViQ==;
+Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdc6b-0008Kr-9b; Wed, 19 Jun 2019 15:02:33 +0000
+Date:   Wed, 19 Jun 2019 12:02:29 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
         Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>
-Subject: Re: [PATCH 04/14] ABI: better identificate tables
-Message-ID: <20190619150207.GA19346@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
- <20190619125135.GG25248@localhost>
- <20190619105633.7f7315a5@coco.lan>
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main
+ dir
+Message-ID: <20190619120229.78ce6e07@coco.lan>
+In-Reply-To: <20190619081353.75762028@lwn.net>
+References: <cover.1560890771.git.mchehab+samsung@kernel.org>
+        <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org>
+        <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com>
+        <20190619072218.4437f891@coco.lan>
+        <20190619104239.GM3419@hirez.programming.kicks-ass.net>
+        <20190619081353.75762028@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619105633.7f7315a5@coco.lan>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 10:56:33AM -0300, Mauro Carvalho Chehab wrote:
-> Hi Johan,
+Hi Jon,
+
+Em Wed, 19 Jun 2019 08:13:53 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
+
+> On Wed, 19 Jun 2019 12:42:39 +0200
+> Peter Zijlstra <peterz@infradead.org> wrote:
 > 
-> Em Wed, 19 Jun 2019 14:51:35 +0200
-> Johan Hovold <johan@kernel.org> escreveu:
-> 
-> > On Thu, Jun 13, 2019 at 11:04:10PM -0300, Mauro Carvalho Chehab wrote:
-> > > From: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> > > 
-> > > When parsing via script, it is important to know if the script
-> > > should consider a description as a literal block that should
-> > > be displayed as-is, or if the description can be considered
-> > > as a normal text.
-> > > 
-> > > Change descriptions to ensure that the preceding line of a table
-> > > ends with a colon. That makes easy to identify the need of a
-> > > literal block.  
+> > No, the other way around, Sphinx can recognize local files and treat
+> > them special. That way we keep the text readable.
 > > 
-> > In the cover letter you say that the first four patches of this series,
-> > including this one, "fix some ABI descriptions that are violating the
-> > syntax described at Documentation/ABI/README". This seems a bit harsh,
-> > given that it's you that is now *introducing* a new syntax requirement
-> > to assist your script.
+> > Same with that :c:func:'foo' crap, that needs to die, and Sphinx needs
+> > to be taught about foo().  
 > 
-> Yeah, what's there at the cover letter doesn't apply to this specific
-> patch. The thing is that I wrote this series a lot of time ago (2016/17).
-> 
-> I revived those per a request at KS ML, as we still need to expose the
-> ABI content on some book that will be used by userspace people.
-> 
-> So, I just rebased it on the top of curent Kernel, add a cover letter
-> with the things I remembered and re-sent.
-> 
-> In the specific case of this patch, the ":" there actually makes sense
-> for someone that it is reading it as a text file, and it is an easy
-> hack to make it parse better.
-> 
-> > Specifically, this new requirement isn't documented anywhere AFAICT, so
-> > how will anyone adding new ABI descriptions learn about it?
-> 
-> Yeah, either that or provide an alternative to "Description" tag, to be
-> used with more complex ABI descriptions.
-> 
-> One of the things that occurred to me, back on 2017, is that we should
-> have a way to to specify that an specific ABI description would have
-> a rich format. Something like:
-> 
-> What:		/sys/bus/usb/devices/<busnum>-<devnum>:<config num>.<interface num>/<hid-bus>:<vendor-id>:<product-id>.<num>/pyra/roccatpyra<minor>/actual_cpi
-> Date:		August 2010
-> Contact:	Stefan Achatz <erazor_de@users.sourceforge.net>
-> RST-Description:
-> 		It is possible to switch the cpi setting of the mouse with the
-> 		press of a button.
-> 		When read, this file returns the raw number of the actual cpi
-> 		setting reported by the mouse. This number has to be further
-> 		processed to receive the real dpi value:
-> 
-> 		===== =====
-> 		VALUE DPI
-> 		===== =====
-> 		1     400
-> 		2     800
-> 		4     1600
-> 		===== =====
-> 
-> With that, the script will know that the description contents will be using
-> the ReST markup, and parse it accordingly. Right now, what it does, instead,
-> is to place the description on a code-block, e. g. it will produce this
-> output for the description:
-> 
-> ::
-> 
-> 		It is possible to switch the cpi setting of the mouse with the
-> 		press of a button.
-> 		When read, this file returns the raw number of the actual cpi
-> 		setting reported by the mouse. This number has to be further
-> 		processed to receive the real dpi value:
-> 
-> 		VALUE DPI
-> 		1     400
-> 		2     800
-> 		4     1600
-> 
-> 
-> Greg, 
-> 
-> what do you think?
+> I did a patch to make that latter part happen, but haven't been able to
+> find the time to address the comments and get it out there.  It definitely
+> cleaned up the source files a lot and is worth doing.  Will try to get
+> back to it soon.
 
-I don't know when "Description" and "RST-Description" would be used.
-Why not just parse "Description" like rst text and if things are "messy"
-we fix them up as found, like you did with the ":" here?  It doesn't
-have to be complex, we can always fix them up after-the-fact if new
-stuff gets added that doesn't quite parse properly.
+See my comment. Yeah, the :c:func:'foo' (the version you merged at the automarkup
+branch) has currently a bug, when there's something like:
 
-Just like we do for most kernel-doc formatting :)
+	func()
+	======
 
-thanks,
+or when func() is inside a table.
 
-greg k-h
+Solving the table case would be a lot better if the plugin could run the
+existing table parser and only then handle the cross-reference replacements,
+but I've no idea how flexible the Sphinx plugins can be.
+
+> 
+> The local file links should be easy to do; we shouldn't need to add any
+> markup for those.
+
+Yeah, those are easy - except if someone adds a Documentation/* link 
+inside a table or inside a topic header.
+
+Running a modified version of your tool shows just two new warnings:
+
+	Documentation/translations/ja_JP/howto.rst:176: WARNING: undefined label: :doc: (if the link has no caption the label must precede a section header)         
+	Documentation/translations/zh_CN/process/submitting-drivers.rst:25: WARNING: unknown document: ../../../Documentation/translations/zh_CN/process/submitting-patches
+
+The first one is because of this:
+
+	:Ref:`Documentation/process/kernel-docs.rst <kernel_docs>`
+
+(my parser didn't consider upper-case tags - a simple fix at a regex should
+fix this)
+
+The second one is because the URL is wrong. It is pointing to:
+
+	Documentation/Documentation/translations/zh_CN/process/submitting-patches
+
+at Chinese translation.
+
+So, at least the way our documentation is, the plugin seems to be working
+as expected.
+
+As a reference, I'm enclosing the diff against your patch:
+
+    commit 6231d7456e87bd3e11f892709945887bd55a8a20 (docs/automarkup)
+    Author: Jonathan Corbet <corbet@lwn.net>
+    Date:   Thu Apr 25 07:55:07 2019 -0600
+
+        Docs: An initial automarkup extension for sphinx
+    
+        Rather than fill our text files with :c:func:`function()` syntax, just do
+        the markup via a hook into the sphinx build process.  As is always the
+        case, the real problem is detecting the situations where this markup should
+        *not* be done.
+    
+        Signed-off-by: Jonathan Corbet <corbet@lwn.net>
+
+Thanks,
+Mauro
+
+-
+
+diff --git a/Documentation/sphinx/automarkup.py b/Documentation/sphinx/automarkup.py
+index 39c8f4d5af82..60dad596c790 100644
+--- a/Documentation/sphinx/automarkup.py
++++ b/Documentation/sphinx/automarkup.py
+@@ -9,6 +9,7 @@
+ from __future__ import print_function
+ import re
+ import sphinx
++#import sys		# Just for debug
+ 
+ #
+ # Regex nastiness.  Of course.
+@@ -31,10 +32,26 @@ RE_literal = re.compile(r'^(\s*)(.*::\s*|\.\.\s+code-block::.*)$')
+ #
+ RE_whitesp = re.compile(r'^(\s*)')
+ 
++#
++# Get a documentation reference
++#
++RE_doc_links = re.compile(r'\bDocumentation/([\w\d\-\_\/]+)\.rst\b')
++
++#
++# Doc link false-positives
++#
++RE_false_doc_links = re.compile(r':ref:`\s*Documentation/[\w\d\-\_\/]+\.rst')
++
+ def MangleFile(app, docname, text):
+     ret = [ ]
+     previous = ''
+     literal = False
++
++    rel_dir = ''
++
++    for depth in range(0, docname.count('/')):
++        rel_dir += "../"
++
+     for line in text[0].split('\n'):
+         #
+         # See if we might be ending a literal block, as denoted by
+@@ -63,7 +80,18 @@ def MangleFile(app, docname, text):
+         # Normal line - perform substitutions.
+         #
+         else:
+-            ret.append(RE_function.sub(r'\1:c:func:`\2`\3', line))
++#            new_line = RE_function.sub(r'\1:c:func:`\2`\3', line)
++            new_line = line
++
++            if not RE_false_doc_links.search(new_line):
++                new_line = RE_doc_links.sub(r':doc:`' + rel_dir + r'\1`', new_line)
++
++ #           # Just for debug - should be removed on production
++ #           if new_line != line:
++ #               print ("===>" + new_line, file=sys.stderr)
++
++            ret.append(new_line)
++
+         #
+         # Might we be starting a literal block?  If so make note of
+         # the fact.
+
+
