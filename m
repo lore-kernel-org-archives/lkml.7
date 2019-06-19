@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CB1C31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:11:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6FD8C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B82482147A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:11:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D319208CB
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 05:13:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730656AbfFSFLn (ORCPT
+        id S1730518AbfFSFNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 01:11:43 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:50481 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSFLm (ORCPT
+        Wed, 19 Jun 2019 01:13:01 -0400
+Received: from relay5-d.mail.gandi.net ([217.70.183.197]:43689 "EHLO
+        relay5-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725893AbfFSFNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 01:11:42 -0400
+        Wed, 19 Jun 2019 01:13:00 -0400
 X-Originating-IP: 79.86.19.127
 Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
         (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id DC9AB60010;
-        Wed, 19 Jun 2019 05:11:16 +0000 (UTC)
+        by relay5-d.mail.gandi.net (Postfix) with ESMTPSA id 3A6441C0006;
+        Wed, 19 Jun 2019 05:12:38 +0000 (UTC)
 From:   Alexandre Ghiti <alex@ghiti.fr>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
@@ -46,9 +46,9 @@ Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
         linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linux-mm@kvack.org,
         Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH 2/8] sh: Start fallback of top-down mmap at mm->mmap_base
-Date:   Wed, 19 Jun 2019 01:08:38 -0400
-Message-Id: <20190619050844.5294-3-alex@ghiti.fr>
+Subject: [PATCH 3/8] sparc: Start fallback of top-down mmap at mm->mmap_base
+Date:   Wed, 19 Jun 2019 01:08:39 -0400
+Message-Id: <20190619050844.5294-4-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190619050844.5294-1-alex@ghiti.fr>
 References: <20190619050844.5294-1-alex@ghiti.fr>
@@ -66,20 +66,34 @@ and the stack, which is the only place not covered by the top-down mmap.
 
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 ---
- arch/sh/mm/mmap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/sparc/kernel/sys_sparc_64.c | 2 +-
+ arch/sparc/mm/hugetlbpage.c      | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/sh/mm/mmap.c b/arch/sh/mm/mmap.c
-index 6a1a1297baae..4c7da92473dd 100644
---- a/arch/sh/mm/mmap.c
-+++ b/arch/sh/mm/mmap.c
-@@ -135,7 +135,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+diff --git a/arch/sparc/kernel/sys_sparc_64.c b/arch/sparc/kernel/sys_sparc_64.c
+index ccc88926bc00..ea1de1e5fa8d 100644
+--- a/arch/sparc/kernel/sys_sparc_64.c
++++ b/arch/sparc/kernel/sys_sparc_64.c
+@@ -206,7 +206,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
  	if (addr & ~PAGE_MASK) {
  		VM_BUG_ON(addr != -ENOMEM);
  		info.flags = 0;
 -		info.low_limit = TASK_UNMAPPED_BASE;
 +		info.low_limit = mm->mmap_base;
- 		info.high_limit = TASK_SIZE;
+ 		info.high_limit = STACK_TOP32;
+ 		addr = vm_unmapped_area(&info);
+ 	}
+diff --git a/arch/sparc/mm/hugetlbpage.c b/arch/sparc/mm/hugetlbpage.c
+index f78793a06bbd..9c67f805abc8 100644
+--- a/arch/sparc/mm/hugetlbpage.c
++++ b/arch/sparc/mm/hugetlbpage.c
+@@ -86,7 +86,7 @@ hugetlb_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+ 	if (addr & ~PAGE_MASK) {
+ 		VM_BUG_ON(addr != -ENOMEM);
+ 		info.flags = 0;
+-		info.low_limit = TASK_UNMAPPED_BASE;
++		info.low_limit = mm->mmap_base;
+ 		info.high_limit = STACK_TOP32;
  		addr = vm_unmapped_area(&info);
  	}
 -- 
