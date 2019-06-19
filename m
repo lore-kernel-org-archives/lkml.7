@@ -2,109 +2,92 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAEDC31E5E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:47:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDDE9C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:50:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5136621721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:47:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1AAF21721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:50:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="uAX5khEU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbfFSTrj (ORCPT
+        id S1727002AbfFSTue (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:47:39 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:37110 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726447AbfFSTrj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:47:39 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1hdgYT-0003lA-LS; Wed, 19 Jun 2019 13:47:38 -0600
-To:     Kirill Smelkov <kirr@nexedi.com>,
-        Julia Lawall <julia.lawall@lip6.fr>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kbuild-all@01.org
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien>
- <20190619162713.GA19859@deco.navytux.spb.ru>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <8ece80ad-d3c9-ac7b-29a5-b8c6f40851af@deltatee.com>
-Date:   Wed, 19 Jun 2019 13:47:35 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Wed, 19 Jun 2019 15:50:34 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:45339 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726175AbfFSTud (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 15:50:33 -0400
+Received: by mail-pg1-f196.google.com with SMTP id s21so216469pga.12
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 12:50:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DZChMikjAO3PKudQBAI8B1YDg/B4twPluki0ZMCxSIs=;
+        b=uAX5khEUlOhxoZniQNjo8u3dnMil0nwkHv/puLD90VYqZ0OPcVSo0UK1nTX4ncwsAh
+         nFD23dUC/PL9lzXuBb+Vw0RS1j3HHq8E6OeL9vJVxpOtIMn8MzCNtMf6UQvBzqA8P0mV
+         oEAqohOTMlKDoBLvZ94oqIAHtBfbdioqyTqlf9wZ9H70VK4rnFd1d3EPrUTAFsLpPIKo
+         98YbzCSkIqeAgBvatd910y5tR2RAWmGEMTIYUU0K+Q+x2ORwoU9L7nYE0HphC3PnQHdI
+         Mm3VYoULxrCuMVdMziInouFOFisXSsTpD1fsP/ELB8za3v6Z5TGtqipds/Eclg+QTWze
+         f58A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DZChMikjAO3PKudQBAI8B1YDg/B4twPluki0ZMCxSIs=;
+        b=bB7pzG4uQX+LKMj2wWXTIiUKRSliQVj43xYVeW2zv9/Pzk0lsefdellLRAenV8gA98
+         Ezw2cLT/6+9cy409Tt7Gh0+PgJMcQ32FvHvNq7cU5/oivnvUZX18qQQAlImPoU2BMHen
+         n4AkqCxoYG86E79YkOF3jvhxBWNlRACQqtGfdFJW9+Gxb0lqrYt385vw0ihiovYxRYs0
+         2m50dWf/9su/FzkvSzuDoXXsy4FB29Bm847z50eNmhyZgez5fuOt/kxEGeEsUrotV05G
+         rHDe2+6owPGo1XdwAdYnRD47f5yrfhykHAbfH+/tA1iJRVS4I6a9Dif6JmNAnBNwMkpV
+         PGng==
+X-Gm-Message-State: APjAAAXdX5dqAbCxy3mynNEAQ70Dap2Qc/VjxT9XiwB2PKKlNODCYh7I
+        DVPkYyHirl9n54dPrUd7LCyeuS1U4TyPqVdvOYF9mw==
+X-Google-Smtp-Source: APXvYqyjCBtQEr2rOg6EN5DHa/HLlH7APyqHI/pOkGz7IZqPsvs7me8bqrliv/gzcx50ktbRfyv+oRvr1kIMba9BH38=
+X-Received: by 2002:a17:90a:ac11:: with SMTP id o17mr13171269pjq.134.1560973832424;
+ Wed, 19 Jun 2019 12:50:32 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190619162713.GA19859@deco.navytux.spb.ru>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: kbuild-all@01.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, helgaas@kernel.org, kurt.schwemmer@microsemi.com, bigeasy@linutronix.de, julia.lawall@lip6.fr, kirr@nexedi.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+References: <20190619181844.57696-1-ndesaulniers@google.com> <20190619191605.GA5837@gmail.com>
+In-Reply-To: <20190619191605.GA5837@gmail.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Wed, 19 Jun 2019 12:50:21 -0700
+Message-ID: <CAKwvOdmZuxZyRF1FoKNqunin6AnWfwjni5PKsf0TV12hLJttyw@mail.gmail.com>
+Subject: Re: [PATCH] MAINTAINERS: add CLANG/LLVM BUILD SUPPORT info
+To:     Louis Taylor <louis@kragniz.eu>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Joe Perches <joe@perches.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 12:17 PM Louis Taylor <louis@kragniz.eu> wrote:
+>
+> On Wed, Jun 19, 2019 at 11:18:44AM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
+> > Add keyword support so that our mailing list gets cc'ed for clang/llvm
+> > patches. We're pretty active on our mailing list so far as code review.
+> > There are numerous Googlers like myself that are paid to support
+> > building the Linux kernel with Clang and LLVM.
+> > +CLANG/LLVM BUILD SUPPORT
+> > +L: clang-built-linux@googlegroups.com
+>
+> I think this should have "(moderated for non-subscribers)" added.
 
-
-On 2019-06-19 10:27 a.m., Kirill Smelkov wrote:
-> Hi Julia, everyone.
-> 
-> On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
->> Hi,
->>
->> Can you forward this patch to the people below if you think it is
->> appropriate?
-
->> From: kbuild test robot <lkp@intel.com>
->>
->> drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read() can deadlock .write(); change nonseekable_open -> stream_open to fix.
->>
->> Generated by: scripts/coccinelle/api/stream_open.cocci
->>
->> Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue")
->> Signed-off-by: kbuild test robot <lkp@intel.com>
->> ---
->>
->> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-devel.git linux-5.0.y-rt-rebase
-
-This is for the RT tree? The patch in the fixes tag isn't in upstream
-and I don't understand how this is related to that patch at all. It just
-looks like the RT tree hasn't picked up the patch which made this change
-in upstream.
-
-I feel like I've seen the change in this patch a bunch of times already
-and it appears to be correct in rc5 at least...
-
-Logan
-
-
->> head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
->> commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switchtec: Don't use completion's wait queue
->> :::::: branch date: 6 days ago
->> :::::: commit date: 6 days ago
->>
->> Please take the patch only if it's a positive warning. Thanks!
->>
->>  switchtec.c |    2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> --- a/drivers/pci/switch/switchtec.c
->> +++ b/drivers/pci/switch/switchtec.c
->> @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
->>  		return PTR_ERR(stuser);
->>
->>  	filp->private_data = stuser;
->> -	nonseekable_open(inode, filp);
->> +	stream_open(inode, filp);
->>
->>  	dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
->>
+The current setting is "anyone from the web [may post]" as otherwise
+the various CI services reporting there have issues.  There is a basic
+spam filter that emails me every so often.  Not sure if that's quite
+considered "moderated for non-subscribers" or if I'm just being overly
+pedantic? (Point being that I don't think you have to subscribe to
+post)
+-- 
+Thanks,
+~Nick Desaulniers
