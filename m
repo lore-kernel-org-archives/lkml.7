@@ -2,209 +2,74 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3326EC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:50:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0825C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36A5217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:50:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ULctRkHD"
+	by mail.kernel.org (Postfix) with ESMTP id D032821881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:51:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729507AbfFSPuC (ORCPT
+        id S1729642AbfFSPvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:50:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:46023 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726091AbfFSPuC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 11:50:02 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so3897778wre.12;
-        Wed, 19 Jun 2019 08:49:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=zjf81C76HrVq+IReyDc6rr3+Eybofc2ke2b3vedZ5Rg=;
-        b=ULctRkHDOigvuGlSvdwNv3rWYSF9l80UIsojktkG8wSVREp60zn7BBE0zSyH4N1C+c
-         L3QO7i7auNozvzvjRDFGY92+L8FgL94ArECvsovHgh6SCv94okLREIFeVG+ncRncFQZo
-         adh5deAk9NRmmpuRxNyk0YFZw8C2rcgt6tWYpPnidOI5d2mM1nHZ2YfaS0CYu7PHno1w
-         6jLtVujb2t47X+hh0PgqPsb/FZL2bayp0ebjBm8K8squkHPdR+9JImYWaPIV/CtiL1Zu
-         9gIh6TMh8OG2lXWeCuqJ4IPAw9MRzsrA+dSJoNx44vovu+Io3vUNkW4dyZTl1FwIaOEX
-         EG9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=zjf81C76HrVq+IReyDc6rr3+Eybofc2ke2b3vedZ5Rg=;
-        b=ksB/GcdwDtRAduY3xrMOt0aEWwRAw8kKDrnF28PU/cfOrPlybD05XiZIAmGca1ELpQ
-         TFOQPErPVjY/BMyURU5gCsb+INpav0I5QfkcdSNwnsD05uOrVWmznWOdWJY5O6gInq3o
-         k66Q96KkoNBkb1zxgBpV4vGeTa2ZwKERjjU0rRDZdBTbuHiSTCtORj4N42uTflnAcaOP
-         wpiTIPti5U8rxvsosXK22YJPDAOWv/yXKro+jtWpgEqx8h8sgsSw/xkqG5J034nGqqPr
-         SvXXiqCnLtKOIRDA77OuKJfhXfrLgUOhQJQcj9FkS5EK5TpyWd8IeEsWVySB+mKGdKjL
-         wn+Q==
-X-Gm-Message-State: APjAAAXbPim8m2f7RqyxXJgPe7yyF6xvPLB/nf/fP8Igqeo/kgBsObxp
-        3ni2vu3KfUGS7AJ4Er5QssPn2irl
-X-Google-Smtp-Source: APXvYqwlCcWEflll908xJpAYKY+HQOFWGdzfS9lQKxxuzhnSmvwWppTU0LaGLOKY0gVoXg3rRewatA==
-X-Received: by 2002:adf:dd03:: with SMTP id a3mr34099070wrm.87.1560959398652;
-        Wed, 19 Jun 2019 08:49:58 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id q21sm1977424wmq.13.2019.06.19.08.49.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 08:49:57 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Aaron Lewis <aaronlewis@google.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>
-Subject: [PATCH] KVM: nVMX: reorganize initial steps of vmx_set_nested_state
-Date:   Wed, 19 Jun 2019 17:49:56 +0200
-Message-Id: <1560959396-13969-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 19 Jun 2019 11:51:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:30650 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726091AbfFSPvF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 11:51:05 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 08:51:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,392,1557212400"; 
+   d="scan'208";a="181661305"
+Received: from mcostacx-wtg.ger.corp.intel.com (HELO localhost) ([10.249.47.136])
+  by fmsmga001.fm.intel.com with ESMTP; 19 Jun 2019 08:51:02 -0700
+From:   Jani Nikula <jani.nikula@linux.intel.com>
+To:     Jonathan Corbet <corbet@lwn.net>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     David Howells <dhowells@redhat.com>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v1 12/22] docs: driver-api: add .rst files from the main dir
+In-Reply-To: <20190619085458.08872dbb@lwn.net>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+References: <20190619072218.4437f891@coco.lan> <cover.1560890771.git.mchehab+samsung@kernel.org> <b0d24e805d5368719cc64e8104d64ee9b5b89dd0.1560890772.git.mchehab+samsung@kernel.org> <CAKMK7uGM1aZz9yg1kYM8w2gw_cS6Eaynmar-uVurXjK5t6WouQ@mail.gmail.com> <11422.1560951550@warthog.procyon.org.uk> <20190619111528.3e2665e3@coco.lan> <20190619085458.08872dbb@lwn.net>
+Date:   Wed, 19 Jun 2019 18:52:32 +0300
+Message-ID: <874l4llghr.fsf@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 332d079735f5 ("KVM: nVMX: KVM_SET_NESTED_STATE - Tear down old EVMCS
-state before setting new state", 2019-05-02) broke evmcs_test because the
-eVMCS setup must be performed even if there is no VMXON region defined,
-as long as the eVMCS bit is set in the assist page.
+On Wed, 19 Jun 2019, Jonathan Corbet <corbet@lwn.net> wrote:
+> Organization of the documentation tree is important; it has never really
+> gotten any attention so far, and we're trying to make it better.  But
+> moving documents will, by its nature, annoy people.  We can generally get
+> past that, but I'd really like to avoid moving things twice.  In general,
+> I would rather see a single document converted, read critically and
+> updated, and carefully integrated with the rest than a hundred of them
+> swept into different piles...
 
-While the simplest possible fix would be to add a check on
-kvm_state->flags & KVM_STATE_NESTED_EVMCS in the initial "if" that
-covers kvm_state->hdr.vmx.vmxon_pa == -1ull, that is quite ugly.
+FWIW, as a first step, my preference would actually be cleaning up the
+top level Documentation/ directory. Move every file to an existing or a
+new subdirectory, even if just as .txt, or just delete. I understand
+this would lead to an extra rst conversion and extension change later,
+which you'd like to avoid, but IMO would be helpful.
 
-Instead, this patch moves checks earlier in the function and
-conditionalizes them on kvm_state->hdr.vmx.vmxon_pa, so that
-vmx_set_nested_state always goes through vmx_leave_nested
-and nested_enable_evmcs.
+We could even add an attic directory, which would be a suitable place
+for things like zorro.txt. Attic is where I'd look for my old Amiga
+hardware, so feels natural.
 
-Fixes: 332d079735f5
-Cc: Aaron Lewis <aaronlewis@google.com>
-Cc: Vitaly Kuznetsov <vkuznets@redhat.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c                          | 26 ++++++++++--------
- .../kvm/x86_64/vmx_set_nested_state_test.c         | 32 ++++++++++++++--------
- 2 files changed, 35 insertions(+), 23 deletions(-)
+BR,
+Jani.
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index fb6d1f7b43f3..5f9c1a200201 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -5343,9 +5343,6 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 	if (kvm_state->format != KVM_STATE_NESTED_FORMAT_VMX)
- 		return -EINVAL;
- 
--	if (!nested_vmx_allowed(vcpu))
--		return kvm_state->hdr.vmx.vmxon_pa == -1ull ? 0 : -EINVAL;
--
- 	if (kvm_state->hdr.vmx.vmxon_pa == -1ull) {
- 		if (kvm_state->hdr.vmx.smm.flags)
- 			return -EINVAL;
-@@ -5353,12 +5350,15 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 		if (kvm_state->hdr.vmx.vmcs12_pa != -1ull)
- 			return -EINVAL;
- 
--		vmx_leave_nested(vcpu);
--		return 0;
--	}
-+		if (kvm_state->flags & ~KVM_STATE_NESTED_EVMCS)
-+			return -EINVAL;
-+	} else {
-+		if (!nested_vmx_allowed(vcpu))
-+			return -EINVAL;
- 
--	if (!page_address_valid(vcpu, kvm_state->hdr.vmx.vmxon_pa))
--		return -EINVAL;
-+		if (!page_address_valid(vcpu, kvm_state->hdr.vmx.vmxon_pa))
-+			return -EINVAL;
-+    	}
- 
- 	if ((kvm_state->hdr.vmx.smm.flags & KVM_STATE_NESTED_SMM_GUEST_MODE) &&
- 	    (kvm_state->flags & KVM_STATE_NESTED_GUEST_MODE))
-@@ -5381,11 +5381,15 @@ static int vmx_set_nested_state(struct kvm_vcpu *vcpu,
- 		return -EINVAL;
- 
- 	vmx_leave_nested(vcpu);
--	if (kvm_state->hdr.vmx.vmxon_pa == -1ull)
--		return 0;
-+	if (kvm_state->flags & KVM_STATE_NESTED_EVMCS) {
-+		if (!nested_vmx_allowed(vcpu))
-+			return -EINVAL;
- 
--	if (kvm_state->flags & KVM_STATE_NESTED_EVMCS)
- 		nested_enable_evmcs(vcpu, NULL);
-+	}
-+
-+	if (kvm_state->hdr.vmx.vmxon_pa == -1ull)
-+		return 0;
- 
- 	vmx->nested.vmxon_ptr = kvm_state->hdr.vmx.vmxon_pa;
- 	ret = enter_vmx_operation(vcpu);
-diff --git a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-index 0648fe6df5a8..e64ca20b315a 100644
---- a/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-+++ b/tools/testing/selftests/kvm/x86_64/vmx_set_nested_state_test.c
-@@ -123,36 +123,44 @@ void test_vmx_nested_state(struct kvm_vm *vm)
- 	/*
- 	 * We cannot virtualize anything if the guest does not have VMX
- 	 * enabled.  We expect KVM_SET_NESTED_STATE to return 0 if vmxon_pa
--	 * is set to -1ull.
-+	 * is set to -1ull, but the flags must be zero.
- 	 */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = -1ull;
-+	test_nested_state_expect_einval(vm, state);
-+
-+	state->hdr.vmx.vmcs12_pa = -1ull;
-+	state->flags = KVM_STATE_NESTED_EVMCS;
-+	test_nested_state_expect_einval(vm, state);
-+
-+	state->flags = 0;
- 	test_nested_state(vm, state);
- 
- 	/* Enable VMX in the guest CPUID. */
- 	vcpu_set_cpuid(vm, VCPU_ID, kvm_get_supported_cpuid());
- 
--	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
-+	/*
-+	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
-+	 * setting the nested state but flags other than eVMCS must be clear.
-+	 */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = -1ull;
-+	state->hdr.vmx.vmcs12_pa = -1ull;
-+	test_nested_state_expect_einval(vm, state);
-+
-+	state->flags = KVM_STATE_NESTED_EVMCS;
-+	test_nested_state(vm, state);
-+
-+	/* It is invalid to have vmxon_pa == -1ull and SMM flags non-zero. */
- 	state->hdr.vmx.smm.flags = 1;
- 	test_nested_state_expect_einval(vm, state);
- 
- 	/* It is invalid to have vmxon_pa == -1ull and vmcs_pa != -1ull. */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = -1ull;
--	state->hdr.vmx.vmcs12_pa = 0;
-+	state->flags = 0;
- 	test_nested_state_expect_einval(vm, state);
- 
--	/*
--	 * Setting vmxon_pa == -1ull and vmcs_pa == -1ull exits early without
--	 * setting the nested state.
--	 */
--	set_default_vmx_state(state, state_sz);
--	state->hdr.vmx.vmxon_pa = -1ull;
--	state->hdr.vmx.vmcs12_pa = -1ull;
--	test_nested_state(vm, state);
--
- 	/* It is invalid to have vmxon_pa set to a non-page aligned address. */
- 	set_default_vmx_state(state, state_sz);
- 	state->hdr.vmx.vmxon_pa = 1;
+
 -- 
-1.8.3.1
-
+Jani Nikula, Intel Open Source Graphics Center
