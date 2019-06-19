@@ -2,130 +2,168 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77088C48BDF
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:52:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A79A9C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FF1A21721
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:52:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E3E821721
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 21:52:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1560981138;
+	bh=urZJK504KW8i0CCEmlesyUZmxKFCIwn6WTEdzPvLXUA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=b87E03YAB427GIXcnl5HUDov4AdjKWUnptA0yrf0eBAyg0HXeh9LjAHTlQbFpBRKI
+	 5MymsZC+mYpJ0spMdAJImYPVj/KOQzrpr0eIqXiUA36Iafg1ANvJ18DvZAdE1EDS46
+	 E2Bdqhm7dYsAm+wytdMg5kxEx3fatToRamVZnQzw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730670AbfFSVwC (ORCPT
+        id S1730800AbfFSVwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Wed, 19 Jun 2019 17:52:17 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:33452 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730616AbfFSVwC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 17:52:02 -0400
-Received: from mga14.intel.com ([192.55.52.115]:37127 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726246AbfFSVwB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 17:52:01 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 14:52:00 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
-   d="scan'208";a="160481702"
-Received: from schen9-desk.jf.intel.com (HELO [10.54.74.162]) ([10.54.74.162])
-  by fmsmga008.fm.intel.com with ESMTP; 19 Jun 2019 14:52:00 -0700
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Greear <greearb@candelatech.com>, stable@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Jun Nakajima <jun.nakajima@intel.com>,
-        Jiri Kosina <jikos@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Asit Mallick <asit.k.mallick@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Jon Masters <jcm@redhat.com>,
-        Waiman Long <longman9394@gmail.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Mark Gross <mgross@linux.intel.com>,
-        LKML <linux-kernel@vger.kernel.org>, x86@kernel.org
-References: <20190618212457.9764-1-tim.c.chen@linux.intel.com>
-From:   Tim Chen <tim.c.chen@linux.intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=tim.c.chen@linux.intel.com; prefer-encrypt=mutual; keydata=
- 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
- l50q2K/r651xphs7CGEdKi1nU0YJVbQxJQ==
-Subject: Re: [PATCH v4] Documentation: Add section about CPU vulnerabilities
- for Spectre
-Message-ID: <bf064dce-2ab6-ad72-d052-3199b2bef3ac@linux.intel.com>
-Date:   Wed, 19 Jun 2019 14:51:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: by mail-io1-f67.google.com with SMTP id u13so1248961iop.0;
+        Wed, 19 Jun 2019 14:52:02 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=/7RNl0V1WoARVRD/RxLj0SbJgldmEVIr2syT8aiqqBI=;
+        b=XfxLaYAiI5x8hAnBhocjZm90A9Lg/0CTPLwCsTsgdAANDvmwRPCKJUfOGYAkZXaNmn
+         IeaUEq2k1IVGrBYoQm1o4hx1xdNs0mQlUPVAMY1BlV92rIdHeLcCvgyOmqU594gPrj4s
+         8/9M+Sr0dBxCxIzbV+6iZUhtw4eBzD87q12Oqqa0ewKjryEQ+i1z4f9hdhNWbBB0cp68
+         L1CbkPd3hzlWCFmxbiaw9hSYPfvTFCIYn0TztdNVTPH3yZyzQhVhJpcjsMBQBz0jg6GL
+         QezRKWE/fudI7t/0Y8yKVtP5fnqXc3/UeyRzuC4i1/urnZmeQbDhw0QMuuToOx2tD/Mm
+         XeXQ==
+X-Gm-Message-State: APjAAAWBjY9YmLevzTfxahlqaef2f++wSAcwr+gfo5oa2GHehI9Sc/c7
+        OIZpfIGwhXrmDFlkO0U6rw==
+X-Google-Smtp-Source: APXvYqwsCLCHHve5YFnB7Eegl0JTw/80pFtx6JeAxTQ67f75e5Qj4mCBLH4/9MyYF/LdnVCfkHlSJw==
+X-Received: by 2002:a5d:94d0:: with SMTP id y16mr42777142ior.123.1560981121583;
+        Wed, 19 Jun 2019 14:52:01 -0700 (PDT)
+Received: from localhost.localdomain ([64.188.179.247])
+        by smtp.googlemail.com with ESMTPSA id e84sm37754698iof.39.2019.06.19.14.52.00
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 14:52:01 -0700 (PDT)
+From:   Rob Herring <robh@kernel.org>
+To:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: [RFC PATCH 2/4] dt-bindings: display: Convert ampire,am-480272h3tmqw-t01h panel to DT schema
+Date:   Wed, 19 Jun 2019 15:51:54 -0600
+Message-Id: <20190619215156.27795-2-robh@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190619215156.27795-1-robh@kernel.org>
+References: <20190619215156.27795-1-robh@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190618212457.9764-1-tim.c.chen@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/18/19 2:24 PM, Tim Chen wrote:
+Convert the ampire,am-480272h3tmqw-t01h panel binding to DT schema.
 
-> +
-> +_lab1:
-> +
-> +References on Spectre
-> +---------------------
+Cc: Thierry Reding <thierry.reding@gmail.com>
+Cc: Sam Ravnborg <sam@ravnborg.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: dri-devel@lists.freedesktop.org
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ .../panel/ampire,am-480272h3tmqw-t01h.txt     | 26 ------------
+ .../panel/ampire,am-480272h3tmqw-t01h.yaml    | 41 +++++++++++++++++++
+ 2 files changed, 41 insertions(+), 26 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
+ create mode 100644 Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
 
-Thomas,
-
-I accidentally left a stray "_lab1:" label.  Should be removed.
-
-Sending you an updated v5 version separately.
-
-Tim
+diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
+deleted file mode 100644
+index 6812280cb109..000000000000
+--- a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.txt
++++ /dev/null
+@@ -1,26 +0,0 @@
+-Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
+-
+-This binding is compatible with the simple-panel binding, which is specified
+-in simple-panel.txt in this directory.
+-
+-Required properties:
+-- compatible: should be "ampire,am-480272h3tmqw-t01h"
+-
+-Optional properties:
+-- power-supply: regulator to provide the supply voltage
+-- enable-gpios: GPIO pin to enable or disable the panel
+-- backlight: phandle of the backlight device attached to the panel
+-
+-Optional nodes:
+-- Video port for RGB input.
+-
+-Example:
+-	panel_rgb: panel-rgb {
+-		compatible = "ampire,am-480272h3tmqw-t01h";
+-		enable-gpios = <&gpioa 8 1>;
+-		port {
+-			panel_in_rgb: endpoint {
+-				remote-endpoint = <&controller_out_rgb>;
+-			};
+-		};
+-	};
+diff --git a/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+new file mode 100644
+index 000000000000..cc2f6ec6ebf6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/display/panel/ampire,am-480272h3tmqw-t01h.yaml
+@@ -0,0 +1,41 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/display/panel/ampire,am-480272h3tmqw-t01h.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Ampire AM-480272H3TMQW-T01H 4.3" WQVGA TFT LCD panel
++
++maintainers:
++  - Thierry Reding <treding@nvidia.com>
++
++allOf:
++  - $ref: panel-common.yaml#
++
++properties:
++  compatible:
++    const: ampire,am-480272h3tmqw-t01h
++
++  power-supply: true
++  enable-gpios: true
++  backlight: true
++  port: true
++
++required:
++  - compatible
++
++additionalProperties: false
++
++examples:
++  - |
++    panel_rgb: panel {
++      compatible = "ampire,am-480272h3tmqw-t01h";
++      enable-gpios = <&gpioa 8 1>;
++      port {
++        panel_in_rgb: endpoint {
++          remote-endpoint = <&controller_out_rgb>;
++        };
++      };
++    };
++
++...
+-- 
+2.20.1
 
