@@ -2,258 +2,191 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F7DCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73E04C31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA3F2084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 399972084E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 16:35:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="ITt4xmst"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727134AbfFSQfF (ORCPT
+        id S1729753AbfFSQfN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 12:35:05 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.66]:18958 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725899AbfFSQfF (ORCPT
+        Wed, 19 Jun 2019 12:35:13 -0400
+Received: from out3-smtp.messagingengine.com ([66.111.4.27]:51273 "EHLO
+        out3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725899AbfFSQfM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 12:35:05 -0400
-Received: from [46.226.52.194] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-2.bemta.az-b.eu-west-1.aws.symcld.net id 19/BA-04517-4346A0D5; Wed, 19 Jun 2019 16:35:00 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHIsWRWlGSWpSXmKPExsVy8IPnUV2TFK5
-  YgxtzlCymPnzCZvFz0jQWi/tfjzJafLvSwWRxedccNgdWj52z7rJ7bFrVyeZx59oeNo9ntxex
-  eHzeJBfAGsWamZeUX5HAmrGn5yhLQbtVxc/Ok2wNjDMNuxg5OYQE1jNKdM+X72LkALIrJH4fS
-  AEJswkYSsx7854RJMwioCqx61YZSFhYIFRi0vrZbF2MXBwiApMZJea9mssGkmAWiJU4P28pC4
-  jNK+AgMfH/TiYIW1Di5MwnLBA1EhIHX7xghlilJbH8WCRIWELAXmL6+6tgYQkBfYnGY7EQYUO
-  J77O+sUDY5hIfjnewTGDkn4Vk6CwkQxcwMq1itEgqykzPKMlNzMzRNTQw0DU0NNI1tLTQNTQz
-  0Eus0k3SSy3VLU8tLtE11EssL9YrrsxNzknRy0st2cQIDOqUgmMLdjCuPfJa7xCjJAeTkiiv8
-  gfOWCG+pPyUyozE4oz4otKc1OJDjDIcHEoSvJHJXLFCgkWp6akVaZk5wAiDSUtw8CiJ8PYlAa
-  V5iwsSc4sz0yFSpxh1OdZuX7KIWYglLz8vVUqcdzJIkQBIUUZpHtwIWLRfYpSVEuZlZGBgEOI
-  pSC3KzSxBlX/FKM7BqCTMawlyCU9mXgncpldARzABHfFoKRvIESWJCCmpBqbdLzsyF61P4FOx
-  yc2LLdx1rULbvH1OfeG+1RfqV7Bms3nVyO20dP53OPBn+KyD8TbWq4MW/T4R+7P88rWIin6/b
-  7/4Nn5W827cbzIv0cfGb35MfQB3y3ExvQ4nDgZWdrG7Ln0SfzrLP9zdPDe69V3C5Koveb8STL
-  JTEucXBbvEa7bfPvd/jS2v+t7Yzm/K5zYmKx9aqfH3vYX+coOKu6+Wrpc4oZm+VeHERvlN243
-  fLrD+veaJk/eq1yd87qtMvFoRtvrOl2zNNba6dSHFx6tebmpkUD5p0zX59LcOlUM2Nxt3/Lun
-  7PbpkfX+yW5rF2l9WaXU9z59zaMgxml3Z24J/L+0Nm75syM/rok3LEpQYinOSDTUYi4qTgQAf
-  OFEgXEDAAA=
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-17.tower-282.messagelabs.com!1560962100!1308001!1
-X-Originating-IP: [193.240.73.197]
-X-SYMC-ESS-Client-Auth: outbound-route-from=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.43.9; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 14632 invoked from network); 19 Jun 2019 16:35:00 -0000
-Received: from unknown (HELO sw-ex-cashub01.diasemi.com) (193.240.73.197)
-  by server-17.tower-282.messagelabs.com with AES128-SHA256 encrypted SMTP; 19 Jun 2019 16:35:00 -0000
-Received: from swsrvapps-01.diasemi.com (10.20.28.141) by
- SW-EX-CASHUB01.diasemi.com (10.20.16.140) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 19 Jun 2019 17:34:57 +0100
-Received: by swsrvapps-01.diasemi.com (Postfix, from userid 22547)      id
- A35B73FB46; Wed, 19 Jun 2019 17:34:57 +0100 (BST)
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-Date:   Wed, 19 Jun 2019 17:35:00 +0100
-Subject: [PATCH V3] regulator: da9061/62: Adjust LDO voltage selection minimum
- value
-To:     Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Lee Jones" <lee.jones@linaro.org>,
-        Felix Riemann <Felix.Riemann@sma.de>
-CC:     Support Opensource <support.opensource@diasemi.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Message-ID: <20190619163457.A35B73FB46@swsrvapps-01.diasemi.com>
+        Wed, 19 Jun 2019 12:35:12 -0400
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.nyi.internal (Postfix) with ESMTP id 1E3F3223AD;
+        Wed, 19 Jun 2019 12:35:11 -0400 (EDT)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute3.internal (MEProxy); Wed, 19 Jun 2019 12:35:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-type:date:from:in-reply-to
+        :message-id:mime-version:references:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm3; bh=QWszy1
+        QIZnq1jTGoaVFxRLAtJXpnXGB4FyzDJyOceJ0=; b=ITt4xmstYiV1EbvbS00vri
+        3GD/I46andthTRF0WUtHJblgiDmB857RUr7BD7mvEmsLEl1Qvr6GbFrZMPvG0qWi
+        o3N3G/Thig+ItN7LBJ0MiPomXApVTdUccKE4FxIgn/syoLQGhDLMz4Q8GV4HmJOZ
+        trXuebsm22ZzLwNVGeIYWR/ISO41IUW75nDZv+w6EyYwe6+PxkjxhRNORQcDFKy+
+        Fi+8gIyN80F9XdgMoSlfyTNW4VIqmdDNNQw8ptggFh/JCOBm+SPMMR6KiVN8z9xn
+        eYAfu6oxdithER5xHhdf8NhkXIQfxiD+LNSavT+Sv4xbLmueDZMRD/HEKe7x6y5A
+        ==
+X-ME-Sender: <xms:PWQKXYVnTu53V7EkhYPmUZmYT0JAHOPcpWO1gogp4icu8hteJmvKTg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtddvgdejlecutefuodetggdotefrodftvf
+    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
+    uegrihhlohhuthemuceftddtnecuogfuuhhsphgvtghtffhomhgrihhnucdlgeelmdenuc
+    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefkughoucfu
+    tghhihhmmhgvlhcuoehiughoshgthhesihguohhstghhrdhorhhgqeenucffohhmrghinh
+    epthgvshhtshdrnhgvthdpghhoohdrghhlpdgrphhpshhpohhtrdgtohhmnecukfhppedu
+    leefrdegjedrudeihedrvdehudenucfrrghrrghmpehmrghilhhfrhhomhepihguohhstg
+    hhsehiughoshgthhdrohhrghenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:PWQKXTd4LMijvR3frMovsmHVL-5JeNGcrq8i5eQMOxHeRC75ergFZg>
+    <xmx:PWQKXUsst1a2aP06I4Mptvl9Y3PJWqiWTE8xf2EftiUqjHPjdAgnxg>
+    <xmx:PWQKXS9ojuIe2HPaawGzFYB0QyxRnpj_Ug5et8jei_hKgBelqttgGA>
+    <xmx:P2QKXXv_1UsVIDG3nDd46QsweVjP8bdxHEUTTqt5yeVs34p5wRf7xw>
+Received: from localhost (unknown [193.47.165.251])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 4F3E938008D;
+        Wed, 19 Jun 2019 12:35:09 -0400 (EDT)
+Date:   Wed, 19 Jun 2019 19:35:07 +0300
+From:   Ido Schimmel <idosch@idosch.org>
+To:     syzbot <syzbot+382566d339d52cd1a204@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, dsahern@gmail.com, idosch@mellanox.com,
+        jiri@mellanox.com, kuznet@ms2.inr.ac.ru,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Subject: Re: general protection fault in call_fib6_multipath_entry_notifiers
+Message-ID: <20190619163507.GA2080@splinter>
+References: <0000000000004237d7058baf24e3@google.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-KSE-AttachmentFiltering-Interceptor-Info: protection disabled
-X-KSE-ServerInfo: sw-ex-cashub01.diasemi.com, 9
-X-KSE-Antivirus-Interceptor-Info: scan successful
-X-KSE-Antivirus-Info: Clean, bases: 19/06/2019 15:11:00
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0000000000004237d7058baf24e3@google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Felix Riemann <felix.riemann@sma.de>
+On Wed, Jun 19, 2019 at 08:47:07AM -0700, syzbot wrote:
+> Hello,
+> 
+> syzbot found the following crash on:
+> 
+> HEAD commit:    39f58860 net/mlx5: add missing void argument to function m..
+> git tree:       net-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=115eb99ea00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=4937094fc643655f
+> dashboard link: https://syzkaller.appspot.com/bug?extid=382566d339d52cd1a204
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=120c9e11a00000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120c3d21a00000
+> 
+> The bug was bisected to:
+> 
+> commit ebee3cad835f7fe7250213225cf6d62c7cf3b2ca
+> Author: Ido Schimmel <idosch@mellanox.com>
+> Date:   Tue Jun 18 15:12:48 2019 +0000
+> 
+>     ipv6: Add IPv6 multipath notifications for add / replace
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1529970aa00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=1729970aa00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1329970aa00000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+382566d339d52cd1a204@syzkaller.appspotmail.com
+> Fixes: ebee3cad835f ("ipv6: Add IPv6 multipath notifications for add /
+> replace")
+> 
+> kasan: CONFIG_KASAN_INLINE enabled
+> kasan: GPF could be caused by NULL-ptr deref or user memory access
+> general protection fault: 0000 [#1] PREEMPT SMP KASAN
+> CPU: 0 PID: 9190 Comm: syz-executor149 Not tainted 5.2.0-rc5+ #38
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> Google 01/01/2011
+> RIP: 0010:call_fib6_multipath_entry_notifiers+0xd1/0x1a0
 
-According to the DA9061 and DA9062 datasheets the LDO voltage selection
-registers have a lower value of 0x02. This applies to voltage registers
-VLDO1_A, VLDO2_A, VLDO3_A and VLDO4_A. This linear offset of 0x02 was
-previously not observed by the driver, causing the LDO output voltage to
-be systematically lower by two steps (= 0.1V).
+Did not consider the case where RTA_MULTIPATH does not encode valid
+nexthop information in which case 'rt_notif' can be NULL. Will send a
+fix after I run some tests.
 
-This patch fixes the minimum linear selector offset by setting it to a
-value of 2 and increases the n_voltages by the same amount allowing
-voltages in the range 0x02 -> 0.9V to 0x38 -> 3.6V to be correctly
-selected. Also fixes an incorrect calculaton for the n_voltages value in
-the regulator LDO2.
-
-These fixes effect all LDO regulators for DA9061 and DA9062.
-
-Acked-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Steve Twiss <stwiss.opensource@diasemi.com>
-Signed-off-by: Felix Riemann <felix.riemann@sma.de>
----
-
-Hi Mark,
-
-I've added my signed-off tag to the commit patch of V3.
-
-Regards,
-Steve
-
- drivers/regulator/da9062-regulator.c | 40 +++++++++++++++++++++---------------
- include/linux/mfd/da9062/registers.h |  3 +++
- 2 files changed, 27 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/regulator/da9062-regulator.c b/drivers/regulator/da9062-regulator.c
-index a02e048..1cadaae 100644
---- a/drivers/regulator/da9062-regulator.c
-+++ b/drivers/regulator/da9062-regulator.c
-@@ -493,12 +493,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (900))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO1_CONT,
- 		.desc.enable_mask = DA9062AA_LDO1_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO1_A,
- 		.desc.vsel_mask = DA9062AA_VLDO1_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO1_A,
- 			__builtin_ffs((int)DA9062AA_LDO1_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -525,12 +526,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (600))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO2_CONT,
- 		.desc.enable_mask = DA9062AA_LDO2_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO2_A,
- 		.desc.vsel_mask = DA9062AA_VLDO2_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO2_A,
- 			__builtin_ffs((int)DA9062AA_LDO2_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -557,12 +559,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (900))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO3_CONT,
- 		.desc.enable_mask = DA9062AA_LDO3_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO3_A,
- 		.desc.vsel_mask = DA9062AA_VLDO3_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO3_A,
- 			__builtin_ffs((int)DA9062AA_LDO3_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -589,12 +592,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (900))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO4_CONT,
- 		.desc.enable_mask = DA9062AA_LDO4_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO4_A,
- 		.desc.vsel_mask = DA9062AA_VLDO4_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO4_A,
- 			__builtin_ffs((int)DA9062AA_LDO4_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -769,12 +773,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (900))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO1_CONT,
- 		.desc.enable_mask = DA9062AA_LDO1_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO1_A,
- 		.desc.vsel_mask = DA9062AA_VLDO1_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO1_A,
- 			__builtin_ffs((int)DA9062AA_LDO1_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -801,12 +806,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (600))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO2_CONT,
- 		.desc.enable_mask = DA9062AA_LDO2_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO2_A,
- 		.desc.vsel_mask = DA9062AA_VLDO2_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO2_A,
- 			__builtin_ffs((int)DA9062AA_LDO2_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -833,12 +839,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (900))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO3_CONT,
- 		.desc.enable_mask = DA9062AA_LDO3_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO3_A,
- 		.desc.vsel_mask = DA9062AA_VLDO3_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO3_A,
- 			__builtin_ffs((int)DA9062AA_LDO3_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-@@ -865,12 +872,13 @@ static int da9062_ldo_set_suspend_mode(struct regulator_dev *rdev,
- 		.desc.ops = &da9062_ldo_ops,
- 		.desc.min_uV = (900) * 1000,
- 		.desc.uV_step = (50) * 1000,
--		.desc.n_voltages = ((3600) - (900))/(50) + 1,
-+		.desc.n_voltages = ((3600) - (900))/(50) + 1
-+				+ DA9062AA_VLDO_A_MIN_SEL,
- 		.desc.enable_reg = DA9062AA_LDO4_CONT,
- 		.desc.enable_mask = DA9062AA_LDO4_EN_MASK,
- 		.desc.vsel_reg = DA9062AA_VLDO4_A,
- 		.desc.vsel_mask = DA9062AA_VLDO4_A_MASK,
--		.desc.linear_min_sel = 0,
-+		.desc.linear_min_sel = DA9062AA_VLDO_A_MIN_SEL,
- 		.sleep = REG_FIELD(DA9062AA_VLDO4_A,
- 			__builtin_ffs((int)DA9062AA_LDO4_SL_A_MASK) - 1,
- 			sizeof(unsigned int) * 8 -
-diff --git a/include/linux/mfd/da9062/registers.h b/include/linux/mfd/da9062/registers.h
-index fe04b70..090213a 100644
---- a/include/linux/mfd/da9062/registers.h
-+++ b/include/linux/mfd/da9062/registers.h
-@@ -797,6 +797,9 @@
- #define DA9062AA_BUCK3_SL_A_SHIFT	7
- #define DA9062AA_BUCK3_SL_A_MASK	BIT(7)
- 
-+/* DA9062AA_VLDO[1-4]_A common */
-+#define DA9062AA_VLDO_A_MIN_SEL		2
-+
- /* DA9062AA_VLDO1_A = 0x0A9 */
- #define DA9062AA_VLDO1_A_SHIFT		0
- #define DA9062AA_VLDO1_A_MASK		0x3f
--- 
-1.9.3
-
+> net/ipv6/ip6_fib.c:396
+> Code: 8b b5 30 ff ff ff 48 c7 85 68 ff ff ff 00 00 00 00 48 c7 85 70 ff ff
+> ff 00 00 00 00 89 45 88 4c 89 e0 48 c1 e8 03 4c 89 65 80 <42> 80 3c 28 00 0f
+> 85 9a 00 00 00 48 b8 00 00 00 00 00 fc ff df 4d
+> RSP: 0018:ffff88809788f2c0 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 1ffff11012f11e59 RCX: 00000000ffffffff
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff88809788f390 R08: ffff88809788f8c0 R09: 000000000000000c
+> R10: ffff88809788f5d8 R11: ffff88809788f527 R12: 0000000000000000
+> R13: dffffc0000000000 R14: ffff88809788f8c0 R15: ffffffff89541d80
+> FS:  000055555632c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000080 CR3: 000000009ba7c000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  ip6_route_multipath_add+0xc55/0x1490 net/ipv6/route.c:5094
+>  inet6_rtm_newroute+0xed/0x180 net/ipv6/route.c:5208
+>  rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5219
+>  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
+>  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5237
+>  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
+>  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
+>  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1917
+>  sock_sendmsg_nosec net/socket.c:646 [inline]
+>  sock_sendmsg+0xd7/0x130 net/socket.c:665
+>  ___sys_sendmsg+0x803/0x920 net/socket.c:2286
+>  __sys_sendmsg+0x105/0x1d0 net/socket.c:2324
+>  __do_sys_sendmsg net/socket.c:2333 [inline]
+>  __se_sys_sendmsg net/socket.c:2331 [inline]
+>  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2331
+>  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+>  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> RIP: 0033:0x4401f9
+> Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7
+> 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff
+> 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+> RSP: 002b:00007ffc09fd0028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
+> RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
+> RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
+> R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
+> R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
+> Modules linked in:
+> ---[ end trace 77949df4cfac115c ]---
+> RIP: 0010:call_fib6_multipath_entry_notifiers+0xd1/0x1a0
+> net/ipv6/ip6_fib.c:396
+> Code: 8b b5 30 ff ff ff 48 c7 85 68 ff ff ff 00 00 00 00 48 c7 85 70 ff ff
+> ff 00 00 00 00 89 45 88 4c 89 e0 48 c1 e8 03 4c 89 65 80 <42> 80 3c 28 00 0f
+> 85 9a 00 00 00 48 b8 00 00 00 00 00 fc ff df 4d
+> RSP: 0018:ffff88809788f2c0 EFLAGS: 00010246
+> RAX: 0000000000000000 RBX: 1ffff11012f11e59 RCX: 00000000ffffffff
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffff88809788f390 R08: ffff88809788f8c0 R09: 000000000000000c
+> R10: ffff88809788f5d8 R11: ffff88809788f527 R12: 0000000000000000
+> R13: dffffc0000000000 R14: ffff88809788f8c0 R15: ffffffff89541d80
+> FS:  000055555632c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 0000000020000080 CR3: 000000009ba7c000 CR4: 00000000001406f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> 
+> 
+> ---
+> This bug is generated by a bot. It may contain errors.
+> See https://goo.gl/tpsmEJ for more information about syzbot.
+> syzbot engineers can be reached at syzkaller@googlegroups.com.
+> 
+> syzbot will keep track of this bug report. See:
+> https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+> syzbot can test patches for this bug, for details see:
+> https://goo.gl/tpsmEJ#testing-patches
