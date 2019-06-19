@@ -2,106 +2,166 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C56FC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB595C43613
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:02:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DB1F12084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 19:57:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0DB420673
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 20:02:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tQKRrCMR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfFST5z (ORCPT
+        id S1727458AbfFSUCZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 15:57:55 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:37101 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726143AbfFST5z (ORCPT
+        Wed, 19 Jun 2019 16:02:25 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:36286 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726143AbfFSUCY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 15:57:55 -0400
-Received: by mail-qt1-f193.google.com with SMTP id y57so543048qtk.4;
-        Wed, 19 Jun 2019 12:57:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6AYyD7TdXFlYd8xNntFANT3/Llq0uH8/SY9AGv/U5DI=;
-        b=YFqWX8E9WKgmfO4L47m4uY2XbYw/sglIBwe/8lNylUdMZhH7BhgKLrKzM4oHvxTJtC
-         kdB1M/GQe12gJyqfjF88y2dYRO1ylaoXBDZVxQeumJHaFOKCBj/WenZ9NmQPZbARgwWW
-         3//tTs62VaMCEbmCFAVfQ+4AKW/dFQIoiWnhY/vADTMUWtUnlo9KZFVdWEdqN2J0qxj1
-         OO4oJt3I2aJ8j6WVc6ew6g9dyuNhNqeZRGd5v1Y5fhVfQxtnJVYA+W6BeNTWUtsalOVt
-         9AGG5OWlPh0BvnVpSdPITdSESJ1AHqOnlkKRkw+wOB1hTDZT82ubKHgfBOUmxlSsPwJC
-         ag/A==
-X-Gm-Message-State: APjAAAWDOvyDlKqe/2k+nMd7uxuAaFOEnvIYrX4v2mtWDO0TzRUwZlNZ
-        f+fk8zh5RvW45zsshPFT6VEHGhHHX21TUem9DMA=
-X-Google-Smtp-Source: APXvYqy2TeKLUH0rNHdGElJIP0Lh9rOLcGE09nUms4tDMgXncCfPdYt5Go8DgakpocJ7U7fh4NZBy8kK4+Wch5xCufQ=
-X-Received: by 2002:a0c:87bd:: with SMTP id 58mr35151296qvj.62.1560974273851;
- Wed, 19 Jun 2019 12:57:53 -0700 (PDT)
+        Wed, 19 Jun 2019 16:02:24 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JJxCMh013084;
+        Wed, 19 Jun 2019 20:01:33 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=Vroyiiy2apNH9g1WQULlt3tAhqXh3qFzkC0thjbI/tY=;
+ b=tQKRrCMRIZFf76xHdG+OcQRJVCixkQdbl3HfJkhqJ6zQ5Fq71mORMALE81hvlqMU5cq2
+ K4F8SUycLHKVrHTiluUHLfebVsFtIV4u7NZst1BEEOGeJtKDYGfPNuGNBzsiq/6/sG1m
+ oHmWEWnqBcx8EHxc8VsLy1BXGGOzd4qHtZgUM3+RorIGLB7LeM8SEKQOzG7hpzi3tUIX
+ cBqz1T+7bPFIBDeruJWhgHUJUNTS7jmoeogb9Jt64Fnvc0VzloFKzLKS2q+3tVxVQSnx
+ bLlYN2Mg5EBeENllw30HSTJNHEAnYlsgKqvHUrkE60SZa/hI/hGzXCuuUFok8MhRdXuP yg== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2t7809ddd7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 20:01:33 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5JK0U82055051;
+        Wed, 19 Jun 2019 20:01:32 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2t77yp1s13-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 20:01:32 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5JK1P5e025354;
+        Wed, 19 Jun 2019 20:01:25 GMT
+Received: from [10.65.164.174] (/10.65.164.174)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 19 Jun 2019 13:01:25 -0700
+Subject: Re: [PATCH v17 07/15] fs, arm64: untag user pointers in
+ copy_mount_options
+To:     Andrey Konovalov <andreyknvl@google.com>,
+        linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org,
+        dri-devel@lists.freedesktop.org, linux-rdma@vger.kernel.org,
+        linux-media@vger.kernel.org, kvm@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Kees Cook <keescook@chromium.org>,
+        Yishai Hadas <yishaih@mellanox.com>,
+        Felix Kuehling <Felix.Kuehling@amd.com>,
+        Alexander Deucher <Alexander.Deucher@amd.com>,
+        Christian Koenig <Christian.Koenig@amd.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jens Wiklander <jens.wiklander@linaro.org>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        Dave Martin <Dave.Martin@arm.com>, enh <enh@google.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Evgeniy Stepanov <eugenis@google.com>,
+        Lee Smith <Lee.Smith@arm.com>,
+        Ramana Radhakrishnan <Ramana.Radhakrishnan@arm.com>,
+        Jacob Bramley <Jacob.Bramley@arm.com>,
+        Ruben Ayrapetyan <Ruben.Ayrapetyan@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kevin Brodsky <kevin.brodsky@arm.com>,
+        Szabolcs Nagy <Szabolcs.Nagy@arm.com>
+References: <cover.1560339705.git.andreyknvl@google.com>
+ <4ed871e14cc265a519c6ba8660a1827844371791.1560339705.git.andreyknvl@google.com>
+From:   Khalid Aziz <khalid.aziz@oracle.com>
+Organization: Oracle Corp
+Message-ID: <14e49054-01dc-dab5-40cc-71434ea3852a@oracle.com>
+Date:   Wed, 19 Jun 2019 14:01:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190619125500.1054426-1-arnd@arndb.de> <20190619174642.hvjvmfaptfdkmbpk@salvia>
-In-Reply-To: <20190619174642.hvjvmfaptfdkmbpk@salvia>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 19 Jun 2019 21:57:35 +0200
-Message-ID: <CAK8P3a3BPgieF_dUFZoNVOp7avdJwJZn2S1O=EA9DZXu_c59WQ@mail.gmail.com>
-Subject: Re: [PATCH] netfilter: synproxy: fix building syncookie calls
-To:     Pablo Neira Ayuso <pablo@netfilter.org>
-Cc:     Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Florian Westphal <fw@strlen.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
-        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
-        Fernando Fernandez Mancera <ffmancera@riseup.net>,
-        wenxu <wenxu@ucloud.cn>,
-        netfilter-devel <netfilter-devel@vger.kernel.org>,
-        coreteam@netfilter.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <4ed871e14cc265a519c6ba8660a1827844371791.1560339705.git.andreyknvl@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906190164
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9293 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906190164
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 7:46 PM Pablo Neira Ayuso <pablo@netfilter.org> wrote:
->
-> On Wed, Jun 19, 2019 at 02:54:36PM +0200, Arnd Bergmann wrote:
-> > When either CONFIG_IPV6 or CONFIG_SYN_COOKIES are disabled, the kernel
-> > fails to build:
-> >
-> > include/linux/netfilter_ipv6.h:180:9: error: implicit declaration of function '__cookie_v6_init_sequence'
-> >       [-Werror,-Wimplicit-function-declaration]
-> >         return __cookie_v6_init_sequence(iph, th, mssp);
-> > include/linux/netfilter_ipv6.h:194:9: error: implicit declaration of function '__cookie_v6_check'
-> >       [-Werror,-Wimplicit-function-declaration]
-> >         return __cookie_v6_check(iph, th, cookie);
-> > net/ipv6/netfilter.c:237:26: error: use of undeclared identifier '__cookie_v6_init_sequence'; did you mean 'cookie_init_sequence'?
-> > net/ipv6/netfilter.c:238:21: error: use of undeclared identifier '__cookie_v6_check'; did you mean '__cookie_v4_check'?
-> >
-> > Fix the IS_ENABLED() checks to match the function declaration
-> > and definitions for these.
->
-> I made this:
->
-> https://patchwork.ozlabs.org/patch/1117735/
->
-> Basically it does:
->
-> +#endif
-> +#if IS_MODULE(CONFIG_IPV6) && defined(CONFIG_SYN_COOKIES)
->         .cookie_init_sequence   = __cookie_v6_init_sequence,
->         .cookie_v6_check        = __cookie_v6_check,
->  #endif
->
-> If CONFIG_IPV6=n, then net/ipv6/netfilter.c is never compiled.
->
-> Unless I'm missing anything, I'd prefer my patch because it's a bit
-> less of ifdefs 8-)
+On 6/12/19 5:43 AM, Andrey Konovalov wrote:
+> This patch is a part of a series that extends arm64 kernel ABI to allow=
+ to
+> pass tagged user pointers (with the top byte set to something else othe=
+r
+> than 0x00) as syscall arguments.
+>=20
+> In copy_mount_options a user address is being subtracted from TASK_SIZE=
+=2E
+> If the address is lower than TASK_SIZE, the size is calculated to not
+> allow the exact_copy_from_user() call to cross TASK_SIZE boundary.
+> However if the address is tagged, then the size will be calculated
+> incorrectly.
+>=20
+> Untag the address before subtracting.
+>=20
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
+> Signed-off-by: Andrey Konovalov <andreyknvl@google.com>
+> ---
 
-That takes care of the link error, but not the "implicit declaration"
-when netfilter_ipv6.h is included without SYN_COOKIES.
+Please update commit log to make it not arm64 specific since this change
+affects other architectures as well. Other than that,
 
-My patch addresses both issues together since they are strongly
-related.
+Reviewed-by: Khalid Aziz <khalid.aziz@oracle.com>
 
-      Arnd
+
+>  fs/namespace.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/fs/namespace.c b/fs/namespace.c
+> index b26778bdc236..2e85712a19ed 100644
+> --- a/fs/namespace.c
+> +++ b/fs/namespace.c
+> @@ -2993,7 +2993,7 @@ void *copy_mount_options(const void __user * data=
+)
+>  	 * the remainder of the page.
+>  	 */
+>  	/* copy_from_user cannot cross TASK_SIZE ! */
+> -	size =3D TASK_SIZE - (unsigned long)data;
+> +	size =3D TASK_SIZE - (unsigned long)untagged_addr(data);
+>  	if (size > PAGE_SIZE)
+>  		size =3D PAGE_SIZE;
+> =20
+>=20
+
+
