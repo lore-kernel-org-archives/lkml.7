@@ -2,230 +2,440 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 978A7C31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:35:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D12F1C31E5E
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:36:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 601E52084E
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:35:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98F682147A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 17:36:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="as5+XqJ9"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="ScMAd1wI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730371AbfFSRft (ORCPT
+        id S1730215AbfFSRgg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 13:35:49 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44583 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726330AbfFSRft (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 13:35:49 -0400
-Received: by mail-lf1-f68.google.com with SMTP id r15so232484lfm.11;
-        Wed, 19 Jun 2019 10:35:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to;
-        bh=NHm7xB5LUXS0s17TzfQaK6KKy/+rzOoNiBvwQqHxzOI=;
-        b=as5+XqJ9917Efyyy6IkKnShcrsWNQLrVkLJXgdvGt3f8ghlaUaGIP6Cx/HxH196P5N
-         kkz5t+y71peo7pE1cwdxh3eKBf7Hdk283Etr+aAo2bky+GnOToBCGdG0BKtS5+Z+xbIS
-         gOsLVMBusTk6yDsRp5/k+lK5spA1V/Ace0sj4jcfoUWg7ZgoBAzoVu40FSCcO5ZIEpTO
-         DUo9+Rl8+vxjbZCk/hKIci6RJs1GS88Y9yON5RWbeWVYu+KoprFJYQVxge5mld14pV6n
-         07BT+W/KG5utnXd/50OxE9jbYQod+lto/fsUgrcgV0vLS5eF5ol5khA+5U9SyYTRdRh7
-         HWAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=NHm7xB5LUXS0s17TzfQaK6KKy/+rzOoNiBvwQqHxzOI=;
-        b=YMePCxDef3yFpveW0wvQVqguyxviDivHJ6TlFMWb5X90eD5LwLJT2HuLkuhO/aNLxO
-         EvQQEdJQRDe1oQGvcB4CS8KNHWUoJPxrazAKEMsrwcq4MLJrXEheNNr3Qr9Z5UJZzkbK
-         4y7oQsjn1eIa+6dH+Wprydp3T4+9q+EDbzEQOnKvpLibWGckIZvhTqha3A8X0D3wzc3o
-         Oj64sjIVjGKtSGrEIaWBXO32TFFtJvzFE3pMzA+rezCt3We2jp/XpDc2cbtr1COyl7bF
-         lc4QqDW2IkNGdAS+jtsdqrxpkBwtY4L6moO/hLaaHUo2I95IHf+A0sr6drOKZ9wG6X+N
-         tXPA==
-X-Gm-Message-State: APjAAAXVq8xh6TRg96xDFli6B6ylQqe5RkDNa0IuIT+GOVRwPlnoihfZ
-        O0wGV+C80FiBRNUxs50nMmOm4xfO
-X-Google-Smtp-Source: APXvYqyVpEBzbcLc6PCU87jUaDOxP4i2TWncL0cQ28ZTstwEOjPSKuwr7lMEbAkdv++vfjy7O3nw6A==
-X-Received: by 2002:ac2:484f:: with SMTP id 15mr7374204lfy.51.1560965745591;
-        Wed, 19 Jun 2019 10:35:45 -0700 (PDT)
-Received: from [192.168.100.202] (mm-148-236-122-178.mgts.dynamic.pppoe.byfly.by. [178.122.236.148])
-        by smtp.gmail.com with ESMTPSA id 24sm3558662ljs.63.2019.06.19.10.35.44
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 10:35:44 -0700 (PDT)
-Subject: Re: [PATCH 1/1] blk-core: Remove blk_end_request*() declarations
-To:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
-From:   Pavel Begunkov <asml.silence@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=asml.silence@gmail.com; prefer-encrypt=mutual; keydata=
- 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 bA==
-Message-ID: <b6d25f41-4422-b0e7-8127-0356b35d8fa9@gmail.com>
-Date:   Wed, 19 Jun 2019 20:35:34 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Wed, 19 Jun 2019 13:36:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:39666 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726330AbfFSRgf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 13:36:35 -0400
+Received: from zn.tnic (p200300EC2F109900C181231BF4D53555.dip0.t-ipconnect.de [IPv6:2003:ec:2f10:9900:c181:231b:f4d5:3555])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 166BD1EC066F;
+        Wed, 19 Jun 2019 19:36:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1560965793;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=0MpQLrbAp1UVcOtMP70WZ0ez5872olDqTULyQUYOf8E=;
+        b=ScMAd1wIdMWxrZWeVfPuOPYU/yg68q9qYm0VoKaTs5/t5El5j16+MT7E9yjGOyxsZFCyK0
+        qIIe7ta1mIkQfifgItYld9J/s6Hn6dz9LOH0sWg0WwAKoVw+BqixXnpAQFJ1e7iUiZZgma
+        sziBRv2lXulzQxvtT620iR0XkKyojAc=
+Date:   Wed, 19 Jun 2019 19:36:28 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v2 1/2] x86/cpufeatures: Combine word 11 and 12 into new
+ scattered features word 11
+Message-ID: <20190619173628.GI9574@zn.tnic>
+References: <1560794416-217638-1-git-send-email-fenghua.yu@intel.com>
+ <1560794416-217638-2-git-send-email-fenghua.yu@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="wbisv2a2GG0lU1ZmrXRzQ5G4aYTX0t9pT"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560794416-217638-2-git-send-email-fenghua.yu@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---wbisv2a2GG0lU1ZmrXRzQ5G4aYTX0t9pT
-Content-Type: multipart/mixed; boundary="M3B98CrXHQos5uTQBXt9E74O8zctoLblx";
- protected-headers="v1"
-From: Pavel Begunkov <asml.silence@gmail.com>
-To: Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Message-ID: <b6d25f41-4422-b0e7-8127-0356b35d8fa9@gmail.com>
-Subject: Re: [PATCH 1/1] blk-core: Remove blk_end_request*() declarations
-References: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
-In-Reply-To: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
+On Mon, Jun 17, 2019 at 11:00:15AM -0700, Fenghua Yu wrote:
+> @@ -832,33 +857,6 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+>  		c->x86_capability[CPUID_D_1_EAX] = eax;
+>  	}
+>  
+> -	/* Additional Intel-defined flags: level 0x0000000F */
+> -	if (c->cpuid_level >= 0x0000000F) {
+> -
+> -		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
+> -		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
+> -		c->x86_capability[CPUID_F_0_EDX] = edx;
+> -
+> -		if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
+> -			/* will be overridden if occupancy monitoring exists */
+> -			c->x86_cache_max_rmid = ebx;
+> -
+> -			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
+> -			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
+> -			c->x86_capability[CPUID_F_1_EDX] = edx;
+> -
+> -			if ((cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC)) ||
+> -			      ((cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL)) ||
+> -			       (cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)))) {
+> -				c->x86_cache_max_rmid = ecx;
+> -				c->x86_cache_occ_scale = ebx;
+> -			}
+> -		} else {
+> -			c->x86_cache_max_rmid = -1;
+> -			c->x86_cache_occ_scale = -1;
+> -		}
+> -	}
+> -
+>  	/* AMD-defined flags: level 0x80000001 */
+>  	eax = cpuid_eax(0x80000000);
+>  	c->extended_cpuid_level = eax;
 
---M3B98CrXHQos5uTQBXt9E74O8zctoLblx
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+What I meant with having a separate patch doing the carve out is to have
+a single patch doing *only* code movement - no changes, no nothing. So
+that it is clear what happens. Intermixing code movement and changes is
+a bad idea and hard to review.
 
-Ping?
+IOW, I did this:
 
-On 23/05/2019 18:43, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
->=20
-> Commit a1ce35fa49852db60fc6e268 ("block: remove dead elevator code")
-> deleted blk_end_request() and friends, but some declaration are still
-> left. Purge them.
->=20
-> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
-> ---
->  block/blk-core.c       |  2 +-
->  include/linux/blkdev.h | 12 ------------
->  2 files changed, 1 insertion(+), 13 deletions(-)
->=20
-> diff --git a/block/blk-core.c b/block/blk-core.c
-> index 419d600e6637..48ba4783437f 100644
-> --- a/block/blk-core.c
-> +++ b/block/blk-core.c
-> @@ -1393,7 +1393,7 @@ EXPORT_SYMBOL_GPL(blk_steal_bios);
->   *
->   *     This special helper function is only for request stacking drive=
-rs
->   *     (e.g. request-based dm) so that they can handle partial complet=
-ion.
-> - *     Actual device drivers should use blk_end_request instead.
-> + *     Actual device drivers should use blk_mq_end_request instead.
->   *
->   *     Passing the result of blk_rq_bytes() as @nr_bytes guarantees
->   *     %false return from this function.
-> diff --git a/include/linux/blkdev.h b/include/linux/blkdev.h
-> index 1aafeb923e7b..d069b5e2a295 100644
-> --- a/include/linux/blkdev.h
-> +++ b/include/linux/blkdev.h
-> @@ -1021,21 +1021,9 @@ void blk_steal_bios(struct bio_list *list, struc=
-t request *rq);
->   *
->   * blk_update_request() completes given number of bytes and updates
->   * the request without completing it.
-> - *
-> - * blk_end_request() and friends.  __blk_end_request() must be called
-> - * with the request queue spinlock acquired.
-> - *
-> - * Several drivers define their own end_request and call
-> - * blk_end_request() for parts of the original function.
-> - * This prevents code duplication in drivers.
->   */
->  extern bool blk_update_request(struct request *rq, blk_status_t error,=
+---
+From cef4f58a3da0465bbff33b2d669cc600b775f3ba Mon Sep 17 00:00:00 2001
+From: Borislav Petkov <bp@suse.de>
+Date: Wed, 19 Jun 2019 17:24:34 +0200
+Subject: [PATCH] x86/cpufeatures: Carve out CQM features retrieval
 
->  			       unsigned int nr_bytes);
-> -extern void blk_end_request_all(struct request *rq, blk_status_t error=
-);
-> -extern bool __blk_end_request(struct request *rq, blk_status_t error,
-> -			      unsigned int nr_bytes);
-> -extern void __blk_end_request_all(struct request *rq, blk_status_t err=
-or);
-> -extern bool __blk_end_request_cur(struct request *rq, blk_status_t err=
-or);
-> =20
->  extern void __blk_complete_request(struct request *);
->  extern void blk_abort_request(struct request *);
->=20
+... into a separate function for better readability. Split out from a
+patch from Fenghua Yu <fenghua.yu@intel.com> to keep the mechanical,
+sole code movement separate for easy review.
 
---=20
-Yours sincerely,
-Pavel Begunkov
+No functional changes.
+
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: x86@kernel.org
+---
+ arch/x86/kernel/cpu/common.c | 60 ++++++++++++++++++++----------------
+ 1 file changed, 33 insertions(+), 27 deletions(-)
+
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 2c57fffebf9b..fe6ed9696467 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -801,6 +801,38 @@ static void init_speculation_control(struct cpuinfo_x86 *c)
+ 	}
+ }
+ 
++static void init_cqm(struct cpuinfo_x86 *c)
++{
++	u32 eax, ebx, ecx, edx;
++
++	/* Additional Intel-defined flags: level 0x0000000F */
++	if (c->cpuid_level >= 0x0000000F) {
++
++		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
++		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
++		c->x86_capability[CPUID_F_0_EDX] = edx;
++
++		if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
++			/* will be overridden if occupancy monitoring exists */
++			c->x86_cache_max_rmid = ebx;
++
++			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
++			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
++			c->x86_capability[CPUID_F_1_EDX] = edx;
++
++			if ((cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC)) ||
++			      ((cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL)) ||
++			       (cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)))) {
++				c->x86_cache_max_rmid = ecx;
++				c->x86_cache_occ_scale = ebx;
++			}
++		} else {
++			c->x86_cache_max_rmid = -1;
++			c->x86_cache_occ_scale = -1;
++		}
++	}
++}
++
+ void get_cpu_cap(struct cpuinfo_x86 *c)
+ {
+ 	u32 eax, ebx, ecx, edx;
+@@ -832,33 +864,6 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_D_1_EAX] = eax;
+ 	}
+ 
+-	/* Additional Intel-defined flags: level 0x0000000F */
+-	if (c->cpuid_level >= 0x0000000F) {
+-
+-		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
+-		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
+-		c->x86_capability[CPUID_F_0_EDX] = edx;
+-
+-		if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
+-			/* will be overridden if occupancy monitoring exists */
+-			c->x86_cache_max_rmid = ebx;
+-
+-			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
+-			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
+-			c->x86_capability[CPUID_F_1_EDX] = edx;
+-
+-			if ((cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC)) ||
+-			      ((cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL)) ||
+-			       (cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)))) {
+-				c->x86_cache_max_rmid = ecx;
+-				c->x86_cache_occ_scale = ebx;
+-			}
+-		} else {
+-			c->x86_cache_max_rmid = -1;
+-			c->x86_cache_occ_scale = -1;
+-		}
+-	}
+-
+ 	/* AMD-defined flags: level 0x80000001 */
+ 	eax = cpuid_eax(0x80000000);
+ 	c->extended_cpuid_level = eax;
+@@ -889,6 +894,7 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 
+ 	init_scattered_cpuid_features(c);
+ 	init_speculation_control(c);
++	init_cqm(c);
+ 
+ 	/*
+ 	 * Clear/Set all flags overridden by options, after probe.
+-- 
+2.21.0
+
+---
+
+This way you have *pure* code movement only.
+
+And then your second patch turns into this, which shows *exactly* what
+has been changed in init_cqm().
+
+Please have a look and send me only the now third patch with corrected
+commit message.
+
+Thx.
+
+---
+From e33527b8cde8bef84cdc90651d1a1c7a9a5234d7 Mon Sep 17 00:00:00 2001
+From: Fenghua Yu <fenghua.yu@intel.com>
+Date: Wed, 19 Jun 2019 18:51:09 +0200
+Subject: [PATCH] x86/cpufeatures: Combine word 11 and 12 into a new
+ scattered features word
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+It's a waste for the four X86_FEATURE_CQM_* feature bits to occupy two
+whole feature bits words. To better utilize feature words, re-define
+word 11 to host scattered features and move the four X86_FEATURE_CQM_*
+features into Linux defined word 11. More scattered features can be
+added in word 11 in the future.
+
+Rename leaf 11 in cpuid_leafs to CPUID_LNX_4 to reflect it's a
+Linux-defined leaf.
+
+Rename leaf 12 as CPUID_DUMMY which will be replaced by a meaningful
+name in the next patch when CPUID.7.1:EAX occupies world 12.
+
+Maximum number of RMID and cache occupancy scale are retrieved from
+CPUID.0xf.1 after scattered CQM features are enumerated. Carve out the
+code into a separate function.
+
+KVM doesn't support resctrl now. So it's safe to move the
+X86_FEATURE_CQM_* features to scattered features word 11 for KVM.
+
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Aaron Lewis <aaronlewis@google.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Babu Moger <babu.moger@amd.com>
+Cc: "Chang S. Bae" <chang.seok.bae@intel.com>
+Cc: "Sean J Christopherson" <sean.j.christopherson@intel.com>
+Cc: Frederic Weisbecker <frederic@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Cc: kvm ML <kvm@vger.kernel.org>
+Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Paolo Bonzini <pbonzini@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Peter Feiner <pfeiner@google.com>
+Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Cc: "Radim Krčmář" <rkrcmar@redhat.com>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: Ravi V Shankar <ravi.v.shankar@intel.com>
+Cc: Sherry Hurwitz <sherry.hurwitz@amd.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Lendacky <Thomas.Lendacky@amd.com>
+Cc: x86 <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1560794416-217638-2-git-send-email-fenghua.yu@intel.com
+---
+ arch/x86/include/asm/cpufeature.h  |  4 ++--
+ arch/x86/include/asm/cpufeatures.h | 17 +++++++------
+ arch/x86/kernel/cpu/common.c       | 38 ++++++++++++------------------
+ arch/x86/kernel/cpu/cpuid-deps.c   |  3 +++
+ arch/x86/kernel/cpu/scattered.c    |  4 ++++
+ arch/x86/kvm/cpuid.h               |  2 --
+ 6 files changed, 34 insertions(+), 34 deletions(-)
+
+diff --git a/arch/x86/include/asm/cpufeature.h b/arch/x86/include/asm/cpufeature.h
+index 1d337c51f7e6..403f70c2e431 100644
+--- a/arch/x86/include/asm/cpufeature.h
++++ b/arch/x86/include/asm/cpufeature.h
+@@ -22,8 +22,8 @@ enum cpuid_leafs
+ 	CPUID_LNX_3,
+ 	CPUID_7_0_EBX,
+ 	CPUID_D_1_EAX,
+-	CPUID_F_0_EDX,
+-	CPUID_F_1_EDX,
++	CPUID_LNX_4,
++	CPUID_DUMMY,
+ 	CPUID_8000_0008_EBX,
+ 	CPUID_6_EAX,
+ 	CPUID_8000_000A_EDX,
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 1017b9c7dfe0..be858b86023a 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -271,13 +271,16 @@
+ #define X86_FEATURE_XGETBV1		(10*32+ 2) /* XGETBV with ECX = 1 instruction */
+ #define X86_FEATURE_XSAVES		(10*32+ 3) /* XSAVES/XRSTORS instructions */
+ 
+-/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:0 (EDX), word 11 */
+-#define X86_FEATURE_CQM_LLC		(11*32+ 1) /* LLC QoS if 1 */
+-
+-/* Intel-defined CPU QoS Sub-leaf, CPUID level 0x0000000F:1 (EDX), word 12 */
+-#define X86_FEATURE_CQM_OCCUP_LLC	(12*32+ 0) /* LLC occupancy monitoring */
+-#define X86_FEATURE_CQM_MBM_TOTAL	(12*32+ 1) /* LLC Total MBM monitoring */
+-#define X86_FEATURE_CQM_MBM_LOCAL	(12*32+ 2) /* LLC Local MBM monitoring */
++/*
++ * Extended auxiliary flags: Linux defined - for features scattered in various
++ * CPUID levels like 0xf, etc.
++ *
++ * Reuse free bits when adding new feature flags!
++ */
++#define X86_FEATURE_CQM_LLC		(11*32+ 0) /* LLC QoS if 1 */
++#define X86_FEATURE_CQM_OCCUP_LLC	(11*32+ 1) /* LLC occupancy monitoring */
++#define X86_FEATURE_CQM_MBM_TOTAL	(11*32+ 2) /* LLC Total MBM monitoring */
++#define X86_FEATURE_CQM_MBM_LOCAL	(11*32+ 3) /* LLC Local MBM monitoring */
+ 
+ /* AMD-defined CPU features, CPUID level 0x80000008 (EBX), word 13 */
+ #define X86_FEATURE_CLZERO		(13*32+ 0) /* CLZERO instruction */
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index fe6ed9696467..efb114298cfb 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -803,33 +803,25 @@ static void init_speculation_control(struct cpuinfo_x86 *c)
+ 
+ static void init_cqm(struct cpuinfo_x86 *c)
+ {
+-	u32 eax, ebx, ecx, edx;
+-
+-	/* Additional Intel-defined flags: level 0x0000000F */
+-	if (c->cpuid_level >= 0x0000000F) {
++	if (!cpu_has(c, X86_FEATURE_CQM_LLC)) {
++		c->x86_cache_max_rmid  = -1;
++		c->x86_cache_occ_scale = -1;
++		return;
++	}
+ 
+-		/* QoS sub-leaf, EAX=0Fh, ECX=0 */
+-		cpuid_count(0x0000000F, 0, &eax, &ebx, &ecx, &edx);
+-		c->x86_capability[CPUID_F_0_EDX] = edx;
++	/* will be overridden if occupancy monitoring exists */
++	c->x86_cache_max_rmid = cpuid_ebx(0xf);
+ 
+-		if (cpu_has(c, X86_FEATURE_CQM_LLC)) {
+-			/* will be overridden if occupancy monitoring exists */
+-			c->x86_cache_max_rmid = ebx;
++	if (cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC) ||
++	    cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL) ||
++	    cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)) {
++		u32 eax, ebx, ecx, edx;
+ 
+-			/* QoS sub-leaf, EAX=0Fh, ECX=1 */
+-			cpuid_count(0x0000000F, 1, &eax, &ebx, &ecx, &edx);
+-			c->x86_capability[CPUID_F_1_EDX] = edx;
++		/* QoS sub-leaf, EAX=0Fh, ECX=1 */
++		cpuid_count(0xf, 1, &eax, &ebx, &ecx, &edx);
+ 
+-			if ((cpu_has(c, X86_FEATURE_CQM_OCCUP_LLC)) ||
+-			      ((cpu_has(c, X86_FEATURE_CQM_MBM_TOTAL)) ||
+-			       (cpu_has(c, X86_FEATURE_CQM_MBM_LOCAL)))) {
+-				c->x86_cache_max_rmid = ecx;
+-				c->x86_cache_occ_scale = ebx;
+-			}
+-		} else {
+-			c->x86_cache_max_rmid = -1;
+-			c->x86_cache_occ_scale = -1;
+-		}
++		c->x86_cache_max_rmid  = ecx;
++		c->x86_cache_occ_scale = ebx;
+ 	}
+ }
+ 
+diff --git a/arch/x86/kernel/cpu/cpuid-deps.c b/arch/x86/kernel/cpu/cpuid-deps.c
+index 2c0bd38a44ab..fa07a224e7b9 100644
+--- a/arch/x86/kernel/cpu/cpuid-deps.c
++++ b/arch/x86/kernel/cpu/cpuid-deps.c
+@@ -59,6 +59,9 @@ static const struct cpuid_dep cpuid_deps[] = {
+ 	{ X86_FEATURE_AVX512_4VNNIW,	X86_FEATURE_AVX512F   },
+ 	{ X86_FEATURE_AVX512_4FMAPS,	X86_FEATURE_AVX512F   },
+ 	{ X86_FEATURE_AVX512_VPOPCNTDQ, X86_FEATURE_AVX512F   },
++	{ X86_FEATURE_CQM_OCCUP_LLC,	X86_FEATURE_CQM_LLC   },
++	{ X86_FEATURE_CQM_MBM_TOTAL,	X86_FEATURE_CQM_LLC   },
++	{ X86_FEATURE_CQM_MBM_LOCAL,	X86_FEATURE_CQM_LLC   },
+ 	{}
+ };
+ 
+diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
+index 94aa1c72ca98..adf9b71386ef 100644
+--- a/arch/x86/kernel/cpu/scattered.c
++++ b/arch/x86/kernel/cpu/scattered.c
+@@ -26,6 +26,10 @@ struct cpuid_bit {
+ static const struct cpuid_bit cpuid_bits[] = {
+ 	{ X86_FEATURE_APERFMPERF,       CPUID_ECX,  0, 0x00000006, 0 },
+ 	{ X86_FEATURE_EPB,		CPUID_ECX,  3, 0x00000006, 0 },
++	{ X86_FEATURE_CQM_LLC,		CPUID_EDX,  1, 0x0000000f, 0 },
++	{ X86_FEATURE_CQM_OCCUP_LLC,	CPUID_EDX,  0, 0x0000000f, 1 },
++	{ X86_FEATURE_CQM_MBM_TOTAL,	CPUID_EDX,  1, 0x0000000f, 1 },
++	{ X86_FEATURE_CQM_MBM_LOCAL,	CPUID_EDX,  2, 0x0000000f, 1 },
+ 	{ X86_FEATURE_CAT_L3,		CPUID_EBX,  1, 0x00000010, 0 },
+ 	{ X86_FEATURE_CAT_L2,		CPUID_EBX,  2, 0x00000010, 0 },
+ 	{ X86_FEATURE_CDP_L3,		CPUID_ECX,  2, 0x00000010, 1 },
+diff --git a/arch/x86/kvm/cpuid.h b/arch/x86/kvm/cpuid.h
+index 9a327d5b6d1f..d78a61408243 100644
+--- a/arch/x86/kvm/cpuid.h
++++ b/arch/x86/kvm/cpuid.h
+@@ -47,8 +47,6 @@ static const struct cpuid_reg reverse_cpuid[] = {
+ 	[CPUID_8000_0001_ECX] = {0x80000001, 0, CPUID_ECX},
+ 	[CPUID_7_0_EBX]       = {         7, 0, CPUID_EBX},
+ 	[CPUID_D_1_EAX]       = {       0xd, 1, CPUID_EAX},
+-	[CPUID_F_0_EDX]       = {       0xf, 0, CPUID_EDX},
+-	[CPUID_F_1_EDX]       = {       0xf, 1, CPUID_EDX},
+ 	[CPUID_8000_0008_EBX] = {0x80000008, 0, CPUID_EBX},
+ 	[CPUID_6_EAX]         = {         6, 0, CPUID_EAX},
+ 	[CPUID_8000_000A_EDX] = {0x8000000a, 0, CPUID_EDX},
+-- 
+2.21.0
 
 
---M3B98CrXHQos5uTQBXt9E74O8zctoLblx--
+-- 
+Regards/Gruss,
+    Boris.
 
---wbisv2a2GG0lU1ZmrXRzQ5G4aYTX0t9pT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE+6JuPTjTbx479o3OWt5b1Glr+6UFAl0KcmcACgkQWt5b1Glr
-+6W/QBAAps6EoA8cMh38YCszcbkA56Su9gHIXNK399QSmDhRnsfnbjLAnHbJZWI+
-D7iDGfM/EqKHdbq3fw/p1EArhp0LzpKxYxRKPpuoSg0SD9m2SihMzdUVRNX792/R
-cwX8RoPC1tg4M4FBIg1j92YrS+oWiOVkj05B0OAv+oy22sOmcKOIXul5bSUFNc7R
-19pnNkAPatq9OhYqrt49ln6UmuDh5o8c+MxRUGWQr5pRN4dhacbodBLGla0gn7/8
-5HIau4k79p0kYg2j8nX2YeOJD4lKPn8G3ZMw6IaGrJxNo/WUSIkfU889LL9Ld6b8
-KaYoasYLNAx9q0kW0JPnWb8uEnug5RLD7y0Pa06UphDFRF5t/Nt7cLHmjT9OtOkf
-quM9V5C2iKpgHfZy5zvB/E3YwhXbVVZLppvqfgNzGSbrjrNwUJbB4ad7kmVM1YFB
-DJ+b5AMiSYw4tm1EhQrz/6R40TqihpNovIkNW8m1RemJ7JVsm+5myF9ziKwiNIc+
-tcHdYsYJCGUUNHXTdRmHSSEo1JZa7qLgdKeAoznSbOYVXAw2t8XZviu0RpUMAZPJ
-5UknGxlvE6fLLrwILLfloPTMMbu/Ck26WsQfifigZRmqNU0fTCLlOer1JzqdBXFv
-UIOTJEwhNg8tBTRghJAszVUFAblSZ/jaMTnJ1JHd4dyWstHnc5k=
-=FRcJ
------END PGP SIGNATURE-----
-
---wbisv2a2GG0lU1ZmrXRzQ5G4aYTX0t9pT--
+Good mailing practices for 400: avoid top-posting and trim the reply.
