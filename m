@@ -2,52 +2,64 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.6 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96BCC31E5B
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8A0EC31E5B
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A38321881
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15CB21881
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 15:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfFSPrK (ORCPT
+        id S1729959AbfFSPrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 11:47:10 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51404 "EHLO
+        Wed, 19 Jun 2019 11:47:09 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:55140 "EHLO
         mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727144AbfFSPrI (ORCPT
+        with ESMTP id S1727584AbfFSPrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 11:47:08 -0400
-Received: by mail-io1-f71.google.com with SMTP id c5so21595007iom.18
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:47:07 -0700 (PDT)
+Received: by mail-io1-f71.google.com with SMTP id n8so21715122ioo.21
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 08:47:08 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=HcDITllUPfSPDG1JQqG6leFos4NEv4NFO7VcX2wuMAM=;
-        b=XhFye2pFD1XTM6+J1TVwA3tHwBwyWfYPOSHg0GMEkZQDgANo74SiPxF1Y726jR8K9w
-         QoUkzMGope+lUZs41Jf3hELH9MH+2D5H3hYBy4fJR6VgM280ilLnydXyTgdZP1SGQpXq
-         qqBH93ZKm/D5MkRYwOvHZwNElIWUP0GER/XQ8PWj6ZQ5BXpvHz4g1qNony7wwW6dA8j6
-         4Hg+zU8ezaraRtFUlc6/UQf1Z9aLIeVR2OFGFlQZOh6pQ+NERw5/t80/2iwOwDUcoCbS
-         FaY359NdmlyIvI13CPCA8hUNPSdKH0xTePSdQXSA+iKJWPg81Pu/Tg8fSRN+EI/f4wp2
-         wsbQ==
-X-Gm-Message-State: APjAAAWoa8UizQ6Nari7pPHp2X/wZhD/bws9+2oYu0t8lNWuom42+/ou
-        x98hPnNkR/u5rG6+icZDAuDsfdFuZ5+BZ49SYsfZ+jlmLOfq
-X-Google-Smtp-Source: APXvYqzHT+/h5fzHBH9/4STY90y7enbUfAXXMhdUUAhSQrtLQji30V+Q0KFaTyRBM1d+dDCB1/lW2XSmUUkJECIoXf6PsZcY5dQy
+        bh=hHZuSqbZ2UJO3F7wlo6ZhKddlrieBiNbmp48U00E8fw=;
+        b=I7845FEGktBDh2o0Zi59Ox+PbAviSXUcyKJFHv9RATcLrScYYITdFUA9yIPTDciyTC
+         yJ36zntRSpvM7NgBpw0Qv2erh/kWyJQK0umQV2PbX7SpqYKXkkoleuUw3BMFbBRrYArx
+         lhyvhcFIhXol05RUhe/ChRJJcghcHmgtPmqds1AculZqJzk1GZqAgISlYa92P9WpiIGB
+         d7j/aOHpiP7gj1lsxVk5Y7J37uGTbfmBfrDHMrLGgjpIJvsEGiuUAyp1av7c04LprC0T
+         YSf1T3bKWUatKCk5bAKN1EN1xxGPUIMEi5xDyp/ihQs3XZVOfeXM+07/gbp9OAnZirUF
+         eeXw==
+X-Gm-Message-State: APjAAAVlS9SbNtt1iYbeu/WoNohMXCH6OnxD9J9fCs9CqeqFHctBv79X
+        +2/Foj18mQmlAiPuKhEUUI4fdFhuC2eiRzdqYQV1CGhjOK5R
+X-Google-Smtp-Source: APXvYqwhGg/njNrbsjgF+X1iruI5O5ZpW2m9d6clI7bswQPMf3AcspTNW93k7VEime5skQC4mXueAFfu0Wb6Z06/DJQ1OjXATx0T
 MIME-Version: 1.0
-X-Received: by 2002:a6b:b843:: with SMTP id i64mr3626822iof.81.1560959227406;
+X-Received: by 2002:a02:22c6:: with SMTP id o189mr8090464jao.35.1560959227952;
  Wed, 19 Jun 2019 08:47:07 -0700 (PDT)
 Date:   Wed, 19 Jun 2019 08:47:07 -0700
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004237d7058baf24e3@google.com>
-Subject: general protection fault in call_fib6_multipath_entry_notifiers
-From:   syzbot <syzbot+382566d339d52cd1a204@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, dsahern@gmail.com, idosch@mellanox.com,
-        jiri@mellanox.com, kuznet@ms2.inr.ac.ru,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, yoshfuji@linux-ipv6.org
+Message-ID: <0000000000004a8875058baf24f7@google.com>
+Subject: KASAN: use-after-free Read in brnf_exit_net
+From:   syzbot <syzbot+43a3fa52c0d9c5c94f41@syzkaller.appspotmail.com>
+To:     a.hajda@samsung.com, airlied@linux.ie, airlied@redhat.com,
+        alexander.deucher@amd.com, bridge@lists.linux-foundation.org,
+        christian.koenig@amd.com, coreteam@netfilter.org, daniel@ffwll.ch,
+        davem@davemloft.net, dri-devel@lists.freedesktop.org,
+        enric.balletbo@collabora.com, fw@strlen.de, harry.wentland@amd.com,
+        heiko@sntech.de, intel-gfx@lists.freedesktop.org,
+        jani.nikula@linux.intel.com, jerry.zhang@amd.com, jonas@kwiboo.se,
+        joonas.lahtinen@linux.intel.com, kadlec@netfilter.org,
+        laurent.pinchart@ideasonboard.com, linux-kernel@vger.kernel.org,
+        maarten.lankhorst@linux.intel.com, marc.zyngier@arm.com,
+        maxime.ripard@bootlin.com, narmstrong@baylibre.com,
+        netdev@vger.kernel.org, netfilter-devel@vger.kernel.org,
+        nikolay@cumulusnetworks.com, pablo@netfilter.org,
+        patrik.r.jakobsson@gmail.com, rodrigo.vivi@intel.com,
+        roopa@cumulusnetworks.com, sam@ravnborg.org, sean@poorly.run,
+        sfr@canb.auug.org.au, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -58,100 +70,116 @@ Hello,
 
 syzbot found the following crash on:
 
-HEAD commit:    39f58860 net/mlx5: add missing void argument to function m..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=115eb99ea00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4937094fc643655f
-dashboard link: https://syzkaller.appspot.com/bug?extid=382566d339d52cd1a204
+HEAD commit:    1c6b4050 Add linux-next specific files for 20190618
+git tree:       linux-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=10126209a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=3c614278993de456
+dashboard link: https://syzkaller.appspot.com/bug?extid=43a3fa52c0d9c5c94f41
 compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=120c9e11a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=120c3d21a00000
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16291176a00000
 
 The bug was bisected to:
 
-commit ebee3cad835f7fe7250213225cf6d62c7cf3b2ca
-Author: Ido Schimmel <idosch@mellanox.com>
-Date:   Tue Jun 18 15:12:48 2019 +0000
+commit b38d37a08ec4b19a9b9ec3a1ff5566781fcae1f1
+Author: Stephen Rothwell <sfr@canb.auug.org.au>
+Date:   Tue Jun 18 04:19:55 2019 +0000
 
-     ipv6: Add IPv6 multipath notifications for add / replace
+     Merge remote-tracking branch 'drm/drm-next'
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1529970aa00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=1729970aa00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=1329970aa00000
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=146f914ea00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=166f914ea00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=126f914ea00000
 
 IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+382566d339d52cd1a204@syzkaller.appspotmail.com
-Fixes: ebee3cad835f ("ipv6: Add IPv6 multipath notifications for add /  
-replace")
+Reported-by: syzbot+43a3fa52c0d9c5c94f41@syzkaller.appspotmail.com
+Fixes: b38d37a08ec4 ("Merge remote-tracking branch 'drm/drm-next'")
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 9190 Comm: syz-executor149 Not tainted 5.2.0-rc5+ #38
+==================================================================
+BUG: KASAN: use-after-free in br_netfilter_sysctl_exit_net  
+net/bridge/br_netfilter_hooks.c:1121 [inline]
+BUG: KASAN: use-after-free in brnf_exit_net+0x38c/0x3a0  
+net/bridge/br_netfilter_hooks.c:1141
+Read of size 8 at addr ffff8880a4078d60 by task kworker/u4:4/8749
+
+CPU: 0 PID: 8749 Comm: kworker/u4:4 Not tainted 5.2.0-rc5-next-20190618 #17
 Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
 Google 01/01/2011
-RIP: 0010:call_fib6_multipath_entry_notifiers+0xd1/0x1a0  
-net/ipv6/ip6_fib.c:396
-Code: 8b b5 30 ff ff ff 48 c7 85 68 ff ff ff 00 00 00 00 48 c7 85 70 ff ff  
-ff 00 00 00 00 89 45 88 4c 89 e0 48 c1 e8 03 4c 89 65 80 <42> 80 3c 28 00  
-0f 85 9a 00 00 00 48 b8 00 00 00 00 00 fc ff df 4d
-RSP: 0018:ffff88809788f2c0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 1ffff11012f11e59 RCX: 00000000ffffffff
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88809788f390 R08: ffff88809788f8c0 R09: 000000000000000c
-R10: ffff88809788f5d8 R11: ffff88809788f527 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff88809788f8c0 R15: ffffffff89541d80
-FS:  000055555632c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000009ba7c000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Workqueue: netns cleanup_net
 Call Trace:
-  ip6_route_multipath_add+0xc55/0x1490 net/ipv6/route.c:5094
-  inet6_rtm_newroute+0xed/0x180 net/ipv6/route.c:5208
-  rtnetlink_rcv_msg+0x463/0xb00 net/core/rtnetlink.c:5219
-  netlink_rcv_skb+0x177/0x450 net/netlink/af_netlink.c:2477
-  rtnetlink_rcv+0x1d/0x30 net/core/rtnetlink.c:5237
-  netlink_unicast_kernel net/netlink/af_netlink.c:1302 [inline]
-  netlink_unicast+0x531/0x710 net/netlink/af_netlink.c:1328
-  netlink_sendmsg+0x8ae/0xd70 net/netlink/af_netlink.c:1917
-  sock_sendmsg_nosec net/socket.c:646 [inline]
-  sock_sendmsg+0xd7/0x130 net/socket.c:665
-  ___sys_sendmsg+0x803/0x920 net/socket.c:2286
-  __sys_sendmsg+0x105/0x1d0 net/socket.c:2324
-  __do_sys_sendmsg net/socket.c:2333 [inline]
-  __se_sys_sendmsg net/socket.c:2331 [inline]
-  __x64_sys_sendmsg+0x78/0xb0 net/socket.c:2331
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_address_description.cold+0xd4/0x306 mm/kasan/report.c:351
+  __kasan_report.cold+0x1b/0x36 mm/kasan/report.c:482
+  kasan_report+0x12/0x20 mm/kasan/common.c:614
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  br_netfilter_sysctl_exit_net net/bridge/br_netfilter_hooks.c:1121 [inline]
+  brnf_exit_net+0x38c/0x3a0 net/bridge/br_netfilter_hooks.c:1141
+  ops_exit_list.isra.0+0xaa/0x150 net/core/net_namespace.c:154
+  cleanup_net+0x3fb/0x960 net/core/net_namespace.c:553
+  process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+Allocated by task 11374:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_kmalloc mm/kasan/common.c:489 [inline]
+  __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+  __do_kmalloc mm/slab.c:3645 [inline]
+  __kmalloc+0x15c/0x740 mm/slab.c:3654
+  kmalloc include/linux/slab.h:552 [inline]
+  kzalloc include/linux/slab.h:743 [inline]
+  __register_sysctl_table+0xc7/0xef0 fs/proc/proc_sysctl.c:1327
+  register_net_sysctl+0x29/0x30 net/sysctl_net.c:121
+  br_netfilter_sysctl_init_net net/bridge/br_netfilter_hooks.c:1105 [inline]
+  brnf_init_net+0x379/0x6a0 net/bridge/br_netfilter_hooks.c:1126
+  ops_init+0xb3/0x410 net/core/net_namespace.c:130
+  setup_net+0x2d3/0x740 net/core/net_namespace.c:316
+  copy_net_ns+0x1df/0x340 net/core/net_namespace.c:439
+  create_new_namespaces+0x400/0x7b0 kernel/nsproxy.c:103
+  unshare_nsproxy_namespaces+0xc2/0x200 kernel/nsproxy.c:202
+  ksys_unshare+0x444/0x980 kernel/fork.c:2822
+  __do_sys_unshare kernel/fork.c:2890 [inline]
+  __se_sys_unshare kernel/fork.c:2888 [inline]
+  __x64_sys_unshare+0x31/0x40 kernel/fork.c:2888
   do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4401f9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffc09fd0028 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401f9
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 00000000004002c8
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000401a80
-R13: 0000000000401b10 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 77949df4cfac115c ]---
-RIP: 0010:call_fib6_multipath_entry_notifiers+0xd1/0x1a0  
-net/ipv6/ip6_fib.c:396
-Code: 8b b5 30 ff ff ff 48 c7 85 68 ff ff ff 00 00 00 00 48 c7 85 70 ff ff  
-ff 00 00 00 00 89 45 88 4c 89 e0 48 c1 e8 03 4c 89 65 80 <42> 80 3c 28 00  
-0f 85 9a 00 00 00 48 b8 00 00 00 00 00 fc ff df 4d
-RSP: 0018:ffff88809788f2c0 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 1ffff11012f11e59 RCX: 00000000ffffffff
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffff88809788f390 R08: ffff88809788f8c0 R09: 000000000000000c
-R10: ffff88809788f5d8 R11: ffff88809788f527 R12: 0000000000000000
-R13: dffffc0000000000 R14: ffff88809788f8c0 R15: ffffffff89541d80
-FS:  000055555632c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020000080 CR3: 000000009ba7c000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+Freed by task 9:
+  save_stack+0x23/0x90 mm/kasan/common.c:71
+  set_track mm/kasan/common.c:79 [inline]
+  __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+  __cache_free mm/slab.c:3417 [inline]
+  kfree+0x10a/0x2c0 mm/slab.c:3746
+  __rcu_reclaim kernel/rcu/rcu.h:215 [inline]
+  rcu_do_batch kernel/rcu/tree.c:2092 [inline]
+  invoke_rcu_callbacks kernel/rcu/tree.c:2310 [inline]
+  rcu_core+0xcc7/0x1500 kernel/rcu/tree.c:2291
+  __do_softirq+0x25c/0x94c kernel/softirq.c:292
+
+The buggy address belongs to the object at ffff8880a4078d40
+  which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 32 bytes inside of
+  512-byte region [ffff8880a4078d40, ffff8880a4078f40)
+The buggy address belongs to the page:
+page:ffffea0002901e00 refcount:1 mapcount:0 mapping:ffff8880aa400a80  
+index:0xffff8880a40785c0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea0001d636c8 ffffea0001b07308 ffff8880aa400a80
+raw: ffff8880a40785c0 ffff8880a40780c0 0000000100000004 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+  ffff8880a4078c00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a4078c80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+> ffff8880a4078d00: fc fc fc fc fc fc fc fc fb fb fb fb fb fb fb fb
+                                                        ^
+  ffff8880a4078d80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff8880a4078e00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
 
 ---
