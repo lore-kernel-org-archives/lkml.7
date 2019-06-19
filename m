@@ -2,135 +2,114 @@ Return-Path: <SRS0=wAGj=US=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7FEC31E49
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F915C31E49
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:32:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 724B62084A
-	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 789722084A
+	for <linux-kernel@archiver.kernel.org>; Wed, 19 Jun 2019 07:32:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="KbEOrQLu"
+	dkim=pass (4096-bit key) header.d=kolabnow.com header.i=@kolabnow.com header.b="CnCHi1dU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731185AbfFSHcr (ORCPT
+        id S1731129AbfFSHcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 03:32:47 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34479 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731065AbfFSHcq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 03:32:46 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5J7Vx7R247900
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 19 Jun 2019 00:31:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5J7Vx7R247900
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019051801; t=1560929520;
-        bh=fTdj1HYoz+Ag8ogsG0vZVQ/JAHq194S4qWCi25pJ6z4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=KbEOrQLuGBFqF4PG3lASHevC0/oDvaPNZB78UJ+F1DZOxRnhUnfIp1icDGbj+NHVk
-         rivrti5HDUZo4i8b/WDdFQEtioPCJg168RFC1htcEL9vaXf7OExh+uiXMSVQevs08S
-         HMGzF2JJjVxnlAqKEDwrMp22tk3zKFTUOaeltsezFq731uLWrOtoV1N7NvniUQwx3n
-         bh9zUsgzVVajbP6OpMP9N7AJhc1+3d1+7l98Y4fY3BlPkAgmibNxO722R3tPv7/c2F
-         fIJxAgtcT8B5A53L2lwEV5ycjim/c/2W2cmoZ3112FVH7UShuZoZFks8XuVMk5xLaH
-         HNV3n04QkUpPQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5J7Vx0r247897;
-        Wed, 19 Jun 2019 00:31:59 -0700
-Date:   Wed, 19 Jun 2019 00:31:59 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-5423f5ce5ca410b3646f355279e4e937d452e622@git.kernel.org>
-Cc:     tglx@linutronix.de, x86@kernel.org, linux-kernel@vger.kernel.org,
-        mingo@redhat.com, mingo@kernel.org, hpa@zytor.com, bp@suse.de
-Reply-To: mingo@kernel.org, hpa@zytor.com, bp@suse.de, tglx@linutronix.de,
-          x86@kernel.org, mingo@redhat.com, linux-kernel@vger.kernel.org
-In-Reply-To: <alpine.DEB.2.21.1906182228350.1766@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1906182228350.1766@nanos.tec.linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/microcode: Fix the microcode load on CPU
- hotplug for real
-Git-Commit-ID: 5423f5ce5ca410b3646f355279e4e937d452e622
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 19 Jun 2019 03:32:45 -0400
+Received: from mx.kolabnow.com ([95.128.36.41]:51680 "EHLO mx.kolabnow.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725854AbfFSHcp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 03:32:45 -0400
+Received: from localhost (unknown [127.0.0.1])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTP id EA326814;
+        Wed, 19 Jun 2019 09:32:42 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kolabnow.com; h=
+        content-type:content-type:content-transfer-encoding:mime-version
+        :references:in-reply-to:message-id:date:date:subject:subject
+        :from:from:received:received:received; s=dkim20160331; t=
+        1560929562; x=1562743963; bh=OclQqLg+8U1JWonW5RZbtfoMC1IimdHslWy
+        HSQ7fQyE=; b=CnCHi1dULXFOSiKbj4SXp5nclrnSB3UnxRfdOdBDNkij5x7P92i
+        W4HiyJu2IVAQPxlKFNP95Yru/HiRfO+L+JlhDcghk+a8ctYVVySnPz5mLe1BMydN
+        eg4qMFEIQXc3KhsfoY2pVjmh05RuzullHWWbXya8A9zwcFbXewWPN6aahs3Lp/OF
+        o+GYVMr/1jpLACMdP/bQwsooA7NkLUl9zoj+tQAfgEN/5mnP4uuqAb8oLZd2Ac9q
+        z8A/ESq7aBjFgsklyvcwm9z4HIVjuMqQv2TRZD4jw/BsbPwOMikKChsqTf8vqiz9
+        dYfFujaVSYPvWj6dnZtalee8TygqJIRbg4tgB3T9km9q8WkktM+Fbm3DNcL1mkqh
+        BU8IzHhYQSLZLywtasR9k4Pk2mgoBhXfFZzgWU8ZeCTJgQhvKcwhnlaYIsOLLT2r
+        5I8NjYvhnY9CzILS6yiPqedSSbnFa9k1tqS7baQ3K0uOcbRVKEkXzcUQNLzf1Qr3
+        oW0XZrLpOIqIlIgVB7t0aYnLgcZu88d7LAAP02bfHFq9Xiue0z9a1neF5odrNl5x
+        Kg8OsT5TOvRV6p4b2mnr3V3LxsmwWzsTUTze5zwWz1en9Sf79k1vQEysgniV7J68
+        eDs8mLJqHijGPKBo/IjuFnUkTefCNXQt6oz6wb/K68sh346dLCkaqOFc=
+X-Virus-Scanned: amavisd-new at mykolab.com
+Received: from mx.kolabnow.com ([127.0.0.1])
+        by localhost (ext-mx-out002.mykolab.com [127.0.0.1]) (amavisd-new, port 10024)
+        with ESMTP id 5gHneNcaTfjr; Wed, 19 Jun 2019 09:32:42 +0200 (CEST)
+Received: from int-mx002.mykolab.com (unknown [10.9.13.2])
+        by ext-mx-out002.mykolab.com (Postfix) with ESMTPS id 96203635;
+        Wed, 19 Jun 2019 09:32:41 +0200 (CEST)
+Received: from ext-subm003.mykolab.com (unknown [10.9.6.3])
+        by int-mx002.mykolab.com (Postfix) with ESMTPS id 25BC835D3;
+        Wed, 19 Jun 2019 09:32:38 +0200 (CEST)
+From:   Federico Vaga <federico.vaga@vaga.pv.it>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Harry Wei <harryxiyou@gmail.com>,
+        Alex Shi <alex.shi@linux.alibaba.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>, linux-rdma@vger.kernel.org
+Subject: Re: [PATCH v1 02/22] docs: ioctl-number.txt: convert it to ReST format
+Date:   Wed, 19 Jun 2019 09:32:14 +0200
+Message-ID: <1723505.IrfYrSHNLM@pcbe13614>
+In-Reply-To: <e8f1c925c5d118717eb38455e8f9dacf340cc35e.1560891322.git.mchehab+samsung@kernel.org>
+References: <cover.1560891322.git.mchehab+samsung@kernel.org> <e8f1c925c5d118717eb38455e8f9dacf340cc35e.1560891322.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5423f5ce5ca410b3646f355279e4e937d452e622
-Gitweb:     https://git.kernel.org/tip/5423f5ce5ca410b3646f355279e4e937d452e622
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Tue, 18 Jun 2019 22:31:40 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 19 Jun 2019 09:16:35 +0200
+On Tuesday, June 18, 2019 11:05:26 PM CEST Mauro Carvalho Chehab wrote:
+> The conversion itself is simple: add a markup for the
+> title of this file and add markups for both tables.
+> 
+> Yet, the big table here with IOCTL numbers is badly formatted:
+> on several lines, the "Include File" column has some values that
+> are bigger than the reserved space there.
+> 
+> Also, on several places, a comment was misplaced at the "Include
+> File" space.
+> 
+> So, most of the work here is to actually ensure that each field
+> will be properly fixed.
+> 
+> Also worth to mention that some URLs have the asterisk character
+> on it. Well, Sphinx has an issue with asterisks in the middle
+> of an string. As this is URL, use the alternate format: %2A.
+> 
+> As a side effect of this patch, it is now a lot easier to see that
+> some reserved ioctl numbers are missing the include files
+> where it is supposed to be used.
+> 
+> PS.: While this is part of a subdir, I opted to convert this
+> single file alone, as this file has a potential of conflicts,
+> as most subsystem maintainers touch it.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  .../{ioctl-number.txt => ioctl-number.rst}    | 588 +++++++++---------
+>  Documentation/process/submit-checklist.rst    |   2 +-
+>  .../it_IT/process/submit-checklist.rst        |   2 +-
+>  .../zh_CN/process/submit-checklist.rst        |   2 +-
+>  include/uapi/rdma/rdma_user_ioctl_cmds.h      |   2 +-
 
-x86/microcode: Fix the microcode load on CPU hotplug for real
+Acked-by: Federico Vaga <federico.vaga@vaga.pv.it>
 
-A recent change moved the microcode loader hotplug callback into the early
-startup phase which is running with interrupts disabled. It missed that
-the callbacks invoke sysfs functions which might sleep causing nice 'might
-sleep' splats with proper debugging enabled.
+-- 
+Federico Vaga
+http://www.federicovaga.it/
 
-Split the callbacks and only load the microcode in the early startup phase
-and move the sysfs handling back into the later threaded and preemptible
-bringup phase where it was before.
 
-Fixes: 78f4e932f776 ("x86/microcode, cpuhotplug: Add a microcode loader CPU hotplug callback")
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: stable@vger.kernel.org
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/alpine.DEB.2.21.1906182228350.1766@nanos.tec.linutronix.de
----
- arch/x86/kernel/cpu/microcode/core.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/microcode/core.c b/arch/x86/kernel/cpu/microcode/core.c
-index a813987b5552..cb0fdcaf1415 100644
---- a/arch/x86/kernel/cpu/microcode/core.c
-+++ b/arch/x86/kernel/cpu/microcode/core.c
-@@ -789,13 +789,16 @@ static struct syscore_ops mc_syscore_ops = {
- 	.resume			= mc_bp_resume,
- };
- 
--static int mc_cpu_online(unsigned int cpu)
-+static int mc_cpu_starting(unsigned int cpu)
- {
--	struct device *dev;
--
--	dev = get_cpu_device(cpu);
- 	microcode_update_cpu(cpu);
- 	pr_debug("CPU%d added\n", cpu);
-+	return 0;
-+}
-+
-+static int mc_cpu_online(unsigned int cpu)
-+{
-+	struct device *dev = get_cpu_device(cpu);
- 
- 	if (sysfs_create_group(&dev->kobj, &mc_attr_group))
- 		pr_err("Failed to create group for CPU%d\n", cpu);
-@@ -872,7 +875,9 @@ int __init microcode_init(void)
- 		goto out_ucode_group;
- 
- 	register_syscore_ops(&mc_syscore_ops);
--	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:online",
-+	cpuhp_setup_state_nocalls(CPUHP_AP_MICROCODE_LOADER, "x86/microcode:starting",
-+				  mc_cpu_starting, NULL);
-+	cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN, "x86/microcode:online",
- 				  mc_cpu_online, mc_cpu_down_prep);
- 
- 	pr_info("Microcode Update Driver: v%s.", DRIVER_VERSION);
