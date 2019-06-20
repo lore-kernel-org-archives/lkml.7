@@ -2,109 +2,116 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 032AFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F3FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB4942084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24D40215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:34:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="T9qVefZX"
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XxxTCKxD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731124AbfFTB2M (ORCPT
+        id S1731141AbfFTBeb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:28:12 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41857 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726480AbfFTB2L (ORCPT
+        Wed, 19 Jun 2019 21:34:31 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:41615 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfFTBea (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:28:11 -0400
-Received: by mail-io1-f67.google.com with SMTP id w25so1316404ioc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 18:28:11 -0700 (PDT)
+        Wed, 19 Jun 2019 21:34:30 -0400
+Received: by mail-oi1-f196.google.com with SMTP id g7so885533oia.8;
+        Wed, 19 Jun 2019 18:34:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=googlemail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=K+lJ3CLPTlV9tpNBKFgd0Xmeaz/SJ4QdPFY55va1FCk=;
-        b=T9qVefZXg/l4TY1fZ5t4+FBcV8bawtYd7X1iwe2XqARuiVY+xJvg4NGnhUnJ/dR/K1
-         Y9cB1lnaFpB2sOYEZkpB8u1dWTE9wM6t07kCXXzXW3SqvSe6lqHfvnhmN3QyN0W4IRi9
-         CTTi0MmuSSPbmAZXhKPRSNz3zuDNzA0674j2o=
+        bh=nYuOW5lyxxT0zsgk7qqZi/7w20Oi72vHiGCqLTnTrl8=;
+        b=XxxTCKxD/5Hh4mP6+R4KSzkOEhkkx9EXfAH8omqHrIeXVmLMBa406JF09S5I9/dOxR
+         wc9h4G7Dflde6RcyDAZnRIMTkl43HRI69tjffugAWRVlUFXSiEWEbbvf1v8Dkv333ACz
+         fPBTlaPJtNz1tic4Y8+juQsuQ6mnFj5eYHNiMilXbbr3elf5dvc2xJrALVZVKGSFd1iZ
+         efEFfZAArnZa7GOg/IseyJDpc7KuRCJF8XYefzt5VhBC48jDwJGyC0kRcJOnDLUKC0In
+         eFPF3hEUJBXxsibzw51TwqvsjDFIP78hjGH3zMbetl9Rq5+bOJEMbbz3Y1EtDIbZufot
+         ZLMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=K+lJ3CLPTlV9tpNBKFgd0Xmeaz/SJ4QdPFY55va1FCk=;
-        b=FDUJIqk8vCrfjiB5rWTEwdgQ03iA/P0Hug/9kt4vlwtPo0Pr9cTMJt7Dq+DE5ioJyr
-         zE0i+ZoTbai3M2wtJseQR/GsBFVcX7qBF7mvUll0iO8M5eFQPlSKlBalCJdlXGLQz6/3
-         LM5NiZkMWydyaJZZBE19dLvOH66By25hdc8oIsW1VVZn9N8VQUqMkqPfjUw72h/8Gl/a
-         O1Ve4RWOrBgvVlIT4FHhzqF/R1WFXDJ6hQLslhxQ/PkNjVpTU7X3Xihh1XuHUbTqQlqN
-         pb5h6hqd7wqw5dSjB6O21ybkQC0GA+PGkvir21wEQwM6awRVNWazdMsCW9TkX7kCzICr
-         c6Nw==
-X-Gm-Message-State: APjAAAUzinefFLHfJRh/Whs2I9RNEKHKB7pwV8a4iGfjxxHiFfIcKALi
-        jvvqrjDodYOym14DU6efvSCC0AFtN3A=
-X-Google-Smtp-Source: APXvYqxp9aX1saz2EW6H9mUyv6K5WGpLW8KhGgvGJzTY6+PjksMifKnkIHdtCCxcioxpuTKqTJekNw==
-X-Received: by 2002:a02:914c:: with SMTP id b12mr14411283jag.105.1560994090948;
-        Wed, 19 Jun 2019 18:28:10 -0700 (PDT)
-Received: from mail-io1-f44.google.com (mail-io1-f44.google.com. [209.85.166.44])
-        by smtp.gmail.com with ESMTPSA id p63sm25055819iof.45.2019.06.19.18.28.10
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 18:28:10 -0700 (PDT)
-Received: by mail-io1-f44.google.com with SMTP id r185so442791iod.6
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 18:28:10 -0700 (PDT)
-X-Received: by 2002:a5e:d615:: with SMTP id w21mr12594037iom.0.1560994089873;
- Wed, 19 Jun 2019 18:28:09 -0700 (PDT)
+        bh=nYuOW5lyxxT0zsgk7qqZi/7w20Oi72vHiGCqLTnTrl8=;
+        b=BNEsDTidFziHEymSbkUyEdskkuyBeBVCwziwa7rvAqOIrSG4eWjQmmVQRyUab2orZx
+         zxXuwZkUEH9/ObfyEqpl5lo+HUwsCu6cKMUFXBL5OKadPQIO9RSab+5rtXoi4fiW4WRP
+         gaIM8mmk1XlSA9kiSUecIQ3A3ikCuA8ixUNodUc6e3ax9LALBF4LruvmQ53Iym6Ar+Ws
+         87jnzSdlyDcUQRO4pIeAAbpolXwcZgUmFZX5veAKUK223JZwMJ2fcPr9+f38iHVI0Q/u
+         oAJMt+6+wMXL11JDT8yvu0jAUb/vzf7yfMPfb1dBHXLgjUR3FI+4L1EexMGCWyaAMdxF
+         xApQ==
+X-Gm-Message-State: APjAAAVhVyePyzMFVsj/BNAvEbOQe0LSxwyVEQhXR/A6aTrfzovv39li
+        wcL7KPZ9hpOlMc7LE4DnPmjtMijzQx2SBhMPaXE=
+X-Google-Smtp-Source: APXvYqwrykrLtbD0pG9V8vBrsbsTo35v6Soy95FKONjQ0aI87GQhODvgpXAK5RhK2mM0+AszFXum8RjavMf7MOSMXic=
+X-Received: by 2002:aca:4403:: with SMTP id r3mr4853308oia.39.1560994469747;
+ Wed, 19 Jun 2019 18:34:29 -0700 (PDT)
 MIME-Version: 1.0
-References: <1458265206-15733-1-git-send-email-heiko@sntech.de> <1458265206-15733-5-git-send-email-heiko@sntech.de>
-In-Reply-To: <1458265206-15733-5-git-send-email-heiko@sntech.de>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Wed, 19 Jun 2019 18:27:55 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=U23+5pcze=6zDTx0dAYF8HTmbR8s8zem93VhgYgaZeGQ@mail.gmail.com>
-Message-ID: <CAD=FV=U23+5pcze=6zDTx0dAYF8HTmbR8s8zem93VhgYgaZeGQ@mail.gmail.com>
-Subject: Re: [PATCH 04/10] ARM: dts: rockchip: add startup delay to
- rk3288-veyron panel-regulators
-To:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>
-Cc:     Heiko Stuebner <heiko@sntech.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Yakir Yang <ykk@rock-chips.com>,
-        Matthias Kaehlcke <mka@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190617165836.4673-1-colin.king@canonical.com>
+ <20190619051308.23582-1-martin.blumenstingl@googlemail.com> <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com>
+In-Reply-To: <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Thu, 20 Jun 2019 03:34:18 +0200
+Message-ID: <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
+Subject: Re: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array
+ call
+To:     Colin Ian King <colin.king@canonical.com>
+Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
+        kernel-janitors@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
+        peppe.cavallaro@st.com
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Colin,
 
-On Wed, Fri, 18 Mar 2016 Heiko Stuebner <heiko@sntech.de> wrote:
+On Wed, Jun 19, 2019 at 8:55 AM Colin Ian King <colin.king@canonical.com> wrote:
 >
-> The panels need a bit of time to actually turn on. If this isn't
-> observed, this results in problems when trying talk to the panels
-> and thus produces detection errors. 100ms seem to be a safe value
-> for the time being.
->
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> ---
->  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 +
->  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 +
->  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 +
->  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 +
->  4 files changed, 4 insertions(+)
-
-I know it was 3 years ago, but any idea how to reproduce the problems
-you were seeing without this patch?  I believe the downstream kernel
-never had any delay like this and I'm not aware of any issues.
-
-I wonder if the need for this extra 100 ms delay is no longer there
-now that we have:
-
-3157694d8c7f pwm-backlight: Add support for PWM delays proprieties.
-5fb5caee92ba pwm-backlight: Enable/disable the PWM before/after LCD
-enable toggle.
-6d5922dd0d60 ARM: dts: rockchip: set PWM delay backlight settings for Veyron
+> On 19/06/2019 06:13, Martin Blumenstingl wrote:
+> > Hi Colin,
+> >
+> >> Currently the call to device_property_read_u32_array is not error checked
+> >> leading to potential garbage values in the delays array that are then used
+> >> in msleep delays.  Add a sanity check to the property fetching.
+> >>
+> >> Addresses-Coverity: ("Uninitialized scalar variable")
+> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > I have also sent a patch [0] to fix initialize the array.
+> > can you please look at my patch so we can work out which one to use?
+> >
+> > my concern is that the "snps,reset-delays-us" property is optional,
+> > the current dt-bindings documentation states that it's a required
+> > property. in reality it isn't, there are boards (two examples are
+> > mentioned in my patch: [0]) without it.
+> >
+> > so I believe that the resulting behavior has to be:
+> > 1. don't delay if this property is missing (instead of delaying for
+> >    <garbage value> ms)
+> > 2. don't error out if this property is missing
+> >
+> > your patch covers #1, can you please check whether #2 is also covered?
+> > I tested case #2 when submitting my patch and it worked fine (even
+> > though I could not reproduce the garbage values which are being read
+> > on some boards)
+> >
+> >
+> > Thank you!
+> > Martin
+> >
+> >
+> > [0] https://lkml.org/lkml/2019/4/19/638
+> >
+> Is that the correct link?
+sorry, that is a totally unrelated link
+the correct link is: https://patchwork.ozlabs.org/patch/1118313/
