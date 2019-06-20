@@ -2,105 +2,92 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F151CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:42:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC70C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:46:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C737A2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:42:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561045326;
-	bh=v03C322y5FrHQeDuwVvWrF4MCZyT6rtT188y+cmx1ZI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rmyJqMIi94Cy+MIdEg5c8d5qY/watLamqP1Gi3zgyb4cb8cpG6CfKxCrCJrqCYAJR
-	 TFInqyrBod1wLEn4T0ACCl5BB6VCgT2/nE2mhnOPIatRPiEAAzCB1KEEa54DsJzkTe
-	 71yXt86tx39j/Es4S6hEhnZq8nH6q9706xjVWn+A=
+	by mail.kernel.org (Postfix) with ESMTP id C5BC82083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:46:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1x6JgFvr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726798AbfFTPmF (ORCPT
+        id S1726785AbfFTPqg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:42:05 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50506 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfFTPmE (ORCPT
+        Thu, 20 Jun 2019 11:46:36 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:37742 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfFTPqg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:42:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6s6aZu8b9dqDAqPoq81Bk78Hj/YlZ9Zu2gddBiQR0jA=; b=jov01KPU7Ey0HCtDvL/bMfUvM
-        q+kHss2+okCgunU54lbz7AUEXxS2cz7t6hVp3TCiDXLIBSddCYMcK66KsNAYrByHqXzLdYmj5E8ms
-        s98+kDkEwIFNMnhf/WgI7uAcAm8nRSMA5EA0gm8aA9dNtYxJ/3JhRSD6SoNS961M86AwU=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hdzCB-0000qH-N9; Thu, 20 Jun 2019 15:41:51 +0000
-Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id AF546440046; Thu, 20 Jun 2019 16:41:50 +0100 (BST)
-Date:   Thu, 20 Jun 2019 16:41:50 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Collabora Kernel ML <kernel@collabora.com>,
-        Xing Zheng <zhengxing@rock-chips.com>,
-        Benson Leung <bleung@chromium.org>,
-        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org, Takashi Iwai <tiwai@suse.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH] ASoC: rk3399_gru_sound: Support 32, 44.1 and 88.2 kHz
- sample rates
-Message-ID: <20190620154150.GE5316@sirena.org.uk>
-References: <20190620134708.28311-1-enric.balletbo@collabora.com>
+        Thu, 20 Jun 2019 11:46:36 -0400
+Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x5KFk5jJ029576;
+        Fri, 21 Jun 2019 00:46:06 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5KFk5jJ029576
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561045566;
+        bh=9i03caR2ECEq/q+aW869XY+C+VxbqwsnsWklWv7B9eo=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=1x6JgFvrFwRMDNMIdloEL1OqqdCZS0776tvyreeTG1e6g9KehasjfbXl4tEcaaro9
+         9ZiOpVfsBb/9JafQTLMTm+avbhqUWDRY9CJSHHvEgBFXD+gR9MTS1H+DA93mceIEGU
+         a1ZJ70Up8y3+7+BPKLiHJFX++M2QRp0vSelz97/XTWmFAdEZ7RdxqOrKcGZD17/2s2
+         1YCPEMLBOod3erep0LIW5WYXFYQRfgOqHV7Elh2j7Rh0Myl2HqecuNU4Y+iToj2Kd/
+         BuOyKpTsHupFLIXe78Gd0NRbOEQyxWxBRYFiQVVXW3B6XXHOqwin9kcvK0KTHwUVGH
+         62kbyVfoemB4w==
+X-Nifty-SrcIP: [209.85.221.170]
+Received: by mail-vk1-f170.google.com with SMTP id k1so666380vkb.2;
+        Thu, 20 Jun 2019 08:46:06 -0700 (PDT)
+X-Gm-Message-State: APjAAAX0kjmf9eV0giGwxN4NazSI8ty9XD5ShoZeQG6uXTshIZbIcBCv
+        10bB+4a/ZAd3wNCrvzVvXn8/wE5Lts9SnyIJrZc=
+X-Google-Smtp-Source: APXvYqyp1S2LP2eYsGfXBtTBzMi1H805FURj8jPyinxB7XMBDVa3H8a/TkxCh192R+l3WO5nO6TBP6dtRro99IRiNK8=
+X-Received: by 2002:a1f:6347:: with SMTP id x68mr7258691vkb.64.1561045565131;
+ Thu, 20 Jun 2019 08:46:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="rOnZ5ITIX7GHaQD9"
-Content-Disposition: inline
-In-Reply-To: <20190620134708.28311-1-enric.balletbo@collabora.com>
-X-Cookie: Editing is a rewording activity.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190614165242.79257-1-natechancellor@gmail.com>
+In-Reply-To: <20190614165242.79257-1-natechancellor@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 21 Jun 2019 00:45:29 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASn9wDnhbP=FAg8tvXyXSQTUqQu_JY-+HqCds5c8Tor8g@mail.gmail.com>
+Message-ID: <CAK7LNASn9wDnhbP=FAg8tvXyXSQTUqQu_JY-+HqCds5c8Tor8g@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: Enable -Wuninitialized
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Jun 15, 2019 at 1:53 AM Nathan Chancellor
+<natechancellor@gmail.com> wrote:
+>
+> This helps fine very dodgy behavior through both -Wuninitialized
+> (warning that a variable is always uninitialized) and
+> -Wsometimes-uninitialized (warning that a variable is sometimes
+> uninitialized, like GCC's -Wmaybe-uninitialized). These warnings
+> catch things that GCC doesn't such as:
+>
+> https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
+>
+> We very much want to catch these so turn this warning on so that CI is
+> aware of it.
+>
+> Link: https://github.com/ClangBuiltLinux/linux/issues/381
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> ---
 
---rOnZ5ITIX7GHaQD9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to linux-kbuild.
+Thanks!
 
-On Thu, Jun 20, 2019 at 03:47:08PM +0200, Enric Balletbo i Serra wrote:
-> According to the datasheet the max98357a also supports 32, 44.1 and
-> 88.2 kHz sample rate. This support was also introduced recently by
-> commit fdf34366d324 ("ASoC: max98357a: add missing supported rates").
-> This patch adds support for these rates also for the machine driver so
-> we get rid of the errors like the below and we are able to play files
-> using these sample rates.
 
-Does the machine actually need to validate this at all?  The component
-drivers can all apply whatever constraints are needed and do their own
-validation, the machine driver is just getting in the way here.
-
---rOnZ5ITIX7GHaQD9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0LqT0ACgkQJNaLcl1U
-h9Aomwf+IWYRVucBBZvhsm/gdBVe/B8CpBjmp/2qlcOTbdBRiwV3TGlwjFiWqyNF
-a/7criDs2zMUCDb4Ad2Xh7FoRj24dC+1QikkP64iwyN/Y5wJLwQhRRDuM60vjRGp
-waQP/rQ86h14cWtTi/+IE8Rm3nFcs/0J0S+87SVuW8kIifVcEAzUGYH8fhTwgkki
-SerVWbkR+weSZLJVq/cvR2CKQvt4qPaQ2AT2V7W9pCRzBJRza8CLIg+t7jaFUuLP
-EefouE+9/aOgtVf4NT+BPfcy7pptkMZwAsbX0Obcm6+1dmIpjffWRdRzki4AVnJD
-wUUi0N6O0HWIkSLhMnqzgBaOrZBMjg==
-=cr78
------END PGP SIGNATURE-----
-
---rOnZ5ITIX7GHaQD9--
+-- 
+Best Regards
+Masahiro Yamada
