@@ -2,127 +2,96 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B6FC48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:05:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21584C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 368172075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:05:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E31962082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="f5D9YQ8z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731312AbfFTLFt (ORCPT
+        id S1726801AbfFTLIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:05:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:59850 "EHLO foss.arm.com"
+        Thu, 20 Jun 2019 07:08:39 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:60803 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfFTLFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:05:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3C174360;
-        Thu, 20 Jun 2019 04:05:48 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 3785B3F718;
-        Thu, 20 Jun 2019 04:05:47 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 12:05:42 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, quentin.perret@arm.com,
-        dietmar.eggemann@arm.com
-Subject: Re: [RFC PATCH 6/7] sched/cpufreq: Improve sugov_cpu_is_busy accuracy
-Message-ID: <20190620110541.iweliy7vyzjvhahf@e110439-lin>
-References: <20190508174301.4828-1-douglas.raillard@arm.com>
- <20190508174301.4828-7-douglas.raillard@arm.com>
- <20190516125552.hol3rasllhveekxq@e110439-lin>
- <e908b2ab-5c86-5be1-d3f0-36f2b26973c5@arm.com>
+        id S1726268AbfFTLIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:08:39 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TzZr1GXjz9s00;
+        Thu, 20 Jun 2019 21:08:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561028916;
+        bh=1vRGmwPCkpWKGX62qsREf0TDCdeBQ57O0Ojp2YTUVK8=;
+        h=Date:From:To:Cc:Subject:From;
+        b=f5D9YQ8zN8PRHEEnn80c72pf6NgryiR9ECanUIL9rhmLEydEVoBQEewdYMN7jU/HI
+         xY3dqvL23W1IzHd9MCJ6nHoLS1oeXYZhG1gj4DmKW/+4K1sPmN+okF6GggjzelZ8GE
+         piOEjVRfJL7oOCDIn2plFMePTpYC4fNMD7B1uYAvjHDHmYF5n7uJ+XrQ/Q053a03Zl
+         c+i9mLudvT0VteRNwySvjZ2IzuMkHzaID/MX/Dsnlef8yGxKri498QXPqioyCcgxSt
+         KVPIoCFImOZZAlhHbFkJ1ui3Qc/x6VS/5yo9f2jUb7wqT4zJAPTEIQBpzdbRi8qXpo
+         Obq2YyfbuFXmQ==
+Date:   Thu, 20 Jun 2019 21:08:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linus Walleij <linus.walleij@linaro.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Phil Reid <preid@electromag.com.au>
+Subject: linux-next: Fixes tag needs some work in the pinctrl tree
+Message-ID: <20190620210834.7f952c18@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e908b2ab-5c86-5be1-d3f0-36f2b26973c5@arm.com>
-User-Agent: NeoMutt/20180716
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/..wPVWPdTY0W87LBipDGUOG"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-Jun 17:19, Douglas Raillard wrote:
-> Hi Patrick,
+--Sig_/..wPVWPdTY0W87LBipDGUOG
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi!
+Hi all,
 
-> On 5/16/19 1:55 PM, Patrick Bellasi wrote:
-> > On 08-May 18:43, douglas.raillard@arm.com wrote:
-> > > From: Douglas RAILLARD <douglas.raillard@arm.com>
-> > > 
-> > > Avoid assuming a CPU is busy when it has begun being idle before
-> > > get_next_freq() is called. This is achieved by making sure the CPU will
-> > > not be detected as busy by other CPUs whenever its utilization is
-> > > decreasing.
-> > 
-> > If I understand it correctly, what you are after here is a "metric"
-> > which tells you (in a shared performance domain) if a CPU has been
-> > busy for a certain amount of time.
-> > You do that by reworking the way idle_calls are accounted for the
-> > sugov_update_single() case.
-> > 
-> > That approach could work but it looks a bit convoluted in the way it's
-> > coded and it's also difficult to exclude there could be corner cases
-> > with wired behaviors.
-> > Isn't that why you "fix" the saved_idle_calls counter after all?
-> > 
-> > What about a different approach where we:
-> > 
-> > 1. we annotate the timestamp a CPU wakes up from IDLE (last_wakeup_time)
-> > 
-> > 2. we use that annotated last_wake_time and the rq->nr_running to
-> >     define the "cpu is busy" heuristic.
-> > 
-> > Looking at a sibling CPU, I think we can end up with two main cases:
-> > 
-> > 1. CPU's nr_running is == 0
-> >     then we don't consider busy that CPU
-> > 
-> > 2. CPU's nr_running is  > 0
-> >     then the CPU is busy iff
-> >        (current_time - last_wakeup_tim) >= busy_threshold
-> > 
-> > Notice that, when a CPU is active, its rq clock is periodically
-> > updated, at least once per tick. Thus, provided a tick time is not too
-> > long to declare busy a CPU, then the above logic should work.
-> > 
-> > Perhaps the busy_threshold can also be defined considering the PELT
-> > dynamics and starting from an expected utilization increase converted
-> > in time.
-> 
-> After experimenting with quite a few combinations, I managed to get a heuristic
-> based on util_avg and util_est_enqueued that seems to work better in my case.
-> Key differences are:
-> * this new heuristic only really takes into account CFS signals
->  (current one based on idle calls takes into account everything that executes
->   on a given CPU.)
+In commit
 
-Right, that should not be an issue. You are after boosting for CFS
-tasks at the end, while for RT and DL we don't need boosting since
-they have their own mechanisms.
+  905dade66268 ("pinctrl: mcp23s08: Fix add_data and irqchip_add_nested cal=
+l order")
 
-> * it will mark a CPU as busy less often, since it should only trigger when
->   there is a change in the utilization of a currently enqueued tasks.
+Fixes tag
 
-That sounds right too.
+  Fixes: 02e389e63 ("pinctrl: mcp23s08: fix irq setup order")
 
->   Util changes due to enqueue/dequeue will not trigger it, which IMHO
->   is desirable, since we only want to bias frequency selection
->   when we know that we don't have precise utilization values for the
->   enqueued tasks (because the task has changed its behavior).
+has these problem(s):
 
-Agree.
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
-Best,
-Patrick
+--=20
+Cheers,
+Stephen Rothwell
 
--- 
-#include <best/regards.h>
+--Sig_/..wPVWPdTY0W87LBipDGUOG
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-Patrick Bellasi
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0LaTIACgkQAVBC80lX
+0GwG1Qf+Jnrq2/Rd4cfjGHvupfIZ7VOq8lVbXgonSKdxG5x+hvlXUz0j8K+Z0oIs
+ojaBpXqTg3YqDRtAd38+QI+qbmeWnYKx5tJhadWM1LnPqaOdi7XM8QcbAG0srlsj
+HaOrtvlbWWynPj0R5uCuMt8Ia0ax+FpRFkyd3BjfNM1KQ3yHnsWs5zV2L65fI6iW
+Qd9nUJ4NJCZoA1h9m62k4UyhjXMCSCdyTz3VDnJtpB3XQ/rdYPxiyoQSCAf5kUd7
+AImPAoBv07YIu59kkl9eAcxr8QKzemBf87MB0gody9/kOxQxorKuLXTnTtcF8299
+3TjDFtxD7GH0Rq9Mvau9eI6TKh7+bg==
+=H9Jj
+-----END PGP SIGNATURE-----
+
+--Sig_/..wPVWPdTY0W87LBipDGUOG--
