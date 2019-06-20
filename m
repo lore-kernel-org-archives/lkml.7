@@ -2,140 +2,102 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1654C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:57:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B8DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFBFE20652
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:57:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fmo+79nD"
+	by mail.kernel.org (Postfix) with ESMTP id 5B07D206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:06:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726632AbfFTU5O (ORCPT
+        id S1726388AbfFTVGw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:57:14 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37180 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfFTU5O (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:57:14 -0400
-Received: by mail-io1-f66.google.com with SMTP id e5so860350iok.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:57:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=clvCWOgrf+bohYw4yPLb3cRL+S1vltb3Xjm9acQt7gc=;
-        b=fmo+79nDbCw1LpEWNQuMz3TNZn/Agh17uX72Jpp7q6b2HvuhGW1kZQ9w9YwtzXg3z2
-         /c739uDRHe8FPIWbBXlypKWcZxCFxSOtSQcjJCFUPnkccul+7ySI22Ey9bEqvPsZkHPi
-         x9tDyl9iGhsEIRv8KDy0ciKm79J/jHdToPbV6RjYhhWbBMNCeuNX+L5fxSb56iwB+Sce
-         d+gC6ukOMm2Fk5M/Ql4M5wyk+M8KRsIrp3mTcQ+0+YZ0HDi5H93pBa9DemOWu+GigIDg
-         hV9wS9IAnlyKY5A8RFTiS2NQDzMDossP9+GvAZxA1QWn7BS4uLbzGLKflsbL5RRYsMmw
-         Lahw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=clvCWOgrf+bohYw4yPLb3cRL+S1vltb3Xjm9acQt7gc=;
-        b=nFRHfUrX8swoaECFd8tsJCtoHyQDwTwb56zAPyErhu+DIDuCPAk8UiF3mnCdJd8ktW
-         chHVc01jKPzEN1ZCHcUq5O4Axp4j3s5FbmRFFENv5GzFDLBAOH6+sCA1u90UC3eRY2vY
-         TCh1au5AJED82srwx4jrIFYyBVJFKUGaYN6+c+JmDKnUq7H/Uip+Vczje13H3Dse54Rp
-         9Ca53o8/wK/9V3Odz6tPMLVb9Hd0sAs006WodO16iAVXwIr7lFJTDygCjQGSCVvBatau
-         G3V5AEDkCBFD90tcgguthqFkpX1qAg7QB1ABnLf4gNW2H/5jjVDV5vuAduJg/22NfS54
-         Esfg==
-X-Gm-Message-State: APjAAAWJT6I4qryB/irLSUwK6hJsL8X1VHKSgM/aOhZECLv5mFTT/eIb
-        WNpmUnBD6LbUsUXN1z5K73xnbG9chq4pbB4iDFm5Qw==
-X-Google-Smtp-Source: APXvYqyoE6yVE00Eod4xt7YYeSZb5+bhhG3FG4eMRcSKpCjKHKHIlIROzex6qp1ezLxojf+kzqzXWbf0kL5uiXi22KU=
-X-Received: by 2002:a02:878a:: with SMTP id t10mr3379368jai.112.1561064232696;
- Thu, 20 Jun 2019 13:57:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620184523.155756-1-mka@chromium.org> <CAKwvOdn-o9UszRW+MQ9Z0Ds9B2wSVBWUsPBPSF0S2DYxVFYpqA@mail.gmail.com>
- <CAD=FV=WcH=dVeVWznO7Ti5A8HBDRM=rPvvH=-XJ2o1PKXvHAQw@mail.gmail.com> <CAKwvOd=twuZAAyKsBRSeJEFuQZGdyTw+=JAwmJugUhV+bppdtg@mail.gmail.com>
-In-Reply-To: <CAKwvOd=twuZAAyKsBRSeJEFuQZGdyTw+=JAwmJugUhV+bppdtg@mail.gmail.com>
-From:   Doug Anderson <dianders@google.com>
-Date:   Thu, 20 Jun 2019 13:57:00 -0700
-Message-ID: <CAD=FV=UHNwXhGcqua=gfGzyRMUt=fBd0RbRvQwttj-6hFdrjKw@mail.gmail.com>
-Subject: Re: [PATCH] gen_compile_command: Add support for separate
- KBUILD_OUTPUT directory
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Tom Roeder <tmroeder@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Raul E Rangel <rrangel@chromium.org>,
-        Tom Hughes <tomhughes@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>,
-        Yu Liu <yudiliu@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
+        Thu, 20 Jun 2019 17:06:52 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42804 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725913AbfFTVGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 17:06:51 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 55178C05D3F9;
+        Thu, 20 Jun 2019 21:06:43 +0000 (UTC)
+Received: from ovpn-117-83.phx2.redhat.com (ovpn-117-83.phx2.redhat.com [10.3.117.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E5FCF1001B05;
+        Thu, 20 Jun 2019 21:06:37 +0000 (UTC)
+Message-ID: <1b6dfc95bba69aa53e4e84eebf6af60f0b9ed95c.camel@redhat.com>
+Subject: Re: [PATCH RT 1/4] rcu: Acquire RCU lock when disabling BHs
+From:   Scott Wood <swood@redhat.com>
+To:     paulmck@linux.ibm.com
+Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Clark Williams <williams@redhat.com>,
+        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190620205352.GV26519@linux.ibm.com>
+References: <20190619011908.25026-1-swood@redhat.com>
+         <20190619011908.25026-2-swood@redhat.com>
+         <20190620205352.GV26519@linux.ibm.com>
+Organization: Red Hat
 Content-Type: text/plain; charset="UTF-8"
+MIME-Version: 1.0
+Date:   Thu, 20 Jun 2019 16:06:02 -0500
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 20 Jun 2019 21:06:51 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Thu, 2019-06-20 at 13:53 -0700, Paul E. McKenney wrote:
+> On Tue, Jun 18, 2019 at 08:19:05PM -0500, Scott Wood wrote:
+> > diff --git a/include/linux/rcupdate.h b/include/linux/rcupdate.h
+> > index fb267bc04fdf..aca4e5e25ace 100644
+> > --- a/include/linux/rcupdate.h
+> > +++ b/include/linux/rcupdate.h
+> > @@ -637,10 +637,12 @@ static inline void rcu_read_unlock(void)
+> >  static inline void rcu_read_lock_bh(void)
+> >  {
+> >  	local_bh_disable();
+> > +#ifndef CONFIG_PREEMPT_RT_FULL
+> 
+> How about this instead?
+> 
+> 	if (IS_ENABLED(CONFIG_PREEMPT_RT_FULL))
+> 		return;
 
-On Thu, Jun 20, 2019 at 1:25 PM Nick Desaulniers
-<ndesaulniers@google.com> wrote:
->
-> On Thu, Jun 20, 2019 at 1:13 PM Doug Anderson <dianders@google.com> wrote:
-> > On Thu, Jun 20, 2019 at 12:53 PM Nick Desaulniers
-> > <ndesaulniers@google.com> wrote:
-> > >
-> > > I do miss Doug's Kbuild caching patches' speedup.
-> >
-> > You actually get quite a bit of this by grabbing a new version of
-> > ccache (assuming you use ccache).  :-P  You still have to pay the
-> > penalty (twice) for all the options that are tested that the compiler
-> > _doesn't_ support, but at least you get the cache for the commands
-> > that the compiler does support.
->
-> Hello darkness my old friend:
-> https://nickdesaulniers.github.io/blog/2018/06/02/speeding-up-linux-kernel-builds-with-ccache/
-> Man, that post has not aged well.  Here's what we do now:
-> https://github.com/ClangBuiltLinux/continuous-integration/blob/45ab5842a69cb0c72d27d34e73b0599ec2a0e2ed/driver.sh#L227-L245
->
-> > Specifically, make sure you have a ccache with:
-> >
-> >     * https://github.com/ccache/ccache/pull/365
-> >     * https://github.com/ccache/ccache/pull/370
->
-> Oh! Interesting finds and thanks for the pointers.  Did these make it
-> into a release version of ccache, yet? If so, do you know which
-> version?
->
-> > I still have it in my thoughts to avoid the penalty for options that
-> > the compiler doesn't support but haven't had time to work on it
-> > recently.
->
-> It had better not be autoconf! (Hopefully yet-to-be-written GNU C
-> extensions can support feature detection via C preprocessor)
+OK.
 
-I've had a few ideas.  I won't object if you wanted to steal any of
-them and implement them yourself.  :-P
+> > @@ -189,8 +193,10 @@ void __local_bh_enable_ip(unsigned long ip,
+> > unsigned int cnt)
+> >  	WARN_ON_ONCE(count < 0);
+> >  	local_irq_enable();
+> >  
+> > -	if (!in_atomic())
+> > +	if (!in_atomic()) {
+> > +		rcu_read_unlock();
+> >  		local_unlock(bh_lock);
+> > +	}
+> >  
+> >  	preempt_check_resched();
+> >  }
+> 
+> And I have to ask...
+> 
+> What did you do to test this change to kernel/softirq.c?  My past attempts
+> to do this sort of thing have always run afoul of open-coded BH
+> transitions.
 
-1. Lamest but easiest (and best speedup for me personally) is to just
-cheat and hack our toolchain wrapper (which is invoked _before_
-ccache) to immediately reject flags we know our toolchain doesn't
-support.  I don't love our toolchain wrapper since it adds ~15 ms to
-every compiler invocation, but if it's there anyway might as well use
-it.
+Mostly rcutorture and loads such as kernel builds, on a debug kernel.  By
+"open-coded BH transition" do you mean directly manipulating the preempt
+count?  That would already be broken on RT.
 
-2. Part of the slowness in testing for unsupported options is that
-ccache runs twice.  After validating that it doesn't have a cache hit,
-it first tries to produce a preprocessed version of the file.  With an
-unsupported option that fails.  ...so ccache tries again _without_ the
-preprocessor.  So you call the compiler twice.  We could either make
-ccache skip this double-step when the target is /dev/null (why bother
-trying to preprocess /dev/null?) or we could add a CCACHE directive
-into the kernel build when testing options.  Probably the ccache
-option makes the most sense.
+-Scott
 
-3. In theory we could teach ccache how to cache these "tests for
-unsupported options".  That might be hard, though.
 
--Doug
