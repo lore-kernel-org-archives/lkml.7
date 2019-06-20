@@ -2,319 +2,281 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD7C8C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:19:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3883DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:20:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEC12070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:19:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E894D20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:20:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="OxCTA6+F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Fc+amVxj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732128AbfFTPTJ (ORCPT
+        id S1732154AbfFTPUG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:19:09 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:37609 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbfFTPSy (ORCPT
+        Thu, 20 Jun 2019 11:20:06 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46711 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726757AbfFTPUG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:18:54 -0400
-Received: by mail-io1-f66.google.com with SMTP id e5so467706iok.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:18:54 -0700 (PDT)
+        Thu, 20 Jun 2019 11:20:06 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d4so5185838edr.13;
+        Thu, 20 Jun 2019 08:20:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=yst8MNat78gyvUv+78J2l6JrkJnYsEpCBtbxbwsO9x8=;
-        b=OxCTA6+FCqpeGgc5w46hByG+mh3eFlESmcXTfAhJaFakhTREe6TJQM8tjn3mlgPh1K
-         xsh3D9ct0UrnDTrifSZyN/u0Ewvrl8JwH48Y/Q/cZQ76A8rELcDwwT5/BKBouEf0v92z
-         gYcrSBsg/5vCi7lfjsz6nZjac5lq/RTlEDKJo=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=N2VNIUOyS//PeNXKj8baceMCwOAwC6SDkpNGl5vg3Uc=;
+        b=Fc+amVxjLOu9r/KR7ypA7KaVpUNXyGFT0blT2YWGxqu5nmdYMk4HXJaaE2ZGnSMpUd
+         DHOKsay9KpBEvdrDO1vumyGS7p+8yVu8AtDyjqdgNJz+wXUfh/BxwqeWZukzrT0NPzna
+         c0AF0HFK32z4sBVAwNE3G/eVoTlb8fUo/BrTMniVfCnefr0uXG2RMzFUHOcHmqsfy/ge
+         txaFV4/xv/Lveiul0AZrKgVkr2lqDKUByod5WcP6RRWLILw1A384L90inqMndeCDNzRW
+         wTGYweYaRGfOrxK9me8xw1vAIUc56bsOGf0eTLjFLug9gKJUS1F/cYEqHWh91YKXGspX
+         c1BQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yst8MNat78gyvUv+78J2l6JrkJnYsEpCBtbxbwsO9x8=;
-        b=Bo7Fy21x4RJiGMv6DToC4G4DQ4B07L82kTwewcnDGqzUKELhMJlJP8/UPxUSeXbfUS
-         euukTD3+DQQ8MRs7BA2CqDZPkaxao9rkZ6XnihBwAQTDOYvAHLyYyLWhFNzMbIvP0PNj
-         nqym7lYHsH3ZkCH8Y2EE7tLQY5q1xv5NoXT5NEKJyFzS8H7zLbvkEsyUFG2JV2rH5d1A
-         1BmegzbZa09c2GCUV22OdK9TVm91zd2yXUnjioPJm+g2Ma6QpkjaueWAHyDwXkUxP263
-         yrl4sv89XEGWeMTMco+wtOKdVrFo8YGkomhEYuY3RibHwqgmu+0ysv8HnUFl0DUFqz6J
-         jh5A==
-X-Gm-Message-State: APjAAAXwUZeQSvtd/rwQtuRVPp2E4nQ133YCiV9IK1fbn7phmu6XD1fp
-        tcGuLcrBnNWstOMjF63NpKcNyXcw8Ao=
-X-Google-Smtp-Source: APXvYqxBEO4SmFYY60o3fT/y9Z8WeHnCefsDa+T4fidYk/4ZoCsyv9qbjJKjrbbvjiqri/qJpiWGwQ==
-X-Received: by 2002:a6b:7f0b:: with SMTP id l11mr91998488ioq.282.1561043933293;
-        Thu, 20 Jun 2019 08:18:53 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id o7sm36082ioo.81.2019.06.20.08.18.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 08:18:52 -0700 (PDT)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH v2 2/3] jbd2: introduce jbd2_inode dirty range scoping
-Date:   Thu, 20 Jun 2019 09:18:38 -0600
-Message-Id: <20190620151839.195506-3-zwisler@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190620151839.195506-1-zwisler@google.com>
-References: <20190620151839.195506-1-zwisler@google.com>
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=N2VNIUOyS//PeNXKj8baceMCwOAwC6SDkpNGl5vg3Uc=;
+        b=itoSB38OBmeXDAdxg6/8cQxUxlsTfTz8rUepOM0nt0M5zB8AEzSITWQcjKbdZCG2tY
+         1Hz6gh6+N8L5EwZBgC5OLn4EDoQ/mb6N2MnuZG6X/4OgJLdueOTicsYBVZXKTgJcxlSP
+         5FIoJ358jM5SmdzTp0QQ9Rjk9YXjMw3XyNZ25fteFX9Ce5fKUS791iuu+sG0TwOcaAGd
+         OSXgl0ZNukJmS2UyH5+dvSV3Lt+1kOT0zi8HxdqQbEzcfDjmGq1tHmS071ghjhirL+6r
+         jWDOw2nnzgqGJ4XMAfkAuR8LSvZxWFvYmlTKmGE6JaMjTWENNq9c+md9B3ulBAdy/Zx6
+         +X+A==
+X-Gm-Message-State: APjAAAUPmLbhP2eVXSXsF3KnhOASAHR4qpFKtz+KpvgJwryQQMeDg69D
+        sduqIotb4NXZARZwtBz/iS0=
+X-Google-Smtp-Source: APXvYqzXfZ+i65bsCpN7tMt5OnH9LiK2LmfonLC7KBpnym34qiSY67mfBY+VgCEE0tl3Q0rk7dqXRw==
+X-Received: by 2002:a50:fa83:: with SMTP id w3mr62596235edr.47.1561044004215;
+        Thu, 20 Jun 2019 08:20:04 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.141.54])
+        by smtp.gmail.com with ESMTPSA id r11sm3580491ejr.57.2019.06.20.08.20.02
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 08:20:03 -0700 (PDT)
+Subject: Re: [PATCH v2 05/12] media: mtk-jpeg: Get rid of mtk_smi_larb_get/put
+To:     Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Evan Green <evgreen@chromium.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Tomasz Figa <tfiga@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, yingjoe.chen@mediatek.com,
+        youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>,
+        anan.sun@mediatek.com, Rick Chang <rick.chang@mediatek.com>
+References: <1560171313-28299-1-git-send-email-yong.wu@mediatek.com>
+ <1560171313-28299-6-git-send-email-yong.wu@mediatek.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <6539751d-1751-f309-1c51-b3f9576c1b99@gmail.com>
+Date:   Thu, 20 Jun 2019 17:20:01 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1560171313-28299-6-git-send-email-yong.wu@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently both journal_submit_inode_data_buffers() and
-journal_finish_inode_data_buffers() operate on the entire address space
-of each of the inodes associated with a given journal entry.  The
-consequence of this is that if we have an inode where we are constantly
-appending dirty pages we can end up waiting for an indefinite amount of
-time in journal_finish_inode_data_buffers() while we wait for all the
-pages under writeback to be written out.
 
-The easiest way to cause this type of workload is do just dd from
-/dev/zero to a file until it fills the entire filesystem.  This can
-cause journal_finish_inode_data_buffers() to wait for the duration of
-the entire dd operation.
 
-We can improve this situation by scoping each of the inode dirty ranges
-associated with a given transaction.  We do this via the jbd2_inode
-structure so that the scoping is contained within jbd2 and so that it
-follows the lifetime and locking rules for that structure.
+On 10/06/2019 14:55, Yong Wu wrote:
+> MediaTek IOMMU has already added device_link between the consumer
+> and smi-larb device. If the jpg device call the pm_runtime_get_sync,
+> the smi-larb's pm_runtime_get_sync also be called automatically.
 
-This allows us to limit the writeback & wait in
-journal_submit_inode_data_buffers() and
-journal_finish_inode_data_buffers() respectively to the dirty range for
-a given struct jdb2_inode, keeping us from waiting forever if the inode
-in question is still being appended to.
+Please help me out find this relation. I seem to miss something basic, because I
+can't find any between the jpeg IP and the iommu.
 
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@vger.kernel.org
----
- fs/jbd2/commit.c      | 23 ++++++++++++++------
- fs/jbd2/journal.c     |  2 ++
- fs/jbd2/transaction.c | 49 ++++++++++++++++++++++++-------------------
- include/linux/jbd2.h  | 22 +++++++++++++++++++
- 4 files changed, 69 insertions(+), 27 deletions(-)
+Regards,
+Matthias
 
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index efd0ce9489ae9..668f9021cf115 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -187,14 +187,15 @@ static int journal_wait_on_commit_record(journal_t *journal,
-  * use writepages() because with dealyed allocation we may be doing
-  * block allocation in writepages().
-  */
--static int journal_submit_inode_data_buffers(struct address_space *mapping)
-+static int journal_submit_inode_data_buffers(struct address_space *mapping,
-+		loff_t dirty_start, loff_t dirty_end)
- {
- 	int ret;
- 	struct writeback_control wbc = {
- 		.sync_mode =  WB_SYNC_ALL,
- 		.nr_to_write = mapping->nrpages * 2,
--		.range_start = 0,
--		.range_end = i_size_read(mapping->host),
-+		.range_start = dirty_start,
-+		.range_end = dirty_end,
- 	};
- 
- 	ret = generic_writepages(mapping, &wbc);
-@@ -218,6 +219,9 @@ static int journal_submit_data_buffers(journal_t *journal,
- 
- 	spin_lock(&journal->j_list_lock);
- 	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
-+		loff_t dirty_start = jinode->i_dirty_start;
-+		loff_t dirty_end = jinode->i_dirty_end;
-+
- 		if (!(jinode->i_flags & JI_WRITE_DATA))
- 			continue;
- 		mapping = jinode->i_vfs_inode->i_mapping;
-@@ -230,7 +234,8 @@ static int journal_submit_data_buffers(journal_t *journal,
- 		 * only allocated blocks here.
- 		 */
- 		trace_jbd2_submit_inode_data(jinode->i_vfs_inode);
--		err = journal_submit_inode_data_buffers(mapping);
-+		err = journal_submit_inode_data_buffers(mapping, dirty_start,
-+				dirty_end);
- 		if (!ret)
- 			ret = err;
- 		spin_lock(&journal->j_list_lock);
-@@ -257,12 +262,16 @@ static int journal_finish_inode_data_buffers(journal_t *journal,
- 	/* For locking, see the comment in journal_submit_data_buffers() */
- 	spin_lock(&journal->j_list_lock);
- 	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
-+		loff_t dirty_start = jinode->i_dirty_start;
-+		loff_t dirty_end = jinode->i_dirty_end;
-+
- 		if (!(jinode->i_flags & JI_WAIT_DATA))
- 			continue;
- 		jinode->i_flags |= JI_COMMIT_RUNNING;
- 		spin_unlock(&journal->j_list_lock);
--		err = filemap_fdatawait_keep_errors(
--				jinode->i_vfs_inode->i_mapping);
-+		err = filemap_fdatawait_range_keep_errors(
-+				jinode->i_vfs_inode->i_mapping, dirty_start,
-+				dirty_end);
- 		if (!ret)
- 			ret = err;
- 		spin_lock(&journal->j_list_lock);
-@@ -282,6 +291,8 @@ static int journal_finish_inode_data_buffers(journal_t *journal,
- 				&jinode->i_transaction->t_inode_list);
- 		} else {
- 			jinode->i_transaction = NULL;
-+			jinode->i_dirty_start = 0;
-+			jinode->i_dirty_end = 0;
- 		}
- 	}
- 	spin_unlock(&journal->j_list_lock);
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 43df0c943229c..288b8e7cf21c7 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -2574,6 +2574,8 @@ void jbd2_journal_init_jbd_inode(struct jbd2_inode *jinode, struct inode *inode)
- 	jinode->i_next_transaction = NULL;
- 	jinode->i_vfs_inode = inode;
- 	jinode->i_flags = 0;
-+	jinode->i_dirty_start = 0;
-+	jinode->i_dirty_end = 0;
- 	INIT_LIST_HEAD(&jinode->i_list);
- }
- 
-diff --git a/fs/jbd2/transaction.c b/fs/jbd2/transaction.c
-index 8ca4fddc705fe..990e7b5062e74 100644
---- a/fs/jbd2/transaction.c
-+++ b/fs/jbd2/transaction.c
-@@ -2565,7 +2565,7 @@ void jbd2_journal_refile_buffer(journal_t *journal, struct journal_head *jh)
-  * File inode in the inode list of the handle's transaction
-  */
- static int jbd2_journal_file_inode(handle_t *handle, struct jbd2_inode *jinode,
--				   unsigned long flags)
-+		unsigned long flags, loff_t start_byte, loff_t end_byte)
- {
- 	transaction_t *transaction = handle->h_transaction;
- 	journal_t *journal;
-@@ -2577,26 +2577,17 @@ static int jbd2_journal_file_inode(handle_t *handle, struct jbd2_inode *jinode,
- 	jbd_debug(4, "Adding inode %lu, tid:%d\n", jinode->i_vfs_inode->i_ino,
- 			transaction->t_tid);
- 
--	/*
--	 * First check whether inode isn't already on the transaction's
--	 * lists without taking the lock. Note that this check is safe
--	 * without the lock as we cannot race with somebody removing inode
--	 * from the transaction. The reason is that we remove inode from the
--	 * transaction only in journal_release_jbd_inode() and when we commit
--	 * the transaction. We are guarded from the first case by holding
--	 * a reference to the inode. We are safe against the second case
--	 * because if jinode->i_transaction == transaction, commit code
--	 * cannot touch the transaction because we hold reference to it,
--	 * and if jinode->i_next_transaction == transaction, commit code
--	 * will only file the inode where we want it.
--	 */
--	if ((jinode->i_transaction == transaction ||
--	    jinode->i_next_transaction == transaction) &&
--	    (jinode->i_flags & flags) == flags)
--		return 0;
--
- 	spin_lock(&journal->j_list_lock);
- 	jinode->i_flags |= flags;
-+
-+	if (jinode->i_dirty_end) {
-+		jinode->i_dirty_start = min(jinode->i_dirty_start, start_byte);
-+		jinode->i_dirty_end = max(jinode->i_dirty_end, end_byte);
-+	} else {
-+		jinode->i_dirty_start = start_byte;
-+		jinode->i_dirty_end = end_byte;
-+	}
-+
- 	/* Is inode already attached where we need it? */
- 	if (jinode->i_transaction == transaction ||
- 	    jinode->i_next_transaction == transaction)
-@@ -2631,12 +2622,28 @@ static int jbd2_journal_file_inode(handle_t *handle, struct jbd2_inode *jinode,
- int jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *jinode)
- {
- 	return jbd2_journal_file_inode(handle, jinode,
--				       JI_WRITE_DATA | JI_WAIT_DATA);
-+			JI_WRITE_DATA | JI_WAIT_DATA, 0, LLONG_MAX);
- }
- 
- int jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *jinode)
- {
--	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA);
-+	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA, 0,
-+			LLONG_MAX);
-+}
-+
-+int jbd2_journal_inode_ranged_write(handle_t *handle,
-+		struct jbd2_inode *jinode, loff_t start_byte, loff_t length)
-+{
-+	return jbd2_journal_file_inode(handle, jinode,
-+			JI_WRITE_DATA | JI_WAIT_DATA, start_byte,
-+			start_byte + length - 1);
-+}
-+
-+int jbd2_journal_inode_ranged_wait(handle_t *handle, struct jbd2_inode *jinode,
-+		loff_t start_byte, loff_t length)
-+{
-+	return jbd2_journal_file_inode(handle, jinode, JI_WAIT_DATA,
-+			start_byte, start_byte + length - 1);
- }
- 
- /*
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 5c04181b7c6d8..0e0393e7f41a4 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -451,6 +451,22 @@ struct jbd2_inode {
- 	 * @i_flags: Flags of inode [j_list_lock]
- 	 */
- 	unsigned long i_flags;
-+
-+	/**
-+	 * @i_dirty_start:
-+	 *
-+	 * Offset in bytes where the dirty range for this inode starts.
-+	 * [j_list_lock]
-+	 */
-+	loff_t i_dirty_start;
-+
-+	/**
-+	 * @i_dirty_end:
-+	 *
-+	 * Inclusive offset in bytes where the dirty range for this inode
-+	 * ends. [j_list_lock]
-+	 */
-+	loff_t i_dirty_end;
- };
- 
- struct jbd2_revoke_table_s;
-@@ -1397,6 +1413,12 @@ extern int	   jbd2_journal_force_commit(journal_t *);
- extern int	   jbd2_journal_force_commit_nested(journal_t *);
- extern int	   jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *inode);
- extern int	   jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *inode);
-+extern int	   jbd2_journal_inode_ranged_write(handle_t *handle,
-+			struct jbd2_inode *inode, loff_t start_byte,
-+			loff_t length);
-+extern int	   jbd2_journal_inode_ranged_wait(handle_t *handle,
-+			struct jbd2_inode *inode, loff_t start_byte,
-+			loff_t length);
- extern int	   jbd2_journal_begin_ordered_truncate(journal_t *journal,
- 				struct jbd2_inode *inode, loff_t new_size);
- extern void	   jbd2_journal_init_jbd_inode(struct jbd2_inode *jinode, struct inode *inode);
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+> 
+> CC: Rick Chang <rick.chang@mediatek.com>
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> Reviewed-by: Evan Green <evgreen@chromium.org>
+> ---
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c | 22 ----------------------
+>  drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h |  2 --
+>  2 files changed, 24 deletions(-)
+> 
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> index f761e4d..2f37538 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.c
+> @@ -29,7 +29,6 @@
+>  #include <media/v4l2-ioctl.h>
+>  #include <media/videobuf2-core.h>
+>  #include <media/videobuf2-dma-contig.h>
+> -#include <soc/mediatek/smi.h>
+>  
+>  #include "mtk_jpeg_hw.h"
+>  #include "mtk_jpeg_core.h"
+> @@ -901,11 +900,6 @@ static int mtk_jpeg_queue_init(void *priv, struct vb2_queue *src_vq,
+>  
+>  static void mtk_jpeg_clk_on(struct mtk_jpeg_dev *jpeg)
+>  {
+> -	int ret;
+> -
+> -	ret = mtk_smi_larb_get(jpeg->larb);
+> -	if (ret)
+> -		dev_err(jpeg->dev, "mtk_smi_larb_get larbvdec fail %d\n", ret);
+>  	clk_prepare_enable(jpeg->clk_jdec_smi);
+>  	clk_prepare_enable(jpeg->clk_jdec);
+>  }
+> @@ -914,7 +908,6 @@ static void mtk_jpeg_clk_off(struct mtk_jpeg_dev *jpeg)
+>  {
+>  	clk_disable_unprepare(jpeg->clk_jdec);
+>  	clk_disable_unprepare(jpeg->clk_jdec_smi);
+> -	mtk_smi_larb_put(jpeg->larb);
+>  }
+>  
+>  static irqreturn_t mtk_jpeg_dec_irq(int irq, void *priv)
+> @@ -1059,21 +1052,6 @@ static int mtk_jpeg_release(struct file *file)
+>  
+>  static int mtk_jpeg_clk_init(struct mtk_jpeg_dev *jpeg)
+>  {
+> -	struct device_node *node;
+> -	struct platform_device *pdev;
+> -
+> -	node = of_parse_phandle(jpeg->dev->of_node, "mediatek,larb", 0);
+> -	if (!node)
+> -		return -EINVAL;
+> -	pdev = of_find_device_by_node(node);
+> -	if (WARN_ON(!pdev)) {
+> -		of_node_put(node);
+> -		return -EINVAL;
+> -	}
+> -	of_node_put(node);
+> -
+> -	jpeg->larb = &pdev->dev;
+> -
+>  	jpeg->clk_jdec = devm_clk_get(jpeg->dev, "jpgdec");
+>  	if (IS_ERR(jpeg->clk_jdec))
+>  		return PTR_ERR(jpeg->clk_jdec);
+> diff --git a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> index 1a6cdfd..e35fb79 100644
+> --- a/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> +++ b/drivers/media/platform/mtk-jpeg/mtk_jpeg_core.h
+> @@ -55,7 +55,6 @@ enum mtk_jpeg_ctx_state {
+>   * @dec_reg_base:	JPEG registers mapping
+>   * @clk_jdec:		JPEG hw working clock
+>   * @clk_jdec_smi:	JPEG SMI bus clock
+> - * @larb:		SMI device
+>   */
+>  struct mtk_jpeg_dev {
+>  	struct mutex		lock;
+> @@ -69,7 +68,6 @@ struct mtk_jpeg_dev {
+>  	void __iomem		*dec_reg_base;
+>  	struct clk		*clk_jdec;
+>  	struct clk		*clk_jdec_smi;
+> -	struct device		*larb;
+>  };
+>  
+>  /**
+> 
