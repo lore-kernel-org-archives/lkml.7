@@ -1,218 +1,110 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70325C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:40:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F3C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3FDA020B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:40:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561020051;
-	bh=BV5RFz7v+T0uSAD6vf7PoWeC6dfOHXNMOmIGDyaaLgE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=x8JYUYLVwoNjRo4D4jAFBJr+xvRQHCCzsBe5EvTAScaqzzZY7MjBnVliL3TVPFrGN
-	 4l2+TfOhIK+RX4gLOipiocRMy+7Osce9j1IbBZ4MApzKcCwCSVGGnI43WZ95vsRa/7
-	 HFHTgJuodYJQ/QTSdEoEfIBo6MAygLqP0QQxJsWk=
+	by mail.kernel.org (Postfix) with ESMTP id DFFF320657
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vktv+Nnv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730710AbfFTIku (ORCPT
+        id S1726799AbfFTIoB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:40:50 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:37519 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIkt (ORCPT
+        Thu, 20 Jun 2019 04:44:01 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:41958 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTIoB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:40:49 -0400
-Received: by mail-pl1-f196.google.com with SMTP id bh12so1105548plb.4;
-        Thu, 20 Jun 2019 01:40:49 -0700 (PDT)
+        Thu, 20 Jun 2019 04:44:01 -0400
+Received: by mail-io1-f66.google.com with SMTP id w25so443092ioc.8;
+        Thu, 20 Jun 2019 01:44:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=17FuFbjPRyXfho+sH140B0KsINkMD6CIqFuZH9j134k=;
-        b=bpeSe/TO4VzZbxc/KZ2GE5LRHBCnLc4SONYYnNGkU9d54pqqLXNld/9R2UT8g9R2+B
-         6o+WsxOzUvMmtRyHTWf+1mXxchfjlU2gKko+aJL7ivLuZ4pPOhDILf8o+JJQYTKQGYrG
-         vaWITaJb+CmzdwpFHIpmnNbJZ1Dit8/zBA04M0XNIeQwbV/Yhf9vRxxY/p2x4qF13NcJ
-         ghPEVWTvbpC/hEH7bfBk9wVkeg60J6XWu3xYttsIAUK7hTZ6imhU5l4TXPc+OmP1Ikj3
-         tYeodl7OlTy2Hw//7WvY+N8RGltMdCFBb7jJ4TgJS3JnWigeNUzoFFiuu72I453PGbPO
-         EjFw==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=gCb8MwruH8dKbWAubDWJguVrt49ZLagCriEvdjUA1WU=;
+        b=Vktv+Nnvh9ds+F3HFYArj+H76hfSKDTtGli8022H77ngVSBouxPFNwqTouEdE3vKpE
+         /+9BVmq4pmjw+6uQqfPuh2gK675a58Hk72VvzXz3vUmXeTDogZRT6zptL0A+hsQjWNfh
+         rVp6xLhXFdxuWHvOqMTVtvqPcOLM/EBIKQ6nzvlnTtuhFT7O66Ik0IpKaxn87mGtVT/A
+         3/z4ci2C9enNG1cSrI0Fkibr2IilAxPHzDhrFw+FKMWLiEG2dwcQ7oi622JRTFcpEkYU
+         +jS/zfSFrBAIEOQS3cvrmqD6opLlHc7GYB5VFS+fafHQsCvqlRCbahT+R7wNs7zdz2DO
+         zfpw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=17FuFbjPRyXfho+sH140B0KsINkMD6CIqFuZH9j134k=;
-        b=N75SKuYldf6aeormrh4h85fFffvKAFDWAKuUc9O6DZIwVBSOTKrtXWke9ivVuSoA22
-         Wl9avoNsiBCU0AAkxAnt6wboaCik+2xA+BC9Pb4rla7iBvNUqXcaw/1jeR/vAS6b3JnC
-         S9337hzYfWKuSADdAuhDYg6gCsPyGQM7NbAHBBuJqRkcfaer6GY8iMa6e2IH3WlsqTFB
-         yPi778MQ6vDMEEHRk9K/VIbKlnI8VwifgD+AArqvU36iq26/QFOR3813rVMFhveeNdnm
-         8twk7RGd4Gla2eVVT1/ijWeLZzwz4u33eMdY9NtKeKjGBQw2MnAxQgwC9t96Z5b89z83
-         Vt4w==
-X-Gm-Message-State: APjAAAX15rXk+47WGgvS88lZBeZgWUKGURrbsDw62D0S/BrW2Scpq/j5
-        dQ097KDL3XrOo9GxsmaZfII=
-X-Google-Smtp-Source: APXvYqzsuQmdRBtyel5WmdHfE+nZt+hM5RlpYRct0NLIEycnp0qhp5IaVKy9GqrsUtL03dc/DAuhBA==
-X-Received: by 2002:a17:902:704a:: with SMTP id h10mr16187296plt.337.1561020048599;
-        Thu, 20 Jun 2019 01:40:48 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id j2sm28034806pfn.135.2019.06.20.01.40.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 01:40:47 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 17:40:40 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
-Message-ID: <20190620084040.GD105727@google.com>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-5-minchan@kernel.org>
- <20190619132450.GQ2968@dhcp22.suse.cz>
- <20190620041620.GB105727@google.com>
- <20190620070444.GB12083@dhcp22.suse.cz>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=gCb8MwruH8dKbWAubDWJguVrt49ZLagCriEvdjUA1WU=;
+        b=B0ArAyGQ9xEkMqnD3XbXWtWZeyHGlKr9o181yFnYRhsUpd4UsRDTjAVTDZZbt69a/Z
+         A/pO/sa9ENLHvhV7PV4AQEgG4/6JDYXYxVsnYxaV8Di4B5qgGlnfMaABvnl+0PtDIOAl
+         ev2V31qmlao5vyCWDqiJWlTj2Bu0GGyWto5Vbf0tS1E8BbyUonjmS1VkjM82rV9m17+E
+         0HkEopl4pMkFtiB9VAOZTXH6ot1TD5r1wTbtlkAaNuMHzomBQnxnKXxdov9D7tmnS9yc
+         7i5dXlWEiPk16qasOokZIoJt5btdfRuKx49aqqQMNAT7qeYnmfJyMskgYmY7Mov9gsQL
+         yIvg==
+X-Gm-Message-State: APjAAAV4WugdBTA0fEqp5RFdEeS5+6EZ7+gf438Pi3VWPEkKauVB8REN
+        H3uN7t3xHzk5tXSOBlzRPFXLT9HpU2YKi+664ag=
+X-Google-Smtp-Source: APXvYqw2fVXqZFI1UAjff2P6BLRNnHwF8/qus3xVE14eeP/DMtKrOAjmBQZ8KIC+qO1xuPhi+v/Txq3ckXpJwmsrqrM=
+X-Received: by 2002:a6b:7b01:: with SMTP id l1mr18358947iop.60.1561020240102;
+ Thu, 20 Jun 2019 01:44:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620070444.GB12083@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <8a9ffb4b-791d-35d1-bb2a-7b6ad812bff1@ideasonboard.com>
+ <20190620081142.31302-1-e5ten.arch@gmail.com> <20190620082557.GB28346@zn.tnic>
+In-Reply-To: <20190620082557.GB28346@zn.tnic>
+From:   Ethan Sommer <e5ten.arch@gmail.com>
+Date:   Thu, 20 Jun 2019 04:43:49 -0400
+Message-ID: <CAMEGPiqgoscn-20gDyrQOBYdbfzdimu91Dw0WLEjLKs+u5KSEA@mail.gmail.com>
+Subject: Re: [PATCH v2] replace timeconst bc script with an sh script
+To:     Borislav Petkov <bp@suse.de>
+Cc:     hpa@zytor.com, Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 09:04:44AM +0200, Michal Hocko wrote:
-> On Thu 20-06-19 13:16:20, Minchan Kim wrote:
-> > On Wed, Jun 19, 2019 at 03:24:50PM +0200, Michal Hocko wrote:
-> > > On Mon 10-06-19 20:12:51, Minchan Kim wrote:
-> > > [...]
-> > > > +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
-> > > > +				unsigned long end, struct mm_walk *walk)
-> > > 
-> > > Again the same question about a potential code reuse...
-> > > [...]
-> > > > +regular_page:
-> > > > +	tlb_change_page_size(tlb, PAGE_SIZE);
-> > > > +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
-> > > > +	flush_tlb_batched_pending(mm);
-> > > > +	arch_enter_lazy_mmu_mode();
-> > > > +	for (; addr < end; pte++, addr += PAGE_SIZE) {
-> > > > +		ptent = *pte;
-> > > > +		if (!pte_present(ptent))
-> > > > +			continue;
-> > > > +
-> > > > +		page = vm_normal_page(vma, addr, ptent);
-> > > > +		if (!page)
-> > > > +			continue;
-> > > > +
-> > > > +		if (isolate_lru_page(page))
-> > > > +			continue;
-> > > > +
-> > > > +		isolated++;
-> > > > +		if (pte_young(ptent)) {
-> > > > +			ptent = ptep_get_and_clear_full(mm, addr, pte,
-> > > > +							tlb->fullmm);
-> > > > +			ptent = pte_mkold(ptent);
-> > > > +			set_pte_at(mm, addr, pte, ptent);
-> > > > +			tlb_remove_tlb_entry(tlb, pte, addr);
-> > > > +		}
-> > > > +		ClearPageReferenced(page);
-> > > > +		test_and_clear_page_young(page);
-> > > > +		list_add(&page->lru, &page_list);
-> > > > +		if (isolated >= SWAP_CLUSTER_MAX) {
-> > > 
-> > > Why do we need SWAP_CLUSTER_MAX batching? Especially when we need ...
-> > > [...]
-> > 
-> > It aims for preventing early OOM kill since we isolate too many LRU
-> > pages concurrently.
-> 
-> This is a good point. For some reason I thought that we consider
-> isolated pages in should_reclaim_retry but we do not anymore (since we
-> move from zone to node LRUs I guess). Please stick a comment there.
+(resend because I didn't know gmail would make it html)
+Ah sorry about that, I accidentally replied to Kieran only instead of
+to all, my response was "I will upload a patch with those issues fixed
+shortly, in terms of the dependency as far as I know commands only required
+for running tests don't count as kernel compilation dependencies, and I
+don't see any other uses of bc except for Documentation/EDID/Makefile, so
+I believe that bc can be removed from the kernel compilation section of the
+process document and will include that change with the updated patch that
+fixes the 2 issues you pointed out."
 
-Sure.
-
-> 
-> > > > +unsigned long reclaim_pages(struct list_head *page_list)
-> > > > +{
-> > > > +	int nid = -1;
-> > > > +	unsigned long nr_reclaimed = 0;
-> > > > +	LIST_HEAD(node_page_list);
-> > > > +	struct reclaim_stat dummy_stat;
-> > > > +	struct scan_control sc = {
-> > > > +		.gfp_mask = GFP_KERNEL,
-> > > > +		.priority = DEF_PRIORITY,
-> > > > +		.may_writepage = 1,
-> > > > +		.may_unmap = 1,
-> > > > +		.may_swap = 1,
-> > > > +	};
-> > > > +
-> > > > +	while (!list_empty(page_list)) {
-> > > > +		struct page *page;
-> > > > +
-> > > > +		page = lru_to_page(page_list);
-> > > > +		if (nid == -1) {
-> > > > +			nid = page_to_nid(page);
-> > > > +			INIT_LIST_HEAD(&node_page_list);
-> > > > +		}
-> > > > +
-> > > > +		if (nid == page_to_nid(page)) {
-> > > > +			list_move(&page->lru, &node_page_list);
-> > > > +			continue;
-> > > > +		}
-> > > > +
-> > > > +		nr_reclaimed += shrink_page_list(&node_page_list,
-> > > > +						NODE_DATA(nid),
-> > > > +						&sc, 0,
-> > > > +						&dummy_stat, false);
-> > > 
-> > > per-node batching in fact. Other than that nothing really jumped at me.
-> > > Except for the shared page cache side channel timing aspect not being
-> > > considered AFAICS. To be more specific. Pushing out a shared page cache
-> > > is possible even now but this interface gives a much easier tool to
-> > > evict shared state and perform all sorts of timing attacks. Unless I am
-> > > missing something we should be doing something similar to mincore and
-> > > ignore shared pages without a writeable access or at least document why
-> > > we do not care.
-> > 
-> > I'm not sure IIUC side channel attach. As you mentioned, without this syscall,
-> > 1. they already can do that simply by memory hogging
-> 
-> This is way much more harder for practical attacks because the reclaim
-> logic is not fully under the attackers control. Having a direct tool to
-> reclaim memory directly then just opens doors to measure the other
-> consumers of that memory and all sorts of side channel.
-
-Not sure it's much more harder. It's really easy on my experience.
-Just creating new memory hogger and consume memory step by step until
-you newly allocated pages will be reclaimed.
-Anyway, we fixed mincore so attacker cannot see when the page fault-in
-if he don't enough permission for the file. Right?
-What's the concern of you even though we reclaim more aggressively?
-
-
-> 
-> > 2. If we need fix MADV_PAGEOUT, that means we need to fix MADV_DONTNEED, too?
-> 
-> nope because MADV_DONTNEED doesn't unmap from other processes.
-
-Hmm, I don't understand. MADV_PAGEOUT doesn't unmap from other
-processes, either. Could you elborate it a bit more what's your concern?
-
-
-> -- 
-> Michal Hocko
-> SUSE Labs
+On Thu, Jun 20, 2019 at 4:26 AM Borislav Petkov <bp@suse.de> wrote:
+>
+> On Thu, Jun 20, 2019 at 04:11:32AM -0400, Ethan Sommer wrote:
+> > removes the bc build dependency introduced when timeconst.pl was
+> > replaced by timeconst.bc:
+> > 70730bca1331 ("kernel: Replace timeconst.pl with a bc script")
+>
+> I don't see you answering Kieran's questions anywhere...
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> SUSE Linux GmbH, GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah, HR=
+B 21284 (AG N=C3=BCrnberg)
