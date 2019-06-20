@@ -2,164 +2,115 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AEEBC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:04:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0478CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EC87214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:04:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEF3D20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:10:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="HzPImJ5C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GY2ZZVmW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730774AbfFTKEm (ORCPT
+        id S1726679AbfFTKKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:04:42 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:35129 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726268AbfFTKEm (ORCPT
+        Thu, 20 Jun 2019 06:10:44 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:36180 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726268AbfFTKKo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:04:42 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5KA3IqW907930
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 20 Jun 2019 03:03:19 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5KA3IqW907930
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561025000;
-        bh=PZckn3lCSiUSIpT3DisREcwVRo73zjJKZsS5wSAPdvE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=HzPImJ5CZAc99xLBooX1axgn7EBpR9sQeu6Z+p9yXxnxmwoiOycY3/PvUSz/UVgds
-         4khRUNK2bCu0xlmh3gEmR43/vB8dB5X71NyoPrIJIbdRiCeFhLbPszMj1YGHo6DCcz
-         gawNonpqNeSvXikY3C7MgVm3w8WUQC3L1f2SY6kb0RoXIMmMqH+UwdboguQx1naBuq
-         Z6h37rxTeNIA2icUew9Vrj0D4DFa4wD0jXYT4pRKqv3ApYlp3Wx6u+fIdOVu/IoIvy
-         g+u+v8hQQDJfZoUxKC4m5hBwZjiVE9e80NPhAzV5/5BfnjYU2ku0StywlqVoptKyCs
-         VDZ9/uJDsTc2Q==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5KA3HTP907920;
-        Thu, 20 Jun 2019 03:03:17 -0700
-Date:   Thu, 20 Jun 2019 03:03:17 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Lianbo Jiang <tipbot@zytor.com>
-Message-ID: <tip-4eb5fec31e613105668a1472d5876f3d0558e5d8@git.kernel.org>
-Cc:     rppt@linux.vnet.ibm.com, thomas.lendacky@amd.com, hpa@zytor.com,
-        tglx@linutronix.de, adobriyan@gmail.com, arnd@arndb.de,
-        jrdr.linux@gmail.com, mingo@kernel.org, x86@kernel.org,
-        lijiang@redhat.com, willy@infradead.org,
-        linux-kernel@vger.kernel.org, bp@suse.de, ganeshgr@chelsio.com,
-        akpm@linux-foundation.org, rahul.lakkireddy@chelsio.com,
-        brijesh.singh@amd.com
-Reply-To: hpa@zytor.com, thomas.lendacky@amd.com, rppt@linux.vnet.ibm.com,
-          tglx@linutronix.de, lijiang@redhat.com, jrdr.linux@gmail.com,
-          mingo@kernel.org, x86@kernel.org, arnd@arndb.de,
-          adobriyan@gmail.com, brijesh.singh@amd.com, ganeshgr@chelsio.com,
-          rahul.lakkireddy@chelsio.com, akpm@linux-foundation.org,
-          bp@suse.de, linux-kernel@vger.kernel.org, willy@infradead.org
-In-Reply-To: <20190430074421.7852-4-lijiang@redhat.com>
-References: <20190430074421.7852-4-lijiang@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/kdump] fs/proc/vmcore: Enable dumping of encrypted memory
- when SEV was active
-Git-Commit-ID: 4eb5fec31e613105668a1472d5876f3d0558e5d8
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Thu, 20 Jun 2019 06:10:44 -0400
+Received: by mail-io1-f67.google.com with SMTP id h6so583808ioh.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 03:10:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jV1xtT6Suu2NuepDJacPY34RkA8y/nPmx6sAGtZRT34=;
+        b=GY2ZZVmWjBrdNDwcAe2jMlFCfNtgQN0w5U1L+db+0QpM3lW9DPZ2NfMbwq3++n0jA6
+         Le2FL8yvB6nCDV/2LW26NC1EESOrQOsfZCofRk4J9JQw5XGIDPwI3G41vBg+zpGbegwJ
+         +L4DdDU8lW7reNaEGIPsO2SrWj12DKBKmKDKwOcaSpiwQ/rJCohB9+56IXfOMAVrPYpf
+         mBo+hoH5uAvY9hKbIo/F0C8wiToqwKaaUOT5lK2U0UQSYilthGv2de/kGOZHt3KTNM0z
+         qlYFbfpILWyUmCd831Tnyt/aLVlPY5gp6g/R86gnmcZjiJQO5Lig9MGF+0/LDk3j/zXf
+         seSQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jV1xtT6Suu2NuepDJacPY34RkA8y/nPmx6sAGtZRT34=;
+        b=okLKfc2VCdHu0tuzyX6fSmo5KxgFmk7KZ+OCfwbvsUpxpVa9FGhyu6oBSF3BQ/475s
+         qIHXEXPm79PxqSgdque8e9OCaJPfKqdGl6zoTaZpzG1mJ7x5bNn6o+Qdmgm7RL8HRpXV
+         CF4A8It7Jf2CBf+/1NX+pL7vT77AnFPLLL07LVBo5L4LBUGYlRbRdvXCkbI+xWvTZVK4
+         MxwITnTETn39hBGdMDye5hHhzgGoP2xzJ9k4C6b+hw7yaB71VfDTS8Akz9EHwRHU4Yot
+         aIaCAD8/8Ypsn1fSuCs0cBqb5DFqHyIjzVg8H7EhvXD+0+JzemxyQzmcY1fKAM5Dymbi
+         tPkQ==
+X-Gm-Message-State: APjAAAWaK5x+dNK8cPgyZwOgk9Ll9Fmjzhod2wSCh+RgMI7fGOllTg9/
+        86t9wpeYVnpxbqvICWoEegDIB6tR2/rG2HnfdcQY9rlJ4kI=
+X-Google-Smtp-Source: APXvYqzVb7e1bAHRq03c2QbOYR4on4XnlUpI8KJ61K5/ydTtHdNzDhMN53l90YfyQ3Zd2Ywy4IzAVnZfPPSnsYqDCWE=
+X-Received: by 2002:a5e:9e0a:: with SMTP id i10mr11582392ioq.44.1561025443346;
+ Thu, 20 Jun 2019 03:10:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <1561010100-14080-1-git-send-email-laoar.shao@gmail.com> <e5c695c9-2006-f2cb-e3e2-7ea8ee465817@i-love.sakura.ne.jp>
+In-Reply-To: <e5c695c9-2006-f2cb-e3e2-7ea8ee465817@i-love.sakura.ne.jp>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 20 Jun 2019 18:10:06 +0800
+Message-ID: <CALOAHbCe9J0pOCW03dW+C4NK__amTKttAs=eNHXwvPPf5Lpwhw@mail.gmail.com>
+Subject: Re: [PATCH] hung_task: recover hung task warnings in next check interval
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  4eb5fec31e613105668a1472d5876f3d0558e5d8
-Gitweb:     https://git.kernel.org/tip/4eb5fec31e613105668a1472d5876f3d0558e5d8
-Author:     Lianbo Jiang <lijiang@redhat.com>
-AuthorDate: Tue, 30 Apr 2019 15:44:21 +0800
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Thu, 20 Jun 2019 10:07:49 +0200
+On Thu, Jun 20, 2019 at 6:03 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
+>
+> On 2019/06/20 14:55, Yafang Shao wrote:
+> > When sys_hung_task_warnings reaches 0, the hang task messages will not
+> > be reported any more.
+>
+> It is a common mistake that sys_hung_task_warnings is already 0 when
+> a real problem which should be reported occurred.
+>
+> >
+> > If the user want to get more hung task messages, he must reset
+> > kernel.hung_task_warnings to a postive integer or -1 with sysctl.
+>
+> People are setting sys_hung_task_warnings to -1 in order to make sure
+> that the messages are printed.
+>
+> > This is not a good way for the user.
+>
+> But I don't think we should reset automatically.
+>
+> > We'd better reset hung task warnings in the kernel, and then the user
+> > don't need to pay attention to this value.
+>
+> I suggest changing the default value of sys_hung_task_warnings to -1.
+>
 
-fs/proc/vmcore: Enable dumping of encrypted memory when SEV was active
+Yes, that's what we have did now.
 
-In the kdump kernel, the memory of the first kernel gets to be dumped
-into a vmcore file.
+> >
+> > With this patch, hung task warnings will be reset with
+> > sys_hung_task_warnings setting in evenry check interval.
+>
+> Since it is uncommon that the messages are printed for more than 10
+> times for one check_hung_uninterruptible_tasks() call, this patch is
+> effectively changing to always print the messages (in other words,
+> setting -1).
 
-Similarly to SME kdump, if SEV was enabled in the first kernel, the old
-memory has to be remapped encrypted in order to access it properly.
+If sys_hung_task_warnings can't be recovered, does it make sense to exist?
+In which case do we need this setting ?
 
-Commit
+Btw, why the default value of this setting is 10, instead of -1 ?
 
-  992b649a3f01 ("kdump, proc/vmcore: Enable kdumping encrypted memory with SME enabled")
-
-took care of the SME case but it uses sme_active() which checks for SME
-only. Use mem_encrypt_active() instead, which returns true when either
-SME or SEV is active.
-
-Unlike SME, the second kernel images (kernel and initrd) are loaded into
-encrypted memory when SEV is active, hence the kernel elf header must be
-remapped as encrypted in order to access it properly.
-
- [ bp: Massage commit message. ]
-
-Co-developed-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Brijesh Singh <brijesh.singh@amd.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Alexey Dobriyan <adobriyan@gmail.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: bhe@redhat.com
-Cc: dyoung@redhat.com
-Cc: Ganesh Goudar <ganeshgr@chelsio.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: kexec@lists.infradead.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: Matthew Wilcox <willy@infradead.org>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: mingo@redhat.com
-Cc: Rahul Lakkireddy <rahul.lakkireddy@chelsio.com>
-Cc: Souptick Joarder <jrdr.linux@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190430074421.7852-4-lijiang@redhat.com
----
- fs/proc/vmcore.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 7bb96fdd38ad..57957c91c6df 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -166,7 +166,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	return read_from_oldmem(buf, count, ppos, 0, sev_active());
- }
- 
- /*
-@@ -174,7 +174,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, sme_active());
-+	return read_from_oldmem(buf, count, ppos, 0, mem_encrypt_active());
- }
- 
- /*
-@@ -374,7 +374,7 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start,
--					       userbuf, sme_active());
-+					       userbuf, mem_encrypt_active());
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
+Thanks
+Yafang
