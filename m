@@ -8,60 +8,60 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA9B1C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44DB9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:11:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9388B20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:11:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1973620679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XvjgVLfv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmqkXCli"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732121AbfFTOLB (ORCPT
+        id S1732135AbfFTOLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:11:01 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42725 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732020AbfFTOK4 (ORCPT
+        Thu, 20 Jun 2019 10:11:04 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36441 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732064AbfFTOK6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:10:56 -0400
-Received: by mail-lf1-f65.google.com with SMTP id y13so2536204lfh.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:10:55 -0700 (PDT)
+        Thu, 20 Jun 2019 10:10:58 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i21so2856875ljj.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:10:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=fsCelw2dLPJ1ORBNoEE6eWPI8VGcaISo9+6FUYIM0LQ=;
-        b=XvjgVLfv8hQ+wdI3qrx62+r/UDCMLgdPduOwm26f6h/BAFUqS6R9g80MXNccbkyAF0
-         cgvLW9Iv2rCGMNHGBz4YRPhuiZHw/olI9TxJYmZNCMBs1Av399kWuoq68B61Ktqy+IRG
-         E+vcAw2pYEnx2ia+iwa2qFwUpKh5aEpr/iun2qqe+2XhgJh/lpORElaPhwfr/MbrdOw4
-         05pEG1ceVgyZXIMezZPO0jHsWNrNFGg+jR7s64rrBBSFBx5iW9/qlzMN5i22eCZpgFnJ
-         UMlga6aUpR55R7wIt7y65pE6Bnd2gsDZiP78meDs/TaZ2n+aPus1fUZuauNZtneVoN31
-         PcBw==
+        bh=5sQG+Tf/VdEu5HF//CktSQgqtzNV5xwUlC9bLlmokHY=;
+        b=YmqkXClicvVzXJIojhfwWJg+SDueLC8Y6YRPoBFhOQxvPFN+3P7iP/frhMOhnINea1
+         7BqyWv4kQ+qHg2SAJPH2asaf9ONUY2X9iIfuL8JeuYn2Rhku5/i+QwfEq19ou6flWMc6
+         Jq1GdPS03V3xuehgvsitenUEkUiQlnNOaXPZZqKR5Zf8epNhdASIKYfVTf1oDrxbOK4K
+         6xP2+nlkctafF5SXzv1G6VYvhh3s1X2vkdMzBhLC0p4nMVyPRLPoRxwZS8XsuMKdiLpN
+         8I55lg1joWJh6LbMgKnpTLeG3mia02palgIT2WC5nesz0tbxvsLsEjVXDnjKwKuXeO2P
+         b8UA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=fsCelw2dLPJ1ORBNoEE6eWPI8VGcaISo9+6FUYIM0LQ=;
-        b=OUEYHY13Rw3Uv1yUzU9qTMdoD0TZck6oyz/5rM/C9FyuT2JqKCAmOQhw9YElvJGgB9
-         4cAdOtMg8auMpuj+iKlEyAU/cAe32WPfxiNztWq//ajAl/my84GuGUMbleBN6j+Gh9m2
-         qBq8H6UJ3zgVrUx3Dj2v4s7g0G/dh2YPYKufh4FCEIdpNsTxbHvfSsheLO3yyLIWNou8
-         E4pmIm76UrhuYiMPp+HMwlkqJCSOnOfKdLuZk3685TpICEwA5OCICBGASxm/RZOUlRRR
-         KOzqH8fcd/FioW2pEa6TD6pnUdNySmtdpHFgT3bzNcWotshMZ8/ZlRWTECXn6zz4BxlI
-         nbkw==
-X-Gm-Message-State: APjAAAW0fv6g6ToXvETmy0E86aPXEALgarbnFDIa6AOf+N+eL2ZMcGZy
-        1YVwZdxpYLAfNYYuSMCv4tV+o5n6
-X-Google-Smtp-Source: APXvYqwf7wiEsirhA4ugfBQ/5LIQOkuGm6vAXD++ptGp7pIxHpcwAi1hazMtDpDvHZ6Kj5ytdFKkNQ==
-X-Received: by 2002:a19:e308:: with SMTP id a8mr7387107lfh.69.1561039854562;
-        Thu, 20 Jun 2019 07:10:54 -0700 (PDT)
+        bh=5sQG+Tf/VdEu5HF//CktSQgqtzNV5xwUlC9bLlmokHY=;
+        b=r1Oe0Cc+2w9FlF7EbLhv9coAX1UZdgyqOkUQ1SlgzoNnK17M25Ese3FN08Apn7uBDS
+         a912lTd4zO3ustavNBbbL5pPLr/X0vMy8x1HBo7bpmJUPrjdowKAqQh+VAGBr9hoEU4G
+         5/snOixfS+3S/A8s4EmZAjXHI+hm2X9mWnvB0lrG9SP6i1dCSVYkSMOErYaVT536P+DE
+         /PccfYElwOOr5+/rBQ1oRDz4vpu52jzLPJdXzL1a3KfRaS2FM4rOhThTSmP6AS4zMIl7
+         qYRTDh0FiTOG8TI9GVqoePrNe0HdQ8ftK1AckVm9Z4JlTOzZHcUHv2st2pp98g7sveBk
+         e41g==
+X-Gm-Message-State: APjAAAW+IIoRZNi70qQ/vQFqRN3fJAcRk5I+TMwWxsckn7ePhXZ05/PT
+        I9fdL1FkwMF96+N8FucTRWBN0u7H
+X-Google-Smtp-Source: APXvYqyo51+PZBFOnfutJV2tlA61v6p+dt4nSMCjaGZGYOphlJIKjQJvSdtKjGJgn7a9gJqoTxezGg==
+X-Received: by 2002:a2e:8345:: with SMTP id l5mr1035531ljh.18.1561039855661;
+        Thu, 20 Jun 2019 07:10:55 -0700 (PDT)
 Received: from localhost.localdomain (v902-804.aalto.fi. [130.233.11.55])
-        by smtp.gmail.com with ESMTPSA id 27sm3524684ljw.97.2019.06.20.07.10.53
+        by smtp.gmail.com with ESMTPSA id 27sm3524684ljw.97.2019.06.20.07.10.54
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
         Thu, 20 Jun 2019 07:10:54 -0700 (PDT)
 From:   Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 5/7] rslib: Fix handling of of caller provided syndrome
-Date:   Thu, 20 Jun 2019 17:10:37 +0300
-Message-Id: <20190620141039.9874-6-ferdinand.blomqvist@gmail.com>
+Subject: [PATCH v2 6/7] rslib: Update documentation
+Date:   Thu, 20 Jun 2019 17:10:38 +0300
+Message-Id: <20190620141039.9874-7-ferdinand.blomqvist@gmail.com>
 X-Mailer: git-send-email 2.17.2
 In-Reply-To: <20190620141039.9874-1-ferdinand.blomqvist@gmail.com>
 References: <20190620141039.9874-1-ferdinand.blomqvist@gmail.com>
@@ -70,39 +70,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Check if the syndrome provided by the caller is zero, and act
-accordingly.
+The decoder returns the number of corrected symbols, not bits.
+The caller provided syndrome must be in index form.
 
 Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
 ---
- lib/reed_solomon/decode_rs.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ lib/reed_solomon/reed_solomon.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/lib/reed_solomon/decode_rs.c b/lib/reed_solomon/decode_rs.c
-index 78629bbe6590..b7264a712d46 100644
---- a/lib/reed_solomon/decode_rs.c
-+++ b/lib/reed_solomon/decode_rs.c
-@@ -42,8 +42,18 @@
- 	BUG_ON(pad < 0 || pad >= nn - nroots);
- 
- 	/* Does the caller provide the syndrome ? */
--	if (s != NULL)
--		goto decode;
-+	if (s != NULL) {
-+		for (i = 0; i < nroots; i++) {
-+			/* The syndrome is in index form,
-+			 * so nn represents zero
-+			 */
-+			if (s[i] != nn)
-+				goto decode;
-+		}
-+
-+		/* syndrome is zero, no errors to correct  */
-+		return 0;
-+	}
- 
- 	/* form the syndromes; i.e., evaluate data(x) at roots of
- 	 * g(x) */
+diff --git a/lib/reed_solomon/reed_solomon.c b/lib/reed_solomon/reed_solomon.c
+index e5fdc8b9e856..bbc01bad3053 100644
+--- a/lib/reed_solomon/reed_solomon.c
++++ b/lib/reed_solomon/reed_solomon.c
+@@ -340,7 +340,8 @@ EXPORT_SYMBOL_GPL(encode_rs8);
+  *  @data:	data field of a given type
+  *  @par:	received parity data field
+  *  @len:	data length
+- *  @s:		syndrome data field (if NULL, syndrome is calculated)
++ *  @s: 	syndrome data field, must be in index form
++ *		(if NULL, syndrome is calculated)
+  *  @no_eras:	number of erasures
+  *  @eras_pos:	position of erasures, can be NULL
+  *  @invmsk:	invert data mask (will be xored on data, not on parity!)
+@@ -354,7 +355,8 @@ EXPORT_SYMBOL_GPL(encode_rs8);
+  *  decoding, so the caller has to ensure that decoder invocations are
+  *  serialized.
+  *
+- *  Returns the number of corrected bits or -EBADMSG for uncorrectable errors.
++ *  Returns the number of corrected symbols or -EBADMSG for uncorrectable
++ *  errors. The count includes errors in the parity.
+  */
+ int decode_rs8(struct rs_control *rsc, uint8_t *data, uint16_t *par, int len,
+ 	       uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
+@@ -391,7 +393,8 @@ EXPORT_SYMBOL_GPL(encode_rs16);
+  *  @data:	data field of a given type
+  *  @par:	received parity data field
+  *  @len:	data length
+- *  @s:		syndrome data field (if NULL, syndrome is calculated)
++ *  @s: 	syndrome data field, must be in index form
++ *		(if NULL, syndrome is calculated)
+  *  @no_eras:	number of erasures
+  *  @eras_pos:	position of erasures, can be NULL
+  *  @invmsk:	invert data mask (will be xored on data, not on parity!)
+@@ -403,7 +406,8 @@ EXPORT_SYMBOL_GPL(encode_rs16);
+  *  decoding, so the caller has to ensure that decoder invocations are
+  *  serialized.
+  *
+- *  Returns the number of corrected bits or -EBADMSG for uncorrectable errors.
++ *  Returns the number of corrected symbols or -EBADMSG for uncorrectable
++ *  errors. The count includes errors in the parity.
+  */
+ int decode_rs16(struct rs_control *rsc, uint16_t *data, uint16_t *par, int len,
+ 		uint16_t *s, int no_eras, int *eras_pos, uint16_t invmsk,
 -- 
 2.17.2
 
