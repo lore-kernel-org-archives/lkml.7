@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C4FDC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32B4C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E49021744
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4AC321479
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053897;
-	bh=RXSCdDUMopVh8+8d9z183A+gfSEGcEZeZFDCTI3t3fM=;
+	s=default; t=1561053899;
+	bh=5+pIcsxL3+kMfNjKRKyMxU8gJGrwjrepimwCwm6k9zk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ptdAEV/+x2ENsl85JNGTQH9H0y5AfzSQ3ogcdw189dnplkqDK/vD768+ViripGJ/E
-	 0Z2vAZjNpQtGF/MhIA92BdofsIGYI6ozxmD/YTp4t+0jt9HSHOdfN3kQLqUxFfhuRC
-	 yBxdHNpL57luZRQRQYOWjqMLMAJI5MimO4iNh3qc=
+	b=kFke9UTOASN2uOzQHFgNXcrdUaYqZC8sbnxOsc4LLUxcDbjMdDmJ+3OeUsKlnw8PK
+	 1oaTzQzvhPWna97+6+w0pe/HIyG+RdYGqBM5yof4FHOpLZ0zY9BjgkSzlOVxuXIvAG
+	 Op9xqkTWrBzJK1BYARJH0mgM+5UrihiwoQDfEF4Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfFTSE4 (ORCPT
+        id S1727957AbfFTSE6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:04:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57682 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:04:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727280AbfFTSEw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:04:52 -0400
+        id S1727940AbfFTSEz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:04:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 197B021670;
-        Thu, 20 Jun 2019 18:04:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4E1C32173E;
+        Thu, 20 Jun 2019 18:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053891;
-        bh=RXSCdDUMopVh8+8d9z183A+gfSEGcEZeZFDCTI3t3fM=;
+        s=default; t=1561053894;
+        bh=5+pIcsxL3+kMfNjKRKyMxU8gJGrwjrepimwCwm6k9zk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uLyuKitGinzQZIvVcBwueGU/i/yq27GwhfgM/bCTp4Y1oguMXHgojg0smeEBYS8RI
-         XlvYzhbcg6f1+m++LQGFYv9TUf37fHdmApzHemnofFnmWbY9IYUF5BoEnckICzU4NI
-         x7SNnR10O7eUyHdPeHB1rDy/gj7NuMcs2qipaf3Y=
+        b=kBBaULWjiqhIfd5SaAwC2O8uEY8DYgA/UZKrHnB1Tcd5zkN6Cb4mTtjPt8Nbaw7zT
+         XGn/Aq6jrx47mPxVAgBmKY+vTcBOEiEDwwAc/r8kknyxA441bpUtqxHa4XEJQ5rit5
+         uw0yQveVjLLqePjexIydYv6c24oC29dGF4FtkCrQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>
-Subject: [PATCH 4.9 063/117] media: v4l2-ioctl: clear fields in s_parm
-Date:   Thu, 20 Jun 2019 19:56:37 +0200
-Message-Id: <20190620174356.670522344@linuxfoundation.org>
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        Wolfram Sang <wsa@the-dreams.de>, stable@kernel.org
+Subject: [PATCH 4.9 064/117] i2c: acorn: fix i2c warning
+Date:   Thu, 20 Jun 2019 19:56:38 +0200
+Message-Id: <20190620174356.698304328@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,52 +59,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans Verkuil <hans.verkuil@cisco.com>
+From: Russell King <rmk+kernel@armlinux.org.uk>
 
-commit 8a7c5594c02022ca5fa7fb603e11b3e1feb76ed5 upstream.
+commit ca21f851cc9643af049226d57fabc3c883ea648e upstream.
 
-Zero the reserved capture/output array.
+The Acorn i2c driver (for RiscPC) triggers the "i2c adapter has no name"
+warning in the I2C core driver, resulting in the RTC being inaccessible.
+Fix this.
 
-Zero the extendedmode (it is never used in drivers).
-
-Clear all flags in capture/outputmode except for V4L2_MODE_HIGHQUALITY,
-as that is the only valid flag.
-
-Signed-off-by: Hans Verkuil <hans.verkuil@cisco.com>
-Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+Fixes: 2236baa75f70 ("i2c: Sanity checks on adapter registration")
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Cc: stable@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/media/v4l2-core/v4l2-ioctl.c |   17 ++++++++++++++++-
- 1 file changed, 16 insertions(+), 1 deletion(-)
+ drivers/i2c/busses/i2c-acorn.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/media/v4l2-core/v4l2-ioctl.c
-+++ b/drivers/media/v4l2-core/v4l2-ioctl.c
-@@ -1959,7 +1959,22 @@ static int v4l_s_parm(const struct v4l2_
- 	struct v4l2_streamparm *p = arg;
- 	int ret = check_fmt(file, p->type);
+--- a/drivers/i2c/busses/i2c-acorn.c
++++ b/drivers/i2c/busses/i2c-acorn.c
+@@ -83,6 +83,7 @@ static struct i2c_algo_bit_data ioc_data
  
--	return ret ? ret : ops->vidioc_s_parm(file, fh, p);
-+	if (ret)
-+		return ret;
-+
-+	/* Note: extendedmode is never used in drivers */
-+	if (V4L2_TYPE_IS_OUTPUT(p->type)) {
-+		memset(p->parm.output.reserved, 0,
-+		       sizeof(p->parm.output.reserved));
-+		p->parm.output.extendedmode = 0;
-+		p->parm.output.outputmode &= V4L2_MODE_HIGHQUALITY;
-+	} else {
-+		memset(p->parm.capture.reserved, 0,
-+		       sizeof(p->parm.capture.reserved));
-+		p->parm.capture.extendedmode = 0;
-+		p->parm.capture.capturemode &= V4L2_MODE_HIGHQUALITY;
-+	}
-+	return ops->vidioc_s_parm(file, fh, p);
- }
+ static struct i2c_adapter ioc_ops = {
+ 	.nr			= 0,
++	.name			= "ioc",
+ 	.algo_data		= &ioc_data,
+ };
  
- static int v4l_queryctrl(const struct v4l2_ioctl_ops *ops,
 
 
