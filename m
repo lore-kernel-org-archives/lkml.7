@@ -2,88 +2,148 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 622C7C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:59:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E717CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:00:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A85A2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:59:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C038320673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:00:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="D26PYrCy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726921AbfFTO7z (ORCPT
+        id S1731701AbfFTPAX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:59:55 -0400
-Received: from mga11.intel.com ([192.55.52.93]:54140 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfFTO7y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:59:54 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 07:59:54 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="168538290"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by FMSMGA003.fm.intel.com with ESMTP; 20 Jun 2019 07:59:51 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hdyXW-0001Om-Me; Thu, 20 Jun 2019 17:59:50 +0300
-Date:   Thu, 20 Jun 2019 17:59:50 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
-        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v5 4/7] i2c: core: Make i2c_acpi_get_irq available to the
- rest of the I2C core
-Message-ID: <20190620145950.GE9224@smile.fi.intel.com>
-References: <20190620133420.4632-1-ckeepax@opensource.cirrus.com>
- <20190620133420.4632-5-ckeepax@opensource.cirrus.com>
+        Thu, 20 Jun 2019 11:00:23 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:37462 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726654AbfFTPAW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:00:22 -0400
+Received: by mail-wm1-f68.google.com with SMTP id f17so3510135wme.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:00:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iGJO1VOPXnwiO9fEhZqN6X/eRe30yCuqhTibmCsxXjw=;
+        b=D26PYrCydSgAvlyMXHUOVwEHkqVfkO3eIU+Hw97fyOOaJhSd3TTaERMVpGTO01BA/a
+         WTSvDNybjRgNPVBPg4AKhb1YAxpFMudHhPqlYRRljgWdVKAIU/KpiTqqKN8rXdc89coc
+         oj2pe8nJd5BX4Oh6O9WDO/g+AzqTXdUweRXgwg987O3Rw6EetJEkL3LvTo2QJI4PK6H4
+         zfrTGY5oSiQlU1ea/EeeFjW50K9hvMIaICcKbSXt7380xxh5jQw7tq6m+aokZ30/c5+Q
+         mg0UYoiwFRcvvdV0ToIAJ90+6wcvCSVLdZLbbLXCfMKQ6eRNoe+8rSMk9w0tkffrhgHu
+         j5TA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iGJO1VOPXnwiO9fEhZqN6X/eRe30yCuqhTibmCsxXjw=;
+        b=A9MOwlxZMtZoQgkt3VQ+ESatUcbEvvTo0r8PlJd0p3pMlkz2dAmedv9ltXxKFPM2rL
+         i+/OvgYy7pzO8zHKM35AJXdinlsv+Q7eGYrS9oGgPlc4Fpol//gwtoMFoZwqB9eKvqxZ
+         Lggh+q91BbvG4G5Iax8gKscdEJHEWaFb8DE4TMDsVJegtybRNjQIpQeEasaJ/F8qUWBB
+         dlq9JxNegDuoADDlD5HyaM3ifRCi+Pc4B9YfwxAcLOIKGuKZWabIRUrqamagpfHo6x7t
+         ABLtDTkgR55QK4StvPvTx98QuDQ1L1qEFtY0w/+jDcoig5fH6w61lF+oiCK3LOxjF0lJ
+         4MNg==
+X-Gm-Message-State: APjAAAVPiggBxS1I3tlMCb5DcDtVNciNHYrV6a4GdIvGzO0vxUbyZlMt
+        Z/h52RIxsSHBL3BubiufUM0T2A==
+X-Google-Smtp-Source: APXvYqzq+mH4AFjJmn1fukJcLa9bYkZIAjP8/Kwk4UdxGe4R+GJgHf3rpGNNqIIgdGkyOTXdsm/tQw==
+X-Received: by 2002:a1c:5546:: with SMTP id j67mr71050wmb.80.1561042820164;
+        Thu, 20 Jun 2019 08:00:20 -0700 (PDT)
+Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id o126sm6802520wmo.1.2019.06.20.08.00.19
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Thu, 20 Jun 2019 08:00:19 -0700 (PDT)
+From:   Neil Armstrong <narmstrong@baylibre.com>
+To:     jbrunet@baylibre.com, khilman@baylibre.com
+Cc:     linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
+        Neil Armstrong <narmstrong@baylibre.com>
+Subject: [RFC/RFT 00/14] arm64: g12a: add support for DVFS
+Date:   Thu, 20 Jun 2019 16:59:59 +0200
+Message-Id: <20190620150013.13462-1-narmstrong@baylibre.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620133420.4632-5-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 02:34:17PM +0100, Charles Keepax wrote:
-> In preparation for more refactoring make i2c_acpi_get_irq available
-> outside i2c-core-acpi.c.
+The G12A/G12B Socs embeds a specific clock tree for each CPU cluster :
+cpu_clk / cpub_clk
+|   \- cpu_clk_dyn
+|      |  \- cpu_clk_premux0
+|      |        |- cpu_clk_postmux0
+|      |        |    |- cpu_clk_dyn0_div
+|      |        |    \- xtal/fclk_div2/fclk_div3
+|      |        \- xtal/fclk_div2/fclk_div3
+|      \- cpu_clk_premux1
+|            |- cpu_clk_postmux1
+|            |    |- cpu_clk_dyn1_div
+|            |    \- xtal/fclk_div2/fclk_div3
+|            \- xtal/fclk_div2/fclk_div3
+\ sys_pll / sys1_pll
 
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+This patchset adds notifiers on cpu_clk / cpub_clk, cpu_clk_dyn,
+cpu_clk_premux0 and sys_pll / sys1_pll to permit change frequency of
+the CPU clock in a safe way as recommended by the vendor Documentation
+and reference code.
 
-I'm not sure Rb tags are suitable for patches 4 and 5 since the changes made.
+This patchset :
+- introduces needed core and meson clk changes
+- adds support for the G12B second cluster clock measurer ids
+- protects clock measurer from cooncurent measures
+- adds the clock notifiers
+- moves the G12A DT to a common g12a-common dtsi
+- adds the G12A and G12B OPPs
+- enables DVFS on all supported boards
 
-> +struct acpi_device;
+Dependencies:
+- PWM AO input order fix at [1]
+- PWM enhancements from Martin at [2]
 
-Hmm... Doesn't acpi.h define that for !ACPI case?
+[1] https://patchwork.kernel.org/patch/11006835/
+[2] https://patchwork.kernel.org/patch/11006835/
 
->  #ifdef CONFIG_ACPI
->  const struct acpi_device_id *
->  i2c_acpi_match_device(const struct acpi_device_id *matches,
->  		      struct i2c_client *client);
->  void i2c_acpi_register_devices(struct i2c_adapter *adap);
-> +
-> +int i2c_acpi_get_irq(struct acpi_device *adev);
+Neil Armstrong (14):
+  pinctrl: meson-g12a: add pwm_a on GPIOE_2 pinmux
+  clk: core: introduce clk_hw_set_parent()
+  clk: meson: regmap: export regmap_div ops functions
+  clk: meson: eeclk: add setup callback
+  soc: amlogic: meson-clk-measure: protect measure with a mutex
+  soc: amlogic: meson-clk-measure: add G12B second cluster cpu clk
+  clk: meson: g12a: add notifiers to handle cpu clock change
+  clk: meson: g12a: expose CPUB clock ID for G12B
+  arm64: dts: move common G12A & G12B modes to meson-g12-common.dtsi
+  arm64: dts: meson-g12-common: add pwm_a on GPIOE_2 pinmux
+  arm64: dts: meson-g12a: add cpus OPP table
+  arm64: dts: meson-g12a: enable DVFS on G12A boards
+  arm64: dts: meson-g12b: add cpus OPP tables
+  arm64: dts: meson-g12b-odroid-n2: enable DVFS
 
-Since you call this afterwards with struct device from which companion is
-derived, can't we directly use struct device as a parameter?
-
-Yes, in case of adev call, it might be &adev->dev I suppose?
+ .../boot/dts/amlogic/meson-g12-common.dtsi    | 2464 +++++++++++++++++
+ .../boot/dts/amlogic/meson-g12a-sei510.dts    |   55 +
+ .../boot/dts/amlogic/meson-g12a-u200.dts      |   55 +
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   |   52 +
+ arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 2462 +---------------
+ .../boot/dts/amlogic/meson-g12b-odroid-n2.dts |   96 +
+ arch/arm64/boot/dts/amlogic/meson-g12b.dtsi   |  141 +-
+ drivers/clk/clk.c                             |    5 +
+ drivers/clk/meson/clk-regmap.c                |   10 +-
+ drivers/clk/meson/clk-regmap.h                |    5 +
+ drivers/clk/meson/g12a.c                      |  500 +++-
+ drivers/clk/meson/meson-eeclk.c               |    6 +
+ drivers/clk/meson/meson-eeclk.h               |    1 +
+ drivers/pinctrl/meson/pinctrl-meson-g12a.c    |    9 +
+ drivers/soc/amlogic/meson-clk-measure.c       |   14 +-
+ include/dt-bindings/clock/g12a-clkc.h         |    1 +
+ include/linux/clk-provider.h                  |    1 +
+ 17 files changed, 3412 insertions(+), 2465 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12-common.dtsi
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.21.0
 
