@@ -2,99 +2,187 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 06330C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:53:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E05C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3E8720B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:53:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB2020B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:55:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O92/TWMC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCVaRrbp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731083AbfFTFxR (ORCPT
+        id S1731321AbfFTFzg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 01:53:17 -0400
-Received: from mail-pl1-f177.google.com ([209.85.214.177]:39986 "EHLO
-        mail-pl1-f177.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfFTFxR (ORCPT
+        Thu, 20 Jun 2019 01:55:36 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38839 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfFTFzg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 01:53:17 -0400
-Received: by mail-pl1-f177.google.com with SMTP id a93so923025pla.7;
-        Wed, 19 Jun 2019 22:53:16 -0700 (PDT)
+        Thu, 20 Jun 2019 01:55:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v11so977088pgl.5
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 22:55:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GCWIu+pKgfVWcOGFQteSuVLw0jZjzlfHNzkQ2wuwzGQ=;
-        b=O92/TWMC2x0RmONVUUz/lsKvv4Je9F81ANSUEbndRVi/zs7d+aCvOgfgz2FOg8k5xO
-         Gh9npPp0gy5xaAJaZKyTTgRxYrR5vJm2KntyyHv/q3GtfCE5dEJ3l7xYsyUFBu4oXpIG
-         7zSSZzD+qYHRy+gZXyFZXjA9Lwtk3nHM2Gj1RDwcHb94XVV8lhzitHLtIWMJNRejPisO
-         3v8kWs6Ze6y52ueHz7X5WhF4TXX+TAn15AQMQLnhurjhX9AKhkC7FF3eaPr45/RzlgsC
-         P/WkHPPb/h4h9p0W0xqMc1g8/uIXUf5zML+UTt3T2gYEnFKZ1NsZ0/lZcXlfW346U4vh
-         zZNw==
+        h=from:to:cc:subject:date:message-id;
+        bh=K9pZXmjEarEwCyykMezDXwpehpmv4umtwvd9btCXgKc=;
+        b=XCVaRrbpse0CSGD70QnaHV3nIfsX43qaQFSxrfnJW/VmR080ALVpX8dSSZASxz2lzr
+         R100yUGLnMUR69TxsxEuO/YdkK1EoNyWdMbIA1NyYz/XZsCfcBs6Skb5n2cMnE8JqY4f
+         /4FWSMQ1niGhs+4sXX5B++cu0bQoqURFh5bctYtIIDQCl68u0pFC5wNpqDjU5KH7UNIU
+         YsEnNOIrZDaeCz/vLS0/wSj53HhulsyCiFljCWI4xgvqTRa17HnK+oyaPzOckmuwojEU
+         Xm2lUMHgFK9vjYwO2QyJ0L04c4ePZe/bF8/mFVgfFaos8RtBC1HHk19D5le0FS3bLlon
+         utIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GCWIu+pKgfVWcOGFQteSuVLw0jZjzlfHNzkQ2wuwzGQ=;
-        b=j3CMwyn0FI9QcbOvXgeiXc0QnFoCV/ImCmOL/MwP2onrSyfvr9IFpWXjbOZCCjL4z4
-         raW55YuYTN8xXJvsEc/8h9N0YocqwybFC9d+w42IrZ4fQPskclN3aHSiFB9jhYzHzHzk
-         xNFc4MpHG+R4GLsMvu/0LyDJnb03eKn4jhNVS+e5g5jBTo/HPTYG+l/9Aka0vHFbHmJD
-         AuEkRUoCsd/HsqLeLCZelxWeQPzyPxw5a1w090ALsFLf+mCuZzppXnSnRNU3FVNuYi6A
-         6XnRN5U5S0kyoio9y19pQbwAqH662KTb4Zdeeyv3SA/kcusBw6P5oZS15Y3+rJy7mFha
-         hroA==
-X-Gm-Message-State: APjAAAVnoIMfIwuut88bz7Xd4zqhv8edwd2H5ZsiGP9qSaiFzsQKy1DQ
-        3/M+qS5TC2BzNza6pJqQBf66DWsXRCzdgN7Ri+Y=
-X-Google-Smtp-Source: APXvYqxZOTiC/uQeY5uXx+EXtxpwTtxGmGlw39NsLAYnsIzZi8HQBg4UrDQSLUkbdppg3XGixy6IU4vRBGlqteo8JZQ=
-X-Received: by 2002:a17:902:934a:: with SMTP id g10mr113660318plp.18.1561009996329;
- Wed, 19 Jun 2019 22:53:16 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190516142523.117978-1-luzmaximilian@gmail.com>
- <a0f93af3-c587-40d5-2a85-fdc0f9e6b79f@gmail.com> <e8bb212c-9894-d244-4ee1-617df3952a53@gmail.com>
-In-Reply-To: <e8bb212c-9894-d244-4ee1-617df3952a53@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Thu, 20 Jun 2019 08:53:03 +0300
-Message-ID: <CAHp75Vcf79a2_3VGfju237omDjmnhCYN18u+=m_n-tjxZUxt4A@mail.gmail.com>
-Subject: Re: [RFC 0/2] Support for buttons on newer MS Surface devices
-To:     Maximilian Luz <luzmaximilian@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-input <linux-input@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Chen Yu <yu.c.chen@intel.com>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=K9pZXmjEarEwCyykMezDXwpehpmv4umtwvd9btCXgKc=;
+        b=jfXdy9GlaV2Fl/TLGsbHbH2jrk3CjBGRY8coX833kMDga+svu65X35yCfc6VKs2LNy
+         Tpf4MmtcPjya67j+G8340Tz/wK/K0Lc8W5lX4V8+CtZsrxt/xAvbZsG1+krf+8FGl5rv
+         UIwOuP0pyUnBSLGTrY+tP2e9OySCzYj4UCOz2SIxh/s3bwPE2w6pAnqistiX5Es25sgF
+         VCNmlELiP4kh1Ide32VJrn+pycI51HHuAPss2zJ8oP+FeXZ0/amE0JVotaScdGyY28f2
+         H3Wza8crStRYZixdC7+9w6jkWS1pjcPVtvwNLO7rjqlyg6FZpKJ5IVCF3O03qkKsTifI
+         lr3A==
+X-Gm-Message-State: APjAAAUjo+ZMgGqChd2aPjfPOhii7pNaPS/Gfb6Qv7VmmpKxHc7t12MK
+        xC3Lb0cluAHd6qA/yVu2N0ls/mgWcpc=
+X-Google-Smtp-Source: APXvYqx5er+qQrHL1j38LKHAX4s8XXfOE8iKYN4Ky6U1iGragatOQN6CtKyu178J66sxlxjJS5eY1Q==
+X-Received: by 2002:a65:63c6:: with SMTP id n6mr11208778pgv.370.1561010135545;
+        Wed, 19 Jun 2019 22:55:35 -0700 (PDT)
+Received: from localhost.localdomain ([203.100.54.194])
+        by smtp.gmail.com with ESMTPSA id n17sm37308044pfq.182.2019.06.19.22.55.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 22:55:34 -0700 (PDT)
+From:   Yafang Shao <laoar.shao@gmail.com>
+To:     akpm@linux-foundation.org, penguin-kernel@I-love.SAKURA.ne.jp,
+        dvyukov@google.com
+Cc:     linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
+Subject: [PATCH] hung_task: recover hung task warnings in next check interval
+Date:   Thu, 20 Jun 2019 13:55:00 +0800
+Message-Id: <1561010100-14080-1-git-send-email-laoar.shao@gmail.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 2:06 AM Maximilian Luz <luzmaximilian@gmail.com> wrote:
->
-> Since there are no comments on this, should I simply submit this as patch?
+When sys_hung_task_warnings reaches 0, the hang task messages will not
+be reported any more.
 
-No top post, please.
+If the user want to get more hung task messages, he must reset
+kernel.hung_task_warnings to a postive integer or -1 with sysctl.
+This is not a good way for the user.
+We'd better reset hung task warnings in the kernel, and then the user
+don't need to pay attention to this value.
 
-And yes, submit it as a series. Also Cc to Benjamin Tissoires.
+With this patch, hung task warnings will be reset with
+sys_hung_task_warnings setting in evenry check interval.
 
-> On 6/1/19 9:07 PM, Maximilian Luz wrote:
-> > Hi,
-> >
-> > any comments on this?
-> >
-> > I should also mention that this has been tested via
-> > https://github.com/jakeday/linux-surface.
-> >
-> > Maximilian
+Another difference is if the user set kernel.hung_task_warnings with a
+new value, the new value will take effect in next check interval.
+For example, when the kernel is printing the hung task messages, the
+user can't set it to 0 to stop the printing, but I don't think this will
+happen in the real world. (If that happens, then sys_hung_task_warnings
+must be protected by a lock)
 
+Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
+---
+ Documentation/sysctl/kernel.txt |  5 ++++-
+ kernel/hung_task.c              | 19 ++++++++++++-------
+ 2 files changed, 16 insertions(+), 8 deletions(-)
 
-
+diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+index f0c86fb..350df41 100644
+--- a/Documentation/sysctl/kernel.txt
++++ b/Documentation/sysctl/kernel.txt
+@@ -377,6 +377,8 @@ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 
+ 0 (default): means use hung_task_timeout_secs as checking interval.
+ Possible values to set are in range {0..LONG_MAX/HZ}.
++hung_task_check_interval_secs must not be set greater than
++hung_task_timeout_secs.
+ 
+ ==============================================================
+ 
+@@ -384,7 +386,8 @@ hung_task_warnings:
+ 
+ The maximum number of warnings to report. During a check interval
+ if a hung task is detected, this value is decreased by 1.
+-When this value reaches 0, no more warnings will be reported.
++When this value reaches 0, no more warnings will be reported until
++next check interval begins.
+ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
+ 
+ -1: report an infinite number of warnings.
+diff --git a/kernel/hung_task.c b/kernel/hung_task.c
+index 14a625c..01e6c94 100644
+--- a/kernel/hung_task.c
++++ b/kernel/hung_task.c
+@@ -85,7 +85,8 @@ static int __init hung_task_panic_setup(char *str)
+ 	.notifier_call = hung_task_panic,
+ };
+ 
+-static void check_hung_task(struct task_struct *t, unsigned long timeout)
++static void check_hung_task(struct task_struct *t, unsigned long timeout,
++			    int *warnings)
+ {
+ 	unsigned long switch_count = t->nvcsw + t->nivcsw;
+ 
+@@ -124,9 +125,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
+ 	 * Ok, the task did not get scheduled for more than 2 minutes,
+ 	 * complain:
+ 	 */
+-	if (sysctl_hung_task_warnings) {
+-		if (sysctl_hung_task_warnings > 0)
+-			sysctl_hung_task_warnings--;
++	if (*warnings) {
++		if (*warnings > 0)
++			(*warnings)--;
+ 		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
+ 		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
+ 		pr_err("      %s %s %.*s\n",
+@@ -170,7 +171,8 @@ static bool rcu_lock_break(struct task_struct *g, struct task_struct *t)
+  * a really long time (120 seconds). If that happens, print out
+  * a warning.
+  */
+-static void check_hung_uninterruptible_tasks(unsigned long timeout)
++static void check_hung_uninterruptible_tasks(unsigned long timeout,
++					     int *warnings)
+ {
+ 	int max_count = sysctl_hung_task_check_count;
+ 	unsigned long last_break = jiffies;
+@@ -195,7 +197,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
+ 		}
+ 		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
+ 		if (t->state == TASK_UNINTERRUPTIBLE)
+-			check_hung_task(t, timeout);
++			check_hung_task(t, timeout, warnings);
+ 	}
+  unlock:
+ 	rcu_read_unlock();
+@@ -271,6 +273,7 @@ static int hungtask_pm_notify(struct notifier_block *self,
+ static int watchdog(void *dummy)
+ {
+ 	unsigned long hung_last_checked = jiffies;
++	int warnings;
+ 
+ 	set_user_nice(current, 0);
+ 
+@@ -284,9 +287,11 @@ static int watchdog(void *dummy)
+ 		interval = min_t(unsigned long, interval, timeout);
+ 		t = hung_timeout_jiffies(hung_last_checked, interval);
+ 		if (t <= 0) {
++			warnings = sysctl_hung_task_warnings;
+ 			if (!atomic_xchg(&reset_hung_task, 0) &&
+ 			    !hung_detector_suspended)
+-				check_hung_uninterruptible_tasks(timeout);
++				check_hung_uninterruptible_tasks(timeout,
++								 &warnings);
+ 			hung_last_checked = jiffies;
+ 			continue;
+ 		}
 -- 
-With Best Regards,
-Andy Shevchenko
+1.8.3.1
+
