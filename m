@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A02C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1439AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8F092089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DE12084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054123;
-	bh=PtveUy+0uOZbpOHnaV4yvABE3ro4XwdM4Y9Hp9DxeCI=;
+	s=default; t=1561054126;
+	bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uY6xhIU5MJGzAQp5sN0VX4lgE316FJZ7WASUJIAVMp7p7ZYoVgD1xXpKN0/X8X6Vn
-	 VaW38Dhu7reZUKeL3UlDAjy8A2d2TzXTPOf95YmqXu2BMotDIUFbt4HDbSBuKLKiE/
-	 hyG/P6VkBmzhwQcyX25avazKQVMDz+JFO44lyWDo=
+	b=fqK8kamOp3PoeDBZ4e60IEFQie4EJTEtXWZgttIqpPxI5+Df92GjoF1D+HuzPapNX
+	 SZre1SKnmXDI9BFUfDFj/oFY/owKR3OeMQ5jzzGcsOQFbJ7m40cBJS5iRdFZhbBvP0
+	 ahhsfgM5scPRl4H4UWwzb+4CYHAXRRdpdTGM3tBs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728523AbfFTSIm (ORCPT
+        id S1728533AbfFTSIo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:08:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728487AbfFTSId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:33 -0400
+        id S1728511AbfFTSIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 28BC52082C;
-        Thu, 20 Jun 2019 18:08:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 087942089C;
+        Thu, 20 Jun 2019 18:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054112;
-        bh=PtveUy+0uOZbpOHnaV4yvABE3ro4XwdM4Y9Hp9DxeCI=;
+        s=default; t=1561054118;
+        bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=roeWDdskuSxDPoyM7d7R3kjO6+Tubtb0ZFYS74kwsypA2upw1RfXhslfXKHTgbRrW
-         STzgKv3d+LQtAdIPZ8xuJrzTLgdAmujfiort16qDDpO0KZJdvPl8mfuJxRnny4ejA8
-         9IqnKyfNrG0HrfpBbTnC+jmSZTzR5CcyOPm65uKA=
+        b=tW5XVvM4TzGzhR3MN+Lr4NuDvbruXcP+XLw8HtypXDTMGSBlMXVHZuXkKxDPC5ovq
+         Yqb7lo7H0HBrNdNhFq5tnr5qDxmxPMIDjoFQ0+xiG5DqU90y3Se/7WMl2wRmmkl1qT
+         vJTUoeW7+Tz3OKKmEolZVDG5VrzXiLbvgmmbj7p8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tianhao <tizhao@redhat.com>,
-        Ivan Vecera <ivecera@redhat.com>,
+        stable@vger.kernel.org,
+        syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com,
+        Jeremy Sowden <jeremy@azazel.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 03/45] be2net: Fix number of Rx queues used for flow hashing
-Date:   Thu, 20 Jun 2019 19:57:05 +0200
-Message-Id: <20190620174330.439064686@linuxfoundation.org>
+Subject: [PATCH 4.14 05/45] lapb: fixed leak of control-blocks.
+Date:   Thu, 20 Jun 2019 19:57:07 +0200
+Message-Id: <20190620174331.745047067@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -60,74 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ivan Vecera <ivecera@redhat.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 718f4a2537089ea41903bf357071306163bc7c04 ]
+[ Upstream commit 6be8e297f9bcea666ea85ac7a6cd9d52d6deaf92 ]
 
-Number of Rx queues used for flow hashing returned by the driver is
-incorrect and this bug prevents user to use the last Rx queue in
-indirection table.
+lapb_register calls lapb_create_cb, which initializes the control-
+block's ref-count to one, and __lapb_insert_cb, which increments it when
+adding the new block to the list of blocks.
 
-Let's say we have a NIC with 6 combined queues:
+lapb_unregister calls __lapb_remove_cb, which decrements the ref-count
+when removing control-block from the list of blocks, and calls lapb_put
+itself to decrement the ref-count before returning.
 
-[root@sm-03 ~]# ethtool -l enp4s0f0
-Channel parameters for enp4s0f0:
-Pre-set maximums:
-RX:             5
-TX:             5
-Other:          0
-Combined:       6
-Current hardware settings:
-RX:             0
-TX:             0
-Other:          0
-Combined:       6
+However, lapb_unregister also calls __lapb_devtostruct to look up the
+right control-block for the given net_device, and __lapb_devtostruct
+also bumps the ref-count, which means that when lapb_unregister returns
+the ref-count is still 1 and the control-block is leaked.
 
-Default indirection table maps all (6) queues equally but the driver
-reports only 5 rings available.
+Call lapb_put after __lapb_devtostruct to fix leak.
 
-[root@sm-03 ~]# ethtool -x enp4s0f0
-RX flow hash indirection table for enp4s0f0 with 5 RX ring(s):
-    0:      0     1     2     3     4     5     0     1
-    8:      2     3     4     5     0     1     2     3
-   16:      4     5     0     1     2     3     4     5
-   24:      0     1     2     3     4     5     0     1
-...
-
-Now change indirection table somehow:
-
-[root@sm-03 ~]# ethtool -X enp4s0f0 weight 1 1
-[root@sm-03 ~]# ethtool -x enp4s0f0
-RX flow hash indirection table for enp4s0f0 with 6 RX ring(s):
-    0:      0     0     0     0     0     0     0     0
-...
-   64:      1     1     1     1     1     1     1     1
-...
-
-Now it is not possible to change mapping back to equal (default) state:
-
-[root@sm-03 ~]# ethtool -X enp4s0f0 equal 6
-Cannot set RX flow hash configuration: Invalid argument
-
-Fixes: 594ad54a2c3b ("be2net: Add support for setting and getting rx flow hash options")
-Reported-by: Tianhao <tizhao@redhat.com>
-Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Reported-by: syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/emulex/benet/be_ethtool.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/lapb/lapb_iface.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
-+++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
-@@ -1103,7 +1103,7 @@ static int be_get_rxnfc(struct net_devic
- 		cmd->data = be_get_rss_hash_opts(adapter, cmd->flow_type);
- 		break;
- 	case ETHTOOL_GRXRINGS:
--		cmd->data = adapter->num_rx_qs - 1;
-+		cmd->data = adapter->num_rx_qs;
- 		break;
- 	default:
- 		return -EINVAL;
+--- a/net/lapb/lapb_iface.c
++++ b/net/lapb/lapb_iface.c
+@@ -182,6 +182,7 @@ int lapb_unregister(struct net_device *d
+ 	lapb = __lapb_devtostruct(dev);
+ 	if (!lapb)
+ 		goto out;
++	lapb_put(lapb);
+ 
+ 	lapb_stop_t1timer(lapb);
+ 	lapb_stop_t2timer(lapb);
 
 
