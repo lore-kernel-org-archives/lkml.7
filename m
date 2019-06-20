@@ -2,149 +2,107 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 868BCC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:41:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A7B8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:42:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 517482080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:41:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561030872;
-	bh=tGcz+zzMCn9y60AI9nhCrbOZgPlgoC8PP4DIQWqvS1g=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=UTTFdyhhYCuZWEVfDaIZlxI7/9qA613M2a2aREQyOz65xvYrrgF3gFHl0DO2wb7u3
-	 igvUJ6cY180eGTNnvOJvp372SnhZ4O3MKuZw+dskfmkutDZLMjiDrAHx0BqCFay4CY
-	 2hw9yPLnRA+nsIASMtzDzFBxat0+okcOnL09sQXs=
+	by mail.kernel.org (Postfix) with ESMTP id E241C2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:42:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbfFTLlK (ORCPT
+        id S1731518AbfFTLmw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:41:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56770 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726404AbfFTLlK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:41:10 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4EB52075E;
-        Thu, 20 Jun 2019 11:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561030869;
-        bh=tGcz+zzMCn9y60AI9nhCrbOZgPlgoC8PP4DIQWqvS1g=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=Nikgw3qfW71sRH6WpPpYD5HM1O1pWoMvEPRzVkYTr/xoOZ5RQT7pXzjo4QeviT43K
-         x1kxiQJ0GjnhjW3Sl11/hontnLXTZrL5SgpYlm5lnTS7nGX7wv0k5nKsiAPlH4791G
-         2zDKfChnMUIQna1wkANW1NW4d4GzFpwpSuB05XKY=
-Message-ID: <7c12abe8a7e6cd3cfe9129a1e74d9c788ff2f1a9.camel@kernel.org>
-Subject: Re: [PATCH v2 0/3] ceph: don't NULL terminate virtual xattr values
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        idryomov@gmail.com, zyan@redhat.com, sage@redhat.com,
-        agruenba@redhat.com, joe@perches.com, pmladek@suse.com,
-        rostedt@goodmis.org, geert+renesas@glider.be
-Date:   Thu, 20 Jun 2019 07:41:06 -0400
-In-Reply-To: <20190620102410.GT9224@smile.fi.intel.com>
-References: <20190619164528.31958-1-jlayton@kernel.org>
-         <20190620102410.GT9224@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        Thu, 20 Jun 2019 07:42:52 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:56107 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfFTLmw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:42:52 -0400
+Received: from uno.localdomain (2-224-242-101.ip172.fastwebnet.it [2.224.242.101])
+        (Authenticated sender: jacopo@jmondi.org)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id BD1FB100011;
+        Thu, 20 Jun 2019 11:42:41 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 13:43:55 +0200
+From:   Jacopo Mondi <jacopo@jmondi.org>
+To:     Lubomir Rintel <lkundrak@v3.sk>
+Cc:     Sakari Ailus <sakari.ailus@iki.fi>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 5/7] [media] marvell-ccic/mmp: add devicetree support
+Message-ID: <20190620114355.hox5gsbp4ftlqupb@uno.localdomain>
+References: <20190528090731.10341-1-lkundrak@v3.sk>
+ <20190528090731.10341-6-lkundrak@v3.sk>
+ <20190614103940.4dg43fo7dmbwnpfs@uno.localdomain>
+ <20190620113511.rxoybnxm2exv2ibl@valkosipuli.retiisi.org.uk>
+ <26d8ac51ff8c454a357028f267efd0d4cdd0ea84.camel@v3.sk>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="f42e4j576t2san2o"
+Content-Disposition: inline
+In-Reply-To: <26d8ac51ff8c454a357028f267efd0d4cdd0ea84.camel@v3.sk>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 13:24 +0300, Andy Shevchenko wrote:
-> On Wed, Jun 19, 2019 at 12:45:25PM -0400, Jeff Layton wrote:
-> > v2: drop bogus EXPORT_SYMBOL of static function
-> > 
-> > The only real difference between this set and the one I sent originally
-> > is the removal of a spurious EXPORT_SYMBOL in the snprintf patch.
-> > 
-> > I'm mostly sending this with a wider cc list in an effort to get a
-> > review from the maintainers of the printf code. Basically ceph needs a
-> > snprintf variant that does not NULL terminate in order to handle its
-> > virtual xattrs.
-> > 
-> > Joe Perches had expressed some concerns about stack usage in vsnprintf
-> > with this, but I'm not sure I really understand the basis of that
-> > concern. If it is problematic, then I could use suggestions as to how
-> > best to fix that up.
-> 
-> It might be problematic, since vsnprintf() can be called recursively.
-> 
 
-So the concern is that we'd have extra call/ret activity in the stack?
-That seems like a lot of hand-wringing over very little, but ok if so.
+--f42e4j576t2san2o
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-> > ----------------------------8<-----------------------------
-> > 
-> > kcephfs has several "virtual" xattrs that return strings that are
-> > currently populated using snprintf(), which always NULL terminates the
-> > string.
-> > 
-> > This leads to the string being truncated when we use a buffer length
-> > acquired by calling getxattr with a 0 size first. The last character
-> > of the string ends up being clobbered by the termination.
-> 
-> So, then don't use snprintf() for this, simple memcpy() designed for that kind
-> of things.
-> 
+Hi Lubomir, Sakari,
 
-memcpy from what? For many of these xattrs, we need to format integer
-data into strings. I could roll my own routine to do this formatting,
-but that's sort of what sprintf and its variants are for and I'd rather
-not reimplement all of it from scratch.
+On Thu, Jun 20, 2019 at 01:37:53PM +0200, Lubomir Rintel wrote:
+> On Thu, 2019-06-20 at 14:35 +0300, Sakari Ailus wrote:
+> > Ping?
+> >
+> > Lubomir: I'm applying the set now, but please addres Jacopo's comment.
+> > Thanks.
+>
+> Hi, I'm wondering if you could wait a couple of minutes?
+>
+> I've tested the patch set on my machine last night and I was about to
+> submit the updated set just now.
+>
+> Alternatively, I can just address Jacopo's comment with a patch that
+> applies on top of the set, but it would make slightly more sense if it
+> came earlier.
 
-> > The convention with xattrs is to not store the termination with string
-> > data, given that we have the length. This is how setfattr/getfattr
-> > operate.
-> 
-> Fine.
-> 
-> > This patch makes ceph's virtual xattrs not include NULL termination
-> > when formatting their values. In order to handle this, a new
-> > snprintf_noterm function is added, and ceph is changed over to use
-> > this to populate the xattr value buffer.
-> 
-> In terms of vsnprintf(), and actually compiler point of view, it's not a string
-> anymore, it's a text-based data.
-> 
-> Personally, I don't see an advantage of a deep intrusion into vsnprintf().
-> The wrapper can be made to achieve this w/o touching the generic code. Thus,
-> you can quickly and cleanly fix the issue, while discussing this with wider
-> audience.
-> 
+Indeed, sorry for the late review. I also commented on patches which
+are already in, so please consider if you would like to address issues
+on top.
 
-Sorry, if I'm being dense but I'm not sure I follow here.
+It's minor stuff though, nothing that seems a blocker to me.
 
-Are you suggesting I should just copy/paste most of vsnprintf into a new
-function that just leaves off the termination at the end, and leave the
-original alone? That seems like a bit of a waste, but if that's the
-consensus then ok.
+Thanks
+   j
+>
+> Thanks
+> Lubo
+>
 
-> > Finally, we fix ceph to
-> > return -ERANGE properly when the string didn't fit in the buffer.
-> > 
-> > Jeff Layton (3):
-> >   lib/vsprintf: add snprintf_noterm
-> >   ceph: don't NULL terminate virtual xattr strings
-> >   ceph: return -ERANGE if virtual xattr value didn't fit in buffer
-> > 
-> >  fs/ceph/xattr.c        |  49 +++++++-------
-> >  include/linux/kernel.h |   2 +
-> >  lib/vsprintf.c         | 144 ++++++++++++++++++++++++++++-------------
-> >  3 files changed, 129 insertions(+), 66 deletions(-)
-> > 
-> > -- 
-> > 2.21.0
-> > 
+--f42e4j576t2san2o
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Jeff Layton <jlayton@kernel.org>
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAABCAAdFiEEtcQ9SICaIIqPWDjAcjQGjxahVjwFAl0LcXsACgkQcjQGjxah
+VjxvZQ/+MpS7DtPXinGO04kyb6BsAek2OCLz+P69cjCJ29gqWvSRlBVVlqQSGi3b
+lO0ag/u+2BFVuO8G/tNhKcql6Rm/nVEel4lbUgRojIW6vURG7aS9dfly6bTSlL7O
+JFKnyh+XD6n4zt46ed+LqGS9NWK98X1yY/EMS0rkTGxvKkbebNCQqmUATH9QCki5
+RtkzDf2Sr//Nno5zKjQmRgjsu4UMIzgkmtmsaWIc4pyTZWdnUSlHsozGxrjRPFD0
+BV85vuwywVNpvXvathYbAyAl6wgpZ68UnkGAFJYbX8GGrFNGt/axEBu86fLmRa/d
+acQtSKeiKTXUdyGqsafvBjE9mcl0uTxKbMITvtOf0/wgAQesj0J/K2b3IJ68VrvL
+hcnN4fIg9tlUeecAgaQ/Myyp+Sr+5OPNY6FoWMdY1GNBww9wyJPPCQSc8NA7UGET
+CWuzPp1vrAsSnszOCuVm0xmxnvakEefhzuRshmFdt/JBJIvpwd/kiX83swDnmsFk
+NQo82o3uiRqfyTYPxAvW4yDLf0TM5ICrDySUg3gPjWQ25j5BP9JwzWd0oZsVonOu
+9rt06Q/EOzXlPSwRrPSYholBOue5ZGHWmyfUbD69F0f1JAaEXai2oXfdBbggKZo+
+rFjoJ7UBJIFwGEadeXboLtAKIYR1f+wFHHqiy4SERRd2zyrYK3Y=
+=t2Cv
+-----END PGP SIGNATURE-----
+
+--f42e4j576t2san2o--
