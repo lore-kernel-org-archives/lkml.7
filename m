@@ -3,88 +3,219 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67ADCC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B971C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:34:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34E6F206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 431D02084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:34:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Ug1/ChKV"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="OOoXpp5A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726976AbfFTQct (ORCPT
+        id S1731791AbfFTQej (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:32:49 -0400
-Received: from mail-ed1-f41.google.com ([209.85.208.41]:39290 "EHLO
-        mail-ed1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726758AbfFTQcs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:32:48 -0400
-Received: by mail-ed1-f41.google.com with SMTP id m10so5582010edv.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:32:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=lWaahTvqeFpcpOtko+DL9aqqDWntV26lpwBJ5O+GW9Q=;
-        b=Ug1/ChKVDzZOYIsyHhPlKIGz91/Caw12cOGtM3k4qGRp0QUaNpaZajCdz1zUwJVnUU
-         7hrEBLN5/30FS9zP1pmuXFOeTOFVTWQv6iudmJr2WyzkGjk/jBIgpLHR5Hb7Hp9GwxAq
-         iVNNU/nNvttkOibLuAO8CYjoTxQTFLqMWrNGki6x3KloaUI4L/P42naGG2d1RXzD92nS
-         utDAceIRT21JKaiDyEJwfXUG0u4F5Z6UU798naR+FLS7p932QPO1usvR/BG+CHz26Ind
-         NV5+qAwaZYvaYBM1V4c/jK0cYw81pun9SmNQEg58GsmqfIXyBRIjiMCUiIrfZIkqrLwe
-         cLLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=lWaahTvqeFpcpOtko+DL9aqqDWntV26lpwBJ5O+GW9Q=;
-        b=U2BXrasuWiFlxVimV9f4DoooWvBf8naLVWLyEucZn6Fb84SZYy8aKM+wBWVNn4EJuw
-         W6Xx3YpXi+lm97JTmkRaAmF8S0GkPcrIiZO0XGDVjycZ9NbC2ER1n9rpFZN7DWmq2Ukp
-         ByrEmtjIv34B81cddSbc1wlIop692dWfmKCZlXEJv+6BlDf1RxvJzBvXyIQu10CksU7X
-         x9kZQ5aRr/xBVdHp8E0NBIv+xvaYruGo56XRGcI2uwvZ3Q5UfSuMlLrXG4MvP1mUkARM
-         IjDJBRuj2DHmZqyzVnbtUVmunn+M4ZwQHuBDq1Y4UV7LA74VLe4b2IA94mcDmopbgMUy
-         c7Xw==
-X-Gm-Message-State: APjAAAWCLJF+Yb3PHXWW7dwJeCSlhBPwLpS0svRKeI9Drvs0UK6/jz8H
-        03XMKJI07h4kkQaDd8auGvD9P+ws6++E6npW
-X-Google-Smtp-Source: APXvYqyUXASWweDho/JuDfLx0BFLxa/LvWX2vKj9OspUCh/7y6SIk9wCcu7jn9dzMR3d1xj/+9Smqw==
-X-Received: by 2002:a50:9203:: with SMTP id i3mr123016558eda.302.1561048366254;
-        Thu, 20 Jun 2019 09:32:46 -0700 (PDT)
-Received: from [192.168.1.208] (ip-5-186-115-204.cgn.fibianet.dk. [5.186.115.204])
-        by smtp.gmail.com with ESMTPSA id d3sm8925edd.88.2019.06.20.09.32.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 09:32:45 -0700 (PDT)
-Subject: Re: blk-cgroup cleanups
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Paolo Valente <paolo.valente@linaro.org>,
-        linux-block@vger.kernel.org, cgroups@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190606102624.3847-1-hch@lst.de>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <2afccbe4-ef5e-6a74-551d-d91b2d1a267a@kernel.dk>
-Date:   Thu, 20 Jun 2019 10:32:43 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 12:34:39 -0400
+Received: from vps.xff.cz ([195.181.215.36]:38884 "EHLO vps.xff.cz"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726530AbfFTQej (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:34:39 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1561048476; bh=o/Mcg/crtvpWxn1wzurghlzWgNJsvC2nPLJ6FrUQ/ak=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OOoXpp5AeLGNexNn7LTMlvWNXYoDw13vRczTqVmlZrlW5UUgGhVmdiiIW/gGRUUNV
+         aKjs8K0+yW7kBoCdZND1UogtHtgLvmCd+QQ4WN7NRpABKhWBBepxKGW9A8hISzRoBh
+         V5ZscyNMoQZc4A5tonmTLLytGu/CoBsMNjJHEPaw=
+Date:   Thu, 20 Jun 2019 18:34:36 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>
+Cc:     linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [linux-sunxi] [PATCH v7 0/6] Add support for Orange Pi 3
+Message-ID: <20190620163436.upg5pkpspyz64brh@core.my.home>
+Mail-Followup-To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@gmail.com>,
+        linux-sunxi@googlegroups.com,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+References: <20190620134748.17866-1-megous@megous.com>
+ <2263144.KN5DhQ2VKD@jernej-laptop>
 MIME-Version: 1.0
-In-Reply-To: <20190606102624.3847-1-hch@lst.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2263144.KN5DhQ2VKD@jernej-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/6/19 4:26 AM, Christoph Hellwig wrote:
-> Hi all,
+Hi Jernej,
+
+On Thu, Jun 20, 2019 at 05:53:58PM +0200, Jernej Škrabec wrote:
+> Hi!
 > 
-> below are a couple of cleanups I came up with when trying to understand
-> the blk-cgroup code.
+> Dne četrtek, 20. junij 2019 ob 15:47:42 CEST je megous via linux-sunxi 
+> napisal(a):
+> > From: Ondrej Jirman <megous@megous.com>
+> > 
+> > This series implements support for Xunlong Orange Pi 3 board.
+> > 
+> > - ethernet support (patches 1-3)
+> 
+> Correct me if I'm wrong, but patches 1-2 aren't strictly necessary for 
+> OrangePi 3, right? H6 DTSI already has emac node with dual compatible (H6 and 
+> A64) and since OrangePi 3 uses gigabit ethernet, quirk introduced by patches 
+> 1-2 are not needed.
 
-Applied, thanks.
+I've checked with u-boot and md.l 0x03000030 (syscon_field) and the actual
+default value there on cold boot is 0x58000, just like on H3.
 
--- 
-Jens Axboe
+H3_EPHY_SELECT is BIT(15)
 
+That means that those patches (1 and 2) are both doing the same thing, basicaly.
+H3_EPHY_SELECT bit needs to be cleared, and it is cleared either explicitly, or
+via default_syscon_value = 0x50000. It's also cleared incidentally by using
+emac_variant_a64, because it has default_syscon_value set to 0.
+
+Meaning of those remaining set bits on H6[1] are the same as on H3. Bit 16 is
+SHUTDOWN (on 1) and bit 18 is CLK_SEL. At least SHUTDOWN bit should be kept
+high, as it keeps the EPHY shut down. Normally that would be ensured by the
+code, but only if soc_has_internal_phy is true, which it is not for
+emac_variant_a64.
+
+Thus the patch adds the emac_variant_h6 with a different default_syscon_value
+from A64.
+
+Dose the SHUTDOWN bit matter on H6? I don't know. I'm just trying to keep the
+default values of these bits unchanged. Maybe it would be nicer to have
+default_syscon_value be 0x58000 on H6, to avoid the boot warning.
+
+dwmac-sun8i 5020000.ethernet: Current syscon value is not the default 58000 (expect 50000)
+
+The same warning is there with A64 compatible (with "expect 0").
+
+[1] See page 238 in H6 manual.
+
+regards,
+	o.
+
+> However, it is nice to have this 100 Mbit fix, because most STB DTS will need 
+> it.
+> 
+> Best regards,
+> Jernej
+> 
+> > - HDMI support (patches 4-6)
+> > 
+> > For some people, ethernet doesn't work after reboot (but works on cold
+> > boot), when the stmmac driver is built into the kernel. It works when
+> > the driver is built as a module. It's either some timing issue, or power
+> > supply issue or a combination of both. Module build induces a power
+> > cycling of the phy.
+> > 
+> > I encourage people with this issue, to build the driver into the kernel,
+> > and try to alter the reset timings for the phy in DTS or
+> > startup-delay-us and report the findings.
+> > 
+> > 
+> > Please take a look.
+> > 
+> > thank you and regards,
+> >   Ondrej Jirman
+> > 
+> > 
+> > Changes in v7:
+> > - dropped stored reference to connector_pdev as suggested by Jernej
+> > - added forgotten dt-bindings reviewed-by tag
+> > 
+> > Changes in v6:
+> > - added dt-bindings reviewed-by tag
+> > - fix wording in stmmac commit (as suggested by Sergei)
+> > 
+> > Changes in v5:
+> > - dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
+> > - rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
+> > - changed hdmi-connector's ddc-supply property to ddc-en-gpios
+> >   (Rob Herring)
+> > 
+> > Changes in v4:
+> > - fix checkpatch warnings/style issues
+> > - use enum in struct sunxi_desc_function for io_bias_cfg_variant
+> > - collected acked-by's
+> > - fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
+> >   caused by missing conversion from has_io_bias_cfg struct member
+> >   (I've kept the acked-by, because it's a trivial change, but feel free
+> >   to object.) (reported by Martin A. on github)
+> >   I did not have A80 pinctrl enabled for some reason, so I did not catch
+> >   this sooner.
+> > - dropped brcm firmware patch (was already applied)
+> > - dropped the wifi dts patch (will re-send after H6 RTC gets merged,
+> >   along with bluetooth support, in a separate series)
+> > 
+> > Changes in v3:
+> > - dropped already applied patches
+> > - changed pinctrl I/O bias selection constants to enum and renamed
+> > - added /omit-if-no-ref/ to mmc1_pins
+> > - made mmc1_pins default pinconf for mmc1 in H6 dtsi
+> > - move ddc-supply to HDMI connector node, updated patch descriptions,
+> >   changed dt-bindings docs
+> > 
+> > Changes in v2:
+> > - added dt-bindings documentation for the board's compatible string
+> >   (suggested by Clement)
+> > - addressed checkpatch warnings and code formatting issues (on Maxime's
+> >   suggestions)
+> > - stmmac: dropped useless parenthesis, reworded description of the patch
+> >   (suggested by Sergei)
+> > - drop useles dev_info() about the selected io bias voltage
+> > - docummented io voltage bias selection variant macros
+> > - wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
+> >   because wifi depends on H6 RTC support that's not merged yet (suggested
+> >   by Clement)
+> > - added missing signed-of-bys
+> > - changed &usb2otg dr_mode to otg, and added a note about VBUS
+> > - improved wording of HDMI driver's DDC power supply patch
+> > 
+> > Icenowy Zheng (2):
+> >   net: stmmac: sun8i: add support for Allwinner H6 EMAC
+> >   net: stmmac: sun8i: force select external PHY when no internal one
+> > 
+> > Ondrej Jirman (4):
+> >   arm64: dts: allwinner: orange-pi-3: Enable ethernet
+> >   dt-bindings: display: hdmi-connector: Support DDC bus enable
+> >   drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
+> >   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+> > 
+> >  .../display/connector/hdmi-connector.txt      |  1 +
+> >  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 54 ++++++++++++--
+> >  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
+> >  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
+> >  5 files changed, 144 insertions(+), 4 deletions(-)
+> 
+> 
+> 
+> 
