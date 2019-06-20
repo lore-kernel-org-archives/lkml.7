@@ -2,347 +2,121 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 990BFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA756C48BE0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:06:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 655322080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:03:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E542080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:06:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="iogtbNTR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731156AbfFTCDN (ORCPT
+        id S1731137AbfFTCGp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 22:03:13 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56692 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726370AbfFTCDN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 22:03:13 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 091BA2BB19AE079AD903;
-        Thu, 20 Jun 2019 10:03:11 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.211) with Microsoft SMTP Server (TLS) id 14.3.439.0; Thu, 20 Jun
- 2019 10:03:09 +0800
-Subject: Re: [f2fs-dev] [PATCH v3] f2fs: add a rw_sem to cover quota flag
- changes
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-kernel@vger.kernel.org>,
-        <linux-f2fs-devel@lists.sourceforge.net>
-References: <20190530033115.16853-1-jaegeuk@kernel.org>
- <20190530175714.GB28719@jaegeuk-macbookpro.roam.corp.google.com>
- <20190604183619.GA8507@jaegeuk-macbookpro.roam.corp.google.com>
- <2afe0416-fe2d-8ba8-7625-0246aca9eba6@huawei.com>
- <20190614024655.GA18113@jaegeuk-macbookpro.roam.corp.google.com>
- <6f70ae56-45eb-666d-ae55-48eb0cc96f32@huawei.com>
- <20190619172651.GB57884@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <ba6555c9-b864-d0cc-1c65-4077e7f15175@huawei.com>
-Date:   Thu, 20 Jun 2019 10:03:08 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 19 Jun 2019 22:06:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:38631 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726325AbfFTCGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 22:06:45 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TlYY6Kgcz9s5c;
+        Thu, 20 Jun 2019 12:06:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560996401;
+        bh=SQXJ7gG6M2UUcliCziXzEpGOzPbxFfd06GTVc+nkWek=;
+        h=Date:From:To:Cc:Subject:From;
+        b=iogtbNTRYNCtPDVkk20sU3TO4H0nGlrfGf0SQS071srKVWOiKV0vVmVrGCLRQJ/Cq
+         mlaNsVSlCDoD17l52OxHEibWamEHy9TsyDF5IWRd3RqZngqk/P+d061gjlhzaAAOkj
+         qMxXejqFgklprmB8VXQZHe2nsUpkZN/gKxRnsUK5nyBpEqZEq6n9uLusAp6NRCq5cA
+         wNUT4O7sdb+pwWe2lKHzQ2WeDPZJPJvCPACYLteSCsVUSlXeBSMM3g9zOIPAeHtsdA
+         1CNKFLunVJCcAP2C/+r3dV/Jbs+dZB+TiYYbLZj3tO5JtcYBTvPG8i7VBJSe+Z3MaK
+         Q6Xe6I3moGRWA==
+Date:   Thu, 20 Jun 2019 12:06:40 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>
+Subject: linux-next: manual merge of the rdma tree with Linus' tree
+Message-ID: <20190620120640.5dbcc599@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190619172651.GB57884@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/U+fnxZlKklAnbeOwIoLHtwa"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/6/20 1:26, Jaegeuk Kim wrote:
-> On 06/18, Chao Yu wrote:
->> On 2019/6/14 10:46, Jaegeuk Kim wrote:
->>> On 06/11, Chao Yu wrote:
->>>> On 2019/6/5 2:36, Jaegeuk Kim wrote:
->>>>> Two paths to update quota and f2fs_lock_op:
->>>>>
->>>>> 1.
->>>>>  - lock_op
->>>>>  |  - quota_update
->>>>>  `- unlock_op
->>>>>
->>>>> 2.
->>>>>  - quota_update
->>>>>  - lock_op
->>>>>  `- unlock_op
->>>>>
->>>>> But, we need to make a transaction on quota_update + lock_op in #2 case.
->>>>> So, this patch introduces:
->>>>> 1. lock_op
->>>>> 2. down_write
->>>>> 3. check __need_flush
->>>>> 4. up_write
->>>>> 5. if there is dirty quota entries, flush them
->>>>> 6. otherwise, good to go
->>>>>
->>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
->>>>> ---
->>>>>
->>>>> v3 from v2:
->>>>>  - refactor to fix quota corruption issue
->>>>>   : it seems that the previous scenario is not real and no deadlock case was
->>>>>     encountered.
->>>>
->>>> - f2fs_dquot_commit
->>>>  - down_read(&sbi->quota_sem)
->>>> 					- block_operation
->>>> 					 - f2fs_lock_all
->>>> 					  - need_flush_quota
->>>> 					   - down_write(&sbi->quota_sem)
->>>>   - f2fs_quota_write
->>>>    - f2fs_lock_op
->>>>
->>>> Why can't this happen?
->>>>
->>>> Once more question, should we hold quota_sem during checkpoint to avoid further
->>>> quota update? f2fs_lock_op can do this job as well?
->>>
->>> I couldn't find write_dquot() call to make this happen, and f2fs_lock_op was not
->>
->> - f2fs_dquot_commit
->>  - dquot_commit
->>   ->commit_dqblk (v2_write_dquot)
->>    - qtree_write_dquot
->>     ->quota_write (f2fs_quota_write)
->>      - f2fs_lock_op
->>
->> Do you mean there is no such way that calling f2fs_lock_op() from
->> f2fs_quota_write()? So that deadlock condition is not existing?
-> 
-> I mean write_dquot->f2fs_dquot_commit and block_operation seems not racing
-> together.
+--Sig_/U+fnxZlKklAnbeOwIoLHtwa
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-quota ioctl has the path calling write_dquot->f2fs_dquot_commit as below, which
-can race with checkpoint().
+Hi all,
 
-- do_quotactl
- - sb->s_qcop->quota_sync (f2fs_quota_sync)
-  - down_read(&sbi->quota_sem);      ----  First
-   - dquot_writeback_dquots
-    - sb->dq_op->write_dquot (f2fs_dquot_commit)
-							- block_operation can race here
-     - down_read(&sbi->quota_sem);   ----  Second
+Today's linux-next merge of the rdma tree got a conflict in:
 
-Thanks,
+  include/rdma/ib_verbs.h
 
-> 
->>
->> Thanks,
->>
->>> enough to cover quota updates. Current stress & power-cut tests are running for
->>> several days without problem with this patch.
->>>
->>>>
->>>> Thanks,
->>>>
->>>>>
->>>>>  fs/f2fs/checkpoint.c | 41 +++++++++++++++++++----------------------
->>>>>  fs/f2fs/f2fs.h       |  1 +
->>>>>  fs/f2fs/super.c      | 26 +++++++++++++++++++++-----
->>>>>  3 files changed, 41 insertions(+), 27 deletions(-)
->>>>>
->>>>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->>>>> index 89825261d474..43f65f0962e5 100644
->>>>> --- a/fs/f2fs/checkpoint.c
->>>>> +++ b/fs/f2fs/checkpoint.c
->>>>> @@ -1131,17 +1131,24 @@ static void __prepare_cp_block(struct f2fs_sb_info *sbi)
->>>>>  
->>>>>  static bool __need_flush_quota(struct f2fs_sb_info *sbi)
->>>>>  {
->>>>> +	bool ret = false;
->>>>> +
->>>>>  	if (!is_journalled_quota(sbi))
->>>>>  		return false;
->>>>> -	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH))
->>>>> -		return false;
->>>>> -	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR))
->>>>> -		return false;
->>>>> -	if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH))
->>>>> -		return true;
->>>>> -	if (get_pages(sbi, F2FS_DIRTY_QDATA))
->>>>> -		return true;
->>>>> -	return false;
->>>>> +
->>>>> +	down_write(&sbi->quota_sem);
->>>>> +	if (is_sbi_flag_set(sbi, SBI_QUOTA_SKIP_FLUSH)) {
->>>>> +		ret = false;
->>>>> +	} else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_REPAIR)) {
->>>>> +		ret = false;
->>>>> +	} else if (is_sbi_flag_set(sbi, SBI_QUOTA_NEED_FLUSH)) {
->>>>> +		clear_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
->>>>> +		ret = true;
->>>>> +	} else if (get_pages(sbi, F2FS_DIRTY_QDATA)) {
->>>>> +		ret = true;
->>>>> +	}
->>>>> +	up_write(&sbi->quota_sem);
->>>>> +	return ret;
->>>>>  }
->>>>>  
->>>>>  /*
->>>>> @@ -1160,26 +1167,22 @@ static int block_operations(struct f2fs_sb_info *sbi)
->>>>>  	blk_start_plug(&plug);
->>>>>  
->>>>>  retry_flush_quotas:
->>>>> +	f2fs_lock_all(sbi);
->>>>>  	if (__need_flush_quota(sbi)) {
->>>>>  		int locked;
->>>>>  
->>>>>  		if (++cnt > DEFAULT_RETRY_QUOTA_FLUSH_COUNT) {
->>>>>  			set_sbi_flag(sbi, SBI_QUOTA_SKIP_FLUSH);
->>>>> -			f2fs_lock_all(sbi);
->>>>> +			set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
->>>>>  			goto retry_flush_dents;
->>>>>  		}
->>>>> -		clear_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
->>>>> +		f2fs_unlock_all(sbi);
->>>>>  
->>>>>  		/* only failed during mount/umount/freeze/quotactl */
->>>>>  		locked = down_read_trylock(&sbi->sb->s_umount);
->>>>>  		f2fs_quota_sync(sbi->sb, -1);
->>>>>  		if (locked)
->>>>>  			up_read(&sbi->sb->s_umount);
->>>>> -	}
->>>>> -
->>>>> -	f2fs_lock_all(sbi);
->>>>> -	if (__need_flush_quota(sbi)) {
->>>>> -		f2fs_unlock_all(sbi);
->>>>>  		cond_resched();
->>>>>  		goto retry_flush_quotas;
->>>>>  	}
->>>>> @@ -1201,12 +1204,6 @@ static int block_operations(struct f2fs_sb_info *sbi)
->>>>>  	 */
->>>>>  	down_write(&sbi->node_change);
->>>>>  
->>>>> -	if (__need_flush_quota(sbi)) {
->>>>> -		up_write(&sbi->node_change);
->>>>> -		f2fs_unlock_all(sbi);
->>>>> -		goto retry_flush_quotas;
->>>>> -	}
->>>>> -
->>>>>  	if (get_pages(sbi, F2FS_DIRTY_IMETA)) {
->>>>>  		up_write(&sbi->node_change);
->>>>>  		f2fs_unlock_all(sbi);
->>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->>>>> index 9674a85154b2..9bd2bf0f559b 100644
->>>>> --- a/fs/f2fs/f2fs.h
->>>>> +++ b/fs/f2fs/f2fs.h
->>>>> @@ -1253,6 +1253,7 @@ struct f2fs_sb_info {
->>>>>  	block_t unusable_block_count;		/* # of blocks saved by last cp */
->>>>>  
->>>>>  	unsigned int nquota_files;		/* # of quota sysfile */
->>>>> +	struct rw_semaphore quota_sem;		/* blocking cp for flags */
->>>>>  
->>>>>  	/* # of pages, see count_type */
->>>>>  	atomic_t nr_pages[NR_COUNT_TYPE];
->>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->>>>> index 15d7e30bfc72..5a318399a2fa 100644
->>>>> --- a/fs/f2fs/super.c
->>>>> +++ b/fs/f2fs/super.c
->>>>> @@ -1964,6 +1964,7 @@ int f2fs_quota_sync(struct super_block *sb, int type)
->>>>>  	int cnt;
->>>>>  	int ret;
->>>>>  
->>>>> +	down_read(&sbi->quota_sem);
->>>>>  	ret = dquot_writeback_dquots(sb, type);
->>>>>  	if (ret)
->>>>>  		goto out;
->>>>> @@ -2001,6 +2002,7 @@ int f2fs_quota_sync(struct super_block *sb, int type)
->>>>>  out:
->>>>>  	if (ret)
->>>>>  		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
->>>>> +	up_read(&sbi->quota_sem);
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>> @@ -2094,32 +2096,40 @@ static void f2fs_truncate_quota_inode_pages(struct super_block *sb)
->>>>>  
->>>>>  static int f2fs_dquot_commit(struct dquot *dquot)
->>>>>  {
->>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
->>>>>  	int ret;
->>>>>  
->>>>> +	down_read(&sbi->quota_sem);
->>>>>  	ret = dquot_commit(dquot);
->>>>>  	if (ret < 0)
->>>>> -		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
->>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
->>>>> +	up_read(&sbi->quota_sem);
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>>  static int f2fs_dquot_acquire(struct dquot *dquot)
->>>>>  {
->>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
->>>>>  	int ret;
->>>>>  
->>>>> +	down_read(&sbi->quota_sem);
->>>>>  	ret = dquot_acquire(dquot);
->>>>>  	if (ret < 0)
->>>>> -		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
->>>>> -
->>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
->>>>> +	up_read(&sbi->quota_sem);
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>>  static int f2fs_dquot_release(struct dquot *dquot)
->>>>>  {
->>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(dquot->dq_sb);
->>>>>  	int ret;
->>>>>  
->>>>> +	down_read(&sbi->quota_sem);
->>>>>  	ret = dquot_release(dquot);
->>>>>  	if (ret < 0)
->>>>> -		set_sbi_flag(F2FS_SB(dquot->dq_sb), SBI_QUOTA_NEED_REPAIR);
->>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
->>>>> +	up_read(&sbi->quota_sem);
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>> @@ -2129,22 +2139,27 @@ static int f2fs_dquot_mark_dquot_dirty(struct dquot *dquot)
->>>>>  	struct f2fs_sb_info *sbi = F2FS_SB(sb);
->>>>>  	int ret;
->>>>>  
->>>>> +	down_read(&sbi->quota_sem);
->>>>>  	ret = dquot_mark_dquot_dirty(dquot);
->>>>>  
->>>>>  	/* if we are using journalled quota */
->>>>>  	if (is_journalled_quota(sbi))
->>>>>  		set_sbi_flag(sbi, SBI_QUOTA_NEED_FLUSH);
->>>>>  
->>>>> +	up_read(&sbi->quota_sem);
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>>  static int f2fs_dquot_commit_info(struct super_block *sb, int type)
->>>>>  {
->>>>> +	struct f2fs_sb_info *sbi = F2FS_SB(sb);
->>>>>  	int ret;
->>>>>  
->>>>> +	down_read(&sbi->quota_sem);
->>>>>  	ret = dquot_commit_info(sb, type);
->>>>>  	if (ret < 0)
->>>>> -		set_sbi_flag(F2FS_SB(sb), SBI_QUOTA_NEED_REPAIR);
->>>>> +		set_sbi_flag(sbi, SBI_QUOTA_NEED_REPAIR);
->>>>> +	up_read(&sbi->quota_sem);
->>>>>  	return ret;
->>>>>  }
->>>>>  
->>>>> @@ -3253,6 +3268,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>>>>  	}
->>>>>  
->>>>>  	init_rwsem(&sbi->cp_rwsem);
->>>>> +	init_rwsem(&sbi->quota_sem);
->>>>>  	init_waitqueue_head(&sbi->cp_wait);
->>>>>  	init_sb_info(sbi);
->>>>>  
->>>>>
->>> .
->>>
-> .
-> 
+between commit:
+
+  dc1435c00fcd ("RDMA/srp: Rename SRP sysfs name after IB device rename tri=
+gger")
+
+from Linus' tree and commit:
+
+  0e2d00eb6fd4 ("RDMA: Add NLDEV_GET_CHARDEV to allow char dev discovery an=
+d autoload")
+
+from the rdma tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/rdma/ib_verbs.h
+index 54873085f2da,6f09fcc21d7a..000000000000
+--- a/include/rdma/ib_verbs.h
++++ b/include/rdma/ib_verbs.h
+@@@ -2698,7 -2690,9 +2690,10 @@@ struct ib_client=20
+  	const char *name;
+  	void (*add)   (struct ib_device *);
+  	void (*remove)(struct ib_device *, void *client_data);
+ +	void (*rename)(struct ib_device *dev, void *client_data);
++ 	int (*get_nl_info)(struct ib_device *ibdev, void *client_data,
++ 			   struct ib_client_nl_info *res);
++ 	int (*get_global_nl_info)(struct ib_client_nl_info *res);
+ =20
+  	/* Returns the net_dev belonging to this ib_client and matching the
+  	 * given parameters.
+
+--Sig_/U+fnxZlKklAnbeOwIoLHtwa
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0K6jAACgkQAVBC80lX
+0Gzwywf/ZPPUWpZKze62xyMeUG0TAes1MlkoFIr87x45g0Xvqll0elRqZgFjkRsb
+iJSCdZknEfO6mdW4YR4XNCxZikxOcA6ptcCX/Ph7Xst8f2XFikVhp8545XYmKGKU
+1IoGxqXt5mTT3hYJ2zd7+0B00YaItOvVIG2yH40en1q11CyeJ2Hf3P8ewwwoqW18
+fQBDZd0LnsttEveqtDT5jeTCTWE7f9FAzU7SDAccok0ExONxEaUcvUWsrakIJXon
+eKErHaRqCtjxijGZPAEr/KunQAZiD8H1IDnES+rlARpUwxDIeNejcQYub0fw4tkU
+Hi/TMtXWZWN08Nb1SQJczsooyScWMA==
+=CDtS
+-----END PGP SIGNATURE-----
+
+--Sig_/U+fnxZlKklAnbeOwIoLHtwa--
