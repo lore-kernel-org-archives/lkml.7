@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5625C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C7BC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1A7920665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1FC720665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFTSes (ORCPT
+        id S1726640AbfFTSet (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:34:48 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:32893 "EHLO
+        Thu, 20 Jun 2019 14:34:49 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:34989 "EHLO
         relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfFTSer (ORCPT
+        with ESMTP id S1726403AbfFTSer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 14:34:47 -0400
 Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D9A24240004;
-        Thu, 20 Jun 2019 18:34:38 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D0407240005;
+        Thu, 20 Jun 2019 18:34:40 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Dylan Howey <Dylan.Howey@tennantco.com>,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/4] rtc: pcf2123: let the core handle range offsetting
-Date:   Thu, 20 Jun 2019 20:34:31 +0200
-Message-Id: <20190620183433.30779-2-alexandre.belloni@bootlin.com>
+Subject: [PATCH 4/4] rtc: pcf2123: add proper compatible string
+Date:   Thu, 20 Jun 2019 20:34:33 +0200
+Message-Id: <20190620183433.30779-4-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190620183433.30779-1-alexandre.belloni@bootlin.com>
 References: <20190620183433.30779-1-alexandre.belloni@bootlin.com>
@@ -42,48 +42,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Set the RTC range properly and use the core windowing and offsetting to
-(unfortunately) map back to a 1970-2069 range.
+nxp,rtc-pcf2123 is not a proper compatible strong for this RTC. The part
+name is only pcf2123 and is less confusing.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf2123.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/rtc/nxp,rtc-2123.txt | 4 ++--
+ drivers/rtc/rtc-pcf2123.c                              | 4 +++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/rtc/nxp,rtc-2123.txt b/Documentation/devicetree/bindings/rtc/nxp,rtc-2123.txt
+index 1994f601800a..7371f525a687 100644
+--- a/Documentation/devicetree/bindings/rtc/nxp,rtc-2123.txt
++++ b/Documentation/devicetree/bindings/rtc/nxp,rtc-2123.txt
+@@ -1,7 +1,7 @@
+ NXP PCF2123 SPI Real Time Clock
+ 
+ Required properties:
+-- compatible: should be: "nxp,rtc-pcf2123"
++- compatible: should be: "nxp,pcf2123"
+                       or "microcrystal,rv2123"
+ - reg: should be the SPI slave chipselect address
+ 
+@@ -11,7 +11,7 @@ Optional properties:
+ Example:
+ 
+ pcf2123: rtc@3 {
+-	compatible = "nxp,rtc-pcf2123"
++	compatible = "nxp,pcf2123"
+ 	reg = <3>
+ 	spi-cs-high;
+ };
 diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
-index 29e09ff57f89..d263c8bab62a 100644
+index f31feffed2d2..2ac016cb2af6 100644
 --- a/drivers/rtc/rtc-pcf2123.c
 +++ b/drivers/rtc/rtc-pcf2123.c
-@@ -198,9 +198,7 @@ static int pcf2123_rtc_read_time(struct device *dev, struct rtc_time *tm)
- 	tm->tm_mday = bcd2bin(rxbuf[3] & 0x3F);
- 	tm->tm_wday = rxbuf[4] & 0x07;
- 	tm->tm_mon = bcd2bin(rxbuf[5] & 0x1F) - 1; /* rtc mn 1-12 */
--	tm->tm_year = bcd2bin(rxbuf[6]);
--	if (tm->tm_year < 70)
--		tm->tm_year += 100;	/* assume we are in 1970...2069 */
-+	tm->tm_year = bcd2bin(rxbuf[6]) + 100;
+@@ -453,8 +453,10 @@ static int pcf2123_probe(struct spi_device *spi)
  
- 	dev_dbg(dev, "%s: tm is %ptR\n", __func__, tm);
- 
-@@ -227,7 +225,7 @@ static int pcf2123_rtc_set_time(struct device *dev, struct rtc_time *tm)
- 	txbuf[3] = bin2bcd(tm->tm_mday & 0x3F);
- 	txbuf[4] = tm->tm_wday & 0x07;
- 	txbuf[5] = bin2bcd((tm->tm_mon + 1) & 0x1F); /* rtc mn 1-12 */
--	txbuf[6] = bin2bcd(tm->tm_year < 100 ? tm->tm_year : tm->tm_year - 100);
-+	txbuf[6] = bin2bcd(tm->tm_year - 100);
- 
- 	ret = regmap_bulk_write(pdata->map, PCF2123_REG_SC, txbuf,
- 				sizeof(txbuf));
-@@ -435,6 +433,9 @@ static int pcf2123_probe(struct spi_device *spi)
- 	 */
- 	rtc->uie_unsupported = 1;
- 	rtc->ops = &pcf2123_rtc_ops;
-+	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
-+	rtc->range_max = RTC_TIMESTAMP_END_2099;
-+	rtc->set_start_time = true;
- 
- 	ret = rtc_register_device(rtc);
- 	if (ret)
+ #ifdef CONFIG_OF
+ static const struct of_device_id pcf2123_dt_ids[] = {
+-	{ .compatible = "nxp,rtc-pcf2123", },
++	{ .compatible = "nxp,pcf2123", },
+ 	{ .compatible = "microcrystal,rv2123", },
++	/* Deprecated, do not use */
++	{ .compatible = "nxp,rtc-pcf2123", },
+ 	{ /* sentinel */ }
+ };
+ MODULE_DEVICE_TABLE(of, pcf2123_dt_ids);
 -- 
 2.21.0
 
