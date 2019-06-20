@@ -2,114 +2,85 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B86DEC4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:14:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90FF7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:14:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 915D72080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:14:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CAD52080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:14:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="1i2iITqj"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GYN49hoM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731936AbfFTNOF (ORCPT
+        id S1731965AbfFTNOd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:14:05 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:19924 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726952AbfFTNOE (ORCPT
+        Thu, 20 Jun 2019 09:14:33 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:36976 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfFTNOc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:14:04 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KD6pbC021627;
-        Thu, 20 Jun 2019 15:13:52 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=AqEt1HjWRKgGGIYLNysj/iOUGva1/k0fnnA1DQfj/Nc=;
- b=1i2iITqjSzxjPDA0v34j1gyK2boQJeVzaXxp+3wBomDQ3gQiYTCFRnctwfbFI4hR7YO3
- ZabYwttKVrPzJ0COcQfryFixiLRLA7qvHsMT1LROqmgrPg1+QYAc9uEEkIIzSvvIxrXe
- VWA88QCqoUODGiKSlccTHZp8WEyR+Wh8vce4WBxoKn6ANShoXgSFeGGv3MbGlVA1JJ3j
- JuK1mx5iBqhoBEtg8ng2Pf6Z7/2JkcOka3Ncrc9E614228EYHyTJSKjy+ADBxfQK0lu0
- g3r9CUxF74F+pRGz7NyLXjzUI+PLXlAD4TeCNwnV2aVZJInur0W44tAM21BxACrkAEC1 Sw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2t7813hq5j-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 20 Jun 2019 15:13:52 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 2F58B38;
-        Thu, 20 Jun 2019 13:13:51 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 16B4E27F7;
-        Thu, 20 Jun 2019 13:13:51 +0000 (GMT)
-Received: from localhost (10.75.127.45) by SFHDAG6NODE3.st.com (10.75.127.18)
- with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun 2019 15:13:50
- +0200
-From:   <patrice.chotard@st.com>
-To:     Mark Brown <broonie@kernel.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        <linux-spi@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <patrice.chotard@st.com>, <christophe.kerello@st.com>
-Subject: [PATCH 1/1] spi: spi-stm32-qspi: Remove CR_FTHRES_MASK usage
-Date:   Thu, 20 Jun 2019 15:13:23 +0200
-Message-ID: <20190620131323.5955-1-patrice.chotard@st.com>
-X-Mailer: git-send-email 2.17.1
+        Thu, 20 Jun 2019 09:14:32 -0400
+Received: by mail-lj1-f195.google.com with SMTP id 131so2673408ljf.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 06:14:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qspgoBFCIto313vrlu1/vYF7ItkjbZkTOvgEc+TXu7k=;
+        b=GYN49hoMnjjkcvRT46FngilNLFwBgB/jCAw3+MZgMgMr0Qu8xlw4qKIybRc5AgfUiu
+         QZIAeiJbwwz9GGyL8+8S8f7s3o2CybaYrNQNujqLhohuEXURu0ZKJ334jLnvfiFjPHT7
+         r3kfJsc3t9RjeBbNb49SYu3JPi1itkZHQqVgIEodNZduQppz34FHW0/BOUVbALWJOXSR
+         WBrzK4ZMb8mbKmRQjiQtWh4aXW4fiVKUt5xVJOuH60sdnGznOGvMgORJT8cMHph43fcF
+         7UHbP7m8mrix1ssQCQxdtLvekdUv1Pr2+/xV21sLOff4sLmqRFJVMpdLl5ur2m4XYFQY
+         xwlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qspgoBFCIto313vrlu1/vYF7ItkjbZkTOvgEc+TXu7k=;
+        b=q0i504lOHNQ3P9SXyMiaCy2fQqcjweUh6y3HYqIA0s6Y3XZT6L4GMHNDoI9VVOvrs/
+         H40iatgz62FpzE/L9MOmM5h9IT2lp3ZQNsLgmWW8896YhsTu6Dm3zkklr/wpO0kKRSy3
+         4JVTSgofhrhH6trz30BbuDEht3KSlPcJVpHo6zBds7sl29TSueoYCNRaHG5Vngn2sifi
+         jpggJyUupbrkp6X83bgzFSszz+BCICFzJ8De+0zeMMCVbEDgUINFdmHwHkD/wnOG5vd/
+         Wc6cRb8tqfadciVSC77R5thacXwW0yvyn6qCy18dQfJXD6WOSxkTM2pfU5ejfgCBg2wU
+         LVLw==
+X-Gm-Message-State: APjAAAXKOlZLKd85+1NtX1BBI/J8DguDR+XC5YfHJRyMyklT1vutisOt
+        X9payVltLMIgrGG8OOTL2f9iLQm3ZFDJsmiiZ8i9JZ0a1rc=
+X-Google-Smtp-Source: APXvYqyrZXzjSaPpnnMLclfqXxrpzULgbBI9HIevVVGD2/JNz3SaC9PZi0HhSSMRT+IJ52GDF2CmCZZsGwLYBpL9bl0=
+X-Received: by 2002:a2e:8741:: with SMTP id q1mr41532726ljj.144.1561036470965;
+ Thu, 20 Jun 2019 06:14:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.75.127.45]
-X-ClientProxiedBy: SFHDAG7NODE1.st.com (10.75.127.19) To SFHDAG6NODE3.st.com
- (10.75.127.18)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_09:,,
- signatures=0
+References: <20190619163843.26918-1-andriy.shevchenko@linux.intel.com>
+In-Reply-To: <20190619163843.26918-1-andriy.shevchenko@linux.intel.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 20 Jun 2019 15:14:20 +0200
+Message-ID: <CANiq72ko_4cdZOtXxAr3TcorE7Aio3erbNYnUk-JP1aKBpOvuQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] kernel.h: Update comment about simple_strto<foo>() functions
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Mans Rullgard <mans@mansr.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Patrice Chotard <patrice.chotard@st.com>
+On Wed, Jun 19, 2019 at 6:38 PM Andy Shevchenko
+<andriy.shevchenko@linux.intel.com> wrote:
+>
+> There were discussions in the past about use cases for
+> simple_strto<foo>() functions and in some rare cases they have a benefit
+> on kstrto<foo>() ones.
+>
+> Update a comment to reduce confusing about special use cases.
 
-On STM32 F4/F7/H7 SoCs, FTHRES is a 5 bits field in QSPI_CR register,
-but for STM32MP1 SoCs, FTHRES is a 4 bits field long. CR_FTHRES_MASK
-definition is not correct.
+I don't recall the discussions anymore... :-) But are we sure
+simple_strtoul() etc. are not obsolete anymore and want to use them
+again?
 
-As for all these SoCs, FTHRES field is set to 3, FIELD_PREP() macro
-is used with a constant as second parameter which make its usage useless.
-
-CR_FTHRES_MASK and FIELD_PREP() can be removed.
-
-Signed-off-by: Patrice Chotard <patrice.chotard@st.com>
----
- drivers/spi/spi-stm32-qspi.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/spi/spi-stm32-qspi.c b/drivers/spi/spi-stm32-qspi.c
-index 42f8e3c6aa1f..5dbb6a8e893c 100644
---- a/drivers/spi/spi-stm32-qspi.c
-+++ b/drivers/spi/spi-stm32-qspi.c
-@@ -29,7 +29,7 @@
- #define CR_SSHIFT		BIT(4)
- #define CR_DFM			BIT(6)
- #define CR_FSEL			BIT(7)
--#define CR_FTHRES_MASK		GENMASK(12, 8)
-+#define CR_FTHRES_SHIFT		8
- #define CR_TEIE			BIT(16)
- #define CR_TCIE			BIT(17)
- #define CR_FTIE			BIT(18)
-@@ -463,7 +463,7 @@ static int stm32_qspi_setup(struct spi_device *spi)
- 	flash->presc = presc;
- 
- 	mutex_lock(&qspi->lock);
--	qspi->cr_reg = FIELD_PREP(CR_FTHRES_MASK, 3) | CR_SSHIFT | CR_EN;
-+	qspi->cr_reg = 3 << CR_FTHRES_SHIFT | CR_SSHIFT | CR_EN;
- 	writel_relaxed(qspi->cr_reg, qspi->io_base + QSPI_CR);
- 
- 	/* set dcr fsize to max address */
--- 
-2.17.1
-
+Cheers,
+Miguel
