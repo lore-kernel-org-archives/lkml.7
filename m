@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE0C6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E00C2C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE661204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6CBA2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054011;
-	bh=F11Hz1nTzzRwdTkLbRI4MhxUkydlb6D1ZSIkF2x/kfQ=;
+	s=default; t=1561054015;
+	bh=stD2km8O8ryVNFcQWPdJVNae5/6WaYBBT71xURYlIts=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CCyd9foJ65OyRaOKncihLXiWDiJGkyPOKNuBKO2Zn4t0/EwL2Jmu5gyKAzozXcPg+
-	 Ryzhglty+Yyd75MlJelJzPPUsYq58gj00dDCkmYF4Gt+cUukyimxvqcT9kbf02OQ/1
-	 RLWobZTtT7uwpa7i9LzY9OHrW2pz20QIXZsAiX/U=
+	b=2agevIp9lEHTv6KV6FR92lGEj33ytKh3AxoEoVZ4D9ji5DEd7ONtq2kL4ThEdEB7c
+	 /B7t07g3/Un3tlEzcuEPvbTPs5ORKHbG2xnQS+Ywi/fQO9Cfurx05J8w+BpDJfz2dk
+	 hu1b0NaARyolpWdQoQAtrcV2yAM3RdH618JpNTjw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728223AbfFTSGu (ORCPT
+        id S1728233AbfFTSGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:06:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32828 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:06:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:32962 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728218AbfFTSGp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:45 -0400
+        id S1726863AbfFTSGv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 72897215EA;
-        Thu, 20 Jun 2019 18:06:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A611E2089C;
+        Thu, 20 Jun 2019 18:06:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054004;
-        bh=F11Hz1nTzzRwdTkLbRI4MhxUkydlb6D1ZSIkF2x/kfQ=;
+        s=default; t=1561054010;
+        bh=stD2km8O8ryVNFcQWPdJVNae5/6WaYBBT71xURYlIts=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WvnzYeSzcPNJsv9szxF1Qgy6OKHQnz9tmE6DbNwQKnIbjC1FOIfRR5Prtj9a+zX9x
-         Rrldcvhf3CXX7DxWFMic3Xgq9RrFwK9hkiwfQYU25t8OdXbdFWVvlxo3mmuf7bJcKQ
-         bAspS0c/4VYTQOcHVih4yYrJarrz6oXZD0bWwIro=
+        b=iaKFvJRBN/BumnhmyHzvQ733h64ztEtoyCTgM2ed6NnYSCLQ17m8EplSFA9tLrNZf
+         SABn0jnXCrkwb8XP1jaYKF/0E6Nwd89wRzAyrXzwPzU7fuCr3qP7sHPoXNOsQm83d4
+         MWnW+lFliJt4a8xcQ3ZVyaGDowMYpOJZJfDspwD8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 102/117] perf/ring_buffer: Add ordering to rb->nest increment
-Date:   Thu, 20 Jun 2019 19:57:16 +0200
-Message-Id: <20190620174357.883255703@linuxfoundation.org>
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 077/117] selftests/timers: Add missing fflush(stdout) calls
+Date:   Thu, 20 Jun 2019 19:56:51 +0200
+Message-Id: <20190620174357.074110773@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -68,58 +60,165 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
+[ Upstream commit fe48319243a626c860fd666ca032daacc2ba84a5 ]
 
-Similar to how decrementing rb->next too early can cause data_head to
-(temporarily) be observed to go backward, so too can this happen when
-we increment too late.
+When running under a pipe, some timer tests would not report output in
+real-time because stdout flushes were missing after printf()s that lacked
+a newline. This adds them to restore real-time status output that humans
+can enjoy.
 
-This barrier() ensures the rb->head load happens after the increment,
-both the one in the 'goto again' path, as the one from
-perf_output_get_handle() -- albeit very unlikely to matter for the
-latter.
-
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Shuah Khan <skhan@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/testing/selftests/timers/adjtick.c        | 1 +
+ tools/testing/selftests/timers/leapcrash.c      | 1 +
+ tools/testing/selftests/timers/mqueue-lat.c     | 1 +
+ tools/testing/selftests/timers/nanosleep.c      | 1 +
+ tools/testing/selftests/timers/nsleep-lat.c     | 1 +
+ tools/testing/selftests/timers/raw_skew.c       | 1 +
+ tools/testing/selftests/timers/set-tai.c        | 1 +
+ tools/testing/selftests/timers/set-tz.c         | 2 ++
+ tools/testing/selftests/timers/threadtest.c     | 1 +
+ tools/testing/selftests/timers/valid-adjtimex.c | 2 ++
+ 10 files changed, 12 insertions(+)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 524744a38d61..8e8b903b7613 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -49,6 +49,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	unsigned long head;
+diff --git a/tools/testing/selftests/timers/adjtick.c b/tools/testing/selftests/timers/adjtick.c
+index 9887fd538fec..91316ab4b041 100644
+--- a/tools/testing/selftests/timers/adjtick.c
++++ b/tools/testing/selftests/timers/adjtick.c
+@@ -147,6 +147,7 @@ int check_tick_adj(long tickval)
  
- again:
-+	/*
-+	 * In order to avoid publishing a head value that goes backwards,
-+	 * we must ensure the load of @rb->head happens after we've
-+	 * incremented @rb->nest.
-+	 *
-+	 * Otherwise we can observe a @rb->head value before one published
-+	 * by an IRQ/NMI happening between the load and the increment.
-+	 */
-+	barrier();
- 	head = local_read(&rb->head);
+ 	eppm = get_ppm_drift();
+ 	printf("%lld usec, %lld ppm", systick + (systick * eppm / MILLION), eppm);
++	fflush(stdout);
  
- 	/*
+ 	tx1.modes = 0;
+ 	adjtimex(&tx1);
+diff --git a/tools/testing/selftests/timers/leapcrash.c b/tools/testing/selftests/timers/leapcrash.c
+index a1071bdbdeb7..a77c70b47495 100644
+--- a/tools/testing/selftests/timers/leapcrash.c
++++ b/tools/testing/selftests/timers/leapcrash.c
+@@ -114,6 +114,7 @@ int main(void)
+ 		}
+ 		clear_time_state();
+ 		printf(".");
++		fflush(stdout);
+ 	}
+ 	printf("[OK]\n");
+ 	return ksft_exit_pass();
+diff --git a/tools/testing/selftests/timers/mqueue-lat.c b/tools/testing/selftests/timers/mqueue-lat.c
+index a2a3924d0b41..efdb62470052 100644
+--- a/tools/testing/selftests/timers/mqueue-lat.c
++++ b/tools/testing/selftests/timers/mqueue-lat.c
+@@ -113,6 +113,7 @@ int main(int argc, char **argv)
+ 	int ret;
+ 
+ 	printf("Mqueue latency :                          ");
++	fflush(stdout);
+ 
+ 	ret = mqueue_lat_test();
+ 	if (ret < 0) {
+diff --git a/tools/testing/selftests/timers/nanosleep.c b/tools/testing/selftests/timers/nanosleep.c
+index ff942ff7c9b3..2e6e94c02a33 100644
+--- a/tools/testing/selftests/timers/nanosleep.c
++++ b/tools/testing/selftests/timers/nanosleep.c
+@@ -153,6 +153,7 @@ int main(int argc, char **argv)
+ 			continue;
+ 
+ 		printf("Nanosleep %-31s ", clockstring(clockid));
++		fflush(stdout);
+ 
+ 		length = 10;
+ 		while (length <= (NSEC_PER_SEC * 10)) {
+diff --git a/tools/testing/selftests/timers/nsleep-lat.c b/tools/testing/selftests/timers/nsleep-lat.c
+index 2d7898fda0f1..ac06cf10a5c2 100644
+--- a/tools/testing/selftests/timers/nsleep-lat.c
++++ b/tools/testing/selftests/timers/nsleep-lat.c
+@@ -166,6 +166,7 @@ int main(int argc, char **argv)
+ 			continue;
+ 
+ 		printf("nsleep latency %-26s ", clockstring(clockid));
++		fflush(stdout);
+ 
+ 		length = 10;
+ 		while (length <= (NSEC_PER_SEC * 10)) {
+diff --git a/tools/testing/selftests/timers/raw_skew.c b/tools/testing/selftests/timers/raw_skew.c
+index 0ab937a17ebb..4e631da7f956 100644
+--- a/tools/testing/selftests/timers/raw_skew.c
++++ b/tools/testing/selftests/timers/raw_skew.c
+@@ -124,6 +124,7 @@ int main(int argv, char **argc)
+ 		printf("WARNING: ADJ_OFFSET in progress, this will cause inaccurate results\n");
+ 
+ 	printf("Estimating clock drift: ");
++	fflush(stdout);
+ 	sleep(120);
+ 
+ 	get_monotonic_and_raw(&mon, &raw);
+diff --git a/tools/testing/selftests/timers/set-tai.c b/tools/testing/selftests/timers/set-tai.c
+index dc88dbc8831f..3ae76ab483de 100644
+--- a/tools/testing/selftests/timers/set-tai.c
++++ b/tools/testing/selftests/timers/set-tai.c
+@@ -66,6 +66,7 @@ int main(int argc, char **argv)
+ 	printf("tai offset started at %i\n", ret);
+ 
+ 	printf("Checking tai offsets can be properly set: ");
++	fflush(stdout);
+ 	for (i = 1; i <= 60; i++) {
+ 		ret = set_tai(i);
+ 		ret = get_tai();
+diff --git a/tools/testing/selftests/timers/set-tz.c b/tools/testing/selftests/timers/set-tz.c
+index f4184928b16b..b038131c9682 100644
+--- a/tools/testing/selftests/timers/set-tz.c
++++ b/tools/testing/selftests/timers/set-tz.c
+@@ -76,6 +76,7 @@ int main(int argc, char **argv)
+ 	printf("tz_minuteswest started at %i, dst at %i\n", min, dst);
+ 
+ 	printf("Checking tz_minuteswest can be properly set: ");
++	fflush(stdout);
+ 	for (i = -15*60; i < 15*60; i += 30) {
+ 		ret = set_tz(i, dst);
+ 		ret = get_tz_min();
+@@ -87,6 +88,7 @@ int main(int argc, char **argv)
+ 	printf("[OK]\n");
+ 
+ 	printf("Checking invalid tz_minuteswest values are caught: ");
++	fflush(stdout);
+ 
+ 	if (!set_tz(-15*60-1, dst)) {
+ 		printf("[FAILED] %i didn't return failure!\n", -15*60-1);
+diff --git a/tools/testing/selftests/timers/threadtest.c b/tools/testing/selftests/timers/threadtest.c
+index e632e116f05e..a4bf736dd842 100644
+--- a/tools/testing/selftests/timers/threadtest.c
++++ b/tools/testing/selftests/timers/threadtest.c
+@@ -175,6 +175,7 @@ int main(int argc, char **argv)
+ 	strftime(buf, 255, "%a, %d %b %Y %T %z", localtime(&start));
+ 	printf("%s\n", buf);
+ 	printf("Testing consistency with %i threads for %ld seconds: ", thread_count, runtime);
++	fflush(stdout);
+ 
+ 	/* spawn */
+ 	for (i = 0; i < thread_count; i++)
+diff --git a/tools/testing/selftests/timers/valid-adjtimex.c b/tools/testing/selftests/timers/valid-adjtimex.c
+index 60fe3c569bd9..a747645d79f4 100644
+--- a/tools/testing/selftests/timers/valid-adjtimex.c
++++ b/tools/testing/selftests/timers/valid-adjtimex.c
+@@ -134,6 +134,7 @@ int validate_freq(void)
+ 	/* Set the leap second insert flag */
+ 
+ 	printf("Testing ADJ_FREQ... ");
++	fflush(stdout);
+ 	for (i = 0; i < NUM_FREQ_VALID; i++) {
+ 		tx.modes = ADJ_FREQUENCY;
+ 		tx.freq = valid_freq[i];
+@@ -261,6 +262,7 @@ int set_bad_offset(long sec, long usec, int use_nano)
+ int validate_set_offset(void)
+ {
+ 	printf("Testing ADJ_SETOFFSET... ");
++	fflush(stdout);
+ 
+ 	/* Test valid values */
+ 	if (set_offset(NSEC_PER_SEC - 1, 1))
 -- 
 2.20.1
 
