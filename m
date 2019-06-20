@@ -2,132 +2,151 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC140C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:45:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A928C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB37920656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:45:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="PvhKM5V+"
+	by mail.kernel.org (Postfix) with ESMTP id 2B13620656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfFTSpw (ORCPT
+        id S1726412AbfFTSs0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:45:52 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37248 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726903AbfFTSpu (ORCPT
+        Thu, 20 Jun 2019 14:48:26 -0400
+Received: from mail2-relais-roc.national.inria.fr ([192.134.164.83]:4891 "EHLO
+        mail2-relais-roc.national.inria.fr" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726062AbfFTSs0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:45:50 -0400
-Received: by mail-oi1-f193.google.com with SMTP id t76so2925076oih.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 11:45:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=5VxtaXvavuIj/WSwZHnAHCDIqk0MlZk9aDQYd+gdFk4=;
-        b=PvhKM5V+6yqnt2aU5HxaJksE4uPAQmNs5skwhuJ6n8y5XgZlmqj3eeb150T7SBN6SE
-         gIm81w+vU1PtiVJorKQJeZTOHd5OFru39TU4SqL/hr3Rtekmt9KMOkokl1EdfE8VlZMk
-         1NkJs/r1WvgIbwR5DJQ0DbUyxIuHbh3jBXe8LKcbCXSMEinhkyK/xlaSv+78VovqYMtg
-         q1DEjNCTrdAytojICVF4MAcW1VhW5C6b2MEs9t9SRvlyLXj7Lh7Yhv74YAr6kla9u8Qp
-         j8ElcBqtPWtUqgwrRBxPPxQ++W67n8FbK6X2OdqDEGZA60ahsSfATor7gBkpcrk+yQzG
-         znqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=5VxtaXvavuIj/WSwZHnAHCDIqk0MlZk9aDQYd+gdFk4=;
-        b=DoZD3NhUeJQrl5u75q3wrzvqWYNWJWVM8ppsuMC6sr8Bs0kmxmafTfwoKnQYl/B0Am
-         3Phl+DDVMg3j/Uw5PXK5p3oLWdjJfJeOb/WtZqPM/6j6hCMfCstmytQcsEQZKawzpIlt
-         hfdiBGPQKQcONCSTQiVzgf625vbfbxnvQwSXEO2oycGxWsxSJSW6KT3ir14/IzlpZrFu
-         OFgln67PNqtP0Qpd2B/1LhT1uejmn0HDn4cgD9U4K9yl1/L0xosVDCbnPO+PbWoDHd/V
-         QKLisizNljYGMi1xFyCee7ZCxPA7fSRK6RKvkMRiU4c07Gd2cVCv4gyN8Vg6HLicmHBw
-         ig3g==
-X-Gm-Message-State: APjAAAXqVimdqOS7hQPktAileTUKtrIPVE7wLmb0PE+n+DJkFieBb+3T
-        pXEzyKnROqXuw9ij+Bdsu92T7qIVJcIop2LNdo+VOg==
-X-Google-Smtp-Source: APXvYqxzQJlp4UblxkfvTerY7hS4anNKGD6JaiZlLO54L7p3q2W7RUsf+utlNLQ8WFVB+mqDyi2X0jOIR79GoWAQb9A=
-X-Received: by 2002:aca:ec82:: with SMTP id k124mr222240oih.73.1561056349598;
- Thu, 20 Jun 2019 11:45:49 -0700 (PDT)
+        Thu, 20 Jun 2019 14:48:26 -0400
+X-IronPort-AV: E=Sophos;i="5.63,397,1557180000"; 
+   d="scan'208";a="388394882"
+Received: from abo-12-105-68.mrs.modulonet.fr (HELO hadrien) ([85.68.105.12])
+  by mail2-relais-roc.national.inria.fr with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 20:48:23 +0200
+Date:   Thu, 20 Jun 2019 20:48:23 +0200 (CEST)
+From:   Julia Lawall <julia.lawall@lip6.fr>
+X-X-Sender: jll@hadrien
+To:     Markus Elfring <Markus.Elfring@web.de>
+cc:     kernel-janitors@vger.kernel.org,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Coccinelle <cocci@systeme.lip6.fr>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ding Xiang <dingxiang@cmss.chinamobile.com>
+Subject: Re: [PATCH] Coccinelle: Add a SmPL script for the reconsideration
+ of redundant dev_err() calls
+In-Reply-To: <05d85182-7ec3-8fc1-4bcd-fd2528de3a40@web.de>
+Message-ID: <alpine.DEB.2.21.1906202046550.3087@hadrien>
+References: <05d85182-7ec3-8fc1-4bcd-fd2528de3a40@web.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20190620161240.22738-1-logang@deltatee.com>
-In-Reply-To: <20190620161240.22738-1-logang@deltatee.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 20 Jun 2019 11:45:38 -0700
-Message-ID: <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
-Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/mixed; boundary="8323329-1240475580-1561056503=:3087"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 9:13 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+  This message is in MIME format.  The first part should be readable text,
+  while the remaining parts are likely unreadable without MIME-aware tools.
+
+--8323329-1240475580-1561056503=:3087
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+
+
+
+On Thu, 20 Jun 2019, Markus Elfring wrote:
+
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Thu, 20 Jun 2019 19:12:53 +0200
 >
-> For eons there has been a debate over whether or not to use
-> struct pages for peer-to-peer DMA transactions. Pro-pagers have
-> argued that struct pages are necessary for interacting with
-> existing code like scatterlists or the bio_vecs. Anti-pagers
-> assert that the tracking of the memory is unecessary and
-> allocating the pages is a waste of memory. Both viewpoints are
-> valid, however developers working on GPUs and RDMA tend to be
-> able to do away with struct pages relatively easily
-
-Presumably because they have historically never tried to be
-inter-operable with the block layer or drivers outside graphics and
-RDMA.
-
->  compared to
-> those wanting to work with NVMe devices through the block layer.
-> So it would be of great value to be able to universally do P2PDMA
-> transactions without the use of struct pages.
-
-Please spell out the value, it is not immediately obvious to me
-outside of some memory capacity savings.
-
-> Previously, there have been multiple attempts[1][2] to replace
-> struct page usage with pfn_t but this has been unpopular seeing
-> it creates dangerous edge cases where unsuspecting code might
-> run accross pfn_t's they are not ready for.
-
-That's not the conclusion I arrived at because pfn_t is specifically
-an opaque type precisely to force "unsuspecting" code to throw
-compiler assertions. Instead pfn_t was dealt its death blow here:
-
-https://lore.kernel.org/lkml/CA+55aFzON9617c2_Amep0ngLq91kfrPiSccdZakxir82iekUiA@mail.gmail.com/
-
-...and I think that feedback also reads on this proposal.
-
-> Currently, we have P2PDMA using struct pages through the block layer
-> and the dangerous cases are avoided by using a queue flag that
-> indicates support for the special pages.
+> The function “devm_ioremap_resource” contains appropriate error reporting.
+> Thus it can be questionable to present another error message
+> at other places.
 >
-> This RFC proposes a new solution: allow the block layer to take
-> DMA addresses directly for queues that indicate support. This will
-> provide a more general path for doing P2PDMA-like requests and will
-> allow us to remove the struct pages that back P2PDMA memory thus paving
-> the way to build a more uniform P2PDMA ecosystem.
+> Provide design options for the adjustment of affected source code
+> by the means of the semantic patch language (Coccinelle software).
+>
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> ---
+>  .../coccinelle/misc/redundant_dev_err.cocci   | 53 +++++++++++++++++++
+>  1 file changed, 53 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/redundant_dev_err.cocci
+>
+> diff --git a/scripts/coccinelle/misc/redundant_dev_err.cocci b/scripts/coccinelle/misc/redundant_dev_err.cocci
+> new file mode 100644
+> index 000000000000..aeb228280276
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/redundant_dev_err.cocci
+> @@ -0,0 +1,53 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/// Reconsider a function call for redundant error reporting.
+> +//
+> +// Keywords: dev_err redundant device error messages
+> +// Confidence: Medium
+> +
+> +virtual patch
+> +virtual context
+> +virtual org
+> +virtual report
+> +
+> +@display depends on context@
+> +expression e;
+> +@@
+> + e = devm_ioremap_resource(...);
+> + if (IS_ERR(e))
+> + {
+> +*   dev_err(...);
+> +    return (...);
+> + }
 
-My primary concern with this is that ascribes a level of generality
-that just isn't there for peer-to-peer dma operations. "Peer"
-addresses are not "DMA" addresses, and the rules about what can and
-can't do peer-DMA are not generically known to the block layer. At
-least with a side object there's a chance to describe / recall those
-restrictions as these things get passed around the I/O stack, but an
-undecorated "DMA" address passed through the block layer with no other
-benefit to any subsystem besides RDMA does not feel like it advances
-the state of the art.
+Why do you assume that there is exactly one dev_err and one return after
+the test?
 
-Again, what are the benefits of plumbing this RDMA special case?
+> +
+> +@deletion depends on patch@
+> +expression e;
+> +@@
+> + e = devm_ioremap_resource(...);
+> + if (IS_ERR(e))
+> +-{
+> +-   dev_err(...);
+> +    return (...);
+> +-}
+> +
+> +@or depends on org || report@
+> +expression e;
+> +position p;
+> +@@
+> + e = devm_ioremap_resource(...);
+> + if (IS_ERR(e))
+> + {
+> +    dev_err@p(...);
+> +    return (...);
+> + }
+> +
+> +@script:python to_do depends on org@
+> +p << or.p;
+> +@@
+> +coccilib.org.print_todo(p[0],
+> +                        "WARNING: An error message is probably not needed here because the previously called function contains appropriate error reporting.")
+
+"the previously called function" would be better as
+"devm_ioremap_resource".
+
+julia
+
+> +
+> +@script:python reporting depends on report@
+> +p << or.p;
+> +@@
+> +coccilib.report.print_report(p[0],
+> +                             "WARNING: An error message is probably not needed here because the previously called function contains appropriate error reporting.")
+> --
+> 2.22.0
+>
+>
+--8323329-1240475580-1561056503=:3087--
