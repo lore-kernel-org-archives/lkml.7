@@ -2,91 +2,74 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B558C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E248C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C50D20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055245;
-	bh=5jrAkegvWKyZI+KhoA+/JKnMoJguzm564z0l+fgdMoA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gc8D4McsZNSLSgnNKiYffXU4zs5rxwUfY+le6ZHj9HXNx+eOL0MsmLslmQRuj02L+
-	 lyDhCzgsvRkZWnwGDWp7ujxlcJXOsET6MDwGTlCAoG6mxNgSKbean3iIUbDQRiPzKJ
-	 zcGNcWzHHCoOrKEcJj8ovX3JAP9nTYh9dUVzQF8M=
+	by mail.kernel.org (Postfix) with ESMTP id 38D9920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728198AbfFTS1X (ORCPT
+        id S1728307AbfFTS12 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:27:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58098 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:27:28 -0400
+Received: from mga05.intel.com ([192.55.52.43]:56248 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbfFTSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726408AbfFTSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 14:05:03 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A426B21670;
-        Thu, 20 Jun 2019 18:05:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053903;
-        bh=5jrAkegvWKyZI+KhoA+/JKnMoJguzm564z0l+fgdMoA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XxRy2Q64A+Mwobr+62FLVk/TsswOvDLHsNdPQvxaC7uFMpRY+I1uHhPUsaGARCc90
-         t4QCrb60j1w7mYp4z7uUrP4iZLjIClAE42ijFxtf6TGU/5esnsLZ5Kn6kFqdWuxIdf
-         a+2Z7jF1ut3NHEEKex1OJmi5z98pu6h0fxmhkrFY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 067/117] ASoC: cs42xx8: Add regcache mask dirty
-Date:   Thu, 20 Jun 2019 19:56:41 +0200
-Message-Id: <20190620174356.786080120@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
-References: <20190620174351.964339809@linuxfoundation.org>
-User-Agent: quilt/0.66
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 11:05:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="243714870"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.137])
+  by orsmga001.jf.intel.com with ESMTP; 20 Jun 2019 11:05:01 -0700
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 9ABAE300FFA; Thu, 20 Jun 2019 11:05:01 -0700 (PDT)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     ehankland@google.com
+Cc:     linux-kernel@vger.kernel.org, linux-kvm@vger.kernel.org
+Subject: Re: [PATCH v1] KVM: x86: PMU Whitelist
+References: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+Date:   Thu, 20 Jun 2019 11:05:01 -0700
+In-Reply-To: <CAOyeoRWfPNmaWY6Lifdkdj3KPPM654vzDO+s3oduEMCJP+Asow@mail.gmail.com>
+        (Eric Hankland's message of "Wed, 22 May 2019 15:23:00 -0700")
+Message-ID: <877e9g9lpu.fsf@firstfloor.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+Eric Hankland <ehankland@google.com> writes:
+>
+> +int kvm_vcpu_ioctl_set_pmu_whitelist(struct kvm_vcpu *vcpu,
+> +                                    struct kvm_pmu_whitelist __user *whtlst)
+> +{
+> +       struct kvm_pmu *pmu = vcpu_to_pmu(vcpu);
+> +       struct kvm_pmu_whitelist *old = pmu->whitelist;
+> +       struct kvm_pmu_whitelist *new = NULL;
+> +       struct kvm_pmu_whitelist tmp;
+> +       int r;
+> +       size_t size;
+> +
+> +       r = -EFAULT;
+> +       if (copy_from_user(&tmp, whtlst, sizeof(struct kvm_pmu_whitelist)))
+> +               goto err;
+> +
+> +       size = sizeof(tmp) + sizeof(tmp.events[0]) * tmp.num_events;
+> +       new = kvzalloc(size, GFP_KERNEL_ACCOUNT);
 
-commit ad6eecbfc01c987e0253371f274c3872042e4350 upstream.
+Consider what happens when tmp.num_events is large enough to wrap size.
+I suspect that's a kernel exploit as written.
 
-Add regcache_mark_dirty before regcache_sync for power
-of codec may be lost at suspend, then all the register
-need to be reconfigured.
+Also don't you need to copy tmp to new?
 
-Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver
-support for CS42448/CS42888")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- sound/soc/codecs/cs42xx8.c |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/sound/soc/codecs/cs42xx8.c
-+++ b/sound/soc/codecs/cs42xx8.c
-@@ -569,6 +569,7 @@ static int cs42xx8_runtime_resume(struct
- 	msleep(5);
- 
- 	regcache_cache_only(cs42xx8->regmap, false);
-+	regcache_mark_dirty(cs42xx8->regmap);
- 
- 	ret = regcache_sync(cs42xx8->regmap);
- 	if (ret) {
-
+-Andi
 
