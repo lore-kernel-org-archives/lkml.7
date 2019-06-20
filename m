@@ -4,48 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B159C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB9E7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66D5020665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96D2520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055473;
-	bh=ouzMQJKSpXwjZpt1pdoZv050tBWH9isF/yYIty+FVM8=;
+	s=default; t=1561055480;
+	bh=z5SKF9DOlqPNls6ia41cYM6baailNmIznIbwfYklA1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=04ybkJF67SNeNfqm9GTiQW7W59L2VmfBG93+KJTTOnAxw4yfNLdkfkwvRfb7nGLCI
-	 kDxLfBqpokTp50dwM7z3X1bf+keGUWGWrMvgVdKVDIgnOe5JO9ljbxNKHY2LVRvuN/
-	 kNArfsmRbjzAcxD+cQHGrOVW+c9DR+0T3mk4zkX0=
+	b=F59a+RBiuMn9zDld5MtqvQrzqJfV4jOOpNnat+TefozNyPygBxUbIp4qZM1faxOzN
+	 9gvnu/vTObNCauJz7ggwR6WK9CX3pfhc7TOPYPkvdcd8XN8fIOymdbADUE56b/Stnj
+	 tp3gFiVoO2FeA0yAJZABRmvXLUdek88tzAOG7pQA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726154AbfFTSAJ (ORCPT
+        id S1726748AbfFTR7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:59:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726819AbfFTSAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:06 -0400
+        id S1726731AbfFTR7x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:59:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A78AC21530;
-        Thu, 20 Jun 2019 18:00:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75650215EA;
+        Thu, 20 Jun 2019 17:59:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053605;
-        bh=ouzMQJKSpXwjZpt1pdoZv050tBWH9isF/yYIty+FVM8=;
+        s=default; t=1561053592;
+        bh=z5SKF9DOlqPNls6ia41cYM6baailNmIznIbwfYklA1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K0WGYcSjl8wBURymEsA6vpc6YqtU574ZmVl+/rjaEEtT6EAB/uXmnFl2J3xIzL4kV
-         8J7+x5qCu2KgbowkwACrhIFjQQl7cdohBOB1cZA5Jl2zRYEOpdhDHG7wT7vb3bhETK
-         Az6IpWdkcc59vyel0F0q/0KUDie6JTGeNvGWlHdg=
+        b=qUsRtbyKSP4IzrAGTP9XeLVDFw6X82ml+SbwihlRz7i3TMjNy9Gr6Ek943vygoJ1r
+         fcqv+n9GnrG25hktxL4AzMp9gsmeBZprhQt9dChzwcxdO1IjSeiES2En9wfMqMoIna
+         5I3RD3GpINJ4nvCrdS/a1nhJ9LJVqykyvZ/aea+E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>
-Subject: [PATCH 4.4 48/84] cgroup: Use css_tryget() instead of css_tryget_online() in task_get_css()
-Date:   Thu, 20 Jun 2019 19:56:45 +0200
-Message-Id: <20190620174345.920912606@linuxfoundation.org>
+        stable@vger.kernel.org, Wengang Wang <wen.gang.wang@oracle.com>,
+        Daniel Sobe <daniel.sobe@nxp.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 43/84] fs/ocfs2: fix race in ocfs2_dentry_attach_lock()
+Date:   Thu, 20 Jun 2019 19:56:40 +0200
+Message-Id: <20190620174344.930930123@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -58,88 +67,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tejun Heo <tj@kernel.org>
+From: Wengang Wang <wen.gang.wang@oracle.com>
 
-commit 18fa84a2db0e15b02baa5d94bdb5bd509175d2f6 upstream.
+commit be99ca2716972a712cde46092c54dee5e6192bf8 upstream.
 
-A PF_EXITING task can stay associated with an offline css.  If such
-task calls task_get_css(), it can get stuck indefinitely.  This can be
-triggered by BSD process accounting which writes to a file with
-PF_EXITING set when racing against memcg disable as in the backtrace
-at the end.
+ocfs2_dentry_attach_lock() can be executed in parallel threads against the
+same dentry.  Make that race safe.  The race is like this:
 
-After this change, task_get_css() may return a css which was already
-offline when the function was called.  None of the existing users are
-affected by this change.
+            thread A                               thread B
 
-  INFO: rcu_sched self-detected stall on CPU
-  INFO: rcu_sched detected stalls on CPUs/tasks:
-  ...
-  NMI backtrace for cpu 0
-  ...
-  Call Trace:
-   <IRQ>
-   dump_stack+0x46/0x68
-   nmi_cpu_backtrace.cold.2+0x13/0x57
-   nmi_trigger_cpumask_backtrace+0xba/0xca
-   rcu_dump_cpu_stacks+0x9e/0xce
-   rcu_check_callbacks.cold.74+0x2af/0x433
-   update_process_times+0x28/0x60
-   tick_sched_timer+0x34/0x70
-   __hrtimer_run_queues+0xee/0x250
-   hrtimer_interrupt+0xf4/0x210
-   smp_apic_timer_interrupt+0x56/0x110
-   apic_timer_interrupt+0xf/0x20
-   </IRQ>
-  RIP: 0010:balance_dirty_pages_ratelimited+0x28f/0x3d0
-  ...
-   btrfs_file_write_iter+0x31b/0x563
-   __vfs_write+0xfa/0x140
-   __kernel_write+0x4f/0x100
-   do_acct_process+0x495/0x580
-   acct_process+0xb9/0xdb
-   do_exit+0x748/0xa00
-   do_group_exit+0x3a/0xa0
-   get_signal+0x254/0x560
-   do_signal+0x23/0x5c0
-   exit_to_usermode_loop+0x5d/0xa0
-   prepare_exit_to_usermode+0x53/0x80
-   retint_user+0x8/0x8
+(A1) enter ocfs2_dentry_attach_lock,
+seeing dentry->d_fsdata is NULL,
+and no alias found by
+ocfs2_find_local_alias, so kmalloc
+a new ocfs2_dentry_lock structure
+to local variable "dl", dl1
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Cc: stable@vger.kernel.org # v4.2+
-Fixes: ec438699a9ae ("cgroup, block: implement task_get_css() and use it in bio_associate_current()")
+               .....
+
+                                    (B1) enter ocfs2_dentry_attach_lock,
+                                    seeing dentry->d_fsdata is NULL,
+                                    and no alias found by
+                                    ocfs2_find_local_alias so kmalloc
+                                    a new ocfs2_dentry_lock structure
+                                    to local variable "dl", dl2.
+
+                                                   ......
+
+(A2) set dentry->d_fsdata with dl1,
+call ocfs2_dentry_lock() and increase
+dl1->dl_lockres.l_ro_holders to 1 on
+success.
+              ......
+
+                                    (B2) set dentry->d_fsdata with dl2
+                                    call ocfs2_dentry_lock() and increase
+				    dl2->dl_lockres.l_ro_holders to 1 on
+				    success.
+
+                                                  ......
+
+(A3) call ocfs2_dentry_unlock()
+and decrease
+dl2->dl_lockres.l_ro_holders to 0
+on success.
+             ....
+
+                                    (B3) call ocfs2_dentry_unlock(),
+                                    decreasing
+				    dl2->dl_lockres.l_ro_holders, but
+				    see it's zero now, panic
+
+Link: http://lkml.kernel.org/r/20190529174636.22364-1-wen.gang.wang@oracle.com
+Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
+Reported-by: Daniel Sobe <daniel.sobe@nxp.com>
+Tested-by: Daniel Sobe <daniel.sobe@nxp.com>
+Reviewed-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/cgroup.h |   10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ fs/ocfs2/dcache.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/include/linux/cgroup.h
-+++ b/include/linux/cgroup.h
-@@ -453,7 +453,7 @@ static inline struct cgroup_subsys_state
-  *
-  * Find the css for the (@task, @subsys_id) combination, increment a
-  * reference on and return it.  This function is guaranteed to return a
-- * valid css.
-+ * valid css.  The returned css may already have been offlined.
-  */
- static inline struct cgroup_subsys_state *
- task_get_css(struct task_struct *task, int subsys_id)
-@@ -463,7 +463,13 @@ task_get_css(struct task_struct *task, i
- 	rcu_read_lock();
- 	while (true) {
- 		css = task_css(task, subsys_id);
--		if (likely(css_tryget_online(css)))
-+		/*
-+		 * Can't use css_tryget_online() here.  A task which has
-+		 * PF_EXITING set may stay associated with an offline css.
-+		 * If such task calls this function, css_tryget_online()
-+		 * will keep failing.
+--- a/fs/ocfs2/dcache.c
++++ b/fs/ocfs2/dcache.c
+@@ -310,6 +310,18 @@ int ocfs2_dentry_attach_lock(struct dent
+ 
+ out_attach:
+ 	spin_lock(&dentry_attach_lock);
++	if (unlikely(dentry->d_fsdata && !alias)) {
++		/* d_fsdata is set by a racing thread which is doing
++		 * the same thing as this thread is doing. Leave the racing
++		 * thread going ahead and we return here.
 +		 */
-+		if (likely(css_tryget(css)))
- 			break;
- 		cpu_relax();
- 	}
++		spin_unlock(&dentry_attach_lock);
++		iput(dl->dl_inode);
++		ocfs2_lock_res_free(&dl->dl_lockres);
++		kfree(dl);
++		return 0;
++	}
++
+ 	dentry->d_fsdata = dl;
+ 	dl->dl_count++;
+ 	spin_unlock(&dentry_attach_lock);
 
 
