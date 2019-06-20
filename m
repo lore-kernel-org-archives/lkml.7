@@ -2,127 +2,139 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94597C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3829320665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h1+pfyX4";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fyIrHi0k"
+	by mail.kernel.org (Postfix) with ESMTP id 73F8D206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561055200;
+	bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=TqZZFCDGRrYYy4FN7K5SiWsPZHbtFKOoejjipzaqdHXmmf8tpCTKYdFwQDNrL6Mal
+	 ZpUxRnOpAD+SPSCZxEsVfF59W1vJEDgwRqBe0gTFq0I5HmP5Bc1EVY3CJO8MOT0jAF
+	 FHwskeTZAwnhL5TkmU7witqJ8w0atG9/o07VI2y4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728123AbfFTS0b (ORCPT
+        id S1728203AbfFTS0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:26:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:35086 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726721AbfFTSGH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:07 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C715A60CEC; Thu, 20 Jun 2019 18:06:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561053965;
-        bh=xqFrw2iEUDGfrGwNGjX8WKf97VfRNbSs18+LFwCkO+4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h1+pfyX4F+q6dq4Nh7cgxgSLcie8FSD23ddcS7kFr3JlAl8rSfvpZYyohlptGR8+U
-         DmPFKU4RFQnEvi5ilanp3qUJ+Or9OEWaN4I2ZZPfhnc0w+FXdEzKR/AsQoxGTLBpid
-         GxT2zeaJUtXYYPLmj5HFTBWv1XSo5Is/bacUcc1A=
-Received: from [192.168.1.100] (unknown [157.45.245.98])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Thu, 20 Jun 2019 14:26:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726546AbfFTSGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id CAD5860ACE;
-        Thu, 20 Jun 2019 18:05:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561053963;
-        bh=xqFrw2iEUDGfrGwNGjX8WKf97VfRNbSs18+LFwCkO+4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=fyIrHi0kTh7H+/xl5q7YA4c1k1jZjRQbz+F2RzehTRGhfvuQ2drjAd1ngvj+nt4k2
-         9PulOeBcArJzpAwwS3mNYhND6rZcuzHwtvppHvqqyto41vw29dwJnOKsKt02AD6Yla
-         kgVpN1slAGcfy/IPYu7CbVk2waSwQJ0fdxDVVoy4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CAD5860ACE
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH 1/2] coresight: Set affinity to invalid for missing CPU
- phandle
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org
-References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
- <49d6554536047b9f5526c4ea33990b7c904673d3.1561037262.git.saiprakash.ranjan@codeaurora.org>
- <20190620173908.GA5581@xps15>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <64f67948-3b7f-422b-0ab7-2393b6083514@codeaurora.org>
-Date:   Thu, 20 Jun 2019 23:35:53 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AE25204FD;
+        Thu, 20 Jun 2019 18:06:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561053964;
+        bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TahNF0GltYeurJerwxoTgMnfQF+WgHTXMJmRg/4+LIBOkETPUCQrcSY0TqLcGwUYs
+         8NgW/wvRwDIkHyrV++R7S9LMavLBNJZVaUZ0by8z7NntnzzKPPV5aJNpV86cfuLTpV
+         x7QkkpddmukpUZ1GHq4I267WTRD3usXKvMvO8cY8=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Erik=20=C4=8Cuk?= <erik.cuk@domel.com>,
+        Baruch Siach <baruch@tkos.co.il>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH 4.9 089/117] rtc: pcf8523: dont return invalid date when battery is low
+Date:   Thu, 20 Jun 2019 19:57:03 +0200
+Message-Id: <20190620174357.424257264@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
+References: <20190620174351.964339809@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <20190620173908.GA5581@xps15>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mathieu,
+From: Baruch Siach <baruch@tkos.co.il>
 
-Thanks for the review comments.
+commit ecb4a353d3afd45b9bb30c85d03ee113a0589079 upstream.
 
-On 6/20/2019 11:09 PM, Mathieu Poirier wrote:
-> Hi Sai,
-> 
-> On Thu, Jun 20, 2019 at 07:15:46PM +0530, Sai Prakash Ranjan wrote:
->> Affinity defaults to CPU0 in case of missing CPU phandle
->> and this leads to crashes in some cases because of such
->> wrong assumption. Fix this by returning -ENODEV in
->> coresight platform for such cases and then handle it
->> in the coresight drivers.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>   drivers/hwtracing/coresight/coresight-platform.c | 10 ++++++----
->>   1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
->> index 3c5ceda8db24..b1ea60c210e1 100644
->> --- a/drivers/hwtracing/coresight/coresight-platform.c
->> +++ b/drivers/hwtracing/coresight/coresight-platform.c
->> @@ -160,15 +160,17 @@ static int of_coresight_get_cpu(struct device *dev)
->>   
->>   	if (!dev->of_node)
->>   		return 0;
-> 
-> An error should be returned if the above condition is true.
-> 
+The RTC_VL_READ ioctl reports the low battery condition. Still,
+pcf8523_rtc_read_time() happily returns invalid dates in this case.
+Check the battery health on pcf8523_rtc_read_time() to avoid that.
 
-Will do it, thanks.
+Reported-by: Erik Čuk <erik.cuk@domel.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
->> +
-> 
-> Spurious newline
-> 
+---
+ drivers/rtc/rtc-pcf8523.c |   32 ++++++++++++++++++++++++--------
+ 1 file changed, 24 insertions(+), 8 deletions(-)
 
-This was on purpose, the code looks much cleaner.
+--- a/drivers/rtc/rtc-pcf8523.c
++++ b/drivers/rtc/rtc-pcf8523.c
+@@ -82,6 +82,18 @@ static int pcf8523_write(struct i2c_clie
+ 	return 0;
+ }
+ 
++static int pcf8523_voltage_low(struct i2c_client *client)
++{
++	u8 value;
++	int err;
++
++	err = pcf8523_read(client, REG_CONTROL3, &value);
++	if (err < 0)
++		return err;
++
++	return !!(value & REG_CONTROL3_BLF);
++}
++
+ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+ {
+ 	u8 value;
+@@ -164,6 +176,14 @@ static int pcf8523_rtc_read_time(struct
+ 	struct i2c_msg msgs[2];
+ 	int err;
+ 
++	err = pcf8523_voltage_low(client);
++	if (err < 0) {
++		return err;
++	} else if (err > 0) {
++		dev_err(dev, "low voltage detected, time is unreliable\n");
++		return -EINVAL;
++	}
++
+ 	msgs[0].addr = client->addr;
+ 	msgs[0].flags = 0;
+ 	msgs[0].len = 1;
+@@ -248,17 +268,13 @@ static int pcf8523_rtc_ioctl(struct devi
+ 			     unsigned long arg)
+ {
+ 	struct i2c_client *client = to_i2c_client(dev);
+-	u8 value;
+-	int ret = 0, err;
++	int ret;
+ 
+ 	switch (cmd) {
+ 	case RTC_VL_READ:
+-		err = pcf8523_read(client, REG_CONTROL3, &value);
+-		if (err < 0)
+-			return err;
+-
+-		if (value & REG_CONTROL3_BLF)
+-			ret = 1;
++		ret = pcf8523_voltage_low(client);
++		if (ret < 0)
++			return ret;
+ 
+ 		if (copy_to_user((void __user *)arg, &ret, sizeof(int)))
+ 			return -EFAULT;
 
--Sai
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
