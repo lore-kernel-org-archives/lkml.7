@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ADD2C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBC75C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B10D21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC43F2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053873;
-	bh=UFiHQNYzOBvgg/6HU+6lO8B/JEmfpNhFn9G0j9ouWVc=;
+	s=default; t=1561053876;
+	bh=qtrcLS0Ihxw/TV73LYimeZNrjr8AoKq8dUxpfk53+y0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aUlftMdb9ofIBCwwHy7AdGxWzgE1OosQVZPF3FUF7CEBoGM63wQBU05gjKrWkDviY
-	 vYPFNSuRELNpy9raHVtHCa4r8AwmpDz5geKYdOerxUIVE8gYMs9px2Q6S/hFY4x4xg
-	 ONdjTmbBrAHNIHOH44i1ZrNH3I68VQD1loOu55YQ=
+	b=QBOr0raJ+m3/yBPZzKhESaTm4CnW2IS9/R6hBItfyi8mdTfpEGJQxfIdDN5c3Kwpm
+	 VBm8iEA4qtteY7x6lrKKEfCiPsKkhGZVUHAaPASVkIT+BnywC7clg9f7J9r1FNimE4
+	 CC5jjAzEmQckBpa9yuqX0ClBbHs7vuDfIeBRUL0w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727872AbfFTSEb (ORCPT
+        id S1727885AbfFTSEf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:04:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56928 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:04:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727168AbfFTSE3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:04:29 -0400
+        id S1727874AbfFTSEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:04:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5672821479;
-        Thu, 20 Jun 2019 18:04:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC1D21537;
+        Thu, 20 Jun 2019 18:04:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053868;
-        bh=UFiHQNYzOBvgg/6HU+6lO8B/JEmfpNhFn9G0j9ouWVc=;
+        s=default; t=1561053871;
+        bh=qtrcLS0Ihxw/TV73LYimeZNrjr8AoKq8dUxpfk53+y0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxZEp0aKJ85hZUXt2sqIdRr3xOBwo4aDfarf7YdTDkkocTmAY78le58qe8gQfCuZk
-         ZsNjRp9hXPT6qwOM4wDV0GykvERPtv82FgvMEsN73hgdtR37cOeDF85qJ4F1GlB4dZ
-         hNf2TV9JevaE6FIFinlubzYTGED7v3Kri7/SOAqI=
+        b=1zGscBbqplnxpyBm1AxOlXpalQM9TwjbtoBzPGfQoogutr+DUGHGtsavdPE0gHkKv
+         K6l2cMJ6zt1lmrYHOXC0qO1AoDddt3nuvnHKMG8fgPTLPFajn4c/p85Vlj8fkf4S5S
+         RVLu0nwpTBt2rQu0CvTz9XQ+3vsMOwVkVjzn6hJU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.9 056/117] ALSA: seq: Cover unsubscribe_port() in list_mutex
-Date:   Thu, 20 Jun 2019 19:56:30 +0200
-Message-Id: <20190620174355.988400472@linuxfoundation.org>
+Subject: [PATCH 4.9 057/117] ALSA: oxfw: allow PCM capture for Stanton SCS.1m
+Date:   Thu, 20 Jun 2019 19:56:31 +0200
+Message-Id: <20190620174356.067683719@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,37 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit 7c32ae35fbf9cffb7aa3736f44dec10c944ca18e upstream.
+commit d8fa87c368f5b4096c4746894fdcc195da285df1 upstream.
 
-The call of unsubscribe_port() which manages the group count and
-module refcount from delete_and_unsubscribe_port() looks racy; it's
-not covered by the group list lock, and it's likely a cause of the
-reported unbalance at port deletion.  Let's move the call inside the
-group list_mutex to plug the hole.
+Stanton SCS.1m can transfer isochronous packet with Multi Bit Linear
+Audio data channels, therefore it allows software to capture PCM
+substream. However, ALSA oxfw driver doesn't.
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+This commit changes the driver to add one PCM substream for capture
+direction.
+
+Fixes: de5126cc3c0b ("ALSA: oxfw: add stream format quirk for SCS.1 models")
+Cc: <stable@vger.kernel.org> # v4.5+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_ports.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/firewire/oxfw/oxfw.c |    3 ---
+ 1 file changed, 3 deletions(-)
 
---- a/sound/core/seq/seq_ports.c
-+++ b/sound/core/seq/seq_ports.c
-@@ -550,10 +550,10 @@ static void delete_and_unsubscribe_port(
- 		list_del_init(list);
- 	grp->exclusive = 0;
- 	write_unlock_irq(&grp->list_lock);
--	up_write(&grp->list_mutex);
+--- a/sound/firewire/oxfw/oxfw.c
++++ b/sound/firewire/oxfw/oxfw.c
+@@ -175,9 +175,6 @@ static int detect_quirks(struct snd_oxfw
+ 		oxfw->midi_input_ports = 0;
+ 		oxfw->midi_output_ports = 0;
  
- 	if (!empty)
- 		unsubscribe_port(client, port, grp, &subs->info, ack);
-+	up_write(&grp->list_mutex);
- }
+-		/* Output stream exists but no data channels are useful. */
+-		oxfw->has_output = false;
+-
+ 		return snd_oxfw_scs1x_add(oxfw);
+ 	}
  
- /* connect two ports */
 
 
