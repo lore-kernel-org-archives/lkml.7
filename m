@@ -2,99 +2,84 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D2EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:26:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D17C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 767A22070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:26:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 553A72084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:26:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfFTP0J (ORCPT
+        id S1731790AbfFTP0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:26:09 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19049 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726428AbfFTP0J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:26:09 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 00609F52E4A9FE473DD7;
-        Thu, 20 Jun 2019 23:26:05 +0800 (CST)
-Received: from [127.0.0.1] (10.133.213.239) by DGGEMS404-HUB.china.huawei.com
- (10.3.19.204) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Jun 2019
- 23:26:02 +0800
-Subject: Re: [PATCH net-next] netfilter: ipv6: Fix build error without
- CONFIG_IPV6
-To:     <pablo@netfilter.org>, <kadlec@blackhole.kfki.hu>, <fw@strlen.de>,
-        <davem@davemloft.net>, <rdunlap@infradead.org>
-References: <20190612084715.21656-1-yuehaibing@huawei.com>
-CC:     <linux-kernel@vger.kernel.org>, <coreteam@netfilter.org>,
-        <netfilter-devel@vger.kernel.org>, <netdev@vger.kernel.org>
-From:   Yuehaibing <yuehaibing@huawei.com>
-Message-ID: <d2eba9e4-34be-f9bb-f0fd-024fe81d2b02@huawei.com>
-Date:   Thu, 20 Jun 2019 23:26:01 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.2.0
+        Thu, 20 Jun 2019 11:26:51 -0400
+Received: from mga03.intel.com ([134.134.136.65]:4413 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726428AbfFTP0v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:26:51 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:26:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="311692885"
+Received: from waelreed-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.63.228])
+  by orsmga004.jf.intel.com with ESMTP; 20 Jun 2019 08:26:45 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id B5D8D21D88; Thu, 20 Jun 2019 18:26:41 +0300 (EEST)
+Date:   Thu, 20 Jun 2019 18:26:41 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Hugues Fruchet <hugues.fruchet@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: Re: [PATCH v2 1/3] media: stm32-dcmi: improve sensor subdev naming
+Message-ID: <20190620152640.chd4u4u5hd56ausk@kekkonen.localdomain>
+References: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
+ <1560242912-17138-2-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-In-Reply-To: <20190612084715.21656-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.213.239]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560242912-17138-2-git-send-email-hugues.fruchet@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Friendly ping...
+Hi Hugues,
 
-On 2019/6/12 16:47, YueHaibing wrote:
-> If CONFIG_IPV6 is not set, building fails:
-> 
-> net/bridge/netfilter/nf_conntrack_bridge.o: In function `nf_ct_bridge_pre':
-> nf_conntrack_bridge.c:(.text+0x41c): undefined symbol `nf_ct_frag6_gather'
-> net/bridge/netfilter/nf_conntrack_bridge.o: In function `nf_ct_bridge_post':
-> nf_conntrack_bridge.c:(.text+0x820): undefined symbol `br_ip6_fragment'
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: c9bb6165a16e ("netfilter: nf_conntrack_bridge: fix CONFIG_IPV6=y")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
-> ---
->  include/linux/netfilter_ipv6.h | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/netfilter_ipv6.h b/include/linux/netfilter_ipv6.h
-> index 3a3dc4b..0e1febc 100644
-> --- a/include/linux/netfilter_ipv6.h
-> +++ b/include/linux/netfilter_ipv6.h
-> @@ -108,8 +108,11 @@ static inline int nf_ipv6_br_defrag(struct net *net, struct sk_buff *skb,
->  		return 1;
->  
->  	return v6_ops->br_defrag(net, skb, user);
-> -#else
-> +#endif
-> +#if IS_BUILTIN(CONFIG_IPV6)
->  	return nf_ct_frag6_gather(net, skb, user);
-> +#else
-> +	return 1;
->  #endif
->  }
->  
-> @@ -133,8 +136,11 @@ static inline int nf_br_ip6_fragment(struct net *net, struct sock *sk,
->  		return 1;
->  
->  	return v6_ops->br_fragment(net, sk, skb, data, output);
-> -#else
-> +#endif
-> +#if IS_BUILTIN(CONFIG_IPV6)
->  	return br_ip6_fragment(net, sk, skb, data, output);
-> +#else
-> +	return 1;
->  #endif
->  }
->  
-> 
+On Tue, Jun 11, 2019 at 10:48:30AM +0200, Hugues Fruchet wrote:
+> Add a new "sensor" field to dcmi struct instead of
+> reusing entity->subdev to address sensor subdev.
 
+The purpose of the struct binding image source's async subdev as well as
+related information is to allow associating the two. This patch breaks
+that. If your device can support a single sensor, it might not be a big
+deal. The end result remains somewhat inconsistent as subdev specific
+information is spread across struct stm32_dcmi and struct
+dcmi_graph_entity.
+
+In general you don't need to know the sensor as you can always find it
+using media_entity_remote_pad(). This driver is a little different though
+as it could presumably continue to work without MC. Was that the intent?
+
+On a side note: struct dcmi_graph_entity does NOT have struct
+v4l2_async_subdev as its first member. Please fix that and prepend the fix
+to this set.
+
+-- 
+Kind regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
