@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA099C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46ACDC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3DF02085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 146942085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051447;
-	bh=MKRc9+RDngvnVz52hlGDYY+KaYMWxlc05G9WTy6Zzlw=;
+	s=default; t=1561051450;
+	bh=YTzxh5bYhc4Ux9v3gXK60yN3D15XanZ0hghy2utv7bA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SG+nEXTQz+AKNR9ecDGv+d1whLf0+wwDbkIuMSYGNLuFr3IVX3oA6f7m/TVZge+Iq
-	 e/zi9jGy0i4h0T15BT/vlSkRAcepdpY/+XDAJElRVVv0S/zW1qtMNzVKYv+ztFfSDc
-	 rK7fyUNkb8jxSqfy8qYLeC7Qvk0ixZLo0GCBWs9o=
+	b=EV5TbtHn5AY+8z2PgjtfNTz4fTyjQ6nsGCK60Bj6pk4hc4X+d8N8OA7pKtpXi/clk
+	 bwpq3mx3XmKb4MSEW9iq4skq9z68eO5FwBDzjY725MV00Oga4V6IguNA16SWPQg60y
+	 sxz8JUl8+KUtEytlSr/oACFwNEz1w7MBEY5LGMw4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbfFTRYG (ORCPT
+        id S1732351AbfFTRYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:24:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52598 "EHLO
+        Thu, 20 Jun 2019 13:24:04 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52638 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732170AbfFTRXU (ORCPT
+        with ESMTP id S1732191AbfFTRXU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 13:23:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,32 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=86TkPPpFJuPy6eZbgDCbTxzixd78qAKph70hSGg4B2A=; b=Zh8ChdpjsyoRdr5MI8wxvQhrc/
-        r7TNo/xgDdhHJg/JELsFNSjsYg+skhi5iJDyewwBsIcf88Knfwxjf92QGbNI7pqfCTkOPGc3r51I8
-        l/jXQdDFz0p7MH72ON/ttQ0DqDkQFk4v++0GnVOaj3H5+4ERT5K7MhrgwTNzZeq824agJ1sWMuRhi
-        NOfnDUhZOFubAFRJrTmy7CXxbMFNdbVGdcRC/jtRBK2CZB/9rwK2OBsuyOCZ4q3OvjBFBj6mL4+Fq
-        gKGpelt6p62b9D/NIdH0MuzvdoFe2/8RsASaruDT2lrLkckmIM7eN3S2G+Pfjv2RTaHT39kuZLx8r
-        kw9oyMqA==;
+        bh=UJbmn9p2YHHghIsYRyn5I+GHeBu50kA/TdoqNC/g3aQ=; b=g2SOx81hkEXlNJ1EqR0L7PVa/3
+        wG3jaRegWt0wMNfNKgzbiZYKCIupbynI3oubhpy9wlHNq/snkTg3Y6KythTZ+wPJj/io5EfjUgivH
+        HLBDCbWaGoyt1XhpuCudGZ8r1O6KA11tK1DP66ZVd/4HItAqIU36cybmmzCPiRBdjc6GV88TFj7hh
+        ZTH/PzTRqdVLrAcjdSj2PokVP9ow5f5JOOuWfNN1KTqmiA0/7bjIXx+AdtM2MZYwG+PEGBrtGYUFQ
+        LoBB9g0I4whAQFf0KZuviPk4EE5p6kaUiOUpkp+mmBhEd6Jev6jVTdsf5LorkPZ8dN9GEEWF/QknF
+        4P57lPWg==;
 Received: from [177.97.20.138] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he0mM-0008Rs-8b; Thu, 20 Jun 2019 17:23:18 +0000
+        id 1he0mM-0008Rz-9R; Thu, 20 Jun 2019 17:23:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1he0mK-0000E2-2F; Thu, 20 Jun 2019 14:23:16 -0300
+        id 1he0mJ-0000DS-Rx; Thu, 20 Jun 2019 14:23:15 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 21/22] scripts/get_feat.pl: handle ".." special case
-Date:   Thu, 20 Jun 2019 14:23:13 -0300
-Message-Id: <59a9078408e4c4bf593c60af48e30ddfee845354.1561050806.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Changbin Du <changbin.du@intel.com>
+Subject: [PATCH v2 13/22] doc-rst: add ABI documentation to the admin-guide book
+Date:   Thu, 20 Jun 2019 14:23:05 -0300
+Message-Id: <11c18b7588a21e66f3e29b94f6e739f0d0a36d94.1561050806.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
 References: <cover.1561050806.git.mchehab+samsung@kernel.org>
@@ -64,31 +70,304 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The status ".." Means that the feature can't be implemented
-on a given architecture.
+As we don't want a generic Sphinx extension to execute commands,
+change the one proposed to Markus to call the abi_book.pl
+script.
 
-The problem is that this doesn't show anything at the
-output, so replace it by "---", with is a markup for a long
-hyphen.
+Use a script to parse the Documentation/ABI directory and output
+it at the admin-guide.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/get_feat.pl | 2 ++
- 1 file changed, 2 insertions(+)
+ Documentation/admin-guide/abi-obsolete.rst |  10 ++
+ Documentation/admin-guide/abi-removed.rst  |   4 +
+ Documentation/admin-guide/abi-stable.rst   |  13 ++
+ Documentation/admin-guide/abi-testing.rst  |  19 +++
+ Documentation/admin-guide/abi.rst          |  11 ++
+ Documentation/admin-guide/index.rst        |   1 +
+ Documentation/conf.py                      |   2 +-
+ Documentation/sphinx/kernel_abi.py         | 155 +++++++++++++++++++++
+ 8 files changed, 214 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/admin-guide/abi-obsolete.rst
+ create mode 100644 Documentation/admin-guide/abi-removed.rst
+ create mode 100644 Documentation/admin-guide/abi-stable.rst
+ create mode 100644 Documentation/admin-guide/abi-testing.rst
+ create mode 100644 Documentation/admin-guide/abi.rst
+ create mode 100644 Documentation/sphinx/kernel_abi.py
 
-diff --git a/scripts/get_feat.pl b/scripts/get_feat.pl
-index 401cbc820caa..79d83595addd 100755
---- a/scripts/get_feat.pl
-+++ b/scripts/get_feat.pl
-@@ -141,6 +141,8 @@ sub parse_feat {
- 				$max_size_arch = length($a);
- 			}
- 
-+			$status = "---" if ($status =~ m/^\.\.$/);
+diff --git a/Documentation/admin-guide/abi-obsolete.rst b/Documentation/admin-guide/abi-obsolete.rst
+new file mode 100644
+index 000000000000..cda9168445a5
+--- /dev/null
++++ b/Documentation/admin-guide/abi-obsolete.rst
+@@ -0,0 +1,10 @@
++ABI obsolete symbols
++====================
 +
- 			$archs{$a} = 1;
- 			$arch_table{$a} = $status;
- 			next;
++Documents interfaces that are still remaining in the kernel, but are
++marked to be removed at some later point in time.
++
++The description of the interface will document the reason why it is
++obsolete and when it can be expected to be removed.
++
++.. kernel-abi:: $srctree/Documentation/ABI/obsolete
+diff --git a/Documentation/admin-guide/abi-removed.rst b/Documentation/admin-guide/abi-removed.rst
+new file mode 100644
+index 000000000000..497978fc9632
+--- /dev/null
++++ b/Documentation/admin-guide/abi-removed.rst
+@@ -0,0 +1,4 @@
++ABI removed symbols
++===================
++
++.. kernel-abi:: $srctree/Documentation/ABI/removed
+diff --git a/Documentation/admin-guide/abi-stable.rst b/Documentation/admin-guide/abi-stable.rst
+new file mode 100644
+index 000000000000..7495d7a35048
+--- /dev/null
++++ b/Documentation/admin-guide/abi-stable.rst
+@@ -0,0 +1,13 @@
++ABI stable symbols
++==================
++
++Documents the interfaces that the developer has defined to be stable.
++
++Userspace programs are free to use these interfaces with no
++restrictions, and backward compatibility for them will be guaranteed
++for at least 2 years.
++
++Most interfaces (like syscalls) are expected to never change and always
++be available.
++
++.. kernel-abi:: $srctree/Documentation/ABI/stable
+diff --git a/Documentation/admin-guide/abi-testing.rst b/Documentation/admin-guide/abi-testing.rst
+new file mode 100644
+index 000000000000..5c886fc50b9e
+--- /dev/null
++++ b/Documentation/admin-guide/abi-testing.rst
+@@ -0,0 +1,19 @@
++ABI testing symbols
++===================
++
++Documents interfaces that are felt to be stable,
++as the main development of this interface has been completed.
++
++The interface can be changed to add new features, but the
++current interface will not break by doing this, unless grave
++errors or security problems are found in them.
++
++Userspace programs can start to rely on these interfaces, but they must
++be aware of changes that can occur before these interfaces move to
++be marked stable.
++
++Programs that use these interfaces are strongly encouraged to add their
++name to the description of these interfaces, so that the kernel
++developers can easily notify them if any changes occur.
++
++.. kernel-abi:: $srctree/Documentation/ABI/testing
+diff --git a/Documentation/admin-guide/abi.rst b/Documentation/admin-guide/abi.rst
+new file mode 100644
+index 000000000000..3b9645c77469
+--- /dev/null
++++ b/Documentation/admin-guide/abi.rst
+@@ -0,0 +1,11 @@
++=====================
++Linux ABI description
++=====================
++
++.. toctree::
++   :maxdepth: 1
++
++   abi-stable
++   abi-testing
++   abi-obsolete
++   abi-removed
+diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
+index 8001917ee012..20c3020fd73c 100644
+--- a/Documentation/admin-guide/index.rst
++++ b/Documentation/admin-guide/index.rst
+@@ -16,6 +16,7 @@ etc.
+    README
+    kernel-parameters
+    devices
++   abi
+ 
+ This section describes CPU vulnerabilities and their mitigations.
+ 
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index 7ace3f8852bd..598256fb5c98 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -34,7 +34,7 @@ needs_sphinx = '1.3'
+ # Add any Sphinx extension module names here, as strings. They can be
+ # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+ # ones.
+-extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig']
++extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi']
+ 
+ # The name of the math extension changed on Sphinx 1.4
+ if (major == 1 and minor > 3) or (major > 1):
+diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+new file mode 100644
+index 000000000000..32ce90775d96
+--- /dev/null
++++ b/Documentation/sphinx/kernel_abi.py
+@@ -0,0 +1,155 @@
++# -*- coding: utf-8; mode: python -*-
++u"""
++    kernel-abi
++    ~~~~~~~~~~
++
++    Implementation of the ``kernel-abi`` reST-directive.
++
++    :copyright:  Copyright (C) 2016  Markus Heiser
++    :copyright:  Copyright (C) 2016  Mauro Carvalho Chehab
++    :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
++
++    The ``kernel-abi`` (:py:class:`KernelCmd`) directive calls the
++    scripts/get_abi.pl script to parse the Kernel ABI files.
++
++    Overview of directive's argument and options.
++
++    .. code-block:: rst
++
++        .. kernel-abi:: <ABI directory location>
++            :debug:
++
++    The argument ``<ABI directory location>`` is required. It contains the
++    location of the ABI files to be parsed.
++
++    ``debug``
++      Inserts a code-block with the *raw* reST. Sometimes it is helpful to see
++      what reST is generated.
++
++"""
++
++import sys
++import os
++from os import path
++import subprocess
++
++from sphinx.ext.autodoc import AutodocReporter
++
++from docutils import nodes
++from docutils.parsers.rst import Directive, directives
++from docutils.statemachine import ViewList
++from docutils.utils.error_reporting import ErrorString
++
++
++__version__  = '1.0'
++
++# We can't assume that six is installed
++PY3 = sys.version_info[0] == 3
++PY2 = sys.version_info[0] == 2
++if PY3:
++    # pylint: disable=C0103, W0622
++    unicode     = str
++    basestring  = str
++
++def setup(app):
++
++    app.add_directive("kernel-abi", KernelCmd)
++    return dict(
++        version = __version__
++        , parallel_read_safe = True
++        , parallel_write_safe = True
++    )
++
++class KernelCmd(Directive):
++
++    u"""KernelABI (``kernel-abi``) directive"""
++
++    required_arguments = 1
++    optional_arguments = 0
++    has_content = False
++    final_argument_whitespace = True
++
++    option_spec = {
++        "debug"     : directives.flag
++    }
++
++    def warn(self, message, **replace):
++        replace["fname"]   = self.state.document.current_source
++        replace["line_no"] = replace.get("line_no", self.lineno)
++        message = ("%(fname)s:%(line_no)s: [kernel-abi WARN] : " + message) % replace
++        self.state.document.settings.env.app.warn(message, prefix="")
++
++    def run(self):
++
++        doc = self.state.document
++        if not doc.settings.file_insertion_enabled:
++            raise self.warning("docutils: file insertion disabled")
++
++        env = doc.settings.env
++        cwd = path.dirname(doc.current_source)
++        cmd = "get_abi.pl rest --dir "
++        cmd += self.arguments[0]
++
++        srctree = path.abspath(os.environ["srctree"])
++
++        fname = cmd
++
++        # extend PATH with $(srctree)/scripts
++        path_env = os.pathsep.join([
++            srctree + os.sep + "scripts",
++            os.environ["PATH"]
++        ])
++        shell_env = os.environ.copy()
++        shell_env["PATH"]    = path_env
++        shell_env["srctree"] = srctree
++
++        lines = self.runCmd(cmd, shell=True, cwd=cwd, env=shell_env)
++        nodeList = self.nestedParse(lines, fname)
++        return nodeList
++
++    def runCmd(self, cmd, **kwargs):
++        u"""Run command ``cmd`` and return it's stdout as unicode."""
++
++        try:
++            proc = subprocess.Popen(
++                cmd
++                , stdout = subprocess.PIPE
++                , stderr = subprocess.PIPE
++                , universal_newlines = True
++                , **kwargs
++            )
++            out, err = proc.communicate()
++            if err:
++                self.warn(err)
++            if proc.returncode != 0:
++                raise self.severe(
++                    u"command '%s' failed with return code %d"
++                    % (cmd, proc.returncode)
++                )
++        except OSError as exc:
++            raise self.severe(u"problems with '%s' directive: %s."
++                              % (self.name, ErrorString(exc)))
++        return unicode(out)
++
++    def nestedParse(self, lines, fname):
++        content = ViewList()
++        node    = nodes.section()
++
++        if "debug" in self.options:
++            code_block = "\n\n.. code-block:: rst\n    :linenos:\n"
++            for l in lines.split("\n"):
++                code_block += "\n    " + l
++            lines = code_block + "\n\n"
++
++        for c, l in enumerate(lines.split("\n")):
++            content.append(l, fname, c)
++
++        buf  = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
++        self.state.memo.title_styles  = []
++        self.state.memo.section_level = 0
++        self.state.memo.reporter      = AutodocReporter(content, self.state.memo.reporter)
++        try:
++            self.state.nested_parse(content, 0, node, match_titles=1)
++        finally:
++            self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
++        return node.children
 -- 
 2.21.0
 
