@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4160C4646C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B217C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D212083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 178C920B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053688;
-	bh=eqKl0zvJukqapTrsVsf8Glo6wcBxzBGqmpgcdf9rP5E=;
+	s=default; t=1561053695;
+	bh=xwCTgva9OI67grSH5Oh2hITs1mJLqZptYrYyn964VaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TglMEuasNAUpzqkcTRa0ycJiAEoKHEzOjGPlucpfOKt8qa7KqWLTSuBRoqORwQLSC
-	 WerN6eGvP2KpMfY9+do+74aRR4oz9FwD8JkrDOWlChQMELz7IunDG316+HRf7iVFep
-	 OAGmHwKFUf2lgsRE/Ar4po2xnw3QYfY8JjLfs8gs=
+	b=tfj9fqCHxq3xnRmiHZPqrcIVD4o3cJyU2HN5cmSdauIYwCcyy3vaDFuKMHlXueWVM
+	 E51JxUKJrIoWs1aAY6S5n31+SvonTGHkWuepH2vOrLOmnAIPY97E04BT+9iBSbszob
+	 UxCjxRcrkt8xjPrQ5UqqKG3YVGj9OevOXr8D8grQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbfFTSB1 (ORCPT
+        id S1727264AbfFTSBd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51122 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727230AbfFTSBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:23 -0400
+        id S1726114AbfFTSB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A4E72083B;
-        Thu, 20 Jun 2019 18:01:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C4EB2084A;
+        Thu, 20 Jun 2019 18:01:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053682;
-        bh=eqKl0zvJukqapTrsVsf8Glo6wcBxzBGqmpgcdf9rP5E=;
+        s=default; t=1561053688;
+        bh=xwCTgva9OI67grSH5Oh2hITs1mJLqZptYrYyn964VaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=02o/49R0ZJB6Zqn5XsatdCxTHztvUVEPQ+ZTuysz5U36HQyVIrb4cwm74SERjOhPj
-         rfakEpb/lkBs9ek4QaD6c9qPfWYssEzlbyXWtRPWodq5nft2mZpGbXFssrfeuf4+e5
-         BzA4yQa8UmPJFE0EffW1exicKfTlaBkiGHw0wpzE=
+        b=1T+WtLA6tlFac974CprhGQYSyXk4w4kpC0oMYzOshw202keF602LHb+uvkn5X5nP8
+         yMe/dOWPtSQ1iKXXAce6yVW9pmhuYIsNDO7S7QcJ4jrnaM1EpU8bMsIoDGJX6A8IFD
+         pzb2Rd+EIgEqwndWaENpadeXn0ykbjzyp2cXD9sU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 75/84] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
-Date:   Thu, 20 Jun 2019 19:57:12 +0200
-Message-Id: <20190620174348.846387719@linuxfoundation.org>
+Subject: [PATCH 4.4 77/84] ia64: fix build errors by exporting paddr_to_nid()
+Date:   Thu, 20 Jun 2019 19:57:14 +0200
+Message-Id: <20190620174348.926262865@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,31 +63,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
+[ Upstream commit 9a626c4a6326da4433a0d4d4a8a7d1571caf1ed3 ]
 
-If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
-will not be freed. Pump index up so it will be freed.
+Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
+exporting paddr_to_nid().
 
-Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Fixes these build errors:
+
+ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
+ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
+ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
+ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
+ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
+
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: linux-ia64@vger.kernel.org
+Signed-off-by: Tony Luck <tony.luck@intel.com>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-dev.c | 1 +
+ arch/ia64/mm/numa.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
-index 57e3790c87b1..e56b774e7cf9 100644
---- a/drivers/i2c/i2c-dev.c
-+++ b/drivers/i2c/i2c-dev.c
-@@ -295,6 +295,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
- 			    rdwr_pa[i].buf[0] < 1 ||
- 			    rdwr_pa[i].len < rdwr_pa[i].buf[0] +
- 					     I2C_SMBUS_BLOCK_MAX) {
-+				i++;
- 				res = -EINVAL;
- 				break;
- 			}
+diff --git a/arch/ia64/mm/numa.c b/arch/ia64/mm/numa.c
+index aa19b7ac8222..476c7b4be378 100644
+--- a/arch/ia64/mm/numa.c
++++ b/arch/ia64/mm/numa.c
+@@ -49,6 +49,7 @@ paddr_to_nid(unsigned long paddr)
+ 
+ 	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
+ }
++EXPORT_SYMBOL(paddr_to_nid);
+ 
+ #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
+ /*
 -- 
 2.20.1
 
