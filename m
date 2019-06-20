@@ -5,49 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7710C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29012C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87A682089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFC21206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054905;
-	bh=TBAws2c/GmHnYBrpWrysQHwua9SqWMmW78aPAlCjFQg=;
+	s=default; t=1561054908;
+	bh=95GPIigMvlLUlVMsW6pUoxXKIsw1/FBEZC9liyRnEaQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iY3KcUyytjDMCFORHeGhf4T9tIXMv2/BhpySlakbEXcjLqUaPzkso1KMG0TawfmcR
-	 0o5uM5uAqXIxKR0vJdUsaX0iepN/p46iK8TPNsllI5IC2vYyAFnKRtrHM5VENLNsCc
-	 6nVutOmLZEm0DDbWKjzPtQui/ywL5KcX9TZe2XlM=
+	b=U7iT0bdhDhintDCEvveWUboh4LOdXWNevFSuSr+9zfHJdlAS5xPtMbMo2ub2h9lwk
+	 oFVLCvy5d2+RtOuKB2fRbBt5+l2K9jgQXzmYLe4yS0jlK/V8MRuXu1tFY65xrIAZuA
+	 rNwDfk+v8/SSwLkdgihLGnMEuXmckI90LiAwOk+k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729002AbfFTSVo (ORCPT
+        id S1726923AbfFTSLx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:21:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727193AbfFTSMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:03 -0400
+        id S1728954AbfFTSLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D9972070B;
-        Thu, 20 Jun 2019 18:12:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B96802070B;
+        Thu, 20 Jun 2019 18:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054321;
-        bh=TBAws2c/GmHnYBrpWrysQHwua9SqWMmW78aPAlCjFQg=;
+        s=default; t=1561054307;
+        bh=95GPIigMvlLUlVMsW6pUoxXKIsw1/FBEZC9liyRnEaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyLEA/crunDQl+Q1N/w0ka3hz69bRW8xYNITfGs0qLVE4w7W/o47k7ctKCesOhtqf
-         zD31KcLTX3npAExiqm9D51CKkys/jTAyydEsu69ehSzaTdQSW/mfNo0iL+1fdu0xMN
-         BCt141Nk4TYcS4I5RYpu48kZGNcDSJhnzRvVhW3g=
+        b=CJB1y2ObySN3LJd1CoI7+foHVRTn4AhOaLarK0Hj9YXNc2gy0DIHBdCqwPympOGEo
+         Ge2CbQhP3J7CDbu1ewEkZ+JMnXik+BjXSeW60qSn/4jBCMuzVwxO5bCrrV8H8r57fH
+         deZb+v+mcygR9ZLGoFRi7ZkKG0T7MhSETAJdjgfg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Will Deacon <will.deacon@arm.com>,
+        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 50/61] arm64: use the correct function type for __arm64_sys_ni_syscall
-Date:   Thu, 20 Jun 2019 19:57:45 +0200
-Message-Id: <20190620174345.934523625@linuxfoundation.org>
+Subject: [PATCH 4.19 18/61] perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
+Date:   Thu, 20 Jun 2019 19:57:13 +0200
+Message-Id: <20190620174340.281076789@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,81 +67,151 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1e29ab3186e33c77dbb2d7566172a205b59fa390 ]
+[ Upstream commit 23e3983a466cd540ffdd2bbc6e0c51e31934f941 ]
 
-Calling sys_ni_syscall through a syscall_fn_t pointer trips indirect
-call Control-Flow Integrity checking due to a function type
-mismatch. Use SYSCALL_DEFINE0 for __arm64_sys_ni_syscall instead and
-remove the now unnecessary casts.
+This patch fixes an bug revealed by the following commit:
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+  6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
+
+That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
+when matching a constraint. If code+umask were needed, then the
+INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
+This broke with some of the constraints for PEBS events.
+
+Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
+fell in that category and caused the event to be rejected in PEBS mode.
+In other words, on some platforms a cmdline such as:
+
+  $ perf top -e cycles:pp
+
+would fail with -EINVAL.
+
+This patch fixes this bug by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
+when needed in the PEBS constraint tables.
+
+Reported-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Link: http://lkml.kernel.org/r/20190521005246.423-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/sys.c   | 14 +++++++++-----
- arch/arm64/kernel/sys32.c |  7 ++-----
- 2 files changed, 11 insertions(+), 10 deletions(-)
+ arch/x86/events/intel/ds.c | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
 
-diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
-index 162a95ed0881..fe20c461582a 100644
---- a/arch/arm64/kernel/sys.c
-+++ b/arch/arm64/kernel/sys.c
-@@ -47,22 +47,26 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
- 	return ksys_personality(personality);
- }
- 
-+asmlinkage long sys_ni_syscall(void);
-+
-+asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
-+{
-+	return sys_ni_syscall();
-+}
-+
- /*
-  * Wrappers to pass the pt_regs argument.
-  */
- #define __arm64_sys_personality		__arm64_sys_arm64_personality
- 
--asmlinkage long sys_ni_syscall(const struct pt_regs *);
--#define __arm64_sys_ni_syscall	sys_ni_syscall
--
- #undef __SYSCALL
- #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
- #include <asm/unistd.h>
- 
- #undef __SYSCALL
--#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
-+#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
- 
- const syscall_fn_t sys_call_table[__NR_syscalls] = {
--	[0 ... __NR_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
-+	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
- #include <asm/unistd.h>
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index b7b01d762d32..e91814d1a27f 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -684,7 +684,7 @@ struct event_constraint intel_core2_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1fc7, 0x1), /* SIMD_INST_RETURED.ANY */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
+ 	EVENT_CONSTRAINT_END
  };
-diff --git a/arch/arm64/kernel/sys32.c b/arch/arm64/kernel/sys32.c
-index 0f8bcb7de700..3c80a40c1c9d 100644
---- a/arch/arm64/kernel/sys32.c
-+++ b/arch/arm64/kernel/sys32.c
-@@ -133,17 +133,14 @@ COMPAT_SYSCALL_DEFINE6(aarch32_fallocate, int, fd, int, mode,
- 	return ksys_fallocate(fd, mode, arg_u64(offset), arg_u64(len));
- }
  
--asmlinkage long sys_ni_syscall(const struct pt_regs *);
--#define __arm64_sys_ni_syscall	sys_ni_syscall
--
- #undef __SYSCALL
- #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
- #include <asm/unistd32.h>
+@@ -693,7 +693,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x00c5, 0x1), /* MISPREDICTED_BRANCH_RETIRED */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
+ 	/* Allow all events as PEBS with no flags */
+ 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
+ 	EVENT_CONSTRAINT_END
+@@ -701,7 +701,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
  
- #undef __SYSCALL
--#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
-+#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
- 
- const syscall_fn_t compat_sys_call_table[__NR_compat_syscalls] = {
--	[0 ... __NR_compat_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
-+	[0 ... __NR_compat_syscalls - 1] = __arm64_sys_ni_syscall,
- #include <asm/unistd32.h>
+ struct event_constraint intel_slm_pebs_event_constraints[] = {
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x1),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x1),
+ 	/* Allow all events as PEBS with no flags */
+ 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
+ 	EVENT_CONSTRAINT_END
+@@ -726,7 +726,7 @@ struct event_constraint intel_nehalem_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
  };
+ 
+@@ -743,7 +743,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
+ 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
+ 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	EVENT_CONSTRAINT_END
+ };
+ 
+@@ -752,7 +752,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -767,9 +767,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
+         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
+ 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
+ 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
+@@ -783,9 +783,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -806,9 +806,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
+ 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
+ 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
+@@ -829,9 +829,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
+ struct event_constraint intel_skl_pebs_event_constraints[] = {
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
+ 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
+ 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
+-	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
+ 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
+ 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
 -- 
 2.20.1
 
