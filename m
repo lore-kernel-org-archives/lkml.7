@@ -2,187 +2,376 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E05C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:55:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C63C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB2020B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:55:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB8B320B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:56:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XCVaRrbp"
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="V3TjHCDb";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="HmEQel9C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731321AbfFTFzg (ORCPT
+        id S1731375AbfFTF4w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 01:55:36 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38839 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfFTFzg (ORCPT
+        Thu, 20 Jun 2019 01:56:52 -0400
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:33650 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725857AbfFTF4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 01:55:36 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so977088pgl.5
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 22:55:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=K9pZXmjEarEwCyykMezDXwpehpmv4umtwvd9btCXgKc=;
-        b=XCVaRrbpse0CSGD70QnaHV3nIfsX43qaQFSxrfnJW/VmR080ALVpX8dSSZASxz2lzr
-         R100yUGLnMUR69TxsxEuO/YdkK1EoNyWdMbIA1NyYz/XZsCfcBs6Skb5n2cMnE8JqY4f
-         /4FWSMQ1niGhs+4sXX5B++cu0bQoqURFh5bctYtIIDQCl68u0pFC5wNpqDjU5KH7UNIU
-         YsEnNOIrZDaeCz/vLS0/wSj53HhulsyCiFljCWI4xgvqTRa17HnK+oyaPzOckmuwojEU
-         Xm2lUMHgFK9vjYwO2QyJ0L04c4ePZe/bF8/mFVgfFaos8RtBC1HHk19D5le0FS3bLlon
-         utIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K9pZXmjEarEwCyykMezDXwpehpmv4umtwvd9btCXgKc=;
-        b=jfXdy9GlaV2Fl/TLGsbHbH2jrk3CjBGRY8coX833kMDga+svu65X35yCfc6VKs2LNy
-         Tpf4MmtcPjya67j+G8340Tz/wK/K0Lc8W5lX4V8+CtZsrxt/xAvbZsG1+krf+8FGl5rv
-         UIwOuP0pyUnBSLGTrY+tP2e9OySCzYj4UCOz2SIxh/s3bwPE2w6pAnqistiX5Es25sgF
-         VCNmlELiP4kh1Ide32VJrn+pycI51HHuAPss2zJ8oP+FeXZ0/amE0JVotaScdGyY28f2
-         H3Wza8crStRYZixdC7+9w6jkWS1pjcPVtvwNLO7rjqlyg6FZpKJ5IVCF3O03qkKsTifI
-         lr3A==
-X-Gm-Message-State: APjAAAUjo+ZMgGqChd2aPjfPOhii7pNaPS/Gfb6Qv7VmmpKxHc7t12MK
-        xC3Lb0cluAHd6qA/yVu2N0ls/mgWcpc=
-X-Google-Smtp-Source: APXvYqx5er+qQrHL1j38LKHAX4s8XXfOE8iKYN4Ky6U1iGragatOQN6CtKyu178J66sxlxjJS5eY1Q==
-X-Received: by 2002:a65:63c6:: with SMTP id n6mr11208778pgv.370.1561010135545;
-        Wed, 19 Jun 2019 22:55:35 -0700 (PDT)
-Received: from localhost.localdomain ([203.100.54.194])
-        by smtp.gmail.com with ESMTPSA id n17sm37308044pfq.182.2019.06.19.22.55.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 22:55:34 -0700 (PDT)
-From:   Yafang Shao <laoar.shao@gmail.com>
-To:     akpm@linux-foundation.org, penguin-kernel@I-love.SAKURA.ne.jp,
-        dvyukov@google.com
-Cc:     linux-kernel@vger.kernel.org, Yafang Shao <laoar.shao@gmail.com>
-Subject: [PATCH] hung_task: recover hung task warnings in next check interval
-Date:   Thu, 20 Jun 2019 13:55:00 +0800
-Message-Id: <1561010100-14080-1-git-send-email-laoar.shao@gmail.com>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 20 Jun 2019 01:56:52 -0400
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5K5scqg001135;
+        Wed, 19 Jun 2019 22:56:35 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=QrB6/Bd5JTBdsW37ZH+JnM4cL33bTB1CqmrE3shCL/0=;
+ b=V3TjHCDbq8ndXp5hdTSNtevXIoev5dA+FuemRq2mmRtTw7gko6GoD6fbzDW+hZWz4BJ3
+ 5AX6Arx4PfZhwCHhaZAeNDWLIMeHr0fwbtZYdXD6cajKo9OcKvNW4tUQk54KU4VS6HIf
+ iCLiOv+ZCuXw/rd5R8TVCap84qBLH0H6aPnDcdPVOIKrwrh5UTpsNm9/NJApqQZr4Oc5
+ /WDtMQrhifomvEM3YTpXde1NDYGfRJuweL5VfwclTwpqQ9ahnBDBxEeOcHm9BZOLhojK
+ 8CVJmeOvebLj55AsyGWVFdhagNSAm9poN9yX4hFF+nNvQfBue30AMyRm+UgedKvAxthw jw== 
+Authentication-Results: cadence.com;
+        spf=pass smtp.mailfrom=pthombar@cadence.com
+Received: from nam02-cy1-obe.outbound.protection.outlook.com (mail-cys01nam02lp2059.outbound.protection.outlook.com [104.47.37.59])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2t7byx5w9s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jun 2019 22:56:34 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=QrB6/Bd5JTBdsW37ZH+JnM4cL33bTB1CqmrE3shCL/0=;
+ b=HmEQel9CDu/zbBT2NUYetzTNVSfV42jCFMR5dqTR1Cd3y3rLJndaVbYg07RBTvweUd1YxElbPedvxsdZ47/U3tQbUzFkf8rum5EZ9SPfsNDhQFhzxkAg/+Fnfh6Q3Svcl0lu3LDD2ELvLTM/2+vKpVzp0Pyh+WMfVHI98hvA73Q=
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com (10.166.94.21) by
+ CO2PR07MB2677.namprd07.prod.outlook.com (10.166.93.135) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.13; Thu, 20 Jun 2019 05:56:32 +0000
+Received: from CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::b9c0:ba2d:e9e8:4176]) by CO2PR07MB2469.namprd07.prod.outlook.com
+ ([fe80::b9c0:ba2d:e9e8:4176%4]) with mapi id 15.20.1987.014; Thu, 20 Jun 2019
+ 05:56:32 +0000
+From:   Parshuram Raju Thombare <pthombar@cadence.com>
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+CC:     "andrew@lunn.ch" <andrew@lunn.ch>,
+        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Rafal Ciepiela <rafalc@cadence.com>,
+        Anil Joy Varughese <aniljoy@cadence.com>,
+        Piotr Sroka <piotrs@cadence.com>
+Subject: RE: [PATCH v2 2/5] net: macb: add support for sgmii MAC-PHY interface
+Thread-Topic: [PATCH v2 2/5] net: macb: add support for sgmii MAC-PHY
+ interface
+Thread-Index: AQHVJnr0drBG2PH/rUy05pV+jK9MiqaitqoAgAAZ8dCAABhxAIABFcIg
+Date:   Thu, 20 Jun 2019 05:56:32 +0000
+Message-ID: <CO2PR07MB24693905766BD027DB972761C1E40@CO2PR07MB2469.namprd07.prod.outlook.com>
+References: <1560933600-27626-1-git-send-email-pthombar@cadence.com>
+ <1560933646-29852-1-git-send-email-pthombar@cadence.com>
+ <20190619093146.yajbeht7mizm4hmr@shell.armlinux.org.uk>
+ <CO2PR07MB24695C706292A16D71322DB5C1E50@CO2PR07MB2469.namprd07.prod.outlook.com>
+ <20190619123206.zvc7gzt4ewxby2y2@shell.armlinux.org.uk>
+In-Reply-To: <20190619123206.zvc7gzt4ewxby2y2@shell.armlinux.org.uk>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNccHRob21iYXJcYXBwZGF0YVxyb2FtaW5nXDA5ZDg0OWI2LTMyZDMtNGE0MC04NWVlLTZiODRiYTI5ZTM1Ylxtc2dzXG1zZy0yMjlkZGQ1Ny05MzIwLTExZTktODRmOC0wNGQzYjAyNzc0NGFcYW1lLXRlc3RcMjI5ZGRkNTktOTMyMC0xMWU5LTg0ZjgtMDRkM2IwMjc3NDRhYm9keS50eHQiIHN6PSI1ODkzIiB0PSIxMzIwNTQ4Mzc4NTA2ODgwMjYiIGg9IktzNTN5a2lDNnR0b3d6UTB6a2pLLzhjNXYzbz0iIGlkPSIiIGJsPSIwIiBibz0iMSIvPjwvbWV0YT4=
+x-dg-rorf: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 51a44a8f-68b9-4ca0-bdcb-08d6f5440be2
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:CO2PR07MB2677;
+x-ms-traffictypediagnostic: CO2PR07MB2677:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <CO2PR07MB267780078E49677CED3D510BC1E40@CO2PR07MB2677.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
+x-forefront-prvs: 0074BBE012
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(376002)(39860400002)(346002)(366004)(396003)(36092001)(199004)(189003)(53936002)(6306002)(9686003)(68736007)(186003)(54906003)(7696005)(55236004)(86362001)(8936002)(66066001)(66476007)(107886003)(11346002)(446003)(73956011)(76176011)(64756008)(66556008)(8676002)(5660300002)(102836004)(66446008)(4326008)(81166006)(52536014)(2906002)(26005)(6116002)(66946007)(78486014)(3846002)(76116006)(6916009)(14444005)(256004)(14454004)(25786009)(99286004)(966005)(6246003)(81156014)(305945005)(33656002)(6506007)(229853002)(74316002)(486006)(476003)(55016002)(6436002)(316002)(7736002)(71190400001)(71200400001)(478600001);DIR:OUT;SFP:1101;SCL:1;SRVR:CO2PR07MB2677;H:CO2PR07MB2469.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: /WjayXgmGSy2k503wcqJBnBRbPVxtpCCdSA/cYzrZsPkhOIhe2JbvSzN2bpNgMqhDDRGJloggVYKkwyB3q5U+lBPfPkOX1sAQq/rQT8quuHSk6op8Q9L+H1hC6chhKuYha2ykEefA5UT6EQ97j0jtHA55L+wj/1jsWFr3xPCRo11h1ZT9CgsTlAyRmF8WcbIi+EA0Pun1b48AuFUuSg+XlMrsuhr1r6MHCrXqliRWelQX+dre25gguv+JhQBswcFpuav3bihZrVGml/FEpEHvBinHIYWwxbVsiiBO2nu/e3zhMqSPzQvJp4jxUrZhDxSsgiXplYzPCleSzInxnwN6LHVcAWa/QNAfEcgXPx87C5Qpa8IoPO4ntWVcBSiBcJTgF/UTpO+Poo9QpWFbULREARtp75RMA6aziJlU5TcGNI=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 51a44a8f-68b9-4ca0-bdcb-08d6f5440be2
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2019 05:56:32.4203
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: pthombar@global.cadence.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR07MB2677
+X-Proofpoint-SPF-Result: pass
+X-Proofpoint-SPF-Record: v=spf1 include:spf.smktg.jp include:_spf.salesforce.com
+ include:mktomail.com include:spf-0014ca01.pphosted.com
+ include:spf.protection.outlook.com include:auth.msgapp.com
+ include:spf.mandrillapp.com ~all
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
+ spamscore=0 clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200047
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When sys_hung_task_warnings reaches 0, the hang task messages will not
-be reported any more.
+>From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+>
+>On Wed, Jun 19, 2019 at 11:23:01AM +0000, Parshuram Raju Thombare wrote:
+>
+>> >From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+>
+>> >
+>
+>> >On Wed, Jun 19, 2019 at 09:40:46AM +0100, Parshuram Thombare wrote:
+>
+>> >
+>
+>> >> This patch add support for SGMII interface) and
+>
+>> >
+>
+>> >> 2.5Gbps MAC in Cadence ethernet controller driver.
+>
+>>
+>
+>> >>  	switch (state->interface) {
+>
+>> >
+>
+>> >> +	case PHY_INTERFACE_MODE_SGMII:
+>
+>> >
+>
+>> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+>
+>> >
+>
+>> >> +			phylink_set(mask, 2500baseT_Full);
+>
+>> >
+>
+>> >
+>
+>> >
+>
+>> >This doesn't look correct to me.  SGMII as defined by Cisco only
+>
+>> >supports 1G, 100M and 10M speeds, not 2.5G.
+>
+>>
+>
+>> Cadence MAC support 2.5G SGMII by using higher clock frequency.
+>
+>
+>
+>Ok, so why not set 2.5GBASE-X too?  Does the MAC handle auto-detecting
+>
+>the SGMII/BASE-X speed itself or does it need to be programmed?  If it
+>
+>needs to be programmed, you need additional handling in the validate
+>
+>callback to deal with that.
 
-If the user want to get more hung task messages, he must reset
-kernel.hung_task_warnings to a postive integer or -1 with sysctl.
-This is not a good way for the user.
-We'd better reset hung task warnings in the kernel, and then the user
-don't need to pay attention to this value.
+No, currently MAC can't auto detect it, it need to be programmed.
+But I think programming speed/duplex mode is already done for non in-band
+modes in mac_config.
+For in band mode, I see two places to config MAC speed
+and duplex mode, 1. mac_link_state 2. mac_link_up. In mac_link_up, though s=
+tate
+read from mac_link_state is passed, it is only used for printing log and up=
+dating
+pl->cur_interface, so if configuring MAC speed/duplex mode in mac_link_up i=
+s correct,=20
+these parameters will need to read again from HW.
 
-With this patch, hung task warnings will be reset with
-sys_hung_task_warnings setting in evenry check interval.
+>> >> +	case PHY_INTERFACE_MODE_2500BASEX:
+>
+>> >
+>
+>> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+>
+>> >
+>
+>> >> +			phylink_set(mask, 2500baseX_Full);
+>
+>> >
+>
+>> >> +	/* fallthrough */
+>
+>> >
+>
+>> >> +	case PHY_INTERFACE_MODE_1000BASEX:
+>
+>> >
+>
+>> >> +		if (bp->caps & MACB_CAPS_GIGABIT_MODE_AVAILABLE)
+>
+>> >
+>
+>> >> +			phylink_set(mask, 1000baseX_Full);
+>
+>> >
+>
+>> >> +		break;
+>
+>> >
+>
+>> >
+>
+>> >
+>
+>> >Please see how other drivers which use phylink deal with the validate()
+>
+>> >format, and please read the phylink documentation:
+>
+>> >
+>
+>> > * Note that the PHY may be able to transform from one connection
+>
+>> > * technology to another, so, eg, don't clear 1000BaseX just
+>
+>> > * because the MAC is unable to BaseX mode. This is more about
+>
+>> > * clearing unsupported speeds and duplex settings.
+>
+>> >
+>
+>>
+>
+>> There are some configs used in this driver which limits MAC speed.
+>
+>> Above checks just to make sure this use case does not break.
+>
+>
+>
+>That's not what I'm saying.
+>
+>
+>
+>By way of example, you're offering 1000BASE-T just because the MAC
+>
+>connection supports it.  However, the MAC doesn't _actually_ support
+>
+>1000BASE-T, it supports a connection to a PHY that _happens_ to
+>
+>convert the MAC connection to 1000BASE-T.  It could equally well
+>
+>convert the MAC connection to 1000BASE-X.
+>
+>
+>
+>So, only setting 1000BASE-X when you have a PHY connection using
+>
+>1000BASE-X is fundamentally incorrect.
+>
+>
+>
+>For example, you could have a MAC <-> PHY link using standard 1.25Gbps
+>=09
+>SGMII, and the PHY offers 1000BASE-T _and_ 1000BASE-X connections on
+>
+>a first-link-up basis.  An example of a PHY that does this are the
+>
+>Marvell 1G PHYs (eg, 88E151x).
+>
+>
+>
+>This point is detailed in the PHYLINK documentation, which I quoted
+>
+>above.
+Ok, I will not clear 1000/2500BASE-T for PHY connection is just 1000/2500BA=
+SE-X
+Also I will keep 1000/2500BASE-X link modes for SGMII/GMII modes.
 
-Another difference is if the user set kernel.hung_task_warnings with a
-new value, the new value will take effect in next check interval.
-For example, when the kernel is printing the hung task messages, the
-user can't set it to 0 to stop the printing, but I don't think this will
-happen in the real world. (If that happens, then sys_hung_task_warnings
-must be protected by a lock)
+>
+>
+>> >> @@ -506,18 +563,26 @@ static void gem_mac_config(struct phylink_confi=
+g
+>
+>> >*pl_config, unsigned int mode,
+>
+>> >>  		switch (state->speed) {
+>
+>> >> +		case SPEED_2500:
+>
+>> >> +			gem_writel(bp, NCFGR, GEM_BIT(GBE) |
+>
+>> >> +				   gem_readl(bp, NCFGR));
+>
+>> >>  		}
+>
+>> >> -		macb_or_gem_writel(bp, NCFGR, reg);
+>
+>> >>
+>
+>> >>  		bp->speed =3D state->speed;
+>
+>> >>  		bp->duplex =3D state->duplex;
+>
+>> >
+>
+>> >
+>
+>> >
+>
+>> >This is not going to work for 802.3z nor SGMII properly when in-band
+>
+>> >negotiation is used.  We don't know ahead of time what the speed and
+>
+>> >duplex will be.  Please see existing drivers for examples showing
+>
+>> >how mac_config() should be implemented (there's good reason why its
+>
+>> >laid out as it is in those drivers.)
+>
+>> >
+>
+>> Ok, Here I will configure MAC only for FIXED and PHY mode.
+>
+>
+>
+>As you are not the only one who has made this error, I'm considering
+>
+>splitting mac_config() into mac_config_fixed() and mac_config_inband()
+>
+>so that it's clearer what is required.  Maybe even taking separate
+>
+>structures so that it's impossible to access members that should not
+>
+>be used.
+>
+For in band mode, I see two places to config MAC speed
+and duplex mode - 1. mac_link_state 2. mac_link_up.=20
+In mac_link_up, though state read from mac_link_state is passed,=20
+it is only used for printing log and updating pl->cur_interface,=20
+so if configuring MAC speed/duplex mode in mac_link_up is correct,=20
+these parameters will need to read again from HW.
+>
+>--
+>
+>RMK's Patch system: https://urldefense.proofpoint.com/v2/url?u=3Dhttps-
+>3A__www.armlinux.org.uk_developer_patches_&d=3DDwIBAg&c=3DaUq983L2pue2F
+>qKFoP6PGHMJQyoJ7kl3s3GZ-_haXqY&r=3DGTefrem3hiBCnsjCOqAuapQHRN8-
+>rKC1FRbk0it-LDs&m=3DqYg0cUy9RXzvJcQIwLNjHCC8tbUg_-
+>k2oqUIMDpStiA&s=3DxUkYplnpxrywxVfsk-J5c2Z6_K96ELTBkgC5g37OXTE&e=3D
+>
+>FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps=
+ up
+>
+>According to speedtest.net: 11.9Mbps down 500kbps up
 
-Signed-off-by: Yafang Shao <laoar.shao@gmail.com>
----
- Documentation/sysctl/kernel.txt |  5 ++++-
- kernel/hung_task.c              | 19 ++++++++++++-------
- 2 files changed, 16 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
-index f0c86fb..350df41 100644
---- a/Documentation/sysctl/kernel.txt
-+++ b/Documentation/sysctl/kernel.txt
-@@ -377,6 +377,8 @@ This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
- 
- 0 (default): means use hung_task_timeout_secs as checking interval.
- Possible values to set are in range {0..LONG_MAX/HZ}.
-+hung_task_check_interval_secs must not be set greater than
-+hung_task_timeout_secs.
- 
- ==============================================================
- 
-@@ -384,7 +386,8 @@ hung_task_warnings:
- 
- The maximum number of warnings to report. During a check interval
- if a hung task is detected, this value is decreased by 1.
--When this value reaches 0, no more warnings will be reported.
-+When this value reaches 0, no more warnings will be reported until
-+next check interval begins.
- This file shows up if CONFIG_DETECT_HUNG_TASK is enabled.
- 
- -1: report an infinite number of warnings.
-diff --git a/kernel/hung_task.c b/kernel/hung_task.c
-index 14a625c..01e6c94 100644
---- a/kernel/hung_task.c
-+++ b/kernel/hung_task.c
-@@ -85,7 +85,8 @@ static int __init hung_task_panic_setup(char *str)
- 	.notifier_call = hung_task_panic,
- };
- 
--static void check_hung_task(struct task_struct *t, unsigned long timeout)
-+static void check_hung_task(struct task_struct *t, unsigned long timeout,
-+			    int *warnings)
- {
- 	unsigned long switch_count = t->nvcsw + t->nivcsw;
- 
-@@ -124,9 +125,9 @@ static void check_hung_task(struct task_struct *t, unsigned long timeout)
- 	 * Ok, the task did not get scheduled for more than 2 minutes,
- 	 * complain:
- 	 */
--	if (sysctl_hung_task_warnings) {
--		if (sysctl_hung_task_warnings > 0)
--			sysctl_hung_task_warnings--;
-+	if (*warnings) {
-+		if (*warnings > 0)
-+			(*warnings)--;
- 		pr_err("INFO: task %s:%d blocked for more than %ld seconds.\n",
- 		       t->comm, t->pid, (jiffies - t->last_switch_time) / HZ);
- 		pr_err("      %s %s %.*s\n",
-@@ -170,7 +171,8 @@ static bool rcu_lock_break(struct task_struct *g, struct task_struct *t)
-  * a really long time (120 seconds). If that happens, print out
-  * a warning.
-  */
--static void check_hung_uninterruptible_tasks(unsigned long timeout)
-+static void check_hung_uninterruptible_tasks(unsigned long timeout,
-+					     int *warnings)
- {
- 	int max_count = sysctl_hung_task_check_count;
- 	unsigned long last_break = jiffies;
-@@ -195,7 +197,7 @@ static void check_hung_uninterruptible_tasks(unsigned long timeout)
- 		}
- 		/* use "==" to skip the TASK_KILLABLE tasks waiting on NFS */
- 		if (t->state == TASK_UNINTERRUPTIBLE)
--			check_hung_task(t, timeout);
-+			check_hung_task(t, timeout, warnings);
- 	}
-  unlock:
- 	rcu_read_unlock();
-@@ -271,6 +273,7 @@ static int hungtask_pm_notify(struct notifier_block *self,
- static int watchdog(void *dummy)
- {
- 	unsigned long hung_last_checked = jiffies;
-+	int warnings;
- 
- 	set_user_nice(current, 0);
- 
-@@ -284,9 +287,11 @@ static int watchdog(void *dummy)
- 		interval = min_t(unsigned long, interval, timeout);
- 		t = hung_timeout_jiffies(hung_last_checked, interval);
- 		if (t <= 0) {
-+			warnings = sysctl_hung_task_warnings;
- 			if (!atomic_xchg(&reset_hung_task, 0) &&
- 			    !hung_detector_suspended)
--				check_hung_uninterruptible_tasks(timeout);
-+				check_hung_uninterruptible_tasks(timeout,
-+								 &warnings);
- 			hung_last_checked = jiffies;
- 			continue;
- 		}
--- 
-1.8.3.1
-
+Regards,
+Parshuram Thombare
