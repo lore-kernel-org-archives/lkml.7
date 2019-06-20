@@ -2,101 +2,127 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B073C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5930FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAFE206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055189;
-	bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PtRa6+i8SyuqsPccKX6EYca/oGlJLeMZ9lmZ+5+9zEtn3XCb471SriSWe84G6u7dN
-	 43nN5rII4nbyNhVQiBIPSmewLiTqxt58wlvHZ9uEnzZEORO9JMHUUohPaa/EnW+FyB
-	 Udrrf1TOLnWLGyWjH/oJy5ZTgoV8e9pWtC6yZplE=
+	by mail.kernel.org (Postfix) with ESMTP id 3829320665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h1+pfyX4";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="fyIrHi0k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727361AbfFTS01 (ORCPT
+        id S1728123AbfFTS0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:26:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60394 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726804AbfFTSGR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Jun 2019 14:26:31 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35086 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726721AbfFTSGH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C715A60CEC; Thu, 20 Jun 2019 18:06:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561053965;
+        bh=xqFrw2iEUDGfrGwNGjX8WKf97VfRNbSs18+LFwCkO+4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=h1+pfyX4F+q6dq4Nh7cgxgSLcie8FSD23ddcS7kFr3JlAl8rSfvpZYyohlptGR8+U
+         DmPFKU4RFQnEvi5ilanp3qUJ+Or9OEWaN4I2ZZPfhnc0w+FXdEzKR/AsQoxGTLBpid
+         GxT2zeaJUtXYYPLmj5HFTBWv1XSo5Is/bacUcc1A=
+Received: from [192.168.1.100] (unknown [157.45.245.98])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D4B09214AF;
-        Thu, 20 Jun 2019 18:06:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053976;
-        bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EpAdyF6A6kCHAw5k3C9ZxT7TuiAYC4sZ4QLu1bfuERazI28lK0CvaFQGjk1/tEzbI
-         U/Y3DyWyqfGNAdzVY3Yf4KZwfyA0OVgSm04BdZkFzrauIOahztSYCtcSQ1O8Xcu/9Y
-         SmaFEmKhq7zPOFpiQP3IAeTmeeGr4UzYwWhC0NlE=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 093/117] lapb: fixed leak of control-blocks.
-Date:   Thu, 20 Jun 2019 19:57:07 +0200
-Message-Id: <20190620174357.550517090@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
-References: <20190620174351.964339809@linuxfoundation.org>
-User-Agent: quilt/0.66
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CAD5860ACE;
+        Thu, 20 Jun 2019 18:05:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561053963;
+        bh=xqFrw2iEUDGfrGwNGjX8WKf97VfRNbSs18+LFwCkO+4=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=fyIrHi0kTh7H+/xl5q7YA4c1k1jZjRQbz+F2RzehTRGhfvuQ2drjAd1ngvj+nt4k2
+         9PulOeBcArJzpAwwS3mNYhND6rZcuzHwtvppHvqqyto41vw29dwJnOKsKt02AD6Yla
+         kgVpN1slAGcfy/IPYu7CbVk2waSwQJ0fdxDVVoy4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CAD5860ACE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH 1/2] coresight: Set affinity to invalid for missing CPU
+ phandle
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <49d6554536047b9f5526c4ea33990b7c904673d3.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <20190620173908.GA5581@xps15>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <64f67948-3b7f-422b-0ab7-2393b6083514@codeaurora.org>
+Date:   Thu, 20 Jun 2019 23:35:53 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190620173908.GA5581@xps15>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+Hi Mathieu,
 
-[ Upstream commit 6be8e297f9bcea666ea85ac7a6cd9d52d6deaf92 ]
+Thanks for the review comments.
 
-lapb_register calls lapb_create_cb, which initializes the control-
-block's ref-count to one, and __lapb_insert_cb, which increments it when
-adding the new block to the list of blocks.
+On 6/20/2019 11:09 PM, Mathieu Poirier wrote:
+> Hi Sai,
+> 
+> On Thu, Jun 20, 2019 at 07:15:46PM +0530, Sai Prakash Ranjan wrote:
+>> Affinity defaults to CPU0 in case of missing CPU phandle
+>> and this leads to crashes in some cases because of such
+>> wrong assumption. Fix this by returning -ENODEV in
+>> coresight platform for such cases and then handle it
+>> in the coresight drivers.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-platform.c | 10 ++++++----
+>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+>> index 3c5ceda8db24..b1ea60c210e1 100644
+>> --- a/drivers/hwtracing/coresight/coresight-platform.c
+>> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+>> @@ -160,15 +160,17 @@ static int of_coresight_get_cpu(struct device *dev)
+>>   
+>>   	if (!dev->of_node)
+>>   		return 0;
+> 
+> An error should be returned if the above condition is true.
+> 
 
-lapb_unregister calls __lapb_remove_cb, which decrements the ref-count
-when removing control-block from the list of blocks, and calls lapb_put
-itself to decrement the ref-count before returning.
+Will do it, thanks.
 
-However, lapb_unregister also calls __lapb_devtostruct to look up the
-right control-block for the given net_device, and __lapb_devtostruct
-also bumps the ref-count, which means that when lapb_unregister returns
-the ref-count is still 1 and the control-block is leaked.
+>> +
+> 
+> Spurious newline
+> 
 
-Call lapb_put after __lapb_devtostruct to fix leak.
+This was on purpose, the code looks much cleaner.
 
-Reported-by: syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/lapb/lapb_iface.c |    1 +
- 1 file changed, 1 insertion(+)
+-Sai
 
---- a/net/lapb/lapb_iface.c
-+++ b/net/lapb/lapb_iface.c
-@@ -182,6 +182,7 @@ int lapb_unregister(struct net_device *d
- 	lapb = __lapb_devtostruct(dev);
- 	if (!lapb)
- 		goto out;
-+	lapb_put(lapb);
- 
- 	lapb_stop_t1timer(lapb);
- 	lapb_stop_t2timer(lapb);
-
-
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
