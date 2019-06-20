@@ -6,125 +6,150 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
 	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBE39C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:11:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E285AC4646B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:14:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE277208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:11:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B123A208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:14:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="tFCxgIz0"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="RF6v98lS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731098AbfFTBLe (ORCPT
+        id S1731120AbfFTBOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:11:34 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:33501 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730991AbfFTBLe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:11:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TkKs2dKLz9s7h;
-        Thu, 20 Jun 2019 11:11:29 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560993090;
-        bh=CNbxJiYq6C75CwfdocCTPBs4JFfe36r1O41S28vRkEs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=tFCxgIz0cyASNgeqVJqGmjTW3bsRbj1lxGg4rvSL6wMTEUAQCQtGeqNUSdv/xCoPK
-         5dvfu9iiYcBYf3Jrru1SOnEb0OaGYI6vfjxdmz4ukHjX+H1PjAXpPwtliDkb/anu18
-         xDizcI2g3YGmHVT9yrt2aLrRvw+8TR2rCbdkqPcgEUYpm78E/wfk/LaPBoXlfBsdno
-         GLZGZSwAjizH5QKNiluNJR1KtxKSGHfrNXCULXu+q0eBmK3vivxW8/RozKxOoK5YED
-         CsIHLNbC6nvTOJXs3JJ8ymoRgR4yiCdyOv2PR2Oa3JoRteHRrOKciRR9jtuBkpS1uA
-         mTqv4N84YjMLQ==
-Date:   Thu, 20 Jun 2019 11:11:28 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jonathan Corbet <corbet@lwn.net>, Greg KH <greg@kroah.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Subject: linux-next: manual merge of the jc_docs tree with the
- char-misc.current tree
-Message-ID: <20190620111128.7599af5a@canb.auug.org.au>
+        Wed, 19 Jun 2019 21:14:41 -0400
+Received: from ushosting.nmnhosting.com ([66.55.73.32]:42702 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730815AbfFTBOk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 21:14:40 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 69B9C2DC005B;
+        Wed, 19 Jun 2019 21:14:36 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1560993276;
+        bh=BpBuDfxeeGKTRli558OgjbbAAYwjKMdDNWO/akOC738=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=RF6v98lSsz7mEeMkL6nYM26bVYiaYsE5nhDTdpSgsSqeX/3zMCjAr4TqNQp9WIfv/
+         86CC6Ye1PnKU2tVcKzoHi6p0ci6zxBOVgFO9n72C5iQz9+SB6K7/0nVDP/VyFCPlaY
+         FLUcpUGGdTZdApXoRPpCqgMDcOcjY474Zn0XLgaGITdvorfwpUXmZDgQ6EAv2KEeeH
+         hsDlwa55rOWcmyBEG1gJiqQFoKwd4vtesVH2ev+sFIs/P0K4fN8rAnPULx/aKlaW55
+         Xog4yR0aT8p5wNoiqCRJwH2iN+YfSZ4AvcdM+Q0rEd7JLhL6sB0ezZLT7TOwH1n+XN
+         ppi/I6nDq4fWTCfaHlyIa6RXgMwHcCEeDMWqSuoySrahrXRNJvfvsk6ZLNMGqTQCf6
+         /Gw1UfiMqZwrY6h2/n+W7N7emw8D5oHjLS525cWVe0UaUk81hSiabY8yyHmHomHnoM
+         AUP20jID/hZwCVjTNxW4G4AF+ve+rXXutokOzrxmk8TxeEt2H6fZk0j+hMnp6xmgCo
+         ztA+5Y0Fln5ESkL9ZxaDLBIEGtIwITdDACn777F9Dh8IZerMjjbxrfAodkiKBcMQdq
+         w+lJnV2rMVuDBufsyxzwpAWwXFQZuqAV7brmmdY/sAB+Gtg/np4gGpFCjb5kY2UnjQ
+         glkSIphnG+gk/TjO0eDg5rys=
+Received: from adsilva.ozlabs.ibm.com (static-82-10.transact.net.au [122.99.82.10] (may be forged))
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x5K1E6f4079317
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NO);
+        Thu, 20 Jun 2019 11:14:22 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+Message-ID: <9456ca2a4ae827635bb6d864e5095a9e51f2ac45.camel@d-silva.org>
+Subject: Re: [PATCH v3 0/7] Hexdump Enhancements
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     Joe Perches <joe@perches.com>
+Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Karsten Keil <isdn@linux-pingi.de>,
+        Jassi Brar <jassisinghbrar@gmail.com>,
+        Tom Lendacky <thomas.lendacky@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Jose Abreu <Jose.Abreu@synopsys.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Date:   Thu, 20 Jun 2019 11:14:06 +1000
+In-Reply-To: <d8316be322f33ea67640ff83f2248fe433078407.camel@perches.com>
+References: <20190617020430.8708-1-alastair@au1.ibm.com>
+         <9a000734375c0801fc16b71f4be1235f9b857772.camel@perches.com>
+         <c68cb819257f251cbb66f8998a95c31cebe2d72e.camel@d-silva.org>
+         <d8316be322f33ea67640ff83f2248fe433078407.camel@perches.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/v4hr7Ndm5uVt_YBbpG.wv/o"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Thu, 20 Jun 2019 11:14:32 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/v4hr7Ndm5uVt_YBbpG.wv/o
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, 2019-06-19 at 17:35 -0700, Joe Perches wrote:
+> On Thu, 2019-06-20 at 09:15 +1000, Alastair D'Silva wrote:
+> > On Wed, 2019-06-19 at 09:31 -0700, Joe Perches wrote:
+> > > On Mon, 2019-06-17 at 12:04 +1000, Alastair D'Silva wrote:
+> > > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > > 
+> > > > Apologies for the large CC list, it's a heads up for those
+> > > > responsible
+> > > > for subsystems where a prototype change in generic code causes
+> > > > a
+> > > > change
+> > > > in those subsystems.
+> > > > 
+> > > > This series enhances hexdump.
+> > > 
+> > > Still not a fan of these patches.
+> > 
+> > I'm afraid there's not too much action I can take on that, I'm
+> > happy to
+> > address specific issues though.
+> > 
+> > > > These improve the readability of the dumped data in certain
+> > > > situations
+> > > > (eg. wide terminals are available, many lines of empty bytes
+> > > > exist,
+> > > > etc).
+> 
+> I think it's generally overkill for the desired uses.
 
-Hi all,
+I understand where you're coming from, however, these patches make it a
+lot easier to work with large chucks of binary data. I think it makes
+more sense to have these patches upstream, even though committed code
+may not necessarily have all the features enabled, as it means that
+devs won't have to apply out-of-tree patches during development to make
+larger dumps manageable.
 
-Today's linux-next merge of the jc_docs tree got a conflict in:
+> 
+> > > Changing hexdump's last argument from bool to int is odd.
+> > > 
+> > 
+> > Think of it as replacing a single boolean with many booleans.
+> 
+> I understand it.  It's odd.
+> 
+> I would rather not have a mixture of true, false, and apparently
+> random collections of bitfields like 0xd or 0b1011 or their
+> equivalent or'd defines.
+> 
 
-  Documentation/fb/fbcon.rst
+Where's the mixture? What would you propose instead?
 
-between commit:
+-- 
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva    
+Twitter: @EvilDeece
+blog: http://alastair.d-silva.org
 
-  fce677d7e8f0 ("docs: fb: Add TER16x32 to the available font names")
 
-from the char-misc.current tree and commit:
-
-  ab42b818954c ("docs: fb: convert docs to ReST and rename to *.rst")
-
-from the jc_docs tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc Documentation/fb/fbcon.rst
-index 5a865437b33f,cfb9f7c38f18..000000000000
---- a/Documentation/fb/fbcon.rst
-+++ b/Documentation/fb/fbcon.rst
-@@@ -77,12 -80,12 +80,12 @@@ C. Boot option
- =20
-  1. fbcon=3Dfont:<name>
- =20
--         Select the initial font to use. The value 'name' can be any of the
--         compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
--         PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, TER16x32, VGA8x16, VGA8=
-x8.
-+ 	Select the initial font to use. The value 'name' can be any of the
-+ 	compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
- -	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
-++	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, TER16x32, VGA8x16, VGA8x8.
- =20
-  	Note, not all drivers can handle font with widths not divisible by 8,
--         such as vga16fb.
-+ 	such as vga16fb.
- =20
-  2. fbcon=3Dscrollback:<value>[k]
- =20
-
---Sig_/v4hr7Ndm5uVt_YBbpG.wv/o
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0K3UAACgkQAVBC80lX
-0GyZSAf/ejm/xy2L7QtLuyvIeP+EA7tnZomLg/ClcB+ensLAMtiCrmgwfNoJ2Y3D
-ls1SneS4rFxLtzBcdgt7AR7efBEXAzU+dJKMZ//AM989PxqCqNwp0V9SkfM0oab/
-6lne7+lVQ0jlGGpLv8Nayl8vu1gY8i5ImgIvAZvEmbHqyOryncVt6V0/lOGDVgQn
-oErbtyY/6KA1q1vvVLCuQP790uvg1BMhlluw5cZcmgiaSp5IFImkI5ooSGWLR3rK
-q7MstizHQoEtIAUXudNOao+s/VKXo0rrtvORoAPRCEvIU1xLhcgpUuGTz/HHk4fM
-MBh25L/UypEEQY+lcV8UtJMWMFpdNg==
-=oxjW
------END PGP SIGNATURE-----
-
---Sig_/v4hr7Ndm5uVt_YBbpG.wv/o--
