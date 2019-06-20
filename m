@@ -2,91 +2,102 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 140A7C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF17C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8B0520B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BBB5D20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726370AbfFTGCm (ORCPT
+        id S1726482AbfFTGDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 02:02:42 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:38376 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfFTGCm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 02:02:42 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hdq9X-0008UB-3U; Thu, 20 Jun 2019 14:02:31 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hdq9N-0006tl-Hn; Thu, 20 Jun 2019 14:02:21 +0800
-Date:   Thu, 20 Jun 2019 14:02:21 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Imre Deak <imre.deak@intel.com>
-Subject: Re: [PATCH v4 1/4] lib/scatterlist: Fix mapping iterator when
- sg->offset is greater than PAGE_SIZE
-Message-ID: <20190620060221.q4pbsqzsza3pxs42@gondor.apana.org.au>
-References: <cover.1560805614.git.christophe.leroy@c-s.fr>
- <f28c6b0e2f9510f42ca934f19c4315084e668c21.1560805614.git.christophe.leroy@c-s.fr>
+        Thu, 20 Jun 2019 02:03:05 -0400
+Received: from mslow2.mail.gandi.net ([217.70.178.242]:46776 "EHLO
+        mslow2.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfFTGDF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 02:03:05 -0400
+Received: from relay1-d.mail.gandi.net (unknown [217.70.183.193])
+        by mslow2.mail.gandi.net (Postfix) with ESMTP id AADE43A47E6;
+        Thu, 20 Jun 2019 05:08:50 +0000 (UTC)
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 08AE424000A;
+        Thu, 20 Jun 2019 05:08:33 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH RESEND 4/8] x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
+Date:   Thu, 20 Jun 2019 01:03:24 -0400
+Message-Id: <20190620050328.8942-5-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
+References: <20190620050328.8942-1-alex@ghiti.fr>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f28c6b0e2f9510f42ca934f19c4315084e668c21.1560805614.git.christophe.leroy@c-s.fr>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 09:15:02PM +0000, Christophe Leroy wrote:
-> All mapping iterator logic is based on the assumption that sg->offset
-> is always lower than PAGE_SIZE.
-> 
-> But there are situations where sg->offset is such that the SG item
-> is on the second page. In that case sg_copy_to_buffer() fails
-> properly copying the data into the buffer. One of the reason is
-> that the data will be outside the kmapped area used to access that
-> data.
-> 
-> This patch fixes the issue by adjusting the mapping iterator
-> offset and pgoffset fields such that offset is always lower than
-> PAGE_SIZE.
-> 
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Fixes: 4225fc8555a9 ("lib/scatterlist: use page iterator in the mapping iterator")
-> Cc: stable@vger.kernel.org
-> ---
->  lib/scatterlist.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
+In case of mmap failure in top-down mode, there is no need to go through
+the whole address space again for the bottom-up fallback: the goal of this
+fallback is to find, as a last resort, space between the top-down mmap base
+and the stack, which is the only place not covered by the top-down mmap.
 
-Good catch.
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/x86/mm/hugetlbpage.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-> @@ -686,7 +686,12 @@ static bool sg_miter_get_next_page(struct sg_mapping_iter *miter)
->  		sg = miter->piter.sg;
->  		pgoffset = miter->piter.sg_pgoffset;
->  
-> -		miter->__offset = pgoffset ? 0 : sg->offset;
-> +		offset = pgoffset ? 0 : sg->offset;
-> +		while (offset >= PAGE_SIZE) {
-> +			miter->piter.sg_pgoffset = ++pgoffset;
-> +			offset -= PAGE_SIZE;
-> +		}
-
-How about
-
-	miter->piter.sg_pgoffset += offset >> PAGE_SHIFT;
-	offset &= PAGE_SIZE - 1;
-
-Thanks,
+diff --git a/arch/x86/mm/hugetlbpage.c b/arch/x86/mm/hugetlbpage.c
+index fab095362c50..4b90339aef50 100644
+--- a/arch/x86/mm/hugetlbpage.c
++++ b/arch/x86/mm/hugetlbpage.c
+@@ -106,11 +106,12 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
+ {
+ 	struct hstate *h = hstate_file(file);
+ 	struct vm_unmapped_area_info info;
++	unsigned long mmap_base = get_mmap_base(0);
+ 
+ 	info.flags = VM_UNMAPPED_AREA_TOPDOWN;
+ 	info.length = len;
+ 	info.low_limit = PAGE_SIZE;
+-	info.high_limit = get_mmap_base(0);
++	info.high_limit = mmap_base;
+ 
+ 	/*
+ 	 * If hint address is above DEFAULT_MAP_WINDOW, look for unmapped area
+@@ -132,7 +133,7 @@ static unsigned long hugetlb_get_unmapped_area_topdown(struct file *file,
+ 	if (addr & ~PAGE_MASK) {
+ 		VM_BUG_ON(addr != -ENOMEM);
+ 		info.flags = 0;
+-		info.low_limit = TASK_UNMAPPED_BASE;
++		info.low_limit = mmap_base;
+ 		info.high_limit = TASK_SIZE_LOW;
+ 		addr = vm_unmapped_area(&info);
+ 	}
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.20.1
+
