@@ -2,202 +2,155 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46109C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACBAC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B2F82084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E8C92070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="osV60pJe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4lqWYrR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726931AbfFTVK2 (ORCPT
+        id S1726969AbfFTVKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:10:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:54854 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726807AbfFTVKZ (ORCPT
+        Thu, 20 Jun 2019 17:10:35 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37689 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfFTVKQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:10:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=5PW4XZmchu+Ac4QXAmqxzBgwKjq7Qa2xaIQiv21ft7E=; b=osV60pJeOxlnA0nBYxb6H6iEL
-        QD+A5Xyszd79qwuxf/BTivUsNmY8boZjaDaojawGFTn56QfsDcLcdyAhLsY5XIPn8nfCcfugeBg8W
-        7y8pcyulw47UhinYfwmbkCsgNiwcHiIwLrYnrKjg9vm09ZFG/8+0Zn6QrdOu1tEsUttoYZJWSlD9e
-        XvHhEwbUJaJWy/vSiVKRA20OnCstqh9Tf7xMUT1EBzNSjUjftAVGuh47FqUU0pVXOWT1RKItIPd1U
-        tEhN84+rL0k8lRKJpJ9OUjV+9Y7ha4UszeNIYnFUnUbB/crgM00uKs8SO3Ocyc2qjGFOO6Y5I/Iyx
-        gkbvWlTbQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he4K5-0001NI-OL; Thu, 20 Jun 2019 21:10:22 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B6C4C2021E583; Thu, 20 Jun 2019 23:10:19 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 23:10:19 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        frederic@kernel.org, tglx@linutronix.de
-Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
- lockdep complaint
-Message-ID: <20190620211019.GA3436@hirez.programming.kicks-ass.net>
-References: <20190619181903.GA14233@linux.ibm.com>
- <20190620121032.GU3436@hirez.programming.kicks-ass.net>
- <20190620160118.GQ26519@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620160118.GQ26519@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Jun 2019 17:10:16 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bh12so1887045plb.4;
+        Thu, 20 Jun 2019 14:10:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=yUxHr0hNOMB2xE/tt9UalgG6ujmd92ZRH1krBwmSmgY=;
+        b=E4lqWYrRkM6KJNjQ2DdXr2dcOiHpEGX2YRmNRNuIGzZisK03dVPjlXa+lAsoEPO5Hh
+         Gqvhzx4fd8Y51hbboeQtdjvM2X0V6OQUtzOkYN7m29YNGNF8A64XTvGme42xbGtwE/3/
+         16okdMQxaLDPooy0IqkFhpvK1aehYqCG82uUQB1ehc56NBXLDF9U28CDTFhoEZo0B4XW
+         LlMUSMn3cQ93elqet52/RzUkirP2EUvoJvYFxRVLpQ6eZNY3LFm0qON76XiihtegDSw7
+         y81apneBMySgv734LUTJlCnNOwzbOuyVT7od+80xEcdU+dpNY7x+DF50O+ckJG/7Jzpt
+         FgAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=yUxHr0hNOMB2xE/tt9UalgG6ujmd92ZRH1krBwmSmgY=;
+        b=BM3k/y3JLZ7CHs2FjT1EEjIWFDNluzSyXZN7uPlSNUZcB7krEloLCo6yPYFT+tdJmh
+         36iQzavFJTWrQi+VXY7H5JmrUt+daMI26AGb8Ixg2Cfooy8BE8EuPUtG4P8GJZTWOLYa
+         trpr6bicEm47rpp+VWYsBK40BiK+O0Xs33IUGMS5+6K0GB7OYMZCAiSr1JqOQclWZJWB
+         P2kfkuYuHHATSz/gxmw4P4PU7w8pAXOpGuJeIfKBJPq4qMHw4lfUVnJIJ2IMYDXpT2ZP
+         Xnsxi6jiPDQeDVbUr6hE4FGlFK3VAt+/6Y19Yge5hNTILpKI2nAppYAEwWOMUu0EgFjw
+         WFVA==
+X-Gm-Message-State: APjAAAX+vvptjLfTkZ3XzlGVztCkvsLUf8ysoVCUcSZJ8ryX0blBMkNX
+        +tI2lMZ0Z7P8ympSp8QfQiiZRBfI6As=
+X-Google-Smtp-Source: APXvYqweQXsePQOeD1QPqsLfAMJ2XNXS6TyEIzqv76S2fzeWoPA1Sn43mDciVODO5YNLQLkKVML5NQ==
+X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr78619023plb.114.1561065015001;
+        Thu, 20 Jun 2019 14:10:15 -0700 (PDT)
+Received: from stbsrv-and-3.and.broadcom.com ([192.19.231.250])
+        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 14:10:14 -0700 (PDT)
+From:   Al Cooper <alcooperx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
+        Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 4/6] usb: bdc: Fix bug causing crash after multiple disconnects
+Date:   Thu, 20 Jun 2019 17:09:49 -0400
+Message-Id: <1561064991-16874-5-git-send-email-alcooperx@gmail.com>
+X-Mailer: git-send-email 1.9.0.138.g2de3478
+In-Reply-To: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
+References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 09:01:18AM -0700, Paul E. McKenney wrote:
+Multiple connects/disconnects can cause a crash on the second
+disconnect. The driver had a problem where it would try to send
+endpoint commands after it was disconnected which is not allowed
+by the hardware. The fix is to only allow the endpoint commands
+when the endpoint is connected. This will also fix issues that
+showed up when using configfs to create gadgets.
 
-> > > +#define TICK_SCHED_REMOTE_OFFLINE	0
-> > > +#define TICK_SCHED_REMOTE_RUNNING	1
-> > > +#define TICK_SCHED_REMOTE_OFFLINING	2
-> > 
-> > That seems a daft set of values; consider { RUNNING, OFFLINING, OFFLINE }
-> > and see below.
-> 
-> As in make it an enum?  I could do that.
+Signed-off-by: Al Cooper <alcooperx@gmail.com>
+---
+ drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
+ drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
+ 2 files changed, 14 insertions(+), 6 deletions(-)
 
-Enum or define, I don't much care, but the 'natural' ordering of the
-states is either: running -> offlining -> offline, or the other way
-around, the given order in the patch just didn't make sense.
-
-The one with running=0 just seems to work out nicer.
-
-> > > +
-> > > +// State diagram for ->state:
-> > > +//
-> > > +//
-> > > +//      +----->OFFLINE--------------------------+
-> > > +//      |                                       |
-> > > +//      |                                       |
-> > > +//      |                                       | sched_tick_start()
-> > > +//      | sched_tick_remote()                   |
-> > > +//      |                                       |
-> > > +//      |                                       V
-> > > +//      |                        +---------->RUNNING
-> > > +//      |                        |              |
-> > > +//      |                        |              |
-> > > +//      |                        |              |
-> > > +//      |     sched_tick_start() |              | sched_tick_stop()
-> > > +//      |                        |              |
-> > > +//      |                        |              |
-> > > +//      |                        |              |
-> > > +//      +--------------------OFFLINING<---------+
-> > > +//
-> > > +//
-> > > +// Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
-> > > +// and sched_tick_start() are happy to leave the state in RUNNING.
-
-> > Also, I find it harder to read that needed, maybe a little something
-> > like so:
-> > 
-> > /*
-> >  *              OFFLINE
-> >  *               |   ^
-> >  *               |   | tick_remote()
-> >  *               |   |
-> >  *               +--OFFLINING
-> >  *               |   ^
-> >  *  tick_start() |   | tick_stop()
-> >  *               v   |
-> >  *              RUNNING
-> >  */
-> 
-> As in remove the leading "sched_" from the function names?  (The names
-> were already there, so I left them be.)
-
-That was just me being lazy, the main part being getting the states in a
-linear order, instead of spread around a 2d grid.
-
-> > While not wrong, it seems overly complicated; can't we do something
-> > like:
-> > 
-> > tick:
-> 
-> As in sched_tick_remote(), right?
-> 
-> > 	state = atomic_read(->state);
-> > 	if (state) {
-> 
-> You sure you don't want "if (state != RUNNING)"?  But I guess you need
-> to understand that RUNNING==0 to understand the atomic_inc_not_zero().
-
-Right..
-
-> 
-> > 		WARN_ON_ONCE(state != OFFLINING);
-> > 		if (atomic_inc_not_zero(->state))
-> 
-> This assumes that there cannot be concurrent calls to sched_tick_remote(),
-> otherwise, you can end up with ->state==3.  Which is a situation that
-> my version does a WARN_ON_ONCE() for, so I guess the only difference is
-> that mine would be guaranteed to complain and yours would complain with
-> high probability.  So fair enough!
-
-I was assuming there was only a single work per CPU and there'd not be
-concurrency on this path.
-
-> > 			return;
-> > 	}
-> > 	queue_delayed_work();
-> > 
-> > 
-> > stop:
-> > 	/*
-> > 	 * This is hotplug; even without stop-machine, there cannot be
-> > 	 * concurrency on offlining specific CPUs.
-> > 	 */
-> > 	state = atomic_read(->state);
-> 
-> There cannot be a sched_tick_stop() or sched_tick_stop(), but there really
-> can be a sched_tick_remote() right here in the absence of stop-machine,
-> can't there?  Or am I missing something other than stop-machine that
-> prevents this?
-
-There can be a remote tick, indeed.
-
-> Now, you could argue that concurrency is safe: Either sched_tick_remote()
-> sees RUNNING and doesn't touch the value, or it sees offlining and
-> sched_tick_stop() makes no further changes,
-
-That was indeed the thinking.
-
-> but I am not sure that this qualifies as simpler...
-
-There is that I suppose. I think my initial version was a little more
-complicated, but after a few passes this happened :-)
-
-> > 	WARN_ON_ONCE(state != RUNNING);
-> > 	atomic_set(->state, OFFLINING);
-> 
-> Another option would be to use atomic_xchg() as below instead of the
-> atomic_read()/atomic_set() pair.  Would that work for you?
-
-Yes, that works I suppose. Is more expensive, but I don't think we
-particularly care about that here.
-
-> > start:
-> > 	state = atomic_xchg(->state, RUNNING);
-> > 	WARN_ON_ONCE(state == RUNNING);
-> > 	if (state == OFFLINE) {
-> > 		// ...
-> > 		queue_delayed_work();
-> > 	}
-> 
-> This one looks to be an improvement on mine regardless of the other two.
-
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index c794890d785b..15e28790142d 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -282,6 +282,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
+ 	 * in that case reinit is passed as 1
+ 	 */
+ 	if (reinit) {
++		int i;
+ 		/* Enable interrupts */
+ 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
+ 		temp |= BDC_GIE;
+@@ -291,6 +292,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
+ 		/* Initialize SRR to 0 */
+ 		memset(bdc->srr.sr_bds, 0,
+ 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
++		/* clear ep flags to avoid post disconnect stops/deconfigs */
++		for (i = 1; i < bdc->num_eps; ++i)
++			bdc->bdc_ep_array[i]->flags = 0;
+ 	} else {
+ 		/* One time initiaization only */
+ 		/* Enable status report function pointers */
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+index a4d9b5e1e50e..3f34d10939d0 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
+@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
+ 	}
+ 	bdc_dbg_bd_list(bdc, ep);
+ 	/* only for ep0: config ep is called for ep0 from connect event */
+-	ep->flags |= BDC_EP_ENABLED;
+ 	if (ep->ep_num == 1)
+ 		return ret;
+ 
+@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
+ 					__func__, ep->name, start_bdi, end_bdi);
+ 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
+ 						ep, (void *)ep->usb_ep.desc);
+-	/* Stop the ep to see where the HW is ? */
+-	ret = bdc_stop_ep(bdc, ep->ep_num);
+-	/* if there is an issue with stopping ep, then no need to go further */
+-	if (ret)
++	/* if still connected, stop the ep to see where the HW is ? */
++	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
++		ret = bdc_stop_ep(bdc, ep->ep_num);
++		/* if there is an issue, then no need to go further */
++		if (ret)
++			return 0;
++	} else
+ 		return 0;
+ 
+ 	/*
+@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
+ 		__func__, ep->name, ep->flags);
+ 
+ 	if (!(ep->flags & BDC_EP_ENABLED)) {
+-		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
++		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
++			dev_warn(bdc->dev, "%s is already disabled\n",
++				 ep->name);
+ 		return 0;
+ 	}
+ 	spin_lock_irqsave(&bdc->lock, flags);
+-- 
+1.9.0.138.g2de3478
 
