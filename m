@@ -2,122 +2,201 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FA3C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:53:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB0C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93FB2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:53:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AF642082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:54:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="j1CpcYtf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V44Esc+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726992AbfFTPx0 (ORCPT
+        id S1731946AbfFTPyF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:53:26 -0400
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:43977 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726551AbfFTPxZ (ORCPT
+        Thu, 20 Jun 2019 11:54:05 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46613 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfFTPyF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:53:25 -0400
-Received: from mail-vs1-f41.google.com (mail-vs1-f41.google.com [209.85.217.41]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id x5KFrGHk030031;
-        Fri, 21 Jun 2019 00:53:17 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5KFrGHk030031
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561045997;
-        bh=iRJq3YgZQ4ohWqePk0QYexJbrYZIPdBdV7a+31+PdK4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=j1CpcYtfBvu6WV0HQAf7UWje5sGgdX8McoDtxlRbQ1y16hatsDOxrCv7WWFH2pNmk
-         uvhoz9OA+WdTySjKYeHgEdjuptjiFsp4em4iucvN2ULme09e5uacExEFqdSBIJS9NR
-         iYHJDjYZbiuhx3ZVQQOOWveGV4pc2di9D3wboj4Hz5PRKlaW6mxeGCdXYa18XPGrcS
-         +dGtjQbgpyiON/7CXKNQnPCcxNa6Fb5LpppZKbamm6POFJ3kFXL+VzmNNokn5kIBwg
-         Io8rQ1vzLBAn7OWkkoJYZ0rfN4m1z72oJr9ay8bqLveOi992YKABvYf3+hyM44Wyvz
-         9dz2piX3mGcZw==
-X-Nifty-SrcIP: [209.85.217.41]
-Received: by mail-vs1-f41.google.com with SMTP id l125so1842354vsl.13;
-        Thu, 20 Jun 2019 08:53:17 -0700 (PDT)
-X-Gm-Message-State: APjAAAWQ0id5Lh/WK0NqTUdgB+70nt147BRgHK6z8oxRi5zF9CBO4oee
-        WBZosWClt8h4DmxYvihn2y/HZgFFYiapM+sDJUo=
-X-Google-Smtp-Source: APXvYqzbyx5DgFaWTMn2kEc9IUBJ7cyjY6GJDjnC+U5ytv2h589fRkPuqkkeUvyPT4+Tao8e5QAbk6qxrNUHl0GvVG8=
-X-Received: by 2002:a67:cd1a:: with SMTP id u26mr32261561vsl.155.1561045995988;
- Thu, 20 Jun 2019 08:53:15 -0700 (PDT)
+        Thu, 20 Jun 2019 11:54:05 -0400
+Received: by mail-wr1-f68.google.com with SMTP id n4so3521282wrw.13;
+        Thu, 20 Jun 2019 08:54:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=q2BZSgLwxymATwcz5mZeMXxgTAlopkINs/PMNefIvUU=;
+        b=V44Esc+XKQSOQjNnaxw2MmMTKdJaJKQDxq17rl0lBAneRfZN1f8XeL5yyjyQyrOSOa
+         FOfj2kwyNRS6HcW9PAPst6IjjKKkU3xxvrLkESfhmQZAPNvN6EkfJnAbjkY3PoX1v35I
+         0monHG7qNbVh+PckIESPcARdhbOow9+mlJxI6YjsIIqmz532OE0y3GP28s3Ogpzt4z6/
+         /n/pZlnjpYEvB1tlUCbEZawOHnoFxPDA+q5gLVoWxYEuh5iN8f5oZEqewN4ttmGHe0P3
+         XoQRJJUakLeW6GigtSRWsIH0o1zAzuVucDEgR2zJlzBu4kv0rX7gVRK2zoVE0SSAu+rV
+         +ajg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=q2BZSgLwxymATwcz5mZeMXxgTAlopkINs/PMNefIvUU=;
+        b=W1a5DR7QWla8dMqL7ZJkF2lwXYFaTo2zPESK+khtRq6oIn86dz/GmeM9mRifljfJsv
+         RQa1HcktTBD8+JRdR8yNqeVkxlLnYdD9Y9+2tusDRSSTFo3wUdAjb874ZnZ3lDu640OG
+         CJ4+lCgGh6/sTy+evNMbcfoMwjY5SoWze0bcGCd1CJ1gU9LGY24kMnFwkiZa4u897dWA
+         xPuvW3o7sx+lz3OZsmnszDdLUlh1cA8ymj7MLwMzHH88ouOxn6F/nXVF1aD91o37ndwn
+         xs3xy4BgQSV+iuGShBD/yHktxdmMO0MYFkBET8R1+L+nLBDo2uxppDNmGxxvzIVXspIP
+         iSYA==
+X-Gm-Message-State: APjAAAUhD40wkoY+aPoNRLkloVG9xDAF+PDl+F4gKy5dYgwoEw3SUYJ4
+        9WTMQXzWkPHLggu3tteHNCgr2Y9tdEU=
+X-Google-Smtp-Source: APXvYqwjinCWK/aSKbDmwODZdByqPtonNAHy81M6XwA7AeZJB8EfRvgjyd6heFibzYj9+zCcNldc5Q==
+X-Received: by 2002:adf:b1ca:: with SMTP id r10mr15094293wra.156.1561046042286;
+        Thu, 20 Jun 2019 08:54:02 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net. [86.58.52.202])
+        by smtp.gmail.com with ESMTPSA id o13sm34914608wra.92.2019.06.20.08.53.59
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 08:54:00 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com, megous@megous.com
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [linux-sunxi] [PATCH v7 0/6] Add support for Orange Pi 3
+Date:   Thu, 20 Jun 2019 17:53:58 +0200
+Message-ID: <2263144.KN5DhQ2VKD@jernej-laptop>
+In-Reply-To: <20190620134748.17866-1-megous@megous.com>
+References: <20190620134748.17866-1-megous@megous.com>
 MIME-Version: 1.0
-References: <20190617172829.164520-1-nhuck@google.com>
-In-Reply-To: <20190617172829.164520-1-nhuck@google.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 21 Jun 2019 00:52:40 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQnsx0tb4bWqLjxGjU5udXE8FsT+dC4_YCwwY=HpMUhgw@mail.gmail.com>
-Message-ID: <CAK7LNAQnsx0tb4bWqLjxGjU5udXE8FsT+dC4_YCwwY=HpMUhgw@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Remove unnecessary -Wno-unused-value
-To:     Nathan Huckleberry <nhuck@google.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 2:28 AM Nathan Huckleberry <nhuck@google.com> wrote:
->
-> This flag turns off several other warnings that would
-> be useful. Most notably -warn_unused_result is disabled.
-> All of the following warnings are currently disabled:
->
-> UnusedValue
-> |-UnusedComparison
->   |-warn_unused_comparison
-> |-UnusedResult
->   |-warn_unused_result
-> |-UnevaluatedExpression
->   |-PotentiallyEvaluatedExpression
->     |-warn_side_effects_typeid
->   |-warn_side_effects_unevaluated_context
-> |-warn_unused_expr
-> |-warn_unused_voidptr
-> |-warn_unused_container_subscript_expr
-> |-warn_unused_call
->
-> With this flag removed there are ~10 warnings.
-> Patches have been submitted for each of these warnings.
->
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
-> Cc: clang-built-linux@googlegroups.com
-> Link: https://github.com/ClangBuiltLinux/linux/issues/520
-> Signed-off-by: Nathan Huckleberry <nhuck@google.com>
-> ---
+Hi!
 
-Applied to linux-kbuild.
-Thanks!
+Dne =C4=8Detrtek, 20. junij 2019 ob 15:47:42 CEST je megous via linux-sunxi=
+=20
+napisal(a):
+> From: Ondrej Jirman <megous@megous.com>
+>=20
+> This series implements support for Xunlong Orange Pi 3 board.
+>=20
+> - ethernet support (patches 1-3)
+
+Correct me if I'm wrong, but patches 1-2 aren't strictly necessary for=20
+OrangePi 3, right? H6 DTSI already has emac node with dual compatible (H6 a=
+nd=20
+A64) and since OrangePi 3 uses gigabit ethernet, quirk introduced by patche=
+s=20
+1-2 are not needed.
+
+However, it is nice to have this 100 Mbit fix, because most STB DTS will ne=
+ed=20
+it.
+
+Best regards,
+Jernej
+
+> - HDMI support (patches 4-6)
+>=20
+> For some people, ethernet doesn't work after reboot (but works on cold
+> boot), when the stmmac driver is built into the kernel. It works when
+> the driver is built as a module. It's either some timing issue, or power
+> supply issue or a combination of both. Module build induces a power
+> cycling of the phy.
+>=20
+> I encourage people with this issue, to build the driver into the kernel,
+> and try to alter the reset timings for the phy in DTS or
+> startup-delay-us and report the findings.
+>=20
+>=20
+> Please take a look.
+>=20
+> thank you and regards,
+>   Ondrej Jirman
+>=20
+>=20
+> Changes in v7:
+> - dropped stored reference to connector_pdev as suggested by Jernej
+> - added forgotten dt-bindings reviewed-by tag
+>=20
+> Changes in v6:
+> - added dt-bindings reviewed-by tag
+> - fix wording in stmmac commit (as suggested by Sergei)
+>=20
+> Changes in v5:
+> - dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
+> - rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
+> - changed hdmi-connector's ddc-supply property to ddc-en-gpios
+>   (Rob Herring)
+>=20
+> Changes in v4:
+> - fix checkpatch warnings/style issues
+> - use enum in struct sunxi_desc_function for io_bias_cfg_variant
+> - collected acked-by's
+> - fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
+>   caused by missing conversion from has_io_bias_cfg struct member
+>   (I've kept the acked-by, because it's a trivial change, but feel free
+>   to object.) (reported by Martin A. on github)
+>   I did not have A80 pinctrl enabled for some reason, so I did not catch
+>   this sooner.
+> - dropped brcm firmware patch (was already applied)
+> - dropped the wifi dts patch (will re-send after H6 RTC gets merged,
+>   along with bluetooth support, in a separate series)
+>=20
+> Changes in v3:
+> - dropped already applied patches
+> - changed pinctrl I/O bias selection constants to enum and renamed
+> - added /omit-if-no-ref/ to mmc1_pins
+> - made mmc1_pins default pinconf for mmc1 in H6 dtsi
+> - move ddc-supply to HDMI connector node, updated patch descriptions,
+>   changed dt-bindings docs
+>=20
+> Changes in v2:
+> - added dt-bindings documentation for the board's compatible string
+>   (suggested by Clement)
+> - addressed checkpatch warnings and code formatting issues (on Maxime's
+>   suggestions)
+> - stmmac: dropped useless parenthesis, reworded description of the patch
+>   (suggested by Sergei)
+> - drop useles dev_info() about the selected io bias voltage
+> - docummented io voltage bias selection variant macros
+> - wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
+>   because wifi depends on H6 RTC support that's not merged yet (suggested
+>   by Clement)
+> - added missing signed-of-bys
+> - changed &usb2otg dr_mode to otg, and added a note about VBUS
+> - improved wording of HDMI driver's DDC power supply patch
+>=20
+> Icenowy Zheng (2):
+>   net: stmmac: sun8i: add support for Allwinner H6 EMAC
+>   net: stmmac: sun8i: force select external PHY when no internal one
+>=20
+> Ondrej Jirman (4):
+>   arm64: dts: allwinner: orange-pi-3: Enable ethernet
+>   dt-bindings: display: hdmi-connector: Support DDC bus enable
+>   drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
+>   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
+>=20
+>  .../display/connector/hdmi-connector.txt      |  1 +
+>  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 54 ++++++++++++--
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
+>  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
+>  5 files changed, 144 insertions(+), 4 deletions(-)
 
 
->  scripts/Makefile.extrawarn | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/scripts/Makefile.extrawarn b/scripts/Makefile.extrawarn
-> index 3ab8d1a303cd..b293246e48fe 100644
-> --- a/scripts/Makefile.extrawarn
-> +++ b/scripts/Makefile.extrawarn
-> @@ -68,7 +68,6 @@ else
->
->  ifdef CONFIG_CC_IS_CLANG
->  KBUILD_CFLAGS += -Wno-initializer-overrides
-> -KBUILD_CFLAGS += -Wno-unused-value
->  KBUILD_CFLAGS += -Wno-format
->  KBUILD_CFLAGS += -Wno-sign-compare
->  KBUILD_CFLAGS += -Wno-format-zero-length
-> --
-> 2.22.0.410.gd8fdbe21b5-goog
->
 
 
--- 
-Best Regards
-Masahiro Yamada
