@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2967C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AF25C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2D4021537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 092BA21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054430;
-	bh=OBMJoiPQaTvsnD2GfHaSCrxzr14ZOG3EferDDf6RBQE=;
+	s=default; t=1561054434;
+	bh=49GtFO9bkV4i66AG+0aAnRmWJ2ihM36M4UZfPiJZZHY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4YcP3VF7RCe/foh2R0qjKiUPMCr8N0qHoVm1a1a1nw1UXBhHgLuXDmd6Eio25kMd
-	 Poe0wjeE0n1vSGcyVO0z6gXfP4vLNNvYNnAUugEaY/+0NdsfeHkiRKgqjumPaJiWQr
-	 1lZkT3j08vLs1PQf8UL5bEFNYMeeYtHvcpiJxu20=
+	b=unEobt5oSp96GLMPjhcOqvrJ4xv+uoSB/s6T2gGs0Dk9K4bamDtLaYOiPQ8bkOeDG
+	 zkWjPBTFMS3iW9m6eQ5xV799p4HL+fQ3iDeSINPrtXh3De8hIzSN6ZkC7wRzWWd2KS
+	 TsQ4vzm/y2L+XNjo5LgBxVyivx9zal/FEou9+6Ts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfFTSNt (ORCPT
+        id S1729348AbfFTSNw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:13:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41818 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:13:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729016AbfFTSNr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:13:47 -0400
+        id S1729337AbfFTSNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:13:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1D7621537;
-        Thu, 20 Jun 2019 18:13:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9775C2082C;
+        Thu, 20 Jun 2019 18:13:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054426;
-        bh=OBMJoiPQaTvsnD2GfHaSCrxzr14ZOG3EferDDf6RBQE=;
+        s=default; t=1561054429;
+        bh=49GtFO9bkV4i66AG+0aAnRmWJ2ihM36M4UZfPiJZZHY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=w73ZQo8LJHFhnKWWhEf1/4iKU6X/4FQVOqXgvti1W4J1CrO/TIspA6cMv2d8mprkD
-         JYAwbzmzgqvNgETlTkAlkfXFhk+Cb4XH3Y+BNC7BPBI5io/jgadgN2JjtgQbHTpcvN
-         NMX/+KD93wcrl7N4MlEnGYDuM4cpaORFXvPwcsZc=
+        b=vsFrEHrgIOcl6P163NdG573O23cJpQ3YEobgWXhAtMiT/TMczm89XH82hHHjTXMiU
+         PuzGFBv2hpXtsE8ahmMKKzkYSM/A6rvT5up1nWqPRH+TfiAK5KOeDYrdNbQKqnezno
+         dL6QO0eSXVouZ1MmP8iccPOg9C8JhhSzj2rRksZk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chris Mi <chrism@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Vlad Buslov <vladbu@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 25/98] net/mlx5e: Add ndo_set_feature for uplink representor
-Date:   Thu, 20 Jun 2019 19:56:52 +0200
-Message-Id: <20190620174350.308579831@linuxfoundation.org>
+        stable@vger.kernel.org, Alexander Petrovskiy <alexpe@mellanox.com>,
+        Jiri Pirko <jiri@mellanox.com>,
+        Ido Schimmel <idosch@mellanox.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 26/98] mlxsw: spectrum_flower: Fix TOS matching
+Date:   Thu, 20 Jun 2019 19:56:53 +0200
+Message-Id: <20190620174350.342488014@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -61,82 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Mi <chrism@mellanox.com>
+From: Jiri Pirko <jiri@mellanox.com>
 
-After we have a dedicated uplink representor, the new netdev ops
-doesn't support ndo_set_feature. Because of that, we can't change
-some features, eg. rxvlan. Now add it back.
+The TOS value was not extracted correctly. Fix it.
 
-In this patch, I also do a cleanup for the features flag handling,
-eg. remove duplicate NETIF_F_HW_TC flag setting.
-
-Fixes: aec002f6f82c ("net/mlx5e: Uninstantiate esw manager vport netdev on switchdev mode")
-Signed-off-by: Chris Mi <chrism@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Reviewed-by: Vlad Buslov <vladbu@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Fixes: 87996f91f739 ("mlxsw: spectrum_flower: Add support for ip tos")
+Reported-by: Alexander Petrovskiy <alexpe@mellanox.com>
+Signed-off-by: Jiri Pirko <jiri@mellanox.com>
+Signed-off-by: Ido Schimmel <idosch@mellanox.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en.h      |    1 +
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    3 +--
- drivers/net/ethernet/mellanox/mlx5/core/en_rep.c  |   10 ++++++----
- 3 files changed, 8 insertions(+), 6 deletions(-)
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en.h
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en.h
-@@ -1059,6 +1059,7 @@ void mlx5e_del_vxlan_port(struct net_dev
- netdev_features_t mlx5e_features_check(struct sk_buff *skb,
- 				       struct net_device *netdev,
- 				       netdev_features_t features);
-+int mlx5e_set_features(struct net_device *netdev, netdev_features_t features);
- #ifdef CONFIG_MLX5_ESWITCH
- int mlx5e_set_vf_mac(struct net_device *dev, int vf, u8 *mac);
- int mlx5e_set_vf_rate(struct net_device *dev, int vf, int min_tx_rate, int max_tx_rate);
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -3698,8 +3698,7 @@ static int mlx5e_handle_feature(struct n
+--- a/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
++++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum_flower.c
+@@ -247,8 +247,8 @@ static int mlxsw_sp_flower_parse_ip(stru
+ 				       match.mask->tos & 0x3);
+ 
+ 	mlxsw_sp_acl_rulei_keymask_u32(rulei, MLXSW_AFK_ELEMENT_IP_DSCP,
+-				       match.key->tos >> 6,
+-				       match.mask->tos >> 6);
++				       match.key->tos >> 2,
++				       match.mask->tos >> 2);
+ 
  	return 0;
  }
- 
--static int mlx5e_set_features(struct net_device *netdev,
--			      netdev_features_t features)
-+int mlx5e_set_features(struct net_device *netdev, netdev_features_t features)
- {
- 	netdev_features_t oper_features = netdev->features;
- 	int err = 0;
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_rep.c
-@@ -1350,6 +1350,7 @@ static const struct net_device_ops mlx5e
- 	.ndo_get_vf_stats        = mlx5e_get_vf_stats,
- 	.ndo_set_vf_vlan         = mlx5e_uplink_rep_set_vf_vlan,
- 	.ndo_get_port_parent_id	 = mlx5e_rep_get_port_parent_id,
-+	.ndo_set_features        = mlx5e_set_features,
- };
- 
- bool mlx5e_eswitch_rep(struct net_device *netdev)
-@@ -1423,10 +1424,9 @@ static void mlx5e_build_rep_netdev(struc
- 
- 	netdev->watchdog_timeo    = 15 * HZ;
- 
-+	netdev->features       |= NETIF_F_NETNS_LOCAL;
- 
--	netdev->features	 |= NETIF_F_HW_TC | NETIF_F_NETNS_LOCAL;
--	netdev->hw_features      |= NETIF_F_HW_TC;
--
-+	netdev->hw_features    |= NETIF_F_HW_TC;
- 	netdev->hw_features    |= NETIF_F_SG;
- 	netdev->hw_features    |= NETIF_F_IP_CSUM;
- 	netdev->hw_features    |= NETIF_F_IPV6_CSUM;
-@@ -1435,7 +1435,9 @@ static void mlx5e_build_rep_netdev(struc
- 	netdev->hw_features    |= NETIF_F_TSO6;
- 	netdev->hw_features    |= NETIF_F_RXCSUM;
- 
--	if (rep->vport != MLX5_VPORT_UPLINK)
-+	if (rep->vport == MLX5_VPORT_UPLINK)
-+		netdev->hw_features |= NETIF_F_HW_VLAN_CTAG_RX;
-+	else
- 		netdev->features |= NETIF_F_VLAN_CHALLENGED;
- 
- 	netdev->features |= netdev->hw_features;
 
 
