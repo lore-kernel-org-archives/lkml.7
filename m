@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88FC9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D05C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5717C2166E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98B1F2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054278;
-	bh=4fXlYpDtVwzR2XnaWuS2EBV4dzux4eUOf4rpqXy2GZA=;
+	s=default; t=1561054281;
+	bh=bvDOhLS2kF6GV1MDOs5xagA3VZMecFnAsJu3rPT1kOE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HpRA1yFPQBGoBk/3OBEabj9d29wW0WHlXJUZN2nBwUTIzqsrPYAFHu+PfsnhbU7CX
-	 ss8JxdSPjh6Er1EOCW+4b2zdjhSu8rroeVlOmNvJ4PkYIT/Wpm8mpLbMOkM+vA7CR0
-	 PFZzt3LVMNKNo0YKvJsj6jF307wuaCY6Byb/VVM0=
+	b=jujonHr8HVCDdk/PcwzYC8CWImzB+K/x7dC8fG7MarxlGK/3GktTR7T1cmon/qODu
+	 d5zfSMWZd6rjwY1En2gWevLpcRHTYq7LV+mxzIfAbTfwBILs8GNz7jdbN/c7BTCknk
+	 zzX6ok68etikAUvR9UiKzYnIbXfOfSBbId2P6H/o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfFTSLQ (ORCPT
+        id S1726642AbfFTSLU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38886 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38950 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727637AbfFTSLK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:10 -0400
+        id S1728309AbfFTSLN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CD8CD2166E;
-        Thu, 20 Jun 2019 18:11:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EA6AE215EA;
+        Thu, 20 Jun 2019 18:11:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054269;
-        bh=4fXlYpDtVwzR2XnaWuS2EBV4dzux4eUOf4rpqXy2GZA=;
+        s=default; t=1561054272;
+        bh=bvDOhLS2kF6GV1MDOs5xagA3VZMecFnAsJu3rPT1kOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B1L1M5ZIYJdvzId26SW6heUWVW7n9G1Bo4ksst75e31R2IWdmmRwGm11AfqcTK4SN
-         6A/ygaJaSNg9a5RcJVFNSygTidJZbfcQq0DyoC4UIZXQ5N9Z6s06x/xLOzLuVrtF2h
-         /eDaaGh7BMK0FplKZl2WN+ElT2TcNyeAK/KZbu94=
+        b=0nDoWzDDmbpdXVxxGHRMC+cvbi5nVk1GC3JqOW28p6aDaQ9rUw1N948QOt6xbyXCj
+         zp7YmtHyJraQpaZ7l1TVrjlGZoitf8UQqtZBCRc9MY8/UoPxsgFZRihKCUCF+OIGSJ
+         BMJNfG2Pgo6owrWekkMiUIHs1CQEfjPvgSQv84pc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
+        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 31/61] net: stmmac: update rx tail pointer register to fix rx dma hang issue.
-Date:   Thu, 20 Jun 2019 19:57:26 +0200
-Message-Id: <20190620174342.719197932@linuxfoundation.org>
+Subject: [PATCH 4.19 32/61] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
+Date:   Thu, 20 Jun 2019 19:57:27 +0200
+Message-Id: <20190620174343.077596702@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,35 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4523a5611526709ec9b4e2574f1bb7818212651e ]
+[ Upstream commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e ]
 
-Currently we will not update the receive descriptor tail pointer in
-stmmac_rx_refill. Rx dma will think no available descriptors and stop
-once received packets exceed DMA_RX_SIZE, so that the rx only test will fail.
+Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
 
-Update the receive tail pointer in stmmac_rx_refill to add more descriptors
-to the rx channel, so packets can be received continually
+drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
+MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
+^
+./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
+extern typeof(name) __mod_##type##__##name##_device_table               \
+                    ^
+<scratch space>:90:1: note: expanded from here
+__mod_eisa__de4x5_eisa_ids_device_table
+^
+drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
+MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
+^
+./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
+extern typeof(name) __mod_##type##__##name##_device_table               \
+                    ^
+<scratch space>:85:1: note: expanded from here
+__mod_eisa__de4x5_eisa_ids_device_table
+^
 
-Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+This drops the one further from the table definition to match the common
+use of MODULE_DEVICE_TABLE().
+
+Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
+Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 50c00822b2d8..45e64d71a93f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -3319,6 +3319,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
- 		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
- 	}
- 	rx_q->dirty_rx = entry;
-+	stmmac_set_rx_tail_ptr(priv, priv->ioaddr, rx_q->rx_tail_addr, queue);
- }
+diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
+index 66535d1653f6..f16853c3c851 100644
+--- a/drivers/net/ethernet/dec/tulip/de4x5.c
++++ b/drivers/net/ethernet/dec/tulip/de4x5.c
+@@ -2107,7 +2107,6 @@ static struct eisa_driver de4x5_eisa_driver = {
+ 		.remove  = de4x5_eisa_remove,
+         }
+ };
+-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
+ #endif
  
- /**
+ #ifdef CONFIG_PCI
 -- 
 2.20.1
 
