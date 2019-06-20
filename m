@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07836C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03602C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDD8120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9DCA20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055120;
-	bh=k4EW+WfHa8F3R2B6B+jMbz8EqOEEgCGFBF/wI7+kg1c=;
+	s=default; t=1561055127;
+	bh=Qb0dadM45HXDL5s/gvBp6XlsfMAxW756/7rKzTzmClo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=R+a/U8heYZa1dI/3x4akqxywuXjAriCluqPWN2OIwvCHcI8XtJ6Xne+hzDG3CheQ8
-	 X4AkbPihaG7rZFjfiv4jOjGidw4V5y/SbcBt8hEovCQvfZMYBJa1nbHrOThcAGPJFH
-	 rT+WN/v4Y6AbnbpJg7n0k/EAsqYNS3a3ixsOE6Fc=
+	b=D3fD62E9fNaODONvEpY7bsuM8jtAEOJnIbqJKSbBv15uEs7p8NxSrTrBoK2gBAAuQ
+	 kNxvRmoPvZ8vgnWRq3m0Os3BomYM/dRi7qRYnk6GPXentZHheB3KggK5JES6H0ep53
+	 zIvxSUvqJCX+W14G6KckdTVWYA+7ycmc+4L/qMAY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727377AbfFTSZT (ORCPT
+        id S1728304AbfFTSHV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:25:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33706 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727941AbfFTSHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:35 -0400
+        id S1728097AbfFTSHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DC0242084E;
-        Thu, 20 Jun 2019 18:07:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F33962089C;
+        Thu, 20 Jun 2019 18:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054054;
-        bh=k4EW+WfHa8F3R2B6B+jMbz8EqOEEgCGFBF/wI7+kg1c=;
+        s=default; t=1561054037;
+        bh=Qb0dadM45HXDL5s/gvBp6XlsfMAxW756/7rKzTzmClo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RNDWd3Y3LbZdGvxoGSFUtHLqiqTvSm8MqjK5h+lLZeh2wPOebh5XKs/+LLkFugKKK
-         iL7Raz5L50UC/j2OvPuSFM3La83PnB/NQbIyvTdyyq2aSlq1SReziXfhI9NUSLPI7A
-         Qwb2cdPUOH1rdFymFcHV+9+nXfBWWSLR2aYW9n8c=
+        b=gMb7FM8f9bj+UdNOecACxFxQrQzmyh55Exlv/svRD+F2KDA2t60BWWvujSOrjXKtW
+         2g1s0IdpwOddahenVekd1vKm9zuPFIF/UcizlKSoC6sFBD8QXTh0XT1XwuPtUAD4wo
+         NyRT2WuZ7FPn4IY4DD9tdGQw8WJlylNUdku0AH2s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 112/117] net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
-Date:   Thu, 20 Jun 2019 19:57:26 +0200
-Message-Id: <20190620174358.238643720@linuxfoundation.org>
+Subject: [PATCH 4.9 074/117] scsi: lpfc: add check for loss of ndlp when sending RRQ
+Date:   Thu, 20 Jun 2019 19:56:48 +0200
+Message-Id: <20190620174356.989416158@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,48 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 315ca92dd863fecbffc0bb52ae0ac11e0398726a ]
+[ Upstream commit c8cb261a072c88ca1aff0e804a30db4c7606521b ]
 
-The sh_eth_close() resets the MAC and then calls phy_stop()
-so that mdio read access result is incorrect without any error
-according to kernel trace like below:
+There was a missing qualification of a valid ndlp structure when calling to
+send an RRQ for an abort.  Add the check.
 
-ifconfig-216   [003] .n..   109.133124: mdio_access: ee700000.ethernet-ffffffff read  phy:0x01 reg:0x00 val:0xffff
-
-According to the hardware manual, the RMII mode should be set to 1
-before operation the Ethernet MAC. However, the previous code was not
-set to 1 after the driver issued the soft_reset in sh_eth_dev_exit()
-so that the mdio read access result seemed incorrect. To fix the issue,
-this patch adds a condition and set the RMII mode register in
-sh_eth_dev_exit() for R-Car Gen2 and RZ/A1 SoCs.
-
-Note that when I have tried to move the sh_eth_dev_exit() calling
-after phy_stop() on sh_eth_close(), but it gets worse (kernel panic
-happened and it seems that a register is accessed while the clock is
-off).
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Tested-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/lpfc/lpfc_els.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index c59e8fe37069..49300194d3f9 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -1388,6 +1388,10 @@ static void sh_eth_dev_exit(struct net_device *ndev)
- 	sh_eth_get_stats(ndev);
- 	sh_eth_reset(ndev);
- 
-+	/* Set the RMII mode again if required */
-+	if (mdp->cd->rmiimode)
-+		sh_eth_write(ndev, 0x1, RMIIMODE);
+diff --git a/drivers/scsi/lpfc/lpfc_els.c b/drivers/scsi/lpfc/lpfc_els.c
+index 4905455bbfc7..b5be4df05733 100644
+--- a/drivers/scsi/lpfc/lpfc_els.c
++++ b/drivers/scsi/lpfc/lpfc_els.c
+@@ -6789,7 +6789,10 @@ int
+ lpfc_send_rrq(struct lpfc_hba *phba, struct lpfc_node_rrq *rrq)
+ {
+ 	struct lpfc_nodelist *ndlp = lpfc_findnode_did(rrq->vport,
+-							rrq->nlp_DID);
++						       rrq->nlp_DID);
++	if (!ndlp)
++		return 1;
 +
- 	/* Set MAC address again */
- 	update_mac_address(ndev);
- }
+ 	if (lpfc_test_rrq_active(phba, ndlp, rrq->xritag))
+ 		return lpfc_issue_els_rrq(rrq->vport, ndlp,
+ 					 rrq->nlp_DID, rrq);
 -- 
 2.20.1
 
