@@ -2,140 +2,446 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258BCC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9CDC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:19:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF02E2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So/APhDB"
+	by mail.kernel.org (Postfix) with ESMTP id ACACC2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:19:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561033147;
+	bh=9Vux5wAbBU7Bq4itv05sQDJHjsazKgjTw5ANO58U53o=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oyjj/XF3MFpIrqxD6+uYExXrPJpCaizn8u18y5wVDcUni83drYSxbcWYFq3OLbTcJ
+	 HYuL4/lHgJYZ46i6vPw1RI/7m2AzpMvCgEU2iO+BDM0fYOZXDEyMNjMTk5iJibMxaM
+	 /boRyh5s+UW1Juk5kQQ0AcK9p+7e32xaUPegQTME=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfFTMSz (ORCPT
+        id S1731887AbfFTMTG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:18:55 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:40390 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731695AbfFTMSy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:18:54 -0400
-Received: by mail-pf1-f194.google.com with SMTP id p184so1585806pfp.7;
-        Thu, 20 Jun 2019 05:18:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:subject:to:cc:references:in-reply-to:mime-version
-         :user-agent:message-id:content-transfer-encoding;
-        bh=YoTiXuUhP7MILD5fnaoAlkgFg2nR8TYJrJEF6s4RZXw=;
-        b=So/APhDByNH5ZTnsyLPXFkassmIa6Ov5z4dUXPiq3BcI+/tBJroH1OYfD+D/LPx2Kz
-         Z2iebLBARMIonYTJViKAMNqX6T9DWFpGX4f7lEU40XE6jdwOBAKSb7px2/VVG1NdMZUV
-         DGEi2tUgpJk8ahufrxePUMdf1fVMSMqTEhNaXDKRGi+y/W5OIH7OvaZjkf2vDypfXqxI
-         TD2ewroIsXlnf4E6gOQtkllshj947AFSuqcZtKArd6jeI++QOwML2r0B7G5wvAqJD4UD
-         xWsias8CY08OAi7pp0ZZm2YUI8zBDfNLVjsK8N1PIHm6HWAHq05Ev5F7HsEKLa/T1vLU
-         uiFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
-         :mime-version:user-agent:message-id:content-transfer-encoding;
-        bh=YoTiXuUhP7MILD5fnaoAlkgFg2nR8TYJrJEF6s4RZXw=;
-        b=kePlzXM4/wPA4VtCNmPC/YLDphhtrtgFsUHm7vnlWElG9cwbJd1HvrWstzoUsDMq47
-         cTg+bK2rY0sY21forNIdLpp4ZAMhd7lmipbuhEk1oy6r0WvNcpNm1BVIUP2XogXAQTqx
-         33Mb91B/j9MW1XLI+muuKZ3iKtgbsoJLVliT0aJmM913JEQnW/s6Q9ZTeOOmdphquWPB
-         B1SzW3UtdNvD4VQuHldwKJrNRvv891i5QE9tzTxMWSdV7uFxC+86U1AJn9cN4dEnCYiH
-         N/wHH0Y82M5Q8i2ie3bFaBDZDnFf+pIoAeg5cBMaF0nJhV73q6y/QEqlDauRpJDEfI8s
-         8z6g==
-X-Gm-Message-State: APjAAAW6n1z7LmbSNmRPD/lfuVBFziWLxcX+MNf1f3bXlg1tiz2KV8Tj
-        1nPmHXZxTncB7FfE/bSAtts=
-X-Google-Smtp-Source: APXvYqx1eSkhbrnX9j+XXPf1ijevNCfi95aQ4yuFnnSZCNNzh3FuAkFtzgkNfUYJBeEqzMwN6uhd9g==
-X-Received: by 2002:a62:e815:: with SMTP id c21mr90025668pfi.244.1561033133807;
-        Thu, 20 Jun 2019 05:18:53 -0700 (PDT)
-Received: from localhost ([203.220.63.126])
-        by smtp.gmail.com with ESMTPSA id i133sm24389358pfe.75.2019.06.20.05.18.51
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 05:18:52 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 22:18:51 +1000
-From:   Nicholas Piggin <npiggin@gmail.com>
-Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
- a structure
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        James Hogan <jhogan@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-References: <20190611144102.8848-1-hch@lst.de>
-        <20190611144102.8848-17-hch@lst.de>
-        <1560300464.nijubslu3h.astroid@bobo.none>
-        <CAHk-=wjSo+TzkvYnAqrp=eFgzzc058DhSMTPr4-2quZTbGLfnw@mail.gmail.com>
-In-Reply-To: <CAHk-=wjSo+TzkvYnAqrp=eFgzzc058DhSMTPr4-2quZTbGLfnw@mail.gmail.com>
+        Thu, 20 Jun 2019 08:19:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44198 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731756AbfFTMTG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:19:06 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4C54C2080C;
+        Thu, 20 Jun 2019 12:19:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561033144;
+        bh=9Vux5wAbBU7Bq4itv05sQDJHjsazKgjTw5ANO58U53o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XuBBmK1+4VsYmnc5Id6qv0EmOccJLhRogocATGKti5K2/M7YcxMCc0AMbCVxPZR5O
+         G+P0qah5hM+7Pjk/brfbNFu6fvILx0aTePn4zYOv4ATJKDmJwdBazGR5EmS5IOBoq0
+         Dj1nvnssStnRQcX6bzJE0/0jb6k9GjtKaa13UOtY=
+Date:   Thu, 20 Jun 2019 14:19:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH 1/5] usb: xhci: add firmware loader for uPD720201 and
+ uPD720202 w/o ROM
+Message-ID: <20190620121902.GD19295@kroah.com>
+References: <20190620102154.20805-1-vkoul@kernel.org>
+ <20190620102154.20805-2-vkoul@kernel.org>
 MIME-Version: 1.0
-User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
-Message-Id: <1561032202.0qfct43s2c.astroid@bobo.none>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620102154.20805-2-vkoul@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus Torvalds's on June 12, 2019 11:09 am:
-> On Tue, Jun 11, 2019 at 2:55 PM Nicholas Piggin <npiggin@gmail.com> wrote=
-:
->>
->> What does this do for performance? I've found this pattern can be
->> bad for store aliasing detection.
->=20
-> I wouldn't expect it to be noticeable, and the lack of argument
-> reloading etc should make up for it. Plus inlining makes it a
-> non-issue when that happens.
+On Thu, Jun 20, 2019 at 03:51:50PM +0530, Vinod Koul wrote:
+> From: Christian Lamparter <chunkeey@googlemail.com>
+> 
+> This patch adds a firmware loader for the uPD720201K8-711-BAC-A
+> and uPD720202K8-711-BAA-A variant. Both of these chips are listed
+> in Renesas' R19UH0078EJ0500 Rev.5.00 "User's Manual: Hardware" as
+> devices which need the firmware loader on page 2 in order to
+> work as they "do not support the External ROM".
+> 
+> The "Firmware Download Sequence" is describe in chapter
+> "7.1 FW Download Interface" R19UH0078EJ0500 Rev.5.00 page 131.
+> 
+> The firmware "K2013080.mem" is available from a USB3.0 Host to
+> PCIe Adapter (PP2U-E card) "Firmware download" archive. An
+> alternative version can be sourced from Netgear's WNDR4700 GPL
+> archives.
+> 
+> The release notes of the PP2U-E's "Firmware Download" ver 2.0.1.3
+> (2012-06-15) state that the firmware is for the following devices:
+>  - uPD720201 ES 2.0 sample whose revision ID is 2.
+>  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+>  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> 
+> If someone from Renesas is listening: It would be great, if these
+> firmwares could be added to linux-firmware.git.
 
-Maybe in isolation. Just seems like a strange pattern to sprinkle
-around randomly, I wouldn't like it to proliferate.
+That paragraph does not need to be in the changelog :)
 
-I understand in some cases where a big set of parameters or
-basically state gets sent around through a lot of interfaces.
-Within one file to make lines a bit shorter or save a few bytes
-isn't such a strong case.
+> Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> Signed-off-by: Christian Lamparter <chunkeey@googlemail.com>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> ---
+>  drivers/usb/host/xhci-pci.c | 480 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 480 insertions(+)
+> 
+> diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
+> index c2fe218e051f..a400cf7b39da 100644
+> --- a/drivers/usb/host/xhci-pci.c
+> +++ b/drivers/usb/host/xhci-pci.c
+> @@ -12,6 +12,8 @@
+>  #include <linux/slab.h>
+>  #include <linux/module.h>
+>  #include <linux/acpi.h>
+> +#include <linux/firmware.h>
+> +#include <asm/unaligned.h>
 
->=20
-> But I guess we could also at least look at using "restrict", if that
-> ends up helping. Unlike the completely bogus type-based aliasing rules
-> (that we disable because I think the C people were on some bad bad
-> drugs when they came up with them), restricted pointers are a real
-> thing that makes sense.
->=20
-> That said, we haven't traditionally used it, and I don't know how much
-> it helps gcc. Maybe gcc ignores it entirely? S
+asm/ in a driver?  Are you sure???
 
-Ahh, it's not compiler store alias analysis I'm talking about, but
-processor (but you raise an interesting point about compiler too,
-would be nice if we could improve that in general).
+>  
+>  #include "xhci.h"
+>  #include "xhci-trace.h"
+> @@ -279,6 +281,458 @@ static void xhci_pme_acpi_rtd3_enable(struct pci_dev *dev)
+>  static void xhci_pme_acpi_rtd3_enable(struct pci_dev *dev) { }
+>  #endif /* CONFIG_ACPI */
+>  
+> +static const struct renesas_fw_entry {
+> +	const char *firmware_name;
+> +	u16 device;
+> +	u8 revision;
+> +	u16 expected_version;
+> +} renesas_fw_table[] = {
+> +	/*
+> +	 * Only the uPD720201K8-711-BAC-A or uPD720202K8-711-BAA-A
+> +	 * are listed in R19UH0078EJ0500 Rev.5.00 as devices which
+> +	 * need the software loader.
+> +	 *
+> +	 * PP2U/ReleaseNote_USB3-201-202-FW.txt:
+> +	 *
+> +	 * Note: This firmware is for the following devices.
+> +	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
+> +	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
+> +	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
+> +	 */
+> +	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
+> +	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
+> +	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
+> +};
 
-The processor aliasing problem happens because the struct will
-be initialised with stores using one base register (e.g., stack
-register), and then same memory is loaded using a different
-register (e.g., parameter register). Processor's static heuristics
-for determining a load doesn't alias with an earlier store doesn't
-do so well in that case.
+No MODULE_FIRMWARE() entries as well?
 
-Just about everywhere I've seen those kind of misspeculation and
-flushes in the kernel has been this pattern, so I'm wary of it in
-performance critical code.
+> +static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
+> +{
+> +	const struct renesas_fw_entry *entry;
+> +	size_t i;
+> +
+> +	/* This loader will only work with a RENESAS device. */
+> +	if (!(dev->vendor == PCI_VENDOR_ID_RENESAS))
+> +		return NULL;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
+> +		entry = &renesas_fw_table[i];
+> +		if (entry->device == dev->device &&
+> +		    entry->revision == dev->revision)
+> +			return entry;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +static int renesas_fw_download_image(struct pci_dev *dev,
+> +				     const u32 *fw,
+> +				     size_t step)
+> +{
+> +	size_t i;
+> +	int err;
+> +	u8 fw_status;
+> +	bool data0_or_data1;
+> +
+> +	/*
+> +	 * The hardware does alternate between two 32-bit pages.
+> +	 * (This is because each row of the firmware is 8 bytes).
+> +	 *
+> +	 * for even steps we use DATA0, for odd steps DATA1.
+> +	 */
+> +	data0_or_data1 = (step & 1) == 1;
+> +
+> +	/* step+1. Read "Set DATAX" and confirm it is cleared. */
+> +	for (i = 0; i < 10000; i++) {
+> +		err = pci_read_config_byte(dev, 0xF5, &fw_status);
+> +		if (err)
+> +			return pcibios_err_to_errno(err);
+> +		if (!(fw_status & BIT(data0_or_data1)))
+> +			break;
+> +
+> +		udelay(1);
+> +	}
+> +	if (i == 10000)
+> +		return -ETIMEDOUT;
+> +
+> +	/*
+> +	 * step+2. Write FW data to "DATAX".
+> +	 * "LSB is left" => force little endian
+> +	 */
+> +	err = pci_write_config_dword(dev, data0_or_data1 ? 0xFC : 0xF8,
+> +				     (__force u32) cpu_to_le32(fw[step]));
+> +	if (err)
+> +		return pcibios_err_to_errno(err);
+> +
+> +	udelay(100);
+> +
+> +	/* step+3. Set "Set DATAX". */
+> +	err = pci_write_config_byte(dev, 0xF5, BIT(data0_or_data1));
+> +	if (err)
+> +		return pcibios_err_to_errno(err);
+> +
 
-Thanks,
-Nick
-=
+Shouldn't you just do a read after the write to be sure the write
+actually went out on the wire?  Then you shouldn't have to do the
+udelay, right?
+
+> +	return 0;
+> +}
+> +
+> +static int renesas_fw_verify(struct pci_dev *dev,
+> +			     const void *fw_data,
+> +			     size_t length)
+> +{
+> +	const struct renesas_fw_entry *entry = renesas_needs_fw_dl(dev);
+> +	u16 fw_version_pointer;
+> +	u16 fw_version;
+> +
+> +	if (!entry)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * The Firmware's Data Format is describe in
+> +	 * "6.3 Data Format" R19UH0078EJ0500 Rev.5.00 page 124
+> +	 */
+> +
+> +	/* "Each row is 8 bytes". => firmware size must be a multiple of 8. */
+> +	if (length % 8 != 0) {
+> +		dev_err(&dev->dev, "firmware size is not a multipe of 8.");
+
+"multiple"
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * The bootrom chips of the big brother have sizes up to 64k, let's
+> +	 * assume that's the biggest the firmware can get.
+> +	 */
+> +	if (length < 0x1000 || length >= 0x10000) {
+> +		dev_err(&dev->dev, "firmware is size %zd is not (4k - 64k).",
+> +			length);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* The First 2 bytes are fixed value (55aa). "LSB on Left" */
+> +	if (get_unaligned_le16(fw_data) != 0x55aa) {
+> +		dev_err(&dev->dev, "no valid firmware header found.");
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* verify the firmware version position and print it. */
+> +	fw_version_pointer = get_unaligned_le16(fw_data + 4);
+> +	if (fw_version_pointer + 2 >= length) {
+> +		dev_err(&dev->dev, "firmware version pointer is outside of the firmware image.");
+> +		return -EINVAL;
+> +	}
+> +
+> +	fw_version = get_unaligned_le16(fw_data + fw_version_pointer);
+> +	dev_dbg(&dev->dev, "got firmware version: %02x.", fw_version);
+> +
+> +	if (fw_version != entry->expected_version) {
+> +		dev_err(&dev->dev, "firmware version mismatch, expected version: %02x.",
+> +			 entry->expected_version);
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int renesas_hw_check_run_stop_busy(struct pci_dev *pdev)
+> +{
+> +#if 0
+> +	u32 val;
+> +
+> +	/*
+> +	 * 7.1.3 Note 3: "... must not set 'FW Download Enable' when
+> +	 * 'RUN/STOP' of USBCMD Register is set"
+> +	 */
+> +	val = readl(hcd->regs + 0x20);
+> +	if (val & BIT(0)) {
+> +		dev_err(&pdev->dev, "hardware is busy and can't receive a FW.");
+> +		return -EBUSY;
+> +	}
+> +#endif
+> +	return 0;
+> +}
+> +
+
+Is this function still really needed anymore?
+
+
+> +	/*
+> +	 * 11. After finishing writing the last data of FW, the
+> +	 * System Software must clear "FW Download Enable"
+> +	 */
+> +	err = pci_write_config_byte(pdev, 0xF4, 0);
+> +	if (err)
+> +		return pcibios_err_to_errno(err);
+> +
+> +	/* 12. Read "Result Code" and confirm it is good. */
+> +	for (i = 0; i < 10000; i++) {
+> +		err = pci_read_config_byte(pdev, 0xF4, &fw_status);
+> +		if (err)
+> +			return pcibios_err_to_errno(err);
+> +		if (fw_status & BIT(4))
+> +			break;
+> +
+> +		udelay(1);
+> +	}
+
+1000 reads???  I've heard of having to read a few times to ensure
+something "latched" in the device, but not 1000.  Why so many?
+
+> +	if (i == 10000) {
+> +		/* Timed out / Error - let's see if we can fix this */
+> +		err = renesas_fw_check_running(pdev);
+> +		switch (err) {
+> +		case 0: /*
+> +			 * we shouldn't end up here.
+> +			 * maybe it took a little bit longer.
+> +			 * But all should be well?
+> +			 */
+> +			break;
+> +
+> +		case 1: /* (No result yet? - we can try to retry) */
+> +			if (retry_counter < 10) {
+> +				retry_counter++;
+> +				dev_warn(&pdev->dev, "Retry Firmware download: %d try.",
+> +					  retry_counter);
+> +				return renesas_fw_download(pdev, fw,
+> +							   retry_counter);
+
+recursion?
+
+> +			}
+> +			return -ETIMEDOUT;
+> +
+> +		default:
+> +			return err;
+> +		}
+> +	}
+> +	/*
+> +	 * Optional last step: Engage Firmware Lock
+> +	 *
+> +	 * err = pci_write_config_byte(pdev, 0xF4, BIT(2));
+> +	 * if (err)
+> +	 *	return pcibios_err_to_errno(err);
+> +	 */
+> +
+> +	return 0;
+> +}
+> +
+> +struct renesas_fw_ctx {
+> +	struct pci_dev *pdev;
+> +	const struct pci_device_id *id;
+> +	bool resume;
+> +};
+> +
+> +static int xhci_pci_probe(struct pci_dev *pdev,
+> +			  const struct pci_device_id *id);
+> +
+> +static void renesas_fw_callback(const struct firmware *fw,
+> +				void *context)
+> +{
+> +	struct renesas_fw_ctx *ctx = context;
+> +	struct pci_dev *pdev = ctx->pdev;
+> +	struct device *parent = pdev->dev.parent;
+> +	int err = -ENOENT;
+> +
+> +	if (fw) {
+> +		err = renesas_fw_verify(pdev, fw->data, fw->size);
+> +		if (!err) {
+> +			err = renesas_fw_download(pdev, fw, 0);
+> +			release_firmware(fw);
+> +			if (!err) {
+> +				if (ctx->resume)
+> +					return;
+> +
+> +				err = xhci_pci_probe(pdev, ctx->id);
+> +				if (!err) {
+> +					/* everything worked */
+> +					devm_kfree(&pdev->dev, ctx);
+> +					return;
+> +				}
+> +
+> +				/* in case of an error - fall through */
+> +			} else {
+> +				dev_err(&pdev->dev, "firmware failed to download (%d).",
+> +					err);
+> +			}
+> +		}
+> +	} else {
+> +		dev_err(&pdev->dev, "firmware failed to load (%d).", err);
+> +	}
+
+This can be cleaned up a lot by just erroring out when something
+happens, and then jumping to the end.  Not this nested if mess.
+
+> +
+> +	dev_info(&pdev->dev, "Unloading driver");
+> +
+> +	if (parent)
+> +		device_lock(parent);
+> +
+> +	device_release_driver(&pdev->dev);
+> +
+> +	if (parent)
+> +		device_unlock(parent);
+> +
+> +	pci_dev_put(pdev);
+> +}
+> +
+> +static int renesas_fw_alive_check(struct pci_dev *pdev)
+> +{
+> +	const struct renesas_fw_entry *entry;
+> +	int err;
+> +
+> +	/* check if we have a eligible RENESAS' uPD720201/2 w/o FW. */
+> +	entry = renesas_needs_fw_dl(pdev);
+> +	if (!entry)
+> +		return 0;
+> +
+> +	err = renesas_fw_check_running(pdev);
+> +	/* Also go ahead, if the firmware is running */
+> +	if (err == 0)
+> +		return 0;
+> +
+> +	/* At this point, we can be sure that the FW isn't ready. */
+> +	return err;
+
+Why not just:
+	return renesas_fw_check_running(pdev);
+?
+
+thanks,
+
+greg k-h
