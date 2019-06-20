@@ -2,115 +2,104 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74A6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF72C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:48:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A080E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B06F82070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:48:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ufw/PJFb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EKGHlg8c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbfFTXsj (ORCPT
+        id S1726115AbfFTXsp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 19:48:39 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:39580 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfFTXsi (ORCPT
+        Thu, 20 Jun 2019 19:48:45 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:39642 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfFTXsm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 19:48:38 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 196so2399891pgc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 16:48:38 -0700 (PDT)
+        Thu, 20 Jun 2019 19:48:42 -0400
+Received: by mail-oi1-f196.google.com with SMTP id m202so3429413oig.6;
+        Thu, 20 Jun 2019 16:48:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=WDSF4/5gIVl0q/Y5kiKBD3WGHCnc11W4/O/uCS0I/xg=;
-        b=Ufw/PJFbsYXI8fOZsVIqLo22TA9EiF422kbGLdL+GtmV9GYxEMoZLsgBfUehldafHK
-         DwlaqrKbEXctGNF14IKuHKmEzHZ3V0fLle49ySPaYpo7lRjNPmU6WeGIcLiRE4H2Z5LA
-         MTn66GPaJo9t12paeyfP7xC+C43MElFRknKdg=
+        bh=wostT3Xc6vu2lS2+SWXXzSbhD9zC9Wywuo64OXkYOLc=;
+        b=EKGHlg8cAUQZeAi2Jf8Mo/MRrT8m9sebpd2zUUJvscKapxzf0ln60tD9Oe2vOLKaFR
+         5s0sH2KCVJrBrjMm9wM1ZwcUmaKu5KO0hf0aj3OtKn4Z0CA12M2VW2mcMSMDUWqImqNe
+         /qFgKa+SRNJf23eHC+PhL1brSHN73Ey+PC+XWT4p6SEixqvOcsUvGSJOGTN4M55FHEkT
+         ezV1VueV2k2KhcnFuyYotNLS4J9JdHSAmaZzREQdO8kg6yli9ussLw6iaLWw5vXq/Z+0
+         nGqT/pbDRvtau65QhCAp3vb4HhN8MbCetUZrpkuqNMLnrBXXnmZ4SMEHp2i0HfP1e3FY
+         bCIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=WDSF4/5gIVl0q/Y5kiKBD3WGHCnc11W4/O/uCS0I/xg=;
-        b=lE0yFChxcg2kZL9ZuaYuREXE4RxhqfshVYwfL4hsm0bpaAmrA9kgAK0F2RvpinDDVn
-         WvqIJXJlvj/Hz0EFCkdqqgCQjw1OvP7zv1Ql8XJpQE1oDLkwMKuRr2cobD36ZNcJzl2w
-         tv3pP2MBBlkhHnQkPQIdG6wFMpBuaaOqIOuyYTtefMpqn7SBXotRMT9tfUU2KnyeRpe6
-         m7aYdPr4Pk7FS9FxecyjqQhpxThDEvM55jx3H2Vt5afK/+qYcYEc6cpLcDmOTFKn/4Lr
-         B3Qr/pHNC8fbrZYAEKESYN/TzHZL/+NHeVtD3vbinvsSHp9tt4huIgrGbuhtWYkr4TeT
-         QYpQ==
-X-Gm-Message-State: APjAAAXZ37ohTOxqw74HI4+Rck0Qm3MGGsktruXk58EhzJ6xkvQITFz5
-        Uhz5OmEoZ6LvfOCk9k9GO9J4Lw==
-X-Google-Smtp-Source: APXvYqzIk9C3mS84uBO304CxiZE9GF2WsdzLUO9sky2JMwefoEHmlCFHyQZmwBXXx3F2T8RaRqV8tg==
-X-Received: by 2002:a17:90a:fa18:: with SMTP id cm24mr2312229pjb.120.1561074518183;
-        Thu, 20 Jun 2019 16:48:38 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id d123sm577407pfc.144.2019.06.20.16.48.37
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 16:48:37 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 16:48:35 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
-        Harish Bandi <c-hbandi@codeaurora.org>,
-        Rocky Liao <rjliao@codeaurora.org>
-Subject: Re: [PATCH v4] Bluetooth: hci_qca: wcn3990: Drop baudrate change
- vendor event
-Message-ID: <20190620234835.GZ137143@google.com>
-References: <20190521195307.23874-1-mka@chromium.org>
+        bh=wostT3Xc6vu2lS2+SWXXzSbhD9zC9Wywuo64OXkYOLc=;
+        b=F2JPrNJiSz8h2RIag6oQQ0Ayta51fqnPqXbff5Q8J8OkKCLxR3iOsnGasZHyQYAinS
+         TtLaWMjGVc6Lgd/ihBY4J5gYO0GPZ3rc21fu6SoPzCVN3aXrars0lm48nDblc8Agp43N
+         QCEgscE4E+WnNWoLybu/6gP90S3aWs4RBZC8aC6wgIH1Y1KVBM5HvrZF8JTTs4Dh9+om
+         JjGOpgr8id+zZu398FejWn7MtQQPFMKE2EmOB2vB2fhhVwDTxJTYB30klpS8bDVn9SFq
+         QKzry4gBumf9WnZEGoabAIoBl9wekQn7RUzn21GkV9hAjGtu7M5olKMlogtuM8iLGP8s
+         i1SQ==
+X-Gm-Message-State: APjAAAU5sZsaMXTJs1Qh4cw8UZ7cJpg6stF6GKe0ThZ7msvIXJYhO4op
+        vTY/ApjhhdaU646Sm1X83hvlcomC
+X-Google-Smtp-Source: APXvYqwYgelUf7yAM/9GZho8zMHQoY6q5D+SzprHr/4MPNs0POG9dov6uqoqecIRJ5yILipuIWWtqQ==
+X-Received: by 2002:aca:4806:: with SMTP id v6mr1000111oia.133.1561074521871;
+        Thu, 20 Jun 2019 16:48:41 -0700 (PDT)
+Received: from rYz3n ([2600:1700:210:3790::48])
+        by smtp.gmail.com with ESMTPSA id v198sm486452oif.0.2019.06.20.16.48.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 16:48:41 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 18:48:40 -0500
+From:   Jiunn Chang <c0d1n61at3@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 5.1 00/98] 5.1.13-stable review
+Message-ID: <20190620234839.4f4aiczjjssfn2fg@rYz3n>
+References: <20190620174349.443386789@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190521195307.23874-1-mka@chromium.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, May 21, 2019 at 12:53:07PM -0700, Matthias Kaehlcke wrote:
-> Firmware download to the WCN3990 often fails with a 'TLV response size
-> mismatch' error:
+On Thu, Jun 20, 2019 at 07:56:27PM +0200, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.1.13 release.
+> There are 98 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> [  133.064659] Bluetooth: hci0: setting up wcn3990
-> [  133.489150] Bluetooth: hci0: QCA controller version 0x02140201
-> [  133.495245] Bluetooth: hci0: QCA Downloading qca/crbtfw21.tlv
-> [  133.507214] Bluetooth: hci0: QCA TLV response size mismatch
-> [  133.513265] Bluetooth: hci0: QCA Failed to download patch (-84)
+> Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
+> Anything received after that time might be too late.
 > 
-> This is caused by a vendor event that corresponds to an earlier command
-> to change the baudrate. The event is not processed in the context of the
-> baudrate change and is later interpreted as response to the firmware
-> download command (which is also a vendor command), but the driver detects
-> that the event doesn't have the expected amount of associated data.
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.1.13-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.1.y
+> and the diffstat can be found below.
 > 
-> More details:
+> thanks,
 > 
-> For the WCN3990 the vendor command for a baudrate change isn't sent as
-> synchronous HCI command, because the controller sends the corresponding
-> vendor event with the new baudrate. The event is received and decoded
-> after the baudrate change of the host port.
+> greg k-h
 > 
-> Identify the 'unused' event when it is received and don't add it to
-> the queue of RX frames.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> -------------
 
-ping
+Compiled and booted.  No regressions on x86_64.
 
-Firmware download on WCN3990 is know to be broken for about 6
-months. Can we please either apply this patch or discuss possible
-alternatives? Doing nothing isn't really a great option :/ As
-mentioned earlier one alternative could be a delay at the right place
-with a comment why it is needed.
+THX
 
-Thanks
-
-Matthias
+Jiunn
