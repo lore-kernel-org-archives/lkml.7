@@ -2,52 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9832C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7462CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99C3A21530
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 441AB21530
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053629;
-	bh=VX0Mch9mxPNtTWpyXYP91PK7meeVE2iNkr4GOupQ+Mw=;
+	s=default; t=1561053635;
+	bh=RjWjbrUsKAnG9glT+LX1xw7oZU0QdimWMnifTTPmnqY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uA93qv9dyQLnnQJFO02AKiC1B3PMRxI+iP4zGHwvgmF9N70CcrClyadoQJgcdgHOh
-	 Of3KeY5jmJ0+iJ12svqo8UrFoJx0MZnt7c043zYt7X6auS3meHlEcm9IuwndXm3Lbz
-	 xmQOJfwfewPh/7diOJGJYKdfO+O++lRWOW0XYHOE=
+	b=csNON21c0VVBeNQXpKBRizSPbelcGhGwEnROAVW/HedhVzMBNgxqzPWt6Yv2zsp9/
+	 lRjrzF/em/b2nJ8+LzTi1uV7oCTW0e/fSdBE6FYZALQSeGXyqidr5rWOuEtWFFS3e3
+	 z0juCgU5Txx2yKW3oLFyj1qEp/yrIQsjDvW9iHmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfFTSA2 (ORCPT
+        id S1726987AbfFTSAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49134 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbfFTSAZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:25 -0400
+        id S1726967AbfFTSAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B688A2168B;
-        Thu, 20 Jun 2019 18:00:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 814DF214AF;
+        Thu, 20 Jun 2019 18:00:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053624;
-        bh=VX0Mch9mxPNtTWpyXYP91PK7meeVE2iNkr4GOupQ+Mw=;
+        s=default; t=1561053630;
+        bh=RjWjbrUsKAnG9glT+LX1xw7oZU0QdimWMnifTTPmnqY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gBI/29+5kSkLE7eOJna8xYYWw6YJ3T7PDAL3Uq78nBZoLeOYr1GTip96gu7fYTwSE
-         /2J5fRwBXtbI5xaEcfEuZuEfhHCQYVx3cPHdUJeXK7zxCG43rYEQqPGl/GydVpATjC
-         6d/2C2CgrPA9N1dzffGUn7FqusdINxarWWUmhWkg=
+        b=lJKRH0Y/qoeLYIyPR5mxYAcOkewVac1XxukzBc9RBFjk2Q7nz9rA0/uZ0jrmRY/u+
+         SaCGNTo5rHvn/17Qm0zR4YnrWg+dJyYV4xTWeWZqg1j1KORxig5FhJFY/vo1oUf1gf
+         qFFEouN/1GMnS1y8wD3XZ2rLYgeqRSZzCpVVv2Y8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nadav Amit <nadav.amit@gmail.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 54/84] KVM: x86/pmu: do not mask the value that is written to fixed PMUs
-Date:   Thu, 20 Jun 2019 19:56:51 +0200
-Message-Id: <20190620174347.119128481@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Murray McAllister <murray.mcallister@gmail.com>,
+        Thomas Hellstrom <thellstrom@vmware.com>
+Subject: [PATCH 4.4 56/84] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader() leading to an invalid read
+Date:   Thu, 20 Jun 2019 19:56:53 +0200
+Message-Id: <20190620174347.499299948@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,48 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2924b52117b2812e9633d5ea337333299166d373 ]
+From: Murray McAllister <murray.mcallister@gmail.com>
 
-According to the SDM, for MSR_IA32_PERFCTR0/1 "the lower-order 32 bits of
-each MSR may be written with any value, and the high-order 8 bits are
-sign-extended according to the value of bit 31", but the fixed counters
-in real hardware are limited to the width of the fixed counters ("bits
-beyond the width of the fixed-function counter are reserved and must be
-written as zeros").  Fix KVM to do the same.
+commit 5ed7f4b5eca11c3c69e7c8b53e4321812bc1ee1e upstream.
 
-Reported-by: Nadav Amit <nadav.amit@gmail.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+If SVGA_3D_CMD_DX_SET_SHADER is called with a shader ID
+of SVGA3D_INVALID_ID, and a shader type of
+SVGA3D_SHADERTYPE_INVALID, the calculated binding.shader_slot
+will be 4294967295, leading to an out-of-bounds read in vmw_binding_loc()
+when the offset is calculated.
+
+Cc: <stable@vger.kernel.org>
+Fixes: d80efd5cb3de ("drm/vmwgfx: Initial DX support")
+Signed-off-by: Murray McAllister <murray.mcallister@gmail.com>
+Reviewed-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Thomas Hellstrom <thellstrom@vmware.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+
 ---
- arch/x86/kvm/pmu_intel.c | 13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kvm/pmu_intel.c b/arch/x86/kvm/pmu_intel.c
-index 23a7c7ba377a..8fc07ea23344 100644
---- a/arch/x86/kvm/pmu_intel.c
-+++ b/arch/x86/kvm/pmu_intel.c
-@@ -235,11 +235,14 @@ static int intel_pmu_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
- 		}
- 		break;
- 	default:
--		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0)) ||
--		    (pmc = get_fixed_pmc(pmu, msr))) {
--			if (!msr_info->host_initiated)
--				data = (s64)(s32)data;
--			pmc->counter += data - pmc_read_counter(pmc);
-+		if ((pmc = get_gp_pmc(pmu, msr, MSR_IA32_PERFCTR0))) {
-+			if (msr_info->host_initiated)
-+				pmc->counter = data;
-+			else
-+				pmc->counter = (s32)data;
-+			return 0;
-+		} else if ((pmc = get_fixed_pmc(pmu, msr))) {
-+			pmc->counter = data;
- 			return 0;
- 		} else if ((pmc = get_gp_pmc(pmu, msr, MSR_P6_EVNTSEL0))) {
- 			if (data == pmc->eventsel)
--- 
-2.20.1
-
+--- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
++++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
+@@ -2442,7 +2442,8 @@ static int vmw_cmd_dx_set_shader(struct
+ 
+ 	cmd = container_of(header, typeof(*cmd), header);
+ 
+-	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX) {
++	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX ||
++	    cmd->body.type < SVGA3D_SHADERTYPE_MIN) {
+ 		DRM_ERROR("Illegal shader type %u.\n",
+ 			  (unsigned) cmd->body.type);
+ 		return -EINVAL;
 
 
