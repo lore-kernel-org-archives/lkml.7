@@ -2,120 +2,170 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B89DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEB68C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1821920675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:32 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MymrtzTM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bNgid0dF"
+	by mail.kernel.org (Postfix) with ESMTP id C6F9120665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727594AbfFTScb (ORCPT
+        id S1727614AbfFTScf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:32:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54518 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726875AbfFTSc1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:32:27 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 3AFD960E57; Thu, 20 Jun 2019 18:32:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561055546;
-        bh=nNFaKlesrcQPjLvKVg+8OZfxjFS3WjlQjPLTlWJcIzI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MymrtzTMFzFCOPICGEAJ2tAQ0q73Uknnswsq5s4PA49M1j2fmdwbP1m30dZpclwFJ
-         Gjgt9BXfYWIJqk4NBf/H3vUSxlyUE928A4WzG6UK5Z6Uy+v4Nq6JZVBrAC5thw7Ees
-         N61MbDgLuW2OYGzyejLkb/XoWwI6BGerKrZOApGU=
-Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        Thu, 20 Jun 2019 14:32:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55440 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfFTScd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:32:33 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 7F1216090F;
-        Thu, 20 Jun 2019 18:32:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561055538;
-        bh=nNFaKlesrcQPjLvKVg+8OZfxjFS3WjlQjPLTlWJcIzI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bNgid0dFyvbzzgJhV0wavktTRxxIC71szOjTKcejzQq7L/jgp+/VSgpMebQuNi4lC
-         BmxBRW4V3a3c4LHGRYlCHFsIeF/pdiomhlFxdNVKAe56yjYCLBdPQlgmuDEnqK4VeW
-         M5Me0a5DD4tHKbeiF5KZ3deov3zECjdUzjkWlizI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 7F1216090F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>,
-        devicetree@vger.kernel.org,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv2 2/2] coresight: Abort probe if cpus are not available
-Date:   Fri, 21 Jun 2019 00:01:52 +0530
-Message-Id: <65050e4cb2b0433f3cb9b1ca0bf6ec49d0751086.1561054498.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id CFED74E90E;
+        Thu, 20 Jun 2019 18:32:31 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-116-71.ams2.redhat.com [10.36.116.71])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EFF9419722;
+        Thu, 20 Jun 2019 18:32:25 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
+        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>
+Subject: [PATCH v3 6/6] drivers/base/memory.c: Get rid of find_memory_block_hinted()
+Date:   Thu, 20 Jun 2019 20:31:39 +0200
+Message-Id: <20190620183139.4352-7-david@redhat.com>
+In-Reply-To: <20190620183139.4352-1-david@redhat.com>
+References: <20190620183139.4352-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 20 Jun 2019 18:32:32 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently coresight etm and cpu-debug will go ahead with
-the probe even when corresponding cpus are not available
-and error out later in the probe path. In such cases, it
-is better to abort the probe earlier.
+No longer needed, let's remove it. Also, drop the "hint" parameter
+completely from "find_memory_block_by_id", as nobody needs it anymore.
 
-Without this, setting *nosmp* will throw below errors:
-
- [    5.910622] coresight-cpu-debug 850000.debug: Coresight debug-CPU0 initialized
- [    5.914266] coresight-cpu-debug 852000.debug: CPU1 debug arch init failed
- [    5.921474] coresight-cpu-debug 854000.debug: CPU2 debug arch init failed
- [    5.928328] coresight-cpu-debug 856000.debug: CPU3 debug arch init failed
- [    5.935330] coresight etm0: CPU0: ETM v4.0 initialized
- [    5.941875] coresight-etm4x 85d000.etm: ETM arch init failed
- [    5.946794] coresight-etm4x: probe of 85d000.etm failed with error -22
- [    5.952707] coresight-etm4x 85e000.etm: ETM arch init failed
- [    5.958945] coresight-etm4x: probe of 85e000.etm failed with error -22
- [    5.964853] coresight-etm4x 85f000.etm: ETM arch init failed
- [    5.971096] coresight-etm4x: probe of 85f000.etm failed with error -22
-
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Stephen Rothwell <sfr@canb.auug.org.au>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/hwtracing/coresight/coresight-platform.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/base/memory.c  | 37 +++++++++++--------------------------
+ include/linux/memory.h |  2 --
+ 2 files changed, 11 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
-index 8b03fa573684..3f4559596c6b 100644
---- a/drivers/hwtracing/coresight/coresight-platform.c
-+++ b/drivers/hwtracing/coresight/coresight-platform.c
-@@ -168,6 +168,9 @@ static int of_coresight_get_cpu(struct device *dev)
- 	cpu = of_cpu_node_to_id(dn);
- 	of_node_put(dn);
- 
-+	if (num_online_cpus() <= cpu)
-+		return -ENODEV;
-+
- 	return cpu;
+diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+index 0204384b4d1d..195dbcb8e8a8 100644
+--- a/drivers/base/memory.c
++++ b/drivers/base/memory.c
+@@ -588,30 +588,13 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
+ 	return 0;
  }
  
+-/*
+- * A reference for the returned object is held and the reference for the
+- * hinted object is released.
+- */
+-static struct memory_block *find_memory_block_by_id(unsigned long block_id,
+-						    struct memory_block *hint)
++/* A reference for the returned memory block device is acquired. */
++static struct memory_block *find_memory_block_by_id(unsigned long block_id)
+ {
+-	struct device *hintdev = hint ? &hint->dev : NULL;
+ 	struct device *dev;
+ 
+-	dev = subsys_find_device_by_id(&memory_subsys, block_id, hintdev);
+-	if (hint)
+-		put_device(&hint->dev);
+-	if (!dev)
+-		return NULL;
+-	return to_memory_block(dev);
+-}
+-
+-struct memory_block *find_memory_block_hinted(struct mem_section *section,
+-					      struct memory_block *hint)
+-{
+-	unsigned long block_id = base_memory_block_id(__section_nr(section));
+-
+-	return find_memory_block_by_id(block_id, hint);
++	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
++	return dev ? to_memory_block(dev) : NULL;
+ }
+ 
+ /*
+@@ -624,7 +607,9 @@ struct memory_block *find_memory_block_hinted(struct mem_section *section,
+  */
+ struct memory_block *find_memory_block(struct mem_section *section)
+ {
+-	return find_memory_block_hinted(section, NULL);
++	unsigned long block_id = base_memory_block_id(__section_nr(section));
++
++	return find_memory_block_by_id(block_id);
+ }
+ 
+ static struct attribute *memory_memblk_attrs[] = {
+@@ -675,7 +660,7 @@ static int init_memory_block(struct memory_block **memory,
+ 	unsigned long start_pfn;
+ 	int ret = 0;
+ 
+-	mem = find_memory_block_by_id(block_id, NULL);
++	mem = find_memory_block_by_id(block_id);
+ 	if (mem) {
+ 		put_device(&mem->dev);
+ 		return -EEXIST;
+@@ -755,7 +740,7 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
+ 		end_block_id = block_id;
+ 		for (block_id = start_block_id; block_id != end_block_id;
+ 		     block_id++) {
+-			mem = find_memory_block_by_id(block_id, NULL);
++			mem = find_memory_block_by_id(block_id);
+ 			mem->section_count = 0;
+ 			unregister_memory(mem);
+ 		}
+@@ -782,7 +767,7 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
+ 
+ 	mutex_lock(&mem_sysfs_mutex);
+ 	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
+-		mem = find_memory_block_by_id(block_id, NULL);
++		mem = find_memory_block_by_id(block_id);
+ 		if (WARN_ON_ONCE(!mem))
+ 			continue;
+ 		mem->section_count = 0;
+@@ -882,7 +867,7 @@ int walk_memory_blocks(unsigned long start, unsigned long size,
+ 	int ret = 0;
+ 
+ 	for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
+-		mem = find_memory_block_by_id(block_id, NULL);
++		mem = find_memory_block_by_id(block_id);
+ 		if (!mem)
+ 			continue;
+ 
+diff --git a/include/linux/memory.h b/include/linux/memory.h
+index b3b388775a30..02e633f3ede0 100644
+--- a/include/linux/memory.h
++++ b/include/linux/memory.h
+@@ -116,8 +116,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size);
+ extern int memory_dev_init(void);
+ extern int memory_notify(unsigned long val, void *v);
+ extern int memory_isolate_notify(unsigned long val, void *v);
+-extern struct memory_block *find_memory_block_hinted(struct mem_section *,
+-							struct memory_block *);
+ extern struct memory_block *find_memory_block(struct mem_section *);
+ typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *);
+ extern int walk_memory_blocks(unsigned long start, unsigned long size,
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
 
