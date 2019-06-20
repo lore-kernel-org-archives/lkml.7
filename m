@@ -5,52 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7310DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DE39C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466EE2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DAED20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053563;
-	bh=sq4VCybYKGKjtPfFFjzFHkKi+xEO3H8We1edpx5i9bY=;
+	s=default; t=1561053567;
+	bh=B4ziijeeYPHWG8gk+zu0SbSDVRVGhUhn/n3OnKn/15E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n5XeuIK11ozMgqNdZHhRaBUbUJIldC7lXkVg+V2ZiS+OQTteOQ1i+wKYOYpJxYAKb
-	 +koaYA3l4a2k34xp0/iqxLJ3CkV9eWFP2fxuNjgjaFWE71HxTmqVPYVWu+bh/Kuyq1
-	 lbQ3V82aXqDHJJXb7jKpvAZfHslhND56N5u9UVsw=
+	b=ACcTfIYahxwJ0C5jVcOo0C3a7XVWfkeHPVKjMv6WugS24hXRskAircuyKFPZEuuZ5
+	 4uXUCTTt7yH14iJ+WrV5OtbxsW69i+cjVrSefT93oTDI1RBNsQMwZYvs7fVddebwoN
+	 Vkt+Qh8XBPRn4uJsoryVlBOuQSs6PKdunayP8dxc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbfFTR7V (ORCPT
+        id S1726571AbfFTR7Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:59:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46696 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:59:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726519AbfFTR7T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:59:19 -0400
+        id S1726535AbfFTR7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:59:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B6A3A2083B;
-        Thu, 20 Jun 2019 17:59:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 55A2E2083B;
+        Thu, 20 Jun 2019 17:59:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053558;
-        bh=sq4VCybYKGKjtPfFFjzFHkKi+xEO3H8We1edpx5i9bY=;
+        s=default; t=1561053560;
+        bh=B4ziijeeYPHWG8gk+zu0SbSDVRVGhUhn/n3OnKn/15E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ul+uoGeQv0GY0vyrNbZd0piikDPF7238yuyfCkZm/DO4ONJKk6ctqV/CV2kLg6yFE
-         hg8+ydym6bhPGks7J2GAD9p3VKuQ6vhQcU2uliOrxptPXsiXDi0krgewuGbymGP8OA
-         EI7+N7HFkzUINVkUHClkueapS52xBZMjl9zSDEtw=
+        b=DiKboVoboXS2gp/mGt0zyrWqsq61wJcaWIRtRaPRwkxBuD7845XupzWSD5WAk34Ct
+         1TiD+BG5b+/ZU4tP8tgoBjvh3E5a+9Vu27z0ut5X6GmpdhEWG1DT7JsKp0Nu3QcRCn
+         PuQ2KSdi78lRExEBqBliTMO9QJ4BkbqUPALQrXKw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Aditya Pakki <pakki001@umn.edu>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Rob Herring <robh@kernel.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Steven Price <steven.price@arm.com>,
+        Mukesh Ojha <mojha@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 30/84] video: imsttfb: fix potential NULL pointer dereferences
-Date:   Thu, 20 Jun 2019 19:56:27 +0200
-Message-Id: <20190620174342.354402039@linuxfoundation.org>
+Subject: [PATCH 4.4 31/84] PCI: xilinx: Check for __get_free_pages() failure
+Date:   Thu, 20 Jun 2019 19:56:28 +0200
+Message-Id: <20190620174342.507765310@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -63,39 +62,64 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1d84353d205a953e2381044953b7fa31c8c9702d ]
+[ Upstream commit 699ca30162686bf305cdf94861be02eb0cf9bda2 ]
 
-In case ioremap fails, the fix releases resources and returns
--ENOMEM to avoid NULL pointer dereferences.
+If __get_free_pages() fails, return -ENOMEM to avoid a NULL pointer
+dereference.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
-Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Finn Thain <fthain@telegraphics.com.au>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-[b.zolnierkie: minor patch summary fixup]
-Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Reviewed-by: Steven Price <steven.price@arm.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/imsttfb.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/host/pcie-xilinx.c | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/video/fbdev/imsttfb.c b/drivers/video/fbdev/imsttfb.c
-index 9b167f7ef6c6..4994a540f680 100644
---- a/drivers/video/fbdev/imsttfb.c
-+++ b/drivers/video/fbdev/imsttfb.c
-@@ -1517,6 +1517,11 @@ static int imsttfb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	info->fix.smem_start = addr;
- 	info->screen_base = (__u8 *)ioremap(addr, par->ramdac == IBM ?
- 					    0x400000 : 0x800000);
-+	if (!info->screen_base) {
-+		release_mem_region(addr, size);
-+		framebuffer_release(info);
+diff --git a/drivers/pci/host/pcie-xilinx.c b/drivers/pci/host/pcie-xilinx.c
+index 4cfa46360d12..6a2499f4d610 100644
+--- a/drivers/pci/host/pcie-xilinx.c
++++ b/drivers/pci/host/pcie-xilinx.c
+@@ -349,14 +349,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+  * xilinx_pcie_enable_msi - Enable MSI support
+  * @port: PCIe port information
+  */
+-static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
++static int xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+ {
+ 	phys_addr_t msg_addr;
+ 
+ 	port->msi_pages = __get_free_pages(GFP_KERNEL, 0);
++	if (!port->msi_pages)
 +		return -ENOMEM;
-+	}
- 	info->fix.mmio_start = addr + 0x800000;
- 	par->dc_regs = ioremap(addr + 0x800000, 0x1000);
- 	par->cmap_regs_phys = addr + 0x840000;
++
+ 	msg_addr = virt_to_phys((void *)port->msi_pages);
+ 	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+ 	pcie_write(port, msg_addr, XILINX_PCIE_REG_MSIBASE2);
++
++	return 0;
+ }
+ 
+ /* INTx Functions */
+@@ -555,6 +560,7 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 	struct device *dev = port->dev;
+ 	struct device_node *node = dev->of_node;
+ 	struct device_node *pcie_intc_node;
++	int ret;
+ 
+ 	/* Setup INTx */
+ 	pcie_intc_node = of_get_next_child(node, NULL);
+@@ -582,7 +588,9 @@ static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+ 			return PTR_ERR(port->irq_domain);
+ 		}
+ 
+-		xilinx_pcie_enable_msi(port);
++		ret = xilinx_pcie_enable_msi(port);
++		if (ret)
++			return ret;
+ 	}
+ 
+ 	return 0;
 -- 
 2.20.1
 
