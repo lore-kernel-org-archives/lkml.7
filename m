@@ -2,142 +2,156 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,URIBL_SBL,URIBL_SBL_A,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DB95C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E47DC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D10206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:29:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UD2HEJxI"
+	by mail.kernel.org (Postfix) with ESMTP id 318F12080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731808AbfFTM26 (ORCPT
+        id S1731653AbfFTMa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:28:58 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:35377 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfFTM26 (ORCPT
+        Thu, 20 Jun 2019 08:30:28 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11098 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726569AbfFTMa2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:28:58 -0400
-Received: by mail-wm1-f65.google.com with SMTP id c6so2999376wml.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:28:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=f8A38WuFGwuhUpIag07Mu5Ad2tlvuMwviR3nNUO1eYc=;
-        b=UD2HEJxIaZYFN31LZj5+kRb827BBEknCjoff00qcVtmDfXoih9RTdVVDk2A28tEDPX
-         uL6DgkzoiFr3IYYvQC8PM9dHOcHFGPmvGskBatlKBBrH3GdhYx2yK/XrxWquZyEPX2pe
-         EDSAie7w6zSMZNMsOcYDoAVp9RJMTqsBiLewKrSNJxOaa+nWK94OSBwCp2TGLE/vsCAX
-         fm1VxysEEzZEgpdoMU5KBnMSWeIXrrnuzkdtuFrdOBCgI7BcDHtllqpVV1N8euujUxvN
-         UcEVotm6+4sGk69SiCgC8WQ1DZsZdYkp3nMHU/LcuIVPG64NnsKeja6vsHDzIhxjEC4C
-         6ngg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=f8A38WuFGwuhUpIag07Mu5Ad2tlvuMwviR3nNUO1eYc=;
-        b=ERw+cXqfNxLdozy1QZQlbZVpADDV2Nk4DJSmpn9pn9HK/oTX6QY3QYkWnBJRwwdYOR
-         tTfDm/gDCRoLgA/5dACCAqRGbWIOM2tnJWfLBsiDim9V3GUGmtjTyxIgJ0HxIqg1YBut
-         FN2Xq4ovYTINhacU0RVx4uwfDdFHKmaJl21WjtCDCQa5x3IWr03dNIB0Cdrj2ic+9Qzc
-         5fzh/ObGvWw7S0m1iwDL1MpVbtsDpn1CRHQ244EDpy1SZzGooWzCMAqj+OfODqhBJ+oB
-         BMTsAhErXePKT0gPpKKsuCqMqKBXMqbdg85cd4eNC5AUYZzIVuiHHTeegBKe02eguq3E
-         xU6g==
-X-Gm-Message-State: APjAAAU7Z/YFDw2/D9xqYXTGWJkuADaXGRIw2h/8GIo6DZVXziS+Y1oG
-        pGrpcVtdKOvb1psgri5bvwwTHA==
-X-Google-Smtp-Source: APXvYqwdnD8aCGlhiKsRg0lBY/4mAWljDCZ/gIODZhpJgrKYLXJdy2inAGcX+Y9xJvhsdnpUve6dwQ==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr2602367wmc.64.1561033736096;
-        Thu, 20 Jun 2019 05:28:56 -0700 (PDT)
-Received: from dell ([2.27.35.243])
-        by smtp.gmail.com with ESMTPSA id k82sm5613177wma.15.2019.06.20.05.28.55
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 05:28:55 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 13:28:53 +0100
-From:   Lee Jones <lee.jones@linaro.org>
-To:     Steve Twiss <stwiss.opensource@diasemi.com>
-Cc:     "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: Re: [PATCH] mfd: da9063: occupy second I2C address, too
-Message-ID: <20190620122853.GD4699@dell>
-References: <AM6PR10MB218184C8F2206024C6CB77EAFEE40@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
+        Thu, 20 Jun 2019 08:30:28 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KCJMMQ036563
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:30:27 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8a1grgnn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:30:27 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 20 Jun 2019 13:30:24 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Jun 2019 13:30:21 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KCUBdr37552596
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 12:30:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 57D6DAE04D;
+        Thu, 20 Jun 2019 12:30:20 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5D45AE055;
+        Thu, 20 Jun 2019 12:30:19 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.168])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 20 Jun 2019 12:30:19 +0000 (GMT)
+Date:   Thu, 20 Jun 2019 15:30:18 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, Jonathan Corbet <corbet@lwn.net>,
+        linux-mm@kvack.org, linux-nvdimm@lists.01.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 10/13] mm: Document ZONE_DEVICE memory-model
+ implications
+References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <156092354985.979959.15763234410543451710.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <AM6PR10MB218184C8F2206024C6CB77EAFEE40@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <156092354985.979959.15763234410543451710.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19062012-4275-0000-0000-0000034413CD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062012-4276-0000-0000-000038544349
+Message-Id: <20190620123017.GB18387@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200091
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019, Steve Twiss wrote:
+On Tue, Jun 18, 2019 at 10:52:29PM -0700, Dan Williams wrote:
+> Explain the general mechanisms of 'ZONE_DEVICE' pages and list the users
+> of 'devm_memremap_pages()'.
+> 
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Reported-by: Mike Rapoport <rppt@linux.ibm.com>
+> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 
-> (resend because the e-mail client added HTML formatting to my last reply)
-> 
-> Hi Wolfram,
-> 
-> On Wed, 19 Jun 2019 19:18:06, Wolfram Sang wrote:
-> 
-> > Subject: [PATCH] mfd: da9063: occupy second I2C address, too
-> > 
-> > Even though we don't use it yet, we should mark the second I2C address
-> > this device is listening to as used.
-> 
-> Sure. There is a second method for accessing higher pages of registers.
-> The DA9063 Datasheet Revision 2.2, 12-Mar-2019, page 96, says this:
-> 
-> In 2-WIRE operation, the DA9063 offers an alternative method to access register pages 2 and 3.
-> These pages can be accessed directly by incrementing the device address by one (default read
-> address 0xB3; write address 0xB2). This removes the need to write to the page register before
-> access to pages 2 and 3, thus reducing the traffic on the 2-WIRE bus.
-> 
-> Is this a safety clause? What I mean is, shouldn't the hardware design make
-> sure there are not two devices located on the same I2C bus with the same slave
-> address?
+With one nit below
 
-Why isn't this reply attached (threaded) to the patch.
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
 
-Is your mailer broken?
+> ---
+>  Documentation/vm/memory-model.rst |   39 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+> 
+> diff --git a/Documentation/vm/memory-model.rst b/Documentation/vm/memory-model.rst
+> index 382f72ace1fc..e0af47e02e78 100644
+> --- a/Documentation/vm/memory-model.rst
+> +++ b/Documentation/vm/memory-model.rst
+> @@ -181,3 +181,42 @@ that is eventually passed to vmemmap_populate() through a long chain
+>  of function calls. The vmemmap_populate() implementation may use the
+>  `vmem_altmap` along with :c:func:`altmap_alloc_block_buf` helper to
+>  allocate memory map on the persistent memory device.
+> +
+> +ZONE_DEVICE
+> +===========
+> +The `ZONE_DEVICE` facility builds upon `SPARSEMEM_VMEMMAP` to offer
+> +`struct page` `mem_map` services for device driver identified physical
+> +address ranges. The "device" aspect of `ZONE_DEVICE` relates to the fact
+> +that the page objects for these address ranges are never marked online,
+> +and that a reference must be taken against the device, not just the page
+> +to keep the memory pinned for active use. `ZONE_DEVICE`, via
+> +:c:func:`devm_memremap_pages`, performs just enough memory hotplug to
+> +turn on :c:func:`pfn_to_page`, :c:func:`page_to_pfn`, and
+> +:c:func:`get_user_pages` service for the given range of pfns. Since the
+> +page reference count never drops below 1 the page is never tracked as
+> +free memory and the page's `struct list_head lru` space is repurposed
+> +for back referencing to the host device / driver that mapped the memory.
+> +
+> +While `SPARSEMEM` presents memory as a collection of sections,
+> +optionally collected into memory blocks, `ZONE_DEVICE` users have a need
+> +for smaller granularity of populating the `mem_map`. Given that
+> +`ZONE_DEVICE` memory is never marked online it is subsequently never
+> +subject to its memory ranges being exposed through the sysfs memory
+> +hotplug api on memory block boundaries. The implementation relies on
+> +this lack of user-api constraint to allow sub-section sized memory
+> +ranges to be specified to :c:func:`arch_add_memory`, the top-half of
+> +memory hotplug. Sub-section support allows for `PMD_SIZE` as the minimum
+> +alignment granularity for :c:func:`devm_memremap_pages`.
+> +
+> +The users of `ZONE_DEVICE` are:
 
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > Reviewed-by: Peter Rosin <peda@axentia.se>
-> > Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > Reviewed-by: Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>
-> > ---
-> >  drivers/mfd/da9063-i2c.c | 2 ++
-> >  1 file changed, 2 insertions(+)
-> > 
-> > diff --git a/drivers/mfd/da9063-i2c.c b/drivers/mfd/da9063-i2c.c
-> > index 455de74c0dd2..2133b09f6e7a 100644
-> > --- a/drivers/mfd/da9063-i2c.c
-> > +++ b/drivers/mfd/da9063-i2c.c
-> > @@ -221,6 +221,8 @@ static int da9063_i2c_probe(struct i2c_client *i2c,
-> >  		return ret;
-> >  	}
-> >  
-> > +	devm_i2c_new_dummy_device(&i2c->dev, i2c->adapter, i2c->addr + 1);
-> > +
-> >  	return da9063_device_init(da9063, i2c->irq);
-> >  }
-> >  
+Sphinx wants an empty line here:
+/home/rapoport/git/linux-docs/Documentation/vm/memory-model.rst:213: ERROR:
+Unexpected indentation.
+
+> +* pmem: Map platform persistent memory to be used as a direct-I/O target
+> +  via DAX mappings.
+> +
+> +* hmm: Extend `ZONE_DEVICE` with `->page_fault()` and `->page_free()`
+> +  event callbacks to allow a device-driver to coordinate memory management
+> +  events related to device-memory, typically GPU memory. See
+> +  Documentation/vm/hmm.rst.
+> +
+> +* p2pdma: Create `struct page` objects to allow peer devices in a
+> +  PCI/-E topology to coordinate direct-DMA operations between themselves,
+> +  i.e. bypass host memory.
 > 
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Sincerely yours,
+Mike.
+
