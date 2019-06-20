@@ -2,53 +2,55 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77816C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F1C2C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5779420665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35142206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:28:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055316;
-	bh=BBj0/VtwrZ3b5CHLKrVhqW+NFAJ0R7p077y7EhWWjvY=;
+	s=default; t=1561055319;
+	bh=QFpOEXXW0FjTm7dhG4KwD1l7Bk6rjye07FM0QSmow6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FkPQn+aZ9D5qZjsd3qaEiuIYD0m9+lITPDDe877FgRc+ReYxLk3/E30tEufQcx+g2
-	 lkxW82LAnJT8HjfusDXDvU7pPcZqwudgujbWj1zq9mN5bWTPTHHRWJib8RRzncnVmb
-	 FlvGwbzWsqTr79f8w3ter07UWNhO7iUvlO2+EVbU=
+	b=zpZ/vyX2hq+AtHzNP+zkprErqigX/cXg0EqeTfJ7Bf/kIUb/BWlFulFQoqgDd+wJA
+	 k5N3BfXPo4KowPapT1NEwgs5ys04chEWX/ZO6oydVMrDOQ9+2/oN35cQ3fA0+CY31s
+	 n/A1RYYwYrDFBiXpnfaUWD/ofBMaepwnGJ+Z36PI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727688AbfFTSDk (ORCPT
+        id S1726927AbfFTSDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:03:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55016 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:03:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54936 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727678AbfFTSDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:36 -0400
+        id S1727260AbfFTSDe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A47821530;
-        Thu, 20 Jun 2019 18:03:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 011DF21655;
+        Thu, 20 Jun 2019 18:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053816;
-        bh=BBj0/VtwrZ3b5CHLKrVhqW+NFAJ0R7p077y7EhWWjvY=;
+        s=default; t=1561053813;
+        bh=QFpOEXXW0FjTm7dhG4KwD1l7Bk6rjye07FM0QSmow6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aGBMtYvGgmBvhnVB8MFe135Ppt2GngA4u2uzrrXp2LM8gCEvuyR+qb4+FJK6X1z3N
-         6cv6CTc+vhl9w6DzE5DO5tQAdemeIUQBN729How0A/+IEVIZtFxrZTBTAUUB29OEsL
-         JfnnD2liJyOb2vrjHWNyuxNMCxHZJqfpyjyqemm0=
+        b=fXm/VXwXp9MTVbWYnTvNGfoe4e8jG3U/NjLyCM+L2gfpKifLll3FMM/eVF1mRjrln
+         C2kHILqHOSYLU9JGYouH2Bh+bXcYGWw/AXW/APm+iAlnho0732zggRQo5h/hUgmZmN
+         N8Ihm+MiaqL1sKLAbeHZ7VPFGIt7d4Su/+u4iaxU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Elaine Zhang <zhangqing@rock-chips.com>,
-        Heiko Stuebner <heiko@sntech.de>,
+        stable@vger.kernel.org,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 036/117] clk: rockchip: Turn on "aclk_dmac1" for suspend on rk3288
-Date:   Thu, 20 Jun 2019 19:56:10 +0200
-Message-Id: <20190620174354.159231624@linuxfoundation.org>
+Subject: [PATCH 4.9 035/117] soc: mediatek: pwrap: Zero initialize rdata in pwrap_init_cipher
+Date:   Thu, 20 Jun 2019 19:56:09 +0200
+Message-Id: <20190620174354.094825607@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,87 +63,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 57a20248ef3e429dc822f0774bc4e00136c46c83 ]
+[ Upstream commit 89e28da82836530f1ac7a3a32fecc31f22d79b3e ]
 
-Experimentally it can be seen that going into deep sleep (specifically
-setting PMU_CLR_DMA and PMU_CLR_BUS in RK3288_PMU_PWRMODE_CON1)
-appears to fail unless "aclk_dmac1" is on.  The failure is that the
-system never signals that it made it into suspend on the GLOBAL_PWROFF
-pin and it just hangs.
+When building with -Wsometimes-uninitialized, Clang warns:
 
-NOTE that it's confirmed that it's the actual suspend that fails, not
-one of the earlier calls to read/write registers.  Specifically if you
-comment out the "PMU_GLOBAL_INT_DISABLE" setting in
-rk3288_slp_mode_set() and then comment out the "cpu_do_idle()" call in
-rockchip_lpmode_enter() then you can exercise the whole suspend path
-without any crashing.
+drivers/soc/mediatek/mtk-pmic-wrap.c:1358:6: error: variable 'rdata' is
+used uninitialized whenever '||' condition is true
+[-Werror,-Wsometimes-uninitialized]
 
-This is currently not a problem with suspend upstream because there is
-no current way to exercise the deep suspend code.  However, anyone
-trying to make it work will run into this issue.
+If pwrap_write returns non-zero, pwrap_read will not be called to
+initialize rdata, meaning that we will use some random uninitialized
+stack value in our print statement. Zero initialize rdata in case this
+happens.
 
-This was not a problem on shipping rk3288-based Chromebooks because
-those devices all ran on an old kernel based on 3.14.  On that kernel
-"aclk_dmac1" appears to be left on all the time.
-
-There are several ways to skin this problem.
-
-A) We could add "aclk_dmac1" to the list of critical clocks and that
-apperas to work, but presumably that wastes power.
-
-B) We could keep a list of "struct clk" objects to enable at suspend
-time in clk-rk3288.c and use the standard clock APIs.
-
-C) We could make the rk3288-pmu driver keep a list of clocks to enable
-at suspend time.  Presumably this would require a dts and bindings
-change.
-
-D) We could just whack the clock on in the existing syscore suspend
-function where we whack a bunch of other clocks.  This is particularly
-easy because we know for sure that the clock's only parent
-("aclk_cpu") is a critical clock so we don't need to do anything more
-than ungate it.
-
-In this case I have chosen D) because it seemed like the least work,
-but any of the other options would presumably also work fine.
-
-Signed-off-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Elaine Zhang <zhangqing@rock-chips.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Link: https://github.com/ClangBuiltLinux/linux/issues/401
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/rockchip/clk-rk3288.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/soc/mediatek/mtk-pmic-wrap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clk/rockchip/clk-rk3288.c b/drivers/clk/rockchip/clk-rk3288.c
-index 39af05a589b3..32b130c53ff9 100644
---- a/drivers/clk/rockchip/clk-rk3288.c
-+++ b/drivers/clk/rockchip/clk-rk3288.c
-@@ -826,6 +826,9 @@ static const int rk3288_saved_cru_reg_ids[] = {
- 	RK3288_CLKSEL_CON(10),
- 	RK3288_CLKSEL_CON(33),
- 	RK3288_CLKSEL_CON(37),
-+
-+	/* We turn aclk_dmac1 on for suspend; this will restore it */
-+	RK3288_CLKGATE_CON(10),
- };
+diff --git a/drivers/soc/mediatek/mtk-pmic-wrap.c b/drivers/soc/mediatek/mtk-pmic-wrap.c
+index e929f5142862..36226976773f 100644
+--- a/drivers/soc/mediatek/mtk-pmic-wrap.c
++++ b/drivers/soc/mediatek/mtk-pmic-wrap.c
+@@ -778,7 +778,7 @@ static bool pwrap_is_pmic_cipher_ready(struct pmic_wrapper *wrp)
+ static int pwrap_init_cipher(struct pmic_wrapper *wrp)
+ {
+ 	int ret;
+-	u32 rdata;
++	u32 rdata = 0;
  
- static u32 rk3288_saved_cru_regs[ARRAY_SIZE(rk3288_saved_cru_reg_ids)];
-@@ -841,6 +844,14 @@ static int rk3288_clk_suspend(void)
- 				readl_relaxed(rk3288_cru_base + reg_id);
- 	}
- 
-+	/*
-+	 * Going into deep sleep (specifically setting PMU_CLR_DMA in
-+	 * RK3288_PMU_PWRMODE_CON1) appears to fail unless
-+	 * "aclk_dmac1" is on.
-+	 */
-+	writel_relaxed(1 << (12 + 16),
-+		       rk3288_cru_base + RK3288_CLKGATE_CON(10));
-+
- 	/*
- 	 * Switch PLLs other than DPLL (for SDRAM) to slow mode to
- 	 * avoid crashes on resume. The Mask ROM on the system will
+ 	pwrap_writel(wrp, 0x1, PWRAP_CIPHER_SWRST);
+ 	pwrap_writel(wrp, 0x0, PWRAP_CIPHER_SWRST);
 -- 
 2.20.1
 
