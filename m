@@ -2,91 +2,101 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF5EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD30C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:26:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B64082070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:25:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 072952070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:26:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726538AbfFTVZe (ORCPT
+        id S1726333AbfFTV0e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:25:34 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:54051 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725905AbfFTVZe (ORCPT
+        Thu, 20 Jun 2019 17:26:34 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:51636 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726008AbfFTV0e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:25:34 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5KLPHSK007114
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 17:25:18 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 86C56420484; Thu, 20 Jun 2019 17:25:17 -0400 (EDT)
-Date:   Thu, 20 Jun 2019 17:25:17 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH v2 2/3] jbd2: introduce jbd2_inode dirty range scoping
-Message-ID: <20190620212517.GC4650@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
-        Ross Zwisler <zwisler@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
-        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-References: <20190620151839.195506-1-zwisler@google.com>
- <20190620151839.195506-3-zwisler@google.com>
+        Thu, 20 Jun 2019 17:26:34 -0400
+Received: from [IPv6:2804:431:d719:ae74:d711:794d:1c68:5ed3] (unknown [IPv6:2804:431:d719:ae74:d711:794d:1c68:5ed3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: tonyk)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 2877C286270;
+        Thu, 20 Jun 2019 22:26:30 +0100 (BST)
+Subject: Re: [PATCH 1/1] staging: media: fix style problem
+To:     Aliasgar Surti <aliasgar.surti500@gmail.com>,
+        linux-media@vger.kernel.org, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org
+References: <1561008675-30224-1-git-send-email-aliasgar.surti500@gmail.com>
+From:   =?UTF-8?Q?Andr=c3=a9_Almeida?= <andrealmeid@collabora.com>
+Message-ID: <f5789433-6403-db2b-48f5-732257f7be0d@collabora.com>
+Date:   Thu, 20 Jun 2019 18:25:54 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620151839.195506-3-zwisler@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1561008675-30224-1-git-send-email-aliasgar.surti500@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 09:18:38AM -0600, Ross Zwisler wrote:
-> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> index 5c04181b7c6d8..0e0393e7f41a4 100644
-> --- a/include/linux/jbd2.h
-> +++ b/include/linux/jbd2.h
-> @@ -1397,6 +1413,12 @@ extern int	   jbd2_journal_force_commit(journal_t *);
->  extern int	   jbd2_journal_force_commit_nested(journal_t *);
->  extern int	   jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *inode);
->  extern int	   jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *inode);
-> +extern int	   jbd2_journal_inode_ranged_write(handle_t *handle,
-> +			struct jbd2_inode *inode, loff_t start_byte,
-> +			loff_t length);
-> +extern int	   jbd2_journal_inode_ranged_wait(handle_t *handle,
-> +			struct jbd2_inode *inode, loff_t start_byte,
-> +			loff_t length);
->  extern int	   jbd2_journal_begin_ordered_truncate(journal_t *journal,
->  				struct jbd2_inode *inode, loff_t new_size);
->  extern void	   jbd2_journal_init_jbd_inode(struct jbd2_inode *jinode, struct inode *inode);
+Hello Alisgar,
 
-You're adding two new functions that are called from outside the jbd2
-subsystem.  To support compiling jbd2 as a module, we also need to add
-EXPORT_SYMBOL declarations for these two functions.
+On 6/20/19 2:31 AM, Aliasgar Surti wrote:
+> From: Aliasgar Surti <aliasgar.surti500@gmail.com>
+>
+> checkpatch reported "WARNING: line over 80 characters".
+> This patch fixes the warning for file davinci_vpfe/dm365_isif.c
+>
+> Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
+> ---
+>  drivers/staging/media/davinci_vpfe/dm365_isif.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/staging/media/davinci_vpfe/dm365_isif.c b/drivers/staging/media/davinci_vpfe/dm365_isif.c
+> index 46fd818..e9c8de1 100644
+> --- a/drivers/staging/media/davinci_vpfe/dm365_isif.c
+> +++ b/drivers/staging/media/davinci_vpfe/dm365_isif.c
+> @@ -532,7 +532,8 @@ static int isif_validate_dfc_params(const struct vpfe_isif_dfc *dfc)
+>  #define DM365_ISIF_MAX_CLVSV			0x1fff
+>  #define DM365_ISIF_MAX_HEIGHT_BLACK_REGION	0x1fff
+>  
+> -static int isif_validate_bclamp_params(const struct vpfe_isif_black_clamp *bclamp)
+> +static int
+> +isif_validate_bclamp_params(const struct vpfe_isif_black_clamp *bclamp)
+>  {
+>  	int err = -EINVAL;
+>  
+> @@ -593,7 +594,8 @@ isif_validate_raw_params(const struct vpfe_isif_raw_config *params)
+>  	return isif_validate_bclamp_params(&params->bclamp);
+>  }
+>  
+> -static int isif_set_params(struct v4l2_subdev *sd, const struct vpfe_isif_raw_config *params)
+> +static int isif_set_params(struct v4l2_subdev *sd,
+> +			   const struct vpfe_isif_raw_config *params)
+>  {
+>  	struct vpfe_isif_device *isif = v4l2_get_subdevdata(sd);
+>  	int ret = -EINVAL;
 
-I'll take care of this when applying this change.
 
-Thanks, applied.
+When you resend a patch with some modifications you have done after
+receiving some feedback, don't forget to increase the version of your
+patch . One can do this by adding the `-v2` flag at `git format-patch`
+command. It is also a good practice to changelog what modifications you
+did bellow the `---` mark.
 
-    		     	       	       - Ted
+Have a look at this v3[1]. And please read "Revising your patches"[2]
+for a complete documentation.
+
+Good hacking!
+    André
+
+[1] https://patchwork.kernel.org/patch/10999271/
+[2] https://kernelnewbies.org/FirstKernelPatch
+
