@@ -2,53 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED78C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AC7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04BF121530
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BFD20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055407;
-	bh=dyrPen8UBKVWOtfB03I5Mx+bnvrcbZLHun8Mz816CaQ=;
+	s=default; t=1561055411;
+	bh=wZJ6i255Avu2b78vVG0xeKXBLHHluZogYmBhvaZV6WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KipmqnP/mcpofuz/1Bt6bWjHJWXCbnWU0oILe860W5jk4gPIkM4G+IJQMwyLG3tv0
-	 va2MXF96sO3vynNETs+6V/45zKyOLF2y/9EaN3QwuX4pHDilQdLwpiNA5I+fVhlhmU
-	 lTpVEHtYvvRpPRRQQKB34Z2DoqNtsHLc0LUEcjMQ=
+	b=g0ZIj+mgbKIULR2r6fH6nq4QuvR4a6BLtEGsWQaBds88+jAI980oxEJVhymiKzUu5
+	 le4dWHwDRoDKFVzeewR3KrJal+/6R6vrfCJyvt4v0V/8ixYg//nXChfTuuG4yP3oPt
+	 c5+Ek4CMHCJOu7yE1bt1ym+5Sj87Pl2dm7SHYmmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfFTSBh (ORCPT
+        id S1727253AbfFTSBc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51298 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726114AbfFTSBe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:34 -0400
+        id S1727239AbfFTSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48AC62084A;
-        Thu, 20 Jun 2019 18:01:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F40A72083B;
+        Thu, 20 Jun 2019 18:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053693;
-        bh=dyrPen8UBKVWOtfB03I5Mx+bnvrcbZLHun8Mz816CaQ=;
+        s=default; t=1561053685;
+        bh=wZJ6i255Avu2b78vVG0xeKXBLHHluZogYmBhvaZV6WE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ypV12nM5yILNR7+0IF5ocC1BXi/wROIofuD+8zdFGXQFtm3AU7X7rKyDvZrBu8VqD
-         6UPaVMHBnWGTrgvc5W7qwmpW0I5h5sYeogFwTa+/GbY6M6cARsfbMkcpPLHEAoqjsu
-         M7+HzY6eGVuAL2Ndld5AorIu98zhBco7Zk/pJbJI=
+        b=CuB7bWBcVMck/7NWt1NYeovYy6d6JZMCoBT5w3e7Fw/YXJcMGx+CgF6eSx8JJeiA9
+         CeDSx45n/dXg5THZKvoO55b3+0jNecoq6L35VCgDrfcPJgUmhK6X7QQ4YuEWWO7NqZ
+         clfUd8Cw/CTvev5n4ikaLB0tpL2H/H8FzYmNQmr0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 79/84] net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
-Date:   Thu, 20 Jun 2019 19:57:16 +0200
-Message-Id: <20190620174348.987754510@linuxfoundation.org>
+        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
+        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 76/84] configfs: Fix use-after-free when accessing sd->s_dentry
+Date:   Thu, 20 Jun 2019 19:57:13 +0200
+Message-Id: <20190620174348.883894809@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,48 +59,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 315ca92dd863fecbffc0bb52ae0ac11e0398726a ]
+[ Upstream commit f6122ed2a4f9c9c1c073ddf6308d1b2ac10e0781 ]
 
-The sh_eth_close() resets the MAC and then calls phy_stop()
-so that mdio read access result is incorrect without any error
-according to kernel trace like below:
+In the vfs_statx() context, during path lookup, the dentry gets
+added to sd->s_dentry via configfs_attach_attr(). In the end,
+vfs_statx() kills the dentry by calling path_put(), which invokes
+configfs_d_iput(). Ideally, this dentry must be removed from
+sd->s_dentry but it doesn't if the sd->s_count >= 3. As a result,
+sd->s_dentry is holding reference to a stale dentry pointer whose
+memory is already freed up. This results in use-after-free issue,
+when this stale sd->s_dentry is accessed later in
+configfs_readdir() path.
 
-ifconfig-216   [003] .n..   109.133124: mdio_access: ee700000.ethernet-ffffffff read  phy:0x01 reg:0x00 val:0xffff
+This issue can be easily reproduced, by running the LTP test case -
+sh fs_racer_file_list.sh /config
+(https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/racer/fs_racer_file_list.sh)
 
-According to the hardware manual, the RMII mode should be set to 1
-before operation the Ethernet MAC. However, the previous code was not
-set to 1 after the driver issued the soft_reset in sh_eth_dev_exit()
-so that the mdio read access result seemed incorrect. To fix the issue,
-this patch adds a condition and set the RMII mode register in
-sh_eth_dev_exit() for R-Car Gen2 and RZ/A1 SoCs.
-
-Note that when I have tried to move the sh_eth_dev_exit() calling
-after phy_stop() on sh_eth_close(), but it gets worse (kernel panic
-happened and it seems that a register is accessed while the clock is
-off).
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 76ae281f6307 ('configfs: fix race between dentry put and lookup')
+Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/configfs/dir.c | 14 ++++++--------
+ 1 file changed, 6 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index afaf79b8761f..2d9f4ed9a65e 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -1408,6 +1408,10 @@ static void sh_eth_dev_exit(struct net_device *ndev)
- 	sh_eth_get_stats(ndev);
- 	sh_eth_reset(ndev);
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index a7a1b218f308..8e709b641b55 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -58,15 +58,13 @@ static void configfs_d_iput(struct dentry * dentry,
+ 	if (sd) {
+ 		/* Coordinate with configfs_readdir */
+ 		spin_lock(&configfs_dirent_lock);
+-		/* Coordinate with configfs_attach_attr where will increase
+-		 * sd->s_count and update sd->s_dentry to new allocated one.
+-		 * Only set sd->dentry to null when this dentry is the only
+-		 * sd owner.
+-		 * If not do so, configfs_d_iput may run just after
+-		 * configfs_attach_attr and set sd->s_dentry to null
+-		 * even it's still in use.
++		/*
++		 * Set sd->s_dentry to null only when this dentry is the one
++		 * that is going to be killed.  Otherwise configfs_d_iput may
++		 * run just after configfs_attach_attr and set sd->s_dentry to
++		 * NULL even it's still in use.
+ 		 */
+-		if (atomic_read(&sd->s_count) <= 2)
++		if (sd->s_dentry == dentry)
+ 			sd->s_dentry = NULL;
  
-+	/* Set the RMII mode again if required */
-+	if (mdp->cd->rmiimode)
-+		sh_eth_write(ndev, 0x1, RMIIMODE);
-+
- 	/* Set MAC address again */
- 	update_mac_address(ndev);
- }
+ 		spin_unlock(&configfs_dirent_lock);
 -- 
 2.20.1
 
