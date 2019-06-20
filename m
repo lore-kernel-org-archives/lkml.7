@@ -2,116 +2,253 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54F3FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:34:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F138FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:37:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24D40215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:34:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="XxxTCKxD"
+	by mail.kernel.org (Postfix) with ESMTP id C03D7214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:37:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731141AbfFTBeb (ORCPT
+        id S1731151AbfFTBhl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:34:31 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:41615 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726325AbfFTBea (ORCPT
+        Wed, 19 Jun 2019 21:37:41 -0400
+Received: from sobre.alvarezp.com ([173.230.155.94]:56534 "EHLO
+        sobre.alvarezp.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726325AbfFTBhl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:34:30 -0400
-Received: by mail-oi1-f196.google.com with SMTP id g7so885533oia.8;
-        Wed, 19 Jun 2019 18:34:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=googlemail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nYuOW5lyxxT0zsgk7qqZi/7w20Oi72vHiGCqLTnTrl8=;
-        b=XxxTCKxD/5Hh4mP6+R4KSzkOEhkkx9EXfAH8omqHrIeXVmLMBa406JF09S5I9/dOxR
-         wc9h4G7Dflde6RcyDAZnRIMTkl43HRI69tjffugAWRVlUFXSiEWEbbvf1v8Dkv333ACz
-         fPBTlaPJtNz1tic4Y8+juQsuQ6mnFj5eYHNiMilXbbr3elf5dvc2xJrALVZVKGSFd1iZ
-         efEFfZAArnZa7GOg/IseyJDpc7KuRCJF8XYefzt5VhBC48jDwJGyC0kRcJOnDLUKC0In
-         eFPF3hEUJBXxsibzw51TwqvsjDFIP78hjGH3zMbetl9Rq5+bOJEMbbz3Y1EtDIbZufot
-         ZLMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nYuOW5lyxxT0zsgk7qqZi/7w20Oi72vHiGCqLTnTrl8=;
-        b=BNEsDTidFziHEymSbkUyEdskkuyBeBVCwziwa7rvAqOIrSG4eWjQmmVQRyUab2orZx
-         zxXuwZkUEH9/ObfyEqpl5lo+HUwsCu6cKMUFXBL5OKadPQIO9RSab+5rtXoi4fiW4WRP
-         gaIM8mmk1XlSA9kiSUecIQ3A3ikCuA8ixUNodUc6e3ax9LALBF4LruvmQ53Iym6Ar+Ws
-         87jnzSdlyDcUQRO4pIeAAbpolXwcZgUmFZX5veAKUK223JZwMJ2fcPr9+f38iHVI0Q/u
-         oAJMt+6+wMXL11JDT8yvu0jAUb/vzf7yfMPfb1dBHXLgjUR3FI+4L1EexMGCWyaAMdxF
-         xApQ==
-X-Gm-Message-State: APjAAAVhVyePyzMFVsj/BNAvEbOQe0LSxwyVEQhXR/A6aTrfzovv39li
-        wcL7KPZ9hpOlMc7LE4DnPmjtMijzQx2SBhMPaXE=
-X-Google-Smtp-Source: APXvYqwrykrLtbD0pG9V8vBrsbsTo35v6Soy95FKONjQ0aI87GQhODvgpXAK5RhK2mM0+AszFXum8RjavMf7MOSMXic=
-X-Received: by 2002:aca:4403:: with SMTP id r3mr4853308oia.39.1560994469747;
- Wed, 19 Jun 2019 18:34:29 -0700 (PDT)
+        Wed, 19 Jun 2019 21:37:41 -0400
+Received: from [192.168.15.64] (unknown [189.205.206.165])
+        by sobre.alvarezp.com (Postfix) with ESMTPSA id 8E779228AF;
+        Wed, 19 Jun 2019 20:37:38 -0500 (CDT)
+Subject: Re: PROBLEM: Marvell 88E8040 (sky2) fails after hibernation
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiang Biao <jiang.biao2@zte.com.cn>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Dou Liyang <douly.fnst@cn.fujitsu.com>,
+        Nicolai Stange <nstange@suse.de>
+References: <aba1c363-92de-66d7-4aac-b555f398e70a@alvarezp.org>
+ <2cf2f745-0e29-13a7-6364-0a981dae758c@alvarezp.org>
+ <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de>
+From:   Octavio Alvarez <octallk1@alvarezp.org>
+Message-ID: <95539fd9-ffdb-b91c-935f-7fd54d048fdf@alvarezp.org>
+Date:   Wed, 19 Jun 2019 20:37:37 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-References: <20190617165836.4673-1-colin.king@canonical.com>
- <20190619051308.23582-1-martin.blumenstingl@googlemail.com> <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com>
-In-Reply-To: <92f9e5a6-d2a2-6bf2-ff8a-2430fe977f93@canonical.com>
-From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Date:   Thu, 20 Jun 2019 03:34:18 +0200
-Message-ID: <CAFBinCDmYVPDMcwAAYhMfxxuTsG=xunduN58_8e20zE_Mhmb7Q@mail.gmail.com>
-Subject: Re: [PATCH] net: stmmac: add sanity check to device_property_read_u32_array
- call
-To:     Colin Ian King <colin.king@canonical.com>
-Cc:     alexandre.torgue@st.com, davem@davemloft.net, joabreu@synopsys.com,
-        kernel-janitors@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        mcoquelin.stm32@gmail.com, netdev@vger.kernel.org,
-        peppe.cavallaro@st.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <alpine.DEB.2.21.1906132229540.1791@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Colin,
+On 6/13/19 3:45 PM, Thomas Gleixner wrote:
+>> I noticed that Thomas' mailbox is filtering my mail because of some RBL and
+>> have not figured out why that is yet so maybe he has not gotten any e-mails
+>> from me. However, I already tried conacting using a different mail provider.
+> 
+> I got your mail from June 1st via LKML and this one directly and via
+> LKML. It's in the pile of the other ~1000 mails in my backlog as I was out
+> on vacation and travel. Just because people do not reply immediately does
+> not mean they ignore you.
 
-On Wed, Jun 19, 2019 at 8:55 AM Colin Ian King <colin.king@canonical.com> wrote:
->
-> On 19/06/2019 06:13, Martin Blumenstingl wrote:
-> > Hi Colin,
-> >
-> >> Currently the call to device_property_read_u32_array is not error checked
-> >> leading to potential garbage values in the delays array that are then used
-> >> in msleep delays.  Add a sanity check to the property fetching.
-> >>
-> >> Addresses-Coverity: ("Uninitialized scalar variable")
-> >> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> > I have also sent a patch [0] to fix initialize the array.
-> > can you please look at my patch so we can work out which one to use?
-> >
-> > my concern is that the "snps,reset-delays-us" property is optional,
-> > the current dt-bindings documentation states that it's a required
-> > property. in reality it isn't, there are boards (two examples are
-> > mentioned in my patch: [0]) without it.
-> >
-> > so I believe that the resulting behavior has to be:
-> > 1. don't delay if this property is missing (instead of delaying for
-> >    <garbage value> ms)
-> > 2. don't error out if this property is missing
-> >
-> > your patch covers #1, can you please check whether #2 is also covered?
-> > I tested case #2 when submitting my patch and it worked fine (even
-> > though I could not reproduce the garbage values which are being read
-> > on some boards)
-> >
-> >
-> > Thank you!
-> > Martin
-> >
-> >
-> > [0] https://lkml.org/lkml/2019/4/19/638
-> >
-> Is that the correct link?
-sorry, that is a totally unrelated link
-the correct link is: https://patchwork.ozlabs.org/patch/1118313/
+I didn't assume "ignore", just wondered if messages got through. Thank 
+you for explaining; I will be more patient. :-)
+
+> Can you please provide the content of /proc/interrupts with the driver
+> loaded and working after boot (don't hibernate) for the following kernels:
+> 
+>    Linus upstream
+
+$ cat linux-master-after-boot.txt
+            CPU0       CPU1       CPU2       CPU3
+   0:         34          0          0          0   IO-APIC   2-edge 
+  timer
+   1:          0          0        257          0   IO-APIC   1-edge 
+  i8042
+   8:          0          0          0          1   IO-APIC   8-edge 
+  rtc0
+   9:          0        949          0          0   IO-APIC   9-fasteoi 
+  acpi
+  12:          0       2587          0          0   IO-APIC  12-edge 
+  i8042
+  16:          0          0         88       4116   IO-APIC  16-fasteoi 
+  ehci_hcd:usb1, ath9k
+  18:          0          0          0          0   IO-APIC  18-fasteoi 
+  i801_smbus, ips
+  23:        992          0        420        720   IO-APIC  23-fasteoi 
+  ehci_hcd:usb2
+  27:          1          0          0          0   PCI-MSI 3145728-edge 
+      eth0
+  28:      22999          0          0       8916   PCI-MSI 512000-edge 
+     ahci[0000:00:1f.2]
+  29:          0        243          0          0   PCI-MSI 32768-edge 
+    i915
+  30:          0          0        527          0   PCI-MSI 442368-edge 
+     snd_hda_intel:card0
+NMI:          9         10         10         14   Non-maskable interrupts
+LOC:      26980      34136      32278      30957   Local timer interrupts
+SPU:          0          0          0          0   Spurious interrupts
+PMI:          9         10         10         14   Performance 
+monitoring interrupts
+IWI:      12118      12820      11923      13042   IRQ work interrupts
+RTR:          0          0          0          0   APIC ICR read retries
+RES:       2566       1590       1565       1363   Rescheduling interrupts
+CAL:       2090       1927       1925       2002   Function call interrupts
+TLB:        238        256        206        262   TLB shootdowns
+TRM:          0          0          0          0   Thermal event interrupts
+THR:          0          0          0          0   Threshold APIC interrupts
+DFR:          0          0          0          0   Deferred Error APIC 
+interrupts
+MCE:          0          0          0          0   Machine check exceptions
+MCP:          2          3          3          3   Machine check polls
+HYP:          0          0          0          0   Hypervisor callback 
+interrupts
+HRE:          0          0          0          0   Hyper-V 
+reenlightenment interrupts
+HVS:          0          0          0          0   Hyper-V stimer0 
+interrupts
+ERR:          0
+MIS:          0
+PIN:          0          0          0          0   Posted-interrupt 
+notification event
+NPI:          0          0          0          0   Nested 
+posted-interrupt event
+PIW:          0          0          0          0   Posted-interrupt 
+wakeup event
+
+
+>    Linus upstream + revert
+
+$ cat linux-master-reverted-after-boot.txt
+            CPU0       CPU1       CPU2       CPU3
+   0:         34          0          0          0   IO-APIC   2-edge 
+  timer
+   1:          0          0          0        402   IO-APIC   1-edge 
+  i8042
+   8:          1          0          0          0   IO-APIC   8-edge 
+  rtc0
+   9:          0       1085          0          0   IO-APIC   9-fasteoi 
+  acpi
+  12:          0          0       5155          0   IO-APIC  12-edge 
+  i8042
+  16:          0          0         88       6917   IO-APIC  16-fasteoi 
+  ehci_hcd:usb1, ath9k
+  18:          0          0          0          0   IO-APIC  18-fasteoi 
+  i801_smbus, ips
+  23:        324          0          0       1959   IO-APIC  23-fasteoi 
+  ehci_hcd:usb2
+  27:          1          0          0          0   PCI-MSI 3145728-edge 
+      eth0
+  28:      39442          0          0          0   PCI-MSI 512000-edge 
+     ahci[0000:00:1f.2]
+  29:          0       2021          0          0   PCI-MSI 32768-edge 
+    i915
+  30:          0          0        544          0   PCI-MSI 442368-edge 
+     snd_hda_intel:card0
+NMI:         16         17         18         17   Non-maskable interrupts
+LOC:      46049      47263      47259      44457   Local timer interrupts
+SPU:          0          0          0          0   Spurious interrupts
+PMI:         16         17         18         17   Performance 
+monitoring interrupts
+IWI:      17558      15616      15991      15884   IRQ work interrupts
+RTR:          0          0          0          0   APIC ICR read retries
+RES:       4333       3136       2882       2690   Rescheduling interrupts
+CAL:       2803       2518       2405       2588   Function call interrupts
+TLB:       1085       1171       1201       1077   TLB shootdowns
+TRM:          0          0          0          0   Thermal event interrupts
+THR:          0          0          0          0   Threshold APIC interrupts
+DFR:          0          0          0          0   Deferred Error APIC 
+interrupts
+MCE:          0          0          0          0   Machine check exceptions
+MCP:          2          3          3          3   Machine check polls
+HYP:          0          0          0          0   Hypervisor callback 
+interrupts
+HRE:          0          0          0          0   Hyper-V 
+reenlightenment interrupts
+HVS:          0          0          0          0   Hyper-V stimer0 
+interrupts
+ERR:          0
+MIS:          0
+PIN:          0          0          0          0   Posted-interrupt 
+notification event
+NPI:          0          0          0          0   Nested 
+posted-interrupt event
+PIW:          0          0          0          0   Posted-interrupt 
+wakeup event
+
+>    4.14 stable (that's before the big overhaul of the vector/msi code)
+
+Haven't been able to boot 4.14 yet (as I already have a newer GCC). 
+Still trying to properly compile.
+
+Meanwhile, here it is for 4.9, which is the latest Debian-provided 
+kernel and worked:
+
+$ cat linux-4.9-after-boot.txt
+            CPU0       CPU1       CPU2       CPU3
+   0:         49          0          0          0   IO-APIC   2-edge 
+  timer
+   1:         74         65         90         81   IO-APIC   1-edge 
+  i8042
+   8:          0          0          1          0   IO-APIC   8-edge 
+  rtc0
+   9:         71         73         74         73   IO-APIC   9-fasteoi 
+  acpi
+  12:        263        250        257        293   IO-APIC  12-edge 
+  i8042
+  16:        340         56        507         63   IO-APIC  16-fasteoi 
+  ehci_hcd:usb1, ath9k
+  18:          0          0          0          0   IO-APIC  18-fasteoi 
+  i801_smbus, ips
+  23:        429        250        444        246   IO-APIC  23-fasteoi 
+  ehci_hcd:usb2
+  24:          1          0          0          0   PCI-MSI 3145728-edge 
+      eth0
+  25:       1469      17413       1462       1474   PCI-MSI 512000-edge 
+     ahci[0000:00:1f.2]
+  26:         20         15       1177         18   PCI-MSI 32768-edge 
+    i915
+  27:        119        115        125        124   PCI-MSI 442368-edge 
+     snd_hda_intel:card0
+NMI:          7          8          8          6   Non-maskable interrupts
+LOC:      13917      19102      13725      13534   Local timer interrupts
+SPU:          0          0          0          0   Spurious interrupts
+PMI:          7          8          8          6   Performance 
+monitoring interrupts
+IWI:       5372       7444       5009       4967   IRQ work interrupts
+RTR:          0          0          0          0   APIC ICR read retries
+RES:       1001        835        616        590   Rescheduling interrupts
+CAL:       3360       3170       3607       3670   Function call interrupts
+TLB:        146        169         74        219   TLB shootdowns
+TRM:          0          0          0          0   Thermal event interrupts
+THR:          0          0          0          0   Threshold APIC interrupts
+DFR:          0          0          0          0   Deferred Error APIC 
+interrupts
+MCE:          0          0          0          0   Machine check exceptions
+MCP:          2          2          2          2   Machine check polls
+ERR:          0
+MIS:          0
+PIN:          0          0          0          0   Posted-interrupt 
+notification event
+PIW:          0          0          0          0   Posted-interrupt 
+wakeup event
+
+I will keep trying 4.14, unless you say otherwise.
+
+I tried diffing -u but I could not interpret the result.
+
+Thank you for your help,
+Octavio.
