@@ -2,104 +2,274 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C26FEC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4578EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B4220679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14BEB20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:21:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561040442;
-	bh=SEe3n7FjxI5kRbQXaB6LQ1wMYZsE5oO3JDkdBCVx+I4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=dz4oP0TjQ+S61G0Nqx+y47/asozx05k8eBCdyZ5Vczv/x5cBVSkoH71mC7Hr6sqx4
-	 QCYlU9aEo5nWwLrwTgrgBgr8gxP1jdCA6b3Ek4zvpPYLev6muZHs60RCZKxLLt4k+s
-	 l0iAbkB0KjPPSnTJuInHQdmLqRITHayZGpmfSu8A=
+	s=default; t=1561040464;
+	bh=6F5deMei+k5+YeIpCzNrBLuu2IPKgo+Fob+rK4Iy+NQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=mHKSF5KynikMxrhyG9kYwF89qilEhsM8r3cosb9f3/Bw5urv5aAC+ERiY4uz1YzG+
+	 uMLjDTKn0Wg+L5pJ7uHoJ9vo8qR/djNYKMQfppryOOzpsseN4B3bRj6nTV1BE9VnzZ
+	 OouWgOx5Hi8VJN9z2/NEXD3iCU95KiC13xvWNb1Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbfFTOUl (ORCPT
+        id S1732110AbfFTOVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:20:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41286 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfFTOUk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:20:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
-        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BwRBAuz4S+s3MY4Q44hTgBhxFBOF/+k626a03wrDmOo=; b=CR3aWFX3TkOOIaYVE/VHyTJlh
-        Y8KjT8wQ1ZDscCTXgeamIkGCsZZ0FWFvKCVHkZjOtkK7GSpCmRE2retqdck/UmVohMIRM8LgVA+0g
-        uBMGuBgkUlw+QgBxFkbMVd9dgZ5f3HaCxK187kQ3M/nSbkYcTcilmhmF1jFHjNcmhC5O7K7eZjK5a
-        levepTfwOBuGYehSYdPrPIzMC/9joBLFFSmSr8yucahkSwq025TiN6xW93169GWyh/SuPyQFUTK24
-        7aCUn4difJn9RDcI9nf4aVFJKicpTVLbRtQUCLsieCJXS+vwWkOYhBqankvu+vIYeiwOSXNkwEhre
-        rQhkD0N4Q==;
-Received: from 177.133.86.196.dynamic.adsl.gvt.net.br ([177.133.86.196] helo=coco.lan)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdxvb-000303-6i; Thu, 20 Jun 2019 14:20:39 +0000
-Date:   Thu, 20 Jun 2019 11:20:34 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>
-Subject: Re: [PATCH 04/14] ABI: better identificate tables
-Message-ID: <20190620112034.0d2be447@coco.lan>
-In-Reply-To: <20190620125413.GA5170@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
-        <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
-        <20190619125135.GG25248@localhost>
-        <20190619105633.7f7315a5@coco.lan>
-        <20190619150207.GA19346@kroah.com>
-        <20190620120150.GH6241@localhost>
-        <20190620125413.GA5170@kroah.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 20 Jun 2019 10:21:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35726 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726391AbfFTOVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:21:02 -0400
+Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 903BD2085A;
+        Thu, 20 Jun 2019 14:21:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561040460;
+        bh=6F5deMei+k5+YeIpCzNrBLuu2IPKgo+Fob+rK4Iy+NQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=D6CfA/ADEPYvgec3kZ65C4dvIwt5vIiHBo3o+qeieu87Ce+NsXE/YURm9z0yLCYL8
+         NIDFqt192RyFpvQCqFRvRyciuLjrCaMqJqiqsmTFrXWYGsHsgFjmQLtFdMhfW69TGw
+         4LGwM+HYGo7hkAula2TvcTZgMwtCfX98wHuIXkKU=
+Received: by mail-qt1-f175.google.com with SMTP id h21so3292734qtn.13;
+        Thu, 20 Jun 2019 07:21:00 -0700 (PDT)
+X-Gm-Message-State: APjAAAULEUUGa07iejw0d9orJeTFaNVzx2DtvgUqz8d72KEqL3Olfjy+
+        ZpWd/GI3+Cnw4w8lGzHUzubo9aeVDhP1qszVvA==
+X-Google-Smtp-Source: APXvYqw03gZBMsZRPNi1BjzZT8MEMjOmAfMJmJ2g9chv7u9G+/iC5PFAdptyPt9iPpUBZAF4tOoKVlaJ6n9XxPv+neY=
+X-Received: by 2002:a0c:8a43:: with SMTP id 3mr40415318qvu.138.1561040459773;
+ Thu, 20 Jun 2019 07:20:59 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20190620094203.13654-1-mircea.caprioru@analog.com> <20190620094203.13654-4-mircea.caprioru@analog.com>
+In-Reply-To: <20190620094203.13654-4-mircea.caprioru@analog.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 20 Jun 2019 08:20:47 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+P3oG1MPcMMrEfp58Ltw92kk66os34wVwNuUC9a=F2vg@mail.gmail.com>
+Message-ID: <CAL_Jsq+P3oG1MPcMMrEfp58Ltw92kk66os34wVwNuUC9a=F2vg@mail.gmail.com>
+Subject: Re: [RESEND PATCH 4/4] dt-bindings: iio: adc: Convert ad7124
+ documentation to YAML
+To:     Mircea Caprioru <mircea.caprioru@analog.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Thu, 20 Jun 2019 14:54:13 +0200
-Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+On Thu, Jun 20, 2019 at 3:42 AM Mircea Caprioru
+<mircea.caprioru@analog.com> wrote:
+>
+> Convert AD7124 bindings documentation to YAML format.
+>
+> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+> ---
+>  .../bindings/iio/adc/adi,ad7124.yaml          | 146 ++++++++++++++++++
+>  1 file changed, 146 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> new file mode 100644
+> index 000000000000..2dba3759b8e3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
+> @@ -0,0 +1,146 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-> On Thu, Jun 20, 2019 at 02:01:50PM +0200, Johan Hovold wrote:
-> > > I don't know when "Description" and "RST-Description" would be used.
-> > > Why not just parse "Description" like rst text and if things are "messy"
-> > > we fix them up as found, like you did with the ":" here?  It doesn't
-> > > have to be complex, we can always fix them up after-the-fact if new
-> > > stuff gets added that doesn't quite parse properly.
-> > > 
-> > > Just like we do for most kernel-doc formatting :)  
-> > 
-> > But kernel-doc has a documented format, which was sort of the point I
-> > was trying to make. If the new get_abi.pl scripts expects a colon I
-> > think it should be mentioned somewhere (e.g. Documentation/ABI/README).
-> > 
-> > Grepping for attribute entries in linux-next still reveals a number
-> > descriptions that still lack that colon and use varying formatting. More
-> > are bound to be added later, but perhaps that's ok depending on what
-> > you're aiming at here.  
-> 
-> I'm aiming for "good enough" to start with, and then we can work through
-> the exceptions.
-> 
-> But given that Mauro hasn't resent the script that does the conversion
-> of the files, I don't know if that will even matter... {hint}
+The preference for new bindings is dual (GPL-2.0 OR BSD-2-Clause) if
+that is okay with you.
 
-It sounds I missed something... are you expecting a new version? 
+> +# Copyright 2019 Analog Devices Inc.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7124 ADC device driver
+> +
+> +maintainers:
+> +  - Stefan Popa <stefan.popa@analog.com>
+> +
+> +description: |
+> +  Bindings for the Analog Devices AD7124 ADC device. Datasheet can be
+> +  found here:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7124-8.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7124-4
+> +      - adi,ad7124-8
+> +
+> +  reg:
+> +    description: SPI chip select number for the device
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +    description: phandle to the master clock (mclk)
+> +
+> +  clock-names:
+> +    items:
+> +      - const: mclk
+> +
+> +  interrupts:
+> +    description: IRQ line for the ADC
+> +    maxItems: 1
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +  refin1-supply:
+> +    description: refin1 supply can be used as reference for conversion.
+> +    maxItems: 1
+> +
+> +  refin2-supply:
+> +    description: refin2 supply can be used as reference for conversion.
+> +    maxItems: 1
+> +
+> +  avdd-supply:
+> +    description: avdd supply can be used as reference for conversion.
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - clock-names
+> +  - interrupts
+> +
+> +patternProperties:
+> +  "^channel@[01]$":
 
-If so, what changes are you expecting?
+Need to allow 2-15?
 
-Thanks,
-Mauro
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number. It can have up to 8 channels on ad7124-4
+> +          and 16 channels on ad7124-8, numbered from 0 to 15.
+
+Sounds like constraints.
+
+items:
+  - minimum: 0
+    maximum: 15
+
+> +        maxItems: 1
+
+And then you can drop this as it is implied with the number of 'items' entries.
+
+> +
+> +      adi,reference-select:
+> +        description: |
+> +          Select the reference source to use when converting on
+> +          the specific channel.
+> +          If this field is left empty, internal reference is selected.
+> +        maxItems: 1
+
+Type? Range of values?
+
+> +
+> +      diff-channels:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+
+Not correct as this is an array. Assuming this is covered by a common
+adc schema, you just need to define constraints on the values:
+
+items:
+  minimum: 0
+  maximum: 15
+
+> +
+> +      bipolar:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+
+You can assume this is covered by common adc schema. So just 'bipolar:
+true' is enough.
+
+> +
+> +      adi,buffered-positive:
+> +        description: Enable buffered mode for positive input.
+> +        maxItems: 1
+
+Not right as this is bool. Needs 'type: boolean'
+
+> +      adi,buffered-negative:
+> +        description: Enable buffered mode for negative input.
+> +        maxItems: 1
+
+ditto
+
+> +
+> +    required:
+> +      - reg
+> +      - diff-channels
+> +
+> +examples:
+> +  - |
+> +    adc@0 {
+> +      compatible = "adi,ad7124-4";
+> +      reg = <0>;
+> +      spi-max-frequency = <5000000>;
+> +      interrupts = <25 2>;
+> +      interrupt-parent = <&gpio>;
+> +      refin1-supply = <&adc_vref>;
+> +      clocks = <&ad7124_mclk>;
+> +      clock-names = "mclk";
+> +
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      channel@0 {
+> +        reg = <0>;
+> +        diff-channels = <0 1>;
+> +        adi,reference-select = <0>;
+> +        adi,buffered-positive;
+> +      };
+> +
+> +      channel@1 {
+> +        reg = <1>;
+> +        bipolar;
+> +        diff-channels = <2 3>;
+> +        adi,reference-select = <0>;
+> +        adi,buffered-positive;
+> +        adi,buffered-negative;
+> +      };
+> +
+> +      channel@2 {
+> +        reg = <2>;
+> +        diff-channels = <4 5>;
+> +      };
+> +
+> +      channel@3 {
+> +        reg = <3>;
+> +        diff-channels = <6 7>;
+> +      };
+> +    };
+> --
+> 2.17.1
+>
