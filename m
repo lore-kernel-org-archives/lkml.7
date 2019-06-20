@@ -2,109 +2,93 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AABC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:13:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 499C1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DA22082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:13:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="wZXK/rGx"
+	by mail.kernel.org (Postfix) with ESMTP id 1EEA12082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:15:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726031AbfFTXNR (ORCPT
+        id S1726029AbfFTXPw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 19:13:17 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:42140 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFTXNQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 19:13:16 -0400
-Received: by mail-oi1-f193.google.com with SMTP id s184so3371606oie.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 16:13:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s1U8b9i28hLJayWU6+c6YVAvl2Rop3SMymokvtyzh0o=;
-        b=wZXK/rGx3xr+u7oi//RllS+oGNo9Tzry/ML+vUVpgS/Zv+UVNj64dDUV96UYUd1Jn3
-         HTEz2HrWATyMseQ9ESDNMngt9dsb1UfHOlUe8zE/5wDSyS1AVE4ZRpittyrzTTchLos5
-         4eYsM6eY6GbydQyeJ5021LQYq2W4FXOMsUpMRrhldyeNx0gkDVyn8cVP0JPDGRXYNHA0
-         Khcxwe9CepLmmm4wC6aJwDUSLxUAkLS7QB/OjbTbUQGW9ZgOSJMHsxAIyonm6fZ1Gisx
-         DP1+rtOY4WuxwcsaUVn8PkaGb7RTOOyiGjDW9YizTilPtgcvoQvLQUcgY/Zjj7YawYJt
-         OuAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s1U8b9i28hLJayWU6+c6YVAvl2Rop3SMymokvtyzh0o=;
-        b=nDj7k6/cnpEkd/nZaFbtDqY1sK80zwlPKKj6fLFrSROLWLR0z6u8v9iVUWfzDPOyJx
-         i+vA66pH7zn3wMkZfC8zkA1dCBZsjjOXE79YaX3pVZyWSUQ731blYGkCnoM1YA566MLE
-         MF6p2jIgYCUea+aBsrVWp9sDPbcAoD3KkEPVbE6PUz6V4ilo0kL9M5b+kfAV2Kq/KTrO
-         xtoGKWS00p7oEBSrl7cd0qENWOsQXm047NXVCFWyCDbTVcrYnjM7NqnUuWCr7LLj8pw4
-         /MgWsT6kMiVlZlI32MubEyW/y1e1UpPEW3/wclAfESvy4oHdat8M4veiSfCdl60ctSx0
-         zAGQ==
-X-Gm-Message-State: APjAAAW7d3+Q2/JIzI690YFQcpU/3S5Ahu+i/R4XLDjhSNggIZ1GEpJx
-        IhMdIS6wyjUr6Iof7WiaVHtbHSujTfNasARcUMwQ4Q==
-X-Google-Smtp-Source: APXvYqxf0VmRIyLU90bg8tJ1rHATTJ0aCa2jorETk2j+MQarpeuMzOl/bF99+OKywGM9BxnPQWWwQHFQhni6/xxki/w=
-X-Received: by 2002:aca:fc50:: with SMTP id a77mr917887oii.0.1561072395816;
- Thu, 20 Jun 2019 16:13:15 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190613045903.4922-1-namit@vmware.com> <20190613045903.4922-4-namit@vmware.com>
- <20190617215750.8e46ae846c09cd5c1f22fdf9@linux-foundation.org>
- <98464609-8F5A-47B9-A64E-2F67809737AD@vmware.com> <8072D878-BBF2-47E4-B4C9-190F379F6221@vmware.com>
- <CAErSpo5eiweMk2rfT81Kwnpd=MZsOa01prPo_rAFp-MZ9F2xdQ@mail.gmail.com>
- <CAPcyv4iAbWnWUT2d2VhnvuHvJE0-Vxgbf1TYtOPjkR6j3qROtw@mail.gmail.com> <8736k49c57.fsf@firstfloor.org>
-In-Reply-To: <8736k49c57.fsf@firstfloor.org>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 20 Jun 2019 16:13:04 -0700
-Message-ID: <CAPcyv4i1YYExVtXXdkCMgRvjqoeTkZdjwDVjf=sJN-qPF1LEtg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] resource: Introduce resource cache
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, Nadav Amit <namit@vmware.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Borislav Petkov <bp@suse.de>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Peter Zijlstra <peterz@infradead.org>,
+        Thu, 20 Jun 2019 19:15:52 -0400
+Received: from mga07.intel.com ([134.134.136.100]:54442 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfFTXPw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 19:15:52 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 16:15:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,398,1557212400"; 
+   d="scan'208";a="186977287"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Jun 2019 16:15:48 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+        id 7438114B; Fri, 21 Jun 2019 02:15:47 +0300 (EEST)
+Date:   Fri, 21 Jun 2019 02:15:47 +0300
+From:   "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        "Kleen, Andi" <andi.kleen@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Kyle Pelton <kyle.d.pelton@intel.com>,
+        Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
+ phys_p4d_init()
+Message-ID: <20190620231547.dkefu73blzte32wq@black.fi.intel.com>
+References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
+ <4ecd0603-e847-1cae-bafa-e892d79b7259@intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4ecd0603-e847-1cae-bafa-e892d79b7259@intel.com>
+User-Agent: NeoMutt/20170714-126-deb55f (1.8.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 2:31 PM Andi Kleen <andi@firstfloor.org> wrote:
->
-> Dan Williams <dan.j.williams@intel.com> writes:
-> >
-> > The underlying issue is that the x86-PAT implementation wants to
-> > ensure that conflicting mappings are not set up for the same physical
-> > address. This is mentioned in the developer manuals as problematic on
-> > some cpus. Andi, is lookup_memtype() and track_pfn_insert() still
-> > relevant?
->
-> There have been discussions about it in the past, and the right answer
-> will likely differ for different CPUs: But so far the official answer
-> for Intel CPUs is that these caching conflicts should be avoided.
->
+On Thu, Jun 20, 2019 at 02:42:55PM +0000, Dave Hansen wrote:
+> On 6/20/19 4:22 AM, Kirill A. Shutemov wrote:
+> > The commit relaxes KASLR alignment requirements and it can lead to
+> > mismatch bentween 'i' and 'p4d_index(vaddr)' inside the loop in
+> > phys_p4d_init(). The mismatch in its turn leads to clearing wrong p4d
+> > entry and eventually to the oops.
+> 
+> Just curious, but what does it relax the requirement to and from?
+> 
+> I'm just not clearly spotting the actual bug.
 
-Ok.
+Before the commit PAGE_OFFSET is always aligned to P4D_SIZE if we boot in
+5-level paging mode. But now only PUD_SIZE alignment is guaranteed.
 
-> So I guess the cache in the original email makes sense for now.
+For phys_p4d_init() it means that paddr_next after the first iteration
+can belong to the same p4d entry.
 
-I wouldn't go that far, but it does mean that if we go ahead with
-caching the value as a dax_device property there should at least be a
-debug option to assert that the device value conforms to all the other
-mappings.
+In the case I was able to reproduce the vaddr on the first iteration is
+0xff4228027fe00000 and paddr is 0x33fe00000. On the second iteration vaddr
+becomes 0xff42287f40000000 and paddr is 0x8000000000. The vaddr in both
+cases bolong to the same p4d entry.
 
-Another  failing of the track_pfn_insert() and lookup_memtype()
-implementation is that it makes it awkward to handle marking mappings
-UC to prevent speculative consumption of poison. That is something
-that is better handled, in my opinion, by asking the device for the
-pgprot and coordinating shooting down any WB mappings of the same
-physical page.
+It screws up 'i' count: we miss the last entry in the page table
+completely.  And it confuses the branch under 'paddr >= paddr_end'
+condition: the p4d entry can be cleared where must not to.
+
+The patch makes phys_p4d_init() work like __kernel_physical_mapping_init()
+which deals with phys-virt mismatch already.
+
+I hope this explanation makes any sense :P
+
+-- 
+ Kirill A. Shutemov
