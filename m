@@ -2,171 +2,72 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-10.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 321E8C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:40:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE11C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:40:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0918820657
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:40:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="HKn791tb"
+	by mail.kernel.org (Postfix) with ESMTP id A2340206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:40:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbfFTVkE (ORCPT
+        id S1726434AbfFTVk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:40:04 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:39864 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfFTVkD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:40:03 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KLYHVn088700;
-        Thu, 20 Jun 2019 21:38:38 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=D3CnJNHOIgWdUG1TcE81fq/bsWj72ILMBiE1tAPqQwo=;
- b=HKn791tbDcSyV5tTwA4L7n0iz31Dp5T+PYftD80uW1HfTEOKSjNNo8ILTMjO1/Rv8cOI
- hpROCjBB23fPljyiuqdvwYxNy/xpAecXOJ97+qJXUbuQysBIXp6+kq1M1NohTdSt2o5m
- bdEHlQfhcUcK9Q2VlmkUVsRBf7mVWZm2yOm4eXP0y5gikqkZmSL3eKCbJdvsPzjLY50k
- BfxiWb1VEIm42WU1tUp/bKXk3/F6YlHbkAbzrc8pKPgHNgEvkWIV2bY4z7UBJVZQfH8/
- ZSoTLiWzgKluhc0l9SvuD6uztH108WS7lGdHTqumoJ0SNSOf6qr9qij979gZkZoaMzEB qg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2t7809kdj1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 21:38:38 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KLacer151050;
-        Thu, 20 Jun 2019 21:36:38 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by aserp3020.oracle.com with ESMTP id 2t77ypkrr0-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Jun 2019 21:36:38 +0000
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5KLabeL151041;
-        Thu, 20 Jun 2019 21:36:37 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2t77ypkrqs-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 21:36:37 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5KLaWqH007037;
-        Thu, 20 Jun 2019 21:36:32 GMT
-Received: from localhost (/10.145.179.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Jun 2019 14:36:31 -0700
-Date:   Thu, 20 Jun 2019 14:36:29 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 4/6] vfs: don't allow most setxattr to immutable files
-Message-ID: <20190620213629.GB5375@magnolia>
-References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
- <156022840560.3227213.4776913678782966728.stgit@magnolia>
- <20190620140345.GI30243@quack2.suse.cz>
+        Thu, 20 Jun 2019 17:40:28 -0400
+Received: from mga18.intel.com ([134.134.136.126]:34693 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfFTVk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 17:40:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 14:40:26 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,398,1557212400"; 
+   d="scan'208";a="168639077"
+Received: from mudigirx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.61.12])
+  by FMSMGA003.fm.intel.com with ESMTP; 20 Jun 2019 14:40:24 -0700
+Date:   Fri, 21 Jun 2019 00:40:22 +0300
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Daniel =?iso-8859-1?Q?D=EDaz?= <daniel.diaz@linaro.org>
+Cc:     shuah@kernel.org, linux-kselftest@vger.kernel.org,
+        Petr Vorel <petr.vorel@gmail.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] selftests/tpm2: Install run-time Python modules
+Message-ID: <20190620214022.GA20474@linux.intel.com>
+References: <20190620131822.28944-1-daniel.diaz@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190620140345.GI30243@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906200154
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190620131822.28944-1-daniel.diaz@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:03:45PM +0200, Jan Kara wrote:
-> On Mon 10-06-19 21:46:45, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
-> > 
-> > The chattr manpage has this to say about immutable files:
-> > 
-> > "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> > or renamed, no link can be created to this file, most of the file's
-> > metadata can not be modified, and the file can not be opened in write
-> > mode."
-> > 
-> > However, we don't actually check the immutable flag in the setattr code,
-> > which means that we can update inode flags and project ids and extent
-> > size hints on supposedly immutable files.  Therefore, reject setflags
-> > and fssetxattr calls on an immutable file if the file is immutable and
-> > will remain that way.
-> > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> > ---
-> >  fs/inode.c |   31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> > 
-> > 
-> > diff --git a/fs/inode.c b/fs/inode.c
-> > index a3757051fd55..adfb458bf533 100644
-> > --- a/fs/inode.c
-> > +++ b/fs/inode.c
-> > @@ -2184,6 +2184,17 @@ int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags)
-> >  	    !capable(CAP_LINUX_IMMUTABLE))
-> >  		return -EPERM;
-> >  
-> > +	/*
-> > +	 * We aren't allowed to change any other flags if the immutable flag is
-> > +	 * already set and is not being unset.
-> > +	 */
-> > +	if ((oldflags & FS_IMMUTABLE_FL) &&
-> > +	    (flags & FS_IMMUTABLE_FL)) {
-> > +		if ((oldflags & ~FS_IMMUTABLE_FL) !=
-> > +		    (flags & ~FS_IMMUTABLE_FL))
+On Thu, Jun 20, 2019 at 08:18:19AM -0500, Daniel Díaz wrote:
+> When ordinarily running the tests, upon `make install', the
+> following error is encountered:
+>   ImportError: No module named tpm2_tests
+> because the Python files are not installed at the moment.
 > 
-> This check looks a bit strange when you've just check FS_IMMUTABLE_FL isn't
-> changing... Why not just oldflags != flags?
+> Fix this by adding both Python modules as accompanying
+> TEST_FILES in the Makefile.
 > 
-> > +	if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
-> > +	    (fa->fsx_xflags & FS_XFLAG_IMMUTABLE)) {
-> > +		if ((old_fa->fsx_xflags & ~FS_XFLAG_IMMUTABLE) !=
-> > +		    (fa->fsx_xflags & ~FS_XFLAG_IMMUTABLE))
-> 
-> Ditto here...
+> Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
 
-Good point!  I'll fix it.
+Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
 
---D
+Question the kselftests maintainers: can I take this to [1] and
+include to my 5.3 PR?
 
-> 
-> > +			return -EPERM;
-> > +		if (old_fa->fsx_projid != fa->fsx_projid)
-> > +			return -EPERM;
-> > +		if ((fa->fsx_xflags & (FS_XFLAG_EXTSIZE |
-> > +				       FS_XFLAG_EXTSZINHERIT)) &&
-> > +		    old_fa->fsx_extsize != fa->fsx_extsize)
-> > +			return -EPERM;
-> > +		if ((old_fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
-> > +		    old_fa->fsx_cowextsize != fa->fsx_cowextsize)
-> > +			return -EPERM;
-> > +	}
-> > +
-> >  	/* Extent size hints of zero turn off the flags. */
-> >  	if (fa->fsx_extsize == 0)
-> >  		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
-> 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+[1] git://git.infradead.org/users/jjs/linux-tpmdd.git
+
+/Jarkko
