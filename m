@@ -2,82 +2,81 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEC79C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45DF1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:00:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C20A02075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A2142075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:00:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nMD9yr5q"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfFTV7t (ORCPT
+        id S1726353AbfFTWAu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:59:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:49856 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725906AbfFTV7t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:59:49 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2B0AFBB00;
-        Thu, 20 Jun 2019 21:59:36 +0000 (UTC)
-Received: from ovpn-117-83.phx2.redhat.com (ovpn-117-83.phx2.redhat.com [10.3.117.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E1D1860477;
-        Thu, 20 Jun 2019 21:59:30 +0000 (UTC)
-Message-ID: <cf42d8516ac99f69913b1f7a7e8abe578ad27e7f.camel@redhat.com>
-Subject: Re: [RFC PATCH RT 3/4] rcu: unlock special: Treat irq and preempt
- disabled the same
-From:   Scott Wood <swood@redhat.com>
-To:     paulmck@linux.ibm.com
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 20 Jun 2019 16:59:30 -0500
-In-Reply-To: <20190620211005.GW26519@linux.ibm.com>
-References: <20190619011908.25026-1-swood@redhat.com>
-         <20190619011908.25026-4-swood@redhat.com>
-         <20190620211005.GW26519@linux.ibm.com>
-Organization: Red Hat
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 20 Jun 2019 18:00:50 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:45926 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726079AbfFTWAu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 18:00:50 -0400
+Received: by mail-io1-f68.google.com with SMTP id e3so862357ioc.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 15:00:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q1L8uRv2O5Sf9Nnxuq5fcmvqea9J+FoKGX/eSZPI9YI=;
+        b=nMD9yr5qiweWh1Lj7LZj1ylEbvr5Ei8RKKNYbfaQCHbkH8r3fxz8fbn3+I3TC79oT4
+         K7ubsATwWtEbYTngqJDoZ7gqd44WiCWyOHJ49UY3o7Y6CFjBnlkppSuZX19Ax30cmibc
+         r7KZYTqrIwkBaSK177hShJ/kwf6fzypVpcF0LB5FsrfkPC25ZVp7dKdy/Cc1Gs4pV1WY
+         rXobPmwDjq8RhCh89WNhuUeb4GsTsN2On5UtX/xLHzugz3cnLg0MatEJ2DT3+QpeK9AH
+         5x+2UAq4KXYjTNSLV/gEkxi6TT9NreFJNO/6k66BmKK8Eeyslb90Dmj8TORHWrG8nKyp
+         plRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q1L8uRv2O5Sf9Nnxuq5fcmvqea9J+FoKGX/eSZPI9YI=;
+        b=p4WShSaIalypp4WRZQNTrQVmx8lKDvLmlrgTwYgx9b+V+97qCIO9dQMmSpDCdapydt
+         Yh+AkdD69X0T1jrH7KTWqrdYuJFPJV0gMKnGPoVrSlZrtUAB2HWPg7EAIWcsWnGJz8at
+         1+Exw+pOnpoBRfpPCtjcYQKKNZRnyattD3YMbQc8QKmJcMIg8zrr3hA0A1IxP9rNu4/b
+         wWIXsRBHE1hvSPcbGr4Jwsv/zHy0d4bAvOBr9+hooLoAMz6gr+JnGQCKcKKTxWwlm7pv
+         pvTr2wCAHDMn2mBIBtqF+ivn5zYGkqY72CbcbVRtss5aKq6N3GmYinnuwjB5/RVIwJum
+         l6fg==
+X-Gm-Message-State: APjAAAUqS4eDfPbWIrs1ZkcCLu7aJtEEd9xWlaHEKcHY6wt623afLZFD
+        /s2mq6Zm/ECZuUYyVlY3kTcfmAInKyBc1fXPkcLzJw==
+X-Google-Smtp-Source: APXvYqyrvNV0TAI2T6wKLb6CUaIt2peexavbbYTFmWo2/dmMyrc6AdQDx7XOB8ftB7s+gWh0AQgHtNlirFETQ42BIJM=
+X-Received: by 2002:a05:6602:220d:: with SMTP id n13mr13392720ion.104.1561068049041;
+ Thu, 20 Jun 2019 15:00:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 20 Jun 2019 21:59:49 +0000 (UTC)
+References: <20190615040210.GA9112@hari-Inspiron-1545> <CAKv+Gu9-wiJNxPsVn06dBSU8Gchg8LjV=mi0cThZUWywmt2xzQ@mail.gmail.com>
+ <CACdnJuudmE-MNuO7z87Mm65VaXbRzhOrBEpU5F=yC67uSLytGQ@mail.gmail.com> <20190620213722.GA17841@linux.intel.com>
+In-Reply-To: <20190620213722.GA17841@linux.intel.com>
+From:   Matthew Garrett <mjg59@google.com>
+Date:   Thu, 20 Jun 2019 15:00:37 -0700
+Message-ID: <CACdnJusDaGkTAEWJ41+dGQxRWqxbgk8a_iNq5pCuGp=NsdEXgg@mail.gmail.com>
+Subject: Re: [PATCH] drivers: firmware: efi: fix gcc warning -Wint-conversion
+To:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
+        tpmdd-devel@lists.sourceforge.net,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 14:10 -0700, Paul E. McKenney wrote:
-> On Tue, Jun 18, 2019 at 08:19:07PM -0500, Scott Wood wrote:
-> > [Note: Just before posting this I noticed that the invoke_rcu_core stuff
-> >  is part of the latest RCU pull request, and it has a patch that
-> >  addresses this in a more complicated way that appears to deal with the
-> >  bare irq-disabled sequence as well.
-> 
-> Far easier to deal with it than to debug the lack of it.  ;-)
-> 
-> >  Assuming we need/want to support such sequences, is the
-> >  invoke_rcu_core() call actually going to result in scheduling any
-> >  sooner?  resched_curr() just does the same setting of need_resched
-> >  when it's the same cpu.
-> > ]
-> 
-> Yes, invoke_rcu_core() can in some cases invoke the scheduler sooner.
-> Setting the CPU-local bits might not have effect until the next interrupt.
+On Thu, Jun 20, 2019 at 2:37 PM Jarkko Sakkinen
+<jarkko.sakkinen@linux.intel.com> wrote:
+> Right! OK, I squashed just the fix to the earlier patch. Master and
+> next are updated. Can you take a peek of [1] and see if it looks
+> legit given all the fuzz around these changes? Then I'm confident
+> enough to do the 5.3 PR.
 
-Maybe I'm missing something, but I don't see how (in the non-use_softirq
-case).  It just calls wake_up_process(), which in resched_curr() will set
-need_resched but not do an IPI-to-self.
-
--Scott
-
-
+All looks good to me. Thanks!
