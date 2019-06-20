@@ -2,121 +2,168 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63F01C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:04:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C39EDC48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38C582085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:04:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="W8Kq8n3T"
+	by mail.kernel.org (Postfix) with ESMTP id 967A8208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:04:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561014290;
+	bh=u9dfPRuXvIzrKU/vTN2a37+Ut2Vtr8pb9LzyqX4aR+4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y4ipQyFkR4qWwIMJbNv9ZI07NIGd0YE8hojQ4yyMu9r1SjnHt+J8BfvwD9gsQDiwG
+	 t2mYAN5oeXRzOSMFXkfrFZN0W+6akI5ahygIJ9w08D7eYj0lvPjANBrdZZnDXLLAaF
+	 uFXxZD1JpOmovzTs8csWG9SGwIxz5pIRv0Qd5oyg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfFTHEP (ORCPT
+        id S1730786AbfFTHEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:04:15 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:45265 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTHEP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:04:15 -0400
-Received: by mail-qk1-f196.google.com with SMTP id s22so1204885qkj.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 00:04:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=qra3uPbmwxdDyA4AaZlBHKJVrJf/WvX+mVnEuv9KXzU=;
-        b=W8Kq8n3Tk/T94dHOWAMcyWhdnrnuJks3EX2wE7Bfqelm6h6U/w8oSPk7CCXKmTjmoU
-         TfeeCKVRvJNzayy9f6Wi+t1jtIkmar2UUzYZX9NejWdA9c0Y6KWK9OBS3ZGo5Qs2aFIW
-         DRhFxFA4WqFOqWagNobpAj/17ziKwPPEJgIUw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=qra3uPbmwxdDyA4AaZlBHKJVrJf/WvX+mVnEuv9KXzU=;
-        b=Lnhna5pt2toIyJkC4/uo+BdIkY0MJZiGN2H4y3ass4GwGtenotMHl734ms8nc0kUZq
-         sVf1YiXEpCjYrKV0TJOOgFB+9BidViBkegthlwhShEo1Eti+kAnfzio2T+zKDUcICAxZ
-         XhpYKSTt1I6EpmQh0sriseodqULxkDMXTJvUkl0NArzoNFaKhaUrzAQgDg6V7KPh+fVO
-         QDKLwDjcrtBc/i0zHg7Zqax4rpCKNmsQ5gyVyxZQzTf2S2MKZQL9t4NM2b/3+SKF+00R
-         9MPOgQYyjWMIw5B6lHHr4GHI7zzJbSTIhSZP5b8CwgwbAjSkA0E8ejgEs3cS+KD54yf4
-         HiIQ==
-X-Gm-Message-State: APjAAAWsQCBcCX2IcyEMwIDCkbJB/aaWWRg7R4b5zUWxYBpJw5gsW5yZ
-        CLW1kPJqUoJjVvz927cBEJre5Js8AhvE7tvNafWiQQ==
-X-Google-Smtp-Source: APXvYqyn0Z6SBnEwII20nrJnyGd3pOxDX+LJHUmak7ix9Cp2YOWeFQYLIzeYzQfPuf1S6FLxj/0GSbcuVaf/Pu4uJV4=
-X-Received: by 2002:a37:ea0c:: with SMTP id t12mr35032475qkj.117.1561014254295;
- Thu, 20 Jun 2019 00:04:14 -0700 (PDT)
+        Thu, 20 Jun 2019 03:04:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43250 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725872AbfFTHEt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:04:49 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A60D3AE34;
+        Thu, 20 Jun 2019 07:04:46 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 09:04:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
+Message-ID: <20190620070444.GB12083@dhcp22.suse.cz>
+References: <20190610111252.239156-1-minchan@kernel.org>
+ <20190610111252.239156-5-minchan@kernel.org>
+ <20190619132450.GQ2968@dhcp22.suse.cz>
+ <20190620041620.GB105727@google.com>
 MIME-Version: 1.0
-References: <20190617122000.22181-1-hch@lst.de> <20190617122000.22181-8-hch@lst.de>
- <CACVXFVObpdjN6V9qS-C9NG5xcrPqmx-X22qVamOSZf81Vog6zw@mail.gmail.com> <CA+RiK64sFfY79i7q2YbN5HcZ4wzVOcLWgDJnPbf6=ycdcmC-Mg@mail.gmail.com>
-In-Reply-To: <CA+RiK64sFfY79i7q2YbN5HcZ4wzVOcLWgDJnPbf6=ycdcmC-Mg@mail.gmail.com>
-From:   Suganath Prabu Subramani <suganath-prabu.subramani@broadcom.com>
-Date:   Thu, 20 Jun 2019 12:38:52 +0530
-Message-ID: <CA+RiK64_31h+UHA7r3BdPo7AjUTyfEKYfskEquqbCZ84d4pbKw@mail.gmail.com>
-Subject: Re: [PATCH 7/8] mpt3sas: set an unlimited max_segment_size for SAS
- 3.0 HBAs
-To:     Ming Lei <tom.leiming@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        megaraidlinux.pdl@broadcom.com,
-        PDL-MPT-FUSIONLINUX <MPT-FusionLinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620041620.GB105727@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Acked-by: Suganath Prabu <suganath-prabu.subramani@broadcom.com>
+On Thu 20-06-19 13:16:20, Minchan Kim wrote:
+> On Wed, Jun 19, 2019 at 03:24:50PM +0200, Michal Hocko wrote:
+> > On Mon 10-06-19 20:12:51, Minchan Kim wrote:
+> > [...]
+> > > +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> > > +				unsigned long end, struct mm_walk *walk)
+> > 
+> > Again the same question about a potential code reuse...
+> > [...]
+> > > +regular_page:
+> > > +	tlb_change_page_size(tlb, PAGE_SIZE);
+> > > +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> > > +	flush_tlb_batched_pending(mm);
+> > > +	arch_enter_lazy_mmu_mode();
+> > > +	for (; addr < end; pte++, addr += PAGE_SIZE) {
+> > > +		ptent = *pte;
+> > > +		if (!pte_present(ptent))
+> > > +			continue;
+> > > +
+> > > +		page = vm_normal_page(vma, addr, ptent);
+> > > +		if (!page)
+> > > +			continue;
+> > > +
+> > > +		if (isolate_lru_page(page))
+> > > +			continue;
+> > > +
+> > > +		isolated++;
+> > > +		if (pte_young(ptent)) {
+> > > +			ptent = ptep_get_and_clear_full(mm, addr, pte,
+> > > +							tlb->fullmm);
+> > > +			ptent = pte_mkold(ptent);
+> > > +			set_pte_at(mm, addr, pte, ptent);
+> > > +			tlb_remove_tlb_entry(tlb, pte, addr);
+> > > +		}
+> > > +		ClearPageReferenced(page);
+> > > +		test_and_clear_page_young(page);
+> > > +		list_add(&page->lru, &page_list);
+> > > +		if (isolated >= SWAP_CLUSTER_MAX) {
+> > 
+> > Why do we need SWAP_CLUSTER_MAX batching? Especially when we need ...
+> > [...]
+> 
+> It aims for preventing early OOM kill since we isolate too many LRU
+> pages concurrently.
 
-On Thu, Jun 20, 2019 at 12:34 PM Suganath Prabu Subramani
-<suganath-prabu.subramani@broadcom.com> wrote:
->
-> Please consider this as Acked-by: Suganath Prabu
-> <suganath-prabu.subramani@broadcom.com>
->
->
-> On Tue, Jun 18, 2019 at 6:16 AM Ming Lei <tom.leiming@gmail.com> wrote:
-> >
-> > On Mon, Jun 17, 2019 at 8:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> > >
-> > > When using a virt_boundary_mask, as done for NVMe devices attached to
-> > > mpt3sas controllers we require an unlimited max_segment_size, as the
-> > > virt boundary merging code assumes that.  But we also need to propagate
-> > > that to the DMA mapping layer to make dma-debug happy.  The SCSI layer
-> > > takes care of that when using the per-host virt_boundary setting, but
-> > > given that mpt3sas only wants to set the virt_boundary for actual
-> > > NVMe devices we can't rely on that.  The DMA layer maximum segment
-> > > is global to the HBA however, so we have to set it explicitly.  This
-> > > patch assumes that mpt3sas does not have a segment size limitation,
-> > > which seems true based on the SGL format, but will need to be verified.
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  drivers/scsi/mpt3sas/mpt3sas_scsih.c | 1 +
-> > >  1 file changed, 1 insertion(+)
-> > >
-> > > diff --git a/drivers/scsi/mpt3sas/mpt3sas_scsih.c b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-> > > index 1ccfbc7eebe0..c719b807f6d8 100644
-> > > --- a/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-> > > +++ b/drivers/scsi/mpt3sas/mpt3sas_scsih.c
-> > > @@ -10222,6 +10222,7 @@ static struct scsi_host_template mpt3sas_driver_template = {
-> > >         .this_id                        = -1,
-> > >         .sg_tablesize                   = MPT3SAS_SG_DEPTH,
-> > >         .max_sectors                    = 32767,
-> > > +       .max_segment_size               = 0xffffffff,
-> >
-> > .max_segment_size should be aligned, either setting it here correctly or
-> > forcing to make it aligned in scsi-core.
-> >
-> > Thanks,
-> > Ming Lei
+This is a good point. For some reason I thought that we consider
+isolated pages in should_reclaim_retry but we do not anymore (since we
+move from zone to node LRUs I guess). Please stick a comment there.
+
+> > > +unsigned long reclaim_pages(struct list_head *page_list)
+> > > +{
+> > > +	int nid = -1;
+> > > +	unsigned long nr_reclaimed = 0;
+> > > +	LIST_HEAD(node_page_list);
+> > > +	struct reclaim_stat dummy_stat;
+> > > +	struct scan_control sc = {
+> > > +		.gfp_mask = GFP_KERNEL,
+> > > +		.priority = DEF_PRIORITY,
+> > > +		.may_writepage = 1,
+> > > +		.may_unmap = 1,
+> > > +		.may_swap = 1,
+> > > +	};
+> > > +
+> > > +	while (!list_empty(page_list)) {
+> > > +		struct page *page;
+> > > +
+> > > +		page = lru_to_page(page_list);
+> > > +		if (nid == -1) {
+> > > +			nid = page_to_nid(page);
+> > > +			INIT_LIST_HEAD(&node_page_list);
+> > > +		}
+> > > +
+> > > +		if (nid == page_to_nid(page)) {
+> > > +			list_move(&page->lru, &node_page_list);
+> > > +			continue;
+> > > +		}
+> > > +
+> > > +		nr_reclaimed += shrink_page_list(&node_page_list,
+> > > +						NODE_DATA(nid),
+> > > +						&sc, 0,
+> > > +						&dummy_stat, false);
+> > 
+> > per-node batching in fact. Other than that nothing really jumped at me.
+> > Except for the shared page cache side channel timing aspect not being
+> > considered AFAICS. To be more specific. Pushing out a shared page cache
+> > is possible even now but this interface gives a much easier tool to
+> > evict shared state and perform all sorts of timing attacks. Unless I am
+> > missing something we should be doing something similar to mincore and
+> > ignore shared pages without a writeable access or at least document why
+> > we do not care.
+> 
+> I'm not sure IIUC side channel attach. As you mentioned, without this syscall,
+> 1. they already can do that simply by memory hogging
+
+This is way much more harder for practical attacks because the reclaim
+logic is not fully under the attackers control. Having a direct tool to
+reclaim memory directly then just opens doors to measure the other
+consumers of that memory and all sorts of side channel.
+
+> 2. If we need fix MADV_PAGEOUT, that means we need to fix MADV_DONTNEED, too?
+
+nope because MADV_DONTNEED doesn't unmap from other processes.
+-- 
+Michal Hocko
+SUSE Labs
