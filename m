@@ -2,268 +2,177 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD4CC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F27AFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53EC72084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051461;
-	bh=P01JkKh2EwDIKOkKeZ63M1fuJyDYnZHPDcjEI+Lqenc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=czjpL03afVR4Re6j14jRU/Mv/hbCx/5fK16LY5RsE4Iey4NXuZ9yU0AwilXnL/Ti9
-	 31oxf9QqGEuclXLYuibRKqWXQEgNA5AekgkF5FPQ9QG8y9+OO6T4UUOGA1b6FJJheX
-	 B7O79JjlmKXD3smTa+MSxQhElFQ6V+4dX983Vs1U=
+	by mail.kernel.org (Postfix) with ESMTP id C9FBB2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:24:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="aAJcT41j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732398AbfFTRYT (ORCPT
+        id S1732432AbfFTRYZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:24:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52604 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732175AbfFTRXT (ORCPT
+        Thu, 20 Jun 2019 13:24:25 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34124 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732401AbfFTRYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:23:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=wEP/uGZbmvWdMQQ7lu7aU2Sw4lu0L8oVUgCmRRiaIis=; b=hYGfsqnERhERW74kuTKpp9dGDQ
-        idsqIvnqbQ2HPeOGcNBZLOjPftaE8Gwcdl438lmZWxfJpxkt8iYRtBngBVbmBlqjUSjsWp/dQhJtd
-        ee9PUG4S7g1GnHolIVGWRRQdcisjteczrPJfGLxNqgp8SnFqO0ZbBlNpqn7OnEZF//0zKWfRc7Vhc
-        nrdiz+VUllggL7n965C/tvo65s171yFy31OWozOPy4YgmvRUujCF6tMzmkMnlTCj+vJynIEo1AQzm
-        6NoNQsv+AuOhidkNC0KUnR2GXbS5MWgh8odBAmJ2LtClaurYDOqV4KMxTfqnbV36dD9Ig5VN3hBXz
-        NG41ur8w==;
-Received: from [177.97.20.138] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he0mM-0008S1-A8; Thu, 20 Jun 2019 17:23:18 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1he0mJ-0000Cw-LS; Thu, 20 Jun 2019 14:23:15 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 05/22] scripts/get_abi.pl: avoid use literal blocks when not needed
-Date:   Thu, 20 Jun 2019 14:22:57 -0300
-Message-Id: <5964e0e4e93dc6582a8a1662116c015f07247a36.1561050806.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
-References: <cover.1561050806.git.mchehab+samsung@kernel.org>
+        Thu, 20 Jun 2019 13:24:22 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5KHNvgA088118;
+        Thu, 20 Jun 2019 12:23:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561051437;
+        bh=rL6xunoowNvWhuipbCBDNt+3nFxgWZVKJw1ieaLhEb8=;
+        h=From:To:CC:Subject:Date;
+        b=aAJcT41jstNcjFpJ3thJXXYk7YN4s1NEhwXahGO75201i9mHadForgtBtM5ObqXAN
+         z9/D281vNOjTFIeHgnXUlkpbHZtinfeseSd7lxGMxMHlJkDY6Eg+yZUfv5GTZJzlhE
+         L0sJn4IH1iFuX05o08DtaQogOe8a9Csu4/K+DkVs=
+Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5KHNvXh009839
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Jun 2019 12:23:57 -0500
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 20
+ Jun 2019 12:23:56 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 20 Jun 2019 12:23:56 -0500
+Received: from a0132425.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5KHNrJU117342;
+        Thu, 20 Jun 2019 12:23:53 -0500
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     <linux-mtd@lists.infradead.org>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        <devicetree@vger.kernel.org>,
+        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
+        Mason Yang <masonccyang@mxic.com.tw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: [PATCH v7 0/5] MTD: Add Initial HyperBus support
+Date:   Thu, 20 Jun 2019 22:52:45 +0530
+Message-ID: <20190620172250.9102-1-vigneshr@ti.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The usage of literal blocks make the document very complex,
-causing the browser to take a long time to load.
+Change log:
+Since v6:
+Fix up DT bindings for TI HBMC driver to move hyperbus node out of
+syscon
 
-On most ABI descriptions, they're a plain text, and don't
-require a literal block.
+Since v5:
+Fix up DT bindings comments for TI HBMC driver
+Move calibration sequence out of core into TI HBMC driver
 
-So, add a logic there with identifies when a literal block
-is needed.
+Since v4:
+Fix Rob's comments on dt-bindings of TI HBMC driver
 
-As, on literal blocks, we need to respect the original
-document space, the most complex part of this patch is
-to preserve the original spacing where needed.
+Since v3:
+* Drop reading QRY string twice in hyperbus_calibrate()
+* Fix doc/misc comments on v3.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- scripts/get_abi.pl | 104 +++++++++++++++++++++++++++++++++------------
- 1 file changed, 78 insertions(+), 26 deletions(-)
+Since RFC v2:
+* use map_word_xxx() for handling status register to support interleaved
+  flashes as suggested by Joakim Tjernlund <Joakim.Tjernlund@infinera.com>
+* Report error status/messages on erase/program failure by looking at
+  status register bits.
+* Add "cfi-flash" as fallback compatible for cypress,hyperflash
+* Add support to select between HyperBus and OSPI using mmio mux
 
-diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index ef9b6e108973..0ede9593c639 100755
---- a/scripts/get_abi.pl
-+++ b/scripts/get_abi.pl
-@@ -59,29 +59,34 @@ sub parse_abi {
- 	my $ln;
- 	my $has_file;
- 	my $xrefs;
-+	my $space;
- 
- 	print STDERR "Opening $file\n" if ($debug > 1);
- 	open IN, $file;
- 	while(<IN>) {
- 		$ln++;
--		if (m/^(\S+):\s*(.*)/i) {
-+		if (m/^(\S+)(:\s*)(.*)/i) {
- 			my $new_tag = lc($1);
--			my $content = $2;
-+			my $sep = $2;
-+			my $content = $3;
- 
- 			if (!($new_tag =~ m/(what|date|kernelversion|contact|description|users)/)) {
- 				if ($tag eq "description") {
--					$data{$what}->{$tag} .= "\n$content";
--					$data{$what}->{$tag} =~ s/\n+$//;
--					next;
-+					# New "tag" is actually part of
-+					# description. Don't consider it a tag
-+					$new_tag = "";
- 				} else {
- 					parse_error($file, $ln, "tag '$tag' is invalid", $_);
- 				}
- 			}
- 
- 			if ($new_tag =~ m/what/) {
-+				$space = "";
- 				if ($tag =~ m/what/) {
- 					$what .= ", " . $content;
- 				} else {
-+					parse_error($file, $ln, "What '$what' doesn't have a description", "") if ($what && !$data{$what}->{description});
-+
- 					$what = $content;
- 					$new_what = 1;
- 				}
-@@ -108,25 +113,38 @@ sub parse_abi {
- 				next;
- 			}
- 
--			$tag = $new_tag;
-+			if ($new_tag) {
-+				$tag = $new_tag;
- 
--			if ($new_what) {
--				$new_what = 0;
-+				if ($new_what) {
-+					$new_what = 0;
- 
--				$data{$what}->{type} = $type;
--				$data{$what}->{file} = $name;
--				print STDERR "\twhat: $what\n" if ($debug > 1);
--			}
-+					$data{$what}->{type} = $type;
-+					$data{$what}->{file} = $name;
-+					print STDERR "\twhat: $what\n" if ($debug > 1);
-+				}
- 
--			if (!$what) {
--				parse_error($file, $ln, "'What:' should come first:", $_);
-+				if (!$what) {
-+					parse_error($file, $ln, "'What:' should come first:", $_);
-+					next;
-+				}
-+				if ($tag eq "description") {
-+					next if ($content =~ m/^\s*$/);
-+					if ($content =~ m/^(\s*)(.*)/) {
-+						my $new_content = $2;
-+						$space = $new_tag . $sep . $1;
-+						while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+						$space =~ s/./ /g;
-+						$data{$what}->{$tag} .= "$new_content\n";
-+					}
-+				} else {
-+					$data{$what}->{$tag} = $content;
-+				}
- 				next;
- 			}
--			$data{$what}->{$tag} = $content;
--			next;
- 		}
- 
--		# Store any contents before the database
-+		# Store any contents before tags at the database
- 		if (!$tag) {
- 			next if (/^\n/);
- 
-@@ -139,6 +157,32 @@ sub parse_abi {
- 			next;
- 		}
- 
-+		if ($tag eq "description") {
-+			if (!$data{$what}->{description}) {
-+				next if (m/^\s*\n/);
-+				if (m/^(\s*)(.*)/) {
-+					$space = $1;
-+					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+					$data{$what}->{$tag} .= "$2\n";
-+				}
-+			} else {
-+				my $content = $_;
-+				if (m/^\s*\n/) {
-+					$data{$what}->{$tag} .= $content;
-+					next;
-+				}
-+
-+				while ($content =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+				$space = "" if (!($content =~ s/^($space)//));
-+
-+				# Compress spaces with tabs
-+				$content =~ s<^ {8}> <\t>;
-+				$content =~ s<^ {1,7}\t> <\t>;
-+				$content =~ s< {1,7}\t> <\t>;
-+				$data{$what}->{$tag} .= $content;
-+			}
-+			next;
-+		}
- 		if (m/^\s*(.*)/) {
- 			$data{$what}->{$tag} .= "\n$1";
- 			$data{$what}->{$tag} =~ s/\n+$//;
-@@ -165,6 +209,9 @@ sub output_rest {
- 		my $w = $what;
- 		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
- 
-+		my $bar = $w;
-+		$bar =~ s/./-/g;
-+
- 		if ($data{$what}->{label}) {
- 			my @labels = split(/\s/, $data{$what}->{label});
- 			foreach my $label (@labels) {
-@@ -172,10 +219,9 @@ sub output_rest {
- 			}
- 		}
- 
--		print "$w\n\n";
-+		print "$w\n$bar\n\n";
- 
- 		print "- defined on file $file (type: $type)\n\n" if ($type ne "File");
--		print "::\n\n";
- 
- 		my $desc = $data{$what}->{description};
- 		$desc =~ s/^\s+//;
-@@ -183,18 +229,24 @@ sub output_rest {
- 		# Remove title markups from the description, as they won't work
- 		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
- 
--		# put everything inside a code block
--		$desc =~ s/\n/\n /g;
--
--
- 		if (!($desc =~ /^\s*$/)) {
--			print " $desc\n\n";
-+			if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-+				# put everything inside a code block
-+				$desc =~ s/\n/\n /g;
-+
-+				print "::\n\n";
-+				print " $desc\n\n";
-+			} else {
-+				# Escape any special chars from description
-+				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
-+
-+				print "$desc\n\n";
-+			}
- 		} else {
--			print " DESCRIPTION MISSING for $what\n\n";
-+			print "DESCRIPTION MISSING for $what\n\n";
- 		}
- 
- 		printf "Has the following ABI:\n\n%s", $data{$what}->{xrefs} if ($data{$what}->{xrefs});
--
- 	}
- }
- 
+Since RFC v1:
+* Re-work Hyperbus core to provide separate struct representation for
+  controller and slave devices
+* Rename all files and func names to have hyperbus_ prefix
+* Provide default calibration routine for use by controller drivers
+* Fix up errors with patch spliting
+* Address comments by Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cypress HyperBus is Low Signal Count, High Performance Double Data Rate Bus
+interface between a host system master and one or more slave interfaces.
+HyperBus is used to connect microprocessor, microcontroller, or ASIC
+devices with random access NOR flash memory(called HyperFlash) or
+self refresh DRAM(called HyperRAM).
+
+Its a 8-bit data bus (DQ[7:0]) with  Read-Write Data Strobe (RWDS)
+signal and either Single-ended clock(3.0V parts) or Differential clock
+(1.8V parts). It uses ChipSelect lines to select b/w multiple slaves.
+At bus level, it follows a separate protocol described in HyperBus
+specification[1].
+
+HyperFlash follows CFI AMD/Fujitsu Extended Command Set (0x0002) similar
+to that of existing parallel NORs. Since Hyperbus is x8 DDR bus,
+its equivalent to x16 parallel NOR flash wrt bits per clk. But Hyperbus
+operates at >166MHz frequencies.
+HyperRAM provides direct random read/write access to flash memory
+array.
+Framework is modelled along the lines of spi-nor framework. HyperBus
+memory controller (HBMC) drivers call hyperbus_register_device() to
+register a single HyperFlash device. HyperFlash core parses MMIO access
+information from DT, sets up the map_info struct, probes CFI flash and
+registers it with MTD framework.
+
+Tested on modified TI AM654 EVM with Cypress Hyperflash S26KS512 by
+creating a UBIFS partition and writing and reading files to it.
+Stress tested by writing/reading 16MB flash repeatedly at different
+offsets using dd commmand.
+
+HyperBus specification can be found at[1]
+HyperFlash datasheet can be found at[2]
+TI's HBMC controller details at[3]
+
+[1] https://www.cypress.com/file/213356/download
+[2] https://www.cypress.com/file/213346/download
+[3] http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+    Table 12-5741. HyperFlash Access Sequence
+
+
+Vignesh Raghavendra (5):
+  mtd: cfi_cmdset_0002: Add support for polling status register
+  dt-bindings: mtd: Add binding documentation for HyperFlash
+  mtd: Add support for HyperBus memory devices
+  dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory
+    controller
+  mtd: hyperbus: Add driver for TI's HyperBus memory controller
+
+ .../bindings/mtd/cypress,hyperflash.txt       |  13 ++
+ .../devicetree/bindings/mtd/ti,am654-hbmc.txt |  52 ++++++
+ MAINTAINERS                                   |   8 +
+ drivers/mtd/Kconfig                           |   2 +
+ drivers/mtd/Makefile                          |   1 +
+ drivers/mtd/chips/cfi_cmdset_0002.c           |  90 ++++++++++
+ drivers/mtd/hyperbus/Kconfig                  |  23 +++
+ drivers/mtd/hyperbus/Makefile                 |   4 +
+ drivers/mtd/hyperbus/hbmc-am654.c             | 141 ++++++++++++++++
+ drivers/mtd/hyperbus/hyperbus-core.c          | 154 ++++++++++++++++++
+ include/linux/mtd/cfi.h                       |   5 +
+ include/linux/mtd/hyperbus.h                  |  86 ++++++++++
+ 12 files changed, 579 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/cypress,hyperflash.txt
+ create mode 100644 Documentation/devicetree/bindings/mtd/ti,am654-hbmc.txt
+ create mode 100644 drivers/mtd/hyperbus/Kconfig
+ create mode 100644 drivers/mtd/hyperbus/Makefile
+ create mode 100644 drivers/mtd/hyperbus/hbmc-am654.c
+ create mode 100644 drivers/mtd/hyperbus/hyperbus-core.c
+ create mode 100644 include/linux/mtd/hyperbus.h
+
 -- 
-2.21.0
+2.22.0
 
