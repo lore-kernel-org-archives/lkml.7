@@ -2,122 +2,172 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1926FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:15:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C36C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E391620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:15:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cirrus.com header.i=@cirrus.com header.b="rHV7h7aL"
+	by mail.kernel.org (Postfix) with ESMTP id 9EF1920675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:15:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfFTPP3 (ORCPT
+        id S1731950AbfFTPPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:15:29 -0400
-Received: from mx0b-001ae601.pphosted.com ([67.231.152.168]:57442 "EHLO
-        mx0b-001ae601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726512AbfFTPP2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:15:28 -0400
-Received: from pps.filterd (m0077474.ppops.net [127.0.0.1])
-        by mx0b-001ae601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KFAETQ008735;
-        Thu, 20 Jun 2019 10:12:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cirrus.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=PODMain02222019;
- bh=9VYaOdEDt/Ppw9q+XoYjEoDW5NIi5eVOJ0dRdfOiirk=;
- b=rHV7h7aLsM+z0WkIl+O6o+TM9hH8B/s+EhrlCMFa2s1JvL+w8mC9mCXUPn+dbg/Vv+j1
- KHNmV8NTfA912mqsH1v/xHWLe3gW8N1zDFnag1Gu+JMuiyZvbkpdYo9V7mSl/Gc1YHIV
- 85DBTC90QQNqxi5yLQIWEyuV4RKELnEXavfmD3a6m2q1KYrtBu04dV8l/4CgeCpMBVHT
- yHFofYb1Eg+BlioFnQRLTXPWu9RUD0FPg/qZ0e07H3q2xR6GXv/EsnmtOfPj8PGlUDqQ
- TgOwj0wAnLN328HGqzf5oXpzBBZ1p7PGIYYMTDlFb5IwESW9uOGyOIoDEf0MoWyIXL4/ EA== 
-Authentication-Results: ppops.net;
-        spf=none smtp.mailfrom=ckeepax@opensource.cirrus.com
-Received: from mail1.cirrus.com (mail1.cirrus.com [141.131.3.20])
-        by mx0b-001ae601.pphosted.com with ESMTP id 2t780ctnyx-1;
-        Thu, 20 Jun 2019 10:12:51 -0500
-Received: from EDIEX01.ad.cirrus.com (unknown [198.61.84.80])
-        by mail1.cirrus.com (Postfix) with ESMTP id A1235611C8BF;
-        Thu, 20 Jun 2019 10:12:50 -0500 (CDT)
-Received: from EDIEX01.ad.cirrus.com (198.61.84.80) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Thu, 20 Jun
- 2019 16:12:49 +0100
-Received: from ediswmail.ad.cirrus.com (198.61.86.93) by EDIEX01.ad.cirrus.com
- (198.61.84.80) with Microsoft SMTP Server id 15.1.1591.10 via Frontend
- Transport; Thu, 20 Jun 2019 16:12:49 +0100
-Received: from ediswmail.ad.cirrus.com (ediswmail.ad.cirrus.com [198.61.86.93])
-        by ediswmail.ad.cirrus.com (Postfix) with ESMTP id 311D645;
-        Thu, 20 Jun 2019 16:12:50 +0100 (BST)
-Date:   Thu, 20 Jun 2019 16:12:50 +0100
-From:   Charles Keepax <ckeepax@opensource.cirrus.com>
-To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-CC:     <wsa@the-dreams.de>, <mika.westerberg@linux.intel.com>,
-        <jarkko.nikula@linux.intel.com>, <linux-i2c@vger.kernel.org>,
-        <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <benjamin.tissoires@redhat.com>, <jbroadus@gmail.com>,
-        <patches@opensource.cirrus.com>
-Subject: Re: [PATCH v5 4/7] i2c: core: Make i2c_acpi_get_irq available to the
- rest of the I2C core
-Message-ID: <20190620151250.GB54126@ediswmail.ad.cirrus.com>
-References: <20190620133420.4632-1-ckeepax@opensource.cirrus.com>
- <20190620133420.4632-5-ckeepax@opensource.cirrus.com>
- <20190620145950.GE9224@smile.fi.intel.com>
+        Thu, 20 Jun 2019 11:15:46 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44530 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726512AbfFTPPp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:15:45 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8B25BEEF051135EFB448;
+        Thu, 20 Jun 2019 23:15:42 +0800 (CST)
+Received: from [127.0.0.1] (10.184.225.177) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Jun 2019
+ 23:15:33 +0800
+To:     <corbet@lwn.net>, <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>
+CC:     <akpm@linux-foundation.org>, <manfred@colorfullife.com>,
+        <jwilk@jwilk.net>, <dvyukov@google.com>, <feng.tang@intel.com>,
+        <sunilmut@microsoft.com>, <quentin.perret@arm.com>,
+        <linux@leemhuis.info>, <alex.popov@linux.com>,
+        <tglx@linutronix.de>, <linux-doc@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>,
+        "wangxiaogang (F)" <wangxiaogang3@huawei.com>,
+        "Zhoukang (A)" <zhoukang7@huawei.com>,
+        Mingfangsen <mingfangsen@huawei.com>, <tedheadster@gmail.com>,
+        Eric Dumazet <edumazet@google.com>
+From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
+Subject: [PATCH next] softirq: enable MAX_SOFTIRQ_TIME tuning with sysctl
+ max_softirq_time_usecs
+Message-ID: <f274f85a-bbb6-3e32-b293-1d5d7f27a98f@huawei.com>
+Date:   Thu, 20 Jun 2019 23:14:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20190620145950.GE9224@smile.fi.intel.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906200111
+Content-Type: text/plain; charset="gbk"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.184.225.177]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 05:59:50PM +0300, Andy Shevchenko wrote:
-> On Thu, Jun 20, 2019 at 02:34:17PM +0100, Charles Keepax wrote:
-> > In preparation for more refactoring make i2c_acpi_get_irq available
-> > outside i2c-core-acpi.c.
-> 
-> > Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> > Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> 
-> I'm not sure Rb tags are suitable for patches 4 and 5 since the changes made.
-> 
+From: Zhiqiang liu <liuzhiqiang26@huawei.com>
 
-Apologies I figured the changes were small enough will remove for
-any changes in future.
+In __do_softirq func, MAX_SOFTIRQ_TIME was set to 2ms via experimentation by
+commit c10d73671 ("softirq: reduce latencies") in 2013, which was designed
+to reduce latencies for various network workloads. The key reason is that the
+maximum number of microseconds in one NAPI polling cycle in net_rx_action func
+was set to 2 jiffies, so different HZ settting will lead to different latencies.
 
-> > +struct acpi_device;
-> 
-> Hmm... Doesn't acpi.h define that for !ACPI case?
-> 
+However, commit 7acf8a1e8 ("Replace 2 jiffies with sysctl netdev_budget_usecs
+to enable softirq tuning") adopts netdev_budget_usecs to tun maximum number of
+microseconds in one NAPI polling cycle. So the latencies of net_rx_action can be
+controlled by sysadmins to copy with hardware changes over time.
 
-Pretty sure I was getting a build error in that case.
+Correspondingly, the MAX_SOFTIRQ_TIME should be able to be tunned by sysadmins,
+who knows best about hardware performance, for excepted tradeoff between latence
+and fairness.
 
-> >  #ifdef CONFIG_ACPI
-> >  const struct acpi_device_id *
-> >  i2c_acpi_match_device(const struct acpi_device_id *matches,
-> >  		      struct i2c_client *client);
-> >  void i2c_acpi_register_devices(struct i2c_adapter *adap);
-> > +
-> > +int i2c_acpi_get_irq(struct acpi_device *adev);
-> 
-> Since you call this afterwards with struct device from which companion is
-> derived, can't we directly use struct device as a parameter?
-> 
-> Yes, in case of adev call, it might be &adev->dev I suppose?
-> 
+Here, we add sysctl variable max_softirq_time_usecs to replace MAX_SOFTIRQ_TIME
+with 2ms default value.
 
-A good idea I will investigate and do a respin taking in the
-other comments too.
+Signed-off-by: Zhiqiang liu <liuzhiqiang26@huawei.com>
+---
+ Documentation/sysctl/kernel.txt |  7 +++++++
+ kernel/softirq.c                | 10 ++++++----
+ kernel/sysctl.c                 |  9 +++++++++
+ 3 files changed, 22 insertions(+), 4 deletions(-)
 
-Thanks,
-Charles
+diff --git a/Documentation/sysctl/kernel.txt b/Documentation/sysctl/kernel.txt
+index f0c86fbb3b48..647233faf896 100644
+--- a/Documentation/sysctl/kernel.txt
++++ b/Documentation/sysctl/kernel.txt
+@@ -44,6 +44,7 @@ show up in /proc/sys/kernel:
+ - kexec_load_disabled
+ - kptr_restrict
+ - l2cr                        [ PPC only ]
++- max_softirq_time_usecs
+ - modprobe                    ==> Documentation/debugging-modules.txt
+ - modules_disabled
+ - msg_next_id		      [ sysv ipc ]
+@@ -445,6 +446,12 @@ This flag controls the L2 cache of G3 processor boards. If
+
+ ==============================================================
+
++max_softirq_time_usecs:
++Maximum number of microseconds to break the loop of restarting softirq
++processing for at most MAX_SOFTIRQ_RESTART times in __do_softirq().
++
++==============================================================
++
+ modules_disabled:
+
+ A toggle value indicating if modules are allowed to be loaded
+diff --git a/kernel/softirq.c b/kernel/softirq.c
+index a6b81c6b6bff..32f93d82e2e8 100644
+--- a/kernel/softirq.c
++++ b/kernel/softirq.c
+@@ -199,8 +199,9 @@ EXPORT_SYMBOL(__local_bh_enable_ip);
+
+ /*
+  * We restart softirq processing for at most MAX_SOFTIRQ_RESTART times,
+- * but break the loop if need_resched() is set or after 2 ms.
+- * The MAX_SOFTIRQ_TIME provides a nice upper bound in most cases, but in
++ * but break the loop if need_resched() is set or after
++ * max_softirq_time_usecs usecs.
++ * The max_softirq_time_usecs provides a nice upper bound in most cases, but in
+  * certain cases, such as stop_machine(), jiffies may cease to
+  * increment and so we need the MAX_SOFTIRQ_RESTART limit as
+  * well to make sure we eventually return from this method.
+@@ -210,7 +211,7 @@ EXPORT_SYMBOL(__local_bh_enable_ip);
+  * we want to handle softirqs as soon as possible, but they
+  * should not be able to lock up the box.
+  */
+-#define MAX_SOFTIRQ_TIME  msecs_to_jiffies(2)
++unsigned int __read_mostly max_softirq_time_usecs = 2000;
+ #define MAX_SOFTIRQ_RESTART 10
+
+ #ifdef CONFIG_TRACE_IRQFLAGS
+@@ -248,7 +249,8 @@ static inline void lockdep_softirq_end(bool in_hardirq) { }
+
+ asmlinkage __visible void __softirq_entry __do_softirq(void)
+ {
+-	unsigned long end = jiffies + MAX_SOFTIRQ_TIME;
++	unsigned long end = jiffies +
++		usecs_to_jiffies(max_softirq_time_usecs);
+ 	unsigned long old_flags = current->flags;
+ 	int max_restart = MAX_SOFTIRQ_RESTART;
+ 	struct softirq_action *h;
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 1beca96fb625..db4bc18f84de 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -118,6 +118,7 @@ extern unsigned int sysctl_nr_open_min, sysctl_nr_open_max;
+ #ifndef CONFIG_MMU
+ extern int sysctl_nr_trim_pages;
+ #endif
++extern unsigned int max_softirq_time_usecs;
+
+ /* Constants used for minimum and  maximum */
+ #ifdef CONFIG_LOCKUP_DETECTOR
+@@ -1276,6 +1277,14 @@ static struct ctl_table kern_table[] = {
+ 		.extra2		= &one,
+ 	},
+ #endif
++	{
++		.procname	= "max_softirq_time_usecs",
++		.data		= &max_softirq_time_usecs,
++		.maxlen		= sizeof(unsigned int),
++		.mode		= 0644,
++		.proc_handler   = proc_dointvec_minmax,
++		.extra1		= &zero,
++	},
+ 	{ }
+ };
+
+-- 
+2.19.1
+
