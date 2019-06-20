@@ -2,133 +2,138 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ABECC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:38:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92441C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:38:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 281102083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:38:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67F112083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:38:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n0MyWeLM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732051AbfFTQi2 (ORCPT
+        id S1732165AbfFTQir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:38:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31718 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726675AbfFTQi2 (ORCPT
+        Thu, 20 Jun 2019 12:38:47 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35398 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfFTQio (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:38:28 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KGR0xZ120326;
-        Thu, 20 Jun 2019 12:37:47 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8cmtkcqq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 12:37:47 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5KGSnO5125503;
-        Thu, 20 Jun 2019 12:37:46 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8cmtkcqb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 12:37:46 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5KGVPpg018598;
-        Thu, 20 Jun 2019 16:37:45 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03dal.us.ibm.com with ESMTP id 2t4ra6ar88-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 16:37:45 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KGbiiI43909394
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 16:37:44 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CC5C2B2064;
-        Thu, 20 Jun 2019 16:37:44 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AF0F8B205F;
-        Thu, 20 Jun 2019 16:37:44 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Jun 2019 16:37:44 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id 647E616C2A4A; Thu, 20 Jun 2019 09:37:46 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 09:37:46 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] tools: memory-model: Expand definition of barrier
-Message-ID: <20190620163746.GS26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <Pine.LNX.4.44L0.1906201151210.1512-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.44L0.1906201151210.1512-100000@iolanthe.rowland.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200120
+        Thu, 20 Jun 2019 12:38:44 -0400
+Received: by mail-wr1-f68.google.com with SMTP id m3so3748296wrv.2;
+        Thu, 20 Jun 2019 09:38:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=E1zSQny9YRRdHwfEgEpwDA5eSOxszmxLDpT/5VN+UTI=;
+        b=n0MyWeLMjOjk56sWHslQ5KowK4Xqqy4KEjaqMiv5ywD0u7uUowp/XKK1Ob6+2AZnTe
+         tcQym3wmLJeFk9wOp+qfTKHHZ2VqSMqmyJD93XVxzc+DCHX/bQPmVlckMkCd/m+YPL+A
+         zy5+B7dA5J1uEqZrYFJtZVewDs0Lx+MX9/XVwQ74nWWnYu4+xhDEeAyREbNrb30gsIJL
+         M3qEeHPeOqjAckkX3i/okUBvmbzndQxiCNmz2av9X2awP6vxSefjuXZK3DUsxn2+R4AO
+         /5x/uTmz79Ccb+5sUKES6+fQa8ufvKs6awd2XbaRRA+b2z0SypTXNbwdErbL5kB2cdZN
+         /3qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=E1zSQny9YRRdHwfEgEpwDA5eSOxszmxLDpT/5VN+UTI=;
+        b=VcHWkMz7bMU9Fs7S79GGv1Y2U4Kp4pONESt4qhRhlUTO2I8p64+QNGRdttUB52Be53
+         AzyJjjOFV1+Xp/IJTKKsu4+wXWwVx17p3NcZy2sk+9LJ4YPBtrcrg3iM13Us/M2iEnTD
+         ITNgA8NCweu0blP6Zn9I2psBiGKvfFRhgkT05AkqK3lzT/xS700nNAL8Zx4K7JNjiqFe
+         /19ycM59MgpX+Coma/HkyZGU0gIxsr14W/VQdoiqQ+jssLWlsHjGFVA26/XeTI7DQGIa
+         GXByABlXXElCjvcm6BIRaExMXtYUmGSIYUJmUzXMbniDFTRaUWQW4hUAKGk6clvv24Nx
+         qpMw==
+X-Gm-Message-State: APjAAAV+CBr5WCOAi7TLSZmUyjtZt3FqTkeEGgWX89zlvR4CYE95gukZ
+        csG0dCLqV6Lxn6UVBRUekzG2hZHz
+X-Google-Smtp-Source: APXvYqxBW54IZ8TGH3u+omyIeOTsx4gy8ScfRrWDXzbYvIlOB0fBPQY3OP9ShlNw2Tg0ZimHm5JXkg==
+X-Received: by 2002:adf:de90:: with SMTP id w16mr59995339wrl.217.1561048721772;
+        Thu, 20 Jun 2019 09:38:41 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id u6sm87286wml.9.2019.06.20.09.38.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 09:38:40 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL] KVM changes for 5.2-rc6
+Date:   Thu, 20 Jun 2019 18:38:39 +0200
+Message-Id: <1561048719-38059-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:55:36AM -0400, Alan Stern wrote:
-> Commit 66be4e66a7f4 ("rcu: locking and unlocking need to always be at
-> least barriers") added compiler barriers back into rcu_read_lock() and
-> rcu_read_unlock().  Furthermore, srcu_read_lock() and
-> srcu_read_unlock() have always contained compiler barriers.
-> 
-> The Linux Kernel Memory Model ought to know about these barriers.
-> This patch adds them into the memory model.
-> 
-> Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+Linus,
 
-And yes, much easier to understand this way, thank you!
+The following changes since commit f8d221d2e0e1572d0d60174c118e3554d1aa79fa:
 
-I have queued them and they both diff equal to your previous patch and
-give the expected results on the litmus-tests and github tests having
-Result tags.
+  Merge tag 'kvm-s390-master-5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux into kvm-master (2019-06-01 00:49:02 +0200)
 
-							Thanx, Paul
+are available in the git repository at:
 
-> ---
-> 
-> 
->  tools/memory-model/linux-kernel.cat |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> Index: usb-devel/tools/memory-model/linux-kernel.cat
-> ===================================================================
-> --- usb-devel.orig/tools/memory-model/linux-kernel.cat
-> +++ usb-devel/tools/memory-model/linux-kernel.cat
-> @@ -47,7 +47,8 @@ let strong-fence = mb | gp
->  let nonrw-fence = strong-fence | po-rel | acq-po
->  let fence = nonrw-fence | wmb | rmb
->  let barrier = fencerel(Barrier | Rmb | Wmb | Mb | Sync-rcu | Sync-srcu |
-> -		Before-atomic | After-atomic | Acquire | Release) |
-> +		Before-atomic | After-atomic | Acquire | Release |
-> +		Rcu-lock | Rcu-unlock | Srcu-lock | Srcu-unlock) |
->  	(po ; [Release]) | ([Acquire] ; po)
->  
->  (**********************************)
-> 
+
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to b21e31b253048b7f9768ca7cc270e67765fd6ba2:
+
+  Merge tag 'kvmarm-fixes-for-5.2-2' of git://git.kernel.org/pub/scm/linux/kernel/git/kvmarm/kvmarm into HEAD (2019-06-20 18:24:18 +0200)
+
+----------------------------------------------------------------
+
+Fixes for ARM and x86, plus selftest patches and nicer structs
+for nested state save/restore.
+
+----------------------------------------------------------------
+Aaron Lewis (2):
+      kvm: tests: Sort tests in the Makefile alphabetically
+      tests: kvm: Check for a kernel warning
+
+Andrew Jones (1):
+      KVM: arm/arm64: Fix emulated ptimer irq injection
+
+Dave Martin (2):
+      KVM: arm64: Filter out invalid core register IDs in KVM_GET_REG_LIST
+      KVM: arm/arm64: vgic: Fix kvm_device leak in vgic_its_destroy
+
+Dennis Restle (1):
+      KVM: fix typo in documentation
+
+Liran Alon (1):
+      KVM: x86: Modify struct kvm_nested_state to have explicit fields for data
+
+Paolo Bonzini (2):
+      KVM: nVMX: reorganize initial steps of vmx_set_nested_state
+      Merge tag 'kvmarm-fixes-for-5.2-2' of git://git.kernel.org/.../kvmarm/kvmarm into HEAD
+
+Sean Christopherson (1):
+      KVM: x86/mmu: Allocate PAE root array when using SVM's 32-bit NPT
+
+Viresh Kumar (1):
+      KVM: arm64: Implement vq_present() as a macro
+
+Vitaly Kuznetsov (1):
+      KVM: nVMX: use correct clean fields when copying from eVMCS
+
+ Documentation/virtual/kvm/api.txt                  |  48 +++++---
+ arch/arm64/kvm/guest.c                             |  65 +++++++----
+ arch/x86/include/uapi/asm/kvm.h                    |  33 ++++--
+ arch/x86/kvm/mmu.c                                 |  16 ++-
+ arch/x86/kvm/vmx/nested.c                          | 103 +++++++++--------
+ arch/x86/kvm/vmx/vmcs12.h                          |   5 +-
+ tools/arch/x86/include/uapi/asm/kvm.h              |   2 +-
+ tools/testing/selftests/kvm/.gitignore             |   1 +
+ tools/testing/selftests/kvm/Makefile               |  21 ++--
+ tools/testing/selftests/kvm/include/kvm_util.h     |   2 +
+ .../selftests/kvm/include/x86_64/processor.h       |   2 +
+ tools/testing/selftests/kvm/lib/kvm_util.c         |  36 ++++++
+ tools/testing/selftests/kvm/lib/x86_64/processor.c |  16 +++
+ .../selftests/kvm/x86_64/mmio_warning_test.c       | 126 +++++++++++++++++++++
+ .../kvm/x86_64/vmx_set_nested_state_test.c         |  68 ++++++-----
+ virt/kvm/arm/arch_timer.c                          |   5 +-
+ virt/kvm/arm/vgic/vgic-its.c                       |   1 +
+ 17 files changed, 405 insertions(+), 145 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/mmio_warning_test.c
