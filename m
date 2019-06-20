@@ -3,191 +3,146 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68515C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1585C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BE6C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:10:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 760DD2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:11:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="JrwSrOMq"
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="fx8SHCFY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726304AbfFTWKK (ORCPT
+        id S1726339AbfFTWLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 18:10:10 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44164 "EHLO
+        Thu, 20 Jun 2019 18:11:05 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:34930 "EHLO
         mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726180AbfFTWKJ (ORCPT
+        with ESMTP id S1725906AbfFTWLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 18:10:09 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r16so4530864wrl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 15:10:07 -0700 (PDT)
+        Thu, 20 Jun 2019 18:11:04 -0400
+Received: by mail-wr1-f65.google.com with SMTP id m3so4593580wrv.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 15:11:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=osQ4T6cHI9dS6FXTVEWB3XzgaXkhdOGQwr24b6JLCQo=;
-        b=JrwSrOMqW6pdRX/MfVgjguikzmfB2AM5MTvWAoZcvSUV87L4iAhtFu+vVuAqerIFG4
-         YD9OJqiT5a56xrSyv71I38B7Pt5v8iOQBMdMXLsI79lqkTCWEo02Nt3jtnKh6SFsB8EG
-         KuskCykxLQkQ992OrO59yi9LtmL0VofckfHvmHr884smqufwyRlaXXm9j8pdtXC9r28x
-         h0uOIb32beFoOYUiZXETw8u7Ae6wChqgCX+7DmXEqpT8lijAMIvdTF2di9x9b9HBBMZP
-         PYkSFbcucR2Ilsh9OAOcuzv4cVW/xib12ot2hwFaQJYq1bpQZJaCoifkFff68L1p/Xsc
-         hQGA==
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=mbYFTh6bazxqWo9R2yJjJ1/62LryVwqMQHAl8inkfY8=;
+        b=fx8SHCFYj8+ekg/5IL+B4cIMRixAzUC2mMLglXUFG8a0a4DrqVNCDYr4DQ0ztR+15g
+         0IX2NUPnNWhxcS0iqJ4+VupcDWFGo7zHbmByixSI1nacq0LI5hKCZ//vZ/KPwnyHSCpO
+         4As59nXUwzDuUQvslAPEe+5LkaKL/a6zjFBGwIDlbZlz+OcyPAQCBdyAyahFwljWQ5Xo
+         j5QOlOX42Jd5boBQA7P1Ervd7WIsetrKt3CUc0rzBMKdDjm+nFJxGOMqOx/LMuxLkP7M
+         zIixdThhX7X9CicKNcK+rQX7D9DdyPIGSWDjb3DkfUEoNUWAyFBirRkS++yTCUZ2IjL5
+         dwSw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=osQ4T6cHI9dS6FXTVEWB3XzgaXkhdOGQwr24b6JLCQo=;
-        b=O3ThBmfsOvwnrYSC/Rox6PWvHBv9hnIQRRgbt/OxVw9l4gIFquVgM8vYoF0gC+xlhc
-         tT1dztFr6mJkI00KnE+P0Wj0O8LnWyb97nuTIilAohKnEfQU8+FH3u3subfHkPQ0+9J9
-         WgJq7FXpxzT3matrESYWSMc7KEwAED3yqsUNaXhJbTmFuqUH+jNwF8IwzbnldkIkt40z
-         v4Aepf2Ddj48OMA6gaiSCU2fUf4V1/N6NvVlDygHZV0G84TKMJIwYdPvOkHQi+83zvuV
-         +so5MbKunjie9c/uYF19zs2ORhbaqmYkcYEy9/gTGN/OPm54VORS4gDJY97gByQwJ0VD
-         gDDw==
-X-Gm-Message-State: APjAAAVO8M5BtJTy9UXQLCtvqzyWI3p2YB/pgKH8FZJy0uGp+Kpc9SB4
-        fjubdsNfWlMhX5ZAyYTM71H6sg==
-X-Google-Smtp-Source: APXvYqy/anSRn/zCi4pr0B+FnsissvYptswWTiSJCYV1O2ADeDbazP83NMugvS4Ri9Oq77DuK6ekSg==
-X-Received: by 2002:adf:ec8e:: with SMTP id z14mr8010601wrn.125.1561068606919;
-        Thu, 20 Jun 2019 15:10:06 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id x129sm525212wmg.44.2019.06.20.15.10.05
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 15:10:06 -0700 (PDT)
-Date:   Fri, 21 Jun 2019 00:10:04 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, jannh@google.com,
-        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
-        arnd@arndb.de, dhowells@redhat.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
-Message-ID: <20190620221003.ciuov5fzqxrcaykp@brauner.io>
-References: <20190604160944.4058-1-christian@brauner.io>
- <20190604160944.4058-2-christian@brauner.io>
- <20190620184451.GA28543@roeck-us.net>
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=mbYFTh6bazxqWo9R2yJjJ1/62LryVwqMQHAl8inkfY8=;
+        b=sZgY1zknueqFZG+T+PkvWoqwsy6Me67Ju+2YLYdWyjKJlGj0EWOq+6/xlKdzuwIK6c
+         jbLWSfZK/q5WPEAzlrxcCDNJFP1j0Bwni7fIZOwxp1bqmV64W2BzVaTS61UD9EmIKVaw
+         NlUTSfWQaAXULQnmKeRvT7FPftYu9tL6a0jmfl+A77POoZXK5QE2QdkY8dt06MQfhaFz
+         85bkPqAY5YrdwEaCFWUOhXgZkPXwwgsLH79n2hz0wqaJGIDxf25HBTflPbSstzcNNG2a
+         BmlNCcGkny69lombOpZF2CVdOLwLXb4XCqlbtj2a7iPTR7B2Kp5rSMj9Ox8gjRJ/W4oo
+         DcoA==
+X-Gm-Message-State: APjAAAXb8eqs3Xmq6L9bEWpN2+7ql8Mxij8Ec35EK9ol67shWSXOZTWM
+        yNc5x3yWza21lxWYgHq2r07syw==
+X-Google-Smtp-Source: APXvYqwco75N024LNpbRiHjtMlzSwUitTMmkymBba2UxnLOWOikFVoDkvcDMvidvTsjDzTpVCn9ItA==
+X-Received: by 2002:adf:dd51:: with SMTP id u17mr76614756wrm.218.1561068662643;
+        Thu, 20 Jun 2019 15:11:02 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id o20sm1824598wrh.8.2019.06.20.15.11.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 15:11:02 -0700 (PDT)
+Message-ID: <5d0c0476.1c69fb81.cef30.b578@mx.google.com>
+Date:   Thu, 20 Jun 2019 15:11:02 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190620184451.GA28543@roeck-us.net>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.4.182-85-g847c345985fd
+X-Kernelci-Branch: linux-4.4.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
+References: <20190620174337.538228162@linuxfoundation.org>
+Subject: Re: [PATCH 4.4 00/84] 4.4.183-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:44:51AM -0700, Guenter Roeck wrote:
-> On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
-> > Wire up the clone3() call on all arches that don't require hand-rolled
-> > assembly.
-> > 
-> > Some of the arches look like they need special assembly massaging and it is
-> > probably smarter if the appropriate arch maintainers would do the actual
-> > wiring. Arches that are wired-up are:
-> > - x86{_32,64}
-> > - arm{64}
-> > - xtensa
-> > 
-> 
-> This patch results in build failures on various architecetures.
-> 
-> h8300-linux-ld: arch/h8300/kernel/syscalls.o:(.data+0x6d0): undefined reference to `sys_clone3'
-> 
-> nios2-linux-ld: arch/nios2/kernel/syscall_table.o:(.data+0x6d0): undefined reference to `sys_clone3'
-> 
-> There may be others; -next is in too bad shape right now to get a complete
-> picture. Wondering, though: What is special with this syscall ? Normally
-> one would only get a warning that a syscall is not wired up.
+stable-rc/linux-4.4.y boot: 90 boots: 2 failed, 86 passed with 1 offline, 1=
+ conflict (v4.4.182-85-g847c345985fd)
 
-clone3() was placed under __ARCH_WANT_SYS_CLONE. Most architectures
-simply define __ARCH_WANT_SYS_CLONE and are done with it.
-Some however, such as nios2 and h8300 don't define it but instead
-provide a sys_clone stub of their own because of architectural
-requirements (or tweaks) and they are mostly written in assembly. (That
-should be left to arch maintainers for sys_clone3.)
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.4.y/kernel/v4.4.182-85-g847c345985fd/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.4.y=
+/kernel/v4.4.182-85-g847c345985fd/
 
-The build failures were on my radar already. I hadn't yet replied
-since I haven't pushed the fixup below.
-The solution is to define __ARCH_WANT_SYS_CLONE3 and add a
-cond_syscall(clone3) so we catch all architectures that do not yet
-provide clone3 with a ENOSYS until maintainers have added it.
+Tree: stable-rc
+Branch: linux-4.4.y
+Git Describe: v4.4.182-85-g847c345985fd
+Git Commit: 847c345985fd296caa81af3820e8185f0d716159
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 44 unique boards, 20 SoC families, 14 builds out of 190
 
-diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
-index 7a39e77984ef..aa35aa5d68dc 100644
---- a/arch/arm/include/asm/unistd.h
-+++ b/arch/arm/include/asm/unistd.h
-@@ -40,6 +40,7 @@
- #define __ARCH_WANT_SYS_FORK
- #define __ARCH_WANT_SYS_VFORK
- #define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_CLONE3
- 
- /*
-  * Unimplemented (or alternatively implemented) syscalls
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 24480c2d95da..e4e0523102e2 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -48,6 +48,7 @@
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_CLONE3
- 
- #ifndef __COMPAT_SYSCALL_NR
- #include <uapi/asm/unistd.h>
-diff --git a/arch/x86/include/asm/unistd.h b/arch/x86/include/asm/unistd.h
-index 146859efd83c..097589753fec 100644
---- a/arch/x86/include/asm/unistd.h
-+++ b/arch/x86/include/asm/unistd.h
-@@ -54,5 +54,6 @@
- # define __ARCH_WANT_SYS_FORK
- # define __ARCH_WANT_SYS_VFORK
- # define __ARCH_WANT_SYS_CLONE
-+# define __ARCH_WANT_SYS_CLONE3
- 
- #endif /* _ASM_X86_UNISTD_H */
-diff --git a/arch/xtensa/include/asm/unistd.h b/arch/xtensa/include/asm/unistd.h
-index 30af4dc3ce7b..b52236245e51 100644
---- a/arch/xtensa/include/asm/unistd.h
-+++ b/arch/xtensa/include/asm/unistd.h
-@@ -3,6 +3,7 @@
- #define _XTENSA_UNISTD_H
- 
- #define __ARCH_WANT_SYS_CLONE
-+#define __ARCH_WANT_SYS_CLONE3
- #include <uapi/asm/unistd.h>
- 
- #define __ARCH_WANT_NEW_STAT
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 08ff131f26b4..98abea995629 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2490,7 +2490,9 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
- 
- 	return _do_fork(&args);
- }
-+#endif
- 
-+#ifdef __ARCH_WANT_SYS_CLONE3
- noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
- 					      struct clone_args __user *uargs,
- 					      size_t size)
-diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index 4d9ae5ea6caf..34b76895b81e 100644
---- a/kernel/sys_ni.c
-+++ b/kernel/sys_ni.c
-@@ -137,6 +137,8 @@ COND_SYSCALL(capset);
- /* kernel/exit.c */
- 
- /* kernel/fork.c */
-+/* __ARCH_WANT_SYS_CLONE3 */
-+COND_SYSCALL(clone3);
- 
- /* kernel/futex.c */
- COND_SYSCALL(futex);
+Boot Regressions Detected:
+
+arm:
+
+    multi_v7_defconfig:
+        gcc-8:
+          omap3-beagle-xm:
+              lab-baylibre: new failure (last pass: v4.4.182)
+
+x86_64:
+
+    x86_64_defconfig:
+        gcc-8:
+          qemu:
+              lab-baylibre: new failure (last pass: v4.4.182)
+
+Boot Failures Detected:
+
+arm:
+    multi_v7_defconfig:
+        gcc-8:
+            omap3-beagle-xm: 1 failed lab
+
+arm64:
+    defconfig:
+        gcc-8:
+            qcom-qdf2400: 1 failed lab
+
+Offline Platforms:
+
+arm64:
+
+    defconfig:
+        gcc-8
+            apq8016-sbc: 1 offline lab
+
+Conflicting Boot Failure Detected: (These likely are not failures as other =
+labs are reporting PASS. Needs review.)
+
+x86_64:
+    x86_64_defconfig:
+        qemu:
+            lab-drue: PASS (gcc-8)
+            lab-baylibre: FAIL (gcc-8)
+            lab-collabora: PASS (gcc-8)
+            lab-linaro-lkft: PASS (gcc-8)
+            lab-mhart: PASS (gcc-8)
+
+---
+For more info write to <info@kernelci.org>
