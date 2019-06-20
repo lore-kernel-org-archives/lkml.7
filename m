@@ -2,68 +2,97 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D00C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7DDC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326AB2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:16:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561040215;
-	bh=9iRebO6DLKsf5fGTm7JWX4wTJr9M2g78lVVOWiI329U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hg0QCj8TITYgwzVVZn5XfxheddwHHPkkQmJhxdygG8OfBogtqtZ0o3+48r9ou27ME
-	 2LxoQ0kBms3TYt+cZAfT0z/o5T31ls7SoFw0iaadkUfo284aQdYsCzOOWFobtnliB4
-	 sK1HJb2GU39hrwp9JUute/WB9uNbbqLBgIoWFc7g=
+	by mail.kernel.org (Postfix) with ESMTP id 2DA842085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:16:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="QMlKdFnJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732108AbfFTOQx (ORCPT
+        id S1732131AbfFTOQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:16:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34148 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 10:16:57 -0400
+Received: from ozlabs.org ([203.11.71.1]:58517 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfFTOQx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:16:53 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1731773AbfFTOQz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:16:55 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1D7FE20679;
-        Thu, 20 Jun 2019 14:16:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561040212;
-        bh=9iRebO6DLKsf5fGTm7JWX4wTJr9M2g78lVVOWiI329U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AQ386KG/y054gecT++bUjaurqIH56NLWa099TjUwJEjpUaMR3NnklNkw5IMY91nvl
-         A4T5XvHW8nMYJyYDdXM4XASK/i/EyvBfTEpJL7WaHAcrUkt93Ey/qGxp0yy+QrtgYz
-         uO66rXsb1iNid4qAoefbvCvX+fgVNlFzyk3aD3DI=
-Date:   Thu, 20 Jun 2019 16:16:50 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     akpm@linux-foundation.org, aneesh.kumar@linux.ibm.com,
-        jstancek@redhat.com, mgorman@suse.de, minchan@kernel.org,
-        namit@vmware.com, npiggin@gmail.com, peterz@infradead.org,
-        will.deacon@arm.com, stable@vger.kernel.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND 5.1-stable PATCH] mm: mmu_gather: remove
- __tlb_reset_range() for force flush
-Message-ID: <20190620141650.GB9832@kroah.com>
-References: <1560805037-35324-1-git-send-email-yang.shi@linux.alibaba.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45V3m33SGhz9s5c;
+        Fri, 21 Jun 2019 00:16:51 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561040212;
+        bh=vdja2ap0jXe0YFwNWLNtjkfL4tYpQ+TI45RHxPMuGDc=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=QMlKdFnJPWwbxgZeuxJtNM70ggOfFCt3hxwZ4u2jtIrWpIwb0kEPPrZbDLl7X/jBH
+         UTMxcH18qH7moX9fxTJvNl9ktpZUYGMKE+owxy7xaPtCx+87feLBCTmjPURWavirib
+         aX3C+26puhlHrakpxkDhVx92ZYgX3SaHlCT3nuKOjEDCZQqoiZrtJrSfJykiF0II5m
+         BScYSmTd3FIM00yCv5gIRKOba5HZTyM6CabpgbVE3ivo8oGbpHKcIjMIZ052dNc8lY
+         frM1Ps1MilvF8uyIBmttgFs/PImBZGOCJEVFiUalLLt1Bqi/Jyv5CBQMMn5IILXNuA
+         sBs1GB5yYGzFw==
+Date:   Fri, 21 Jun 2019 00:16:49 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Pablo Neira Ayuso <pablo@netfilter.org>
+Cc:     NetFilter <netfilter-devel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Fernando Fernandez Mancera <ffmancera@riseup.net>
+Subject: Re: linux-next: build failure after merge of the netfilter-next
+ tree
+Message-ID: <20190621001649.4954df45@canb.auug.org.au>
+In-Reply-To: <20190620135703.aiv62n6fhzf6wjwv@salvia>
+References: <20190620234743.42e9d3e8@canb.auug.org.au>
+        <20190620135703.aiv62n6fhzf6wjwv@salvia>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1560805037-35324-1-git-send-email-yang.shi@linux.alibaba.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/SZk4yP0hckaUr/ULND1Dk+/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 04:57:17AM +0800, Yang Shi wrote:
-> commit 7a30df49f63ad92318ddf1f7498d1129a77dd4bd upstream
+--Sig_/SZk4yP0hckaUr/ULND1Dk+/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-THanks for the backport, now queued up.
+Hi Pablo,
 
-greg k-h
+On Thu, 20 Jun 2019 15:57:03 +0200 Pablo Neira Ayuso <pablo@netfilter.org> =
+wrote:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/pablo/nf-next.git/commit/=
+?id=3D8527fa6cc68a489f735823e61b31ec6cb266274a
+
+Good timing :-)
+
+Thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SZk4yP0hckaUr/ULND1Dk+/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0LlVEACgkQAVBC80lX
+0GxrvAgAlz07KK18OGLbKh42QR1OTkWWQ7FThdF98Wn6qyXTzzQakCXjxoyXxKNM
+9kl6fIkixj+WDn/UdVL8aq12x91e4RCwAiKzAbyG2SsCB9zPm65apUsWCnCFliCq
+lRTwE5AGD5WLyDGxI/GD3VRv/qAZQrkq93rkeK12sh64HLXwqAtKzkpkd1tZnqxM
+7Sv7ipWd7KxhsEE+z0xE7ocU19OXEaRSnZrx2GZCDt2QAyvcvyFOATlcXJyhnA18
+vaXGzgks/zlO4YzeytYSYlnBih5bsaYVZGax4wbJlpuoZZ5CsR97MDaC4Mjj9d28
+iQxZORJr+3JjRZ/PglH6IHGi0/oICQ==
+=czsd
+-----END PGP SIGNATURE-----
+
+--Sig_/SZk4yP0hckaUr/ULND1Dk+/--
