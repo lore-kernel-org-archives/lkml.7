@@ -2,170 +2,261 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BC78C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:27:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C72B2C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ABE92084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:27:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9642E2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:28:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ocALnvCY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hnuGTBxG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfFTI1l (ORCPT
+        id S1730561AbfFTI2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:27:41 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:52209 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTI1k (ORCPT
+        Thu, 20 Jun 2019 04:28:35 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54770 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTI2f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:27:40 -0400
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 226F420000F;
-        Thu, 20 Jun 2019 08:27:36 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 10:27:36 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Eugen.Hristev@microchip.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com,
-        wsa@the-dreams.de, linux-i2c@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 3/5] i2c: at91: add support for digital filtering
-Message-ID: <20190620082736.GS23549@piout.net>
-References: <1561014676-22446-1-git-send-email-eugen.hristev@microchip.com>
- <1561014676-22446-3-git-send-email-eugen.hristev@microchip.com>
+        Thu, 20 Jun 2019 04:28:35 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 55CEE60867; Thu, 20 Jun 2019 08:28:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561019313;
+        bh=UiZTqO2d/B91wZV2iRJUamihFX7vX8r/m9aAuZdvl0U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ocALnvCYwC9QRJQUPsRcwvqANyJqa53SfaCIEmT0QswcBf+nmnNr7SnUhXh+X6cCW
+         zmhXv405mWBfAyVbjG2dIKqTINyyN0XKOnfsocXETawt03GEEE2lGZecuH8IU5m6pV
+         zExV2PTHNMe00CBhcZgFvSXcVqvr3oMcGWt11n8A=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 62894606FC;
+        Thu, 20 Jun 2019 08:28:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561019312;
+        bh=UiZTqO2d/B91wZV2iRJUamihFX7vX8r/m9aAuZdvl0U=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hnuGTBxGmMYkKvVgDNbeJaWwM1/2XzNz/fv1YwdrsesW+PX8UvHsu7wuSvco1OyP3
+         5fZ2u0qrcDNa1UsCqP72vH4hiURwfsBx0+0sxPvrxTkQvBlK1nwZsrPedS8hForSP+
+         xAmi05PCri21LPPcrvDLZY3RRp7dhUoJRVXVefxo=
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1561014676-22446-3-git-send-email-eugen.hristev@microchip.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Jun 2019 13:58:32 +0530
+From:   amasule@codeaurora.org
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
+Subject: Re: [PATCH 3/5] media: venus: Update clock scaling
+In-Reply-To: <e1903711-b8c1-d528-2da8-ffd511a2da72@linaro.org>
+References: <1560233130-27264-1-git-send-email-amasule@codeaurora.org>
+ <1560233130-27264-4-git-send-email-amasule@codeaurora.org>
+ <e1903711-b8c1-d528-2da8-ffd511a2da72@linaro.org>
+Message-ID: <0a0b2dd455f21d3ea7013c4595fb0fc7@codeaurora.org>
+X-Sender: amasule@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/06/2019 07:16:13+0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
+Hi Stan,
+
+On 2019-06-17 14:28, Stanimir Varbanov wrote:
+> Hi Aniket,
 > 
-> Add new platform data support for digital filtering for i2c.
-> The sama5d4, sama5d2 and sam9x60 support this feature.
+> On 6/11/19 9:05 AM, Aniket Masule wrote:
+>> Current clock scaling calculations are same for vpu4 and
+>> previous versions. For vpu4, Clock scaling calculations
+>> are updated with cycles/mb. This helps in getting precise
+>> clock required.
+>> 
+>> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/helpers.c | 88 
+>> +++++++++++++++++++++++++++--
+>>  1 file changed, 84 insertions(+), 4 deletions(-)
+>> 
+>> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
+>> b/drivers/media/platform/qcom/venus/helpers.c
+>> index f7f724b..7bcc1e6 100644
+>> --- a/drivers/media/platform/qcom/venus/helpers.c
+>> +++ b/drivers/media/platform/qcom/venus/helpers.c
+>> @@ -348,8 +348,9 @@ static u32 load_per_type(struct venus_core *core, 
+>> u32 session_type)
+>>  	return mbs_per_sec;
+>>  }
+>> 
+>> -static int load_scale_clocks(struct venus_core *core)
+>> +static int scale_clocks(struct venus_inst *inst)
+>>  {
+>> +	struct venus_core *core = inst->core;
+>>  	const struct freq_tbl *table = core->res->freq_tbl;
+>>  	unsigned int num_rows = core->res->freq_tbl_size;
+>>  	unsigned long freq = table[0].freq;
+>> @@ -398,6 +399,86 @@ static int load_scale_clocks(struct venus_core 
+>> *core)
+>>  	return ret;
+>>  }
+>> 
+>> +static unsigned long calculate_inst_freq(struct venus_inst *inst)
+>> +{
+>> +	unsigned long vpp_cycles = 0;
+>> +	u32 mbs_per_sec;
+>> +
+>> +	mbs_per_sec = load_per_instance(inst);
+>> +	vpp_cycles = mbs_per_sec * inst->clk_data.codec_data->vpp_cycles;
+>> +	/* 21 / 20 is overhead factor */
+>> +	vpp_cycles += vpp_cycles / 20;
 > 
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> ---
->  drivers/i2c/busses/i2c-at91-core.c   | 9 +++++++++
->  drivers/i2c/busses/i2c-at91-master.c | 6 ++++++
->  drivers/i2c/busses/i2c-at91.h        | 4 ++++
->  3 files changed, 19 insertions(+)
+> shouldn't you multiply by 21?
 > 
-> diff --git a/drivers/i2c/busses/i2c-at91-core.c b/drivers/i2c/busses/i2c-at91-core.c
-> index a663a7a..62610af 100644
-> --- a/drivers/i2c/busses/i2c-at91-core.c
-> +++ b/drivers/i2c/busses/i2c-at91-core.c
-> @@ -68,6 +68,7 @@ static struct at91_twi_pdata at91rm9200_config = {
->  	.has_unre_flag = true,
->  	.has_alt_cmd = false,
->  	.has_hold_field = false,
-> +	.has_dig_filtr = false,
-
-As false is the default value, may we should avoid setting it
-explicitly to keep the file size manageable.
-
->  };
->  
->  static struct at91_twi_pdata at91sam9261_config = {
-> @@ -76,6 +77,7 @@ static struct at91_twi_pdata at91sam9261_config = {
->  	.has_unre_flag = false,
->  	.has_alt_cmd = false,
->  	.has_hold_field = false,
-> +	.has_dig_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9260_config = {
-> @@ -84,6 +86,7 @@ static struct at91_twi_pdata at91sam9260_config = {
->  	.has_unre_flag = false,
->  	.has_alt_cmd = false,
->  	.has_hold_field = false,
-> +	.has_dig_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9g20_config = {
-> @@ -92,6 +95,7 @@ static struct at91_twi_pdata at91sam9g20_config = {
->  	.has_unre_flag = false,
->  	.has_alt_cmd = false,
->  	.has_hold_field = false,
-> +	.has_dig_filtr = false,
->  };
->  
->  static struct at91_twi_pdata at91sam9g10_config = {
-> @@ -100,6 +104,7 @@ static struct at91_twi_pdata at91sam9g10_config = {
->  	.has_unre_flag = false,
->  	.has_alt_cmd = false,
->  	.has_hold_field = false,
-> +	.has_dig_filtr = false,
->  };
->  
->  static const struct platform_device_id at91_twi_devtypes[] = {
-> @@ -130,6 +135,7 @@ static struct at91_twi_pdata at91sam9x5_config = {
->  	.has_unre_flag = false,
->  	.has_alt_cmd = false,
->  	.has_hold_field = false,
-> +	.has_dig_filtr = false,
->  };
->  
->  static struct at91_twi_pdata sama5d4_config = {
-> @@ -138,6 +144,7 @@ static struct at91_twi_pdata sama5d4_config = {
->  	.has_unre_flag = false,
->  	.has_alt_cmd = false,
->  	.has_hold_field = true,
-> +	.has_dig_filtr = true,
->  };
->  
->  static struct at91_twi_pdata sama5d2_config = {
-> @@ -146,6 +153,7 @@ static struct at91_twi_pdata sama5d2_config = {
->  	.has_unre_flag = true,
->  	.has_alt_cmd = true,
->  	.has_hold_field = true,
-> +	.has_dig_filtr = true,
->  };
->  
->  static struct at91_twi_pdata sam9x60_config = {
-> @@ -154,6 +162,7 @@ static struct at91_twi_pdata sam9x60_config = {
->  	.has_unre_flag = true,
->  	.has_alt_cmd = true,
->  	.has_hold_field = true,
-> +	.has_dig_filtr = true,
->  };
->  
->  static const struct of_device_id atmel_twi_dt_ids[] = {
-> diff --git a/drivers/i2c/busses/i2c-at91-master.c b/drivers/i2c/busses/i2c-at91-master.c
-> index e87232f..366e90f 100644
-> --- a/drivers/i2c/busses/i2c-at91-master.c
-> +++ b/drivers/i2c/busses/i2c-at91-master.c
-> @@ -31,12 +31,18 @@
->  
->  void at91_init_twi_bus_master(struct at91_twi_dev *dev)
->  {
-> +	struct at91_twi_pdata *pdata = dev->pdata;
-> +
->  	/* FIFO should be enabled immediately after the software reset */
->  	if (dev->fifo_size)
->  		at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_FIFOEN);
->  	at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_MSEN);
->  	at91_twi_write(dev, AT91_TWI_CR, AT91_TWI_SVDIS);
->  	at91_twi_write(dev, AT91_TWI_CWGR, dev->twi_cwgr_reg);
-> +
-> +	/* enable digital filter */
-> +	if (pdata->has_dig_filtr)
-> +		at91_twi_write(dev, AT91_TWI_FILTR, AT91_TWI_FILTR_FILT);
-
-You are enabling all those filtering features by default which mean that
-if we ever need to handle them using DT, the property will be a
-disabling one instead of a more logical enabling one.
-
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Expansion of given expression results to the same.
+>> +
+>> +	return vpp_cycles;
+> 
+> It is not clear to me is that vpp_cycles or frequency (rate)? I just
+> lost in dimensions used here.
+> 
+> If you return vpp_cycles could you rename the function name?
+> 
+Initial calculations included frequency (for bitrate based scaling), 
+which I removed.
+I will rename it calculate_inst_vpp_cycles for this patch.
+>> +}
+>> +
+>> +static int scale_clocks_vpu4(struct venus_inst *inst)
+> 
+> does vpu4 equivalent to HFI_VERSION_4XX? If so could you rename 
+> function
+> to scale_clocks_v4.
+> 
+Sure Stan, I will rename it to scale_clocks_v4.
+>> +{
+>> +	struct venus_core *core = inst->core;
+>> +	const struct freq_tbl *table = core->res->freq_tbl;
+>> +	unsigned int num_rows = core->res->freq_tbl_size;
+>> +
+>> +	struct clk *clk = core->clks[0];
+>> +	struct device *dev = core->dev;
+>> +	unsigned int i;
+>> +	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
+>> +	int ret;
+>> +
+>> +	freq = calculate_inst_freq(inst);
+>> +
+>> +	if (freq > table[0].freq)
+>> +		goto err;
+>> +
+>> +	for (i = 0; i < num_rows; i++) {
+>> +		if (freq > table[i].freq)
+>> +			break;
+>> +		freq = table[i].freq;
+>> +	}
+>> +
+>> +	inst->clk_data.freq = freq;
+>> +
+>> +	mutex_lock(&core->lock);
+>> +	list_for_each_entry(inst, &core->instances, list) {
+>> +		if (inst->clk_data.core_id == VIDC_CORE_ID_1) {
+>> +			freq_core0 += inst->clk_data.freq;
+>> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_2) {
+>> +			freq_core1 += inst->clk_data.freq;
+>> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_3) {
+>> +			freq_core0 += inst->clk_data.freq;
+>> +			freq_core1 += inst->clk_data.freq;
+>> +		}
+>> +	}
+>> +	mutex_unlock(&core->lock);
+>> +
+>> +	freq = max(freq_core0, freq_core1);
+> 
+> hmm, this doesn't look right. core0 and core1 frequencies can be
+> different why you get the bigger and set it on both?
+> 
+We can't set separate clocks to core0 and core1.
+As per the design, we can set clocks to the branch only not the 
+individual cores.
+>> +
+>> +	ret = clk_set_rate(clk, freq);
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	ret = clk_set_rate(core->core0_clk, freq);
+> 
+> IMO this should set freq_core0
+We need set max required frequency, due to the reason mentioned above.
+> 
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	ret = clk_set_rate(core->core1_clk, freq);
+> 
+> set freq_core1
+> 
+We need set max required frequency, due to the reason mentioned above.
+>> +	if (ret)
+>> +		goto err;
+>> +
+>> +	return 0;
+>> +
+>> +err:
+>> +	dev_err(dev, "failed to set clock rate %lu (%d)\n", freq, ret);
+>> +	return ret;
+>> +}
+>> +
+>> +static int load_scale_clocks(struct venus_inst *inst)
+>> +{
+>> +	if (IS_V3(inst->core) || IS_V1(inst->core))
+>> +		return scale_clocks(inst);
+>> +	else
+>> +		return scale_clocks_vpu4(inst);
+> 
+> could you reorder this to:
+> 
+> 	if (IS_V4())
+> 		return scale_clocks_v4(inst);
+> 
+> 	return scale_clocks(inst);
+> 
+Yes Stan.
+>> +}
+>> +
+>>  static void fill_buffer_desc(const struct venus_buffer *buf,
+>>  			     struct hfi_buffer_desc *bd, bool response)
+>>  {
+>> @@ -1053,7 +1134,7 @@ void venus_helper_vb2_stop_streaming(struct 
+>> vb2_queue *q)
+>> 
+>>  		venus_helper_free_dpb_bufs(inst);
+>> 
+>> -		load_scale_clocks(core);
+>> +		load_scale_clocks(inst);
+>>  		INIT_LIST_HEAD(&inst->registeredbufs);
+>>  	}
+>> 
+>> @@ -1070,7 +1151,6 @@ void venus_helper_vb2_stop_streaming(struct 
+>> vb2_queue *q)
+>> 
+>>  int venus_helper_vb2_start_streaming(struct venus_inst *inst)
+>>  {
+>> -	struct venus_core *core = inst->core;
+>>  	int ret;
+>> 
+>>  	ret = intbufs_alloc(inst);
+>> @@ -1081,7 +1161,7 @@ int venus_helper_vb2_start_streaming(struct 
+>> venus_inst *inst)
+>>  	if (ret)
+>>  		goto err_bufs_free;
+>> 
+>> -	load_scale_clocks(core);
+>> +	load_scale_clocks(inst);
+>> 
+>>  	ret = hfi_session_load_res(inst);
+>>  	if (ret)
+>> 
