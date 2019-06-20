@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2794CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0D5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1AC0214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A32C21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054164;
-	bh=XOsat5H/9JjIfpfM0mPQ8/vDMgKzPKSgWRuivcB5zmY=;
+	s=default; t=1561054167;
+	bh=9p28c3RznQiz5aW5S9Jv555YmAzoCf9lQtwhUb6LtGY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pYp4unfFVhqWe872V/pw4CKQES1rxGV4pnz5G8ae64hzn4G2FwhKpZyKupFRE4fGY
-	 zr7O/AXYMEuZEj3u57ARrfsoKdMZqdvpg2stIIUT0TeG/92ENfq8rKCl5fWfgz5+Xm
-	 tISkKE4Z+lttTKW2budqQzlmHHpuZ2EY3aIX8cA0=
+	b=TE+cEiAM1PqRnnc08OcSmznkscCKJi6wqx/x+16fecOsG0hYg/0dHJObZKRn3STUW
+	 RY3P3Zqm4g83DrfDDFAuupaed33c8GVsqAlr76d3yPdgNB0AGqK30Qmgg5JNS25lCL
+	 Tov3fNZC+990rSMwUkmqIFRW1jX26Fi6qUA7pPu0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728636AbfFTSJW (ORCPT
+        id S1728644AbfFTSJ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:09:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36772 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:09:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728627AbfFTSJU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:09:20 -0400
+        id S1728217AbfFTSJX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:09:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93BFF2082C;
-        Thu, 20 Jun 2019 18:09:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C98C32082C;
+        Thu, 20 Jun 2019 18:09:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054159;
-        bh=XOsat5H/9JjIfpfM0mPQ8/vDMgKzPKSgWRuivcB5zmY=;
+        s=default; t=1561054162;
+        bh=9p28c3RznQiz5aW5S9Jv555YmAzoCf9lQtwhUb6LtGY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sizbQCa8z/wfcSqHHka3RhTPoJ9YM/AsBH+PHkNQNuch3/NJaG6b/B/AKZkk50+8W
-         euH2X57g8tQgkf/HdmpUCqQNIeIxQEVf8viZ/D1eya/qTG6d5+OeniELbQHoKliLwt
-         ND4uNsE38rKHGa+exCPE01gQBK/5gpBOOiQBZqmE=
+        b=bdKybB4Vnb0t5W2CR1KU6mR+RCZfTq+PB5Al8c1naCIcfm6vH4TwFhM8JrtWxkphN
+         uWMTVAc4TYgZ65LiI2dx3cjq8W+kHIy9eKtVVE0gs78+jlQK8J7WjiMCXki1SpwbiZ
+         /Kebi0yWw/vb4zD5d79vRl4fscFL1mwQJlE5IDQM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 39/45] mlxsw: spectrum: Prevent force of 56G
-Date:   Thu, 20 Jun 2019 19:57:41 +0200
-Message-Id: <20190620174340.345051055@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
+        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Subject: [PATCH 4.14 40/45] HID: wacom: Dont set tool type until were in range
+Date:   Thu, 20 Jun 2019 19:57:42 +0200
+Message-Id: <20190620174340.517860181@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -62,36 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 275e928f19117d22f6d26dee94548baf4041b773 ]
+From: Jason Gerecke <jason.gerecke@wacom.com>
 
-Force of 56G is not supported by hardware in Ethernet devices. This
-configuration fails with a bad parameter error from firmware.
+commit 2cc08800a6b9fcda7c7afbcf2da1a6e8808da725 upstream.
 
-Add check of this case. Instead of trying to set 56G with autoneg off,
-return a meaningful error.
+The serial number and tool type information that is reported by the tablet
+while a pen is merely "in prox" instead of fully "in range" can be stale
+and cause us to report incorrect tool information. Serial number, tool
+type, and other information is only valid once the pen comes fully in range
+so we should be careful to not use this information until that point.
 
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+In particular, this issue may cause the driver to incorectly report
+BTN_TOOL_RUBBER after switching from the eraser tool back to the pen.
+
+Fixes: a48324de6d4d ("HID: wacom: Bluetooth IRQ for Intuos Pro should handle prox/range")
+Cc: <stable@vger.kernel.org> # 4.11+
+Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
+Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
+Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/hid/wacom_wac.c |   17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2505,6 +2505,10 @@ mlxsw_sp_port_set_link_ksettings(struct
- 	mlxsw_reg_ptys_eth_unpack(ptys_pl, &eth_proto_cap, NULL, NULL);
+--- a/drivers/hid/wacom_wac.c
++++ b/drivers/hid/wacom_wac.c
+@@ -1225,13 +1225,13 @@ static void wacom_intuos_pro2_bt_pen(str
+ 		/* Add back in missing bits of ID for non-USI pens */
+ 		wacom->id[0] |= (wacom->serial[0] >> 32) & 0xFFFFF;
+ 	}
+-	wacom->tool[0]   = wacom_intuos_get_tool_type(wacom_intuos_id_mangle(wacom->id[0]));
  
- 	autoneg = cmd->base.autoneg == AUTONEG_ENABLE;
-+	if (!autoneg && cmd->base.speed == SPEED_56000) {
-+		netdev_err(dev, "56G not supported with autoneg off\n");
-+		return -EINVAL;
-+	}
- 	eth_proto_new = autoneg ?
- 		mlxsw_sp_to_ptys_advert_link(cmd) :
- 		mlxsw_sp_to_ptys_speed(cmd->base.speed);
+ 	for (i = 0; i < pen_frames; i++) {
+ 		unsigned char *frame = &data[i*pen_frame_len + 1];
+ 		bool valid = frame[0] & 0x80;
+ 		bool prox = frame[0] & 0x40;
+ 		bool range = frame[0] & 0x20;
++		bool invert = frame[0] & 0x10;
+ 
+ 		if (!valid)
+ 			continue;
+@@ -1240,8 +1240,13 @@ static void wacom_intuos_pro2_bt_pen(str
+ 			wacom->shared->stylus_in_proximity = false;
+ 			wacom_exit_report(wacom);
+ 			input_sync(pen_input);
++
++			wacom->tool[0] = 0;
++			wacom->id[0] = 0;
++			wacom->serial[0] = 0;
+ 			return;
+ 		}
++
+ 		if (range) {
+ 			/* Fix rotation alignment: userspace expects zero at left */
+ 			int16_t rotation = (int16_t)get_unaligned_le16(&frame[9]);
+@@ -1249,6 +1254,16 @@ static void wacom_intuos_pro2_bt_pen(str
+ 			if (rotation > 899)
+ 				rotation -= 1800;
+ 
++			if (!wacom->tool[0]) { /* first in range */
++				/* Going into range select tool */
++				if (invert)
++					wacom->tool[0] = BTN_TOOL_RUBBER;
++				else if (wacom->id[0])
++					wacom->tool[0] = wacom_intuos_get_tool_type(wacom->id[0]);
++				else
++					wacom->tool[0] = BTN_TOOL_PEN;
++			}
++
+ 			input_report_abs(pen_input, ABS_X, get_unaligned_le16(&frame[1]));
+ 			input_report_abs(pen_input, ABS_Y, get_unaligned_le16(&frame[3]));
+ 			input_report_abs(pen_input, ABS_TILT_X, (char)frame[7]);
 
 
