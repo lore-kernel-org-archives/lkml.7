@@ -5,54 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A660C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD828C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D187621479
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A022C2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053750;
-	bh=n7tQKfeYKlJlcoLndlpLYKAf4WKPKLoY1zFFRKHW00A=;
+	s=default; t=1561053757;
+	bh=AvOH+kKlYLWTdHDziyOdxsTL314e3tdGBQ5nbgBybfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Azwi6GuY4RrL020Gz5ZbAwKTolDzhb9fC4gLRY9GOO344b7u/pODTRs8PrzBqtYTG
-	 lfqcw/g04L9CmqS750RKpBSmy4BnH9vS3MMFYTF3jWKJuz/6NpP8ReSXhBfIYrxK8p
-	 +RyP2IPogIfnJf48PabeXURN4ucdnQthbk6oAWVU=
+	b=n596TxLRvTcEe6fyp+8Ys98pRBVX8WwQRw7X4E4wOWKfZ0Xglnl8TlkJZpQZfhzMe
+	 sl0tyS+nR2jRbGB8ub2Le4CFFx+TYZx90J/gDiK+lbZBYKKbw5ux5XD0amdMYyXbSY
+	 x0qXRfFYboYL4CxobEH2ezNmXe35SZPK1lv0ArFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfFTSC3 (ORCPT
+        id S1726622AbfFTSCg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:02:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52952 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:02:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727426AbfFTSC0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:02:26 -0400
+        id S1726244AbfFTSCd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:02:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 10FC8204FD;
-        Thu, 20 Jun 2019 18:02:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7D1042083B;
+        Thu, 20 Jun 2019 18:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053745;
-        bh=n7tQKfeYKlJlcoLndlpLYKAf4WKPKLoY1zFFRKHW00A=;
+        s=default; t=1561053753;
+        bh=AvOH+kKlYLWTdHDziyOdxsTL314e3tdGBQ5nbgBybfA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MmXdRK2bVS9wFkFTek6CcRQHRqWONbykLe/RYjTwQTJMhI63nkEz4qdnzevndq6jU
-         AS/aBXIrouVWG50w2FQIszDbolaIUacNMSRAL91bNUTo3U9sbRjbMi9i2r6+bJSm0j
-         GIZxxrF0Fa1KDBl406oFOcdRK+Fn7ZviCZMbkp4s=
+        b=nJ0qYoeGoas7galr53k3jUX/46s713XJLO4dpXDMixywPgXQBdRHtakfUvwb8OCZW
+         PBKhNvHfvZX/KOD/uaT8LlJbwl6FU0vLVQjDaR21rTTL26tf7cjSWE1MDliUre6kIk
+         A9P6zXCLnTjIkcgzekrPVJ2+UU24n5ZMCucFS7zk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Zhang Yu <zhangyu31@baidu.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+        stable@vger.kernel.org, Linxu Fang <fanglinxu@huawei.com>,
+        Taku Izumi <izumi.taku@jp.fujitsu.com>,
+        Xishi Qiu <qiuxishi@huawei.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 004/117] ipc: prevent lockup on alloc_msg and free_msg
-Date:   Thu, 20 Jun 2019 19:55:38 +0200
-Message-Id: <20190620174352.225391749@linuxfoundation.org>
+Subject: [PATCH 4.9 007/117] mem-hotplug: fix node spanned pages when we have a node with only ZONE_MOVABLE
+Date:   Thu, 20 Jun 2019 19:55:41 +0200
+Message-Id: <20190620174352.418442097@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -65,157 +67,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6a2946a88f524a47cc9b79279667137899db807 ]
+[ Upstream commit 299c83dce9ea3a79bb4b5511d2cb996b6b8e5111 ]
 
-msgctl10 of ltp triggers the following lockup When CONFIG_KASAN is
-enabled on large memory SMP systems, the pages initialization can take a
-long time, if msgctl10 requests a huge block memory, and it will block
-rcu scheduler, so release cpu actively.
+342332e6a925 ("mm/page_alloc.c: introduce kernelcore=mirror option") and
+later patches rewrote the calculation of node spanned pages.
 
-After adding schedule() in free_msg, free_msg can not be called when
-holding spinlock, so adding msg to a tmp list, and free it out of
-spinlock
+e506b99696a2 ("mem-hotplug: fix node spanned pages when we have a movable
+node"), but the current code still has problems,
 
-  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-  rcu:     Tasks blocked on level-1 rcu_node (CPUs 16-31): P32505
-  rcu:     Tasks blocked on level-1 rcu_node (CPUs 48-63): P34978
-  rcu:     (detected by 11, t=35024 jiffies, g=44237529, q=16542267)
-  msgctl10        R  running task    21608 32505   2794 0x00000082
-  Call Trace:
-   preempt_schedule_irq+0x4c/0xb0
-   retint_kernel+0x1b/0x2d
-  RIP: 0010:__is_insn_slot_addr+0xfb/0x250
-  Code: 82 1d 00 48 8b 9b 90 00 00 00 4c 89 f7 49 c1 ee 03 e8 59 83 1d 00 48 b8 00 00 00 00 00 fc ff df 4c 39 eb 48 89 9d 58 ff ff ff <41> c6 04 06 f8 74 66 4c 8d 75 98 4c 89 f1 48 c1 e9 03 48 01 c8 48
-  RSP: 0018:ffff88bce041f758 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-  RAX: dffffc0000000000 RBX: ffffffff8471bc50 RCX: ffffffff828a2a57
-  RDX: dffffc0000000000 RSI: dffffc0000000000 RDI: ffff88bce041f780
-  RBP: ffff88bce041f828 R08: ffffed15f3f4c5b3 R09: ffffed15f3f4c5b3
-  R10: 0000000000000001 R11: ffffed15f3f4c5b2 R12: 000000318aee9b73
-  R13: ffffffff8471bc50 R14: 1ffff1179c083ef0 R15: 1ffff1179c083eec
-   kernel_text_address+0xc1/0x100
-   __kernel_text_address+0xe/0x30
-   unwind_get_return_address+0x2f/0x50
-   __save_stack_trace+0x92/0x100
-   create_object+0x380/0x650
-   __kmalloc+0x14c/0x2b0
-   load_msg+0x38/0x1a0
-   do_msgsnd+0x19e/0xcf0
-   do_syscall_64+0x117/0x400
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+When we have a node with only zone_movable and the node id is not zero,
+the size of node spanned pages is double added.
 
-  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-  rcu:     Tasks blocked on level-1 rcu_node (CPUs 0-15): P32170
-  rcu:     (detected by 14, t=35016 jiffies, g=44237525, q=12423063)
-  msgctl10        R  running task    21608 32170  32155 0x00000082
-  Call Trace:
-   preempt_schedule_irq+0x4c/0xb0
-   retint_kernel+0x1b/0x2d
-  RIP: 0010:lock_acquire+0x4d/0x340
-  Code: 48 81 ec c0 00 00 00 45 89 c6 4d 89 cf 48 8d 6c 24 20 48 89 3c 24 48 8d bb e4 0c 00 00 89 74 24 0c 48 c7 44 24 20 b3 8a b5 41 <48> c1 ed 03 48 c7 44 24 28 b4 25 18 84 48 c7 44 24 30 d0 54 7a 82
-  RSP: 0018:ffff88af83417738 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-  RAX: dffffc0000000000 RBX: ffff88bd335f3080 RCX: 0000000000000002
-  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88bd335f3d64
-  RBP: ffff88af83417758 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000001 R11: ffffed13f3f745b2 R12: 0000000000000000
-  R13: 0000000000000002 R14: 0000000000000000 R15: 0000000000000000
-   is_bpf_text_address+0x32/0xe0
-   kernel_text_address+0xec/0x100
-   __kernel_text_address+0xe/0x30
-   unwind_get_return_address+0x2f/0x50
-   __save_stack_trace+0x92/0x100
-   save_stack+0x32/0xb0
-   __kasan_slab_free+0x130/0x180
-   kfree+0xfa/0x2d0
-   free_msg+0x24/0x50
-   do_msgrcv+0x508/0xe60
-   do_syscall_64+0x117/0x400
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
+That's because we have an empty normal zone, and zone_start_pfn or
+zone_end_pfn is not between arch_zone_lowest_possible_pfn and
+arch_zone_highest_possible_pfn, so we need to use clamp to constrain the
+range just like the commit <96e907d13602> (bootmem: Reimplement
+__absent_pages_in_range() using for_each_mem_pfn_range()).
 
-Davidlohr said:
- "So after releasing the lock, the msg rbtree/list is empty and new
-  calls will not see those in the newly populated tmp_msg list, and
-  therefore they cannot access the delayed msg freeing pointers, which
-  is good. Also the fact that the node_cache is now freed before the
-  actual messages seems to be harmless as this is wanted for
-  msg_insert() avoiding GFP_ATOMIC allocations, and after releasing the
-  info->lock the thing is freed anyway so it should not change things"
+e.g.
+Zone ranges:
+  DMA      [mem 0x0000000000001000-0x0000000000ffffff]
+  DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
+  Normal   [mem 0x0000000100000000-0x000000023fffffff]
+Movable zone start for each node
+  Node 0: 0x0000000100000000
+  Node 1: 0x0000000140000000
+Early memory node ranges
+  node   0: [mem 0x0000000000001000-0x000000000009efff]
+  node   0: [mem 0x0000000000100000-0x00000000bffdffff]
+  node   0: [mem 0x0000000100000000-0x000000013fffffff]
+  node   1: [mem 0x0000000140000000-0x000000023fffffff]
 
-Link: http://lkml.kernel.org/r/1552029161-4957-1-git-send-email-lirongqing@baidu.com
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
+node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
+node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
+node 0 Normal	spanned:0	present:0	absent:0
+node 0 Movable	spanned:0x40000 present:0x40000 absent:0
+On node 0 totalpages(node_present_pages): 1048446
+node_spanned_pages:1310719
+node 1 DMA	spanned:0	    present:0		absent:0
+node 1 DMA32	spanned:0	    present:0		absent:0
+node 1 Normal	spanned:0x100000    present:0x100000	absent:0
+node 1 Movable	spanned:0x100000    present:0x100000	absent:0
+On node 1 totalpages(node_present_pages): 2097152
+node_spanned_pages:2097152
+Memory: 6967796K/12582392K available (16388K kernel code, 3686K rwdata,
+4468K rodata, 2160K init, 10444K bss, 5614596K reserved, 0K
+cma-reserved)
+
+It shows that the current memory of node 1 is double added.
+After this patch, the problem is fixed.
+
+node 0 DMA	spanned:0xfff   present:0xf9e   absent:0x61
+node 0 DMA32	spanned:0xff000 present:0xbefe0	absent:0x40020
+node 0 Normal	spanned:0	present:0	absent:0
+node 0 Movable	spanned:0x40000 present:0x40000 absent:0
+On node 0 totalpages(node_present_pages): 1048446
+node_spanned_pages:1310719
+node 1 DMA	spanned:0	    present:0		absent:0
+node 1 DMA32	spanned:0	    present:0		absent:0
+node 1 Normal	spanned:0	    present:0		absent:0
+node 1 Movable	spanned:0x100000    present:0x100000	absent:0
+On node 1 totalpages(node_present_pages): 1048576
+node_spanned_pages:1048576
+memory: 6967796K/8388088K available (16388K kernel code, 3686K rwdata,
+4468K rodata, 2160K init, 10444K bss, 1420292K reserved, 0K
+cma-reserved)
+
+Link: http://lkml.kernel.org/r/1554178276-10372-1-git-send-email-fanglinxu@huawei.com
+Signed-off-by: Linxu Fang <fanglinxu@huawei.com>
+Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
+Cc: Xishi Qiu <qiuxishi@huawei.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Oscar Salvador <osalvador@suse.de>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c  | 10 ++++++++--
- ipc/msgutil.c |  6 ++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ mm/page_alloc.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 28a142f1be36..d5491a880751 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -371,7 +371,8 @@ static void mqueue_evict_inode(struct inode *inode)
- 	struct user_struct *user;
- 	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
--	struct msg_msg *msg;
-+	struct msg_msg *msg, *nmsg;
-+	LIST_HEAD(tmp_msg);
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 05f141e39ac1..13a642192e12 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5491,13 +5491,15 @@ static unsigned long __meminit zone_spanned_pages_in_node(int nid,
+ 					unsigned long *zone_end_pfn,
+ 					unsigned long *ignored)
+ {
++	unsigned long zone_low = arch_zone_lowest_possible_pfn[zone_type];
++	unsigned long zone_high = arch_zone_highest_possible_pfn[zone_type];
+ 	/* When hotadd a new node from cpu_up(), the node should be empty */
+ 	if (!node_start_pfn && !node_end_pfn)
+ 		return 0;
  
- 	clear_inode(inode);
- 
-@@ -382,10 +383,15 @@ static void mqueue_evict_inode(struct inode *inode)
- 	info = MQUEUE_I(inode);
- 	spin_lock(&info->lock);
- 	while ((msg = msg_get(info)) != NULL)
--		free_msg(msg);
-+		list_add_tail(&msg->m_list, &tmp_msg);
- 	kfree(info->node_cache);
- 	spin_unlock(&info->lock);
- 
-+	list_for_each_entry_safe(msg, nmsg, &tmp_msg, m_list) {
-+		list_del(&msg->m_list);
-+		free_msg(msg);
-+	}
-+
- 	/* Total amount of bytes accounted for the mqueue */
- 	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
- 		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-diff --git a/ipc/msgutil.c b/ipc/msgutil.c
-index bf74eaa5c39f..6d90b191c638 100644
---- a/ipc/msgutil.c
-+++ b/ipc/msgutil.c
-@@ -18,6 +18,7 @@
- #include <linux/utsname.h>
- #include <linux/proc_ns.h>
- #include <linux/uaccess.h>
-+#include <linux/sched.h>
- 
- #include "util.h"
- 
-@@ -64,6 +65,9 @@ static struct msg_msg *alloc_msg(size_t len)
- 	pseg = &msg->next;
- 	while (len > 0) {
- 		struct msg_msgseg *seg;
-+
-+		cond_resched();
-+
- 		alen = min(len, DATALEN_SEG);
- 		seg = kmalloc(sizeof(*seg) + alen, GFP_KERNEL_ACCOUNT);
- 		if (seg == NULL)
-@@ -176,6 +180,8 @@ void free_msg(struct msg_msg *msg)
- 	kfree(msg);
- 	while (seg != NULL) {
- 		struct msg_msgseg *tmp = seg->next;
-+
-+		cond_resched();
- 		kfree(seg);
- 		seg = tmp;
- 	}
+ 	/* Get the start and end of the zone */
+-	*zone_start_pfn = arch_zone_lowest_possible_pfn[zone_type];
+-	*zone_end_pfn = arch_zone_highest_possible_pfn[zone_type];
++	*zone_start_pfn = clamp(node_start_pfn, zone_low, zone_high);
++	*zone_end_pfn = clamp(node_end_pfn, zone_low, zone_high);
+ 	adjust_zone_range_for_zone_movable(nid, zone_type,
+ 				node_start_pfn, node_end_pfn,
+ 				zone_start_pfn, zone_end_pfn);
 -- 
 2.20.1
 
