@@ -5,49 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAF8C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 795E5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 830A220675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AA720675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054705;
-	bh=0rHNTe7piWPQPp9EcUqjXMi/HxZeN+SZaZjtZOxQ19s=;
+	s=default; t=1561054717;
+	bh=d0gosAX3r3C3qaB0cccEa/Bre6+woGl0mD5ROsE6eKg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AEepaBXNL5SDnKAgZ2aJ+H/45MyahGCLsNL+0Hfr0BWCzgLmLZGwXyWpsbw39EXak
-	 D8YiOMA2BEOOn4iFgukpfMx5CtFqgYClDg7hckCEPbd7ph17FpCEoPeUSwc/7Qm/1b
-	 Jh7K7gXCl5r6INA0Bu9fHj6+a+fTdaeI7UtZLHcI=
+	b=OWLXIgfWiegAom/F+3o133qXhZUTkEc6QaLI98ru3/r7fTnohjckpcXR+DNetBx/q
+	 qZp4MMN+lJA1vyW5p1eSi/4Sk54OIRcBttJ8X12qzM5IH/qBPSdsk8JdFvg06NXaK1
+	 B0UHCM24OaYSU4svsbDi9tLwb2cQOcd8kM5fCCZY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729801AbfFTSQg (ORCPT
+        id S1729643AbfFTSSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:16:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45780 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:18:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729081AbfFTSQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:34 -0400
+        id S1729419AbfFTSQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94EF4205F4;
-        Thu, 20 Jun 2019 18:16:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3DC752089C;
+        Thu, 20 Jun 2019 18:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054594;
-        bh=0rHNTe7piWPQPp9EcUqjXMi/HxZeN+SZaZjtZOxQ19s=;
+        s=default; t=1561054579;
+        bh=d0gosAX3r3C3qaB0cccEa/Bre6+woGl0mD5ROsE6eKg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jaw5R/u0ymSnUuPODwgkEYykMjKHfodMWWIhzuDk55+A6fVyXDEo5yRLePiyno9JR
-         iOtG5U1qH/fbqyewkQdH96r42X13c3B4cUh5zV2AK72KX8H9aB0RDKv78hlw2SvmCu
-         2xx5jpteKDDFIaF6jlr/ts1Hy0thynhShw99duv4=
+        b=lbkzAY9tKPF8HXBrlPJeG+9H4FCyl1bUstHmPCOlKWwlnP4cpWy8oiqGpTK16FA3Q
+         lIKIHVsVxYMzMoIcpNeu0Cij2oWeGP80bgqKiD3CufcFB5jxJTYRzZcykhVvHI7SO+
+         Ij0pYLIZCQhVHrIQJquNEk8LUzQYWmgZ92JLZYLk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 54/98] net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
-Date:   Thu, 20 Jun 2019 19:57:21 +0200
-Message-Id: <20190620174351.764275156@linuxfoundation.org>
+        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        mark.rutland@arm.com, namhyung@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 49/98] perf/ring_buffer: Add ordering to rb->nest increment
+Date:   Thu, 20 Jun 2019 19:57:16 +0200
+Message-Id: <20190620174351.467871924@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -60,33 +68,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f4ca7a9260dfe700f2a16f0881825de625067515 ]
+[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
 
-1. the frequency of csr clock is 66.5MHz, so the csr_clk value should
-be 0 other than 5.
-2. the csr_clk can be got from device tree, so remove initialization here.
+Similar to how decrementing rb->next too early can cause data_head to
+(temporarily) be observed to go backward, so too can this happen when
+we increment too late.
 
-Fixes: 9992f37e346b ("stmmac: dwmac-mediatek: add support for mt2712")
-Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+This barrier() ensures the rb->head load happens after the increment,
+both the one in the 'goto again' path, as the one from
+perf_output_get_handle() -- albeit very unlikely to matter for the
+latter.
+
+Suggested-by: Yabin Cui <yabinc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: mark.rutland@arm.com
+Cc: namhyung@kernel.org
+Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
+Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c | 2 --
- 1 file changed, 2 deletions(-)
+ kernel/events/ring_buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-index bf2562995fc8..126b66bb73a6 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
-@@ -346,8 +346,6 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
- 		return PTR_ERR(plat_dat);
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 009467a60578..4b5f8d932400 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -48,6 +48,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	unsigned long head;
  
- 	plat_dat->interface = priv_plat->phy_mode;
--	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
--	plat_dat->clk_csr = 5;
- 	plat_dat->has_gmac4 = 1;
- 	plat_dat->has_gmac = 0;
- 	plat_dat->pmt = 0;
+ again:
++	/*
++	 * In order to avoid publishing a head value that goes backwards,
++	 * we must ensure the load of @rb->head happens after we've
++	 * incremented @rb->nest.
++	 *
++	 * Otherwise we can observe a @rb->head value before one published
++	 * by an IRQ/NMI happening between the load and the increment.
++	 */
++	barrier();
+ 	head = local_read(&rb->head);
+ 
+ 	/*
 -- 
 2.20.1
 
