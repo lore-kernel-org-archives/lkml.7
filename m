@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5243C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98018C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852152089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 662222082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054034;
-	bh=5FKgHiwaps52oURHQqc1RE4Wu7mEfpAXnwncpeXbwZI=;
+	s=default; t=1561054038;
+	bh=rTRSA2ixgXrIK32n3nUn99ovwkIyyyPn4BpR/+aI+fI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SN9N/yknHZl1xEsoC30bWdTXdf19a8tkq1mbKlc+28pXv4rEoYGTPwHQb3VU9rFuq
-	 WtdJyLHBmnxAWVNlKamIWFV6S6c5AAkK+n5yNuWg0YlsF4UtqHude+mwf9vw+AzAGm
-	 ncfcdCCvNJgBsJ1YImEKrTNShTJSobNYG36XOhqw=
+	b=PjWvs6v4B3ZXO5D9HjWIdQ0oifBDdD/5bt/c16OjEymiDe1U2CLA39Ys38jz0rcrZ
+	 K6VetDEcF9cnwZSw5NmZjw3obT6dWvncPr3MTZZn8DC/5apKN4Y0H8BynUaFlxa8YE
+	 Wa482mipKQ0BsvKw0mLG8Vzf8HyK3kJoT3Gc2rsY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfFTSHN (ORCPT
+        id S1726786AbfFTSHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:07:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33500 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728282AbfFTSHK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:10 -0400
+        id S1728290AbfFTSHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 16E422089C;
-        Thu, 20 Jun 2019 18:07:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B060E2089C;
+        Thu, 20 Jun 2019 18:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054029;
-        bh=5FKgHiwaps52oURHQqc1RE4Wu7mEfpAXnwncpeXbwZI=;
+        s=default; t=1561054032;
+        bh=rTRSA2ixgXrIK32n3nUn99ovwkIyyyPn4BpR/+aI+fI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yh28DIMXqGJjXKrZfzv6zqRHQQowxubDxzctkiR0Q3qO5jyOpYFMdhH/4e1v6a4Co
-         mZJcg6RSOIg1euLhTuqy4yp/cs7F33cMdqWoX5UWgRhC21Z6PPD1X+eIOhbQQhRWcC
-         qAKziAN7CBFsGYvoQgjLCNapyfueSRGuiu6Pl+Ks=
+        b=oQZIR4zU9I16yzxeWRQjhGxrGqDWsljo7Fmk3/yfpIZ95wOewcE6uSdp+Z9RjTp1V
+         5CVBQo1T2+JIpCIYohStgeA93vPvWvk30t9Xg6RtjkAEP7nQ4SRb1QaBEzvX8hIZ6P
+         hwLMT1MlDnfNiLk5k3jgEP06qrsXCzvDg46eU3d4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
         Murray McAllister <murray.mcallister@gmail.com>,
         Thomas Hellstrom <thellstrom@vmware.com>
-Subject: [PATCH 4.9 081/117] drm/vmwgfx: integer underflow in vmw_cmd_dx_set_shader() leading to an invalid read
-Date:   Thu, 20 Jun 2019 19:56:55 +0200
-Message-Id: <20190620174357.187907749@linuxfoundation.org>
+Subject: [PATCH 4.9 082/117] drm/vmwgfx: NULL pointer dereference from vmw_cmd_dx_view_define()
+Date:   Thu, 20 Jun 2019 19:56:56 +0200
+Message-Id: <20190620174357.216317178@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -62,13 +62,12 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Murray McAllister <murray.mcallister@gmail.com>
 
-commit 5ed7f4b5eca11c3c69e7c8b53e4321812bc1ee1e upstream.
+commit bcd6aa7b6cbfd6f985f606c6f76046d782905820 upstream.
 
-If SVGA_3D_CMD_DX_SET_SHADER is called with a shader ID
-of SVGA3D_INVALID_ID, and a shader type of
-SVGA3D_SHADERTYPE_INVALID, the calculated binding.shader_slot
-will be 4294967295, leading to an out-of-bounds read in vmw_binding_loc()
-when the offset is calculated.
+If SVGA_3D_CMD_DX_DEFINE_RENDERTARGET_VIEW is called with a surface
+ID of SVGA3D_INVALID_ID, the srf struct will remain NULL after
+vmw_cmd_res_check(), leading to a null pointer dereference in
+vmw_view_add().
 
 Cc: <stable@vger.kernel.org>
 Fixes: d80efd5cb3de ("drm/vmwgfx: Initial DX support")
@@ -79,20 +78,21 @@ Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 
 ---
- drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
 --- a/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
 +++ b/drivers/gpu/drm/vmwgfx/vmwgfx_execbuf.c
-@@ -2493,7 +2493,8 @@ static int vmw_cmd_dx_set_shader(struct
- 
- 	cmd = container_of(header, typeof(*cmd), header);
- 
--	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX) {
-+	if (cmd->body.type >= SVGA3D_SHADERTYPE_DX10_MAX ||
-+	    cmd->body.type < SVGA3D_SHADERTYPE_MIN) {
- 		DRM_ERROR("Illegal shader type %u.\n",
- 			  (unsigned) cmd->body.type);
+@@ -2733,6 +2733,10 @@ static int vmw_cmd_dx_view_define(struct
+ 	if (view_type == vmw_view_max)
  		return -EINVAL;
+ 	cmd = container_of(header, typeof(*cmd), header);
++	if (unlikely(cmd->sid == SVGA3D_INVALID_ID)) {
++		DRM_ERROR("Invalid surface id.\n");
++		return -EINVAL;
++	}
+ 	ret = vmw_cmd_res_check(dev_priv, sw_context, vmw_res_surface,
+ 				user_surface_converter,
+ 				&cmd->sid, &srf_node);
 
 
