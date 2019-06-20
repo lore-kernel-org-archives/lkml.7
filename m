@@ -2,107 +2,86 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37837C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23253C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:05:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06552208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:03:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="egLf0fKB"
+	by mail.kernel.org (Postfix) with ESMTP id ED4FE214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731317AbfFTFDO (ORCPT
+        id S1726388AbfFTFFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 01:03:14 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:37909 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725889AbfFTFDO (ORCPT
+        Thu, 20 Jun 2019 01:05:11 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57929 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfFTFFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 01:03:14 -0400
-Received: by mail-yb1-f193.google.com with SMTP id x7so745597ybg.5;
-        Wed, 19 Jun 2019 22:03:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=7HBf20WmjrPf6txW1VcpmTw3TChQSYPo/s7Jh1SViDw=;
-        b=egLf0fKBek29Q6g0xEMWHJsZqjLD6PaABBuLgxZXk1EVoBBxiBfl5P3qJeb8GAqZAK
-         R9hzutg+bDCdpiXuPiFBssQD4tjMIa6nnJSK4AKfUpBXdWgiAVG3CdkFnhOON05tJtzP
-         jFrxm1Qr70r7ZqsjuOzsOpK7t4qZYlLreBOfbsWdNbpngd4dugLu+Phimp5Z623gegST
-         rh9c6R8fF9vbTVWZf29JHEuSgQI1+hPJ7DWNkZSM41xgs6VNOP3mNRC7WP4bHrm2Z6wX
-         nsA39d5ET2UOuHcL38R8r8IxqESKT2OZ/wb0Dae3/3G3e9ZzWHIYC4TlE6yDvVvieU8s
-         Bjhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=7HBf20WmjrPf6txW1VcpmTw3TChQSYPo/s7Jh1SViDw=;
-        b=QR7GvJ786+/44Gv3uyZrtpF6ro6wWJqDkjx96VyLChobgm3k65vdbBLICeYONByJ89
-         5xlrNbCm/8R15o4HqSnSI3M9PVaOpESPO4kZTpQM4jn9E8UrtYdWJqO7co6Uph1bYLoE
-         prsug2DGAcx0ul17+tNIuGDaOKDT6cBSZ/vEkkVtjMNoSBwWh2CeVq7XlzWMqGflBR1R
-         nqVXk82MPaqQDLQ5Y5+HYJ18IB9hA7LRsVTW2fTXftAaGuF/+E1v7LPiKX/0PYsx5FKv
-         b8xWFooiv/H6NZ8LpneLH8e1S8c010FY+hRoCqZfxvVELkO1dkzemcomvs8EtHqNZFQW
-         iSjA==
-X-Gm-Message-State: APjAAAUlmPBBNSpwRvAxo1UV42sXl8b64yIWxQms3rYmLVEIl+F0Nwsv
-        ANlgYk3T+CymPEpZOCgFrrlmQRsLKUit3g==
-X-Google-Smtp-Source: APXvYqyGgSO8zJA6rmdCOOZ7hvy7jwl85twJno35Lfg1GLYBPQ8cvw2KDGv945sB1wyWUwKVy5mskg==
-X-Received: by 2002:a25:5051:: with SMTP id e78mr67384944ybb.496.1561006992903;
-        Wed, 19 Jun 2019 22:03:12 -0700 (PDT)
-Received: from AHMCPU1978.einfochips.com ([219.65.62.52])
-        by smtp.gmail.com with ESMTPSA id b68sm5126586ywf.48.2019.06.19.22.03.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 19 Jun 2019 22:03:12 -0700 (PDT)
-From:   Aliasgar Surti <aliasgar.surti500@gmail.com>
-X-Google-Original-From: Aliasgar Surti
-To:     linux-media@vger.kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Aliasgar Surti <aliasgar.surti500@gmail.com>
-Subject: [PATCH 1/1] staging: media: fix style problem
-Date:   Thu, 20 Jun 2019 10:32:48 +0530
-Message-Id: <1561006968-29717-1-git-send-email-aliasgar.surti500@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Jun 2019 01:05:11 -0400
+X-Originating-IP: 79.86.19.127
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id DA6C6FF804;
+        Thu, 20 Jun 2019 05:04:55 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH RESEND 1/8] s390: Start fallback of top-down mmap at mm->mmap_base
+Date:   Thu, 20 Jun 2019 01:03:21 -0400
+Message-Id: <20190620050328.8942-2-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
+References: <20190620050328.8942-1-alex@ghiti.fr>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Aliasgar Surti <aliasgar.surti500@gmail.com>
+In case of mmap failure in top-down mode, there is no need to go through
+the whole address space again for the bottom-up fallback: the goal of this
+fallback is to find, as a last resort, space between the top-down mmap base
+and the stack, which is the only place not covered by the top-down mmap.
 
-checkpatch reported "WARNING: line over 80 characters".
-This patch fixes the warning for file davinci_vpfe/dm365_isif.c
-
-Signed-off-by: Aliasgar Surti <aliasgar.surti500@gmail.com>
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 ---
- drivers/staging/media/davinci_vpfe/dm365_isif.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ arch/s390/mm/mmap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/staging/media/davinci_vpfe/dm365_isif.c b/drivers/staging/media/davinci_vpfe/dm365_isif.c
-index 46fd818..12bdf91 100644
---- a/drivers/staging/media/davinci_vpfe/dm365_isif.c
-+++ b/drivers/staging/media/davinci_vpfe/dm365_isif.c
-@@ -532,7 +532,8 @@ static int isif_validate_dfc_params(const struct vpfe_isif_dfc *dfc)
- #define DM365_ISIF_MAX_CLVSV			0x1fff
- #define DM365_ISIF_MAX_HEIGHT_BLACK_REGION	0x1fff
- 
--static int isif_validate_bclamp_params(const struct vpfe_isif_black_clamp *bclamp)
-+static int isif_validate_bclamp_params(const struct vpfe_isif_black_clamp
-+				       *bclamp)
- {
- 	int err = -EINVAL;
- 
-@@ -593,7 +594,8 @@ isif_validate_raw_params(const struct vpfe_isif_raw_config *params)
- 	return isif_validate_bclamp_params(&params->bclamp);
- }
- 
--static int isif_set_params(struct v4l2_subdev *sd, const struct vpfe_isif_raw_config *params)
-+static int isif_set_params(struct v4l2_subdev *sd,
-+			   const struct vpfe_isif_raw_config *params)
- {
- 	struct vpfe_isif_device *isif = v4l2_get_subdevdata(sd);
- 	int ret = -EINVAL;
+diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
+index cbc718ba6d78..4a222969843b 100644
+--- a/arch/s390/mm/mmap.c
++++ b/arch/s390/mm/mmap.c
+@@ -166,7 +166,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+ 	if (addr & ~PAGE_MASK) {
+ 		VM_BUG_ON(addr != -ENOMEM);
+ 		info.flags = 0;
+-		info.low_limit = TASK_UNMAPPED_BASE;
++		info.low_limit = mm->mmap_base;
+ 		info.high_limit = TASK_SIZE;
+ 		addr = vm_unmapped_area(&info);
+ 		if (addr & ~PAGE_MASK)
 -- 
-2.7.4
+2.20.1
 
