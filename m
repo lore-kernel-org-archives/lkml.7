@@ -2,112 +2,94 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CB1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:44:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB384C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 078562083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:44:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0352206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="fpj+eHKQ"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="adDajW9R";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="adDajW9R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731747AbfFTNok (ORCPT
+        id S1731175AbfFTNqA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:44:40 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:39588 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfFTNok (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:44:40 -0400
-Received: from zn.tnic (p200300EC2F07DE00D53AC9D946AF6654.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:de00:d53a:c9d9:46af:6654])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Thu, 20 Jun 2019 09:46:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:60082 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfFTNqA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:46:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E76C36087F; Thu, 20 Jun 2019 13:45:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561038358;
+        bh=EVLOjBiuHAwvyWvBoM5vLEyeiGbRDiMlF01y77p98+c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=adDajW9R26ZLq50ZmUogq+7HJkHeDy/6dHCZR8TOCY/j2l2QqNuN3/6IkI5gLUlX4
+         gjXjRcHgaaFs1z4KMDvt3HMy4kZHOyEmZmLsLu6jQWmf3rNej36Bk5aXI5xrPLA9f4
+         7+AFi2Ez9VqWkcRqQEPztd+QdfsfBeByFNu3YAys=
+Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 0A0C01EC08BF;
-        Thu, 20 Jun 2019 15:44:37 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1561038278;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=rUNsSF+JR74CeJtCQdzcIH31DxAglLW7nCzn5d5D+V4=;
-        b=fpj+eHKQ3qBP+eePTJpVO4X/AbY9HoG0Yvq8uG5Y9Cp9ew5DtinheLjsu7HK2mURN4DuVl
-        gSrS1eHswrhJnke5bQ5MC2hVgDBocvndRlmdAJhKmn6aqaHoKkPtnTr4bkXtZ2DyZ8sDQ6
-        U8zhp7cKY1S0bJML/iUBMB1IPSDS3ww=
-Date:   Thu, 20 Jun 2019 15:44:29 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Reinette Chatre <reinette.chatre@intel.com>
-Cc:     tglx@linutronix.de, fenghua.yu@intel.com, tony.luck@intel.com,
-        mingo@redhat.com, hpa@zytor.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] x86/resctrl: Prevent possible overrun during bitmap
- operations
-Message-ID: <20190620134429.GD28032@zn.tnic>
-References: <58c9b6081fd9bf599af0dfc01a6fdd335768efef.1560975645.git.reinette.chatre@intel.com>
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A54A1602A7;
+        Thu, 20 Jun 2019 13:45:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561038358;
+        bh=EVLOjBiuHAwvyWvBoM5vLEyeiGbRDiMlF01y77p98+c=;
+        h=From:To:Cc:Subject:Date:From;
+        b=adDajW9R26ZLq50ZmUogq+7HJkHeDy/6dHCZR8TOCY/j2l2QqNuN3/6IkI5gLUlX4
+         gjXjRcHgaaFs1z4KMDvt3HMy4kZHOyEmZmLsLu6jQWmf3rNej36Bk5aXI5xrPLA9f4
+         7+AFi2Ez9VqWkcRqQEPztd+QdfsfBeByFNu3YAys=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A54A1602A7
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCH 0/2] coresight: Set affinity to invalid for missing CPU phandle
+Date:   Thu, 20 Jun 2019 19:15:45 +0530
+Message-Id: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <58c9b6081fd9bf599af0dfc01a6fdd335768efef.1560975645.git.reinette.chatre@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 01:27:16PM -0700, Reinette Chatre wrote:
-> @@ -2494,26 +2498,19 @@ static int mkdir_mondata_all(struct kernfs_node *parent_kn,
->   */
->  static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
->  {
-> -	/*
-> -	 * Convert the u32 _val to an unsigned long required by all the bit
-> -	 * operations within this function. No more than 32 bits of this
-> -	 * converted value can be accessed because all bit operations are
-> -	 * additionally provided with cbm_len that is initialized during
-> -	 * hardware enumeration using five bits from the EAX register and
-> -	 * thus never can exceed 32 bits.
-> -	 */
-> -	unsigned long *val = (unsigned long *)_val;
-> +	unsigned long val = *_val;
->  	unsigned int cbm_len = r->cache.cbm_len;
->  	unsigned long first_bit, zero_bit;
+In case of missing CPU phandle, the affinity is set default to
+CPU0 which is not a correct assumption and leads to crashes
+in few cases. Fix this by returning -ENODEV in coresight
+platform and abort the probe in coresight etm and cpu-debug
+drivers.
 
-Please sort function local variables declaration in a reverse christmas
-tree order:
+Sai Prakash Ranjan (2):
+  coresight: Set affinity to invalid for missing CPU phandle
+  coresight: Abort probe for missing CPU phandle
 
-	<type A> longest_variable_name;
-	<type B> shorter_var_name;
-	<type C> even_shorter;
-	<type D> i;
-
-> -	if (*val == 0)
-> +	if (val == 0)
-
-	if (!val)
-
->  		return;
->  
-> -	first_bit = find_first_bit(val, cbm_len);
-> -	zero_bit = find_next_zero_bit(val, cbm_len, first_bit);
-> +	first_bit = find_first_bit(&val, cbm_len);
-> +	zero_bit = find_next_zero_bit(&val, cbm_len, first_bit);
->  
->  	/* Clear any remaining bits to ensure contiguous region */
-> -	bitmap_clear(val, zero_bit, cbm_len - zero_bit);
-> +	bitmap_clear(&val, zero_bit, cbm_len - zero_bit);
-> +	*_val = (u32)val;
-
-... and also, that function should simply return the u32 value instead
-of using @_val as an input and output var.
-
-But that should be a separate cleanup patch anyway.
-
-Thx.
+ drivers/hwtracing/coresight/coresight-cpu-debug.c |  3 +++
+ drivers/hwtracing/coresight/coresight-etm3x.c     |  3 +++
+ drivers/hwtracing/coresight/coresight-etm4x.c     |  3 +++
+ drivers/hwtracing/coresight/coresight-platform.c  | 10 ++++++----
+ 4 files changed, 15 insertions(+), 4 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
