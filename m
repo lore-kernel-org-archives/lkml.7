@@ -5,54 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE2F9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54602C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD6FF206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 276AB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055224;
-	bh=CpP9HgL7rXO7Q7sG/9UEhz5tekuDMgLy+X8pz2WFkiM=;
+	s=default; t=1561055226;
+	bh=K0D5RiaBxXVakvVfZoWJm431MDLU2u7E5g65ouIOmp0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eiIknQ06+U63T5tqToKn35fMhQaA/yIWO0Oh6sUCGrAXJntWdRABkbBnEgYM/EO7k
-	 AhZKXMuWh+CQG0jTPfUyZbTnyEDiCjjq3/diDnEWzSiuuEMFXhpBZyxHyq00np1YM+
-	 v9LItGwmzPIclxGzLplgquF9dfYZ10pJ2EC1Zhf8=
+	b=FCaW2qJTplbZFn8F1ERfuzZYMeCPkoyZYz6HvYUixNGKx1vlSJh1OEwG0UZ7dB9Qu
+	 4alTTgsPSeyuVuMaGltFYJSJ7MbkIdAnqxqOxeIRNpLlTx90VEAXBR0ipI+zh4SOOk
+	 LlMiIaOFZI35iv/XICutLPpRYuVj78zmBB1ysbak=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726497AbfFTSFY (ORCPT
+        id S1728284AbfFTS1F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:05:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58586 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:27:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727416AbfFTSFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:18 -0400
+        id S1727716AbfFTSFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D36B2089C;
-        Thu, 20 Jun 2019 18:05:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51E9A204FD;
+        Thu, 20 Jun 2019 18:05:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053918;
-        bh=CpP9HgL7rXO7Q7sG/9UEhz5tekuDMgLy+X8pz2WFkiM=;
+        s=default; t=1561053923;
+        bh=K0D5RiaBxXVakvVfZoWJm431MDLU2u7E5g65ouIOmp0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ETanSgi+vX1VUEDcG0zTkN9MKZ+I6Z/DI69OaDx4TbEkV0DQRv+Rhis4E3QkhEb3n
-         AiQyYiH7iA0GnXJqoOR2iwNtzpwUEHVgjeddu79UwZMs+fdOCFy6viBPtxwhSNOXex
-         QDDmbqM6HbPvKXTP/odgDk47wUNBhpJFIbOyEHJg=
+        b=lDymvYj4RjXdEGaUGvG1GP0dbPBCYgIuI17STwCAPv/ZzaM4r4GwtNm419LxAvf/r
+         urM3fq5oq3pvCW75ceiRZ4YfkGIfOTvHcboQc2sKscASollAUy4MhJ3VfEqQg10rdn
+         tTHgpqi9ed71g3sjbtl/myLXgDgZ+aZG1jzQ8QVQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Phil Edworthy <phil.edworthy@renesas.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        linux-renesas-soc@vger.kernel.org, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 045/117] PCI: rcar: Fix 64bit MSI message address handling
-Date:   Thu, 20 Jun 2019 19:56:19 +0200
-Message-Id: <20190620174354.672833798@linuxfoundation.org>
+        stable@vger.kernel.org, Young Xiao <YangX92@hotmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 073/117] Drivers: misc: fix out-of-bounds access in function param_set_kgdbts_var
+Date:   Thu, 20 Jun 2019 19:56:47 +0200
+Message-Id: <20190620174356.961101617@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -65,74 +59,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 954b4b752a4c4e963b017ed8cef4c453c5ed308d ]
+[ Upstream commit b281218ad4311a0342a40cb02fb17a363df08b48 ]
 
-The MSI message address in the RC address space can be 64 bit. The
-R-Car PCIe RC supports such a 64bit MSI message address as well.
-The code currently uses virt_to_phys(__get_free_pages()) to obtain
-a reserved page for the MSI message address, and the return value
-of which can be a 64 bit physical address on 64 bit system.
+There is an out-of-bounds access to "config[len - 1]" array when the
+variable "len" is zero.
 
-However, the driver only programs PCIEMSIALR register with the bottom
-32 bits of the virt_to_phys(__get_free_pages()) return value and does
-not program the top 32 bits into PCIEMSIAUR, but rather programs the
-PCIEMSIAUR register with 0x0. This worked fine on older 32 bit R-Car
-SoCs, however may fail on new 64 bit R-Car SoCs.
+See commit dada6a43b040 ("kgdboc: fix KASAN global-out-of-bounds bug
+in param_set_kgdboc_var()") for details.
 
-Since from a PCIe controller perspective, an inbound MSI is a memory
-write to a special address (in case of this controller, defined by
-the value in PCIEMSIAUR:PCIEMSIALR), which triggers an interrupt, but
-never hits the DRAM _and_ because allocation of an MSI by a PCIe card
-driver obtains the MSI message address by reading PCIEMSIAUR:PCIEMSIALR
-in rcar_msi_setup_irqs(), incorrectly programmed PCIEMSIAUR cannot
-cause memory corruption or other issues.
-
-There is however the possibility that if virt_to_phys(__get_free_pages())
-returned address above the 32bit boundary _and_ PCIEMSIAUR was programmed
-to 0x0 _and_ if the system had physical RAM at the address matching the
-value of PCIEMSIALR, a PCIe card driver could allocate a buffer with a
-physical address matching the value of PCIEMSIALR and a remote write to
-such a buffer by a PCIe card would trigger a spurious MSI.
-
-Fixes: e015f88c368d ("PCI: rcar: Add support for R-Car H3 to pcie-rcar")
-Signed-off-by: Marek Vasut <marek.vasut+renesas@gmail.com>
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-renesas-soc@vger.kernel.org
+Signed-off-by: Young Xiao <YangX92@hotmail.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/host/pcie-rcar.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/misc/kgdbts.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/host/pcie-rcar.c b/drivers/pci/host/pcie-rcar.c
-index 77d931178178..7f6b454bca65 100644
---- a/drivers/pci/host/pcie-rcar.c
-+++ b/drivers/pci/host/pcie-rcar.c
-@@ -847,7 +847,7 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
+diff --git a/drivers/misc/kgdbts.c b/drivers/misc/kgdbts.c
+index 99635dd9dbac..bb3a76ad80da 100644
+--- a/drivers/misc/kgdbts.c
++++ b/drivers/misc/kgdbts.c
+@@ -1132,7 +1132,7 @@ static void kgdbts_put_char(u8 chr)
+ 
+ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
  {
- 	struct device *dev = pcie->dev;
- 	struct rcar_msi *msi = &pcie->msi;
--	unsigned long base;
-+	phys_addr_t base;
- 	int err, i;
+-	int len = strlen(kmessage);
++	size_t len = strlen(kmessage);
  
- 	mutex_init(&msi->lock);
-@@ -892,8 +892,8 @@ static int rcar_pcie_enable_msi(struct rcar_pcie *pcie)
- 	}
- 	base = virt_to_phys((void *)msi->pages);
+ 	if (len >= MAX_CONFIG_LEN) {
+ 		printk(KERN_ERR "kgdbts: config string too long\n");
+@@ -1152,7 +1152,7 @@ static int param_set_kgdbts_var(const char *kmessage, struct kernel_param *kp)
  
--	rcar_pci_write_reg(pcie, base | MSIFE, PCIEMSIALR);
--	rcar_pci_write_reg(pcie, 0, PCIEMSIAUR);
-+	rcar_pci_write_reg(pcie, lower_32_bits(base) | MSIFE, PCIEMSIALR);
-+	rcar_pci_write_reg(pcie, upper_32_bits(base), PCIEMSIAUR);
+ 	strcpy(config, kmessage);
+ 	/* Chop out \n char as a result of echo */
+-	if (config[len - 1] == '\n')
++	if (len && config[len - 1] == '\n')
+ 		config[len - 1] = '\0';
  
- 	/* enable all MSI interrupts */
- 	rcar_pci_write_reg(pcie, 0xffffffff, PCIEMSIIER);
+ 	/* Go and configure with the new params. */
 -- 
 2.20.1
 
