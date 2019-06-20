@@ -2,112 +2,129 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DBFEC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:24:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22135C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:31:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 033CB2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:24:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=shutemov-name.20150623.gappssmtp.com header.i=@shutemov-name.20150623.gappssmtp.com header.b="TvNlbhsx"
+	by mail.kernel.org (Postfix) with ESMTP id 0639C2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:31:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731557AbfFTLY0 (ORCPT
+        id S1731681AbfFTLbN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:24:26 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:38621 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfFTLY0 (ORCPT
+        Thu, 20 Jun 2019 07:31:13 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:41673 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726491AbfFTLbM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:24:26 -0400
-Received: by mail-ed1-f67.google.com with SMTP id r12so4205119edo.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 04:24:25 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LjM0cV/bj1P72dFe0nedZsKK4znRV88KKfVEX7k49WY=;
-        b=TvNlbhsxVxOOqpPMrv/TSKNadKbnq/OOB32FLW8FOsWPBI+zHlAs3XT0wYYg4pjcod
-         ghodAtJ9UyrWY+galSIg2HhrrzFJFoa+Nf/SOkwnaFgYEbjZWT7lqrZhkOa0Y7LTYbAj
-         PM1KPPcHsP2gJmjrijblAneAds+cNGf3Pk7K0HkbYTx+HjM61HuR+/Yd5qfL+XKjQ9Bd
-         KJeUb2yQ3CmE261znSts/ye4KC5y8/e37XoNqAk7CMnupNB+2s1pIQ7RlpkB1bGR5f8U
-         WwmLCZYfuXvK+XbxzAV67OetxoiibSXHH3KLcaccHM6XeUK5nKmplvo1Ua0vg2+LtsGU
-         4zgQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=LjM0cV/bj1P72dFe0nedZsKK4znRV88KKfVEX7k49WY=;
-        b=mj1IlB/Iyk0adhYMemb3XPOeMlvfzqr4KXkuLG/HAMPO9iyGwOf/fKT/xPrLmD/TSu
-         GK10JOBFImcfkopJXMcbt3RtRmJ5K7KXvsFy10j9bLAd9Z63Xp/wjlgQKm9QJCgDXVbg
-         UUUZZ49AAutrlM5qiQ+L/iJAUpBwLJGQg633heJMqoqa62L4rUp3inTf3BAQhgkozVvZ
-         HEak3X/jOii1xlYFa4W92fEBIdRYJFyoH2WJjcJLlf5RAWNNdCxP8ezbT5o7fvr+DM9h
-         5qD1G8a5RXhpsF6GGBzFYMqkjuVfdW30GtwQdBVq4q7hLaDOTS5QL5VKBbSgXylhuXzT
-         GvSA==
-X-Gm-Message-State: APjAAAXYOKSD78+bwK5WiI8TpSza3TqFXOK5RW06D6U8Pkq9ubbtef6D
-        FBzBpcV3/NR6IAPShWv45xNpXw==
-X-Google-Smtp-Source: APXvYqxjOnXArZRjN7nJvFwzbquqB+n5nJGhIi+Izhsa0OZPDtvs3ljpYNfxEDpaVMv3ztyfFodH6Q==
-X-Received: by 2002:a50:a544:: with SMTP id z4mr1460519edb.71.1561029864584;
-        Thu, 20 Jun 2019 04:24:24 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id o93sm6508189edd.46.2019.06.20.04.24.23
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 04:24:23 -0700 (PDT)
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-X-Google-Original-From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 333F31040F8; Thu, 20 Jun 2019 14:24:25 +0300 (+03)
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Alexander Potapenko <glider@google.com>
-Subject: [PATCH] x86/boot/64: Fix missed fixup_pointer() for next_early_pgt access
-Date:   Thu, 20 Jun 2019 14:24:22 +0300
-Message-Id: <20190620112422.29264-1-kirill.shutemov@linux.intel.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 20 Jun 2019 07:31:12 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id D30728053C; Thu, 20 Jun 2019 13:30:57 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 13:30:57 +0200
+From:   Pavel Machek <pavel@ucw.cz>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        "rjw@rjwysocki.net" <rjw@rjwysocki.net>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "robert.moore@intel.com" <robert.moore@intel.com>,
+        "erik.schmauss@intel.com" <erik.schmauss@intel.com>,
+        Russell King <rmk+kernel@arm.linux.org.uk>,
+        Russ Dill <Russ.Dill@ti.com>,
+        Sebastian Capella <sebastian.capella@linaro.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        KY Srinivasan <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>
+Subject: Re: [PATCH] ACPI: PM: Export the function
+ acpi_sleep_state_supported()
+Message-ID: <20190620113057.GA16460@atrey.karlin.mff.cuni.cz>
+References: <1560536224-35338-1-git-send-email-decui@microsoft.com>
+ <BL0PR2101MB134895BADA1D8E0FA631D532D7EE0@BL0PR2101MB1348.namprd21.prod.outlook.com>
+ <PU1P153MB01699020B5BC4287C58F5335BFEE0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190617161454.GB27113@e121166-lin.cambridge.arm.com>
+ <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB016902786ABA34BD01430F83BFE50@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-__startup_64() uses fixup_pointer() to access global variables in a
-position-independent fashion. Access to next_early_pgt was wrapped into
-the helper, but one of the instance in 5-level paging branch was missed.
+> > From: linux-hyperv-owner@vger.kernel.org
+> > <linux-hyperv-owner@vger.kernel.org> On Behalf Of Lorenzo Pieralisi
+> > Sent: Monday, June 17, 2019 9:15 AM
+> > > ...
+> > > + some ARM experts who worked on arch/arm/kernel/hibernate.c.
+> > >
+> > > drivers/acpi/sleep.c is only built if ACPI_SYSTEM_POWER_STATES_SUPPORT
+> > > is defined, but it looks this option is not defined on ARM.
+> > >
+> > > It looks ARM does not support the ACPI S4 state, then how do we know
+> > > if an ARM host supports hibernation or not?
+> > 
+> > Maybe we should start from understanding why you need to know whether
+> > Hibernate is possible to answer your question ?
+> > 
+> > On ARM64 platforms system states are entered through PSCI firmware
+> > interface that works for ACPI and device tree alike.
+> > 
+> > Lorenzo
+> 
+> Hi Lorenzo,
+> It looks I may have confused you as I didn't realize the word "ARM" only means
+> 32-bit ARM. It looks the "ARM" arch and the "ARM64" arch are very different.
+> 
+> As far as I know, Hyper-V only supports x86 and "ARM64", and it's unlikely to
+> support 32-bit ARM in the future, so actually I don't really need to know if and
+> how a 32-bit ARM machine supports hibernation.
+> 
+> When a Linux guest runs on Hyper-V (x86_32, x86_64, or ARM64) , we have a
+> front-end balloon driver in the guest, which balloons up/down and
+> hot adds/removes the guest's memory when the host requests that. The problem
+> is: the back-end driver on the host can not really save and restore the states
+> related to the front-end balloon driver on guest hibernation, so we made the
+> decision that balloon up/down and hot-add/remove are not supported when
+> we enable hibernation for a guest; BTW, we still want to load the front-end
+> driver in the guest, because the dirver has a functionality of reporting the
+> guest's memory pressure to the host, which we think is useful.
+> 
+> On x86_32 and x86_64, we enable hibernation for a guest by enabling
+> the virtual ACPI S4 state for the guest; on ARM64, so far we don't have the
+> host side changes required to support guest hibernation, so the details are
+> still unclear.
+> 
+> After I discussed with Michael Kelley, it looks we don't really need to
+> export drivers/acpi/sleep.c: acpi_sleep_state_supported(), but I think we do
+> need to make it non-static.
+> 
+> Now I propose the below changes. I plan to submit a patch first for the
+> changes made to drivers/acpi/sleep.c and include/acpi/acpi_bus.h in a few
+> days, if there is no objection.
+> 
+> Please let me know how you think of this. Thanks!
 
-GCC generates a R_X86_64_PC32 PC-relative relocation for the access
-which doesn't trigger the issue, but Clang emmits a R_X86_64_32S which
-leads to an invalid memory and system reboot.
+No.
 
-Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Fixes: 187e91fe5e91 ("x86/boot/64/clang: Use fixup_pointer() to access 'next_early_pgt'")
-Cc: Alexander Potapenko <glider@google.com>
----
- arch/x86/kernel/head64.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hibernation should be always supported, no matter what firmware. If it
+can powerdown, it can hibernate.
 
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index 16b1cbd3a61e..4d98ba8063d1 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -184,7 +184,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	pgtable_flags = _KERNPG_TABLE_NOENC + sme_get_me_mask();
- 
- 	if (la57) {
--		p4d = fixup_pointer(early_dynamic_pgts[next_early_pgt++], physaddr);
-+		p4d = fixup_pointer(early_dynamic_pgts[(*next_pgt_ptr)++], physaddr);
- 
- 		i = (physaddr >> PGDIR_SHIFT) % PTRS_PER_PGD;
- 		pgd[i + 0] = (pgdval_t)p4d + pgtable_flags;
+That is for x86-32/64, too.
+									Pavel
+
 -- 
-2.21.0
-
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
