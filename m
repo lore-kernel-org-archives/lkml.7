@@ -2,108 +2,69 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDFDFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:26:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86820C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:26:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96B1E2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:26:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nnkUIanp"
+	by mail.kernel.org (Postfix) with ESMTP id 6A4482064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:26:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726466AbfFTI0N (ORCPT
+        id S1730860AbfFTI0V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:26:13 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42483 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfFTI0N (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:26:13 -0400
-Received: by mail-ot1-f66.google.com with SMTP id l15so1897860otn.9;
-        Thu, 20 Jun 2019 01:26:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ZK1UlhpuLZcyd9XHAbHKg7Weff0O7Oy2YAd/unLoi4A=;
-        b=nnkUIanp3lEYXFV2dbxujXD0AQeroq9ociTuT+GxtG8gtFJXGYMoHcUilcC4RSZ7OJ
-         hG0ZY//LJgvtWdXTsokVukM7VguGsy3isqA+ZOeRjvEeaaM029H6ldMIX1ChluloTShY
-         5eU8bXCkjGwnLsGiZTaDwjIxyxGkmkN3XjqwHH01J6Rb2VRQ5HTrtf6fL/t6fFDk4u6+
-         oiruNtmCYiBqn63++HlmWjBM15gpHHZn2uJsyYSMuSylVRvs37U+UHaTmir2DAPFas6o
-         CYjMq3cI+XEqJLrqkbrLUu3ckaN1aQQsSpTIpJB//PcD/Ofh7p4grVB/hi2Xtt8NdAGt
-         zvbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ZK1UlhpuLZcyd9XHAbHKg7Weff0O7Oy2YAd/unLoi4A=;
-        b=QasyKwcHf9zffXsC6bq9Iy3bntOxsaf1k3O/z9JO+C3QOXUaXdme1Oqw2FNfcbEFWS
-         NCeOTusqFsmbSjgD4+ibNk9Hle94iGvlOczsX5CwKHJbcdpJH6BW5MZLaQWQyMRdcxII
-         PFumLpwNvUTVuYcMf/gOHaEqSBPzNIOtcJgUFgmD4FN1VcjHMZTcGoPxT/Do8uQcG8NI
-         RSc2hZnQWZXazzartrIgoGYMO2l8IFdkVELBD6nVcfUW08PmIxdGhMi6tt5ZUbQ/OLjL
-         +B1WbpaFF12YfawZFxTjLgnBBfpwNRH98pNTM26O71KXEc+qpsHHED1ztaLEB8Oq9pqx
-         WPHg==
-X-Gm-Message-State: APjAAAUlOXTh55egG8ne50RNQAYhRSBynU+PJbuIsh2SB6kTCBvFuDT5
-        y25LmiFTKWWbFaw4G3TvSOiJVljxowShAye3F9M=
-X-Google-Smtp-Source: APXvYqznCjofjv9h5iAunLzMajmGqWLPKuoV36Wf7dOUzKqxEjXuu92WyZuJvAUq4F9DXoNnBY465TaLLOpYwuprVmM=
-X-Received: by 2002:a9d:6959:: with SMTP id p25mr48678695oto.118.1561019172278;
- Thu, 20 Jun 2019 01:26:12 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620050301.1149-1-tao3.xu@intel.com> <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
- <f358c914-ae58-9889-a8ef-6ea9f3b2650e@linux.intel.com> <b3f76acd-cc7e-9cd7-d7f7-404ba756ab87@redhat.com>
-In-Reply-To: <b3f76acd-cc7e-9cd7-d7f7-404ba756ab87@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 20 Jun 2019 16:27:26 +0800
-Message-ID: <CANRm+Cy_oo7BkYXD-nc0Ro=rivJircL6aheuFujMv6twS3gk=g@mail.gmail.com>
-Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
-        Tao Xu <tao3.xu@intel.com>, Radim Krcmar <rkrcmar@redhat.com>,
+        Thu, 20 Jun 2019 04:26:21 -0400
+Received: from mx2.suse.de ([195.135.220.15]:34042 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726072AbfFTI0U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:26:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2B8E1ADA2;
+        Thu, 20 Jun 2019 08:26:19 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 10:25:57 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     hpa@zytor.com, Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Corey Minyard <cminyard@mvista.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] replace timeconst bc script with an sh script
+Message-ID: <20190620082557.GB28346@zn.tnic>
+References: <8a9ffb4b-791d-35d1-bb2a-7b6ad812bff1@ideasonboard.com>
+ <20190620081142.31302-1-e5ten.arch@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190620081142.31302-1-e5ten.arch@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019 at 16:17, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 20/06/19 08:46, Xiaoyao Li wrote:
-> >>
-> >> It depends on whether or not processors support the 1-setting instead
-> >> of =E2=80=9Cenable XSAVES/XRSTORS=E2=80=9D is 1 in VM-exection control=
- field. Anyway,
-> >
-> > Yes, whether this field exist or not depends on whether processors
-> > support the 1-setting.
-> >
-> > But if "enable XSAVES/XRSTORS" is clear to 0, XSS_EXIT_BITMAP doesn't
-> > work. I think in this case, there is no need to set this vmcs field?
->
-> vmx->secondary_exec_control can change; you are making the code more
-> complex by relying on the value of the field at the point of vmx_vcpu_set=
-up.
->
-> I do _think_ your version is incorrect, because at this point CPUID has
-> not been initialized yet and therefore
-> vmx_compute_secondary_exec_control has not set SECONDARY_EXEC_XSAVES.
-> However I may be wrong because I didn't review the code very closely:
-> the old code is obvious and so there is no point in changing it.
+On Thu, Jun 20, 2019 at 04:11:32AM -0400, Ethan Sommer wrote:
+> removes the bc build dependency introduced when timeconst.pl was
+> replaced by timeconst.bc:
+> 70730bca1331 ("kernel: Replace timeconst.pl with a bc script")
 
-Agreed, in addition, guest can enable/disable cpuid bits by grub
-parameter, should we call kvm_x86_ops->cpuid_update() in
-kvm_vcpu_reset() path to reflect the new guest cpuid influence to
-exec_control? e.g. the first boot guest disable xsaves in grub, kvm
-disables xsaves in exec_control; then guest reboot w/ xsaves enabled,
-it still get an #UD when executing.
+I don't see you answering Kieran's questions anywhere...
 
-Regards,
-Wanpeng Li
+-- 
+Regards/Gruss,
+    Boris.
+
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
