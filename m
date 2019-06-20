@@ -2,137 +2,140 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57767C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258BCC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AB362080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF02E2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:18:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So/APhDB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731856AbfFTMSt (ORCPT
+        id S1731865AbfFTMSz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:18:49 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39364 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731824AbfFTMSs (ORCPT
+        Thu, 20 Jun 2019 08:18:55 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:40390 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731695AbfFTMSy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:18:48 -0400
-Received: by mail-wr1-f68.google.com with SMTP id x4so2803302wrt.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:18:47 -0700 (PDT)
+        Thu, 20 Jun 2019 08:18:54 -0400
+Received: by mail-pf1-f194.google.com with SMTP id p184so1585806pfp.7;
+        Thu, 20 Jun 2019 05:18:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:subject:to:cc:references:in-reply-to:mime-version
+         :user-agent:message-id:content-transfer-encoding;
+        bh=YoTiXuUhP7MILD5fnaoAlkgFg2nR8TYJrJEF6s4RZXw=;
+        b=So/APhDByNH5ZTnsyLPXFkassmIa6Ov5z4dUXPiq3BcI+/tBJroH1OYfD+D/LPx2Kz
+         Z2iebLBARMIonYTJViKAMNqX6T9DWFpGX4f7lEU40XE6jdwOBAKSb7px2/VVG1NdMZUV
+         DGEi2tUgpJk8ahufrxePUMdf1fVMSMqTEhNaXDKRGi+y/W5OIH7OvaZjkf2vDypfXqxI
+         TD2ewroIsXlnf4E6gOQtkllshj947AFSuqcZtKArd6jeI++QOwML2r0B7G5wvAqJD4UD
+         xWsias8CY08OAi7pp0ZZm2YUI8zBDfNLVjsK8N1PIHm6HWAHq05Ev5F7HsEKLa/T1vLU
+         uiFg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YOyay7L+Ug00icQt9/AuolC+PTU/k20bZjxiFL/LzXw=;
-        b=Gui2tzLSlOdOqESiXvYHP2XpuQWlL3ahhc05OoAdMOiOFRLi5GuS3kZ04cAd+1RQi9
-         n2DUCKgZbpLS8x4CKcmBCdq16c4lNZXREoDiYEny8syrW/5d1ANUbalP5ojuRUX/E6ep
-         rh7hyTwP4FOkpzhW1pE7wvKjKJw2FZVIxzatlBbn/bWif5MPHhTdg+L4eAa2kn5cUOOS
-         DELf9y6uPTzXmAbmGW+FUCKMGK+os0TIIjHruhsxRogTLkkEUpKRRyS+nZOw+Y5pqzMB
-         ZnMkQPvN3ga0ocmZQSY4aEZwxMKwSHuSXkuLZgZVnOSo2TDeddXMweSTcy8/4O+4dLbp
-         O9Ww==
-X-Gm-Message-State: APjAAAWKypsa/lvIEi/TxKYsYBa2THHmUuRclR3zZxTUozPl8oj2qFzQ
-        gnDjGGV86ozEpdkP3FPNgQnLmg==
-X-Google-Smtp-Source: APXvYqynay/wtRGlHY6FX1KkqdtL1giCC9W9+5OV9fapZCTz3X+ZA5NlxK69UqxLBRK68aPNscyTPg==
-X-Received: by 2002:a05:6000:128d:: with SMTP id f13mr4144690wrx.39.1561033126353;
-        Thu, 20 Jun 2019 05:18:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7822:aa18:a9d8:39ab? ([2001:b07:6468:f312:7822:aa18:a9d8:39ab])
-        by smtp.gmail.com with ESMTPSA id r4sm45526075wra.96.2019.06.20.05.18.45
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 05:18:45 -0700 (PDT)
-Subject: Re: [PATCH RFC 4/5] x86: KVM: add xsetbv to the emulator
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com>
- <20190620110240.25799-5-vkuznets@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <a86ca8b7-0333-398b-7bf6-90cb79366226@redhat.com>
-Date:   Thu, 20 Jun 2019 14:18:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:subject:to:cc:references:in-reply-to
+         :mime-version:user-agent:message-id:content-transfer-encoding;
+        bh=YoTiXuUhP7MILD5fnaoAlkgFg2nR8TYJrJEF6s4RZXw=;
+        b=kePlzXM4/wPA4VtCNmPC/YLDphhtrtgFsUHm7vnlWElG9cwbJd1HvrWstzoUsDMq47
+         cTg+bK2rY0sY21forNIdLpp4ZAMhd7lmipbuhEk1oy6r0WvNcpNm1BVIUP2XogXAQTqx
+         33Mb91B/j9MW1XLI+muuKZ3iKtgbsoJLVliT0aJmM913JEQnW/s6Q9ZTeOOmdphquWPB
+         B1SzW3UtdNvD4VQuHldwKJrNRvv891i5QE9tzTxMWSdV7uFxC+86U1AJn9cN4dEnCYiH
+         N/wHH0Y82M5Q8i2ie3bFaBDZDnFf+pIoAeg5cBMaF0nJhV73q6y/QEqlDauRpJDEfI8s
+         8z6g==
+X-Gm-Message-State: APjAAAW6n1z7LmbSNmRPD/lfuVBFziWLxcX+MNf1f3bXlg1tiz2KV8Tj
+        1nPmHXZxTncB7FfE/bSAtts=
+X-Google-Smtp-Source: APXvYqx1eSkhbrnX9j+XXPf1ijevNCfi95aQ4yuFnnSZCNNzh3FuAkFtzgkNfUYJBeEqzMwN6uhd9g==
+X-Received: by 2002:a62:e815:: with SMTP id c21mr90025668pfi.244.1561033133807;
+        Thu, 20 Jun 2019 05:18:53 -0700 (PDT)
+Received: from localhost ([203.220.63.126])
+        by smtp.gmail.com with ESMTPSA id i133sm24389358pfe.75.2019.06.20.05.18.51
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 05:18:52 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 22:18:51 +1000
+From:   Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
+ a structure
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andrey Konovalov <andreyknvl@google.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Christoph Hellwig <hch@lst.de>,
+        James Hogan <jhogan@kernel.org>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linux-mips@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Burton <paul.burton@mips.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>
+References: <20190611144102.8848-1-hch@lst.de>
+        <20190611144102.8848-17-hch@lst.de>
+        <1560300464.nijubslu3h.astroid@bobo.none>
+        <CAHk-=wjSo+TzkvYnAqrp=eFgzzc058DhSMTPr4-2quZTbGLfnw@mail.gmail.com>
+In-Reply-To: <CAHk-=wjSo+TzkvYnAqrp=eFgzzc058DhSMTPr4-2quZTbGLfnw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620110240.25799-5-vkuznets@redhat.com>
+User-Agent: astroid/0.14.0 (https://github.com/astroidmail/astroid)
+Message-Id: <1561032202.0qfct43s2c.astroid@bobo.none>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/06/19 13:02, Vitaly Kuznetsov wrote:
-> To avoid hardcoding xsetbv length to '3' we need to support decoding it in
-> the emulator.
-> 
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Linus Torvalds's on June 12, 2019 11:09 am:
+> On Tue, Jun 11, 2019 at 2:55 PM Nicholas Piggin <npiggin@gmail.com> wrote=
+:
+>>
+>> What does this do for performance? I've found this pattern can be
+>> bad for store aliasing detection.
+>=20
+> I wouldn't expect it to be noticeable, and the lack of argument
+> reloading etc should make up for it. Plus inlining makes it a
+> non-issue when that happens.
 
-Can you also emulate it properly?  The code from QEMU's
-target/i386/fpu_helper.c can help. :)
+Maybe in isolation. Just seems like a strange pattern to sprinkle
+around randomly, I wouldn't like it to proliferate.
 
-Paolo
+I understand in some cases where a big set of parameters or
+basically state gets sent around through a lot of interfaces.
+Within one file to make lines a bit shorter or save a few bytes
+isn't such a strong case.
 
-> ---
->  arch/x86/include/asm/kvm_emulate.h | 1 +
->  arch/x86/kvm/emulate.c             | 9 ++++++++-
->  arch/x86/kvm/svm.c                 | 1 +
->  3 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_emulate.h b/arch/x86/include/asm/kvm_emulate.h
-> index feab24cac610..478f76b0122d 100644
-> --- a/arch/x86/include/asm/kvm_emulate.h
-> +++ b/arch/x86/include/asm/kvm_emulate.h
-> @@ -429,6 +429,7 @@ enum x86_intercept {
->  	x86_intercept_ins,
->  	x86_intercept_out,
->  	x86_intercept_outs,
-> +	x86_intercept_xsetbv,
->  
->  	nr_x86_intercepts
->  };
-> diff --git a/arch/x86/kvm/emulate.c b/arch/x86/kvm/emulate.c
-> index d0d5dd44b4f4..ff25d94df684 100644
-> --- a/arch/x86/kvm/emulate.c
-> +++ b/arch/x86/kvm/emulate.c
-> @@ -4393,6 +4393,12 @@ static const struct opcode group7_rm1[] = {
->  	N, N, N, N, N, N,
->  };
->  
-> +static const struct opcode group7_rm2[] = {
-> +	N,
-> +	DI(SrcNone | Priv, xsetbv),
-> +	N, N, N, N, N, N,
-> +};
-> +
->  static const struct opcode group7_rm3[] = {
->  	DIP(SrcNone | Prot | Priv,		vmrun,		check_svme_pa),
->  	II(SrcNone  | Prot | EmulateOnUD,	em_hypercall,	vmmcall),
-> @@ -4482,7 +4488,8 @@ static const struct group_dual group7 = { {
->  }, {
->  	EXT(0, group7_rm0),
->  	EXT(0, group7_rm1),
-> -	N, EXT(0, group7_rm3),
-> +	EXT(0, group7_rm2),
-> +	EXT(0, group7_rm3),
->  	II(SrcNone | DstMem | Mov,		em_smsw, smsw), N,
->  	II(SrcMem16 | Mov | Priv,		em_lmsw, lmsw),
->  	EXT(0, group7_rm7),
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index f980fc43372d..39e61029f401 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -6041,6 +6041,7 @@ static const struct __x86_intercept {
->  	[x86_intercept_ins]		= POST_EX(SVM_EXIT_IOIO),
->  	[x86_intercept_out]		= POST_EX(SVM_EXIT_IOIO),
->  	[x86_intercept_outs]		= POST_EX(SVM_EXIT_IOIO),
-> +	[x86_intercept_xsetbv]		= PRE_EX(SVM_EXIT_XSETBV),
->  };
->  
->  #undef PRE_EX
-> 
+>=20
+> But I guess we could also at least look at using "restrict", if that
+> ends up helping. Unlike the completely bogus type-based aliasing rules
+> (that we disable because I think the C people were on some bad bad
+> drugs when they came up with them), restricted pointers are a real
+> thing that makes sense.
+>=20
+> That said, we haven't traditionally used it, and I don't know how much
+> it helps gcc. Maybe gcc ignores it entirely? S
 
+Ahh, it's not compiler store alias analysis I'm talking about, but
+processor (but you raise an interesting point about compiler too,
+would be nice if we could improve that in general).
+
+The processor aliasing problem happens because the struct will
+be initialised with stores using one base register (e.g., stack
+register), and then same memory is loaded using a different
+register (e.g., parameter register). Processor's static heuristics
+for determining a load doesn't alias with an earlier store doesn't
+do so well in that case.
+
+Just about everywhere I've seen those kind of misspeculation and
+flushes in the kernel has been this pattern, so I'm wary of it in
+performance critical code.
+
+Thanks,
+Nick
+=
