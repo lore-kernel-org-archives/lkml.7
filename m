@@ -5,51 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE65AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8C3C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFF5C2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F1E92082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054488;
-	bh=2ifiMgl8orG4/FZtSN1k/rJ/Xz6HkjDxpOnrOdsp394=;
+	s=default; t=1561054493;
+	bh=x3DQAm9fBik+KczsyNcMttT72qr4M0hPWQmDCAH5ZlI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w5ZwI0RowxEeFtJOv+gl3Cmm0JSI7XHxklHqt1NGRGV9QENn34dSicFGIk9aY7fwC
-	 GLdisu2Hx2ngJjXeinNj7E0lO+j30O9E0X/B8Pgj8YpTUwVKKpkESk08kpU2AE8mXh
-	 4P7ELfJACdq6AEWj3P0SHSvwtterCEfaNy5VFamo=
+	b=wYaLnv1pymHqHKMM+dpwWQdIj9ZRBExAS1+M0/+BdlYvJWM6RfTkx99a/JcQh/QMi
+	 I46FIN4AjX9gp97WDuWj4YoVC9GoeGtDH52nEam54uFhD+A2fi37Hwde5Ah4xIT+7c
+	 IrKw/+aNKwMSIydM1ZXU+uCl2ov8HWGyWRb8+3UU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729498AbfFTSOr (ORCPT
+        id S1729287AbfFTSOw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:14:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43094 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbfFTSOk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:40 -0400
+        id S1726812AbfFTSOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4385121530;
-        Thu, 20 Jun 2019 18:14:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05C41205F4;
+        Thu, 20 Jun 2019 18:14:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054479;
-        bh=2ifiMgl8orG4/FZtSN1k/rJ/Xz6HkjDxpOnrOdsp394=;
+        s=default; t=1561054488;
+        bh=x3DQAm9fBik+KczsyNcMttT72qr4M0hPWQmDCAH5ZlI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1P66H9X8wvarAQ7WHz0M1hbOvSHpeel1uzLLg1oyHDGfnLOd8lApsi5G1gBhM0KHd
-         CHwVX07XgdYvV1QYJVzgrLB9HT3alT2LWvN4yY0Xn6pVVTRfHXSkjlKaZoCFnipWGh
-         Ytg6WiNicPT5uHmE1KZrCinFKLGtq6Zao1+7IAWk=
+        b=LEp5pMXt+Sd+dv1SzH3CVZXBvWaNybHbyvkaznGYRQvqc6V4UFlhRaPekG8ir+0XS
+         ySNlPyCtIrL4xqZUqlLmShs7s/c6jZ+AyNU+LB1aV/wLauenN/EWt3UttdmfbHpo5A
+         rXUAORulpXB3T9FlqOTqHJWLWZGZMXE7412adTbI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Pavaman Subramaniyam <pavsubra@in.ibm.com>,
+        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 42/98] selftests: netfilter: missing error check when setting up veth interface
-Date:   Thu, 20 Jun 2019 19:57:09 +0200
-Message-Id: <20190620174351.022943386@linuxfoundation.org>
+Subject: [PATCH 5.1 44/98] powerpc/powernv: Return for invalid IMC domain
+Date:   Thu, 20 Jun 2019 19:57:11 +0200
+Message-Id: <20190620174351.143824080@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -62,38 +62,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 82ce6eb1dd13fd12e449b2ee2c2ec051e6f52c43 ]
+[ Upstream commit b59bd3527fe3c1939340df558d7f9d568fc9f882 ]
 
-A test for the basic NAT functionality uses ip command which needs veth
-device. There is a condition where the kernel support for veth is not
-compiled into the kernel and the test script breaks. This patch contains
-code for reasonable error display and correct code exit.
+Currently init_imc_pmu() can fail either because we try to register an
+IMC unit with an invalid domain (i.e an IMC node not supported by the
+kernel) or something went wrong while registering a valid IMC unit. In
+both the cases kernel provides a 'Register failed' error message.
 
-Signed-off-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+For example when trace-imc node is not supported by the kernel, but
+skiboot advertises a trace-imc node we print:
+
+  IMC Unknown Device type
+  IMC PMU (null) Register failed
+
+To avoid confusion just print the unknown device type message, before
+attempting PMU registration, so the second message isn't printed.
+
+Fixes: 8f95faaac56c ("powerpc/powernv: Detect and create IMC device")
+Reported-by: Pavaman Subramaniyam <pavsubra@in.ibm.com>
+Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+[mpe: Reword change log a bit]
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/netfilter/nft_nat.sh | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
-index 3194007cf8d1..a59c5fd4e987 100755
---- a/tools/testing/selftests/netfilter/nft_nat.sh
-+++ b/tools/testing/selftests/netfilter/nft_nat.sh
-@@ -23,7 +23,11 @@ ip netns add ns0
- ip netns add ns1
- ip netns add ns2
+diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
+index 3d27f02695e4..828f6656f8f7 100644
+--- a/arch/powerpc/platforms/powernv/opal-imc.c
++++ b/arch/powerpc/platforms/powernv/opal-imc.c
+@@ -161,6 +161,10 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
+ 	struct imc_pmu *pmu_ptr;
+ 	u32 offset;
  
--ip link add veth0 netns ns0 type veth peer name eth0 netns ns1
-+ip link add veth0 netns ns0 type veth peer name eth0 netns ns1 > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+    echo "SKIP: No virtual ethernet pair device support in kernel"
-+    exit $ksft_skip
-+fi
- ip link add veth1 netns ns0 type veth peer name eth0 netns ns2
- 
- ip -net ns0 link set lo up
++	/* Return for unknown domain */
++	if (domain < 0)
++		return -EINVAL;
++
+ 	/* memory for pmu */
+ 	pmu_ptr = kzalloc(sizeof(*pmu_ptr), GFP_KERNEL);
+ 	if (!pmu_ptr)
 -- 
 2.20.1
 
