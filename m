@@ -2,130 +2,84 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD44C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:42:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A803C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:43:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18E272082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:42:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52D732082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:43:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="BWIZu1Wk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="H048f8WA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731809AbfFTMmS (ORCPT
+        id S1731824AbfFTMnF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:42:18 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:36490 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFTMmR (ORCPT
+        Thu, 20 Jun 2019 08:43:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45974 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFTMnF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:42:17 -0400
-Received: by mail-io1-f65.google.com with SMTP id h6so1497401ioh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:42:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oEI7F/AbEhScv3JnMYlB7Pd/hzM4EXTzmC95auXuTwE=;
-        b=BWIZu1WkOi4mG09pZuVLraenQ5r3WFzHz+rr+WaW3hWkxe0XX8c1yhGBpP2xGI+8VO
-         g833PXYqSzTouCtTuOa0scSHSdZmcaG937NuYsZe1WZBNaXrhDrUrnfu2i0eAUJsK2Zz
-         sDMrA2iux2hUIvQREc1CjSf50GBP8mljYmtkTohchCrNO410WVTBnGpxqpEi0/TSsRiw
-         XOS/wb9mID5DzAkoYJ2DCMxiS0jcHNJ/KsfvAv1KSU7AaFcTQfFK7Af86qWindUttg0d
-         NKz8LUkNAwMJSx9hLW5INTOHG3dvaW03ULFRXEDR3zImfXON4wZp3wG0UyoAR64Mui7Z
-         G9BQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oEI7F/AbEhScv3JnMYlB7Pd/hzM4EXTzmC95auXuTwE=;
-        b=bx+xLHGlZVXWgS9DXBVs2h6v9Me8YWyfRCqpIGqz2qFF12qya8FGWUCorHotW0FVDz
-         Yp1IPzlt+9wbhdQpimAiC09o5v7upU012l6rBlub9ZLabfd610fGyG0ppAZVJ8rNyBAc
-         yn2CrXc5SLLHxSTcJxXSBv39jHmJySO+Tgy8cCa9I8+LBnUyEa2DmTs3+JkwovGAw/uS
-         38+UmFCtlJFAE8tb3dHHuCAPyu0tvfzODo8h0e6psDbi/PHmGeFD+HPm/3pfaJCaVhmM
-         1/Ucg1ljL3oCL9geRrMY+Ixd1esjHK+Q2KClr6IB3/ghSEfC6SFqYZD6Zb9hEz+m3xvR
-         +Agg==
-X-Gm-Message-State: APjAAAWts75DZmiKGJFMecdPYVDVa4d3G5f1/sGV8HG2WuLonmv7TOZT
-        FyOlm6lh73rg4RJq+ij8uuodvNAihaK2013sGQFn/Q==
-X-Google-Smtp-Source: APXvYqzUVpdJZiYVJc2nOtwnAx7L80BlUbFIa6SF/JjPAj5ZnIFu33ZgGDq5ZAZL6WidQZD0F1mwEhz3Zm0gCUgJiv4=
-X-Received: by 2002:a02:394c:: with SMTP id w12mr154066jae.126.1561034534821;
- Thu, 20 Jun 2019 05:42:14 -0700 (PDT)
+        Thu, 20 Jun 2019 08:43:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=P6wLfL4v65TmS7pOg/8udBIAPlJHmV+Icj7XRJLu7O0=; b=H048f8WAqnd230Llx6ZkUnsMR
+        p+t7HnmbbkRapjtnpgMB/4eWZiPI0PEfOlluzuXPh7Beq8cMe0abciJxzS//7pSah9LK/U/93Gl4V
+        Ldws44ODFTiefI9iP42XRYuKUUA57XpH78r8Beeu1827cLchjrDzGYbAC1K5Bdy5mzuKVW6lZ8tcu
+        /17T2ArTrKhBaGA1u3ESw+4bsiEYUJlFw8YzaD9mdpMzlV9USajaJ+dP7iDpqgEJUNW4oZFXqoIxE
+        f/PBiMXJ5qH1FOg5dWW90Gvszuylm9EE2qkgb3AOcBqYZuVwm1YxO43o9Q0Sj9BlKpQ4ZRsw95XH7
+        xW5o1C2Qg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdwP8-00062B-9N; Thu, 20 Jun 2019 12:43:02 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id BFDAE20316587; Thu, 20 Jun 2019 14:43:00 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 14:43:00 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Kan Liang <kan.liang@linux.intel.com>, kbuild-all@01.org,
+        linux-kernel@vger.kernel.org, tipbuild@zytor.com,
+        Ingo Molnar <mingo@kernel.org>
+Subject: Re: [tip:perf/core 23/33] arch/x86/events/intel/rapl.c:781:23:
+ error: 'INTEL_FAM6_ICELAKE_DESKTOP' undeclared here (not in a function); did
+ you mean 'INTEL_FAM6_SKYLAKE_DESKTOP'?
+Message-ID: <20190620124300.GY3436@hirez.programming.kicks-ass.net>
+References: <201906200702.n7RdDWBw%lkp@intel.com>
 MIME-Version: 1.0
-References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
-In-Reply-To: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Thu, 20 Jun 2019 13:42:03 +0100
-Message-ID: <CAOesGMg+jAae5A0LgvBH0=dF95Y208h0c5RZ6f0v6CVUhsMk4g@mail.gmail.com>
-Subject: Re: [PATCH 0/5] Fixes for HiSilicon LPC driver and logical PIO code
-To:     John Garry <john.garry@huawei.com>
-Cc:     xuwei5@huawei.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Linuxarm <linuxarm@huawei.com>,
-        ARM-SoC Maintainers <arm@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-pci@vger.kernel.org, Joe Perches <joe@perches.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201906200702.n7RdDWBw%lkp@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi John,
+On Thu, Jun 20, 2019 at 07:38:07AM +0800, kbuild test robot wrote:
+> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git perf/core
+> head:   3ce5aceb5dee298b082adfa2baa0df5a447c1b0b
+> commit: 2a538fda82824a7722e296be656bb5d11d91a9cb [23/33] perf/x86/intel: Add Icelake desktop CPUID
+> config: x86_64-rhel-7.6 (attached as .config)
+> compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+> reproduce:
+>         git checkout 2a538fda82824a7722e296be656bb5d11d91a9cb
+>         # save the attached .config to linux build tree
+>         make ARCH=x86_64 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+> >> arch/x86/events/intel/rapl.c:781:23: error: 'INTEL_FAM6_ICELAKE_DESKTOP' undeclared here (not in a function); did you mean 'INTEL_FAM6_SKYLAKE_DESKTOP'?
+>      X86_RAPL_MODEL_MATCH(INTEL_FAM6_ICELAKE_DESKTOP, skl_rapl_init),
+>                           ^
 
-For patches that go to a soc maintainer for merge, we're asking that
-people don't cc arm@kernel.org directly.
-
-We prefer to keep that alias mostly for pull requests from other
-maintainers and patches we might have a reason to apply directly.
-Otherwise we risk essentially getting all of linux-arm-kernel into
-this mailbox as well.
-
-
-Thanks!
-
--Olof
-
-On Thu, Jun 20, 2019 at 11:33 AM John Garry <john.garry@huawei.com> wrote:
->
-> As reported in [1], the hisi-lpc driver has certain issues in handling
-> logical PIO regions, specifically unregistering regions.
->
-> This series add a method to unregister a logical PIO region, and fixes up
-> the driver to use them.
->
-> RCU usage in logical PIO code looks to always have been broken, so that
-> is fixed also. This is not a major fix as the list which RCU protects is
-> very rarely modified.
->
-> There is another patch to simplify logical PIO registration, made possible
-> by the fixes.
->
-> At this point, there are still separate ongoing discussions about how to
-> stop the logical PIO and PCI host bridge code leaking ranges, as in [2].
->
-> Hopefully this series can go through the arm soc tree and the maintainers
-> have no issue with that. I'm talking specifically about the logical PIO
-> code, which went through PCI tree on only previous upstreaming.
->
-> Cc. linux-pci@vger.kernel.org
->
-> [1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
-> [2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
->
-> John Garry (5):
->   lib: logic_pio: Fix RCU usage
->   lib: logic_pio: Add logic_pio_unregister_range()
->   bus: hisi_lpc: Unregister logical PIO range to avoid potential
->     use-after-free
->   bus: hisi_lpc: Add .remove method to avoid driver unbind crash
->   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
->     registration
->
->  drivers/bus/hisi_lpc.c    | 43 ++++++++++++++++++---
->  include/linux/logic_pio.h |  1 +
->  lib/logic_pio.c           | 78 ++++++++++++++++++++++++++++-----------
->  3 files changed, 95 insertions(+), 27 deletions(-)
->
-> --
-> 2.17.1
->
+Ingo, I know you're busy, but I think this is a merge fail, these
+defines are in tip/x86/cpu and/or tip/x86/urgent.
