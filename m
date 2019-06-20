@@ -2,131 +2,176 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0925EC4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:44:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1F0CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:47:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBEBE2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:44:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="D++Q8bNI"
+	by mail.kernel.org (Postfix) with ESMTP id 774E52082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:47:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731840AbfFTMo5 (ORCPT
+        id S1731720AbfFTMrG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:44:57 -0400
-Received: from mail1.bemta25.messagelabs.com ([195.245.230.129]:13412 "EHLO
-        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726874AbfFTMo5 (ORCPT
+        Thu, 20 Jun 2019 08:47:06 -0400
+Received: from mail-io1-f70.google.com ([209.85.166.70]:52613 "EHLO
+        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbfFTMrG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:44:57 -0400
-Received: from [46.226.53.56] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-1.bemta.az-c.eu-west-1.aws.symcld.net id CD/B3-17220-5CF7B0D5; Thu, 20 Jun 2019 12:44:53 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrIJsWRWlGSWpSXmKPExsWSoc9jqXuknjv
-  W4PZ5M4svc0+xWHy61s1ocf/rUUaLy7vmsFlsffmOyWLvofmMFn3n3B3YPaYdmM3u8f5GK7vH
-  7I6ZrB53ru1h83i2cD2Lx+dNcgFsUayZeUn5FQmsGS/aDjAXTGWt2LzzMEsDYw9rFyMXB4vAC
-  WaJOdPns4A4QgKTmCSevHzMDuHcZ5TYPeMdUxcjJwebgKHEvDfvGUFsEYEciVk3L4N1MAt8Z5
-  JoXHYDyOHgEBZwkOieWA5R4yixoOcGE4RtJPH47Fc2EJtFQFVi9YKJ7CA2r0CsxOrG/2A1QgL
-  VEj/PTWAGGcMpoClxY3s0SJhRQFbiS+NqZhCbWUBc4taT+WDlEgICEkv2nGeGsEUlXj7+xwpR
-  Hy/Rvv8tO0RcR+Ls9SeMELaSxLIbs1ghbFmJS/O7oeK+Eh9n9zKCvCIhcItRoqPvFhPIDRICW
-  hLvJuVD1AC9+7ULaqaaxPnG62wQtozE1cl7WSF6l7BJfFz5iRHil2SJD3PPQjXISazqfcgCUX
-  SBWaKt+xgjyAJmoCfX79KfwKg1C8lvsxAyEGFFiSndD9lngUNLUOLkzCcsCxhZVjFaJBVlpme
-  U5CZm5ugaGhjoGhoa6RoZGOkampnpJVbpJuulluqWpxaX6BrqJZYX6xVX5ibnpOjlpZZsYgSm
-  sJSCU8t2MD478lrvEKMkB5OSKO8Bfe5YIb6k/JTKjMTijPii0pzU4kOMMhwcShK8N+uAcoJFq
-  empFWmZOcB0CpOW4OBREuH1BknzFhck5hZnpkOkTjFackx4OXcRM8fN90uA5JG5SxcxC7Hk5e
-  elSonzXq4FahAAacgozYMbB0v5lxhlpYR5GRkYGIR4ClKLcjNLUOVfMYpzMCoJ8x4GmcKTmVc
-  Ct/UV0EFMQActmM0FclBJIkJKqoFJYu3cB7/CM1aIpL7rmy9yJKrHPn6bSfRqZsePa5w2iD8/
-  FehcH77RMuOF8JFDhy5sqVhVd1zin3DN2fmK7Dw3GlalBPHGTNkrw3U8l1tD591uhS17XM7Er
-  v27VoHH+/IVy4d9s2YENzzodxI7Lhdv9zbO9sLOQ2Jfmxxu325/mduufmytil7ghPLO8wWRN9
-  cnh994qf1tddm3FeLJs5xC9t3ao3zw7Kf5UYET/2QfDJOzn9Yl9FSyPf3Ry9rYuZFXA5iM/fT
-  XttqGzGlYzPl7z4tj8x4bZ8+7tVd9lXzdfE9PF3fTRQ0bNFyqxYue6PZbxRu7nnYr+coVW21s
-  ve7itj9n3/X87giqL3r8g6NeiaU4I9FQi7moOBEAbMLaP3QEAAA=
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-16.tower-308.messagelabs.com!1561034692!10953607!1
-X-Originating-IP: [104.47.12.57]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 13967 invoked from network); 20 Jun 2019 12:44:52 -0000
-Received: from mail-db3eur04lp2057.outbound.protection.outlook.com (HELO EUR04-DB3-obe.outbound.protection.outlook.com) (104.47.12.57)
-  by server-16.tower-308.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 20 Jun 2019 12:44:52 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com;
- s=selector2-dialogsemiconductor-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=I39A39H4OJIctuM7Erp9RN0D2ye45w30lyIqVG+wUI0=;
- b=D++Q8bNI8k3QLk3+VCiUMC36ZVq5KbN6XXZzuQPlhwVNFQsid8VzCT9W2gCjs3cADkHftZk8g2bN+o3K4DHHM29Fy5fU7KXoQpVwB6QBAujiqa+38TYpo9X2shLXiMbo99pC/oM2i7dSyV7Rd1xxr6LHH3n8egJOArKuPT256pc=
-Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM (20.177.113.222) by
- AM6PR10MB2918.EURPRD10.PROD.OUTLOOK.COM (10.255.121.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Thu, 20 Jun 2019 12:44:50 +0000
-Received: from AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::4561:9d63:48fa:a882]) by AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::4561:9d63:48fa:a882%7]) with mapi id 15.20.1987.014; Thu, 20 Jun 2019
- 12:44:50 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     Lee Jones <lee.jones@linaro.org>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>
-CC:     "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "kieran.bingham+renesas@ideasonboard.com" 
-        <kieran.bingham+renesas@ideasonboard.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "peda@axentia.se" <peda@axentia.se>,
-        Support Opensource <Support.Opensource@diasemi.com>
-Subject: RE: [PATCH] mfd: da9063: occupy second I2C address, too
-Thread-Topic: [PATCH] mfd: da9063: occupy second I2C address, too
-Thread-Index: AQHVJ2O+9kLXmLUZBE2ZJJdgV3Mbg6akeZzA
-Date:   Thu, 20 Jun 2019 12:44:50 +0000
-Message-ID: <AM6PR10MB2181D2A08D98FB9F8092EC8DFEE40@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
-References: <AM6PR10MB218184C8F2206024C6CB77EAFEE40@AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM>
- <20190620122853.GD4699@dell>
-In-Reply-To: <20190620122853.GD4699@dell>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 232576c4-89bd-465e-fc73-08d6f57d15bf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:AM6PR10MB2918;
-x-ms-traffictypediagnostic: AM6PR10MB2918:
-x-microsoft-antispam-prvs: <AM6PR10MB2918A42ECA20857F9EA33DA7F5E40@AM6PR10MB2918.EURPRD10.PROD.OUTLOOK.COM>
-x-ms-oob-tlc-oobclassifiers: OLM:5516;
-x-forefront-prvs: 0074BBE012
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(346002)(366004)(136003)(376002)(39860400002)(199004)(189003)(66946007)(25786009)(81166006)(81156014)(107886003)(14444005)(6246003)(4326008)(5024004)(3846002)(14454004)(45080400002)(256004)(11346002)(229853002)(476003)(33656002)(74316002)(446003)(7736002)(6116002)(478600001)(305945005)(8676002)(55016002)(2906002)(6436002)(486006)(53936002)(9686003)(5660300002)(76116006)(86362001)(68736007)(66446008)(6506007)(66556008)(8936002)(66476007)(64756008)(54906003)(102836004)(76176011)(7696005)(66066001)(53546011)(99286004)(52536014)(4744005)(316002)(110136005)(186003)(71190400001)(71200400001)(73956011)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR10MB2918;H:AM6PR10MB2181.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:0;MX:1;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: SCgiyz4MAOtYZeHk2BKn4gdUMi78tEfjgo11fsTQRit1rxzyh83ExxFXz+R7/xyZgaS16ep8KVq3wNK/yOoZ0IzfxIu4uKvqLuogeWGnG0ElXT2uzIy1uT4mW+O8V+lTNhPB6qiIACQJ7vrdqTP6ukf77gVEdBzNAPgf8xPHR0GHlQmH010R7tx4zRPz6X4Du24cnO0ByXX2stTdMZzrJCbhQUE6j+6pcGU3Ma+ZHRXfuHpU4aX2P8rMDqDr+H2ERAJpmfJhplQlX5VsqaFZZC3yev+gC2/UTu3D+OgLS+XO/FwDzuapkFZwRQF9cO6fNTgJUo0PFAx8CpC2rzql0I0lxCF7Pof9laTt2boGfJI1r5B834OUvIWnf0KPIdN3du6TGEBKu5v8FuFlJCqv/YAQFEoEIlb9lbsL8w0T+UQ=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Thu, 20 Jun 2019 08:47:06 -0400
+Received: by mail-io1-f70.google.com with SMTP id p12so4977554iog.19
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:47:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=iNr4pXoRjHYJxCsQLDFZzgF3wWUq5wqzMUmtkVEWxlA=;
+        b=qIHSZA6r6bG/ZQPD/XLTWPm9YGw7+P/EtyOxm5ikxWhvyyruG0tLFCnLo8ME982M0a
+         w50ckeAh3kZnbWZnE6Wsz5bOKKtjxtKgJQU02M2QMlpT2n3NWtgz6Z1zckVTuetn5c3W
+         +JMB3GGObETEiGCxKGlUwm/RprtFCwgE07OIOeET1Ju1rrRaRFTFMWuZtcPSUdxCAWtd
+         16WD3ecnjyX/fSsvZtZVmzkeNJ1ry2zO70evD3MmjtoSC6BrgHNQG7u2hvSssMX6CANi
+         62TezkZ0xqjjJsHamJIvTCw+UnxMjxfBD1KddwD50okEgiwbJo1+li+3BKdZzu+NEBTh
+         vI9g==
+X-Gm-Message-State: APjAAAUpsGXVV3k+VsqPQh0MEGqyTbpLl098+3kQ70kZ6IuBBT6MALK4
+        q7s6Tn05EjReTL6WfIS7atnbJa26bJn2kpjr7PJ0jG09dXeS
+X-Google-Smtp-Source: APXvYqxBEHjp/DDJw2j8KTmEawpYVu43gY57TO7tXs5XOqKu3i1FHbungXu60i/kZebeYG996fqJaVdfNDLYBo+ixzhSL8MOVyTb
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 232576c4-89bd-465e-fc73-08d6f57d15bf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2019 12:44:50.3075
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: stephen.twiss@diasemi.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR10MB2918
+X-Received: by 2002:a5e:9701:: with SMTP id w1mr7660813ioj.294.1561034825492;
+ Thu, 20 Jun 2019 05:47:05 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 05:47:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000417551058bc0bef9@google.com>
+Subject: kernel BUG at ./include/linux/scatterlist.h:LINE!
+From:   syzbot <syzbot+ef0daa6ce95facb233c1@syzkaller.appspotmail.com>
+To:     ast@kernel.org, aviadye@mellanox.com, borisp@mellanox.com,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davejwatson@fb.com,
+        davem@davemloft.net, john.fastabend@gmail.com, kafai@fb.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
+        vakul.garg@nxp.com, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMjAgSnVuZSAyMDE5IDEzOjI5LCBMZWUgSm9uZXMgd3JvdGU6DQoNCj4gU3ViamVjdDogUmU6
-IFtQQVRDSF0gbWZkOiBkYTkwNjM6IG9jY3VweSBzZWNvbmQgSTJDIGFkZHJlc3MsIHRvbw0KPiAN
-Cj4gV2h5IGlzbid0IHRoaXMgcmVwbHkgYXR0YWNoZWQgKHRocmVhZGVkKSB0byB0aGUgcGF0Y2gu
-DQoNCk15IGFwb2xvZ2llcy4gSXQgd2Fzbid0IG15IGludGVudGlvbiB0byBzcGxpdCBXb2xmcmFt
-J3Mgb3JpZ2luYWwgZS1tYWlsIHRocmVhZC4NCg0KSSBkb24ndCB1c3VhbGx5IHJlcGx5IHVzaW5n
-IHRoZSBtYWlsdG86IGxpbmsgZnJvbSBsb3JlIHdoZW4gY3JlYXRpbmcgZS1tYWlscy4NCk91dGxv
-b2sgbXVzdG4ndCBzdXBwb3J0IHRoZSBJbi1SZXBseS1UbyBoZWFkZXIuDQoNCkknbGwgZmlndXJl
-IG91dCBhIGRpZmZlcmVudCB3YXkgdG8gcmVwbHkgaW4gZnV0dXJlLg0KDQo+IElzIHlvdXIgbWFp
-bGVyIGJyb2tlbj8NCg0KSXQncyBXaW5kb3dzDQoNCg==
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=138d485ea00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+dashboard link: https://syzkaller.appspot.com/bug?extid=ef0daa6ce95facb233c1
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=13175731a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=126947faa00000
+
+The bug was bisected to:
+
+commit f295b3ae9f5927e084bd5decdff82390e3471801
+Author: Vakul Garg <vakul.garg@nxp.com>
+Date:   Wed Mar 20 02:03:36 2019 +0000
+
+     net/tls: Add support of AES128-CCM based ciphers
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=1738b732a00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14b8b732a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10b8b732a00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+ef0daa6ce95facb233c1@syzkaller.appspotmail.com
+Fixes: f295b3ae9f59 ("net/tls: Add support of AES128-CCM based ciphers")
+
+RAX: ffffffffffffffda RBX: 00007ffd6d3365b0 RCX: 0000000000441ba9
+RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000100000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000000
+------------[ cut here ]------------
+kernel BUG at ./include/linux/scatterlist.h:97!
+invalid opcode: 0000 [#1] PREEMPT SMP KASAN
+CPU: 1 PID: 8023 Comm: syz-executor694 Not tainted 5.2.0-rc5+ #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+RIP: 0010:sg_assign_page include/linux/scatterlist.h:97 [inline]
+RIP: 0010:sg_set_page include/linux/scatterlist.h:119 [inline]
+RIP: 0010:sk_msg_page_add include/linux/skmsg.h:246 [inline]
+RIP: 0010:tls_sw_do_sendpage net/tls/tls_sw.c:1170 [inline]
+RIP: 0010:tls_sw_sendpage+0x11b5/0x11e0 net/tls/tls_sw.c:1229
+Code: c1 38 c1 0f 8c 12 fe ff ff 4c 89 f7 e8 14 bb 27 fb e9 05 fe ff ff e8  
+0a 92 ee fa 44 8b 7c 24 18 e9 b2 fe ff ff e8 fb 91 ee fa <0f> 0b e8 f4 91  
+ee fa 0f 0b e8 ed 91 ee fa 4c 89 f7 48 c7 c6 87 e5
+RSP: 0018:ffff888094adf7c0 EFLAGS: 00010293
+RAX: ffffffff86871ff5 RBX: 0000000000000001 RCX: ffff888095bfc300
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffff888094adf998 R08: ffffffff8687170c R09: fffff9400045851f
+R10: fffff9400045851f R11: 1ffffd400045851e R12: 0000000000000000
+R13: 0000000000000080 R14: ffffea00022c28c0 R15: 1ffff110124d0d01
+FS:  0000555556a2f880(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffc5c9d1f18 CR3: 00000000a8a2c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+  inet_sendpage+0x16d/0x340 net/ipv4/af_inet.c:815
+  kernel_sendpage net/socket.c:3642 [inline]
+  sock_sendpage+0xd3/0x120 net/socket.c:940
+  pipe_to_sendpage+0x23e/0x310 fs/splice.c:449
+  splice_from_pipe_feed fs/splice.c:500 [inline]
+  __splice_from_pipe+0x2f7/0x8a0 fs/splice.c:624
+  splice_from_pipe fs/splice.c:659 [inline]
+  generic_splice_sendpage+0x172/0x200 fs/splice.c:829
+  do_splice_from fs/splice.c:848 [inline]
+  do_splice fs/splice.c:1155 [inline]
+  __do_sys_splice fs/splice.c:1425 [inline]
+  __se_sys_splice+0x12ec/0x1db0 fs/splice.c:1405
+  __x64_sys_splice+0xe5/0x100 fs/splice.c:1405
+  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x441ba9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
+48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 bb 10 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffd6d336548 EFLAGS: 00000246 ORIG_RAX: 0000000000000113
+RAX: ffffffffffffffda RBX: 00007ffd6d3365b0 RCX: 0000000000441ba9
+RDX: 0000000000000004 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000100000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: ffffffffffffffff
+R13: 0000000000000005 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 3b5328faabff785c ]---
+RIP: 0010:sg_assign_page include/linux/scatterlist.h:97 [inline]
+RIP: 0010:sg_set_page include/linux/scatterlist.h:119 [inline]
+RIP: 0010:sk_msg_page_add include/linux/skmsg.h:246 [inline]
+RIP: 0010:tls_sw_do_sendpage net/tls/tls_sw.c:1170 [inline]
+RIP: 0010:tls_sw_sendpage+0x11b5/0x11e0 net/tls/tls_sw.c:1229
+Code: c1 38 c1 0f 8c 12 fe ff ff 4c 89 f7 e8 14 bb 27 fb e9 05 fe ff ff e8  
+0a 92 ee fa 44 8b 7c 24 18 e9 b2 fe ff ff e8 fb 91 ee fa <0f> 0b e8 f4 91  
+ee fa 0f 0b e8 ed 91 ee fa 4c 89 f7 48 c7 c6 87 e5
+RSP: 0018:ffff888094adf7c0 EFLAGS: 00010293
+RAX: ffffffff86871ff5 RBX: 0000000000000001 RCX: ffff888095bfc300
+RDX: 0000000000000000 RSI: 0000000000000001 RDI: 0000000000000000
+RBP: ffff888094adf998 R08: ffffffff8687170c R09: fffff9400045851f
+R10: fffff9400045851f R11: 1ffffd400045851e R12: 0000000000000000
+R13: 0000000000000080 R14: ffffea00022c28c0 R15: 1ffff110124d0d01
+FS:  0000555556a2f880(0000) GS:ffff8880aeb00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007ffc5c9d1f18 CR3: 00000000a8a2c000 CR4: 00000000001406e0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
