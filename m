@@ -2,111 +2,78 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BA0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15D9FC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F864204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4DE32075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:02:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726879AbfFTLCp (ORCPT
+        id S1731485AbfFTLCu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:02:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37882 "EHLO mx1.redhat.com"
+        Thu, 20 Jun 2019 07:02:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34010 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfFTLCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:02:44 -0400
+        id S1731328AbfFTLCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:02:48 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9AFB2300DA2B;
-        Thu, 20 Jun 2019 11:02:44 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1704A30C4F41;
+        Thu, 20 Jun 2019 11:02:48 +0000 (UTC)
 Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AB7E5D9E5;
-        Thu, 20 Jun 2019 11:02:43 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AC765D9E5;
+        Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
 From:   Vitaly Kuznetsov <vkuznets@redhat.com>
 To:     kvm@vger.kernel.org
 Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
         =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
         Joerg Roedel <joro@8bytes.org>,
         Jim Mattson <jmattson@google.com>
-Subject: [PATCH RFC 0/5] x86/KVM/svm: get rid of hardcoded instructions lengths
-Date:   Thu, 20 Jun 2019 13:02:35 +0200
-Message-Id: <20190620110240.25799-1-vkuznets@redhat.com>
+Subject: [PATCH RFC 2/5] x86: KVM: svm: avoid flooding logs when skip_emulated_instruction() fails
+Date:   Thu, 20 Jun 2019 13:02:37 +0200
+Message-Id: <20190620110240.25799-3-vkuznets@redhat.com>
+In-Reply-To: <20190620110240.25799-1-vkuznets@redhat.com>
+References: <20190620110240.25799-1-vkuznets@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 20 Jun 2019 11:02:44 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 20 Jun 2019 11:02:48 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Jim rightfully complains that hardcoding instuctions lengths is not always
-correct: additional (redundant) prefixes can be used. Luckily, the ugliness
-is mostly harmless: modern AMD CPUs support NRIP_SAVE feature but I'd like
-to clean things up and sacrifice speed in favor of correctness.
+When we're unable to skip instruction with kvm_emulate_instruction() we
+will not advance RIP and most likely the guest will get stuck as
+consequitive attempts to execute the same instruction will likely result
+in the same behavior.
 
-Early RFC. Unfortunately, I got distracted by some other problems so
-sending it out half-baked.
+As we're not supposed to see these messages under normal conditions, switch
+to pr_err_once().
 
-TODO:
-- Get rid of hardcoded '+ 3' in vmrun_interception().
-- Test.
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+---
+ arch/x86/kvm/svm.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-P.S. If you'd like to test the series you'll have to have a CPU without
-NRIP_SAVE feature or forcefully disable it, something like:
-
-index 8d4e50428b68..93c7eaad7915 100644
---- a/arch/x86/kernel/cpu/amd.c
-+++ b/arch/x86/kernel/cpu/amd.c
-@@ -922,6 +922,9 @@ static void init_amd(struct cpuinfo_x86 *c)
-        /* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
-        if (!cpu_has(c, X86_FEATURE_XENPV))
-                set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
-+
-+       /* No nrips */
-+       clear_cpu_cap(c, X86_FEATURE_NRIPS);
- }
- 
- #ifdef CONFIG_X86_32
 diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 5beca1030c9a..5b2ea34bc9f2 100644
+index 982c6b9bfc90..68f1f0218c95 100644
 --- a/arch/x86/kvm/svm.c
 +++ b/arch/x86/kvm/svm.c
-@@ -773,11 +773,11 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
- {
-        struct vcpu_svm *svm = to_svm(vcpu);
- 
--       if (svm->vmcb->control.next_rip != 0) {
-+/*     if (svm->vmcb->control.next_rip != 0) {
-                WARN_ON_ONCE(!static_cpu_has(X86_FEATURE_NRIPS));
-                svm->next_rip = svm->vmcb->control.next_rip;
-        }
--
-+*/
-        if (!svm->next_rip) {
-                if (kvm_emulate_instruction(vcpu, EMULTYPE_SKIP) !=
-                                EMULATE_DONE)
-
-Vitaly Kuznetsov (5):
-  x86: KVM: svm: don't pretend to advance RIP in case
-    wrmsr_interception() results in #GP
-  x86: KVM: svm: avoid flooding logs when skip_emulated_instruction()
-    fails
-  x86: KVM: svm: clear interrupt shadow on all paths in
-    skip_emulated_instruction()
-  x86: KVM: add xsetbv to the emulator
-  x86: KVM: svm: remove hardcoded instruction length from intercepts
-
- arch/x86/include/asm/kvm_emulate.h |  1 +
- arch/x86/kvm/emulate.c             |  9 ++++++++-
- arch/x86/kvm/svm.c                 | 19 ++++++-------------
- 3 files changed, 15 insertions(+), 14 deletions(-)
-
+@@ -781,7 +781,8 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ 	if (!svm->next_rip) {
+ 		if (kvm_emulate_instruction(vcpu, EMULTYPE_SKIP) !=
+ 				EMULATE_DONE)
+-			printk(KERN_DEBUG "%s: NOP\n", __func__);
++			pr_err_once("KVM: %s: unable to skip instruction\n",
++				    __func__);
+ 		return;
+ 	}
+ 	if (svm->next_rip - kvm_rip_read(vcpu) > MAX_INST_SIZE)
 -- 
 2.20.1
 
