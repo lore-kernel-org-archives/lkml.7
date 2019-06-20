@@ -2,121 +2,82 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 586BAC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:22:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07BDFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:22:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3370E2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:22:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051328;
-	bh=Sh+i3/+atKsLHq20f7BYR2YeUmM7aHDmKCg2/Gz2RQM=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EpgvVgwzfF9AzFGZl3isV5NMqSelizq0vqpjTt9EuN0w73qKgakt2tudaLUc3+RiW
-	 xnRFa0R4OGN8DrBLvpwbmiA6EKFg1+Y28LEDd0dghYo4TrRy34xtWEYNee3+fZ2f33
-	 o/4LZY8+4XILVJcXfX/DlqT5T6myy9SIgVPZJ5Uk=
+	by mail.kernel.org (Postfix) with ESMTP id D27402083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731733AbfFTRWG (ORCPT
+        id S1732033AbfFTRWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:22:06 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40037 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726620AbfFTRWG (ORCPT
+        Thu, 20 Jun 2019 13:22:22 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:32922 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726637AbfFTRWW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:22:06 -0400
-Received: by mail-lf1-f67.google.com with SMTP id a9so3007752lff.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:22:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=8s7nWa83ZrllVywYBO3+qENQEvSqioKh5iSEDp3yvQc=;
-        b=g1mjJHSB+/44ZB7V3d991RQ8lmWdxyz7cRKmwtk9byrjcNUD9YP2uS+RZIIrKE7lKn
-         tVpZNvyJkolb6AtIXbb56yLA6c56wf2OFIIZEIPMa1TRDMJb6FE75meYgwCBSBqSYdRC
-         O8jEDgU+LfyGIAqseIIvIOnHddyiMVgjB9lIw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8s7nWa83ZrllVywYBO3+qENQEvSqioKh5iSEDp3yvQc=;
-        b=C+vjOvTPMwj5HWDlvrJDfiRZeFdw9XXC1jmqkywmN0XvNiuSFFPWaFXa2mVAt3b+3Y
-         raKU1JopF0d91yTcqZWTlZxhD/CCTKj2x1M2j03ObSUy6p5935nF1l+pR/hegwDbZxMI
-         KEGSR6jabNkDaEx4LNLF3ectS5ahHF+r3dhzLzpSCAxAp8Z09I3chVAbk6ISidtjXwDs
-         tBBLEIziqF7NEdtNqlg/uLz8anoPcPUjTDUWIid4qDGnGA+6OcMSJhW08agD5DWAvt8C
-         TEVnJ4k/N+jtZ3XLpoeP97KFDXH8zFtF7thBXtcLe8kc7AXUPINvN0ZbrCaGxm7mZmvD
-         QHRA==
-X-Gm-Message-State: APjAAAUl7wlD3T6Rzqc3s/hqDrEArE34T8owNBN5dgbeQzp0J0djj7Js
-        6U/rykuLoNoLOQqpF7qgevZxFiTVp8c=
-X-Google-Smtp-Source: APXvYqyX+4vQPX/HP+UQYV3HX4ivwOw7f7p1AbhLuX3+Q8+99VwKUCQPH1Fa99sla6t6M6nY3ZWpZQ==
-X-Received: by 2002:a05:6512:24a:: with SMTP id b10mr63615946lfo.37.1561051323910;
-        Thu, 20 Jun 2019 10:22:03 -0700 (PDT)
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com. [209.85.167.53])
-        by smtp.gmail.com with ESMTPSA id x79sm38713lff.74.2019.06.20.10.22.02
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 10:22:02 -0700 (PDT)
-Received: by mail-lf1-f53.google.com with SMTP id a9so3007613lff.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:22:02 -0700 (PDT)
-X-Received: by 2002:ac2:5601:: with SMTP id v1mr51955604lfd.106.1561051322002;
- Thu, 20 Jun 2019 10:22:02 -0700 (PDT)
+        Thu, 20 Jun 2019 13:22:22 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5KHM8mu014348
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 20 Jun 2019 13:22:09 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 528DC420484; Thu, 20 Jun 2019 13:22:08 -0400 (EDT)
+Date:   Thu, 20 Jun 2019 13:22:08 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     Ross Zwisler <zwisler@google.com>
+Cc:     Jan Kara <jack@suse.cz>, Ross Zwisler <zwisler@chromium.org>,
+        linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Fletcher Woodruff <fletcherw@google.com>,
+        Justin TerAvest <teravest@google.com>
+Subject: Re: [PATCH 2/3] jbd2: introduce jbd2_inode dirty range scoping
+Message-ID: <20190620172208.GB4650@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        Ross Zwisler <zwisler@google.com>, Jan Kara <jack@suse.cz>,
+        Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>, Jan Kara <jack@suse.com>,
+        linux-ext4@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, Fletcher Woodruff <fletcherw@google.com>,
+        Justin TerAvest <teravest@google.com>
+References: <20190619172156.105508-1-zwisler@google.com>
+ <20190619172156.105508-3-zwisler@google.com>
+ <20190620110454.GL13630@quack2.suse.cz>
+ <20190620150911.GA4488@google.com>
 MIME-Version: 1.0
-References: <20190611144102.8848-1-hch@lst.de> <20190611144102.8848-17-hch@lst.de>
- <1560300464.nijubslu3h.astroid@bobo.none> <CAHk-=wjSo+TzkvYnAqrp=eFgzzc058DhSMTPr4-2quZTbGLfnw@mail.gmail.com>
- <1561032202.0qfct43s2c.astroid@bobo.none>
-In-Reply-To: <1561032202.0qfct43s2c.astroid@bobo.none>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Thu, 20 Jun 2019 10:21:46 -0700
-X-Gmail-Original-Message-ID: <CAHk-=wh46y3x5O0HkR=R4ETh6e5pDCrEsJ94CtC0fyQiYYAf6A@mail.gmail.com>
-Message-ID: <CAHk-=wh46y3x5O0HkR=R4ETh6e5pDCrEsJ94CtC0fyQiYYAf6A@mail.gmail.com>
-Subject: Re: [PATCH 16/16] mm: pass get_user_pages_fast iterator arguments in
- a structure
-To:     Nicholas Piggin <npiggin@gmail.com>
-Cc:     Andrey Konovalov <andreyknvl@google.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Christoph Hellwig <hch@lst.de>,
-        James Hogan <jhogan@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linux-mips@vger.kernel.org, Linux-MM <linux-mm@kvack.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Burton <paul.burton@mips.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620150911.GA4488@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 5:19 AM Nicholas Piggin <npiggin@gmail.com> wrote:
->
-> The processor aliasing problem happens because the struct will
-> be initialised with stores using one base register (e.g., stack
-> register), and then same memory is loaded using a different
-> register (e.g., parameter register).
+On Thu, Jun 20, 2019 at 09:09:11AM -0600, Ross Zwisler wrote:
+> We could definitely keep separate dirty ranges for each of the current and
+> next transaction.  I think the case where you would see a difference would be
+> if you had multiple transactions in a row which grew the dirty range for a
+> given jbd2_inode, and then had a random I/O workload which kept dirtying pages
+> inside that enlarged dirty range.
+> 
+> I'm not sure how often this type of workload would be a problem.  For the
+> workloads I've been testing which purely append to the inode, having a single
+> dirty range per jbd2_inode is sufficient.
 
-Hmm. Honestly, I've never seen anything like that in any kernel profiles.
+My inclination would be to keep things simple for now, unless we have
+a real workload that tickles this.  In the long run I'm hoping to
+remove the need to do writebacks from the journal thread altogether,
+by always updating the metadata blocks *after* the I/O completes,
+instead of before we submit the I/O.
 
-Compared to the problems I _do_ see (which is usually the obvious
-cache misses, and locking), it must either be in the noise or it's
-some problem specific to whatever CPU you are doing performance work
-on?
-
-I've occasionally seen pipeline hiccups in profiles, but it's usually
-been either some serious glass jaw of the core, or it's been something
-really stupid we did (or occasionally that the compiler did: one in
-particular I remember was how there was a time when gcc would narrow
-stores when it could, so if you set a bit in a word, it would do it
-with a byte store, and then when you read the whole word afterwards
-you'd get a major pipeline stall and it happened to show up in some
-really hot paths).
-
-            Linus
+					- Ted
