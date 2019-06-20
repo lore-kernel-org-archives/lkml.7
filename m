@@ -1,110 +1,113 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 120F3C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24655C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFFF320657
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vktv+Nnv"
+	by mail.kernel.org (Postfix) with ESMTP id F2DEE2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561020257;
+	bh=mf4MZRK5XgaL8Au5RGvFrPPm0zyIoj1CKxst6/Ouzuw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dOxkiwceXktyUp80iHlohZLWM9UgRkftOGVrY3WSNtM1SpiLe5j+D7R0cwhrZ4Nfz
+	 nBm0TTatvaD6p9VYufEnkmfZ0w8i6rb6CHphFlkegJRVa95zAO/7sxhp0PFfpBShSX
+	 rlL3s1FrhdtsFSjiL6rCDtUcsK4vp6tmyGXS6J3M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726799AbfFTIoB (ORCPT
+        id S1730709AbfFTIoP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:44:01 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:41958 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIoB (ORCPT
+        Thu, 20 Jun 2019 04:44:15 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41456 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTIoP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:44:01 -0400
-Received: by mail-io1-f66.google.com with SMTP id w25so443092ioc.8;
-        Thu, 20 Jun 2019 01:44:00 -0700 (PDT)
+        Thu, 20 Jun 2019 04:44:15 -0400
+Received: by mail-pl1-f196.google.com with SMTP id m7so1096931pls.8;
+        Thu, 20 Jun 2019 01:44:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=gCb8MwruH8dKbWAubDWJguVrt49ZLagCriEvdjUA1WU=;
-        b=Vktv+Nnvh9ds+F3HFYArj+H76hfSKDTtGli8022H77ngVSBouxPFNwqTouEdE3vKpE
-         /+9BVmq4pmjw+6uQqfPuh2gK675a58Hk72VvzXz3vUmXeTDogZRT6zptL0A+hsQjWNfh
-         rVp6xLhXFdxuWHvOqMTVtvqPcOLM/EBIKQ6nzvlnTtuhFT7O66Ik0IpKaxn87mGtVT/A
-         3/z4ci2C9enNG1cSrI0Fkibr2IilAxPHzDhrFw+FKMWLiEG2dwcQ7oi622JRTFcpEkYU
-         +jS/zfSFrBAIEOQS3cvrmqD6opLlHc7GYB5VFS+fafHQsCvqlRCbahT+R7wNs7zdz2DO
-         zfpw==
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=sYUDpApbnrIBn4i7klGE9UQ92KtpIubNAiUNXQIv47k=;
+        b=aEzfvWfhJfjqwaVDjQ+y2Jj8uQ5QLxM1Z9rSTwdKEVkhpfKq1+Vqx4cQoEo3LUbewb
+         nU43G4E5gYmlEqHnYPXnoi+dPlxxjyj2hEDeLmCouA0sk/KCNJqQM5lOtVQx7zd4IeOc
+         Nu+R1IfH6LIZkVvQqJ0U2YjQ2u4vWRTNlgJkN4NcOLwYjLzEYcopTqj/2uLvHTnvSQPU
+         G6VczY8GZn0HQXUzj2HmCQ64NCkoar+aFuvgFDt+OhG2jMZha7ZvtmNq0lzwD3a6508x
+         bjre/yWIfx9smdOvOz6K9HtuVd9grJ7MlUsBVt5ku7kkUWkZ7zoHCriBmFVGGGAb2L31
+         6iuw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=gCb8MwruH8dKbWAubDWJguVrt49ZLagCriEvdjUA1WU=;
-        b=B0ArAyGQ9xEkMqnD3XbXWtWZeyHGlKr9o181yFnYRhsUpd4UsRDTjAVTDZZbt69a/Z
-         A/pO/sa9ENLHvhV7PV4AQEgG4/6JDYXYxVsnYxaV8Di4B5qgGlnfMaABvnl+0PtDIOAl
-         ev2V31qmlao5vyCWDqiJWlTj2Bu0GGyWto5Vbf0tS1E8BbyUonjmS1VkjM82rV9m17+E
-         0HkEopl4pMkFtiB9VAOZTXH6ot1TD5r1wTbtlkAaNuMHzomBQnxnKXxdov9D7tmnS9yc
-         7i5dXlWEiPk16qasOokZIoJt5btdfRuKx49aqqQMNAT7qeYnmfJyMskgYmY7Mov9gsQL
-         yIvg==
-X-Gm-Message-State: APjAAAV4WugdBTA0fEqp5RFdEeS5+6EZ7+gf438Pi3VWPEkKauVB8REN
-        H3uN7t3xHzk5tXSOBlzRPFXLT9HpU2YKi+664ag=
-X-Google-Smtp-Source: APXvYqw2fVXqZFI1UAjff2P6BLRNnHwF8/qus3xVE14eeP/DMtKrOAjmBQZ8KIC+qO1xuPhi+v/Txq3ckXpJwmsrqrM=
-X-Received: by 2002:a6b:7b01:: with SMTP id l1mr18358947iop.60.1561020240102;
- Thu, 20 Jun 2019 01:44:00 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sYUDpApbnrIBn4i7klGE9UQ92KtpIubNAiUNXQIv47k=;
+        b=cUQiLb+AUMUFfjGRgpb7Smdy8T8FA5/9wDfLlE7Ny+xtnhmsu2Q6n9by2CZxzp5W3/
+         pCj6+D25ELP7SpsxR0eyqDPtmUmpZbJZMZuqyMrC18xgnwMbeIHOrCPdXPzN/5pPBjbB
+         uwgg6pGS0+8TGvh4hHzh0vWEKyxSQG47X73YiPzYGUuz2wCawj4PbT2pllVsBy6+dOmA
+         7I6Hqh6PyRmiXEz9gfm/3QQKj0nIhiJ1g7DZqBTkV6Zvq75bPNLgEgT2fUwX/whcmbVg
+         4LXmbQLmaiBFgBTxkk8nOhsJZznLl6yX+vlhhpaaVzuY4qnZfPpZLkgDDsqPdnMHxCHp
+         k1Zw==
+X-Gm-Message-State: APjAAAVYlc0Az1nhFTbBDmgkx3hEyM/JgNnKFPmKNLm/PHyHgSSZA9GG
+        Z7b9JoUH2Ul7rtKRlayksUo=
+X-Google-Smtp-Source: APXvYqyNaeJOWDXCKLsONO3xoo0uW5BSwfxZeeqpUW3oEVsmOBAMneaKESWF6GWZ/kvgM7+JkXbHYQ==
+X-Received: by 2002:a17:902:290b:: with SMTP id g11mr121725061plb.26.1561020254488;
+        Thu, 20 Jun 2019 01:44:14 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id q144sm28994756pfc.103.2019.06.20.01.44.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 01:44:12 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 17:44:06 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 1/5] mm: introduce MADV_COLD
+Message-ID: <20190620084406.GE105727@google.com>
+References: <20190610111252.239156-1-minchan@kernel.org>
+ <20190610111252.239156-2-minchan@kernel.org>
+ <20190619125611.GO2968@dhcp22.suse.cz>
+ <20190620000650.GB52978@google.com>
+ <20190620070854.GC12083@dhcp22.suse.cz>
 MIME-Version: 1.0
-References: <8a9ffb4b-791d-35d1-bb2a-7b6ad812bff1@ideasonboard.com>
- <20190620081142.31302-1-e5ten.arch@gmail.com> <20190620082557.GB28346@zn.tnic>
-In-Reply-To: <20190620082557.GB28346@zn.tnic>
-From:   Ethan Sommer <e5ten.arch@gmail.com>
-Date:   Thu, 20 Jun 2019 04:43:49 -0400
-Message-ID: <CAMEGPiqgoscn-20gDyrQOBYdbfzdimu91Dw0WLEjLKs+u5KSEA@mail.gmail.com>
-Subject: Re: [PATCH v2] replace timeconst bc script with an sh script
-To:     Borislav Petkov <bp@suse.de>
-Cc:     hpa@zytor.com, Jonathan Corbet <corbet@lwn.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joe Perches <joe@perches.com>,
-        Federico Vaga <federico.vaga@vaga.pv.it>,
-        Ingo Molnar <mingo@kernel.org>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        John Stultz <john.stultz@linaro.org>,
-        Corey Minyard <cminyard@mvista.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620070854.GC12083@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(resend because I didn't know gmail would make it html)
-Ah sorry about that, I accidentally replied to Kieran only instead of
-to all, my response was "I will upload a patch with those issues fixed
-shortly, in terms of the dependency as far as I know commands only required
-for running tests don't count as kernel compilation dependencies, and I
-don't see any other uses of bc except for Documentation/EDID/Makefile, so
-I believe that bc can be removed from the kernel compilation section of the
-process document and will include that change with the updated patch that
-fixes the 2 issues you pointed out."
+On Thu, Jun 20, 2019 at 09:08:54AM +0200, Michal Hocko wrote:
+> On Thu 20-06-19 09:06:51, Minchan Kim wrote:
+> > On Wed, Jun 19, 2019 at 02:56:12PM +0200, Michal Hocko wrote:
+> [...]
+> > > Why cannot we reuse a large part of that code and differ essentially on
+> > > the reclaim target check and action? Have you considered to consolidate
+> > > the code to share as much as possible? Maybe that is easier said than
+> > > done because the devil is always in details...
+> > 
+> > Yub, it was not pretty when I tried. Please see last patch in this
+> > patchset.
+> 
+> That is bad because this code is quite subtle - especially the THP part
+> of it. I will be staring at the code some more. Maybe some
+> simplification pops out.
 
-On Thu, Jun 20, 2019 at 4:26 AM Borislav Petkov <bp@suse.de> wrote:
->
-> On Thu, Jun 20, 2019 at 04:11:32AM -0400, Ethan Sommer wrote:
-> > removes the bc build dependency introduced when timeconst.pl was
-> > replaced by timeconst.bc:
-> > 70730bca1331 ("kernel: Replace timeconst.pl with a bc script")
->
-> I don't see you answering Kieran's questions anywhere...
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> SUSE Linux GmbH, GF: Felix Imend=C3=B6rffer, Mary Higgins, Sri Rasiah, HR=
-B 21284 (AG N=C3=BCrnberg)
+Yeah, I couldn't come up with better idea. Actually, I wanted to be
+left. More suggestion to make simple/readable would be great.
