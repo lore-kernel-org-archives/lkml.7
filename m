@@ -2,208 +2,90 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CE8CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 053F7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 697BB2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:07:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDB5C206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:10:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7KQnw6/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731961AbfFTNG2 (ORCPT
+        id S1731932AbfFTNKx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:06:28 -0400
-Received: from foss.arm.com ([217.140.110.172]:36720 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731733AbfFTNGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:06:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 80349C0A;
-        Thu, 20 Jun 2019 06:06:24 -0700 (PDT)
-Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2BA713F718;
-        Thu, 20 Jun 2019 06:06:23 -0700 (PDT)
-From:   Julien Grall <julien.grall@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu
-Cc:     james.morse@arm.com, marc.zyngier@arm.com, julien.thierry@arm.com,
-        suzuki.poulose@arm.com, catalin.marinas@arm.com,
-        will.deacon@arm.com, Julien Grall <julien.grall@arm.com>
-Subject: [RFC v2 01/14] arm64/mm: Introduce asid_info structure and move asid_generation/asid_map to it
-Date:   Thu, 20 Jun 2019 14:05:55 +0100
-Message-Id: <20190620130608.17230-2-julien.grall@arm.com>
-X-Mailer: git-send-email 2.11.0
-In-Reply-To: <20190620130608.17230-1-julien.grall@arm.com>
-References: <20190620130608.17230-1-julien.grall@arm.com>
+        Thu, 20 Jun 2019 09:10:53 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41249 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfFTNKw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:10:52 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so2394577lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 06:10:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3R8g4P26UIPbxa2jL7jXQ1Hl0lmGg7Sw8gg5ZFkQV2E=;
+        b=E7KQnw6/zwAMJbhbi0bJ+j/IYPpL/UFkUyxxFqY3N2j6Rmtzs5XvTiseAES9ui0Ly4
+         6JPZdQbMC6uK5QjWchSP9gwOcZo0XBPXQz9h3cQJ4wYAr0RUPt6uqlVQT4L1VhBJ/39L
+         60SmrcwSyFK7AZ4lzDIgyPPJT8FBhoRMVRqjVLc+Wg6aNcBD35coI2bbIKNn9DHJzIMk
+         tvyzUGcrdta9VFw+annMiI7+kFyW5OXKHdvCzYM4v7B9IFIEqXtg2g3OVJ259i7xTuOR
+         q7SRQKxZBnhfR69YgG+8IP9gE1jCON2Jiu33aAi4QcsH6Ob6GgFNjN58ck1+AiR5YCx1
+         WDmQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3R8g4P26UIPbxa2jL7jXQ1Hl0lmGg7Sw8gg5ZFkQV2E=;
+        b=ILn1XIYbO+NK/YFF9sxebdKdk1jbNWTP1x/vPtFy7BKyTJFQJ712UdAdiB7QNdANU0
+         z0HDRlNjiQ9gVSRd2lzWScFSwh43nI4nQOGlWJ2t4bX2LGDSfXi1Zt/0ik17OcgJFBNw
+         POhT1x4mP7zeEe7MXR/JxmLd1pTaV8JAxcaHZBG76ZqrZwdIV7KKkXt3HPOGLiamFA9S
+         XDe77rd2/oUkVlu5sCD9+LXnAhZSrg7Cyqp7tmKmDQxbqGXeovMzPGRmH2AGIN8au8nm
+         GCHCGiyTxlrKyLaMPkEAZm5kV6ejJvhs7zD0KdAM6Se5No4JCubMsg8Zop8p5fLGA5fE
+         hX1g==
+X-Gm-Message-State: APjAAAUEW+7gGRq2rnWibkuisijlHd8c7rLNebNL5A00+s2KT/5zMf3p
+        g5y6+ohfzI7ARTOXHoEV/8osI4Inin03w0PbOXE=
+X-Google-Smtp-Source: APXvYqxdpbDjHR9y63Rn6bPvqSJZkL4Hgw1c/hiaobsdflntg7lb7BdbmvMR9BBPHaguUIi252wbG/oDRVrD4IfWKS0=
+X-Received: by 2002:a19:d5:: with SMTP id 204mr63936539lfa.66.1561036250966;
+ Thu, 20 Jun 2019 06:10:50 -0700 (PDT)
+MIME-Version: 1.0
+References: <1558887028-4026-1-git-send-email-jrdr.linux@gmail.com>
+In-Reply-To: <1558887028-4026-1-git-send-email-jrdr.linux@gmail.com>
+From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date:   Thu, 20 Jun 2019 15:10:39 +0200
+Message-ID: <CANiq72m538x8=eCq78sUC2T1_US7Ddbh4O96G1-vD3yaF6wgUQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] auxdisplay/cfag12864bfb.c: Convert to use vm_map_pages_zero()
+To:     Souptick Joarder <jrdr.linux@gmail.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In an attempt to make the ASID allocator generic, create a new structure
-asid_info to store all the information necessary for the allocator.
+On Sun, May 26, 2019 at 6:05 PM Souptick Joarder <jrdr.linux@gmail.com> wrote:
+>
+> While using mmap, the incorrect values of length and vm_pgoff are
+> ignored and this driver goes ahead with mapping cfag12864b_buffer
+> to user vma.
+>
+> Convert vm_insert_pages() to use vm_map_pages_zero(). We could later
+> "fix" these drivers to behave according to the normal vm_pgoff
+> offsetting simply by removing the _zero suffix on the function name and
+> if that causes regressions, it gives us an easy way to revert.
+>
+> Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> ---
+> v2: Fixed minor typo.
 
-For now, move the variables asid_generation and asid_map to the new structure
-asid_info. Follow-up patches will move more variables.
+Almost forgot about these two -- picking both v2s for a PR later. Not
+sure what happened with the mm/ related one I sent, is it in Andrew's
+tree?
 
-Note to avoid more renaming aftwards, a local variable 'info' has been
-created and is a pointer to the ASID allocator structure.
-
-Signed-off-by: Julien Grall <julien.grall@arm.com>
-
----
-    Changes in v2:
-        - Add turn asid_info to a static variable
----
- arch/arm64/mm/context.c | 46 ++++++++++++++++++++++++++--------------------
- 1 file changed, 26 insertions(+), 20 deletions(-)
-
-diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
-index 1f0ea2facf24..8167c369172d 100644
---- a/arch/arm64/mm/context.c
-+++ b/arch/arm64/mm/context.c
-@@ -30,8 +30,11 @@
- static u32 asid_bits;
- static DEFINE_RAW_SPINLOCK(cpu_asid_lock);
- 
--static atomic64_t asid_generation;
--static unsigned long *asid_map;
-+static struct asid_info
-+{
-+	atomic64_t	generation;
-+	unsigned long	*map;
-+} asid_info;
- 
- static DEFINE_PER_CPU(atomic64_t, active_asids);
- static DEFINE_PER_CPU(u64, reserved_asids);
-@@ -88,13 +91,13 @@ void verify_cpu_asid_bits(void)
- 	}
- }
- 
--static void flush_context(void)
-+static void flush_context(struct asid_info *info)
- {
- 	int i;
- 	u64 asid;
- 
- 	/* Update the list of reserved ASIDs and the ASID bitmap. */
--	bitmap_clear(asid_map, 0, NUM_USER_ASIDS);
-+	bitmap_clear(info->map, 0, NUM_USER_ASIDS);
- 
- 	for_each_possible_cpu(i) {
- 		asid = atomic64_xchg_relaxed(&per_cpu(active_asids, i), 0);
-@@ -107,7 +110,7 @@ static void flush_context(void)
- 		 */
- 		if (asid == 0)
- 			asid = per_cpu(reserved_asids, i);
--		__set_bit(asid2idx(asid), asid_map);
-+		__set_bit(asid2idx(asid), info->map);
- 		per_cpu(reserved_asids, i) = asid;
- 	}
- 
-@@ -142,11 +145,11 @@ static bool check_update_reserved_asid(u64 asid, u64 newasid)
- 	return hit;
- }
- 
--static u64 new_context(struct mm_struct *mm)
-+static u64 new_context(struct asid_info *info, struct mm_struct *mm)
- {
- 	static u32 cur_idx = 1;
- 	u64 asid = atomic64_read(&mm->context.id);
--	u64 generation = atomic64_read(&asid_generation);
-+	u64 generation = atomic64_read(&info->generation);
- 
- 	if (asid != 0) {
- 		u64 newasid = generation | (asid & ~ASID_MASK);
-@@ -162,7 +165,7 @@ static u64 new_context(struct mm_struct *mm)
- 		 * We had a valid ASID in a previous life, so try to re-use
- 		 * it if possible.
- 		 */
--		if (!__test_and_set_bit(asid2idx(asid), asid_map))
-+		if (!__test_and_set_bit(asid2idx(asid), info->map))
- 			return newasid;
- 	}
- 
-@@ -173,20 +176,20 @@ static u64 new_context(struct mm_struct *mm)
- 	 * a reserved TTBR0 for the init_mm and we allocate ASIDs in even/odd
- 	 * pairs.
- 	 */
--	asid = find_next_zero_bit(asid_map, NUM_USER_ASIDS, cur_idx);
-+	asid = find_next_zero_bit(info->map, NUM_USER_ASIDS, cur_idx);
- 	if (asid != NUM_USER_ASIDS)
- 		goto set_asid;
- 
- 	/* We're out of ASIDs, so increment the global generation count */
- 	generation = atomic64_add_return_relaxed(ASID_FIRST_VERSION,
--						 &asid_generation);
--	flush_context();
-+						 &info->generation);
-+	flush_context(info);
- 
- 	/* We have more ASIDs than CPUs, so this will always succeed */
--	asid = find_next_zero_bit(asid_map, NUM_USER_ASIDS, 1);
-+	asid = find_next_zero_bit(info->map, NUM_USER_ASIDS, 1);
- 
- set_asid:
--	__set_bit(asid, asid_map);
-+	__set_bit(asid, info->map);
- 	cur_idx = asid;
- 	return idx2asid(asid) | generation;
- }
-@@ -195,6 +198,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- {
- 	unsigned long flags;
- 	u64 asid, old_active_asid;
-+	struct asid_info *info = &asid_info;
- 
- 	if (system_supports_cnp())
- 		cpu_set_reserved_ttbr0();
-@@ -217,7 +221,7 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 	 */
- 	old_active_asid = atomic64_read(&per_cpu(active_asids, cpu));
- 	if (old_active_asid &&
--	    !((asid ^ atomic64_read(&asid_generation)) >> asid_bits) &&
-+	    !((asid ^ atomic64_read(&info->generation)) >> asid_bits) &&
- 	    atomic64_cmpxchg_relaxed(&per_cpu(active_asids, cpu),
- 				     old_active_asid, asid))
- 		goto switch_mm_fastpath;
-@@ -225,8 +229,8 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 	raw_spin_lock_irqsave(&cpu_asid_lock, flags);
- 	/* Check that our ASID belongs to the current generation. */
- 	asid = atomic64_read(&mm->context.id);
--	if ((asid ^ atomic64_read(&asid_generation)) >> asid_bits) {
--		asid = new_context(mm);
-+	if ((asid ^ atomic64_read(&info->generation)) >> asid_bits) {
-+		asid = new_context(info, mm);
- 		atomic64_set(&mm->context.id, asid);
- 	}
- 
-@@ -259,16 +263,18 @@ asmlinkage void post_ttbr_update_workaround(void)
- 
- static int asids_init(void)
- {
-+	struct asid_info *info = &asid_info;
-+
- 	asid_bits = get_cpu_asid_bits();
- 	/*
- 	 * Expect allocation after rollover to fail if we don't have at least
- 	 * one more ASID than CPUs. ASID #0 is reserved for init_mm.
- 	 */
- 	WARN_ON(NUM_USER_ASIDS - 1 <= num_possible_cpus());
--	atomic64_set(&asid_generation, ASID_FIRST_VERSION);
--	asid_map = kcalloc(BITS_TO_LONGS(NUM_USER_ASIDS), sizeof(*asid_map),
--			   GFP_KERNEL);
--	if (!asid_map)
-+	atomic64_set(&info->generation, ASID_FIRST_VERSION);
-+	info->map = kcalloc(BITS_TO_LONGS(NUM_USER_ASIDS), sizeof(*info->map),
-+			    GFP_KERNEL);
-+	if (!info->map)
- 		panic("Failed to allocate bitmap for %lu ASIDs\n",
- 		      NUM_USER_ASIDS);
- 
--- 
-2.11.0
-
+Cheers,
+Miguel
