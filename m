@@ -2,280 +2,119 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC21C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9BDC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD87B206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DB44206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055027;
-	bh=offD5MryYKqKRg4ZESlrakVPRA9Gu1VCmz0DoF7v7j0=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=WFVQ8/0uXwrEDK3yENy9/5yv6Pl5MidhKhk4TR8R4xbofeP8NO+YF+DqIgyKnZo8e
-	 jDt3PptA2SQlf1Kr/Pacln9iUr4uX7R1s+oW3jFA8ikpq2gFO7/4oVW9YXd1dyCtc9
-	 HtygKUtnh7KqApN2tFCbXtD0+ebOyFtL73UAl/vw=
+	s=default; t=1561055035;
+	bh=GdAVIKAYlmrnV5ik0UioPxBb+s+7a4Cqaxt58ExCFrg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tL1GmHPp3MX3IPK8hhMemcR7f99K95ol8Qp4rahmVvTARtbOd2hi6WPdqCE0b/y5X
+	 AA8ik+cyypl10IP4wekzsfFKw5QDokrBQ1dq/wnnPXpYuWB7k8A/vTMXCMp+GI4BNs
+	 s5/n6Pyppctt1YZ0eP22yjSjKydg04aLvCrzo5pU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726131AbfFTSI6 (ORCPT
+        id S1728125AbfFTSXx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:23:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36250 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728551AbfFTSIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:54 -0400
+        id S1728521AbfFTSIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B4FC121655;
-        Thu, 20 Jun 2019 18:08:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 71C4E2082C;
+        Thu, 20 Jun 2019 18:08:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054133;
-        bh=offD5MryYKqKRg4ZESlrakVPRA9Gu1VCmz0DoF7v7j0=;
-        h=From:To:Cc:Subject:Date:From;
-        b=vIY9+oTH3ulbBXsvy8bAX0NB5duMy/r9PC1nOTcTk32Hkr5nUMpKkSQzrNugPh2qv
-         HpCndsQ8cGq2X6hQKFV+jhGOcY2NSTAXGxX+IJA1aDDGIzXBQA9ClisqDNCbYgxsze
-         IJRhg3rVEWnJu0Zz6uUFLcWEPOWDKi81BzL4MF0g=
+        s=default; t=1561054129;
+        bh=GdAVIKAYlmrnV5ik0UioPxBb+s+7a4Cqaxt58ExCFrg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LUMOkmgwL1lRF5H5mPdtJ5xUK+bImZeDQsmPyDqzhJiSlwjaq8qAzHFqLolD+FBnu
+         gcxmcba8AefXfUOZxnEqo3aSPQinT28ToiOxY3hcGndjS7fxjNYpPsGRiP5WNo60Jw
+         fNDFi7tomWyNr0s2S/+MsxCuix/tcKHU+CmiLzLg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-Subject: [PATCH 4.14 00/45] 4.14.129-stable review
-Date:   Thu, 20 Jun 2019 19:57:02 +0200
-Message-Id: <20190620174328.608036501@linuxfoundation.org>
+        stable@vger.kernel.org,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 09/45] sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
+Date:   Thu, 20 Jun 2019 19:57:11 +0200
+Message-Id: <20190620174333.195180327@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-MIME-Version: 1.0
+In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
+References: <20190620174328.608036501@linuxfoundation.org>
 User-Agent: quilt/0.66
-X-stable: review
-X-Patchwork-Hint: ignore
-X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.129-rc1.gz
-X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-X-KernelTest-Branch: linux-4.14.y
-X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
-X-KernelTest-Version: 4.14.129-rc1
-X-KernelTest-Deadline: 2019-06-22T17:43+00:00
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the start of the stable review cycle for the 4.14.129 release.
-There are 45 patches in this series, all will be posted as a response
-to this one.  If anyone has any issues with these being applied, please
-let me know.
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
-Anything received after that time might be too late.
+[ Upstream commit 07a6d63eb1b54b5fb38092780fe618dfe1d96e23 ]
 
-The whole patch series can be found in one patch at:
-	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.129-rc1.gz
-or in the git tree and branch at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
-and the diffstat can be found below.
+In d5a2aa24, the name in struct console sunhv_console was changed from "ttyS"
+to "ttyHV" while the name in struct uart_ops sunhv_pops remained unchanged.
 
-thanks,
+This results in the hypervisor console device to be listed as "ttyHV0" under
+/proc/consoles while the device node is still named "ttyS0":
 
-greg k-h
+root@osaka:~# cat /proc/consoles
+ttyHV0               -W- (EC p  )    4:64
+tty0                 -WU (E     )    4:1
+root@osaka:~# readlink /sys/dev/char/4:64
+../../devices/root/f02836f0/f0285690/tty/ttyS0
+root@osaka:~#
 
--------------
-Pseudo-Shortlog of commits:
+This means that any userland code which tries to determine the name of the
+device file of the hypervisor console device can not rely on the information
+provided by /proc/consoles. In particular, booting current versions of debian-
+installer inside a SPARC LDOM will fail with the installer unable to determine
+the console device.
 
-Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-    Linux 4.14.129-rc1
+After renaming the device in struct uart_ops sunhv_pops to "ttyHV" as well,
+the inconsistency is fixed and it is possible again to determine the name
+of the device file of the hypervisor console device by reading the contents
+of /proc/console:
 
-Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
-    Abort file_remove_privs() for non-reg. files
+root@osaka:~# cat /proc/consoles
+ttyHV0               -W- (EC p  )    4:64
+tty0                 -WU (E     )    4:1
+root@osaka:~# readlink /sys/dev/char/4:64
+../../devices/root/f02836f0/f0285690/tty/ttyHV0
+root@osaka:~#
 
-Ajay Kaher <akaher@vmware.com>
-    infiniband: fix race condition between infiniband mlx4, mlx5 driver and core dumping
+With this change, debian-installer works correctly when installing inside
+a SPARC LDOM.
 
-Andrea Arcangeli <aarcange@redhat.com>
-    coredump: fix race condition between collapse_huge_page() and core dumping
+Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/tty/serial/sunhv.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Jason Gerecke <jason.gerecke@wacom.com>
-    HID: wacom: Send BTN_TOUCH in response to INTUOSP2_BT eraser contact
-
-Jason Gerecke <jason.gerecke@wacom.com>
-    HID: wacom: Don't report anything prior to the tool entering range
-
-Jason Gerecke <jason.gerecke@wacom.com>
-    HID: wacom: Don't set tool type until we're in range
-
-Amit Cohen <amitc@mellanox.com>
-    mlxsw: spectrum: Prevent force of 56G
-
-Jason Yan <yanaijie@huawei.com>
-    scsi: libsas: delete sas port if expander discover failed
-
-YueHaibing <yuehaibing@huawei.com>
-    scsi: scsi_dh_alua: Fix possible null-ptr-deref
-
-Lianbo Jiang <lijiang@redhat.com>
-    scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
-
-Varun Prakash <varun@chelsio.com>
-    scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
-
-Max Uvarov <muvarov@gmail.com>
-    net: phy: dp83867: Set up RGMII TX delay
-
-Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-    net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
-
-Paul Mackerras <paulus@ozlabs.org>
-    KVM: PPC: Book3S HV: Don't take kvm->lock around kvm_for_each_vcpu
-
-Paul Mackerras <paulus@ozlabs.org>
-    KVM: PPC: Book3S: Use new mutex to synchronize access to rtas token list
-
-Randy Dunlap <rdunlap@infradead.org>
-    ia64: fix build errors by exporting paddr_to_nid()
-
-Thomas Richter <tmricht@linux.ibm.com>
-    perf record: Fix s390 missing module symbol and warning for non-root users
-
-Shawn Landden <shawn@git.icu>
-    perf data: Fix 'strncat may truncate' build failure with recent gcc
-
-Sahitya Tummala <stummala@codeaurora.org>
-    configfs: Fix use-after-free when accessing sd->s_dentry
-
-Bard Liao <yung-chuan.liao@linux.intel.com>
-    ALSA: hda - Force polling mode on CNL for fixing codec communication
-
-Yingjoe Chen <yingjoe.chen@mediatek.com>
-    i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
-
-Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
-    net: aquantia: fix LRO with FCS error
-
-Kees Cook <keescook@chromium.org>
-    net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-
-Randy Dunlap <rdunlap@infradead.org>
-    gpio: fix gpio-adp5588 build errors
-
-Peter Zijlstra <peterz@infradead.org>
-    perf/ring-buffer: Always use {READ,WRITE}_ONCE() for rb->user_page data
-
-Peter Zijlstra <peterz@infradead.org>
-    perf/ring_buffer: Add ordering to rb->nest increment
-
-Yabin Cui <yabinc@google.com>
-    perf/ring_buffer: Fix exposing a temporarily decreased data_head
-
-Frank van der Linden <fllinden@amazon.com>
-    x86/CPU/AMD: Don't force the CPB cap when running under a hypervisor
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    mISDN: make sure device name is NUL terminated
-
-Anju T Sudhakar <anju@linux.vnet.ibm.com>
-    powerpc/powernv: Return for invalid IMC domain
-
-Tony Lindgren <tony@atomide.com>
-    clk: ti: clkctrl: Fix clkdm_clk handling
-
-Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-    selftests: netfilter: missing error check when setting up veth interface
-
-YueHaibing <yuehaibing@huawei.com>
-    ipvs: Fix use-after-free in ip_vs_in
-
-Jagdish Motwani <jagdish.motwani@sophos.com>
-    netfilter: nf_queue: fix reinject verdict handling
-
-Stephane Eranian <eranian@google.com>
-    perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
-
-Dan Carpenter <dan.carpenter@oracle.com>
-    Staging: vc04_services: Fix a couple error codes
-
-John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
-    sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
-
-Neil Horman <nhorman@tuxdriver.com>
-    sctp: Free cookie before we memdup a new one
-
-Taehee Yoo <ap420073@gmail.com>
-    net: openvswitch: do not free vport if register_netdevice() is failed.
-
-Eric Dumazet <edumazet@google.com>
-    neigh: fix use-after-free read in pneigh_get_next
-
-Jeremy Sowden <jeremy@azazel.net>
-    lapb: fixed leak of control-blocks.
-
-Eric Dumazet <edumazet@google.com>
-    ipv6: flowlabel: fl6_sock_lookup() must use atomic_inc_not_zero
-
-Ivan Vecera <ivecera@redhat.com>
-    be2net: Fix number of Rx queues used for flow hashing
-
-Eric Dumazet <edumazet@google.com>
-    ax25: fix inconsistent lock state in ax25_destroy_timer
-
-Arnaldo Carvalho de Melo <acme@redhat.com>
-    perf machine: Guard against NULL in machine__exit()
-
-
--------------
-
-Diffstat:
-
- Makefile                                           |  4 +-
- arch/ia64/mm/numa.c                                |  1 +
- arch/powerpc/include/asm/kvm_host.h                |  1 +
- arch/powerpc/kvm/book3s.c                          |  1 +
- arch/powerpc/kvm/book3s_hv.c                       |  9 +---
- arch/powerpc/kvm/book3s_rtas.c                     | 14 +++--
- arch/powerpc/platforms/powernv/opal-imc.c          |  4 ++
- arch/x86/events/intel/ds.c                         | 28 +++++-----
- arch/x86/kernel/cpu/amd.c                          |  7 ++-
- drivers/clk/ti/clkctrl.c                           |  8 +--
- drivers/gpio/Kconfig                               |  1 +
- drivers/hid/wacom_wac.c                            | 41 ++++++++++-----
- drivers/i2c/i2c-dev.c                              |  1 +
- drivers/infiniband/hw/mlx4/main.c                  |  4 +-
- drivers/infiniband/hw/mlx5/main.c                  |  3 ++
- drivers/isdn/mISDN/socket.c                        |  5 +-
- .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c  | 61 ++++++++++++----------
- drivers/net/ethernet/dec/tulip/de4x5.c             |  1 -
- drivers/net/ethernet/emulex/benet/be_ethtool.c     |  2 +-
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c     |  4 ++
- drivers/net/ethernet/renesas/sh_eth.c              |  4 ++
- drivers/net/phy/dp83867.c                          |  4 +-
- drivers/scsi/cxgbi/libcxgbi.c                      |  4 ++
- drivers/scsi/device_handler/scsi_dh_alua.c         |  6 +--
- drivers/scsi/libsas/sas_expander.c                 |  2 +
- drivers/scsi/smartpqi/smartpqi_init.c              |  2 +-
- .../vc04_services/bcm2835-camera/controls.c        |  4 +-
- drivers/tty/serial/sunhv.c                         |  2 +-
- fs/configfs/dir.c                                  | 14 +++--
- fs/inode.c                                         |  9 +++-
- include/linux/sched/mm.h                           |  4 ++
- kernel/events/ring_buffer.c                        | 39 +++++++++++---
- mm/khugepaged.c                                    |  3 ++
- net/ax25/ax25_route.c                              |  2 +
- net/core/neighbour.c                               |  7 +++
- net/ipv6/ip6_flowlabel.c                           |  7 +--
- net/lapb/lapb_iface.c                              |  1 +
- net/netfilter/ipvs/ip_vs_core.c                    |  2 +-
- net/netfilter/nf_queue.c                           |  1 +
- net/openvswitch/vport-internal_dev.c               | 18 ++++---
- net/sctp/sm_make_chunk.c                           |  8 +++
- sound/pci/hda/hda_intel.c                          |  5 +-
- tools/perf/arch/s390/util/machine.c                |  9 ++--
- tools/perf/util/data-convert-bt.c                  |  2 +-
- tools/perf/util/machine.c                          |  3 ++
- tools/testing/selftests/netfilter/nft_nat.sh       |  6 ++-
- 46 files changed, 239 insertions(+), 129 deletions(-)
+--- a/drivers/tty/serial/sunhv.c
++++ b/drivers/tty/serial/sunhv.c
+@@ -396,7 +396,7 @@ static const struct uart_ops sunhv_pops
+ static struct uart_driver sunhv_reg = {
+ 	.owner			= THIS_MODULE,
+ 	.driver_name		= "sunhv",
+-	.dev_name		= "ttyS",
++	.dev_name		= "ttyHV",
+ 	.major			= TTY_MAJOR,
+ };
+ 
 
 
