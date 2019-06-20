@@ -2,96 +2,126 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB4AC48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:30:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC2EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 581D12082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:30:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1E77B2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:30:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YxLr3lcw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfFTKa1 (ORCPT
+        id S1731076AbfFTKab (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:30:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51626 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfFTKa0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:30:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 905F731628EF;
-        Thu, 20 Jun 2019 10:30:21 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F8AD19C71;
-        Thu, 20 Jun 2019 10:30:20 +0000 (UTC)
-Received: from zmail21.collab.prod.int.phx2.redhat.com (zmail21.collab.prod.int.phx2.redhat.com [10.5.83.24])
-        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 525AB1806B0E;
-        Thu, 20 Jun 2019 10:30:20 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 06:30:19 -0400 (EDT)
-From:   Pankaj Gupta <pagupta@redhat.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mike Snitzer <snitzer@redhat.com>
-Message-ID: <1700587723.36256070.1561026619938.JavaMail.zimbra@redhat.com>
-In-Reply-To: <20190620192939.139bf5c0@canb.auug.org.au>
-References: <20190620192939.139bf5c0@canb.auug.org.au>
-Subject: Re: linux-next: build failure after merge of the nvdimm tree
+        Thu, 20 Jun 2019 06:30:31 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35187 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfFTKab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:30:31 -0400
+Received: by mail-wr1-f67.google.com with SMTP id m3so2491152wrv.2;
+        Thu, 20 Jun 2019 03:30:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=owokrRNK0Zi2Bsb2Xuro2mxPfcj4PsE4YMJW0gn1uDw=;
+        b=YxLr3lcwJHQak3aqif33hw/1EfmtsIHcEPQENBPqLndK9hVD/cts2VEMg0vjeZc14o
+         s/Rm/PHsc9QGN76ZlEAMipcMSxlwh2YKBgGelpVYU4h1Z69r4poR9F/TDt6J4HKYxr27
+         AT1KQ4cK+egJfZK01dFCq66F7kkIRXVobuhbIp+DqpQAkBMQCgJtAz0EGYhj3swkNYwb
+         Bx/r1sH7VdGpRISamfeuDvlUk4e+a4PVlA/pYZK1fu07GEyoJVJvMl9OUAhkmWHXQQy2
+         Q2UvlDl38wtNwYjVn9bp/g4LlDpN/Aw55S7Bl9vQbF9Gaqpy2o+9ypC0tLlIEcd6gXWK
+         nmyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=owokrRNK0Zi2Bsb2Xuro2mxPfcj4PsE4YMJW0gn1uDw=;
+        b=kRi9ljmww9vzvzfkGbLRGxPhu2TseQqp2yHz4mvXcz42S/ROhmW8bt3hByYqGEfr+g
+         v0VayCDOj6QhXzpXK2B/0cSO2mITmpnxu0bkmuyLQAVYAPapO0bZ7vMVmRG91hyN8/D1
+         yBvSEDWjQT3Sbpjrqz7xuaF4/c1HPmHkQ0Go2BEduJR1FdnDZrz2hGpcJexDvk/NKBDE
+         9ma5HFCE2UhuYkep8cc9DkQDpRXRDtdnzoZ6i8tGMgqXmQydStnzyk9ZTcL8VBP5ixW5
+         V/xAd/PojEg7zDacAHVoAze6G5AlgFivN7oWTq4VYUxonNgMuFUbF/bBJ9o4FjJfBRUY
+         X9BQ==
+X-Gm-Message-State: APjAAAXZGs9+rMMbv6kq3j/NGkRHbI8FqAd1+fwIDL2m1pFH+206mCcc
+        gIq2ZJJFRkOVQUPlFyFAY0A=
+X-Google-Smtp-Source: APXvYqzR4k7THbgMN7+pjORuiXLdd5zoxC1Lgis513ucLLXvsbQoRRrkcKJdek0n+IKA9LRI6niTyQ==
+X-Received: by 2002:adf:ce03:: with SMTP id p3mr67649654wrn.94.1561026628462;
+        Thu, 20 Jun 2019 03:30:28 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id a67sm4705772wmh.40.2019.06.20.03.30.27
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 03:30:27 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 12:30:26 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Bitan Biswas <bbiswas@nvidia.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-i2c@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Dmitry Osipenko <digetx@gmail.com>,
+        Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
+Message-ID: <20190620103026.GC28703@ulmo>
+References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.67.116.130, 10.4.195.2]
-Thread-Topic: linux-next: build failure after merge of the nvdimm tree
-Thread-Index: ugQHflS9VnH/ecTW2oBJ451saINOCw==
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 20 Jun 2019 10:30:26 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="qtZFehHsKgwS5rPz"
+Content-Disposition: inline
+In-Reply-To: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-> Hi Dan,
-> 
-> After merging the nvdimm tree, today's linux-next build (i386 defconfig)
-> failed like this:
-> 
-> drivers/md/dm-table.c: In function 'device_synchronous':
-> drivers/md/dm-table.c:897:9: error: implicit declaration of function
-> 'dax_synchronous'; did you mean 'device_synchronous'?
-> [-Werror=implicit-function-declaration]
->   return dax_synchronous(dev->dax_dev);
->          ^~~~~~~~~~~~~~~
->          device_synchronous
-> drivers/md/dm-table.c: In function 'dm_table_set_restrictions':
-> drivers/md/dm-table.c:1925:4: error: implicit declaration of function
-> 'set_dax_synchronous'; did you mean 'device_synchronous'?
-> [-Werror=implicit-function-declaration]
->     set_dax_synchronous(t->md->dax_dev);
->     ^~~~~~~~~~~~~~~~~~~
->     device_synchronous
-> cc1: some warnings being treated as errors
-> 
-> Caused by commit
-> 
->   38887edec247 ("dm: enable synchronous dax")
-> 
-> CONFIG_DAX is not set for this build.
+--qtZFehHsKgwS5rPz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Moving 'dax_synchronous' & 'set_dax_synchronous' function declaration
-out of CONFIG_DAX should fix this. This will make compiler aware about 
-'device_synchronous' function for non DAX archs as well.
+On Tue, Jun 18, 2019 at 04:09:42AM -0700, Bitan Biswas wrote:
+> The usage of BUG() macro is generally discouraged in kernel, unless
+> it's a problem that results in a physical damage or loss of data.
+> This patch removes unnecessary BUG() macros and replaces the rest
+> with warning.
+>=20
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+> ---
+>  drivers/i2c/busses/i2c-tegra.c | 47 +++++++++++++++++++++++++++++++++++-=
+------
+>  1 file changed, 39 insertions(+), 8 deletions(-)
 
-Thanks,
-Pankaj
- 
-> 
-> I have reverted that commit for today.
-> --
-> Cheers,
-> Stephen Rothwell
-> 
+Acked-by: Thierry Reding <treding@nvidia.com>
+
+--qtZFehHsKgwS5rPz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LYEIACgkQ3SOs138+
+s6HbJg/+NQD27bmKZrCzUK7vAXwuLegaM2bwf05Oef7h97iDtPkokkYDCRqeIlyh
+9DK5MnHOAesPTgJBnrAB5+5zcI0EVthgi1QGRcQ5FmAuUElJBtbImnUVC0ky6Mxx
+349RLIaYMPWskOxiPLLo6hiuVqe4h1KaQq0yKrLFk4UjvhHGIRa2OvLXMpUgnmSz
+jGcjnSI0wNXDOkiuGLMHsAeL/UDHvj+r+omJLz4N5rcD62p7d+JUJ+0h5FZSNutj
+T+eepY98x3DVy8Kafc7UJeddwHlaggYtGx4neX4LKKUwxle06lkWZqpz8kp1MD3D
+I7I47AuY+YdqMb1FS6+dAl2FGfd+H5qSkjzn//2TLS2rco3oZR+tABcRC/KqSNxB
+oXihIrV80rhVm7PRyZLyTs+rsOrQP/GKZf4AeLRbJECgNSldocqkLvDCAWnY1KTy
+woXVGlVco9mihisM0gflVv/9EcGWuV+wmObhTYbxYL4QhWOe57BGqDXkCqcu3AGU
+C2TVTloPFg3vmB5lZFoE33A5fC1Q2mIzBqi9nEFHEbVRiYfVm81lSGf4Zof2Zslq
+DR/tv+RqDJ4bzwIpruVYj6sZY99VEodvTUTqxqTlijbPYY6pdJVkD++zypnFj7tx
+jY/H2lDmTTVX4SBzCec6QIZ+VPsdBrAh9xAJwAEyvRmxtoTCdUc=
+=i6uB
+-----END PGP SIGNATURE-----
+
+--qtZFehHsKgwS5rPz--
