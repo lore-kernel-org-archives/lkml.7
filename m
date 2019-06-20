@@ -7,117 +7,192 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE17BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:50:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 525D2C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8317E2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:50:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F2F208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:01:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="invRPHWw"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k/I4WdmD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfFTEuo (ORCPT
+        id S1726313AbfFTFBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 00:50:44 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40825 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTEun (ORCPT
+        Thu, 20 Jun 2019 01:01:01 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:1709 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfFTFBB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 00:50:43 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so1433797otl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 21:50:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=H7KfXwWshFgYCRp/rB3EC7KJ7aO3/YBFcG4HpA2yrRc=;
-        b=invRPHWwsG//4HFgg9KwSVpDmW6VW+E3xuRUlv6jjX+XcUyFbQHVG471IpclLNl2VX
-         I3AZlwTuDX0/+rRDEabV4QRS/D9gr1ubU0bH9ZKJTFadXBg0m9J5DXEib9hp+IP5zJRn
-         1hMMPiE2UdXow03GY4JfUMU6W21H2egfNnhEY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=H7KfXwWshFgYCRp/rB3EC7KJ7aO3/YBFcG4HpA2yrRc=;
-        b=Wg4DpOlYQvlh25ZTzPwWIgUrL6ljNunUpF66WSvs67utZ795MUlGLTEBwmHYUKKjRp
-         OH+R9tlCLLfVPkmvIVsUlcud0KCXfkn/RMFlt89v/Gi04r36BY9QFq2674kzaAqlh03D
-         6s6fllAw0LDKyEDPa1zsmmrG3Htdp8n9pTZENEa62zHlezopJwlK6m7cn43iHvZxU8KS
-         f84Xa/WDOgb+0g/ct9BsLf6cKFZNNaCi2/S2U9GKbUlgr3Y8TE2+nBeRdskLTv99VVc5
-         XmlRyKlMkZkLyABfTGjipYmFoCFcPrHARR8iPSNp9WGos7M/3UaeFlsuENXFWACd+Q/5
-         vSfQ==
-X-Gm-Message-State: APjAAAVg496V45s0Wy3BlI2pDcaeCwK6zBW2LiKNb4Ikkmq1zoiIDZJy
-        eTxmrtkQ9n/G/aPf7gAiimKYds4Hs9iJEA==
-X-Google-Smtp-Source: APXvYqyqEXqLF9EJd1H70SF7cbk0ewlT6nauwHCAiiSTjYyrkHOaBwDjMNBHMAEbA1NY+MCwLBDOFQ==
-X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr11653201otn.266.1561006242644;
-        Wed, 19 Jun 2019 21:50:42 -0700 (PDT)
-Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
-        by smtp.gmail.com with ESMTPSA id m5sm7688701oif.13.2019.06.19.21.50.41
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 21:50:42 -0700 (PDT)
-Received: by mail-ot1-f46.google.com with SMTP id b7so1408894otl.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 21:50:41 -0700 (PDT)
-X-Received: by 2002:a9d:711e:: with SMTP id n30mr12204552otj.97.1561006241374;
- Wed, 19 Jun 2019 21:50:41 -0700 (PDT)
+        Thu, 20 Jun 2019 01:01:01 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0b130a0000>; Wed, 19 Jun 2019 22:00:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Wed, 19 Jun 2019 22:00:58 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Wed, 19 Jun 2019 22:00:58 -0700
+Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
+ 2019 05:00:54 +0000
+Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
+To:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Dmitry Osipenko <digetx@gmail.com>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>,
+        "Thierry Reding" <thierry.reding@gmail.com>
+References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+From:   Bitan Biswas <bbiswas@nvidia.com>
+Message-ID: <a2a94eb5-c3c3-24bb-e7a6-0d02f2546f94@nvidia.com>
+Date:   Wed, 19 Jun 2019 22:00:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190612093648.47412-1-tfiga@chromium.org>
-In-Reply-To: <20190612093648.47412-1-tfiga@chromium.org>
-From:   Alexandre Courbot <acourbot@chromium.org>
-Date:   Thu, 20 Jun 2019 13:50:30 +0900
-X-Gmail-Original-Message-ID: <CAPBb6MWaq1W0bCUTmx0ad29vBpH1xOEoe-Q33vQj2b8AvEHoVg@mail.gmail.com>
-Message-ID: <CAPBb6MWaq1W0bCUTmx0ad29vBpH1xOEoe-Q33vQj2b8AvEHoVg@mail.gmail.com>
-Subject: Re: [PATCH] media: Clarify the meaning of file descriptors in VIDIOC_DQBUF
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Hirokazu Honda <hiroh@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561006858; bh=fYK1YbOLXLOtJfuwb+ssRvSQx1QHtpEJNfYKlLvob5Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=k/I4WdmDTLwcuyLc2eosg3rscAeySxlTqFn8VH3dri5WOfRnKe7DoPeh9vKvVkD0Q
+         XWeUcSdPPSJ9hUk0xC6+y9qGpWqJaomL5IcQ7Se8qao/+W1mnrHZ9ouS1WaraMABda
+         NElV4FpAB7faFin8e1HqoP7S0/ZpX6gEB4hJUwcZBZq9o7bFyWnU6jNE+bLOc4CgST
+         cCMj4s5OFbwogdZkAhhwPRlin9FxiIzIFm4MeXD3uIKZ1Bh4P+8uqHtNzjo/jeeUjL
+         ik/7t60MhV2YFAl+txpRbgpfANDlzwc5hazdpWK9X6Cz/7FIlUVYBLwAYOon4SsXrI
+         tULrs5g0TZyLw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 6:36 PM Tomasz Figa <tfiga@chromium.org> wrote:
->
-> When the application calls VIDIOC_DQBUF with the DMABUF memory type, the
-> v4l2_buffer structure (or v4l2_plane structures) are filled with DMA-buf
-> file descriptors. However, the current documentation does not explain
-> whether those are new file descriptors referring to the same DMA-bufs or
-> just the same integers as passed to VIDIOC_QBUF back in time. Clarify
-> the documentation that it's the latter.
->
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 
-That's a welcome precision indeed.
 
-Reviewed-by: Alexandre Courbot <acourbot@chromium.org>
-
+On 6/18/19 4:09 AM, Bitan Biswas wrote:
+> The usage of BUG() macro is generally discouraged in kernel, unless
+> it's a problem that results in a physical damage or loss of data.
+> This patch removes unnecessary BUG() macros and replaces the rest
+> with warning.
+> 
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
 > ---
->  Documentation/media/uapi/v4l/vidioc-qbuf.rst | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/Documentation/media/uapi/v4l/vidioc-qbuf.rst b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
-> index dbf7b445a27b..407302d80684 100644
-> --- a/Documentation/media/uapi/v4l/vidioc-qbuf.rst
-> +++ b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
-> @@ -139,6 +139,14 @@ may continue as normal, but should be aware that data in the dequeued
->  buffer might be corrupted. When using the multi-planar API, the planes
->  array must be passed in as well.
->
-> +If the application sets the ``memory`` field to ``V4L2_MEMORY_DMABUF`` to
-> +dequeue a :ref:`DMABUF <dmabuf>` buffer, the driver fills the ``m.fd`` field
-> +with a file descriptor numerically the same as the one given to ``VIDIOC_QBUF``
-> +when the buffer was enqueued. No new file descriptor is created at dequeue time
-> +and the value is only for the application convenience. When the multi-planar
-> +API is used the ``m.fd`` fields of the passed array of struct
-> +:c:type:`v4l2_plane` are filled instead.
+>   drivers/i2c/busses/i2c-tegra.c | 47 +++++++++++++++++++++++++++++++++++-------
+>   1 file changed, 39 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
+> index 4dfb4c1..e9ff96d 100644
+> --- a/drivers/i2c/busses/i2c-tegra.c
+> +++ b/drivers/i2c/busses/i2c-tegra.c
+> @@ -73,6 +73,7 @@
+>   #define I2C_ERR_NO_ACK				BIT(0)
+>   #define I2C_ERR_ARBITRATION_LOST		BIT(1)
+>   #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
+> +#define I2C_ERR_RX_BUFFER_OVERFLOW		BIT(3)
+>   
+>   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
+>   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
+> @@ -489,6 +490,13 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>   	size_t buf_remaining = i2c_dev->msg_buf_remaining;
+>   	int words_to_transfer;
+>   
+> +	/*
+> +	 * Catch overflow due to message fully sent
+> +	 * before the check for RX FIFO availability.
+> +	 */
+> +	if (WARN_ON_ONCE(!(i2c_dev->msg_buf_remaining)))
+> +		return -EINVAL;
 > +
->  By default ``VIDIOC_DQBUF`` blocks when no buffer is in the outgoing
->  queue. When the ``O_NONBLOCK`` flag was given to the
->  :ref:`open() <func-open>` function, ``VIDIOC_DQBUF`` returns
-> --
-> 2.22.0.rc2.383.gf4fbbf30c2-goog
->
+>   	if (i2c_dev->hw->has_mst_fifo) {
+>   		val = i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
+>   		rx_fifo_avail = (val & I2C_MST_FIFO_STATUS_RX_MASK) >>
+> @@ -515,7 +523,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>   	 * prevent overwriting past the end of buf
+>   	 */
+>   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
+> -		BUG_ON(buf_remaining > 3);
+> +		/*
+> +		 * buf_remaining > 3 check not needed as rx_fifo_avail == 0
+> +		 * when (words_to_transfer was > rx_fifo_avail) earlier
+> +		 * in this function.
+> +		 */
+>   		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
+>   		val = cpu_to_le32(val);
+>   		memcpy(buf, &val, buf_remaining);
+> @@ -523,7 +535,10 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
+>   		rx_fifo_avail--;
+>   	}
+>   
+> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
+> +	/* RX FIFO must be drained, otherwise it's an Overflow case. */
+> +	if (WARN_ON_ONCE(rx_fifo_avail))
+> +		return -EINVAL;
+> +
+>   	i2c_dev->msg_buf_remaining = buf_remaining;
+>   	i2c_dev->msg_buf = buf;
+>   
+> @@ -581,7 +596,11 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
+>   	 * boundary and fault.
+>   	 */
+>   	if (tx_fifo_avail > 0 && buf_remaining > 0) {
+> -		BUG_ON(buf_remaining > 3);
+> +		/*
+> +		 * buf_remaining > 3 check not needed as tx_fifo_avail == 0
+> +		 * when (words_to_transfer was > tx_fifo_avail) earlier
+> +		 * in this function for non-zero words_to_transfer.
+> +		 */
+>   		memcpy(&val, buf, buf_remaining);
+>   		val = le32_to_cpu(val);
+>   
+> @@ -847,10 +866,15 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>   
+>   	if (!i2c_dev->is_curr_dma_xfer) {
+>   		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
+> -			if (i2c_dev->msg_buf_remaining)
+> -				tegra_i2c_empty_rx_fifo(i2c_dev);
+> -			else
+> -				BUG();
+> +			if (tegra_i2c_empty_rx_fifo(i2c_dev)) {
+> +				/*
+> +				 * Overflow error condition: message fully sent,
+> +				 * with no XFER_COMPLETE interrupt but hardware
+> +				 * asks to transfer more.
+> +				 */
+> +				i2c_dev->msg_err |= I2C_ERR_RX_BUFFER_OVERFLOW;
+> +				goto err;
+> +			}
+>   		}
+>   
+>   		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
+> @@ -876,7 +900,14 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
+>   	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
+>   		if (i2c_dev->is_curr_dma_xfer)
+>   			i2c_dev->msg_buf_remaining = 0;
+> -		BUG_ON(i2c_dev->msg_buf_remaining);
+> +		/*
+> +		 * Underflow error condition: XFER_COMPLETE before message
+> +		 * fully sent.
+> +		 */
+> +		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
+> +			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
+> +			goto err;
+> +		}
+>   		complete(&i2c_dev->msg_complete);
+>   	}
+>   	goto done;
+> 
+
+Please get back if there are any further comments regarding this patch.
+
+-regards,
+  Bitan
+
