@@ -2,56 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 933D8C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA4EC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71B6B21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D6382084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053676;
-	bh=4EQFF575OSksr+Czwy7Daf1KcxUt6KdPuAr8LL/g0+I=;
+	s=default; t=1561053679;
+	bh=fi14v7tY+Dj4HzGpzONsHg+GQLBzTS2h/TjDT3U62m4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FaZs5N7q9wtTqIOgc3gGYKpbWHulLpfAiHJgxwSH/Z69c3nJZh9iRELuaCQuiQx6F
-	 waaNIKNVIfU2lbOeND9+ef2t6M6GMnOIAWk/JJ+ydpPAo4g+QsghFhvNvdP6iqh0vK
-	 BYxrnNYxW3z2TSh1e+PaXGOi+3+3QtfTf3qaOIFI=
+	b=wgrOpdG7JGgbbcAOv1ZoeN2Ipv9MnIEs5+igaltnr8ZuZ8ENmSGavemKy1S5V50Eo
+	 UHnqruV4KU3BMhn3hbVmOky7M2VS/jFRc7bCGpbhIfP9XCbhyzO6DKLWh5Pzvg6R4f
+	 CFKcZEp/5hbddDrRAjg1MEuVTwWm558htmlRp1uA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727191AbfFTSBP (ORCPT
+        id S1727203AbfFTSBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50542 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727177AbfFTSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:11 -0400
+        id S1726293AbfFTSBP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 20BC9214AF;
-        Thu, 20 Jun 2019 18:01:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4DDA8208CA;
+        Thu, 20 Jun 2019 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053670;
-        bh=4EQFF575OSksr+Czwy7Daf1KcxUt6KdPuAr8LL/g0+I=;
+        s=default; t=1561053673;
+        bh=fi14v7tY+Dj4HzGpzONsHg+GQLBzTS2h/TjDT3U62m4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0M4RFprbvj4y1SrcCt3HBl1gYdA8+RdUTNgbbgteJbNaqZ92akj2rzw2WZp/anfFZ
-         ho2Y0BsPncER2FPaG2sjB0wlluzkuYTxqAX1JlIT/foQbdHuY4dZQOtdjM0cABioFW
-         c0gn4vTRK6DrwW4x5UD8xZOuaxXTFg6shx50NO2E=
+        b=arZHjE9xBAz1qSrGyiO01hXDRCdstccaHRUBvnj7cTvJj2QqDrCQeHkJLnbb0SYPg
+         j7F2o1DlSvBwfbg3ZEsiIHYbTYiv+z+XJCCc3rdy28CaLy0lAcbHL05v3An0j5BVc2
+         22Et5HlNn690055SKHxEj7S+o/7YXq9iiYifEEPQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com,
-        Shakeel Butt <shakeelb@google.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Kirill Tkhai <ktkhai@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.4 42/84] mm/list_lru.c: fix memory leak in __memcg_init_list_lru_node
-Date:   Thu, 20 Jun 2019 19:56:39 +0200
-Message-Id: <20190620174344.583952251@linuxfoundation.org>
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>, Vinod Koul <vkoul@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 33/84] dmaengine: idma64: Use actual device for DMA transfers
+Date:   Thu, 20 Jun 2019 19:56:30 +0200
+Message-Id: <20190620174343.057167055@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -64,71 +61,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shakeel Butt <shakeelb@google.com>
+[ Upstream commit 5ba846b1ee0792f5a596b9b0b86d6e8cdebfab06 ]
 
-commit 3510955b327176fd4cbab5baa75b449f077722a2 upstream.
+Intel IOMMU, when enabled, tries to find the domain of the device,
+assuming it's a PCI one, during DMA operations, such as mapping or
+unmapping. Since we are splitting the actual PCI device to couple of
+children via MFD framework (see drivers/mfd/intel-lpss.c for details),
+the DMA device appears to be a platform one, and thus not an actual one
+that performs DMA. In a such situation IOMMU can't find or allocate
+a proper domain for its operations. As a result, all DMA operations are
+failed.
 
-Syzbot reported following memory leak:
+In order to fix this, supply parent of the platform device
+to the DMA engine framework and fix filter functions accordingly.
 
-ffffffffda RBX: 0000000000000003 RCX: 0000000000441f79
-BUG: memory leak
-unreferenced object 0xffff888114f26040 (size 32):
-  comm "syz-executor626", pid 7056, jiffies 4294948701 (age 39.410s)
-  hex dump (first 32 bytes):
-    40 60 f2 14 81 88 ff ff 40 60 f2 14 81 88 ff ff  @`......@`......
-    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-  backtrace:
-     slab_post_alloc_hook mm/slab.h:439 [inline]
-     slab_alloc mm/slab.c:3326 [inline]
-     kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
-     kmalloc include/linux/slab.h:547 [inline]
-     __memcg_init_list_lru_node+0x58/0xf0 mm/list_lru.c:352
-     memcg_init_list_lru_node mm/list_lru.c:375 [inline]
-     memcg_init_list_lru mm/list_lru.c:459 [inline]
-     __list_lru_init+0x193/0x2a0 mm/list_lru.c:626
-     alloc_super+0x2e0/0x310 fs/super.c:269
-     sget_userns+0x94/0x2a0 fs/super.c:609
-     sget+0x8d/0xb0 fs/super.c:660
-     mount_nodev+0x31/0xb0 fs/super.c:1387
-     fuse_mount+0x2d/0x40 fs/fuse/inode.c:1236
-     legacy_get_tree+0x27/0x80 fs/fs_context.c:661
-     vfs_get_tree+0x2e/0x120 fs/super.c:1476
-     do_new_mount fs/namespace.c:2790 [inline]
-     do_mount+0x932/0xc50 fs/namespace.c:3110
-     ksys_mount+0xab/0x120 fs/namespace.c:3319
-     __do_sys_mount fs/namespace.c:3333 [inline]
-     __se_sys_mount fs/namespace.c:3330 [inline]
-     __x64_sys_mount+0x26/0x30 fs/namespace.c:3330
-     do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
-     entry_SYSCALL_64_after_hwframe+0x44/0xa9
+We may rely on the fact that parent is a real PCI device, because no
+other configuration is present in the wild.
 
-This is a simple off by one bug on the error path.
-
-Link: http://lkml.kernel.org/r/20190528043202.99980-1-shakeelb@google.com
-Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
-Reported-by: syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
-Signed-off-by: Shakeel Butt <shakeelb@google.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
-Cc: <stable@vger.kernel.org>	[4.0+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Acked-by: Mark Brown <broonie@kernel.org>
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org> [for tty parts]
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/list_lru.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/dma/idma64.c              | 6 ++++--
+ drivers/dma/idma64.h              | 2 ++
+ drivers/spi/spi-pxa2xx.c          | 7 +------
+ drivers/tty/serial/8250/8250_dw.c | 4 ++--
+ 4 files changed, 9 insertions(+), 10 deletions(-)
 
---- a/mm/list_lru.c
-+++ b/mm/list_lru.c
-@@ -313,7 +313,7 @@ static int __memcg_init_list_lru_node(st
- 	}
- 	return 0;
- fail:
--	__memcg_destroy_list_lru_node(memcg_lrus, begin, i - 1);
-+	__memcg_destroy_list_lru_node(memcg_lrus, begin, i);
- 	return -ENOMEM;
+diff --git a/drivers/dma/idma64.c b/drivers/dma/idma64.c
+index 7d56b47e4fcf..25e25b64bc89 100644
+--- a/drivers/dma/idma64.c
++++ b/drivers/dma/idma64.c
+@@ -594,7 +594,7 @@ static int idma64_probe(struct idma64_chip *chip)
+ 	idma64->dma.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+ 	idma64->dma.residue_granularity = DMA_RESIDUE_GRANULARITY_BURST;
+ 
+-	idma64->dma.dev = chip->dev;
++	idma64->dma.dev = chip->sysdev;
+ 
+ 	ret = dma_async_device_register(&idma64->dma);
+ 	if (ret)
+@@ -632,6 +632,7 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ {
+ 	struct idma64_chip *chip;
+ 	struct device *dev = &pdev->dev;
++	struct device *sysdev = dev->parent;
+ 	struct resource *mem;
+ 	int ret;
+ 
+@@ -648,11 +649,12 @@ static int idma64_platform_probe(struct platform_device *pdev)
+ 	if (IS_ERR(chip->regs))
+ 		return PTR_ERR(chip->regs);
+ 
+-	ret = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	ret = dma_coerce_mask_and_coherent(sysdev, DMA_BIT_MASK(64));
+ 	if (ret)
+ 		return ret;
+ 
+ 	chip->dev = dev;
++	chip->sysdev = sysdev;
+ 
+ 	ret = idma64_probe(chip);
+ 	if (ret)
+diff --git a/drivers/dma/idma64.h b/drivers/dma/idma64.h
+index f6aeff0af8a5..e40c69bd1fb5 100644
+--- a/drivers/dma/idma64.h
++++ b/drivers/dma/idma64.h
+@@ -215,12 +215,14 @@ static inline void idma64_writel(struct idma64 *idma64, int offset, u32 value)
+ /**
+  * struct idma64_chip - representation of iDMA 64-bit controller hardware
+  * @dev:		struct device of the DMA controller
++ * @sysdev:		struct device of the physical device that does DMA
+  * @irq:		irq line
+  * @regs:		memory mapped I/O space
+  * @idma64:		struct idma64 that is filed by idma64_probe()
+  */
+ struct idma64_chip {
+ 	struct device	*dev;
++	struct device	*sysdev;
+ 	int		irq;
+ 	void __iomem	*regs;
+ 	struct idma64	*idma64;
+diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
+index e87b6fc9f4c6..193aa3da5033 100644
+--- a/drivers/spi/spi-pxa2xx.c
++++ b/drivers/spi/spi-pxa2xx.c
+@@ -1371,12 +1371,7 @@ static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
+ 
+ static bool pxa2xx_spi_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	struct device *dev = param;
+-
+-	if (dev != chan->device->dev->parent)
+-		return false;
+-
+-	return true;
++	return param == chan->device->dev;
  }
  
+ static struct pxa2xx_spi_master *
+diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
+index a30d68c4b689..039837db65fc 100644
+--- a/drivers/tty/serial/8250/8250_dw.c
++++ b/drivers/tty/serial/8250/8250_dw.c
+@@ -258,7 +258,7 @@ static bool dw8250_fallback_dma_filter(struct dma_chan *chan, void *param)
+ 
+ static bool dw8250_idma_filter(struct dma_chan *chan, void *param)
+ {
+-	return param == chan->device->dev->parent;
++	return param == chan->device->dev;
+ }
+ 
+ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+@@ -290,7 +290,7 @@ static void dw8250_quirks(struct uart_port *p, struct dw8250_data *data)
+ 		data->uart_16550_compatible = true;
+ 	}
+ 
+-	/* Platforms with iDMA */
++	/* Platforms with iDMA 64-bit */
+ 	if (platform_get_resource_byname(to_platform_device(p->dev),
+ 					 IORESOURCE_MEM, "lpss_priv")) {
+ 		p->set_termios = dw8250_set_termios;
+-- 
+2.20.1
+
 
 
