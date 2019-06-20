@@ -2,101 +2,117 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4364C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CBD3C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:55:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F546206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:51:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tzB/GDzW"
+	by mail.kernel.org (Postfix) with ESMTP id 68A662082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:55:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561053317;
+	bh=Q0HE6hDJzQ2OikJgpyS6TE3/enHYzxs952B1kdtn/ho=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aqskpf9XmXvNsDfRcwINmvSwrc36ziVEwX8f9ErujhNI0Ex+4KtKECY1J/gnyfwgn
+	 1hvcLtocQ5BFhxaANRwGEFvoJcAKdtnyYe9AIguFjGR57QcEAHxktLQWPbysmEe2MV
+	 9hpJ/OIbST9u9sosp0adxqUp5jyUA0/UHqlByrns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731567AbfFTRvH (ORCPT
+        id S1726770AbfFTRzP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:51:07 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:43300 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfFTRvH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:51:07 -0400
-Received: by mail-lf1-f68.google.com with SMTP id j29so3044014lfk.10
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AsRTx4UMMXAfahNHVbziSWvG8kO/9PcJpiP01Kyu5Js=;
-        b=tzB/GDzWW4jmxpmIFCkF95zygclqgkxQJoRNoMuLL/EegtZpxURbz6ZhhwfpYvw2Mn
-         OOFzJuzbx+t4wIabY1fafDcWapP8wR4H++suVOEVSASIpqlo7kjhSOTz37k2t4DV3mhK
-         1OFtMS7nVO3YmC5LYPmKX/ZOrwyqsqKHkQNWeiSMmVgN+iWDVgh1+B20FG2kXQFNsphi
-         aDtbsTIVgKLs5K8nXbk6czH2pJlyQES4YmPjXv6d8NF4U8WeCLQigA/muZQuMQnnyp+9
-         TCqBs7O4xS2goCMn+iYpbeRM7mvLgR7820spsONideUN2vcR84H9/58pV/k5h2B0moZE
-         7wEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=AsRTx4UMMXAfahNHVbziSWvG8kO/9PcJpiP01Kyu5Js=;
-        b=gs3/3lVHNmi3OJQ7I7eGkeoijNoRC9QK9cuRk8YC29x5/kfTLSh9w746R6dIw+d2cQ
-         imZ0xQr1zvlmD113Gvumm08O99yu+qhG1StgLEnVbIrCIX2SaGuQH0PG2sfYSUgOYige
-         esz1cicirai6EHdzZI/pBxSRZub2swUK5m8mncsaSR1I1y9IYh2E/Jz3MBH5tPg8ffcy
-         56YmidceFX8ZfjZoTXeaaQ5MTc3fi8mte8bmWNeX+jRyFh+mpg8MFgjhegP0NyyR+ild
-         +yB8eCZ23AIJq+2p5IumRX8qGBdV/2DH+NT4MTzXzYEkAbnmzdlw/1zs7Ie3p1YxNdnf
-         bEJw==
-X-Gm-Message-State: APjAAAXnmBORCvWlt5GZR9ulKoYXpLQx43CCrvTUB0qjKlaO9kZfyiiH
-        AOpt8RVufm0MrJnsBIQwdgQ=
-X-Google-Smtp-Source: APXvYqyqJWJnaIZUD++ayUZE/WMaQlPYn3FaFe+T+Uomi2M9CfPKiUcqIQS6VpKQDy2uBV4oww56AA==
-X-Received: by 2002:ac2:4152:: with SMTP id c18mr15303553lfi.144.1561053064829;
-        Thu, 20 Jun 2019 10:51:04 -0700 (PDT)
-Received: from localhost.localdomain (mm-56-110-44-37.mgts.dynamic.pppoe.byfly.by. [37.44.110.56])
-        by smtp.gmail.com with ESMTPSA id d5sm44341lfc.96.2019.06.20.10.51.03
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 10:51:04 -0700 (PDT)
-From:   "Pavel Begunkov (Silence)" <asml.silence@gmail.com>
-To:     Alasdair Kergon <agk@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com,
-        linux-kernel@vger.kernel.org
-Cc:     Pavel Begunkov <asml.silence@gmail.com>
-Subject: [PATCH 1/1] dm: Update comment
-Date:   Thu, 20 Jun 2019 20:50:50 +0300
-Message-Id: <08f06799d0336322ae85b3f8ba3acfb68180a96d.1561052999.git.asml.silence@gmail.com>
-X-Mailer: git-send-email 2.22.0
+        Thu, 20 Jun 2019 13:55:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43992 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726523AbfFTRzP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:55:15 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 777222053B;
+        Thu, 20 Jun 2019 17:55:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561053314;
+        bh=Q0HE6hDJzQ2OikJgpyS6TE3/enHYzxs952B1kdtn/ho=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Wy2ZF58GPPc+bi2mWXQOYlZdF0/LNldMRGpOxlArsrqWnFtpyMUg0tCi+ai7yScUz
+         P7ouUzRAj8NZD+Znjge3Ov8WpqSl/+uIdIA5otte6kFiK3GqpbI+zqYFPFjzkHQeMw
+         sL1hk0+mjyLBQTtYpHQJuXLQbzBMnq34RKQpbwX0=
+Date:   Thu, 20 Jun 2019 19:55:11 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>
+Subject: Re: [PATCH 04/14] ABI: better identificate tables
+Message-ID: <20190620175511.GA13038@kroah.com>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+ <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
+ <20190619125135.GG25248@localhost>
+ <20190619105633.7f7315a5@coco.lan>
+ <20190619150207.GA19346@kroah.com>
+ <20190620120150.GH6241@localhost>
+ <20190620125413.GA5170@kroah.com>
+ <20190620112034.0d2be447@coco.lan>
+ <20190620162945.GC23052@kroah.com>
+ <20190620141628.71157dda@coco.lan>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620141628.71157dda@coco.lan>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pavel Begunkov <asml.silence@gmail.com>
+On Thu, Jun 20, 2019 at 02:16:28PM -0300, Mauro Carvalho Chehab wrote:
+> Em Thu, 20 Jun 2019 18:29:45 +0200
+> Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+> 
+> > On Thu, Jun 20, 2019 at 11:20:34AM -0300, Mauro Carvalho Chehab wrote:
+> > > Em Thu, 20 Jun 2019 14:54:13 +0200
+> > > Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
+> > >   
+> > > > On Thu, Jun 20, 2019 at 02:01:50PM +0200, Johan Hovold wrote:  
+> > > > > > I don't know when "Description" and "RST-Description" would be used.
+> > > > > > Why not just parse "Description" like rst text and if things are "messy"
+> > > > > > we fix them up as found, like you did with the ":" here?  It doesn't
+> > > > > > have to be complex, we can always fix them up after-the-fact if new
+> > > > > > stuff gets added that doesn't quite parse properly.
+> > > > > > 
+> > > > > > Just like we do for most kernel-doc formatting :)    
+> > > > > 
+> > > > > But kernel-doc has a documented format, which was sort of the point I
+> > > > > was trying to make. If the new get_abi.pl scripts expects a colon I
+> > > > > think it should be mentioned somewhere (e.g. Documentation/ABI/README).
+> > > > > 
+> > > > > Grepping for attribute entries in linux-next still reveals a number
+> > > > > descriptions that still lack that colon and use varying formatting. More
+> > > > > are bound to be added later, but perhaps that's ok depending on what
+> > > > > you're aiming at here.    
+> > > > 
+> > > > I'm aiming for "good enough" to start with, and then we can work through
+> > > > the exceptions.
+> > > > 
+> > > > But given that Mauro hasn't resent the script that does the conversion
+> > > > of the files, I don't know if that will even matter... {hint}  
+> > > 
+> > > It sounds I missed something... are you expecting a new version?   
+> > 
+> > Yes, the last round of patches didn't have a SPDX header on the script,
+> > so I couldn't add it to the tree :(
+> 
+> I could swear I sent you a version with SPDX on it... anyway, I'm
+> re-sending the hole thing. The SPDX header addition is on a separate
+> patch.
 
-Since Commit a1ce35fa49852db60fc6e268 ("block: remove dead elevator
-code") blk_end_request() has been replaced with blk_mq_end_request().
-Update comment
+Ah, you didn't cc: me on the whole thread this time, that's why I missed
+it last time.  I sucked it off lkml now, will look at it in the morning.
 
-Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
----
- drivers/md/dm-rq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
 
-diff --git a/drivers/md/dm-rq.c b/drivers/md/dm-rq.c
-index 5f7063f05ae0..c9e44ac1f9a6 100644
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -115,7 +115,7 @@ static void end_clone_bio(struct bio *clone)
- 
- 	/*
- 	 * Update the original request.
--	 * Do not use blk_end_request() here, because it may complete
-+	 * Do not use blk_mq_end_request() here, because it may complete
- 	 * the original request before the clone, and break the ordering.
- 	 */
- 	if (is_last)
--- 
-2.22.0
-
+greg k-h
