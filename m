@@ -2,67 +2,316 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EB6FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:42:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51485C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:45:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08CF720B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:42:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F23A214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:45:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="h4QOvbps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731580AbfFTDm3 (ORCPT
+        id S1731395AbfFTDpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 23:42:29 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:43817 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726419AbfFTDm3 (ORCPT
+        Wed, 19 Jun 2019 23:45:10 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:39785 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfFTDpJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 23:42:29 -0400
-Received: from callcc.thunk.org ([66.31.38.53])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5K3gHPx000943
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 19 Jun 2019 23:42:18 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 32202420484; Wed, 19 Jun 2019 23:42:17 -0400 (EDT)
-Date:   Wed, 19 Jun 2019 23:42:17 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     jinshui zhang <leozhangjs@gmail.com>
-Cc:     adilger.kernel@dilger.ca, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org, zhangjs <zachary@baishancloud.com>
-Subject: Re: [PATCH] ext4: make __ext4_get_inode_loc plug
-Message-ID: <20190620034217.GA15783@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        jinshui zhang <leozhangjs@gmail.com>, adilger.kernel@dilger.ca,
-        linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        zhangjs <zachary@baishancloud.com>
-References: <20190617155712.51339-1-leozhangjs@gmail.com>
+        Wed, 19 Jun 2019 23:45:09 -0400
+Received: by mail-oi1-f193.google.com with SMTP id m202so1082759oig.6
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 20:45:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5hmozZ3T7yXiQbHQwiiLz6hpYqDbodbt9yn6e1/Zlmk=;
+        b=h4QOvbpsIt3d3LIasq/8Yn9F2fiY5AlxUwWHg9KnfBzwX7+RIOOprlOJs74qJhE4Vu
+         yyvd9iiQy3wAg8/sDoD10cYJ2q5JODGUJ4tr+p0Wocb+qt/m0/g2GlfyDpxStAe8oVUA
+         UsdhPWpAdT0m3ROySt69iAsmqqgcIUuDeBO+JU3WS+ROWDeKOrv20SF9qkNVGco16keF
+         th/rxkbUIdSsIXln6ei/JQmYggM+NGNOaw2KsL/FlzlIDoswiS6LIeS8fiJJcGM3TD4q
+         M9E8JaXuVTqZ6QKTfNjkGmFE5nXzW2dbKd6E9m9dTj33u56ao9L6GcOt6GPBw7jXH5I7
+         Bmgg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=5hmozZ3T7yXiQbHQwiiLz6hpYqDbodbt9yn6e1/Zlmk=;
+        b=HEPtCwwDaMvOMJtgifjOJ4CV4qOItoguL59Aag6/TaRvRCrNzjqCif9ey8GF8Q6tr/
+         6pDqqiirlhHc+mm07nNv8wm5Kp+qi/DrSJ/AF5KUO/oYXorUiXP2TCIWYzGLs+tGSEkj
+         dwqrg6VxepMLQumVJ1L75EpggAWPxOpBEHeUmygAVEjA4oc/WDWN3wFFJpg2/+h4NOZf
+         pTrSZ10L7YvLw336W9cCSul7evrXhQMYVSUYT6mvl9Z3r0/vmwOnFb5Gil+znkaFGri8
+         8F/RcVtANGtPhUz1vycR9YlUyXOAeguvsz5kUkZdsJf5HoULIecwxwaeJUcs9lp/Ys54
+         EBtg==
+X-Gm-Message-State: APjAAAUQssGGTy0Zfb9NOOQh0zWnT6gLSK183ixB2jzb7HGs8fS6JYPp
+        mNgioLLSgwyMlZKuUtd7f0/jdg==
+X-Google-Smtp-Source: APXvYqxibUhIiIOjuUpqxJfBW3ShhDR1KSMaBGfRGCWxo0//PMWa/TCML0kWk4uvNJre+U0LPcgTZA==
+X-Received: by 2002:aca:f4ce:: with SMTP id s197mr5088167oih.45.1561002308790;
+        Wed, 19 Jun 2019 20:45:08 -0700 (PDT)
+Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
+        by smtp.gmail.com with ESMTPSA id a18sm7142158otf.67.2019.06.19.20.45.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 20:45:07 -0700 (PDT)
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        netdev@vger.kernel.org, bpf@vger.kernel.org
+Cc:     Leo Yan <leo.yan@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        coresight@lists.linaro.org
+Subject: [PATCH v3] perf cs-etm: Improve completeness for kernel address space
+Date:   Thu, 20 Jun 2019 11:44:46 +0800
+Message-Id: <20190620034446.25561-1-leo.yan@linaro.org>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617155712.51339-1-leozhangjs@gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 11:57:12PM +0800, jinshui zhang wrote:
-> From: zhangjs <zachary@baishancloud.com>
-> 
-> If the task is unplugged when called, the inode_readahead_blks may not be merged, 
-> these will cause small pieces of io, It should be plugged.
-> 
-> Signed-off-by: zhangjs <zachary@baishancloud.com>
+Arm and arm64 architecture reserve some memory regions prior to the
+symbol '_stext' and these memory regions later will be used by device
+module and BPF jit.  The current code misses to consider these memory
+regions thus any address in the regions will be taken as user space
+mode, but perf cannot find the corresponding dso with the wrong CPU
+mode so we misses to generate samples for device module and BPF
+related trace data.
 
-Thanks, applied.
+This patch parse the link scripts to get the memory size prior to start
+address and reduce this size from 'etmq->etm->kernel_start', then can
+get a fixed up kernel start address which contain memory regions for
+device module and BPF.  Finally, cs_etm__cpu_mode() can return right
+mode for these memory regions and perf can successfully generate
+samples.
 
-I cleaned up the commit description a little, and I removed some of
-the extra empty lines added by the patch.
+The reason for parsing the link scripts is Arm architecture changes text
+offset dependent on different platforms, which define multiple text
+offsets in $kernel/arch/arm/Makefile.  This offset is decided when build
+kernel and the final value is extended in the link script, so we can
+extract the used value from the link script.  We use the same way to
+parse arm64 link script as well.  If fail to find the link script, the
+pre start memory size is assumed as zero, in this case it has no any
+change caused with this patch.
 
-Cheers,
+Below is detailed info for testing this patch:
 
-					- Ted
+- Build LLVM/Clang 8.0 or later version;
+
+- Configure perf with ~/.perfconfig:
+
+  root@debian:~# cat ~/.perfconfig
+  # this file is auto-generated.
+  [llvm]
+          clang-path = /mnt/build/llvm-build/build/install/bin/clang
+          kbuild-dir = /mnt/linux-kernel/linux-cs-dev/
+          clang-opt = "-g"
+          dump-obj = true
+
+  [trace]
+          show_zeros = yes
+          show_duration = no
+          no_inherit = yes
+          show_timestamp = no
+          show_arg_names = no
+          args_alignment = 40
+          show_prefix = yes
+
+- Run 'perf trace' command with eBPF event:
+
+  root@debian:~# perf trace -e string \
+      -e $kernel/tools/perf/examples/bpf/augmented_raw_syscalls.c
+
+- Read eBPF program memory mapping in kernel:
+
+  root@debian:~# echo 1 > /proc/sys/net/core/bpf_jit_kallsyms
+  root@debian:~# cat /proc/kallsyms | grep -E "bpf_prog_.+_sys_[enter|exit]"
+  ffff000000086a84 t bpf_prog_f173133dc38ccf87_sys_enter  [bpf]
+  ffff000000088618 t bpf_prog_c1bd85c092d6e4aa_sys_exit   [bpf]
+
+- Launch any program which accesses file system frequently so can hit
+  the system calls trace flow with eBPF event;
+
+- Capture CoreSight trace data with filtering eBPF program:
+
+  root@debian:~# perf record -e cs_etm/@20070000.etr/ \
+	  --filter 'filter 0xffff000000086a84/0x800' -a sleep 5s
+
+- Annotate for symbol 'bpf_prog_f173133dc38ccf87_sys_enter':
+
+  root@debian:~# perf report
+  Then select 'branches' samples and press 'a' to annotate symbol
+  'bpf_prog_f173133dc38ccf87_sys_enter', press 'P' to print to the
+  bpf_prog_f173133dc38ccf87_sys_enter.annotation file:
+
+  root@debian:~# cat bpf_prog_f173133dc38ccf87_sys_enter.annotation
+
+  bpf_prog_f173133dc38ccf87_sys_enter() bpf_prog_f173133dc38ccf87_sys_enter
+  Event: branches
+
+  Percent      int sys_enter(struct syscall_enter_args *args)
+                 stp  x29, x30, [sp, #-16]!
+
+               	int key = 0;
+                 mov  x29, sp
+
+                       augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
+                 stp  x19, x20, [sp, #-16]!
+
+                       augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
+                 stp  x21, x22, [sp, #-16]!
+
+                 stp  x25, x26, [sp, #-16]!
+
+               	return bpf_get_current_pid_tgid();
+                 mov  x25, sp
+
+               	return bpf_get_current_pid_tgid();
+                 mov  x26, #0x0                   	// #0
+
+                 sub  sp, sp, #0x10
+
+               	return bpf_map_lookup_elem(pids, &pid) != NULL;
+                 add  x19, x0, #0x0
+
+                 mov  x0, #0x0                   	// #0
+
+                 mov  x10, #0xfffffffffffffff8    	// #-8
+
+               	if (pid_filter__has(&pids_filtered, getpid()))
+                 str  w0, [x25, x10]
+
+               	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+                 add  x1, x25, #0x0
+
+               	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
+                 mov  x10, #0xfffffffffffffff8    	// #-8
+
+               	syscall = bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_nr);
+                 add  x1, x1, x10
+
+               	syscall = bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_nr);
+                 mov  x0, #0xffff8009ffffffff    	// #-140694538682369
+
+                 movk x0, #0x6698, lsl #16
+
+                 movk x0, #0x3e00
+
+                 mov  x10, #0xffffffffffff1040    	// #-61376
+
+               	if (syscall == NULL || !syscall->enabled)
+                 movk x10, #0x1023, lsl #16
+
+               	if (syscall == NULL || !syscall->enabled)
+                 movk x10, #0x0, lsl #32
+
+               	loop_iter_first()
+    3.69       → blr  bpf_prog_f173133dc38ccf87_sys_enter
+               	loop_iter_first()
+                 add  x7, x0, #0x0
+
+               	loop_iter_first()
+                 add  x20, x7, #0x0
+
+               	int size = probe_read_str(&augmented_filename->value, filename_len, filename_arg);
+                 mov  x0, #0x1                   	// #1
+
+  [...]
+
+Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
+Cc: coresight@lists.linaro.org
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Leo Yan <leo.yan@linaro.org>
+---
+ tools/perf/Makefile.config | 22 ++++++++++++++++++++++
+ tools/perf/util/cs-etm.c   | 19 ++++++++++++++++++-
+ 2 files changed, 40 insertions(+), 1 deletion(-)
+
+diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+index 51dd00f65709..a58cd5a43a98 100644
+--- a/tools/perf/Makefile.config
++++ b/tools/perf/Makefile.config
+@@ -418,6 +418,28 @@ ifdef CORESIGHT
+     endif
+     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
+     EXTLIBS += $(OPENCSDLIBS)
++    PRE_START_SIZE := 0
++    ifneq ($(wildcard $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds),)
++      ifeq ($(SRCARCH),arm64)
++        # Extract info from lds:
++        #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
++        # PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000) = 0x10080000
++        PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
++          $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
++          sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
++          awk -F' ' '{printf "0x%x", $$6+$$7+$$8}' 2>/dev/null)
++      endif
++      ifeq ($(SRCARCH),arm)
++        # Extract info from lds:
++        #   . = ((0xC0000000)) + 0x00208000;
++        # PRE_START_SIZE := 0x00208000
++        PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
++          $(srctree)/arch/$(SRCARCH)/kernel/vmlinux.lds | \
++          sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
++          awk -F' ' '{printf "0x%x", $$2}' 2>/dev/null)
++      endif
++    endif
++    CFLAGS += -DARM_PRE_START_SIZE=$(PRE_START_SIZE)
+     $(call detected,CONFIG_LIBOPENCSD)
+     ifdef CSTRACE_RAW
+       CFLAGS += -DCS_DEBUG_RAW
+diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+index 0c7776b51045..5fa0be3a3904 100644
+--- a/tools/perf/util/cs-etm.c
++++ b/tools/perf/util/cs-etm.c
+@@ -613,10 +613,27 @@ static void cs_etm__free(struct perf_session *session)
+ static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+ {
+ 	struct machine *machine;
++	u64 fixup_kernel_start = 0;
+ 
+ 	machine = etmq->etm->machine;
+ 
+-	if (address >= etmq->etm->kernel_start) {
++	/*
++	 * Since arm and arm64 specify some memory regions prior to
++	 * 'kernel_start', kernel addresses can be less than 'kernel_start'.
++	 *
++	 * For arm architecture, the 16MB virtual memory space prior to
++	 * 'kernel_start' is allocated to device modules, a PMD table if
++	 * CONFIG_HIGHMEM is enabled and a PGD table.
++	 *
++	 * For arm64 architecture, the root PGD table, device module memory
++	 * region and BPF jit region are prior to 'kernel_start'.
++	 *
++	 * To reflect the complete kernel address space, compensate these
++	 * pre-defined regions for kernel start address.
++	 */
++	fixup_kernel_start = etmq->etm->kernel_start - ARM_PRE_START_SIZE;
++
++	if (address >= fixup_kernel_start) {
+ 		if (machine__is_host(machine))
+ 			return PERF_RECORD_MISC_KERNEL;
+ 		else
+-- 
+2.17.1
+
