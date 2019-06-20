@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A02C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCA95C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D241D215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B72DA2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054065;
-	bh=GNAkOgeppAFJLfe8olWqbUZabhusjg8Ki6Qhz2n1N0Q=;
+	s=default; t=1561054068;
+	bh=i4ORBx3pCH7xpGHnTrBVfT/x9fmtCRJMMQ65Zulqjy4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gb8kd3VDcCz3/moTusSFtuFnwlyZeYSnK4eMAk3dL6X+aOMjVmGHI3TQGiohZiUPB
-	 uA4aipidnfMbgB0Cip3t2SBvv5OHlnFx0mEZdHavQKB76h9M2szeW0wtnguHeibh5R
-	 paAmc6nDiDm0jxWxf8/BdSrqnRDe2pi23AyC8oLE=
+	b=mDOqjCqUzuK/q3/LbHRRxecY20XFZru9s4nVL5pDwFEy+Fcfct1C5lawu+xbCWPHB
+	 d+f3Ei11BsK2pOSMji3E1Xm8XEy3WSwTkUlETeT1rBmCxI7khx3i/I0IdRqibgZUka
+	 pA2zfpTxe+anp4i2x3Mh5JS1693o9QqKYgow8Tek=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728365AbfFTSHo (ORCPT
+        id S1728168AbfFTSHr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:07:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727510AbfFTSHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:41 -0400
+        id S1728359AbfFTSHo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 407682089C;
-        Thu, 20 Jun 2019 18:07:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006362070B;
+        Thu, 20 Jun 2019 18:07:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054060;
-        bh=GNAkOgeppAFJLfe8olWqbUZabhusjg8Ki6Qhz2n1N0Q=;
+        s=default; t=1561054063;
+        bh=i4ORBx3pCH7xpGHnTrBVfT/x9fmtCRJMMQ65Zulqjy4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U5mJizWGHACK24+lr7H/bTGDy9bniRjzxY++xYtgRSaxRyfwdGHM9n3T1hk1S0Eq2
-         yAZOJ3Gt+b+6uB7g7Xg/4tNV4brGFpUjqFVTRWnV4N6lmzD+m8OCiU2dOnQExwNNx+
-         EIr92U3OFONnLFnsEXR8SKT12epCMHK9Nkfe0miY=
+        b=N9ZHfMWFCJAdH7RojyphvK4IJ1Cb+iSxuIdRaiwKLFxsj8lb5n5KLjLP+gcA5zc4x
+         ACkdWXgVvQYwTwo6RtdTAAQkoTFdrXTh1Gch24+T+lZVjz/uWwLlskw1A8gi0NQVCO
+         Q8L7B4vdXpxXi3rRwR72tokI6IlUmpNR0BC3FwPU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Lianbo Jiang <lijiang@redhat.com>,
-        Don Brace <don.brace@microsemi.com>,
+        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
+        Jason Yan <yanaijie@huawei.com>,
+        John Garry <john.garry@huawei.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 114/117] scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
-Date:   Thu, 20 Jun 2019 19:57:28 +0200
-Message-Id: <20190620174358.309462542@linuxfoundation.org>
+Subject: [PATCH 4.9 115/117] scsi: libsas: delete sas port if expander discover failed
+Date:   Thu, 20 Jun 2019 19:57:29 +0200
+Message-Id: <20190620174358.345288434@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,54 +62,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1d94f06e7f5df4064ef336b7b710f50143b64a53 ]
+[ Upstream commit 3b0541791453fbe7f42867e310e0c9eb6295364d ]
 
-When SME is enabled, the smartpqi driver won't work on the HP DL385 G10
-machine, which causes the failure of kernel boot because it fails to
-allocate pqi error buffer. Please refer to the kernel log:
-....
-[    9.431749] usbcore: registered new interface driver uas
-[    9.441524] Microsemi PQI Driver (v1.1.4-130)
-[    9.442956] i40e 0000:04:00.0: fw 6.70.48768 api 1.7 nvm 10.2.5
-[    9.447237] smartpqi 0000:23:00.0: Microsemi Smart Family Controller found
-         Starting dracut initqueue hook...
-[  OK  ] Started Show Plymouth Boot Scre[    9.471654] Broadcom NetXtreme-C/E driver bnxt_en v1.9.1
-en.
-[  OK  ] Started Forward Password Requests to Plymouth Directory Watch.
-[[0;[    9.487108] smartpqi 0000:23:00.0: failed to allocate PQI error buffer
-....
-[  139.050544] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
-[  139.589779] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
+The sas_port(phy->port) allocated in sas_ex_discover_expander() will not be
+deleted when the expander failed to discover. This will cause resource leak
+and a further issue of kernel BUG like below:
 
-Basically, the fact that the coherent DMA mask value wasn't set caused the
-driver to fall back to SWIOTLB when SME is active.
+[159785.843156]  port-2:17:29: trying to add phy phy-2:17:29 fails: it's
+already part of another port
+[159785.852144] ------------[ cut here  ]------------
+[159785.856833] kernel BUG at drivers/scsi/scsi_transport_sas.c:1086!
+[159785.863000] Internal error: Oops - BUG: 0 [#1] SMP
+[159785.867866] CPU: 39 PID: 16993 Comm: kworker/u96:2 Tainted: G
+W  OE     4.19.25-vhulk1901.1.0.h111.aarch64 #1
+[159785.878458] Hardware name: Huawei Technologies Co., Ltd.
+Hi1620EVBCS/Hi1620EVBCS, BIOS Hi1620 CS B070 1P TA 03/21/2019
+[159785.889231] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
+[159785.895224] pstate: 40c00009 (nZcv daif +PAN +UAO)
+[159785.900094] pc : sas_port_add_phy+0x188/0x1b8
+[159785.904524] lr : sas_port_add_phy+0x188/0x1b8
+[159785.908952] sp : ffff0001120e3b80
+[159785.912341] x29: ffff0001120e3b80 x28: 0000000000000000
+[159785.917727] x27: ffff802ade8f5400 x26: ffff0000681b7560
+[159785.923111] x25: ffff802adf11a800 x24: ffff0000680e8000
+[159785.928496] x23: ffff802ade8f5728 x22: ffff802ade8f5708
+[159785.933880] x21: ffff802adea2db40 x20: ffff802ade8f5400
+[159785.939264] x19: ffff802adea2d800 x18: 0000000000000010
+[159785.944649] x17: 00000000821bf734 x16: ffff00006714faa0
+[159785.950033] x15: ffff0000e8ab4ecf x14: 7261702079646165
+[159785.955417] x13: 726c612073277469 x12: ffff00006887b830
+[159785.960802] x11: ffff00006773eaa0 x10: 7968702079687020
+[159785.966186] x9 : 0000000000002453 x8 : 726f702072656874
+[159785.971570] x7 : 6f6e6120666f2074 x6 : ffff802bcfb21290
+[159785.976955] x5 : ffff802bcfb21290 x4 : 0000000000000000
+[159785.982339] x3 : ffff802bcfb298c8 x2 : 337752b234c2ab00
+[159785.987723] x1 : 337752b234c2ab00 x0 : 0000000000000000
+[159785.993108] Process kworker/u96:2 (pid: 16993, stack limit =
+0x0000000072dae094)
+[159786.000576] Call trace:
+[159786.003097]  sas_port_add_phy+0x188/0x1b8
+[159786.007179]  sas_ex_get_linkrate.isra.5+0x134/0x140
+[159786.012130]  sas_ex_discover_expander+0x128/0x408
+[159786.016906]  sas_ex_discover_dev+0x218/0x4c8
+[159786.021249]  sas_ex_discover_devices+0x9c/0x1a8
+[159786.025852]  sas_discover_root_expander+0x134/0x160
+[159786.030802]  sas_discover_domain+0x1b8/0x1e8
+[159786.035148]  process_one_work+0x1b4/0x3f8
+[159786.039230]  worker_thread+0x54/0x470
+[159786.042967]  kthread+0x134/0x138
+[159786.046269]  ret_from_fork+0x10/0x18
+[159786.049918] Code: 91322300 f0004402 91178042 97fe4c9b (d4210000)
+[159786.056083] Modules linked in: hns3_enet_ut(OE) hclge(OE) hnae3(OE)
+hisi_sas_test_hw(OE) hisi_sas_test_main(OE) serdes(OE)
+[159786.067202] ---[ end trace 03622b9e2d99e196  ]---
+[159786.071893] Kernel panic - not syncing: Fatal exception
+[159786.077190] SMP: stopping secondary CPUs
+[159786.081192] Kernel Offset: disabled
+[159786.084753] CPU features: 0x2,a2a00a38
 
-For correct operation, lets call the dma_set_mask_and_coherent() to
-properly set the mask for both streaming and coherent, in order to inform
-the kernel about the devices DMA addressing capabilities.
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Acked-by: Don Brace <don.brace@microsemi.com>
-Tested-by: Don Brace <don.brace@microsemi.com>
+Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
+Reported-by: Jian Luo <luojian5@huawei.com>
+Signed-off-by: Jason Yan <yanaijie@huawei.com>
+CC: John Garry <john.garry@huawei.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/smartpqi/smartpqi_init.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/scsi/libsas/sas_expander.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
-index 06a062455404..b12f7f952b70 100644
---- a/drivers/scsi/smartpqi/smartpqi_init.c
-+++ b/drivers/scsi/smartpqi/smartpqi_init.c
-@@ -5478,7 +5478,7 @@ static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
- 	else
- 		mask = DMA_BIT_MASK(32);
- 
--	rc = dma_set_mask(&ctrl_info->pci_dev->dev, mask);
-+	rc = dma_set_mask_and_coherent(&ctrl_info->pci_dev->dev, mask);
- 	if (rc) {
- 		dev_err(&ctrl_info->pci_dev->dev, "failed to set DMA mask\n");
- 		goto disable_device;
+diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
+index ee1f9ee995e5..400eee9d7783 100644
+--- a/drivers/scsi/libsas/sas_expander.c
++++ b/drivers/scsi/libsas/sas_expander.c
+@@ -978,6 +978,8 @@ static struct domain_device *sas_ex_discover_expander(
+ 		list_del(&child->dev_list_node);
+ 		spin_unlock_irq(&parent->port->dev_list_lock);
+ 		sas_put_device(child);
++		sas_port_delete(phy->port);
++		phy->port = NULL;
+ 		return NULL;
+ 	}
+ 	list_add_tail(&child->siblings, &parent->ex_dev.children);
 -- 
 2.20.1
 
