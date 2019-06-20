@@ -2,164 +2,98 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D782C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F46C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 787CE2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054108;
-	bh=5q2ZkPJxpZmo3q6+LrA6lxx6rvOSNT3MAEspYmXwxys=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=h0/tx5PRB24toJITTPamSo0TPVgNTXFBa4R90NaxQm1RmI+5IehpdB1+hGTuUR8u3
-	 uYMOk5nxU3iuPLYkh9AXXbTaYb6T9IeoxXfNez6KxVxHfN80lp4/2NLu8HM7QjyZOF
-	 wAtK75I9aJkD5deNAzEG1gtAijq4LPn31DB4XAWo=
+	by mail.kernel.org (Postfix) with ESMTP id EB5272082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOdnCN4k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727771AbfFTSI1 (ORCPT
+        id S1727891AbfFTSIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35682 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728073AbfFTSIV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D18C2084E;
-        Thu, 20 Jun 2019 18:08:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054100;
-        bh=5q2ZkPJxpZmo3q6+LrA6lxx6rvOSNT3MAEspYmXwxys=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hWJjqQ7aVrG0ZIpPJTuXay5N3AnGMl/A1R7RCf03iWC/2sIl8SoFGMboTw/V/X5Ht
-         55PLR2jhUAQIjF62T4T5OT4AsCTqMD0ALYr1tjPN1G0Tkajh5+uURN+iFKquR+ws5T
-         1XOFCUu1l/y44YeHudigOBXluHSiKe7GwaajgXSo=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, mark.rutland@arm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 19/45] perf/ring_buffer: Fix exposing a temporarily decreased data_head
-Date:   Thu, 20 Jun 2019 19:57:21 +0200
-Message-Id: <20190620174336.434609739@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
-References: <20190620174328.608036501@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Jun 2019 14:08:39 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:34854 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728486AbfFTSId (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:33 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so1714179plo.2;
+        Thu, 20 Jun 2019 11:08:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m48O7FRi8r+gWyNb3X9q+djqhmJvKoGCXjsAReJFTG8=;
+        b=oOdnCN4kibi8UdpRROgkAuatPNdLADRR5vMRpA6WbXvPjlpFyAcbAvd+0xqxUgV0h4
+         SPHGlofI0JU1zboGi/T4cSFHDikLE4dLIa+UrDbLWwGfBNsXb0EIBv3OXMhrHideSCX8
+         Kb/QgY2rEsAhiBZ36H5UvnIllETIYM2WsQ6jjCfaq24hyHxENTBazYfnFpMVCOdIMGTd
+         O6siub7W7CNaF82pTIdXx19jyJQuKAIwIIOiXiKYK9G6ZN1WO5ZbTl5XEoYVRDtKBFqH
+         BGtOYJDCygj5v/Z6yrMKy2PPJ5KhcAaQSYwIuSsEKZZRbTn1JMWpLHCSCJVjA7iczOQe
+         AcsQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=m48O7FRi8r+gWyNb3X9q+djqhmJvKoGCXjsAReJFTG8=;
+        b=m7MoS/svtJEZO0SM70Ig6QTVW/3udszz9J7XmKHyD2FHlz5E5rKIkT0fRtViyTyDx3
+         CUNrXFQVsTFGTd4DDOivw4fldX8ObRYh9hFNAMM3u/nhNkZqdFAXhO/rvzvVpnOxlTML
+         wGLfsKXYfcB5RFmHuu/9t/ADPPffV49k3vbeFTqRiKlxtPy9vMDwsOrOu4uL4ovinQyd
+         ETtpspNezdI6iqRGYFw+2nhCaCkfoIGbGNrY2ZUANxLrMjF40LW2IGrx81/A3WZq3e3r
+         2O/rmKEEfepUlu2aSoKdiCdf333EbYiZuU2bwKWg78fPLblAbwb0shynaczRbzKp4HZR
+         A+CA==
+X-Gm-Message-State: APjAAAUhpVIKdYKVCKaPIepvxqs3sBWsusRPw4HJcY/RI/8xk5vDOCsL
+        DLImU6ts/4QZboIjlK5MLNA=
+X-Google-Smtp-Source: APXvYqyqnqQIhs6j31ORV6H+CICacUP1ugT9/edQHjN+VwobCmftwnkoxQ+fW2POJwSWWxlAl1DhFQ==
+X-Received: by 2002:a17:902:7883:: with SMTP id q3mr124656755pll.89.1561054112215;
+        Thu, 20 Jun 2019 11:08:32 -0700 (PDT)
+Received: from localhost.localdomain ([112.196.181.13])
+        by smtp.googlemail.com with ESMTPSA id 85sm289016pgb.52.2019.06.20.11.08.28
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 11:08:31 -0700 (PDT)
+From:   Puranjay Mohan <puranjay12@gmail.com>
+To:     Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Puranjay Mohan <puranjay12@gmail.com>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Subject: [PATCH v2 0/3] net: fddi: skfp: Use PCI generic definitions instead of private duplicates
+Date:   Thu, 20 Jun 2019 23:37:51 +0530
+Message-Id: <20190620180754.15413-1-puranjay12@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53 ]
+This patch series removes the private duplicates of PCI definitions in
+favour of generic definitions defined in pci_regs.h.
 
-In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-write records to the same ring buffer:
+This driver only uses one of the generic PCI definitons, i.e.
+PCI_REVISION_ID, which is included from pci_regs.h and its private
+version is removed from skfbi.h with all other private defines.
 
-	...
-	local_dec_and_test(&rb->nest)
-	...                          <-- an IRQ/NMI can happen here
-	rb->user_page->data_head = head;
-	...
+The skfbi.h defines PCI_REV_ID which is renamed to PCI_REVISION_ID in
+drvfbi.c to make it compatible with the generic define in pci_regs.h.
 
-In this case, a value A is written to data_head in the IRQ, then a value
-B is written to data_head after the IRQ. And A > B. As a result,
-data_head is temporarily decreased from A to B. And a reader may see
-data_head < data_tail if it read the buffer frequently enough, which
-creates unexpected behaviors.
+Puranjay Mohan (3):
+  net: fddi: skfp: Rename PCI_REV_ID to PCI_REVISION_ID
+  net: fddi: skfp: Include generic PCI definitions
+  net: fddi: skfp: Remove unused private PCI definitions
 
-This can be fixed by moving dec(&rb->nest) to after updating data_head,
-which prevents the IRQ/NMI above from updating data_head.
+ drivers/net/fddi/skfp/drvfbi.c  |   4 +-
+ drivers/net/fddi/skfp/h/skfbi.h | 207 +-------------------------------
+ 2 files changed, 3 insertions(+), 208 deletions(-)
 
-[ Split up by peterz. ]
-
-Signed-off-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: mark.rutland@arm.com
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
-
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 489dc6b60053..fde853270c09 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -52,11 +52,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	head = local_read(&rb->head);
- 
- 	/*
--	 * IRQ/NMI can happen here, which means we can miss a head update.
-+	 * IRQ/NMI can happen here and advance @rb->head, causing our
-+	 * load above to be stale.
- 	 */
- 
--	if (!local_dec_and_test(&rb->nest))
-+	/*
-+	 * If this isn't the outermost nesting, we don't have to update
-+	 * @rb->user_page->data_head.
-+	 */
-+	if (local_read(&rb->nest) > 1) {
-+		local_dec(&rb->nest);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Since the mmap() consumer (userspace) can run on a different CPU:
-@@ -88,9 +95,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	rb->user_page->data_head = head;
- 
- 	/*
--	 * Now check if we missed an update -- rely on previous implied
--	 * compiler barriers to force a re-read.
-+	 * We must publish the head before decrementing the nest count,
-+	 * otherwise an IRQ/NMI can publish a more recent head value and our
-+	 * write will (temporarily) publish a stale value.
-+	 */
-+	barrier();
-+	local_set(&rb->nest, 0);
-+
-+	/*
-+	 * Ensure we decrement @rb->nest before we validate the @rb->head.
-+	 * Otherwise we cannot be sure we caught the 'last' nested update.
- 	 */
-+	barrier();
- 	if (unlikely(head != local_read(&rb->head))) {
- 		local_inc(&rb->nest);
- 		goto again;
 -- 
-2.20.1
-
-
+2.21.0
 
