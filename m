@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DBA4C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E2D5C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185EF205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E10220652
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054933;
-	bh=qbPcjr/LBfpOJDxo37Q16bYknL/wsFWe6s4ii73uDLc=;
+	s=default; t=1561054945;
+	bh=zgbUZHD2UZoYFx3E8SfXLifV6MSgtlLNZd2Kb/AYhUg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1G1xh4uzJU7+Fw1VcbuRli7ICjhUEb229KyH2VO3gOJUKCVq4Pm5fxJBIueUcbZff
-	 POoklf7AedefHrUmTv4iE3lyKeWqGBpgf69PTOA4NG1x0Bc1xFdoVj6/KPEEHz3X2O
-	 9PR5uWnAIrUdcgaDR28zu7GF5cGaJMkQWBzImGVo=
+	b=sRQw/Owoy9/j/DuAVNkVD/v1gD73l4Jx5ghzyBrYlKoFHvKD0mzZ0zYVDGPkqQ6L0
+	 PS3MhnU/IVrm7qve9VeCdV7+RUU32PSc734z/XQMuWoCbLGU0+DJ4RMEkGhUNinPI/
+	 hc0EoDSetiCdqCHYC8grLImQWBz6J/tVmzHkn2mo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728966AbfFTSWM (ORCPT
+        id S1728851AbfFTSKu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:22:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38978 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:10:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728509AbfFTSLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:15 -0400
+        id S1726333AbfFTSKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:10:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83B52215EA;
-        Thu, 20 Jun 2019 18:11:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9C25321537;
+        Thu, 20 Jun 2019 18:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054275;
-        bh=qbPcjr/LBfpOJDxo37Q16bYknL/wsFWe6s4ii73uDLc=;
+        s=default; t=1561054246;
+        bh=zgbUZHD2UZoYFx3E8SfXLifV6MSgtlLNZd2Kb/AYhUg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NsoLGyiQnbkls7TNRx1PNVqPU2V99GeqCBuDwiTFVCSc9R/pUZ335N4EhOrpguOsL
-         okAFCRCppwl8Rkssds7Tbge3PYkjaUdcK2mO4G6dH15e81UTolj4LpCSNICuXbaIat
-         tDRz7sC61zrUQlhaIMdEdX+ThPA/LIaEwSvwXVOA=
+        b=iolHElDxNhkKy5B/aPERTXogiP5Xz+esA2D8w7Fw6XIn7qOZ+e/Fhy969FFAgHENF
+         kmpJR1LjWLNe3vafOwT9cy1bM+L0Jh34/V0hs/cv5gGZHAWFUn0cfeX2yF2hTfPAWY
+         5WlJT8gvZYiLFaTqElnCjeIxYHWuC8apYnMJ8nEQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 33/61] ACPI/PCI: PM: Add missing wakeup.flags.valid checks
-Date:   Thu, 20 Jun 2019 19:57:28 +0200
-Message-Id: <20190620174343.156517840@linuxfoundation.org>
+Subject: [PATCH 4.19 24/61] usb: xhci: Fix a potential null pointer dereference in xhci_debugfs_create_endpoint()
+Date:   Thu, 20 Jun 2019 19:57:19 +0200
+Message-Id: <20190620174341.492732267@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,56 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a51c6b1f9e0239a9435db036b212498a2a3b75c ]
+[ Upstream commit 5bce256f0b528624a34fe907db385133bb7be33e ]
 
-Both acpi_pci_need_resume() and acpi_dev_needs_resume() check if the
-current ACPI wakeup configuration of the device matches what is
-expected as far as system wakeup from sleep states is concerned, as
-reflected by the device_may_wakeup() return value for the device.
+In xhci_debugfs_create_slot(), kzalloc() can fail and
+dev->debugfs_private will be NULL.
+In xhci_debugfs_create_endpoint(), dev->debugfs_private is used without
+any null-pointer check, and can cause a null pointer dereference.
 
-However, they only should do that if wakeup.flags.valid is set for
-the device's ACPI companion, because otherwise the wakeup.prepare_count
-value for it is meaningless.
+To fix this bug, a null-pointer check is added in
+xhci_debugfs_create_endpoint().
 
-Add the missing wakeup.flags.valid checks to these functions.
+This bug is found by a runtime fuzzing tool named FIZZER written by us.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+[subjet line change change, add potential -Mathais]
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/acpi/device_pm.c | 4 ++--
- drivers/pci/pci-acpi.c   | 3 ++-
- 2 files changed, 4 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-debugfs.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/acpi/device_pm.c b/drivers/acpi/device_pm.c
-index a7c2673ffd36..1806260938e8 100644
---- a/drivers/acpi/device_pm.c
-+++ b/drivers/acpi/device_pm.c
-@@ -948,8 +948,8 @@ static bool acpi_dev_needs_resume(struct device *dev, struct acpi_device *adev)
- 	u32 sys_target = acpi_target_system_state();
- 	int ret, state;
+diff --git a/drivers/usb/host/xhci-debugfs.c b/drivers/usb/host/xhci-debugfs.c
+index cadc01336bf8..7ba6afc7ef23 100644
+--- a/drivers/usb/host/xhci-debugfs.c
++++ b/drivers/usb/host/xhci-debugfs.c
+@@ -440,6 +440,9 @@ void xhci_debugfs_create_endpoint(struct xhci_hcd *xhci,
+ 	struct xhci_ep_priv	*epriv;
+ 	struct xhci_slot_priv	*spriv = dev->debugfs_private;
  
--	if (!pm_runtime_suspended(dev) || !adev ||
--	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count)
-+	if (!pm_runtime_suspended(dev) || !adev || (adev->wakeup.flags.valid &&
-+	    device_may_wakeup(dev) != !!adev->wakeup.prepare_count))
- 		return true;
++	if (!spriv)
++		return;
++
+ 	if (spriv->eps[ep_index])
+ 		return;
  
- 	if (sys_target == ACPI_STATE_S0)
-diff --git a/drivers/pci/pci-acpi.c b/drivers/pci/pci-acpi.c
-index f8436d1c4d45..f7218c1673ce 100644
---- a/drivers/pci/pci-acpi.c
-+++ b/drivers/pci/pci-acpi.c
-@@ -625,7 +625,8 @@ static bool acpi_pci_need_resume(struct pci_dev *dev)
- 	if (!adev || !acpi_device_power_manageable(adev))
- 		return false;
- 
--	if (device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
-+	if (adev->wakeup.flags.valid &&
-+	    device_may_wakeup(&dev->dev) != !!adev->wakeup.prepare_count)
- 		return true;
- 
- 	if (acpi_target_system_state() == ACPI_STATE_S0)
 -- 
 2.20.1
 
