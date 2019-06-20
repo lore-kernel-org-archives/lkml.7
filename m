@@ -2,100 +2,99 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7452C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE0C7C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF6162082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 878392084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="LpDJTpfq"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XeeY3ZRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbfFTUyJ (ORCPT
+        id S1727076AbfFTUyO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:54:09 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:21496 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726192AbfFTUx7 (ORCPT
+        Thu, 20 Jun 2019 16:54:14 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:34644 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726875AbfFTUyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:53:59 -0400
-Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KKnocg005791
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:53:58 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=facebook; bh=EqtD9pgjSn3RpeCA8R1A7DD1Wom8eSWCEiXrtl71yV4=;
- b=LpDJTpfqcAQZyhceb25XcDEeRRD76idUGMP2YCehfhWBdS6UgC5jlKKOaxVp8kKYkZvJ
- iQYqcb7yNzHAvf259bDRxivY5bQWyoJ82yfIN4bsvN1C0sFdbKbNm7GwYccgyHsskI/G
- ZjVOQcms0Zki8NUcysf2+xqYg30DxS1q9+M= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t867ftg0d-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:53:58 -0700
-Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::129) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 20 Jun 2019 13:53:57 -0700
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id E8D0762E2A35; Thu, 20 Jun 2019 13:53:55 -0700 (PDT)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-mm@kvack.org>, <linux-fsdevel@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        <kernel-team@fb.com>, <william.kucharski@oracle.com>,
-        <akpm@linux-foundation.org>, Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 1/6] filemap: check compound_head(page)->mapping in filemap_fault()
-Date:   Thu, 20 Jun 2019 13:53:43 -0700
-Message-ID: <20190620205348.3980213-2-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190620205348.3980213-1-songliubraving@fb.com>
-References: <20190620205348.3980213-1-songliubraving@fb.com>
-X-FB-Internal: Safe
+        Thu, 20 Jun 2019 16:54:09 -0400
+Received: by mail-pl1-f193.google.com with SMTP id i2so1878440plt.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:54:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FzM+nSzZADFLmLVhAQE5b18OebXV89v5MtutF00qYdI=;
+        b=XeeY3ZRxKogcT3JJRz5OzSakGkmmClO1FZDE11x0BQ6G8i4mDSowUiYbaAcFe63yIZ
+         Znu6lfUBiKHlHayosEjj06HKKe99m6CFoRtWbkvYNKciwBxh/7EKIZ+K3m0jV69C4AL+
+         ShFJ67Rpun7qnsh8gpiLwamceO3jyKINwA9cM=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FzM+nSzZADFLmLVhAQE5b18OebXV89v5MtutF00qYdI=;
+        b=AGFx2bHFkaJmzQyAk3noqZmMGl8BPQns64JNjsf1hSbaf7Wpo4oAMjEWHeJF78gRVN
+         MS9deVjotMeahQWTlJm0CF9vXMg6fdhxjVqeGAEP9W7+ICU7Sphqyxqudj7SFcgKgw8O
+         ftan6YJ86LgBjrdjBa7exH9gBkFMOvU3QFlKpdC1CL5SYy9V/B7nBgPcTfAMRaG15/Ux
+         ybj69kCzjpmeVwqw5AVs0kiToHzdAMw7iofnA8kNnE9ODZF5tY6THtJeEBEu7tPFWJSp
+         xOYLJFk9qPKbY/bvOMk7tTJEejWu/r7rGhVDJViSFJVgTer7H54DLV9Q0Jg9sfJ4lC8A
+         axKQ==
+X-Gm-Message-State: APjAAAU9PRJfwutkTIRHO7orTXt5Gpv/7B44RZLqtcQC4hV9/9i+Taef
+        pMyBIngeqTC8f45m8iU95KTmFQ==
+X-Google-Smtp-Source: APXvYqzEeogb+6WVejeoyQ8UjjuWf4LBvek9BRvj/NG+tj2RayXz/hNSGKMpD2NAXrxY6wZFnH85Hw==
+X-Received: by 2002:a17:902:b18f:: with SMTP id s15mr130515351plr.44.1561064049388;
+        Thu, 20 Jun 2019 13:54:09 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
+        by smtp.gmail.com with ESMTPSA id a16sm385309pfd.68.2019.06.20.13.54.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 13:54:08 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 13:54:06 -0700
+From:   Matthias Kaehlcke <mka@chromium.org>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Tom Roeder <tmroeder@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Tom Hughes <tomhughes@chromium.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>,
+        Yu Liu <yudiliu@google.com>,
+        Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH] gen_compile_command: Add support for separate
+ KBUILD_OUTPUT directory
+Message-ID: <20190620205406.GY137143@google.com>
+References: <20190620184523.155756-1-mka@chromium.org>
+ <CAKwvOdn-o9UszRW+MQ9Z0Ds9B2wSVBWUsPBPSF0S2DYxVFYpqA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=929 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200149
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdn-o9UszRW+MQ9Z0Ds9B2wSVBWUsPBPSF0S2DYxVFYpqA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, filemap_fault() avoids trace condition with truncate by
-checking page->mapping == mapping. This does not work for compound
-pages. This patch let it check compound_head(page)->mapping instead.
+On Thu, Jun 20, 2019 at 12:53:22PM -0700, Nick Desaulniers wrote:
+> On Thu, Jun 20, 2019 at 11:45 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > gen_compile_command.py currently assumes that the .cmd files and the
+> > source code live in the same directory, which is not the case when
+> > a separate KBUILD_OUTPUT directory is used.
+> 
+> Great point; android builds the kernel outside of the source dir
+> (`make O=/non-source/path ...`). Thanks for the patch! BTW if CrOS is
+> doing cool stuff with compile_commands.json; I'd like to know!
+> Particularly; I'm curious if it's possible to generate Ninja build
+> files from compile_commands.json; I do miss Doug's Kbuild caching
+> patches' speedup.
+> Acked-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Acked-by: Rik van Riel <riel@surriel.com>
-Signed-off-by: Song Liu <songliubraving@fb.com>
----
- mm/filemap.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/filemap.c b/mm/filemap.c
-index df2006ba0cfa..f5b79a43946d 100644
---- a/mm/filemap.c
-+++ b/mm/filemap.c
-@@ -2517,7 +2517,7 @@ vm_fault_t filemap_fault(struct vm_fault *vmf)
- 		goto out_retry;
- 
- 	/* Did it get truncated? */
--	if (unlikely(page->mapping != mapping)) {
-+	if (unlikely(compound_head(page)->mapping != mapping)) {
- 		unlock_page(page);
- 		put_page(page);
- 		goto retry_find;
--- 
-2.17.1
-
+At this point Chrome OS doesn't do anything with compile_commands.json
+for the kernel. I was just toying around a bit after a presentation
+from Tom Hughes about IDE integration and encountered this limitation.
