@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F600C4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A669AC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F22620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7967B206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055437;
-	bh=prdMiaT7N9TrVI/A20MwePkGZCg2cYEobayyrSDpkg8=;
+	s=default; t=1561055444;
+	bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gYaEtUSiaYYdLT+A+dsmWT4DW+zjXgLFCm2+N9NodmwDdJXEaobcwtEvqol3Ls6V1
-	 /OAuxTAoeQaVXdZwDIU/Ak0jqDMgVxEqerxWLh6vnnqYiiBQmkiZto3LxGVNEss4+L
-	 QhD4yDxqp0OXlhfAErdVlSMjCY69JBzGbqcSzMXY=
+	b=G6reRhRNJglPH4FDdf7eP++GxZrqblsyl4ZT01kxQjIP/UHgyQV7o8u+LRwgvaEQo
+	 322hhZKbDNFbpI5AcTPVwjFzH7eX2xad4duJEKbploKidYqnVVpkLUcHGbpS2N2U93
+	 Iws7ZSL27tE1OxYGK3L49mFhmxAJHk9Nvvsi5eH0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727082AbfFTSAv (ORCPT
+        id S1727031AbfFTSAj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49850 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49508 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfFTSAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:48 -0400
+        id S1727010AbfFTSAg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 02B51214AF;
-        Thu, 20 Jun 2019 18:00:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F844214AF;
+        Thu, 20 Jun 2019 18:00:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053647;
-        bh=prdMiaT7N9TrVI/A20MwePkGZCg2cYEobayyrSDpkg8=;
+        s=default; t=1561053635;
+        bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lPc1wWuDHyW7dlhD8uHz8XtR1ss0JcGGk//rG/1zJzQQiDp0a2KDEOJ+KGk5KGExk
-         hp5+Zorl96YfdUMZvR05CaDn4M00BV/MZhdZFW3nFlbu+DXgi2KtsC8323PwqKItG0
-         J2S1dKpEeTi8nfbNDOv0Rsnuwo5CpRwvG3kLTgQs=
+        b=pHl7kDBAS3dlBxVP3Dk1/Zwhe0lL7SyoM/ITUyMvT83FL4npVZC3r6ZVbrPXn1/8Q
+         iYZ43quFHwoLXtOD/kSaD9I4bXtEYrusVgjysJ00JNpsSJDFrXSOA9KbRv90vi6VrS
+         w9HfwMU/zqlBfELtEaJ9x3JAXmMsaFO0pJ2Iz0vs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniele Palmas <dnlplm@gmail.com>,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 62/84] USB: serial: option: add Telit 0x1260 and 0x1261 compositions
-Date:   Thu, 20 Jun 2019 19:56:59 +0200
-Message-Id: <20190620174347.946623015@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Zatta <marco@zatta.me>
+Subject: [PATCH 4.4 58/84] USB: Fix chipmunk-like voice when using Logitech C270 for recording audio.
+Date:   Thu, 20 Jun 2019 19:56:55 +0200
+Message-Id: <20190620174347.649836673@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -59,33 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniele Palmas <dnlplm@gmail.com>
+From: Marco Zatta <marco@zatta.me>
 
-commit f3dfd4072c3ee6e287f501a18b5718b185d6a940 upstream.
+commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
 
-Added support for Telit LE910Cx 0x1260 and 0x1261 compositions.
+This patch fixes the chipmunk-like voice that manifets randomly when
+using the integrated mic of the Logitech Webcam HD C270.
 
-Signed-off-by: Daniele Palmas <dnlplm@gmail.com>
+The issue was solved initially for this device by commit 2394d67e446b
+("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
+reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
+Logitech UVC webcams"). This patch is to have the fix back.
+
+Signed-off-by: Marco Zatta <marco@zatta.me>
 Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/option.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/usb/serial/option.c
-+++ b/drivers/usb/serial/option.c
-@@ -1166,6 +1166,10 @@ static const struct usb_device_id option
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, TELIT_PRODUCT_LE920A4_1213, 0xff) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, TELIT_PRODUCT_LE920A4_1214),
- 	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) | RSVD(3) },
-+	{ USB_DEVICE(TELIT_VENDOR_ID, 0x1260),
-+	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
-+	{ USB_DEVICE(TELIT_VENDOR_ID, 0x1261),
-+	  .driver_info = NCTRL(0) | RSVD(1) | RSVD(2) },
- 	{ USB_DEVICE(TELIT_VENDOR_ID, 0x1900),				/* Telit LN940 (QMI) */
- 	  .driver_info = NCTRL(0) | RSVD(1) },
- 	{ USB_DEVICE_INTERFACE_CLASS(TELIT_VENDOR_ID, 0x1901, 0xff),	/* Telit LN940 (MBIM) */
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -70,6 +70,9 @@ static const struct usb_device_id usb_qu
+ 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
+ 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
+ 
++	/* Logitech HD Webcam C270 */
++	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
++
+ 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
+ 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
 
 
