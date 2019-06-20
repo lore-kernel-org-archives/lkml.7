@@ -1,84 +1,145 @@
-Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=Bkl1=UT=noreply.com=noreply@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=0.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_HTML_ONLY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF5C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:28 +0000 (UTC)
-Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E351F2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:27 +0000 (UTC)
-Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbfFTMQ0 (ORCPT
-        <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:16:26 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54404 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFTMQ0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:16:26 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g135so2838164wme.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:16:25 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=B9TrtGyucT7ajjWuvboh+Hy5dvZksEd6/p4CR2fghIg=;
-        b=A7OSdNT+3bcSy1ZMZkS3doXRRWmpmYpQeUp4St2vBpbna8fSIVmsIS9lt3WYKmo/lg
-         EzqpP4JIPR+rDBwn9eIdfa+SHiOKztBxJTL+qk/5VKA61zYADlRMNjSmLBVDdYUJMUJW
-         hR3Ab56kzX7q/jSBDFCLr+akM0jJT6uJUX1g/n9LQcS7ApENETP6hiGMkvpLvOnxxHhF
-         aKEQkfHaScVzOcCnMBweJBXO/tLULzPh204es0YFpM5r6Doo03PJOat7njbaSWfwIgYq
-         GuTn8myiIsNyCac1W5vhxEb/GzA1l4MdyBTH0TvXlhNZ7cPLIwP7U8IreDMcDNfBdUDY
-         BP5A==
-X-Gm-Message-State: APjAAAWmsRlflUz647COptG6tYWdaOUpP3dH5VJp2SJOjOKxkFEf5uil
-        CTrn//BWEMcoD6YKVsPgfc2H6A==
-X-Google-Smtp-Source: APXvYqzkWL+juoCKmAeAkp5CGN3y2wmBiY61EVn/WFlS6StZw7pwdzH2GmRBNiiSmutGjpGYKskLFA==
-X-Received: by 2002:a1c:4484:: with SMTP id r126mr2782080wma.27.1561032984421;
-        Thu, 20 Jun 2019 05:16:24 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:7822:aa18:a9d8:39ab? ([2001:b07:6468:f312:7822:aa18:a9d8:39ab])
-        by smtp.gmail.com with ESMTPSA id d18sm36464286wrb.90.2019.06.20.05.16.23
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 05:16:23 -0700 (PDT)
-Subject: Re: [PATCH RFC] kvm: x86: Expose AVX512_BF16 feature to guest
-To:     Jing Liu <jing2.liu@linux.intel.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, jing2.liu@intel.com
-References: <1561029712-11848-1-git-send-email-jing2.liu@linux.intel.com>
- <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
-Date:   Thu, 20 Jun 2019 14:16:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E2C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:52 +0000 (UTC)
+X-Greylist: delayed 34724 seconds by postgrey-1.34 at mail.kernel.org; Thu, 20 Jun 2019 12:16:51 UTC
+DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org ADB4B2080C
+Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=noreply.com
+Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=noreply@noreply.com
+Received: from host.btflhosting.com (unknown [69.16.193.59])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by mail.kernel.org (Postfix) with ESMTPS id ADB4B2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:51 +0000 (UTC)
+Received: from mta-d-189.sentinbox.com ([185.235.15.190]:59609 helo=noreply.com)
+	by host.btflhosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+	(Exim 4.87)
+	(envelope-from <noreply@noreply.com>)
+	id 1hdmxi-000JG5-4v
+	for linux-kernel@archiver.kernel.org; Wed, 19 Jun 2019 22:38:06 -0400
+From: archiver.kernel.org  <noreply@noreply.com>
+To: linux-kernel@archiver.kernel.org
+Subject: Warning!!! Email Update
+Date: 19 Jun 2019 19:37:58 -0700
+Message-ID: <20190619193758.DFC292987856281C@noreply.com>
 MIME-Version: 1.0
-In-Reply-To: <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: linux-kernel-owner@vger.kernel.org
-Precedence: bulk
-List-ID: <linux-kernel.vger.kernel.org>
-X-Mailing-List: linux-kernel@vger.kernel.org
+Content-Type: text/html;
+	charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - host.btflhosting.com
+X-AntiAbuse: Original Domain - archiver.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - noreply.com
+X-Get-Message-Sender-Via: host.btflhosting.com: authenticated_id: test@btflhosting.com
+X-Authenticated-Sender: host.btflhosting.com: test@btflhosting.com
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+List-Id: <linux-kernel.vger.kernel.org>
 
-On 20/06/19 13:21, Jing Liu wrote:
-> +		for (i = 1; i <= times; i++) {
-> +			if (*nent >= maxnent)
-> +				goto out;
-> +			do_cpuid_1_ent(&entry[i], function, i);
-> +			entry[i].eax &= F(AVX512_BF16);
-> +			entry[i].ebx = 0;
-> +			entry[i].ecx = 0;
-> +			entry[i].edx = 0;
-> +			entry[i].flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
-> +			++*nent;
-
-This woud be wrong for i > 1, so instead make this
-
-	if (entry->eax >= 1)
-
-and define F(AVX512_BF16) as a new constant kvm_cpuid_7_1_eax_features.
-
-Paolo
+<html><head></head><body><div style=3D"color:#000;background-color:#fff;fon=
+t-family:Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:=
+13px"><div id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym=
+19_1_1555803250049_95266" dir=3D"ltr"><br id=3D"m_2296189881713917254ydp4a1=
+92433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97327"/></div><table widt=
+h=3D"478" cellspacing=3D"0" cellpadding=3D"0" border=3D"1" style=3D"font-fa=
+mily:Arial,Helvetica,sans-serif;font-size:small;color:rgb(33,33,33)" id=3D"=
+m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155580325004=
+9_97328"><tbody id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16=
+_0_ym19_1_1555803250049_97329"><tr id=3D"m_2296189881713917254ydp4a192433yi=
+v4067848516yui_3_16_0_ym19_1_1555803250049_97330"><td style=3D"font-family:=
+Roboto,RobotoDraft,Helvetica,Arial,sans-serif;margin:0px;border:medium none=
+;padding:11.25pt 7.5pt 11.25pt 15pt" id=3D"m_2296189881713917254ydp4a192433=
+yiv4067848516yui_3_16_0_ym19_1_1555803250049_97331"><div style=3D"margin:0i=
+n 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,serif,EmojiFon=
+t" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155=
+5803250049_97332"><span style=3D"font-size:11.5pt" id=3D"m_2296189881713917=
+254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97333"></span></=
+div><div style=3D"margin:0in 0in 0.0001pt;font-size:11pt;font-family:Calibr=
+i,sans-serif,serif,EmojiFont" id=3D"m_2296189881713917254ydp4a192433yiv4067=
+848516yui_3_16_0_ym19_1_1555803250049_97334">Hello=A0<span style=3D"font-fa=
+mily:Roboto,RobotoDraft,Helvetica,Arial,sans-serif;font-size:small" id=3D"m=
+_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049=
+_97335">linux-kernel@archiver.kernel.org</span><span style=3D"font-size:11p=
+t" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155=
+5803250049_97336">,</span></div><div style=3D"margin:0in 0in 0.0001pt;font-=
+size:11pt;font-family:Calibri,sans-serif,serif,EmojiFont" id=3D"m_229618988=
+1713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97337"><s=
+pan style=3D"font-size:11.5pt" id=3D"m_2296189881713917254ydp4a192433yiv406=
+7848516yui_3_16_0_ym19_1_1555803250049_97338"></span></div><div style=3D"ma=
+rgin:0in 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,serif,E=
+mojiFont" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym1=
+9_1_1555803250049_97339"><br id=3D"m_2296189881713917254ydp4a192433yiv40678=
+48516yui_3_16_0_ym19_1_1555803250049_97340"/></div><div style=3D"margin:0in=
+ 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,serif,EmojiFont=
+" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555=
+803250049_97341">You have three messages On Hold due to your mail account l=
+imit</div></td><td style=3D"font-family:Roboto,RobotoDraft,Helvetica,Arial,=
+sans-serif;margin:0px;border:medium none;padding:11.25pt 15pt 11.25pt 7.5pt=
+" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555=
+803250049_97342"><div align=3D"right" style=3D"margin:0in 0in 0.0001pt;font=
+-size:11pt;font-family:Calibri,sans-serif,serif,EmojiFont;text-align:right"=
+ id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_15558=
+03250049_97343"></div><br id=3D"m_2296189881713917254ydp4a192433yiv40678485=
+16yui_3_16_0_ym19_1_1555803250049_97344"/></td></tr><tr id=3D"m_22961898817=
+13917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97345"><td =
+colspan=3D"2" style=3D"font-family:Roboto,RobotoDraft,Helvetica,Arial,sans-=
+serif;margin:0px;border:medium none;padding:0in 15pt 15pt" id=3D"m_22961898=
+81713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97346"><=
+table width=3D"438" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=
+=3D"width:328.5pt;background-image:none" id=3D"m_2296189881713917254ydp4a19=
+2433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97347"><tbody id=3D"m_2296=
+189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_9734=
+8"><tr id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1=
+_1555803250049_97349"><td style=3D"margin:0px;padding:15pt 0in 15pt 15pt" i=
+d=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803=
+250049_97350"><font color=3D"#0000ff" face=3D"Calibri, sans-serif" id=3D"m_=
+2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_=
+97351"><span style=3D"font-size:16px" id=3D"m_2296189881713917254ydp4a19243=
+3yiv4067848516yui_3_16_0_ym19_1_1555803250049_97352">Inbox (3)</span></font=
+><br id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1=
+555803250049_97353"/><div style=3D"margin:0in 0in 0.0001pt;font-family:Cali=
+bri,sans-serif,serif,EmojiFont" id=3D"m_2296189881713917254ydp4a192433yiv40=
+67848516yui_3_16_0_ym19_1_1555803250049_97354"><font size=3D"4" id=3D"m_229=
+6189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_973=
+55"><span style=3D"color:black" id=3D"m_2296189881713917254ydp4a192433yiv40=
+67848516yui_3_16_0_ym19_1_1555803250049_97356">Please click on the below bu=
+tton to=A0preview messages and Upgrade Limit</span></font></div><div style=
+=3D"margin:0in 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,s=
+erif,EmojiFont" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16=
+_0_ym19_1_1555803250049_97357">
+</div><table width=3D"393" cellpadding=3D"0" border=3D"0" style=3D"width:29=
+4.75pt" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_=
+1_1555803250049_97358"><tbody id=3D"m_2296189881713917254ydp4a192433yiv4067=
+848516yui_3_16_0_ym19_1_1555803250049_97359"><tr style=3D"min-height:22.5pt=
+" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555=
+803250049_97360"><td nowrap=3D"" width=3D"200" style=3D"margin:0px;width:15=
+0pt;border:1pt solid rgb(0,120,215);background-image:none;background-color:=
+rgb(0,120,215);padding:0.75pt 15pt;min-height:22.5pt" id=3D"m_2296189881713=
+917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97361"><div a=
+lign=3D"center" style=3D"margin:0in 0in 0.0001pt;font-size:11pt;font-family=
+:Calibri,sans-serif,serif,EmojiFont;text-align:center" dir=3D"ltr" id=3D"m_=
+2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_=
+97362"><span style=3D"font-size:12pt" id=3D"m_2296189881713917254ydp4a19243=
+3yiv4067848516yui_3_16_0_ym19_1_1555803250049_97363"><b id=3D"m_22961898817=
+13917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97364"><spa=
+n style=3D"font-size:10.5pt;font-family:Tahoma,sans-serif,serif,EmojiFont" =
+id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155580=
+3250049_97365"><a href=3D"https://marquiss.co.kr/update/?email=3Dlinux-kern=
+el@archiver.kernel.org" style=3D"color:rgb(17,85,204)" id=3D"m_229618988171=
+3917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97366" rel=
+=3D"nofollow" target=3D"_blank" data-saferedirecturl=3D"https://www.google.=
+com/url?q=3Dhttp://ktca.com.au/admin/logs/update%25202/index.php?email%3D%5=
+B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1559185558494000&amp;usg=3DA=
+FQjCNEzG9XcEjaVH3Xg_pQj9Xhu8v28Fg" data-saferedirectreason=3D"2"><font colo=
+r=3D"#ffffff" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0=
+_ym19_1_1555803250049_97367">View Here</font></a></span></b></span></div></=
+td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table=
+></div></body></html>
