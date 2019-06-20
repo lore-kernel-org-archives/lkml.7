@@ -2,128 +2,130 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2F5C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DA5AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:31:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEE39206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:25:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24C0D206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:31:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="HtNTWqIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726437AbfFTWZL (ORCPT
+        id S1726353AbfFTWbG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 18:25:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726135AbfFTWZL (ORCPT
+        Thu, 20 Jun 2019 18:31:06 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:34707 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726138AbfFTWbF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 18:25:11 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KMMQCA023573
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:25:09 -0400
-Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8ht0jb3p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:25:09 -0400
-Received: from localhost
-        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 20 Jun 2019 23:25:08 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Jun 2019 23:25:04 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KMP3O044761490
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 22:25:03 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD847B205F;
-        Thu, 20 Jun 2019 22:25:03 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AA9BDB2067;
-        Thu, 20 Jun 2019 22:25:03 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Jun 2019 22:25:03 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id B7EF816C2FA6; Thu, 20 Jun 2019 15:25:05 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 15:25:05 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH RT 3/4] rcu: unlock special: Treat irq and preempt
- disabled the same
-Reply-To: paulmck@linux.ibm.com
-References: <20190619011908.25026-1-swood@redhat.com>
- <20190619011908.25026-4-swood@redhat.com>
- <20190620211005.GW26519@linux.ibm.com>
- <cf42d8516ac99f69913b1f7a7e8abe578ad27e7f.camel@redhat.com>
+        Thu, 20 Jun 2019 18:31:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id k11so4632171wrl.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 15:31:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=ag++18MM2w6/vpUxW7CWe051RRwuKEh5Ljl74q3jfpQ=;
+        b=HtNTWqIJphhFeUQQi3Emsd6LPEQOuib+6khoegibX7KpfSay+CJd5ZqF6U9wWBeOp1
+         zoh6NzWSbMjv6dkR7O5USCNougO3CdKkhlVicm2h+UOocGQ427EkJZARCIzlB05fTmF8
+         IK5NRx21W1K+lXyfmjmKsU3fq1F/a4KOemnV2Lf9Rvo6ovrpEx14mFtkaI/NviiP5seS
+         Jy3CukNOf+Bbf8OoI5pot5CE/loOs03PqodhyuiiDUr3emRMLOrIoiyvQtzMkyvVgtTZ
+         5iyiDHHVtsKF2fyXC1oXWteV3DTC4QjwNGvU3Aa2XU5BW/PisEFpytJo1kSYVyHqAlz3
+         wxlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=ag++18MM2w6/vpUxW7CWe051RRwuKEh5Ljl74q3jfpQ=;
+        b=cQ5PJ3RAaoL+o/rwKZshF/RdERcp7QBBInilDY6quzTfNL2ecq06HR2LAkxVGGJXuz
+         ARccC7aGfLBgfh5Kl28YIa9rb8goGjUhKtgS9H7SO8hPySOIu9QWT1lwBm2zSTMnEIzg
+         ASTCEp3yC2edFei3cdtbw/35v2odf8r+r4TVJsqUVBSqB1W3gOz6HdcNHVwbZF/xZk87
+         IGuqr7JGbE2Cii2qfbtYgHOnVvr05gJemUwQ+5Y1HvPHwbJVGy5rSq1y8uikzk/Gbc7t
+         36mPLuI+E82figxLlLeRU2NdaaLR2osTpjeSrK9U5IvQ3NPFCnFD2G4u4RHj5I4SSSwH
+         fCkw==
+X-Gm-Message-State: APjAAAXD4sVyJKdMt6Uc0lAqPXjYVPVhG2nAaYtJCfH4PqUqlmmQbQ2X
+        46RVjbefU6DDyx7y3/1BtS3fTQ==
+X-Google-Smtp-Source: APXvYqxqbksWbOfkcceNTbehNzpG1EulO4+XmFJK26ZA5dzb/mRqnbBlGbldi4yoANI2Sn8DYl1azg==
+X-Received: by 2002:adf:f60b:: with SMTP id t11mr8330788wrp.332.1561069863472;
+        Thu, 20 Jun 2019 15:31:03 -0700 (PDT)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id r4sm913798wra.96.2019.06.20.15.31.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 15:31:02 -0700 (PDT)
+Message-ID: <5d0c0926.1c69fb81.14f3.58b8@mx.google.com>
+Date:   Thu, 20 Jun 2019 15:31:02 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cf42d8516ac99f69913b1f7a7e8abe578ad27e7f.camel@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062022-0064-0000-0000-000003F08FA7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011299; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01220891; UDB=6.00642289; IPR=6.01002030;
- MB=3.00027398; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-20 22:25:07
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062022-0065-0000-0000-00003DF6536E
-Message-Id: <20190620222505.GB26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200159
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v4.9.182-118-gb2977e94f62a
+X-Kernelci-Branch: linux-4.9.y
+X-Kernelci-Tree: stable-rc
+In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
+References: <20190620174351.964339809@linuxfoundation.org>
+Subject: Re: [PATCH 4.9 000/117] 4.9.183-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:59:30PM -0500, Scott Wood wrote:
-> On Thu, 2019-06-20 at 14:10 -0700, Paul E. McKenney wrote:
-> > On Tue, Jun 18, 2019 at 08:19:07PM -0500, Scott Wood wrote:
-> > > [Note: Just before posting this I noticed that the invoke_rcu_core stuff
-> > >  is part of the latest RCU pull request, and it has a patch that
-> > >  addresses this in a more complicated way that appears to deal with the
-> > >  bare irq-disabled sequence as well.
-> > 
-> > Far easier to deal with it than to debug the lack of it.  ;-)
-> > 
-> > >  Assuming we need/want to support such sequences, is the
-> > >  invoke_rcu_core() call actually going to result in scheduling any
-> > >  sooner?  resched_curr() just does the same setting of need_resched
-> > >  when it's the same cpu.
-> > > ]
-> > 
-> > Yes, invoke_rcu_core() can in some cases invoke the scheduler sooner.
-> > Setting the CPU-local bits might not have effect until the next interrupt.
-> 
-> Maybe I'm missing something, but I don't see how (in the non-use_softirq
-> case).  It just calls wake_up_process(), which in resched_curr() will set
-> need_resched but not do an IPI-to-self.
+stable-rc/linux-4.9.y boot: 102 boots: 1 failed, 99 passed with 2 offline (=
+v4.9.182-118-gb2977e94f62a)
 
-The common non-rt case will be use_softirq.  Or are you referring
-specifically to this block of code in current -rcu?
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-4.9.y/kernel/v4.9.182-118-gb2977e94f62a/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.9.y=
+/kernel/v4.9.182-118-gb2977e94f62a/
 
-		} else if (exp && irqs_were_disabled && !use_softirq &&
-			   !t->rcu_read_unlock_special.b.deferred_qs) {
-			// Safe to awaken and we get no help from enabling
-			// irqs, unlike bh/preempt.
-			invoke_rcu_core();
+Tree: stable-rc
+Branch: linux-4.9.y
+Git Describe: v4.9.182-118-gb2977e94f62a
+Git Commit: b2977e94f62a4008b6cc418f3af3c1a04ddb8ce3
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 52 unique boards, 23 SoC families, 15 builds out of 197
 
-								Thanx, Paul
+Boot Regressions Detected:
 
+arm:
+
+    omap2plus_defconfig:
+        gcc-8:
+          omap3-beagle-xm:
+              lab-baylibre: new failure (last pass: v4.9.182)
+
+Boot Failure Detected:
+
+arm:
+    omap2plus_defconfig:
+        gcc-8:
+            omap3-beagle-xm: 1 failed lab
+
+Offline Platforms:
+
+arm:
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+
+arm64:
+
+    defconfig:
+        gcc-8
+            apq8016-sbc: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
