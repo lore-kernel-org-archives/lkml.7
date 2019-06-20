@@ -3,87 +3,107 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E429BC48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:26:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A383C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD6342082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:26:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A0C42082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:29:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vYO8y7Jk"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="svCCjT6A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730765AbfFTJ0p (ORCPT
+        id S1726369AbfFTJ3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:26:45 -0400
-Received: from mail-yb1-f193.google.com ([209.85.219.193]:45113 "EHLO
-        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725953AbfFTJ0o (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:26:44 -0400
-Received: by mail-yb1-f193.google.com with SMTP id v104so956001ybi.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:26:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=yhqOWcsVMRLUugSeb1eby5Cv08pN53Ic4ZUoxcG3TJo=;
-        b=vYO8y7JkLy+Kw57JCh+SGP9xT4ECOc2Zr9Btu65hng9dKnuiBuZk6CsiLkCq4RBBiE
-         Rt814xsd2FG38spTJAwavWlrASeDrh04YJy6BJV2PJ8gnMbEFt3i07KWpbSr4StC4UMx
-         XczfK91OAASx0SUJsrdUKv4SdNXbPUbAscwoQb0bJuux7Dh4aROJ6g47hv1MQd1ZNkgG
-         1JOi23/ECEeqQaKoBA+/eNJ3TqKAigbaQYavLEKdbP8Nn9w5dY5meIxOtFRztn7dx3xZ
-         d2bTtAubK2N1SigHRkYOEgU1px3bBnd3xTKzPWbMlxtO2pk2g0d0XLAWT5IqLy74MM63
-         9PeA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yhqOWcsVMRLUugSeb1eby5Cv08pN53Ic4ZUoxcG3TJo=;
-        b=pJA0KHNzr9tVePqGOis/39QmXjY9prbHOCTSIQdSITEKPPZr+E+qrChsatprqzrr/v
-         uWxUTRaPLPCtq6ZB7dDDvL4y6UwfCk0ej0D52ypUL/EyOkrd3PxPv/9lbFt7PbghPHPi
-         QfQb5EV7l5uUJSr10aIeld2jgyi/NNJANNuKuBiu2I1lyoeusmVUiNn4gqGL8mTbgi2s
-         orw+OVBCp492LBENO+K1zY6+VSsiZxtkCYmq1vpKv4PWYAtlTWGBJRJbBjLDDsGxI/H+
-         zvVxx/proCk5T6eXKu04HkOOZUBJXhHUVPWMMcK68N1lHyo0rUpwqnoNJH0x4m3KmO4D
-         mc0w==
-X-Gm-Message-State: APjAAAVWKR0wFrLmfduP2d/UL/cTHHyy5j2UzB7mSqY3AYnYOGKMxL+8
-        perwgQhVWmK3JUDoNVjYVKZ/MjEY90jgtiYd
-X-Google-Smtp-Source: APXvYqySUz1cIJX6NDR8ngA1GjoraRplX/O24N5dzHr1ye9UYfXOj4X5kPzZsGimkTHVjqrgsBpHlQ==
-X-Received: by 2002:a25:cc0a:: with SMTP id l10mr7239938ybf.433.1561022803695;
-        Thu, 20 Jun 2019 02:26:43 -0700 (PDT)
-Received: from ?IPv6:2600:380:5278:90d8:9c74:6b59:c9f5:5bd0? ([2600:380:5278:90d8:9c74:6b59:c9f5:5bd0])
-        by smtp.gmail.com with ESMTPSA id l143sm5657391ywl.107.2019.06.20.02.26.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 02:26:42 -0700 (PDT)
-Subject: Re: [PATCH 1/1] blk-core: Remove blk_end_request*() declarations
-To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <23ecea9b-7833-5b77-11ae-7e989cc89385@kernel.dk>
-Date:   Thu, 20 Jun 2019 03:26:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 05:29:45 -0400
+Received: from ozlabs.org ([203.11.71.1]:33263 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726084AbfFTJ3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:29:44 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TxNj40Q7z9s3l;
+        Thu, 20 Jun 2019 19:29:41 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561022981;
+        bh=K59OXEootkBW9/39ic60PcVuvJF1I7LsPOVfv1qbMPE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=svCCjT6AsCF3x8LpPEOWxrWmQPgZz/qcS16fhNt71m95GWzTY+8aJVBveiFcov815
+         q/8lPJD4byQaNEHefde3klVVCl7uzY3aEFSIFaenckV/SZpWP1lbNV78qx4Gb1rmxZ
+         JAMo4vXDSxb05vPNmQNDCJ0z9gy4M8TxldtTEILdn+DVvfzpoYuU7U2Na0lwX9iaWn
+         oVccTozQlGL6npQFMCXIS/7At4J3Pvw8yXuB61d9Z0WRj+UugzEVsmyl5xIAFzi+Mk
+         Ee1LrqMwdmDtGztaGzOIpwVVSawNgmgIQ7RLBen92kztk2JT/gYN0p/rezWNnEWvRD
+         nOsxrGTDa1mpA==
+Date:   Thu, 20 Jun 2019 19:29:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pankaj Gupta <pagupta@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: linux-next: build failure after merge of the nvdimm tree
+Message-ID: <20190620192939.139bf5c0@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/4KtIhbTHIDjH6/JTpyQoNoR"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 5/23/19 9:43 AM, Pavel Begunkov (Silence) wrote:
-> From: Pavel Begunkov <asml.silence@gmail.com>
-> 
-> Commit a1ce35fa49852db60fc6e268 ("block: remove dead elevator code")
-> deleted blk_end_request() and friends, but some declaration are still
-> left. Purge them.
+--Sig_/4KtIhbTHIDjH6/JTpyQoNoR
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+Hi Dan,
 
--- 
-Jens Axboe
+After merging the nvdimm tree, today's linux-next build (i386 defconfig)
+failed like this:
 
+drivers/md/dm-table.c: In function 'device_synchronous':
+drivers/md/dm-table.c:897:9: error: implicit declaration of function 'dax_s=
+ynchronous'; did you mean 'device_synchronous'? [-Werror=3Dimplicit-functio=
+n-declaration]
+  return dax_synchronous(dev->dax_dev);
+         ^~~~~~~~~~~~~~~
+         device_synchronous
+drivers/md/dm-table.c: In function 'dm_table_set_restrictions':
+drivers/md/dm-table.c:1925:4: error: implicit declaration of function 'set_=
+dax_synchronous'; did you mean 'device_synchronous'? [-Werror=3Dimplicit-fu=
+nction-declaration]
+    set_dax_synchronous(t->md->dax_dev);
+    ^~~~~~~~~~~~~~~~~~~
+    device_synchronous
+cc1: some warnings being treated as errors
+
+Caused by commit
+
+  38887edec247 ("dm: enable synchronous dax")
+
+CONFIG_DAX is not set for this build.
+
+I have reverted that commit for today.
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/4KtIhbTHIDjH6/JTpyQoNoR
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0LUgMACgkQAVBC80lX
+0GzxNAf3Qf1H6IS0CTWobhKTsaAIDGl5vnmUL3zJbOvM88FO0YUcnkvznZr6SWK8
+5b7nZEXopjnAnhIxw1tnau2JL17ToJ5/+du/pUSHyhld48H054fDc0LD0P8dvQ4I
+gwdbgkHXHFH5ZRXzWxjJwU+DWaKG53oHyD+ww9nTHnz0qSxPNHyC0jUlCoPcuagE
+L51MucbLDZRUTeEnlyoVOYUWzKCSUXT2jhh/h29vvhpapA1lU74BNIcLsHjZhVFW
+MEx3nWw7yaDL63Kq7hWN8m5y0ZVlb8C7GeeGpqf7ycu/WdrzlYWLkrscq7l58b94
+lULd4ogV5nc1Y1r9E5/6le2sQdcx
+=ilBF
+-----END PGP SIGNATURE-----
+
+--Sig_/4KtIhbTHIDjH6/JTpyQoNoR--
