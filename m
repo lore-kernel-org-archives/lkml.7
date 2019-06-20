@@ -2,196 +2,227 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D71AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0653C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B9B02089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:43:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561056222;
-	bh=OcHqNm1n5uJ76yfzV9QqKQLTonumwC4p/KsmHbYpEA8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NWwzvHbUzd6bCUWOplc1yamRvi7d1p8Dapx5e8ggNEaH7SjXbZXpCzlxWfCt8ZLgm
-	 2BDhzCAYv5xemhFUKvY9dS0lzwxv1s6HHqLGkn0GtejZMenNTfeDGTyp66b+V64Byo
-	 Ef60JQ1clEqR8rpxMDEaBCvBM8ap0rto7ydR+zDA=
+	by mail.kernel.org (Postfix) with ESMTP id 70ECB20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:44:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpFNLiT6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726617AbfFTSnl (ORCPT
+        id S1726711AbfFTSoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:43:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39946 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725869AbfFTSnj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:43:39 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7327A2085A;
-        Thu, 20 Jun 2019 18:43:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561056218;
-        bh=OcHqNm1n5uJ76yfzV9QqKQLTonumwC4p/KsmHbYpEA8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f6hLbC7pNmyZwHZ5O1vUSgPXZnFgFAdE2bCFOINA908BcVnD5vrCHSU9T4aWNb+50
-         5YTg6yjR2wN9f0H3+obp/yySu6p7qIvfbKjoPDotcrU5VFkjxJ0A+sVB/+mRp8tNuc
-         JhzzEESSbOnA+KSkcB67Jllem4vll8I0DLdgDLdY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Harris, James R" <james.r.harris@intel.com>,
-        Roy Shterman <roys@lightbitslabs.com>,
-        Sagi Grimberg <sagi@grimberg.me>
-Subject: [PATCH 5.1 97/98] nvme-tcp: fix queue mapping when queue count is limited
-Date:   Thu, 20 Jun 2019 19:58:04 +0200
-Message-Id: <20190620174354.311087942@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
-References: <20190620174349.443386789@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Jun 2019 14:44:55 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43970 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725869AbfFTSoy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:44:54 -0400
+Received: by mail-pl1-f193.google.com with SMTP id cl9so1724861plb.10;
+        Thu, 20 Jun 2019 11:44:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZUQkb0G4ZCPKDrEvoX1BfK4MWYkIeDwjtEN0vUqPNkw=;
+        b=MpFNLiT6zMfv6lZIUsgTarD0saHSc6px9pGCnHVv4o3SwD5Je+t3augvHoqNayH+69
+         FW1ExZjtFRu3HjSf0LtHnKMdNSIF+jWt1th6i0kQqPdtfgHbtT7do93b92PJvMlCC9dv
+         W1guz/52t6z9GTHUcGBwdmufV0cm0zPru1pXJpwPvMUPcTKNDwtQWDxjQM3IXwE69GFn
+         3mU9AV8MeDWlpPf55RPmZPvdAe0H4mhgJci6euF0CjDBf7DQAbC+wbcGsLXzNiYqR/XB
+         0G9D0V83hewGZ3mYCv877iAsi2OTTvLVbzh1hkB5ypCIL2XTcOCuTgzQUeEd2i9yh/AQ
+         Ry9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZUQkb0G4ZCPKDrEvoX1BfK4MWYkIeDwjtEN0vUqPNkw=;
+        b=Hx5wBhlmNwyaWlEqRV9HvYjoLoy+99jEMx5crnYKay5z87BwP/cl9yyzHiU3Zoq9e3
+         qgBMxudJMu69YYFlmepWBdzhemIV5MdHZdt6IzqyNdlb+mebHK+y8hRUKiuFdJlMEooW
+         Pz0Wt4b3jXDQdpLNxF3hV1pzLpA8/Hl6BzsCvzM7FFcXBS8e8b3tRZFIZW0AS+wmaXAW
+         K1OQEDDi67hDrZuqm8ae+6eYn+Afil/aqEZ3N4RL2vfys4vmKYK9Rnu61wzMhPXOaeWk
+         oRoI0vtoUvQsPrkTkycK8TSuVvKVpKfCx28/n/bJP+aZnW43GIAPC1SVyghGsZvicM/B
+         MJmQ==
+X-Gm-Message-State: APjAAAWYnv/p4qBhjoWMiBXduDxPI4uAB6XMvEM2LRFbCemWVn5/dKIH
+        sjbdnLUfxNB/HlHgYHRYQUo=
+X-Google-Smtp-Source: APXvYqzOnI3pkm62WhhgX9g/X3V1KxMheGzQeaimTCtkTbntSlVPaJT/oLykxHPMufJ0swIi/avZnA==
+X-Received: by 2002:a17:902:30a3:: with SMTP id v32mr127734872plb.6.1561056293930;
+        Thu, 20 Jun 2019 11:44:53 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l63sm169837pfl.181.2019.06.20.11.44.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 11:44:53 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 11:44:51 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com,
+        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
+        arnd@arndb.de, dhowells@redhat.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+Message-ID: <20190620184451.GA28543@roeck-us.net>
+References: <20190604160944.4058-1-christian@brauner.io>
+ <20190604160944.4058-2-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190604160944.4058-2-christian@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
+> Wire up the clone3() call on all arches that don't require hand-rolled
+> assembly.
+> 
+> Some of the arches look like they need special assembly massaging and it is
+> probably smarter if the appropriate arch maintainers would do the actual
+> wiring. Arches that are wired-up are:
+> - x86{_32,64}
+> - arm{64}
+> - xtensa
+> 
 
-commit 6486199378a505c58fddc47459631235c9fb7638 upstream.
+This patch results in build failures on various architecetures.
 
-When the controller supports less queues than requested, we
-should make sure that queue mapping does the right thing and
-not assume that all queues are available. This fixes a crash
-when the controller supports less queues than requested.
+h8300-linux-ld: arch/h8300/kernel/syscalls.o:(.data+0x6d0): undefined reference to `sys_clone3'
 
-The rules are:
-1. if no write queues are requested, we assign the available queues
-   to the default queue map. The default and read queue maps share the
-   existing queues.
-2. if write queues are requested:
-  - first make sure that read queue map gets the requested
-    nr_io_queues count
-  - then grant the default queue map the minimum between the requested
-    nr_write_queues and the remaining queues. If there are no available
-    queues to dedicate to the default queue map, fallback to (1) and
-    share all the queues in the existing queue map.
+nios2-linux-ld: arch/nios2/kernel/syscall_table.o:(.data+0x6d0): undefined reference to `sys_clone3'
 
-Also, provide a log indication on how we constructed the different
-queue maps.
+There may be others; -next is in too bad shape right now to get a complete
+picture. Wondering, though: What is special with this syscall ? Normally
+one would only get a warning that a syscall is not wired up.
 
-Reported-by: Harris, James R <james.r.harris@intel.com>
-Tested-by: Jim Harris <james.r.harris@intel.com>
-Cc: <stable@vger.kernel.org> # v5.0+
-Suggested-by: Roy Shterman <roys@lightbitslabs.com>
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Guenter
 
----
- drivers/nvme/host/tcp.c |   57 ++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 50 insertions(+), 7 deletions(-)
-
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -111,6 +111,7 @@ struct nvme_tcp_ctrl {
- 	struct work_struct	err_work;
- 	struct delayed_work	connect_work;
- 	struct nvme_tcp_request async_req;
-+	u32			io_queues[HCTX_MAX_TYPES];
- };
- 
- static LIST_HEAD(nvme_tcp_ctrl_list);
-@@ -1564,6 +1565,35 @@ static unsigned int nvme_tcp_nr_io_queue
- 	return nr_io_queues;
- }
- 
-+static void nvme_tcp_set_io_queues(struct nvme_ctrl *nctrl,
-+		unsigned int nr_io_queues)
-+{
-+	struct nvme_tcp_ctrl *ctrl = to_tcp_ctrl(nctrl);
-+	struct nvmf_ctrl_options *opts = nctrl->opts;
-+
-+	if (opts->nr_write_queues && opts->nr_io_queues < nr_io_queues) {
-+		/*
-+		 * separate read/write queues
-+		 * hand out dedicated default queues only after we have
-+		 * sufficient read queues.
-+		 */
-+		ctrl->io_queues[HCTX_TYPE_READ] = opts->nr_io_queues;
-+		nr_io_queues -= ctrl->io_queues[HCTX_TYPE_READ];
-+		ctrl->io_queues[HCTX_TYPE_DEFAULT] =
-+			min(opts->nr_write_queues, nr_io_queues);
-+		nr_io_queues -= ctrl->io_queues[HCTX_TYPE_DEFAULT];
-+	} else {
-+		/*
-+		 * shared read/write queues
-+		 * either no write queues were requested, or we don't have
-+		 * sufficient queue count to have dedicated default queues.
-+		 */
-+		ctrl->io_queues[HCTX_TYPE_DEFAULT] =
-+			min(opts->nr_io_queues, nr_io_queues);
-+		nr_io_queues -= ctrl->io_queues[HCTX_TYPE_DEFAULT];
-+	}
-+}
-+
- static int nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
- {
- 	unsigned int nr_io_queues;
-@@ -1581,6 +1611,8 @@ static int nvme_tcp_alloc_io_queues(stru
- 	dev_info(ctrl->device,
- 		"creating %d I/O queues.\n", nr_io_queues);
- 
-+	nvme_tcp_set_io_queues(ctrl, nr_io_queues);
-+
- 	return __nvme_tcp_alloc_io_queues(ctrl);
- }
- 
-@@ -2089,23 +2121,34 @@ static blk_status_t nvme_tcp_queue_rq(st
- static int nvme_tcp_map_queues(struct blk_mq_tag_set *set)
- {
- 	struct nvme_tcp_ctrl *ctrl = set->driver_data;
-+	struct nvmf_ctrl_options *opts = ctrl->ctrl.opts;
- 
--	set->map[HCTX_TYPE_DEFAULT].queue_offset = 0;
--	set->map[HCTX_TYPE_READ].nr_queues = ctrl->ctrl.opts->nr_io_queues;
--	if (ctrl->ctrl.opts->nr_write_queues) {
-+	if (opts->nr_write_queues && ctrl->io_queues[HCTX_TYPE_READ]) {
- 		/* separate read/write queues */
- 		set->map[HCTX_TYPE_DEFAULT].nr_queues =
--				ctrl->ctrl.opts->nr_write_queues;
-+			ctrl->io_queues[HCTX_TYPE_DEFAULT];
-+		set->map[HCTX_TYPE_DEFAULT].queue_offset = 0;
-+		set->map[HCTX_TYPE_READ].nr_queues =
-+			ctrl->io_queues[HCTX_TYPE_READ];
- 		set->map[HCTX_TYPE_READ].queue_offset =
--				ctrl->ctrl.opts->nr_write_queues;
-+			ctrl->io_queues[HCTX_TYPE_DEFAULT];
- 	} else {
--		/* mixed read/write queues */
-+		/* shared read/write queues */
- 		set->map[HCTX_TYPE_DEFAULT].nr_queues =
--				ctrl->ctrl.opts->nr_io_queues;
-+			ctrl->io_queues[HCTX_TYPE_DEFAULT];
-+		set->map[HCTX_TYPE_DEFAULT].queue_offset = 0;
-+		set->map[HCTX_TYPE_READ].nr_queues =
-+			ctrl->io_queues[HCTX_TYPE_DEFAULT];
- 		set->map[HCTX_TYPE_READ].queue_offset = 0;
- 	}
- 	blk_mq_map_queues(&set->map[HCTX_TYPE_DEFAULT]);
- 	blk_mq_map_queues(&set->map[HCTX_TYPE_READ]);
-+
-+	dev_info(ctrl->ctrl.device,
-+		"mapped %d/%d default/read queues.\n",
-+		ctrl->io_queues[HCTX_TYPE_DEFAULT],
-+		ctrl->io_queues[HCTX_TYPE_READ]);
-+
- 	return 0;
- }
- 
-
-
+> Signed-off-by: Christian Brauner <christian@brauner.io>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: David Howells <dhowells@redhat.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oleg Nesterov <oleg@redhat.com>
+> Cc: Adrian Reber <adrian@lisas.de>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Al Viro <viro@zeniv.linux.org.uk>
+> Cc: Florian Weimer <fweimer@redhat.com>
+> Cc: linux-api@vger.kernel.org
+> Cc: linux-arch@vger.kernel.org
+> Cc: x86@kernel.org
+> ---
+> v1: unchanged
+> v2: unchanged
+> v3:
+> - Christian Brauner <christian@brauner.io>:
+>   - wire up clone3 on all arches that don't have hand-rolled entry points
+>     for clone
+> ---
+>  arch/arm/tools/syscall.tbl                  | 1 +
+>  arch/arm64/include/asm/unistd.h             | 2 +-
+>  arch/arm64/include/asm/unistd32.h           | 2 ++
+>  arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
+>  include/uapi/asm-generic/unistd.h           | 4 +++-
+>  8 files changed, 11 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
+> index aaf479a9e92d..e99a82bdb93a 100644
+> --- a/arch/arm/tools/syscall.tbl
+> +++ b/arch/arm/tools/syscall.tbl
+> @@ -447,3 +447,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +436	common	clone3				sys_clone3
+> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+> index 70e6882853c0..24480c2d95da 100644
+> --- a/arch/arm64/include/asm/unistd.h
+> +++ b/arch/arm64/include/asm/unistd.h
+> @@ -44,7 +44,7 @@
+>  #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
+>  #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
+>  
+> -#define __NR_compat_syscalls		434
+> +#define __NR_compat_syscalls		437
+>  #endif
+>  
+>  #define __ARCH_WANT_SYS_CLONE
+> diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
+> index c39e90600bb3..b144ea675d70 100644
+> --- a/arch/arm64/include/asm/unistd32.h
+> +++ b/arch/arm64/include/asm/unistd32.h
+> @@ -886,6 +886,8 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+>  __SYSCALL(__NR_fsmount, sys_fsmount)
+>  #define __NR_fspick 433
+>  __SYSCALL(__NR_fspick, sys_fspick)
+> +#define __NR_clone3 436
+> +__SYSCALL(__NR_clone3, sys_clone3)
+>  
+>  /*
+>   * Please add new compat syscalls above this comment and update
+> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
+> index 26339e417695..3110440bcc31 100644
+> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
+> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
+> @@ -439,3 +439,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +436	common	clone3				sys_clone3
+> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
+> index ad968b7bac72..80e26211feff 100644
+> --- a/arch/x86/entry/syscalls/syscall_32.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
+> @@ -438,3 +438,4 @@
+>  431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
+>  432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
+>  433	i386	fspick			sys_fspick			__ia32_sys_fspick
+> +436	i386	clone3			sys_clone3			__ia32_sys_clone3
+> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
+> index b4e6f9e6204a..7968f0b5b5e8 100644
+> --- a/arch/x86/entry/syscalls/syscall_64.tbl
+> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
+> @@ -355,6 +355,7 @@
+>  431	common	fsconfig		__x64_sys_fsconfig
+>  432	common	fsmount			__x64_sys_fsmount
+>  433	common	fspick			__x64_sys_fspick
+> +436	common	clone3			__x64_sys_clone3/ptregs
+>  
+>  #
+>  # x32-specific system call numbers start at 512 to avoid cache impact
+> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
+> index 5fa0ee1c8e00..b2767c8c2b4e 100644
+> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
+> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
+> @@ -404,3 +404,4 @@
+>  431	common	fsconfig			sys_fsconfig
+>  432	common	fsmount				sys_fsmount
+>  433	common	fspick				sys_fspick
+> +436	common	clone3				sys_clone3
+> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> index a87904daf103..45bc87687c47 100644
+> --- a/include/uapi/asm-generic/unistd.h
+> +++ b/include/uapi/asm-generic/unistd.h
+> @@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
+>  __SYSCALL(__NR_fsmount, sys_fsmount)
+>  #define __NR_fspick 433
+>  __SYSCALL(__NR_fspick, sys_fspick)
+> +#define __NR_clone3 436
+> +__SYSCALL(__NR_clone3, sys_clone3)
+>  
+>  #undef __NR_syscalls
+> -#define __NR_syscalls 434
+> +#define __NR_syscalls 437
+>  
+>  /*
+>   * 32 bit systems traditionally used different
