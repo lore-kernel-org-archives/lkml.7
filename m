@@ -2,124 +2,156 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1D69C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED056C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:05:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2FC22083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEC372075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:05:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FMk4shXH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731985AbfFTODt (ORCPT
+        id S1731987AbfFTOF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:03:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49182 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726551AbfFTODs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:03:48 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 05638AF85;
-        Thu, 20 Jun 2019 14:03:46 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id A12B31E434F; Thu, 20 Jun 2019 16:03:45 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 16:03:45 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 4/6] vfs: don't allow most setxattr to immutable files
-Message-ID: <20190620140345.GI30243@quack2.suse.cz>
-References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
- <156022840560.3227213.4776913678782966728.stgit@magnolia>
+        Thu, 20 Jun 2019 10:05:29 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:11708 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfFTOF2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:05:28 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0b92a50001>; Thu, 20 Jun 2019 07:05:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Jun 2019 07:05:26 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 07:05:26 -0700
+Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
+ 2019 14:05:24 +0000
+Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
+ phylib logic
+From:   Jon Hunter <jonathanh@nvidia.com>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
+        linux-tegra <linux-tegra@vger.kernel.org>
+References: <cover.1560266175.git.joabreu@synopsys.com>
+ <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
+ <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
+ <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
+ <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
+ <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
+ <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
+ <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
+Message-ID: <7f0f2ed0-f47c-4670-d169-25f0413c1fd3@nvidia.com>
+Date:   Thu, 20 Jun 2019 15:05:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156022840560.3227213.4776913678782966728.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561039525; bh=kk0iROuiBw86L8JMDa5UasFqeu4eaEGk4Y4zy76zYa0=;
+        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=FMk4shXHyUbeAy1dildJ33Lcn3gZ2iR/fQjUlgiuSdiiES3WHLIV9lz409RfTMOJ1
+         GtXnMNJB5cYBuyP9R24/pinO1sWsYrELeJiRFD0cQxHHguiE6fbLbuLES3oix3t92n
+         F4eyUg9mbIyrLWFVdpBKvOOTqtffCQ7fwfcq57AhvVP7WxKmCppZvbifhTO7yBd2Tt
+         8YPZWiSDbZ3AkQkelKGq4TuYmv+wfI4o/Gy9fktBMcI+cW4yt0Rc3Euh+2K5XRiKEF
+         J87DSIyAM6fZQlDOkJA8xeiEqL2R+/JvuSKyj6BornoIZ3E9T5bJz5veXRm/lUVsfB
+         NVigdYX6UlNyQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10-06-19 21:46:45, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> The chattr manpage has this to say about immutable files:
-> 
-> "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> or renamed, no link can be created to this file, most of the file's
-> metadata can not be modified, and the file can not be opened in write
-> mode."
-> 
-> However, we don't actually check the immutable flag in the setattr code,
-> which means that we can update inode flags and project ids and extent
-> size hints on supposedly immutable files.  Therefore, reject setflags
-> and fssetxattr calls on an immutable file if the file is immutable and
-> will remain that way.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-> ---
->  fs/inode.c |   31 +++++++++++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
-> 
-> 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index a3757051fd55..adfb458bf533 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -2184,6 +2184,17 @@ int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags)
->  	    !capable(CAP_LINUX_IMMUTABLE))
->  		return -EPERM;
->  
-> +	/*
-> +	 * We aren't allowed to change any other flags if the immutable flag is
-> +	 * already set and is not being unset.
-> +	 */
-> +	if ((oldflags & FS_IMMUTABLE_FL) &&
-> +	    (flags & FS_IMMUTABLE_FL)) {
-> +		if ((oldflags & ~FS_IMMUTABLE_FL) !=
-> +		    (flags & ~FS_IMMUTABLE_FL))
 
-This check looks a bit strange when you've just check FS_IMMUTABLE_FL isn't
-changing... Why not just oldflags != flags?
+On 18/06/2019 20:44, Jon Hunter wrote:
+> 
+> On 18/06/2019 16:20, Jon Hunter wrote:
+>>
+>> On 18/06/2019 11:18, Jon Hunter wrote:
+>>>
+>>> On 18/06/2019 10:46, Jose Abreu wrote:
+>>>> From: Jon Hunter <jonathanh@nvidia.com>
+>>>>
+>>>>> I am not certain but I don't believe so. We are using a static IP address
+>>>>> and mounting the root file-system via NFS when we see this ...
+>>>>
+>>>> Can you please add a call to napi_synchronize() before every 
+>>>> napi_disable() calls, like this:
+>>>>
+>>>> if (queue < rx_queues_cnt) {
+>>>> 	napi_synchronize(&ch->rx_napi);
+>>>> 	napi_disable(&ch->rx_napi);
+>>>> }
+>>>>
+>>>> if (queue < tx_queues_cnt) {
+>>>> 	napi_synchronize(&ch->tx_napi);
+>>>> 	napi_disable(&ch->tx_napi);
+>>>> }
+>>>>
+>>>> [ I can send you a patch if you prefer ]
+>>>
+>>> Yes I can try this and for completeness you mean ...
+>>>
+>>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>>> index 4ca46289a742..d4a12cb64d8e 100644
+>>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+>>> @@ -146,10 +146,15 @@ static void stmmac_disable_all_queues(struct stmmac_priv *priv)
+>>>         for (queue = 0; queue < maxq; queue++) {
+>>>                 struct stmmac_channel *ch = &priv->channel[queue];
+>>>  
+>>> -               if (queue < rx_queues_cnt)
+>>> +               if (queue < rx_queues_cnt) {
+>>> +                       napi_synchronize(&ch->rx_napi);
+>>>                         napi_disable(&ch->rx_napi);
+>>> -               if (queue < tx_queues_cnt)
+>>> +               }
+>>> +
+>>> +               if (queue < tx_queues_cnt) {
+>>> +                       napi_synchronize(&ch->tx_napi);
+>>>                         napi_disable(&ch->tx_napi);
+>>> +               }
+>>>         }
+>>>  }
+>>
+>> So good news and bad news ...
+>>
+>> The good news is that the above change does fix the initial crash
+>> I am seeing. However, even with this change applied on top of
+>> -next, it is still dying somewhere else and so there appears to
+>> be a second issue. 
+> 
+> Further testing has shown that actually this does NOT resolve the issue
+> and I am still seeing the crash. Sorry for the false-positive.
 
-> +	if ((old_fa->fsx_xflags & FS_XFLAG_IMMUTABLE) &&
-> +	    (fa->fsx_xflags & FS_XFLAG_IMMUTABLE)) {
-> +		if ((old_fa->fsx_xflags & ~FS_XFLAG_IMMUTABLE) !=
-> +		    (fa->fsx_xflags & ~FS_XFLAG_IMMUTABLE))
+Any further feedback? I am still seeing this issue on today's -next.
 
-Ditto here...
+Thanks
+Jon
 
-> +			return -EPERM;
-> +		if (old_fa->fsx_projid != fa->fsx_projid)
-> +			return -EPERM;
-> +		if ((fa->fsx_xflags & (FS_XFLAG_EXTSIZE |
-> +				       FS_XFLAG_EXTSZINHERIT)) &&
-> +		    old_fa->fsx_extsize != fa->fsx_extsize)
-> +			return -EPERM;
-> +		if ((old_fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
-> +		    old_fa->fsx_cowextsize != fa->fsx_cowextsize)
-> +			return -EPERM;
-> +	}
-> +
->  	/* Extent size hints of zero turn off the flags. */
->  	if (fa->fsx_extsize == 0)
->  		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
-
-								Honza
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+nvpublic
