@@ -4,49 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 953D1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F20AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BEDB2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB8D2168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053810;
-	bh=1H2OOZ5xJRq9mj4X0Y/7+7y3oHkhm0n8Pn1EyciXXso=;
+	s=default; t=1561053812;
+	bh=fN+mNrmLgtHQROZH8aqQZFI7JhULnm8CryM/SGFakXo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jx61yQCKBy4IMdn76s91koP4cSbLEeFQN+9AMV0uK6ZQdp+G9e75bXZ6sEq2ibuFS
-	 OoWEnjCdmQ9rcOUCaadfafPsP9G09j7lFYs5FCknlRK5FwpqBcXVWEh6JqEdYfSlNx
-	 vm4sQXbT8m0MXt2xKgzS0LNNz3qAaAIZxzF7FM8Y=
+	b=bkUuj+80f3OP47HyVO0GedBkyPgaVuScEs6jwnaJ4BNnswQ5zIlnerNxv3MfB/O8/
+	 EmNfypFDl0AEwr983XmN9fALLkxKcYYZmCLOLroh6m9eTU+vmFrYOcr1yEAqvX6fkF
+	 Zz5vd/prXdd2Be0AJMSx7e9AbgZ2WLe+b5LBVUvU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727651AbfFTSD3 (ORCPT
+        id S1727663AbfFTSDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:03:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54694 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727626AbfFTSDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:25 -0400
+        id S1725921AbfFTSD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1A574204FD;
-        Thu, 20 Jun 2019 18:03:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F37221537;
+        Thu, 20 Jun 2019 18:03:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053804;
-        bh=1H2OOZ5xJRq9mj4X0Y/7+7y3oHkhm0n8Pn1EyciXXso=;
+        s=default; t=1561053807;
+        bh=fN+mNrmLgtHQROZH8aqQZFI7JhULnm8CryM/SGFakXo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bm8xLgsDBWlH9XiZUlIjy/oteyA6Bv2lMwvsuYHtJaAi2+HIJyjlwLaeUYkszYEZf
-         7CFrUoJvUAjDz8hqCIbx+qEKJCXXiUvXFpdKt7psqLMBed07p498fw7hE8A/HZDdYc
-         xilu//9mxtMWzp/YHppgmsH0Bj50x1bvRlCpF1Jw=
+        b=GCCWay2bADT3pz6HxbLlgnJscD2kVYTIOuriilxu1/oNvitMHcrNAeCcW4WvkV7j3
+         t2Q3Zeexp74vjCfPXLV5CfZablpYlhf634qw1bnn+iFAyeAxXH9vpxiDzTZwXxuZFC
+         G6MBqYKSmPBXWJ8q5AcZBy+YcR3dAZK8iSlHbn9I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "J. Bruce Fields" <bfields@redhat.com>,
+        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 032/117] nfsd: allow fh_want_write to be called twice
-Date:   Thu, 20 Jun 2019 19:56:06 +0200
-Message-Id: <20190620174353.921173617@linuxfoundation.org>
+Subject: [PATCH 4.9 033/117] x86/PCI: Fix PCI IRQ routing table memory leak
+Date:   Thu, 20 Jun 2019 19:56:07 +0200
+Message-Id: <20190620174353.978290184@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -59,49 +62,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0b8f62625dc309651d0efcb6a6247c933acd8b45 ]
+[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
 
-A fuzzer recently triggered lockdep warnings about potential sb_writers
-deadlocks caused by fh_want_write().
+In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
+found through pirq_find_routing_table().  If the table is not found and
+CONFIG_PCI_BIOS is defined, the table is then allocated in
+pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
+used, this table is actually not used.  In that case, the allocated table
+is not freed, which is a memory leak.
 
-Looks like we aren't careful to pair each fh_want_write() with an
-fh_drop_write().
+Free the allocated table if it is not used.
 
-It's not normally a problem since fh_put() will call fh_drop_write() for
-us.  And was OK for NFSv3 where we'd do one operation that might call
-fh_want_write(), and then put the filehandle.
-
-But an NFSv4 protocol fuzzer can do weird things like call unlink twice
-in a compound, and then we get into trouble.
-
-I'm a little worried about this approach of just leaving everything to
-fh_put().  But I think there are probably a lot of
-fh_want_write()/fh_drop_write() imbalances so for now I think we need it
-to be more forgiving.
-
-Signed-off-by: J. Bruce Fields <bfields@redhat.com>
+Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
+use the irq_routing_table local variable name he suggested]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Reviewed-by: Ingo Molnar <mingo@kernel.org>
+Acked-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfsd/vfs.h | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/x86/pci/irq.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/fs/nfsd/vfs.h b/fs/nfsd/vfs.h
-index 0bf9e7bf5800..9140b9cf3870 100644
---- a/fs/nfsd/vfs.h
-+++ b/fs/nfsd/vfs.h
-@@ -116,8 +116,11 @@ void		nfsd_put_raparams(struct file *file, struct raparms *ra);
+diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+index 9bd115484745..5f0e596b0519 100644
+--- a/arch/x86/pci/irq.c
++++ b/arch/x86/pci/irq.c
+@@ -1117,6 +1117,8 @@ static struct dmi_system_id __initdata pciirq_dmi_table[] = {
  
- static inline int fh_want_write(struct svc_fh *fh)
+ void __init pcibios_irq_init(void)
  {
--	int ret = mnt_want_write(fh->fh_export->ex_path.mnt);
-+	int ret;
++	struct irq_routing_table *rtable = NULL;
++
+ 	DBG(KERN_DEBUG "PCI: IRQ init\n");
  
-+	if (fh->fh_want_write)
-+		return 0;
-+	ret = mnt_want_write(fh->fh_export->ex_path.mnt);
- 	if (!ret)
- 		fh->fh_want_write = true;
- 	return ret;
+ 	if (raw_pci_ops == NULL)
+@@ -1127,8 +1129,10 @@ void __init pcibios_irq_init(void)
+ 	pirq_table = pirq_find_routing_table();
+ 
+ #ifdef CONFIG_PCI_BIOS
+-	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
++	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
+ 		pirq_table = pcibios_get_irq_routing_table();
++		rtable = pirq_table;
++	}
+ #endif
+ 	if (pirq_table) {
+ 		pirq_peer_trick();
+@@ -1143,8 +1147,10 @@ void __init pcibios_irq_init(void)
+ 		 * If we're using the I/O APIC, avoid using the PCI IRQ
+ 		 * routing table
+ 		 */
+-		if (io_apic_assign_pci_irqs)
++		if (io_apic_assign_pci_irqs) {
++			kfree(rtable);
+ 			pirq_table = NULL;
++		}
+ 	}
+ 
+ 	x86_init.pci.fixup_irqs();
 -- 
 2.20.1
 
