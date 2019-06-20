@@ -2,174 +2,129 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E93C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:33:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09127C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82B482082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:33:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561023200;
-	bh=wF4Kft1kjvbBGl6bFmuWJVdHoYPD3Au810PkssaKIZE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bFnSHg183yZCm0p2TR3XKHHuV0+R5kygpFvMK58FLHnGfEVqGs3N6f1jw2Y6hKtYF
-	 So2i5B/Cm7CD8DH+jeUJEywrr8NIQ8SVniUOAqI543joaWfFi5CeiOrJDZ2iWVDF8u
-	 jfO4RYg87ne6FSwXlTsXTclyRFU0+2bOL1p9bkzc=
+	by mail.kernel.org (Postfix) with ESMTP id CC6392082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:35:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="SZk8M3Qw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730650AbfFTJdT (ORCPT
+        id S1730267AbfFTJfY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:33:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46452 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725912AbfFTJdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:33:18 -0400
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA533208CB
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561023197;
-        bh=wF4Kft1kjvbBGl6bFmuWJVdHoYPD3Au810PkssaKIZE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=CRnVSVD2m/JMuXmXMMrNupVPb9HD1/YsmLG8zB04i3IkiTQa5+dImtqjWlVtUVL2D
-         D6jpwAqpeH0/uzLX9kd3H2jKKRW5rWYgla3LouDxkAwovsEOVIM7Q15eS9jT6yjpgK
-         RV1gJEk7ESm7ioUhEmW3+1cjqjSwKwUbjyJDEMgE=
-Received: by mail-wr1-f46.google.com with SMTP id p11so2267919wre.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:33:16 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTSV43Q4fFwvT43L1niU/oK+Vi6GesoHxNbSXFMfI6dMlaG9tw
-        ETlvx67OXuZkULnz3OFT79K/N/b4DOMFRm8uDzU=
-X-Google-Smtp-Source: APXvYqwcJ3JkBbowwrQ6KDOzuprIogDlsLPM1Ig5CGLqsI9nvrmysAdsaO2kn1od4dFuMTqL4DBP4KwoTY8KiIhPM/I=
-X-Received: by 2002:adf:f28a:: with SMTP id k10mr8885379wro.343.1561023195316;
- Thu, 20 Jun 2019 02:33:15 -0700 (PDT)
+        Thu, 20 Jun 2019 05:35:24 -0400
+Received: from mail-eopbgr770071.outbound.protection.outlook.com ([40.107.77.71]:9094
+        "EHLO NAM02-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725925AbfFTJfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:35:23 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O0PVaOH+gsirioJtKnMwB8zuZ8zQabuEKQHuNYKFLpU=;
+ b=SZk8M3QwB/vXX00qWoqk5iX2bUQdTl06qIpitoezhJIr3hlbhNpjTG0USrVGNpofM9XioGaYU+FaDF70BWpX1HJScXVFGvuK3Gwm/kIowovisCjrJs2d6r6QfLUGsLfh5JdbCxQ2K1Dzh4NitPfnCGXSdl1Y0kDXVExWxKDvQAg=
+Received: from BL0PR03CA0008.namprd03.prod.outlook.com (2603:10b6:208:2d::21)
+ by MWHPR03MB3136.namprd03.prod.outlook.com (2603:10b6:301:3c::29) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.13; Thu, 20 Jun
+ 2019 09:35:20 +0000
+Received: from SN1NAM02FT040.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::205) by BL0PR03CA0008.outlook.office365.com
+ (2603:10b6:208:2d::21) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14 via Frontend
+ Transport; Thu, 20 Jun 2019 09:35:20 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.57)
+ smtp.mailfrom=analog.com; metafoo.de; dkim=none (message not signed)
+ header.d=none;metafoo.de; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
+Received: from nwd2mta2.analog.com (137.71.25.57) by
+ SN1NAM02FT040.mail.protection.outlook.com (10.152.72.195) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Thu, 20 Jun 2019 09:35:19 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id x5K9ZI0m011368
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 20 Jun 2019 02:35:18 -0700
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 20 Jun 2019 05:35:17 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <robh+dt@kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [RESEND PATCH 1/4] iio: adc: ad7124: Remove input number limitation
+Date:   Thu, 20 Jun 2019 12:34:49 +0300
+Message-ID: <20190620093452.12891-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-References: <20190321163623.20219-1-julien.grall@arm.com> <20190321163623.20219-12-julien.grall@arm.com>
- <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com> <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
- <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com> <20190619091219.GB7767@fuggles.cambridge.arm.com>
- <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com> <20190619123939.GF7767@fuggles.cambridge.arm.com>
-In-Reply-To: <20190619123939.GF7767@fuggles.cambridge.arm.com>
-From:   Guo Ren <guoren@kernel.org>
-Date:   Thu, 20 Jun 2019 17:33:03 +0800
-X-Gmail-Original-Message-ID: <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
-Message-ID: <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
-Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
- separate file
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
-        Julien Grall <julien.grall@arm.com>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        aou@eecs.berkeley.edu, gary@garyguo.net, Atish.Patra@wdc.com,
-        hch@infradead.org, paul.walmsley@sifive.com, rppt@linux.ibm.com,
-        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
-        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
-        Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com,
-        julien.thierry@arm.com, christoffer.dall@arm.com,
-        james.morse@arm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(346002)(376002)(39860400002)(136003)(396003)(2980300002)(37524003)(199004)(189003)(50466002)(70206006)(356004)(5660300002)(186003)(478600001)(47776003)(246002)(7696005)(16586007)(77096007)(1076003)(316002)(2351001)(336012)(8936002)(48376002)(26005)(4326008)(486006)(44832011)(126002)(2906002)(6666004)(51416003)(476003)(426003)(107886003)(54906003)(50226002)(106002)(86362001)(6916009)(305945005)(36756003)(70586007)(72206003)(2616005)(7636002)(8676002);DIR:OUT;SFP:1101;SCL:1;SRVR:MWHPR03MB3136;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: d04fc1e7-2ec0-478e-ef7e-08d6f5629c36
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600148)(711020)(4605104)(4709080)(1401327)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:MWHPR03MB3136;
+X-MS-TrafficTypeDiagnostic: MWHPR03MB3136:
+X-Microsoft-Antispam-PRVS: <MWHPR03MB31361CDCCC5F3A812594607C81E40@MWHPR03MB3136.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0074BBE012
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: xs/+cMWSsbRBHi+CvljPkJPq5iybrBKOomRIUiV7x8b9DCREi/TlJSIFSP4MpkmYJkKzVlb0A0KoxvV/bQeG97qqPUZvrqG858Mqnw03iTCbmFMBhexWiSoomQE6sj+ZBurZixDAIq6/17efa4ADv471l5FEWKpJ+QjYj2zqUuGtpqSwg4Ra8r7DL0ATpRcLZ74rasKos/yUk2lxzA9kyCy4SwuvVpktnynWnyC32vrnEZQygPh2C/+Ajkqei6JeiPW0KFIOPrCluauWFOnr0NTgAqpaWf19BeRV4QpupgnnUy0Nm0yG6jSPLzZMpTtWIWTKnPZyQNC2h30ADDC5gOS+vFlTuq9A3tR6W54CC7cd38waH6FFWiBwfop1Oax+oEiOzmLDKb6OpW/JfM5JADXYhoS14EHCb6iKlocRpZg=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2019 09:35:19.2627
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: d04fc1e7-2ec0-478e-ef7e-08d6f5629c36
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR03MB3136
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 8:39 PM Will Deacon <will.deacon@arm.com> wrote:
->
-> On Wed, Jun 19, 2019 at 08:18:04PM +0800, Guo Ren wrote:
-> > On Wed, Jun 19, 2019 at 5:12 PM Will Deacon <will.deacon@arm.com> wrote:
-> > > This is one place where I'd actually prefer not to go down the route of
-> > > making the code generic. Context-switching and low-level TLB management
-> > > is deeply architecture-specific and I worry that by trying to make this
-> > > code common, we run the real risk of introducing subtle bugs on some
-> > > architecture every time it is changed.
-> > "Add generic asid code" and "move arm's into generic" are two things.
-> > We could do
-> > first and let architecture's maintainer to choose.
->
-> If I understand the proposal being discussed, it involves basing that
-> generic ASID allocation code around the arm64 implementation which I don't
-> necessarily think is a good starting point.
-...
->
-> > > Furthermore, the algorithm we use
-> > > on arm64 is designed to scale to large systems using DVM and may well be
-> > > too complex and/or sub-optimal for architectures with different system
-> > > topologies or TLB invalidation mechanisms.
-> > It's just a asid algorithm not very complex and there is a callback
-> > for architecture to define their
-> > own local hart tlb flush. Seems it has nothing with DVM or tlb
-> > broadcast mechanism.
->
-> I'm pleased that you think the algorithm is not very complex, but I'm also
-> worried that you might not have fully understood some of its finer details.
-I understand your concern about my less understanding of asid
-technology. Here is
-my short-description of arm64 asid allocator: (If you find anything
-wrong, please
-correct me directly, thx :)
-The asid allocator use five level check to reduce the cost of switch_mm.
- 1. Check if the asid version is the same (it's general)
- 2. Check reserved_asid which is set in rollover flush_context() and
-the key point is
-     keep the same bit position with the current asid version instead
-of input version.
- 3. Check if the position of bitmap is free then it could be set &
-used directly.
- 4. find_next_zero_bit() (a little performance cost)
- 5. flush_context  (this is the worst cost with increase current asid version)
+The driver limits the user to use only 4/8 differential inputs, but this
+device has the option to use pseudo-differential channels. This will
+increase the number of channels to be equal with the number of inputs so 8
+channels for ad7124-4 and 16 for ad7124-8.
 
-Check is level by level and cost is also higher with the next level.
-The design that
-impressed me the most was reserved_asid and bitmap and the 2th level and 3th
-level will prevent unnecessary find_next_zero_bit().
+This patch removes the check between channel nodes and num_inputs value.
 
-The atomic 64 bit asid is also ok for 32-bit system and it won't cost
-a lot in 1th 2th 3th
-level check.
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 7 -------
+ 1 file changed, 7 deletions(-)
 
-The operation of set/clear mm_cpumask was removed in arm64 compared to arm32.
-It seems no side effect on current arm64 system, but from software
-meaning it's wrong.
-So I think it should be reserved in generic version.
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 659ef37d5fe8..810234db9c0d 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			goto err;
+ 
+-		if (ain[0] >= st->chip_info->num_inputs ||
+-		    ain[1] >= st->chip_info->num_inputs) {
+-			dev_err(indio_dev->dev.parent,
+-				"Input pin number out of range.\n");
+-			ret = -EINVAL;
+-			goto err;
+-		}
+ 		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
+ 						  AD7124_CHANNEL_AINM(ain[1]);
+ 		st->channel_config[channel].bipolar =
+-- 
+2.17.1
 
->
-> The reason I mention DVM and TLB broadcasting is because, depending on
-> the mechanisms in your architecture relating to those, it may be strictly
-> required that all concurrently running threads of a process have the same
-> ASID at any given point in time, or it may be that you really don't care.
->
-> If you don't care, then the arm64 allocator is over-engineered and likely
-> inefficient for your system. If you do care, then it's worth considering
-> whether a lock is sufficient around the allocator if you don't expect high
-> core counts. Another possibility is that you end up using only one ASID and
-> invalidating the local TLB on every context switch. Yet another design
-> would be to manage per-cpu ASID pools.
-I'll keep my system use the same ASID for SMP + IOMMU :P
-Yes, there are two styles of asid allocator: per-cpu ASID (MIPS) or
-same ASID (ARM).
-If the CPU couldn't support cache/tlb coherency maintian in hardware,
-it should use
-per-cpu ASID style because IPI is expensive and per-cpu ASID style
-need more software
-mechanism to improve performance (eg: delay cache flush). From software view the
-same ASID is clearer and easier to build bigger system with more TLB caches.
-
-I think the same ASID style is a more sensible choice for modern
-processor and let it be
-one of generic is reasonable.
-
->
-> So rather than blindly copying the arm64 code, I suggest sitting down and
-> designing something that fits to your architecture instead. You may end up
-> with something that is both simpler and more efficient.
-In fact, riscv folks have discussed a lot about arm's asid allocator
-and I learned
-a lot from the discussion:
-https://lore.kernel.org/linux-riscv/20190327100201.32220-1-anup.patel@wdc.com/
-
-We are developing C-SKY and RISC-V ISA cpu cores and make it generic
-is good for us.
-
-Best Regards
- Guo Ren
