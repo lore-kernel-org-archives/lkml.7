@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 787ECC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C823DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56FE921670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A881B20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053773;
-	bh=m3tTPnNAkgqFtN/2nRUSNBTOitepTMlSaAXARBF1d7A=;
+	s=default; t=1561053779;
+	bh=6aPQ+SZJrNBQE1bCP2AAQIHlazC98BuMIAU85BDQpKk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Jnqr/camNztUyb4/7B+FRTtE5NYPWu8l84K14VXK7+WzN9czFnqKo+c41Oj9SVUpk
-	 t/5d5MTcF0Fit3hIaGKdavMIdZbpYfBV8GzRG0OAJ4copiVsjiMuu9H/ZPhT2tPtsT
-	 No3o2ZetZDCjF0T8vc9ojsqcrPHRclC+NIbtUjoM=
+	b=U1Zqh1Bq2jkEthbuCkQu9nnd9Cq1LL1XHQHls6Ug2+PAwoYkTICKbDaMTrRSln+F0
+	 zTCMMswq5KQXDRh6l3mf5eiS2kqvuT5zFY8Idy1PcXTr/n2yCPLDw4rSfqzS/C/1ZO
+	 py/kfUtEzUy47DvmfYOmY8fy8SRUXv28d41gPkF0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727533AbfFTSCw (ORCPT
+        id S1727537AbfFTSC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:02:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53706 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727497AbfFTSCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:02:50 -0400
+        id S1726721AbfFTSCy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:02:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 15B222083B;
-        Thu, 20 Jun 2019 18:02:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AFB5D2082C;
+        Thu, 20 Jun 2019 18:02:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053769;
-        bh=m3tTPnNAkgqFtN/2nRUSNBTOitepTMlSaAXARBF1d7A=;
+        s=default; t=1561053773;
+        bh=6aPQ+SZJrNBQE1bCP2AAQIHlazC98BuMIAU85BDQpKk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MSThfl1ILjINVwTnUMzK8q7C/HOp6sjScbUBsNw1McxrA3lerCBBc5hGAxn/Zrz5w
-         5LS6Bkuh2WU2a9wnMYehiB4HNrRTTC4MIEMxmeRCLDEbRWR9TSftKE3+2h1KnvcBRD
-         8o0dVQYp0V5F4GUsc/W/2RcuQhDGAuvcd6MviZh0=
+        b=nMRPWjGvmiMrPZZ0RKu81Wbpa0w9xRVcdCnpohO1Ek1xUcZ/XhKbSRWwpSYB3Eqj9
+         +OkQHsGHFxvR2mDx4vHGz89RvLdb75ZmzYDfvgp7z3cUEE7bq8nRLZ+L4j9T2vUYdY
+         440mPn/WM7HgBKZofpAt4fzEDe7x8rdR9fBcNQI4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
         Jaegeuk Kim <jaegeuk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 021/117] f2fs: fix to avoid panic in do_recover_data()
-Date:   Thu, 20 Jun 2019 19:55:55 +0200
-Message-Id: <20190620174353.245249239@linuxfoundation.org>
+Subject: [PATCH 4.9 022/117] f2fs: fix to clear dirty inode in error path of f2fs_iget()
+Date:   Thu, 20 Jun 2019 19:55:56 +0200
+Message-Id: <20190620174353.301206329@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,76 +60,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit 546d22f070d64a7b96f57c93333772085d3a5e6d ]
 
 As Jungyeon reported in bugzilla:
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
+https://bugzilla.kernel.org/show_bug.cgi?id=203217
 
 - Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after running the program.
 
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
 
 - Reproduces
+cc poc_test_05.c
 mkdir test
 mount -t f2fs tmp.img test
+sudo ./a.out
 sync
 
 - Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
+ kernel BUG at fs/f2fs/inode.c:707!
+ RIP: 0010:f2fs_evict_inode+0x33f/0x3a0
  Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
+  evict+0xba/0x180
+  f2fs_iget+0x598/0xdf0
+  f2fs_lookup+0x136/0x320
+  __lookup_slow+0x92/0x140
+  lookup_slow+0x30/0x50
+  walk_component+0x1c1/0x350
+  path_lookupat+0x62/0x200
+  filename_lookup+0xb3/0x1a0
+  do_readlinkat+0x56/0x110
+  __x64_sys_readlink+0x16/0x20
   do_syscall_64+0x43/0xf0
   entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
+During inode loading, __recover_inline_status() can recovery inode status
+and set inode dirty, once we failed in following process, it will fail
+the check in f2fs_evict_inode, result in trigger BUG_ON().
+
+Let's clear dirty inode in error path of f2fs_iget() to avoid panic.
 
 Signed-off-by: Chao Yu <yuchao0@huawei.com>
 Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ fs/f2fs/inode.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index e59eeaf02eaa..9de1480a86bd 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -407,7 +407,15 @@ retry_dn:
+diff --git a/fs/f2fs/inode.c b/fs/f2fs/inode.c
+index 1de02c31756b..c56d04ec45dc 100644
+--- a/fs/f2fs/inode.c
++++ b/fs/f2fs/inode.c
+@@ -288,6 +288,7 @@ make_now:
+ 	return inode;
  
- 	get_node_info(sbi, dn.nid, &ni);
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
-+
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
- 
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
+ bad_inode:
++	f2fs_inode_synced(inode);
+ 	iget_failed(inode);
+ 	trace_f2fs_iget_exit(inode, ret);
+ 	return ERR_PTR(ret);
 -- 
 2.20.1
 
