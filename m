@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91749C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 622B5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61C8B2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 32D0D2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uY7cEYYQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="odDqhRBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726843AbfFTVKU (ORCPT
+        id S1726893AbfFTVKY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:10:20 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41616 "EHLO
+        Thu, 20 Jun 2019 17:10:24 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40188 "EHLO
         mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFTVKR (ORCPT
+        with ESMTP id S1726807AbfFTVKT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:10:17 -0400
-Received: by mail-pl1-f195.google.com with SMTP id m7so1876307pls.8;
-        Thu, 20 Jun 2019 14:10:17 -0700 (PDT)
+        Thu, 20 Jun 2019 17:10:19 -0400
+Received: by mail-pl1-f195.google.com with SMTP id a93so1889373pla.7;
+        Thu, 20 Jun 2019 14:10:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=cDab2WaDc8pmyozwLyE8nCfYmBAFCdTC9FtT+TR/XI0=;
-        b=uY7cEYYQj2MK+bqyQ9CpRQfc3g1dfCFniZZIXkdY8drNCUNjJBLLaHdZH5+p06aemy
-         GcGPYFm+q6oXQg+Jk8Ala/K1G1hgnI/L09BDHXHqDAkba54zHOpJbaSyOCQ2sJ5l05eV
-         ALWeeMvw72G9T8lbNHqkzhfWXR9/ZBQy9k2FxcErC0mA2YYQHGxp7/d53WjF+pivlOxI
-         cl6enhqqSNB+LYMH8jSauOfmidOQtrqYIJvkL2iSEbHFH3w3HCip2upVzj0jXjK7A1cK
-         v1BO7cd/kPDvEeTCxLY/QuvFgikQTM3Vhf9T+ateZNZyvGVYPp6VhyrfIowMOGjNJy+H
-         L6MQ==
+        bh=nBLqKjSVrBp381m0eswowtTt2XvGMCRYc4oh6uPOArU=;
+        b=odDqhRBWBoc3kunhmHJB492EcjJwrhFnyXSUVW3/CoWDvFNgUyRMRIvvo6XsI+hRpC
+         F8PK8A4AnBpq6wLd0H7Pjr9ZGlp6xHPWKnQFGO00cnPVFoJ/lyFb9pdg4jra3fGKxQEU
+         2X3q20gRCZDdgRqN07nqK1bFVIAlAbplibG1x+sLxagcy10U6sMBk4oNYWqHoncvtpPg
+         oERoRdPPpL2cBcuymbSzsj1Fty4chUNuNV230KR63W3ofdO/Ydca1wDvHnklAChhmpXf
+         iqogw3hGzMxaVxmddB9nF6KsM+TmyR35hKtNUGKFttAKPS9ESWc5O3JpHXLRf+TeEwRF
+         r3dw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=cDab2WaDc8pmyozwLyE8nCfYmBAFCdTC9FtT+TR/XI0=;
-        b=mFt3vCx/TijTuTXuUdRGZmf74cqAHpzWRW8CEN/qGNepBQVqQ5HuYNKTfnxovsR5kp
-         4B8iXqSYWH+9uHkuPvaWoinOiSO4c9DyKLn7YsCvhacNimxumcVRoKUjj51+g6OELPE3
-         sjaeyNNFIRDJidvdRLVrt7n7oxAegpIG/8HVT2YPoqcW1C3oiKuAaMJTZdwidGum+MlB
-         rEqmUInsFN+mOsFphDxMGXNsP6s4yP5Ywv7PpzwRW7Pjt0uD06ULz0ayuXLXdqF+Dzic
-         6bMjAflC9+zbVmgUnWvbtnQSMpDpNGxpTTwJ5+btjI7VdErVVr4ZsA58w2t2B3ESMnMG
-         AFMg==
-X-Gm-Message-State: APjAAAWJknMq5MDPU6QDU6mfXRq9wsaEZEq94A7O7kDDYWh9JqhuVP/t
-        Wphr1CDuzn1d1FmEJNnfi9x1BPTBOYQ=
-X-Google-Smtp-Source: APXvYqwZjKo2rGUjYzKp0BcPEdJYd30LpDC7JkTj8NUjDCwb1T5DEN95UNT37w4J5RCNhwMlN2GQvA==
-X-Received: by 2002:a17:902:4623:: with SMTP id o32mr9490608pld.112.1561065016794;
-        Thu, 20 Jun 2019 14:10:16 -0700 (PDT)
+        bh=nBLqKjSVrBp381m0eswowtTt2XvGMCRYc4oh6uPOArU=;
+        b=pHz08Le6tZRfLPIGDLxMfm8EQngjEYmkFZoBHlLKz6uowVMlBbEE6D8swpjFd+7jtO
+         gzDvvpM7UgnGeKO9iE87rN+i7eFmpdjn55NOG+67LOs356wWtloJ9a/pfga89yP044ae
+         DfXF1Kl/379ognT72/BcrKgCX0+cAR+V/NCjeXbkfr460W1cHjT1+jcd2d7a+QRI9B+7
+         rNFbgCiNx3LPyontYnwJP3LiOtAQm89LVd2gIZetH5AcvMI4LiLgDMqleus33ymU49cl
+         FQMSnSY2zkW9zywC5vNGSNQD9100cXCY7BK3qHij0cR7GQ/yMPAvOnhVfYQkE/WM53Pi
+         8Z+w==
+X-Gm-Message-State: APjAAAU7grOSWOUf6m3DaQIqH0zzwBgGKVAfsj7yf3wFABXAt9CKoogM
+        x1JRQKhCA/CLVMc6CM2lOpWQ4fV8xOA=
+X-Google-Smtp-Source: APXvYqwQeDcUXcq5wDH39La0AxAdtmC0QX43bHAhnAlNJBq86E2hHf1IRQ7lkIFgYUWZ30soK4xk5A==
+X-Received: by 2002:a17:902:2862:: with SMTP id e89mr127805856plb.258.1561065018506;
+        Thu, 20 Jun 2019 14:10:18 -0700 (PDT)
 Received: from stbsrv-and-3.and.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.15
+        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 14:10:16 -0700 (PDT)
+        Thu, 20 Jun 2019 14:10:18 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
         linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 5/6] dt-bindings: usb: bdc: Update compatible strings
-Date:   Thu, 20 Jun 2019 17:09:50 -0400
-Message-Id: <1561064991-16874-6-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH 6/6] usb: bdc: Update compatible match strings
+Date:   Thu, 20 Jun 2019 17:09:51 -0400
+Message-Id: <1561064991-16874-7-git-send-email-alcooperx@gmail.com>
 X-Mailer: git-send-email 1.9.0.138.g2de3478
 In-Reply-To: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
 References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
@@ -80,31 +80,21 @@ Add "brcm,bdc-udc-v3.1" which exists for any STB system with BDC.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- Documentation/devicetree/bindings/usb/brcm,bdc.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/brcm,bdc.txt b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-index 63e63af3bf59..597f3902d857 100644
---- a/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-+++ b/Documentation/devicetree/bindings/usb/brcm,bdc.txt
-@@ -4,7 +4,7 @@ Broadcom USB Device Controller (BDC)
- Required properties:
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 15e28790142d..e2b2628925e6 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -644,6 +644,7 @@ static SIMPLE_DEV_PM_OPS(bdc_pm_ops, bdc_suspend,
+ 		bdc_resume);
  
- - compatible: must be one of:
--                "brcm,bdc-v0.16"
-+                "brcm,bdc-udc-v3.1"
-                 "brcm,bdc"
- - reg: the base register address and length
- - interrupts: the interrupt line for this controller
-@@ -21,7 +21,7 @@ On Broadcom STB platforms, these properties are required:
- Example:
- 
-         bdc@f0b02000 {
--                compatible = "brcm,bdc-v0.16";
-+                compatible = "brcm,bdc-udc-v3.1";
-                 reg = <0xf0b02000 0xfc4>;
-                 interrupts = <0x0 0x60 0x0>;
-                 phys = <&usbphy_0 0x0>;
+ static const struct of_device_id bdc_of_match[] = {
++	{ .compatible = "brcm,bdc-udc-v3.1" },
+ 	{ .compatible = "brcm,bdc-v0.16" },
+ 	{ .compatible = "brcm,bdc" },
+ 	{ /* sentinel */ }
 -- 
 1.9.0.138.g2de3478
 
