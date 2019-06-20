@@ -6,58 +6,55 @@ X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A35D3C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:14:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17CF5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 828812080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:14:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E351F2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731804AbfFTMOM (ORCPT
+        id S1731742AbfFTMQ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:14:12 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33392 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFTMOL (ORCPT
+        Thu, 20 Jun 2019 08:16:26 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54404 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFTMQ0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:14:11 -0400
-Received: by mail-wm1-f68.google.com with SMTP id h19so6794023wme.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:14:10 -0700 (PDT)
+        Thu, 20 Jun 2019 08:16:26 -0400
+Received: by mail-wm1-f65.google.com with SMTP id g135so2838164wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:16:25 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=j6RqlD3tjx4apx8Dop5hpUBnB0AsX4GUNp1imsaFEWU=;
-        b=kucKfdTSA9e+yI3+ompGQEJQVuF6h2zQ+7dQ2KjOy4TuC2FOEfHcTtCCzBum02OUf7
-         2sm8VVfpz35WaN6Zpq3sNZb4sX8M3zvNPtvCU7U61mC38NJT7IXRF2zBJ4un/QIA2x0r
-         ORYmThPrilJ3g+hT5RDxvj3KkluUiecP++fJMu0OS/QfogvsST7STzEvfSmNz9G2IXps
-         bqOYuWIffAIKuBwMW3EBy6TdiesSeD4AuGfsNG4h1X2DD41BEJ8qZB75vi/fL0hbxFTy
-         Mu//biJ3nMvilVwVDDD5Bf394UG2uA+5V3tCOvcRW3TpvlM/Ek2T0YsJW/TwHnX5irDd
-         RLrw==
-X-Gm-Message-State: APjAAAWVyNMtO/oYcTxnd2WwC1AatY8+fPr5GJmfWGmwUAxh4SeYyhRY
-        KPedJze6QSYri30KgBZbMurdeA==
-X-Google-Smtp-Source: APXvYqwqNN7z4fPCN4X79oZjI2lnVPj/ReOJhcvL+WrOsnOt4/UEvzaGwgwU76LsXJVRmVm2vDz7Eg==
-X-Received: by 2002:a05:600c:228b:: with SMTP id 11mr2745365wmf.26.1561032849420;
-        Thu, 20 Jun 2019 05:14:09 -0700 (PDT)
+        bh=B9TrtGyucT7ajjWuvboh+Hy5dvZksEd6/p4CR2fghIg=;
+        b=A7OSdNT+3bcSy1ZMZkS3doXRRWmpmYpQeUp4St2vBpbna8fSIVmsIS9lt3WYKmo/lg
+         EzqpP4JIPR+rDBwn9eIdfa+SHiOKztBxJTL+qk/5VKA61zYADlRMNjSmLBVDdYUJMUJW
+         hR3Ab56kzX7q/jSBDFCLr+akM0jJT6uJUX1g/n9LQcS7ApENETP6hiGMkvpLvOnxxHhF
+         aKEQkfHaScVzOcCnMBweJBXO/tLULzPh204es0YFpM5r6Doo03PJOat7njbaSWfwIgYq
+         GuTn8myiIsNyCac1W5vhxEb/GzA1l4MdyBTH0TvXlhNZ7cPLIwP7U8IreDMcDNfBdUDY
+         BP5A==
+X-Gm-Message-State: APjAAAWmsRlflUz647COptG6tYWdaOUpP3dH5VJp2SJOjOKxkFEf5uil
+        CTrn//BWEMcoD6YKVsPgfc2H6A==
+X-Google-Smtp-Source: APXvYqzkWL+juoCKmAeAkp5CGN3y2wmBiY61EVn/WFlS6StZw7pwdzH2GmRBNiiSmutGjpGYKskLFA==
+X-Received: by 2002:a1c:4484:: with SMTP id r126mr2782080wma.27.1561032984421;
+        Thu, 20 Jun 2019 05:16:24 -0700 (PDT)
 Received: from ?IPv6:2001:b07:6468:f312:7822:aa18:a9d8:39ab? ([2001:b07:6468:f312:7822:aa18:a9d8:39ab])
-        by smtp.gmail.com with ESMTPSA id h133sm2091970wme.28.2019.06.20.05.14.08
+        by smtp.gmail.com with ESMTPSA id d18sm36464286wrb.90.2019.06.20.05.16.23
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 05:14:08 -0700 (PDT)
-Subject: Re: [PATCH RFC 0/5] x86/KVM/svm: get rid of hardcoded instructions
- lengths
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com>
+        Thu, 20 Jun 2019 05:16:23 -0700 (PDT)
+Subject: Re: [PATCH RFC] kvm: x86: Expose AVX512_BF16 feature to guest
+To:     Jing Liu <jing2.liu@linux.intel.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jing2.liu@intel.com
+References: <1561029712-11848-1-git-send-email-jing2.liu@linux.intel.com>
+ <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
 From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <3515d812-e5dd-4436-b73f-1d64bc93b079@redhat.com>
-Date:   Thu, 20 Jun 2019 14:14:06 +0200
+Message-ID: <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
+Date:   Thu, 20 Jun 2019 14:16:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190620110240.25799-1-vkuznets@redhat.com>
+In-Reply-To: <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -66,25 +63,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20/06/19 13:02, Vitaly Kuznetsov wrote:
-> 
-> P.S. If you'd like to test the series you'll have to have a CPU without
-> NRIP_SAVE feature or forcefully disable it, something like:
-> 
-> index 8d4e50428b68..93c7eaad7915 100644
-> --- a/arch/x86/kernel/cpu/amd.c
-> +++ b/arch/x86/kernel/cpu/amd.c
-> @@ -922,6 +922,9 @@ static void init_amd(struct cpuinfo_x86 *c)
->         /* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
->         if (!cpu_has(c, X86_FEATURE_XENPV))
->                 set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
-> +
-> +       /* No nrips */
-> +       clear_cpu_cap(c, X86_FEATURE_NRIPS);
->  }
->  
->  #ifdef CONFIG_X86_32
+On 20/06/19 13:21, Jing Liu wrote:
+> +		for (i = 1; i <= times; i++) {
+> +			if (*nent >= maxnent)
+> +				goto out;
+> +			do_cpuid_1_ent(&entry[i], function, i);
+> +			entry[i].eax &= F(AVX512_BF16);
+> +			entry[i].ebx = 0;
+> +			entry[i].ecx = 0;
+> +			entry[i].edx = 0;
+> +			entry[i].flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+> +			++*nent;
 
-Let's add a module parameter instead.  Patch sent (forgot to Cc you).
+This woud be wrong for i > 1, so instead make this
+
+	if (entry->eax >= 1)
+
+and define F(AVX512_BF16) as a new constant kvm_cpuid_7_1_eax_features.
 
 Paolo
