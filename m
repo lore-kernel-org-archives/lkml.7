@@ -5,22 +5,22 @@ X-Spam-Level:
 X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BBFFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:03:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AA50C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6B4206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:03:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BFF206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
 	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="I9EGS0zY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfFTTDZ (ORCPT
+        id S1726489AbfFTTDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 15:03:25 -0400
-Received: from mout.web.de ([212.227.15.4]:40767 "EHLO mout.web.de"
+        Thu, 20 Jun 2019 15:03:30 -0400
+Received: from mout.web.de ([212.227.15.3]:38657 "EHLO mout.web.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725989AbfFTTDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1725905AbfFTTDZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 15:03:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
         s=dbaedf251592; t=1561057372;
@@ -30,8 +30,8 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
          +FeCUOp3dPt4kdyIzVse7dDlEMPIFnSoh2syzQREpbhX1437z5Y9DRWrxFOwV4Hq6s
          zHSRtINXMaQ4mfjSPxDMqxskylSwU7WYUgsmZRvo=
 X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([2.243.128.109]) by smtp.web.de (mrweb001
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MYefK-1i8Eda1vda-00VTMw; Thu, 20
+Received: from [192.168.1.2] ([2.243.128.109]) by smtp.web.de (mrweb002
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0MRTzc-1i2Bxk1sIy-00ShXI; Thu, 20
  Jun 2019 21:02:52 +0200
 Subject: Re: Coccinelle: Add a SmPL script for the reconsideration of
  redundant dev_err() calls
@@ -91,7 +91,7 @@ Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
  Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
  x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
  pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <532ef0ea-9478-bc2a-c1c1-2ed5e1545879@web.de>
+Message-ID: <34d528db-5582-5fe2-caeb-89bcb07a1d30@web.de>
 Date:   Thu, 20 Jun 2019 21:02:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.1
@@ -100,25 +100,25 @@ In-Reply-To: <alpine.DEB.2.21.1906202046550.3087@hadrien>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:FwzKJAPdM90wf9P1+AUL4rGU32JO2MWkSSRBTTuHgqzI2fIvm6L
- hcxuorftp0fYzrD4uheAom9ovvvB753zHEQ5uPoLLXu3dpKvUpSPIGk8MU8A3MrQe14ODBU
- eoXl5f2Ns6tdoBqfHYCMCa8vG0mnnnUL9WZwSmUTjJc6dJMgluevBiBsHS2qQVkEIIn2+hF
- /HRyfgMf6RYvWss+1bYEQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ivDt3DMEkbs=:yJGOYYQTCTHgjg0PML8qg1
- Y70nLz51SzDCh/COtFkH0jiJ7Qq7rVWk2djIStDiUDcGVAsc86WMGvq6TlhCVIU5h1buARXz3
- jxmdOT3clifk+Sa1h+Q0D4bajFvBKEHa1mpgzRs/n/wALh92rLMVp2D86g9v/w8eRZgIjXVrH
- llQbZZmV6Le2eIqnaKZP5Zkl1W4bNvYctQpz8XRLOVE9iFNbCNzKc+N5bt8dOjMCdlglIE52n
- 9ZC3OkPZ4YIYnjQUyPz6CctbhtfLCZTGhAJqrxOjbC6/bzHw3NyPTY1VpWLgnUi5ng1h/9SvQ
- 1/UGve+o9T7MICHYuOCoDOXnrl44b1qhizCTQMwIg/tdKJsu2W88wtKHORulf8bHGNmMRDarC
- 3RDYuvbP/aKuCZYtoEMtME0C24+No0pU5TC5CEUZqZXIExSXcJUky1dda3Y+sMVdJc+C4aKGN
- HTSpzUEIX89yOwTsD4BAJqk+lXdM70/cBe0d1sobODjihjNr+CjSdh8jpi9Yy3kDEHp1r1Chn
- mlSV4iCmSOYYrgEozRhgkhQy7WE23YUosApdRnc9YFaVYhasdiVI/W13c5ZaLNEu3dyFinJ0d
- 7mRmFifw0rvoRg/sm3ouSL+M3NEW7E5FMqb1bPLN3BC3mKBpiWyOrTS9CfatDmFZgtMgT4sWZ
- Zvaylcl2Y34e6I8MVM0UXeq/0sxPwPw5uTDawp2ybQABhztAtPIj3PE+CK+SSv9FsJUvpd0Fz
- aBYCDFZsMUcWOwEep3mPUfFdsnacGzqX9TreT+/owW7JPPBNEvkj4ocaOWyVpKNTbNyrn7IrN
- 8iZOWf0JuFLFOd0O2EWtQ+nJOlxN3db6zqea7KkqTnjKh25FlSVrPqAUQSHZODJFVDbEtznyz
- BzM6sWbBr/0CthqwsSnLMgSfLdNY7hyQVGSKYEw0moVzkD3tEnVhEPZDzSu6vfrCLJ5Xu21rT
- xd9cP8blpxSj/PTpEzCFBSWek9Au0LwRZolVrphfWcpMhTEtc3im4
+X-Provags-ID: V03:K1:kyiA8ZPxAZHFfJHNkZBsYAZLElHdRiQKHIn7PmkhgsI1ZLk/oxO
+ PlLr3+kjhOlypfzIWpNevk5IbYSTGtlCJrLJ4ZLy4jZs49LusQ6HQc/8nF4knMMpilpRx9W
+ elEFjzZfQuAZ0s6KrnDp8gcWnlhsIz4Q/wynKqiiMQyiGiXEDq6eWG7tvRgEOty6p+WHuzg
+ k/3ynWdsxfKM0MTzxpjFA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:rkia6fHN3PY=:0v8bTS7aSvjVS1ljG/qLKY
+ mbMeVNlmzYnzWe8aIsu7UJ0mFfItT+jXkinvHeKoiWstb1YhGbSiht58DE1IqUmRwBzhnoWqi
+ n+qsi6Zqon7m4TO7s4A8dwUgeqg5T1g0iy47E54BqN9C8OjQX1mTxGsrnqlMkyUsCce/rKwJP
+ T4cMC/6XRg1WO2VCs/ojBVUJ0bt77baR0uF5zg3b6qARawo+KPJSp6L7TjffJKRPL4I7y/I47
+ p57Qtm6j3iWyL+6uQQtnUGHZe0/gVEBxKkXH3Iz6/0HVdRFsyghfhoGR0sjYPcKQJXOXyci0D
+ PloZ4f191ixK95Nq8JVC2tGHkY91y1PAz0NzPi3TCH4Y0Qqir6nUuwd3C8l4dvGqBrmu4Rg+h
+ ZU8dkU+TeWG81PBaBOrlUhKOzCcEo9MXqgqh5S2By+YldRsbRRCJI8tTWTJbRaYXoEbh3AkbB
+ CLo8l0K66ucsUh815HDCGVEtMplSbdVVXa0RgQImmwQEdG+nzevrywQbc2VI1ba3xi9COGqLM
+ +L50WFpO9YSUUxKKopC/AbL3yPFuDxSSsH9E8YJFKu8fNLIYqkQSiCv7cGUV7kkFo/BqCGirD
+ NDqBa0AWNvIxU2AJSVBA7W/lUb9NHLfkcPD1rC/4s+5phmM9SS91ccieBIqcnjMMRNZlXloxT
+ j1LFyD7aeE98RJ9RtbKmKqlEBdrGEgaa4kyTCss+5XvhC5zoD4nKwrv7C/oBeQs4zTr9aEaPd
+ iY02IR36+rxa8bCs5rx8KAcPL1F5ThHaepnAOzbhoJ1mz/n7KTifRJwmGTzGRLQDPDXliAfth
+ jDggWQx/flc3biVG6A2MShn79RYMDOp2MTEyB+FeeI8iIjg5ekwtpyE46H3mJjpDk2qJsOMBt
+ NjIR+sQqh681PelHDch9N5I5mEKxx176VaF0ZxUe72/MmlTekhgHdGz266+R71BN6pavWWeE1
+ jM0qo9C0nAADM6FIgYniDYXcl+Ek9ETHz2g36rFM8UuqyeDxWTzyJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
