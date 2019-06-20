@@ -2,201 +2,385 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0EB0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7935C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AF642082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:54:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V44Esc+X"
+	by mail.kernel.org (Postfix) with ESMTP id 609E02082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:54:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731946AbfFTPyF (ORCPT
+        id S1732022AbfFTPyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:54:05 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:46613 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfFTPyF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:54:05 -0400
-Received: by mail-wr1-f68.google.com with SMTP id n4so3521282wrw.13;
-        Thu, 20 Jun 2019 08:54:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=q2BZSgLwxymATwcz5mZeMXxgTAlopkINs/PMNefIvUU=;
-        b=V44Esc+XKQSOQjNnaxw2MmMTKdJaJKQDxq17rl0lBAneRfZN1f8XeL5yyjyQyrOSOa
-         FOfj2kwyNRS6HcW9PAPst6IjjKKkU3xxvrLkESfhmQZAPNvN6EkfJnAbjkY3PoX1v35I
-         0monHG7qNbVh+PckIESPcARdhbOow9+mlJxI6YjsIIqmz532OE0y3GP28s3Ogpzt4z6/
-         /n/pZlnjpYEvB1tlUCbEZawOHnoFxPDA+q5gLVoWxYEuh5iN8f5oZEqewN4ttmGHe0P3
-         XoQRJJUakLeW6GigtSRWsIH0o1zAzuVucDEgR2zJlzBu4kv0rX7gVRK2zoVE0SSAu+rV
-         +ajg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=q2BZSgLwxymATwcz5mZeMXxgTAlopkINs/PMNefIvUU=;
-        b=W1a5DR7QWla8dMqL7ZJkF2lwXYFaTo2zPESK+khtRq6oIn86dz/GmeM9mRifljfJsv
-         RQa1HcktTBD8+JRdR8yNqeVkxlLnYdD9Y9+2tusDRSSTFo3wUdAjb874ZnZ3lDu640OG
-         CJ4+lCgGh6/sTy+evNMbcfoMwjY5SoWze0bcGCd1CJ1gU9LGY24kMnFwkiZa4u897dWA
-         xPuvW3o7sx+lz3OZsmnszDdLUlh1cA8ymj7MLwMzHH88ouOxn6F/nXVF1aD91o37ndwn
-         xs3xy4BgQSV+iuGShBD/yHktxdmMO0MYFkBET8R1+L+nLBDo2uxppDNmGxxvzIVXspIP
-         iSYA==
-X-Gm-Message-State: APjAAAUhD40wkoY+aPoNRLkloVG9xDAF+PDl+F4gKy5dYgwoEw3SUYJ4
-        9WTMQXzWkPHLggu3tteHNCgr2Y9tdEU=
-X-Google-Smtp-Source: APXvYqwjinCWK/aSKbDmwODZdByqPtonNAHy81M6XwA7AeZJB8EfRvgjyd6heFibzYj9+zCcNldc5Q==
-X-Received: by 2002:adf:b1ca:: with SMTP id r10mr15094293wra.156.1561046042286;
-        Thu, 20 Jun 2019 08:54:02 -0700 (PDT)
-Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net. [86.58.52.202])
-        by smtp.gmail.com with ESMTPSA id o13sm34914608wra.92.2019.06.20.08.53.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 08:54:00 -0700 (PDT)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
-To:     linux-sunxi@googlegroups.com, megous@megous.com
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        Thu, 20 Jun 2019 11:54:23 -0400
+Received: from mga07.intel.com ([134.134.136.100]:35177 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726620AbfFTPyW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:54:22 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:54:21 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="183111321"
+Received: from waelreed-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.63.228])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Jun 2019 08:54:18 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 690A121D88; Thu, 20 Jun 2019 18:54:15 +0300 (EEST)
+Date:   Thu, 20 Jun 2019 18:54:15 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Hugues Fruchet <hugues.fruchet@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: Re: [linux-sunxi] [PATCH v7 0/6] Add support for Orange Pi 3
-Date:   Thu, 20 Jun 2019 17:53:58 +0200
-Message-ID: <2263144.KN5DhQ2VKD@jernej-laptop>
-In-Reply-To: <20190620134748.17866-1-megous@megous.com>
-References: <20190620134748.17866-1-megous@megous.com>
+        linux-stm32@st-md-mailman.stormreply.com,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: Re: [PATCH v2 3/3] media: stm32-dcmi: add support of several
+ sub-devices
+Message-ID: <20190620155414.rei4mtinpczznpnk@kekkonen.localdomain>
+References: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
+ <1560242912-17138-4-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560242912-17138-4-git-send-email-hugues.fruchet@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+Hi Hugues,
 
-Dne =C4=8Detrtek, 20. junij 2019 ob 15:47:42 CEST je megous via linux-sunxi=
-=20
-napisal(a):
-> From: Ondrej Jirman <megous@megous.com>
->=20
-> This series implements support for Xunlong Orange Pi 3 board.
->=20
-> - ethernet support (patches 1-3)
+Thank you for the update.
 
-Correct me if I'm wrong, but patches 1-2 aren't strictly necessary for=20
-OrangePi 3, right? H6 DTSI already has emac node with dual compatible (H6 a=
-nd=20
-A64) and since OrangePi 3 uses gigabit ethernet, quirk introduced by patche=
-s=20
-1-2 are not needed.
+On Tue, Jun 11, 2019 at 10:48:32AM +0200, Hugues Fruchet wrote:
+> Add support of several sub-devices within pipeline instead
+> of a single one.
+> This allows to support a CSI-2 camera sensor connected
+> through a CSI-2 to parallel bridge.
+> 
+> Signed-off-by: Hugues Fruchet <hugues.fruchet@st.com>
+> ---
+>  drivers/media/platform/stm32/stm32-dcmi.c | 207 +++++++++++++++++++++++++++---
+>  1 file changed, 189 insertions(+), 18 deletions(-)
+> 
+> diff --git a/drivers/media/platform/stm32/stm32-dcmi.c b/drivers/media/platform/stm32/stm32-dcmi.c
+> index 3a69783..144912f 100644
+> --- a/drivers/media/platform/stm32/stm32-dcmi.c
+> +++ b/drivers/media/platform/stm32/stm32-dcmi.c
+> @@ -173,6 +173,7 @@ struct stm32_dcmi {
+>  
+>  	struct media_device		mdev;
+>  	struct media_pad		vid_cap_pad;
+> +	struct media_pipeline		pipeline;
+>  };
+>  
+>  static inline struct stm32_dcmi *notifier_to_dcmi(struct v4l2_async_notifier *n)
+> @@ -584,6 +585,135 @@ static void dcmi_buf_queue(struct vb2_buffer *vb)
+>  	spin_unlock_irq(&dcmi->irqlock);
+>  }
+>  
+> +static struct media_entity *dcmi_find_sensor(struct stm32_dcmi *dcmi)
 
-However, it is nice to have this 100 Mbit fix, because most STB DTS will ne=
-ed=20
-it.
+You generally should be only concerned with the next entity connected to the
+one you're in control of, not the rest of the pipeline.
 
-Best regards,
-Jernej
+> +{
+> +	struct media_entity *entity = &dcmi->vdev->entity;
+> +	struct v4l2_subdev *subdev;
+> +	struct media_pad *pad;
+> +
+> +	/* Walk searching for entity having no sink */
+> +	while (1) {
+> +		pad = &entity->pads[0];
+> +
+> +		subdev = media_entity_to_v4l2_subdev(entity);
+> +
+> +		if (!(pad->flags & MEDIA_PAD_FL_SINK))
+> +			break;
+> +
+> +		pad = media_entity_remote_pad(pad);
+> +		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+> +			break;
+> +
+> +		entity = pad->entity;
+> +	}
+> +
+> +	return entity;
+> +}
+> +
+> +static int dcmi_pipeline_s_fmt(struct stm32_dcmi *dcmi,
+> +			       struct v4l2_subdev_pad_config *pad_cfg,
+> +			       struct v4l2_subdev_format *format)
+> +{
+> +	struct media_entity *entity = &dcmi->sensor->entity;
+> +	struct v4l2_subdev *subdev;
+> +	struct media_pad *sink_pad = NULL;
+> +	struct media_pad *src_pad = NULL;
+> +	struct media_pad *pad = NULL;
+> +	struct v4l2_subdev_format fmt = *format;
+> +	bool found = false;
+> +	int ret;
+> +
+> +	/*
+> +	 * Starting from sensor subdevice, walk within
+> +	 * pipeline and set format on each subdevice
+> +	 */
+> +	while (1) {
+> +		unsigned int i;
+> +
+> +		/* Search if current entity has a source pad */
+> +		for (i = 0; i < entity->num_pads; i++) {
+> +			pad = &entity->pads[i];
+> +			if (pad->flags & MEDIA_PAD_FL_SOURCE) {
+> +				src_pad = pad;
+> +				found = true;
+> +				break;
+> +			}
+> +		}
+> +		if (!found)
+> +			break;
+> +
+> +		subdev = media_entity_to_v4l2_subdev(entity);
+> +
+> +		/* Propagate format on sink pad if any, otherwise source pad */
+> +		if (sink_pad)
+> +			pad = sink_pad;
+> +
+> +		dev_dbg(dcmi->dev, "%s[%d] pad format set to 0x%x %ux%u\n",
+> +			subdev->name, pad->index, format->format.code,
+> +			format->format.width, format->format.height);
+> +
+> +		fmt.pad = pad->index;
+> +		ret = v4l2_subdev_call(subdev, pad, set_fmt, pad_cfg, &fmt);
 
-> - HDMI support (patches 4-6)
->=20
-> For some people, ethernet doesn't work after reboot (but works on cold
-> boot), when the stmmac driver is built into the kernel. It works when
-> the driver is built as a module. It's either some timing issue, or power
-> supply issue or a combination of both. Module build induces a power
-> cycling of the phy.
->=20
-> I encourage people with this issue, to build the driver into the kernel,
-> and try to alter the reset timings for the phy in DTS or
-> startup-delay-us and report the findings.
->=20
->=20
-> Please take a look.
->=20
-> thank you and regards,
->   Ondrej Jirman
->=20
->=20
-> Changes in v7:
-> - dropped stored reference to connector_pdev as suggested by Jernej
-> - added forgotten dt-bindings reviewed-by tag
->=20
-> Changes in v6:
-> - added dt-bindings reviewed-by tag
-> - fix wording in stmmac commit (as suggested by Sergei)
->=20
-> Changes in v5:
-> - dropped already applied patches (pinctrl patches, mmc1 pinconf patch)
-> - rename GMAC-3V3 -> GMAC-3V to match the schematic (Jagan)
-> - changed hdmi-connector's ddc-supply property to ddc-en-gpios
->   (Rob Herring)
->=20
-> Changes in v4:
-> - fix checkpatch warnings/style issues
-> - use enum in struct sunxi_desc_function for io_bias_cfg_variant
-> - collected acked-by's
-> - fix compile error in drivers/pinctrl/sunxi/pinctrl-sun9i-a80-r.c:156
->   caused by missing conversion from has_io_bias_cfg struct member
->   (I've kept the acked-by, because it's a trivial change, but feel free
->   to object.) (reported by Martin A. on github)
->   I did not have A80 pinctrl enabled for some reason, so I did not catch
->   this sooner.
-> - dropped brcm firmware patch (was already applied)
-> - dropped the wifi dts patch (will re-send after H6 RTC gets merged,
->   along with bluetooth support, in a separate series)
->=20
-> Changes in v3:
-> - dropped already applied patches
-> - changed pinctrl I/O bias selection constants to enum and renamed
-> - added /omit-if-no-ref/ to mmc1_pins
-> - made mmc1_pins default pinconf for mmc1 in H6 dtsi
-> - move ddc-supply to HDMI connector node, updated patch descriptions,
->   changed dt-bindings docs
->=20
-> Changes in v2:
-> - added dt-bindings documentation for the board's compatible string
->   (suggested by Clement)
-> - addressed checkpatch warnings and code formatting issues (on Maxime's
->   suggestions)
-> - stmmac: dropped useless parenthesis, reworded description of the patch
->   (suggested by Sergei)
-> - drop useles dev_info() about the selected io bias voltage
-> - docummented io voltage bias selection variant macros
-> - wifi: marked WiFi DTS patch and realted mmc1_pins as "DO NOT MERGE",
->   because wifi depends on H6 RTC support that's not merged yet (suggested
->   by Clement)
-> - added missing signed-of-bys
-> - changed &usb2otg dr_mode to otg, and added a note about VBUS
-> - improved wording of HDMI driver's DDC power supply patch
->=20
-> Icenowy Zheng (2):
->   net: stmmac: sun8i: add support for Allwinner H6 EMAC
->   net: stmmac: sun8i: force select external PHY when no internal one
->=20
-> Ondrej Jirman (4):
->   arm64: dts: allwinner: orange-pi-3: Enable ethernet
->   dt-bindings: display: hdmi-connector: Support DDC bus enable
->   drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
->   arm64: dts: allwinner: orange-pi-3: Enable HDMI output
->=20
->  .../display/connector/hdmi-connector.txt      |  1 +
->  .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 70 +++++++++++++++++++
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c         | 54 ++++++++++++--
->  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h         |  2 +
->  .../net/ethernet/stmicro/stmmac/dwmac-sun8i.c | 21 ++++++
->  5 files changed, 144 insertions(+), 4 deletions(-)
+Generally speaking, on MC-centric devices, the user space needs to
+configure the pipeline. The driver's responsibility is to validate it
+(through the link_validate media entity and subdev pad ops). I.e. set_fmt
+is only used through the subdev nodes.
 
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		/* Walk to next entity */
+> +		sink_pad = media_entity_remote_pad(src_pad);
+> +		if (!sink_pad || !is_media_entity_v4l2_subdev(sink_pad->entity))
+> +			break;
+> +
+> +		entity = sink_pad->entity;
+> +	}
+> +	*format = fmt;
+> +
+> +	return 0;
+> +}
+> +
+> +static int dcmi_pipeline_s_stream(struct stm32_dcmi *dcmi, int state)
+> +{
+> +	struct media_entity *entity = &dcmi->vdev->entity;
+> +	struct v4l2_subdev *subdev;
+> +	struct media_pad *pad;
+> +	int ret;
+> +
+> +	/* Start/stop all entities within pipeline */
+> +	while (1) {
+> +		pad = &entity->pads[0];
+> +		if (!(pad->flags & MEDIA_PAD_FL_SINK))
+> +			break;
+> +
+> +		pad = media_entity_remote_pad(pad);
+> +		if (!pad || !is_media_entity_v4l2_subdev(pad->entity))
+> +			break;
+> +
+> +		entity = pad->entity;
+> +		subdev = media_entity_to_v4l2_subdev(entity);
+> +
+> +		ret = v4l2_subdev_call(subdev, video, s_stream, state);
 
+Please only call this on the next upstream sub-device. See e.g. the
+ipu3-cio2 or omap3isp driver for an example.
 
+> +		if (ret < 0 && ret != -ENOIOCTLCMD) {
+> +			dev_err(dcmi->dev, "%s: %s failed to %s streaming (%d)\n",
+> +				__func__, subdev->name,
+> +				state ? "start" : "stop", ret);
+> +			return ret;
+> +		}
+> +
+> +		dev_dbg(dcmi->dev, "%s is %s\n",
+> +			subdev->name, state ? "started" : "stopped");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int dcmi_pipeline_start(struct stm32_dcmi *dcmi)
+> +{
+> +	return dcmi_pipeline_s_stream(dcmi, 1);
+> +}
+> +
+> +static void dcmi_pipeline_stop(struct stm32_dcmi *dcmi)
+> +{
+> +	dcmi_pipeline_s_stream(dcmi, 0);
+> +}
+> +
+>  static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  {
+>  	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+> @@ -598,14 +728,17 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  		goto err_release_buffers;
+>  	}
+>  
+> -	/* Enable stream on the sub device */
+> -	ret = v4l2_subdev_call(dcmi->sensor, video, s_stream, 1);
+> -	if (ret && ret != -ENOIOCTLCMD) {
+> -		dev_err(dcmi->dev, "%s: Failed to start streaming, subdev streamon error",
+> -			__func__);
+> +	ret = media_pipeline_start(&dcmi->vdev->entity, &dcmi->pipeline);
+> +	if (ret < 0) {
+> +		dev_err(dcmi->dev, "%s: Failed to start streaming, media pipeline start error (%d)\n",
+> +			__func__, ret);
+>  		goto err_pm_put;
+>  	}
+>  
+> +	ret = dcmi_pipeline_start(dcmi);
+> +	if (ret)
+> +		goto err_media_pipeline_stop;
+> +
+>  	spin_lock_irq(&dcmi->irqlock);
+>  
+>  	/* Set bus width */
+> @@ -677,7 +810,7 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  	if (ret) {
+>  		dev_err(dcmi->dev, "%s: Start streaming failed, cannot start capture\n",
+>  			__func__);
+> -		goto err_subdev_streamoff;
+> +		goto err_pipeline_stop;
+>  	}
+>  
+>  	/* Enable interruptions */
+> @@ -688,8 +821,11 @@ static int dcmi_start_streaming(struct vb2_queue *vq, unsigned int count)
+>  
+>  	return 0;
+>  
+> -err_subdev_streamoff:
+> -	v4l2_subdev_call(dcmi->sensor, video, s_stream, 0);
+> +err_pipeline_stop:
+> +	dcmi_pipeline_stop(dcmi);
+> +
+> +err_media_pipeline_stop:
+> +	media_pipeline_stop(&dcmi->vdev->entity);
+>  
+>  err_pm_put:
+>  	pm_runtime_put(dcmi->dev);
+> @@ -714,13 +850,10 @@ static void dcmi_stop_streaming(struct vb2_queue *vq)
+>  {
+>  	struct stm32_dcmi *dcmi = vb2_get_drv_priv(vq);
+>  	struct dcmi_buf *buf, *node;
+> -	int ret;
+>  
+> -	/* Disable stream on the sub device */
+> -	ret = v4l2_subdev_call(dcmi->sensor, video, s_stream, 0);
+> -	if (ret && ret != -ENOIOCTLCMD)
+> -		dev_err(dcmi->dev, "%s: Failed to stop streaming, subdev streamoff error (%d)\n",
+> -			__func__, ret);
+> +	dcmi_pipeline_stop(dcmi);
+> +
+> +	media_pipeline_stop(&dcmi->vdev->entity);
+>  
+>  	spin_lock_irq(&dcmi->irqlock);
+>  
+> @@ -938,8 +1071,7 @@ static int dcmi_set_fmt(struct stm32_dcmi *dcmi, struct v4l2_format *f)
+>  	mf->width = sd_framesize.width;
+>  	mf->height = sd_framesize.height;
+>  
+> -	ret = v4l2_subdev_call(dcmi->sensor, pad,
+> -			       set_fmt, NULL, &format);
+> +	ret = dcmi_pipeline_s_fmt(dcmi, NULL, &format);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> @@ -1530,7 +1662,19 @@ static int dcmi_graph_notify_complete(struct v4l2_async_notifier *notifier)
+>  	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
+>  	int ret;
+>  
+> +	/*
+> +	 * Now that the graph is complete,
+> +	 * we search for the camera sensor subdevice
+> +	 * in order to expose it through V4L2 interface
+> +	 */
+> +	dcmi->sensor = media_entity_to_v4l2_subdev(dcmi_find_sensor(dcmi));
+> +	if (!dcmi->sensor) {
+> +		dev_err(dcmi->dev, "No camera sensor subdevice found\n");
+> +		return -ENODEV;
+> +	}
+> +
+>  	dcmi->vdev->ctrl_handler = dcmi->sensor->ctrl_handler;
+> +
+>  	ret = dcmi_formats_init(dcmi);
+>  	if (ret) {
+>  		dev_err(dcmi->dev, "No supported mediabus format found\n");
+> @@ -1574,12 +1718,30 @@ static int dcmi_graph_notify_bound(struct v4l2_async_notifier *notifier,
+>  				   struct v4l2_async_subdev *asd)
+>  {
+>  	struct stm32_dcmi *dcmi = notifier_to_dcmi(notifier);
+> +	unsigned int ret;
+> +	int src_pad;
+>  
+>  	dev_dbg(dcmi->dev, "Subdev %s bound\n", subdev->name);
+>  
+> -	dcmi->sensor = subdev;
+> +	/*
+> +	 * Link this sub-device to DCMI, it could be
+> +	 * a parallel camera sensor or a bridge
+> +	 */
+> +	src_pad = media_entity_get_fwnode_pad(&subdev->entity,
+> +					      subdev->fwnode,
+> +					      MEDIA_PAD_FL_SOURCE);
+> +
+> +	ret = media_create_pad_link(&subdev->entity, src_pad,
+> +				    &dcmi->vdev->entity, 0,
+> +				    MEDIA_LNK_FL_IMMUTABLE |
+> +				    MEDIA_LNK_FL_ENABLED);
+> +	if (ret)
+> +		dev_err(dcmi->dev, "Failed to create media pad link with subdev %s\n",
+> +			subdev->name);
+> +	else
+> +		dev_dbg(dcmi->dev, "DCMI is now linked to %s\n", subdev->name);
+>  
+> -	return 0;
+> +	return ret;
+>  }
+>  
+>  static const struct v4l2_async_notifier_operations dcmi_graph_notify_ops = {
+> @@ -1639,6 +1801,15 @@ static int dcmi_graph_init(struct stm32_dcmi *dcmi)
+>  		return ret;
+>  	}
+>  
+> +	/* Register all the subdev nodes */
+> +	ret = v4l2_device_register_subdev_nodes(&dcmi->v4l2_dev);
+> +	if (ret) {
+> +		dev_err(dcmi->dev, "Failed to register subdev nodes\n");
+> +		v4l2_async_notifier_unregister(&dcmi->notifier);
+> +		of_node_put(dcmi->entity.node);
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
 
+-- 
+regards,
+
+Sakari Ailus
+sakari.ailus@linux.intel.com
