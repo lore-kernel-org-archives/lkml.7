@@ -2,228 +2,182 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03EA8C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:39:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FD18C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6E0E2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:39:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6749F2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EsRX/z5i"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="WsUEv8+z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731958AbfFTOju (ORCPT
+        id S1731972AbfFTOkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:39:50 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:35534 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfFTOjt (ORCPT
+        Thu, 20 Jun 2019 10:40:17 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:50793 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726758AbfFTOkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:39:49 -0400
-Received: by mail-yw1-f68.google.com with SMTP id k128so1281226ywf.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:39:49 -0700 (PDT)
+        Thu, 20 Jun 2019 10:40:16 -0400
+Received: by mail-wm1-f68.google.com with SMTP id c66so3367639wmf.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:40:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=b/xVTTO13YZRoWlxnmmyYUyBFZOvXu9iKc3UKSDiO8g=;
-        b=EsRX/z5iufniFIHZi8C2aO9PnAZTemthqfhGRb0QeF4codH+ax/xP4mDwPcp+HFIAb
-         1RKLsA5PGLighAEMsz2UdbWJU3hU3tmWZaIBlCRV4Ci95MQsPLogeoFRr7AVLWcdHKJT
-         4SXBMXLaBsBRkaHlDljk+roS7qjO+i/yfSE5knLHMUzEI7d1ZE4d+Gk/0FAGzjPy/U4F
-         bq0zPM2BtqNCW6xCYx0yh+y/M0+Sy9/oIGkNO8XadJL0dYpUZMgkGWlhKBKDYVKnVR/O
-         2qGtMm0WgOCGkQzHLbf1aKQg9XXCYrOspw6tlyvHoC0RAuJA8INjbnTMkkdqITADAuCB
-         AO3A==
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rbA7KNAENXe+ANroQbV4yDpx7Jb+S4Jx+UHkiChpfPA=;
+        b=WsUEv8+zMSy8H9xzrB72BgzVZyvWB5rsNKxX5+tQWPMdJy9LvNotaNnoUsahGoAd0+
+         UqxdwWhntAyFe898mwIHoaMsGjRQQAKbe0QKwQAIp/ejDxeAlECSrDqouz5hANj6d03j
+         6LoSyj5FxyhIhwv1mvOYtW0638a1mUNlDQlyXK7xWG1ytLktLU1L0UIRocazPhiCSE4I
+         QmXpJ89ySPR8LkEU8KCxkkxXsBFh1BXLkF0MnoE8ttaTT8UYom6pFIZ4xyej9AaQHsuL
+         MztaxhC50tfwHrKLrMSt7WHZH/LQyStRR5gZlZYeVwvJNcZQBfPx2rYdkUMdktf58xjx
+         1G6g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=b/xVTTO13YZRoWlxnmmyYUyBFZOvXu9iKc3UKSDiO8g=;
-        b=rlD6brgUeomps7D3qfnKqn5CFCw5UjW6FSRSaog1xmRhHWWBRPv1LvB7Q2x/O783/R
-         RWEiK2IWTXslfbCc/518wmUJ63WytASwVoCrdDLdxkDPnbwUhxn/vQsp7P8+MNOsCUmf
-         U0H7z+Y6Hj8ZOMwtEIDnsxi9E6WYlQeplvBhp0aqBeIgCLGXNrD5v818JuK0aw5bxo4N
-         M08h+Oe+fif1tMXRRCPeueEWPwcA5BMp9rq0rgNBpJPRs41sBnXBqnly1L/MlD7Kr7uh
-         3dh8DmvG3wPOACOWJwsTjXEqkfCApVSQ8J1v4W8ezfk1c72hfc3Fj+vJdefhcXFcIbvr
-         KpIw==
-X-Gm-Message-State: APjAAAW8Nr6w6OufiIO/r0KKIpPf/VR0qJw0AfEDsBTw0Y9HFdwjRbjf
-        TwvAZMDY1A/AeeWdTGG1vpQ5iwfEm9qiPKERSNrFQg==
-X-Google-Smtp-Source: APXvYqxv+Tuq6d6FipBVznIuiXxZGa9UBLC4lTXMCQcA8rTWKFP8sUpjSIIHDESNxlTn8uv6nSiVgSh9rgCJkNNROhI=
-X-Received: by 2002:a0d:c345:: with SMTP id f66mr26110539ywd.10.1561041587654;
- Thu, 20 Jun 2019 07:39:47 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=rbA7KNAENXe+ANroQbV4yDpx7Jb+S4Jx+UHkiChpfPA=;
+        b=K0QKGm4l/sOMnj4NiCj9OVlyKR/AhUa+IJKbih3KtV7ev4+J2KuzZT/IPIl1V08chg
+         L1tassahSymSM2JSdzqjwSCLAWK/VLAYzkcGKzfEYQvUEGn6rx8VsEdJwAkR4It4Y8jH
+         O+r+M468bmRQ+xHvwP7P1lsx3yP6SKQvI3dITpqXk8PdiO1UHf75ooxY5FYqAzeLQqKL
+         mki80el1ZYwaDd7fWbdBNXADlxE0n8xP/5+elNksZh2I5tlgubfH/HmcXYE9rEDhIdcI
+         1ZnIf7e235U9yuNrSQLnsKbAody6LeGnOGLweobhhKX5RX0LBBoxC/vy061vjQrEByVW
+         bMuQ==
+X-Gm-Message-State: APjAAAXMiLiPxo2OWSI4X5Fo8dbNUlRmZSuOmZ2Y5gNVb0tr3twkk8YN
+        OmFVNzswHSC3Jw7eCLRSm4NmlZjWWre2tQ==
+X-Google-Smtp-Source: APXvYqyF8Gwk2z8kiKskIxmUKThKe1pKCq4jyJ0AXOPQ5LsgJ735VFk09Gs2YfIyp85wfTbLh9Gfkw==
+X-Received: by 2002:a1c:720e:: with SMTP id n14mr3154446wmc.53.1561041613229;
+        Thu, 20 Jun 2019 07:40:13 -0700 (PDT)
+Received: from [10.1.2.12] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id p3sm21020823wrd.47.2019.06.20.07.40.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 07:40:12 -0700 (PDT)
+Subject: Re: [PATCH 0/4] drm/bridge: dw-hdmi: Add support for HDR metadata
+To:     Jonas Karlman <jonas@kwiboo.se>,
+        "a.hajda@samsung.com" <a.hajda@samsung.com>,
+        "Laurent.pinchart@ideasonboard.com" 
+        <Laurent.pinchart@ideasonboard.com>
+Cc:     "jernej.skrabec@siol.net" <jernej.skrabec@siol.net>,
+        "khilman@baylibre.com" <khilman@baylibre.com>,
+        "zhengyang@rock-chips.com" <zhengyang@rock-chips.com>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        "wens@csie.org" <wens@csie.org>,
+        "hjc@rock-chips.com" <hjc@rock-chips.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+From:   Neil Armstrong <narmstrong@baylibre.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=narmstrong@baylibre.com; prefer-encrypt=mutual; keydata=
+ mQENBE1ZBs8BCAD78xVLsXPwV/2qQx2FaO/7mhWL0Qodw8UcQJnkrWmgTFRobtTWxuRx8WWP
+ GTjuhvbleoQ5Cxjr+v+1ARGCH46MxFP5DwauzPekwJUD5QKZlaw/bURTLmS2id5wWi3lqVH4
+ BVF2WzvGyyeV1o4RTCYDnZ9VLLylJ9bneEaIs/7cjCEbipGGFlfIML3sfqnIvMAxIMZrvcl9
+ qPV2k+KQ7q+aXavU5W+yLNn7QtXUB530Zlk/d2ETgzQ5FLYYnUDAaRl+8JUTjc0CNOTpCeik
+ 80TZcE6f8M76Xa6yU8VcNko94Ck7iB4vj70q76P/J7kt98hklrr85/3NU3oti3nrIHmHABEB
+ AAG0KE5laWwgQXJtc3Ryb25nIDxuYXJtc3Ryb25nQGJheWxpYnJlLmNvbT6JATsEEwEKACUC
+ GyMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheABQJXDO2CAhkBAAoJEBaat7Gkz/iubGIH/iyk
+ RqvgB62oKOFlgOTYCMkYpm2aAOZZLf6VKHKc7DoVwuUkjHfIRXdslbrxi4pk5VKU6ZP9AKsN
+ NtMZntB8WrBTtkAZfZbTF7850uwd3eU5cN/7N1Q6g0JQihE7w4GlIkEpQ8vwSg5W7hkx3yQ6
+ 2YzrUZh/b7QThXbNZ7xOeSEms014QXazx8+txR7jrGF3dYxBsCkotO/8DNtZ1R+aUvRfpKg5
+ ZgABTC0LmAQnuUUf2PHcKFAHZo5KrdO+tyfL+LgTUXIXkK+tenkLsAJ0cagz1EZ5gntuheLD
+ YJuzS4zN+1Asmb9kVKxhjSQOcIh6g2tw7vaYJgL/OzJtZi6JlIW5AQ0ETVkGzwEIALyKDN/O
+ GURaHBVzwjgYq+ZtifvekdrSNl8TIDH8g1xicBYpQTbPn6bbSZbdvfeQPNCcD4/EhXZuhQXM
+ coJsQQQnO4vwVULmPGgtGf8PVc7dxKOeta+qUh6+SRh3vIcAUFHDT3f/Zdspz+e2E0hPV2hi
+ SvICLk11qO6cyJE13zeNFoeY3ggrKY+IzbFomIZY4yG6xI99NIPEVE9lNBXBKIlewIyVlkOa
+ YvJWSV+p5gdJXOvScNN1epm5YHmf9aE2ZjnqZGoMMtsyw18YoX9BqMFInxqYQQ3j/HpVgTSv
+ mo5ea5qQDDUaCsaTf8UeDcwYOtgI8iL4oHcsGtUXoUk33HEAEQEAAYkBHwQYAQIACQUCTVkG
+ zwIbDAAKCRAWmrexpM/4rrXiB/sGbkQ6itMrAIfnM7IbRuiSZS1unlySUVYu3SD6YBYnNi3G
+ 5EpbwfBNuT3H8//rVvtOFK4OD8cRYkxXRQmTvqa33eDIHu/zr1HMKErm+2SD6PO9umRef8V8
+ 2o2oaCLvf4WeIssFjwB0b6a12opuRP7yo3E3gTCSKmbUuLv1CtxKQF+fUV1cVaTPMyT25Od+
+ RC1K+iOR0F54oUJvJeq7fUzbn/KdlhA8XPGzwGRy4zcsPWvwnXgfe5tk680fEKZVwOZKIEuJ
+ C3v+/yZpQzDvGYJvbyix0lHnrCzq43WefRHI5XTTQbM0WUIBIcGmq38+OgUsMYu4NzLu7uZF
+ Acmp6h8guQINBFYnf6QBEADQ+wBYa+X2n/xIQz/RUoGHf84Jm+yTqRT43t7sO48/cBW9vAn9
+ GNwnJ3HRJWKATW0ZXrCr40ES/JqM1fUTfiFDB3VMdWpEfwOAT1zXS+0rX8yljgsWR1UvqyEP
+ 3xN0M/40Zk+rdmZKaZS8VQaXbveaiWMEmY7sBV3QvgOzB7UF2It1HwoCon5Y+PvyE3CguhBd
+ 9iq5iEampkMIkbA3FFCpQFI5Ai3BywkLzbA3ZtnMXR8Qt9gFZtyXvFQrB+/6hDzEPnBGZOOx
+ zkd/iIX59SxBuS38LMlhPPycbFNmtauOC0DNpXCv9ACgC9tFw3exER/xQgSpDVc4vrL2Cacr
+ wmQp1k9E0W+9pk/l8S1jcHx03hgCxPtQLOIyEu9iIJb27TjcXNjiInd7Uea195NldIrndD+x
+ 58/yU3X70qVY+eWbqzpdlwF1KRm6uV0ZOQhEhbi0FfKKgsYFgBIBchGqSOBsCbL35f9hK/JC
+ 6LnGDtSHeJs+jd9/qJj4WqF3x8i0sncQ/gszSajdhnWrxraG3b7/9ldMLpKo/OoihfLaCxtv
+ xYmtw8TGhlMaiOxjDrohmY1z7f3rf6njskoIXUO0nabun1nPAiV1dpjleg60s3OmVQeEpr3a
+ K7gR1ljkemJzM9NUoRROPaT7nMlNYQL+IwuthJd6XQqwzp1jRTGG26J97wARAQABiQM+BBgB
+ AgAJBQJWJ3+kAhsCAikJEBaat7Gkz/iuwV0gBBkBAgAGBQJWJ3+kAAoJEHfc29rIyEnRk6MQ
+ AJDo0nxsadLpYB26FALZsWlN74rnFXth5dQVQ7SkipmyFWZhFL8fQ9OiIoxWhM6rSg9+C1w+
+ n45eByMg2b8H3mmQmyWztdI95OxSREKwbaXVapCcZnv52JRjlc3DoiiHqTZML5x1Z7lQ1T3F
+ 8o9sKrbFO1WQw1+Nc91+MU0MGN0jtfZ0Tvn/ouEZrSXCE4K3oDGtj3AdC764yZVq6CPigCgs
+ 6Ex80k6QlzCdVP3RKsnPO2xQXXPgyJPJlpD8bHHHW7OLfoR9DaBNympfcbQJeekQrTvyoASw
+ EOTPKE6CVWrcQIztUp0WFTdRGgMK0cZB3Xfe6sOp24PQTHAKGtjTHNP/THomkH24Fum9K3iM
+ /4Wh4V2eqGEgpdeSp5K+LdaNyNgaqzMOtt4HYk86LYLSHfFXywdlbGrY9+TqiJ+ZVW4trmui
+ NIJCOku8SYansq34QzYM0x3UFRwff+45zNBEVzctSnremg1mVgrzOfXU8rt+4N1b2MxorPF8
+ 619aCwVP7U16qNSBaqiAJr4e5SNEnoAq18+1Gp8QsFG0ARY8xp+qaKBByWES7lRi3QbqAKZf
+ yOHS6gmYo9gBmuAhc65/VtHMJtxwjpUeN4Bcs9HUpDMDVHdfeRa73wM+wY5potfQ5zkSp0Jp
+ bxnv/cRBH6+c43stTffprd//4Hgz+nJcCgZKtCYIAPkUxABC85ID2CidzbraErVACmRoizhT
+ KR2OiqSLW2x4xdmSiFNcIWkWJB6Qdri0Fzs2dHe8etD1HYaht1ZhZ810s7QOL7JwypO8dscN
+ KTEkyoTGn6cWj0CX+PeP4xp8AR8ot4d0BhtUY34UPzjE1/xyrQFAdnLd0PP4wXxdIUuRs0+n
+ WLY9Aou/vC1LAdlaGsoTVzJ2gX4fkKQIWhX0WVk41BSFeDKQ3RQ2pnuzwedLO94Bf6X0G48O
+ VsbXrP9BZ6snXyHfebPnno/te5XRqZTL9aJOytB/1iUna+1MAwBxGFPvqeEUUyT+gx1l3Acl
+ ZaTUOEkgIor5losDrePdPgE=
+Organization: Baylibre
+Message-ID: <085dc3be-20e5-b2fe-4c02-bf4a4d1473da@baylibre.com>
+Date:   Thu, 20 Jun 2019 16:40:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-References: <20190619171621.26209-1-longman@redhat.com> <CALvZod7pdOx0a1v4oX5-7ZfCykM8iwRwPkW-+gbO1B4+j1SXqw@mail.gmail.com>
- <cfc6c800-1cb4-e2f2-e6d9-f0571c11a47b@redhat.com>
-In-Reply-To: <cfc6c800-1cb4-e2f2-e6d9-f0571c11a47b@redhat.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 20 Jun 2019 07:39:36 -0700
-Message-ID: <CALvZod4oOddDvuvuXyp=p2Dq=h354a-D72daagfya_Ewp_ggSA@mail.gmail.com>
-Subject: Re: [PATCH v2] mm, memcg: Add a memcg_slabinfo debugfs file
-To:     Waiman Long <longman@redhat.com>
-Cc:     Christoph Lameter <cl@linux.com>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Michal Hocko <mhocko@kernel.org>, Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <VI1PR03MB420621617DDEAB3596700DE0AC1C0@VI1PR03MB4206.eurprd03.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 7:24 AM Waiman Long <longman@redhat.com> wrote:
->
-> On 6/19/19 7:48 PM, Shakeel Butt wrote:
-> > Hi Waiman,
-> >
-> > On Wed, Jun 19, 2019 at 10:16 AM Waiman Long <longman@redhat.com> wrote:
-> >> There are concerns about memory leaks from extensive use of memory
-> >> cgroups as each memory cgroup creates its own set of kmem caches. There
-> >> is a possiblity that the memcg kmem caches may remain even after the
-> >> memory cgroups have been offlined. Therefore, it will be useful to show
-> >> the status of each of memcg kmem caches.
-> >>
-> >> This patch introduces a new <debugfs>/memcg_slabinfo file which is
-> >> somewhat similar to /proc/slabinfo in format, but lists only information
-> >> about kmem caches that have child memcg kmem caches. Information
-> >> available in /proc/slabinfo are not repeated in memcg_slabinfo.
-> >>
-> >> A portion of a sample output of the file was:
-> >>
-> >>   # <name> <css_id[:dead]> <active_objs> <num_objs> <active_slabs> <num_slabs>
-> >>   rpc_inode_cache   root          13     51      1      1
-> >>   rpc_inode_cache     48           0      0      0      0
-> >>   fat_inode_cache   root           1     45      1      1
-> >>   fat_inode_cache     41           2     45      1      1
-> >>   xfs_inode         root         770    816     24     24
-> >>   xfs_inode           92          22     34      1      1
-> >>   xfs_inode           88:dead      1     34      1      1
-> >>   xfs_inode           89:dead     23     34      1      1
-> >>   xfs_inode           85           4     34      1      1
-> >>   xfs_inode           84           9     34      1      1
-> >>
-> >> The css id of the memcg is also listed. If a memcg is not online,
-> >> the tag ":dead" will be attached as shown above.
-> >>
-> >> Suggested-by: Shakeel Butt <shakeelb@google.com>
-> >> Signed-off-by: Waiman Long <longman@redhat.com>
-> >> ---
-> >>  mm/slab_common.c | 57 ++++++++++++++++++++++++++++++++++++++++++++++++
-> >>  1 file changed, 57 insertions(+)
-> >>
-> >> diff --git a/mm/slab_common.c b/mm/slab_common.c
-> >> index 58251ba63e4a..2bca1558a722 100644
-> >> --- a/mm/slab_common.c
-> >> +++ b/mm/slab_common.c
-> >> @@ -17,6 +17,7 @@
-> >>  #include <linux/uaccess.h>
-> >>  #include <linux/seq_file.h>
-> >>  #include <linux/proc_fs.h>
-> >> +#include <linux/debugfs.h>
-> >>  #include <asm/cacheflush.h>
-> >>  #include <asm/tlbflush.h>
-> >>  #include <asm/page.h>
-> >> @@ -1498,6 +1499,62 @@ static int __init slab_proc_init(void)
-> >>         return 0;
-> >>  }
-> >>  module_init(slab_proc_init);
-> >> +
-> >> +#if defined(CONFIG_DEBUG_FS) && defined(CONFIG_MEMCG_KMEM)
-> >> +/*
-> >> + * Display information about kmem caches that have child memcg caches.
-> >> + */
-> >> +static int memcg_slabinfo_show(struct seq_file *m, void *unused)
-> >> +{
-> >> +       struct kmem_cache *s, *c;
-> >> +       struct slabinfo sinfo;
-> >> +
-> >> +       mutex_lock(&slab_mutex);
-> > On large machines there can be thousands of memcgs and potentially
-> > each memcg can have hundreds of kmem caches. So, the slab_mutex can be
-> > held for a very long time.
->
-> But that is also what /proc/slabinfo does by doing mutex_lock() at
-> slab_start() and mutex_unlock() at slab_stop(). So the same problem will
-> happen when /proc/slabinfo is being read.
->
-> When you are in a situation that reading /proc/slabinfo take a long time
-> because of the large number of memcg's, the system is in some kind of
-> trouble anyway. I am saying that we should not improve the scalability
-> of this patch. It is just that some nasty race conditions may pop up if
-> we release the lock and re-acquire it latter. That will greatly
-> complicate the code to handle all those edge cases.
->
+Hi Andrzej,
 
-We have been using that interface and implementation for couple of
-years and have not seen any race condition. However I am fine with
-what you have here for now. We can always come back if we think we
-need to improve it.
+Gentle ping, could you review the dw-hdmi changes here ?
 
-> > Our internal implementation traverses the memcg tree and then
-> > traverses 'memcg->kmem_caches' within the slab_mutex (and
-> > cond_resched() after unlock).
-> For cgroup v1, the setting of the CONFIG_SLUB_DEBUG option will allow
-> you to iterate and display slabinfo just for that particular memcg. I am
-> thinking of extending the debug controller to do similar thing for
-> cgroup v2.
+Thanks,
+Neil
 
-I was also planning to look into that and it seems like you are
-already on it. Do CC me the patches.
+On 26/05/2019 23:18, Jonas Karlman wrote:
+> Add support for HDR metadata using the hdr_output_metadata connector property,
+> configure Dynamic Range and Mastering InfoFrame accordingly.
+> 
+> A drm_infoframe flag is added to dw_hdmi_plat_data that platform drivers
+> can use to signal when Dynamic Range and Mastering infoframes is supported.
+> This flag is needed because Amlogic GXBB and GXL report same DW-HDMI version,
+> and only GXL support DRM InfoFrame.
+> 
+> The first patch add functionality to configure DRM InfoFrame based on the
+> hdr_output_metadata connector property.
+> 
+> The remaining patches sets the drm_infoframe flag on some SoCs supporting
+> Dynamic Range and Mastering InfoFrame.
+> 
+> Note that this was based on top of drm-misc-next and Neil Armstrong's
+> "drm/meson: Add support for HDMI2.0 YUV420 4k60" series at [1]
+> 
+> [1] https://patchwork.freedesktop.org/series/58725/#rev2
+> 
+> Jonas Karlman (4):
+>   drm/bridge: dw-hdmi: Add Dynamic Range and Mastering InfoFrame support
+>   drm/rockchip: Enable DRM InfoFrame support on RK3328 and RK3399
+>   drm/meson: Enable DRM InfoFrame support on GXL, GXM and G12A
+>   drm/sun4i: Enable DRM InfoFrame support on H6
+> 
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.c   | 109 ++++++++++++++++++++
+>  drivers/gpu/drm/bridge/synopsys/dw-hdmi.h   |  37 +++++++
+>  drivers/gpu/drm/meson/meson_dw_hdmi.c       |   5 +
+>  drivers/gpu/drm/rockchip/dw_hdmi-rockchip.c |   2 +
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c       |   2 +
+>  drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h       |   1 +
+>  include/drm/bridge/dw_hdmi.h                |   1 +
+>  7 files changed, 157 insertions(+)
+> 
 
-> >> +       seq_puts(m, "# <name> <css_id[:dead]> <active_objs> <num_objs>");
-> >> +       seq_puts(m, " <active_slabs> <num_slabs>\n");
-> >> +       list_for_each_entry(s, &slab_root_caches, root_caches_node) {
-> >> +               /*
-> >> +                * Skip kmem caches that don't have any memcg children.
-> >> +                */
-> >> +               if (list_empty(&s->memcg_params.children))
-> >> +                       continue;
-> >> +
-> >> +               memset(&sinfo, 0, sizeof(sinfo));
-> >> +               get_slabinfo(s, &sinfo);
-> >> +               seq_printf(m, "%-17s root      %6lu %6lu %6lu %6lu\n",
-> >> +                          cache_name(s), sinfo.active_objs, sinfo.num_objs,
-> >> +                          sinfo.active_slabs, sinfo.num_slabs);
-> >> +
-> >> +               for_each_memcg_cache(c, s) {
-> >> +                       struct cgroup_subsys_state *css;
-> >> +                       char *dead = "";
-> >> +
-> >> +                       css = &c->memcg_params.memcg->css;
-> >> +                       if (!(css->flags & CSS_ONLINE))
-> >> +                               dead = ":dead";
-> > Please note that Roman's kmem cache reparenting patch series have made
-> > kmem caches of zombie memcgs a bit tricky. On memcg offlining the
-> > memcg kmem caches are reparented and the css->id can get recycled. So,
-> > we want to know that the a kmem cache is reparented and which memcg it
-> > belonged to initially. Determining if a kmem cache is reparented, we
-> > can store a flag on the kmem cache and for the previous memcg we can
-> > use fhandle. However to not make this more complicated, for now, we
-> > can just have the info that the kmem cache was reparented i.e. belongs
-> > to an offlined memcg.
->
-> I need to play with Roman's kmem cache reparenting patch a bit more to
-> see how to properly recognize a reparent'ed kmem cache. What I have
-> noticed is that the dead kmem caches that I saw at boot up were gone
-> after applying his patch. So that is a good thing.
->
-
-By gone, do you mean the kmem cache got freed or the kmem cache is not
-part of online parent memcg and thus no more dead kmem cache?
-
-> For now, I think the current patch is good enough for its purpose. I may
-> send follow-up if I see something that can be improved.
->
-
-I would like to see the recognition of reparent'ed kmem cache in this
-patch. However if others are ok with the current status of the patch
-then I will not stand in the way.
-
-thanks,
-Shakeel
