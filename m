@@ -2,53 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F116CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD467C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ECE20652
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8AAF20652
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054957;
-	bh=f71/z4ZI1OFo3ElfPtSw2oyiw5zxr3DPqg14ucDRLTk=;
+	s=default; t=1561054962;
+	bh=SjfTpmvzvuQZ9JZgKZvtzkAgoLB4u3yXSE2feqq0kUo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bhfWT6pn+v3uhMu3A5euM2BfHIVodWAOCA2ooC7N0crg5ARx2GuCuECTBpxWZGNqa
-	 Mz9OXJVF8NfsDGAznhX8p2Vd10fdDXEU68loEb9eQ4qmgw9+C3PvEmHgD06uO8XyOd
-	 YQ1GZaALdLIZDJfLXHd85HghOh2kOPx3kiSWILBE=
+	b=ktWeWNyBBeeVNG0aQKg3/bJ7JrXrXgW0AjJX7xiyihJL1/tqzGeD9VqBOTajHVTeZ
+	 H7EdOg9/Z3O8xW7FxMl8wfFFr+n+Y0pq6D0QuDsbdochy5ABiiA5lPqRmMv+jrjiAL
+	 /EznmFB/OcXcB9piMgllI/5sREjG1wzqleAcGxOw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728846AbfFTSWg (ORCPT
+        id S1728809AbfFTSK0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:22:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38120 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:10:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726494AbfFTSKc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:10:32 -0400
+        id S1728799AbfFTSKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:10:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F06621537;
-        Thu, 20 Jun 2019 18:10:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D9FAC2082C;
+        Thu, 20 Jun 2019 18:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054231;
-        bh=f71/z4ZI1OFo3ElfPtSw2oyiw5zxr3DPqg14ucDRLTk=;
+        s=default; t=1561054220;
+        bh=SjfTpmvzvuQZ9JZgKZvtzkAgoLB4u3yXSE2feqq0kUo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tUwWK9w44wx8RAMO+Lp3U/I+XUCN19a5ys5x1M5veXyT8/+NHTXRxxeIhelFD/QPa
-         gr4hMrSJLZ7mgWv2eVass4pnhv7ukvsRk+0C3cal8hDI25jGr1Cvbk5tqzsCtXyRzP
-         F4MmhPmj1GRRsymUACRXyfjS9EpSowZuuNlnelso=
+        b=skm4ODibmPXABGUdekoFOZ7G2orcr9/iECBeveWCggQ35tLQOexXQ1L7dlc2T5EqG
+         sT1hRJSPfQBgjxts54dsWE/J7kimDCnrSDVz7jc6NcPa00sNgq8QnPJLCXG7KMNKex
+         GNhfFYUUJWEn2JukpZRp4qBzfiMENtniYsLSwXnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jagdish Motwani <jagdish.motwani@sophos.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 19/61] netfilter: nf_queue: fix reinject verdict handling
-Date:   Thu, 20 Jun 2019 19:57:14 +0200
-Message-Id: <20190620174340.514808963@linuxfoundation.org>
+        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 07/61] net: dsa: rtl8366: Fix up VLAN filtering
+Date:   Thu, 20 Jun 2019 19:57:02 +0200
+Message-Id: <20190620174338.691124752@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,37 +59,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 946c0d8e6ed43dae6527e878d0077c1e11015db0 ]
+From: Linus Walleij <linus.walleij@linaro.org>
 
-This patch fixes netfilter hook traversal when there are more than 1 hooks
-returning NF_QUEUE verdict. When the first queue reinjects the packet,
-'nf_reinject' starts traversing hooks with a proper hook_index. However,
-if it again receives a NF_QUEUE verdict (by some other netfilter hook), it
-queues the packet with a wrong hook_index. So, when the second queue
-reinjects the packet, it re-executes hooks in between.
+[ Upstream commit 760c80b70bed2cd01630e8595d1bbde910339f31 ]
 
-Fixes: 960632ece694 ("netfilter: convert hook list to an array")
-Signed-off-by: Jagdish Motwani <jagdish.motwani@sophos.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+We get this regression when using RTL8366RB as part of a bridge
+with OpenWrt:
+
+WARNING: CPU: 0 PID: 1347 at net/switchdev/switchdev.c:291
+	 switchdev_port_attr_set_now+0x80/0xa4
+lan0: Commit of attribute (id=7) failed.
+(...)
+realtek-smi switch lan0: failed to initialize vlan filtering on this port
+
+This is because it is trying to disable VLAN filtering
+on VLAN0, as we have forgot to add 1 to the port number
+to get the right VLAN in rtl8366_vlan_filtering(): when
+we initialize the VLAN we associate VLAN1 with port 0,
+VLAN2 with port 1 etc, so we need to add 1 to the port
+offset.
+
+Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/netfilter/nf_queue.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/dsa/rtl8366.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
-index d67a96a25a68..7569ba00e732 100644
---- a/net/netfilter/nf_queue.c
-+++ b/net/netfilter/nf_queue.c
-@@ -238,6 +238,7 @@ static unsigned int nf_iterate(struct sk_buff *skb,
- repeat:
- 		verdict = nf_hook_entry_hookfn(hook, skb, state);
- 		if (verdict != NF_ACCEPT) {
-+			*index = i;
- 			if (verdict != NF_REPEAT)
- 				return verdict;
- 			goto repeat;
--- 
-2.20.1
-
+--- a/drivers/net/dsa/rtl8366.c
++++ b/drivers/net/dsa/rtl8366.c
+@@ -307,7 +307,8 @@ int rtl8366_vlan_filtering(struct dsa_sw
+ 	struct rtl8366_vlan_4k vlan4k;
+ 	int ret;
+ 
+-	if (!smi->ops->is_vlan_valid(smi, port))
++	/* Use VLAN nr port + 1 since VLAN0 is not valid */
++	if (!smi->ops->is_vlan_valid(smi, port + 1))
+ 		return -EINVAL;
+ 
+ 	dev_info(smi->dev, "%s filtering on port %d\n",
+@@ -318,12 +319,12 @@ int rtl8366_vlan_filtering(struct dsa_sw
+ 	 * The hardware support filter ID (FID) 0..7, I have no clue how to
+ 	 * support this in the driver when the callback only says on/off.
+ 	 */
+-	ret = smi->ops->get_vlan_4k(smi, port, &vlan4k);
++	ret = smi->ops->get_vlan_4k(smi, port + 1, &vlan4k);
+ 	if (ret)
+ 		return ret;
+ 
+ 	/* Just set the filter to FID 1 for now then */
+-	ret = rtl8366_set_vlan(smi, port,
++	ret = rtl8366_set_vlan(smi, port + 1,
+ 			       vlan4k.member,
+ 			       vlan4k.untag,
+ 			       1);
 
 
