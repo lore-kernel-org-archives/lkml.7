@@ -2,60 +2,56 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CFCC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D9CBC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F299D2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06F22089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054888;
-	bh=jTmDsx1uxWJJAKePfTT5smH8ihEcf+ejQk0qhzH5X0c=;
+	s=default; t=1561054894;
+	bh=2eKVb5teN8C20NHCPPLCr0sFRQfN5NphxJX0SrK7h5I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nmuzj44LkU0MTxpfvgBn2DEK/BDWC9poXyNR/4kwhEMXEkJ3PJoq6A/51Rl5+O89A
-	 i3OwLLRlf9VxnS9NuS6ERjPdfb+I0E3AbIZjY6055ixBaeYtwYo4S/kr9pKJl6yRA6
-	 ODaH0pD9Lc184SLy5S0nK1MyHrcBcPRuGBR3prT8=
+	b=yypcTDnjN6xDzs7LNN2i+A6qCblBOxAMQiXV/4yBaW3DDLSZpcsdxsaG8dNsANacQ
+	 57oKs95U5C+R8gvAzLgW90e6fJYyA8Suc73RNr/TyY80H/IiUOH4AGBlWw62vlT8f4
+	 XMPc/cUJu/b4jyGV5jBaRTCqYjJXxG7p8BKR/EsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfFTSV1 (ORCPT
+        id S1726885AbfFTSM2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:21:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40424 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:12:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728817AbfFTSMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:34 -0400
+        id S1728689AbfFTSMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:12:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 302AA205F4;
-        Thu, 20 Jun 2019 18:12:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52F29205F4;
+        Thu, 20 Jun 2019 18:12:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054353;
-        bh=jTmDsx1uxWJJAKePfTT5smH8ihEcf+ejQk0qhzH5X0c=;
+        s=default; t=1561054344;
+        bh=2eKVb5teN8C20NHCPPLCr0sFRQfN5NphxJX0SrK7h5I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SAt+foCsrKKcKKSqYC7z6Ul+nbc+N7lufcD6A2MXp+v3HTr4L+F2wAw8TX4/FRLV+
-         mOt4ayIZHJ1Qj66/PAvmEdFaiJsfkEXWTdKgldCvZVTgm69R9DExeZXI27vTAsAeoz
-         oq1GFD1QUefJEzS6DsziIitEZjiQF5pDPmSZTVcE=
+        b=M0QRz5aKyoUm8bY5DwqUHSA/rQRz4UDI6P5ODDKO8sSSsu4/5lWdoYFku7kqcQKfH
+         QP07N/EqWXpBnLcNcIkUXQ1HqUzodUUCSdRPxnJ5znHMEsLEhNMpvWszEnyZ3c8tn5
+         vzQJ81gMMZlU+x7q7pR/4ZY28XwPRY/BT28IWRO0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Peter Xu <peterx@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 60/61] coredump: fix race condition between collapse_huge_page() and core dumping
-Date:   Thu, 20 Jun 2019 19:57:55 +0200
-Message-Id: <20190620174347.575809772@linuxfoundation.org>
+        stable@vger.kernel.org, Shawn Landden <shawn@git.icu>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 40/61] perf data: Fix strncat may truncate build failure with recent gcc
+Date:   Thu, 20 Jun 2019 19:57:35 +0200
+Message-Id: <20190620174344.287341788@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -68,97 +64,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+[ Upstream commit 97acec7df172cd1e450f81f5e293c0aa145a2797 ]
 
-commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
+This strncat() is safe because the buffer was allocated with zalloc(),
+however gcc doesn't know that. Since the string always has 4 non-null
+bytes, just use memcpy() here.
 
-When fixing the race conditions between the coredump and the mmap_sem
-holders outside the context of the process, we focused on
-mmget_not_zero()/get_task_mm() callers in 04f5866e41fb70 ("coredump: fix
-race condition between mmget_not_zero()/get_task_mm() and core
-dumping"), but those aren't the only cases where the mmap_sem can be
-taken outside of the context of the process as Michal Hocko noticed
-while backporting that commit to older -stable kernels.
+    CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
+  In file included from /usr/include/string.h:494,
+                   from /home/shawn/linux/tools/lib/traceevent/event-parse.h:27,
+                   from util/data-convert-bt.c:22:
+  In function ‘strncat’,
+      inlined from ‘string_set_value’ at util/data-convert-bt.c:274:4:
+  /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin_strncat’ output may be truncated copying 4 bytes from a string of length 4 [-Werror=stringop-truncation]
+    136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If mmgrab() is called in the context of the process, but then the
-mm_count reference is transferred outside the context of the process,
-that can also be a problem if the mmap_sem has to be taken for writing
-through that mm_count reference.
-
-khugepaged registration calls mmgrab() in the context of the process,
-but the mmap_sem for writing is taken later in the context of the
-khugepaged kernel thread.
-
-collapse_huge_page() after taking the mmap_sem for writing doesn't
-modify any vma, so it's not obvious that it could cause a problem to the
-coredump, but it happens to modify the pmd in a way that breaks an
-invariant that pmd_trans_huge_lock() relies upon.  collapse_huge_page()
-needs the mmap_sem for writing just to block concurrent page faults that
-call pmd_trans_huge_lock().
-
-Specifically the invariant that "!pmd_trans_huge()" cannot become a
-"pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
-
-The coredump will call __get_user_pages() without mmap_sem for reading,
-which eventually can invoke a lockless page fault which will need a
-functional pmd_trans_huge_lock().
-
-So collapse_huge_page() needs to use mmget_still_valid() to check it's
-not running concurrently with the coredump...  as long as the coredump
-can invoke page faults without holding the mmap_sem for reading.
-
-This has "Fixes: khugepaged" to facilitate backporting, but in my view
-it's more a bug in the coredump code that will eventually have to be
-rewritten to stop invoking page faults without the mmap_sem for reading.
-So the long term plan is still to drop all mmget_still_valid().
-
-Link: http://lkml.kernel.org/r/20190607161558.32104-1-aarcange@redhat.com
-Fixes: ba76149f47d8 ("thp: khugepaged")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reported-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Shawn Landden <shawn@git.icu>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+LPU-Reference: 20190518183238.10954-1-shawn@git.icu
+Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched/mm.h |    4 ++++
- mm/khugepaged.c          |    3 +++
- 2 files changed, 7 insertions(+)
+ tools/perf/util/data-convert-bt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -54,6 +54,10 @@ static inline void mmdrop(struct mm_stru
-  * followed by taking the mmap_sem for writing before modifying the
-  * vmas or anything the coredump pretends not to change from under it.
-  *
-+ * It also has to be called when mmgrab() is used in the context of
-+ * the process, but then the mm_count refcount is transferred outside
-+ * the context of the process to run down_write() on that pinned mm.
-+ *
-  * NOTE: find_extend_vma() called from GUP context is the only place
-  * that can modify the "mm" (notably the vm_start/end) under mmap_sem
-  * for reading and outside the context of the process, so it is also
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1005,6 +1005,9 @@ static void collapse_huge_page(struct mm
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
-+	result = SCAN_ANY_PROCESS;
-+	if (!mmget_still_valid(mm))
-+		goto out;
- 	result = hugepage_vma_revalidate(mm, address, &vma);
- 	if (result)
- 		goto out;
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index abd38abf1d91..24f2a87cf91d 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -271,7 +271,7 @@ static int string_set_value(struct bt_ctf_field *field, const char *string)
+ 				if (i > 0)
+ 					strncpy(buffer, string, i);
+ 			}
+-			strncat(buffer + p, numstr, 4);
++			memcpy(buffer + p, numstr, 4);
+ 			p += 3;
+ 		}
+ 	}
+-- 
+2.20.1
+
 
 
