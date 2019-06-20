@@ -2,109 +2,116 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 332BBC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:53:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADD85C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11A052075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:53:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808012075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:53:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VfkJrOPN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFTVxn (ORCPT
+        id S1726432AbfFTVxt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:53:43 -0400
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:58782 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725905AbfFTVxn (ORCPT
+        Thu, 20 Jun 2019 17:53:49 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40207 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726373AbfFTVxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:53:43 -0400
-Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x5KLqDCc014930
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 17:52:14 -0400
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id EC0F4420484; Thu, 20 Jun 2019 17:52:12 -0400 (EDT)
-Date:   Thu, 20 Jun 2019 17:52:12 -0400
-From:   "Theodore Ts'o" <tytso@mit.edu>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 1/6] mm/fs: don't allow writes to immutable files
-Message-ID: <20190620215212.GG4650@mit.edu>
-Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        matthew.garrett@nebula.com, yuchao0@huawei.com,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
- <156022837711.3227213.11787906519006016743.stgit@magnolia>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156022837711.3227213.11787906519006016743.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Jun 2019 17:53:48 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a93so1934300pla.7;
+        Thu, 20 Jun 2019 14:53:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:message-id:in-reply-to:references:subject:mime-version
+         :content-transfer-encoding;
+        bh=DLHGGUukVhqeiY5qE6jFUZPvsSTNd+ZgYiZGFb2Z2ps=;
+        b=VfkJrOPNjSmC6BMgX4inVlnZBs2ZblhtFiPbHtj9edoT3tsjbspAk9E38qh2Z1iOUg
+         8dtqUIh0/Jm90du50h+EJ72M9i8VyfMg+KHV5UA8KrtCbCV1JQpP17nJTVt87QKgjTNl
+         fLTc52KAQl4DoqpkiFjCMgfotxB/empkq4M/KJToia9lO0gV5hogRwsSux5lH9NxUW1h
+         iwIc1xkoVyFYnohaJSQ6OyUI8Q3MRN4M+8eRMAc2Hgz5InYno0m9WqwtkwuDhAtMsubC
+         HFdPG1iqgEUR8g9sGRUFZ9svpt0k7N340zG2ECwScylrJtEbc5839vf3WtyjinvRN1Xx
+         8uxA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:message-id:in-reply-to:references
+         :subject:mime-version:content-transfer-encoding;
+        bh=DLHGGUukVhqeiY5qE6jFUZPvsSTNd+ZgYiZGFb2Z2ps=;
+        b=R6i2vuTo1rJYP90dDo0Ak9LPTOPuAqUPD9RQgEjqKHKmk7TOGZ7IZP4U+mNcUeX53c
+         PcsIvnkLFyjpXTPnChXMDnoQ9f5UX/GX7u92l+jbabzOoIc8OA4wqPvH90WAPpPNEH4l
+         +8/SefvNhfxAdqDavFlALS5tfJRBgfGsmhg0uWFK5a7jxEoQqfGslcghi8CYafzUUTfl
+         I7CM/CGrZhtdKmCym8d0BOnBa0iILUn9YvbLbs6a71hap2+gkr4Yv8F5543c3JjhSSEj
+         0RD7DNOaOAUJftnJ+6b14EWft8RytaHO9CbLxdxezSFkir3+9dYzueUEhLsr0PsxbPNs
+         TlTg==
+X-Gm-Message-State: APjAAAVvmiImgSqekbySMDg5rrUkKISjPvcIBYM/QGj+5yStkRV2d6LV
+        zpn4psav/Nuuw0cRVAdfeIw=
+X-Google-Smtp-Source: APXvYqxkWMlc0z1pudI8uuMKEo3o6IwaJb0YwvWlR/93SU7f5z5GZUOSl/6eENrZhK9lh7NXXUAaPQ==
+X-Received: by 2002:a17:902:848c:: with SMTP id c12mr125045177plo.17.1561067627464;
+        Thu, 20 Jun 2019 14:53:47 -0700 (PDT)
+Received: from localhost ([208.185.168.138])
+        by smtp.gmail.com with ESMTPSA id g17sm447179pfb.56.2019.06.20.14.53.46
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 14:53:46 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 14:53:46 -0700
+From:   John Fastabend <john.fastabend@gmail.com>
+To:     syzbot <syzbot+b764c7ca388222ddfb17@syzkaller.appspotmail.com>,
+        ast@kernel.org, daniel@iogearbox.net, john.fastabend@gmail.com,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Message-ID: <5d0c006a1bdb8_1b912ac9b699a5c011@john-XPS-13-9370.notmuch>
+In-Reply-To: <00000000000097ca41058bc129cc@google.com>
+References: <00000000000097ca41058bc129cc@google.com>
+Subject: RE: kernel panic: corrupted stack end in corrupted
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 10, 2019 at 09:46:17PM -0700, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
+syzbot wrote:
+> Hello,
 > 
-> The chattr manpage has this to say about immutable files:
+> syzbot found the following crash on:
 > 
-> "A file with the 'i' attribute cannot be modified: it cannot be deleted
-> or renamed, no link can be created to this file, most of the file's
-> metadata can not be modified, and the file can not be opened in write
-> mode."
+> HEAD commit:    29f785ff Merge branch 'fixes' of git://git.kernel.org/pub/..
+> git tree:       net
+> console output: https://syzkaller.appspot.com/x/log.txt?x=1158d411a00000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
+> dashboard link: https://syzkaller.appspot.com/bug?extid=b764c7ca388222ddfb17
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100ca932a00000
 > 
-> Once the flag is set, it is enforced for quite a few file operations,
-> such as fallocate, fpunch, fzero, rm, touch, open, etc.  However, we
-> don't check for immutability when doing a write(), a PROT_WRITE mmap(),
-> a truncate(), or a write to a previously established mmap.
+> The bug was bisected to:
 > 
-> If a program has an open write fd to a file that the administrator
-> subsequently marks immutable, the program still can change the file
-> contents.  Weird!
+> commit e9db4ef6bf4ca9894bb324c76e01b8f1a16b2650
+> Author: John Fastabend <john.fastabend@gmail.com>
+> Date:   Sat Jun 30 13:17:47 2018 +0000
 > 
-> The ability to write to an immutable file does not follow the manpage
-> promise that immutable files cannot be modified.  Worse yet it's
-> inconsistent with the behavior of other syscalls which don't allow
-> modifications of immutable files.
+>      bpf: sockhash fix omitted bucket lock in sock_close
 > 
-> Therefore, add the necessary checks to make the write, mmap, and
-> truncate behavior consistent with what the manpage says and consistent
-> with other syscalls on filesystems which support IMMUTABLE.
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=135e8a3aa00000
+> final crash:    https://syzkaller.appspot.com/x/report.txt?x=10de8a3aa00000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=175e8a3aa00000
 > 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+b764c7ca388222ddfb17@syzkaller.appspotmail.com
+> Fixes: e9db4ef6bf4c ("bpf: sockhash fix omitted bucket lock in sock_close")
+> 
+> Kernel panic - not syncing: corrupted stack end detected inside scheduler
+> CPU: 0 PID: 8770 Comm: syz-executor.4 Not tainted 5.2.0-rc5+ #57
+> Hardware name: Google GooglSeaBIOS (version 1.8.2-20190503_170316-google)
+> 
 
-I note that this patch doesn't allow writes to swap files.  So Amir's
-generic/554 test will still fail for those file systems that don't use
-copy_file_range.
+I believe this is the same or similar bug to the others found with
+sockmap + ulp running. Will have fixes shortly.
 
-I'm indifferent as to whether you add a new patch, or include that
-change in this patch, but perhaps we should fix this while we're
-making changes in these code paths?
-
-				- Ted
+Thanks,
+John
