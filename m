@@ -2,41 +2,38 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AC4EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58839C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264662084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310842084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731658AbfFTIyo (ORCPT
+        id S1731680AbfFTIyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:54:44 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:42464 "EHLO huawei.com"
+        Thu, 20 Jun 2019 04:54:46 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:56114 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731468AbfFTIyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:54:36 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A1B1A7EE6B2A5DB35A89;
-        Thu, 20 Jun 2019 16:54:33 +0800 (CST)
+        id S1726084AbfFTIyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:54:37 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 5F8C5D6DFD9356DF54EB;
+        Thu, 20 Jun 2019 16:54:28 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 20 Jun 2019 16:54:23 +0800
+ 14.3.439.0; Thu, 20 Jun 2019 16:54:21 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
-        Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 07/11] net: hns3: remove override_pci_need_reset
-Date:   Thu, 20 Jun 2019 16:52:41 +0800
-Message-ID: <1561020765-14481-8-git-send-email-tanhuazhong@huawei.com>
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 00/11] net: hns3: some code optimizations & bugfixes
+Date:   Thu, 20 Jun 2019 16:52:34 +0800
+Message-ID: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
-References: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.67.212.132]
@@ -46,69 +43,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Weihang Li <liweihang@hisilicon.com>
+This patch-set includes code optimizations and bugfixes for
+the HNS3 ethernet controller driver.
 
-We add override_pci_need_reset to prevent redundant and unwanted PF
-resets if a RAS error occurs in commit 69b51bbb03f7 ("net: hns3: fix
-to stop multiple HNS reset due to the AER changes").
+[patch 1/11] fixes a selftest issue when doing autoneg.
 
-Now in HNS3 driver, we use hw_err_reset_req to record reset level that
-we need to recover from a RAS error. This variable cans solve above
-issue as override_pci_need_reset, so this patch removes
-override_pci_need_reset.
+[patch 2/11 - 3-11] adds two code optimizations about VLAN issue.
 
-Signed-off-by: Weihang Li <liweihang@hisilicon.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h            | 1 -
- drivers/net/ethernet/hisilicon/hns3/hns3_enet.c        | 2 +-
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 5 +----
- 3 files changed, 2 insertions(+), 6 deletions(-)
+[patch 4/11] restores the MAC autoneg state after reset.
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index d78a5f6..48c7b70 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -213,7 +213,6 @@ struct hnae3_ae_dev {
- 	const struct hnae3_ae_ops *ops;
- 	struct list_head node;
- 	u32 flag;
--	u8 override_pci_need_reset; /* fix to stop multiple reset happening */
- 	unsigned long hw_err_reset_req;
- 	enum hnae3_reset_type reset_type;
- 	void *priv;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-index 58633cd..4dee7fe 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_enet.c
-@@ -1950,7 +1950,7 @@ static pci_ers_result_t hns3_slot_reset(struct pci_dev *pdev)
- 	ops = ae_dev->ops;
- 	/* request the reset */
- 	if (ops->reset_event) {
--		if (!ae_dev->override_pci_need_reset) {
-+		if (ae_dev->hw_err_reset_req) {
- 			reset_type = ops->get_reset_level(ae_dev,
- 						&ae_dev->hw_err_reset_req);
- 			ops->set_default_reset_request(ae_dev, reset_type);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index dd7b8a8..3d8985f 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1627,13 +1627,10 @@ pci_ers_result_t hclge_handle_hw_ras_error(struct hnae3_ae_dev *ae_dev)
- 	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
- 		goto out;
- 
--	if (ae_dev->hw_err_reset_req) {
--		ae_dev->override_pci_need_reset = 0;
-+	if (ae_dev->hw_err_reset_req)
- 		return PCI_ERS_RESULT_NEED_RESET;
--	}
- 
- out:
--	ae_dev->override_pci_need_reset = 1;
- 	return PCI_ERS_RESULT_RECOVERED;
- }
- 
+[patch 5/11 - 8/11] adds some code optimizations and bugfixes about
+HW errors handling.
+
+[patch 9/11 - 11/11] fixes some issues related to driver loading and
+unloading.
+
+Huazhong Tan (2):
+  net: hns3: fix race conditions between reset and module loading &
+    unloading
+  net: hns3: fixes wrong place enabling ROCE HW error when loading
+
+Jian Shen (4):
+  net: hns3: fix selftest fail issue for fibre port with autoneg on
+  net: hns3: remove VF VLAN filter entry inexistent warning print
+  net: hns3: sync VLAN filter entries when kill VLAN ID failed
+  net: hns3: restore the MAC autoneg state after reset
+
+Weihang Li (5):
+  net: hns3: code optimizaition of hclge_handle_hw_ras_error()
+  net: hns3: modify handling of out of memory in hclge_err.c
+  net: hns3: remove override_pci_need_reset
+  net: hns3: add check to number of buffer descriptors
+  net: hns3: add exception handling when enable NIC HW error interrupts
+
+ drivers/net/ethernet/hisilicon/hns3/hnae3.h        |   4 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_enet.c    |   2 +-
+ drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c |  10 ++
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 117 +++++++++------
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |   5 +
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 166 +++++++++++++++++----
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |   2 +
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.c  |  50 ++++++-
+ .../ethernet/hisilicon/hns3/hns3vf/hclgevf_main.h  |   3 +
+ 9 files changed, 279 insertions(+), 80 deletions(-)
+
 -- 
 2.7.4
 
