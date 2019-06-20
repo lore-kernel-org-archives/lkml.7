@@ -2,52 +2,55 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07E2FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08D89C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D87B6215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF12E215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054782;
-	bh=980y4+/bM4nqKR5zFJc08I4f1d9BaMa28HhT7rOx/s4=;
+	s=default; t=1561054786;
+	bh=G83hLEMP/1V46ithdlmH8jhthUO9F2XAI3119txh6TE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=CQ3RuOalBxr6aJmbDZNXsSgStlF1gxNTJHFev7LSahTTz4YZuaNIfLRh0vox399ZE
-	 b5GiO6DwdLd7dPQhRQ96k745BozF852h9QD2eyD35KnFWja498ux0SCSGOucTkAOZ0
-	 H7seHTVCT507Plbsg8jp0UkztLIuxX5B8DEKqGjA=
+	b=Oc/oOGNOCg7SYLW8nwnyQa1eeAg71x6EVdCR85HFofxJQ/7owJtwXUINJ37VIINRh
+	 HKTLo/Mh3jweUWTdEN4WKGP7TBeol0KCAy1BUqZrrRIiDXFkrtuwN2DT2cj2VSwydV
+	 KUYftp2FMc8DqeGp7rlf/CzmAjXcM/wQGiy8Gl1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729436AbfFTSTl (ORCPT
+        id S1729488AbfFTSOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:19:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43442 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43018 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729503AbfFTSO5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:57 -0400
+        id S1729466AbfFTSOi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E787621734;
-        Thu, 20 Jun 2019 18:14:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 90175205F4;
+        Thu, 20 Jun 2019 18:14:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054496;
-        bh=980y4+/bM4nqKR5zFJc08I4f1d9BaMa28HhT7rOx/s4=;
+        s=default; t=1561054477;
+        bh=G83hLEMP/1V46ithdlmH8jhthUO9F2XAI3119txh6TE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gtXJhcFrxMIffZxvmSjx6D+AplTtPFO8C7MVlSsXmn/LjAAE2jm07C35phAEQDqBm
-         oMhgeHOnEDx43TAYdBapff3PIBPJzDFqI3wUSXr/2P1/RUbPPFRovz0HbRRia8cfBt
-         olUqhKCRrClmkI3nburUa0gNMnJlVOr/rszTtmLI=
+        b=t8i10evswgQpYXmDopsKaEgkM8LqeU/QqqxidL205gA50hxsIwWm+wn15S8q5UYpr
+         kVHwk6Px+dBYv/cYzX06+qjf+77evwgFEq8zgL3TplOFKL3uRtTG6oKa+FrIKo0nTb
+         EVmRD9DnIHP+Eq+Lo9zTaIkQpzIyTJSOLYx6L+Us=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuri Chipchev <yuric@marvell.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 19/98] net: mvpp2: prs: Fix parser range for VID filtering
-Date:   Thu, 20 Jun 2019 19:56:46 +0200
-Message-Id: <20190620174350.122651256@linuxfoundation.org>
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        Julian Anastasov <ja@ssi.bg>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Simon Horman <horms@verge.net.au>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 41/98] ipvs: Fix use-after-free in ip_vs_in
+Date:   Thu, 20 Jun 2019 19:57:08 +0200
+Message-Id: <20190620174350.970053102@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -60,77 +63,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+[ Upstream commit 719c7d563c17b150877cee03a4b812a424989dfa ]
 
-[ Upstream commit 46b0090a6636cf34c0e856f15dd03e15ba4cdda6 ]
+BUG: KASAN: use-after-free in ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+Read of size 4 at addr ffff8881e9b26e2c by task sshd/5603
 
-VID filtering is implemented in the Header Parser, with one range of 11
-vids being assigned for each no-loopback port.
+CPU: 0 PID: 5603 Comm: sshd Not tainted 4.19.39+ #30
+Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+Call Trace:
+ dump_stack+0x71/0xab
+ print_address_description+0x6a/0x270
+ kasan_report+0x179/0x2c0
+ ip_vs_in.part.29+0xe8/0xd20 [ip_vs]
+ ip_vs_in+0xd8/0x170 [ip_vs]
+ nf_hook_slow+0x5f/0xe0
+ __ip_local_out+0x1d5/0x250
+ ip_local_out+0x19/0x60
+ __tcp_transmit_skb+0xba1/0x14f0
+ tcp_write_xmit+0x41f/0x1ed0
+ ? _copy_from_iter_full+0xca/0x340
+ __tcp_push_pending_frames+0x52/0x140
+ tcp_sendmsg_locked+0x787/0x1600
+ ? tcp_sendpage+0x60/0x60
+ ? inet_sk_set_state+0xb0/0xb0
+ tcp_sendmsg+0x27/0x40
+ sock_sendmsg+0x6d/0x80
+ sock_write_iter+0x121/0x1c0
+ ? sock_sendmsg+0x80/0x80
+ __vfs_write+0x23e/0x370
+ vfs_write+0xe7/0x230
+ ksys_write+0xa1/0x120
+ ? __ia32_sys_read+0x50/0x50
+ ? __audit_syscall_exit+0x3ce/0x450
+ do_syscall_64+0x73/0x200
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
+RIP: 0033:0x7ff6f6147c60
+Code: 73 01 c3 48 8b 0d 28 12 2d 00 f7 d8 64 89 01 48 83 c8 ff c3 66 0f 1f 44 00 00 83 3d 5d 73 2d 00 00 75 10 b8 01 00 00 00 0f 05 <48> 3d 01 f0 ff ff 73 31 c3 48 83
+RSP: 002b:00007ffd772ead18 EFLAGS: 00000246 ORIG_RAX: 0000000000000001
+RAX: ffffffffffffffda RBX: 0000000000000034 RCX: 00007ff6f6147c60
+RDX: 0000000000000034 RSI: 000055df30a31270 RDI: 0000000000000003
+RBP: 000055df30a31270 R08: 0000000000000000 R09: 0000000000000000
+R10: 00007ffd772ead70 R11: 0000000000000246 R12: 00007ffd772ead74
+R13: 00007ffd772eae20 R14: 00007ffd772eae24 R15: 000055df2f12ddc0
 
-Make sure we use the per-port range when looking for existing entries in
-the Parser.
+Allocated by task 6052:
+ kasan_kmalloc+0xa0/0xd0
+ __kmalloc+0x10a/0x220
+ ops_init+0x97/0x190
+ register_pernet_operations+0x1ac/0x360
+ register_pernet_subsys+0x24/0x40
+ 0xffffffffc0ea016d
+ do_one_initcall+0x8b/0x253
+ do_init_module+0xe3/0x335
+ load_module+0x2fc0/0x3890
+ __do_sys_finit_module+0x192/0x1c0
+ do_syscall_64+0x73/0x200
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Since we used a global range instead of a per-port one, this causes VIDs
-to be removed from the whitelist from all ports of the same PPv2
-instance.
+Freed by task 6067:
+ __kasan_slab_free+0x130/0x180
+ kfree+0x90/0x1a0
+ ops_free_list.part.7+0xa6/0xc0
+ unregister_pernet_operations+0x18b/0x1f0
+ unregister_pernet_subsys+0x1d/0x30
+ ip_vs_cleanup+0x1d/0xd2f [ip_vs]
+ __x64_sys_delete_module+0x20c/0x300
+ do_syscall_64+0x73/0x200
+ entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-Fixes: 56beda3db602 ("net: mvpp2: Add hardware offloading for VLAN filtering")
-Suggested-by: Yuri Chipchev <yuric@marvell.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The buggy address belongs to the object at ffff8881e9b26600 which belongs to the cache kmalloc-4096 of size 4096
+The buggy address is located 2092 bytes inside of 4096-byte region [ffff8881e9b26600, ffff8881e9b27600)
+The buggy address belongs to the page:
+page:ffffea0007a6c800 count:1 mapcount:0 mapping:ffff888107c0e600 index:0x0 compound_mapcount: 0
+flags: 0x17ffffc0008100(slab|head)
+raw: 0017ffffc0008100 dead000000000100 dead000000000200 ffff888107c0e600
+raw: 0000000000000000 0000000080070007 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+while unregistering ipvs module, ops_free_list calls
+__ip_vs_cleanup, then nf_unregister_net_hooks be called to
+do remove nf hook entries. It need a RCU period to finish,
+however net->ipvs is set to NULL immediately, which will
+trigger NULL pointer dereference when a packet is hooked
+and handled by ip_vs_in where net->ipvs is dereferenced.
+
+Another scene is ops_free_list call ops_free to free the
+net_generic directly while __ip_vs_cleanup finished, then
+calling ip_vs_in will triggers use-after-free.
+
+This patch moves nf_unregister_net_hooks from __ip_vs_cleanup()
+to __ip_vs_dev_cleanup(),  where rcu_barrier() is called by
+unregister_pernet_device -> unregister_pernet_operations,
+that will do the needed grace period.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: efe41606184e ("ipvs: convert to use pernet nf_hook api")
+Suggested-by: Julian Anastasov <ja@ssi.bg>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Julian Anastasov <ja@ssi.bg>
+Signed-off-by: Simon Horman <horms@verge.net.au>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c |   17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ net/netfilter/ipvs/ip_vs_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-@@ -1905,8 +1905,7 @@ static int mvpp2_prs_ip6_init(struct mvp
- }
- 
- /* Find tcam entry with matched pair <vid,port> */
--static int mvpp2_prs_vid_range_find(struct mvpp2 *priv, int pmap, u16 vid,
--				    u16 mask)
-+static int mvpp2_prs_vid_range_find(struct mvpp2_port *port, u16 vid, u16 mask)
+diff --git a/net/netfilter/ipvs/ip_vs_core.c b/net/netfilter/ipvs/ip_vs_core.c
+index 14457551bcb4..8ebf21149ec3 100644
+--- a/net/netfilter/ipvs/ip_vs_core.c
++++ b/net/netfilter/ipvs/ip_vs_core.c
+@@ -2312,7 +2312,6 @@ static void __net_exit __ip_vs_cleanup(struct net *net)
  {
- 	unsigned char byte[2], enable[2];
- 	struct mvpp2_prs_entry pe;
-@@ -1914,13 +1913,13 @@ static int mvpp2_prs_vid_range_find(stru
- 	int tid;
+ 	struct netns_ipvs *ipvs = net_ipvs(net);
  
- 	/* Go through the all entries with MVPP2_PRS_LU_VID */
--	for (tid = MVPP2_PE_VID_FILT_RANGE_START;
--	     tid <= MVPP2_PE_VID_FILT_RANGE_END; tid++) {
--		if (!priv->prs_shadow[tid].valid ||
--		    priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
-+	for (tid = MVPP2_PRS_VID_PORT_FIRST(port->id);
-+	     tid <= MVPP2_PRS_VID_PORT_LAST(port->id); tid++) {
-+		if (!port->priv->prs_shadow[tid].valid ||
-+		    port->priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
- 			continue;
- 
--		mvpp2_prs_init_from_hw(priv, &pe, tid);
-+		mvpp2_prs_init_from_hw(port->priv, &pe, tid);
- 
- 		mvpp2_prs_tcam_data_byte_get(&pe, 2, &byte[0], &enable[0]);
- 		mvpp2_prs_tcam_data_byte_get(&pe, 3, &byte[1], &enable[1]);
-@@ -1950,7 +1949,7 @@ int mvpp2_prs_vid_entry_add(struct mvpp2
- 	memset(&pe, 0, sizeof(pe));
- 
- 	/* Scan TCAM and see if entry with this <vid,port> already exist */
--	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, mask);
-+	tid = mvpp2_prs_vid_range_find(port, vid, mask);
- 
- 	reg_val = mvpp2_read(priv, MVPP2_MH_REG(port->id));
- 	if (reg_val & MVPP2_DSA_EXTENDED)
-@@ -2008,7 +2007,7 @@ void mvpp2_prs_vid_entry_remove(struct m
- 	int tid;
- 
- 	/* Scan TCAM and see if entry with this <vid,port> already exist */
--	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, 0xfff);
-+	tid = mvpp2_prs_vid_range_find(port, vid, 0xfff);
- 
- 	/* No such entry */
- 	if (tid < 0)
+-	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+ 	ip_vs_service_net_cleanup(ipvs);	/* ip_vs_flush() with locks */
+ 	ip_vs_conn_net_cleanup(ipvs);
+ 	ip_vs_app_net_cleanup(ipvs);
+@@ -2327,6 +2326,7 @@ static void __net_exit __ip_vs_dev_cleanup(struct net *net)
+ {
+ 	struct netns_ipvs *ipvs = net_ipvs(net);
+ 	EnterFunction(2);
++	nf_unregister_net_hooks(net, ip_vs_ops, ARRAY_SIZE(ip_vs_ops));
+ 	ipvs->enable = 0;	/* Disable packet reception */
+ 	smp_wmb();
+ 	ip_vs_sync_net_cleanup(ipvs);
+-- 
+2.20.1
+
 
 
