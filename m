@@ -2,118 +2,176 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CBD0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:17:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CAC0C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:17:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A84D2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:17:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="IjL3UQw6"
+	by mail.kernel.org (Postfix) with ESMTP id EE66021530
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:17:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726220AbfFTVRG (ORCPT
+        id S1726412AbfFTVRm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:17:06 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:41824 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725905AbfFTVRG (ORCPT
+        Thu, 20 Jun 2019 17:17:42 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:41003 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726244AbfFTVRm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:17:06 -0400
-Received: by mail-io1-f65.google.com with SMTP id w25so1965411ioc.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 14:17:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uWgtzmK5Dffhp4w0dM9JIEpJpXc3nwLUXojPORvneWU=;
-        b=IjL3UQw6IiWddx8lu54V03rfMWEuut/voSjceIGDeCcMAi7rRstiXLjeq1Fzu1i/t7
-         PCiN2rVxYN6WdaE4QuxkUCZeiRpPhT/zyV0k/ehEir/pe6W8bnf7ObJ/zkj6N2EPayT6
-         vDCMOFScw+BqmympZrvhFKKoqL7MWkTq6Cqq4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uWgtzmK5Dffhp4w0dM9JIEpJpXc3nwLUXojPORvneWU=;
-        b=MxmeWYBjdnGNDuqhQilHy9JwBAvLSpYFvHs7ubMrcSXYHr5xj8BjwVCjgP7Mxyp0M9
-         Js4JkM6tWqnhfIEgqw1l9i+rP4J1qD432SGr1ltpFFlOoGmcppLj8Kjyl14EW5AeASQT
-         3HHnFIjWmJ/gMy3anRJ65m0ajWpAJz+nEQSyENNoBgNpaSXWH0E9y8sOnBONdufSNi2W
-         UWRnYse5yGlpZMCncedS7QAyu7E5o0pD0kis9khz9vDeqdtuNsLbBLAKfKbaqfPB5hrg
-         hIq1FJJtY5qr5LgkF7tUbPq8Mu6FJhdtpqnb9Lq3TexNM8z0y/M7ovzVosunoSHXebg0
-         62Eg==
-X-Gm-Message-State: APjAAAW/YXT83iDxrpgtMTbHhLUiwuxCgmgdt7g9tpVPvjRHrLghb4Eb
-        HL2S4STxDwOgPpiH8x8cZwxxFQJ4ZKY=
-X-Google-Smtp-Source: APXvYqyr9wyBrPBbfk9HiV0Jr7lGQ8QZdHfjMT4Gx7L0vQ0hgTW2WOCVGha05kN2IhBLwuwyKxXWWQ==
-X-Received: by 2002:a02:a493:: with SMTP id d19mr10676765jam.22.1561065425261;
-        Thu, 20 Jun 2019 14:17:05 -0700 (PDT)
-Received: from mail-io1-f48.google.com (mail-io1-f48.google.com. [209.85.166.48])
-        by smtp.gmail.com with ESMTPSA id l11sm1408032ioj.32.2019.06.20.14.17.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 14:17:04 -0700 (PDT)
-Received: by mail-io1-f48.google.com with SMTP id u19so154265ior.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 14:17:04 -0700 (PDT)
-X-Received: by 2002:a02:5b05:: with SMTP id g5mr101301999jab.114.1561065423991;
- Thu, 20 Jun 2019 14:17:03 -0700 (PDT)
+        Thu, 20 Jun 2019 17:17:42 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id D39F9C0003;
+        Thu, 20 Jun 2019 21:17:36 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 23:17:36 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Kevin Hilman <khilman@kernel.org>
+Cc:     linux-rtc@vger.kernel.org, linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/2] rtc: Add Amlogic Virtual Wake RTC
+Message-ID: <20190620211736.GF23549@piout.net>
+References: <20190607194343.18359-1-khilman@kernel.org>
+ <20190607194343.18359-2-khilman@kernel.org>
 MIME-Version: 1.0
-References: <20190620152432.1408278-1-lkundrak@v3.sk> <CAPDyKFrSQR7+POv++8jW5VF4hTcQbNwZzqHntK1k4eNpy2gH=Q@mail.gmail.com>
-In-Reply-To: <CAPDyKFrSQR7+POv++8jW5VF4hTcQbNwZzqHntK1k4eNpy2gH=Q@mail.gmail.com>
-From:   Doug Anderson <dianders@chromium.org>
-Date:   Thu, 20 Jun 2019 14:16:52 -0700
-X-Gmail-Original-Message-ID: <CAD=FV=WBycK5hfa75e0vJ=9sjEG88TJyzU4--jsB6UyDe6nGVA@mail.gmail.com>
-Message-ID: <CAD=FV=WBycK5hfa75e0vJ=9sjEG88TJyzU4--jsB6UyDe6nGVA@mail.gmail.com>
-Subject: Re: [PATCH RESEND] mmc: core: try to use an id from the devicetree
-To:     Ulf Hansson <ulf.hansson@linaro.org>
-Cc:     Lubomir Rintel <lkundrak@v3.sk>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190607194343.18359-2-khilman@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hello Kevin,
 
-On Thu, Jun 20, 2019 at 8:37 AM Ulf Hansson <ulf.hansson@linaro.org> wrote:
->
-> + Doug
->
-> On Thu, 20 Jun 2019 at 17:24, Lubomir Rintel <lkundrak@v3.sk> wrote:
-> >
-> > If there's a mmc* alias in the device tree, take the device number from
-> > it, so that we end up with a device name that matches the alias.
->
-> Lots of people would be happy if I queue something along the lines of
-> what you propose. I am not really having any big problems with it, but
-> I am reluctant to queue it because of other peoples quite strong
-> opinions [1] that have been expressed in regards to this already.
->
-> Kind regards
-> Uffe
->
-> [1]
-> https://www.spinics.net/lists/devicetree-spec/msg00254.html
+On 07/06/2019 12:43:43-0700, Kevin Hilman wrote:
+> +static int meson_vrtc_read_time(struct device *dev, struct rtc_time *tm)
+> +{
+> +	unsigned long local_time;
+> +	struct timespec64 time;
+> +
+> +	ktime_get_raw_ts64(&time);
+> +	local_time = time.tv_sec - (sys_tz.tz_minuteswest * 60);
+The RTC is supposed to be set to UTC so the TZ adjustment is not
+necessary.
 
-Yeah, I personally like being able to assign numbers too, but
-unfortunately there are lots of people who objected.  BTW: if you
-prefer the patchwork view of the same discussion that Ulf pointed to:
+> +	rtc_time_to_tm(local_time, tm);
+> +
 
-https://lore.kernel.org/patchwork/cover/674381/
+Please use the 64 bit version.
 
-As per that discussion, I think might be OK if we could find a way to
-assign a string-based name to devices.  Then if your user manual calls
-them "emmc", "sd", and "sdio" you could name them that way.  ...and if
-your manual calls them "emmc", "sd0", "sd1" you could name them that
-way.  ...but I wouldn't swear that people would actually truly like
-that.
+> +	return 0;
+> +}
+> +
+> +static void meson_vrtc_set_wakeup_time(struct meson_vrtc_data *vrtc,
+> +				       unsigned long time)
+> +{
+> +	writel_relaxed(time, vrtc->io_alarm);
+> +
+> +	dev_dbg(&vrtc->pdev->dev, "set_wakeup_time: %lu\n", time);
+> +}
+> +
+> +static int meson_vrtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
+> +{
+> +	struct meson_vrtc_data *vrtc = dev_get_drvdata(dev);
+> +	struct timespec64 time;
+> +	unsigned long local_time;
+> +	unsigned long alarm_secs;
+> +	int ret;
+> +
+> +	if (alarm->enabled) {
+> +		ret = rtc_tm_to_time(&alarm->time, &alarm_secs);
+> +		if (ret)
+> +			return ret;
+> +
 
-Given the total number of people who keep feeling like this is an
-issue that needs to be solved, though, it does seem worthwhile for
-someone to come up with a solution.
+Use the 64bit version which makes it clear that it never fails (checking
+ret is useless).
+
+> +		ktime_get_raw_ts64(&time);
+> +		local_time = time.tv_sec - (sys_tz.tz_minuteswest * 60);
+> +
+> +		vrtc->alarm_time = alarm_secs;
+> +
+> +		if (alarm_secs >= local_time) {
+
+This is already ensured by the core so no need to check here.
+
+> +			alarm_secs = alarm_secs - local_time;
+> +
+> +			meson_vrtc_set_wakeup_time(vrtc, alarm_secs);
+> +
+> +			pr_debug("system will wakeup %lus later\n", alarm_secs);
+> +		}
+> +	} else {
+> +		vrtc->alarm_time = 0;
+> +		meson_vrtc_set_wakeup_time(vrtc, 0);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int meson_vrtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+> +{
+> +	struct meson_vrtc_data *vrtc = dev_get_drvdata(dev);
+> +
+> +	if (!vrtc->alarm_time) {
+
+I think this test is inverted.
+
+> +		alm->enabled = true;
+> +
+> +		rtc_time_to_tm(vrtc->alarm_time, &alm->time);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct rtc_class_ops meson_vrtc_ops = {
+> +	.read_time = meson_vrtc_read_time,
+> +	.set_alarm = meson_vrtc_set_alarm,
+> +	.read_alarm = meson_vrtc_read_alarm,
+> +};
+> +
+> +static int meson_vrtc_probe(struct platform_device *pdev)
+> +{
+> +	struct meson_vrtc_data *vrtc;
+> +	struct resource *res;
+> +
+> +	vrtc = devm_kzalloc(&pdev->dev, sizeof(*vrtc), GFP_KERNEL);
+> +	if (!vrtc)
+> +		return -ENOMEM;
+> +
+> +	vrtc->pdev = pdev;
+> +
+> +	/* Alarm registers */
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	vrtc->io_alarm = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(vrtc->io_alarm))
+> +		return PTR_ERR(vrtc->io_alarm);
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
+> +
+> +	platform_set_drvdata(pdev, vrtc);
+> +
+> +	vrtc->rtc = devm_rtc_device_register(&pdev->dev, "meson-vrtc",
+> +					     &meson_vrtc_ops, THIS_MODULE);
+> +	if (IS_ERR(vrtc->rtc))
+> +		return PTR_ERR(vrtc->rtc);
+> +
+
+Please use devm_rtc_allocate_device and rtc_register_device. This
+doesn't help much but my plan is to get rid of devm_rtc_device_register.
+
+I suppose you don't get any interrupt for the alarm?
 
 
--Doug
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
