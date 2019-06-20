@@ -2,53 +2,55 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94597C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A284C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73F8D206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46BB920656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055200;
-	bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
+	s=default; t=1561055209;
+	bh=e2nZU217aUWFTWDMd16QQVgHs+P9wdQvvC9J69tTyhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TqZZFCDGRrYYy4FN7K5SiWsPZHbtFKOoejjipzaqdHXmmf8tpCTKYdFwQDNrL6Mal
-	 ZpUxRnOpAD+SPSCZxEsVfF59W1vJEDgwRqBe0gTFq0I5HmP5Bc1EVY3CJO8MOT0jAF
-	 FHwskeTZAwnhL5TkmU7witqJ8w0atG9/o07VI2y4=
+	b=ai4snJdpqyZhDRSAKJRVzgjiEtZHeFkkafmew2HA6qIpIUtGpGl7FzM88Xyr9331n
+	 3jt+1yxO+KNiwvGO2N+wrzJbKtwzJX7e8QUw+dTMt4vsNBLV4WMuapa5vdZ70lXq95
+	 zs1DphzAaZO69sYONeWQ+L1EhaIT5wl0Seb9et/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728203AbfFTS0i (ORCPT
+        id S1728216AbfFTS0r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:26:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60034 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:26:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59466 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726546AbfFTSGF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:05 -0400
+        id S1728076AbfFTSFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AE25204FD;
-        Thu, 20 Jun 2019 18:06:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B6D3215EA;
+        Thu, 20 Jun 2019 18:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053964;
-        bh=i9Ko+0/eQ4ec+hUVmpS3MjI3uwmIUDUjQmFTmcYNk1s=;
+        s=default; t=1561053946;
+        bh=e2nZU217aUWFTWDMd16QQVgHs+P9wdQvvC9J69tTyhs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TahNF0GltYeurJerwxoTgMnfQF+WgHTXMJmRg/4+LIBOkETPUCQrcSY0TqLcGwUYs
-         8NgW/wvRwDIkHyrV++R7S9LMavLBNJZVaUZ0by8z7NntnzzKPPV5aJNpV86cfuLTpV
-         x7QkkpddmukpUZ1GHq4I267WTRD3usXKvMvO8cY8=
+        b=mzOSPmHyBujuNNso6nuOzGeHgi5tIqNp+CWfC9pV9FO+oa/szRIc7fiqDdpnVhroZ
+         Z+wgCZcjWt0fuoZXriFlgvKqz+Gx5KK3Yf1IfbubwU/QQ8vNWMSDl4MokYUVyaUNe5
+         RkIvR5nQMlgulgSi7naIAOS20Mzn2GIVRJkTyuJ8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Erik=20=C4=8Cuk?= <erik.cuk@domel.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 4.9 089/117] rtc: pcf8523: dont return invalid date when battery is low
-Date:   Thu, 20 Jun 2019 19:57:03 +0200
-Message-Id: <20190620174357.424257264@linuxfoundation.org>
+        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 075/117] arm64/mm: Inhibit huge-vmap with ptdump
+Date:   Thu, 20 Jun 2019 19:56:49 +0200
+Message-Id: <20190620174357.017502121@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,80 +63,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Baruch Siach <baruch@tkos.co.il>
+[ Upstream commit 7ba36eccb3f83983a651efd570b4f933ecad1b5c ]
 
-commit ecb4a353d3afd45b9bb30c85d03ee113a0589079 upstream.
+The arm64 ptdump code can race with concurrent modification of the
+kernel page tables. At the time this was added, this was sound as:
 
-The RTC_VL_READ ioctl reports the low battery condition. Still,
-pcf8523_rtc_read_time() happily returns invalid dates in this case.
-Check the battery health on pcf8523_rtc_read_time() to avoid that.
+* Modifications to leaf entries could result in stale information being
+  logged, but would not result in a functional problem.
 
-Reported-by: Erik Čuk <erik.cuk@domel.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+* Boot time modifications to non-leaf entries (e.g. freeing of initmem)
+  were performed when the ptdump code cannot be invoked.
 
+* At runtime, modifications to non-leaf entries only occurred in the
+  vmalloc region, and these were strictly additive, as intermediate
+  entries were never freed.
+
+However, since commit:
+
+  commit 324420bf91f6 ("arm64: add support for ioremap() block mappings")
+
+... it has been possible to create huge mappings in the vmalloc area at
+runtime, and as part of this existing intermediate levels of table my be
+removed and freed.
+
+It's possible for the ptdump code to race with this, and continue to
+walk tables which have been freed (and potentially poisoned or
+reallocated). As a result of this, the ptdump code may dereference bogus
+addresses, which could be fatal.
+
+Since huge-vmap is a TLB and memory optimization, we can disable it when
+the runtime ptdump code is in use to avoid this problem.
+
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Fixes: 324420bf91f60582 ("arm64: add support for ioremap() block mappings")
+Acked-by: Ard Biesheuvel <ard.biesheuvel@arm.com>
+Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/rtc-pcf8523.c |   32 ++++++++++++++++++++++++--------
- 1 file changed, 24 insertions(+), 8 deletions(-)
+ arch/arm64/mm/mmu.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
---- a/drivers/rtc/rtc-pcf8523.c
-+++ b/drivers/rtc/rtc-pcf8523.c
-@@ -82,6 +82,18 @@ static int pcf8523_write(struct i2c_clie
- 	return 0;
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 0a56898f8410..efd65fc85238 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -765,13 +765,18 @@ void *__init fixmap_remap_fdt(phys_addr_t dt_phys)
+ 
+ int __init arch_ioremap_pud_supported(void)
+ {
+-	/* only 4k granule supports level 1 block mappings */
+-	return IS_ENABLED(CONFIG_ARM64_4K_PAGES);
++	/*
++	 * Only 4k granule supports level 1 block mappings.
++	 * SW table walks can't handle removal of intermediate entries.
++	 */
++	return IS_ENABLED(CONFIG_ARM64_4K_PAGES) &&
++	       !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
  }
  
-+static int pcf8523_voltage_low(struct i2c_client *client)
-+{
-+	u8 value;
-+	int err;
-+
-+	err = pcf8523_read(client, REG_CONTROL3, &value);
-+	if (err < 0)
-+		return err;
-+
-+	return !!(value & REG_CONTROL3_BLF);
-+}
-+
- static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+ int __init arch_ioremap_pmd_supported(void)
  {
- 	u8 value;
-@@ -164,6 +176,14 @@ static int pcf8523_rtc_read_time(struct
- 	struct i2c_msg msgs[2];
- 	int err;
+-	return 1;
++	/* See arch_ioremap_pud_supported() */
++	return !IS_ENABLED(CONFIG_ARM64_PTDUMP_DEBUGFS);
+ }
  
-+	err = pcf8523_voltage_low(client);
-+	if (err < 0) {
-+		return err;
-+	} else if (err > 0) {
-+		dev_err(dev, "low voltage detected, time is unreliable\n");
-+		return -EINVAL;
-+	}
-+
- 	msgs[0].addr = client->addr;
- 	msgs[0].flags = 0;
- 	msgs[0].len = 1;
-@@ -248,17 +268,13 @@ static int pcf8523_rtc_ioctl(struct devi
- 			     unsigned long arg)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
--	u8 value;
--	int ret = 0, err;
-+	int ret;
- 
- 	switch (cmd) {
- 	case RTC_VL_READ:
--		err = pcf8523_read(client, REG_CONTROL3, &value);
--		if (err < 0)
--			return err;
--
--		if (value & REG_CONTROL3_BLF)
--			ret = 1;
-+		ret = pcf8523_voltage_low(client);
-+		if (ret < 0)
-+			return ret;
- 
- 		if (copy_to_user((void __user *)arg, &ret, sizeof(int)))
- 			return -EFAULT;
+ int pud_set_huge(pud_t *pud, phys_addr_t phys, pgprot_t prot)
+-- 
+2.20.1
+
 
 
