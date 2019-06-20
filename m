@@ -7,48 +7,49 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1265C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22E41C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF5F220657
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDCFF2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054044;
-	bh=9oLMAM/nIBoGCDh6ofVMyFf0mrfY/YKE5fI1NiFYlA4=;
+	s=default; t=1561054048;
+	bh=SZZE+pgDssWiTsN/aIEafz1u29jCy292uDmCCXDuVjk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=lTqUYiJcV/LeFDNpXLdnoCB4ZC3HXP0+JTNusETrkTfoWUtbxFbfYaeAhcyofhwNn
-	 A3PTq1y3+UOzJGKnYigldPU//QaDla+NS4/FZFBs6Fi0kzvdgOtQkx4pOOqq7oDSGa
-	 6rwjcVtOo+/HLfMgbQhBq/LhfKYm4rjsf7uT9FRw=
+	b=jghvoWOtqOkTsXWls9fcOCIY+w9bFHYhjWflVFGzgtGLgybNcEK4OxYcqlSSJd4uH
+	 as8vhydaKqJ8UBXgqI2QkR2npwwNp2q+QpdDSZrml5xDVzsuo1FTToBc7AzxvmUYwy
+	 ogWN92IxZEt6OjnVnrh1KWNQOhNkPLVSrCI9YtFA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfFTSHW (ORCPT
+        id S1728320AbfFTSH0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:07:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33642 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726511AbfFTSHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:15 -0400
+        id S1728313AbfFTSHX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 547282082C;
-        Thu, 20 Jun 2019 18:07:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 489E52070B;
+        Thu, 20 Jun 2019 18:07:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054034;
-        bh=9oLMAM/nIBoGCDh6ofVMyFf0mrfY/YKE5fI1NiFYlA4=;
+        s=default; t=1561054042;
+        bh=SZZE+pgDssWiTsN/aIEafz1u29jCy292uDmCCXDuVjk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mw+I28DxnlOZo+lMfUr84t/0gxLvppGiSlr2fyjOrc9zx4cIrP+hJEyS+0Lprg30N
-         nEJEcEsyjD672LgNnYGwJvEji7eqGZYFWgOetEiO6vGKSjEaWa0enHcITrQ2ckTBGw
-         I3R5SWGTm/UtB4yzVtxV6u4VWCYbZPjWHzpDNfQw=
+        b=jOwbhcvYf8l3g1Q4WTh5wy3UVG+EdDNUXBusUxq14rgQiJqzMOoMex3a1u2vaohl3
+         LeFBUV462ws3Mjd387GeJlxM4SXByC4jalEG6FPrvDgr786zCiAg8Scy43dC+d8Rol
+         4SibhQKkmjwzxZn2Jq1ld1CIaUaQvo+pKK+vVNgQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Douglas Anderson <dianders@chromium.org>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Martin Schiller <ms@dev.tdt.de>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>
-Subject: [PATCH 4.9 083/117] usb: dwc2: Fix DMA cache alignment issues
-Date:   Thu, 20 Jun 2019 19:56:57 +0200
-Message-Id: <20190620174357.244764381@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
+        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.9 117/117] Abort file_remove_privs() for non-reg. files
+Date:   Thu, 20 Jun 2019 19:57:31 +0200
+Message-Id: <20190620174358.416172980@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,62 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Martin Schiller <ms@dev.tdt.de>
+From: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
 
-commit 4a4863bf2e7932e584a3a462d3c6daf891142ddc upstream.
+commit f69e749a49353d96af1a293f56b5b56de59c668a upstream.
 
-Insert a padding between data and the stored_xfer_buffer pointer to
-ensure they are not on the same cache line.
+file_remove_privs() might be called for non-regular files, e.g.
+blkdev inode. There is no reason to do its job on things
+like blkdev inodes, pipes, or cdevs. Hence, abort if
+file does not refer to a regular inode.
 
-Otherwise, the stored_xfer_buffer gets corrupted for IN URBs on
-non-cache-coherent systems. (In my case: Lantiq xRX200 MIPS)
+AV: more to the point, for devices there might be any number of
+inodes refering to given device.  Which one to strip the permissions
+from, even if that made any sense in the first place?  All of them
+will be observed with contents modified, after all.
 
-Fixes: 3bc04e28a030 ("usb: dwc2: host: Get aligned DMA in a more supported way")
-Fixes: 56406e017a88 ("usb: dwc2: Fix DMA alignment to start at allocated boundary")
-Cc: <stable@vger.kernel.org>
-Tested-by: Douglas Anderson <dianders@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Martin Schiller <ms@dev.tdt.de>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Found by LockDoc (Alexander Lochmann, Horst Schirmeier and Olaf
+Spinczyk)
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Zubin Mithra <zsm@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/dwc2/hcd.c |   10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ fs/inode.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -2552,8 +2552,10 @@ static void dwc2_free_dma_aligned_buffer
- 		return;
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1804,8 +1804,13 @@ int file_remove_privs(struct file *file)
+ 	int kill;
+ 	int error = 0;
  
- 	/* Restore urb->transfer_buffer from the end of the allocated area */
--	memcpy(&stored_xfer_buffer, urb->transfer_buffer +
--	       urb->transfer_buffer_length, sizeof(urb->transfer_buffer));
-+	memcpy(&stored_xfer_buffer,
-+	       PTR_ALIGN(urb->transfer_buffer + urb->transfer_buffer_length,
-+			 dma_get_cache_alignment()),
-+	       sizeof(urb->transfer_buffer));
+-	/* Fast path for nothing security related */
+-	if (IS_NOSEC(inode))
++	/*
++	 * Fast path for nothing security related.
++	 * As well for non-regular files, e.g. blkdev inodes.
++	 * For example, blkdev_write_iter() might get here
++	 * trying to remove privs which it is not allowed to.
++	 */
++	if (IS_NOSEC(inode) || !S_ISREG(inode->i_mode))
+ 		return 0;
  
- 	if (usb_urb_dir_in(urb))
- 		memcpy(stored_xfer_buffer, urb->transfer_buffer,
-@@ -2580,6 +2582,7 @@ static int dwc2_alloc_dma_aligned_buffer
- 	 * DMA
- 	 */
- 	kmalloc_size = urb->transfer_buffer_length +
-+		(dma_get_cache_alignment() - 1) +
- 		sizeof(urb->transfer_buffer);
- 
- 	kmalloc_ptr = kmalloc(kmalloc_size, mem_flags);
-@@ -2590,7 +2593,8 @@ static int dwc2_alloc_dma_aligned_buffer
- 	 * Position value of original urb->transfer_buffer pointer to the end
- 	 * of allocation for later referencing
- 	 */
--	memcpy(kmalloc_ptr + urb->transfer_buffer_length,
-+	memcpy(PTR_ALIGN(kmalloc_ptr + urb->transfer_buffer_length,
-+			 dma_get_cache_alignment()),
- 	       &urb->transfer_buffer, sizeof(urb->transfer_buffer));
- 
- 	if (usb_urb_dir_out(urb))
+ 	kill = dentry_needs_remove_privs(dentry);
 
 
