@@ -2,175 +2,187 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBF8BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DD2CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0B252070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 593B32070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:12:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ZyyEIWc8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727015AbfFTVKx (ORCPT
+        id S1726256AbfFTVMN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:10:53 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726256AbfFTVKw (ORCPT
+        Thu, 20 Jun 2019 17:12:13 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34248 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfFTVMN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:10:52 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KL8FFR088897;
-        Thu, 20 Jun 2019 17:10:05 -0400
-Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t8hsyg2a1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 17:10:04 -0400
-Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
-        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5KL5Utw001317;
-        Thu, 20 Jun 2019 21:10:04 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma01wdc.us.ibm.com with ESMTP id 2t8hrp00gy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 21:10:04 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KLA3n130474734
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 21:10:04 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF168B2064;
-        Thu, 20 Jun 2019 21:10:03 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B181BB205F;
-        Thu, 20 Jun 2019 21:10:03 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Jun 2019 21:10:03 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id AA5FD16C6B85; Thu, 20 Jun 2019 14:10:05 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 14:10:05 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Scott Wood <swood@redhat.com>
-Cc:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Clark Williams <williams@redhat.com>,
-        linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH RT 3/4] rcu: unlock special: Treat irq and preempt
- disabled the same
-Message-ID: <20190620211005.GW26519@linux.ibm.com>
-Reply-To: paulmck@linux.ibm.com
-References: <20190619011908.25026-1-swood@redhat.com>
- <20190619011908.25026-4-swood@redhat.com>
+        Thu, 20 Jun 2019 17:12:13 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so6721692edb.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 14:12:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=959ru36WY2J0Xrly1vs1MXuZnqXsrreyoL0xoecTXQA=;
+        b=ZyyEIWc8g9qNg4ofLToKGhgAmro8fi/qsiplRDzzYnsQzgUBFe4c86Ee/wR4SebDjt
+         d63ZPlgcJxB1wYNf1eIPn3M3bB13fdEww4NsSF+uA3/ahauLDZUM1S12sFjWLoIzrkEq
+         HMbsASyI+4J0m7OfyVxoUW085H+KZiQlel8eY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=959ru36WY2J0Xrly1vs1MXuZnqXsrreyoL0xoecTXQA=;
+        b=URh/gwvwsoY2BNopFro0qh4euMmoGsJ4WnfowCRDhEsmBChDdBj+3HCS4RxPZaTN30
+         Tz0E+xrCw5xWVooqNXOzDFKrYeiHt0N+AGpLjxcPjoriN4WL9trC88tCqidlzBaznGe2
+         SfxKSxUVDX3JJIuv92pvTavOSe++NIXpqZle79svoKSN1wMDOVn74wbfWr8owtkm5t2R
+         SD1dPKhkXELHBXGOz+Wl0+ybxUViz1+uUbDn4UvzaBgMZMK3t3sYR5E8UbpgwBSW+BZA
+         p4etMDt2XC4HgE9IdGUqTuz/ff/tG3hi3pAhAt8WC2Rlh3oc2OyZhI2RWAJ1n1LL7P90
+         disQ==
+X-Gm-Message-State: APjAAAW35sOgxM+Z+mdlAiqdE/WmhFvSOPzP7lIn6uayrnK50YPp+M6Z
+        wyGufnB5RfoNom1IcH3YCtMBBw==
+X-Google-Smtp-Source: APXvYqx3EnsHuhcIFTP2RIslvwoM3AQZ6N+bN+bCoN37PG+nA2hCPhd0nIWscWNoh843HbyPEoTJjw==
+X-Received: by 2002:a17:906:2510:: with SMTP id i16mr98153366ejb.130.1561065130725;
+        Thu, 20 Jun 2019 14:12:10 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id p18sm76849ejr.61.2019.06.20.14.12.08
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 14:12:09 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 23:12:04 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Cheng-yi Chiang <cychiang@chromium.org>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Doug Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        linux-media@vger.kernel.org,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>, dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        Dariusz Marcinkiewicz <darekm@google.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH 1/7] video: add HDMI state notifier support
+Message-ID: <20190620211204.GW12905@phenom.ffwll.local>
+Mail-Followup-To: Cheng-yi Chiang <cychiang@chromium.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Mark Brown <broonie@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Takashi Iwai <tiwai@suse.com>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Russell King <rmk+kernel@armlinux.org.uk>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Doug Anderson <dianders@chromium.org>,
+        Dylan Reid <dgreid@chromium.org>, tzungbi@chromium.org,
+        linux-media@vger.kernel.org,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." <alsa-devel@alsa-project.org>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org,
+        Dariusz Marcinkiewicz <darekm@google.com>
+References: <20190603080931.GG21222@phenom.ffwll.local>
+ <CAFv8Nw+1sB8i1d87vLeKxRricZOi4gnXFSgOzW9k0sa_Tzybjg@mail.gmail.com>
+ <20190604072411.GP21222@phenom.ffwll.local>
+ <CAFv8NwKL9ZL=gNpDmdRV+R9eq22+Da_1kzuYBv8kMMyV3Hq14g@mail.gmail.com>
+ <20190611123455.GD2458@phenom.ffwll.local>
+ <CAFv8NwJxs-R=ehgeqyx=e+T5OmUBsk3uWnUb2t0cC-LDPS7G5w@mail.gmail.com>
+ <20190618121220.GU12905@phenom.ffwll.local>
+ <CAFv8NwLci2ALi3V-e=8jjatciHWOoOj-FeajwNLWRpWRtqgBdg@mail.gmail.com>
+ <20190620092506.GP12905@phenom.ffwll.local>
+ <CAFv8NwLbS_f4cfeorzqtmRzQSY0u1tgM7fitAokg_QfViPvq=Q@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190619011908.25026-4-swood@redhat.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200152
+In-Reply-To: <CAFv8NwLbS_f4cfeorzqtmRzQSY0u1tgM7fitAokg_QfViPvq=Q@mail.gmail.com>
+X-Operating-System: Linux phenom 4.19.0-5-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 08:19:07PM -0500, Scott Wood wrote:
-> [Note: Just before posting this I noticed that the invoke_rcu_core stuff
->  is part of the latest RCU pull request, and it has a patch that
->  addresses this in a more complicated way that appears to deal with the
->  bare irq-disabled sequence as well.
+Massively cutting this thread, since halfway through in my previous reply
+I realized that maybe hdmi_codec is a much better starting point.
 
-Far easier to deal with it than to debug the lack of it.  ;-)
+On Thu, Jun 20, 2019 at 09:23:23PM +0800, Cheng-yi Chiang wrote:
+> On Thu, Jun 20, 2019 at 5:25 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > Yeah fully agreeing that hdmi_audio_code is probably a better starting
+> > point. Problem is that becuase hdmi_codec is built on top of platform
+> > device it's quite a bit harder to extend with callbacks and things like
+> > that, without breaking the driver model.
+> >
+> > I need to think about this more, but if all we need to look at is
+> > hdmi_codec, then I think this becomes a lot easier. And we can ignore
+> > drm_audio_component.h completely.
+> 
+> 
+> It is surprising that you think this way.
+> Maybe the original patch before hdmi-notifier was introduced is the
+> better way to solve this issue, if we only need to look at hdmi_codec.
+> 
+> The history of hdmi_codec driver is in this patch series:
+> 
+> https://lore.kernel.org/patchwork/patch/539656/
 
->  Assuming we need/want to support such sequences, is the
->  invoke_rcu_core() call actually going to result in scheduling any
->  sooner?  resched_curr() just does the same setting of need_resched
->  when it's the same cpu.
-> ]
+Hm, this doesn't seem to be the hdmi_codec driver I meant, but another,
+new one. I was talking about SND_SOC_HDMI_CODEC.
 
-Yes, invoke_rcu_core() can in some cases invoke the scheduler sooner.
-Setting the CPU-local bits might not have effect until the next interrupt.
+> There was a callback mechanism implemented between dw-hdmi and hdmi
+> codec driver.
+> It was later consolidated by Doug in this patch for better jack status
+> reporting:
+> 
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/303573/
 
-So if -rt wants the simpler and slower approach, the change needs to
-use IS_ENABLED(CONFIG_PREEMPT_RT_FULL) or similar.  Not that this is
-an issue until CONFIG_PREEMPT_RT_FULL hits mainline.
+Hm that still seems entirely separate hdmi-codec specific to dw-hdmi only
+...
 
-							Thanx, Paul
+> I am not sure why the original patch series did not get fully accepted
+> in the upstream.
+> It was quite long time ago.
+> 
+> But if you think this might be the right way to do, then it is even
+> better for us because the patch series and Doug's patch had been quite
+> stable
+> on our RK3288 products for about four years with plenty of users, so
+> we have much higher confidence in them.
+> I can rebase and clean up them and post another patch for review.
+> 
+> Please let me know what approach you feel is better.
+> Thanks again!
 
-> Since special should never be getting set inside an irqs-disabled
-> critical section, this is safe as long as there are no sequences of
-> rcu_read_lock()/local_irq_disable()/rcu_read_unlock()/local_irq_enable()
-> (without preempt_disable() wrapped around the IRQ disabling, as spinlocks
-> do).  If there are such sequences, then the grace period may be delayed
-> until the next time need_resched is checked.
-> 
-> This is needed because otherwise, in a sequence such as:
-> 1. rcu_read_lock()
-> 2. *preempt*, set rcu_read_unlock_special.b.blocked
-> 3. preempt_disable()
-> 4. rcu_read_unlock()
-> 5. preempt_enable()
-> 
-> ...rcu_read_unlock_special.b.blocked will not be cleared during
-> step 4, because of the disabled preemption.  If an interrupt is then
-> taken between steps 4 and 5, and that interrupt enters scheduler code
-> that takes pi/rq locks, and an rcu read lock inside that, then when
-> dropping that rcu read lock we will end up in rcu_read_unlock_special()
-> again -- but this time, since irqs are disabled, it will call
-> invoke_rcu_core() in the RT tree (regardless of PREEMPT_RT_FULL), which
-> calls wake_up_process().  This can cause a pi/rq lock deadlock.  An
-> example of interrupt code that does this is scheduler_tick().
-> 
-> The above sequence can be found in (at least) __lock_task_sighand() (for
-> !PREEMPT_RT_FULL) and d_alloc_parallel().
-> 
-> It's potentially an issue on non-RT as well.  While
-> raise_softirq_irqoff() doesn't call wake_up_process() when in_interrupt()
-> is true, if code between steps 4 and 5 directly calls into scheduler
-> code, and that code uses RCU with pi/rq lock held, wake_up_process() can
-> still be called.
-> 
-> On RT, migrate_enable() is such a codepath, so an in_interrupt() check
-> alone would not work on RT.  Instead, keep track of whether we've already
-> had an rcu_read_unlock_special() with preemption disabled but haven't yet
-> scheduled, and rely on the preempt_enable() yet to come instead of
-> calling invoke_rcu_core().
-> 
-> Signed-off-by: Scott Wood <swood@redhat.com>
-> ---
->  kernel/rcu/tree_plugin.h | 10 ++--------
->  1 file changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-> index 5d63914b3687..d7ddbcc7231c 100644
-> --- a/kernel/rcu/tree_plugin.h
-> +++ b/kernel/rcu/tree_plugin.h
-> @@ -630,14 +630,8 @@ static void rcu_read_unlock_special(struct task_struct *t)
->  	if (preempt_bh_were_disabled || irqs_were_disabled) {
->  		WRITE_ONCE(t->rcu_read_unlock_special.b.exp_hint, false);
->  		/* Need to defer quiescent state until everything is enabled. */
-> -		if (irqs_were_disabled) {
-> -			/* Enabling irqs does not reschedule, so... */
-> -			invoke_rcu_core();
-> -		} else {
-> -			/* Enabling BH or preempt does reschedule, so... */
-> -			set_tsk_need_resched(current);
-> -			set_preempt_need_resched();
-> -		}
-> +		set_tsk_need_resched(current);
-> +		set_preempt_need_resched();
->  		local_irq_restore(flags);
->  		return;
->  	}
-> -- 
-> 1.8.3.1
-> 
+Not sure we're talking about the same. What I had in mind is to add jack
+status to the hdmi-codec.c stuff, which is used by multiple soc drm
+display drivers already. Looking at git grep output, there seems to be
+already some support for dw-hdmi synopsys drm_bridge driver. I thought of
+extending that. Does that not work for you?
+
+Thanks, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
