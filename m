@@ -2,114 +2,122 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF879C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC95721537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054751;
-	bh=BP8IddWGjCAgLv+nYP0K19A5yvQ9scesSZhse41AXdU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hoB5vreYhmZd4sOUaB2YkVw4s1bqRQGZX+DLZNT6cvDzCxo3pNbGUuX6OWGFeqGCo
-	 lbsl4tBom/rVO0Tfb+MR2Jv0/9MR5Al1jvTWHvFkGzuwxS0F0u+C45y3abageT/Sir
-	 aSx7FKL16ylHy1QYyqDodBGm/aL+rpTv7RbqKUsA=
+	by mail.kernel.org (Postfix) with ESMTP id B4980205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729613AbfFTSPc (ORCPT
+        id S1729590AbfFTSTQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:15:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44270 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbfFTSP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:15:28 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4321C2084E;
-        Thu, 20 Jun 2019 18:15:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054527;
-        bh=BP8IddWGjCAgLv+nYP0K19A5yvQ9scesSZhse41AXdU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H0RJlQLqWhyH9+4TkYaqLwx0troKbrsq+F7xxAKzXSAtpugFfstde0TYzjRENBZbq
-         Mw8tEqKR0V72i8O8phvlMz5EaM6htS4URl+Uo5P7uWCeohWBugBBgd/q47Ob/rODFZ
-         8Mw43CWc1tg8NNW24TaHg0CbmkMoogzrhjDyx6iY=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Jander <david@protonic.nl>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 60/98] drm/etnaviv: lock MMU while dumping core
-Date:   Thu, 20 Jun 2019 19:57:27 +0200
-Message-Id: <20190620174352.099265172@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
-References: <20190620174349.443386789@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Jun 2019 14:19:16 -0400
+Received: from eddie.linux-mips.org ([148.251.95.138]:38034 "EHLO
+        cvs.linux-mips.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727349AbfFTSTM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:19:12 -0400
+Received: (from localhost user: 'macro', uid#1010) by eddie.linux-mips.org
+        with ESMTP id S23994574AbfFTSTIXLeUG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org> + 1 other);
+        Thu, 20 Jun 2019 20:19:08 +0200
+Date:   Thu, 20 Jun 2019 19:19:08 +0100 (BST)
+From:   "Maciej W. Rozycki" <macro@linux-mips.org>
+To:     Paul Burton <paul.burton@mips.com>
+cc:     Serge Semin <fancer.lancer@gmail.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Serge Semin <Sergey.Semin@t-platforms.ru>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
+In-Reply-To: <20190620174002.tgayzon7dc5d57fh@pburton-laptop>
+Message-ID: <alpine.LFD.2.21.1906201851580.21654@eddie.linux-mips.org>
+References: <20190614063341.1672-1-fancer.lancer@gmail.com> <20190620174002.tgayzon7dc5d57fh@pburton-laptop>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1396500d673bd027683a0609ff84dca7eb6ea2e7 ]
+On Thu, 20 Jun 2019, Paul Burton wrote:
 
-The devcoredump needs to operate on a stable state of the MMU while
-it is writing the MMU state to the coredump. The missing lock
-allowed both the userspace submit, as well as the GPU job finish
-paths to mutate the MMU state while a coredump is under way.
+> So this seems pretty reasonable. Build testing all our defconfigs only
+> showed up one issue for decstation_defconfig & decstation_r4k_defconfig:
+> 
+>   drivers/net/fddi/defza.c: In function 'fza_reads':
+>   drivers/net/fddi/defza.c:88:17: error: implicit declaration of
+>     function 'readq_relaxed'; did you mean 'readw_relaxed'?
+>     [-Werror=implicit-function-declaration]
+>    #define readq_u readq_relaxed
+>                    ^~~~~~~~~~~~~
+>   drivers/net/fddi/defza.c:126:13: note: in expansion of macro 'readq_u'
+>       *dst++ = readq_u(src++);
+>                ^~~~~~~
+>   drivers/net/fddi/defza.c: In function 'fza_writes':
+>   drivers/net/fddi/defza.c:92:18: error: implicit declaration of
+>     function 'writeq_relaxed'; did you mean 'writel_relaxed'?
+>     [-Werror=implicit-function-declaration]
+>    #define writeq_u writeq_relaxed
+>                     ^~~~~~~~~~~~~~
+>   drivers/net/fddi/defza.c:151:4: note: in expansion of macro 'writeq_u'
+>       writeq_u(*src++, dst++);
+>       ^~~~~~~~
+>     CC      net/core/scm.o
+>   cc1: some warnings being treated as errors
+>   make[4]: *** [scripts/Makefile.build:279: drivers/net/fddi/defza.o] Error 1
+> 
+> These uses of readq_relaxed & writeq_relaxed are both conditional upon
+> sizeof(unsigned long) == 8, ie. upon CONFIG_64BIT=y so they're not going
+> to present a runtime issue but we need to provide some implementation of
+> the *q accessors to keep the compiler happy.
+> 
+> I see a few options:
+> 
+> 1) We could just have defza.c include <io-64-nonatomic-lo-hi.h> to get
+>    the appropriate declarations, which should then get optimized away by
+>    the compiler anyway & never actually be used.
 
-Fixes: a8c21a5451d8 (drm/etnaviv: add initial etnaviv DRM driver)
-Reported-by: David Jander <david@protonic.nl>
-Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-Tested-by: David Jander <david@protonic.nl>
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/gpu/drm/etnaviv/etnaviv_dump.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ This, definitely.
 
-diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-index 33854c94cb85..515515ef24f9 100644
---- a/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-+++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
-@@ -125,6 +125,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 		return;
- 	etnaviv_dump_core = false;
- 
-+	mutex_lock(&gpu->mmu->lock);
-+
- 	mmu_size = etnaviv_iommu_dump_size(gpu->mmu);
- 
- 	/* We always dump registers, mmu, ring and end marker */
-@@ -167,6 +169,7 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 	iter.start = __vmalloc(file_size, GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY,
- 			       PAGE_KERNEL);
- 	if (!iter.start) {
-+		mutex_unlock(&gpu->mmu->lock);
- 		dev_warn(gpu->dev, "failed to allocate devcoredump file\n");
- 		return;
- 	}
-@@ -234,6 +237,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
- 					 obj->base.size);
- 	}
- 
-+	mutex_unlock(&gpu->mmu->lock);
-+
- 	etnaviv_core_dump_header(&iter, ETDUMP_BUF_END, iter.data);
- 
- 	dev_coredumpv(gpu->dev, iter.start, iter.data - iter.start, GFP_KERNEL);
--- 
-2.20.1
+> 2) We could have defza.h #define its readq_u & writeq_u macros
+>    differently for CONFIG_32BIT=y kernels, perhaps using
+>    __compiletime_error to catch any bogus use of them.
+> 
+> 3) We could do the same in a generic header, though if nobody else has
+>    needed it so far & this is the only place we need it then maybe it's
+>    not worth it.
+> 
+> So I'm thinking option 2 might be best, as below. Having said that I
+> don't mind option 1 either - it's simple. Maciej do you have any
+> preference?
 
+ The use of 64-bit operations to access option's packet memory, which is 
+true SRAM, i.e. no side effects, is to improve throughput only and there's 
+no need for atomicity here nor also any kind of barriers, except at the 
+conclusion.  Splitting 64-bit accesses into 32-bit halves in software 
+would not be a functional error here.
 
+ I benchmarked it back in the day and the difference was noticeable with 
+actual network transmissions between loops using 32-bit (LW/SW) and 64-bit 
+(LD/SD) accesses respectively, though I may not be able to track down the 
+figures anymore as it must have been some 18 years ago.  The performance 
+of the MB ASIC used to interface the R4400 CPU to DRAM and TURBOchannel 
+with the 5000/260 systems was stellar as it was specifically designed with 
+high throughput in mind, as an upgrade to the exiting R3400-based 5000/240 
+systems (the CPU and the ASIC are both on a daughtercard), though new such 
+machines used to be sold as well.
 
+ For the record the CPU and TURBOchannel run at 60MHz (40MHz with the 
+R3400) and 25MHz respectively with these systems.
+
+ Thanks for the heads-up!
+
+  Maciej
