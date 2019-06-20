@@ -2,140 +2,174 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20799C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:33:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6E93C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:33:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB562082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82B482082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:33:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561023200;
+	bh=wF4Kft1kjvbBGl6bFmuWJVdHoYPD3Au810PkssaKIZE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bFnSHg183yZCm0p2TR3XKHHuV0+R5kygpFvMK58FLHnGfEVqGs3N6f1jw2Y6hKtYF
+	 So2i5B/Cm7CD8DH+jeUJEywrr8NIQ8SVniUOAqI543joaWfFi5CeiOrJDZ2iWVDF8u
+	 jfO4RYg87ne6FSwXlTsXTclyRFU0+2bOL1p9bkzc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726494AbfFTJdH (ORCPT
+        id S1730650AbfFTJdT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:33:07 -0400
-Received: from mail-io1-f72.google.com ([209.85.166.72]:32782 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfFTJdG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:33:06 -0400
-Received: by mail-io1-f72.google.com with SMTP id n4so4206772ioc.0
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:33:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=WtWpzIFG+KojeL/qLHo4CGjxOFRh5iPbQVL0zRdDcv8=;
-        b=WYpoOw+m3AbNhUHICYodAkken4dkVQtSBdNjsxPYgmK2dHNejrcHTLs+6CpQsJrmaA
-         M+Eb/XNl2NfUlJEpFwuiGM6ZsMmSxF4LABYU0lrVXyue4WD6hvT85dGggubBcJZM29bI
-         wqQjhLM5YbFks3fEN6ZqXn6LR73SMAcFYeTt0mhQPXARYyK1w8ctAPlcu5aw3E/nAqFq
-         AIsCNcHRfoWpqg/5HYUy97T2DlRaff9LxqdajCnKWZodoHqZO/jto+dJCU9j6dforT8D
-         XYEGiz0PhxGnH1Zm1OK6VF9OMg6ck16DW48Cob/TgPmgV4aJQGpdy8XS9GJbrMmEWYwi
-         wrWA==
-X-Gm-Message-State: APjAAAW7OMa5i0iOJ3XTeyl4HIEVFESAz30vOjcPrvKdFTIEAkrq7fwW
-        sFh+EFbOrGmuUIl0fMVXKs/QmexRh8UNdGFnygGth1vcyA+0
-X-Google-Smtp-Source: APXvYqxHzHMo/9j6u9oKQD3Qp+e6EO/ppYpsYS4rrYXtLgLwyo3wIGPM50AmvXp7B1oxIRClwugmz9KQHSDzxiaJ0eT6jWmcatkp
+        Thu, 20 Jun 2019 05:33:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46452 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725912AbfFTJdS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:33:18 -0400
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA533208CB
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:33:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561023197;
+        bh=wF4Kft1kjvbBGl6bFmuWJVdHoYPD3Au810PkssaKIZE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=CRnVSVD2m/JMuXmXMMrNupVPb9HD1/YsmLG8zB04i3IkiTQa5+dImtqjWlVtUVL2D
+         D6jpwAqpeH0/uzLX9kd3H2jKKRW5rWYgla3LouDxkAwovsEOVIM7Q15eS9jT6yjpgK
+         RV1gJEk7ESm7ioUhEmW3+1cjqjSwKwUbjyJDEMgE=
+Received: by mail-wr1-f46.google.com with SMTP id p11so2267919wre.7
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:33:16 -0700 (PDT)
+X-Gm-Message-State: APjAAAXTSV43Q4fFwvT43L1niU/oK+Vi6GesoHxNbSXFMfI6dMlaG9tw
+        ETlvx67OXuZkULnz3OFT79K/N/b4DOMFRm8uDzU=
+X-Google-Smtp-Source: APXvYqwcJ3JkBbowwrQ6KDOzuprIogDlsLPM1Ig5CGLqsI9nvrmysAdsaO2kn1od4dFuMTqL4DBP4KwoTY8KiIhPM/I=
+X-Received: by 2002:adf:f28a:: with SMTP id k10mr8885379wro.343.1561023195316;
+ Thu, 20 Jun 2019 02:33:15 -0700 (PDT)
 MIME-Version: 1.0
-X-Received: by 2002:a6b:ed09:: with SMTP id n9mr11381595iog.153.1561023185627;
- Thu, 20 Jun 2019 02:33:05 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 02:33:05 -0700
-In-Reply-To: <0000000000005463aa0589dcfb85@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000773344058bbe0858@google.com>
-Subject: Re: INFO: trying to register non-static key in usbtouch_reset_resume
-From:   syzbot <syzbot+933daad9be4e67ba91a9@syzkaller.appspotmail.com>
-To:     allison@lohutok.net, andreyknvl@google.com,
-        dmitry.torokhov@gmail.com, gregkh@linuxfoundation.org,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, mpe@ellerman.id.au, rfontana@redhat.com,
-        rydberg@bitmath.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20190321163623.20219-1-julien.grall@arm.com> <20190321163623.20219-12-julien.grall@arm.com>
+ <0dfe120b-066a-2ac8-13bc-3f5a29e2caa3@arm.com> <CAJF2gTTXHHgDboaexdHA284y6kNZVSjLis5-Q2rDnXCxr4RSmA@mail.gmail.com>
+ <c871a5ae-914f-a8bb-9474-1dcfec5d45bf@arm.com> <20190619091219.GB7767@fuggles.cambridge.arm.com>
+ <CAJF2gTTmFq3yYa9UrdZRAFwJgC=KmKTe2_NFy_UZBUQovqQJPg@mail.gmail.com> <20190619123939.GF7767@fuggles.cambridge.arm.com>
+In-Reply-To: <20190619123939.GF7767@fuggles.cambridge.arm.com>
+From:   Guo Ren <guoren@kernel.org>
+Date:   Thu, 20 Jun 2019 17:33:03 +0800
+X-Gmail-Original-Message-ID: <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
+Message-ID: <CAJF2gTSiiiewTLwVAXvPLO7rTSUw1rg8VtFLzANdP2S2EEbTjg@mail.gmail.com>
+Subject: Re: [PATCH RFC 11/14] arm64: Move the ASID allocator code in a
+ separate file
+To:     Will Deacon <will.deacon@arm.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org,
+        Julien Grall <julien.grall@arm.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        aou@eecs.berkeley.edu, gary@garyguo.net, Atish.Patra@wdc.com,
+        hch@infradead.org, paul.walmsley@sifive.com, rppt@linux.ibm.com,
+        linux-riscv@lists.infradead.org, Anup Patel <anup.Patel@wdc.com>,
+        Palmer Dabbelt <palmer@sifive.com>, suzuki.poulose@arm.com,
+        Marc Zyngier <marc.zyngier@arm.com>, catalin.marinas@arm.com,
+        julien.thierry@arm.com, christoffer.dall@arm.com,
+        james.morse@arm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+On Wed, Jun 19, 2019 at 8:39 PM Will Deacon <will.deacon@arm.com> wrote:
+>
+> On Wed, Jun 19, 2019 at 08:18:04PM +0800, Guo Ren wrote:
+> > On Wed, Jun 19, 2019 at 5:12 PM Will Deacon <will.deacon@arm.com> wrote:
+> > > This is one place where I'd actually prefer not to go down the route of
+> > > making the code generic. Context-switching and low-level TLB management
+> > > is deeply architecture-specific and I worry that by trying to make this
+> > > code common, we run the real risk of introducing subtle bugs on some
+> > > architecture every time it is changed.
+> > "Add generic asid code" and "move arm's into generic" are two things.
+> > We could do
+> > first and let architecture's maintainer to choose.
+>
+> If I understand the proposal being discussed, it involves basing that
+> generic ASID allocation code around the arm64 implementation which I don't
+> necessarily think is a good starting point.
+...
+>
+> > > Furthermore, the algorithm we use
+> > > on arm64 is designed to scale to large systems using DVM and may well be
+> > > too complex and/or sub-optimal for architectures with different system
+> > > topologies or TLB invalidation mechanisms.
+> > It's just a asid algorithm not very complex and there is a callback
+> > for architecture to define their
+> > own local hart tlb flush. Seems it has nothing with DVM or tlb
+> > broadcast mechanism.
+>
+> I'm pleased that you think the algorithm is not very complex, but I'm also
+> worried that you might not have fully understood some of its finer details.
+I understand your concern about my less understanding of asid
+technology. Here is
+my short-description of arm64 asid allocator: (If you find anything
+wrong, please
+correct me directly, thx :)
+The asid allocator use five level check to reduce the cost of switch_mm.
+ 1. Check if the asid version is the same (it's general)
+ 2. Check reserved_asid which is set in rollover flush_context() and
+the key point is
+     keep the same bit position with the current asid version instead
+of input version.
+ 3. Check if the position of bitmap is free then it could be set &
+used directly.
+ 4. find_next_zero_bit() (a little performance cost)
+ 5. flush_context  (this is the worst cost with increase current asid version)
 
-HEAD commit:    9939f56e usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=100c063aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=df134eda130bb43a
-dashboard link: https://syzkaller.appspot.com/bug?extid=933daad9be4e67ba91a9
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144fa5e6a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13d12de6a00000
+Check is level by level and cost is also higher with the next level.
+The design that
+impressed me the most was reserved_asid and bitmap and the 2th level and 3th
+level will prevent unnecessary find_next_zero_bit().
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+933daad9be4e67ba91a9@syzkaller.appspotmail.com
+The atomic 64 bit asid is also ok for 32-bit system and it won't cost
+a lot in 1th 2th 3th
+level check.
 
-usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-INFO: trying to register non-static key.
-the code is fine but needs lockdep annotation.
-turning off the locking correctness validator.
-CPU: 0 PID: 12 Comm: kworker/0:1 Not tainted 5.2.0-rc5+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  assign_lock_key kernel/locking/lockdep.c:775 [inline]
-  register_lock_class+0x11ae/0x1240 kernel/locking/lockdep.c:1084
-  __lock_acquire+0x11d/0x5340 kernel/locking/lockdep.c:3674
-  lock_acquire+0x100/0x2b0 kernel/locking/lockdep.c:4303
-  __mutex_lock_common kernel/locking/mutex.c:926 [inline]
-  __mutex_lock+0xf9/0x12b0 kernel/locking/mutex.c:1073
-  usbtouch_reset_resume+0xb1/0x170  
-drivers/input/touchscreen/usbtouchscreen.c:1611
-  usb_resume_interface drivers/usb/core/driver.c:1242 [inline]
-  usb_resume_interface.isra.0+0x184/0x390 drivers/usb/core/driver.c:1210
-  usb_resume_both+0x23d/0x780 drivers/usb/core/driver.c:1412
-  __rpm_callback+0x27e/0x3c0 drivers/base/power/runtime.c:355
-  rpm_callback+0x18f/0x230 drivers/base/power/runtime.c:485
-  rpm_resume+0x10c5/0x1840 drivers/base/power/runtime.c:849
-  __pm_runtime_resume+0x103/0x180 drivers/base/power/runtime.c:1076
-  pm_runtime_get_sync include/linux/pm_runtime.h:226 [inline]
-  usb_autoresume_device+0x1e/0x60 drivers/usb/core/driver.c:1599
-  usb_remote_wakeup+0x7b/0xb0 drivers/usb/core/hub.c:3601
-  hub_port_connect_change drivers/usb/core/hub.c:5190 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x23d7/0x3590 drivers/usb/core/hub.c:5432
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-dummy_hcd dummy_hcd.0: port status 0x00010100 has changes
-dummy_hcd dummy_hcd.0: port status 0x00010101 has changes
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb usb1: dummy_bus_suspend
-usb usb1: dummy_bus_resume
-dummy_hcd dummy_hcd.0: port status 0x00010100 has changes
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb usb1: dummy_bus_suspend
-usb usb1: dummy_bus_resume
-dummy_hcd dummy_hcd.0: port status 0x00010100 has changes
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb usb1: dummy_bus_suspend
-usb usb1: dummy_bus_resume
-dummy_hcd dummy_hcd.0: port status 0x00010100 has changes
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb usb1: dummy_bus_suspend
-usb usb1: dummy_bus_resume
-dummy_hcd dummy_hcd.0: port status 0x00010100 has changes
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
-usb 1-1: reset low-speed USB device number 2 using dummy_hcd
-dummy_hcd dummy_hcd.0: port status 0x00100303 has changes
+The operation of set/clear mm_cpumask was removed in arm64 compared to arm32.
+It seems no side effect on current arm64 system, but from software
+meaning it's wrong.
+So I think it should be reserved in generic version.
 
+>
+> The reason I mention DVM and TLB broadcasting is because, depending on
+> the mechanisms in your architecture relating to those, it may be strictly
+> required that all concurrently running threads of a process have the same
+> ASID at any given point in time, or it may be that you really don't care.
+>
+> If you don't care, then the arm64 allocator is over-engineered and likely
+> inefficient for your system. If you do care, then it's worth considering
+> whether a lock is sufficient around the allocator if you don't expect high
+> core counts. Another possibility is that you end up using only one ASID and
+> invalidating the local TLB on every context switch. Yet another design
+> would be to manage per-cpu ASID pools.
+I'll keep my system use the same ASID for SMP + IOMMU :P
+Yes, there are two styles of asid allocator: per-cpu ASID (MIPS) or
+same ASID (ARM).
+If the CPU couldn't support cache/tlb coherency maintian in hardware,
+it should use
+per-cpu ASID style because IPI is expensive and per-cpu ASID style
+need more software
+mechanism to improve performance (eg: delay cache flush). From software view the
+same ASID is clearer and easier to build bigger system with more TLB caches.
+
+I think the same ASID style is a more sensible choice for modern
+processor and let it be
+one of generic is reasonable.
+
+>
+> So rather than blindly copying the arm64 code, I suggest sitting down and
+> designing something that fits to your architecture instead. You may end up
+> with something that is both simpler and more efficient.
+In fact, riscv folks have discussed a lot about arm's asid allocator
+and I learned
+a lot from the discussion:
+https://lore.kernel.org/linux-riscv/20190327100201.32220-1-anup.patel@wdc.com/
+
+We are developing C-SKY and RISC-V ISA cpu cores and make it generic
+is good for us.
+
+Best Regards
+ Guo Ren
