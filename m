@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E100C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CF6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5C5F2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01A32089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053931;
-	bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+	s=default; t=1561053936;
+	bh=huCbm7xIVtdIpzIg6MzCsS/j5xW29H4dHlBqL6qEwP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m/YMKHPAYL77FwVwiARmO0+RvhKedprVqdUHsQ8xmKqrX/eJP9UlQTAhnsvX1Pxn1
-	 r3KWStY7q179INqE8hpzFNTcQDM6GPRNd4wCQtpo/6U3mIavTfWXqPk06jCokSou5C
-	 mJqRUMpFjPXDsqSlXkpaUYesVbMjr3J9PblLmJJk=
+	b=om7fNITnj7kxNsXcMII9A6JGh3etgoAr41Pfu/sqB3CAbRA9hmoKNSlmYrSsaiLxO
+	 hkUIE1CsFYpsa7is5cuHrF9GNNV1YtlLPVCjT7pH+kaK5JJwAzifC6f/CyDWUYe93Q
+	 N1ONMMD8+zQjCjIMxiL8XEXKeM8cbuu61VCJS4/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728056AbfFTSF3 (ORCPT
+        id S1728049AbfFTSFe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:05:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58868 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:05:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58852 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726155AbfFTSF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:27 -0400
+        id S1728057AbfFTSFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:30 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E76E521479;
-        Thu, 20 Jun 2019 18:05:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A8E8204FD;
+        Thu, 20 Jun 2019 18:05:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053926;
-        bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
+        s=default; t=1561053929;
+        bh=huCbm7xIVtdIpzIg6MzCsS/j5xW29H4dHlBqL6qEwP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UmeplU1bfZvxXon5noBscFNaLXmaxLliIuyKnLasNsEV5EekdedMzCEX/0CC3jz4Y
-         ovxO6Inzf734JZwov/j8XVnpYcJtiviSxhaOfcZF0ScT51I13fWwwR7EDvUPDKHCWX
-         6drTKvIiQeM7HxGHJCxkQSL53EXDLUxxZCEuwOhI=
+        b=Ez5B/0umEN3XJ6Ara6RB7NaVZWK7NbV4ZdENt4HKg3lHzD8LHZ4Y959EUk8h+Rzni
+         ANaN+vvotcpP6fXXMVQCNBB6wPqbABTeiUakee9PlcT1cEUCSGa/fVWpaqhsLw0Pqz
+         3r5zvv+GF0lVdypmMKd8ewiR7QIV3jYOL9nhUTzc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
         Aditya Pakki <pakki001@umn.edu>,
-        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Rob Herring <robh@kernel.org>,
         Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 046/117] video: hgafb: fix potential NULL pointer dereference
-Date:   Thu, 20 Jun 2019 19:56:20 +0200
-Message-Id: <20190620174354.722730893@linuxfoundation.org>
+Subject: [PATCH 4.9 047/117] video: imsttfb: fix potential NULL pointer dereferences
+Date:   Thu, 20 Jun 2019 19:56:21 +0200
+Message-Id: <20190620174354.770070615@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -62,34 +63,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
+[ Upstream commit 1d84353d205a953e2381044953b7fa31c8c9702d ]
 
-When ioremap fails, hga_vram should not be dereferenced. The fix
-check the failure to avoid NULL pointer dereference.
+In case ioremap fails, the fix releases resources and returns
+-ENOMEM to avoid NULL pointer dereferences.
 
 Signed-off-by: Kangjie Lu <kjlu@umn.edu>
 Cc: Aditya Pakki <pakki001@umn.edu>
-Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
+Cc: Finn Thain <fthain@telegraphics.com.au>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 [b.zolnierkie: minor patch summary fixup]
 Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/video/fbdev/hgafb.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/video/fbdev/imsttfb.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
-index 463028543173..59e1cae57948 100644
---- a/drivers/video/fbdev/hgafb.c
-+++ b/drivers/video/fbdev/hgafb.c
-@@ -285,6 +285,8 @@ static int hga_card_detect(void)
- 	hga_vram_len  = 0x08000;
- 
- 	hga_vram = ioremap(0xb0000, hga_vram_len);
-+	if (!hga_vram)
-+		goto error;
- 
- 	if (request_region(0x3b0, 12, "hgafb"))
- 		release_io_ports = 1;
+diff --git a/drivers/video/fbdev/imsttfb.c b/drivers/video/fbdev/imsttfb.c
+index 4363c64d74e8..4ef9dc94e813 100644
+--- a/drivers/video/fbdev/imsttfb.c
++++ b/drivers/video/fbdev/imsttfb.c
+@@ -1516,6 +1516,11 @@ static int imsttfb_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	info->fix.smem_start = addr;
+ 	info->screen_base = (__u8 *)ioremap(addr, par->ramdac == IBM ?
+ 					    0x400000 : 0x800000);
++	if (!info->screen_base) {
++		release_mem_region(addr, size);
++		framebuffer_release(info);
++		return -ENOMEM;
++	}
+ 	info->fix.mmio_start = addr + 0x800000;
+ 	par->dc_regs = ioremap(addr + 0x800000, 0x1000);
+ 	par->cmap_regs_phys = addr + 0x840000;
 -- 
 2.20.1
 
