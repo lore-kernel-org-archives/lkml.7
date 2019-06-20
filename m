@@ -2,96 +2,94 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0356C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A501C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A30B82070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8A62070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:56:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfFTQxA (ORCPT
+        id S1726905AbfFTQ4g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:53:00 -0400
-Received: from foss.arm.com ([217.140.110.172]:48988 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfFTQxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:53:00 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37C132B;
-        Thu, 20 Jun 2019 09:52:59 -0700 (PDT)
-Received: from e121166-lin.cambridge.arm.com (unknown [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A1EEF3F246;
-        Thu, 20 Jun 2019 09:52:57 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 17:52:55 +0100
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Vidya Sagar <vidyas@nvidia.com>, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, bhelgaas@google.com,
-        Jisheng.Zhang@synaptics.com, thierry.reding@gmail.com,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V4 1/2] PCI: dwc: Add API support to de-initialize host
-Message-ID: <20190620165255.GC18771@e121166-lin.cambridge.arm.com>
-References: <dec5ecb2-863e-a1db-10c9-2d91f860a2c6@nvidia.com>
- <37697830-5a94-0f8e-a5cf-3347bc4850cb@nvidia.com>
- <b560f3c3-b69e-d9b5-2dae-1ede52af0ea6@nvidia.com>
- <011b52b6-9fcd-8930-1313-6b546226c7b9@nvidia.com>
- <8a6696e0-fc53-2e6b-536b-d1d2668e0f21@nvidia.com>
- <07c3dd04-cfd0-2d52-5917-25d0e40ad00b@nvidia.com>
- <20190618093657.GA30711@e121166-lin.cambridge.arm.com>
- <eb0e5b1e-7e91-4dc6-681f-b497f087c62d@nvidia.com>
- <20190618142821.GC9002@e121166-lin.cambridge.arm.com>
- <69e79afa-16c7-a00c-653d-e4155999660f@ti.com>
+        Thu, 20 Jun 2019 12:56:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:50584 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTQ4f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:56:35 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: ezequiel)
+        with ESMTPSA id 5FE2B26A371
+Message-ID: <385c93321be1ec5875769d1a825d0fcd44677959.camel@collabora.com>
+Subject: Re: [PATCH 1/3] dt-bindings: display: rockchip: document VOP gamma
+ LUT address
+From:   Ezequiel Garcia <ezequiel@collabora.com>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>,
+        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
+        Sean Paul <seanpaul@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Date:   Thu, 20 Jun 2019 13:56:23 -0300
+In-Reply-To: <CAD=FV=UpZAjrWkQ7qj5Wo2tf2wkg5Q-34Sun0MOtYLBAwY731Q@mail.gmail.com>
+References: <20190618213406.7667-1-ezequiel@collabora.com>
+         <20190618213406.7667-2-ezequiel@collabora.com>
+         <CAD=FV=UpZAjrWkQ7qj5Wo2tf2wkg5Q-34Sun0MOtYLBAwY731Q@mail.gmail.com>
+Organization: Collabora
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <69e79afa-16c7-a00c-653d-e4155999660f@ti.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 10:41:26AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Lorenzo,
+On Thu, 2019-06-20 at 09:43 -0700, Doug Anderson wrote:
+> Hi,
 > 
-> On 18/06/19 7:58 PM, Lorenzo Pieralisi wrote:
-> > On Tue, Jun 18, 2019 at 04:21:17PM +0530, Vidya Sagar wrote:
+> On Tue, Jun 18, 2019 at 2:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+> > Add the register specifier description for an
+> > optional gamma LUT address.
 > > 
-> > [...]
+> > Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> > ---
+> >  .../bindings/display/rockchip/rockchip-vop.txt         | 10 +++++++++-
+> >  1 file changed, 9 insertions(+), 1 deletion(-)
 > > 
-> >>> 2) It is not related to this patch but I fail to see the reasoning
-> >>>     behind the __ in __dw_pci_read_dbi(), there is no no-underscore
-> >>>     equivalent so its definition is somewhat questionable, maybe
-> >>>     we should clean-it up (for dbi2 alike).
-> >> Separate no-underscore versions are present in pcie-designware.h for
-> >> each width (i.e. l/w/b) as inline and are calling __ versions passing
-> >> size as argument.
+> > diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-
+> > vop.txt
+> > index 4f58c5a2d195..97ad78cc7e03 100644
+> > --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> > +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> > @@ -20,6 +20,13 @@ Required properties:
+> >                 "rockchip,rk3228-vop";
+> >                 "rockchip,rk3328-vop";
 > > 
-> > I understand - the __ prologue was added in b50b2db266d8 maybe
-> > Kishon can help us understand the __ rationale.
-> > 
-> > I am happy to merge it as is, I was just curious about the
-> > __ annotation (not related to this patch).
+> > +- reg: Must contain one entry corresponding to the base address and length
+> > +       of the register space. Can optionally contain a second entry
+> > +       corresponding to the CRTC gamma LUT address.
+> > +
+> > +- reg-names: "base" for the base register space. If present, the CRTC
+> > +       gamma LUT name should be "lut".
 > 
-> In commit b50b2db266d8a8c303e8d88590 ("PCI: dwc: all: Modify dbi accessors to
-> take dbi_base as argument"), dbi accessors was modified to take dbi_base as
-> argument (since we wanted to write to dbics2 address space). We didn't want to
-> change all the drivers invoking dbi accessors to pass the dbi_base. So we added
-> "__" variant to take dbi_base as argument and the drivers continued to invoke
-> existing dbi accessors which in-turn invoked "__" version with dbi_base as
-> argument.
+> As per Rob Herring, current suggestion is to avoid reg-names when
+> possible.  The code should just look for the presence of a 2nd entry
+> and assume that if it's there that it's the lut range.  Full context:
 > 
-> I agree there could be some cleanup since in commit
-> a509d7d9af5ebf86ffbefa98e49761d ("PCI: dwc: all: Modify dbi accessors to access
-> data of 4/2/1 bytes"), we modified __dw_pcie_readl_dbi() to
-> __dw_pcie_write_dbi() when it could have been directly modified to
-> dw_pcie_write_dbi().
+> > https://lore.kernel.org/lkml/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com/
+> 
 
-Thanks. Vidya can do it as a preliminary patch, I will merge then
-code to export the symbols.
+Oh, that's news to me. I was assuming having reg-names was preferred.
 
-Lorenzo
+Thanks for the feedback, I'll send a new version.
+
