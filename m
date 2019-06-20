@@ -2,108 +2,123 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED239C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:27:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E085AC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:34:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C35A92075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:27:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B887D2075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:34:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="mOfcCydr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726029AbfFTX1e (ORCPT
+        id S1726002AbfFTXeK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 19:27:34 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64431 "EHLO mga06.intel.com"
+        Thu, 20 Jun 2019 19:34:10 -0400
+Received: from ozlabs.org ([203.11.71.1]:47525 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfFTX1d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 19:27:33 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 16:27:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,398,1557212400"; 
-   d="scan'208";a="335655531"
-Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
-  by orsmga005.jf.intel.com with ESMTP; 20 Jun 2019 16:27:33 -0700
-Subject: Re: [PATCH] x86/mm: Handle physical-virtual alignment mismatch in
- phys_p4d_init()
-To:     "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
-Cc:     "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        linux-kernel@vger.kernel.org,
-        Kyle Pelton <kyle.d.pelton@intel.com>,
-        Baoquan He <bhe@redhat.com>
-References: <20190620112239.28346-1-kirill.shutemov@linux.intel.com>
- <4ecd0603-e847-1cae-bafa-e892d79b7259@intel.com>
- <20190620231547.dkefu73blzte32wq@black.fi.intel.com>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <3e753a13-70ca-126e-325c-5d46c81e16c3@intel.com>
-Date:   Thu, 20 Jun 2019 16:27:33 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1725886AbfFTXeK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 19:34:10 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45VJ722nLwz9s5c;
+        Fri, 21 Jun 2019 09:34:06 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561073647;
+        bh=ndWhno4F9OKQyrb9LiFmh3NXDp1/Q19RsftBd8rGACs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=mOfcCydr2hTTQBsb8wFDNpBbohjJIVEgEt5Jff93A/+V6U4XM8JNrNxJwygGq8/9O
+         +LB0m40EwsZ/bQqyYZyM2vJcJQBCSNVR85QJOmHsX9ar75M12/6pT5vPtppo5fDDnj
+         thhJJjOHYZlhM0Gpgj0vjYsSujzmdjmmnyB5Qg7j42lxK+RJsV2UINp8xqXQrs0Ny9
+         tJrVTHpxOJ+PA3jiXDAj63/2tjGVLcs/0pA6c1x0NgMw500Od+3w0IGiPGGiFkbyIb
+         Xr3YGr/bJ+/bY4iHFpW94mke2NjqFQlBYB4Z0WNuAGcCpEWbnUD4jODwPehbQvXt2V
+         bMHxq/dPlt5Bw==
+Date:   Fri, 21 Jun 2019 09:33:47 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Russell King <rmk@armlinux.org.uk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: linux-next: manual merge of the samsung-krzk tree with the arm tree
+Message-ID: <20190621093347.36987c97@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190620231547.dkefu73blzte32wq@black.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/drJXAftZso.P65jPS5fJLqV"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/19 4:15 PM, Kirill A. Shutemov wrote:
-> I hope this explanation makes any sense :P
+--Sig_/drJXAftZso.P65jPS5fJLqV
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Yes, thanks for the details!
+Hi all,
+
+Today's linux-next merge of the samsung-krzk tree got a conflict in:
+
+  arch/arm/configs/exynos_defconfig
+
+between commit:
+
+  5f41f9198f29 ("ARM: 8864/1: Add workaround for I-Cache line size mismatch=
+ between CPU cores")
+
+from the arm tree and commit:
+
+  9f532d26c75c ("ARM: exynos_defconfig: Trim and reorganize with savedefcon=
+fig")
+
+from the samsung-krzk tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm/configs/exynos_defconfig
+index 9b959afaaa12,f140532ddca7..000000000000
+--- a/arch/arm/configs/exynos_defconfig
++++ b/arch/arm/configs/exynos_defconfig
+@@@ -4,12 -5,7 +5,8 @@@ CONFIG_PREEMPT=3D
+  CONFIG_CGROUPS=3Dy
+  CONFIG_BLK_DEV_INITRD=3Dy
+  CONFIG_PERF_EVENTS=3Dy
+- CONFIG_MODULES=3Dy
+- CONFIG_MODULE_UNLOAD=3Dy
+- CONFIG_PARTITION_ADVANCED=3Dy
+  CONFIG_ARCH_EXYNOS=3Dy
+- CONFIG_ARCH_EXYNOS3=3Dy
+ +CONFIG_CPU_ICACHE_MISMATCH_WORKAROUND=3Dy
+  CONFIG_SMP=3Dy
+  CONFIG_BIG_LITTLE=3Dy
+  CONFIG_NR_CPUS=3D8
+
+--Sig_/drJXAftZso.P65jPS5fJLqV
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0MF9sACgkQAVBC80lX
+0Gy2pgf+ML0TjxE2m+kPtNCsnUOq/A/U9Cu7T5JMbxQ5dq2EvpthF3e/pM1/hnQj
+6C86Jx9HE6Y4miYXkuarQzJKwo9fuwThzaNnkbJOv3a/O75a8zeaxCTxxEe1pNor
+Xi4LC1WTmgdyDuFXDnwezxsoQFu1yXf2y28NZ6UJBy3Ady2c6kssZxvq523zGI0z
+xCTLtge3YnZB60u/X4Wui17+OFQBDUhkjpoHjZAC4GfcMmFGWg1mxtGNJrI1D4hn
+HNm78ClTNQewUob8C80dmQHB0xLLJdrKeLXWf7K1ONByR79TKeOkQI+m8Pmx3oh0
+BI7nFLMhEYdamL/yFXJEctd2VoFFVg==
+=xLVW
+-----END PGP SIGNATURE-----
+
+--Sig_/drJXAftZso.P65jPS5fJLqV--
