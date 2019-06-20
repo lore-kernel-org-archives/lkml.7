@@ -2,53 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A44FAC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AA1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDF92070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8853C2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054297;
-	bh=rLGywLM7GHWIRlLUpGXkODVGWh+wZ0q8mk2YBLfdhSY=;
+	s=default; t=1561054300;
+	bh=hphFwK1hIXpMMA+3jCTMhQvVE8F9g39oGFKILzNNueY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EVIy54UKZTPyTBbLUHkslY+3Uc2kAxfnGdPf2AJB9qg23+aLCsZ6pz/cXHy/Bz+h3
-	 URNvDOGeGfkg5gr78dOGt/Nh4LlYzcR0QgAJBn9PyyIRD3VjV40bvVw0v1NN5uuH8U
-	 GzHHTpYq/5PkFMJ2fPsdOiI3MTl7/qR9VSgYmaMI=
+	b=qiQRKI2ZO3++tQjQ7zRq267DiLLUHZG8RZiXc1Re+p72YYUUXsYDzcb6ymOjy5RMn
+	 68IZRJUec1MMWuM1vizBMI/6VbGJlKFGqZK1ojV0h6+6xYaEPeEeOPxrwK4wKr0/OP
+	 S0BosKRXZqUtq+n/oQqXyBO9neESihDCqU/5OQvg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfFTSLb (ORCPT
+        id S1728943AbfFTSLj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39148 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbfFTSLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:25 -0400
+        id S1726906AbfFTSLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFA8A2082C;
-        Thu, 20 Jun 2019 18:11:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2292C2070B;
+        Thu, 20 Jun 2019 18:11:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054284;
-        bh=rLGywLM7GHWIRlLUpGXkODVGWh+wZ0q8mk2YBLfdhSY=;
+        s=default; t=1561054292;
+        bh=hphFwK1hIXpMMA+3jCTMhQvVE8F9g39oGFKILzNNueY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MGWoO7wGcQSPrnPDHKxweXg9GI4hsxIXbQ/hjoBi8HrenJ0BafT/lEBBfaMhzdWAi
-         Qi0C2iOa3NAF9nntG96rU5Zgo0eXeiAQLQEVq5/dgiwuwSH5obDEu061blmh5lKRPN
-         iAKPQxmK8jhl11VzDVKMNRQNvNVSDZ7V0aBJyFA8=
+        b=KqmgEbIKIaGlqFEzI/rPBBstb1wftB1WtZd6z4XcRih2qQo8ryg1OXxjiP/KBiyeg
+         5FpUb8vYYedernfuyvCxsSOEExwmMoGSfmyamIY1RSnF3tfWtUE3BVtSwso/J0z0pG
+         beuAYEVjkb+Mwu8wc9HJL7khAfwGeDliXJH2SWtQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
-        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 36/61] net: aquantia: fix LRO with FCS error
-Date:   Thu, 20 Jun 2019 19:57:31 +0200
-Message-Id: <20190620174343.664443414@linuxfoundation.org>
+        stable@vger.kernel.org, Stephen Barber <smbarber@chromium.org>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 13/61] vsock/virtio: set SOCK_DONE on peer shutdown
+Date:   Thu, 20 Jun 2019 19:57:08 +0200
+Message-Id: <20190620174339.445420153@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,104 +59,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit eaeb3b7494ba9159323814a8ce8af06a9277d99b ]
+From: Stephen Barber <smbarber@chromium.org>
 
-Driver stops producing skbs on ring if a packet with FCS error
-was coalesced into LRO session. Ring gets hang forever.
+[ Upstream commit 42f5cda5eaf4396a939ae9bb43bb8d1d09c1b15c ]
 
-Thats a logical error in driver processing descriptors:
-When rx_stat indicates MAC Error, next pointer and eop flags
-are not filled. This confuses driver so it waits for descriptor 0
-to be filled by HW.
+Set the SOCK_DONE flag to match the TCP_CLOSING state when a peer has
+shut down and there is nothing left to read.
 
-Solution is fill next pointer and eop flag even for packets with FCS error.
+This fixes the following bug:
+1) Peer sends SHUTDOWN(RDWR).
+2) Socket enters TCP_CLOSING but SOCK_DONE is not set.
+3) read() returns -ENOTCONN until close() is called, then returns 0.
 
-Fixes: bab6de8fd180b ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: Stephen Barber <smbarber@chromium.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- .../aquantia/atlantic/hw_atl/hw_atl_b0.c      | 61 ++++++++++---------
- 1 file changed, 32 insertions(+), 29 deletions(-)
+ net/vmw_vsock/virtio_transport_common.c |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-index 56363ff5c891..51cd1f98bcf0 100644
---- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
-@@ -695,38 +695,41 @@ static int hw_atl_b0_hw_ring_rx_receive(struct aq_hw_s *self,
- 		if ((rx_stat & BIT(0)) || rxd_wb->type & 0x1000U) {
- 			/* MAC error or DMA error */
- 			buff->is_error = 1U;
--		} else {
--			if (self->aq_nic_cfg->is_rss) {
--				/* last 4 byte */
--				u16 rss_type = rxd_wb->type & 0xFU;
--
--				if (rss_type && rss_type < 0x8U) {
--					buff->is_hash_l4 = (rss_type == 0x4 ||
--					rss_type == 0x5);
--					buff->rss_hash = rxd_wb->rss_hash;
--				}
+--- a/net/vmw_vsock/virtio_transport_common.c
++++ b/net/vmw_vsock/virtio_transport_common.c
+@@ -871,8 +871,10 @@ virtio_transport_recv_connected(struct s
+ 		if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SHUTDOWN_SEND)
+ 			vsk->peer_shutdown |= SEND_SHUTDOWN;
+ 		if (vsk->peer_shutdown == SHUTDOWN_MASK &&
+-		    vsock_stream_has_data(vsk) <= 0)
++		    vsock_stream_has_data(vsk) <= 0) {
++			sock_set_flag(sk, SOCK_DONE);
+ 			sk->sk_state = TCP_CLOSING;
 +		}
-+		if (self->aq_nic_cfg->is_rss) {
-+			/* last 4 byte */
-+			u16 rss_type = rxd_wb->type & 0xFU;
-+
-+			if (rss_type && rss_type < 0x8U) {
-+				buff->is_hash_l4 = (rss_type == 0x4 ||
-+				rss_type == 0x5);
-+				buff->rss_hash = rxd_wb->rss_hash;
- 			}
-+		}
- 
--			if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
--				buff->len = rxd_wb->pkt_len %
--					AQ_CFG_RX_FRAME_MAX;
--				buff->len = buff->len ?
--					buff->len : AQ_CFG_RX_FRAME_MAX;
--				buff->next = 0U;
--				buff->is_eop = 1U;
-+		if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
-+			buff->len = rxd_wb->pkt_len %
-+				AQ_CFG_RX_FRAME_MAX;
-+			buff->len = buff->len ?
-+				buff->len : AQ_CFG_RX_FRAME_MAX;
-+			buff->next = 0U;
-+			buff->is_eop = 1U;
-+		} else {
-+			buff->len =
-+				rxd_wb->pkt_len > AQ_CFG_RX_FRAME_MAX ?
-+				AQ_CFG_RX_FRAME_MAX : rxd_wb->pkt_len;
-+
-+			if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
-+				rxd_wb->status) {
-+				/* LRO */
-+				buff->next = rxd_wb->next_desc_ptr;
-+				++ring->stats.rx.lro_packets;
- 			} else {
--				if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
--					rxd_wb->status) {
--					/* LRO */
--					buff->next = rxd_wb->next_desc_ptr;
--					++ring->stats.rx.lro_packets;
--				} else {
--					/* jumbo */
--					buff->next =
--						aq_ring_next_dx(ring,
--								ring->hw_head);
--					++ring->stats.rx.jumbo_packets;
--				}
-+				/* jumbo */
-+				buff->next =
-+					aq_ring_next_dx(ring,
-+							ring->hw_head);
-+				++ring->stats.rx.jumbo_packets;
- 			}
- 		}
- 	}
--- 
-2.20.1
-
+ 		if (le32_to_cpu(pkt->hdr.flags))
+ 			sk->sk_state_change(sk);
+ 		break;
 
 
