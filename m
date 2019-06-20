@@ -3,56 +3,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03FA1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DD82C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1ACC2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BFEB2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbfFTXnE (ORCPT
+        id S1726151AbfFTXnJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 19:43:04 -0400
-Received: from kvm5.telegraphics.com.au ([98.124.60.144]:45914 "EHLO
-        kvm5.telegraphics.com.au" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725886AbfFTXnE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 19:43:04 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by kvm5.telegraphics.com.au (Postfix) with ESMTP id 098F329B06;
-        Thu, 20 Jun 2019 19:43:00 -0400 (EDT)
-Date:   Fri, 21 Jun 2019 09:43:15 +1000 (AEST)
-From:   Finn Thain <fthain@telegraphics.com.au>
-To:     Marc Gonzalez <marc.w.gonzalez@free.fr>
-cc:     Douglas Gilbert <dgilbert@interlog.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
-In-Reply-To: <e04e14b7-e1ee-c0c1-9e6d-2628d2c873a9@free.fr>
-Message-ID: <alpine.LNX.2.21.1906210942560.131@nippy.intranet>
-References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr> <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org> <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com> <alpine.LNX.2.21.1906181107240.287@nippy.intranet> <017cf3cf-ecd8-19c2-3bbd-7e7c28042c3c@free.fr>
- <f8339103-5b45-b72d-9f87-fd4dd7b3081e@interlog.com> <f1f98ab0-399a-6c12-073d-ee8ad47d5588@free.fr> <48912bc0-8c79-408d-7ed2-c127b99b8bcc@interlog.com> <e04e14b7-e1ee-c0c1-9e6d-2628d2c873a9@free.fr>
+        Thu, 20 Jun 2019 19:43:09 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:39490 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725886AbfFTXnG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 19:43:06 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1he6hj-0001kp-Hh; Thu, 20 Jun 2019 17:42:56 -0600
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <91eba9a0-27b4-08b4-7c12-86e24e1bfe85@deltatee.com>
+ <CAPcyv4gPOXaL3qks6RMufu==O9RV2m_-7bBmJqKOFYTf4v_jXQ@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <3379917c-0ebc-0019-a71c-12248f4668ee@deltatee.com>
+Date:   Thu, 20 Jun 2019 17:42:50 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <CAPcyv4gPOXaL3qks6RMufu==O9RV2m_-7bBmJqKOFYTf4v_jXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, jgg@ziepe.ca, kbusch@kernel.org, sagi@grimberg.me, bhelgaas@google.com, hch@lst.de, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 20 Jun 2019, Marc Gonzalez wrote:
 
-> 
-> How likely is it that distro kernels would *not* enable CHR_DEV_SG? 
-> (Distros tend to enable everything, and then some.)
-> 
 
-How likely is it that embedded developers would *not* disable CHR_DEV_SG? 
-They tend to disable everything, and then enable only what they need.
+On 2019-06-20 5:40 p.m., Dan Williams wrote:
+> This seems to be the most salient point. I was missing the fact that
+> this replaces custom hacks and "special" pages with an explicit "just
+> pass this pre-mapped address down the stack". It's functionality that
+> might plausibly be used outside of p2p, as long as the driver can
+> assert that it never needs to touch the data with the cpu before
+> handing it off to a dma-engine.
 
--- 
+Yup, that's a good way to put it. If I resend this patchset, I'll
+include wording like yours in the cover letter.
+
+Logan
