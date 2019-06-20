@@ -2,56 +2,156 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 971A0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E47DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:18:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75C61215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:17:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E817420652
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:18:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="0EpvstXh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfFTURQ (ORCPT
+        id S1727059AbfFTUS0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:17:16 -0400
-Received: from ms.lwn.net ([45.79.88.28]:47688 "EHLO ms.lwn.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725907AbfFTURP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:17:15 -0400
-Received: from lwn.net (localhost [127.0.0.1])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id 53C9B2BA;
-        Thu, 20 Jun 2019 20:17:15 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 14:17:14 -0600
-From:   Jonathan Corbet <corbet@lwn.net>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] doc-rst: Add missing newline at end of file
-Message-ID: <20190620141714.46fdf30e@lwn.net>
-In-Reply-To: <20190617143400.4559-1-geert+renesas@glider.be>
-References: <20190617143400.4559-1-geert+renesas@glider.be>
-Organization: LWN.net
+        Thu, 20 Jun 2019 16:18:26 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:42111 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfFTUS0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 16:18:26 -0400
+Received: by mail-ot1-f65.google.com with SMTP id l15so4002390otn.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:18:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/1ACPvah6cwlc4NoiRokzPOQoMSdzU57I7vjUDE0u7s=;
+        b=0EpvstXhVkgDZVnlntes/LFoX5DbZzZfI4fZKY04r9MHAG+jDljwalCR+pzVQcd5N+
+         jCgyhrr3z4Vih61nMLUyzbi6vguWMjoCs1yxx/m+W0PmEJEir3NhOjhOIncQC8xeJlnA
+         ScqRQG53Crt+W9L4aXkuF/pOTp6b6HcbioEWgVQ0Wdd8ra6AaL+LteJRGmJeMFvabjaQ
+         FrxPttS8gc75CExD+3TgsHNERiQopSJetDSK5cOZIibVeewsYrEdl3fG1sHBqc0jfOZ8
+         KAFi8QIcJEtIjVvj0Knw5iTcv8ArOmARLOERSJ98/s/7kGp4XUBuQ9hyjg2QbAGOBYHJ
+         8+Vw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/1ACPvah6cwlc4NoiRokzPOQoMSdzU57I7vjUDE0u7s=;
+        b=NZvzNUL3SMMan3N+F6GzZgZ3XMhnBB6KDfSan6qo+lzfSanO/TxJTf8NMKgf+f5r2P
+         b8E6jj7LwYsRzja0WxC7A04kX7T97BnhHh9PdvOQiioAJaoukKLLaF8kVOx56eM84svS
+         19XSXEE9XRE6EzppQiMq/I9O1Y7B8KhD9kjaC7kyqygq2HcVxJae7W3i0tuzXxU+GPhw
+         A/h6gQ0Pokaa9lDVgLcl+uIDBxpa5iDdULxex1D86sWl/Rny6KB6y01T9gE2wJFevolY
+         bxXcA28o+kH2H4/31zFXQVHlqNaPFjBX6bMOI0IxQis/xc2O+4PYr76Gm3XXil45624H
+         rATQ==
+X-Gm-Message-State: APjAAAUuomWyDo1fHSyGbNmACVPn7eFkBNgkRZafDaPNxJz+d2zE2xfh
+        lq/6UY6Sj3wX094tPefHKV26TFtalRC0HfWXDmF40Q==
+X-Google-Smtp-Source: APXvYqyamVcYjA+tR+olDR6UwLLdjY5DvyoCREZvBR4JUnDzN9QbxbjICVUWXIInA4FtacuQ6q6CVYes9j/gU6KU7Aw=
+X-Received: by 2002:a9d:470d:: with SMTP id a13mr40714284otf.126.1561061905657;
+ Thu, 20 Jun 2019 13:18:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
+References: <20190620161240.22738-1-logang@deltatee.com> <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <20190620193353.GF19891@ziepe.ca>
+In-Reply-To: <20190620193353.GF19891@ziepe.ca>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 20 Jun 2019 13:18:13 -0700
+Message-ID: <CAPcyv4jyNRBvtWhr9+aHbzWP6=D4qAME+=hWMtOYJ17BVHdy2w@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Logan Gunthorpe <logang@deltatee.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 17 Jun 2019 16:34:00 +0200
-Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+On Thu, Jun 20, 2019 at 12:34 PM Jason Gunthorpe <jgg@ziepe.ca> wrote:
+>
+> On Thu, Jun 20, 2019 at 11:45:38AM -0700, Dan Williams wrote:
+>
+> > > Previously, there have been multiple attempts[1][2] to replace
+> > > struct page usage with pfn_t but this has been unpopular seeing
+> > > it creates dangerous edge cases where unsuspecting code might
+> > > run accross pfn_t's they are not ready for.
+> >
+> > That's not the conclusion I arrived at because pfn_t is specifically
+> > an opaque type precisely to force "unsuspecting" code to throw
+> > compiler assertions. Instead pfn_t was dealt its death blow here:
+> >
+> > https://lore.kernel.org/lkml/CA+55aFzON9617c2_Amep0ngLq91kfrPiSccdZakxir82iekUiA@mail.gmail.com/
+> >
+> > ...and I think that feedback also reads on this proposal.
+>
+> I read through Linus's remarks and it he seems completely right that
+> anything that touches a filesystem needs a struct page, because FS's
+> rely heavily on that.
+>
+> It is much less clear to me why a GPU BAR or a NVME CMB that never
+> touches a filesystem needs a struct page.. The best reason I've seen
+> is that it must have struct page because the block layer heavily
+> depends on struct page.
+>
+> Since that thread was so DAX/pmem centric (and Linus did say he liked
+> the __pfn_t), maybe it is worth checking again, but not for DAX/pmem
+> users?
+>
+> This P2P is quite distinct from DAX as the struct page* would point to
+> non-cacheable weird memory that few struct page users would even be
+> able to work with, while I understand DAX use cases focused on CPU
+> cache coherent memory, and filesystem involvement.
 
-> "git diff" says:
-> 
->     \ No newline at end of file
-> 
-> after modifying the file.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+What I'm poking at is whether this block layer capability can pick up
+users outside of RDMA, more on this below...
 
-Applied, thanks.
+>
+> > My primary concern with this is that ascribes a level of generality
+> > that just isn't there for peer-to-peer dma operations. "Peer"
+> > addresses are not "DMA" addresses, and the rules about what can and
+> > can't do peer-DMA are not generically known to the block layer.
+>
+> ?? The P2P infrastructure produces a DMA bus address for the
+> initiating device that is is absolutely a DMA address. There is some
+> intermediate CPU centric representation, but after mapping it is the
+> same as any other DMA bus address.
 
-jon
+Right, this goes back to the confusion caused by the hardware / bus /
+address that a dma-engine would consume directly, and Linux "DMA"
+address as a device-specific translation of host memory.
+
+Is the block layer representation of this address going to go through
+a peer / "bus" address translation when it reaches the RDMA driver? In
+other words if we tried to use this facility with other drivers how
+would the driver know it was passed a traditional Linux DMA address,
+vs a peer bus address that the device may not be able to handle?
+
+> The map function can tell if the device pair combination can do p2p or
+> not.
+
+Ok, if this map step is still there then reduce a significant portion
+of my concern and it becomes a quibble about the naming and how a
+non-RDMA device driver might figure out if it was handled an address
+it can't handle.
+
+>
+> > Again, what are the benefits of plumbing this RDMA special case?
+>
+> It is not just RDMA, this is interesting for GPU and vfio use cases
+> too. RDMA is just the most complete in-tree user we have today.
+>
+> ie GPU people wouuld really like to do read() and have P2P
+> transparently happen to on-GPU pages. With GPUs having huge amounts of
+> memory loading file data into them is really a performance critical
+> thing.
+
+A direct-i/o read(2) into a page-less GPU mapping? Through a regular
+file or a device special file?
