@@ -2,119 +2,87 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FB8BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CAFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:43:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 335392084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:42:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561048955;
-	bh=zCmrEJj/5YbT7k1NdU6eqr1+CknKTQwhJf0kK5Gd8tQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GLtLMnbzbftmROb6SlZHv+RR502aR/mvDrJde3H3+MQLVyE04ucbxB2zXR/SJQYKJ
-	 yQAYJEXTrwmgS4EPHjlckTz6TETcAHf2fpX2YuvuhHO2XSBodJR8Zt3nI4ZK+cMyuD
-	 gVJNO5z+Ds8CqnwZuedmt68U5bp6WnZn1Vv97aJo=
+	by mail.kernel.org (Postfix) with ESMTP id ED6492089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:43:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YvHD4i52"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731682AbfFTQmd (ORCPT
+        id S1732023AbfFTQnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:42:33 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42634 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfFTQmd (ORCPT
+        Thu, 20 Jun 2019 12:43:10 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:19709 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726675AbfFTQnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:42:33 -0400
-Received: by mail-pf1-f193.google.com with SMTP id q10so1974446pff.9;
-        Thu, 20 Jun 2019 09:42:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bqZIqiC2yYn/o+bV0ZJOLIzThjXkYn2uG9o9ZjJa6hk=;
-        b=aJXjIKNZrOuVv0daHxeRKl26YhxSc7OxATe5g5agihcDutsVoV8QnJ+dWHiIwzAqCl
-         pE3HVL5RjrWIZ65jZwG7ltBKSmTmkK6K2/Xo2kFkAyDDgTnggrNWOIISIuq+gbgn3ZhE
-         TzCcMB28dJ8/yPURo0HTYeZGCtDEvpXaHVy/wsVQIX4D1+y7DXNiq7rWv7UezTTztVFF
-         ox2doav/9GzUNq10RwePuy778KcpEt1dS9tx0TntQAeO5b4OhUkUJNte1QYUqFi7iZpT
-         Q90SNo8xa+f69+YZunlcowN/DQxZLoqaTE8KgQiJiwxAFO8hbAGbKmTLK0E+Ldg2mW2j
-         xb5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bqZIqiC2yYn/o+bV0ZJOLIzThjXkYn2uG9o9ZjJa6hk=;
-        b=Gn3ufQbMmS9lyKecpgnpUgae0K1WJ60+qta2hBq/bzxR64Q2JKjF0k7cgS9KZ0jKcd
-         whaSHj/ZzvsNfShat1WTEOcI+1BeiPfm7NqqcTA/ZxX3NJb4VZuSRaKlsy4z+mqgHzp5
-         jvHX38mpUEFSMdUd6YGHPfUupSDzPv/BZlVLxqE8+Bx4OT7mRUyjiSkY7FEuFJr8Tt4S
-         u4+ZIK+G6l3DVejoc2j/P94EI99eFbGLt3DdVLcxJzXdrAbyRGIm3IsRej0XHwPLmKD/
-         ksC4YI2pj7CW/0EEDThegT9SZhlKf6WZ5eCKW3egxqY18pvrwI21zanIXLEWzT4upw9Y
-         cJrg==
-X-Gm-Message-State: APjAAAU8tqwbUnho48umq1IQGJVPhzoxRcF69EU+nqEdeBhAYCDmR9an
-        kVDuuNd5L1HVWpcwhxL6Flw=
-X-Google-Smtp-Source: APXvYqx072QE6ne/M+YjuzM0WPDx/elSTOitdaIoOS9wonauvSK6+p09K5VLrDBRVcopCvc7fjOCow==
-X-Received: by 2002:a17:90a:bc0c:: with SMTP id w12mr496330pjr.111.1561048952289;
-        Thu, 20 Jun 2019 09:42:32 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:500::3:8402])
-        by smtp.gmail.com with ESMTPSA id y16sm2426pff.89.2019.06.20.09.42.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 09:42:31 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 09:42:29 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Jan Kara <jack@suse.cz>
-Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
-        axboe@kernel.dk, linux-btrfs@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        kernel-team@fb.com
-Subject: Re: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
-Message-ID: <20190620164229.GK657710@devbig004.ftw2.facebook.com>
-References: <20190615182453.843275-1-tj@kernel.org>
- <20190615182453.843275-5-tj@kernel.org>
- <20190620153733.GM30243@quack2.suse.cz>
+        Thu, 20 Jun 2019 12:43:09 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0bb79b0000>; Thu, 20 Jun 2019 09:43:07 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 20 Jun 2019 09:43:08 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 09:43:08 -0700
+Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
+ 2019 16:43:06 +0000
+Subject: Re: [PATCH] dmaengine: tegra210-adma: fix transfer failure
+To:     Sameer Pujar <spujar@nvidia.com>, <vkoul@kernel.org>,
+        <dan.j.williams@intel.com>
+CC:     <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
+        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <1561047348-14413-1-git-send-email-spujar@nvidia.com>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <bf478236-9aa7-68cc-4a56-296db2fc4379@nvidia.com>
+Date:   Thu, 20 Jun 2019 17:43:04 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620153733.GM30243@quack2.suse.cz>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <1561047348-14413-1-git-send-email-spujar@nvidia.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561048987; bh=LRAIEKSTmKQE5qE5AvgXkBeRvVsrbSc0H3EL4SfKT80=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=YvHD4i52J9zQIZUxt9GAovH9lWLTS+rhcMlPZQARN+5RyGsSsYDop5vfzL7vj8RmI
+         ihLcP7FE9Jb4/bW5lNAD1VsTleV/xCf/gsFtI6HxK1TRboLXUbfj8axEloRw+wJ0ru
+         YmpaVWMx5YJF68IUz6FlRZplicdZWIFvmGscvmYZaycQeTiPBBc7V80xMihWuIMm+c
+         A9wMFBGw4oY+zbRpW2xlJ4qCD1yZoGc8Ewv03NCwm87h2yqZNbzxbx0mo9gXTVEFrH
+         yJMelnI72Z+BNjN71GOwsKnsH/7cXxycM6EweXT9x2A8dhNg271D2DVFhKbzYJFplC
+         nqDKFGPZhToYQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello, Jan.
 
-On Thu, Jun 20, 2019 at 05:37:33PM +0200, Jan Kara wrote:
-> > +bool __blkcg_punt_bio_submit(struct bio *bio)
-> > +{
-> > +	struct blkcg_gq *blkg = bio->bi_blkg;
-> > +
-> > +	/* consume the flag first */
-> > +	bio->bi_opf &= ~REQ_CGROUP_PUNT;
-> > +
-> > +	/* never bounce for the root cgroup */
-> > +	if (!blkg->parent)
-> > +		return false;
-> > +
-> > +	spin_lock_bh(&blkg->async_bio_lock);
-> > +	bio_list_add(&blkg->async_bios, bio);
-> > +	spin_unlock_bh(&blkg->async_bio_lock);
-> > +
-> > +	queue_work(blkcg_punt_bio_wq, &blkg->async_bio_work);
-> > +	return true;
-> > +}
-> > +
-> 
-> So does this mean that if there is some inode with lots of dirty data for a
-> blkcg that is heavily throttled, that blkcg can occupy a ton of workers all
-> being throttled in submit_bio()? Or what is constraining a number of
-> workers one blkcg can consume?
+On 20/06/2019 17:15, Sameer Pujar wrote:
+> From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
+> configuration register (bits 7:4). ADMA allows a maximum of 8 reads
+> to source and that many writes to target memory be outstanding at any
+> given point of time. If this field is not programmed, DMA transfers
+> fail to happen.
 
-There's only one work item per blkcg-device pair, so the maximum
-number of kthreads a blkcg can occupy on a filesystem would be one.
-It's the same scheme as writeback work items.
+BTW, I am not sure I follow the above. You say a max of 8 reads to the
+source, however, the field we are programming can have a value of up to
+15. So does that mean this field should only be programmed with a max of 8?
 
-Thanks.
+Thanks
+Jon
 
 -- 
-tejun
+nvpublic
