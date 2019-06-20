@@ -2,53 +2,50 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F87C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B159C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FF7520665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D5020665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055463;
-	bh=NmGogpzNpt1U2ZQTq1tpHJyoe3q8JrtJGTcpOyUdc30=;
+	s=default; t=1561055473;
+	bh=ouzMQJKSpXwjZpt1pdoZv050tBWH9isF/yYIty+FVM8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OELGIWA2plmPHWhLKcM3kBqXOyTi0gxNzJuBWLJXRsVDipHnvu/CHUdG3A53Tq8BB
-	 3Zw2PL3fCXpzKeJgGcMsbaTu/3A+nw9G3L7l735Mx7jyniT9m7Z7UaHdUd+w3a+gKU
-	 kGaGb6QDPGM7qv4SRAqioXJL6Twxs9WMeMUkErIQ=
+	b=04ybkJF67SNeNfqm9GTiQW7W59L2VmfBG93+KJTTOnAxw4yfNLdkfkwvRfb7nGLCI
+	 kDxLfBqpokTp50dwM7z3X1bf+keGUWGWrMvgVdKVDIgnOe5JO9ljbxNKHY2LVRvuN/
+	 kNArfsmRbjzAcxD+cQHGrOVW+c9DR+0T3mk4zkX0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfFTSAb (ORCPT
+        id S1726154AbfFTSAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49288 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:09 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726957AbfFTSA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:28 -0400
+        id S1726819AbfFTSAG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D0F41208CA;
-        Thu, 20 Jun 2019 18:00:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78AC21530;
+        Thu, 20 Jun 2019 18:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053627;
-        bh=NmGogpzNpt1U2ZQTq1tpHJyoe3q8JrtJGTcpOyUdc30=;
+        s=default; t=1561053605;
+        bh=ouzMQJKSpXwjZpt1pdoZv050tBWH9isF/yYIty+FVM8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t/CtefCjMAwdVQTqGChA2eJ6/2ztFWHdW4lWAGFaQ55hrMepNshrq2IDVwBXtRvum
-         yIlhS3SXfFS8PQWju1cq1NgLy0UWlpAsVcHB65xqhXZ3liBk3o1+HnMcT9ABnrsHSS
-         VD7kIX+8KDezWJMlHx0oHdIPBdig2XUafpccO+sA=
+        b=K0WGYcSjl8wBURymEsA6vpc6YqtU574ZmVl+/rjaEEtT6EAB/uXmnFl2J3xIzL4kV
+         8J7+x5qCu2KgbowkwACrhIFjQQl7cdohBOB1cZA5Jl2zRYEOpdhDHG7wT7vb3bhETK
+         Az6IpWdkcc59vyel0F0q/0KUDie6JTGeNvGWlHdg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 55/84] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
-Date:   Thu, 20 Jun 2019 19:56:52 +0200
-Message-Id: <20190620174347.303279637@linuxfoundation.org>
+        stable@vger.kernel.org, Tejun Heo <tj@kernel.org>
+Subject: [PATCH 4.4 48/84] cgroup: Use css_tryget() instead of css_tryget_online() in task_get_css()
+Date:   Thu, 20 Jun 2019 19:56:45 +0200
+Message-Id: <20190620174345.920912606@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,69 +58,88 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
+From: Tejun Heo <tj@kernel.org>
 
-kselftests exposed a problem in the s390 handling for memory slots.
-Right now we only do proper memory slot handling for creation of new
-memory slots. Neither MOVE, nor DELETION are handled properly. Let us
-implement those.
+commit 18fa84a2db0e15b02baa5d94bdb5bd509175d2f6 upstream.
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A PF_EXITING task can stay associated with an offline css.  If such
+task calls task_get_css(), it can get stuck indefinitely.  This can be
+triggered by BSD process accounting which writes to a file with
+PF_EXITING set when racing against memcg disable as in the backtrace
+at the end.
+
+After this change, task_get_css() may return a css which was already
+offline when the function was called.  None of the existing users are
+affected by this change.
+
+  INFO: rcu_sched self-detected stall on CPU
+  INFO: rcu_sched detected stalls on CPUs/tasks:
+  ...
+  NMI backtrace for cpu 0
+  ...
+  Call Trace:
+   <IRQ>
+   dump_stack+0x46/0x68
+   nmi_cpu_backtrace.cold.2+0x13/0x57
+   nmi_trigger_cpumask_backtrace+0xba/0xca
+   rcu_dump_cpu_stacks+0x9e/0xce
+   rcu_check_callbacks.cold.74+0x2af/0x433
+   update_process_times+0x28/0x60
+   tick_sched_timer+0x34/0x70
+   __hrtimer_run_queues+0xee/0x250
+   hrtimer_interrupt+0xf4/0x210
+   smp_apic_timer_interrupt+0x56/0x110
+   apic_timer_interrupt+0xf/0x20
+   </IRQ>
+  RIP: 0010:balance_dirty_pages_ratelimited+0x28f/0x3d0
+  ...
+   btrfs_file_write_iter+0x31b/0x563
+   __vfs_write+0xfa/0x140
+   __kernel_write+0x4f/0x100
+   do_acct_process+0x495/0x580
+   acct_process+0xb9/0xdb
+   do_exit+0x748/0xa00
+   do_group_exit+0x3a/0xa0
+   get_signal+0x254/0x560
+   do_signal+0x23/0x5c0
+   exit_to_usermode_loop+0x5d/0xa0
+   prepare_exit_to_usermode+0x53/0x80
+   retint_user+0x8/0x8
+
+Signed-off-by: Tejun Heo <tj@kernel.org>
+Cc: stable@vger.kernel.org # v4.2+
+Fixes: ec438699a9ae ("cgroup, block: implement task_get_css() and use it in bio_associate_current()")
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
- 1 file changed, 21 insertions(+), 14 deletions(-)
+ include/linux/cgroup.h |   10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 5ddb1debba95..23911ecfbad6 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -2721,21 +2721,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
- 				const struct kvm_memory_slot *new,
- 				enum kvm_mr_change change)
- {
--	int rc;
--
--	/* If the basics of the memslot do not change, we do not want
--	 * to update the gmap. Every update causes several unnecessary
--	 * segment translation exceptions. This is usually handled just
--	 * fine by the normal fault handler + gmap, but it will also
--	 * cause faults on the prefix page of running guest CPUs.
--	 */
--	if (old->userspace_addr == mem->userspace_addr &&
--	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
--	    old->npages * PAGE_SIZE == mem->memory_size)
--		return;
-+	int rc = 0;
- 
--	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
--		mem->guest_phys_addr, mem->memory_size);
-+	switch (change) {
-+	case KVM_MR_DELETE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		break;
-+	case KVM_MR_MOVE:
-+		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-+					old->npages * PAGE_SIZE);
-+		if (rc)
-+			break;
-+		/* FALLTHROUGH */
-+	case KVM_MR_CREATE:
-+		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
-+				      mem->guest_phys_addr, mem->memory_size);
-+		break;
-+	case KVM_MR_FLAGS_ONLY:
-+		break;
-+	default:
-+		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
-+	}
- 	if (rc)
- 		pr_warn("failed to commit memory region\n");
- 	return;
--- 
-2.20.1
-
+--- a/include/linux/cgroup.h
++++ b/include/linux/cgroup.h
+@@ -453,7 +453,7 @@ static inline struct cgroup_subsys_state
+  *
+  * Find the css for the (@task, @subsys_id) combination, increment a
+  * reference on and return it.  This function is guaranteed to return a
+- * valid css.
++ * valid css.  The returned css may already have been offlined.
+  */
+ static inline struct cgroup_subsys_state *
+ task_get_css(struct task_struct *task, int subsys_id)
+@@ -463,7 +463,13 @@ task_get_css(struct task_struct *task, i
+ 	rcu_read_lock();
+ 	while (true) {
+ 		css = task_css(task, subsys_id);
+-		if (likely(css_tryget_online(css)))
++		/*
++		 * Can't use css_tryget_online() here.  A task which has
++		 * PF_EXITING set may stay associated with an offline css.
++		 * If such task calls this function, css_tryget_online()
++		 * will keep failing.
++		 */
++		if (likely(css_tryget(css)))
+ 			break;
+ 		cpu_relax();
+ 	}
 
 
