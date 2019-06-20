@@ -2,146 +2,83 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9AEDC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABAE1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A931D2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C6F92084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731846AbfFTIzs (ORCPT
+        id S1731852AbfFTIz4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:55:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56118 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731341AbfFTIyb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:54:31 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 8254468E54B716B83E4E;
-        Thu, 20 Jun 2019 16:54:28 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.132) by
- DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 20 Jun 2019 16:54:21 +0800
-From:   Huazhong Tan <tanhuazhong@huawei.com>
-To:     <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
-        Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 01/11] net: hns3: fix selftest fail issue for fibre port with autoneg on
-Date:   Thu, 20 Jun 2019 16:52:35 +0800
-Message-ID: <1561020765-14481-2-git-send-email-tanhuazhong@huawei.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
-References: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
+        Thu, 20 Jun 2019 04:55:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:54528 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726168AbfFTIzy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:55:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE31D344;
+        Thu, 20 Jun 2019 01:55:53 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 670B43F246;
+        Thu, 20 Jun 2019 01:55:51 -0700 (PDT)
+Subject: Re: [PATCH v6 00/19] Unify vDSOs across more architectures
+To:     Shijith Thotton <sthotton@marvell.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mark Salyzyn <salyzyn@android.com>,
+        Peter Collingbourne <pcc@google.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Huw Davies <huw@codeweavers.com>
+References: <20190530141531.43462-1-vincenzo.frascino@arm.com>
+ <7baf295a-0cc6-1a0a-7e4e-ed33598a2242@marvell.com>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <eccdb6ec-3703-a22d-e6c0-4be31304e385@arm.com>
+Date:   Thu, 20 Jun 2019 09:55:50 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.132]
-X-CFilter-Loop: Reflected
+In-Reply-To: <7baf295a-0cc6-1a0a-7e4e-ed33598a2242@marvell.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+Hi Shijith,
 
-When doing selftest for fibre port with autoneg on, the MAC speed
-may be incorrect, which may cause the selftest failed. This patch
-fixes it by halting autoneg during the selftest.
+...
 
-Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
-Signed-off-by: Peng Li <lipeng321@huawei.com>
-Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns3/hnae3.h             |  3 +++
- drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c      | 10 ++++++++++
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 12 ++++++++++++
- 3 files changed, 25 insertions(+)
+> Observed good improvement for some APIs with the patch.
+> 
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hnae3.h b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-index bf921ef..d78a5f6 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hnae3.h
-@@ -264,6 +264,8 @@ struct hnae3_ae_dev {
-  *   get auto autonegotiation of pause frame use
-  * restart_autoneg()
-  *   restart autonegotiation
-+ * halt_autoneg()
-+ *   halt/resume autonegotiation when autonegotiation on
-  * get_coalesce_usecs()
-  *   get usecs to delay a TX interrupt after a packet is sent
-  * get_rx_max_coalesced_frames()
-@@ -383,6 +385,7 @@ struct hnae3_ae_ops {
- 	int (*set_autoneg)(struct hnae3_handle *handle, bool enable);
- 	int (*get_autoneg)(struct hnae3_handle *handle);
- 	int (*restart_autoneg)(struct hnae3_handle *handle);
-+	int (*halt_autoneg)(struct hnae3_handle *handle, bool halt);
- 
- 	void (*get_coalesce_usecs)(struct hnae3_handle *handle,
- 				   u32 *tx_usecs, u32 *rx_usecs);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-index 0998647..16034af 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3_ethtool.c
-@@ -336,6 +336,13 @@ static void hns3_self_test(struct net_device *ndev,
- 		h->ae_algo->ops->enable_vlan_filter(h, false);
- #endif
- 
-+	/* Tell firmware to stop mac autoneg before loopback test start,
-+	 * otherwise loopback test may be failed when the port is still
-+	 * negotiating.
-+	 */
-+	if (h->ae_algo->ops->halt_autoneg)
-+		h->ae_algo->ops->halt_autoneg(h, true);
-+
- 	set_bit(HNS3_NIC_STATE_TESTING, &priv->state);
- 
- 	for (i = 0; i < HNS3_SELF_TEST_TYPE_NUM; i++) {
-@@ -358,6 +365,9 @@ static void hns3_self_test(struct net_device *ndev,
- 
- 	clear_bit(HNS3_NIC_STATE_TESTING, &priv->state);
- 
-+	if (h->ae_algo->ops->halt_autoneg)
-+		h->ae_algo->ops->halt_autoneg(h, false);
-+
- #if IS_ENABLED(CONFIG_VLAN_8021Q)
- 	if (dis_vlan_filter)
- 		h->ae_algo->ops->enable_vlan_filter(h, true);
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index fbf0c20..b328662 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2315,6 +2315,17 @@ static int hclge_restart_autoneg(struct hnae3_handle *handle)
- 	return hclge_notify_client(hdev, HNAE3_UP_CLIENT);
- }
- 
-+static int hclge_halt_autoneg(struct hnae3_handle *handle, bool halt)
-+{
-+	struct hclge_vport *vport = hclge_get_vport(handle);
-+	struct hclge_dev *hdev = vport->back;
-+
-+	if (hdev->hw.mac.support_autoneg && hdev->hw.mac.autoneg)
-+		return hclge_set_autoneg_en(hdev, !halt);
-+
-+	return 0;
-+}
-+
- static int hclge_set_fec_hw(struct hclge_dev *hdev, u32 fec_mode)
- {
- 	struct hclge_config_fec_cmd *req;
-@@ -9265,6 +9276,7 @@ static const struct hnae3_ae_ops hclge_ops = {
- 	.set_autoneg = hclge_set_autoneg,
- 	.get_autoneg = hclge_get_autoneg,
- 	.restart_autoneg = hclge_restart_autoneg,
-+	.halt_autoneg = hclge_halt_autoneg,
- 	.get_pauseparam = hclge_get_pauseparam,
- 	.set_pauseparam = hclge_set_pauseparam,
- 	.set_mtu = hclge_set_mtu,
+Looks good. Thanks for testing the set, I will add your tag to my patches.
+
+> Tested-by: Shijith Thotton <sthotton@marvell.com>
+> 
+> Thanks,
+> Shijith
+> 
+
 -- 
-2.7.4
-
+Regards,
+Vincenzo
