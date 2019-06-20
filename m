@@ -2,56 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D628C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B558C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28AA82089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C50D20656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:27:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055238;
-	bh=dQf7mbFCXQNIjfwLP5w5E5NTD174bikfFnt5UJbnQZ4=;
+	s=default; t=1561055245;
+	bh=5jrAkegvWKyZI+KhoA+/JKnMoJguzm564z0l+fgdMoA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wrtUqqDu3fc8w+lzSaoKJJUfqBiyBVp17Jnz7SGYE4qRQHfsT3cmb+JC3evf4B1dV
-	 oYfi3NHmjhOffQVIfQpht28J7LmIhkSyLmqKEGkiNc5xwcN/IknQ43g+hB0pFnesrP
-	 XPW7dOZA/BaVdKJqiJ0vXpeHhvCnyLJodCE2IGdc=
+	b=gc8D4McsZNSLSgnNKiYffXU4zs5rxwUfY+le6ZHj9HXNx+eOL0MsmLslmQRuj02L+
+	 lyDhCzgsvRkZWnwGDWp7ujxlcJXOsET6MDwGTlCAoG6mxNgSKbean3iIUbDQRiPzKJ
+	 zcGNcWzHHCoOrKEcJj8ovX3JAP9nTYh9dUVzQF8M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728266AbfFTS1Q (ORCPT
+        id S1728198AbfFTS1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:27:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58286 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:27:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58098 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727611AbfFTSFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:09 -0400
+        id S1727350AbfFTSFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 827FF2082C;
-        Thu, 20 Jun 2019 18:05:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A426B21670;
+        Thu, 20 Jun 2019 18:05:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053909;
-        bh=dQf7mbFCXQNIjfwLP5w5E5NTD174bikfFnt5UJbnQZ4=;
+        s=default; t=1561053903;
+        bh=5jrAkegvWKyZI+KhoA+/JKnMoJguzm564z0l+fgdMoA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=T1iGjORrOqI8ObUQ8sp4E8C13x7CtqYdHJ/pILNmE6EbW6d46lb2FGjyEHZNGg98o
-         LK1PNyTl+tyEzvW7GLUnjaaf8VrnbKCD8qCuaedq5GMcYPtcNrpaQK++4//HyGQ8hg
-         kb01VkC8AM36LpYdJoHUaQSmdRPcC3BuJY8ZeBKM=
+        b=XxRy2Q64A+Mwobr+62FLVk/TsswOvDLHsNdPQvxaC7uFMpRY+I1uHhPUsaGARCc90
+         t4QCrb60j1w7mYp4z7uUrP4iZLjIClAE42ijFxtf6TGU/5esnsLZ5Kn6kFqdWuxIdf
+         a+2Z7jF1ut3NHEEKex1OJmi5z98pu6h0fxmhkrFY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 069/117] x86/uaccess, kcov: Disable stack protector
-Date:   Thu, 20 Jun 2019 19:56:43 +0200
-Message-Id: <20190620174356.843817104@linuxfoundation.org>
+        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.9 067/117] ASoC: cs42xx8: Add regcache mask dirty
+Date:   Thu, 20 Jun 2019 19:56:41 +0200
+Message-Id: <20190620174356.786080120@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -64,42 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 40ea97290b08be2e038b31cbb33097d1145e8169 ]
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-New tooling noticed this mishap:
+commit ad6eecbfc01c987e0253371f274c3872042e4350 upstream.
 
-  kernel/kcov.o: warning: objtool: write_comp_data()+0x138: call to __stack_chk_fail() with UACCESS enabled
-  kernel/kcov.o: warning: objtool: __sanitizer_cov_trace_pc()+0xd9: call to __stack_chk_fail() with UACCESS enabled
+Add regcache_mark_dirty before regcache_sync for power
+of codec may be lost at suspend, then all the register
+need to be reconfigured.
 
-All the other instrumentation (KASAN,UBSAN) also have stack protector
-disabled.
+Fixes: 0c516b4ff85c ("ASoC: cs42xx8: Add codec driver
+support for CS42448/CS42888")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/Makefile | 1 +
+ sound/soc/codecs/cs42xx8.c |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 314e7d62f5f0..184fa9aa5802 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -28,6 +28,7 @@ KCOV_INSTRUMENT_extable.o := n
- # Don't self-instrument.
- KCOV_INSTRUMENT_kcov.o := n
- KASAN_SANITIZE_kcov.o := n
-+CFLAGS_kcov.o := $(call cc-option, -fno-conserve-stack -fno-stack-protector)
+--- a/sound/soc/codecs/cs42xx8.c
++++ b/sound/soc/codecs/cs42xx8.c
+@@ -569,6 +569,7 @@ static int cs42xx8_runtime_resume(struct
+ 	msleep(5);
  
- # cond_syscall is currently not LTO compatible
- CFLAGS_sys_ni.o = $(DISABLE_LTO)
--- 
-2.20.1
-
+ 	regcache_cache_only(cs42xx8->regmap, false);
++	regcache_mark_dirty(cs42xx8->regmap);
+ 
+ 	ret = regcache_sync(cs42xx8->regmap);
+ 	if (ret) {
 
 
