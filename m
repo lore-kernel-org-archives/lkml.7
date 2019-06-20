@@ -2,103 +2,91 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9D5DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEA5C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:11:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CDE72084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A18D02084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:11:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PdSWTevo"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="2AUBnw4K"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731150AbfFTILj (ORCPT
+        id S1731198AbfFTILk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:11:39 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38628 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTILf (ORCPT
+        Thu, 20 Jun 2019 04:11:40 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:37424 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731110AbfFTILi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:11:35 -0400
-Received: by mail-wr1-f66.google.com with SMTP id d18so2003500wrs.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:11:34 -0700 (PDT)
+        Thu, 20 Jun 2019 04:11:38 -0400
+Received: by mail-qk1-f194.google.com with SMTP id d15so1331310qkl.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:11:38 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=HhWyyUaFjokwwCj2d1/nEx4QjaLwX5bSHXHfoJ/Z1z4=;
-        b=PdSWTevoSjMzvE1lmytqcgGP0RPJzKrM/e7aTP+8QeiMu0OnXdcMYmHugWc7jRuWa7
-         ODM7F9jtOna23X01M84cHN4WO2ADB1u0UZJNBYff3lcyv9QVEo/1GMvgUI2+cyL151qM
-         +wPj/ZlKF+qWkg3KVXqNkgbrOrudX0MFEFXbSRuDgXAmzJP5hxTBy1W0STvDt0CuJDDq
-         AZDwcR1lrDCTQs1OlP5QDbQnEib7ttSGqpAgJnSSuagSjwtf+tGh3F2iWGFn4TwW65L5
-         Z25fM51nzg6unt1ho3xAOJ7YlMgtCGDSZMpTyvzL5EPtv6x6IPSMW+vnZrXcnsBTr3+G
-         NWDA==
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TRkUooSd/UaA9IYdN/7znCXTQbIqRDk0LfQwmX0rHGI=;
+        b=2AUBnw4K/dxPsBT0ACnhasZG6o3C2vb8NI8ADKu6mrlsxcT6D8GSweyjMItLvjcPTO
+         M62MAuTrpywiNZfneUDtJE9m1ye7CaKoTfr/nnJ/Sqt4d1lFq2egRpWqfYT1PdQKLu2T
+         CG2UBTbcwWnfcXCYTbc+Tm7LZ4FvZSyy+TIuzQPxe4eqyq0V1ycCXb0aZ9t2fhfYYqIU
+         6xHgCk/2SkwH7csf+P9Hsrhf5iYORp3qq20hC/lACrebPy7bVxMpvvYlg94YnzyDclKG
+         tcOvXjGKdGIoLMNJoy5goqb1k6GncA0CZf59lruSREYWZAqb8odPrrFXEBcxQ6XiEvYy
+         FbXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=HhWyyUaFjokwwCj2d1/nEx4QjaLwX5bSHXHfoJ/Z1z4=;
-        b=jeNLbXtgc7X41nIuddbuUlzXOMwTBX4dohSUseOqwtzwnGeuIjOYcRnDuaUAKMHIcK
-         9RRDOn3Lm4LkpkNB+iVE92pvirsc1nImrLobVq95F3o6tn1SE/jMG/Mr5uGMv75xFw+t
-         6V1aE0Ub2+SVctUxHlGvWm4jZMqa12FueqBqDJoZFTGx26IsQYSNetswBLyV7Kalmewb
-         F4t9ryYR0Dkl45Z0W/Y9HC14sPw0uSnz+dXkS3XZ9DFGrmhpHRCu0vr1tS/5yJuxIEXo
-         /FQ+c8hTCQRaYzUSgnYaVqjaPIqTkICiDXE3pe912P5YuNcFcB7lGt5j9w+8Wz6Nfq7n
-         eHnA==
-X-Gm-Message-State: APjAAAVZWTUpabVuoH/4clZ2kwukabiwBp24MGZlExGLYMDWYslOT0zF
-        qAasf4SHyDePV1VrzukUBLUM3Q==
-X-Google-Smtp-Source: APXvYqzjvw+YuFRfVDg/VKnRQl34K5IFA/EQSugWLkyCXSp67bzfp/MtHssS/iKWK+3hoI6SfOun3A==
-X-Received: by 2002:a05:6000:146:: with SMTP id r6mr78481877wrx.237.1561018293930;
-        Thu, 20 Jun 2019 01:11:33 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q12sm17559174wrp.50.2019.06.20.01.11.32
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 01:11:33 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] slimbus: core: generate uevent for non-dt only
-Date:   Thu, 20 Jun 2019 09:11:29 +0100
-Message-Id: <20190620081129.4721-4-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190620081129.4721-1-srinivas.kandagatla@linaro.org>
-References: <20190620081129.4721-1-srinivas.kandagatla@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TRkUooSd/UaA9IYdN/7znCXTQbIqRDk0LfQwmX0rHGI=;
+        b=aYnKZj6RPvcM4MTkZRRWylohTYGd5zpGQz75te1YDJsrgoJ8TH413pSGgR5eafNjTr
+         ot8bnarU0NnlRcXc/1WF06/AZ181mqx/txm3UxzRw5BQ7ijByoEskUiTHT9a06TsYL+9
+         dYDnMGd/LGHsJiceoabGonCT1YtgsP64rzi8+UX5BI4WNqjX+VsNF5QTjU/xyXQXboX+
+         FXQ7gwiwu7wo8dHjlBBAPPZjRBMW0/eKICwCBJzDRE0vPcidDPGZoqKxbHUGKnGiLqjf
+         0072jI4dmpMOaP74kTvbIyvcx9l0mvgYSBKHizwd48GV13LylX1xF2jiosde8nOn62LG
+         Hr7w==
+X-Gm-Message-State: APjAAAVaRO+q0fG+RBDzd07wAno6IFRYRIyHQeSQ9OKHHeo9GeBtVQZW
+        +wetDrcuZPxbSPrkC/aw8Xecm8t8jrIx0eI8Y41YlQ==
+X-Google-Smtp-Source: APXvYqxOSWRsTHI+1qYV6tXZLhxzg82CDrJlzsurV+doJXHQ9bjAUDTq4iluEfM00odIArBgUTjNtLH0hVGOGcFASPQ=
+X-Received: by 2002:a37:de07:: with SMTP id h7mr105593186qkj.41.1561018297544;
+ Thu, 20 Jun 2019 01:11:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190620051333.2235-1-drake@endlessm.com> <20190620051333.2235-3-drake@endlessm.com>
+ <20190620061038.GA20564@lst.de>
+In-Reply-To: <20190620061038.GA20564@lst.de>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Thu, 20 Jun 2019 16:11:26 +0800
+Message-ID: <CAD8Lp45ua=L+ixO+du=Njhy+dxjWobWA+V1i+Y2p6faeyt1FBQ@mail.gmail.com>
+Subject: Re: [PATCH v2 2/5] nvme: rename "pci" operations to "mmio"
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Keith Busch <kbusch@kernel.org>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Bjorn Helgaas <bhelgaas@google.com>, linux-ide@vger.kernel.org,
+        Linux Upstreaming Team <linux@endlessm.com>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.de>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rely on MODULE_ALIAS() for automatic kernel module loading, rather than
-basing it on the OF compatible. This ensures that drivers without
-of_device_id table, such as wcd9335, will be automatically loaded.
+On Thu, Jun 20, 2019 at 2:11 PM Christoph Hellwig <hch@lst.de> wrote:
+> The Linux NVMe driver will deal with NVMe as specified plus whatever
+> minor tweaks we'll need for small bugs.  Hiding it behind an AHCI
+> device is completely out of scope and will not be accepted.
 
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-[bjorn: Added commit message]
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- drivers/slimbus/core.c | 5 -----
- 1 file changed, 5 deletions(-)
+Do you have any new suggestions for alternative ways we can implement
+support for this storage configuration?
 
-diff --git a/drivers/slimbus/core.c b/drivers/slimbus/core.c
-index b2f07d2043eb..526e3215d8fe 100644
---- a/drivers/slimbus/core.c
-+++ b/drivers/slimbus/core.c
-@@ -98,11 +98,6 @@ static int slim_device_remove(struct device *dev)
- static int slim_device_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	struct slim_device *sbdev = to_slim_device(dev);
--	int ret;
--
--	ret = of_device_uevent_modalias(dev, env);
--	if (ret != -ENODEV)
--		return ret;
- 
- 	return add_uevent_var(env, "MODALIAS=slim:%s", dev_name(&sbdev->dev));
- }
--- 
-2.21.0
+I tried to follow your earlier suggestions regarding faking a PCI bus
+here: (or let me know if you had something different in mind...)
+https://marc.info/?l=linux-pci&m=156015271021614&w=2
+but it looks like that is not going to fly either :(
 
+Daniel
