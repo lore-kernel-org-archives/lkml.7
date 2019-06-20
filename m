@@ -2,52 +2,59 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94824C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 238A8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F6EC2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA642205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054680;
-	bh=9TlGhu5PE6MnakiwtG3u2ciQ4gIz2gyIJSShFYv6hJ0=;
+	s=default; t=1561054692;
+	bh=JKdfDt9OFrZnWSR+kRo3GBiGVO9Uw+w2VF5fUUovLRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BcjYLdBVZ4rT5dDTz8tyWsNt7UvgJ3lXHetn5phVY559ST08aJzEOk73ZiCEyFADs
-	 iCkTkSs01j6FB1iNfqP1LF5XXr2Bpd96JtaF1vrI0tHsUlDVqdPSKIes1DIAKjkFY5
-	 W9nSM4hTXS6toz7uUCRu+R9/cOMm7TsoUSvQX5To=
+	b=yQT4uEZTvt1x2bxdFo79jJCBf4UZnA6YozZ6kSnX89Is+HWfnljr2/iAQ0BTOV6II
+	 XVkKUAvcDuGWqh+KF5HY8MxxswnLN+LSIsNanVw0FnalmOYya5nPR3my1OG1Udozrl
+	 8OsfbxUDkYTrJvhsq2sGw319qwflGv9pr7Dw5R6M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729816AbfFTSR7 (ORCPT
+        id S1729634AbfFTSSK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:18:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbfFTSR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:26 -0400
+        id S1728987AbfFTSRH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E55C20675;
-        Thu, 20 Jun 2019 18:17:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6F752089C;
+        Thu, 20 Jun 2019 18:17:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054645;
-        bh=9TlGhu5PE6MnakiwtG3u2ciQ4gIz2gyIJSShFYv6hJ0=;
+        s=default; t=1561054626;
+        bh=JKdfDt9OFrZnWSR+kRo3GBiGVO9Uw+w2VF5fUUovLRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jKsiPBJ6i78iekpM7CRyt1RsSOKST8P6EF/s0D3tjecdQzug6G4E92NW7lwE7ZSBt
-         DNoZ3+qj6/NJha8qWEubpniL2zmKH8MSTVA3KtkPiPTKEVycl4zGKvHpmdpsa9SvAf
-         /SZHJS8Z9KVYQlvUFX6w3kSEoD92qH/kPMO3BcAM=
+        b=s/j8iF5RoZkMNcskwcUIvR8OePRSi9YUyQ80rkCNNffkq+Nj1PtsocvP75nZRkf32
+         1/LNmPBVUcD9SilHGRV3KkJV7DDMt7MV6B2xRxxpJqB1EkT9yJT2tuz69v8xtwn4BL
+         NFEczuCEiPjTak3+TGpBpYOHgdISIIOyQfwU4Dko=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        stable@vger.kernel.org, Yang Shi <yang.shi@linux.alibaba.com>,
+        Jan Stancek <jstancek@redhat.com>,
         Will Deacon <will.deacon@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 80/98] arm64: use the correct function type in SYSCALL_DEFINE0
-Date:   Thu, 20 Jun 2019 19:57:47 +0200
-Message-Id: <20190620174353.308223420@linuxfoundation.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Nadav Amit <namit@vmware.com>,
+        Minchan Kim <minchan@kernel.org>, Mel Gorman <mgorman@suse.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 94/98] mm: mmu_gather: remove __tlb_reset_range() for force flush
+Date:   Thu, 20 Jun 2019 19:58:01 +0200
+Message-Id: <20190620174354.117984188@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -60,57 +67,198 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0e358bd7b7ebd27e491dabed938eae254c17fe3b ]
+From: Yang Shi <yang.shi@linux.alibaba.com>
 
-Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
-parameters, use the correct function type to avoid indirect call
-type mismatches with Control-Flow Integrity checking.
+commit 7a30df49f63ad92318ddf1f7498d1129a77dd4bd upstream.
 
-Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+A few new fields were added to mmu_gather to make TLB flush smarter for
+huge page by telling what level of page table is changed.
+
+__tlb_reset_range() is used to reset all these page table state to
+unchanged, which is called by TLB flush for parallel mapping changes for
+the same range under non-exclusive lock (i.e.  read mmap_sem).
+
+Before commit dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in
+munmap"), the syscalls (e.g.  MADV_DONTNEED, MADV_FREE) which may update
+PTEs in parallel don't remove page tables.  But, the forementioned
+commit may do munmap() under read mmap_sem and free page tables.  This
+may result in program hang on aarch64 reported by Jan Stancek.  The
+problem could be reproduced by his test program with slightly modified
+below.
+
+---8<---
+
+static int map_size = 4096;
+static int num_iter = 500;
+static long threads_total;
+
+static void *distant_area;
+
+void *map_write_unmap(void *ptr)
+{
+	int *fd = ptr;
+	unsigned char *map_address;
+	int i, j = 0;
+
+	for (i = 0; i < num_iter; i++) {
+		map_address = mmap(distant_area, (size_t) map_size, PROT_WRITE | PROT_READ,
+			MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+		if (map_address == MAP_FAILED) {
+			perror("mmap");
+			exit(1);
+		}
+
+		for (j = 0; j < map_size; j++)
+			map_address[j] = 'b';
+
+		if (munmap(map_address, map_size) == -1) {
+			perror("munmap");
+			exit(1);
+		}
+	}
+
+	return NULL;
+}
+
+void *dummy(void *ptr)
+{
+	return NULL;
+}
+
+int main(void)
+{
+	pthread_t thid[2];
+
+	/* hint for mmap in map_write_unmap() */
+	distant_area = mmap(0, DISTANT_MMAP_SIZE, PROT_WRITE | PROT_READ,
+			MAP_ANONYMOUS | MAP_PRIVATE, -1, 0);
+	munmap(distant_area, (size_t)DISTANT_MMAP_SIZE);
+	distant_area += DISTANT_MMAP_SIZE / 2;
+
+	while (1) {
+		pthread_create(&thid[0], NULL, map_write_unmap, NULL);
+		pthread_create(&thid[1], NULL, dummy, NULL);
+
+		pthread_join(thid[0], NULL);
+		pthread_join(thid[1], NULL);
+	}
+}
+---8<---
+
+The program may bring in parallel execution like below:
+
+        t1                                        t2
+munmap(map_address)
+  downgrade_write(&mm->mmap_sem);
+  unmap_region()
+  tlb_gather_mmu()
+    inc_tlb_flush_pending(tlb->mm);
+  free_pgtables()
+    tlb->freed_tables = 1
+    tlb->cleared_pmds = 1
+
+                                        pthread_exit()
+                                        madvise(thread_stack, 8M, MADV_DONTNEED)
+                                          zap_page_range()
+                                            tlb_gather_mmu()
+                                              inc_tlb_flush_pending(tlb->mm);
+
+  tlb_finish_mmu()
+    if (mm_tlb_flush_nested(tlb->mm))
+      __tlb_reset_range()
+
+__tlb_reset_range() would reset freed_tables and cleared_* bits, but this
+may cause inconsistency for munmap() which do free page tables.  Then it
+may result in some architectures, e.g.  aarch64, may not flush TLB
+completely as expected to have stale TLB entries remained.
+
+Use fullmm flush since it yields much better performance on aarch64 and
+non-fullmm doesn't yields significant difference on x86.
+
+The original proposed fix came from Jan Stancek who mainly debugged this
+issue, I just wrapped up everything together.
+
+Jan's testing results:
+
+v5.2-rc2-24-gbec7550cca10
+--------------------------
+         mean     stddev
+real    37.382   2.780
+user     1.420   0.078
+sys     54.658   1.855
+
+v5.2-rc2-24-gbec7550cca10 + "mm: mmu_gather: remove __tlb_reset_range() for force flush"
+---------------------------------------------------------------------------------------_
+         mean     stddev
+real    37.119   2.105
+user     1.548   0.087
+sys     55.698   1.357
+
+[akpm@linux-foundation.org: coding-style fixes]
+Link: http://lkml.kernel.org/r/1558322252-113575-1-git-send-email-yang.shi@linux.alibaba.com
+Fixes: dd2283f2605e ("mm: mmap: zap pages with read mmap_sem in munmap")
+Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Reported-by: Jan Stancek <jstancek@redhat.com>
+Tested-by: Jan Stancek <jstancek@redhat.com>
+Suggested-by: Will Deacon <will.deacon@arm.com>
+Tested-by: Will Deacon <will.deacon@arm.com>
+Acked-by: Will Deacon <will.deacon@arm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Nick Piggin <npiggin@gmail.com>
+Cc: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc: Nadav Amit <namit@vmware.com>
+Cc: Minchan Kim <minchan@kernel.org>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: <stable@vger.kernel.org>	[4.20+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+ mm/mmu_gather.c |   24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/syscall_wrapper.h b/arch/arm64/include/asm/syscall_wrapper.h
-index a4477e515b79..507d0ee6bc69 100644
---- a/arch/arm64/include/asm/syscall_wrapper.h
-+++ b/arch/arm64/include/asm/syscall_wrapper.h
-@@ -30,10 +30,10 @@
- 	}										\
- 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+--- a/mm/mmu_gather.c
++++ b/mm/mmu_gather.c
+@@ -93,8 +93,17 @@ void arch_tlb_finish_mmu(struct mmu_gath
+ 	struct mmu_gather_batch *batch, *next;
  
--#define COMPAT_SYSCALL_DEFINE0(sname)					\
--	asmlinkage long __arm64_compat_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);	\
--	asmlinkage long __arm64_compat_sys_##sname(void)
-+#define COMPAT_SYSCALL_DEFINE0(sname)							\
-+	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused);	\
-+	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);			\
-+	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused)
+ 	if (force) {
++		/*
++		 * The aarch64 yields better performance with fullmm by
++		 * avoiding multiple CPUs spamming TLBI messages at the
++		 * same time.
++		 *
++		 * On x86 non-fullmm doesn't yield significant difference
++		 * against fullmm.
++		 */
++		tlb->fullmm = 1;
+ 		__tlb_reset_range(tlb);
+-		__tlb_adjust_range(tlb, start, end - start);
++		tlb->freed_tables = 1;
+ 	}
  
- #define COND_SYSCALL_COMPAT(name) \
- 	cond_syscall(__arm64_compat_sys_##name);
-@@ -62,11 +62,11 @@
- 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+ 	tlb_flush_mmu(tlb);
+@@ -249,10 +258,15 @@ void tlb_finish_mmu(struct mmu_gather *t
+ {
+ 	/*
+ 	 * If there are parallel threads are doing PTE changes on same range
+-	 * under non-exclusive lock(e.g., mmap_sem read-side) but defer TLB
+-	 * flush by batching, a thread has stable TLB entry can fail to flush
+-	 * the TLB by observing pte_none|!pte_dirty, for example so flush TLB
+-	 * forcefully if we detect parallel PTE batching threads.
++	 * under non-exclusive lock (e.g., mmap_sem read-side) but defer TLB
++	 * flush by batching, one thread may end up seeing inconsistent PTEs
++	 * and result in having stale TLB entries.  So flush TLB forcefully
++	 * if we detect parallel PTE batching threads.
++	 *
++	 * However, some syscalls, e.g. munmap(), may free page tables, this
++	 * needs force flush everything in the given range. Otherwise this
++	 * may result in having stale TLB entries for some architectures,
++	 * e.g. aarch64, that could specify flush what level TLB.
+ 	 */
+ 	bool force = mm_tlb_flush_nested(tlb->mm);
  
- #ifndef SYSCALL_DEFINE0
--#define SYSCALL_DEFINE0(sname)					\
--	SYSCALL_METADATA(_##sname, 0);				\
--	asmlinkage long __arm64_sys_##sname(void);		\
--	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);	\
--	asmlinkage long __arm64_sys_##sname(void)
-+#define SYSCALL_DEFINE0(sname)							\
-+	SYSCALL_METADATA(_##sname, 0);						\
-+	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused);	\
-+	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);			\
-+	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused)
- #endif
- 
- #ifndef COND_SYSCALL
--- 
-2.20.1
-
 
 
