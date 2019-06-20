@@ -2,117 +2,113 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCADEC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16E3CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9A34208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054414;
-	bh=SjfTpmvzvuQZ9JZgKZvtzkAgoLB4u3yXSE2feqq0kUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ToUhWWaCdCD1GFSIpbtVa/QSjdzBI27Tetg8rUjj+8+BN2qtICt4vSAVJ0i8ccTBh
-	 MFS5wqP0rCXaX41xiE6FxkNKNyJD0Pe9M+mINFWwPZ24hPZa0t6wgyEfNoOG3AM5qg
-	 UEP/zQwTC7LoDlX4bHEShpbLEcJHuOBpL9NFGg84=
+	by mail.kernel.org (Postfix) with ESMTP id E644921530
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oV9KeU7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729281AbfFTSNd (ORCPT
+        id S1728801AbfFTSNj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:13:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41410 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728883AbfFTSN3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:13:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 01DC52082C;
-        Thu, 20 Jun 2019 18:13:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054408;
-        bh=SjfTpmvzvuQZ9JZgKZvtzkAgoLB4u3yXSE2feqq0kUo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AcN+zS6qFgs8AYE7bJpEqNeR3bGpK2rBj3knf5DAXevsmBAJv8yIsvhFNt7C+xwak
-         fKyRTToImnQd1uzti2a4wAMNeHg/zw3FiNfNaVVB+7BOqMp3fCxNZSisG4gDQgVqKo
-         cbnMoD3vneS3gHn8YL1Le81bKiiFsj9ZOBFNYNzA=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 08/98] net: dsa: rtl8366: Fix up VLAN filtering
-Date:   Thu, 20 Jun 2019 19:56:35 +0200
-Message-Id: <20190620174349.751989092@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
-References: <20190620174349.443386789@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Jun 2019 14:13:39 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42986 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729284AbfFTSNe (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:13:34 -0400
+Received: by mail-pl1-f193.google.com with SMTP id ay6so1695175plb.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 11:13:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=RmdL4r6TvJ+oKourpQb+LBst9Fomwh98eeYZGetnRvY=;
+        b=oV9KeU7fuBkBdNRgFANyfh0fcXSl4wDv8kbA4/2xYSLmTm8D40QNMvO/CQH/+cDxK7
+         GbW9f/ukXyTOqWTO2qrk4Tff8D13y9JHIJMsHsnmCAXLnEngZl922vBjaJ4Phu50pSyF
+         pE8CYKHUOKZwcRKjRd0O9tRtzDNgGbDGVRcmw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RmdL4r6TvJ+oKourpQb+LBst9Fomwh98eeYZGetnRvY=;
+        b=Y8Fno+z82EWuOjrzjhAkSFLGC22ijYwwFWybdaQw8EJPwT5Biq+8nB34+YIzg0OAum
+         Sry7riSviAcfNgSa6oK3ylcUnQjhUnehaPUuFd75Pj3bzo8tv59OdK+KyQUXsVzLcMeF
+         ynAMHFzi2RhD4SQ6UVPflrW2YjEHo3Q+pddyTLzTExIosJtDM0meylPfn83fqKXfjHh7
+         Wa8r+rUKtTv8I7jiTvMKpCum4pgajGK6ZwK/UbTDYm59zmVo5GJ/CECmEQBLIPw6OpQi
+         yxh7hX9v+cEMMaeRM+QuJVAKZHbrWnA30l8uh32XN/xHr07OJJvu7qxfeniki6kAVHJV
+         KY8Q==
+X-Gm-Message-State: APjAAAXOGLnVWI16jScHVsEjBVuo6xIRFx2lh7Z3mcpJAj/NUfbOAPvY
+        fiMaNfBCqCkP07GCa+e+H7cXMg==
+X-Google-Smtp-Source: APXvYqwRqHmHiOefZUkjtzQ5hzlVB17R/dzjZKqG93Hc2P9UkalWcaAo2ZuXfBOPjxAeefIn2Ir5zA==
+X-Received: by 2002:a17:902:d707:: with SMTP id w7mr8966934ply.128.1561054413761;
+        Thu, 20 Jun 2019 11:13:33 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id b6sm311008pgd.5.2019.06.20.11.13.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 11:13:32 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 11:13:32 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Colin King <colin.king@canonical.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, kernel-janitors@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] lkdtm: remove redundant initialization of ret
+Message-ID: <201906201112.AE06471@keescook>
+References: <20190614094311.24024-1-colin.king@canonical.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190614094311.24024-1-colin.king@canonical.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+On Fri, Jun 14, 2019 at 10:43:11AM +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+> 
+> The variable ret is being initialized with the value -EINVAL however
+> this value is never read and ret is being re-assigned later on. Hence
+> the initialization is redundant and can be removed.
+> 
+> Addresses-Coverity: ("Unused value")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-[ Upstream commit 760c80b70bed2cd01630e8595d1bbde910339f31 ]
+Thanks!
 
-We get this regression when using RTL8366RB as part of a bridge
-with OpenWrt:
+Acked-by: Kees Cook <keescook@chromium.org>
 
-WARNING: CPU: 0 PID: 1347 at net/switchdev/switchdev.c:291
-	 switchdev_port_attr_set_now+0x80/0xa4
-lan0: Commit of attribute (id=7) failed.
-(...)
-realtek-smi switch lan0: failed to initialize vlan filtering on this port
+Greg, can you take this please?
 
-This is because it is trying to disable VLAN filtering
-on VLAN0, as we have forgot to add 1 to the port number
-to get the right VLAN in rtl8366_vlan_filtering(): when
-we initialize the VLAN we associate VLAN1 with port 0,
-VLAN2 with port 1 etc, so we need to add 1 to the port
-offset.
+-Kees
 
-Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/rtl8366.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+> ---
+>  drivers/misc/lkdtm/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index bba093224813..92df35fdeab0 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -390,7 +390,7 @@ static int __init lkdtm_module_init(void)
+>  {
+>  	struct crashpoint *crashpoint = NULL;
+>  	const struct crashtype *crashtype = NULL;
+> -	int ret = -EINVAL;
+> +	int ret;
+>  	int i;
+>  
+>  	/* Neither or both of these need to be set */
+> -- 
+> 2.20.1
+> 
 
---- a/drivers/net/dsa/rtl8366.c
-+++ b/drivers/net/dsa/rtl8366.c
-@@ -307,7 +307,8 @@ int rtl8366_vlan_filtering(struct dsa_sw
- 	struct rtl8366_vlan_4k vlan4k;
- 	int ret;
- 
--	if (!smi->ops->is_vlan_valid(smi, port))
-+	/* Use VLAN nr port + 1 since VLAN0 is not valid */
-+	if (!smi->ops->is_vlan_valid(smi, port + 1))
- 		return -EINVAL;
- 
- 	dev_info(smi->dev, "%s filtering on port %d\n",
-@@ -318,12 +319,12 @@ int rtl8366_vlan_filtering(struct dsa_sw
- 	 * The hardware support filter ID (FID) 0..7, I have no clue how to
- 	 * support this in the driver when the callback only says on/off.
- 	 */
--	ret = smi->ops->get_vlan_4k(smi, port, &vlan4k);
-+	ret = smi->ops->get_vlan_4k(smi, port + 1, &vlan4k);
- 	if (ret)
- 		return ret;
- 
- 	/* Just set the filter to FID 1 for now then */
--	ret = rtl8366_set_vlan(smi, port,
-+	ret = rtl8366_set_vlan(smi, port + 1,
- 			       vlan4k.member,
- 			       vlan4k.untag,
- 			       1);
-
-
+-- 
+Kees Cook
