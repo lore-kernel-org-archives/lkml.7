@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 292E9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88B35C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0F692070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60FC12070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QjHUnmYd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gWbcCmVM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfFTVKN (ORCPT
+        id S1726788AbfFTVKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:10:13 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:44900 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725958AbfFTVKL (ORCPT
+        Thu, 20 Jun 2019 17:10:16 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36921 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725958AbfFTVKO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:10:11 -0400
-Received: by mail-pf1-f193.google.com with SMTP id t16so2342157pfe.11;
-        Thu, 20 Jun 2019 14:10:10 -0700 (PDT)
+        Thu, 20 Jun 2019 17:10:14 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 19so2360943pfa.4;
+        Thu, 20 Jun 2019 14:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=n2SpWI1yibR3pZui+zsA5SWkFvXjKqrr9tlPiUDopnI=;
-        b=QjHUnmYdROWMRYkxYVPmuYVPNDV1DbWvIZdcfWSL55ySQ0MctwPQ9kYZxtuXgqp1WN
-         EiEtZTikp/OrBL78jp7ZsaUlGVGvvU2GhjHeSxPORWHhACye+nvo/3LszmRKEV9cA7Q5
-         egtZ2bn2jLsOfpLFDWD43lWgiS4k0/U3ZcdpvfDAfhGWrr8/Q8G1uS/Lxe3zz5Xyk77b
-         0rEmNWPpy1awuYwCEZ9j1MBHCK53Gcsqld1OOY6ErSXX5okAvXyKv/zAwFmK3J1iTJX0
-         9xovg3LrnJ7ssWLnc1wdc5IdyFN3adPCq7qNSLjRYp4bDD6aT2HOWUVZ5fMChUYmNXvM
-         WVSg==
+        bh=d7vMFa0RiXSgIQ7GsvInRxIKmt+saHYI+AQuO3/IDBY=;
+        b=gWbcCmVMhKhfH83nz0SjOdViQ6bh80WcOh4JOq9apD0RZ3GvLo6yMIGpz6gWuRBfhg
+         xyhsiwWbOmiD3O1NFP+UCB+IfcbuNYmqLr2gHzzayjHX75hby0YC+7Yz2hFuV+u1dilz
+         a8NV+0xx44k5S91z/FNjzBResy8ZymC96ybQBmF0qfCTxZHf2hO6zcBw+xO2P8vgE5+R
+         lcN0jQLlyI7HWxYRogLqGz5N53kMU1P3M/XoSQTHIsj5KMgGo9rzrZp3bU75W6O/PAre
+         NLosSZLaNftHUl8nDeEpKppSNajoZNEcH9z2Pv/lvoRTwlzAhQZHxiz3EUS3El8OGKx4
+         Mpaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=n2SpWI1yibR3pZui+zsA5SWkFvXjKqrr9tlPiUDopnI=;
-        b=RCEPSJnt5KolhyWgB/zVisQoopjWtcIu7WLs58uIKeFGEbFUoLN/BjrJlVRl5va/Wi
-         jGbZd58bTIEs1cXYqfchdrOo32HMcfspVTx3YAwJw6zQe5V8Jc1HuQpZjLFXkmPLzGYw
-         QrRtPFO3v3pxbeexW3q+UGdqA6nldlpAgen4cf/sJ9TEFYmdDRXK37kRfi4JyDihij+w
-         OBn3vknX8HUg+Aqbis8FSN5F4b5w3BwB2hFLGR3h7Wc+hACPK+2RidCnrVGC1B2jVCa7
-         j8dN1tTH2N7HL9ey79fQ0xyWolTp8c7FNngDgxx2V0+3nWPAN+P7+ktuA/KUcgM2/zt1
-         927g==
-X-Gm-Message-State: APjAAAWO0zgXTCqAOvgQd+G6cweMGB+WBsd7ZWkd7lQtqnT+R2rEz9fq
-        cbJlbFIp1G3KpRzyez8lWz0JGrBp9WY=
-X-Google-Smtp-Source: APXvYqyqTjMPZxbB9dUfZRknPAWnuMOyFhDiYUlVPyNhviWwjbGwPMxDXClY5RvgmUGxxVByRgYZCA==
-X-Received: by 2002:a17:90a:4803:: with SMTP id a3mr1775554pjh.58.1561065009830;
-        Thu, 20 Jun 2019 14:10:09 -0700 (PDT)
+        bh=d7vMFa0RiXSgIQ7GsvInRxIKmt+saHYI+AQuO3/IDBY=;
+        b=IOoij155dGht7F7hij+rHgnM4pTFjPQdDdNSgC4UUyCBgu0hKyip7isF9J4jciNmwx
+         CeFfuVMFTBiBKRFK4OSdWRcrpJCFeDylLx/HorO+5968dwI3pVIGTQnnKQOvdEfYKNN6
+         hJON/QYnZUIOgFdqtMeklAqiDWUmKKWJ9uEOL4FwQalC+Zn6PRzpgjIkkAs6vvSWjCX/
+         miiuBYiEwjPyBpZAB9JCNHE9LxD5LaYCJ53/Xi5uvHHNRacswI60pk5zE02cvAbGTfDV
+         bbCVF9YdL16NbRwIdYQra5fF671j5PxoSZzjZkgzYRYNrTKJ13IpfyXBVh2waN64Lz3s
+         7g6g==
+X-Gm-Message-State: APjAAAWeV0F3ebOujyGyKB+n2Omq+P1mWzd3uIZDYfBCpYRyCNbMWdT6
+        juTmK0IaZNA9FZENF8KD1DuSGPC4DfU=
+X-Google-Smtp-Source: APXvYqwPu7zJoLPZ+CyAH5QO33Bz/OAkt9kFMf1CNxrQboGzgxE1HFuV1K6F0dmYBSU8fVvnKOW7bg==
+X-Received: by 2002:a17:90a:cb8e:: with SMTP id a14mr1653269pju.124.1561065013299;
+        Thu, 20 Jun 2019 14:10:13 -0700 (PDT)
 Received: from stbsrv-and-3.and.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.08
+        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 14:10:09 -0700 (PDT)
+        Thu, 20 Jun 2019 14:10:12 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
         linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 1/6] usb: bdc: driver runs out of buffer descriptors on large ADB transfers
-Date:   Thu, 20 Jun 2019 17:09:46 -0400
-Message-Id: <1561064991-16874-2-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH 3/6] usb: bdc: driver may fail to get USB PHY
+Date:   Thu, 20 Jun 2019 17:09:48 -0400
+Message-Id: <1561064991-16874-4-git-send-email-alcooperx@gmail.com>
 X-Mailer: git-send-email 1.9.0.138.g2de3478
 In-Reply-To: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
 References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
@@ -75,32 +75,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Version v1.0.40 of the Android host ADB software increased maximum
-transfer sizes from 256K to 1M. Since the STB ADB gadget driver
-requests only 16K at a time, the BDC driver ran out of buffer
-descriptors (BDs) if the queuing happens faster than the incoming
-16K transfers. This issue is fixed by doubling the number of BDs
-that can be queued so that the entire 1M request can be queued
-without running out of buffers.
+Initialization order is important for the USB PHY and the PHY clients.
+The init order is based on the build order of the drivers in the
+makefiles and the PHY drivers are built early to help with
+dependencies, but the new SCMI based clock subsystem has the side
+effect of making some additional drivers DEFER until the clock
+is ready. This is causing the USB PHY driver to defer which is causing
+some PHY clients to fail when they try to get the PHY. The fix is to have
+the client driver return DEFER when it's "get phy" routine returns DEFER.
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/usb/gadget/udc/bdc/bdc.h b/drivers/usb/gadget/udc/bdc/bdc.h
-index 6e1e881dc51e..ac75e25c3b6a 100644
---- a/drivers/usb/gadget/udc/bdc/bdc.h
-+++ b/drivers/usb/gadget/udc/bdc/bdc.h
-@@ -44,7 +44,7 @@
- #define NUM_SR_ENTRIES	64
+diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
+index 11a43de6c1c6..c794890d785b 100644
+--- a/drivers/usb/gadget/udc/bdc/bdc_core.c
++++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
+@@ -543,9 +543,13 @@ static int bdc_probe(struct platform_device *pdev)
+ 			dev, dev->of_node, phy_num);
+ 		if (IS_ERR(bdc->phys[phy_num])) {
+ 			ret = PTR_ERR(bdc->phys[phy_num]);
++			if (ret == -EPROBE_DEFER) {
++				dev_dbg(bdc->dev, "DEFER, waiting for PHY\n");
++				return ret;
++			}
+ 			dev_err(bdc->dev,
+ 				"BDC phy specified but not found:%d\n", ret);
+-			return ret;
++			goto clk_cleanup;
+ 		}
+ 	}
  
- /* Num of bds per table */
--#define NUM_BDS_PER_TABLE	32
-+#define NUM_BDS_PER_TABLE	64
- 
- /* Num of tables in bd list for control,bulk and Int ep */
- #define NUM_TABLES	2
 -- 
 1.9.0.138.g2de3478
 
