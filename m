@@ -5,58 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCD3C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322DAC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B7BB20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 116BB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055386;
-	bh=9ILV0qZdYSPQfsZN8NIEhh7P6Txnpp2ubkaKlPVNgOw=;
+	s=default; t=1561055390;
+	bh=l7yIvmOktxjxjn7fNCF6xlrW81F+83972uYnm4hnJAA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PUnqBNkbbybpK9PXZAZPwo4wHYbHw0MSr7K1HocA/PVxcbollwcI5SnVoRp2HFT50
-	 WX626ffnpIvaRRp/6LkMHVwc5NqwwPMKDsLbufVlC4TMvr1FxeIT0n3r17/ld0UoZF
-	 AVtNrwa6B7GUPxjffyBuxigt58H73F2WdahH0pHM=
+	b=xEdfvF3LVJeh/0LTExa6ZbKtwWyTPhKsJ4gx4D9ZvjrmALUC4b/XexQpp7JUBQQ4u
+	 56TE6dE2tpQRmxlXuXBUc/5SilrAO8bYnireMY7zw/oMKDkEMe04dphgB+x0HwBuCL
+	 pTj7W7P4/jDbF9UhVwp/qqqm6n7DyYRA/4LdIYRA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727835AbfFTS3o (ORCPT
+        id S1727381AbfFTSCF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:29:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52304 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:02:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfFTSCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:02:06 -0400
+        id S1726838AbfFTSCB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:02:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F64120B1F;
-        Thu, 20 Jun 2019 18:02:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3410208CA;
+        Thu, 20 Jun 2019 18:01:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053725;
-        bh=9ILV0qZdYSPQfsZN8NIEhh7P6Txnpp2ubkaKlPVNgOw=;
+        s=default; t=1561053720;
+        bh=l7yIvmOktxjxjn7fNCF6xlrW81F+83972uYnm4hnJAA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ran+c3QUHteDpi03qN68atFzB7AW5U88afPONmvaVbYsGqC7aujrVGGifJP9TC1Fi
-         NzGBNkbQa5IuO+jVcN3f/Hje+nekPJFS4n2hVoUBtFXbyyrR3tsOAYuEMZ+AtiYuEG
-         Ofh9Zk3jcryN7+TsueVxcN/Y3RzxaCNp00Kb67R8=
+        b=YowKmdFHEmwi8V2U72NWg9D/+l5GkZgaKGumqPVJ5QyvbGZbULoVRKKXGj8mookP8
+         IG2iiRZfP8TBR/pDEDiT/JeYDUyaSelnWY7YQcx+P/cAb7R7dtIMHBDnQ7s05XgNRE
+         Nf1ELJHyNrONiaPHsE6aW5jlTD8DxminEg7zTepk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, mark.rutland@arm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 71/84] perf/ring_buffer: Fix exposing a temporarily decreased data_head
-Date:   Thu, 20 Jun 2019 19:57:08 +0200
-Message-Id: <20190620174348.682271926@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 69/84] mISDN: make sure device name is NUL terminated
+Date:   Thu, 20 Jun 2019 19:57:06 +0200
+Message-Id: <20190620174348.580281291@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -69,95 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53 ]
+[ Upstream commit ccfb62f27beb295103e9392462b20a6ed807d0ea ]
 
-In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-write records to the same ring buffer:
+The user can change the device_name with the IMSETDEVNAME ioctl, but we
+need to ensure that the user's name is NUL terminated.  Otherwise it
+could result in a buffer overflow when we copy the name back to the user
+with IMGETDEVINFO ioctl.
 
-	...
-	local_dec_and_test(&rb->nest)
-	...                          <-- an IRQ/NMI can happen here
-	rb->user_page->data_head = head;
-	...
+I also changed two strcpy() calls which handle the name to strscpy().
+Hopefully, there aren't any other ways to create a too long name, but
+it's nice to do this as a kernel hardening measure.
 
-In this case, a value A is written to data_head in the IRQ, then a value
-B is written to data_head after the IRQ. And A > B. As a result,
-data_head is temporarily decreased from A to B. And a reader may see
-data_head < data_tail if it read the buffer frequently enough, which
-creates unexpected behaviors.
-
-This can be fixed by moving dec(&rb->nest) to after updating data_head,
-which prevents the IRQ/NMI above from updating data_head.
-
-[ Split up by peterz. ]
-
-Signed-off-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: mark.rutland@arm.com
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ drivers/isdn/mISDN/socket.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 7324d83d6bd8..70e31c48ae9b 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -52,11 +52,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	head = local_read(&rb->head);
- 
- 	/*
--	 * IRQ/NMI can happen here, which means we can miss a head update.
-+	 * IRQ/NMI can happen here and advance @rb->head, causing our
-+	 * load above to be stale.
- 	 */
- 
--	if (!local_dec_and_test(&rb->nest))
-+	/*
-+	 * If this isn't the outermost nesting, we don't have to update
-+	 * @rb->user_page->data_head.
-+	 */
-+	if (local_read(&rb->nest) > 1) {
-+		local_dec(&rb->nest);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Since the mmap() consumer (userspace) can run on a different CPU:
-@@ -88,9 +95,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	rb->user_page->data_head = head;
- 
- 	/*
--	 * Now check if we missed an update -- rely on previous implied
--	 * compiler barriers to force a re-read.
-+	 * We must publish the head before decrementing the nest count,
-+	 * otherwise an IRQ/NMI can publish a more recent head value and our
-+	 * write will (temporarily) publish a stale value.
-+	 */
-+	barrier();
-+	local_set(&rb->nest, 0);
-+
-+	/*
-+	 * Ensure we decrement @rb->nest before we validate the @rb->head.
-+	 * Otherwise we cannot be sure we caught the 'last' nested update.
- 	 */
-+	barrier();
- 	if (unlikely(head != local_read(&rb->head))) {
- 		local_inc(&rb->nest);
- 		goto again;
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index 0d29b5a6356d..8cbb75d09a1d 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -394,7 +394,7 @@ data_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -678,7 +678,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -692,6 +692,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		dn.name[sizeof(dn.name) - 1] = '\0';
+ 		dev = get_mdevice(dn.id);
+ 		if (dev)
+ 			err = device_rename(&dev->dev, dn.name);
 -- 
 2.20.1
 
