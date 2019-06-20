@@ -4,53 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB2E9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B6EC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB7F1206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5671320656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055105;
-	bh=UAq3Zd5iE5Z2DQ5n60G4ImH9wEGYyDXiedKzqA3WeIE=;
+	s=default; t=1561055117;
+	bh=oF0Q3Dv/WmqIztF6Nc0ID0/Nw6Jp7Ul/63w0zWN2vdM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gtSf6NwH0GCE6ZVoNWjj+XuOsXl9D7JTvwTdPkmYlcg2Qt31wMJfEgsaJqEY0hsdy
-	 D33wvjJZR1+npR4yF9/8SIU3afqUzOggUHq+vKGJ/swsCYcYe9BSAqQYb+8MzfWdHm
-	 LUhW+vkVw7f4Qo1cV0BjwTc9J98ivCkKvpJmlL+Q=
+	b=LV3JI1BLHI5P3n0M1wLVsEhTX7AUT1wnHIYz48mOuEmbf4LavfKPCZk6XVPna1EVg
+	 E9xxw3spE3o0/tGvU+dtjvjWsTjtM1+IiFqzphPSZg+O1QYvc3b0U2nIQPBOrzo62A
+	 rkl8joz90KimOKe2uYGYw1+zo2apUNvmIsMOfzos=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728208AbfFTSZE (ORCPT
+        id S1728336AbfFTSHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:25:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34862 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfFTSHz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:55 -0400
+        id S1728316AbfFTSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:32 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 635EB21655;
-        Thu, 20 Jun 2019 18:07:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 297612070B;
+        Thu, 20 Jun 2019 18:07:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054074;
-        bh=UAq3Zd5iE5Z2DQ5n60G4ImH9wEGYyDXiedKzqA3WeIE=;
+        s=default; t=1561054051;
+        bh=oF0Q3Dv/WmqIztF6Nc0ID0/Nw6Jp7Ul/63w0zWN2vdM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=k37ibfYRdMvBr/7n4+v6GtUMPr55vL8dydRF2iGXvZDhqtIdVnlCM3murCL5QelvI
-         0/haR18yfCDlA8xhHwKQJdwvU9SOZMxW1wXLfb1q7A6RE/TJneVeOYsUX6lq3PVGUi
-         ZpBsbzHivqE6nE9UZ9OBZ1BKa9MFay/mwNmr1RCo=
+        b=mzTbPnIwhHJVqL+C2oicAVQyrlg6B+EaYXEBJRMRYPeMG0KqMsgOFoR1q4B/xdvXN
+         PVfyfc/Nyp6/7SqDRlikYZHKUFwD6uNkEDYV1wklJ/2udqr38M96T5iEYFQ+iWc/XM
+         fZRSulqygUOm8akdBRIwS9XTmTPL3A//EJ8bYLb0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Stefan Wahren <stefan.wahren@i2se.com>,
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 10/45] Staging: vc04_services: Fix a couple error codes
-Date:   Thu, 20 Jun 2019 19:57:12 +0200
-Message-Id: <20190620174333.399157265@linuxfoundation.org>
+Subject: [PATCH 4.9 111/117] KVM: PPC: Book3S HV: Dont take kvm->lock around kvm_for_each_vcpu
+Date:   Thu, 20 Jun 2019 19:57:25 +0200
+Message-Id: <20190620174358.202365176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
-References: <20190620174328.608036501@linuxfoundation.org>
+In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
+References: <20190620174351.964339809@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -60,42 +60,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ca4e4efbefbbdde0a7bb3023ea08d491f4daf9b9 ]
+[ Upstream commit 5a3f49364c3ffa1107bd88f8292406e98c5d206c ]
 
-These are accidentally returning positive EINVAL instead of negative
--EINVAL.  Some of the callers treat positive values as success.
+Currently the HV KVM code takes the kvm->lock around calls to
+kvm_for_each_vcpu() and kvm_get_vcpu_by_id() (which can call
+kvm_for_each_vcpu() internally).  However, that leads to a lock
+order inversion problem, because these are called in contexts where
+the vcpu mutex is held, but the vcpu mutexes nest within kvm->lock
+according to Documentation/virtual/kvm/locking.txt.  Hence there
+is a possibility of deadlock.
 
-Fixes: 7b3ad5abf027 ("staging: Import the BCM2835 MMAL-based V4L2 camera driver.")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To fix this, we simply don't take the kvm->lock mutex around these
+calls.  This is safe because the implementations of kvm_for_each_vcpu()
+and kvm_get_vcpu_by_id() have been designed to be able to be called
+locklessly.
+
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Reviewed-by: Cédric Le Goater <clg@kaod.org>
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/vc04_services/bcm2835-camera/controls.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/powerpc/kvm/book3s_hv.c | 9 +--------
+ 1 file changed, 1 insertion(+), 8 deletions(-)
 
-diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-index 77a5d6f4e1eb..8a242f609d3b 100644
---- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
-+++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
-@@ -579,7 +579,7 @@ static int ctrl_set_image_effect(struct bm2835_mmal_dev *dev,
- 				dev->colourfx.enable ? "true" : "false",
- 				dev->colourfx.u, dev->colourfx.v,
- 				ret, (ret == 0 ? 0 : -EINVAL));
--	return (ret == 0 ? 0 : EINVAL);
-+	return (ret == 0 ? 0 : -EINVAL);
+diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
+index 0a2b247dbc6b..e840f943cd2c 100644
+--- a/arch/powerpc/kvm/book3s_hv.c
++++ b/arch/powerpc/kvm/book3s_hv.c
+@@ -374,12 +374,7 @@ static void kvmppc_dump_regs(struct kvm_vcpu *vcpu)
+ 
+ static struct kvm_vcpu *kvmppc_find_vcpu(struct kvm *kvm, int id)
+ {
+-	struct kvm_vcpu *ret;
+-
+-	mutex_lock(&kvm->lock);
+-	ret = kvm_get_vcpu_by_id(kvm, id);
+-	mutex_unlock(&kvm->lock);
+-	return ret;
++	return kvm_get_vcpu_by_id(kvm, id);
  }
  
- static int ctrl_set_colfx(struct bm2835_mmal_dev *dev,
-@@ -603,7 +603,7 @@ static int ctrl_set_colfx(struct bm2835_mmal_dev *dev,
- 		 "%s: After: mmal_ctrl:%p ctrl id:0x%x ctrl val:%d ret %d(%d)\n",
- 			__func__, mmal_ctrl, ctrl->id, ctrl->val, ret,
- 			(ret == 0 ? 0 : -EINVAL));
--	return (ret == 0 ? 0 : EINVAL);
-+	return (ret == 0 ? 0 : -EINVAL);
+ static void init_vpa(struct kvm_vcpu *vcpu, struct lppaca *vpa)
+@@ -1098,7 +1093,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
+ 	struct kvmppc_vcore *vc = vcpu->arch.vcore;
+ 	u64 mask;
+ 
+-	mutex_lock(&kvm->lock);
+ 	spin_lock(&vc->lock);
+ 	/*
+ 	 * If ILE (interrupt little-endian) has changed, update the
+@@ -1132,7 +1126,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
+ 		mask &= 0xFFFFFFFF;
+ 	vc->lpcr = (vc->lpcr & ~mask) | (new_lpcr & mask);
+ 	spin_unlock(&vc->lock);
+-	mutex_unlock(&kvm->lock);
  }
  
- static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
+ static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
 -- 
 2.20.1
 
