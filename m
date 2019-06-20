@@ -2,114 +2,436 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D3E1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A974C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:08:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 596E12070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB8862070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:08:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732215AbfFTQIn (ORCPT
+        id S1732181AbfFTQIi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:08:43 -0400
-Received: from out30-56.freemail.mail.aliyun.com ([115.124.30.56]:51365 "EHLO
-        out30-56.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732184AbfFTQIl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:08:41 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R771e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04446;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0TUlBe2E_1561046914;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TUlBe2E_1561046914)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Fri, 21 Jun 2019 00:08:37 +0800
-Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
- correctly in mbind
-To:     Vlastimil Babka <vbabka@suse.cz>, Michal Hocko <mhocko@kernel.org>
-Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Eric Dumazet <edumazet@google.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190618130253.GH3318@dhcp22.suse.cz>
- <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
- <20190618182848.GJ3318@dhcp22.suse.cz>
- <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
- <20190619052133.GB2968@dhcp22.suse.cz>
- <21a0b20c-5b62-490e-ad8e-26b4b78ac095@suse.cz>
- <687f4e57-5c50-7900-645e-6ef3a5c1c0c7@linux.alibaba.com>
- <55eb2ea9-2c74-87b1-4568-b620c7913e17@linux.alibaba.com>
- <d81b36bb-876e-917a-6115-cedf496b4923@suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <d185f277-85ed-4dc1-8ff2-2984b54a0d64@linux.alibaba.com>
-Date:   Thu, 20 Jun 2019 09:08:30 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Thu, 20 Jun 2019 12:08:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:40158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732096AbfFTQIe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:08:34 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 36F032CC5621B903D011;
+        Fri, 21 Jun 2019 00:08:30 +0800 (CST)
+Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
+ 2019 00:08:18 +0800
+From:   Gao Xiang <gaoxiang25@huawei.com>
+To:     Chao Yu <yuchao0@huawei.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        Chao Yu <chao@kernel.org>, Fang Wei <fangwei1@huawei.com>,
+        Miao Xie <miaoxie@huawei.com>, Du Wei <weidu.du@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>
+Subject: [PATCH v2 7/8] staging: erofs: switch to new decompression backend
+Date:   Fri, 21 Jun 2019 00:07:18 +0800
+Message-ID: <20190620160719.240682-8-gaoxiang25@huawei.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190620160719.240682-1-gaoxiang25@huawei.com>
+References: <20190620160719.240682-1-gaoxiang25@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <d81b36bb-876e-917a-6115-cedf496b4923@suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain
+X-Originating-IP: [10.140.130.215]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch integrates new decompression framework to
+erofs decompression path, and remove the old
+decompression implementation as well.
 
+On kirin980 platform, sequential read is slightly
+improved to 778MiB/s after the new decompression
+backend is used.
 
-On 6/20/19 12:18 AM, Vlastimil Babka wrote:
-> On 6/19/19 8:19 PM, Yang Shi wrote:
->>>>> This is getting even more muddy TBH. Is there any reason that we
->>>>> have to
->>>>> handle this problem during the isolation phase rather the migration?
->>>> I think it was already said that if pages can't be isolated, then
->>>> migration phase won't process them, so they're just ignored.
->>> Yes，exactly.
->>>
->>>> However I think the patch is wrong to abort immediately when
->>>> encountering such page that cannot be isolated (AFAICS). IMHO it should
->>>> still try to migrate everything it can, and only then return -EIO.
->>> It is fine too. I don't see mbind semantics define how to handle such
->>> case other than returning -EIO.
-> I think it does. There's:
-> If MPOL_MF_MOVE is specified in flags, then the kernel *will attempt to
-> move all the existing pages* ... If MPOL_MF_STRICT is also specified,
-> then the call fails with the error *EIO if some pages could not be moved*
->
-> Aborting immediately would be against the attempt to move all.
->
->> By looking into the code, it looks not that easy as what I thought.
->> do_mbind() would check the return value of queue_pages_range(), it just
->> applies the policy and manipulates vmas as long as the return value is 0
->> (success), then migrate pages on the list. We could put the movable
->> pages on the list by not breaking immediately, but they will be ignored.
->> If we migrate the pages regardless of the return value, it may break the
->> policy since the policy will *not* be applied at all.
-> I think we just need to remember if there was at least one page that
-> failed isolation or migration, but keep working, and in the end return
-> EIO if there was such page(s). I don't think it breaks the policy. Once
-> pages are allocated in a mapping, changing the policy is a best effort
-> thing anyway.
+Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
+---
+ drivers/staging/erofs/Makefile        |   2 +-
+ drivers/staging/erofs/internal.h      |   6 -
+ drivers/staging/erofs/unzip_vle.c     |  59 +++----
+ drivers/staging/erofs/unzip_vle.h     |  15 +-
+ drivers/staging/erofs/unzip_vle_lz4.c | 216 --------------------------
+ 5 files changed, 24 insertions(+), 274 deletions(-)
+ delete mode 100644 drivers/staging/erofs/unzip_vle_lz4.c
 
-The current behavior is:
-If queue_pages_range() return -EIO (vma is not migratable, ignore other 
-conditions since we just focus on page migration), the policy won't be 
-set and no page will be migrated.
-
-However, the problem here is the vma might look migratable, but some or 
-all the underlying pages are unmovable. So, my patch assumes the vma is 
-*not* migratable if at least one page is unmovable. I'm not sure if it 
-is possible to have both movable and unmovable pages for the same 
-mapping or not, I'm supposed the vma would be split much earlier.
-
-If we don't abort immediately, then we record if there is unmovable 
-page, then we could do:
-#1. Still follows the current behavior (then why not abort immediately?)
-#2. Set mempolicy then migrate all the migratable pages. But, we may end 
-up with the pages on node A, but the policy says node B. Doesn't it 
-break the policy?
-
->
->>>
+diff --git a/drivers/staging/erofs/Makefile b/drivers/staging/erofs/Makefile
+index adeb5d6e2668..e704d9e51514 100644
+--- a/drivers/staging/erofs/Makefile
++++ b/drivers/staging/erofs/Makefile
+@@ -9,5 +9,5 @@ obj-$(CONFIG_EROFS_FS) += erofs.o
+ ccflags-y += -I $(srctree)/$(src)/include
+ erofs-objs := super.o inode.o data.o namei.o dir.o utils.o
+ erofs-$(CONFIG_EROFS_FS_XATTR) += xattr.o
+-erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o unzip_vle_lz4.o zmap.o decompressor.o
++erofs-$(CONFIG_EROFS_FS_ZIP) += unzip_vle.o zmap.o decompressor.o
+ 
+diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
+index dcbe6f7f5dae..6c8767d4a1d5 100644
+--- a/drivers/staging/erofs/internal.h
++++ b/drivers/staging/erofs/internal.h
+@@ -321,14 +321,8 @@ static inline void z_erofs_exit_zip_subsystem(void) {}
+ 
+ /* page count of a compressed cluster */
+ #define erofs_clusterpages(sbi)         ((1 << (sbi)->clusterbits) / PAGE_SIZE)
+-#define Z_EROFS_NR_INLINE_PAGEVECS      3
+ 
+-#if (Z_EROFS_CLUSTER_MAX_PAGES > Z_EROFS_NR_INLINE_PAGEVECS)
+ #define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_CLUSTER_MAX_PAGES
+-#else
+-#define EROFS_PCPUBUF_NR_PAGES          Z_EROFS_NR_INLINE_PAGEVECS
+-#endif
+-
+ #else
+ #define EROFS_PCPUBUF_NR_PAGES          0
+ #endif
+diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
+index d95f985936b6..cb870b83f3c8 100644
+--- a/drivers/staging/erofs/unzip_vle.c
++++ b/drivers/staging/erofs/unzip_vle.c
+@@ -897,12 +897,12 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 	unsigned int sparsemem_pages = 0;
+ 	struct page *pages_onstack[Z_EROFS_VLE_VMAP_ONSTACK_PAGES];
+ 	struct page **pages, **compressed_pages, *page;
+-	unsigned int i, llen;
++	unsigned int algorithm;
++	unsigned int i, outputsize;
+ 
+ 	enum z_erofs_page_type page_type;
+ 	bool overlapped;
+ 	struct z_erofs_vle_work *work;
+-	void *vout;
+ 	int err;
+ 
+ 	might_sleep();
+@@ -1009,43 +1009,26 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 	if (unlikely(err))
+ 		goto out;
+ 
+-	llen = (nr_pages << PAGE_SHIFT) - work->pageofs;
+-
+-	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN) {
+-		err = z_erofs_vle_plain_copy(compressed_pages, clusterpages,
+-					     pages, nr_pages, work->pageofs);
+-		goto out;
+-	}
+-
+-	if (llen > grp->llen)
+-		llen = grp->llen;
+-
+-	err = z_erofs_vle_unzip_fast_percpu(compressed_pages, clusterpages,
+-					    pages, llen, work->pageofs);
+-	if (err != -ENOTSUPP)
+-		goto out;
+-
+-	if (sparsemem_pages >= nr_pages)
+-		goto skip_allocpage;
+-
+-	for (i = 0; i < nr_pages; ++i) {
+-		if (pages[i])
+-			continue;
+-
+-		pages[i] = __stagingpage_alloc(page_pool, GFP_NOFS);
+-	}
+-
+-skip_allocpage:
+-	vout = erofs_vmap(pages, nr_pages);
+-	if (!vout) {
+-		err = -ENOMEM;
+-		goto out;
+-	}
+-
+-	err = z_erofs_vle_unzip_vmap(compressed_pages, clusterpages, vout,
+-				     llen, work->pageofs, overlapped);
++	if (nr_pages << PAGE_SHIFT >= work->pageofs + grp->llen)
++		outputsize = grp->llen;
++	else
++		outputsize = (nr_pages << PAGE_SHIFT) - work->pageofs;
+ 
+-	erofs_vunmap(vout, nr_pages);
++	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN)
++		algorithm = Z_EROFS_COMPRESSION_SHIFTED;
++	else
++		algorithm = Z_EROFS_COMPRESSION_LZ4;
++
++	err = z_erofs_decompress(&(struct z_erofs_decompress_req) {
++					.sb = sb,
++					.in = compressed_pages,
++					.out = pages,
++					.pageofs_out = work->pageofs,
++					.inputsize = PAGE_SIZE,
++					.outputsize = outputsize,
++					.alg = algorithm,
++					.inplace_io = overlapped,
++					.partial_decoding = true }, page_pool);
+ 
+ out:
+ 	/* must handle all compressed pages before endding pages */
+diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
+index 6c3e0deb63e7..a2d9b60beebd 100644
+--- a/drivers/staging/erofs/unzip_vle.h
++++ b/drivers/staging/erofs/unzip_vle.h
+@@ -16,6 +16,8 @@
+ #include "internal.h"
+ #include "unzip_pagevec.h"
+ 
++#define Z_EROFS_NR_INLINE_PAGEVECS      3
++
+ /*
+  * Structure fields follow one of the following exclusion rules.
+  *
+@@ -189,18 +191,5 @@ static inline void z_erofs_onlinepage_endio(struct page *page)
+ 	min_t(unsigned int, THREAD_SIZE / 8 / sizeof(struct page *), 96U)
+ #define Z_EROFS_VLE_VMAP_GLOBAL_PAGES	2048
+ 
+-/* unzip_vle_lz4.c */
+-int z_erofs_vle_plain_copy(struct page **compressed_pages,
+-			   unsigned int clusterpages, struct page **pages,
+-			   unsigned int nr_pages, unsigned short pageofs);
+-int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+-				  unsigned int clusterpages,
+-				  struct page **pages, unsigned int outlen,
+-				  unsigned short pageofs);
+-int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+-			   unsigned int clusterpages,
+-			   void *vaddr, unsigned int llen,
+-			   unsigned short pageofs, bool overlapped);
+-
+ #endif
+ 
+diff --git a/drivers/staging/erofs/unzip_vle_lz4.c b/drivers/staging/erofs/unzip_vle_lz4.c
+deleted file mode 100644
+index 399c3e3a3ff3..000000000000
+--- a/drivers/staging/erofs/unzip_vle_lz4.c
++++ /dev/null
+@@ -1,216 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * linux/drivers/staging/erofs/unzip_vle_lz4.c
+- *
+- * Copyright (C) 2018 HUAWEI, Inc.
+- *             http://www.huawei.com/
+- * Created by Gao Xiang <gaoxiang25@huawei.com>
+- *
+- * This file is subject to the terms and conditions of the GNU General Public
+- * License.  See the file COPYING in the main directory of the Linux
+- * distribution for more details.
+- */
+-#include "unzip_vle.h"
+-#include <linux/lz4.h>
+-
+-static int z_erofs_unzip_lz4(void *in, void *out, size_t inlen, size_t outlen)
+-{
+-	int ret = LZ4_decompress_safe_partial(in, out, inlen, outlen, outlen);
+-
+-	if (ret >= 0)
+-		return ret;
+-
+-	/*
+-	 * LZ4_decompress_safe_partial will return an error code
+-	 * (< 0) if decompression failed
+-	 */
+-	errln("%s, failed to decompress, in[%p, %zu] outlen[%p, %zu]",
+-	      __func__, in, inlen, out, outlen);
+-	WARN_ON(1);
+-	print_hex_dump(KERN_DEBUG, "raw data [in]: ", DUMP_PREFIX_OFFSET,
+-		       16, 1, in, inlen, true);
+-	print_hex_dump(KERN_DEBUG, "raw data [out]: ", DUMP_PREFIX_OFFSET,
+-		       16, 1, out, outlen, true);
+-	return -EIO;
+-}
+-
+-int z_erofs_vle_plain_copy(struct page **compressed_pages,
+-			   unsigned int clusterpages,
+-			   struct page **pages,
+-			   unsigned int nr_pages,
+-			   unsigned short pageofs)
+-{
+-	unsigned int i, j;
+-	void *src = NULL;
+-	const unsigned int righthalf = PAGE_SIZE - pageofs;
+-	char *percpu_data;
+-	bool mirrored[Z_EROFS_CLUSTER_MAX_PAGES] = { 0 };
+-
+-	percpu_data = erofs_get_pcpubuf(0);
+-
+-	j = 0;
+-	for (i = 0; i < nr_pages; j = i++) {
+-		struct page *page = pages[i];
+-		void *dst;
+-
+-		if (!page) {
+-			if (src) {
+-				if (!mirrored[j])
+-					kunmap_atomic(src);
+-				src = NULL;
+-			}
+-			continue;
+-		}
+-
+-		dst = kmap_atomic(page);
+-
+-		for (; j < clusterpages; ++j) {
+-			if (compressed_pages[j] != page)
+-				continue;
+-
+-			DBG_BUGON(mirrored[j]);
+-			memcpy(percpu_data + j * PAGE_SIZE, dst, PAGE_SIZE);
+-			mirrored[j] = true;
+-			break;
+-		}
+-
+-		if (i) {
+-			if (!src)
+-				src = mirrored[i - 1] ?
+-					percpu_data + (i - 1) * PAGE_SIZE :
+-					kmap_atomic(compressed_pages[i - 1]);
+-
+-			memcpy(dst, src + righthalf, pageofs);
+-
+-			if (!mirrored[i - 1])
+-				kunmap_atomic(src);
+-
+-			if (unlikely(i >= clusterpages)) {
+-				kunmap_atomic(dst);
+-				break;
+-			}
+-		}
+-
+-		if (!righthalf) {
+-			src = NULL;
+-		} else {
+-			src = mirrored[i] ? percpu_data + i * PAGE_SIZE :
+-				kmap_atomic(compressed_pages[i]);
+-
+-			memcpy(dst + pageofs, src, righthalf);
+-		}
+-
+-		kunmap_atomic(dst);
+-	}
+-
+-	if (src && !mirrored[j])
+-		kunmap_atomic(src);
+-
+-	erofs_put_pcpubuf(percpu_data);
+-	return 0;
+-}
+-
+-int z_erofs_vle_unzip_fast_percpu(struct page **compressed_pages,
+-				  unsigned int clusterpages,
+-				  struct page **pages,
+-				  unsigned int outlen,
+-				  unsigned short pageofs)
+-{
+-	void *vin, *vout;
+-	unsigned int nr_pages, i, j;
+-	int ret;
+-
+-	if (outlen + pageofs > EROFS_PCPUBUF_NR_PAGES * PAGE_SIZE)
+-		return -ENOTSUPP;
+-
+-	nr_pages = DIV_ROUND_UP(outlen + pageofs, PAGE_SIZE);
+-
+-	if (clusterpages == 1) {
+-		vin = kmap_atomic(compressed_pages[0]);
+-	} else {
+-		vin = erofs_vmap(compressed_pages, clusterpages);
+-		if (!vin)
+-			return -ENOMEM;
+-	}
+-
+-	vout = erofs_get_pcpubuf(0);
+-
+-	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
+-				clusterpages * PAGE_SIZE, outlen);
+-
+-	if (ret < 0)
+-		goto out;
+-	ret = 0;
+-
+-	for (i = 0; i < nr_pages; ++i) {
+-		j = min((unsigned int)PAGE_SIZE - pageofs, outlen);
+-
+-		if (pages[i]) {
+-			if (clusterpages == 1 &&
+-			    pages[i] == compressed_pages[0]) {
+-				memcpy(vin + pageofs, vout + pageofs, j);
+-			} else {
+-				void *dst = kmap_atomic(pages[i]);
+-
+-				memcpy(dst + pageofs, vout + pageofs, j);
+-				kunmap_atomic(dst);
+-			}
+-		}
+-		vout += PAGE_SIZE;
+-		outlen -= j;
+-		pageofs = 0;
+-	}
+-
+-out:
+-	erofs_put_pcpubuf(vout);
+-
+-	if (clusterpages == 1)
+-		kunmap_atomic(vin);
+-	else
+-		erofs_vunmap(vin, clusterpages);
+-
+-	return ret;
+-}
+-
+-int z_erofs_vle_unzip_vmap(struct page **compressed_pages,
+-			   unsigned int clusterpages,
+-			   void *vout,
+-			   unsigned int llen,
+-			   unsigned short pageofs,
+-			   bool overlapped)
+-{
+-	void *vin;
+-	unsigned int i;
+-	int ret;
+-
+-	if (overlapped) {
+-		vin = erofs_get_pcpubuf(0);
+-
+-		for (i = 0; i < clusterpages; ++i) {
+-			void *t = kmap_atomic(compressed_pages[i]);
+-
+-			memcpy(vin + PAGE_SIZE * i, t, PAGE_SIZE);
+-			kunmap_atomic(t);
+-		}
+-	} else if (clusterpages == 1) {
+-		vin = kmap_atomic(compressed_pages[0]);
+-	} else {
+-		vin = erofs_vmap(compressed_pages, clusterpages);
+-	}
+-
+-	ret = z_erofs_unzip_lz4(vin, vout + pageofs,
+-				clusterpages * PAGE_SIZE, llen);
+-	if (ret > 0)
+-		ret = 0;
+-
+-	if (overlapped) {
+-		erofs_put_pcpubuf(vin);
+-	} else {
+-		if (clusterpages == 1)
+-			kunmap_atomic(vin);
+-		else
+-			erofs_vunmap(vin, clusterpages);
+-	}
+-	return ret;
+-}
+-
+-- 
+2.17.1
 
