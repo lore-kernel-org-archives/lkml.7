@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922F6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0990AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6747821537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF00821530
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054150;
-	bh=tyn+vjND89cxEEg4dbJuvH875U8UwyCD/azAxR8/dPA=;
+	s=default; t=1561054153;
+	bh=3D4Kpx+QNbthar338sCX16nHAl5MKv+8BJWRznGhCFw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=MKkQ8CFRJiTfs+0T9TUNeDHDEBx/VZ+iD5qJtlbp0IT/iay79N5jk49B2DVnnnE2c
-	 LhKKsZEIgQHkfCZDilwSKSrZoztg9u0/N5PbJ/Tx6g76n1E/qGWjLMMZydW6dQ02Jy
-	 txWebOUaqRrUsGnFkYF9muSRXl9YFT186GWVtcHk=
+	b=vwO7XC3Dld+2Gnn6SHgD8SbfW/HqDINujotpdE2kuFAe8cShDNyD/S/s05AacK6Ak
+	 FrJlmJvzirOUE5FY0E+JkmCDie4e/smvdK7OhSEOg7YI8kCDfKT1c3DM/pbllOgWsl
+	 rKdX2jR5+7wmcE8OkqViP9ODCMpsZBlZXfqM5luo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728243AbfFTSJI (ORCPT
+        id S1728605AbfFTSJM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:09:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36516 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:09:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728562AbfFTSJF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:09:05 -0400
+        id S1726954AbfFTSJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:09:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 61A352070B;
-        Thu, 20 Jun 2019 18:09:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E59E2070B;
+        Thu, 20 Jun 2019 18:09:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054144;
-        bh=tyn+vjND89cxEEg4dbJuvH875U8UwyCD/azAxR8/dPA=;
+        s=default; t=1561054147;
+        bh=3D4Kpx+QNbthar338sCX16nHAl5MKv+8BJWRznGhCFw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GnsYQGkQ/9cx0+qXO77GfzDABRrPMvjUVHNgGloiCnLZPGozK57749lLECtStxrLz
-         y/MkIpFg4isJmRF9XtvAjJ7PzZdSsnOKfSMKmmclCIjjx/bKx2PtJsuT9264Srq4yD
-         BJMa/6gwaQmp8vko4J27kxrpf7v+Chk/h36G58Nc=
+        b=J+8xyHnRN6atXPpueQU4glNue9vsIS7QzShu5WPYhCxWzkPETT8zHPV4NIuUDAIl4
+         wvlPW8xqNSoXWsrqa49E4/GsoaHONvdMd9F0WPb0NtFlKQumoA5dEnTylQ5agU/wJw
+         7bK4DWQrarzamKHkJNRyty7EwogjyQrNkCwyZ/EE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Uvarov <muvarov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 34/45] net: phy: dp83867: Set up RGMII TX delay
-Date:   Thu, 20 Jun 2019 19:57:36 +0200
-Message-Id: <20190620174339.638301075@linuxfoundation.org>
+Subject: [PATCH 4.14 35/45] scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
+Date:   Thu, 20 Jun 2019 19:57:37 +0200
+Message-Id: <20190620174339.732810922@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -61,37 +60,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b892649254fec01678c64f16427622b41fa27f4 ]
+[ Upstream commit cc555759117e8349088e0c5d19f2f2a500bafdbd ]
 
-PHY_INTERFACE_MODE_RGMII_RXID is less then TXID
-so code to set tx delay is never called.
+ip_dev_find() can return NULL so add a check for NULL pointer.
 
-Fixes: 2a10154abcb75 ("net: phy: dp83867: Add TI dp83867 phy")
-Signed-off-by: Max Uvarov <muvarov@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Varun Prakash <varun@chelsio.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/scsi/cxgbi/libcxgbi.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index c1ab976cc800..12b09e6e03ba 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -249,10 +249,8 @@ static int dp83867_config_init(struct phy_device *phydev)
- 		ret = phy_write(phydev, MII_DP83867_PHYCTRL, val);
- 		if (ret)
- 			return ret;
--	}
+diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
+index 512c8f1ea5b0..902f5e03ec94 100644
+--- a/drivers/scsi/cxgbi/libcxgbi.c
++++ b/drivers/scsi/cxgbi/libcxgbi.c
+@@ -640,6 +640,10 @@ cxgbi_check_route(struct sockaddr *dst_addr, int ifindex)
  
--	if ((phydev->interface >= PHY_INTERFACE_MODE_RGMII_ID) &&
--	    (phydev->interface <= PHY_INTERFACE_MODE_RGMII_RXID)) {
-+		/* Set up RGMII delays */
- 		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL);
- 
- 		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
+ 	if (ndev->flags & IFF_LOOPBACK) {
+ 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
++		if (!ndev) {
++			err = -ENETUNREACH;
++			goto rel_neigh;
++		}
+ 		mtu = ndev->mtu;
+ 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
+ 			n->dev->name, ndev->name, mtu);
 -- 
 2.20.1
 
