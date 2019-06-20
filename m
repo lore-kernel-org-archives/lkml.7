@@ -2,100 +2,102 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E9CAC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:56:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C29AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:57:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9BA82082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:56:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3286F20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:57:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="WvbjEEN9"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="bFe5M5Vi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732087AbfFTP4g (ORCPT
+        id S1727042AbfFTP5X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:56:36 -0400
-Received: from conssluserg-06.nifty.com ([210.131.2.91]:17720 "EHLO
-        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfFTP4e (ORCPT
+        Thu, 20 Jun 2019 11:57:23 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:33360 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfFTP5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:56:34 -0400
-Received: from mail-ua1-f43.google.com (mail-ua1-f43.google.com [209.85.222.43]) (authenticated)
-        by conssluserg-06.nifty.com with ESMTP id x5KFu6Bj010469;
-        Fri, 21 Jun 2019 00:56:07 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x5KFu6Bj010469
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561046167;
-        bh=/SBC/ErF1nFpyiXBhAuy1Wqj2LZ/8UBCgJRAboZq6yo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=WvbjEEN92L6uK8imEB3/Clr22Cbq85rfco9bP3QdhNn8AubOy9F6QVl4akFnyur9Q
-         reFZ+2//wELmrE644LhkUg4SnV4kZW94Fu/qHTtzZtZI8nZvQsWlXAzITvqfyxtroX
-         acSWofBt40MoJG98hvQoJI+xhqD9wBgIEJRvQJNhxBQBufBbdMuVakY+v1JAzOPK83
-         AxNnR1TEfIMqGJkdBGgdyaPRE27P/uIdCQLCvM9O9cnuSoFHh3zAAIb/7JYeG4hKDN
-         /uz5kUG1o9NBkyrMLW+m+jl02SmnLgLQqP0PMGtG+cj7/Hh9Ux4Rdwx9H6OTQIeC8r
-         NM/Z3FN+CxY0g==
-X-Nifty-SrcIP: [209.85.222.43]
-Received: by mail-ua1-f43.google.com with SMTP id j2so1843103uaq.5;
-        Thu, 20 Jun 2019 08:56:07 -0700 (PDT)
-X-Gm-Message-State: APjAAAVwrLe7xEYIeUkTe2pEwBh0Op6g9RwlUnQIU3XsYMFofO/9AqZx
-        HS/Ehpgc124bv9Hmle+ZEKKjWRknsJZuXO4rxL8=
-X-Google-Smtp-Source: APXvYqw9io0OhojFdnLCIqaFQ/XxRfL6y/h1TwOKeVujgIuINeOVwXWREdRUnplje5m3wVqCTA0lZ3ynTfgzt/cn1uU=
-X-Received: by 2002:ab0:2b0a:: with SMTP id e10mr39878064uar.109.1561046166280;
- Thu, 20 Jun 2019 08:56:06 -0700 (PDT)
+        Thu, 20 Jun 2019 11:57:23 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h10so3232192ljg.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=jWGyLei7iIX0YquCcpJVdvUVmyD9HHcydfLdWLV6VdQ=;
+        b=bFe5M5Viz6mhTHKLXiMPTsQHKWSneXU/P32CqJMYYaptrO+yxI3A5ZHrwgrV2u0KS5
+         rMgI+Roe2+x3nxcZJ1pksI2BGPwWFMRIupONO1kQiB3020Q2Rgino0w1y37GLCitolpZ
+         audrqCWFZ8YkyqtOjHihYhu0nEmriemTSSrqQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=jWGyLei7iIX0YquCcpJVdvUVmyD9HHcydfLdWLV6VdQ=;
+        b=Ypt8zydfKNu08edY6eBbeqOImPsqTqFtLiMaGWZ38aFNelZfDgS9IlEWVYYoi3263m
+         RKbM3uO7Q/2oMAvc7/77aO2aUYHfrWKANcJ8SY/GIaAi9U1YAeuAmfmPzEf28U1/FzSu
+         /GJy3PTu2FNsy3pmNpqJ7dnBsqojMgJuDimuFBmPSejln5z0Jb6vx79/YW2v89TgiW/P
+         hlRmBd045vp3rn9XLDGtWTbdNm8BotdbkN/bffTNCa3UTR8R7fhc1DcsKBQXluzVfhTK
+         YzSrOVHwg8TBX2rHR2NzEjj6cjZ8iZomoXI+Rv0qO8oRiAQC/NDyGP1/9YsztBUrgXnx
+         Ye0A==
+X-Gm-Message-State: APjAAAUPbWUjNf8POhNa1c8DvfvbUKP0KVIW4XhBjZ/ErAc1FeBGuk19
+        kzdoryYp7VoM7vzcP2AhuXqBm8GXnuW1NXBdIpFduA==
+X-Google-Smtp-Source: APXvYqwrlNR3lH/4m9IeD5Bkl0pzlV3Ska/rPfDDBMmGCP6oxktUzG4DNWPlJ52+fxSnzyurONehOvGDKpiTNUq3KkQ=
+X-Received: by 2002:a2e:3602:: with SMTP id d2mr7778406lja.112.1561046240877;
+ Thu, 20 Jun 2019 08:57:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190616174805.3069-1-yamada.masahiro@socionext.com>
-In-Reply-To: <20190616174805.3069-1-yamada.masahiro@socionext.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 21 Jun 2019 00:55:30 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ9qmDu3NxM+unF4=EBy1Dt3gvYRGM3hLUAF3wGBqy8cA@mail.gmail.com>
-Message-ID: <CAK7LNAQ9qmDu3NxM+unF4=EBy1Dt3gvYRGM3hLUAF3wGBqy8cA@mail.gmail.com>
-Subject: Re: [PATCH 1/2] lib/raid6: remove duplicated CFLAGS_REMOVE_altivec8.o
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
-        Stefan Agner <stefan@agner.ch>, Joel Stanley <joel@jms.id.au>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>
+References: <20190603053655.127730-1-minchan@kernel.org> <20190603053655.127730-2-minchan@kernel.org>
+ <20190604203841.GC228607@google.com> <20190610100904.GC55602@google.com>
+ <20190612172104.GA125771@google.com> <20190613044824.GF55602@google.com>
+ <20190619171340.GA83620@google.com> <20190620050132.GC105727@google.com>
+In-Reply-To: <20190620050132.GC105727@google.com>
+From:   Joel Fernandes <joel@joelfernandes.org>
+Date:   Thu, 20 Jun 2019 11:57:09 -0400
+Message-ID: <CAEXW_YSY2GgW_Fp6VN2Qrf0Gr8c71DUgoTzZoq-V2=jFgDEDvQ@mail.gmail.com>
+Subject: Re: [PATCH v1 1/4] mm: introduce MADV_COLD
+To:     Minchan Kim <minchan@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Christian Brauner <christian@brauner.io>, oleksandr@redhat.com,
+        hdanton@sina.com, Vladimir Davydov <vdavydov.dev@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 2:50 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
+On Thu, Jun 20, 2019 at 1:01 AM Minchan Kim <minchan@kernel.org> wrote:
+[snip]
+> > > >
+> > > > I think to fix this, what you should do is clear the PG_Idle flag if the
+> > > > young/accessed PTE bits are set. If PG_Idle is already cleared, then you
+> > > > don't need to do anything.
+> > >
+> > > I'm not sure. What does it make MADV_COLD special?
+> > > How about MADV_FREE|MADV_DONTNEED?
+> > > Why don't they clear PG_Idle if pte was young at tearing down pte?
+> >
+> > Good point, so it sounds like those (MADV_FREE|MADV_DONTNEED) also need to be fixed then?
 >
-> No intended change in behavior.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
+> Not sure. If you want it, maybe you need to fix every pte clearing and pte_mkold
+> part, which is more general to cover every sites like munmap, get_user_pages and
+> so on. Anyway, I don't think it's related to this patchset.
 
-Applied to linux-kbuild.
+Ok, I can look into this issue on my own when I get time. I'll add it
+to my list. No problems with your patch otherwise from my side.
 
-
->  lib/raid6/Makefile | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/lib/raid6/Makefile b/lib/raid6/Makefile
-> index e723eacf7868..74004037033f 100644
-> --- a/lib/raid6/Makefile
-> +++ b/lib/raid6/Makefile
-> @@ -26,7 +26,6 @@ CFLAGS_REMOVE_altivec1.o  += -msoft-float
->  CFLAGS_REMOVE_altivec2.o  += -msoft-float
->  CFLAGS_REMOVE_altivec4.o  += -msoft-float
->  CFLAGS_REMOVE_altivec8.o  += -msoft-float
-> -CFLAGS_REMOVE_altivec8.o  += -msoft-float
->  CFLAGS_REMOVE_vpermxor1.o += -msoft-float
->  CFLAGS_REMOVE_vpermxor2.o += -msoft-float
->  CFLAGS_REMOVE_vpermxor4.o += -msoft-float
-> --
-> 2.17.1
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+ -Joel
