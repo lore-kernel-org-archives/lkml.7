@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ED65C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E100C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AD46214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5C5F2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053921;
-	bh=MJE0HAq12zyKKz3lrXSzxezCIdo/FxGye4GRmSXfdMY=;
+	s=default; t=1561053931;
+	bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kp/J3lZGFJaF5TG96pYyuZpuIW5ISNOJo6wgck5coRJmlSfBWks4nIEHe25xMRQ/I
-	 0mOSGBtcOGu61881qT82rZL9OqO1VDcUCW4z9EsKpwpKL6YsaPmsIqmepVTMfvs+HT
-	 u3LcZlhguIl3ugv3+DC0nFwhJ/YbBKJuHVQskBro=
+	b=m/YMKHPAYL77FwVwiARmO0+RvhKedprVqdUHsQ8xmKqrX/eJP9UlQTAhnsvX1Pxn1
+	 r3KWStY7q179INqE8hpzFNTcQDM6GPRNd4wCQtpo/6U3mIavTfWXqPk06jCokSou5C
+	 mJqRUMpFjPXDsqSlXkpaUYesVbMjr3J9PblLmJJk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728015AbfFTSFU (ORCPT
+        id S1728056AbfFTSF3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:05:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58454 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:05:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58868 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfFTSFQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:16 -0400
+        id S1726155AbfFTSF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6ABD52089C;
-        Thu, 20 Jun 2019 18:05:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E76E521479;
+        Thu, 20 Jun 2019 18:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053914;
-        bh=MJE0HAq12zyKKz3lrXSzxezCIdo/FxGye4GRmSXfdMY=;
+        s=default; t=1561053926;
+        bh=OwZ0qLFkEiHNIobShGBggg/4oh/hdfHyky43omuQniU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GdOIRZrrfSvoW/kBlw0Tz2Y0qTVUDETlMuLZkfQduWCLOCGXhT/cAPEXwvpgbpT+B
-         p40qxC0zddg+xurTr0/QZQfqvqCwIcRd5/+bUwnW3LNzL3gBcVTfLs/F5IgG9pL+/c
-         HikYMT7RmVBRm3ewGeY6OhvPRL8F0QPBI7tLTmyM=
+        b=UmeplU1bfZvxXon5noBscFNaLXmaxLliIuyKnLasNsEV5EekdedMzCEX/0CC3jz4Y
+         ovxO6Inzf734JZwov/j8XVnpYcJtiviSxhaOfcZF0ScT51I13fWwwR7EDvUPDKHCWX
+         6drTKvIiQeM7HxGHJCxkQSL53EXDLUxxZCEuwOhI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+9437020c82413d00222d@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 071/117] ALSA: seq: Fix race of get-subscription call vs port-delete ioctls
-Date:   Thu, 20 Jun 2019 19:56:45 +0200
-Message-Id: <20190620174356.905268478@linuxfoundation.org>
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Aditya Pakki <pakki001@umn.edu>,
+        Ferenc Bakonyi <fero@drama.obuda.kando.hu>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 046/117] video: hgafb: fix potential NULL pointer dereference
+Date:   Thu, 20 Jun 2019 19:56:20 +0200
+Message-Id: <20190620174354.722730893@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,100 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2eabc5ec8ab4d4748a82050dfcb994119b983750 ]
+[ Upstream commit ec7f6aad57ad29e4e66cc2e18e1e1599ddb02542 ]
 
-The snd_seq_ioctl_get_subscription() retrieves the port subscriber
-information as a pointer, while the object isn't protected, hence it
-may be deleted before the actual reference.  This race was spotted by
-syzkaller and may lead to a UAF.
+When ioremap fails, hga_vram should not be dereferenced. The fix
+check the failure to avoid NULL pointer dereference.
 
-The fix is simply copying the data in the lookup function that
-performs in the rwsem to protect against the deletion.
-
-Reported-by: syzbot+9437020c82413d00222d@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Cc: Aditya Pakki <pakki001@umn.edu>
+Cc: Ferenc Bakonyi <fero@drama.obuda.kando.hu>
+[b.zolnierkie: minor patch summary fixup]
+Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/seq/seq_clientmgr.c | 10 ++--------
- sound/core/seq/seq_ports.c     | 13 ++++++++-----
- sound/core/seq/seq_ports.h     |  5 +++--
- 3 files changed, 13 insertions(+), 15 deletions(-)
+ drivers/video/fbdev/hgafb.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
-index 3b1b2e9fb33e..881c965555c5 100644
---- a/sound/core/seq/seq_clientmgr.c
-+++ b/sound/core/seq/seq_clientmgr.c
-@@ -1905,20 +1905,14 @@ static int snd_seq_ioctl_get_subscription(struct snd_seq_client *client,
- 	int result;
- 	struct snd_seq_client *sender = NULL;
- 	struct snd_seq_client_port *sport = NULL;
--	struct snd_seq_subscribers *p;
+diff --git a/drivers/video/fbdev/hgafb.c b/drivers/video/fbdev/hgafb.c
+index 463028543173..59e1cae57948 100644
+--- a/drivers/video/fbdev/hgafb.c
++++ b/drivers/video/fbdev/hgafb.c
+@@ -285,6 +285,8 @@ static int hga_card_detect(void)
+ 	hga_vram_len  = 0x08000;
  
- 	result = -EINVAL;
- 	if ((sender = snd_seq_client_use_ptr(subs->sender.client)) == NULL)
- 		goto __end;
- 	if ((sport = snd_seq_port_use_ptr(sender, subs->sender.port)) == NULL)
- 		goto __end;
--	p = snd_seq_port_get_subscription(&sport->c_src, &subs->dest);
--	if (p) {
--		result = 0;
--		*subs = p->info;
--	} else
--		result = -ENOENT;
--
-+	result = snd_seq_port_get_subscription(&sport->c_src, &subs->dest,
-+					       subs);
-       __end:
-       	if (sport)
- 		snd_seq_port_unlock(sport);
-diff --git a/sound/core/seq/seq_ports.c b/sound/core/seq/seq_ports.c
-index a42e2ce4a726..9cfe4fcee9a5 100644
---- a/sound/core/seq/seq_ports.c
-+++ b/sound/core/seq/seq_ports.c
-@@ -635,20 +635,23 @@ int snd_seq_port_disconnect(struct snd_seq_client *connector,
+ 	hga_vram = ioremap(0xb0000, hga_vram_len);
++	if (!hga_vram)
++		goto error;
  
- 
- /* get matched subscriber */
--struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
--							  struct snd_seq_addr *dest_addr)
-+int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
-+				  struct snd_seq_addr *dest_addr,
-+				  struct snd_seq_port_subscribe *subs)
- {
--	struct snd_seq_subscribers *s, *found = NULL;
-+	struct snd_seq_subscribers *s;
-+	int err = -ENOENT;
- 
- 	down_read(&src_grp->list_mutex);
- 	list_for_each_entry(s, &src_grp->list_head, src_list) {
- 		if (addr_match(dest_addr, &s->info.dest)) {
--			found = s;
-+			*subs = s->info;
-+			err = 0;
- 			break;
- 		}
- 	}
- 	up_read(&src_grp->list_mutex);
--	return found;
-+	return err;
- }
- 
- /*
-diff --git a/sound/core/seq/seq_ports.h b/sound/core/seq/seq_ports.h
-index 26bd71f36c41..06003b36652e 100644
---- a/sound/core/seq/seq_ports.h
-+++ b/sound/core/seq/seq_ports.h
-@@ -135,7 +135,8 @@ int snd_seq_port_subscribe(struct snd_seq_client_port *port,
- 			   struct snd_seq_port_subscribe *info);
- 
- /* get matched subscriber */
--struct snd_seq_subscribers *snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
--							  struct snd_seq_addr *dest_addr);
-+int snd_seq_port_get_subscription(struct snd_seq_port_subs_info *src_grp,
-+				  struct snd_seq_addr *dest_addr,
-+				  struct snd_seq_port_subscribe *subs);
- 
- #endif
+ 	if (request_region(0x3b0, 12, "hgafb"))
+ 		release_io_ports = 1;
 -- 
 2.20.1
 
