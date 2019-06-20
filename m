@@ -7,53 +7,59 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715D0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BCD3C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514D620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B7BB20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055380;
-	bh=CuS6uZSJ7lgfSoK+W+xGUsXBrvbKOJRcbUYbcj8uS5c=;
+	s=default; t=1561055386;
+	bh=9ILV0qZdYSPQfsZN8NIEhh7P6Txnpp2ubkaKlPVNgOw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vl5CH8RDm6coIyVQ09FC6brPn/Hvl3LdRkQzGp+ALrw7qzHhI5kvK9tM+XbYAVFT2
-	 KZGDT/aIN5kGg6yfjMssBFIrY/2iHxkWufdw3rUXnoh8vUZS8lvVeEePLBuT6L3vVi
-	 y/lnCmZJe9bP0FgwHEh6HCKgVDG9hXZnPmc8/2TM=
+	b=PUnqBNkbbybpK9PXZAZPwo4wHYbHw0MSr7K1HocA/PVxcbollwcI5SnVoRp2HFT50
+	 WX626ffnpIvaRRp/6LkMHVwc5NqwwPMKDsLbufVlC4TMvr1FxeIT0n3r17/ld0UoZF
+	 AVtNrwa6B7GUPxjffyBuxigt58H73F2WdahH0pHM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727798AbfFTS3j (ORCPT
+        id S1727835AbfFTS3o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:29:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52748 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:29:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727418AbfFTSCU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:02:20 -0400
+        id S1726672AbfFTSCG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:02:06 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D1932084A;
-        Thu, 20 Jun 2019 18:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1F64120B1F;
+        Thu, 20 Jun 2019 18:02:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053740;
-        bh=CuS6uZSJ7lgfSoK+W+xGUsXBrvbKOJRcbUYbcj8uS5c=;
+        s=default; t=1561053725;
+        bh=9ILV0qZdYSPQfsZN8NIEhh7P6Txnpp2ubkaKlPVNgOw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GeOcTmw+vovFMsj5jM7KfT/96BCBT8jq1/4uH5JevaqBuGifPwU9jQu9bZAp1j87O
-         rSjUl2Mg0n1jn4oClKL29Y+xTdJPLYxMwmElhDE2fYYBJU1pGb7rxApfhfb4ZFp+IP
-         iYjHG7gY25l7myNUmVZDbrqimCu3qT2isacyER7w=
+        b=ran+c3QUHteDpi03qN68atFzB7AW5U88afPONmvaVbYsGqC7aujrVGGifJP9TC1Fi
+         NzGBNkbQa5IuO+jVcN3f/Hje+nekPJFS4n2hVoUBtFXbyyrR3tsOAYuEMZ+AtiYuEG
+         Ofh9Zk3jcryN7+TsueVxcN/Y3RzxaCNp00Kb67R8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 002/117] fs/fat/file.c: issue flush after the writeback of FAT
-Date:   Thu, 20 Jun 2019 19:55:36 +0200
-Message-Id: <20190620174352.105648515@linuxfoundation.org>
+        Namhyung Kim <namhyung@kernel.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, mark.rutland@arm.com,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 71/84] perf/ring_buffer: Fix exposing a temporarily decreased data_head
+Date:   Thu, 20 Jun 2019 19:57:08 +0200
+Message-Id: <20190620174348.682271926@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
-References: <20190620174351.964339809@linuxfoundation.org>
+In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
+References: <20190620174337.538228162@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -63,52 +69,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
+[ Upstream commit 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53 ]
 
-fsync() needs to make sure the data & meta-data of file are persistent
-after the return of fsync(), even when a power-failure occurs later.  In
-the case of fat-fs, the FAT belongs to the meta-data of file, so we need
-to issue a flush after the writeback of FAT instead before.
+In perf_output_put_handle(), an IRQ/NMI can happen in below location and
+write records to the same ring buffer:
 
-Also bail out early when any stage of fsync fails.
+	...
+	local_dec_and_test(&rb->nest)
+	...                          <-- an IRQ/NMI can happen here
+	rb->user_page->data_head = head;
+	...
 
-Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
-Signed-off-by: Hou Tao <houtao1@huawei.com>
-Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Jan Kara <jack@suse.cz>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+In this case, a value A is written to data_head in the IRQ, then a value
+B is written to data_head after the IRQ. And A > B. As a result,
+data_head is temporarily decreased from A to B. And a reader may see
+data_head < data_tail if it read the buffer frequently enough, which
+creates unexpected behaviors.
+
+This can be fixed by moving dec(&rb->nest) to after updating data_head,
+which prevents the IRQ/NMI above from updating data_head.
+
+[ Split up by peterz. ]
+
+Signed-off-by: Yabin Cui <yabinc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: mark.rutland@arm.com
+Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
+Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/fat/file.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
+ 1 file changed, 20 insertions(+), 4 deletions(-)
 
-diff --git a/fs/fat/file.c b/fs/fat/file.c
-index 3d04b124bce0..392ec5641f38 100644
---- a/fs/fat/file.c
-+++ b/fs/fat/file.c
-@@ -160,12 +160,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
- int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
- {
- 	struct inode *inode = filp->f_mapping->host;
--	int res, err;
-+	int err;
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index 7324d83d6bd8..70e31c48ae9b 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -52,11 +52,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	head = local_read(&rb->head);
+ 
+ 	/*
+-	 * IRQ/NMI can happen here, which means we can miss a head update.
++	 * IRQ/NMI can happen here and advance @rb->head, causing our
++	 * load above to be stale.
+ 	 */
+ 
+-	if (!local_dec_and_test(&rb->nest))
++	/*
++	 * If this isn't the outermost nesting, we don't have to update
++	 * @rb->user_page->data_head.
++	 */
++	if (local_read(&rb->nest) > 1) {
++		local_dec(&rb->nest);
+ 		goto out;
++	}
+ 
+ 	/*
+ 	 * Since the mmap() consumer (userspace) can run on a different CPU:
+@@ -88,9 +95,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	rb->user_page->data_head = head;
+ 
+ 	/*
+-	 * Now check if we missed an update -- rely on previous implied
+-	 * compiler barriers to force a re-read.
++	 * We must publish the head before decrementing the nest count,
++	 * otherwise an IRQ/NMI can publish a more recent head value and our
++	 * write will (temporarily) publish a stale value.
++	 */
++	barrier();
++	local_set(&rb->nest, 0);
 +
-+	err = __generic_file_fsync(filp, start, end, datasync);
-+	if (err)
-+		return err;
- 
--	res = generic_file_fsync(filp, start, end, datasync);
- 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
-+	if (err)
-+		return err;
- 
--	return res ? res : err;
-+	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
- }
- 
- 
++	/*
++	 * Ensure we decrement @rb->nest before we validate the @rb->head.
++	 * Otherwise we cannot be sure we caught the 'last' nested update.
+ 	 */
++	barrier();
+ 	if (unlikely(head != local_read(&rb->head))) {
+ 		local_inc(&rb->nest);
+ 		goto again;
 -- 
 2.20.1
 
