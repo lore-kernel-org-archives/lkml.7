@@ -2,185 +2,186 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E25C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:51:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCD9C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:55:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 881422083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:51:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF8AC2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:55:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NQ1so63d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730487AbfFTJvr (ORCPT
+        id S1730848AbfFTJz5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:51:47 -0400
-Received: from mga03.intel.com ([134.134.136.65]:54789 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726082AbfFTJvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:51:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 02:51:46 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
-   d="scan'208";a="165272403"
-Received: from lxy-dell.sh.intel.com ([10.239.159.145])
-  by orsmga006.jf.intel.com with ESMTP; 20 Jun 2019 02:51:43 -0700
-Message-ID: <b2cfa1d015315c74af6cee1c00185e5c68cfa397.camel@linux.intel.com>
-Subject: Re: [PATCH v5 2/3] KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-To:     Tao Xu <tao3.xu@intel.com>, pbonzini@redhat.com,
-        rkrcmar@redhat.com, corbet@lwn.net, tglx@linutronix.de,
-        mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        sean.j.christopherson@intel.com
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        fenghua.yu@intel.com, jingqi.liu@intel.com
-Date:   Thu, 20 Jun 2019 17:46:45 +0800
-In-Reply-To: <20190620084620.17974-3-tao3.xu@intel.com>
-References: <20190620084620.17974-1-tao3.xu@intel.com>
-         <20190620084620.17974-3-tao3.xu@intel.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5 (3.28.5-2.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Thu, 20 Jun 2019 05:55:57 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:42956 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726082AbfFTJz5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:55:57 -0400
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5K9tfj3111742;
+        Thu, 20 Jun 2019 04:55:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1561024541;
+        bh=gMzqG6E9O4i2YfBt81xekJ8pv03pPdWDJCxTqsWo7G0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=NQ1so63dygklF44KpEHQFiJ65zCl0/AG3QG3xL6D2Q80yRU4yN1Xr7yF7OXemcQ/g
+         L/6fgj0DcUkGXq9jDqzNfvHqmJLecmfbVOYF2e0EhgDKIlQ/N3PvauhHr48h0H6+Um
+         6Erh7jeFw3aOiugZPDZqfCMIL+NMlwhgpUM63Nuk=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5K9tfcN086307
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 20 Jun 2019 04:55:41 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 20
+ Jun 2019 04:55:41 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Thu, 20 Jun 2019 04:55:41 -0500
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5K9tciC018188;
+        Thu, 20 Jun 2019 04:55:38 -0500
+Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
+To:     Rob Herring <robh@kernel.org>
+CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
+        Santosh Shilimkar <ssantosh@kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
+        <dmaengine@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Grygorii Strashko <grygorii.strashko@ti.com>,
+        Lokesh Vutla <lokeshvutla@ti.com>,
+        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
+References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
+ <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
+ <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
+ <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
+ <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
+ <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <f7bb4e82-95ea-a043-e2b1-f429b16642ba@ti.com>
+Date:   Thu, 20 Jun 2019 12:56:16 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
+MIME-Version: 1.0
+In-Reply-To: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 16:46 +0800, Tao Xu wrote:
-> UMWAIT and TPAUSE instructions use IA32_UMWAIT_CONTROL at MSR index E1H
-> to determines the maximum time in TSC-quanta that the processor can reside
-> in either C0.1 or C0.2.
-> 
-> This patch emulates MSR IA32_UMWAIT_CONTROL in guest and differentiate
-> IA32_UMWAIT_CONTROL between host and guest. The variable
-> mwait_control_cached in arch/x86/power/umwait.c caches the MSR value, so
-> this patch uses it to avoid frequently rdmsr of IA32_UMWAIT_CONTROL.
-> 
-> Co-developed-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Jingqi Liu <jingqi.liu@intel.com>
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
-> ---
-> 
-> Changes in v5:
-> 	remove vmx_waitpkg_supported() to fix guest can rdmsr or wrmsr
-> 	when the feature is off (Xiaoyao)
-> 	remove the atomic_switch_ia32_umwait_control() and move the
-> 	codes into vmx_set_msr()
-> 	rebase the patch because the kernel dependcy patch updated to
-> 	v5: https://lkml.org/lkml/2019/6/19/972
-> ---
->  arch/x86/kernel/cpu/umwait.c |  3 ++-
->  arch/x86/kvm/vmx/vmx.c       | 24 ++++++++++++++++++++++++
->  arch/x86/kvm/vmx/vmx.h       |  3 +++
->  arch/x86/kvm/x86.c           |  1 +
->  4 files changed, 30 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-> index 4b2aff7b2d4d..db5c193ef136 100644
-> --- a/arch/x86/kernel/cpu/umwait.c
-> +++ b/arch/x86/kernel/cpu/umwait.c
-> @@ -15,7 +15,8 @@
->   * MSR value. By default, umwait max time is 100000 in TSC-quanta and C0.2
->   * is enabled
->   */
-> -static u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000,
-> UMWAIT_C02_ENABLED);
-> +u32 umwait_control_cached = UMWAIT_CTRL_VAL(100000, UMWAIT_C02_ENABLED);
-> +EXPORT_SYMBOL_GPL(umwait_control_cached);
->  
->  /*
->   * Serialize access to umwait_control_cached and IA32_UMWAIT_CONTROL MSR
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b35bfac30a34..0fb55c8426e2 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1679,6 +1679,12 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct
-> msr_data *msr_info)
->  #endif
->  	case MSR_EFER:
->  		return kvm_get_msr_common(vcpu, msr_info);
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
-> +			return 1;
-> +
-> +		msr_info->data = vmx->msr_ia32_umwait_control;
-> +		break;
->  	case MSR_IA32_SPEC_CTRL:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -1841,6 +1847,22 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct
-> msr_data *msr_info)
->  			return 1;
->  		vmcs_write64(GUEST_BNDCFGS, data);
->  		break;
-> +	case MSR_IA32_UMWAIT_CONTROL:
-> +		if (!guest_cpuid_has(vcpu, X86_FEATURE_WAITPKG))
-> +			return 1;
-> +
-> +		/* The reserved bit IA32_UMWAIT_CONTROL[1] should be zero */
-> +		if (data & BIT_ULL(1))
-> +			return 1;
-> +
-> +		vmx->msr_ia32_umwait_control = data;
-> +		if (vmx->msr_ia32_umwait_control != umwait_control_cached)
-> +			add_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL,
-> +				vmx->msr_ia32_umwait_control,
-> +				umwait_control_cached, false);
-> +		else
-> +			clear_atomic_switch_msr(vmx, MSR_IA32_UMWAIT_CONTROL);
 
-You cannot put the atomic switch here. What if umwait_control_cached is changed
-at runtime? Host kernel patch exposed a sysfs interface to let it happen.
 
-> +		break;
->  	case MSR_IA32_SPEC_CTRL:
->  		if (!msr_info->host_initiated &&
->  		    !guest_cpuid_has(vcpu, X86_FEATURE_SPEC_CTRL))
-> @@ -4126,6 +4148,8 @@ static void vmx_vcpu_reset(struct kvm_vcpu *vcpu, bool
-> init_event)
->  	vmx->rmode.vm86_active = 0;
->  	vmx->spec_ctrl = 0;
->  
-> +	vmx->msr_ia32_umwait_control = 0;
-> +
->  	vcpu->arch.microcode_version = 0x100000000ULL;
->  	vmx->vcpu.arch.regs[VCPU_REGS_RDX] = get_rdx_init_val();
->  	kvm_set_cr8(vcpu, 0);
-> diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-> index 61128b48c503..8485bec7c38a 100644
-> --- a/arch/x86/kvm/vmx/vmx.h
-> +++ b/arch/x86/kvm/vmx/vmx.h
-> @@ -14,6 +14,8 @@
->  extern const u32 vmx_msr_index[];
->  extern u64 host_efer;
->  
-> +extern u32 umwait_control_cached;
-> +
->  #define MSR_TYPE_R	1
->  #define MSR_TYPE_W	2
->  #define MSR_TYPE_RW	3
-> @@ -194,6 +196,7 @@ struct vcpu_vmx {
->  #endif
->  
->  	u64		      spec_ctrl;
-> +	u64		      msr_ia32_umwait_control;
->  
->  	u32 vm_entry_controls_shadow;
->  	u32 vm_exit_controls_shadow;
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 83aefd759846..4480de459bf4 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -1138,6 +1138,7 @@ static u32 msrs_to_save[] = {
->  	MSR_IA32_RTIT_ADDR1_A, MSR_IA32_RTIT_ADDR1_B,
->  	MSR_IA32_RTIT_ADDR2_A, MSR_IA32_RTIT_ADDR2_B,
->  	MSR_IA32_RTIT_ADDR3_A, MSR_IA32_RTIT_ADDR3_B,
-> +	MSR_IA32_UMWAIT_CONTROL,
->  };
->  
->  static unsigned num_msrs_to_save;
+On 19/06/2019 17.04, Rob Herring wrote:
+> On Fri, Jun 14, 2019 at 7:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>
+>>
+>> On 14/06/2019 16.20, Rob Herring wrote:
+>>> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+>>>>
+>>>> Rob,
+>>>>
+>>>> On 13/06/2019 21.16, Rob Herring wrote:
+>>>>>> +Remote PSI-L endpoint
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +--------------------
+>>>>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
+>>>>>> +
+>>>>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
+>>>>>> +ti,psil-configX naming convention, where X is the thread ID offset.
+>>>>>
+>>>>> Don't use vendor prefixes on node names.
+>>>>
+>>>> OK.
+>>>>
+>>>>>> +
+>>>>>> +Configuration node Required properties:
+>>>>>> +--------------------
+>>>>>> +- linux,udma-mode:  Channel mode, can be:
+>>>>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
+>>>>>> +                    - UDMA_TR_MODE: for Third-Party mode
+>>>>>
+>>>>> This is hardly a common linux thing. What determines the value here.
+>>>>
+>>>> Unfortunately it is.
+>>>
+>>> No, it's a feature of your h/w and in no way is something linux
+>>> defined which is the point of 'linux' prefix.
+>>
+>> The channel can be either Packet or TR mode. The HW is really flexible
+>> on this (and on other things as well).
+>> It just happens that Linux need to use specific channels in a specific mode.
+>>
+>> Would it help if we assume that all channels are used in Packet mode,
+>> but we have linux,tr-mode bool to indicate that the given channel in
+>> Linux need to be used in TR mode.
+> 
+> Your use of 'linux' prefix is wrong. Stop using it.
 
+OK, I can not argue with that.
+I'll have 'tr-mode' bool to indicate that the channel should be
+configured in TR mode for the given thread.
+
+>>>> Each channel can be configured to Packet or TR mode. For some
+>>>> peripherals it is true that they only support packet mode, these are the
+>>>> newer PSI-L native peripherals.
+>>>> For these channels a udma-mode property would be correct.
+>>>>
+>>>> But we have legacy peripherals as well and they are serviced by PDMA
+>>>> (which is a native peripheral designed to talk to the given legacy IP).
+>>>> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
+>>>> most cases clear what to use, but for example for audio (McASP) channels
+>>>> Linux is using TR channel because we need cyclic DMA while for example
+>>>> RTOS is using Packet mode as it fits their needs better.
+>>>>
+>>>> Here I need to prefix the udma-mode with linux as the mode is used by
+>>>> Linux, but other OS might opt to use different channel mode.
+>>>
+>>> So you'd need <os>,udma-mode? That doesn't work... If the setting is
+>>> per OS, then it belongs in the OS because the same dtb should work
+>>> across OS's.
+>>
+>> So I should have a table for the thread IDs in the DMA driver and mark
+>> channels as TR or Packet in there for Linux use?
+> 
+> Perhaps. I haven't heard any reasons why you need this in DT. If Linux
+> is dictating the modes, then sounds like it should be in Linux.
+> 
+> But really, I don't fully understand what you are doing here to tell
+> you what to do beyond using 'linux' prefix is wrong.
+
+We have certain peripherals (McASP/UART/McSPI/etc) which is serviced by
+PDMAs to be compatible with the data movement architecture implemented
+within NAVSS.
+Unlike native peripherals, like networking we can configure the UDMAP
+channel to either Packet or TR mode. There are differences between the
+two modes, but the job can be done in both modes.
+In Linux we use TR mode for audio channels as it provides the needed
+functionality we need (efficient cyclic mode, can disable interrupts).
+
+There is no information from the HW on how a given thread is best used
+and other OSs can opt for not optimal use.
+
+But the majority of threads are better served in Packet mode, so adding
+a bool flag to the thread configuration to indicate that TR mode is the
+advised mode for it is perfectly fine.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
