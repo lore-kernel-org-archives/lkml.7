@@ -2,60 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A289DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15411C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E998215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E090820675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054644;
-	bh=CwuNLpEDyUvrUMko3mgZ9Lba9moKYdrcfGPPQ9IkNkE=;
+	s=default; t=1561054648;
+	bh=Hh+/0dLR3lXaoa/X7xixagvLxOl2uk4rmHTiPO7TSgM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jiyYl7TLWVBL6mk5QFpCtqtbtJQzDX0lkDs7fsra07kYG63UjirlSFqkw1PEAPIvK
-	 UgwPkxtMDYpTivdUTMgQX6H9JKOWWJEsOdBiVXqmzjwrZY6X78PcTGJOF4zAwHyl4A
-	 wHK/f+7o9BvNcsfJX1k09T9Tpt14LSatm/1C4KLQ=
+	b=vkyhV0cybiXmr46K/Ud3bVcxNRg3/6Sr4TzYIaeKanHkqzsnZnIG7W9B+td5zBTe/
+	 QrWeWLeYbhMVyeImlEzkO+w2ZduR1ioZ8HmUb8CfJiGzz5kr5cj0UqZKNmzcLx90hf
+	 83QVSSukLYf8kpoYdCl7oI+PEge7Vxme8inj/teU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729926AbfFTSRX (ORCPT
+        id S1729930AbfFTSR0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:17:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729474AbfFTSRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:21 -0400
+        id S1729916AbfFTSRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F306205F4;
-        Thu, 20 Jun 2019 18:17:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D7B922089C;
+        Thu, 20 Jun 2019 18:17:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054639;
-        bh=CwuNLpEDyUvrUMko3mgZ9Lba9moKYdrcfGPPQ9IkNkE=;
+        s=default; t=1561054642;
+        bh=Hh+/0dLR3lXaoa/X7xixagvLxOl2uk4rmHTiPO7TSgM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KMNYbXIvQh+hwlXpwZ+BSiJaDJ0H4et4chUVMF0nO7ZRgoFWBrhmupTbrmqRW+K7L
-         g4ftlZaD0iLszBDI38Ai4p3RjXzVN8kaCYtBwHVchrtLE50Ndjlu67gFCV+aOOshmN
-         daPoDO6//kKz/Wb1wLBuPsq7zqQ5AYJuYo0I+pjA=
+        b=0+hF3n2KU880f5ogHu2bgrBKGHCMh2UogXZ4kIUDQauJyCTOmT4gYoA714fDP8mTt
+         +FcYDj8AUnx8jFfZh09aJ14UmABQsDl2/ySREowq5ekEri5XBXwwUX+un6DPbAZhwu
+         9BSHaT7My8Q6Nj3wyEbIe897dEi6fpeubZz9RWtc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
-        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
-        Hugh Dickins <hughd@google.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Peter Xu <peterx@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.1 98/98] coredump: fix race condition between collapse_huge_page() and core dumping
-Date:   Thu, 20 Jun 2019 19:58:05 +0200
-Message-Id: <20190620174354.374371652@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 79/98] arm64: fix syscall_fn_t type
+Date:   Thu, 20 Jun 2019 19:57:46 +0200
+Message-Id: <20190620174353.242096782@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -68,97 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andrea Arcangeli <aarcange@redhat.com>
+[ Upstream commit 8ef8f368ce72b5e17f7c1f1ef15c38dcfd0fef64 ]
 
-commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
+Syscall wrappers in <asm/syscall_wrapper.h> use const struct pt_regs *
+as the argument type. Use const in syscall_fn_t as well to fix indirect
+call type mismatches with Control-Flow Integrity checking.
 
-When fixing the race conditions between the coredump and the mmap_sem
-holders outside the context of the process, we focused on
-mmget_not_zero()/get_task_mm() callers in 04f5866e41fb70 ("coredump: fix
-race condition between mmget_not_zero()/get_task_mm() and core
-dumping"), but those aren't the only cases where the mmap_sem can be
-taken outside of the context of the process as Michal Hocko noticed
-while backporting that commit to older -stable kernels.
-
-If mmgrab() is called in the context of the process, but then the
-mm_count reference is transferred outside the context of the process,
-that can also be a problem if the mmap_sem has to be taken for writing
-through that mm_count reference.
-
-khugepaged registration calls mmgrab() in the context of the process,
-but the mmap_sem for writing is taken later in the context of the
-khugepaged kernel thread.
-
-collapse_huge_page() after taking the mmap_sem for writing doesn't
-modify any vma, so it's not obvious that it could cause a problem to the
-coredump, but it happens to modify the pmd in a way that breaks an
-invariant that pmd_trans_huge_lock() relies upon.  collapse_huge_page()
-needs the mmap_sem for writing just to block concurrent page faults that
-call pmd_trans_huge_lock().
-
-Specifically the invariant that "!pmd_trans_huge()" cannot become a
-"pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
-
-The coredump will call __get_user_pages() without mmap_sem for reading,
-which eventually can invoke a lockless page fault which will need a
-functional pmd_trans_huge_lock().
-
-So collapse_huge_page() needs to use mmget_still_valid() to check it's
-not running concurrently with the coredump...  as long as the coredump
-can invoke page faults without holding the mmap_sem for reading.
-
-This has "Fixes: khugepaged" to facilitate backporting, but in my view
-it's more a bug in the coredump code that will eventually have to be
-rewritten to stop invoking page faults without the mmap_sem for reading.
-So the long term plan is still to drop all mmget_still_valid().
-
-Link: http://lkml.kernel.org/r/20190607161558.32104-1-aarcange@redhat.com
-Fixes: ba76149f47d8 ("thp: khugepaged")
-Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-Reported-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Michal Hocko <mhocko@suse.com>
-Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Jann Horn <jannh@google.com>
-Cc: Hugh Dickins <hughd@google.com>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Mike Kravetz <mike.kravetz@oracle.com>
-Cc: Peter Xu <peterx@redhat.com>
-Cc: Jason Gunthorpe <jgg@mellanox.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/sched/mm.h |    4 ++++
- mm/khugepaged.c          |    3 +++
- 2 files changed, 7 insertions(+)
+ arch/arm64/include/asm/syscall.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/linux/sched/mm.h
-+++ b/include/linux/sched/mm.h
-@@ -54,6 +54,10 @@ static inline void mmdrop(struct mm_stru
-  * followed by taking the mmap_sem for writing before modifying the
-  * vmas or anything the coredump pretends not to change from under it.
-  *
-+ * It also has to be called when mmgrab() is used in the context of
-+ * the process, but then the mm_count refcount is transferred outside
-+ * the context of the process to run down_write() on that pinned mm.
-+ *
-  * NOTE: find_extend_vma() called from GUP context is the only place
-  * that can modify the "mm" (notably the vm_start/end) under mmap_sem
-  * for reading and outside the context of the process, so it is also
---- a/mm/khugepaged.c
-+++ b/mm/khugepaged.c
-@@ -1004,6 +1004,9 @@ static void collapse_huge_page(struct mm
- 	 * handled by the anon_vma lock + PG_lock.
- 	 */
- 	down_write(&mm->mmap_sem);
-+	result = SCAN_ANY_PROCESS;
-+	if (!mmget_still_valid(mm))
-+		goto out;
- 	result = hugepage_vma_revalidate(mm, address, &vma);
- 	if (result)
- 		goto out;
+diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
+index a179df3674a1..6206ab9bfcfc 100644
+--- a/arch/arm64/include/asm/syscall.h
++++ b/arch/arm64/include/asm/syscall.h
+@@ -20,7 +20,7 @@
+ #include <linux/compat.h>
+ #include <linux/err.h>
+ 
+-typedef long (*syscall_fn_t)(struct pt_regs *regs);
++typedef long (*syscall_fn_t)(const struct pt_regs *regs);
+ 
+ extern const syscall_fn_t sys_call_table[];
+ 
+-- 
+2.20.1
+
 
 
