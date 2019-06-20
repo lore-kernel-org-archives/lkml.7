@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78365C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4160C4646C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 481202084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D212083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053684;
-	bh=8zUxCG6iOG8UzpM1LwJPo1hDPowznZpnbthTMPJGBCs=;
+	s=default; t=1561053688;
+	bh=eqKl0zvJukqapTrsVsf8Glo6wcBxzBGqmpgcdf9rP5E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DiC7U6pG9nejcmdGgn6GyUDt1hKPp/E61w9o6yzKiNdj/9xCpxSSnqU/opftswyXB
-	 t15lQqn4JO3MFZjM4xlbS5T90jO5DbvS3P6kSY0xZl/Z2iHh+XP04KSZzwDXnFmJuY
-	 zwql4vKYybf8rL9GIrgUpFFGK1cb5iJxnvnGi1iQ=
+	b=TglMEuasNAUpzqkcTRa0ycJiAEoKHEzOjGPlucpfOKt8qa7KqWLTSuBRoqORwQLSC
+	 WerN6eGvP2KpMfY9+do+74aRR4oz9FwD8JkrDOWlChQMELz7IunDG316+HRf7iVFep
+	 OAGmHwKFUf2lgsRE/Ar4po2xnw3QYfY8JjLfs8gs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfFTSBX (ORCPT
+        id S1726037AbfFTSB1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50852 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727217AbfFTSBU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:20 -0400
+        id S1727230AbfFTSBX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:23 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C413214AF;
-        Thu, 20 Jun 2019 18:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3A4E72083B;
+        Thu, 20 Jun 2019 18:01:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053680;
-        bh=8zUxCG6iOG8UzpM1LwJPo1hDPowznZpnbthTMPJGBCs=;
+        s=default; t=1561053682;
+        bh=eqKl0zvJukqapTrsVsf8Glo6wcBxzBGqmpgcdf9rP5E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZFLkLQM1P2NH3cDTk7YdBNdSdNHkb+zKQGBB/mHgjVyfpD0t8LzYXR+tg6chUmM13
-         BNosSF488UnkBsKOTQ45Edzr8t8rL4wMfj+A06Mg9x3sTFQbnRxDix5yX8v5reealW
-         ZMWx1Cr1BWC1zXWZ9CZm3dEqD5HDPCweRMoJg0TI=
+        b=02o/49R0ZJB6Zqn5XsatdCxTHztvUVEPQ+ZTuysz5U36HQyVIrb4cwm74SERjOhPj
+         rfakEpb/lkBs9ek4QaD6c9qPfWYssEzlbyXWtRPWodq5nft2mZpGbXFssrfeuf4+e5
+         BzA4yQa8UmPJFE0EffW1exicKfTlaBkiGHw0wpzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 74/84] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-Date:   Thu, 20 Jun 2019 19:57:11 +0200
-Message-Id: <20190620174348.808318379@linuxfoundation.org>
+Subject: [PATCH 4.4 75/84] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Date:   Thu, 20 Jun 2019 19:57:12 +0200
+Message-Id: <20190620174348.846387719@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,52 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e ]
+[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
 
-Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:90:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:85:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-
-This drops the one further from the table definition to match the common
-use of MODULE_DEVICE_TABLE().
-
-Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
-index 3acde3b9b767..7799cf33cc6e 100644
---- a/drivers/net/ethernet/dec/tulip/de4x5.c
-+++ b/drivers/net/ethernet/dec/tulip/de4x5.c
-@@ -2106,7 +2106,6 @@ static struct eisa_driver de4x5_eisa_driver = {
- 		.remove  = de4x5_eisa_remove,
-         }
- };
--MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
- #endif
- 
- #ifdef CONFIG_PCI
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index 57e3790c87b1..e56b774e7cf9 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -295,6 +295,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
+ 			    rdwr_pa[i].buf[0] < 1 ||
+ 			    rdwr_pa[i].len < rdwr_pa[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
 -- 
 2.20.1
 
