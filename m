@@ -2,214 +2,81 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E54C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86FE6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:47:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF2CC206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A147206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:47:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732014AbfFTNql (ORCPT
+        id S1732029AbfFTNrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:46:41 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45856 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726391AbfFTNqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:46:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CAA66AE2C;
-        Thu, 20 Jun 2019 13:46:37 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 504A11E434F; Thu, 20 Jun 2019 15:46:37 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 15:46:37 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
-        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
-        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
-        linux-efi@vger.kernel.org, reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
-        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
-        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 4/4] vfs: teach vfs_ioc_fssetxattr_check to check extent
- size hints
-Message-ID: <20190620134637.GG30243@quack2.suse.cz>
-References: <156022833285.3227089.11990489625041926920.stgit@magnolia>
- <156022836522.3227089.4353401791178719941.stgit@magnolia>
+        Thu, 20 Jun 2019 09:47:17 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:49588 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfFTNrR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:47:17 -0400
+Received: from [127.0.0.1] (localhost [127.0.0.1])
+        (Authenticated sender: eballetbo)
+        with ESMTPSA id C036826126D
+From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Collabora Kernel ML <kernel@collabora.com>,
+        Xing Zheng <zhengxing@rock-chips.com>,
+        Benson Leung <bleung@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org,
+        Mark Brown <broonie@kernel.org>, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] ASoC: rk3399_gru_sound: Support 32, 44.1 and 88.2 kHz sample rates
+Date:   Thu, 20 Jun 2019 15:47:08 +0200
+Message-Id: <20190620134708.28311-1-enric.balletbo@collabora.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <156022836522.3227089.4353401791178719941.stgit@magnolia>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 10-06-19 21:46:05, Darrick J. Wong wrote:
-> From: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Move the extent size hint checks that aren't xfs-specific to the vfs.
-> 
-> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+According to the datasheet the max98357a also supports 32, 44.1 and
+88.2 kHz sample rate. This support was also introduced recently by
+commit fdf34366d324 ("ASoC: max98357a: add missing supported rates").
+This patch adds support for these rates also for the machine driver so
+we get rid of the errors like the below and we are able to play files
+using these sample rates.
 
-The patch looks good to me. You can add:
+  rk3399-gru-sound sound: rockchip_sound_max98357a_hw_params() doesn't support this sample rate: 44100
+  rk3399-gru-sound sound: ASoC: machine hw_params failed: -22
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-								Honza
+ sound/soc/rockchip/rk3399_gru_sound.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-> ---
->  fs/inode.c         |   18 +++++++++++++
->  fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++------------------------------
->  2 files changed, 47 insertions(+), 41 deletions(-)
-> 
-> 
-> diff --git a/fs/inode.c b/fs/inode.c
-> index 40ecd3a6a188..a3757051fd55 100644
-> --- a/fs/inode.c
-> +++ b/fs/inode.c
-> @@ -2214,6 +2214,24 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
->  			return -EINVAL;
->  	}
->  
-> +	/* Check extent size hints. */
-> +	if ((fa->fsx_xflags & FS_XFLAG_EXTSIZE) && !S_ISREG(inode->i_mode))
-> +		return -EINVAL;
-> +
-> +	if ((fa->fsx_xflags & FS_XFLAG_EXTSZINHERIT) &&
-> +			!S_ISDIR(inode->i_mode))
-> +		return -EINVAL;
-> +
-> +	if ((fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
-> +	    !S_ISREG(inode->i_mode) && !S_ISDIR(inode->i_mode))
-> +		return -EINVAL;
-> +
-> +	/* Extent size hints of zero turn off the flags. */
-> +	if (fa->fsx_extsize == 0)
-> +		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
-> +	if (fa->fsx_cowextsize == 0)
-> +		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL(vfs_ioc_fssetxattr_check);
-> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
-> index 82961de98900..b494e7e881e3 100644
-> --- a/fs/xfs/xfs_ioctl.c
-> +++ b/fs/xfs/xfs_ioctl.c
-> @@ -1201,39 +1201,31 @@ xfs_ioctl_setattr_check_extsize(
->  	struct fsxattr		*fa)
->  {
->  	struct xfs_mount	*mp = ip->i_mount;
-> -
-> -	if ((fa->fsx_xflags & FS_XFLAG_EXTSIZE) && !S_ISREG(VFS_I(ip)->i_mode))
-> -		return -EINVAL;
-> -
-> -	if ((fa->fsx_xflags & FS_XFLAG_EXTSZINHERIT) &&
-> -	    !S_ISDIR(VFS_I(ip)->i_mode))
-> -		return -EINVAL;
-> +	xfs_extlen_t		size;
-> +	xfs_fsblock_t		extsize_fsb;
->  
->  	if (S_ISREG(VFS_I(ip)->i_mode) && ip->i_d.di_nextents &&
->  	    ((ip->i_d.di_extsize << mp->m_sb.sb_blocklog) != fa->fsx_extsize))
->  		return -EINVAL;
->  
-> -	if (fa->fsx_extsize != 0) {
-> -		xfs_extlen_t    size;
-> -		xfs_fsblock_t   extsize_fsb;
-> -
-> -		extsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_extsize);
-> -		if (extsize_fsb > MAXEXTLEN)
-> -			return -EINVAL;
-> +	if (fa->fsx_extsize == 0)
-> +		return 0;
->  
-> -		if (XFS_IS_REALTIME_INODE(ip) ||
-> -		    (fa->fsx_xflags & FS_XFLAG_REALTIME)) {
-> -			size = mp->m_sb.sb_rextsize << mp->m_sb.sb_blocklog;
-> -		} else {
-> -			size = mp->m_sb.sb_blocksize;
-> -			if (extsize_fsb > mp->m_sb.sb_agblocks / 2)
-> -				return -EINVAL;
-> -		}
-> +	extsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_extsize);
-> +	if (extsize_fsb > MAXEXTLEN)
-> +		return -EINVAL;
->  
-> -		if (fa->fsx_extsize % size)
-> +	if (XFS_IS_REALTIME_INODE(ip) ||
-> +	    (fa->fsx_xflags & FS_XFLAG_REALTIME)) {
-> +		size = mp->m_sb.sb_rextsize << mp->m_sb.sb_blocklog;
-> +	} else {
-> +		size = mp->m_sb.sb_blocksize;
-> +		if (extsize_fsb > mp->m_sb.sb_agblocks / 2)
->  			return -EINVAL;
-> -	} else
-> -		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
-> +	}
-> +
-> +	if (fa->fsx_extsize % size)
-> +		return -EINVAL;
->  
->  	return 0;
->  }
-> @@ -1259,6 +1251,8 @@ xfs_ioctl_setattr_check_cowextsize(
->  	struct fsxattr		*fa)
->  {
->  	struct xfs_mount	*mp = ip->i_mount;
-> +	xfs_extlen_t		size;
-> +	xfs_fsblock_t		cowextsize_fsb;
->  
->  	if (!(fa->fsx_xflags & FS_XFLAG_COWEXTSIZE))
->  		return 0;
-> @@ -1267,25 +1261,19 @@ xfs_ioctl_setattr_check_cowextsize(
->  	    ip->i_d.di_version != 3)
->  		return -EINVAL;
->  
-> -	if (!S_ISREG(VFS_I(ip)->i_mode) && !S_ISDIR(VFS_I(ip)->i_mode))
-> -		return -EINVAL;
-> -
-> -	if (fa->fsx_cowextsize != 0) {
-> -		xfs_extlen_t    size;
-> -		xfs_fsblock_t   cowextsize_fsb;
-> +	if (fa->fsx_cowextsize == 0)
-> +		return 0;
->  
-> -		cowextsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
-> -		if (cowextsize_fsb > MAXEXTLEN)
-> -			return -EINVAL;
-> +	cowextsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
-> +	if (cowextsize_fsb > MAXEXTLEN)
-> +		return -EINVAL;
->  
-> -		size = mp->m_sb.sb_blocksize;
-> -		if (cowextsize_fsb > mp->m_sb.sb_agblocks / 2)
-> -			return -EINVAL;
-> +	size = mp->m_sb.sb_blocksize;
-> +	if (cowextsize_fsb > mp->m_sb.sb_agblocks / 2)
-> +		return -EINVAL;
->  
-> -		if (fa->fsx_cowextsize % size)
-> -			return -EINVAL;
-> -	} else
-> -		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
-> +	if (fa->fsx_cowextsize % size)
-> +		return -EINVAL;
->  
->  	return 0;
->  }
-> 
-> 
+diff --git a/sound/soc/rockchip/rk3399_gru_sound.c b/sound/soc/rockchip/rk3399_gru_sound.c
+index 3d0cc6e90d7b..8dfe1a560e42 100644
+--- a/sound/soc/rockchip/rk3399_gru_sound.c
++++ b/sound/soc/rockchip/rk3399_gru_sound.c
+@@ -59,7 +59,10 @@ static int rockchip_sound_max98357a_hw_params(struct snd_pcm_substream *substrea
+ 	switch (params_rate(params)) {
+ 	case 8000:
+ 	case 16000:
++	case 32000:
++	case 44100:
+ 	case 48000:
++	case 88200:
+ 	case 96000:
+ 		mclk = params_rate(params) * SOUND_FS;
+ 		break;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+2.20.1
+
