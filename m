@@ -2,126 +2,133 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 795E5C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36613C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55AA720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054717;
-	bh=d0gosAX3r3C3qaB0cccEa/Bre6+woGl0mD5ROsE6eKg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OWLXIgfWiegAom/F+3o133qXhZUTkEc6QaLI98ru3/r7fTnohjckpcXR+DNetBx/q
-	 qZp4MMN+lJA1vyW5p1eSi/4Sk54OIRcBttJ8X12qzM5IH/qBPSdsk8JdFvg06NXaK1
-	 B0UHCM24OaYSU4svsbDi9tLwb2cQOcd8kM5fCCZY=
+	by mail.kernel.org (Postfix) with ESMTP id 117F8217D4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PDzWNDJm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729643AbfFTSSg (ORCPT
+        id S1729735AbfFTSQJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:18:36 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729419AbfFTSQU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DC752089C;
-        Thu, 20 Jun 2019 18:16:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054579;
-        bh=d0gosAX3r3C3qaB0cccEa/Bre6+woGl0mD5ROsE6eKg=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lbkzAY9tKPF8HXBrlPJeG+9H4FCyl1bUstHmPCOlKWwlnP4cpWy8oiqGpTK16FA3Q
-         lIKIHVsVxYMzMoIcpNeu0Cij2oWeGP80bgqKiD3CufcFB5jxJTYRzZcykhVvHI7SO+
-         Ij0pYLIZCQhVHrIQJquNEk8LUzQYWmgZ92JLZYLk=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 49/98] perf/ring_buffer: Add ordering to rb->nest increment
-Date:   Thu, 20 Jun 2019 19:57:16 +0200
-Message-Id: <20190620174351.467871924@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
-References: <20190620174349.443386789@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Jun 2019 14:16:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:43860 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729300AbfFTSQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:06 -0400
+Received: by mail-pf1-f193.google.com with SMTP id i189so2102867pfg.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 11:16:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=VUfn1IOEl9rD06WsT02+mqNYFppRegXo3iWeR3nXox0=;
+        b=PDzWNDJmo14cyT5iiWirFxCbttBGQcs6+m6znSmNqWkbpH9CQvnWemOOGcn8NzWSaY
+         Me/Btlvf1i4v5Az6LCxb27WLi+/N2yWCGZM4+wHVmriX/AbDcLibJm2fqVPIUgxSzzjI
+         LBIKQN7uIIL0XSbRDkSMx0ehxU1ZfnoZx0TaU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=VUfn1IOEl9rD06WsT02+mqNYFppRegXo3iWeR3nXox0=;
+        b=n0GQoetK3QRviuhzEWDcuX/kaUn/v/Sy90XK7ftkfACQUAzKFtCAWT/5ohR5dHhXZr
+         ZMiq9G99UtE/T41tK6RuEdAgqOqlmNzUWgKRwIu4YFJxMfd5V87hZH9D1+kVzlZfUKzY
+         KpqXbxwOcHoenIugo26cesPnbe82Z650QkuqVHHDyjVydviD4leaXrOF5wLEqfyNHbqH
+         RUsTT57d8MYSxD9TB34uXNkYFg4tVAW5XRYODl5c8VS5+t+g4zS6fX01n8LFOXMrCHj1
+         d5+Ps5k5D29N+MpewmRHBqA/SJS1DWGwpOgX18JvgM3q3e1/GpA0VBJc1IHkKYYe7Ua4
+         tKHw==
+X-Gm-Message-State: APjAAAUSjlYRsG/PgsL/49euHDP9iB8y7oX/IK9GtFod63qNSld4DDBP
+        ZiwjHdyQ/WnATHOlhcFRfIgY8w==
+X-Google-Smtp-Source: APXvYqw79XlOckNLsRwzTUGfUfSvKWCIsmZtm9ZMQM+GdS+4jaUOmnAbOXIYsSXrzSkx6Fl0/HRCVA==
+X-Received: by 2002:a17:90a:36a9:: with SMTP id t38mr990899pjb.19.1561054565839;
+        Thu, 20 Jun 2019 11:16:05 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id w4sm147481pfw.97.2019.06.20.11.16.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 11:16:05 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 11:16:04 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Anton Vorontsov <anton@enomsg.org>,
+        Colin Cross <ccross@android.com>,
+        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pstore: no need to check return value of debugfs_create
+ functions
+Message-ID: <201906201115.37C12233AB@keescook>
+References: <20190612152033.GA17290@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612152033.GA17290@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
+On Wed, Jun 12, 2019 at 05:20:33PM +0200, Greg Kroah-Hartman wrote:
+> When calling debugfs functions, there is no need to ever check the
+> return value.  The function can work or not, but the code logic should
+> never do something different based on this.
+> 
+> Cc: Kees Cook <keescook@chromium.org>
+> Cc: Anton Vorontsov <anton@enomsg.org>
+> Cc: Colin Cross <ccross@android.com>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Similar to how decrementing rb->next too early can cause data_head to
-(temporarily) be observed to go backward, so too can this happen when
-we increment too late.
+Thanks; applied to my for-next/pstore tree.
 
-This barrier() ensures the rb->head load happens after the increment,
-both the one in the 'goto again' path, as the one from
-perf_output_get_handle() -- albeit very unlikely to matter for the
-latter.
+-Kees
 
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> ---
+>  fs/pstore/ftrace.c | 18 ++----------------
+>  1 file changed, 2 insertions(+), 16 deletions(-)
+> 
+> diff --git a/fs/pstore/ftrace.c b/fs/pstore/ftrace.c
+> index b8a0931568f8..fd9468928bef 100644
+> --- a/fs/pstore/ftrace.c
+> +++ b/fs/pstore/ftrace.c
+> @@ -120,27 +120,13 @@ static struct dentry *pstore_ftrace_dir;
+>  
+>  void pstore_register_ftrace(void)
+>  {
+> -	struct dentry *file;
+> -
+>  	if (!psinfo->write)
+>  		return;
+>  
+>  	pstore_ftrace_dir = debugfs_create_dir("pstore", NULL);
+> -	if (!pstore_ftrace_dir) {
+> -		pr_err("%s: unable to create pstore directory\n", __func__);
+> -		return;
+> -	}
+> -
+> -	file = debugfs_create_file("record_ftrace", 0600, pstore_ftrace_dir,
+> -				   NULL, &pstore_knob_fops);
+> -	if (!file) {
+> -		pr_err("%s: unable to create record_ftrace file\n", __func__);
+> -		goto err_file;
+> -	}
+>  
+> -	return;
+> -err_file:
+> -	debugfs_remove(pstore_ftrace_dir);
+> +	debugfs_create_file("record_ftrace", 0600, pstore_ftrace_dir, NULL,
+> +			    &pstore_knob_fops);
+>  }
+>  
+>  void pstore_unregister_ftrace(void)
+> -- 
+> 2.22.0
+> 
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 009467a60578..4b5f8d932400 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -48,6 +48,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	unsigned long head;
- 
- again:
-+	/*
-+	 * In order to avoid publishing a head value that goes backwards,
-+	 * we must ensure the load of @rb->head happens after we've
-+	 * incremented @rb->nest.
-+	 *
-+	 * Otherwise we can observe a @rb->head value before one published
-+	 * by an IRQ/NMI happening between the load and the increment.
-+	 */
-+	barrier();
- 	head = local_read(&rb->head);
- 
- 	/*
 -- 
-2.20.1
-
-
-
+Kees Cook
