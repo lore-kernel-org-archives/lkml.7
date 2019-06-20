@@ -2,244 +2,107 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-21.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2787C48BDF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:15:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60D9DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:19:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DFB5218D0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:15:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560989730;
-	bh=Cyw3CS4Us7cHDynulRLePwpLSsuY8ho08g4vXgTjDFM=;
-	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
-	b=adSbGTKnrbaGErF6z2MLSnr4kyv42N8lhAJLypJPtHpU+fqgJyIOAxmO2m60YkXBJ
-	 Aj7jLcnNWMbEe6J8MedLmszHibKAF+rGuqMT5XStopmbczDI2xInLs0gfTxyRRO42u
-	 Ho8nkaxzuFfg4wvAuz7MZoqduhb+zITWooLWXfaU=
+	by mail.kernel.org (Postfix) with ESMTP id 2F8DA20673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:19:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JmC9UxSv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730855AbfFTAP3 (ORCPT
+        id S1730329AbfFTATM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 20:15:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726479AbfFTAP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 20:15:28 -0400
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93426218BE;
-        Thu, 20 Jun 2019 00:15:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560989726;
-        bh=Cyw3CS4Us7cHDynulRLePwpLSsuY8ho08g4vXgTjDFM=;
-        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
-        b=uxkDxyYpF7laGQMQdbheNapqj0FQjS0o/hFsG69mDV7yMnicTh9sX+q1GYO8mfbwg
-         E1z69sHUGBcQdsi2WlYDYbSc4B2+s17Nz6qJQoCAMJgUsjAbryk7FV2ai2kP081uXc
-         0hRlrWl2NbES9/L1UjKNP/E97FgjeS8RMgUcodoM=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190617082613.109131-2-brendanhiggins@google.com>
-References: <20190617082613.109131-1-brendanhiggins@google.com> <20190617082613.109131-2-brendanhiggins@google.com>
-To:     Brendan Higgins <brendanhiggins@google.com>,
-        frowand.list@gmail.com, gregkh@linuxfoundation.org,
-        jpoimboe@redhat.com, keescook@google.com,
-        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
-        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
-        tytso@mit.edu, yamada.masahiro@socionext.com
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
-Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
-        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
-        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
-        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
-        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
-        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
-        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
-        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
-User-Agent: alot/0.8.1
-Date:   Wed, 19 Jun 2019 17:15:25 -0700
-Message-Id: <20190620001526.93426218BE@mail.kernel.org>
+        Wed, 19 Jun 2019 20:19:12 -0400
+Received: from mail-vk1-f201.google.com ([209.85.221.201]:42340 "EHLO
+        mail-vk1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726479AbfFTATM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 20:19:12 -0400
+Received: by mail-vk1-f201.google.com with SMTP id y198so513299vky.9
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 17:19:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=aTGhJgb4vxuKf0M//GIyEALWsDaETb7RxGinNOSV0SE=;
+        b=JmC9UxSvfUzWjHLQGaR/g4PDfW9KxeAFlp0ho6nJqN12Zqh9udFPRuIl2tmsV8qIft
+         ZxAkmsHeYKo3uksMr5aPgAZtOfnx5ZFr/P4wTxe4F+GWd5/IwqkT/TFlhlvLSwZFdSRS
+         j9tNUNGr9kSknnBxDhA2RAoLZ6Radpb/M8SONUWt5zUKdlRgHv91zesOYDaAcYWMXOeT
+         8K5lVAZ/PSWfQPmEZNxl0KdKo/KfTEf0SB7JLxrn7yi3m1JhMO6R61QD1DE5mBN1iwQd
+         SNuPkm2mt+yB0AfT8VQVPGrYapTZz90KYzvTwZ8pEqObj4YUxBUEQbXmg5Xfv3CItlaR
+         lhQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=aTGhJgb4vxuKf0M//GIyEALWsDaETb7RxGinNOSV0SE=;
+        b=N8t0VETPGZ956y9YfYW5tB38zV+eO3j1uoXpOWOfOUyPEAt6QmmpDXDP1X+3zzWbDW
+         nOnSYVBk9TwB7jO+Skb3xsbaMnjsWkeUlneq14jxXDX5hXYHESBZy8TAtmOttY45nE0i
+         5XVuf0C0X2I8MNzpcMoiftIxWliCq1oKd2CgWsASVHx9uyWd8EWxfUYXIu+m+pXIy8X6
+         Oz09R5p5lHZqmR/ASyraZonQsYPst30d0kCCGFnhdyj4nTjBvhcXIyTcE6RlFYK8Nsia
+         zuTvLsy6VcvpKbMleXG9/sZxrCd3R2WtK32rTGs/xKJD9P3e05MlJCiQeAHclaMt0Fsq
+         E3aQ==
+X-Gm-Message-State: APjAAAVNNgoeEoHVfLZVbrrUSkPqKSvIyocMF5cVqAS6gcfFFPohB8R0
+        PyHo24HdV1Brqvux8awhncBYaHGU1MQFebAJD/U=
+X-Google-Smtp-Source: APXvYqwclDrJ7Q77uAqrIO5hmAITjLAd6TTmY6zYRakDTcX1idFj2kX+WQKfUkL7bD5YzbLYjJqdm8gyKAh+12mxzOA=
+X-Received: by 2002:a1f:50c1:: with SMTP id e184mr6033451vkb.86.1560989951279;
+ Wed, 19 Jun 2019 17:19:11 -0700 (PDT)
+Date:   Wed, 19 Jun 2019 17:19:07 -0700
+In-Reply-To: <d4b42858366e50f92b133ceb6399e9f16a7cef88.camel@perches.com>
+Message-Id: <20190620001907.255803-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <d4b42858366e50f92b133ceb6399e9f16a7cef88.camel@perches.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+Subject: [PATCH v2] MAINTAINERS: add CLANG/LLVM BUILD SUPPORT info
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     akpm@linux-foundation.org
+Cc:     clang-built-linux@googlegroups.com, joe@perches.com,
+        linux-kernel@vger.kernel.org,
+        Nick Desaulniers <ndesaulniers@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Brendan Higgins (2019-06-17 01:25:56)
-> diff --git a/kunit/test.c b/kunit/test.c
-> new file mode 100644
-> index 0000000000000..d05d254f1521f
-> --- /dev/null
-> +++ b/kunit/test.c
-> @@ -0,0 +1,210 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Base unit test (KUnit) API.
-> + *
-> + * Copyright (C) 2019, Google LLC.
-> + * Author: Brendan Higgins <brendanhiggins@google.com>
-> + */
-> +
-> +#include <linux/sched/debug.h>
-> +#include <kunit/test.h>
-> +
-> +static bool kunit_get_success(struct kunit *test)
-> +{
-> +       unsigned long flags;
-> +       bool success;
-> +
-> +       spin_lock_irqsave(&test->lock, flags);
-> +       success =3D test->success;
-> +       spin_unlock_irqrestore(&test->lock, flags);
+Add keyword support so that our mailing list gets cc'ed for clang/llvm
+patches. We're pretty active on our mailing list so far as code review.
+There are numerous Googlers like myself that are paid to support
+building the Linux kernel with Clang and LLVM.
 
-I still don't understand the locking scheme in this code. Is the
-intention to make getter and setter APIs that are "safe" by adding in a
-spinlock that is held around getting and setting various members in the
-kunit structure?
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+Changes V1 -> V2:
+- tabs vs spaces as per Joe Perches
 
-In what situation is there more than one thread reading or writing the
-kunit struct? Isn't it only a single process that is going to be
-operating on this structure? And why do we need to disable irqs? Are we
-expecting to be modifying the unit tests from irq contexts?
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +
-> +       return success;
-> +}
-> +
-> +static void kunit_set_success(struct kunit *test, bool success)
-> +{
-> +       unsigned long flags;
-> +
-> +       spin_lock_irqsave(&test->lock, flags);
-> +       test->success =3D success;
-> +       spin_unlock_irqrestore(&test->lock, flags);
-> +}
-> +
-> +static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
-> +{
-> +       return vprintk_emit(0, level, NULL, 0, fmt, args);
-> +}
-> +
-> +static int kunit_printk_emit(int level, const char *fmt, ...)
-> +{
-> +       va_list args;
-> +       int ret;
-> +
-> +       va_start(args, fmt);
-> +       ret =3D kunit_vprintk_emit(level, fmt, args);
-> +       va_end(args);
-> +
-> +       return ret;
-> +}
-> +
-> +static void kunit_vprintk(const struct kunit *test,
-> +                         const char *level,
-> +                         struct va_format *vaf)
-> +{
-> +       kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
-> +}
-> +
-> +static bool kunit_has_printed_tap_version;
+diff --git a/MAINTAINERS b/MAINTAINERS
+index ef58d9a881ee..f92432452f46 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3940,6 +3940,14 @@ M:	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+ S:	Maintained
+ F:	.clang-format
+ 
++CLANG/LLVM BUILD SUPPORT
++L:	clang-built-linux@googlegroups.com
++W:	https://clangbuiltlinux.github.io/
++B:	https://github.com/ClangBuiltLinux/linux/issues
++C:	irc://chat.freenode.net/clangbuiltlinux
++S:	Supported
++K:	\b(?i:clang|llvm)\b
++
+ CLEANCACHE API
+ M:	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+ L:	linux-kernel@vger.kernel.org
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
-Can you please move this into function local scope in the function
-below?
-
-> +
-> +static void kunit_print_tap_version(void)
-> +{
-> +       if (!kunit_has_printed_tap_version) {
-> +               kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
-> +               kunit_has_printed_tap_version =3D true;
-> +       }
-> +}
-> +
-[...]
-> +
-> +static bool kunit_module_has_succeeded(struct kunit_module *module)
-> +{
-> +       const struct kunit_case *test_case;
-> +       bool success =3D true;
-> +
-> +       for (test_case =3D module->test_cases; test_case->run_case; test_=
-case++)
-> +               if (!test_case->success) {
-> +                       success =3D false;
-> +                       break;
-
-Why not 'return false'?
-
-> +               }
-> +
-> +       return success;
-
-And 'return true'?
-
-> +}
-> +
-> +static size_t kunit_module_counter =3D 1;
-> +
-> +static void kunit_print_subtest_end(struct kunit_module *module)
-> +{
-> +       kunit_print_ok_not_ok(false,
-> +                             kunit_module_has_succeeded(module),
-> +                             kunit_module_counter++,
-> +                             module->name);
-> +}
-> +
-> +static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
-> +                                           size_t test_number)
-> +{
-> +       kunit_print_ok_not_ok(true,
-> +                             test_case->success,
-> +                             test_number,
-> +                             test_case->name);
-> +}
-> +
-> +void kunit_init_test(struct kunit *test, const char *name)
-> +{
-> +       spin_lock_init(&test->lock);
-> +       test->name =3D name;
-> +       test->success =3D true;
-> +}
-> +
-> +/*
-> + * Performs all logic to run a test case.
-> + */
-> +static void kunit_run_case(struct kunit_module *module,
-> +                          struct kunit_case *test_case)
-> +{
-> +       struct kunit test;
-> +       int ret =3D 0;
-> +
-> +       kunit_init_test(&test, test_case->name);
-> +
-> +       if (module->init) {
-> +               ret =3D module->init(&test);
-> +               if (ret) {
-> +                       kunit_err(&test, "failed to initialize: %d\n", re=
-t);
-> +                       kunit_set_success(&test, false);
-> +                       return;
-> +               }
-> +       }
-> +
-> +       if (!ret)
-> +               test_case->run_case(&test);
-
-Do we need this if condition? ret can only be set to non-zero above but
-then we'll exit the function early so it seems unnecessary. Given that,
-ret should probably be moved into the module->init path.
-
-> +
-> +       if (module->exit)
-> +               module->exit(&test);
-> +
-> +       test_case->success =3D kunit_get_success(&test);
-> +}
-> +
