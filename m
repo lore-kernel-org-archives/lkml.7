@@ -2,128 +2,98 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA091C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C43AAC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:17:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1512084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:16:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561043766;
-	bh=kqza+dMOoVNjShbz0wsIGK4HV5GBcZakWICkYSesXsE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=pltrwue9NqP7+QotxoL4xgcN+Z9P8JV/mbp8wPtds5dSRHveizyEkoOKg2BgWmfWe
-	 dPSwXdaJFW1Qow2IdCnZ6FXhCzDto6zoeyzOIdRGMqkCjXDejcDuqGwu+5fRZ0RJ+O
-	 JwcuOAw3tTq5kaVUZD23OxpnH9nw21qAjQV5fvX0=
+	by mail.kernel.org (Postfix) with ESMTP id 9AA6620675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:17:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfFTPQE (ORCPT
+        id S1731663AbfFTPRg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:16:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36372 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 11:17:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:46939 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfFTPQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:16:04 -0400
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 841C920B1F;
-        Thu, 20 Jun 2019 15:16:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561043763;
-        bh=kqza+dMOoVNjShbz0wsIGK4HV5GBcZakWICkYSesXsE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=KNzeo49v0vOTjS2EQy022uLMpxcHWlEZ8M/of+GzhByi2foYnofiszsQLaOAWX1E+
-         92sv4Q3VOAyaO3X54baPuk2WiQgvWv4I8dE8Bq4BhdNlpDgRiPeh0uXFH2OKBr6Pd6
-         MnyCxa39GPOFV9GQx/Rx/2+c4Qxl4v4vTwujINvc=
-Received: by mail-qk1-f178.google.com with SMTP id i125so2150192qkd.6;
-        Thu, 20 Jun 2019 08:16:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAUaVP00cy6LhlJPLD4lQOzedICyisV0KUrdG/cjOqD8E7lRFmjs
-        18kKEVP7/IW7pJqgP7pKCFFPimf7Au84ULjdVw==
-X-Google-Smtp-Source: APXvYqxCJPiM0PLJvXlPJ9GRTuKL8loc5/Q8qfIUqUa+TpkqcmApxW77au/op7OTbYOnqwwYfkxw+Hy2CzPIzvLxnFA=
-X-Received: by 2002:a05:620a:1447:: with SMTP id i7mr11428589qkl.254.1561043762664;
- Thu, 20 Jun 2019 08:16:02 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190619215156.27795-1-robh@kernel.org> <20190620065508.GA24739@ravnborg.org>
-In-Reply-To: <20190620065508.GA24739@ravnborg.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 20 Jun 2019 09:15:51 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJYWW3TPhWy0=tGc_x99w3jZPsSxcKzQJWuE+FrS19t2g@mail.gmail.com>
-Message-ID: <CAL_JsqJYWW3TPhWy0=tGc_x99w3jZPsSxcKzQJWuE+FrS19t2g@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: display: Convert common panel
- bindings to DT schema
-To:     Sam Ravnborg <sam@ravnborg.org>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+        id S1726512AbfFTPRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:17:35 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:17:35 -0700
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="154144455"
+Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:17:35 -0700
+Message-ID: <d11cf6a9ac9f2f21b6102464bf80925ada02bc78.camel@linux.intel.com>
+Subject: Re: [PATCH RFC] mm: fix regression with deferred struct page init
+From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
+To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Date:   Thu, 20 Jun 2019 08:17:35 -0700
+In-Reply-To: <20190620094015.21206-1-jgross@suse.com>
+References: <20190620094015.21206-1-jgross@suse.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:55 AM Sam Ravnborg <sam@ravnborg.org> wrote:
->
-> Hi Rob.
->
-> Thanks for starting the conversion of panel bindings to yaml.
->
-> On Wed, Jun 19, 2019 at 03:51:53PM -0600, Rob Herring wrote:
-> > Convert the common panel bindings to DT schema consolidating scattered
-> > definitions to a single schema file.
-> >
-> > The 'simple-panel' binding just a collection of properties and not a
-> > complete binding itself. All of the 'simple-panel' properties are
-> > covered by the panel-common.txt binding with the exception of the
-> > 'no-hpd' property, so add that to the schema.
-> >
-> > As there are lots of references to simple-panel.txt, just keep the file
-> > with a reference to panel-common.yaml for now until all the bindings are
-> > converted.
-> Good idea.
->
-> >
-> > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Cc: dri-devel@lists.freedesktop.org
-> > Signed-off-by: Rob Herring <robh@kernel.org>
-> > ---
-> > Note there's still some references to panel-common.txt that I need to
-> > update or just go ahead and convert to schema.
-> Better let it point to the .yaml variant, so this patchset does not
-> depend on too much other bindings to be converted.
+On Thu, 2019-06-20 at 11:40 +0200, Juergen Gross wrote:
+> Commit 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time
+> instead of doing larger sections") is causing a regression on some
+> systems when the kernel is booted as Xen dom0.
+> 
+> The system will just hang in early boot.
+> 
+> Reason is an endless loop in get_page_from_freelist() in case the first
+> zone looked at has no free memory. deferred_grow_zone() is always
+> returning true due to the following code snipplet:
+> 
+>   /* If the zone is empty somebody else may have cleared out the zone */
+>   if (!deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
+>                                            first_deferred_pfn)) {
+>           pgdat->first_deferred_pfn = ULONG_MAX;
+>           pgdat_resize_unlock(pgdat, &flags);
+>           return true;
+>   }
+> 
+> This in turn results in the loop as get_page_from_freelist() is
+> assuming forward progress can be made by doing some more struct page
+> initialization.
+> 
+> Fixes: 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time instead of doing larger sections")
+> ---
+> This patch makes my system boot again as Xen dom0, but I'm not really
+> sure it is the correct way to do it, hence the RFC.
+> Signed-off-by: Juergen Gross <jgross@suse.com>
+> ---
+>  mm/page_alloc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index d66bc8abe0af..6ee754b5cd92 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -1826,7 +1826,7 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
+>  						 first_deferred_pfn)) {
+>  		pgdat->first_deferred_pfn = ULONG_MAX;
+>  		pgdat_resize_unlock(pgdat, &flags);
+> -		return true;
+> +		return false;
+>  	}
+>  
+>  	/*
 
-There's only 8 files referencing panel-common.txt which was why I was
-debating just converting all of them.
+The one change I might make to this would be to do:
+	return first_deferred_pfn != ULONG_MAX;
 
-> Then we can start the conversion of the remaining panel bindings.
-> Any tooling that helps the conversions?
+That way in the event the previous caller did free up the last of the 
+pages and empty the zone just before we got here then we will try one more
+time. Otherwise if it was already done before we got here we exit.
 
-I have a doc2yaml script that helps with some of the boilerplate. It's
-in my yaml-bindings-v2 branch[1].
-
-> When this hits upstream I assume all future panel bindings shall be yaml
-> based - so we have a few pending contributions that need to do something.
-
-That would be ideal, but not strictly required. For pending things, no
-reason to make folks redo things. Requiring schema really depends on
-whomever is applying things to run at least 'make dt_binding_check'
-before accepting.
-
->
-> For the actual conversion below:
-> Acked-by: Sam Ravnborg <sam@ravnborg.org>
-
-Thanks.
-
-Rob
-
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/log/?h=yaml-bindings-v2
