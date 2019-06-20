@@ -2,227 +2,83 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0653C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A331C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:45:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70ECB20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3C22085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:45:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MpFNLiT6"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vrEiqVPU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726711AbfFTSoz (ORCPT
+        id S1726755AbfFTSpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:44:55 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43970 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfFTSoy (ORCPT
+        Thu, 20 Jun 2019 14:45:08 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:37063 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726405AbfFTSpH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:44:54 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cl9so1724861plb.10;
-        Thu, 20 Jun 2019 11:44:54 -0700 (PDT)
+        Thu, 20 Jun 2019 14:45:07 -0400
+Received: by mail-io1-f65.google.com with SMTP id e5so51252iok.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 11:45:06 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ZUQkb0G4ZCPKDrEvoX1BfK4MWYkIeDwjtEN0vUqPNkw=;
-        b=MpFNLiT6zMfv6lZIUsgTarD0saHSc6px9pGCnHVv4o3SwD5Je+t3augvHoqNayH+69
-         FW1ExZjtFRu3HjSf0LtHnKMdNSIF+jWt1th6i0kQqPdtfgHbtT7do93b92PJvMlCC9dv
-         W1guz/52t6z9GTHUcGBwdmufV0cm0zPru1pXJpwPvMUPcTKNDwtQWDxjQM3IXwE69GFn
-         3mU9AV8MeDWlpPf55RPmZPvdAe0H4mhgJci6euF0CjDBf7DQAbC+wbcGsLXzNiYqR/XB
-         0G9D0V83hewGZ3mYCv877iAsi2OTTvLVbzh1hkB5ypCIL2XTcOCuTgzQUeEd2i9yh/AQ
-         Ry9Q==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=iOXxm2t3OxvRhCzI51nS1CEzvfBrrobpsZUrEz8AOHs=;
+        b=vrEiqVPUFYgbkaMwO2Uc2YyLCB7Dp1hkeXflE4KqJcJ8zZ5egfPJsXtegjBuuirrZG
+         KkM4e0oz/lJwl6pPmOw9rO6CBuwccsXFy9AOZR0o5mAnn8BPMqj6i+fz+vc3X+4ebQiT
+         eYX54kKrn7LvU4nJddNoUCVBsmWdSTxDnFPcaPNCUfwh3wKiMgC4gV7AstQ2pwkVs531
+         TrCeW8ia1QmUXgTRsDc4IISczah2I8bYlVWh6T/NKSo0P4L8a6qWZABdCVQBYxVGo98D
+         Or2hz1/Jw4sGDepzMhX6W9JwdKWRxJ974GJj/yIQh9xWjUw8awMUBgKpf/QBvgGFQgX7
+         m58Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ZUQkb0G4ZCPKDrEvoX1BfK4MWYkIeDwjtEN0vUqPNkw=;
-        b=Hx5wBhlmNwyaWlEqRV9HvYjoLoy+99jEMx5crnYKay5z87BwP/cl9yyzHiU3Zoq9e3
-         qgBMxudJMu69YYFlmepWBdzhemIV5MdHZdt6IzqyNdlb+mebHK+y8hRUKiuFdJlMEooW
-         Pz0Wt4b3jXDQdpLNxF3hV1pzLpA8/Hl6BzsCvzM7FFcXBS8e8b3tRZFIZW0AS+wmaXAW
-         K1OQEDDi67hDrZuqm8ae+6eYn+Afil/aqEZ3N4RL2vfys4vmKYK9Rnu61wzMhPXOaeWk
-         oRoI0vtoUvQsPrkTkycK8TSuVvKVpKfCx28/n/bJP+aZnW43GIAPC1SVyghGsZvicM/B
-         MJmQ==
-X-Gm-Message-State: APjAAAWYnv/p4qBhjoWMiBXduDxPI4uAB6XMvEM2LRFbCemWVn5/dKIH
-        sjbdnLUfxNB/HlHgYHRYQUo=
-X-Google-Smtp-Source: APXvYqzOnI3pkm62WhhgX9g/X3V1KxMheGzQeaimTCtkTbntSlVPaJT/oLykxHPMufJ0swIi/avZnA==
-X-Received: by 2002:a17:902:30a3:: with SMTP id v32mr127734872plb.6.1561056293930;
-        Thu, 20 Jun 2019 11:44:53 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l63sm169837pfl.181.2019.06.20.11.44.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 11:44:53 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 11:44:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, jannh@google.com,
-        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
-        arnd@arndb.de, dhowells@redhat.com,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
-Message-ID: <20190620184451.GA28543@roeck-us.net>
-References: <20190604160944.4058-1-christian@brauner.io>
- <20190604160944.4058-2-christian@brauner.io>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iOXxm2t3OxvRhCzI51nS1CEzvfBrrobpsZUrEz8AOHs=;
+        b=IfxVZ0i01UgpYid2l/7xCivTOmgswTTs7KMYqqvO4qoQUPLGguq0N5Ofv2InpdDNol
+         zhoKlsE54tq0UQ9I456KgB041mmP3LJuYM5CeBOx7jNhN5mkIdtHR9Or2ygj4thquzF2
+         yxJ1TKBiWpOPA4x9DuuFzQ53ELDOTkHYUrOLRMSsNvPjFpmZXs5dT9NNwIrIjZ9SsfL1
+         2HZ13kAZ9fw8KzWJyfUHGCffKffyvCOArCHKZEp/y3mJjrLSMGncsvhyi+o3Ng1I/jz1
+         YwDF5j8qGnQcjOfiGm0fVAdIP43Sq+DE4lno75qVPA1QkWHkWOapkkQK3s0BIoJBL18f
+         NYJg==
+X-Gm-Message-State: APjAAAXxRxFViPPzcDsgB6IFoKiV6PWh8gYxn/CpJrwaz/5HnBae19/F
+        OMRMqCd967wmSXxvhCeueEwf5waFFsqSpSOry3IEUg==
+X-Google-Smtp-Source: APXvYqzFRYVCHjk35X1ouKmAUdulBO2FCgBJB35wx0KM985uS4o6OakZ4zYr+o/iHc7sTtL+9Zh4/4nvJu1AtsfQo/A=
+X-Received: by 2002:a6b:6310:: with SMTP id p16mr20938246iog.118.1561056306188;
+ Thu, 20 Jun 2019 11:45:06 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604160944.4058-2-christian@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+References: <20190620110240.25799-1-vkuznets@redhat.com> <20190620110240.25799-4-vkuznets@redhat.com>
+In-Reply-To: <20190620110240.25799-4-vkuznets@redhat.com>
+From:   Jim Mattson <jmattson@google.com>
+Date:   Thu, 20 Jun 2019 11:44:55 -0700
+Message-ID: <CALMp9eQ85h58NMDh-yOYvHN6_2f2T-wu63f+yLnNbwuG+p3Uvw@mail.gmail.com>
+Subject: Re: [PATCH RFC 3/5] x86: KVM: svm: clear interrupt shadow on all
+ paths in skip_emulated_instruction()
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm list <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
-> Wire up the clone3() call on all arches that don't require hand-rolled
-> assembly.
-> 
-> Some of the arches look like they need special assembly massaging and it is
-> probably smarter if the appropriate arch maintainers would do the actual
-> wiring. Arches that are wired-up are:
-> - x86{_32,64}
-> - arm{64}
-> - xtensa
-> 
+On Thu, Jun 20, 2019 at 4:02 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
+>
+> Regardless of the way how we skip instruction, interrupt shadow needs to be
+> cleared.
 
-This patch results in build failures on various architecetures.
+This change is definitely an improvement, but the existing code seems
+to assume that we never call skip_emulated_instruction on a
+POP-SS/MOV-to-SS/STI. Is that enforced anywhere?
 
-h8300-linux-ld: arch/h8300/kernel/syscalls.o:(.data+0x6d0): undefined reference to `sys_clone3'
-
-nios2-linux-ld: arch/nios2/kernel/syscall_table.o:(.data+0x6d0): undefined reference to `sys_clone3'
-
-There may be others; -next is in too bad shape right now to get a complete
-picture. Wondering, though: What is special with this syscall ? Normally
-one would only get a warning that a syscall is not wired up.
-
-Guenter
-
-> Signed-off-by: Christian Brauner <christian@brauner.io>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oleg Nesterov <oleg@redhat.com>
-> Cc: Adrian Reber <adrian@lisas.de>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: Florian Weimer <fweimer@redhat.com>
-> Cc: linux-api@vger.kernel.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: x86@kernel.org
-> ---
-> v1: unchanged
-> v2: unchanged
-> v3:
-> - Christian Brauner <christian@brauner.io>:
->   - wire up clone3 on all arches that don't have hand-rolled entry points
->     for clone
-> ---
->  arch/arm/tools/syscall.tbl                  | 1 +
->  arch/arm64/include/asm/unistd.h             | 2 +-
->  arch/arm64/include/asm/unistd32.h           | 2 ++
->  arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
->  arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
->  arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
->  arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
->  include/uapi/asm-generic/unistd.h           | 4 +++-
->  8 files changed, 11 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-> index aaf479a9e92d..e99a82bdb93a 100644
-> --- a/arch/arm/tools/syscall.tbl
-> +++ b/arch/arm/tools/syscall.tbl
-> @@ -447,3 +447,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +436	common	clone3				sys_clone3
-> diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-> index 70e6882853c0..24480c2d95da 100644
-> --- a/arch/arm64/include/asm/unistd.h
-> +++ b/arch/arm64/include/asm/unistd.h
-> @@ -44,7 +44,7 @@
->  #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
->  #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
->  
-> -#define __NR_compat_syscalls		434
-> +#define __NR_compat_syscalls		437
->  #endif
->  
->  #define __ARCH_WANT_SYS_CLONE
-> diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-> index c39e90600bb3..b144ea675d70 100644
-> --- a/arch/arm64/include/asm/unistd32.h
-> +++ b/arch/arm64/include/asm/unistd32.h
-> @@ -886,6 +886,8 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
->  __SYSCALL(__NR_fsmount, sys_fsmount)
->  #define __NR_fspick 433
->  __SYSCALL(__NR_fspick, sys_fspick)
-> +#define __NR_clone3 436
-> +__SYSCALL(__NR_clone3, sys_clone3)
->  
->  /*
->   * Please add new compat syscalls above this comment and update
-> diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-> index 26339e417695..3110440bcc31 100644
-> --- a/arch/microblaze/kernel/syscalls/syscall.tbl
-> +++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-> @@ -439,3 +439,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +436	common	clone3				sys_clone3
-> diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-> index ad968b7bac72..80e26211feff 100644
-> --- a/arch/x86/entry/syscalls/syscall_32.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-> @@ -438,3 +438,4 @@
->  431	i386	fsconfig		sys_fsconfig			__ia32_sys_fsconfig
->  432	i386	fsmount			sys_fsmount			__ia32_sys_fsmount
->  433	i386	fspick			sys_fspick			__ia32_sys_fspick
-> +436	i386	clone3			sys_clone3			__ia32_sys_clone3
-> diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-> index b4e6f9e6204a..7968f0b5b5e8 100644
-> --- a/arch/x86/entry/syscalls/syscall_64.tbl
-> +++ b/arch/x86/entry/syscalls/syscall_64.tbl
-> @@ -355,6 +355,7 @@
->  431	common	fsconfig		__x64_sys_fsconfig
->  432	common	fsmount			__x64_sys_fsmount
->  433	common	fspick			__x64_sys_fspick
-> +436	common	clone3			__x64_sys_clone3/ptregs
->  
->  #
->  # x32-specific system call numbers start at 512 to avoid cache impact
-> diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-> index 5fa0ee1c8e00..b2767c8c2b4e 100644
-> --- a/arch/xtensa/kernel/syscalls/syscall.tbl
-> +++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-> @@ -404,3 +404,4 @@
->  431	common	fsconfig			sys_fsconfig
->  432	common	fsmount				sys_fsmount
->  433	common	fspick				sys_fspick
-> +436	common	clone3				sys_clone3
-> diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-> index a87904daf103..45bc87687c47 100644
-> --- a/include/uapi/asm-generic/unistd.h
-> +++ b/include/uapi/asm-generic/unistd.h
-> @@ -844,9 +844,11 @@ __SYSCALL(__NR_fsconfig, sys_fsconfig)
->  __SYSCALL(__NR_fsmount, sys_fsmount)
->  #define __NR_fspick 433
->  __SYSCALL(__NR_fspick, sys_fspick)
-> +#define __NR_clone3 436
-> +__SYSCALL(__NR_clone3, sys_clone3)
->  
->  #undef __NR_syscalls
-> -#define __NR_syscalls 434
-> +#define __NR_syscalls 437
->  
->  /*
->   * 32 bit systems traditionally used different
+Reviewed-by: Jim Mattson <jmattson@google.com>
