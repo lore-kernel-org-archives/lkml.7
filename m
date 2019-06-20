@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99F75C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5BABC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FA93214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87FED2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054331;
-	bh=5+Xkg1DTNteA5Ibst+nQrBbY6g3o6wRxnF+0b/k6Bx8=;
+	s=default; t=1561054335;
+	bh=Gp1Vmj3iN/kkjOdO44mChH4+YNTQwOMCrfilW1G1DvQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oY56QqSC11hJPQJy5jtSQlJ8b8tcuc6bb1LgOf6DWTMfdQ8gDHogC9QClvexmOpsC
-	 4plZnOnQFTJX81TZ5lTkdLNCVD7iQb8JdUzAo6tXWRFfTT8FVmsz0Zga2f80HIC5d2
-	 bT5Jch2IBsh3JdnpucBUUr6eHzSkvhF9xHBoDflc=
+	b=fQaEDErCbIoH1LRnMF7v+Yd6r4gAjDWM9u3/59DqpYD9IgyVG6WSST9VX6p47MoZV
+	 XAt1Turo30+/87wcPghKZWdgGlaYKeUD1b6gpxrEvz98aHZDUE1u5EZcggFR7TYQ09
+	 27gpLx8yQuQSHOZdg/0JNO3O55Ymlh6tqDWnq/uw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfFTSMJ (ORCPT
+        id S1728996AbfFTSMO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39862 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:12:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728983AbfFTSMF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:05 -0400
+        id S1728861AbfFTSMI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:12:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C35F2084E;
-        Thu, 20 Jun 2019 18:12:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0851F2070B;
+        Thu, 20 Jun 2019 18:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054324;
-        bh=5+Xkg1DTNteA5Ibst+nQrBbY6g3o6wRxnF+0b/k6Bx8=;
+        s=default; t=1561054327;
+        bh=Gp1Vmj3iN/kkjOdO44mChH4+YNTQwOMCrfilW1G1DvQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=v7HeHvv8LR3V1MS8eiH1ZMh5ez0HukyYoDtwXKBvL+OYKEugmgLvqP/zDkoa7hHNB
-         uYHTgmcaSPuukAdXaLt/ny0G5bNvz1qoNqzDHycAKErUPIF7RQl9f73EC9FThRhJeD
-         0NWmadzcuTYpKlAWmw+ShrvLTT6V44V4+CZEyO8Q=
+        b=rQfKrdyzR6fKmlhILHp9Tyh96wcKqmgHopllDNofDupSm+ZXFfTY88R0vLQJcgO8M
+         gYEyfoWxfe8GLwpa6LncpTEc2hd1rNCxl12359/CmwjVwbaU+HkPgghkwPKJFa07zB
+         t2+oHqrSXSG93zSrIIbvxxAVQZaFfAFH+HhMG+mo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 51/61] net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
-Date:   Thu, 20 Jun 2019 19:57:46 +0200
-Message-Id: <20190620174346.083121151@linuxfoundation.org>
+Subject: [PATCH 4.19 52/61] net: phylink: ensure consistent phy interface mode
+Date:   Thu, 20 Jun 2019 19:57:47 +0200
+Message-Id: <20190620174346.246862470@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,48 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 315ca92dd863fecbffc0bb52ae0ac11e0398726a ]
+[ Upstream commit c678726305b9425454be7c8a7624290b602602fc ]
 
-The sh_eth_close() resets the MAC and then calls phy_stop()
-so that mdio read access result is incorrect without any error
-according to kernel trace like below:
+Ensure that we supply the same phy interface mode to mac_link_down() as
+we did for the corresponding mac_link_up() call.  This ensures that MAC
+drivers that use the phy interface mode in these methods can depend on
+mac_link_down() always corresponding to a mac_link_up() call for the
+same interface mode.
 
-ifconfig-216   [003] .n..   109.133124: mdio_access: ee700000.ethernet-ffffffff read  phy:0x01 reg:0x00 val:0xffff
-
-According to the hardware manual, the RMII mode should be set to 1
-before operation the Ethernet MAC. However, the previous code was not
-set to 1 after the driver issued the soft_reset in sh_eth_dev_exit()
-so that the mdio read access result seemed incorrect. To fix the issue,
-this patch adds a condition and set the RMII mode register in
-sh_eth_dev_exit() for R-Car Gen2 and RZ/A1 SoCs.
-
-Note that when I have tried to move the sh_eth_dev_exit() calling
-after phy_stop() on sh_eth_close(), but it gets worse (kernel panic
-happened and it seems that a register is accessed while the clock is
-off).
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/renesas/sh_eth.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/phy/phylink.c | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index f27a0dc8c563..5e3e6e262ba3 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -1588,6 +1588,10 @@ static void sh_eth_dev_exit(struct net_device *ndev)
- 	sh_eth_get_stats(ndev);
- 	mdp->cd->soft_reset(ndev);
+diff --git a/drivers/net/phy/phylink.c b/drivers/net/phy/phylink.c
+index c5a509129ae6..b7dafa9dfef4 100644
+--- a/drivers/net/phy/phylink.c
++++ b/drivers/net/phy/phylink.c
+@@ -54,6 +54,10 @@ struct phylink {
  
-+	/* Set the RMII mode again if required */
-+	if (mdp->cd->rmiimode)
-+		sh_eth_write(ndev, 0x1, RMIIMODE);
+ 	/* The link configuration settings */
+ 	struct phylink_link_state link_config;
 +
- 	/* Set MAC address again */
- 	update_mac_address(ndev);
- }
++	/* The current settings */
++	phy_interface_t cur_interface;
++
+ 	struct gpio_desc *link_gpio;
+ 	struct timer_list link_poll;
+ 	void (*get_fixed_state)(struct net_device *dev,
+@@ -477,12 +481,12 @@ static void phylink_resolve(struct work_struct *w)
+ 		if (!link_state.link) {
+ 			netif_carrier_off(ndev);
+ 			pl->ops->mac_link_down(ndev, pl->link_an_mode,
+-					       pl->phy_state.interface);
++					       pl->cur_interface);
+ 			netdev_info(ndev, "Link is Down\n");
+ 		} else {
++			pl->cur_interface = link_state.interface;
+ 			pl->ops->mac_link_up(ndev, pl->link_an_mode,
+-					     pl->phy_state.interface,
+-					     pl->phydev);
++					     pl->cur_interface, pl->phydev);
+ 
+ 			netif_carrier_on(ndev);
+ 
 -- 
 2.20.1
 
