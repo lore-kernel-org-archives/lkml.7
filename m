@@ -2,95 +2,138 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29412C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:10:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33BFCC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:12:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 090222070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:10:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16A422084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:12:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732185AbfFTQKx (ORCPT
+        id S1726884AbfFTQMt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:10:53 -0400
-Received: from mga06.intel.com ([134.134.136.31]:46060 "EHLO mga06.intel.com"
+        Thu, 20 Jun 2019 12:12:49 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:59328 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726654AbfFTQKx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:10:53 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 09:10:44 -0700
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="150979509"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 09:10:44 -0700
-Message-ID: <2299c1a5b8773c955e7d0c3803ad3fc6c83c127a.camel@linux.intel.com>
-Subject: Re: [PATCH] mm: fix regression with deferred struct page init
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Thu, 20 Jun 2019 09:10:44 -0700
-In-Reply-To: <20190620160821.4210-1-jgross@suse.com>
-References: <20190620160821.4210-1-jgross@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        id S1726530AbfFTQMs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:12:48 -0400
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hdzg6-00046V-6A; Thu, 20 Jun 2019 10:12:47 -0600
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1hdzg5-0005wZ-4g; Thu, 20 Jun 2019 10:12:45 -0600
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Thu, 20 Jun 2019 10:12:26 -0600
+Message-Id: <20190620161240.22738-15-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190620161240.22738-1-logang@deltatee.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, axboe@kernel.dk, hch@lst.de, bhelgaas@google.com, dan.j.williams@intel.com, sagi@grimberg.me, kbusch@kernel.org, jgg@ziepe.ca, sbates@raithlin.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+Subject: [RFC PATCH 14/28] block: Support splitting dma-direct bios
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 18:08 +0200, Juergen Gross wrote:
-> Commit 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time
-> instead of doing larger sections") is causing a regression on some
-> systems when the kernel is booted as Xen dom0.
-> 
-> The system will just hang in early boot.
-> 
-> Reason is an endless loop in get_page_from_freelist() in case the first
-> zone looked at has no free memory. deferred_grow_zone() is always
-> returning true due to the following code snipplet:
-> 
->   /* If the zone is empty somebody else may have cleared out the zone */
->   if (!deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
->                                            first_deferred_pfn)) {
->           pgdat->first_deferred_pfn = ULONG_MAX;
->           pgdat_resize_unlock(pgdat, &flags);
->           return true;
->   }
-> 
-> This in turn results in the loop as get_page_from_freelist() is
-> assuming forward progress can be made by doing some more struct page
-> initialization.
-> 
-> Cc: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Fixes: 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time instead of doing larger sections")
-> Suggested-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
-> Signed-off-by: Juergen Gross <jgross@suse.com>
+If the bio is a dma-direct bio, loop through the dma_vecs instead
+of the bio_vecs when calling vec_should_split().
 
-Acked-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+---
+ block/blk-merge.c | 45 +++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 37 insertions(+), 8 deletions(-)
 
-> ---
->  mm/page_alloc.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d66bc8abe0af..8e3bc949ebcc 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1826,7 +1826,8 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
->  						 first_deferred_pfn)) {
->  		pgdat->first_deferred_pfn = ULONG_MAX;
->  		pgdat_resize_unlock(pgdat, &flags);
-> -		return true;
-> +		/* Retry only once. */
-> +		return first_deferred_pfn != ULONG_MAX;
->  	}
->  
->  	/*
-
+diff --git a/block/blk-merge.c b/block/blk-merge.c
+index 32653fca53ce..c4c016f994f6 100644
+--- a/block/blk-merge.c
++++ b/block/blk-merge.c
+@@ -257,14 +257,44 @@ static bool vec_should_split(struct request_queue *q, unsigned offset,
+ 	return false;
+ }
+ 
++static bool bio_should_split(struct request_queue *q, struct bio *bio,
++			     struct blk_segment_split_ctx *ctx)
++{
++	struct bvec_iter iter;
++	struct bio_vec bv;
++	bool ret;
++
++	bio_for_each_bvec(bv, bio, iter) {
++		ret = vec_should_split(q, bv.bv_offset, bv.bv_len, ctx);
++		if (ret)
++			return true;
++	}
++
++	return false;
++}
++
++static bool bio_dma_should_split(struct request_queue *q, struct bio *bio,
++				 struct blk_segment_split_ctx *ctx)
++{
++	struct bvec_iter iter;
++	struct dma_vec dv;
++	bool ret;
++
++	bio_for_each_dvec(dv, bio, iter) {
++		ret = vec_should_split(q, dv.dv_addr, dv.dv_len, ctx);
++		if (ret)
++			return true;
++	}
++
++	return false;
++}
++
+ static struct bio *blk_bio_segment_split(struct request_queue *q,
+ 					 struct bio *bio,
+ 					 struct bio_set *bs,
+ 					 unsigned *segs)
+ {
+-	struct bio_vec bv;
+-	struct bvec_iter iter;
+-	bool do_split = false;
++	bool do_split;
+ 	struct bio *new = NULL;
+ 
+ 	struct blk_segment_split_ctx ctx = {
+@@ -272,11 +302,10 @@ static struct bio *blk_bio_segment_split(struct request_queue *q,
+ 		.max_segs = queue_max_segments(q),
+ 	};
+ 
+-	bio_for_each_bvec(bv, bio, iter) {
+-		do_split = vec_should_split(q, bv.bv_offset, bv.bv_len, &ctx);
+-		if (do_split)
+-			break;
+-	}
++	if (bio_is_dma_direct(bio))
++		do_split = bio_dma_should_split(q, bio, &ctx);
++	else
++		do_split = bio_should_split(q, bio, &ctx);
+ 
+ 	*segs = ctx.nsegs;
+ 
+-- 
+2.20.1
 
