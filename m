@@ -7,65 +7,64 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC4EBC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:00:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CFDC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:00:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5CF82147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:00:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 655F72147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:00:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="lqOo7E9j"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="L4+UrVzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731197AbfFTKAO (ORCPT
+        id S1731108AbfFTKAz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:00:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58131 "EHLO
+        Thu, 20 Jun 2019 06:00:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36233 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730669AbfFTKAJ (ORCPT
+        with ESMTP id S1726082AbfFTKAy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:00:09 -0400
+        Thu, 20 Jun 2019 06:00:54 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5K9wxGF906696
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x5K9xgAF906831
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Thu, 20 Jun 2019 02:58:59 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5K9wxGF906696
+        Thu, 20 Jun 2019 02:59:43 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x5K9xgAF906831
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019061801; t=1561024740;
-        bh=4/7OlXkZ0rfaBo1SqBGSOaT9CO52lJhHdM5uB+Bhns4=;
+        s=2019061801; t=1561024783;
+        bh=kFQhygwJI2YkpLXnj1Aw7bCa1lb+mr1aCmZ9wGLIuC8=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=lqOo7E9j8hlVtoc4JaXTQGELMxycs2I2n5puRgCHuTF8erRlOKqQrsckw18V2CV5l
-         925Xy1et5EkRr3P9ssVy7MIieIlWHsBkXnrUPJG+93Kh3wlxUdqL/jFotz9mZHtqJB
-         XX7mvZI7hLBhrA9diw4ENsK9jYqDH9TTipCWWNCX/4PbEz9y7M0vtekIik5VsEeq4j
-         6LVUj/Cj/3/TWjvKpLnHE8oTZpKpNxz3CQo100rRd745SYgiVlOna7AbDWTOkaw3XQ
-         2LxNZvhLJ6Wu2g9m8FF7M/5IChj1/+ZACWrk8PDKgZfoFYh6BWxMGO12KLzfXw5b8k
-         L/wjPyOTlKs0g==
+        b=L4+UrVzHPj8D3FP8WxA7IC8PSDqrjeDGBq8GATUQHyl2hhNO5j389UYGKq2V0CuVA
+         20AjPaOLK/Yk+7wJmO80rwXHVMs8mirbYzt1AnKzJFfnsMHjB221XoelvHj3cdnKrG
+         5Cm6eTC220Fz9yA8qDtesZyyhJu0qv7rAeLyI/tjQbJJauuemiIzHLWtwIy7vyWCMi
+         hgK0jZVqouQGNaXRZ1gb3oEPSRGPfWMhY6kY77WnYtyK8nUV7SY3k68YNKDrzOz5lL
+         bSAcM5jKOZnbIpDgehHgA0ij/rGhW4csJMOH8mjzAdQPOvCb1rid7viraCJpRK1j/s
+         4q66rznsNta6Q==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5K9wxoo906691;
-        Thu, 20 Jun 2019 02:58:59 -0700
-Date:   Thu, 20 Jun 2019 02:58:59 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x5K9xfxx906820;
+        Thu, 20 Jun 2019 02:59:41 -0700
+Date:   Thu, 20 Jun 2019 02:59:41 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Lendacky <tipbot@zytor.com>
-Message-ID: <tip-e1bfa87399e372446454ecbaeba2800f0a385733@git.kernel.org>
-Cc:     luto@kernel.org, lijiang@redhat.com, dave.hansen@intel.com,
-        thomas.lendacky@amd.com, keescook@chromium.org, x86@kernel.org,
-        peterz@infradead.org, mingo@redhat.com, brijesh.singh@amd.com,
-        samitolvanen@google.com, tglx@linutronix.de, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, jroedel@suse.de, hpa@zytor.com,
-        ndesaulniers@google.com, bp@suse.de, rafael@espindo.la,
-        Thomas.Lendacky@amd.com, bhe@redhat.com
-Reply-To: linux-kernel@vger.kernel.org, jroedel@suse.de, bp@suse.de,
-          ndesaulniers@google.com, hpa@zytor.com, bhe@redhat.com,
-          rafael@espindo.la, Thomas.Lendacky@amd.com, x86@kernel.org,
-          keescook@chromium.org, peterz@infradead.org,
-          dave.hansen@intel.com, lijiang@redhat.com, luto@kernel.org,
-          thomas.lendacky@amd.com, samitolvanen@google.com,
-          tglx@linutronix.de, mingo@kernel.org, mingo@redhat.com,
-          brijesh.singh@amd.com
-In-Reply-To: <3c483262eb4077b1654b2052bd14a8d011bffde3.1560969363.git.thomas.lendacky@amd.com>
-References: <3c483262eb4077b1654b2052bd14a8d011bffde3.1560969363.git.thomas.lendacky@amd.com>
+From:   tip-bot for Lianbo Jiang <tipbot@zytor.com>
+Message-ID: <tip-ae9e13d621d6795ec1ad6bf10bd2549c6c3feca4@git.kernel.org>
+Cc:     bp@suse.de, rppt@linux.ibm.com, mingo@kernel.org,
+        huang.zijiang@zte.com.cn, n-horiguchi@ah.jp.nec.com,
+        x86@kernel.org, linux-kernel@vger.kernel.org,
+        m.mizuma@jp.fujitsu.com, jgross@suse.com, mhocko@suse.com,
+        peterz@infradead.org, joe@perches.com, luto@amacapital.net,
+        thomas.lendacky@amd.com, tglx@linutronix.de, lijiang@redhat.com,
+        hpa@zytor.com, mingo@redhat.com, akpm@linux-foundation.org
+Reply-To: luto@amacapital.net, tglx@linutronix.de, thomas.lendacky@amd.com,
+          lijiang@redhat.com, hpa@zytor.com, akpm@linux-foundation.org,
+          mingo@redhat.com, bp@suse.de, mingo@kernel.org,
+          rppt@linux.ibm.com, huang.zijiang@zte.com.cn, x86@kernel.org,
+          n-horiguchi@ah.jp.nec.com, jgross@suse.com,
+          m.mizuma@jp.fujitsu.com, linux-kernel@vger.kernel.org,
+          joe@perches.com, mhocko@suse.com, peterz@infradead.org
+In-Reply-To: <20190423013007.17838-2-lijiang@redhat.com>
+References: <20190423013007.17838-2-lijiang@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/kdump] x86/mm: Create a workarea in the kernel for SME
- early encryption
-Git-Commit-ID: e1bfa87399e372446454ecbaeba2800f0a385733
+Subject: [tip:x86/kdump] x86/e820, ioport: Add a new I/O resource descriptor
+ IORES_DESC_RESERVED
+Git-Commit-ID: ae9e13d621d6795ec1ad6bf10bd2549c6c3feca4
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -79,148 +78,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  e1bfa87399e372446454ecbaeba2800f0a385733
-Gitweb:     https://git.kernel.org/tip/e1bfa87399e372446454ecbaeba2800f0a385733
-Author:     Thomas Lendacky <Thomas.Lendacky@amd.com>
-AuthorDate: Wed, 19 Jun 2019 18:40:59 +0000
+Commit-ID:  ae9e13d621d6795ec1ad6bf10bd2549c6c3feca4
+Gitweb:     https://git.kernel.org/tip/ae9e13d621d6795ec1ad6bf10bd2549c6c3feca4
+Author:     Lianbo Jiang <lijiang@redhat.com>
+AuthorDate: Tue, 23 Apr 2019 09:30:05 +0800
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Thu, 20 Jun 2019 09:44:26 +0200
+CommitDate: Thu, 20 Jun 2019 09:54:31 +0200
 
-x86/mm: Create a workarea in the kernel for SME early encryption
+x86/e820, ioport: Add a new I/O resource descriptor IORES_DESC_RESERVED
 
-In order for the kernel to be encrypted "in place" during boot, a workarea
-outside of the kernel must be used. This SME workarea used during early
-encryption of the kernel is situated on a 2MB boundary after the end of
-the kernel text, data, etc. sections (_end).
+When executing the kexec_file_load() syscall, the first kernel needs to
+pass the e820 reserved ranges to the second kernel because some devices
+(PCI, for example) need them present in the kdump kernel for proper
+initialization.
 
-This works well during initial boot of a compressed kernel because of
-the relocation used for decompression of the kernel. But when performing
-a kexec boot, there's a chance that the SME workarea may not be mapped
-by the kexec pagetables or that some of the other data used by kexec
-could exist in this range.
+But the kernel can not exactly match the e820 reserved ranges when
+walking through the iomem resources using the default IORES_DESC_NONE
+descriptor, because there are several types of e820 ranges which are
+marked IORES_DESC_NONE, see e820_type_to_iores_desc().
 
-Create a section for SME in vmlinux.lds.S. Position it after "_end", which
-is after "__end_of_kernel_reserve", so that the memory will be reclaimed
-during boot and since this area is all zeroes, it compresses well. This
-new section will be part of the kernel image, so kexec will account for it
-in pagetable mappings and placement of data after the kernel.
+Therefore, add a new I/O resource descriptor called IORES_DESC_RESERVED
+to mark exactly those ranges. It will be used to match the reserved
+resource ranges when walking through iomem resources.
 
-Here's an example of a kernel size without and with the SME section:
+ [ bp: Massage commit message. ]
 
-	without:
-		vmlinux:	36,501,616
-		bzImage:	 6,497,344
-
-		100000000-47f37ffff : System RAM
-		  1e4000000-1e47677d4 : Kernel code	(0x7677d4)
-		  1e47677d5-1e4e2e0bf : Kernel data	(0x6c68ea)
-		  1e5074000-1e5372fff : Kernel bss	(0x2fefff)
-
-	with:
-		vmlinux:	44,419,408
-		bzImage:	 6,503,136
-
-		880000000-c7ff7ffff : System RAM
-		  8cf000000-8cf7677d4 : Kernel code	(0x7677d4)
-		  8cf7677d5-8cfe2e0bf : Kernel data	(0x6c68ea)
-		  8d0074000-8d0372fff : Kernel bss	(0x2fefff)
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Suggested-by: Borislav Petkov <bp@suse.de>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Baoquan He <bhe@redhat.com>
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
-Tested-by: Lianbo Jiang <lijiang@redhat.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Brijesh Singh <brijesh.singh@amd.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: bhe@redhat.com
+Cc: dave.hansen@linux.intel.com
+Cc: dyoung@redhat.com
 Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Huang Zijiang <huang.zijiang@zte.com.cn>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <jroedel@suse.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Joe Perches <joe@perches.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: kexec@lists.infradead.org
+Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: "Rafael Ávila de Espíndola" <rafael@espindo.la>
-Cc: Sami Tolvanen <samitolvanen@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: "x86@kernel.org" <x86@kernel.org>
-Link: https://lkml.kernel.org/r/3c483262eb4077b1654b2052bd14a8d011bffde3.1560969363.git.thomas.lendacky@amd.com
+Cc: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190423013007.17838-2-lijiang@redhat.com
 ---
- arch/x86/kernel/vmlinux.lds.S      | 25 +++++++++++++++++++++++++
- arch/x86/mm/mem_encrypt_identity.c | 22 ++++++++++++++++++++--
- 2 files changed, 45 insertions(+), 2 deletions(-)
+ arch/x86/kernel/e820.c | 2 +-
+ include/linux/ioport.h | 1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
-index ca2252ca6ad7..147cd020516a 100644
---- a/arch/x86/kernel/vmlinux.lds.S
-+++ b/arch/x86/kernel/vmlinux.lds.S
-@@ -387,6 +387,31 @@ SECTIONS
- 	. = ALIGN(PAGE_SIZE);		/* keep VO_INIT_SIZE page aligned */
- 	_end = .;
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
-+	/*
-+	 * Early scratch/workarea section: Lives outside of the kernel proper
-+	 * (_text - _end).
-+	 *
-+	 * Resides after _end because even though the .brk section is after
-+	 * __end_of_kernel_reserve, the .brk section is later reserved as a
-+	 * part of the kernel. Since it is located after __end_of_kernel_reserve
-+	 * it will be discarded and become part of the available memory. As
-+	 * such, it can only be used by very early boot code and must not be
-+	 * needed afterwards.
-+	 *
-+	 * Currently used by SME for performing in-place encryption of the
-+	 * kernel during boot. Resides on a 2MB boundary to simplify the
-+	 * pagetable setup used for SME in-place encryption.
-+	 */
-+	. = ALIGN(HPAGE_SIZE);
-+	.init.scratch : AT(ADDR(.init.scratch) - LOAD_OFFSET) {
-+		__init_scratch_begin = .;
-+		*(.init.scratch)
-+		. = ALIGN(HPAGE_SIZE);
-+		__init_scratch_end = .;
-+	}
-+#endif
-+
- 	STABS_DEBUG
- 	DWARF_DEBUG
- 
-diff --git a/arch/x86/mm/mem_encrypt_identity.c b/arch/x86/mm/mem_encrypt_identity.c
-index 4aa9b1480866..6a8dd483f7d9 100644
---- a/arch/x86/mm/mem_encrypt_identity.c
-+++ b/arch/x86/mm/mem_encrypt_identity.c
-@@ -73,6 +73,19 @@ struct sme_populate_pgd_data {
- 	unsigned long vaddr_end;
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index 8f32e705a980..e69408bf664b 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1063,10 +1063,10 @@ static unsigned long __init e820_type_to_iores_desc(struct e820_entry *entry)
+ 	case E820_TYPE_NVS:		return IORES_DESC_ACPI_NV_STORAGE;
+ 	case E820_TYPE_PMEM:		return IORES_DESC_PERSISTENT_MEMORY;
+ 	case E820_TYPE_PRAM:		return IORES_DESC_PERSISTENT_MEMORY_LEGACY;
++	case E820_TYPE_RESERVED:	return IORES_DESC_RESERVED;
+ 	case E820_TYPE_RESERVED_KERN:	/* Fall-through: */
+ 	case E820_TYPE_RAM:		/* Fall-through: */
+ 	case E820_TYPE_UNUSABLE:	/* Fall-through: */
+-	case E820_TYPE_RESERVED:	/* Fall-through: */
+ 	default:			return IORES_DESC_NONE;
+ 	}
+ }
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index da0ebaec25f0..6ed59de48bd5 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -133,6 +133,7 @@ enum {
+ 	IORES_DESC_PERSISTENT_MEMORY_LEGACY	= 5,
+ 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
+ 	IORES_DESC_DEVICE_PUBLIC_MEMORY		= 7,
++	IORES_DESC_RESERVED			= 8,
  };
  
-+/*
-+ * This work area lives in the .init.scratch section, which lives outside of
-+ * the kernel proper. It is sized to hold the intermediate copy buffer and
-+ * more than enough pagetable pages.
-+ *
-+ * By using this section, the kernel can be encrypted in place and it
-+ * avoids any possibility of boot parameters or initramfs images being
-+ * placed such that the in-place encryption logic overwrites them.  This
-+ * section is 2MB aligned to allow for simple pagetable setup using only
-+ * PMD entries (see vmlinux.lds.S).
-+ */
-+static char sme_workarea[2 * PMD_PAGE_SIZE] __section(.init.scratch);
-+
- static char sme_cmdline_arg[] __initdata = "mem_encrypt";
- static char sme_cmdline_on[]  __initdata = "on";
- static char sme_cmdline_off[] __initdata = "off";
-@@ -314,8 +327,13 @@ void __init sme_encrypt_kernel(struct boot_params *bp)
- 	}
- #endif
- 
--	/* Set the encryption workarea to be immediately after the kernel */
--	workarea_start = kernel_end;
-+	/*
-+	 * We're running identity mapped, so we must obtain the address to the
-+	 * SME encryption workarea using rip-relative addressing.
-+	 */
-+	asm ("lea sme_workarea(%%rip), %0"
-+	     : "=r" (workarea_start)
-+	     : "p" (sme_workarea));
- 
- 	/*
- 	 * Calculate required number of workarea bytes needed:
+ /* helpers to define resources */
