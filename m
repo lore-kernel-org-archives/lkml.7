@@ -2,102 +2,153 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 916FFC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E28AAC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:05:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 657522084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4A5420673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:05:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Naa6Gv+f"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sy2yUH85"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbfFTPDp (ORCPT
+        id S1731802AbfFTPFo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:03:45 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:33246 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfFTPDn (ORCPT
+        Thu, 20 Jun 2019 11:05:44 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:45578 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726798AbfFTPFo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:03:43 -0400
-Received: by mail-ed1-f65.google.com with SMTP id i11so5227243edq.0;
-        Thu, 20 Jun 2019 08:03:42 -0700 (PDT)
+        Thu, 20 Jun 2019 11:05:44 -0400
+Received: by mail-qt1-f193.google.com with SMTP id j19so3468157qtr.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:05:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=c+VIZiG1eBhlF3rxdIGklWohp2FF58HwtgWB8kP2krE=;
-        b=Naa6Gv+fzky/gjo7CpiXlMXWStve+HDn/z269u6D22mS2YIpyIrbsm2maPJM8MFOMC
-         sLJ4Mx+S9e28+0xXqFixfbAiLz4asoZQJV/yZMrpNQRJXEhR7exHvmKwm2uoeBGgDjqS
-         c1DQDyrnfPkhxK0dgpJD5D81nU/tmjK19pQoYEHFAUOnVA6RARX08SaVNL7mX2aGlJZF
-         NGZDeLwOfaNCQR+pPHBqIH9MYeVykh7c63njdxCkmSCnAy4Jp8szjlXEfPskU8/L8AuO
-         3iQPfGK/MbJEV+/jC6xk9MxyKAHBaYngivQKkVklF+zxGKp70UprypqQSnKS8BYra6Wz
-         aWOQ==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=+SlWqt7mGdvs9AkWDoKN464Wi1itv44/ucax1MjY5Lc=;
+        b=sy2yUH85O64yGVV1H0EJrjQcDOaj/CH5ejtqXd/eWKCNUQyDKLJ4Ox5EJnSlDquSXm
+         SD8EasjV3UB1B5KBD4BJnBVokm+WRQoyVw89nAbRcPXDVbtLQlWLKqGtZ4VKNAIE+OPn
+         oZDLcU3qBcF0A3LMaG/5XdlCcXF5Ba2qpye539vqcAVjLvl5CfKX5ey0UqOToFh2swiE
+         KiXL6zKImj1xSO+JXDDiNFj4/bXj9QiS8Gf2Eh6SuPs3Z0YBFOxUIaJEAo/rbguyBbq8
+         GaZJroCvZZk8cxlYXqtTx9MgwqhC9iVzV2T8mO6IRsQWKuNSzTapj4JuUQRDWb+n1Tdy
+         W3UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=c+VIZiG1eBhlF3rxdIGklWohp2FF58HwtgWB8kP2krE=;
-        b=Hq50IGEzxBradTglNucwFCjxHPCTV3gB6tSeetMWSd3eMbLvCvR+KtqZosW5a88fK3
-         CYQz79JcHOFwJLyEDcn7u2gBRrJ6DXJpa7ak5ED6bCiGee0TVKSqSxnThexYIF1a9HQ/
-         GSrElsLgs9yRgUQGDX3zy06vasCH82q1HrpnvE+kkcb3NDaXOpp9qlxa7yPcMZYQa8Wr
-         RYB+WgvROdHigNIaoVAHJcQPWo+jBYf0UmsQWgq07HamnRLCDL7JQhNC8AbHcSoZ8DOT
-         Bz5KqQHVNYup9yssko68iRrcEmUlvgOv69CH+Bz6oF6ofBfzMwohLfO9iVVnO3eaVn/Q
-         /Bsw==
-X-Gm-Message-State: APjAAAV3FqgXcvl0Nlb2vN/BHTnwD+TxASTbrSzKI5KAopM1yC3i08ni
-        zIV3xpHIR1HPJYaSU3bOiCQnDKxSzUg=
-X-Google-Smtp-Source: APXvYqySLvmNh9wxZPmypuFfuYTZApGsVZAKsp5UHnSm6q0WQvtYv0puHaE5hU3QulgOF732v/JHvg==
-X-Received: by 2002:a50:9167:: with SMTP id f36mr31218322eda.297.1561043021582;
-        Thu, 20 Jun 2019 08:03:41 -0700 (PDT)
-Received: from jwang-Latitude-5491.pb.local ([62.217.45.26])
-        by smtp.gmail.com with ESMTPSA id a20sm3855817ejj.21.2019.06.20.08.03.40
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 08:03:41 -0700 (PDT)
-From:   Jack Wang <jinpuwang@gmail.com>
-To:     linux-block@vger.kernel.org, linux-rdma@vger.kernel.org
-Cc:     axboe@kernel.dk, hch@infradead.org, sagi@grimberg.me,
-        bvanassche@acm.org, jgg@mellanox.com, dledford@redhat.com,
-        danil.kipnis@cloud.ionos.com, rpenyaev@suse.de,
-        Roman Pen <roman.penyaev@profitbricks.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/25] sysfs: export sysfs_remove_file_self()
-Date:   Thu, 20 Jun 2019 17:03:13 +0200
-Message-Id: <20190620150337.7847-2-jinpuwang@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190620150337.7847-1-jinpuwang@gmail.com>
-References: <20190620150337.7847-1-jinpuwang@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=+SlWqt7mGdvs9AkWDoKN464Wi1itv44/ucax1MjY5Lc=;
+        b=MZ0jyfC5YOfCl13TbpFbApdtr0ICPcmjjbhg8h9k0oIkTEhXfMbSsv3Cx+e4s/CkG9
+         v+3fEYLB76fSi8b0SwpL/m/ZlKtSEHsXZW1NBsikKg1Uwj74av0aHELp3xEQzF7cgdRa
+         s96uoR1jo8TJ3wwnjQFlxdf1Kd/+O4Qb7ywdPk1I3VAQ7MfzOCF2V4lAAlB5mSLlvj4z
+         L51Mh/abcsBWNK++lvd3jFpafK7wDL+5ELWWK3izSf0Bsgd+CioTW3TD1BC7XaTCzCJ3
+         yV3XgKx6haMG7Ik8vbjOJe+/bMV7jfVzSdceoNJgJwORMS4VrN4bJ4tWyqTZNXK4nHQ1
+         YZPA==
+X-Gm-Message-State: APjAAAXTfdzX4FzHF4sABP/RLqukXSOpZc5DVrkbguJLb/73sAKGErlp
+        gawlRyaIyBs+bJbqh42OQiE+3rnmIk7hZRtPc+s8BQ==
+X-Google-Smtp-Source: APXvYqwM0WwCghbi2ShrGdjVLvsTAcFo9iwOmgfOosK9RkDv6TnpEiQTqBaPRpsQc4gKzVQlXZXbkX5AW0qYeR6z2PE=
+X-Received: by 2002:ac8:395b:: with SMTP id t27mr115053664qtb.115.1561043142986;
+ Thu, 20 Jun 2019 08:05:42 -0700 (PDT)
+MIME-Version: 1.0
+References: <1560755897-5002-1-git-send-email-yannick.fertre@st.com> <7e6a87b6-e442-20cb-0d4e-68eb40c56042@st.com>
+In-Reply-To: <7e6a87b6-e442-20cb-0d4e-68eb40c56042@st.com>
+From:   Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Date:   Thu, 20 Jun 2019 17:05:32 +0200
+Message-ID: <CA+M3ks7oNuNnH+0eD5TDLFR_0fFWYA4gGtf40HcbFK4SQ7O-EQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/stm: drv: fix suspend/resume
+To:     Philippe CORNU <philippe.cornu@st.com>
+Cc:     Yannick FERTRE <yannick.fertre@st.com>,
+        Benjamin GAIGNARD <benjamin.gaignard@st.com>,
+        Vincent ABRIOU <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Roman Pen <roman.penyaev@profitbricks.com>
+Le mar. 18 juin 2019 =C3=A0 11:57, Philippe CORNU <philippe.cornu@st.com> a=
+ =C3=A9crit :
+>
+> Hi Yannick,
+>
+> Thank you for your patch.
+>
+> Acked-by: Philippe Cornu <philippe.cornu@st.com>
 
-Function is going to be used in transport over RDMA module
-in subsequent patches.
+I have corrected Fixes sha1 (should be 12 digits)
+Applied on drm-misc-next.
 
-Signed-off-by: Roman Pen <roman.penyaev@profitbricks.com>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- fs/sysfs/file.c | 1 +
- 1 file changed, 1 insertion(+)
+Benjamin
 
-diff --git a/fs/sysfs/file.c b/fs/sysfs/file.c
-index 130fc6fbcc03..1ff4672d7746 100644
---- a/fs/sysfs/file.c
-+++ b/fs/sysfs/file.c
-@@ -492,6 +492,7 @@ bool sysfs_remove_file_self(struct kobject *kobj, const struct attribute *attr)
- 	kernfs_put(kn);
- 	return ret;
- }
-+EXPORT_SYMBOL_GPL(sysfs_remove_file_self);
- 
- void sysfs_remove_files(struct kobject *kobj, const struct attribute * const *ptr)
- {
--- 
-2.17.1
-
+>
+> Philippe :-)
+>
+> On 6/17/19 9:18 AM, Yannick Fertr=C3=A9 wrote:
+> > Without this fix, the system can not go in "suspend" mode
+> > due to an error in drv_suspend function.
+> >
+> > Fixes: 35ab6cf ("drm/stm: support runtime power management")
+> >
+> > Signed-off-by: Yannick Fertr=C3=A9 <yannick.fertre@st.com>
+> > ---
+> >   drivers/gpu/drm/stm/drv.c | 15 ++++++++-------
+> >   1 file changed, 8 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/stm/drv.c b/drivers/gpu/drm/stm/drv.c
+> > index 5659572..9dee4e4 100644
+> > --- a/drivers/gpu/drm/stm/drv.c
+> > +++ b/drivers/gpu/drm/stm/drv.c
+> > @@ -136,8 +136,7 @@ static __maybe_unused int drv_suspend(struct device=
+ *dev)
+> >       struct ltdc_device *ldev =3D ddev->dev_private;
+> >       struct drm_atomic_state *state;
+> >
+> > -     if (WARN_ON(!ldev->suspend_state))
+> > -             return -ENOENT;
+> > +     WARN_ON(ldev->suspend_state);
+> >
+> >       state =3D drm_atomic_helper_suspend(ddev);
+> >       if (IS_ERR(state))
+> > @@ -155,15 +154,17 @@ static __maybe_unused int drv_resume(struct devic=
+e *dev)
+> >       struct ltdc_device *ldev =3D ddev->dev_private;
+> >       int ret;
+> >
+> > +     if (WARN_ON(!ldev->suspend_state))
+> > +             return -ENOENT;
+> > +
+> >       pm_runtime_force_resume(dev);
+> >       ret =3D drm_atomic_helper_resume(ddev, ldev->suspend_state);
+> > -     if (ret) {
+> > +     if (ret)
+> >               pm_runtime_force_suspend(dev);
+> > -             ldev->suspend_state =3D NULL;
+> > -             return ret;
+> > -     }
+> >
+> > -     return 0;
+> > +     ldev->suspend_state =3D NULL;
+> > +
+> > +     return ret;
+> >   }
+> >
+> >   static __maybe_unused int drv_runtime_suspend(struct device *dev)
+> >
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
