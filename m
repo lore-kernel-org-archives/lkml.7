@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D3FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D6EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E823206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8195A2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054911;
-	bh=XSmt2kupemjqB1GXrcptmo3Q9SLtuR3ACvyPs23UnSo=;
+	s=default; t=1561054916;
+	bh=nUY6ILTxX+DakTlISDVeWnorLgfPe9zH17lpV8hhCvs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E4U8A3F5cUkL1ItbLctWT9+Xp4wYtYP22hY3cZSrZmMx1cf1B3bedysghImg21WrR
-	 t5CY7tP3QWtyUz5+WjIsjthd6a7pEK+uZtA7e8r1/YmGe4ow8ImdY7Leexo584Wkg1
-	 pVg5x/ye09e0OneyR8yvQJZpGSL2c79h6PppUU9g=
+	b=2eef1FvY5TcGlvyv4YCCKPUHZeSRMtR8xGEVkF8ImKIGuQFip2Mn41v6QXLL9v9F0
+	 AxlZvXyspDhCk3lEBOt6z6Ju56MV1CglXdHYTwCGk0hHru0iq2qgMu50Y7w8zfHoUo
+	 KAFaMKmYSVqZ4Yar+LmjbmI7fUGLvsvEUjfKKro4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729068AbfFTSVu (ORCPT
+        id S1729160AbfFTSVz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:21:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:21:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39484 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726650AbfFTSLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:50 -0400
+        id S1728607AbfFTSLm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 62C542084E;
-        Thu, 20 Jun 2019 18:11:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1DFE02089C;
+        Thu, 20 Jun 2019 18:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054309;
-        bh=XSmt2kupemjqB1GXrcptmo3Q9SLtuR3ACvyPs23UnSo=;
+        s=default; t=1561054301;
+        bh=nUY6ILTxX+DakTlISDVeWnorLgfPe9zH17lpV8hhCvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u892Q8TOYUlB1lsCWxn2VETyh4bC7ynvvPnyR7nw+jA0qWqKMLqQM4tfpoQG5TlmX
-         jgIBl/WYGk8w5HKYDnclLC0If0UubzO/Tp2nQszb9hmaeo9YH5AhDMAKiqA/pAeDZa
-         eMTzctmFvCB5IVo3Dl4HRS8x2amDFEHFutQkCPSU=
+        b=SkEckStZBLv2r4ZjmjxHWhPJI6Z8Hdo37/DhsjzK5JqvyJxUiOEXdK4CZNMqRLcJQ
+         qiOULDK1Pdg6+IWnC3w4L9vkI7wIC6PyraX66RWhca8mXtKchKRJy77r5g+bqq2NpG
+         /14FJf2pcTWK4x53mZw/REcKmYph0OR5i0qTTcNM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        stable@vger.kernel.org, Yuri Chipchev <yuric@marvell.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 09/61] nfc: Ensure presence of required attributes in the deactivate_target handler
-Date:   Thu, 20 Jun 2019 19:57:04 +0200
-Message-Id: <20190620174338.988938201@linuxfoundation.org>
+Subject: [PATCH 4.19 16/61] net: mvpp2: prs: Use the correct helpers when removing all VID filters
+Date:   Thu, 20 Jun 2019 19:57:11 +0200
+Message-Id: <20190620174339.937895518@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -59,34 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Young Xiao <92siuyang@gmail.com>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-[ Upstream commit 385097a3675749cbc9e97c085c0e5dfe4269ca51 ]
+[ Upstream commit 6b7a3430c163455cf8a514d636bda52b04654972 ]
 
-Check that the NFC_ATTR_TARGET_INDEX attributes (in addition to
-NFC_ATTR_DEVICE_INDEX) are provided by the netlink client prior to
-accessing them. This prevents potential unhandled NULL pointer dereference
-exceptions which can be triggered by malicious user-mode programs,
-if they omit one or both of these attributes.
+When removing all VID filters, the mvpp2_prs_vid_entry_remove would be
+called with the TCAM id incorrectly used as a VID, causing the wrong
+TCAM entries to be invalidated.
 
-Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Fix this by directly invalidating entries in the VID range.
+
+Fixes: 56beda3db602 ("net: mvpp2: Add hardware offloading for VLAN filtering")
+Suggested-by: Yuri Chipchev <yuric@marvell.com>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/nfc/netlink.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c |    6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -922,7 +922,8 @@ static int nfc_genl_deactivate_target(st
- 	u32 device_idx, target_idx;
- 	int rc;
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
+@@ -2025,8 +2025,10 @@ void mvpp2_prs_vid_remove_all(struct mvp
  
--	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
-+	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
-+	    !info->attrs[NFC_ATTR_TARGET_INDEX])
- 		return -EINVAL;
+ 	for (tid = MVPP2_PRS_VID_PORT_FIRST(port->id);
+ 	     tid <= MVPP2_PRS_VID_PORT_LAST(port->id); tid++) {
+-		if (priv->prs_shadow[tid].valid)
+-			mvpp2_prs_vid_entry_remove(port, tid);
++		if (priv->prs_shadow[tid].valid) {
++			mvpp2_prs_hw_inv(priv, tid);
++			priv->prs_shadow[tid].valid = false;
++		}
+ 	}
+ }
  
- 	device_idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
 
 
