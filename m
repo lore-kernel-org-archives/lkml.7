@@ -2,142 +2,98 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFCB9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E38C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 933C4206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334A4206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="ylZqyjth"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="LeqVTnDe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731745AbfFTLz5 (ORCPT
+        id S1731757AbfFTL46 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:55:57 -0400
-Received: from mail-eopbgr690079.outbound.protection.outlook.com ([40.107.69.79]:46166
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726392AbfFTLz5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:55:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=xilinx.onmicrosoft.com; s=selector1-xilinx-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1gsxExkiILYIaMTaFTbJH20TJSTJh+U5yAo31rmWN4k=;
- b=ylZqyjthAD5wqbTGKpC1ViacvDCttagNnn3pL47epZeJ3rz2u+cG/rloGAJM5Da71Y8zcKOOGS+56Gs5E7e1RYC39t0gxCiz/bbvaPx2gaTIAGI60s8i17RGvTPXqfHJOt13KUIin9eWS7DZqJ/a6DPo67iXKatEz3bFlLCAD6o=
-Received: from DM6PR02CA0013.namprd02.prod.outlook.com (2603:10b6:5:1c::26) by
- CH2PR02MB6230.namprd02.prod.outlook.com (2603:10b6:610:d::24) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Thu, 20 Jun 2019 11:55:54 +0000
-Received: from CY1NAM02FT011.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::208) by DM6PR02CA0013.outlook.office365.com
- (2603:10b6:5:1c::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.17 via Frontend
- Transport; Thu, 20 Jun 2019 11:55:54 +0000
-Authentication-Results: spf=pass (sender IP is 149.199.60.100)
- smtp.mailfrom=xilinx.com; canonical.com; dkim=none (message not signed)
- header.d=none;canonical.com; dmarc=bestguesspass action=none
- header.from=xilinx.com;
-Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
- 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
-Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
- CY1NAM02FT011.mail.protection.outlook.com (10.152.75.156) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Thu, 20 Jun 2019 11:55:53 +0000
-Received: from unknown-38-66.xilinx.com ([149.199.38.66]:45474 helo=xsj-pvapsmtp01)
-        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hdvfV-00044z-BS; Thu, 20 Jun 2019 04:55:53 -0700
-Received: from [127.0.0.1] (helo=localhost)
-        by xsj-pvapsmtp01 with smtp (Exim 4.63)
-        (envelope-from <michal.simek@xilinx.com>)
-        id 1hdvfQ-0007yz-81; Thu, 20 Jun 2019 04:55:48 -0700
-Received: from xsj-pvapsmtp01 (mail.xilinx.com [149.199.38.66] (may be forged))
-        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x5KBti47001790;
-        Thu, 20 Jun 2019 04:55:44 -0700
-Received: from [172.30.17.116]
-        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
-        (envelope-from <michals@xilinx.com>)
-        id 1hdvfM-0007yj-3f; Thu, 20 Jun 2019 04:55:44 -0700
-Subject: Re: [PATCH] can: xilinx_can: clean up indentation issue
-To:     Colin King <colin.king@canonical.com>,
-        Wolfgang Grandegger <wg@grandegger.com>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S . Miller" <davem@davemloft.net>,
-        Michal Simek <michal.simek@xilinx.com>,
-        linux-can@vger.kernel.org, netdev@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190619164518.5683-1-colin.king@canonical.com>
-From:   Michal Simek <michal.simek@xilinx.com>
-Message-ID: <71bd82e7-ea1d-89be-c11b-9d79a1655726@xilinx.com>
-Date:   Thu, 20 Jun 2019 13:55:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 07:56:58 -0400
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:51835 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726392AbfFTL46 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:56:58 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id x5KBul1Q011553;
+        Thu, 20 Jun 2019 20:56:48 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com x5KBul1Q011553
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561031808;
+        bh=/BAafWzA383+nnyZrdJw/BM2bhFflyPhOUVwypUThHM=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=LeqVTnDe4d2r0+uqfP//lmL9L2EjtR45DywdQowWQXN0AhRrTOaKoZ6rD2nc3YlRD
+         JaqyMqGLgl2gi4Ax7y5jUqus6f1y2oufgMvw18Gf4wazTzmt6BDx6EST+gwHtN7hmC
+         rW0AYEJVOY/zaQpafHN97seOvS2ir3tv703Hr67MNXV94SruXeT/iss9mDPprZvPes
+         6ffHUlxCzOhE7ugrxMFHbnEh58qV86Nq0cRZcplGlZ4lkQ0P8uKrQKXrjjA8OQu6A3
+         V7TWknv8ReiHCp7ipOaWD2CyqQH0fI9EyGZvwTIki5/zP856BDL8km5YCQNBNsLuJR
+         74CRos0X5bKJw==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id a97so1506604uaa.9;
+        Thu, 20 Jun 2019 04:56:48 -0700 (PDT)
+X-Gm-Message-State: APjAAAWN7PWZlEy9vDSK9xE89/WVbaBfUSdh3fTVIxUok1JOx35C3hqV
+        KFWLKMGxzD6zNDGKvDY/PV0OVcLcbSoPzglZLg0=
+X-Google-Smtp-Source: APXvYqzFkXkuPwWKvjNYsfDgjIps7UBQ7O0hc5whwGz64kb9K7YPhi3vRWwH/ZaeZ7YoQkBARIPfxZtpgqPY6CQyo6s=
+X-Received: by 2002:ab0:5ea6:: with SMTP id y38mr41998536uag.40.1561031806895;
+ Thu, 20 Jun 2019 04:56:46 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190619164518.5683-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-RCIS-Action: ALLOW
-X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
-X-TM-AS-User-Approved-Sender: Yes;Yes
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(136003)(376002)(39830400003)(346002)(2980300002)(189003)(199004)(70586007)(4326008)(50466002)(476003)(63266004)(70206006)(47776003)(65956001)(36386004)(77096007)(9786002)(186003)(6666004)(356004)(65806001)(14444005)(26005)(6246003)(31696002)(110136005)(486006)(229853002)(52146003)(446003)(2906002)(426003)(126002)(2486003)(305945005)(8936002)(5660300002)(230700001)(4744005)(478600001)(23676004)(76176011)(36756003)(65826007)(336012)(11346002)(81166006)(106002)(81156014)(64126003)(316002)(2616005)(31686004)(58126008)(8676002)(44832011)(42866002)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:CH2PR02MB6230;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;MX:1;A:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 79514fc8-6519-47bd-1129-08d6f5763fb5
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:CH2PR02MB6230;
-X-MS-TrafficTypeDiagnostic: CH2PR02MB6230:
-X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
-X-Microsoft-Antispam-PRVS: <CH2PR02MB62308515D380EBD0AA2D2D14C6E40@CH2PR02MB6230.namprd02.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:369;
-X-Forefront-PRVS: 0074BBE012
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: ZsHtvWemuJyBzkwPJ4DiNZzLtT9Mq22gFfCLQy6LGHfFVVglzukGlG+HLQvvjlbiUqsKbSSWmwLU06Cl/U8U4wfZu9HyTpBFVFvoaCcH1i09SUVZFAIyOQ9QsSwHOprjWgYHuBddVqa2FJ2OYttsp2yW3LhQbquVtGiHAgWt+uGlWG0Xg8AzftADOAWrxmFCMa9n9FaqC/WB/C5UJQLo3wbRYkm76DWZivFqVAIi5NU/Wkd3FKW9Syfs0VQnLbWo4FqFo/K9gpTZVqT3MBV6Db+LVkCEzNpIQPSoEYjTBcL8W2Rk8pRYqxuur74bWrvB6O9ECCqX+yAn4uhFo5o9Mp6i3TlEagfyGKWbLAGUL4uYj7Ofb8LJlYJWWVepy0/QDDqgRCHFGQ/xsfX2E+3kb+qvmte2AF578TLTJaH/YlI=
-X-OriginatorOrg: xilinx.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2019 11:55:53.8036
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79514fc8-6519-47bd-1129-08d6f5763fb5
-X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH2PR02MB6230
+References: <20190620064023.cwvcj5g4rgnmkmmn@gondor.apana.org.au>
+ <9c994536a297449d843947ba9be05998@SOC-EX01V.e01.socionext.com> <20190620075838.sthw4kjpp2gt6t6j@gondor.apana.org.au>
+In-Reply-To: <20190620075838.sthw4kjpp2gt6t6j@gondor.apana.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 20 Jun 2019 20:56:10 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATbMou4DHN9=POay4RGT6upj1RoUZPwfvaB7oZwqm5rfA@mail.gmail.com>
+Message-ID: <CAK7LNATbMou4DHN9=POay4RGT6upj1RoUZPwfvaB7oZwqm5rfA@mail.gmail.com>
+Subject: Re: cifs: Fix tracing build error with O=
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     stfrench@microsoft.com, linux-cifs@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 06. 19 18:45, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> A statement is indented one level too deep, fix this.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-> ---
->  drivers/net/can/xilinx_can.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/net/can/xilinx_can.c b/drivers/net/can/xilinx_can.c
-> index 63203ff452b5..a3940141555c 100644
-> --- a/drivers/net/can/xilinx_can.c
-> +++ b/drivers/net/can/xilinx_can.c
-> @@ -924,7 +924,7 @@ static void xcan_err_interrupt(struct net_device *ndev, u32 isr)
->  				cf->data[3] = CAN_ERR_PROT_LOC_CRC_SEQ;
->  			}
->  		}
-> -			priv->can.can_stats.bus_error++;
-> +		priv->can.can_stats.bus_error++;
->  	}
->  
->  	if (skb) {
-> 
+On Thu, Jun 20, 2019 at 4:58 PM Herbert Xu <herbert@gondor.apana.org.au> wrote:
+>
+> On Thu, Jun 20, 2019 at 06:54:42AM +0000, yamada.masahiro@socionext.com wrote:
+> >
+> > I cannot reproduce the build error on the latest Linus tree.
+> >
+> >
+> > $ make O=build allmodconfig fs/cifs/
+> >
+> > perfectly works for me.
+>
+> I was trying to build just the fs/cifs directory with
+>
+>         make O=build M=fs/cifs
+>
+> But I see now that this can't possibly work as M= only supports
+> absolute paths.  As M= is supposed to replace SUBDIRS=, what are
+> we supposed to do to build just a directory?
 
-Reviewed-by: Michal Simek <michal.simek@xilinx.com>
 
-Thanks,
-Michal
+Documentation/kbuild/kbuild.txt says
+M= and KBUILD_EXTMOD (and older form SUBDIRS= too)
+are for building external modules.
+
+Yet, many people still wrongly use them to build
+in-kernel directories just because they seem to work
+(but do not really).
+
+The similar question, and the answer is here:
+https://lkml.org/lkml/2019/1/17/584
+
+
+-- 
+Best Regards
+Masahiro Yamada
