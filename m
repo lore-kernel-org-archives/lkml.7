@@ -2,111 +2,121 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6391DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:47:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19891C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:48:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A2E8206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:47:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EMN0ZZAx"
+	by mail.kernel.org (Postfix) with ESMTP id EBBFD2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:48:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730401AbfFTIrx (ORCPT
+        id S1730871AbfFTIs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:47:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40899 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIrx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:47:53 -0400
-Received: by mail-wm1-f65.google.com with SMTP id v19so2237606wmj.5
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:47:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=N2rZ1vs5Z2JW66fClysbgEwISMUXpRxeDXqb9LFQrbQ=;
-        b=EMN0ZZAxDf0DZUy03S2fHKwnt9FDKNzOTUhPQWTWmNSqUGTloeKfgG4UjBNnSISm1U
-         +HMWNNSL7p5KnlXUxkBAki3Kmv8OGAckmjGZOnSMGXv/sPSajBBN0bCyFHFjT1Var//D
-         2IRy4vR5zuNOGmRD9zW12jO6GMkyHLgzC3SVkGL3b6WWPq8EeIQgs+z1yFuAPp+TDrXE
-         3RssX3wSApd3AyNPZsGq5mSwWl1V60O8E8jPm5Sdz81rWpNxV0oLwGAbvIZeIiEtecMw
-         Urv7iXmGsM6ZDizCnSMFDLwbzqKOPVwJtWlUNUYjs6UWWV6pLE0w76H0gsK7rARDEcOv
-         RuWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=N2rZ1vs5Z2JW66fClysbgEwISMUXpRxeDXqb9LFQrbQ=;
-        b=NqH7KicLxvV1sPNGeH2shobSqGpMotebolgixzA2zRRb0yXJ1wTH1ls+732gAGNHhN
-         OgvBqEkNHpsFWrxK7rF9ECP8pa1qIp8McLjYASuRWGzYUpEHt8DYH2aaFQ9WFB69gWB3
-         ET9UnOm6tL+3nIRwDDt6qFCk/tdkm4ivagUTucnwhyMWluHniBj/lXMmwOXhkK+vhLXt
-         pSlxM7gMrtVAD9LTl6UB7mQOXFr9EmXFTJv8ZZ+fnzTpcGX8coJxHJH/SxU3BIAtdqK4
-         da4M9qGGX7z79UB7bIzgOGYbw9VKi0dRlSbi8BFoCFCpwGqc5ZKQysGVPCfueR3sZR26
-         psdg==
-X-Gm-Message-State: APjAAAVSILAN9eGJhfxkncRwkoptl60M3xNGNo5eBYlINWmwgtun2Stt
-        FZsZwYKLUiVYMPsC7DDD0llsfJN2G1Y=
-X-Google-Smtp-Source: APXvYqy/elDMLeinwU8ML/8ifxSsuhVIyGkEymjAadwLhlxmAld0SUOQ+25yzqJnknmIeRbmMIrl6A==
-X-Received: by 2002:a1c:e90f:: with SMTP id q15mr1921742wmc.89.1561020470956;
-        Thu, 20 Jun 2019 01:47:50 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id r4sm44492370wra.96.2019.06.20.01.47.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 01:47:50 -0700 (PDT)
-Subject: Re: [PATCH 1/3] slimbus: fix kerneldoc comments
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org
-References: <20190620081129.4721-1-srinivas.kandagatla@linaro.org>
- <20190620081129.4721-2-srinivas.kandagatla@linaro.org>
- <20190620084623.GA20943@kroah.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <c6c172db-3eec-8f4e-ac32-0b7cb487c5e3@linaro.org>
-Date:   Thu, 20 Jun 2019 09:47:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 20 Jun 2019 04:48:57 -0400
+Received: from mga12.intel.com ([192.55.52.136]:39500 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfFTIs5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:48:57 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 01:48:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
+   d="scan'208";a="243566337"
+Received: from tao-optiplex-7060.sh.intel.com ([10.239.13.104])
+  by orsmga001.jf.intel.com with ESMTP; 20 Jun 2019 01:48:53 -0700
+From:   Tao Xu <tao3.xu@intel.com>
+To:     pbonzini@redhat.com, rkrcmar@redhat.com, corbet@lwn.net,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
+        sean.j.christopherson@intel.com
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        fenghua.yu@intel.com, xiaoyao.li@linux.intel.com,
+        jingqi.liu@intel.com, tao3.xu@intel.com
+Subject: [PATCH v5 0/3] KVM: x86: Enable user wait instructions
+Date:   Thu, 20 Jun 2019 16:46:17 +0800
+Message-Id: <20190620084620.17974-1-tao3.xu@intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20190620084623.GA20943@kroah.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+UMONITOR, UMWAIT and TPAUSE are a set of user wait instructions.
 
+UMONITOR arms address monitoring hardware using an address. A store
+to an address within the specified address range triggers the
+monitoring hardware to wake up the processor waiting in umwait.
 
-On 20/06/2019 09:46, Greg KH wrote:
-> On Thu, Jun 20, 2019 at 09:11:27AM +0100, Srinivas Kandagatla wrote:
->> From: Jonathan Corbet <corbet@lwn.net>
->>
->> The kerneldoc comments in drivers/slimbus/stream.c were not properly
->> formatted, leading to a distinctly unsatisfying "no structured comments
->> found" warning in the docs build.  Sprinkle some asterisks around so that
->> the comments will be properly recognized.
->>
->> Signed-off-by: Jonathan Corbet <corbet@lwn.net>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   drivers/slimbus/stream.c | 12 ++++++------
->>   1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> Turns out this was already in my tree :)
->
-Ah, I should have rebased it on top of char-misc!
+UMWAIT instructs the processor to enter an implementation-dependent
+optimized state while monitoring a range of addresses. The optimized
+state may be either a light-weight power/performance optimized state
+(c0.1 state) or an improved power/performance optimized state
+(c0.2 state).
 
+TPAUSE instructs the processor to enter an implementation-dependent
+optimized state c0.1 or c0.2 state and wake up when time-stamp counter
+reaches specified timeout.
 
-> Also, when sending out patches, be sure to cc: the authors, no need to
-> suppress that in git send-email.
-> 
-Sure, I will keep that in mind!
+Availability of the user wait instructions is indicated by the presence
+of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
 
-thanks,
-srini
-> thanks,
-> 
-> greg k-h
-> 
+The patches enable the umonitor, umwait and tpause features in KVM.
+Because umwait and tpause can put a (psysical) CPU into a power saving
+state, by default we dont't expose it to kvm and enable it only when
+guest CPUID has it. If the instruction causes a delay, the amount
+of time delayed is called here the physical delay. The physical delay is
+first computed by determining the virtual delay (the time to delay
+relative to the VM’s timestamp counter). 
+
+The release document ref below link:
+Intel 64 and IA-32 Architectures Software Developer's Manual,
+https://software.intel.com/sites/default/files/\
+managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+This patch has a dependency on https://lkml.org/lkml/2019/6/19/972
+
+Changelog:
+v5:
+	remove vmx_waitpkg_supported() to fix guest can rdmsr or wrmsr
+	when the feature is off (Xiaoyao)
+	rebase the patch because the kernel dependcy patch updated to
+	v5: https://lkml.org/lkml/2019/6/19/972
+v4:
+	Set msr of IA32_UMWAIT_CONTROL can be 0 and add the check of
+	reserved bit 1 (Radim and Xiaoyao)
+	Use umwait_control_cached directly and add the IA32_UMWAIT_CONTROL
+	in msrs_to_save[] to support migration (Xiaoyao)
+v3:
+	Simplify the patches, expose user wait instructions when the
+	guest has CPUID (Paolo)
+	Use mwait_control_cached to avoid frequently rdmsr of
+	IA32_UMWAIT_CONTROL (Paolo and Xiaoyao)
+	Handle vm-exit for UMWAIT and TPAUSE as "never happen" (Paolo)
+v2:
+	Separated from the series https://lkml.org/lkml/2018/7/10/160
+	Add provide a capability to enable UMONITOR, UMWAIT and TPAUSE 
+v1:
+	Sent out with MOVDIRI/MOVDIR64B instructions patches
+
+Tao Xu (3):
+  KVM: x86: add support for user wait instructions
+  KVM: vmx: Emulate MSR IA32_UMWAIT_CONTROL
+  KVM: vmx: handle vm-exit for UMWAIT and TPAUSE
+
+ arch/x86/include/asm/vmx.h      |  1 +
+ arch/x86/include/uapi/asm/vmx.h |  6 ++++-
+ arch/x86/kernel/cpu/umwait.c    |  3 ++-
+ arch/x86/kvm/cpuid.c            |  2 +-
+ arch/x86/kvm/vmx/vmx.c          | 44 +++++++++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/vmx.h          |  3 +++
+ arch/x86/kvm/x86.c              |  1 +
+ 7 files changed, 57 insertions(+), 3 deletions(-)
+
+-- 
+2.20.1
+
