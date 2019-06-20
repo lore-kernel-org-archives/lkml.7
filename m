@@ -2,45 +2,174 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F89BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 866EFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E95020B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE082085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731725AbfFTIyu (ORCPT
+        id S1731587AbfFTIyi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:54:50 -0400
-Received: from verein.lst.de ([213.95.11.211]:58766 "EHLO newverein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731681AbfFTIyq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:54:46 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id 371D768B20; Thu, 20 Jun 2019 10:54:17 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 10:54:16 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Minwoo Im <minwoo.im.dev@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [RESEND PATCH] block: move tag field position in struct request
-Message-ID: <20190620085416.GB23140@lst.de>
-References: <20190608201551.4531-1-minwoo.im.dev@gmail.com>
+        Thu, 20 Jun 2019 04:54:38 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19045 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731465AbfFTIyf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:54:35 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 732A334DD74B32B3B7D3;
+        Thu, 20 Jun 2019 16:54:33 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.132) by
+ DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 20 Jun 2019 16:54:24 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, Huazhong Tan <tanhuazhong@huawei.com>,
+        Peng Li <lipeng321@huawei.com>
+Subject: [PATCH net-next 09/11] net: hns3: fix race conditions between reset and module loading & unloading
+Date:   Thu, 20 Jun 2019 16:52:43 +0800
+Message-ID: <1561020765-14481-10-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
+References: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608201551.4531-1-minwoo.im.dev@gmail.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.132]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks good,
+When loading or unloading module, it should wait for the reset task
+done before it un-initializes the client, otherwise the reset task
+may cause a NULL pointer reference.
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
+Signed-off-by: Peng Li <lipeng321@huawei.com>
+---
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 40 ++++++++++++++++++++++
+ .../ethernet/hisilicon/hns3/hns3pf/hclge_main.h    |  1 +
+ 2 files changed, 41 insertions(+)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index 0772ca1..53dbef9 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8282,13 +8282,21 @@ static int hclge_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
+ {
+ 	struct hnae3_client *client = vport->nic.client;
+ 	struct hclge_dev *hdev = ae_dev->priv;
++	int rst_cnt;
+ 	int ret;
+ 
++	rst_cnt = hdev->rst_stats.reset_cnt;
+ 	ret = client->ops->init_instance(&vport->nic);
+ 	if (ret)
+ 		return ret;
+ 
+ 	set_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
++	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
++	    rst_cnt != hdev->rst_stats.reset_cnt) {
++		ret = -EBUSY;
++		goto init_nic_err;
++	}
++
+ 	hnae3_set_client_init_flag(client, ae_dev, 1);
+ 
+ 	/* Enable nic hw error interrupts */
+@@ -8301,6 +8309,15 @@ static int hclge_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
+ 		hclge_info_show(hdev);
+ 
+ 	return ret;
++
++init_nic_err:
++	clear_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
++	while (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++		msleep(HCLGE_WAIT_RESET_DONE);
++
++	client->ops->uninit_instance(&vport->nic, 0);
++
++	return ret;
+ }
+ 
+ static int hclge_init_roce_client_instance(struct hnae3_ae_dev *ae_dev,
+@@ -8308,6 +8325,7 @@ static int hclge_init_roce_client_instance(struct hnae3_ae_dev *ae_dev,
+ {
+ 	struct hnae3_client *client = vport->roce.client;
+ 	struct hclge_dev *hdev = ae_dev->priv;
++	int rst_cnt;
+ 	int ret;
+ 
+ 	if (!hnae3_dev_roce_supported(hdev) || !hdev->roce_client ||
+@@ -8319,14 +8337,30 @@ static int hclge_init_roce_client_instance(struct hnae3_ae_dev *ae_dev,
+ 	if (ret)
+ 		return ret;
+ 
++	rst_cnt = hdev->rst_stats.reset_cnt;
+ 	ret = client->ops->init_instance(&vport->roce);
+ 	if (ret)
+ 		return ret;
+ 
+ 	set_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state);
++	if (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state) ||
++	    rst_cnt != hdev->rst_stats.reset_cnt) {
++		ret = -EBUSY;
++		goto init_roce_err;
++	}
++
+ 	hnae3_set_client_init_flag(client, ae_dev, 1);
+ 
+ 	return 0;
++
++init_roce_err:
++	clear_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state);
++	while (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++		msleep(HCLGE_WAIT_RESET_DONE);
++
++	hdev->roce_client->ops->uninit_instance(&vport->roce, 0);
++
++	return ret;
+ }
+ 
+ static int hclge_init_client_instance(struct hnae3_client *client,
+@@ -8398,6 +8432,9 @@ static void hclge_uninit_client_instance(struct hnae3_client *client,
+ 		vport = &hdev->vport[i];
+ 		if (hdev->roce_client) {
+ 			clear_bit(HCLGE_STATE_ROCE_REGISTERED, &hdev->state);
++			while (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++				msleep(HCLGE_WAIT_RESET_DONE);
++
+ 			hdev->roce_client->ops->uninit_instance(&vport->roce,
+ 								0);
+ 			hdev->roce_client = NULL;
+@@ -8407,6 +8444,9 @@ static void hclge_uninit_client_instance(struct hnae3_client *client,
+ 			return;
+ 		if (hdev->nic_client && client->ops->uninit_instance) {
+ 			clear_bit(HCLGE_STATE_NIC_REGISTERED, &hdev->state);
++			while (test_bit(HCLGE_STATE_RST_HANDLING, &hdev->state))
++				msleep(HCLGE_WAIT_RESET_DONE);
++
+ 			client->ops->uninit_instance(&vport->nic, 0);
+ 			hdev->nic_client = NULL;
+ 			vport->nic.client = NULL;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+index 8c4e47a..6a12285 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.h
+@@ -700,6 +700,7 @@ struct hclge_mac_tnl_stats {
+ };
+ 
+ #define HCLGE_RESET_INTERVAL	(10 * HZ)
++#define HCLGE_WAIT_RESET_DONE	100
+ 
+ #pragma pack(1)
+ struct hclge_vf_vlan_cfg {
+-- 
+2.7.4
+
