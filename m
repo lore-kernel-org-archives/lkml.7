@@ -2,82 +2,167 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 087E9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:03:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECC1FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD2982083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:03:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C596B2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MFwhnOXL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731432AbfFTLCt (ORCPT
+        id S1731693AbfFTLDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:02:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51954 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726268AbfFTLCq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:02:46 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 55595C049D67;
-        Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
-Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DE38C5D9E5;
-        Thu, 20 Jun 2019 11:02:44 +0000 (UTC)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: [PATCH RFC 1/5] x86: KVM: svm: don't pretend to advance RIP in case wrmsr_interception() results in #GP
-Date:   Thu, 20 Jun 2019 13:02:36 +0200
-Message-Id: <20190620110240.25799-2-vkuznets@redhat.com>
-In-Reply-To: <20190620110240.25799-1-vkuznets@redhat.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com>
+        Thu, 20 Jun 2019 07:03:20 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:52337 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731638AbfFTLDS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:03:18 -0400
+Received: by mail-wm1-f68.google.com with SMTP id s3so2624443wms.2;
+        Thu, 20 Jun 2019 04:03:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=VSz5A8epBUVmpw04i+7PmcLUxz8iUrkIJ6W9aJ7sNBE=;
+        b=MFwhnOXLZ9GpiBBqLEqgfUgzF9H/T5lernAK18SVhj8NxXDQFPuD9JGtL0gZ6gbMKf
+         SLubkvRBu88LJI4iW9/byraIUBJrQrskeK0CjVhVfsI/Fb1lcyytEQVgcGSKTB9vnQs0
+         YaGGYz2vRetRoUvgZpuwBFdmITslKVXqNr9vPQDyvnFp0q0xHvwYp3esf/bNp9dgR1+v
+         JkXPZPGh2uZW5LaHvTgFrS5HMBta5HsSD4RfNKF1QSdISKM9larovbZSm3opX5ZpAn1n
+         GJTTeB7GvFKBULMmrQWAMue/EV3yOOLgC21WQXUbGFjJLmLuUyOR1kG4dVw7vpsQcaC2
+         8hUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=VSz5A8epBUVmpw04i+7PmcLUxz8iUrkIJ6W9aJ7sNBE=;
+        b=QH3jRKiyeMueHlCwDYSb0HkOIwFay/1earfrGn9FyIctYMjgv1jGBQGYqpw4f+08Vt
+         70KW0nxi2+YA5hIl/UUBwIpj37uAVyx/ZdmsTTP7Ur1gxlEUVxFXQ3ZQuvq5OpMV2dgo
+         Z/M0UtOxKyayvOGJDlfrO90/G0E0Fs4sp7weiKe5Wl9UZejpYRSVOGByb/pkDWl7xM9N
+         rFXmkvpebePO8uUBTpIkuj2GwREMQaJ1Y7QuRYxIj9suPUcI615KCvdGIDY5YRMX6sXg
+         0OPg6I2RZ+SwBISLYWXFwXOJtRjWHcit6Qf1N5mVMX1YhuBjWnzfybVJgEtOwefxDVtt
+         IruQ==
+X-Gm-Message-State: APjAAAXT4Z+aJ9lqQIgG4+brr4bNQuYDcPl7AViDuXW9IzKRXixDJ8qF
+        B2q3MvVAV7rvtyN+xKtjnas=
+X-Google-Smtp-Source: APXvYqxNm1K3WSG5KtignpG+L+f5Z30baasXSgC4QDQcxHwU0lotsXxcZhOn1TedVwCsHtN2jLY3KA==
+X-Received: by 2002:a1c:8049:: with SMTP id b70mr2364726wmd.33.1561028596768;
+        Thu, 20 Jun 2019 04:03:16 -0700 (PDT)
+Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
+        by smtp.gmail.com with ESMTPSA id s10sm5934353wmf.8.2019.06.20.04.03.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 04:03:15 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 13:03:14 +0200
+From:   Thierry Reding <thierry.reding@gmail.com>
+To:     Vidya Sagar <vidyas@nvidia.com>
+Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
+        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
+        gustavo.pimentel@synopsys.com, digetx@gmail.com,
+        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
+Subject: Re: [PATCH V10 15/15] arm64: Add Tegra194 PCIe driver to defconfig
+Message-ID: <20190620110314.GC15892@ulmo>
+References: <20190612095339.20118-1-vidyas@nvidia.com>
+ <20190612095339.20118-16-vidyas@nvidia.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
+Content-Disposition: inline
+In-Reply-To: <20190612095339.20118-16-vidyas@nvidia.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-svm->next_rip is only used by skip_emulated_instruction() and in case
-kvm_set_msr() fails we rightfully don't do that. Move svm->next_rip
-advancement to 'else' branch to avoid creating false impression that
-it's always advanced.
 
-By the way, rdmsr_interception() has it right already.
+--LwW0XdcUbUexiWVK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
----
- arch/x86/kvm/svm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+On Wed, Jun 12, 2019 at 03:23:39PM +0530, Vidya Sagar wrote:
+> Add PCIe host controller driver for DesignWare core based
+> PCIe controller IP present in Tegra194.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v9]:
+> * None
+>=20
+> Changes since [v8]:
+> * None
+>=20
+> Changes since [v7]:
+> * None
+>=20
+> Changes since [v6]:
+> * None
+>=20
+> Changes since [v5]:
+> * None
+>=20
+> Changes since [v4]:
+> * None
+>=20
+> Changes since [v3]:
+> * None
+>=20
+> Changes since [v2]:
+> * None
+>=20
+> Changes since [v1]:
+> * Changed CONFIG_PCIE_TEGRA194 from 'y' to 'm'
+>=20
+>  arch/arm64/configs/defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index 5b2ea34bc9f2..982c6b9bfc90 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -4430,13 +4430,13 @@ static int wrmsr_interception(struct vcpu_svm *svm)
- 	msr.index = ecx;
- 	msr.host_initiated = false;
- 
--	svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
- 	if (kvm_set_msr(&svm->vcpu, &msr)) {
- 		trace_kvm_msr_write_ex(ecx, data);
- 		kvm_inject_gp(&svm->vcpu, 0);
- 		return 1;
- 	} else {
- 		trace_kvm_msr_write(ecx, data);
-+		svm->next_rip = kvm_rip_read(&svm->vcpu) + 2;
- 		return kvm_skip_emulated_instruction(&svm->vcpu);
- 	}
- }
--- 
-2.20.1
+Applied to for-5.3/arm64/defconfig, thanks.
 
+Thierry
+
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index bb0705e1f52e..6462a4dbac87 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -192,6 +192,7 @@ CONFIG_PCIE_QCOM=3Dy
+>  CONFIG_PCIE_ARMADA_8K=3Dy
+>  CONFIG_PCIE_KIRIN=3Dy
+>  CONFIG_PCIE_HISI_STB=3Dy
+> +CONFIG_PCIE_TEGRA194=3Dm
+>  CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
+>  CONFIG_DEVTMPFS=3Dy
+>  CONFIG_DEVTMPFS_MOUNT=3Dy
+> --=20
+> 2.17.1
+>=20
+
+--LwW0XdcUbUexiWVK
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LZ/IACgkQ3SOs138+
+s6HnVQ//V0AiVK2T4Zt26dMdZRhdje5rcfQvqSvS26yAWlB19a4K+KnSpeO7nTt8
+i6xPCg/PJR7n4dZixeneI2T9CbseVldNr3S1pYDhZkauq6BjAdC83QHLsp9Qi7tX
+DEFCr7Q7S5Kydzm2qWiHqEH0RkU4uS3aHLYqmQgjwegLS70jCaQZ6YKbgOcPbukl
+O8+1Dh62jUJWf4aQrk2td+MtfjSkY3/w+J/ath9tZ2mUgyU3DnLXcX8bl2p2iL3e
+v/fxv6TunUNh4qfxNoPxe+RKYV58eYgYdTx4/iYWWBvmuqGGfDsPibgO/PB2aueu
+7GZu7HlOyAww4ZZyJZq+V59eusRVVdfOmBYNH0V7s4cZ5uylcXjo0OyVxcPaLagc
++4QAQvFvffG8dJ/EtbECoLMp2Yztw1Uq1SVLnt8MBod7DbAYL022NVBIjMB86lLj
+JiWpkweF8hOdUS1adn+j5gsgRVBMR62wBKtkQ8qYx8f4pX0Vl1VEIY2ZnEq44Q7E
+e1uqUuVaLcwszTaFO+CEsPDrdvWqUKyu8F01G+Qx+xC8rgh/g6b8AqDNK/y/x1q9
+z+3DzwdYbUtxw9G2iL4jk76dNnJnGDAKKiDeEmxeO1qYsxEIHdBgySs/eNHvdoRh
+Z1TuJN879ifWwPHgEOB95zZ8Ed5CByYQXa+JT+eDqZuumu8eU2w=
+=BWCx
+-----END PGP SIGNATURE-----
+
+--LwW0XdcUbUexiWVK--
