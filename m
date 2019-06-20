@@ -8,54 +8,54 @@ X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5ACBAC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA736C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E8C92070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F33E2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:10:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E4lqWYrR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S0b2a7aE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726969AbfFTVKf (ORCPT
+        id S1726987AbfFTVKm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:10:35 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37689 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfFTVKQ (ORCPT
+        Thu, 20 Jun 2019 17:10:42 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:43954 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726716AbfFTVKM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:10:16 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bh12so1887045plb.4;
-        Thu, 20 Jun 2019 14:10:15 -0700 (PDT)
+        Thu, 20 Jun 2019 17:10:12 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f25so2202842pgv.10;
+        Thu, 20 Jun 2019 14:10:12 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=yUxHr0hNOMB2xE/tt9UalgG6ujmd92ZRH1krBwmSmgY=;
-        b=E4lqWYrRkM6KJNjQ2DdXr2dcOiHpEGX2YRmNRNuIGzZisK03dVPjlXa+lAsoEPO5Hh
-         Gqvhzx4fd8Y51hbboeQtdjvM2X0V6OQUtzOkYN7m29YNGNF8A64XTvGme42xbGtwE/3/
-         16okdMQxaLDPooy0IqkFhpvK1aehYqCG82uUQB1ehc56NBXLDF9U28CDTFhoEZo0B4XW
-         LlMUSMn3cQ93elqet52/RzUkirP2EUvoJvYFxRVLpQ6eZNY3LFm0qON76XiihtegDSw7
-         y81apneBMySgv734LUTJlCnNOwzbOuyVT7od+80xEcdU+dpNY7x+DF50O+ckJG/7Jzpt
-         FgAw==
+        bh=G1Ij2gv2TDQKvgmKxxszCgpp7AI+3jM9fqq69fwOpA4=;
+        b=S0b2a7aE0WAuieFytAiXyQlQYVr7CGECSzLS6wJFSzGtJ+1HgTIIaRECxzTfKTjNkb
+         cErfqueoa45U43t+jz8QO0Zwp/ZwWHSElXz3DG5jBope2nWbrkpDBhA9V5YnPEj/MbyN
+         B67GD9QJ35CfNL5Exh83tpWY1m75RLYEzuyFH3wTESQ1cFH2WuascjO24sU7gvKKUC5X
+         0sm+/gYt6xFT3mUBqYxXFtiqMEuW6YfUZaLiLbHkf5Awrc2EcrPeowK9YqkPooHME/mE
+         oVNqgxxj3NpqdCZ89eLk5V608mQw2kea8NJ9K65x4x3D6Gebm6f9uhgvtou/id7uGQqH
+         2aYg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=yUxHr0hNOMB2xE/tt9UalgG6ujmd92ZRH1krBwmSmgY=;
-        b=BM3k/y3JLZ7CHs2FjT1EEjIWFDNluzSyXZN7uPlSNUZcB7krEloLCo6yPYFT+tdJmh
-         36iQzavFJTWrQi+VXY7H5JmrUt+daMI26AGb8Ixg2Cfooy8BE8EuPUtG4P8GJZTWOLYa
-         trpr6bicEm47rpp+VWYsBK40BiK+O0Xs33IUGMS5+6K0GB7OYMZCAiSr1JqOQclWZJWB
-         P2kfkuYuHHATSz/gxmw4P4PU7w8pAXOpGuJeIfKBJPq4qMHw4lfUVnJIJ2IMYDXpT2ZP
-         Xnsxi6jiPDQeDVbUr6hE4FGlFK3VAt+/6Y19Yge5hNTILpKI2nAppYAEwWOMUu0EgFjw
-         WFVA==
-X-Gm-Message-State: APjAAAX+vvptjLfTkZ3XzlGVztCkvsLUf8ysoVCUcSZJ8ryX0blBMkNX
-        +tI2lMZ0Z7P8ympSp8QfQiiZRBfI6As=
-X-Google-Smtp-Source: APXvYqweQXsePQOeD1QPqsLfAMJ2XNXS6TyEIzqv76S2fzeWoPA1Sn43mDciVODO5YNLQLkKVML5NQ==
-X-Received: by 2002:a17:902:28e9:: with SMTP id f96mr78619023plb.114.1561065015001;
-        Thu, 20 Jun 2019 14:10:15 -0700 (PDT)
+        bh=G1Ij2gv2TDQKvgmKxxszCgpp7AI+3jM9fqq69fwOpA4=;
+        b=QeWulPQmbgmfywwsgPA9AYqLrmzKW9i8f08hEeS0pbKdFAglAnNODCLdueyH+eDcFu
+         clU6pzPBgcmRRjDM/wTHclcJuMD1g8WSuOLxZ+docL/WGwl7zRBD7Z9NyequoTQ2ZoLY
+         K8PlV3bcOWi1gMppjP6lm9K8XQgVC00v+eu9/4pg1sEAbj8koXahsdNPGAuubSET7o5T
+         JFkfVyaNTotfV3SY+oeS3dIaQDyKYcfG8vSw+kN4vHOEgXYkKTdXjA3nb/2or7I85J3Q
+         gAVo9JNoqwpwRaqcPJubjPTclIeRkLJpBdhYPrvQrMYhN/VYyPkj36frQcTzyOcE5kR1
+         msyw==
+X-Gm-Message-State: APjAAAXl1cM84Mxijtmx9OOud9U4WdqPig1cgedz9PEMzBV/Dp94dfWP
+        yZQ8VirK9aRPaObprO8/r0glDgx06rc=
+X-Google-Smtp-Source: APXvYqzhfbSmcHI0Ef9C7wLbXuSiZnL4lXcN/K/RVjRqcfrVNFxMmQJbBdZzfxS1WWdDw4WarFSUVw==
+X-Received: by 2002:a17:90a:a505:: with SMTP id a5mr1715567pjq.27.1561065011551;
+        Thu, 20 Jun 2019 14:10:11 -0700 (PDT)
 Received: from stbsrv-and-3.and.broadcom.com ([192.19.231.250])
-        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.13
+        by smtp.gmail.com with ESMTPSA id p1sm386805pff.74.2019.06.20.14.10.09
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 14:10:14 -0700 (PDT)
+        Thu, 20 Jun 2019 14:10:11 -0700 (PDT)
 From:   Al Cooper <alcooperx@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
@@ -64,9 +64,9 @@ Cc:     Al Cooper <alcooperx@gmail.com>, devicetree@vger.kernel.org,
         linux-usb@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         Rob Herring <robh+dt@kernel.org>
-Subject: [PATCH 4/6] usb: bdc: Fix bug causing crash after multiple disconnects
-Date:   Thu, 20 Jun 2019 17:09:49 -0400
-Message-Id: <1561064991-16874-5-git-send-email-alcooperx@gmail.com>
+Subject: [PATCH 2/6] usb: bdc: Cleanup clock support
+Date:   Thu, 20 Jun 2019 17:09:47 -0400
+Message-Id: <1561064991-16874-3-git-send-email-alcooperx@gmail.com>
 X-Mailer: git-send-email 1.9.0.138.g2de3478
 In-Reply-To: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
 References: <1561064991-16874-1-git-send-email-alcooperx@gmail.com>
@@ -75,82 +75,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Multiple connects/disconnects can cause a crash on the second
-disconnect. The driver had a problem where it would try to send
-endpoint commands after it was disconnected which is not allowed
-by the hardware. The fix is to only allow the endpoint commands
-when the endpoint is connected. This will also fix issues that
-showed up when using configfs to create gadgets.
+- Fix driver to defer on clk_get defer
 
 Signed-off-by: Al Cooper <alcooperx@gmail.com>
 ---
- drivers/usb/gadget/udc/bdc/bdc_core.c |  4 ++++
- drivers/usb/gadget/udc/bdc/bdc_ep.c   | 16 ++++++++++------
- 2 files changed, 14 insertions(+), 6 deletions(-)
+ drivers/usb/gadget/udc/bdc/bdc_core.c | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/usb/gadget/udc/bdc/bdc_core.c b/drivers/usb/gadget/udc/bdc/bdc_core.c
-index c794890d785b..15e28790142d 100644
+index ccbd1d34eb2a..11a43de6c1c6 100644
 --- a/drivers/usb/gadget/udc/bdc/bdc_core.c
 +++ b/drivers/usb/gadget/udc/bdc/bdc_core.c
-@@ -282,6 +282,7 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 	 * in that case reinit is passed as 1
- 	 */
- 	if (reinit) {
-+		int i;
- 		/* Enable interrupts */
- 		temp = bdc_readl(bdc->regs, BDC_BDCSC);
- 		temp |= BDC_GIE;
-@@ -291,6 +292,9 @@ static void bdc_mem_init(struct bdc *bdc, bool reinit)
- 		/* Initialize SRR to 0 */
- 		memset(bdc->srr.sr_bds, 0,
- 					NUM_SR_ENTRIES * sizeof(struct bdc_bd));
-+		/* clear ep flags to avoid post disconnect stops/deconfigs */
-+		for (i = 1; i < bdc->num_eps; ++i)
-+			bdc->bdc_ep_array[i]->flags = 0;
- 	} else {
- 		/* One time initiaization only */
- 		/* Enable status report function pointers */
-diff --git a/drivers/usb/gadget/udc/bdc/bdc_ep.c b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-index a4d9b5e1e50e..3f34d10939d0 100644
---- a/drivers/usb/gadget/udc/bdc/bdc_ep.c
-+++ b/drivers/usb/gadget/udc/bdc/bdc_ep.c
-@@ -615,7 +615,6 @@ int bdc_ep_enable(struct bdc_ep *ep)
+@@ -490,8 +490,14 @@ static int bdc_probe(struct platform_device *pdev)
+ 
+ 	dev_dbg(dev, "%s()\n", __func__);
+ 
++	bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
++	if (!bdc)
++		return -ENOMEM;
++
+ 	clk = devm_clk_get(dev, "sw_usbd");
+ 	if (IS_ERR(clk)) {
++		if (PTR_ERR(clk) == -EPROBE_DEFER)
++			return -EPROBE_DEFER;
+ 		dev_info(dev, "Clock not found in Device Tree\n");
+ 		clk = NULL;
  	}
- 	bdc_dbg_bd_list(bdc, ep);
- 	/* only for ep0: config ep is called for ep0 from connect event */
--	ep->flags |= BDC_EP_ENABLED;
- 	if (ep->ep_num == 1)
+@@ -501,11 +507,6 @@ static int bdc_probe(struct platform_device *pdev)
+ 		dev_err(dev, "could not enable clock\n");
  		return ret;
- 
-@@ -759,10 +758,13 @@ static int ep_dequeue(struct bdc_ep *ep, struct bdc_req *req)
- 					__func__, ep->name, start_bdi, end_bdi);
- 	dev_dbg(bdc->dev, "ep_dequeue ep=%p ep->desc=%p\n",
- 						ep, (void *)ep->usb_ep.desc);
--	/* Stop the ep to see where the HW is ? */
--	ret = bdc_stop_ep(bdc, ep->ep_num);
--	/* if there is an issue with stopping ep, then no need to go further */
--	if (ret)
-+	/* if still connected, stop the ep to see where the HW is ? */
-+	if (!(bdc_readl(bdc->regs, BDC_USPC) & BDC_PST_MASK)) {
-+		ret = bdc_stop_ep(bdc, ep->ep_num);
-+		/* if there is an issue, then no need to go further */
-+		if (ret)
-+			return 0;
-+	} else
- 		return 0;
- 
- 	/*
-@@ -1911,7 +1913,9 @@ static int bdc_gadget_ep_disable(struct usb_ep *_ep)
- 		__func__, ep->name, ep->flags);
- 
- 	if (!(ep->flags & BDC_EP_ENABLED)) {
--		dev_warn(bdc->dev, "%s is already disabled\n", ep->name);
-+		if (bdc->gadget.speed != USB_SPEED_UNKNOWN)
-+			dev_warn(bdc->dev, "%s is already disabled\n",
-+				 ep->name);
- 		return 0;
  	}
- 	spin_lock_irqsave(&bdc->lock, flags);
+-
+-	bdc = devm_kzalloc(dev, sizeof(*bdc), GFP_KERNEL);
+-	if (!bdc)
+-		return -ENOMEM;
+-
+ 	bdc->clk = clk;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -551,7 +552,7 @@ static int bdc_probe(struct platform_device *pdev)
+ 	ret = bdc_phy_init(bdc);
+ 	if (ret) {
+ 		dev_err(bdc->dev, "BDC phy init failure:%d\n", ret);
+-		return ret;
++		goto clk_cleanup;
+ 	}
+ 
+ 	temp = bdc_readl(bdc->regs, BDC_BDCCAP1);
+@@ -583,6 +584,8 @@ static int bdc_probe(struct platform_device *pdev)
+ 	bdc_hw_exit(bdc);
+ phycleanup:
+ 	bdc_phy_exit(bdc);
++clk_cleanup:
++	clk_disable_unprepare(bdc->clk);
+ 	return ret;
+ }
+ 
 -- 
 1.9.0.138.g2de3478
 
