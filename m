@@ -2,106 +2,106 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FB9CC48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A517EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:22:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AD3221530
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:22:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561022534;
-	bh=NVni3K2b6jaPXcel1tuSet44zE5dh2fJlgDNT+h/Ugs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QtsOMhTNmHA9Zv7oU1e88asDmGcSJ68F5AeQg+6ADKkJPZMkbIN26HWJjVHC9LKrR
-	 vDwI3vs3aVZSVbm6tYzFJgqY2qVEsSj3Qk//OKmmJHL07iW4C/wEkvnrxH1Y37fjKw
-	 JPVgvVoxq+oTZVFPxNySdTBezE6ahK15JLyux1pM=
+	by mail.kernel.org (Postfix) with ESMTP id 7B674206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:22:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L+w1B0DS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbfFTJWN (ORCPT
+        id S1730930AbfFTJWS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:22:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45652 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfFTJWM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:22:12 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1AA10AF58;
-        Thu, 20 Jun 2019 09:22:11 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 11:22:09 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
-Message-ID: <20190620092209.GD12083@dhcp22.suse.cz>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-5-minchan@kernel.org>
- <20190619132450.GQ2968@dhcp22.suse.cz>
- <20190620041620.GB105727@google.com>
- <20190620070444.GB12083@dhcp22.suse.cz>
- <20190620084040.GD105727@google.com>
+        Thu, 20 Jun 2019 05:22:18 -0400
+Received: from mail-wr1-f51.google.com ([209.85.221.51]:38789 "EHLO
+        mail-wr1-f51.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTJWR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:22:17 -0400
+Received: by mail-wr1-f51.google.com with SMTP id d18so2245860wrs.5
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:22:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=7roUMD7abk4YKBQkXRtR04+JSuUPQBY+olY+0yGdQfM=;
+        b=L+w1B0DSg8tEvoCtv9utdSTW0L9QYany7rLOnj7rafijltiq+0ha//4DL7la8BYQXK
+         oJ3sDaudCdhjbyWDGfq/tU6x5RZk45ZfW/TOw361hHCvQPxXQ5QambVVzlpwyqK6csSK
+         12Gzbn01MsAQ99tDs4nPOBABXd4QC6HU3b0Fi1Qj6NhBYrTcZ9LDv1BklMOePrktRC1Y
+         eh78ix4Eu0AW83eWrUUDiJdhVnf/wsqGNjWYrOPNfNlIIlXjeAeCau5uzl6ctX21nn4C
+         Fu2dzmcCAQRvI3luIMmAnlKlI63Mjmc6fFb5+lfQPouNMR3sc7XxM7Gxd3qe6toE4woq
+         sK3Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7roUMD7abk4YKBQkXRtR04+JSuUPQBY+olY+0yGdQfM=;
+        b=LLMmIrsznZFz01bFNPiLBJyqOkyMWwxpej4nVeCW0q/yCySVwUG4K/zSn19XhF/iCI
+         eWTjtEuDvURcPLCxMYQMJ8I3ss5D0h405WIZhNbncB7y7VA+MCAQXHVnwadVg5kFsk9r
+         e7gXC4snhMrWyCuMS35IYYS3t1aEUacVGOtB5UhPJ3pfQ33ESuXIUf7fX3YGM2xpqBCs
+         rdwgaM+gUd5FhQ+u+3/eRh0E2X5IpVPWqkTIQuqX4KWuCe9ONx2sa8zVBFcSzymt6e/u
+         +o7AF94thqdVS7z8C7AdgP8LyKhB4ZdqPwqDpQEUHOnA0rUx6vxMsQniPd6kv6fEuamB
+         QY1A==
+X-Gm-Message-State: APjAAAXtC4fkn6GNmp4JfHKU/Ocw6arJS6hrX+Hzgk60KajkHsXIn8fQ
+        KwMSQ3DzLqJ733BHl1bU3AWjABBwLp0=
+X-Google-Smtp-Source: APXvYqwqGrx1QvQ0o3UUT0psU8zxz3cj/OF2EuHOyUaZ8ifQF3OMa8Qspz2dOZe1yl1nUGmUmc3/Rw==
+X-Received: by 2002:a5d:6144:: with SMTP id y4mr26985123wrt.84.1561022535680;
+        Thu, 20 Jun 2019 02:22:15 -0700 (PDT)
+Received: from ogabbay-VM ([31.154.190.6])
+        by smtp.gmail.com with ESMTPSA id p3sm19984657wrd.47.2019.06.20.02.22.14
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 02:22:15 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 12:22:13 +0300
+From:   Oded Gabbay <oded.gabbay@gmail.com>
+To:     gregkh@linuxfoundation.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: [git pull] habanalabs fixes for 5.2-rc6
+Message-ID: <20190620092213.GA16781@ogabbay-VM>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620084040.GD105727@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-06-19 17:40:40, Minchan Kim wrote:
-> > > > Pushing out a shared page cache
-> > > > is possible even now but this interface gives a much easier tool to
-> > > > evict shared state and perform all sorts of timing attacks. Unless I am
-> > > > missing something we should be doing something similar to mincore and
-> > > > ignore shared pages without a writeable access or at least document why
-> > > > we do not care.
-> > > 
-> > > I'm not sure IIUC side channel attach. As you mentioned, without this syscall,
-> > > 1. they already can do that simply by memory hogging
-> > 
-> > This is way much more harder for practical attacks because the reclaim
-> > logic is not fully under the attackers control. Having a direct tool to
-> > reclaim memory directly then just opens doors to measure the other
-> > consumers of that memory and all sorts of side channel.
-> 
-> Not sure it's much more harder. It's really easy on my experience.
-> Just creating new memory hogger and consume memory step by step until
-> you newly allocated pages will be reclaimed.
+Hi Greg,
 
-You can contain an untrusted application into a memcg and it will only
-reclaim its own working set.
+This is a pull request containing fixes to be merged to 5.2-rc6.
 
-> > > 2. If we need fix MADV_PAGEOUT, that means we need to fix MADV_DONTNEED, too?
-> > 
-> > nope because MADV_DONTNEED doesn't unmap from other processes.
-> 
-> Hmm, I don't understand. MADV_PAGEOUT doesn't unmap from other
-> processes, either.
+It contains a single minor bug fix. See the tag comment for more details.
 
-Either I am confused or missing something. shrink_page_list does
-try_to_unmap and that unmaps from all processes, right?
+Thanks,
+Oded
 
-> Could you elborate it a bit more what's your concern?
+The following changes since commit 6ad805b82dc5fc0ffd2de1d1f0de47214a050278:
 
-If you manage to unmap from a remote process then you can measure delays
-implied from the refault and that information can be used to infer what
-the remote application is doing.
--- 
-Michal Hocko
-SUSE Labs
+  doc: fix documentation about UIO_MEM_LOGICAL using (2019-06-19 19:31:21 +0200)
+
+are available in the Git repository at:
+
+  git://people.freedesktop.org/~gabbayo/linux tags/misc-habanalabs-fixes-2019-06-20
+
+for you to fetch changes up to f99bc332c713b7672bad5236060b02f0c41c7242:
+
+  habanalabs: use u64_to_user_ptr() for reading user pointers (2019-06-20 12:13:19 +0300)
+
+----------------------------------------------------------------
+This tag contains the following fix:
+
+- Casting warning of a 64-bit integer in 32-bit architecture. Use the
+  macro that was defined for this purpose.
+
+----------------------------------------------------------------
+Arnd Bergmann (1):
+      habanalabs: use u64_to_user_ptr() for reading user pointers
+
+ drivers/misc/habanalabs/habanalabs_ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
