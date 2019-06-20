@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79B6EC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07836C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5671320656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDD8120656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:25:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055117;
-	bh=oF0Q3Dv/WmqIztF6Nc0ID0/Nw6Jp7Ul/63w0zWN2vdM=;
+	s=default; t=1561055120;
+	bh=k4EW+WfHa8F3R2B6B+jMbz8EqOEEgCGFBF/wI7+kg1c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LV3JI1BLHI5P3n0M1wLVsEhTX7AUT1wnHIYz48mOuEmbf4LavfKPCZk6XVPna1EVg
-	 E9xxw3spE3o0/tGvU+dtjvjWsTjtM1+IiFqzphPSZg+O1QYvc3b0U2nIQPBOrzo62A
-	 rkl8joz90KimOKe2uYGYw1+zo2apUNvmIsMOfzos=
+	b=R+a/U8heYZa1dI/3x4akqxywuXjAriCluqPWN2OIwvCHcI8XtJ6Xne+hzDG3CheQ8
+	 X4AkbPihaG7rZFjfiv4jOjGidw4V5y/SbcBt8hEovCQvfZMYBJa1nbHrOThcAGPJFH
+	 rT+WN/v4Y6AbnbpJg7n0k/EAsqYNS3a3ixsOE6Fc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfFTSHf (ORCPT
+        id S1727377AbfFTSZT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34140 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:25:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbfFTSHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:32 -0400
+        id S1727941AbfFTSHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 297612070B;
-        Thu, 20 Jun 2019 18:07:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC0242084E;
+        Thu, 20 Jun 2019 18:07:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054051;
-        bh=oF0Q3Dv/WmqIztF6Nc0ID0/Nw6Jp7Ul/63w0zWN2vdM=;
+        s=default; t=1561054054;
+        bh=k4EW+WfHa8F3R2B6B+jMbz8EqOEEgCGFBF/wI7+kg1c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mzTbPnIwhHJVqL+C2oicAVQyrlg6B+EaYXEBJRMRYPeMG0KqMsgOFoR1q4B/xdvXN
-         PVfyfc/Nyp6/7SqDRlikYZHKUFwD6uNkEDYV1wklJ/2udqr38M96T5iEYFQ+iWc/XM
-         fZRSulqygUOm8akdBRIwS9XTmTPL3A//EJ8bYLb0=
+        b=RNDWd3Y3LbZdGvxoGSFUtHLqiqTvSm8MqjK5h+lLZeh2wPOebh5XKs/+LLkFugKKK
+         iL7Raz5L50UC/j2OvPuSFM3La83PnB/NQbIyvTdyyq2aSlq1SReziXfhI9NUSLPI7A
+         Qwb2cdPUOH1rdFymFcHV+9+nXfBWWSLR2aYW9n8c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
+        stable@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 111/117] KVM: PPC: Book3S HV: Dont take kvm->lock around kvm_for_each_vcpu
-Date:   Thu, 20 Jun 2019 19:57:25 +0200
-Message-Id: <20190620174358.202365176@linuxfoundation.org>
+Subject: [PATCH 4.9 112/117] net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
+Date:   Thu, 20 Jun 2019 19:57:26 +0200
+Message-Id: <20190620174358.238643720@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,63 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5a3f49364c3ffa1107bd88f8292406e98c5d206c ]
+[ Upstream commit 315ca92dd863fecbffc0bb52ae0ac11e0398726a ]
 
-Currently the HV KVM code takes the kvm->lock around calls to
-kvm_for_each_vcpu() and kvm_get_vcpu_by_id() (which can call
-kvm_for_each_vcpu() internally).  However, that leads to a lock
-order inversion problem, because these are called in contexts where
-the vcpu mutex is held, but the vcpu mutexes nest within kvm->lock
-according to Documentation/virtual/kvm/locking.txt.  Hence there
-is a possibility of deadlock.
+The sh_eth_close() resets the MAC and then calls phy_stop()
+so that mdio read access result is incorrect without any error
+according to kernel trace like below:
 
-To fix this, we simply don't take the kvm->lock mutex around these
-calls.  This is safe because the implementations of kvm_for_each_vcpu()
-and kvm_get_vcpu_by_id() have been designed to be able to be called
-locklessly.
+ifconfig-216   [003] .n..   109.133124: mdio_access: ee700000.ethernet-ffffffff read  phy:0x01 reg:0x00 val:0xffff
 
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+According to the hardware manual, the RMII mode should be set to 1
+before operation the Ethernet MAC. However, the previous code was not
+set to 1 after the driver issued the soft_reset in sh_eth_dev_exit()
+so that the mdio read access result seemed incorrect. To fix the issue,
+this patch adds a condition and set the RMII mode register in
+sh_eth_dev_exit() for R-Car Gen2 and RZ/A1 SoCs.
+
+Note that when I have tried to move the sh_eth_dev_exit() calling
+after phy_stop() on sh_eth_close(), but it gets worse (kernel panic
+happened and it seems that a register is accessed while the clock is
+off).
+
+Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ drivers/net/ethernet/renesas/sh_eth.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 0a2b247dbc6b..e840f943cd2c 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -374,12 +374,7 @@ static void kvmppc_dump_regs(struct kvm_vcpu *vcpu)
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index c59e8fe37069..49300194d3f9 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -1388,6 +1388,10 @@ static void sh_eth_dev_exit(struct net_device *ndev)
+ 	sh_eth_get_stats(ndev);
+ 	sh_eth_reset(ndev);
  
- static struct kvm_vcpu *kvmppc_find_vcpu(struct kvm *kvm, int id)
- {
--	struct kvm_vcpu *ret;
--
--	mutex_lock(&kvm->lock);
--	ret = kvm_get_vcpu_by_id(kvm, id);
--	mutex_unlock(&kvm->lock);
--	return ret;
-+	return kvm_get_vcpu_by_id(kvm, id);
++	/* Set the RMII mode again if required */
++	if (mdp->cd->rmiimode)
++		sh_eth_write(ndev, 0x1, RMIIMODE);
++
+ 	/* Set MAC address again */
+ 	update_mac_address(ndev);
  }
- 
- static void init_vpa(struct kvm_vcpu *vcpu, struct lppaca *vpa)
-@@ -1098,7 +1093,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
- 	struct kvmppc_vcore *vc = vcpu->arch.vcore;
- 	u64 mask;
- 
--	mutex_lock(&kvm->lock);
- 	spin_lock(&vc->lock);
- 	/*
- 	 * If ILE (interrupt little-endian) has changed, update the
-@@ -1132,7 +1126,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
- 		mask &= 0xFFFFFFFF;
- 	vc->lpcr = (vc->lpcr & ~mask) | (new_lpcr & mask);
- 	spin_unlock(&vc->lock);
--	mutex_unlock(&kvm->lock);
- }
- 
- static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
 -- 
 2.20.1
 
