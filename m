@@ -2,71 +2,73 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BAAB0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:35:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC550C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:35:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E7AE2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:35:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81504208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:35:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="S97f8a1l"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jCN9LFhw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726218AbfFTHfV (ORCPT
+        id S1726442AbfFTHfm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:35:21 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:41167 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTHfV (ORCPT
+        Thu, 20 Jun 2019 03:35:42 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:42521 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfFTHfl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:35:21 -0400
-Received: by mail-pg1-f196.google.com with SMTP id y72so1110738pgd.8
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 00:35:20 -0700 (PDT)
+        Thu, 20 Jun 2019 03:35:41 -0400
+Received: by mail-pf1-f194.google.com with SMTP id q10so1157178pff.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 00:35:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=pDySZOAOEUdrpYL/OYTlLQQDehVRswCFCm7UiM046qE=;
-        b=S97f8a1lRlF2Mb+I5P0V0qYMGqytQrNCFgOKDiSh74lqH5WvdcGs4HGhWK/DcGLnkQ
-         QybhEwk4L4iMwgMSv9E5Go/Pci1qbSKCPRUhcPfh68FmTs6gtwNXjkSMu8+m7PPy6bDg
-         wof7nibkM14K7L7L+DUiZ3bC79OBGxTNV3B1s=
+        bh=vZWBp7XRLY7BMhAB/5Wb1Dw0CKJ6+atW+qt+VNCpkPU=;
+        b=jCN9LFhwlqk32q1x84xet3TXGEXC8C5tUfPhwYwEAXK5NS7UhkEsEv4Cap07CZCu4b
+         uefsWk+zr+kVvRugckZFitv+YaJKTcDFLoGVK68AG98ECYqekqhD2P0N44bDrgjJP/cQ
+         neGID9fqg096WWtYWnn1LRuTY7wUi3YDGaUQiw4YCpyhqKiUyhHhFZM+vvCvplF218Sh
+         HIoQnbX+kQZrLw5h2gAwCyx1rmUMvK9qEDRDPIYS5bFBp2QqQjJwapAtvTjtnSO7MvF/
+         iSRgZDpfvKQFKYhXhHeGKGzJPw9T2qpO528pTnkK8cciqzWguj6uVfTS0r/Ugfj9fdkl
+         C9Yg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=pDySZOAOEUdrpYL/OYTlLQQDehVRswCFCm7UiM046qE=;
-        b=mDJ4ckzmeKkqendw6A/NmywWuD1KceNITLr1/m5bZZmH0ScPIIEhdm0U/Lu58kH4Xh
-         63G+/HdLqLPY/qNjlUIfO6qbfjNFPIHhSxLvU2gDgrwX3gVIgslxkWQZ1Uw2I2a/Lvaz
-         hnjQYoS9ckAzjPWYV9yxrikL2TjELqErnk1eBHf0/L0aR4FzGt/Smqw5UV3U/jyWTYZE
-         lkZqBdlPbljSySSEWLpUq44Lfh4l86CTtxffgXObzm0t+rrAgJmgUW/pji73q2zHfF60
-         TJqW4TvpoLayQasQS5po6MamI4CSpJty+twlzubTgMuMSXCfgrIcCpOaqUqN/3G6vPFY
-         sJBw==
-X-Gm-Message-State: APjAAAW2Co0wnhiao10FhAfj+/h89f+ZXvKSsIzXJPx4Mx6yNL5040+t
-        AquGRcIYv8TkStCftPl+3vUGuw==
-X-Google-Smtp-Source: APXvYqy1Th+X02vBYl8VUOj1IGx8gyXQaoCH2VSzzWWMauoalk//+pYkf/31g1+k2LgNIf8V8G7GAw==
-X-Received: by 2002:a65:44c2:: with SMTP id g2mr11656617pgs.378.1561016120062;
-        Thu, 20 Jun 2019 00:35:20 -0700 (PDT)
-Received: from acourbot.tok.corp.google.com ([2401:fa00:4:4:9712:8cf1:d0f:7d33])
-        by smtp.gmail.com with ESMTPSA id v9sm20504681pfm.34.2019.06.20.00.35.16
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 00:35:19 -0700 (PDT)
-From:   Alexandre Courbot <acourbot@chromium.org>
-To:     Tomasz Figa <tfiga@chromium.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>
-Subject: [PATCH v5] media: docs-rst: Document m2m stateless video decoder interface
-Date:   Thu, 20 Jun 2019 16:35:05 +0900
-Message-Id: <20190620073505.33819-1-acourbot@chromium.org>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
+        bh=vZWBp7XRLY7BMhAB/5Wb1Dw0CKJ6+atW+qt+VNCpkPU=;
+        b=HkMerJN2nhRxYiYg2YWgb/TZTzijfmKqzblv51e0cT0vF9MByFioWQVaciNap/aqkz
+         POtqlqXTD9TUvY3KcV0Kp6NeeovKDy9qf2DNnHJQpPOwMLm06cDU2DdwhJmiKC2L7V9S
+         lR7GObxigHoGU/ZI9RLqCuutT4Q1zlaUFqvCbQIKTEwAXiLHLtjmH+SOL6h7xQ27+qKa
+         pXZV1/Igt7v3TCqMavjX/TOWZTmkX/h5B++ie0+Rm64IaDMzHPacJ9BLhZMB1rUCROkC
+         zJZHZK90wF6WgmUNiYaj7dBWQFC5srw/4nTPrkfMwTQm0nWVMB9Tnt4RNWFhPSn/rbz0
+         JpMg==
+X-Gm-Message-State: APjAAAXeFMHI8vBYeAeYa6aryuq41VBA8FwGdqb1WLVh0oUvC1SQ5DBs
+        hnzfS3J+zeKp2wkKaWOs3n27ET5r0JU=
+X-Google-Smtp-Source: APXvYqzqXxTIJnr8YPEJ6VfjSUXXwzfpp6K4RCFrCL7guad8vXMWvH1MWAuLZdZ8W1iqt5tb2Lk2eA==
+X-Received: by 2002:a63:151a:: with SMTP id v26mr11860950pgl.9.1561016140764;
+        Thu, 20 Jun 2019 00:35:40 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id a12sm6239579pje.3.2019.06.20.00.35.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 00:35:39 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Kevin Hilman <khilman@kernel.org>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Qais.Yousef@arm.com, mka@chromium.org, juri.lelli@gmail.com,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V4 0/6] cpufreq: Use QoS layer to manage freq-constraints
+Date:   Thu, 20 Jun 2019 13:05:23 +0530
+Message-Id: <cover.1561014965.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -74,470 +76,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Documents the protocol that user-space should follow when
-communicating with stateless video decoders.
+Hello,
 
-The stateless video decoding API makes use of the new request and tags
-APIs. While it has been implemented with the Cedrus driver so far, it
-should probably still be considered staging for a short while.
+This patchset attempts to manage CPU frequency constraints using the PM
+QoS framework. It only does the basic stuff right now and moves the
+userspace constraints to use the QoS infrastructure.
 
-Signed-off-by: Alexandre Courbot <acourbot@chromium.org>
----
-Changes since v4:
+This is rebased over pm/linux-next and another cleanup series [1].
 
-* Specify that G_FMT must be performed again after S_FMT on the CAPTURE queue
-  to get up-to-date buffer information,
+Todo:
+- Migrate all users to the QoS framework and get rid of cpufreq specific
+  notifiers.
+- Make PM QoS learn about the relation of CPUs in a policy, so a single
+  list of constraints is managed for all of them instead of per-cpu
+  constraints.
 
-* Add description of multi-slice decoding using the
-  V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF flag.
+V3->V4:
+- Few commit logs updated as suggested during reviews.
+- Separate commit (2/6) to create resume-latency specific routines
+- Reused earlier work ("update") for notifiers as well.
+- Kept Reviewed-by tags as is as the patches normally got better only.
+  Please take them back if you find any issues.
 
-The very last paragraph of this document describes a situation that has not yet
-been discussed: draining the queue when a held CAPTURE buffer is still there. I
-have written a basic solution for this situation, but feel free to suggest
-something better.
+V2->V3:
+- Add a comment in cpufreq.c as suggested by Qais.
+- Rebased on latest pm/linux-next.
 
- Documentation/media/uapi/v4l/dev-mem2mem.rst  |   5 +
- .../media/uapi/v4l/dev-stateless-decoder.rst  | 415 ++++++++++++++++++
- 2 files changed, 420 insertions(+)
- create mode 100644 Documentation/media/uapi/v4l/dev-stateless-decoder.rst
+V1->V2:
+- The previous version introduced a completely new framework, this one
+  moves to PM QoS instead.
+- Lots of changes because of this.
 
-diff --git a/Documentation/media/uapi/v4l/dev-mem2mem.rst b/Documentation/media/uapi/v4l/dev-mem2mem.rst
-index 67a980818dc8..db6f4efc458d 100644
---- a/Documentation/media/uapi/v4l/dev-mem2mem.rst
-+++ b/Documentation/media/uapi/v4l/dev-mem2mem.rst
-@@ -13,6 +13,11 @@
- Video Memory-To-Memory Interface
- ********************************
- 
-+.. toctree::
-+    :maxdepth: 1
-+
-+    dev-stateless-decoder
-+
- A V4L2 memory-to-memory device can compress, decompress, transform, or
- otherwise convert video data from one format into another format, in memory.
- Such memory-to-memory devices set the ``V4L2_CAP_VIDEO_M2M`` or
-diff --git a/Documentation/media/uapi/v4l/dev-stateless-decoder.rst b/Documentation/media/uapi/v4l/dev-stateless-decoder.rst
-new file mode 100644
-index 000000000000..186ec39c5ed7
---- /dev/null
-+++ b/Documentation/media/uapi/v4l/dev-stateless-decoder.rst
-@@ -0,0 +1,415 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. _stateless_decoder:
-+
-+**************************************************
-+Memory-to-memory Stateless Video Decoder Interface
-+**************************************************
-+
-+A stateless decoder is a decoder that works without retaining any kind of state
-+between processed frames. This means that each frame is decoded independently
-+of any previous and future frames, and that the client is responsible for
-+maintaining the decoding state and providing it to the decoder with each
-+decoding request. This is in contrast to the stateful video decoder interface,
-+where the hardware and driver maintain the decoding state and all the client
-+has to do is to provide the raw encoded stream and dequeue decoded frames in
-+display order.
-+
-+This section describes how user-space ("the client") is expected to communicate
-+with stateless decoders in order to successfully decode an encoded stream.
-+Compared to stateful codecs, the decoder/client sequence is simpler, but the
-+cost of this simplicity is extra complexity in the client which is responsible
-+for maintaining a consistent decoding state.
-+
-+Stateless decoders make use of the request API. A stateless decoder must expose
-+the ``V4L2_BUF_CAP_SUPPORTS_REQUESTS`` capability on its ``OUTPUT`` queue when
-+:c:func:`VIDIOC_REQBUFS` or :c:func:`VIDIOC_CREATE_BUFS` are invoked.
-+
-+Depending on the encoded formats supported by the decoder, a single decoded
-+frame may be the result of several decode requests (for instance, H.264 streams
-+with multiple slices per frame). Decoders that support such formats must also
-+expose the ``V4L2_BUF_CAP_SUPPORTS_M2M_HOLD_CAPTURE_BUF`` capability on their
-+``OUTPUT`` queue.
-+
-+Querying capabilities
-+=====================
-+
-+1. To enumerate the set of coded formats supported by the decoder, the client
-+   calls :c:func:`VIDIOC_ENUM_FMT` on the ``OUTPUT`` queue.
-+
-+   * The driver must always return the full set of supported ``OUTPUT`` formats,
-+     irrespective of the format currently set on the ``CAPTURE`` queue.
-+
-+   * Simultaneously, the driver must restrain the set of values returned by
-+     codec-specific capability controls (such as H.264 profiles) to the set
-+     actually supported by the hardware.
-+
-+2. To enumerate the set of supported raw formats, the client calls
-+   :c:func:`VIDIOC_ENUM_FMT` on the ``CAPTURE`` queue.
-+
-+   * The driver must return only the formats supported for the format currently
-+     active on the ``OUTPUT`` queue.
-+
-+   * Depending on the currently set ``OUTPUT`` format, the set of supported raw
-+     formats may depend on the value of some codec-dependent controls. The
-+     The client is responsible for making sure that these controls are set
-+     before querying the ``CAPTURE`` queue. Failure to do so will result in the
-+     default values for these controls being used, and a returned set of formats
-+     that may not be usable for the media the client is trying to decode.
-+
-+3. The client may use :c:func:`VIDIOC_ENUM_FRAMESIZES` to detect supported
-+   resolutions for a given format, passing desired pixel format in
-+   :c:type:`v4l2_frmsizeenum`'s ``pixel_format``.
-+
-+4. Supported profiles and levels for the current ``OUTPUT`` format, if
-+   applicable, may be queried using their respective controls via
-+   :c:func:`VIDIOC_QUERYCTRL`.
-+
-+Initialization
-+==============
-+
-+1. Set the coded format on the ``OUTPUT`` queue via :c:func:`VIDIOC_S_FMT`.
-+
-+   * **Required fields:**
-+
-+     ``type``
-+         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
-+
-+     ``pixelformat``
-+         a coded pixel format.
-+
-+     ``width``, ``height``
-+         coded width and height parsed from the stream.
-+
-+     other fields
-+         follow standard semantics.
-+
-+   .. note::
-+
-+      Changing the ``OUTPUT`` format may change the currently set ``CAPTURE``
-+      format. The driver will derive a new ``CAPTURE`` format from the
-+      ``OUTPUT`` format being set, including resolution, colorimetry
-+      parameters, etc. If the client needs a specific ``CAPTURE`` format,
-+      it must adjust it afterwards.
-+
-+2. Call :c:func:`VIDIOC_S_EXT_CTRLS` to set all the controls (parsed headers,
-+   etc.) required by the ``OUTPUT`` format to enumerate the ``CAPTURE`` formats.
-+
-+3. Call :c:func:`VIDIOC_G_FMT` for ``CAPTURE`` queue to get the format for the
-+   destination buffers parsed/decoded from the bitstream.
-+
-+   * **Required fields:**
-+
-+     ``type``
-+         a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
-+
-+   * **Returned fields:**
-+
-+     ``width``, ``height``
-+         frame buffer resolution for the decoded frames.
-+
-+     ``pixelformat``
-+         pixel format for decoded frames.
-+
-+     ``num_planes`` (for _MPLANE ``type`` only)
-+         number of planes for pixelformat.
-+
-+     ``sizeimage``, ``bytesperline``
-+         as per standard semantics; matching frame buffer format.
-+
-+   .. note::
-+
-+      The value of ``pixelformat`` may be any pixel format supported for the
-+      ``OUTPUT`` format, based on the hardware capabilities. It is suggested
-+      that driver chooses the preferred/optimal format for the current
-+      configuration. For example, a YUV format may be preferred over an RGB
-+      format, if an additional conversion step would be required for RGB.
-+
-+4. *[optional]* Enumerate ``CAPTURE`` formats via :c:func:`VIDIOC_ENUM_FMT` on
-+   the ``CAPTURE`` queue. The client may use this ioctl to discover which
-+   alternative raw formats are supported for the current ``OUTPUT`` format and
-+   select one of them via :c:func:`VIDIOC_S_FMT`.
-+
-+   .. note::
-+
-+      The driver will return only formats supported for the currently selected
-+      ``OUTPUT`` format and currently set controls, even if more formats may be
-+      supported by the decoder in general.
-+
-+      For example, a decoder may support YUV and RGB formats for
-+      resolutions 1920x1088 and lower, but only YUV for higher resolutions (due
-+      to hardware limitations). After setting a resolution of 1920x1088 or lower
-+      as the ``OUTPUT`` format, :c:func:`VIDIOC_ENUM_FMT` may return a set of
-+      YUV and RGB pixel formats, but after setting a resolution higher than
-+      1920x1088, the driver will not return RGB pixel formats, since they are
-+      unsupported for this resolution.
-+
-+5. *[optional]* Choose a different ``CAPTURE`` format than suggested via
-+   :c:func:`VIDIOC_S_FMT` on ``CAPTURE`` queue. It is possible for the client to
-+   choose a different format than selected/suggested by the driver in
-+   :c:func:`VIDIOC_G_FMT`.
-+
-+    * **Required fields:**
-+
-+      ``type``
-+          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
-+
-+      ``pixelformat``
-+          a raw pixel format.
-+
-+   After performing this step, the client must perform step 3 again in order
-+   to obtain up-to-date information about the buffers size and layout.
-+
-+6. Allocate source (bitstream) buffers via :c:func:`VIDIOC_REQBUFS` on
-+   ``OUTPUT`` queue.
-+
-+    * **Required fields:**
-+
-+      ``count``
-+          requested number of buffers to allocate; greater than zero.
-+
-+      ``type``
-+          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``OUTPUT``.
-+
-+      ``memory``
-+          follows standard semantics.
-+
-+    * **Return fields:**
-+
-+      ``count``
-+          actual number of buffers allocated.
-+
-+    * If required, the driver will adjust ``count`` to be equal or bigger to the
-+      minimum of required number of ``OUTPUT`` buffers for the given format and
-+      requested count. The client must check this value after the ioctl returns
-+      to get the actual number of buffers allocated.
-+
-+7. Allocate destination (raw format) buffers via :c:func:`VIDIOC_REQBUFS` on the
-+   ``CAPTURE`` queue.
-+
-+    * **Required fields:**
-+
-+      ``count``
-+          requested number of buffers to allocate; greater than zero. The client
-+          is responsible for deducing the minimum number of buffers required
-+          for the stream to be properly decoded (taking e.g. reference frames
-+          into account) and pass an equal or bigger number.
-+
-+      ``type``
-+          a ``V4L2_BUF_TYPE_*`` enum appropriate for ``CAPTURE``.
-+
-+      ``memory``
-+          follows standard semantics. ``V4L2_MEMORY_USERPTR`` is not supported
-+          for ``CAPTURE`` buffers.
-+
-+    * **Return fields:**
-+
-+      ``count``
-+          adjusted to allocated number of buffers, in case the codec requires
-+          more buffers than requested.
-+
-+    * The driver must adjust count to the minimum of required number of
-+      ``CAPTURE`` buffers for the current format, stream configuration and
-+      requested count. The client must check this value after the ioctl
-+      returns to get the number of buffers allocated.
-+
-+8. Allocate requests (likely one per ``OUTPUT`` buffer) via
-+    :c:func:`MEDIA_IOC_REQUEST_ALLOC` on the media device.
-+
-+9. Start streaming on both ``OUTPUT`` and ``CAPTURE`` queues via
-+    :c:func:`VIDIOC_STREAMON`.
-+
-+Decoding
-+========
-+
-+For each frame, the client is responsible for submitting at least one request to
-+which the following is attached:
-+
-+* The amount of encoded data expected by the codec for its current
-+  configuration, as a buffer submitted to the ``OUTPUT`` queue. Typically, this
-+  corresponds to one frame worth of encoded data, but some formats may allow (or
-+  require) different amounts per unit.
-+* All the metadata needed to decode the submitted encoded data, in the form of
-+  controls relevant to the format being decoded.
-+
-+The amount of data and contents of the source ``OUTPUT`` buffer, as well as the
-+controls that must be set on the request, depend on the active coded pixel
-+format and might be affected by codec-specific extended controls, as stated in
-+documentation of each format.
-+
-+If there is a possibility that the decoded frame will require one or more
-+decode requests after the current one in order to be produced, then the client
-+must set the ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag on the ``OUTPUT``
-+buffer. This will result in the (potentially partially) decoded ``CAPTURE``
-+buffer not being made available for dequeueing, and reused for the next decode
-+request if the timestamp of the next ``OUTPUT`` buffer has not changed.
-+
-+A typical frame would thus be decoded using the following sequence:
-+
-+1. Queue an ``OUTPUT`` buffer containing one unit of encoded bitstream data for
-+   the decoding request, using :c:func:`VIDIOC_QBUF`.
-+
-+    * **Required fields:**
-+
-+      ``index``
-+          index of the buffer being queued.
-+
-+      ``type``
-+          type of the buffer.
-+
-+      ``bytesused``
-+          number of bytes taken by the encoded data frame in the buffer.
-+
-+      ``flags``
-+          the ``V4L2_BUF_FLAG_REQUEST_FD`` flag must be set. Additionally, if
-+          we are not sure that the current decode request is the last one needed
-+          to produce a fully decoded frame, then
-+          ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` must also be set.
-+
-+      ``request_fd``
-+          must be set to the file descriptor of the decoding request.
-+
-+      ``timestamp``
-+          must be set to a unique value per frame. This value will be propagated
-+          into the decoded frame's buffer and can also be used to use this frame
-+          as the reference of another. If using multiple decode requests per
-+          frame, then the timestamps of all the ``OUTPUT`` buffers for a given
-+          frame must be identical. If the timestamp changes, then the currently
-+          held ``CAPTURE`` buffer will be made available for dequeuing and the
-+          current request will work on a new ``CAPTURE`` buffer.
-+
-+2. Set the codec-specific controls for the decoding request, using
-+   :c:func:`VIDIOC_S_EXT_CTRLS`.
-+
-+    * **Required fields:**
-+
-+      ``which``
-+          must be ``V4L2_CTRL_WHICH_REQUEST_VAL``.
-+
-+      ``request_fd``
-+          must be set to the file descriptor of the decoding request.
-+
-+      other fields
-+          other fields are set as usual when setting controls. The ``controls``
-+          array must contain all the codec-specific controls required to decode
-+          a frame.
-+
-+   .. note::
-+
-+      It is possible to specify the controls in different invocations of
-+      :c:func:`VIDIOC_S_EXT_CTRLS`, or to overwrite a previously set control, as
-+      long as ``request_fd`` and ``which`` are properly set. The controls state
-+      at the moment of request submission is the one that will be considered.
-+
-+   .. note::
-+
-+      The order in which steps 1 and 2 take place is interchangeable.
-+
-+3. Submit the request by invoking :c:func:`MEDIA_REQUEST_IOC_QUEUE` on the
-+   request FD.
-+
-+    If the request is submitted without an ``OUTPUT`` buffer, or if some of the
-+    required controls are missing from the request, then
-+    :c:func:`MEDIA_REQUEST_IOC_QUEUE` will return ``-ENOENT``. If more than one
-+    ``OUTPUT`` buffer is queued, then it will return ``-EINVAL``.
-+    :c:func:`MEDIA_REQUEST_IOC_QUEUE` returning non-zero means that no
-+    ``CAPTURE`` buffer will be produced for this request.
-+
-+``CAPTURE`` buffers must not be part of the request, and are queued
-+independently. They are returned in decode order (i.e. the same order as coded
-+frames were submitted to the ``OUTPUT`` queue).
-+
-+Runtime decoding errors are signaled by the dequeued ``CAPTURE`` buffers
-+carrying the ``V4L2_BUF_FLAG_ERROR`` flag. If a decoded reference frame has an
-+error, then all following decoded frames that refer to it also have the
-+``V4L2_BUF_FLAG_ERROR`` flag set, although the decoder will still try to
-+produce a (likely corrupted) frame.
-+
-+Buffer management while decoding
-+================================
-+Contrary to stateful decoders, a stateless decoder does not perform any kind of
-+buffer management: it only guarantees that dequeued ``CAPTURE`` buffers can be
-+used by the client for as long as they are not queued again. "Used" here
-+encompasses using the buffer for compositing or display.
-+
-+A dequeued capture buffer can also be used as the reference frame of another
-+buffer.
-+
-+A frame is specified as reference by converting its timestamp into nanoseconds,
-+and storing it into the relevant member of a codec-dependent control structure.
-+The :c:func:`v4l2_timeval_to_ns` function must be used to perform that
-+conversion. The timestamp of a frame can be used to reference it as soon as all
-+its units of encoded data are successfully submitted to the ``OUTPUT`` queue.
-+
-+A decoded buffer containing a reference frame must not be reused as a decoding
-+target until all the frames referencing it have been decoded. The safest way to
-+achieve this is to refrain from queueing a reference buffer until all the
-+decoded frames referencing it have been dequeued. However, if the driver can
-+guarantee that buffers queued to the ``CAPTURE`` queue are processed in queued
-+order, then user-space can take advantage of this guarantee and queue a
-+reference buffer when the following conditions are met:
-+
-+1. All the requests for frames affected by the reference frame have been
-+   queued, and
-+
-+2. A sufficient number of ``CAPTURE`` buffers to cover all the decoded
-+   referencing frames have been queued.
-+
-+When queuing a decoding request, the driver will increase the reference count of
-+all the resources associated with reference frames. This means that the client
-+can e.g. close the DMABUF file descriptors of reference frame buffers if it
-+won't need them afterwards.
-+
-+Seeking
-+=======
-+In order to seek, the client just needs to submit requests using input buffers
-+corresponding to the new stream position. It must however be aware that
-+resolution may have changed and follow the dynamic resolution change sequence in
-+that case. Also depending on the codec used, picture parameters (e.g. SPS/PPS
-+for H.264) may have changed and the client is responsible for making sure that a
-+valid state is sent to the decoder.
-+
-+The client is then free to ignore any returned ``CAPTURE`` buffer that comes
-+from the pre-seek position.
-+
-+Pausing
-+=======
-+
-+In order to pause, the client can just cease queuing buffers onto the ``OUTPUT``
-+queue. Without source bitstream data, there is no data to process and the codec
-+will remain idle.
-+
-+Dynamic resolution change
-+=========================
-+
-+If the client detects a resolution change in the stream, it will need to perform
-+the initialization sequence again with the new resolution:
-+
-+1. Wait until all submitted requests have completed and dequeue the
-+   corresponding output buffers.
-+
-+2. Call :c:func:`VIDIOC_STREAMOFF` on both the ``OUTPUT`` and ``CAPTURE``
-+   queues.
-+
-+3. Free all ``CAPTURE`` buffers by calling :c:func:`VIDIOC_REQBUFS` on the
-+   ``CAPTURE`` queue with a buffer count of zero.
-+
-+4. Perform the initialization sequence again (minus the allocation of
-+   ``OUTPUT`` buffers), with the new resolution set on the ``OUTPUT`` queue.
-+   Note that due to resolution constraints, a different format may need to be
-+   picked on the ``CAPTURE`` queue.
-+
-+Drain
-+=====
-+
-+In order to drain the stream on a stateless decoder, the client just needs to
-+wait until all the submitted requests are completed. There is no need to send a
-+``V4L2_DEC_CMD_STOP`` command since requests are processed sequentially by the
-+decoder.
-+
-+If the last submitted request resulted in a ``CAPTURE`` buffer being held by the
-+use of the ``V4L2_BUF_FLAG_M2M_HOLD_CAPTURE_BUF`` flag, the last frame may not
-+be available on the ``CAPTURE`` queue. In this case, an extra request with an
-+empty ``OUTPUT`` buffer (e.g. which ``bytesused`` is set to 0) and a different
-+timestamp can be queued. This will make the driver release the held ``CAPTURE``
-+buffer without doing any extra processing.
+--
+viresh
+
+[1] http://lore.kernel.org/lkml/cover.1560999838.git.viresh.kumar@linaro.org
+
+Viresh Kumar (6):
+  PM / QOS: Pass request type to dev_pm_qos_{add|remove}_notifier()
+  PM / QOS: Rename __dev_pm_qos_read_value() and
+    dev_pm_qos_raw_read_value()
+  PM / QOS: Pass request type to dev_pm_qos_read_value()
+  PM / QoS: Add support for MIN/MAX frequency constraints
+  cpufreq: Register notifiers with the PM QoS framework
+  cpufreq: Add QoS requests for userspace constraints
+
+ Documentation/power/pm_qos_interface.txt |  12 +-
+ drivers/base/power/domain.c              |   8 +-
+ drivers/base/power/domain_governor.c     |   4 +-
+ drivers/base/power/qos.c                 | 135 ++++++++++++++--
+ drivers/base/power/runtime.c             |   2 +-
+ drivers/cpufreq/cpufreq.c                | 198 ++++++++++++++++-------
+ drivers/cpuidle/governor.c               |   2 +-
+ include/linux/cpufreq.h                  |  11 +-
+ include/linux/pm_qos.h                   |  48 ++++--
+ 9 files changed, 316 insertions(+), 104 deletions(-)
+
 -- 
-2.22.0.410.gd8fdbe21b5-goog
+2.21.0.rc0.269.g1a574e7a288b
 
