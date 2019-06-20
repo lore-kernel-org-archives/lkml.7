@@ -7,52 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B224EC4646C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2E76C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88F432089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89B4F215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053830;
-	bh=mcK8O7cJ4axg7PLZnsULxdnjfTpJ58vP4mLaz6OLczQ=;
+	s=default; t=1561053833;
+	bh=BPA2MM4cB1nBEioHU50f6n56DuiwxF+so9xsPoBiYX8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HTR3vKOaM7kBZGEdU5OkPM+rrt71nsDqtuwbsR8+NKGZnRDJNLb1GmdmIsy3GhijP
-	 YAvNIcTIsMS5rlXTUXezCpJyEQtDHq555jo1T+R4P+SntqJWOtiofeuwa7BJMEAZKn
-	 /TJayWM8ke0lkOxFqD60K27xaMtcNLp9L/fM4aJ8=
+	b=aK1fKRQT/kIWmDMegEC957pr/ItxMIRDy+IQ0t3eFEt2oD57+4RPUBNUPRjyNEaSx
+	 LWgJToYroDfyppVrP9/gmLLkvwaRc+lC6TPdVtdbnFygwxxZPbL0wX5xIIk4LpXNyH
+	 swsyCwmBU6wbvVuyylO49rcOgV9JU4FWTBAecTg8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbfFTSDt (ORCPT
+        id S1727739AbfFTSDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:03:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55334 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:03:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55438 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727718AbfFTSDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:45 -0400
+        id S1727729AbfFTSDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85B9E2089C;
-        Thu, 20 Jun 2019 18:03:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3EDF021479;
+        Thu, 20 Jun 2019 18:03:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053825;
-        bh=mcK8O7cJ4axg7PLZnsULxdnjfTpJ58vP4mLaz6OLczQ=;
+        s=default; t=1561053827;
+        bh=BPA2MM4cB1nBEioHU50f6n56DuiwxF+so9xsPoBiYX8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j/5WewNxps46ieyijo9V5wmnJppqsBHHKf+kqwp4W7SfsTqa1PWNlruXSM8otx4ri
-         FO/pHqDqaAir80zhl7rmzsAd/dOmCknzk9rn8ze+oyG1cFqAvSY40UCDv9QeDAdIo1
-         AcZQdf68Ka154JK30QhN2ILISxfbDwtuh7b7731Y=
+        b=MMVdhmyY7ECh0cxLDOISV2uMC7+5V2BIkV+wXNn8cBoFPS/1sWplGXyL69lFYxuaZ
+         e6SLzmkQoFiOELkEtOrdoyuR3yQLA+/YNvfgK1CIoIPSixEx3vwgeFk8UmzTXjxxPB
+         grdOz5rzQUGH11kFzypojvi+9CXkiaqSDtoOJEKo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
+        stable@vger.kernel.org,
+        Javier Martinez Canillas <javier@dowhile0.org>,
+        Daniel Gomez <dagmcr@gmail.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 039/117] ARM: dts: imx6ul: Specify IMX6UL_CLK_IPG as "ipg" clock to SDMA
-Date:   Thu, 20 Jun 2019 19:56:13 +0200
-Message-Id: <20190620174354.339677307@linuxfoundation.org>
+Subject: [PATCH 4.9 013/117] mfd: tps65912-spi: Add missing of table registration
+Date:   Thu, 20 Jun 2019 19:55:47 +0200
+Message-Id: <20190620174352.777012926@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -65,43 +62,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 7b3132ecefdd1fcdf6b86e62021d0e55ea8034db ]
+[ Upstream commit 9e364e87ad7f2c636276c773d718cda29d62b741 ]
 
-Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
-clock to determine if it needs to configure the IP block as operating
-at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
-clocks as IMX6UL_CLK_SDMA results in driver incorrectly thinking that
-ratio is 1:1 which results in broken SDMA funtionality. Fix the code
-to specify IMX6UL_CLK_IPG as "ipg" clock for SDMA, to avoid detecting
-incorrect clock ratio.
+MODULE_DEVICE_TABLE(of, <of_match_table> should be called to complete DT
+OF mathing mechanism and register it.
 
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-Cc: Chris Healy <cphealy@gmail.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Before this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          spi:tps65912
+
+After this patch:
+modinfo drivers/mfd/tps65912-spi.ko | grep alias
+alias:          of:N*T*Cti,tps65912C*
+alias:          of:N*T*Cti,tps65912
+alias:          spi:tps65912
+
+Reported-by: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Daniel Gomez <dagmcr@gmail.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/tps65912-spi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index c5c05fdccc78..7839300fe46b 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -669,7 +669,7 @@
- 					     "fsl,imx35-sdma";
- 				reg = <0x020ec000 0x4000>;
- 				interrupts = <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>;
--				clocks = <&clks IMX6UL_CLK_SDMA>,
-+				clocks = <&clks IMX6UL_CLK_IPG>,
- 					 <&clks IMX6UL_CLK_SDMA>;
- 				clock-names = "ipg", "ahb";
- 				#dma-cells = <3>;
+diff --git a/drivers/mfd/tps65912-spi.c b/drivers/mfd/tps65912-spi.c
+index 4aeba9b6942a..ec37cfe32ca3 100644
+--- a/drivers/mfd/tps65912-spi.c
++++ b/drivers/mfd/tps65912-spi.c
+@@ -27,6 +27,7 @@ static const struct of_device_id tps65912_spi_of_match_table[] = {
+ 	{ .compatible = "ti,tps65912", },
+ 	{ /* sentinel */ }
+ };
++MODULE_DEVICE_TABLE(of, tps65912_spi_of_match_table);
+ 
+ static int tps65912_spi_probe(struct spi_device *spi)
+ {
 -- 
 2.20.1
 
