@@ -2,105 +2,94 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12330C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7F6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:54:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D203120675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:51:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="C5VC77CT"
+	by mail.kernel.org (Postfix) with ESMTP id 840F62082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:54:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561035258;
+	bh=mJIzkIy1IkKq1wkFs5xq4C9Jj7aUtzPtSq2EXZZcKIc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aS1wIwY3LgHUGvdmy6S5Yd7EVreqNm96MqHLuuZ+QAxqesY5LjC3iYovAPFcu2L2p
+	 qZCSeBXs+LHG5G5ubpa/QLO9fgfMklYkoOLeDcWGt5FNuEZeBMI6Qs7U0/UL6K+ktr
+	 0e5vijPiGAY9Cf3lypqVGhXke+foEhoJRaYJ/w/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731776AbfFTMvG (ORCPT
+        id S1731814AbfFTMyR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:51:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47310 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfFTMvG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:51:06 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
-        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
-        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=7yjxKkslIpoQDavtSiAROwpDIQ1ErOWdHf7wTrGdGuE=; b=C5VC77CTtPXVAIahK4q0qvngEm
-        ZJn3O7gzyI/zT0cfBbFXho1EzBMvQ79SjbCt47ceeOFL0msX6evYrc7UJSoEY9jxiskmjVxs9CdVM
-        1ocJ4wQDvJNVeZROTcDrrWsiTuX/b1XiyBztxkbWS7eEk+rplkCOv/6kotXCPlEz7DPi+zQcd7dbE
-        rR2hGA3aUW+BW0ix7oBK5MxI7RL+WOa2jxaluWePLA86RHaVniF+wjPpdEPzeu0AksvUudaGyo0GZ
-        RbTUxnKiDd6OrcsnUZdR95xwHXk8MI+r4ycALbrN2SPmavL2T+W/LfnM2rLBrn3Tu97qrVxWo87iA
-        9cnhuhsg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdwWq-0000st-LZ; Thu, 20 Jun 2019 12:51:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 204F6205E1079; Thu, 20 Jun 2019 14:50:59 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 14:50:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-x86 <x86@kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        mingo@redhat.com, acme@kernel.org,
-        alexander.shishkin@linux.intel.com, jolsa@redhat.com,
-        namhyung@kernel.org, tglx@linutronix.de,
-        "Liang, Kan" <kan.liang@intel.com>
-Subject: Re: [PATCH] perf/rapl: restart perf rapl counter after resume
-Message-ID: <20190620125059.GZ3436@hirez.programming.kicks-ass.net>
-References: <1560778897.10723.6.camel@intel.com>
+        Thu, 20 Jun 2019 08:54:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58456 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727040AbfFTMyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:54:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD4D2080C;
+        Thu, 20 Jun 2019 12:54:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561035256;
+        bh=mJIzkIy1IkKq1wkFs5xq4C9Jj7aUtzPtSq2EXZZcKIc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WE3TyVQ1U7WjKVqehsGQxiDSfN20lgka+ZYGMYm/MlYieOkq/O40ifRB2PjpQcHS4
+         FujD8AVdsSG/qKJoGNlKzL5RK126UmH/KdPe41snhOXBQn+OF/+ZmkO/CTKfBtyRD8
+         Ix529taM1ls7ywfQFdzJgXC7/ZP9Z2ZHOvEInXYc=
+Date:   Thu, 20 Jun 2019 14:54:13 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Stefan Achatz <erazor_de@users.sourceforge.net>
+Subject: Re: [PATCH 04/14] ABI: better identificate tables
+Message-ID: <20190620125413.GA5170@kroah.com>
+References: <cover.1560477540.git.mchehab+samsung@kernel.org>
+ <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
+ <20190619125135.GG25248@localhost>
+ <20190619105633.7f7315a5@coco.lan>
+ <20190619150207.GA19346@kroah.com>
+ <20190620120150.GH6241@localhost>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <1560778897.10723.6.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190620120150.GH6241@localhost>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 09:41:37PM +0800, Zhang Rui wrote:
-
-> After S3 suspend/resume, "perf stat -I 1000 -e power/energy-pkg/ -a"
-> reports an insane value for the very first sampling period after resume
-> as shown below.
+On Thu, Jun 20, 2019 at 02:01:50PM +0200, Johan Hovold wrote:
+> > I don't know when "Description" and "RST-Description" would be used.
+> > Why not just parse "Description" like rst text and if things are "messy"
+> > we fix them up as found, like you did with the ":" here?  It doesn't
+> > have to be complex, we can always fix them up after-the-fact if new
+> > stuff gets added that doesn't quite parse properly.
+> > 
+> > Just like we do for most kernel-doc formatting :)
 > 
->     19.278989977               2.16 Joules power/energy-pkg/
->     20.279373569               1.96 Joules power/energy-pkg/
->     21.279765481               2.09 Joules power/energy-pkg/
->     22.280305420               2.10 Joules power/energy-pkg/
->     25.504782277   4,294,966,686.01 Joules power/energy-pkg/
->     26.505114993               3.58 Joules power/energy-pkg/
->     27.505471758               1.66 Joules power/energy-pkg/
+> But kernel-doc has a documented format, which was sort of the point I
+> was trying to make. If the new get_abi.pl scripts expects a colon I
+> think it should be mentioned somewhere (e.g. Documentation/ABI/README).
 > 
-> Fix this by resetting the counter right after resume.
+> Grepping for attribute entries in linux-next still reveals a number
+> descriptions that still lack that colon and use varying formatting. More
+> are bound to be added later, but perhaps that's ok depending on what
+> you're aiming at here.
 
-Cute...
+I'm aiming for "good enough" to start with, and then we can work through
+the exceptions.
 
+But given that Mauro hasn't resent the script that does the conversion
+of the files, I don't know if that will even matter... {hint}
 
-> +#ifdef CONFIG_PM
-> +
-> +static int perf_rapl_suspend(void)
-> +{
-> +	int i;
-> +
-> +	get_online_cpus();
-> +	for (i = 0; i < rapl_pmus->maxpkg; i++)
-> +		rapl_pmu_update_all(rapl_pmus->pmus[i]);
-> +	put_online_cpus();
-> +	return 0;
-> +}
-> +
-> +static void perf_rapl_resume(void)
-> +{
-> +	int i;
-> +
-> +	get_online_cpus();
-> +	for (i = 0; i < rapl_pmus->maxpkg; i++)
-> +		rapl_pmu_restart_all(rapl_pmus->pmus[i]);
-> +	put_online_cpus();
-> +}
+thanks,
 
-What's the reason for that get/put_online_cpus() here ?
+greg k-h
