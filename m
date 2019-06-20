@@ -2,92 +2,110 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD3DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:41:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C734C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 913D62085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:41:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SdRO1o4D"
+	by mail.kernel.org (Postfix) with ESMTP id 3B31A2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:43:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561056219;
+	bh=qssMf724l63GhfHaaNI1XFYyjk/ni2GigTWG47mPq+k=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kjmd7aX3djd5m73W2VoGDWawgHhinJwEQXb+QubLQ9gscLqRmVHYS/ijHbJK6onAO
+	 8/7N0gZV8rldNSq0vtIaXNI0Ljzb5uP85nJ8EHTt1TNEeF3mb3ZObM1W6olw7oeIIN
+	 LMWtczZfD06EV2cbNR2GCSSg7DviVDRz25x25TH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726326AbfFTSlf (ORCPT
+        id S1726430AbfFTSnh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:41:35 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:36006 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725869AbfFTSle (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:41:34 -0400
-Received: by mail-io1-f67.google.com with SMTP id h6so522710ioh.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 11:41:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2bnNSwv6vtlQWGp/eiIohBlhjTQOOeCXZtmIH40KDQI=;
-        b=SdRO1o4Dv3uJylFNXAeVIYPkEvywun2pv/WsTGBkVrhdWiMDQaDvJkWuUBD3ptdZfo
-         KHsZAqb/0VXSI+pg2lzg4DoyPEX18u70VhZS25BdeR5UV9c1UqqFsyl5R7qIvcx/Qhvh
-         wrcSjmNaZwYvCxLetHHCHVQlBO5p+fbTWGsm2Uh48nze5wONwuRGz5gtqlNhU0Zz7R9y
-         KMZ+pDKB90OZkvm+vrfE+j3F71NSQYYfTsvbMvJz7ajW410iXCVQ+8NOlZVRcYwEnnHm
-         h9Nw4Dcv/WDBmISX0zrdhrlBoczoWjv22Ym1uwfB8UMT+U+Gccu05KZiCLzg1r4ZqPHv
-         OjbA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2bnNSwv6vtlQWGp/eiIohBlhjTQOOeCXZtmIH40KDQI=;
-        b=cKANEQCc9vxdzhvxv/KpidRMGMfYfW6szVcVzeIqwPbScywdOV8LSPCl1LHZg2ftNF
-         AP7hsnagguufcZjXCacDtdHjIl3VdGZrGOVvXCiTdylFGW1CWtgx+rjPq9R6pywlCN1U
-         PbPbkoL0PVcZF7+ulUf7UAyIEUtlgq0fH6SB+K6L+sci1y4GHpR19T/lHWaHoxot8nhh
-         addjGWYVODMaWEoW1/D3exnASPIOCrG9NXnEPVGWy+SMr9Xunc0W462tb5PI8Aaf+TRK
-         2cw3Ws2wiWjFk9vY8VlejA5X3GVRlLL+Bh56n5/8pOel0frbOT9RUO/q5ZcomHdNgdIy
-         8krQ==
-X-Gm-Message-State: APjAAAULWXfSBj+B0lC2lD4lPOU+9Ut9D/DOChp0DMuLQqNXoBwkzkIA
-        DklyRWrFo3j4OszTAdgnF/3Xt1P1Bo5Oniv7HP8JBQ==
-X-Google-Smtp-Source: APXvYqxfGPRpdr5RB5w/4lIohLuEV2fFxQOtLYCVm+Two3E6fxDYIpOgEEnkOnjHIO6BGcdWZ8MyOKh7vcd+kfN6aO4=
-X-Received: by 2002:a6b:f80b:: with SMTP id o11mr55413954ioh.40.1561056093467;
- Thu, 20 Jun 2019 11:41:33 -0700 (PDT)
+        Thu, 20 Jun 2019 14:43:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39872 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725869AbfFTSnh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:43:37 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D664720656;
+        Thu, 20 Jun 2019 18:43:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561056216;
+        bh=qssMf724l63GhfHaaNI1XFYyjk/ni2GigTWG47mPq+k=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eHJUJEpwQpJgwjwTXV86R/ejECgnna4zyIVw+/u2pkpi+auEYU1B5ZtOyYh7NGTVs
+         1FAaosz+V23bG4urwC89rZHwUQsIWYEjV0OrQ0tBNk7o4I59XcGyzvLp26ZQHyNH50
+         QCyUvS9YRDBEFu7EbFPVa9ItFy5BKcXPxQ9rCFyk=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, "Kuo, Hsuan-Chi" <hckuo2@illinois.edu>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 027/117] watchdog: fix compile time error of pretimeout governors
+Date:   Thu, 20 Jun 2019 19:56:01 +0200
+Message-Id: <20190620174353.612777514@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
+References: <20190620174351.964339809@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190620110240.25799-1-vkuznets@redhat.com> <20190620110240.25799-6-vkuznets@redhat.com>
-In-Reply-To: <20190620110240.25799-6-vkuznets@redhat.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Thu, 20 Jun 2019 11:41:22 -0700
-Message-ID: <CALMp9eQo3KW_qjW=8KPbJuggs-VOWsBgLjXYi1F6_1aoJ0kfsg@mail.gmail.com>
-Subject: Re: [PATCH RFC 5/5] x86: KVM: svm: remove hardcoded instruction
- length from intercepts
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     kvm list <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 4:02 AM Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
->
-> Various intercepts hard-code the respective instruction lengths to optimize
-> skip_emulated_instruction(): when next_rip is pre-set we skip
-> kvm_emulate_instruction(vcpu, EMULTYPE_SKIP). The optimization is, however,
-> incorrect: different (redundant) prefixes could be used to enlarge the
-> instruction. We can't really avoid decoding.
->
-> svm->next_rip is not used when CPU supports 'nrips' (X86_FEATURE_NRIPS)
-> feature: next RIP is provided in VMCB. The feature is not really new
-> (Opteron G3s had it already) and the change should have zero affect.
->
-> Remove manual svm->next_rip setting with hard-coded instruction lengths. The
-> only case where we now use svm->next_rip is EXIT_IOIO: the instruction
-> length is provided to us by hardware.
->
-> Reported-by: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-Reviewed-by: Jim Mattson <jmattson@google.com>
+[ Upstream commit a223770bfa7b6647f3a70983257bd89f9cafce46 ]
+
+CONFIG_WATCHDOG_PRETIMEOUT_GOV build symbol adds watchdog_pretimeout.o
+object to watchdog.o, the latter is compiled only if CONFIG_WATCHDOG_CORE
+is selected, so it rightfully makes sense to add it as a dependency.
+
+The change fixes the next compilation errors, if CONFIG_WATCHDOG_CORE=n
+and CONFIG_WATCHDOG_PRETIMEOUT_GOV=y are selected:
+
+  drivers/watchdog/pretimeout_noop.o: In function `watchdog_gov_noop_register':
+  drivers/watchdog/pretimeout_noop.c:35: undefined reference to `watchdog_register_governor'
+  drivers/watchdog/pretimeout_noop.o: In function `watchdog_gov_noop_unregister':
+  drivers/watchdog/pretimeout_noop.c:40: undefined reference to `watchdog_unregister_governor'
+
+  drivers/watchdog/pretimeout_panic.o: In function `watchdog_gov_panic_register':
+  drivers/watchdog/pretimeout_panic.c:35: undefined reference to `watchdog_register_governor'
+  drivers/watchdog/pretimeout_panic.o: In function `watchdog_gov_panic_unregister':
+  drivers/watchdog/pretimeout_panic.c:40: undefined reference to `watchdog_unregister_governor'
+
+Reported-by: Kuo, Hsuan-Chi <hckuo2@illinois.edu>
+Fixes: ff84136cb6a4 ("watchdog: add watchdog pretimeout governor framework")
+Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/watchdog/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 15c01830799a..d65c220d8175 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -1850,6 +1850,7 @@ comment "Watchdog Pretimeout Governors"
+ 
+ config WATCHDOG_PRETIMEOUT_GOV
+ 	bool "Enable watchdog pretimeout governors"
++	depends on WATCHDOG_CORE
+ 	help
+ 	  The option allows to select watchdog pretimeout governors.
+ 
+-- 
+2.20.1
+
+
+
