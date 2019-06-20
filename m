@@ -2,110 +2,124 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01156C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9518C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C469E206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KvOr4Sp+"
+	by mail.kernel.org (Postfix) with ESMTP id A7308204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561066644;
+	bh=KEOsoSrb9GsSalzLDzqg7oM6M3w4KE8UClR5usfMJ1Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=idzQM+/jvUKXoW6kwuoC6MU/6RGehdD3b+rEls4A9nvszkH702IqmYn5DSbhnwSpw
+	 iFXR0LijUClZdOOeyAA9FKYQAC906lZ9a2ubVkBF1KkT1eEiITdUvpTyu5suQt77V9
+	 GtifCkHwHrLageSWNNnEDkvewQFIPm6rfoGkFZN0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726147AbfFTVhD (ORCPT
+        id S1726310AbfFTVhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:37:03 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45431 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfFTVhC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:37:02 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a14so6711594edv.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 14:37:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=v3IpD3zOAyT/o3jFLveqYdHxVLapPS/YFt6LidFqVKU=;
-        b=KvOr4Sp+Id3A6XKZfDq0jaToh9hTpDvR4uHERHTmM5jYRInzJr41kiC9SoOmmDJhky
-         oWXqPY/lKaIz9THmlD7IH7YFcmC3tZDq/MG8PgXKGCf9XHFgOdbfcOfRn1VFfw/TeOoP
-         bFK/Xo6W9HJHbqyCJAlgYtMGuDNKG7dFjc43Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=v3IpD3zOAyT/o3jFLveqYdHxVLapPS/YFt6LidFqVKU=;
-        b=U79vuhi7R8u4ri0CyVV3uWJB1hZBet/VhMRZ3ZzXNSD5cKb0X32dlnbmryl1je0MWS
-         aMtPDQISUAVN0w4nxsv+1JVeIdSiKRg3T609FkSZu+sjKkUuDKkV2fDFWeXNp5JBAkNG
-         lFZ1umsbgi5lHtNJVv9tLaz1dmYjtHhSsX6U5tsYd0bV1DtDUFrj9BJ0nkxhoo84eXPf
-         De76Dbe86z/rmE/1PnJ0UExjgleRHE6wq2FBxUj6WGeIup9Fb1L1B0EWHfFmWcc9pkvy
-         m89ysbTMfx+UMGmX0bY4p3fcTZZege2IpSgbOf7v3W0wFW9jIt+c8zSG47ZTmg6HsmsJ
-         /fMA==
-X-Gm-Message-State: APjAAAX8abUT2+z96UcnG/3+iFHg9lMlOXJuYsc+iEbuqdyTgRdjuzpS
-        nbdH4ripWCyi0wXLpfHg343xGRmTuJs=
-X-Google-Smtp-Source: APXvYqwvR/hMYD3xrgS9iC4wgSKZzeekpDjgwXzHCyOHlapnUcWRMSvlntMdrtQE2IYJlwCdGWYEtw==
-X-Received: by 2002:a50:f5f5:: with SMTP id x50mr55771854edm.89.1561066621050;
-        Thu, 20 Jun 2019 14:37:01 -0700 (PDT)
-Received: from mail-ed1-f48.google.com (mail-ed1-f48.google.com. [209.85.208.48])
-        by smtp.gmail.com with ESMTPSA id m19sm86599eje.30.2019.06.20.14.37.00
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 14:37:00 -0700 (PDT)
-Received: by mail-ed1-f48.google.com with SMTP id m10so6778858edv.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 14:37:00 -0700 (PDT)
-X-Received: by 2002:a17:906:b315:: with SMTP id n21mr8174762ejz.312.1561066175899;
- Thu, 20 Jun 2019 14:29:35 -0700 (PDT)
+        Thu, 20 Jun 2019 17:37:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46396 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfFTVhW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 17:37:22 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCD92206BA;
+        Thu, 20 Jun 2019 21:37:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561066642;
+        bh=KEOsoSrb9GsSalzLDzqg7oM6M3w4KE8UClR5usfMJ1Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Q5uC+Cfu5/t9zh8Kv34dJcRj/KqPoNmIcR7JTUgi6pP3MCvNOE0KMP1xi5plXrb7S
+         vNTBkhiveZjiKHxdAr5tlkUVlXgFMD3L1EYk0Oxm17AFLEZAjVuLNTc3m8p/fEX6RU
+         /hWtSewfL3fPw70qmZ9m5N3ww3e2jpIZIBVVqss8=
+Date:   Thu, 20 Jun 2019 16:37:21 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 3/3] net: fddi: skfp: Remove unused private PCI
+ definitions
+Message-ID: <20190620213721.GD110859@google.com>
+References: <20190620180754.15413-1-puranjay12@gmail.com>
+ <20190620180754.15413-4-puranjay12@gmail.com>
 MIME-Version: 1.0
-References: <20190620151839.195506-1-zwisler@google.com> <20190620151839.195506-3-zwisler@google.com>
- <20190620212517.GC4650@mit.edu>
-In-Reply-To: <20190620212517.GC4650@mit.edu>
-From:   Ross Zwisler <zwisler@chromium.org>
-Date:   Thu, 20 Jun 2019 15:29:24 -0600
-X-Gmail-Original-Message-ID: <CAGRrVHw8LuMT7eTnJ4VV9OpnetSSYaLh5nLkN4Anevz6r8KmZA@mail.gmail.com>
-Message-ID: <CAGRrVHw8LuMT7eTnJ4VV9OpnetSSYaLh5nLkN4Anevz6r8KmZA@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] jbd2: introduce jbd2_inode dirty range scoping
-To:     "Theodore Ts'o" <tytso@mit.edu>,
-        Ross Zwisler <zwisler@chromium.org>,
-        linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620180754.15413-4-puranjay12@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 3:25 PM Theodore Ts'o <tytso@mit.edu> wrote:
-> On Thu, Jun 20, 2019 at 09:18:38AM -0600, Ross Zwisler wrote:
-> > diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-> > index 5c04181b7c6d8..0e0393e7f41a4 100644
-> > --- a/include/linux/jbd2.h
-> > +++ b/include/linux/jbd2.h
-> > @@ -1397,6 +1413,12 @@ extern int        jbd2_journal_force_commit(journal_t *);
-> >  extern int      jbd2_journal_force_commit_nested(journal_t *);
-> >  extern int      jbd2_journal_inode_add_write(handle_t *handle, struct jbd2_inode *inode);
-> >  extern int      jbd2_journal_inode_add_wait(handle_t *handle, struct jbd2_inode *inode);
-> > +extern int      jbd2_journal_inode_ranged_write(handle_t *handle,
-> > +                     struct jbd2_inode *inode, loff_t start_byte,
-> > +                     loff_t length);
-> > +extern int      jbd2_journal_inode_ranged_wait(handle_t *handle,
-> > +                     struct jbd2_inode *inode, loff_t start_byte,
-> > +                     loff_t length);
-> >  extern int      jbd2_journal_begin_ordered_truncate(journal_t *journal,
-> >                               struct jbd2_inode *inode, loff_t new_size);
-> >  extern void     jbd2_journal_init_jbd_inode(struct jbd2_inode *jinode, struct inode *inode);
->
-> You're adding two new functions that are called from outside the jbd2
-> subsystem.  To support compiling jbd2 as a module, we also need to add
-> EXPORT_SYMBOL declarations for these two functions.
->
-> I'll take care of this when applying this change.
+On Thu, Jun 20, 2019 at 11:37:54PM +0530, Puranjay Mohan wrote:
+> Remove unused and private PCI definitions from skfbi.h because generic PCI
+> symbols are already included from pci_regs.h.
+> 
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  drivers/net/fddi/skfp/h/skfbi.h | 207 +-------------------------------
+>  1 file changed, 1 insertion(+), 206 deletions(-)
+> 
+> diff --git a/drivers/net/fddi/skfp/h/skfbi.h b/drivers/net/fddi/skfp/h/skfbi.h
+> index a05ce16171be..a8af80148022 100644
+> --- a/drivers/net/fddi/skfp/h/skfbi.h
+> +++ b/drivers/net/fddi/skfp/h/skfbi.h
+> @@ -27,46 +27,6 @@
+>  /*
+>   * Configuration Space header
+>   */
 
-Ah, yep, great catch.  Thanks!
+This comment should be removed because it goes along with the
+definitions below (the ones from PCI_VENDOR_ID to PCI_MAX_LAT).
+
+> -#define	PCI_VENDOR_ID	0x00	/* 16 bit	Vendor ID */
+> -#define	PCI_DEVICE_ID	0x02	/* 16 bit	Device ID */
+
+> @@ -74,179 +34,14 @@
+>   * Note: The temperature and voltage sensors are relocated on a different
+>   *	 I2C bus.
+>   */
+> -#define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */ 
+> +#define I2C_ADDR_VPD	0xA0	/* I2C address for the VPD EEPROM */
+
+You removed the space at the end of the I2C_ADDR_VPD line.  That space
+*is* a whitespace error, but generally you should avoid fixing random
+unrelated issues in the middle of your patch.  Those random fixes make
+it harder because the reviewer is expecting to see unused PCI-related
+things removed and seeing an I2C diff is surprising and forces him/her
+to do some investigation.
+
+> -/*	PCI_STATUS	16 bit	Status */
+>  #define	PCI_PERR	0x8000	/* Bit 15:	Parity Error */
+>  #define	PCI_SERR	0x4000	/* Bit 14:	Signaled SERR */
+>  #define	PCI_RMABORT	0x2000	/* Bit 13:	Received Master Abort */
+
+These should be replaced by PCI_STATUS_DETECTED_PARITY and similar
+generic definitions.  You could do this in your 1/1 patch along with
+PCI_REVISION_ID.
+
+> -#define	PCI_RTABORT	0x1000	/* Bit 12:	Received Target Abort */
+>  #define	PCI_STABORT	0x0800	/* Bit 11:	Sent Target Abort */
+> -#define	PCI_DEVSEL	0x0600	/* Bit 10..9:	DEVSEL Timing */
+> -#define	PCI_DEV_FAST	(0<<9)	/*		fast */
+> -#define	PCI_DEV_MEDIUM	(1<<9)	/*		medium */
+> -#define	PCI_DEV_SLOW	(2<<9)	/*		slow */
+>  #define	PCI_DATAPERR	0x0100	/* Bit 8:	DATA Parity error detected */
+> -#define	PCI_FB2BCAP	0x0080	/* Bit 7:	Fast Back-to-Back Capability */
+> -#define	PCI_UDF		0x0040	/* Bit 6:	User Defined Features */
+> -#define PCI_66MHZCAP	0x0020	/* Bit 5:	66 MHz PCI bus clock capable */
+> -#define PCI_NEWCAP	0x0010	/* Bit 4:	New cap. list implemented */
+> -
+>  #define PCI_ERRBITS	(PCI_PERR|PCI_SERR|PCI_RMABORT|PCI_STABORT|PCI_DATAPERR)
