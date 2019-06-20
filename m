@@ -5,48 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C3CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94824C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F916205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F6EC2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054675;
-	bh=FNNY4z0fWNTg2RzTbJOuQrUVa1cKqXAWH9utYhcXyvA=;
+	s=default; t=1561054680;
+	bh=9TlGhu5PE6MnakiwtG3u2ciQ4gIz2gyIJSShFYv6hJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rgRvOiy8mN2HSf6KxrTifBOctUkFTK4Hiuo+YYQjoqSY+soMzYR+TZyYwXVTp8QjY
-	 oC9ZdCdaXHJlrrmPYxMMFoAhFlhFeFEUK9s+cnd01m1Eei/jB/ryvTmjiXglfs9ZVr
-	 k8y50fi7ZcB/yH/gE6qjYFr2lP+QeNP8FrXlKfbU=
+	b=BcjYLdBVZ4rT5dDTz8tyWsNt7UvgJ3lXHetn5phVY559ST08aJzEOk73ZiCEyFADs
+	 iCkTkSs01j6FB1iNfqP1LF5XXr2Bpd96JtaF1vrI0tHsUlDVqdPSKIes1DIAKjkFY5
+	 W9nSM4hTXS6toz7uUCRu+R9/cOMm7TsoUSvQX5To=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729976AbfFTSRy (ORCPT
+        id S1729816AbfFTSR7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46878 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:17:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729751AbfFTSRd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:33 -0400
+        id S1729474AbfFTSR0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 53ED4205F4;
-        Thu, 20 Jun 2019 18:17:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E55C20675;
+        Thu, 20 Jun 2019 18:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054652;
-        bh=FNNY4z0fWNTg2RzTbJOuQrUVa1cKqXAWH9utYhcXyvA=;
+        s=default; t=1561054645;
+        bh=9TlGhu5PE6MnakiwtG3u2ciQ4gIz2gyIJSShFYv6hJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bSYHoC/q6nFEHtWW7Q31I2Mz0P8B7/w7mhFzOCUTLjgutbfbPlVzcu0lmP9DW3LCt
-         vGVJSU6QAUa8Uf9y6L8zx8JNt75azVQnXgfpD/L7VPiXmuJ/HFETrY/16pHeYecWZ+
-         WHEprz3RMoEM0k7958cC7dZ3PP7uqNmstKdZE3Y0=
+        b=jKsiPBJ6i78iekpM7CRyt1RsSOKST8P6EF/s0D3tjecdQzug6G4E92NW7lwE7ZSBt
+         DNoZ3+qj6/NJha8qWEubpniL2zmKH8MSTVA3KtkPiPTKEVycl4zGKvHpmdpsa9SvAf
+         /SZHJS8Z9KVYQlvUFX6w3kSEoD92qH/kPMO3BcAM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jes Sorensen <jsorensen@fb.com>,
-        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 83/98] blk-mq: Fix memory leak in error handling
-Date:   Thu, 20 Jun 2019 19:57:50 +0200
-Message-Id: <20190620174353.494201302@linuxfoundation.org>
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 80/98] arm64: use the correct function type in SYSCALL_DEFINE0
+Date:   Thu, 20 Jun 2019 19:57:47 +0200
+Message-Id: <20190620174353.308223420@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -59,41 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 41de54c64811bf087c8464fdeb43c6ad8be2686b ]
+[ Upstream commit 0e358bd7b7ebd27e491dabed938eae254c17fe3b ]
 
-If blk_mq_init_allocated_queue() fails, make sure to free the poll
-stat callback struct allocated.
+Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
+parameters, use the correct function type to avoid indirect call
+type mismatches with Control-Flow Integrity checking.
 
-Signed-off-by: Jes Sorensen <jsorensen@fb.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- block/blk-mq.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/block/blk-mq.c b/block/blk-mq.c
-index 11efca3534ad..00b826399228 100644
---- a/block/blk-mq.c
-+++ b/block/blk-mq.c
-@@ -2846,7 +2846,7 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 		goto err_exit;
+diff --git a/arch/arm64/include/asm/syscall_wrapper.h b/arch/arm64/include/asm/syscall_wrapper.h
+index a4477e515b79..507d0ee6bc69 100644
+--- a/arch/arm64/include/asm/syscall_wrapper.h
++++ b/arch/arm64/include/asm/syscall_wrapper.h
+@@ -30,10 +30,10 @@
+ 	}										\
+ 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
  
- 	if (blk_mq_alloc_ctxs(q))
--		goto err_exit;
-+		goto err_poll;
+-#define COMPAT_SYSCALL_DEFINE0(sname)					\
+-	asmlinkage long __arm64_compat_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);	\
+-	asmlinkage long __arm64_compat_sys_##sname(void)
++#define COMPAT_SYSCALL_DEFINE0(sname)							\
++	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused);	\
++	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);			\
++	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused)
  
- 	/* init q->mq_kobj and sw queues' kobjects */
- 	blk_mq_sysfs_init(q);
-@@ -2907,6 +2907,9 @@ struct request_queue *blk_mq_init_allocated_queue(struct blk_mq_tag_set *set,
- 	kfree(q->queue_hw_ctx);
- err_sys_init:
- 	blk_mq_sysfs_deinit(q);
-+err_poll:
-+	blk_stat_free_callback(q->poll_cb);
-+	q->poll_cb = NULL;
- err_exit:
- 	q->mq_ops = NULL;
- 	return ERR_PTR(-ENOMEM);
+ #define COND_SYSCALL_COMPAT(name) \
+ 	cond_syscall(__arm64_compat_sys_##name);
+@@ -62,11 +62,11 @@
+ 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
+ 
+ #ifndef SYSCALL_DEFINE0
+-#define SYSCALL_DEFINE0(sname)					\
+-	SYSCALL_METADATA(_##sname, 0);				\
+-	asmlinkage long __arm64_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);	\
+-	asmlinkage long __arm64_sys_##sname(void)
++#define SYSCALL_DEFINE0(sname)							\
++	SYSCALL_METADATA(_##sname, 0);						\
++	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused);	\
++	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);			\
++	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused)
+ #endif
+ 
+ #ifndef COND_SYSCALL
 -- 
 2.20.1
 
