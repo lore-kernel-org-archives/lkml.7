@@ -7,45 +7,45 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C15C9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96F50C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 930F72089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 69B962082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053953;
-	bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
+	s=default; t=1561053958;
+	bh=HJaYIRQbEsz5NDstb/O2VfR5UOkNscug82Nvcx9Puqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TB7cs7fOZ2PxkF7rasLj5MWU+qZ9Jgim1xfuNgaE4q9E09J/IE5qdW+iAal16h68M
-	 To5EP6mtmwmJYHuWbCgiTOT06chncf9+jT29n/ygSDrMsE4ZmJCytQo0Ic5Cqx+lka
-	 D1lwAcLbGcV1Sac2/QS2euYQVr9jy4I2UxURp+AE=
+	b=MtBbE5jQr1ElC5q5VWWFtN3+0O5S1hqaL1csSIhwdvcsXjY5ka4YUblWC9Rt5F/GJ
+	 nNq1KeA541P9zgxafmUBtNvOUxwjHC3igYeRpZmbQe4ko7c/wHitrSlSQ8UxHm+y0q
+	 vIQS3O0X3DTiETYdcOcb65qJ4HP5ZymEzHFmLv/0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727812AbfFTSFw (ORCPT
+        id S1727525AbfFTSF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:05:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:05:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbfFTSFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:49 -0400
+        id S1726423AbfFTSFy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 34FCA2089C;
-        Thu, 20 Jun 2019 18:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 134BB204FD;
+        Thu, 20 Jun 2019 18:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053948;
-        bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
+        s=default; t=1561053953;
+        bh=HJaYIRQbEsz5NDstb/O2VfR5UOkNscug82Nvcx9Puqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iPcjqoYm9iuxMXidJKMHDreN8nqUdTep+5r3vKNvGcu2EsoBoUgSjkuy2YkvjDay+
-         BWwtfa/8yuBENLKAJEWAC+oW5dfuo/LhEnFcJGYe3I0c5arhz9vzhGieJXyACOyV5v
-         fqCDY69FwFnjjbMp/mU5bHz7zdkzL6yWQNTltDJA=
+        b=BFNWdPex0b/3IzYLHHfi1MuBgZlAWhbi2nZA759vV6y5T1o/xDSXkmJ1Dybnm5ywn
+         lqBWbWP+U+phu7Mm4SNBB1Gq4sDqoe8EVUz2OSYDryCiRFedVmojenmj/TzrYTU884
+         SKeqYj5aLgbcG7QpN7tQ2+cD5F3sZT0YqT+gml+k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Marco Zatta <marco@zatta.me>
-Subject: [PATCH 4.9 084/117] USB: Fix chipmunk-like voice when using Logitech C270 for recording audio.
-Date:   Thu, 20 Jun 2019 19:56:58 +0200
-Message-Id: <20190620174357.272434119@linuxfoundation.org>
+        stable@vger.kernel.org, Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH 4.9 085/117] USB: usb-storage: Add new ID to ums-realtek
+Date:   Thu, 20 Jun 2019 19:56:59 +0200
+Message-Id: <20190620174357.302728119@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -58,37 +58,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marco Zatta <marco@zatta.me>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
+commit 1a6dd3fea131276a4fc44ae77b0f471b0b473577 upstream.
 
-This patch fixes the chipmunk-like voice that manifets randomly when
-using the integrated mic of the Logitech Webcam HD C270.
+There is one more Realtek card reader requires ums-realtek to work
+correctly.
 
-The issue was solved initially for this device by commit 2394d67e446b
-("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
-reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
-Logitech UVC webcams"). This patch is to have the fix back.
+Add the device ID to support it.
 
-Signed-off-by: Marco Zatta <marco@zatta.me>
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/core/quirks.c |    3 +++
- 1 file changed, 3 insertions(+)
+ drivers/usb/storage/unusual_realtek.h |    5 +++++
+ 1 file changed, 5 insertions(+)
 
---- a/drivers/usb/core/quirks.c
-+++ b/drivers/usb/core/quirks.c
-@@ -70,6 +70,9 @@ static const struct usb_device_id usb_qu
- 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
- 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
+--- a/drivers/usb/storage/unusual_realtek.h
++++ b/drivers/usb/storage/unusual_realtek.h
+@@ -29,6 +29,11 @@ UNUSUAL_DEV(0x0bda, 0x0138, 0x0000, 0x99
+ 		"USB Card Reader",
+ 		USB_SC_DEVICE, USB_PR_DEVICE, init_realtek_cr, 0),
  
-+	/* Logitech HD Webcam C270 */
-+	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
++UNUSUAL_DEV(0x0bda, 0x0153, 0x0000, 0x9999,
++		"Realtek",
++		"USB Card Reader",
++		USB_SC_DEVICE, USB_PR_DEVICE, init_realtek_cr, 0),
 +
- 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
- 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
- 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
+ UNUSUAL_DEV(0x0bda, 0x0158, 0x0000, 0x9999,
+ 		"Realtek",
+ 		"USB Card Reader",
 
 
