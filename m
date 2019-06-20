@@ -2,59 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53984C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3D8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 243242082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A85921670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054631;
-	bh=LCuOsWiv7WF+Oe5V31rsGOh6q0ch6ErTxkreM7dz9f8=;
+	s=default; t=1561054635;
+	bh=mK45/Xbhgfwdi2FZYz42Tj69FVZGZYKwaWYPZwqd6P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EmMbBm/cN/AJNRIi09TxuPwm+37C3TYorlAtwelZ2IyPDCDCVlobVflQDfcGjKTCI
-	 cq4mchb+j/4RFiVjyB2nvwb0L79+Y9RMQzhYjuTe1ZYzSmrargtgtcUfps/Uhuw+Ga
-	 2OxbEnVPKT/EY+FOWGYlizfpkE3U0xGgzFhU/m5o=
+	b=znnk0XySkK4GOuGHmQq6CuIlvDmGs7/rvC5fe7gWh5aEJvPHYPwBqYJGvdW7Eu2f8
+	 Dxufx20TuaUVd5gRyJyvCi3UAA95wV+lPBggJfwQqnIfDNiygL3eqAlWCK8c9hN+Hj
+	 c1tOnA59a0Vxvn5JxCLURlDs3g7F7fQYewJBtrto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbfFTSRJ (ORCPT
+        id S1729890AbfFTSRO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46318 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:17:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729556AbfFTSRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:04 -0400
+        id S1729671AbfFTSRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:09 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AB55E2084E;
-        Thu, 20 Jun 2019 18:17:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7221C205F4;
+        Thu, 20 Jun 2019 18:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054623;
-        bh=LCuOsWiv7WF+Oe5V31rsGOh6q0ch6ErTxkreM7dz9f8=;
+        s=default; t=1561054628;
+        bh=mK45/Xbhgfwdi2FZYz42Tj69FVZGZYKwaWYPZwqd6P4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CzXs7zCk0s/KU6LcdVxIXTZby33LdUkp0mkSdQ6XH9U6la0OMQ1XSzIwWV+onk859
-         pRqUKZdigz0HmVLrbWJgHhxAhPUDq+pxD4evNhjspTwMESHnU5O6aksz7X2ML/SR8L
-         mVVjrdMqlzu1e747q+CN5FIM5nqwd3AEIWIDfKGc=
+        b=yjbysLiuYbtNIYXVciAv1atfSA+D1MxMEX22PO/8iB3L5TO9ZbC78zfWYl+RYZ2Mu
+         T0HT1uH+f3Ak3WA/dq/h1drsIeuZh/zbe2Z5b6d58fVuyeU1DA7UWNpQLBtIxcaf6T
+         Sle76NbsKoy7a2wRFnHAHujOzDarUSgoVZ6XMWMA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 93/98] ocfs2: fix error path kobject memory leak
-Date:   Thu, 20 Jun 2019 19:58:00 +0200
-Message-Id: <20190620174354.065965164@linuxfoundation.org>
+        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
+        Minwoo Im <minwoo.im@samsung.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.1 95/98] nvme-tcp: rename function to have nvme_tcp prefix
+Date:   Thu, 20 Jun 2019 19:58:02 +0200
+Message-Id: <20190620174354.182824738@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -67,46 +60,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b9fba67b3806e21b98bd5a98dc3921a8e9b42d61 ]
+From: Sagi Grimberg <sagi@grimberg.me>
 
-If a call to kobject_init_and_add() fails we should call kobject_put()
-otherwise we leak memory.
+commit efb973b19b88642bb7e08b8ce8e03b0bbd2a7e2a upstream.
 
-Add call to kobject_put() in the error path of call to
-kobject_init_and_add().  Please note, this has the side effect that the
-release method is called if kobject_init_and_add() fails.
+usually nvme_ prefix is for core functions.
+While we're cleaning up, remove redundant empty lines
 
-Link: http://lkml.kernel.org/r/20190513033458.2824-1-tobin@kernel.org
-Signed-off-by: Tobin C. Harding <tobin@kernel.org>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
+Reviewed-by: Minwoo Im <minwoo.im@samsung.com>
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- fs/ocfs2/filecheck.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/nvme/host/tcp.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-diff --git a/fs/ocfs2/filecheck.c b/fs/ocfs2/filecheck.c
-index f65f2b2f594d..1906cc962c4d 100644
---- a/fs/ocfs2/filecheck.c
-+++ b/fs/ocfs2/filecheck.c
-@@ -193,6 +193,7 @@ int ocfs2_filecheck_create_sysfs(struct ocfs2_super *osb)
- 	ret = kobject_init_and_add(&entry->fs_kobj, &ocfs2_ktype_filecheck,
- 					NULL, "filecheck");
- 	if (ret) {
-+		kobject_put(&entry->fs_kobj);
- 		kfree(fcheck);
- 		return ret;
+--- a/drivers/nvme/host/tcp.c
++++ b/drivers/nvme/host/tcp.c
+@@ -473,7 +473,6 @@ static int nvme_tcp_handle_c2h_data(stru
  	}
--- 
-2.20.1
-
+ 
+ 	return 0;
+-
+ }
+ 
+ static int nvme_tcp_handle_comp(struct nvme_tcp_queue *queue,
+@@ -634,7 +633,6 @@ static inline void nvme_tcp_end_request(
+ 	nvme_end_request(rq, cpu_to_le16(status << 1), res);
+ }
+ 
+-
+ static int nvme_tcp_recv_data(struct nvme_tcp_queue *queue, struct sk_buff *skb,
+ 			      unsigned int *offset, size_t *len)
+ {
+@@ -1535,7 +1533,7 @@ out_free_queue:
+ 	return ret;
+ }
+ 
+-static int nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
++static int __nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
+ {
+ 	int i, ret;
+ 
+@@ -1565,7 +1563,7 @@ static unsigned int nvme_tcp_nr_io_queue
+ 	return nr_io_queues;
+ }
+ 
+-static int nvme_alloc_io_queues(struct nvme_ctrl *ctrl)
++static int nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
+ {
+ 	unsigned int nr_io_queues;
+ 	int ret;
+@@ -1582,7 +1580,7 @@ static int nvme_alloc_io_queues(struct n
+ 	dev_info(ctrl->device,
+ 		"creating %d I/O queues.\n", nr_io_queues);
+ 
+-	return nvme_tcp_alloc_io_queues(ctrl);
++	return __nvme_tcp_alloc_io_queues(ctrl);
+ }
+ 
+ static void nvme_tcp_destroy_io_queues(struct nvme_ctrl *ctrl, bool remove)
+@@ -1599,7 +1597,7 @@ static int nvme_tcp_configure_io_queues(
+ {
+ 	int ret;
+ 
+-	ret = nvme_alloc_io_queues(ctrl);
++	ret = nvme_tcp_alloc_io_queues(ctrl);
+ 	if (ret)
+ 		return ret;
+ 
 
 
