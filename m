@@ -4,54 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAA26C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16210C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE49205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA3D21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054590;
-	bh=qMzfbiSIwksrwUm8tdqYP8brg/c+K2rOMHysxHULuh4=;
+	s=default; t=1561054594;
+	bh=J1YeY68HcNxy4hxTZGUbI6MEMOoqItqMFANsYPUiprg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ApcZPx5hB6nELyHDQxUWF4tI4Zt+OzfAGxLWYfasRh6lKLzzeIXwfVfd9l3/5ypwo
-	 RujVwcdxAHvrfAKr7zNYsxtU2kBk/N6IB7yQUtDp84dVroSii7N/DZ1pl7kmV2Oxs5
-	 QhVMpOUgKttWr7jahxNFar1SOaY3oku0nHzW52EA=
+	b=u4BP/XQ/lCSYxbiDzCP7eNBrSIAXnkRXp+C3MR5QC1RawkcWVofMIHdA2NaE9NVkN
+	 Wz2V4RSi7iYjsro78mrJk9zv6aqq9HKNv7Xs1WimeVNBh77wOnWw6xnhfeHg83hf6k
+	 oAnQpEFSD9rGYZKo+LdKEdPorVpGfaM1iWtnOsgE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729779AbfFTSQ3 (ORCPT
+        id S1729794AbfFTSQd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:16:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45598 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:16:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45674 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729365AbfFTSQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:26 -0400
+        id S1729776AbfFTSQ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1DA06208CA;
-        Thu, 20 Jun 2019 18:16:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6ED4205F4;
+        Thu, 20 Jun 2019 18:16:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054585;
-        bh=qMzfbiSIwksrwUm8tdqYP8brg/c+K2rOMHysxHULuh4=;
+        s=default; t=1561054588;
+        bh=J1YeY68HcNxy4hxTZGUbI6MEMOoqItqMFANsYPUiprg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KTySs0GdGQ0Cv5p6qt1ZMtwYD/DLeE1hYWxJ951BGDU9TDaTwOO+N1y+Au1XELQcD
-         7B0B8FSlCEL1EyOZ9MVvkiqCNcvzLgwpkxhDWbnyzmVD4bpWO7j5fuud0jVGou9lmD
-         sluL6JugxST4oNOojvvybONgC5z8LCHFqgwkoPDk=
+        b=KJ6yRzJ9zHG5xKiuRCLt0s2uTUq68kHEfOb1nZh1DsBogWeLgQTVST1i0opr5b3YE
+         hA89xK3gacHwGLpxLcYDb2POw6YP9WywNlBfiLGsyVagtJuKvR7fR2E8/tVgMrskuZ
+         fqtZEopVK9aQ2JINi06RchUEcl3eWj+gzTxsCt5A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 51/98] gpio: fix gpio-adp5588 build errors
-Date:   Thu, 20 Jun 2019 19:57:18 +0200
-Message-Id: <20190620174351.591617923@linuxfoundation.org>
+Subject: [PATCH 5.1 52/98] net: stmmac: update rx tail pointer register to fix rx dma hang issue.
+Date:   Thu, 20 Jun 2019 19:57:19 +0200
+Message-Id: <20190620174351.650458591@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -64,49 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 ]
+[ Upstream commit 4523a5611526709ec9b4e2574f1bb7818212651e ]
 
-The gpio-adp5588 driver uses interfaces that are provided by
-GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+Currently we will not update the receive descriptor tail pointer in
+stmmac_rx_refill. Rx dma will think no available descriptors and stop
+once received packets exceed DMA_RX_SIZE, so that the rx only test will fail.
 
-Fixes these build errors:
+Update the receive tail pointer in stmmac_rx_refill to add more descriptors
+to the rx channel, so packets can be received continually
 
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
-../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
-            dev->gpio_chip.irq.domain, gpio));
-                          ^
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
-../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
-  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
-  ^
-../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
-  gpiochip_set_nested_irqchip(&dev->gpio_chip,
-  ^
-
-Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Fixes: 54139cf3bb33 ("net: stmmac: adding multiple buffers for rx")
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/Kconfig | 1 +
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 3f50526a771f..864a1ba7aa3a 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -824,6 +824,7 @@ config GPIO_ADP5588
- config GPIO_ADP5588_IRQ
- 	bool "Interrupt controller support for ADP5588"
- 	depends on GPIO_ADP5588=y
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to enable the adp5588 to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 3c409862c52e..8cebc44108b2 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3338,6 +3338,7 @@ static inline void stmmac_rx_refill(struct stmmac_priv *priv, u32 queue)
+ 		entry = STMMAC_GET_ENTRY(entry, DMA_RX_SIZE);
+ 	}
+ 	rx_q->dirty_rx = entry;
++	stmmac_set_rx_tail_ptr(priv, priv->ioaddr, rx_q->rx_tail_addr, queue);
+ }
+ 
+ /**
 -- 
 2.20.1
 
