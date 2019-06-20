@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9EEC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EAD09C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D674D2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C696521530
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054479;
-	bh=UA8CJVHl22WRCysNGAs/ioVTOP1RLKtNLe+cIK4dq6o=;
+	s=default; t=1561054482;
+	bh=/rhL/A3PQgdjwJ8R6PBU+305++TRCOKguxekVG+24rU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vRvpH9RF0efq5Tw0mu+Or42Az/8iFeA2h7K10de8Qj6g4dz1agOQYKFdowYUMHXQu
-	 cWxSgpdzs6kzEC3Uc6I1F+Z848veoVygLgakhUSeVJk98TMnbQzKum7TGgQWAqJmYm
-	 gMTYKxgzHcWTCnbqO4SeToL4ZYUGafztAQKLLnmg=
+	b=kg/X4NEMVzZQNwjy61Bm6j0Gu2YYlVPWzh6N1zOmAbwoOIZWuPoqsrGypKBHoTKk9
+	 lNmRXCej9GKLTvMN7/AQJ97l5QHo57VX5dbosr3XeGu9CqF5yREaMB5V4tSCPnnSRl
+	 hXa8QahWmF+rYRT8kmkNp8uEBYFCdzQMIcgFMfyk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729470AbfFTSOi (ORCPT
+        id S1729478AbfFTSOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:14:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42850 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729453AbfFTSOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:30 -0400
+        id S1729462AbfFTSOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 504DF205F4;
-        Thu, 20 Jun 2019 18:14:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F10D1205F4;
+        Thu, 20 Jun 2019 18:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054469;
-        bh=UA8CJVHl22WRCysNGAs/ioVTOP1RLKtNLe+cIK4dq6o=;
+        s=default; t=1561054473;
+        bh=/rhL/A3PQgdjwJ8R6PBU+305++TRCOKguxekVG+24rU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n0deR8UAGxL2dZ+J70UEjCbiZWmLU3ZDlTqbStj0/REGJKRvmR02NjTzRCKWNB8Y3
-         yKdVzxZcLW5GH6dNbcz4j9s6s+4xi9ZEM6HjrjMru45YX0c1vI+cYRNZ6CtrbfqkxQ
-         MoWwtA7ZqAJNv853Xx7zUHYqNZCZr28U1fIPqw3s=
+        b=BkiuRMkYJVvEAMr3bx9yM0sWLE3obffa0FyCn0oLkXF1XyO79AeBTA1ejh0ZTf0+R
+         YQK8u+JDQ+xg2qaP30zT7sExdfFringFbD/flgWAsitiPcE8K2mh8wsYrgDJBa7JT4
+         xKJAjNAaOFHeGgGm9a50cIzLm/veWeKDHFioh9nw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jagdish Motwani <jagdish.motwani@sophos.com>,
+        stable@vger.kernel.org, Phil Sutter <phil@nwl.cc>,
         Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 39/98] netfilter: nf_queue: fix reinject verdict handling
-Date:   Thu, 20 Jun 2019 19:57:06 +0200
-Message-Id: <20190620174350.871488415@linuxfoundation.org>
+Subject: [PATCH 5.1 40/98] netfilter: nft_fib: Fix existence check support
+Date:   Thu, 20 Jun 2019 19:57:07 +0200
+Message-Id: <20190620174350.919140859@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -61,35 +60,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 946c0d8e6ed43dae6527e878d0077c1e11015db0 ]
+[ Upstream commit e633508a95289489d28faacb68b32c3e7e68ef6f ]
 
-This patch fixes netfilter hook traversal when there are more than 1 hooks
-returning NF_QUEUE verdict. When the first queue reinjects the packet,
-'nf_reinject' starts traversing hooks with a proper hook_index. However,
-if it again receives a NF_QUEUE verdict (by some other netfilter hook), it
-queues the packet with a wrong hook_index. So, when the second queue
-reinjects the packet, it re-executes hooks in between.
+NFTA_FIB_F_PRESENT flag was not always honored since eval functions did
+not call nft_fib_store_result in all cases.
 
-Fixes: 960632ece694 ("netfilter: convert hook list to an array")
-Signed-off-by: Jagdish Motwani <jagdish.motwani@sophos.com>
+Given that in all callsites there is a struct net_device pointer
+available which holds the interface data to be stored in destination
+register, simplify nft_fib_store_result() to just accept that pointer
+instead of the nft_pktinfo pointer and interface index. This also
+allows to drop the index to interface lookup previously needed to get
+the name associated with given index.
+
+Fixes: 055c4b34b94f6 ("netfilter: nft_fib: Support existence check")
+Signed-off-by: Phil Sutter <phil@nwl.cc>
 Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/nf_queue.c | 1 +
- 1 file changed, 1 insertion(+)
+ include/net/netfilter/nft_fib.h   |  2 +-
+ net/ipv4/netfilter/nft_fib_ipv4.c | 23 +++--------------------
+ net/ipv6/netfilter/nft_fib_ipv6.c | 16 ++--------------
+ net/netfilter/nft_fib.c           |  6 +++---
+ 4 files changed, 9 insertions(+), 38 deletions(-)
 
-diff --git a/net/netfilter/nf_queue.c b/net/netfilter/nf_queue.c
-index a36a77bae1d6..5b86574e7b89 100644
---- a/net/netfilter/nf_queue.c
-+++ b/net/netfilter/nf_queue.c
-@@ -254,6 +254,7 @@ static unsigned int nf_iterate(struct sk_buff *skb,
- repeat:
- 		verdict = nf_hook_entry_hookfn(hook, skb, state);
- 		if (verdict != NF_ACCEPT) {
-+			*index = i;
- 			if (verdict != NF_REPEAT)
- 				return verdict;
- 			goto repeat;
+diff --git a/include/net/netfilter/nft_fib.h b/include/net/netfilter/nft_fib.h
+index a88f92737308..e4c4d8eaca8c 100644
+--- a/include/net/netfilter/nft_fib.h
++++ b/include/net/netfilter/nft_fib.h
+@@ -34,5 +34,5 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 		   const struct nft_pktinfo *pkt);
+ 
+ void nft_fib_store_result(void *reg, const struct nft_fib *priv,
+-			  const struct nft_pktinfo *pkt, int index);
++			  const struct net_device *dev);
+ #endif
+diff --git a/net/ipv4/netfilter/nft_fib_ipv4.c b/net/ipv4/netfilter/nft_fib_ipv4.c
+index 94eb25bc8d7e..c8888e52591f 100644
+--- a/net/ipv4/netfilter/nft_fib_ipv4.c
++++ b/net/ipv4/netfilter/nft_fib_ipv4.c
+@@ -58,11 +58,6 @@ void nft_fib4_eval_type(const struct nft_expr *expr, struct nft_regs *regs,
+ }
+ EXPORT_SYMBOL_GPL(nft_fib4_eval_type);
+ 
+-static int get_ifindex(const struct net_device *dev)
+-{
+-	return dev ? dev->ifindex : 0;
+-}
+-
+ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 		   const struct nft_pktinfo *pkt)
+ {
+@@ -94,8 +89,7 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 
+ 	if (nft_hook(pkt) == NF_INET_PRE_ROUTING &&
+ 	    nft_fib_is_loopback(pkt->skb, nft_in(pkt))) {
+-		nft_fib_store_result(dest, priv, pkt,
+-				     nft_in(pkt)->ifindex);
++		nft_fib_store_result(dest, priv, nft_in(pkt));
+ 		return;
+ 	}
+ 
+@@ -108,8 +102,7 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 	if (ipv4_is_zeronet(iph->saddr)) {
+ 		if (ipv4_is_lbcast(iph->daddr) ||
+ 		    ipv4_is_local_multicast(iph->daddr)) {
+-			nft_fib_store_result(dest, priv, pkt,
+-					     get_ifindex(pkt->skb->dev));
++			nft_fib_store_result(dest, priv, pkt->skb->dev);
+ 			return;
+ 		}
+ 	}
+@@ -150,17 +143,7 @@ void nft_fib4_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 		found = oif;
+ 	}
+ 
+-	switch (priv->result) {
+-	case NFT_FIB_RESULT_OIF:
+-		*dest = found->ifindex;
+-		break;
+-	case NFT_FIB_RESULT_OIFNAME:
+-		strncpy((char *)dest, found->name, IFNAMSIZ);
+-		break;
+-	default:
+-		WARN_ON_ONCE(1);
+-		break;
+-	}
++	nft_fib_store_result(dest, priv, found);
+ }
+ EXPORT_SYMBOL_GPL(nft_fib4_eval);
+ 
+diff --git a/net/ipv6/netfilter/nft_fib_ipv6.c b/net/ipv6/netfilter/nft_fib_ipv6.c
+index 73cdc0bc63f7..ec068b0cffca 100644
+--- a/net/ipv6/netfilter/nft_fib_ipv6.c
++++ b/net/ipv6/netfilter/nft_fib_ipv6.c
+@@ -169,8 +169,7 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 
+ 	if (nft_hook(pkt) == NF_INET_PRE_ROUTING &&
+ 	    nft_fib_is_loopback(pkt->skb, nft_in(pkt))) {
+-		nft_fib_store_result(dest, priv, pkt,
+-				     nft_in(pkt)->ifindex);
++		nft_fib_store_result(dest, priv, nft_in(pkt));
+ 		return;
+ 	}
+ 
+@@ -187,18 +186,7 @@ void nft_fib6_eval(const struct nft_expr *expr, struct nft_regs *regs,
+ 	if (oif && oif != rt->rt6i_idev->dev)
+ 		goto put_rt_err;
+ 
+-	switch (priv->result) {
+-	case NFT_FIB_RESULT_OIF:
+-		*dest = rt->rt6i_idev->dev->ifindex;
+-		break;
+-	case NFT_FIB_RESULT_OIFNAME:
+-		strncpy((char *)dest, rt->rt6i_idev->dev->name, IFNAMSIZ);
+-		break;
+-	default:
+-		WARN_ON_ONCE(1);
+-		break;
+-	}
+-
++	nft_fib_store_result(dest, priv, rt->rt6i_idev->dev);
+  put_rt_err:
+ 	ip6_rt_put(rt);
+ }
+diff --git a/net/netfilter/nft_fib.c b/net/netfilter/nft_fib.c
+index 21df8cccea65..77f00a99dfab 100644
+--- a/net/netfilter/nft_fib.c
++++ b/net/netfilter/nft_fib.c
+@@ -135,17 +135,17 @@ int nft_fib_dump(struct sk_buff *skb, const struct nft_expr *expr)
+ EXPORT_SYMBOL_GPL(nft_fib_dump);
+ 
+ void nft_fib_store_result(void *reg, const struct nft_fib *priv,
+-			  const struct nft_pktinfo *pkt, int index)
++			  const struct net_device *dev)
+ {
+-	struct net_device *dev;
+ 	u32 *dreg = reg;
++	int index;
+ 
+ 	switch (priv->result) {
+ 	case NFT_FIB_RESULT_OIF:
++		index = dev ? dev->ifindex : 0;
+ 		*dreg = (priv->flags & NFTA_FIB_F_PRESENT) ? !!index : index;
+ 		break;
+ 	case NFT_FIB_RESULT_OIFNAME:
+-		dev = dev_get_by_index_rcu(nft_net(pkt), index);
+ 		if (priv->flags & NFTA_FIB_F_PRESENT)
+ 			*dreg = !!dev;
+ 		else
 -- 
 2.20.1
 
