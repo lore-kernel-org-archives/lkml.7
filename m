@@ -2,318 +2,105 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791CEC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:23:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB012C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:23:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 409452089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:23:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051432;
-	bh=9xPWIYY7knjN5DzKOzsU/+0tgJnHIug+LQLSjVv4scs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mkjf7kNNv/4HXH8xV7tG+dyI4RcCllOz55ezFKu1m0rAIQlk8wVNAbUZEKEYzWScG
-	 8VBY6bMtY4BvbVvReUZ2U76MOWpgJEy8f2kIYPCN5wEIbyAoaG+l19SNvYnEmsp6Es
-	 h+WIr1/NAcmOt6bEtAazjm3eUNhneTfeQH02ui8M=
+	by mail.kernel.org (Postfix) with ESMTP id 924202089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:23:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="fDa+hMU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732301AbfFTRXv (ORCPT
+        id S1732323AbfFTRXy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:23:51 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52640 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732192AbfFTRXU (ORCPT
+        Thu, 20 Jun 2019 13:23:54 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42768 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732296AbfFTRXu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:23:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=iCSzZqLsrl4SZGgGSimNBkQcdOEuLjaMwS/hhvVK5Fk=; b=EPsioJ5wGUTTkgGp6YkE8sMWez
-        ogV3xkkjy8zucX2C06wc6WfyPApPn5Cbu7jEnmlE13J9iAD8VTPZlzVO82T0ZGqgO0GQWBZlp8OO6
-        AyZlUDT98rMURZOxDDhC/D6cLVeOgiL/C3l7XWM25289OESB1GsO55Fl1j6aEL6BEXWlbK4OQqkXB
-        bpHmRA1/Xb1GzcZ/jzRjmWQi76omRZ4yi9xlha9JR7GlurcioUHaOzqQJiQNmSZ5RtaHrZNcCZJze
-        KH7EkSWUzpSH+YIULKpCFX8Pm0jfrCGDdAhLgctmUvWGC1FUqHLvv3F9XIk3tLQ+zU77dPjzmYmEv
-        GDRfFZSQ==;
-Received: from [177.97.20.138] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he0mM-0008S4-Ar; Thu, 20 Jun 2019 17:23:18 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1he0mK-0000Dx-1S; Thu, 20 Jun 2019 14:23:16 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Changbin Du <changbin.du@intel.com>
-Subject: [PATCH v2 20/22] docs: admin-guide, x86: add a features list
-Date:   Thu, 20 Jun 2019 14:23:12 -0300
-Message-Id: <f6e5d5d23a970e9fce689963890655917d776996.1561050806.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
-References: <cover.1561050806.git.mchehab+samsung@kernel.org>
+        Thu, 20 Jun 2019 13:23:50 -0400
+Received: by mail-qt1-f193.google.com with SMTP id s15so3952154qtk.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:23:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=SfbKUCdSGF4+jFDRzcaQ+Fna6TrcXDnyta04yl7lq1Y=;
+        b=fDa+hMU4rcsLRRCH2gWRtgjYh9RFedwMwqv0Trz+YbWuMGaoX85v7I71KOkTii51uB
+         oO9IljJOAF7bcm1YYxdaerj3SB1eX+ROcV7aGqi3ZBwoKVBEGC2K9Gm0a4yLiiEn/uAk
+         fBk5sWnkPe6Qfa4DgWWmQRbh4XlFAlCgTAsATQPIvgIfBdORGI7YHDMsJoSK7wBXLdyk
+         G7L29YhKyUqgAQjd6fwdckTK5NEQcVswgxlSYd5TMwXXMxxdYk5swQozsEqhRL82kEHN
+         PYoc9M2dsT9k3d119XICrYvVvAjQcFqPNiWbp3QBf8xLIqoPCbUOF1ztjjMN/UPlCr8M
+         O9Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=SfbKUCdSGF4+jFDRzcaQ+Fna6TrcXDnyta04yl7lq1Y=;
+        b=tcjL7OSdwmAMuHCYSp2Nu0t/j9i385uTJjI1l1MqWvVAdNIhjYofqP0A4Sww6WaxSV
+         4WgA1hGZsIkItKXmwG6HTUB6SgwvWxei1gu/TExAJy7UjFPDQC9kop8Rr+nubX2eq36c
+         /AKzKBU5L8/NEpxFPWQgPtitbJsstXJAa+LsU2ymlTqc2RzEeKlIv+50631lJ/eAaCQZ
+         cbfalPVobu3hw/9dGAaxdLcpDqtkyNC+/YsigK21KD493lgw7La8kYySw1W8S+gLV0h9
+         e/g13l82uvTMuHENfwkGuOk66t2vlpdFzMG+347ZJa8eUraYGt6Zhqy8V/6rTPlm9DPN
+         XzqA==
+X-Gm-Message-State: APjAAAWv9iM8/B3LpQ7RuRx5qpftH1AciUKei5HOtR3Ag//D2D27wxuo
+        UpSYqGZTGa5I8PKFSVbhiVgKDuDDEJZxPQ==
+X-Google-Smtp-Source: APXvYqw404QwKeABmWhU9qLItoqgwLK+kwwRuUpz/G8u1JQs97zHuMB8xnbcA0CiswhJAlAz0nkrug==
+X-Received: by 2002:ac8:2409:: with SMTP id c9mr53861547qtc.145.1561051428982;
+        Thu, 20 Jun 2019 10:23:48 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id c5sm109198qtj.27.2019.06.20.10.23.48
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 10:23:48 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1he0mq-0005eq-0K; Thu, 20 Jun 2019 14:23:48 -0300
+Date:   Thu, 20 Jun 2019 14:23:47 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 04/28] block: Never bounce dma-direct bios
+Message-ID: <20190620172347.GE19891@ziepe.ca>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190620161240.22738-5-logang@deltatee.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620161240.22738-5-logang@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a feature list matrix at the admin-guide and a x86-specific
-feature list to the respective Kernel books.
+On Thu, Jun 20, 2019 at 10:12:16AM -0600, Logan Gunthorpe wrote:
+> It is expected the creator of the dma-direct bio will ensure the
+> target device can access the DMA address it's creating bios for.
+> It's also not possible to bounce a dma-direct bio seeing the block
+> layer doesn't have any way to access the underlying data behind
+> the DMA address.
+> 
+> Thus, never bounce dma-direct bios.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/admin-guide/features.rst |   3 +
- Documentation/admin-guide/index.rst    |   1 +
- Documentation/conf.py                  |   2 +-
- Documentation/sphinx/kernel_feat.py    | 169 +++++++++++++++++++++++++
- Documentation/x86/features.rst         |   3 +
- Documentation/x86/index.rst            |   1 +
- 6 files changed, 178 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/admin-guide/features.rst
- create mode 100644 Documentation/sphinx/kernel_feat.py
- create mode 100644 Documentation/x86/features.rst
+I wonder how feasible it would be to implement a 'dma vec' copy
+from/to? 
 
-diff --git a/Documentation/admin-guide/features.rst b/Documentation/admin-guide/features.rst
-new file mode 100644
-index 000000000000..8c167082a84f
---- /dev/null
-+++ b/Documentation/admin-guide/features.rst
-@@ -0,0 +1,3 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. kernel-feat:: $srctree/Documentation/features
-diff --git a/Documentation/admin-guide/index.rst b/Documentation/admin-guide/index.rst
-index 20c3020fd73c..14c8464f6ca9 100644
---- a/Documentation/admin-guide/index.rst
-+++ b/Documentation/admin-guide/index.rst
-@@ -17,6 +17,7 @@ etc.
-    kernel-parameters
-    devices
-    abi
-+   features
- 
- This section describes CPU vulnerabilities and their mitigations.
- 
-diff --git a/Documentation/conf.py b/Documentation/conf.py
-index 598256fb5c98..a0ef76ce5615 100644
---- a/Documentation/conf.py
-+++ b/Documentation/conf.py
-@@ -34,7 +34,7 @@ needs_sphinx = '1.3'
- # Add any Sphinx extension module names here, as strings. They can be
- # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
- # ones.
--extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi']
-+extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain', 'kfigure', 'sphinx.ext.ifconfig', 'kernel_abi', 'kernel_feat']
- 
- # The name of the math extension changed on Sphinx 1.4
- if (major == 1 and minor > 3) or (major > 1):
-diff --git a/Documentation/sphinx/kernel_feat.py b/Documentation/sphinx/kernel_feat.py
-new file mode 100644
-index 000000000000..2fee04f1dedd
---- /dev/null
-+++ b/Documentation/sphinx/kernel_feat.py
-@@ -0,0 +1,169 @@
-+# coding=utf-8
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+u"""
-+    kernel-feat
-+    ~~~~~~~~~~~
-+
-+    Implementation of the ``kernel-feat`` reST-directive.
-+
-+    :copyright:  Copyright (C) 2016  Markus Heiser
-+    :copyright:  Copyright (C) 2016-2019  Mauro Carvalho Chehab
-+    :maintained-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-+    :license:    GPL Version 2, June 1991 see Linux/COPYING for details.
-+
-+    The ``kernel-feat`` (:py:class:`KernelFeat`) directive calls the
-+    scripts/get_feat.pl script to parse the Kernel ABI files.
-+
-+    Overview of directive's argument and options.
-+
-+    .. code-block:: rst
-+
-+        .. kernel-feat:: <ABI directory location>
-+            :debug:
-+
-+    The argument ``<ABI directory location>`` is required. It contains the
-+    location of the ABI files to be parsed.
-+
-+    ``debug``
-+      Inserts a code-block with the *raw* reST. Sometimes it is helpful to see
-+      what reST is generated.
-+
-+"""
-+
-+import codecs
-+import os
-+import subprocess
-+import sys
-+
-+from os import path
-+
-+from docutils import nodes, statemachine
-+from docutils.statemachine import ViewList
-+from docutils.parsers.rst import directives, Directive
-+from docutils.utils.error_reporting import ErrorString
-+
-+#
-+# AutodocReporter is only good up to Sphinx 1.7
-+#
-+import sphinx
-+
-+Use_SSI = sphinx.__version__[:3] >= '1.7'
-+if Use_SSI:
-+    from sphinx.util.docutils import switch_source_input
-+else:
-+    from sphinx.ext.autodoc import AutodocReporter
-+
-+__version__  = '1.0'
-+
-+def setup(app):
-+
-+    app.add_directive("kernel-feat", KernelFeat)
-+    return dict(
-+        version = __version__
-+        , parallel_read_safe = True
-+        , parallel_write_safe = True
-+    )
-+
-+class KernelFeat(Directive):
-+
-+    u"""KernelFeat (``kernel-feat``) directive"""
-+
-+    required_arguments = 1
-+    optional_arguments = 2
-+    has_content = False
-+    final_argument_whitespace = True
-+
-+    option_spec = {
-+        "debug"     : directives.flag
-+    }
-+
-+    def warn(self, message, **replace):
-+        replace["fname"]   = self.state.document.current_source
-+        replace["line_no"] = replace.get("line_no", self.lineno)
-+        message = ("%(fname)s:%(line_no)s: [kernel-feat WARN] : " + message) % replace
-+        self.state.document.settings.env.app.warn(message, prefix="")
-+
-+    def run(self):
-+
-+        doc = self.state.document
-+        if not doc.settings.file_insertion_enabled:
-+            raise self.warning("docutils: file insertion disabled")
-+
-+        env = doc.settings.env
-+        cwd = path.dirname(doc.current_source)
-+        cmd = "get_feat.pl rest --dir "
-+        cmd += self.arguments[0]
-+
-+        if len(self.arguments) > 1:
-+            cmd += " --arch " + self.arguments[1]
-+
-+        srctree = path.abspath(os.environ["srctree"])
-+
-+        fname = cmd
-+
-+        # extend PATH with $(srctree)/scripts
-+        path_env = os.pathsep.join([
-+            srctree + os.sep + "scripts",
-+            os.environ["PATH"]
-+        ])
-+        shell_env = os.environ.copy()
-+        shell_env["PATH"]    = path_env
-+        shell_env["srctree"] = srctree
-+
-+        lines = self.runCmd(cmd, shell=True, cwd=cwd, env=shell_env)
-+        nodeList = self.nestedParse(lines, fname)
-+        return nodeList
-+
-+    def runCmd(self, cmd, **kwargs):
-+        u"""Run command ``cmd`` and return it's stdout as unicode."""
-+
-+        try:
-+            proc = subprocess.Popen(
-+                cmd
-+                , stdout = subprocess.PIPE
-+                , stderr = subprocess.PIPE
-+                , **kwargs
-+            )
-+            out, err = proc.communicate()
-+
-+            out, err = codecs.decode(out, 'utf-8'), codecs.decode(err, 'utf-8')
-+
-+            if proc.returncode != 0:
-+                raise self.severe(
-+                    u"command '%s' failed with return code %d"
-+                    % (cmd, proc.returncode)
-+                )
-+        except OSError as exc:
-+            raise self.severe(u"problems with '%s' directive: %s."
-+                              % (self.name, ErrorString(exc)))
-+        return out
-+
-+    def nestedParse(self, lines, fname):
-+        content = ViewList()
-+        node    = nodes.section()
-+
-+        if "debug" in self.options:
-+            code_block = "\n\n.. code-block:: rst\n    :linenos:\n"
-+            for l in lines.split("\n"):
-+                code_block += "\n    " + l
-+            lines = code_block + "\n\n"
-+
-+        for c, l in enumerate(lines.split("\n")):
-+            content.append(l, fname, c)
-+
-+        buf  = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
-+
-+        if Use_SSI:
-+            with switch_source_input(self.state, content):
-+                self.state.nested_parse(content, 0, node, match_titles=1)
-+        else:
-+            self.state.memo.title_styles  = []
-+            self.state.memo.section_level = 0
-+            self.state.memo.reporter      = AutodocReporter(content, self.state.memo.reporter)
-+            try:
-+                self.state.nested_parse(content, 0, node, match_titles=1)
-+            finally:
-+                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
-+
-+        return node.children
-diff --git a/Documentation/x86/features.rst b/Documentation/x86/features.rst
-new file mode 100644
-index 000000000000..b663f15053ce
---- /dev/null
-+++ b/Documentation/x86/features.rst
-@@ -0,0 +1,3 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+.. kernel-feat:: $srctree/Documentation/features x86
-diff --git a/Documentation/x86/index.rst b/Documentation/x86/index.rst
-index ae36fc5fc649..ed42c8c9154d 100644
---- a/Documentation/x86/index.rst
-+++ b/Documentation/x86/index.rst
-@@ -29,3 +29,4 @@ x86-specific Documentation
-    usb-legacy-support
-    i386/index
-    x86_64/index
-+   features
--- 
-2.21.0
+That is about the only operation you could safely do on P2P BAR
+memory. 
 
+I wonder if a copy implementation could somehow query the iommu layer
+to get a kmap of the memory pointed at by the dma address so we don't
+need to carry struct page around?
+
+Jason
