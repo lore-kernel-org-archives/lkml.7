@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88517C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B665C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C78F204FD
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 786232082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053998;
-	bh=Iz+s5FrWakQFdWSwoRfCM8MiMavQPXKCX7ztijiLTUI=;
+	s=default; t=1561054000;
+	bh=/NRaRJ0jp8elJzijBdTeELMvF+Ynqa9zz4v4LSQZ5ZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s3vSwAZIqh5/0e8N5JHcZ5Kr3Er10+NSLdiXoOurGS2XvaKdKsxPfBxjnlUKTyQKA
-	 XZobBT/kdTgsZEFlNupfVpm1m8uw2KoEg2ehT06A/WE71eD7l9OY0P51dUZYJD31wZ
-	 8MOydImEy9cjcR5fo6/MlJ0HULhT02wdPa7Qv18E=
+	b=XuqIu1R1XAShTZj3u6L66CII4hspOr6mG9qcnsSwgv2aArvGlMd7mREeUu9KZ0p3r
+	 FVcjgUDs9s3AjknUOGBMhbP3KX3BhyyN81MDjDo/6ktJ9tRKP/CYFsZGFSATkgX3bB
+	 xx9lAhGg6dJgh1WLmC83Lfh5bH55G3j7/+4+lNyc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727734AbfFTSGh (ORCPT
+        id S1728204AbfFTSGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:06:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:06:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727936AbfFTSGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:34 -0400
+        id S1728189AbfFTSGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:37 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F894204FD;
-        Thu, 20 Jun 2019 18:06:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D92C3215EA;
+        Thu, 20 Jun 2019 18:06:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053993;
-        bh=Iz+s5FrWakQFdWSwoRfCM8MiMavQPXKCX7ztijiLTUI=;
+        s=default; t=1561053996;
+        bh=/NRaRJ0jp8elJzijBdTeELMvF+Ynqa9zz4v4LSQZ5ZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=m8oux/viArC9rlR78k1twhS30rillhIOBU8oQKOy+RwZUGF3tplWPPkQcyqL8uuEx
-         Pve4/DNCEsXNTgluW4b0lQ6Nl3BnyV9XNE5CYQEjuSlinTxtqHtzGFxq3L4aW8JrNG
-         M60qlidI5DJHgejvZdRRhsGELBj/vWR0i1IRKFtU=
+        b=XQz4kUScaVM6kTbo2j6iWJVv2L4z2WdKcFVD1l+vOs2sPHxmxx0vrvoV6v6m9W3Cm
+         43LmDoft3jotNTiF35AnPM21ebuMzl1VZZ2GhIxM4l6IchyAEQAs6b8N6ROv27eGiq
+         yR30wGIKhr32tTpxTLQAJPzfwhaPE8/lnUQqEAoA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 098/117] selftests: netfilter: missing error check when setting up veth interface
-Date:   Thu, 20 Jun 2019 19:57:12 +0200
-Message-Id: <20190620174357.733319559@linuxfoundation.org>
+Subject: [PATCH 4.9 099/117] mISDN: make sure device name is NUL terminated
+Date:   Thu, 20 Jun 2019 19:57:13 +0200
+Message-Id: <20190620174357.769992972@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -62,38 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 82ce6eb1dd13fd12e449b2ee2c2ec051e6f52c43 ]
+[ Upstream commit ccfb62f27beb295103e9392462b20a6ed807d0ea ]
 
-A test for the basic NAT functionality uses ip command which needs veth
-device. There is a condition where the kernel support for veth is not
-compiled into the kernel and the test script breaks. This patch contains
-code for reasonable error display and correct code exit.
+The user can change the device_name with the IMSETDEVNAME ioctl, but we
+need to ensure that the user's name is NUL terminated.  Otherwise it
+could result in a buffer overflow when we copy the name back to the user
+with IMGETDEVINFO ioctl.
 
-Signed-off-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+I also changed two strcpy() calls which handle the name to strscpy().
+Hopefully, there aren't any other ways to create a too long name, but
+it's nice to do this as a kernel hardening measure.
+
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/netfilter/nft_nat.sh | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/isdn/mISDN/socket.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
-index 8ec76681605c..f25f72a75cf3 100755
---- a/tools/testing/selftests/netfilter/nft_nat.sh
-+++ b/tools/testing/selftests/netfilter/nft_nat.sh
-@@ -23,7 +23,11 @@ ip netns add ns0
- ip netns add ns1
- ip netns add ns2
- 
--ip link add veth0 netns ns0 type veth peer name eth0 netns ns1
-+ip link add veth0 netns ns0 type veth peer name eth0 netns ns1 > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+    echo "SKIP: No virtual ethernet pair device support in kernel"
-+    exit $ksft_skip
-+fi
- ip link add veth1 netns ns0 type veth peer name eth0 netns ns2
- 
- ip -net ns0 link set lo up
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index f96b8f2bdf74..d7c986fb0b3b 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -394,7 +394,7 @@ data_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -678,7 +678,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -692,6 +692,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		dn.name[sizeof(dn.name) - 1] = '\0';
+ 		dev = get_mdevice(dn.id);
+ 		if (dev)
+ 			err = device_rename(&dev->dev, dn.name);
 -- 
 2.20.1
 
