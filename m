@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62404C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F8C8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 201972084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0EEA62085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051518;
-	bh=AgOwejEoyxJ807Ul08F/0O+tGdcreoGcOh3qhzmOI78=;
+	s=default; t=1561051522;
+	bh=509X9XqZw0ckZakAoADhaZd4JD14ZAUC3DZELbOhiGk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sfzNT4yZjuDJPEPx9CN1w1Q6N7tEvcJLBHDYu6p5VLWkmd/KAMlV/7/0p3B49Q/2S
-	 usH+WuzUZ8maZqAJ4Qu7oYcb/VGfsu5fNnInfgNLwrSI446FJfZqcUBT5TGhiTlA0J
-	 Yf4OyK1KosJ7byN7Z4mEFP0ORVBmQ89zS3YL7JRI=
+	b=pSnufMWbYdqHK2VjaO2FJHS25X5pUVAA7lp8WTtgj6uYTMWf4ob4wqQLI5WjAsqjN
+	 N3cO7xrLakj/j5H4d0skAPHg0A7O5kZm5gd6+ym8YUAhWCZcYh86xE1f2d+5/cad2x
+	 jJi/r53lFv9879dsPDrzcMBVPJ5CT75/qc68AOog=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfFTRYQ (ORCPT
+        id S1732261AbfFTRZU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:24:16 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52576 "EHLO
+        Thu, 20 Jun 2019 13:25:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52574 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732159AbfFTRXT (ORCPT
+        with ESMTP id S1732155AbfFTRXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 13:23:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=YlkVRaJYoloPTJHSMGpuuWEZdOaSNGKkqHxmAd4fl1s=; b=JqJ22RS8x5aZfiVIMPJPFgIKSU
-        7YBDFpuBz9BXmuTMmXXEhbf7AVT/UZebH67y/OfS9w2jIXmfI7GeC6ydTo7avEJKX/1VXCG4uasp/
-        F+RQWsjayIUZnGvdj9Cuj9io4wZtZwmWVpAKwBwpcJBQLJ6upZ1K8Si857ZVplovrLWF9VqC+QpbZ
-        4gkDBkKBgOud8npAhzsxp7eYATkT51iAIu2RuFR+pKL0UdWy0GDgU4ZNueh3z3gGv9F3Bna6YpMr+
-        bBbWd1BIguLNt+3z332fKuxAy8Yekpcjv1YXTP05UPSkdv4VDvUUnCXybDTh9ZtP083Jabaxsoka7
-        pcY0UDlQ==;
+        bh=FociWLakoZ+8To2zv3/tt7eXrQHxKyGo8THcaHAtO7Q=; b=S8ZNtNr52BE4rZAEFXY58sn9rw
+        TNCKgArSvKnw1rvmONqPycw3LSgNbDU+YWO2mcvDBrD7Jp01rnFzx9IIrP0J5dzX9gw6TwqzMJxeu
+        Q35+1iiZ6PB5zG0gIgn0HMHcRYrXlvy345A7o6rpZHfsfu0BeVRLTa3/Is/rPQmZ4TrIFLXBviMGn
+        iyTLq+c/kWrRcdCQh8v0VIH235kdU93tUkcrjmWoEeCLIwcMerV3NSmWG1bDokT3CyHpAxGJYfPPp
+        JAtTvaaM3hM74HyoJMqnTFLgtteU0/JdskA6g0h+Jqw1BlSPwfSI+oXMnagEmzQY1PigqVzdcxSGS
+        1gbWNtTg==;
 Received: from [177.97.20.138] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he0mM-0008Rv-9h; Thu, 20 Jun 2019 17:23:18 +0000
+        id 1he0mM-0008Ru-AK; Thu, 20 Jun 2019 17:23:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1he0mK-0000E7-32; Thu, 20 Jun 2019 14:23:16 -0300
+        id 1he0mJ-0000D0-MH; Thu, 20 Jun 2019 14:23:15 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 22/22] scripts/get_abi.pl: change script to allow parsing in ReST mode
-Date:   Thu, 20 Jun 2019 14:23:14 -0300
-Message-Id: <c4d540b2df8f17bbcd9284c25910a23b081c9cf9.1561050806.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 06/22] scripts/get_abi.pl: split label naming from xref logic
+Date:   Thu, 20 Jun 2019 14:22:58 -0300
+Message-Id: <a94701a22320efb500c016620996380cc2d4ae48.1561050806.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
 References: <cover.1561050806.git.mchehab+samsung@kernel.org>
@@ -64,150 +64,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Right now, several ABI files won't parse as ReST, as they
-contain severe violations to the spec, with makes the script
-to crash.
+Instead of using a ReST compilant label while parsing,
+move the label to ReST output. That makes the parsing logic
+more generic, allowing it to provide other types of output.
 
-So, the code has a sanity logic with escapes bad code and
-cleans tags that can cause Sphinx to crash.
-
-Add support for disabling this mode.
-
-Right now, as enabling rst-mode causes crash, it is disabled
-by default.
+As a side effect, now all files used to generate the output
+will be output. We can later add command line arguments to
+filter.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/get_abi.pl | 74 ++++++++++++++++++++++++++++++----------------
- 1 file changed, 48 insertions(+), 26 deletions(-)
+ scripts/get_abi.pl | 94 ++++++++++++++++++++++++++--------------------
+ 1 file changed, 53 insertions(+), 41 deletions(-)
 
 diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index 7bc619b6890c..e2cd2234af34 100755
+index 0ede9593c639..f84d321a72bb 100755
 --- a/scripts/get_abi.pl
 +++ b/scripts/get_abi.pl
-@@ -12,8 +12,14 @@ my $man;
- my $debug;
- my $prefix="Documentation/ABI";
+@@ -49,17 +49,23 @@ sub parse_abi {
+ 	my $name = $file;
+ 	$name =~ s,.*/,,;
  
-+#
-+# If true, assumes that the description is formatted with ReST
-+#
-+my $description_is_rst = 0;
++	my $nametag = "File $name";
++	$data{$nametag}->{what} = "File $name";
++	$data{$nametag}->{type} = "File";
++	$data{$nametag}->{file} = $name;
++	$data{$nametag}->{is_file} = 1;
 +
- GetOptions(
- 	"debug|d+" => \$debug,
-+	"rst-source!" => \$description_is_rst,
- 	"dir=s" => \$prefix,
- 	'help|?' => \$help,
- 	man => \$man
-@@ -145,14 +151,15 @@ sub parse_abi {
- 					next;
- 				}
- 				if ($tag eq "description") {
--					next if ($content =~ m/^\s*$/);
--					if ($content =~ m/^(\s*)(.*)/) {
--						my $new_content = $2;
--						$space = $new_tag . $sep . $1;
--						while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
--						$space =~ s/./ /g;
--						$data{$what}->{$tag} .= "$new_content\n";
-+					# Preserve initial spaces for the first line
-+					$content = ' ' x length($new_tag) . $sep . $content;
-+					$content =~ s,^(\s*):,$1 ,;
-+					if ($content =~ m/^(\s*)(.*)$/) {
-+						$space = $1;
-+						$content = $2;
- 					}
-+					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+					$data{$what}->{$tag} .= $content;
- 				} else {
- 					$data{$what}->{$tag} = $content;
- 				}
-@@ -168,11 +175,15 @@ sub parse_abi {
+ 	my $type = $file;
+ 	$type =~ s,.*/(.*)/.*,$1,;
  
- 		if ($tag eq "description") {
- 			if (!$data{$what}->{description}) {
--				next if (m/^\s*\n/);
-+				s/^($space)//;
- 				if (m/^(\s*)(.*)/) {
--					$space = $1;
--					while ($space =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
--					$data{$what}->{$tag} .= "$2\n";
-+					my $sp = $1;
-+					while ($sp =~ s/\t+/' ' x (length($&) * 8 - length($`) % 8)/e) {}
-+					my $content = "$sp$2";
+ 	my $what;
+ 	my $new_what;
+ 	my $tag;
+-	my $label;
+ 	my $ln;
+-	my $has_file;
+ 	my $xrefs;
+ 	my $space;
++	my @labels;
++	my $label;
+ 
+ 	print STDERR "Opening $file\n" if ($debug > 1);
+ 	open IN, $file;
+@@ -88,28 +94,13 @@ sub parse_abi {
+ 					parse_error($file, $ln, "What '$what' doesn't have a description", "") if ($what && !$data{$what}->{description});
+ 
+ 					$what = $content;
++					$label = $content;
+ 					$new_what = 1;
+ 				}
++				push @labels, [($content, $label)];
+ 				$tag = $new_tag;
+ 
+-				if ($has_file) {
+-					$label = "abi_" . $content . " ";
+-					$label =~ tr/A-Z/a-z/;
+-
+-					# Convert special chars to "_"
+-					$label =~s/[\x00-\x2f]+/_/g;
+-					$label =~s/[\x3a-\x40]+/_/g;
+-					$label =~s/[\x7b-\xff]+/_/g;
+-					$label =~ s,_+,_,g;
+-					$label =~ s,_$,,;
+-
+-					$data{$what}->{label} .= $label;
+-
+-					# Escape special chars from content
+-					$content =~s/([\x00-\x1f\x21-\x2f\x3a-\x40\x7b-\xff])/\\$1/g;
+-
+-					$xrefs .= "- :ref:`$content <$label>`\n\n";
+-				}
++				push @{$data{$nametag}->{xrefs}}, [($content, $label)] if ($data{$nametag}->{what});
+ 				next;
+ 			}
+ 
+@@ -117,6 +108,9 @@ sub parse_abi {
+ 				$tag = $new_tag;
+ 
+ 				if ($new_what) {
++					@{$data{$what}->{label}} = @labels if ($data{$nametag}->{what});
++					@labels = ();
++					$label = "";
+ 					$new_what = 0;
+ 
+ 					$data{$what}->{type} = $type;
+@@ -145,15 +139,8 @@ sub parse_abi {
+ 		}
+ 
+ 		# Store any contents before tags at the database
+-		if (!$tag) {
+-			next if (/^\n/);
+-
+-			my $my_what = "File $name";
+-			$data{$my_what}->{what} = "File $name";
+-			$data{$my_what}->{type} = "File";
+-			$data{$my_what}->{file} = $name;
+-			$data{$my_what}->{description} .= $_;
+-			$has_file = 1;
++		if (!$tag && $data{$nametag}->{what}) {
++			$data{$nametag}->{description} .= $_;
+ 			next;
+ 		}
+ 
+@@ -192,12 +179,8 @@ sub parse_abi {
+ 		# Everything else is error
+ 		parse_error($file, $ln, "Unexpected line:", $_);
+ 	}
++	$data{$nametag}->{description} =~ s/^\n+//;
+ 	close IN;
+-
+-	if ($has_file) {
+-		my $my_what = "File $name";
+-		$data{$my_what}->{xrefs} = $xrefs;
+-	}
+ }
+ 
+ # Outputs the output on ReST format
+@@ -212,11 +195,22 @@ sub output_rest {
+ 		my $bar = $w;
+ 		$bar =~ s/./-/g;
+ 
+-		if ($data{$what}->{label}) {
+-			my @labels = split(/\s/, $data{$what}->{label});
+-			foreach my $label (@labels) {
+-				printf ".. _%s:\n\n", $label;
+-			}
++		foreach my $p (@{$data{$what}->{label}}) {
++			my ($content, $label) = @{$p};
++			$label = "abi_" . $label . " ";
++			$label =~ tr/A-Z/a-z/;
 +
-+					$content =~ s/^($space)//;
++			# Convert special chars to "_"
++			$label =~s/([\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xff])/_/g;
++			$label =~ s,_+,_,g;
++			$label =~ s,_$,,;
 +
-+					$data{$what}->{$tag} .= "$content";
- 				}
- 			} else {
- 				my $content = $_;
-@@ -282,23 +293,27 @@ sub output_rest {
- 		print "Defined on file :ref:`$file <$fileref>`\n\n" if ($type ne "File");
++			$data{$what}->{label} .= $label;
++
++			printf ".. _%s:\n\n", $label;
++
++			# only one label is enough
++			last;
+ 		}
  
- 		my $desc = $data{$what}->{description};
--		$desc =~ s/^\s+//;
--
--		# Remove title markups from the description, as they won't work
--		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
- 
- 		if (!($desc =~ /^\s*$/)) {
--			if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
--				# put everything inside a code block
--				$desc =~ s/\n/\n /g;
--
--				print "::\n\n";
--				print " $desc\n\n";
--			} else {
--				# Escape any special chars from description
--				$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
--
-+			if ($description_is_rst) {
+ 		print "$w\n$bar\n\n";
+@@ -243,10 +237,28 @@ sub output_rest {
  				print "$desc\n\n";
-+			} else {
-+				$desc =~ s/^\s+//;
-+
-+				# Remove title markups from the description, as they won't work
-+				$desc =~ s/\n[\-\*\=\^\~]+\n/\n\n/g;
-+
-+				if ($desc =~ m/\:\n/ || $desc =~ m/\n[\t ]+/  || $desc =~ m/[\x00-\x08\x0b-\x1f\x7b-\xff]/) {
-+					# put everything inside a code block
-+					$desc =~ s/\n/\n /g;
-+
-+					print "::\n\n";
-+					print " $desc\n\n";
-+				} else {
-+					# Escape any special chars from description
-+					$desc =~s/([\x00-\x08\x0b-\x1f\x21-\x2a\x2d\x2f\x3c-\x40\x5c\x5e-\x60\x7b-\xff])/\\$1/g;
-+					print "$desc\n\n";
-+				}
  			}
  		} else {
- 			print "DESCRIPTION MISSING for $what\n\n" if (!$data{$what}->{is_file});
-@@ -390,7 +405,7 @@ abi_book.pl - parse the Linux ABI files and produce a ReST book.
+-			print "DESCRIPTION MISSING for $what\n\n";
++			print "DESCRIPTION MISSING for $what\n\n" if (!$data{$what}->{is_file});
+ 		}
  
- =head1 SYNOPSIS
- 
--B<abi_book.pl> [--debug] [--man] [--help] [--dir=<dir>] <COMAND> [<ARGUMENT>]
-+B<abi_book.pl> [--debug] [--man] [--help] --[(no-)rst-source] [--dir=<dir>] <COMAND> [<ARGUMENT>]
- 
- Where <COMMAND> can be:
- 
-@@ -413,6 +428,13 @@ B<validate>              - validate the ABI contents
- Changes the location of the ABI search. By default, it uses
- the Documentation/ABI directory.
- 
-+=item B<--rst-source> and B<--no-rst-source>
+-		printf "Has the following ABI:\n\n%s", $data{$what}->{xrefs} if ($data{$what}->{xrefs});
++		if ($data{$what}->{xrefs}) {
++			printf "Has the following ABI:\n\n";
 +
-+The input file may be using ReST syntax or not. Those two options allow
-+selecting between a rst-compliant source ABI (--rst-source), or a
-+plain text that may be violating ReST spec, so it requres some escaping
-+logic (--no-rst-source).
++			foreach my $p(@{$data{$what}->{xrefs}}) {
++				my ($content, $label) = @{$p};
++				$label = "abi_" . $label . " ";
++				$label =~ tr/A-Z/a-z/;
 +
- =item B<--debug>
++				# Convert special chars to "_"
++				$label =~s/([\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xff])/_/g;
++				$label =~ s,_+,_,g;
++				$label =~ s,_$,,;
++
++				# Escape special chars from content
++				$content =~s/([\x00-\x1f\x21-\x2f\x3a-\x40\x7b-\xff])/\\$1/g;
++
++				print "- :ref:`$content <$label>`\n\n";
++			}
++		}
+ 	}
+ }
  
- Put the script in verbose mode, useful for debugging. Can be called multiple
 -- 
 2.21.0
 
