@@ -2,85 +2,135 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB77EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:08:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF27BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:08:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C98FD2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:08:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF812080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:08:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731390AbfFTJIa (ORCPT
+        id S1731481AbfFTJIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:08:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42028 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfFTJI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:08:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 515E1ACAE;
-        Thu, 20 Jun 2019 09:08:28 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 01F7C1E434D; Thu, 20 Jun 2019 11:08:27 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 11:08:27 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org,
-        syzbot+10007d66ca02b08f0e60@syzkaller.appspotmail.com,
-        Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 5.1 35/70] loop: Don't change loop device under
- exclusive opener
-Message-ID: <20190620090827.GJ13630@quack2.suse.cz>
-References: <20190608113950.8033-1-sashal@kernel.org>
- <20190608113950.8033-35-sashal@kernel.org>
- <20190610090013.GF12765@quack2.suse.cz>
- <20190619201136.GD2226@sasha-vm>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619201136.GD2226@sasha-vm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Jun 2019 05:08:49 -0400
+Received: from twhmllg3.macronix.com ([211.75.127.131]:25152 "EHLO
+        TWHMLLG3.macronix.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726084AbfFTJIs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:08:48 -0400
+Received: from localhost.localdomain ([172.17.195.96])
+        by TWHMLLG3.macronix.com with ESMTP id x5K985xD044197;
+        Thu, 20 Jun 2019 17:08:05 +0800 (GMT-8)
+        (envelope-from masonccyang@mxic.com.tw)
+From:   Mason Yang <masonccyang@mxic.com.tw>
+To:     broonie@kernel.org, marek.vasut@gmail.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        bbrezillon@kernel.org, linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        lee.jones@linaro.org, sergei.shtylyov@cogentembedded.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>,
+        Mason Yang <masonccyang@mxic.com.tw>, miquel.raynal@bootlin.com
+Subject: [PATCH v14 0/2] spi: Add Renesas R-Car Gen3 RPC-IF SPI driver
+Date:   Thu, 20 Jun 2019 17:30:44 +0800
+Message-Id: <1561023046-20886-1-git-send-email-masonccyang@mxic.com.tw>
+X-Mailer: git-send-email 1.9.1
+X-MAIL: TWHMLLG3.macronix.com x5K985xD044197
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-06-19 16:11:36, Sasha Levin wrote:
-> On Mon, Jun 10, 2019 at 11:00:13AM +0200, Jan Kara wrote:
-> > On Sat 08-06-19 07:39:14, Sasha Levin wrote:
-> > > From: Jan Kara <jack@suse.cz>
-> > > 
-> > > [ Upstream commit 33ec3e53e7b1869d7851e59e126bdb0fe0bd1982 ]
-> > 
-> > Please don't push this to stable kernels because...
-> 
-> I've dropped this, but...
+Hi Mark,
 
-OK, thanks.
+V14 patch including:
+1) Patch RPC-IF back to SPI mode only instead of MFD & SPI 
+   by MFD maintainer, Lee Jones comments.
+2) Patch pm_runtime control in spi transfer.
 
-> > > [Deliberately chosen not to CC stable as a user with priviledges to
-> > > trigger this race has other means of taking the system down and this
-> > > has a potential of breaking some weird userspace setup]
-> > 
-> > ... of this. Thanks!
-> 
-> Can't this be triggered by an "innocent" user, rather as part of an
-> attack? Why can't this race happen during regular usage?
+v13 patch including:
+1) rename mfd to ddata for SPI driver.
+2) Patch RPC-IF devicetree for SPI and HyperFlash.
 
-Well, the problem happens when mount happens on loop device when someone
-modifies the backing file of the loop device. So for this to be
-triggerable, you have to have control over assignment of backing files to
-loop devices (you have to be owner of these loop devices to be able to do
-this - pretty much means root in most setups) and be able to trigger mount
-on this device. If you have these capabilities, there are much more
-efficient ways to gain full administrator priviledges on the system,
-deadlocking the kernel is thus the least of your worries.
+v12 patch including:
+1) add back "wbuf" in dts example.
+2) RPC-IF replace rpc-if in dts.
 
-								Honza
+v11 patch including:
+1) Patch mfd include header file.
+2) mfd coding style.
+3) add back wbuf description in dts.
+
+v10 patch including:
+1) Address range for > 64M byte flash.
+2) Removed dirmap_write due to WBUF 256 bytes transfer issue.
+3) Dummy bytes setting according to spi-nor.c layer.
+
+v9 patch is for RPC MFD driver and RPC SPI driver.
+
+v8 patch including:
+1) Supported SoC-specific values in DTS.
+2) Rename device node name as flash.
+
+v7 patch is according to Geert and Sergei's comments:
+1) Add all R-Car Gen3 model in dts.
+2) patch rpc-if child node search.
+3) minror coding style.
+
+v6 patch is accroding to Geert, Marek and Sergei's comments:
+1) spi_controller for new code.
+2) "renesas,rcar-gen3-rpc" instead of "renesas,r8a77995-rpc."
+3) patch external address read mode w/o u64 readq().
+4) patch dts for write buffer & drop "renesas,rpc-mode".
+5) coding style and so on.
+
+v5 patch is accroding to Sergei's comments:
+1) Read 6 bytes ID from Sergei's patch.
+2) regmap_update_bits().
+3) C++ style comment.
+
+v4 patch is according to Sergei's comments including:
+1) Drop soc_device_match().
+2) Drop unused RPC registers.
+3) Use ilog2() instead of fls().
+4) Patch read 6 bytes ID w/ one command.
+5) Coding style and so on.
+
+v3 patch is according to Marek and Geert's comments including:
+1) soc_device_mach() to set up RPC_PHYCNT_STRTIM.
+2) get_unaligned().
+3) rpc-mode for rpi-spi-flash or rpc-hyperflash.
+4) coding style and so on.
+
+v2 patch including:
+1) remove RPC clock enable/dis-able control,
+2) patch run time PM.
+3) add RPC module software reset,
+4) add regmap.
+5) other coding style and so on.
+
+thanks for your review.
+
+best regards,
+Mason
+
+
+Mason Yang (2):
+  spi: Add Renesas R-Car Gen3 RPC-IF SPI controller driver
+  dt-bindings: spi: Document Renesas R-Car Gen3 RPC-IF controller
+    bindings
+
+ .../devicetree/bindings/spi/spi-renesas-rpc.txt    |  43 ++
+ drivers/spi/Kconfig                                |   6 +
+ drivers/spi/Makefile                               |   1 +
+ drivers/spi/spi-renesas-rpc.c                      | 760 +++++++++++++++++++++
+ 4 files changed, 810 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
+ create mode 100644 drivers/spi/spi-renesas-rpc.c
+
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+1.9.1
+
