@@ -2,137 +2,85 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18513C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A172C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:39:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E55732083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:38:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hpn5/mZZ"
+	by mail.kernel.org (Postfix) with ESMTP id 5EA852083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:39:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731751AbfFTOin (ORCPT
+        id S1726404AbfFTOjC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:38:43 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:35873 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfFTOin (ORCPT
+        Thu, 20 Jun 2019 10:39:02 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:34995 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfFTOjC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:38:43 -0400
-Received: by mail-pf1-f196.google.com with SMTP id r7so1801570pfl.3;
-        Thu, 20 Jun 2019 07:38:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ERVoWxtrJMWr7j0HNJMfaRBRwVy095sC6GzF6uth9PI=;
-        b=hpn5/mZZdpRC3hgGuzr2zcpCYaI7hQ/89G2volnGsF0ab55L6yBbT5p+19/AygaviS
-         jlm7z6uvivrrZmli3cJi844U1zJqbPdPeS4JwZEFMsQo18xyKDJcjzowXXCjEMk+3sz8
-         LHdQO33vuesB2OHNqujBtROtaHHeDWco5wFC9hCYxnrQo13o2Kyc+Oqt7Gvj5fMf3x+u
-         /goayEblI3AN7g3rEUXGb5O16hpbNrcmTevSdQ8xDwuzI6JCAkYEoPi6nVPHo/qDZbDP
-         37Fn0t10Y1T+mXd9f23McP3iTtpP/3I2tgrIUoKkc6C61WPRxv7B/wFuAxuW4IRaXsKl
-         eojg==
+        Thu, 20 Jun 2019 10:39:02 -0400
+Received: by mail-io1-f71.google.com with SMTP id w17so5528335iom.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:39:01 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=ERVoWxtrJMWr7j0HNJMfaRBRwVy095sC6GzF6uth9PI=;
-        b=b73CkrEtxKSPocov9sTTj5ftl+xc+6BdPD3wBzMOCl6gqIG4jOrutp4Hob4wuvV0XX
-         jmgcaOhfRGJQE/7hw7XgfnIjwjREn9+fjtB5wfrYGlyVk3idlghiWU26PdfCAZ+MB/Fs
-         q3AQDMHB5rygFtUmiX1BPCdW6p1GY9PSop6j2fMTu19t6EzfDbQCF1Ny3PHM9EiK63nz
-         2/2idxDQHsfM0AV9EaAp6V3cC0pOPiVbUoUZPFt+U/ihOmhUYDPgcQGT6NlpFfabzHB7
-         RK1LMrzAK4Km0A01CYZ/NWGOyR+0NasgWPp9dxARF1vaGIRt/TddUOK0Zg1JynqUzyxx
-         dzXQ==
-X-Gm-Message-State: APjAAAX08qPsXZK5u0xBCRl3r7LXSnsGbCTAk/iq5ZsQRkM/PnawlV7X
-        LkzLJIcc8H3vBonRAQUCkpg=
-X-Google-Smtp-Source: APXvYqx6OyYjcTVTxeYpVueNn9GFEPM65wzcua+RwVOJGnWpOlrXiebTiO0jJlEqojoS6sySNGKGTQ==
-X-Received: by 2002:aa7:9ab5:: with SMTP id x21mr33441499pfi.139.1561041522674;
-        Thu, 20 Jun 2019 07:38:42 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id 128sm22905142pff.16.2019.06.20.07.38.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 07:38:42 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     bjorn.andersson@linaro.org, agross@kernel.org
-Cc:     benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        jikos@kernel.org, hdegoede@redhat.com, lee.jones@linaro.org,
-        xnox@ubuntu.com, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v7 4/5] arm64: dts: qcom: Add HP Envy x2
-Date:   Thu, 20 Jun 2019 07:38:38 -0700
-Message-Id: <20190620143838.12035-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
-References: <20190620142801.11827-1-jeffrey.l.hugo@gmail.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=pcMSWZKNicDpxHahzslAEA1Gd+yI94665La65rLMOto=;
+        b=f/nc4bWR9hRx3+ZM6vxEHoXeHbRkfwqdUBISUHvFfYk2h3GHq8T05Ub1V/EzeCqTYO
+         vOd8+OXiD8Bw9gkxQhExlWsy+thp24tOL1BmRp0Ik3/sp2MyMn+ySAbghdvlwcD7gOfS
+         K+pbaQ5k2Rum0+Qs+0w53Ftrx5XalWixVMpX90v5KhiCLvhCD0OGWrdtL7z9XW1aZTID
+         CIErh75Q1yDc1g0O3eIJsmxOhF7qm9f0UK9KMwogOjHuH33nyST1Lzf7YnrPD5fMZIo6
+         4CVSWUXlanpvAtnn5u6bVwkPepyECghFfsb1iKcPFD+N6PrmQAY9lZq8tMKfABbA/Z62
+         gDSg==
+X-Gm-Message-State: APjAAAXqfHQkTU946xQUJQO3ZLT7siqkL55R5yT+FKNLmvwIRQOL3Gvg
+        NxZMeSioU9fL+BZBaH+dyapK47gpz3YiG5XxlE3BIzEkH2gh
+X-Google-Smtp-Source: APXvYqx+TYIh2vUv0uFyzxELBI4G5xYxTzkRj8btxI6/Q81qlMHz++HJM+3ytmsKnLPIC+Zek+ch3AjsBD++T5mDMbdR5vtbxIMl
+MIME-Version: 1.0
+X-Received: by 2002:a5d:8c87:: with SMTP id g7mr20051791ion.85.1561041541089;
+ Thu, 20 Jun 2019 07:39:01 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 07:39:01 -0700
+In-Reply-To: <000000000000946842058bc1291d@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000894e8f058bc24e2b@google.com>
+Subject: Re: WARNING in add_event_to_ctx
+From:   syzbot <syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com>
+To:     acme@kernel.org, acme@redhat.com,
+        alexander.shishkin@linux.intel.com, ast@kernel.org,
+        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
+        jbacik@fb.com, jolsa@redhat.com, kafai@fb.com, kernel-team@fb.com,
+        linux-kernel@vger.kernel.org, mingo@kernel.org, mingo@redhat.com,
+        namhyung@kernel.org, netdev@vger.kernel.org, peterz@infradead.org,
+        rostedt@goodmis.org, songliubraving@fb.com,
+        syzkaller-bugs@googlegroups.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, yhs@fb.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This adds the initial DT for the HP Envy x2 laptop.  Supported
-functionality includes USB (host), microSD-card, keyboard, and trackpad.
+syzbot has bisected this bug to:
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- arch/arm64/boot/dts/qcom/Makefile             |  1 +
- .../boot/dts/qcom/msm8998-hp-envy-x2.dts      | 30 +++++++++++++++++++
- 2 files changed, 31 insertions(+)
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
+commit 33ea4b24277b06dbc55d7f5772a46f029600255e
+Author: Song Liu <songliubraving@fb.com>
+Date:   Wed Dec 6 22:45:16 2017 +0000
 
-diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
-index c3e4307bcbd4..76436f33a013 100644
---- a/arch/arm64/boot/dts/qcom/Makefile
-+++ b/arch/arm64/boot/dts/qcom/Makefile
-@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
-+dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
- dtb-$(CONFIG_ARCH_QCOM)	+= sdm845-mtp.dtb
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts b/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
-new file mode 100644
-index 000000000000..24073127091f
---- /dev/null
-+++ b/arch/arm64/boot/dts/qcom/msm8998-hp-envy-x2.dts
-@@ -0,0 +1,30 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
-+
-+/dts-v1/;
-+
-+#include "msm8998-clamshell.dtsi"
-+
-+/ {
-+	model = "HP Envy x2";
-+	compatible = "hp,envy-x2", "qcom,msm8998";
-+};
-+
-+&blsp1_i2c6 {
-+	status = "okay";
-+
-+	keyboard@3a {
-+		compatible = "hid-over-i2c";
-+		interrupt-parent = <&tlmm>;
-+		interrupts = <0x79 IRQ_TYPE_LEVEL_LOW>;
-+		reg = <0x3a>;
-+		hid-descr-addr = <0x0001>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&touchpad>;
-+	};
-+};
-+
-+&sdhc2 {
-+	cd-gpios = <&tlmm 95 GPIO_ACTIVE_LOW>;
-+};
--- 
-2.17.1
+     perf/core: Implement the 'perf_uprobe' PMU
 
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=17561aa1a00000
+start commit:   abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
+git tree:       upstream
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=14d61aa1a00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=10d61aa1a00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+dashboard link: https://syzkaller.appspot.com/bug?extid=704bfe2c7d156640ad7a
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d8b732a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17f7a5e6a00000
+
+Reported-by: syzbot+704bfe2c7d156640ad7a@syzkaller.appspotmail.com
+Fixes: 33ea4b24277b ("perf/core: Implement the 'perf_uprobe' PMU")
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
