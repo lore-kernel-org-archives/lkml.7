@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 544A6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 139ECC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B852084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E79472085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731748AbfFTIzL (ORCPT
+        id S1731789AbfFTIzY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:55:11 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:19047 "EHLO huawei.com"
+        Thu, 20 Jun 2019 04:55:24 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19048 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731481AbfFTIyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:54:37 -0400
+        id S1731448AbfFTIyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:54:36 -0400
 Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7B6EEA91A42848435355;
+        by Forcepoint Email with ESMTP id 80133515E186C54A14E1;
         Thu, 20 Jun 2019 16:54:33 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 20 Jun 2019 16:54:24 +0800
+ 14.3.439.0; Thu, 20 Jun 2019 16:54:25 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
         <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
         Huazhong Tan <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 08/11] net: hns3: add check to number of buffer descriptors
-Date:   Thu, 20 Jun 2019 16:52:42 +0800
-Message-ID: <1561020765-14481-9-git-send-email-tanhuazhong@huawei.com>
+Subject: [PATCH net-next 11/11] net: hns3: add exception handling when enable NIC HW error interrupts
+Date:   Thu, 20 Jun 2019 16:52:45 +0800
+Message-ID: <1561020765-14481-12-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
 References: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
@@ -48,176 +48,40 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Weihang Li <liweihang@hisilicon.com>
 
-This patch adds check to number of bds before we allocate memory for
-them. If we get an invalid bd num in some cases, it will cause a memory
-overflow.
+If we failed to enable NIC HW error interrupts during client
+initialization in some cases, we should do exception handling to clear
+flags and free the resources.
 
+Fixes: 00ea6e5fda9d ("net: hns3: delay and separate enabling of NIC and ROCE HW errors")
 Signed-off-by: Weihang Li <liweihang@hisilicon.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 86 +++++++++++++---------
- .../net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h |  5 ++
- 2 files changed, 58 insertions(+), 33 deletions(-)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-index 3d8985f..0a72438 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
-@@ -1060,6 +1060,52 @@ static int hclge_config_ssu_hw_err_int(struct hclge_dev *hdev, bool en)
- 	return ret;
- }
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index b0a99c3..b25365c 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -8297,13 +8297,15 @@ static int hclge_init_nic_client_instance(struct hnae3_ae_dev *ae_dev,
+ 		goto init_nic_err;
+ 	}
  
-+/* hclge_query_bd_num: query number of buffer descriptors
-+ * @hdev: pointer to struct hclge_dev
-+ * @is_ras: true for ras, false for msix
-+ * @mpf_bd_num: number of main PF interrupt buffer descriptors
-+ * @pf_bd_num: number of not main PF interrupt buffer descriptors
-+ *
-+ * This function querys number of mpf and pf buffer descriptors.
-+ */
-+static int hclge_query_bd_num(struct hclge_dev *hdev, bool is_ras,
-+			      int *mpf_bd_num, int *pf_bd_num)
-+{
-+	struct device *dev = &hdev->pdev->dev;
-+	u32 mpf_min_bd_num, pf_min_bd_num;
-+	enum hclge_opcode_type opcode;
-+	struct hclge_desc desc_bd;
-+	int ret;
-+
-+	if (is_ras) {
-+		opcode = HCLGE_QUERY_RAS_INT_STS_BD_NUM;
-+		mpf_min_bd_num = HCLGE_MPF_RAS_INT_MIN_BD_NUM;
-+		pf_min_bd_num = HCLGE_PF_RAS_INT_MIN_BD_NUM;
-+	} else {
-+		opcode = HCLGE_QUERY_MSIX_INT_STS_BD_NUM;
-+		mpf_min_bd_num = HCLGE_MPF_MSIX_INT_MIN_BD_NUM;
-+		pf_min_bd_num = HCLGE_PF_MSIX_INT_MIN_BD_NUM;
-+	}
-+
-+	hclge_cmd_setup_basic_desc(&desc_bd, opcode, true);
-+	ret = hclge_cmd_send(&hdev->hw, &desc_bd, 1);
+-	hnae3_set_client_init_flag(client, ae_dev, 1);
+-
+ 	/* Enable nic hw error interrupts */
+ 	ret = hclge_config_nic_hw_error(hdev, true);
+-	if (ret)
 +	if (ret) {
-+		dev_err(dev, "fail(%d) to query msix int status bd num\n",
-+			ret);
-+		return ret;
+ 		dev_err(&ae_dev->pdev->dev,
+ 			"fail(%d) to enable hw error interrupts\n", ret);
++		goto init_nic_err;
 +	}
 +
-+	*mpf_bd_num = le32_to_cpu(desc_bd.data[0]);
-+	*pf_bd_num = le32_to_cpu(desc_bd.data[1]);
-+	if (*mpf_bd_num < mpf_min_bd_num || *pf_bd_num < pf_min_bd_num) {
-+		dev_err(dev, "Invalid bd num: mpf(%d), pf(%d)\n",
-+			*mpf_bd_num, *pf_bd_num);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- /* hclge_handle_mpf_ras_error: handle all main PF RAS errors
-  * @hdev: pointer to struct hclge_dev
-  * @desc: descriptor for describing the command
-@@ -1291,24 +1337,16 @@ static int hclge_handle_pf_ras_error(struct hclge_dev *hdev,
++	hnae3_set_client_init_flag(client, ae_dev, 1);
  
- static int hclge_handle_all_ras_errors(struct hclge_dev *hdev)
- {
--	struct device *dev = &hdev->pdev->dev;
- 	u32 mpf_bd_num, pf_bd_num, bd_num;
--	struct hclge_desc desc_bd;
- 	struct hclge_desc *desc;
- 	int ret;
- 
- 	/* query the number of registers in the RAS int status */
--	hclge_cmd_setup_basic_desc(&desc_bd, HCLGE_QUERY_RAS_INT_STS_BD_NUM,
--				   true);
--	ret = hclge_cmd_send(&hdev->hw, &desc_bd, 1);
--	if (ret) {
--		dev_err(dev, "fail(%d) to query ras int status bd num\n", ret);
-+	ret = hclge_query_bd_num(hdev, true, &mpf_bd_num, &pf_bd_num);
-+	if (ret)
- 		return ret;
--	}
--	mpf_bd_num = le32_to_cpu(desc_bd.data[0]);
--	pf_bd_num = le32_to_cpu(desc_bd.data[1]);
--	bd_num = max_t(u32, mpf_bd_num, pf_bd_num);
- 
-+	bd_num = max_t(u32, mpf_bd_num, pf_bd_num);
- 	desc = kcalloc(bd_num, sizeof(struct hclge_desc), GFP_KERNEL);
- 	if (!desc)
- 		return -ENOMEM;
-@@ -1844,25 +1882,16 @@ static int hclge_handle_all_hw_msix_error(struct hclge_dev *hdev,
- 	struct hclge_mac_tnl_stats mac_tnl_stats;
- 	struct device *dev = &hdev->pdev->dev;
- 	u32 mpf_bd_num, pf_bd_num, bd_num;
--	struct hclge_desc desc_bd;
- 	struct hclge_desc *desc;
- 	u32 status;
- 	int ret;
- 
- 	/* query the number of bds for the MSIx int status */
--	hclge_cmd_setup_basic_desc(&desc_bd, HCLGE_QUERY_MSIX_INT_STS_BD_NUM,
--				   true);
--	ret = hclge_cmd_send(&hdev->hw, &desc_bd, 1);
--	if (ret) {
--		dev_err(dev, "fail(%d) to query msix int status bd num\n",
--			ret);
-+	ret = hclge_query_bd_num(hdev, false, &mpf_bd_num, &pf_bd_num);
-+	if (ret)
- 		goto out;
--	}
- 
--	mpf_bd_num = le32_to_cpu(desc_bd.data[0]);
--	pf_bd_num = le32_to_cpu(desc_bd.data[1]);
- 	bd_num = max_t(u32, mpf_bd_num, pf_bd_num);
--
- 	desc = kcalloc(bd_num, sizeof(struct hclge_desc), GFP_KERNEL);
- 	if (!desc) {
- 		ret = -ENOMEM;
-@@ -1930,7 +1959,6 @@ void hclge_handle_all_hns_hw_errors(struct hnae3_ae_dev *ae_dev)
- 	struct hclge_dev *hdev = ae_dev->priv;
- 	struct device *dev = &hdev->pdev->dev;
- 	u32 mpf_bd_num, pf_bd_num, bd_num;
--	struct hclge_desc desc_bd;
- 	struct hclge_desc *desc;
- 	u32 status;
- 	int ret;
-@@ -1939,19 +1967,11 @@ void hclge_handle_all_hns_hw_errors(struct hnae3_ae_dev *ae_dev)
- 	status = hclge_read_dev(&hdev->hw, HCLGE_RAS_PF_OTHER_INT_STS_REG);
- 
- 	/* query the number of bds for the MSIx int status */
--	hclge_cmd_setup_basic_desc(&desc_bd, HCLGE_QUERY_MSIX_INT_STS_BD_NUM,
--				   true);
--	ret = hclge_cmd_send(&hdev->hw, &desc_bd, 1);
--	if (ret) {
--		dev_err(dev, "fail(%d) to query msix int status bd num\n",
--			ret);
-+	ret = hclge_query_bd_num(hdev, false, &mpf_bd_num, &pf_bd_num);
-+	if (ret)
- 		return;
--	}
- 
--	mpf_bd_num = le32_to_cpu(desc_bd.data[0]);
--	pf_bd_num = le32_to_cpu(desc_bd.data[1]);
- 	bd_num = max_t(u32, mpf_bd_num, pf_bd_num);
--
- 	desc = kcalloc(bd_num, sizeof(struct hclge_desc), GFP_KERNEL);
- 	if (!desc)
- 		return;
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-index db318a4..7ea8bb2 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.h
-@@ -6,6 +6,11 @@
- 
- #include "hclge_main.h"
- 
-+#define HCLGE_MPF_RAS_INT_MIN_BD_NUM	10
-+#define HCLGE_PF_RAS_INT_MIN_BD_NUM	4
-+#define HCLGE_MPF_MSIX_INT_MIN_BD_NUM	10
-+#define HCLGE_PF_MSIX_INT_MIN_BD_NUM	4
-+
- #define HCLGE_RAS_PF_OTHER_INT_STS_REG   0x20B00
- #define HCLGE_RAS_REG_NFE_MASK   0xFF00
- #define HCLGE_RAS_REG_ROCEE_ERR_MASK   0x3000000
+ 	if (netif_msg_drv(&hdev->vport->nic))
+ 		hclge_info_show(hdev);
 -- 
 2.7.4
 
