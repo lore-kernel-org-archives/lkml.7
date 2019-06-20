@@ -2,186 +2,105 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2BCD9C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CDDCC48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:00:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8AC2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:55:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAB81214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:00:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="NQ1so63d"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Us8FuvMV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfFTJz5 (ORCPT
+        id S1730611AbfFTKAE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:55:57 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:42956 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726082AbfFTJz5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:55:57 -0400
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x5K9tfj3111742;
-        Thu, 20 Jun 2019 04:55:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1561024541;
-        bh=gMzqG6E9O4i2YfBt81xekJ8pv03pPdWDJCxTqsWo7G0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=NQ1so63dygklF44KpEHQFiJ65zCl0/AG3QG3xL6D2Q80yRU4yN1Xr7yF7OXemcQ/g
-         L/6fgj0DcUkGXq9jDqzNfvHqmJLecmfbVOYF2e0EhgDKIlQ/N3PvauhHr48h0H6+Um
-         6Erh7jeFw3aOiugZPDZqfCMIL+NMlwhgpUM63Nuk=
-Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x5K9tfcN086307
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Jun 2019 04:55:41 -0500
-Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE103.ent.ti.com
- (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Thu, 20
- Jun 2019 04:55:41 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
- (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Thu, 20 Jun 2019 04:55:41 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x5K9tciC018188;
-        Thu, 20 Jun 2019 04:55:38 -0500
-Subject: Re: [PATCH 09/16] dt-bindings: dma: ti: Add document for K3 UDMA
-To:     Rob Herring <robh@kernel.org>
-CC:     Vinod <vkoul@kernel.org>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" 
-        <dmaengine@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Grygorii Strashko <grygorii.strashko@ti.com>,
-        Lokesh Vutla <lokeshvutla@ti.com>,
-        Tero Kristo <t-kristo@ti.com>, Tony Lindgren <tony@atomide.com>
-References: <20190506123456.6777-1-peter.ujfalusi@ti.com>
- <20190506123456.6777-10-peter.ujfalusi@ti.com> <20190613181626.GA7039@bogus>
- <e0d6a264-96b5-31a6-e70b-3b1c2d863988@ti.com>
- <CAL_JsqJNMkKL_FubZfjKY6jLebMetmgR24EoendHoPM2ckrUQA@mail.gmail.com>
- <e811d674-b79f-4da8-c632-c7a90844b6c5@ti.com>
- <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <f7bb4e82-95ea-a043-e2b1-f429b16642ba@ti.com>
-Date:   Thu, 20 Jun 2019 12:56:16 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 20 Jun 2019 06:00:04 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52727 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726175AbfFTKAE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:00:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Ty3h16TBz9s4V;
+        Thu, 20 Jun 2019 19:59:59 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561024800;
+        bh=IipggBUwCm8dG12BaaBdSFNwAisAMU72LTzcB1dN14I=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Us8FuvMV8tLgi5WXoX0bXJURl8e7PbGPhEcUaxa2Ea5zL0IEf5l5Vv20O6pNMdydx
+         dMEI0tF9RjJ2JqgN9ouJV5D658zmEkLgiVxHpIw0ZLkiY1iNZYD8/sDtPk5PYFw1L5
+         JUhuAgme/XbgtMN3E2xE94Q0jqLFLgdFna+MUEmhvX7iRB+1v09fU24bLWJ1nZT3Ek
+         9Lfbbpfzrvl6OUBtx3BJDb/iH6m3BvL9jcKkTkeqz9iDyDP4rLoDUzOIoZaj8/2gqf
+         k7pyEj3jX+X7aUoVb/5HLTtxFJZAvJiuKhnAwjjrKtDugD8mjW8+ML1Ykk7B+WCL3S
+         l2gi2Te1vDhyw==
+Date:   Thu, 20 Jun 2019 19:59:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Matteo Croce <mcroce@redhat.com>
+Subject: linux-next: manual merge of the akpm tree with the s390 tree
+Message-ID: <20190620195958.44841896@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJTWNKTB1D2wNysonzasgL9awLLvr1HdOckUnQbpgsDQw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/gQ=SzubxHMkTfaRKs_V7Ny6"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/gQ=SzubxHMkTfaRKs_V7Ny6
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-On 19/06/2019 17.04, Rob Herring wrote:
-> On Fri, Jun 14, 2019 at 7:42 AM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>
->>
->> On 14/06/2019 16.20, Rob Herring wrote:
->>> On Thu, Jun 13, 2019 at 2:33 PM Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->>>>
->>>> Rob,
->>>>
->>>> On 13/06/2019 21.16, Rob Herring wrote:
->>>>>> +Remote PSI-L endpoint
->>>>>> +
->>>>>> +Required properties:
->>>>>> +--------------------
->>>>>> +- ti,psil-base:             PSI-L thread ID base of the endpoint
->>>>>> +
->>>>>> +Within the PSI-L endpoint node thread configuration subnodes must present with:
->>>>>> +ti,psil-configX naming convention, where X is the thread ID offset.
->>>>>
->>>>> Don't use vendor prefixes on node names.
->>>>
->>>> OK.
->>>>
->>>>>> +
->>>>>> +Configuration node Required properties:
->>>>>> +--------------------
->>>>>> +- linux,udma-mode:  Channel mode, can be:
->>>>>> +                    - UDMA_PKT_MODE: for Packet mode channels (peripherals)
->>>>>> +                    - UDMA_TR_MODE: for Third-Party mode
->>>>>
->>>>> This is hardly a common linux thing. What determines the value here.
->>>>
->>>> Unfortunately it is.
->>>
->>> No, it's a feature of your h/w and in no way is something linux
->>> defined which is the point of 'linux' prefix.
->>
->> The channel can be either Packet or TR mode. The HW is really flexible
->> on this (and on other things as well).
->> It just happens that Linux need to use specific channels in a specific mode.
->>
->> Would it help if we assume that all channels are used in Packet mode,
->> but we have linux,tr-mode bool to indicate that the given channel in
->> Linux need to be used in TR mode.
-> 
-> Your use of 'linux' prefix is wrong. Stop using it.
+Today's linux-next merge of the akpm tree got a conflict in:
 
-OK, I can not argue with that.
-I'll have 'tr-mode' bool to indicate that the channel should be
-configured in TR mode for the given thread.
+  drivers/s390/char/sclp_async.c
 
->>>> Each channel can be configured to Packet or TR mode. For some
->>>> peripherals it is true that they only support packet mode, these are the
->>>> newer PSI-L native peripherals.
->>>> For these channels a udma-mode property would be correct.
->>>>
->>>> But we have legacy peripherals as well and they are serviced by PDMA
->>>> (which is a native peripheral designed to talk to the given legacy IP).
->>>> We can use either packet or TR mode in UDMAP to talk to PDMAs, it is in
->>>> most cases clear what to use, but for example for audio (McASP) channels
->>>> Linux is using TR channel because we need cyclic DMA while for example
->>>> RTOS is using Packet mode as it fits their needs better.
->>>>
->>>> Here I need to prefix the udma-mode with linux as the mode is used by
->>>> Linux, but other OS might opt to use different channel mode.
->>>
->>> So you'd need <os>,udma-mode? That doesn't work... If the setting is
->>> per OS, then it belongs in the OS because the same dtb should work
->>> across OS's.
->>
->> So I should have a table for the thread IDs in the DMA driver and mark
->> channels as TR or Packet in there for Linux use?
-> 
-> Perhaps. I haven't heard any reasons why you need this in DT. If Linux
-> is dictating the modes, then sounds like it should be in Linux.
-> 
-> But really, I don't fully understand what you are doing here to tell
-> you what to do beyond using 'linux' prefix is wrong.
+between commit:
 
-We have certain peripherals (McASP/UART/McSPI/etc) which is serviced by
-PDMAs to be compatible with the data movement architecture implemented
-within NAVSS.
-Unlike native peripherals, like networking we can configure the UDMAP
-channel to either Packet or TR mode. There are differences between the
-two modes, but the job can be done in both modes.
-In Linux we use TR mode for audio channels as it provides the needed
-functionality we need (efficient cyclic mode, can disable interrupts).
+  191fa92b3448 ("s390/sclp: remove call home support")
 
-There is no information from the HW on how a given thread is best used
-and other OSs can opt for not optimal use.
+from the s390 tree and patch:
 
-But the majority of threads are better served in Packet mode, so adding
-a bool flag to the thread configuration to indicate that TR mode is the
-advised mode for it is perfectly fine.
+   proc/sysctl: add shared variables for range check
 
-- Péter
+from the akpm tree.
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+I fixed it up (I removed the file) and can carry the fix as
+necessary. This is now fixed as far as linux-next is concerned, but any
+non trivial conflicts should be mentioned to your upstream maintainer
+when your tree is submitted for merging.  You may also want to consider
+cooperating with the maintainer of the conflicting tree to minimise any
+particularly complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/gQ=SzubxHMkTfaRKs_V7Ny6
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0LWR4ACgkQAVBC80lX
+0GyB7Qf/Tani1A7xx/mSXffQ8membEuKI+vLA3o1IWWZG3fTC9NKMjcwDLEvrbrj
++/xRsdeHpIqlxh0/9CKcMpqY9ArFSlRj9EJkPYtSlfE/hWVl1b7S7/rZ9Qfy9hM0
+tZcaPp4kMoUfsV8RfbT8rXE/4B0ftYgKyUrAA+JIH2UsIfgWbc8cOkr3wSeqvfbj
+eIud8a9urAHCd02DL/iLNwOh+mxYmDcxMDZnfp36B4qTqAvyLQ1nCz12uthQZhiE
+ZW1LRbJs4wTIA9nGeORgK6cS8g8F80/At7ztVkt7Qp1Og20DKyIKy5GgbovIjJwA
+4ECqL72qzuw62ARpuKK3/u9Gi0SrlA==
+=ntpj
+-----END PGP SIGNATURE-----
+
+--Sig_/gQ=SzubxHMkTfaRKs_V7Ny6--
