@@ -2,147 +2,185 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DA37C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3124C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:12:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 521612085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A988C2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:12:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="YbDDbAeg"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="A8a0vgs6";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="mIpVAMaC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730908AbfFTILg (ORCPT
+        id S1731235AbfFTIMB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:11:36 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36797 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfFTILe (ORCPT
+        Thu, 20 Jun 2019 04:12:01 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:43550 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725966AbfFTIMA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:11:34 -0400
-Received: by mail-wm1-f67.google.com with SMTP id u8so2144032wmm.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:11:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QQRh2gTu0XxP02eaevWI4QLBFrAyLvn8wbFwlTAm3vE=;
-        b=YbDDbAegnE0dp4YumxpEKd5tEw4La1v3jt4kihJK5jyw2BUQQR1uZFOE2Ik6jnJj36
-         z8MiqykH+K7ixsqv71H2SpZ2kIdYvhPPNu4TMwigVUjFZhOQUC7dpx6vVoshTPiYOmNO
-         ftClQRkLAgfaq/fv3imw1NNxA6VFMohIC4QSRuxiQu898a6DmHEf4CSVx6pyiixqrYBN
-         1OInEzdDKeK18AvYt8iG8qrHFhW24Q7MjjSJI8qT7zjFUvMUZO+pTv9/uBdWejqdfXY7
-         GjpcnjXK/PxKVn3+jRWovjUVVZx6CtpbwVRoEAJHq4RSlc2yvBCCA7TDYO+3wgYGkyRH
-         vkQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QQRh2gTu0XxP02eaevWI4QLBFrAyLvn8wbFwlTAm3vE=;
-        b=Ltf2SpliIZAeSsw44AXZp7Yvy5osVXYKAox01gQk0CDWxXKQW2seu+4lWiJxF67tcH
-         QO0TdlvJioYRP5MBskNPBVHpEuZ5i4hYD1MWOdBIsGnjmliQQOowxh5c3kFkKdyHGcMc
-         BsLeSNa6hclz+qNwtYBBJuZhun6rCg3alILvZvsnS+KsBQ/ksAujs+/1N/4m8rAFY7TE
-         NP1n7QXhVEa0Ay693BPAcvZlFfeN8jlCLvi28e+3QJ7duJ8BGHb84KF9i+NvBHEVqEhf
-         As+9Vjtlgk+F3jQyPctPDda4ZmKKCgHE98jEjV0ZbvYD4bkrZRJEo38V+L3Ml0YlOfk8
-         ZcFg==
-X-Gm-Message-State: APjAAAV+qRMlYuj81SJAkJi6g/wdqaLCNXDhI45vr0F2Hr+uOjl0QDA7
-        GW+yhMoPeNqC0wed4k0esmIetg==
-X-Google-Smtp-Source: APXvYqzH+ZLNyvCpXFzWSXrFY3Wsh1CBUpeeYMjj0LkK0ktxpjDOzok10BkKCYtxgWuqjr52/qmPlw==
-X-Received: by 2002:a1c:7a15:: with SMTP id v21mr1672163wmc.82.1561018292082;
-        Thu, 20 Jun 2019 01:11:32 -0700 (PDT)
-Received: from srini-hackbox.lan (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.gmail.com with ESMTPSA id q12sm17559174wrp.50.2019.06.20.01.11.31
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 01:11:31 -0700 (PDT)
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH 1/3] slimbus: fix kerneldoc comments
-Date:   Thu, 20 Jun 2019 09:11:27 +0100
-Message-Id: <20190620081129.4721-2-srinivas.kandagatla@linaro.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190620081129.4721-1-srinivas.kandagatla@linaro.org>
-References: <20190620081129.4721-1-srinivas.kandagatla@linaro.org>
+        Thu, 20 Jun 2019 04:12:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 4B66B60A24; Thu, 20 Jun 2019 08:11:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561018319;
+        bh=dvU4ajc5X9Scc24IFrnqiFqzqsUgEwHjZnNW7TXMMe0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=A8a0vgs6wuLOa5DhlPnxpcrazX1vxYuDRWrWSzkLd/06sm6s0ntsxwPyafsFlNtE1
+         yvx0wDhjvPUbLyRKkz8WAC455jLiKdwrUt+InOQtH+AuJGDg1BHmuNl35HJripnOoK
+         1PpwxglLi7dbuMM0Cxh0rbtbGEbgvfaFSn5tItEA=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 74195606FC;
+        Thu, 20 Jun 2019 08:11:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561018318;
+        bh=dvU4ajc5X9Scc24IFrnqiFqzqsUgEwHjZnNW7TXMMe0=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=mIpVAMaCbF25A6O5Q2W1kSuhBfKw9/MFQrVxSXyN/4+hEcaHJmGfVgMbYhyOJHTGN
+         vVy6Ry5XkWEDNXqJzuNJJJo6ilp4QfaK3WCarKedHJ8LktQ0AqzwV8Ny5d2PYK1Rcd
+         hdNpDqhM6Al521NWNQd3so6Ql+LwK98volxYAqXI=
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Jun 2019 13:41:58 +0530
+From:   amasule@codeaurora.org
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
+Subject: Re: [PATCH 1/5] media: venus: Add codec data table
+In-Reply-To: <bc6035d8-2688-f79a-068e-bf6630dd65ef@linaro.org>
+References: <1560233130-27264-1-git-send-email-amasule@codeaurora.org>
+ <1560233130-27264-2-git-send-email-amasule@codeaurora.org>
+ <bc6035d8-2688-f79a-068e-bf6630dd65ef@linaro.org>
+Message-ID: <cc674c104d0f7bc9007285efd67e8885@codeaurora.org>
+X-Sender: amasule@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonathan Corbet <corbet@lwn.net>
+Hi Stan,
 
-The kerneldoc comments in drivers/slimbus/stream.c were not properly
-formatted, leading to a distinctly unsatisfying "no structured comments
-found" warning in the docs build.  Sprinkle some asterisks around so that
-the comments will be properly recognized.
+On 2019-06-17 14:07, Stanimir Varbanov wrote:
+> Hi Aniket,
+> 
+> On 6/11/19 9:05 AM, Aniket Masule wrote:
+>> Add vpp cycles for for different types of codec
+>> It indicates the cycles required by video hardware
+>> to process each macroblock.
+>> 
+>> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/core.c | 13 +++++++++++++
+>>  drivers/media/platform/qcom/venus/core.h | 15 +++++++++++++++
+>>  2 files changed, 28 insertions(+)
+>> 
+>> diff --git a/drivers/media/platform/qcom/venus/core.c 
+>> b/drivers/media/platform/qcom/venus/core.c
+>> index 7393667..43eb446 100644
+>> --- a/drivers/media/platform/qcom/venus/core.c
+>> +++ b/drivers/media/platform/qcom/venus/core.c
+>> @@ -473,9 +473,22 @@ static __maybe_unused int 
+>> venus_runtime_resume(struct device *dev)
+>>  	{  244800, 100000000 },	/* 1920x1080@30 */
+>>  };
+>> 
+>> +static struct codec_data sdm845_codec_data[] =  {
+>> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_ENC, 675 },
+>> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_ENC, 675 },
+>> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_ENC, 675 },
+>> +	{ V4L2_PIX_FMT_MPEG2, VIDC_SESSION_TYPE_DEC, 200 },
+>> +	{ V4L2_PIX_FMT_H264, VIDC_SESSION_TYPE_DEC, 200 },
+>> +	{ V4L2_PIX_FMT_HEVC, VIDC_SESSION_TYPE_DEC, 200 },
+>> +	{ V4L2_PIX_FMT_VP8, VIDC_SESSION_TYPE_DEC, 200 },
+>> +	{ V4L2_PIX_FMT_VP9, VIDC_SESSION_TYPE_DEC, 200 },
+>> +};
+>> +
+>>  static const struct venus_resources sdm845_res = {
+>>  	.freq_tbl = sdm845_freq_table,
+>>  	.freq_tbl_size = ARRAY_SIZE(sdm845_freq_table),
+>> +	.codec_data = sdm845_codec_data,
+>> +	.codec_data_size = ARRAY_SIZE(sdm845_codec_data),
+>>  	.clks = {"core", "iface", "bus" },
+>>  	.clks_num = 3,
+>>  	.max_load = 2563200,
+>> diff --git a/drivers/media/platform/qcom/venus/core.h 
+>> b/drivers/media/platform/qcom/venus/core.h
+>> index 7a3feb5..b1a9b43 100644
+>> --- a/drivers/media/platform/qcom/venus/core.h
+>> +++ b/drivers/media/platform/qcom/venus/core.h
+>> @@ -35,12 +35,20 @@ struct reg_val {
+>>  	u32 value;
+>>  };
+>> 
+>> +struct codec_data {
+> 
+> The name is very generic, could you rename the structure to something
+> like vpp_cycles_data?
+> 
+I will be adding vsp_cycles with next patch for bitrate based clock 
+scaling.
+So, I could rename it to codec_cycles_data.
 
-Signed-off-by: Jonathan Corbet <corbet@lwn.net>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
----
- drivers/slimbus/stream.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+>> +u32 pixfmt;
+>> +u32 session_type;
+>> +int vpp_cycles;
+> 
+> please check your editor, those fields should have a tab to the right.
+> 
+>> +};
+>> +
+>>  struct venus_resources {
+>>  	u64 dma_mask;
+>>  	const struct freq_tbl *freq_tbl;
+>>  	unsigned int freq_tbl_size;
+>>  	const struct reg_val *reg_tbl;
+>>  	unsigned int reg_tbl_size;
+>> +	const struct codec_data *codec_data;
+>> +	unsigned int codec_data_size;
+>>  	const char * const clks[VIDC_CLKS_NUM_MAX];
+>>  	unsigned int clks_num;
+>>  	enum hfi_version hfi_version;
+>> @@ -216,6 +224,12 @@ struct venus_buffer {
+>>  	struct list_head ref_list;
+>>  };
+>> 
+>> +struct clock_data {
+>> +	u32 core_id;
+>> +	unsigned long freq;
+> 
+> I cannot see how this 'freq' structure field is used? I can see that 
+> you
+> fill it in 3/5 patch but you don't used nowhere.
+> 
+Yes Stan, I will remove 'freq' from clock data structure.
 
-diff --git a/drivers/slimbus/stream.c b/drivers/slimbus/stream.c
-index 2fa05324ed07..75f87b3d8b95 100644
---- a/drivers/slimbus/stream.c
-+++ b/drivers/slimbus/stream.c
-@@ -84,7 +84,7 @@ static const int slim_presence_rate_table[] = {
- 	512000,
- };
- 
--/*
-+/**
-  * slim_stream_allocate() - Allocate a new SLIMbus Stream
-  * @dev:Slim device to be associated with
-  * @name: name of the stream
-@@ -189,7 +189,7 @@ static int slim_get_prate_code(int rate)
- 	return -EINVAL;
- }
- 
--/*
-+/**
-  * slim_stream_prepare() - Prepare a SLIMbus Stream
-  *
-  * @rt: instance of slim stream runtime to configure
-@@ -336,7 +336,7 @@ static int slim_activate_channel(struct slim_stream_runtime *stream,
- 	return slim_do_transfer(sdev->ctrl, &txn);
- }
- 
--/*
-+/**
-  * slim_stream_enable() - Enable a prepared SLIMbus Stream
-  *
-  * @stream: instance of slim stream runtime to enable
-@@ -389,7 +389,7 @@ int slim_stream_enable(struct slim_stream_runtime *stream)
- }
- EXPORT_SYMBOL_GPL(slim_stream_enable);
- 
--/*
-+/**
-  * slim_stream_disable() - Disable a SLIMbus Stream
-  *
-  * @stream: instance of slim stream runtime to disable
-@@ -423,7 +423,7 @@ int slim_stream_disable(struct slim_stream_runtime *stream)
- }
- EXPORT_SYMBOL_GPL(slim_stream_disable);
- 
--/*
-+/**
-  * slim_stream_unprepare() - Un-prepare a SLIMbus Stream
-  *
-  * @stream: instance of slim stream runtime to unprepare
-@@ -449,7 +449,7 @@ int slim_stream_unprepare(struct slim_stream_runtime *stream)
- }
- EXPORT_SYMBOL_GPL(slim_stream_unprepare);
- 
--/*
-+/**
-  * slim_stream_free() - Free a SLIMbus Stream
-  *
-  * @stream: instance of slim stream runtime to free
--- 
-2.21.0
-
+>> +	struct codec_data *codec_data;
+>> +};
+> 
+> Having the fact that freq field seems not needed can we just merge the
+> fields in venus_inst structure?
+> 
+I will be adding 'freq' with next patch for bitrate based clock scaling.
+So, it would be easier if we maintain separate structure from this 
+patch.
+>> +
+>>  #define to_venus_buffer(ptr)	container_of(ptr, struct venus_buffer, 
+>> vb)
+>> 
+>>  /**
+>> @@ -275,6 +289,7 @@ struct venus_inst {
+>>  	struct list_head list;
+>>  	struct mutex lock;
+>>  	struct venus_core *core;
+>> +	struct clock_data clk_data;
+>>  	struct list_head dpbbufs;
+>>  	struct list_head internalbufs;
+>>  	struct list_head registeredbufs;
+>> 
