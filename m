@@ -2,133 +2,164 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HK_RANDOM_FROM,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=DATE_IN_FUTURE_06_12,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D91C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7AACAC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:47:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BA8F206B7
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FD70206B7
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727124AbfFTGq4 (ORCPT
+        id S1730671AbfFTGrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 02:46:56 -0400
-Received: from mga12.intel.com ([192.55.52.136]:33092 "EHLO mga12.intel.com"
+        Thu, 20 Jun 2019 02:47:12 -0400
+Received: from mga18.intel.com ([134.134.136.126]:58599 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725872AbfFTGq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 02:46:56 -0400
+        id S1730267AbfFTGrM (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 02:47:12 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 23:46:55 -0700
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 23:47:11 -0700
+X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,395,1557212400"; 
-   d="scan'208";a="154028475"
-Received: from xiaoyaol-mobl.ccr.corp.intel.com (HELO [10.239.13.123]) ([10.239.13.123])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/AES256-SHA; 19 Jun 2019 23:46:53 -0700
-Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
-To:     Wanpeng Li <kernellwp@gmail.com>, Tao Xu <tao3.xu@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20190620050301.1149-1-tao3.xu@intel.com>
- <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
-From:   Xiaoyao Li <xiaoyao.li@linux.intel.com>
-Message-ID: <f358c914-ae58-9889-a8ef-6ea9f3b2650e@linux.intel.com>
-Date:   Thu, 20 Jun 2019 14:46:50 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+   d="scan'208";a="160573373"
+Received: from skl.sh.intel.com ([10.239.159.132])
+  by fmsmga008.fm.intel.com with ESMTP; 19 Jun 2019 23:47:08 -0700
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v4 0/7] perf diff: diff cycles at basic block level
+Date:   Thu, 20 Jun 2019 22:36:35 +0800
+Message-Id: <1561041402-29444-1-git-send-email-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/2019 2:40 PM, Wanpeng Li wrote:
-> Hi,
-> On Thu, 20 Jun 2019 at 13:06, Tao Xu <tao3.xu@intel.com> wrote:
->>
->> The helper vmx_xsaves_supported() returns the bit value of
->> SECONDARY_EXEC_XSAVES in vmcs_config.cpu_based_2nd_exec_ctrl, which
->> remains unchanged true if vmcs supports 1-setting of this bit after
->> setup_vmcs_config(). It should check the guest's cpuid not this
->> unchanged value when get/set msr.
->>
->> Besides, vmx_compute_secondary_exec_control() adjusts
->> SECONDARY_EXEC_XSAVES bit based on guest cpuid's X86_FEATURE_XSAVE
->> and X86_FEATURE_XSAVES, it should use updated value to decide whether
->> set XSS_EXIT_BITMAP.
->>
->> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
->> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
->> Signed-off-by: Tao Xu <tao3.xu@intel.com>
->> ---
->>   arch/x86/kvm/vmx/vmx.c | 8 +++++---
->>   1 file changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
->> index b93e36ddee5e..935cf72439a9 100644
->> --- a/arch/x86/kvm/vmx/vmx.c
->> +++ b/arch/x86/kvm/vmx/vmx.c
->> @@ -1721,7 +1721,8 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>                  return vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index,
->>                                         &msr_info->data);
->>          case MSR_IA32_XSS:
->> -               if (!vmx_xsaves_supported())
->> +               if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) ||
->> +                       !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
->>                          return 1;
->>                  msr_info->data = vcpu->arch.ia32_xss;
->>                  break;
->> @@ -1935,7 +1936,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struct msr_data *msr_info)
->>                          return 1;
->>                  return vmx_set_vmx_msr(vcpu, msr_index, data);
->>          case MSR_IA32_XSS:
->> -               if (!vmx_xsaves_supported())
->> +               if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) ||
->> +                       !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
->>                          return 1;
-> 
-> Not complete true.
-> 
->>                  /*
->>                   * The only supported bit as of Skylake is bit 8, but
->> @@ -4094,7 +4096,7 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->>
->>          set_cr4_guest_host_mask(vmx);
->>
->> -       if (vmx_xsaves_supported())
->> +       if (vmx->secondary_exec_control & SECONDARY_EXEC_XSAVES)
->>                  vmcs_write64(XSS_EXIT_BITMAP, VMX_XSS_EXIT_BITMAP);
-> 
-> This is not true.
-> 
-> SDM 24.6.20:
-> On processors that support the 1-setting of the “enable
-> XSAVES/XRSTORS” VM-execution control, the VM-execution control fields
-> include a 64-bit XSS-exiting bitmap.
-> 
-> It depends on whether or not processors support the 1-setting instead
-> of “enable XSAVES/XRSTORS” is 1 in VM-exection control field. Anyway,
+In some cases small changes in hot loops can show big differences.
+But it's difficult to identify these differences.
 
-Yes, whether this field exist or not depends on whether processors 
-support the 1-setting.
+perf diff currently can only diff symbols (functions). We can also expand
+it to diff cycles of individual programs blocks as reported by timed LBR.
+This would allow to identify changes in specific code accurately.
 
-But if "enable XSAVES/XRSTORS" is clear to 0, XSS_EXIT_BITMAP doesn't 
-work. I think in this case, there is no need to set this vmcs field?
+With this patch set, for example,
 
-> I will send a patch to fix the msr read/write for commit
-> 203000993de5(kvm: vmx: add MSR logic for XSAVES), thanks for the
-> report.
-> 
-> Regards,
-> Wanpeng Li
-> 
+ $ perf record -b ./div
+ $ perf record -b ./div
+ $ perf diff -c cycles
+
+ # Event 'cycles'
+ #
+ # Baseline                                       [Program Block Range] Cycles Diff  Shared Object     Symbol
+ # ........  ......................................................................  ................  ..................................
+ #
+     48.75%                                             [div.c:42 -> div.c:45]  147  div               [.] main
+     48.75%                                             [div.c:31 -> div.c:40]    4  div               [.] main
+     48.75%                                             [div.c:40 -> div.c:40]    0  div               [.] main
+     48.75%                                             [div.c:42 -> div.c:42]    0  div               [.] main
+     48.75%                                             [div.c:42 -> div.c:44]    0  div               [.] main
+     19.02%                                 [random_r.c:357 -> random_r.c:360]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:373]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:376]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:380]    0  libc-2.23.so      [.] __random_r
+     19.02%                                 [random_r.c:357 -> random_r.c:392]    0  libc-2.23.so      [.] __random_r
+     16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:288 -> random.c:291]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:288 -> random.c:295]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:288 -> random.c:297]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:291 -> random.c:291]    0  libc-2.23.so      [.] __random
+     16.17%                                     [random.c:293 -> random.c:293]    0  libc-2.23.so      [.] __random
+      8.21%                                             [div.c:22 -> div.c:22]  148  div               [.] compute_flag
+      8.21%                                             [div.c:22 -> div.c:25]    0  div               [.] compute_flag
+      8.21%                                             [div.c:27 -> div.c:28]    0  div               [.] compute_flag
+      5.52%                                           [rand.c:26 -> rand.c:27]    0  libc-2.23.so      [.] rand
+      5.52%                                           [rand.c:26 -> rand.c:28]    0  libc-2.23.so      [.] rand
+      2.27%                                         [rand@plt+0 -> rand@plt+0]    0  div               [.] rand@plt
+      0.01%                                 [entry_64.S:694 -> entry_64.S:694]   16  [kernel.vmlinux]  [k] native_irq_return_iret
+      0.00%                                       [fair.c:7676 -> fair.c:7665]  162  [kernel.vmlinux]  [k] update_blocked_averages
+
+ '[Program Block Range]' indicates the range of program basic block
+ (start -> end). If we can find the source line it prints the source
+ line otherwise it prints the symbol+offset instead.
+
+ v4:
+ ---
+ Use source lines or symbol+offset to indicate the basic block.
+
+ Changed patches:
+  perf diff: Print the basic block cycles diff
+  perf diff: Documentation -c cycles option  
+
+ v3:
+ ---
+ In v3, the major change is to move most of block stuffs from
+ 'struct hist_entry' to new structure 'struct block_hist' and
+ update the code accordingly. But we still have to keep the
+ block_info in 'struct hist_entry' since we need to compare by
+ block info when inserting new entry to hists.
+
+ Others are minor changes, such as abs() -> labs(), removing
+ duplicated ops and etc.
+
+ Changed patches:
+  perf diff: Use hists to manage basic blocks per symbol
+  perf diff: Link same basic blocks among different data
+  perf diff: Print the basic block cycles diff
+
+ v2:
+ ---
+ Keep standard perf diff format.
+
+ Following is the v1 output.
+
+ # perf diff --basic-block
+
+ # Cycles diff  Basic block (start:end)
+ # ...........  .......................
+ #
+          -208  hrtimer_interrupt (30b9e0:30ba42)
+          -157  update_blocked_averages (2bf9f2:2bfa63)
+          -126  interrupt_entry (c00880:c0093a)
+           -86  hrtimer_interrupt (30bb29:30bb32)
+           -74  hrtimer_interrupt (30ba65:30bac4)
+           -56  update_blocked_averages (2bf980:2bf9d3)
+            48  update_blocked_averages (2bf934:2bf942)
+           -35  native_write_msr (267900:26790b)
+            26  native_irq_return_iret (c00a27:c00a27)
+            22  rcu_check_callbacks (2febb6:2febdc)
+           -21  __hrtimer_run_queues (30b220:30b2a3)
+            19  pvclock_gtod_notify (14ba0:14c1b)
+           -18  task_tick_fair (2c5d29:2c5d41)
+
+Jin Yao (7):
+  perf util: Create block_info structure
+  perf util: Add block_info in hist_entry
+  perf diff: Check if all data files with branch stacks
+  perf diff: Use hists to manage basic blocks per symbol
+  perf diff: Link same basic blocks among different data
+  perf diff: Print the basic block cycles diff
+  perf diff: Documentation -c cycles option
+
+ tools/perf/Documentation/perf-diff.txt |  17 +-
+ tools/perf/builtin-diff.c              | 404 ++++++++++++++++++++++++++++++++-
+ tools/perf/ui/stdio/hist.c             |  27 +++
+ tools/perf/util/hist.c                 |  40 +++-
+ tools/perf/util/hist.h                 |   9 +
+ tools/perf/util/sort.h                 |  13 ++
+ tools/perf/util/srcline.c              |   4 +-
+ tools/perf/util/symbol.c               |  22 ++
+ tools/perf/util/symbol.h               |  23 ++
+ tools/perf/util/symbol_conf.h          |   4 +-
+ 10 files changed, 551 insertions(+), 12 deletions(-)
+
+-- 
+2.7.4
+
