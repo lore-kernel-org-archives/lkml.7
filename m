@@ -2,89 +2,127 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E03C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:17:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84A0C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD672083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:17:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CD782080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:19:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="r/1yYnXX"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="DdPRlZfy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726638AbfFTJRs (ORCPT
+        id S1726445AbfFTJTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:17:48 -0400
-Received: from mail-yw1-f42.google.com ([209.85.161.42]:36369 "EHLO
-        mail-yw1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725912AbfFTJRr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:17:47 -0400
-Received: by mail-yw1-f42.google.com with SMTP id t126so886890ywf.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:17:46 -0700 (PDT)
+        Thu, 20 Jun 2019 05:19:36 -0400
+Received: from mail-eopbgr790089.outbound.protection.outlook.com ([40.107.79.89]:6932
+        "EHLO NAM03-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbfFTJTg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:19:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=yjS6Q6+F6t5GdBFMmUlrcxYceoRTSp3oTZ0mJxc8DLc=;
-        b=r/1yYnXXaFsNBbYms9dnUrTz6KSjQ9x6NFYgigUTCsUW9L5hQ6tiErceaIBDjMsgfU
-         AOsief+Rc7h4OTKWcsbQJGVbeCHqFRzJNvVGhi9Q9dmCaOEIeX5dah/7R2dkgvBU7sCy
-         dNl0vrS6PAGdT8iKGgKnibojs8LoX7GraPy+H8Yf2xMzSW8CQjKlxnKKA8uLLvdvdgJN
-         BguPMakvZfbsIO0UUcodniWlnazBwy3uz4scQJl767NsZjIXiZnzNYlJjDCkH4GsVbbz
-         VekLSHMgWBFM7dYJS4MzV4K0Jai51UHHA6lBvVl6mn/NEk4NOW/LsOCdPybgYjfNOZPX
-         KMYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=yjS6Q6+F6t5GdBFMmUlrcxYceoRTSp3oTZ0mJxc8DLc=;
-        b=j4dbz1BwxytMMCmXEksHawM20B09zZ2+GahlhZMmrPXErO/YRsbJhLSXxrCt9m3FfE
-         6Z/8C+/LGRlhKEpbFfAGDmkIokTsyB0wasW+seXruzqRLfzehYvugD2y1SrGdt+WkdLz
-         9YZHJ5X0h6xoHaKffwZC1zrAare0ePbvD+89438Qv4WnKdbGV8J+ss5u1ek2Z/zM8dHi
-         iqVXToZfkIwTUzSNw+zyGEJIbJTW+PA9AynilhUsNoRah8A+kQUK09f8U3A7B/Cbb6Nn
-         p7Yy1awUmG0uN/7WzIV8dH1NFL+E2USAI3BI7k+iFdrBKKTZbakSc9OuNXwtwdgHKSVR
-         SEJg==
-X-Gm-Message-State: APjAAAXOtJEYUyYti/sX3e033cBNDx56Yzfrbgfb/eDMaGI6R6f/GlLk
-        sNIV/zH8iDXhjuLlGvhVOC8NAw==
-X-Google-Smtp-Source: APXvYqw+luOP592XhcspSOMCAWKp60asbS1wP4Nkli3ErkUVNbmFVXmD1uG5Uvb9NR18THl//mPoug==
-X-Received: by 2002:a0d:f144:: with SMTP id a65mr49343023ywf.42.1561022266304;
-        Thu, 20 Jun 2019 02:17:46 -0700 (PDT)
-Received: from ?IPv6:2600:380:5278:90d8:9c74:6b59:c9f5:5bd0? ([2600:380:5278:90d8:9c74:6b59:c9f5:5bd0])
-        by smtp.gmail.com with ESMTPSA id i126sm2441339ywa.108.2019.06.20.02.17.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 02:17:45 -0700 (PDT)
-Subject: Re: [RESEND PATCH] block: move tag field position in struct request
-To:     Minwoo Im <minwoo.im.dev@gmail.com>, linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Christoph Hellwig <hch@lst.de>
-References: <20190608201551.4531-1-minwoo.im.dev@gmail.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <091ac608-071c-538f-4c43-eb8b40005b05@kernel.dk>
-Date:   Thu, 20 Jun 2019 03:17:39 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=O0PVaOH+gsirioJtKnMwB8zuZ8zQabuEKQHuNYKFLpU=;
+ b=DdPRlZfybLLzn5oPFsWW7+abuMLEoWJjez+gLBAoGy86sqvVUfWLHFcO8lXd97RJidbrQ2JPdSitWOYz7zwuckuFMFVjGJ9SeMSzu4POLqMI4vudU82nmqwkt0wI85TtQEfaHt0sVCJcQZlRNSdfORRTslAjAfYSUm5iwQfW7mE=
+Received: from DM6PR03CA0016.namprd03.prod.outlook.com (2603:10b6:5:40::29) by
+ BL2PR03MB545.namprd03.prod.outlook.com (2a01:111:e400:c23::14) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1987.15; Thu, 20 Jun 2019 09:19:33 +0000
+Received: from BL2NAM02FT033.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e46::200) by DM6PR03CA0016.outlook.office365.com
+ (2603:10b6:5:40::29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1987.12 via Frontend
+ Transport; Thu, 20 Jun 2019 09:19:33 +0000
+Authentication-Results: spf=pass (sender IP is 137.71.25.55)
+ smtp.mailfrom=analog.com; metafoo.de; dkim=none (message not signed)
+ header.d=none;metafoo.de; dmarc=bestguesspass action=none
+ header.from=analog.com;
+Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
+ 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
+ client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
+Received: from nwd2mta1.analog.com (137.71.25.55) by
+ BL2NAM02FT033.mail.protection.outlook.com (10.152.77.163) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
+ via Frontend Transport; Thu, 20 Jun 2019 09:19:30 +0000
+Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
+        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x5K9JTJP023127
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
+        Thu, 20 Jun 2019 02:19:29 -0700
+Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
+ NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
+ 14.3.408.0; Thu, 20 Jun 2019 05:19:28 -0400
+From:   Mircea Caprioru <mircea.caprioru@analog.com>
+To:     <jic23@kernel.org>
+CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
+        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
+        Mircea Caprioru <mircea.caprioru@analog.com>
+Subject: [PATCH 1/4] iio: adc: ad7124: Remove input number limitation
+Date:   Thu, 20 Jun 2019 12:19:05 +0300
+Message-ID: <20190620091908.12041-1-mircea.caprioru@analog.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <20190608201551.4531-1-minwoo.im.dev@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-ADIRoutedOnPrem: True
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(136003)(39860400002)(376002)(396003)(346002)(2980300002)(37524003)(199004)(189003)(186003)(51416003)(7696005)(356004)(6666004)(86362001)(107886003)(2906002)(54906003)(2351001)(316002)(16586007)(70586007)(36756003)(70206006)(106002)(77096007)(305945005)(7636002)(26005)(1076003)(8676002)(47776003)(5660300002)(8936002)(6916009)(246002)(2616005)(486006)(126002)(476003)(44832011)(426003)(336012)(478600001)(50226002)(50466002)(4326008)(72206003)(48376002);DIR:OUT;SFP:1101;SCL:1;SRVR:BL2PR03MB545;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 59fbc025-4868-4482-cbbe-08d6f56067a1
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BL2PR03MB545;
+X-MS-TrafficTypeDiagnostic: BL2PR03MB545:
+X-Microsoft-Antispam-PRVS: <BL2PR03MB5453022EF47FBF4F0AF56E681E40@BL2PR03MB545.namprd03.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:8273;
+X-Forefront-PRVS: 0074BBE012
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: TO0++dZOhFwhu+ItEA7cJiNemOcxHEdpMxRqB5srBZ4LP2SQNHvzrurbO9M2lRYHewIPhr7B9HYe3e4CfW4UeNEIxX3cRo9asNfglSe+SfWJg01elQOxSVGxELr/gE6dDcTEpq6dHjV26MZzxoa01dHsoHioegrJcIStK5o4gMHzWSeT7Ha46kz1EM1o7myZL/FBdh1+Q/gVVCB4xoYwTQy9AQFgzQh6RSq0N6PK24iRTzZ0ZWV7Vnh1mgvEe8qqx37vbSVGsQKqALga+saU61dvkKfoZphWZ6elbdAenZkhFZXbuyATy9soeivHqWJqQd8rsVWn5AVV6wzDBgCNAzXLWpQAcb0ikrKxAdqLbCMlVPlsT3iRAXhjsl/RceqdsEvkv/pzjRyIVNGPQsZBCdDaORH/WrC5YfYq8XeX8sE=
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2019 09:19:30.5236
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 59fbc025-4868-4482-cbbe-08d6f56067a1
+X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2PR03MB545
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/8/19 2:15 PM, Minwoo Im wrote:
-> __data_len and __sector are internal fields which should not be accessed
-> directly in driver-level like the comment above it. But, tag field can
-> be accessed by driver level directly so that we need to make the comment
-> right by moving it to some other place.
+The driver limits the user to use only 4/8 differential inputs, but this
+device has the option to use pseudo-differential channels. This will
+increase the number of channels to be equal with the number of inputs so 8
+channels for ad7124-4 and 16 for ad7124-8.
 
-Applied, thanks.
+This patch removes the check between channel nodes and num_inputs value.
 
+Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
+---
+ drivers/iio/adc/ad7124.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/iio/adc/ad7124.c b/drivers/iio/adc/ad7124.c
+index 659ef37d5fe8..810234db9c0d 100644
+--- a/drivers/iio/adc/ad7124.c
++++ b/drivers/iio/adc/ad7124.c
+@@ -462,13 +462,6 @@ static int ad7124_of_parse_channel_config(struct iio_dev *indio_dev,
+ 		if (ret)
+ 			goto err;
+ 
+-		if (ain[0] >= st->chip_info->num_inputs ||
+-		    ain[1] >= st->chip_info->num_inputs) {
+-			dev_err(indio_dev->dev.parent,
+-				"Input pin number out of range.\n");
+-			ret = -EINVAL;
+-			goto err;
+-		}
+ 		st->channel_config[channel].ain = AD7124_CHANNEL_AINP(ain[0]) |
+ 						  AD7124_CHANNEL_AINM(ain[1]);
+ 		st->channel_config[channel].bipolar =
 -- 
-Jens Axboe
+2.17.1
 
