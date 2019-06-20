@@ -2,98 +2,132 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22F46C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1A02C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5272082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oOdnCN4k"
+	by mail.kernel.org (Postfix) with ESMTP id C8F092089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561054123;
+	bh=PtveUy+0uOZbpOHnaV4yvABE3ro4XwdM4Y9Hp9DxeCI=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=uY6xhIU5MJGzAQp5sN0VX4lgE316FJZ7WASUJIAVMp7p7ZYoVgD1xXpKN0/X8X6Vn
+	 VaW38Dhu7reZUKeL3UlDAjy8A2d2TzXTPOf95YmqXu2BMotDIUFbt4HDbSBuKLKiE/
+	 hyG/P6VkBmzhwQcyX25avazKQVMDz+JFO44lyWDo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727891AbfFTSIj (ORCPT
+        id S1728523AbfFTSIm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:39 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34854 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728486AbfFTSId (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35974 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728487AbfFTSId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 14:08:33 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p1so1714179plo.2;
-        Thu, 20 Jun 2019 11:08:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m48O7FRi8r+gWyNb3X9q+djqhmJvKoGCXjsAReJFTG8=;
-        b=oOdnCN4kibi8UdpRROgkAuatPNdLADRR5vMRpA6WbXvPjlpFyAcbAvd+0xqxUgV0h4
-         SPHGlofI0JU1zboGi/T4cSFHDikLE4dLIa+UrDbLWwGfBNsXb0EIBv3OXMhrHideSCX8
-         Kb/QgY2rEsAhiBZ36H5UvnIllETIYM2WsQ6jjCfaq24hyHxENTBazYfnFpMVCOdIMGTd
-         O6siub7W7CNaF82pTIdXx19jyJQuKAIwIIOiXiKYK9G6ZN1WO5ZbTl5XEoYVRDtKBFqH
-         BGtOYJDCygj5v/Z6yrMKy2PPJ5KhcAaQSYwIuSsEKZZRbTn1JMWpLHCSCJVjA7iczOQe
-         AcsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=m48O7FRi8r+gWyNb3X9q+djqhmJvKoGCXjsAReJFTG8=;
-        b=m7MoS/svtJEZO0SM70Ig6QTVW/3udszz9J7XmKHyD2FHlz5E5rKIkT0fRtViyTyDx3
-         CUNrXFQVsTFGTd4DDOivw4fldX8ObRYh9hFNAMM3u/nhNkZqdFAXhO/rvzvVpnOxlTML
-         wGLfsKXYfcB5RFmHuu/9t/ADPPffV49k3vbeFTqRiKlxtPy9vMDwsOrOu4uL4ovinQyd
-         ETtpspNezdI6iqRGYFw+2nhCaCkfoIGbGNrY2ZUANxLrMjF40LW2IGrx81/A3WZq3e3r
-         2O/rmKEEfepUlu2aSoKdiCdf333EbYiZuU2bwKWg78fPLblAbwb0shynaczRbzKp4HZR
-         A+CA==
-X-Gm-Message-State: APjAAAUhpVIKdYKVCKaPIepvxqs3sBWsusRPw4HJcY/RI/8xk5vDOCsL
-        DLImU6ts/4QZboIjlK5MLNA=
-X-Google-Smtp-Source: APXvYqyqnqQIhs6j31ORV6H+CICacUP1ugT9/edQHjN+VwobCmftwnkoxQ+fW2POJwSWWxlAl1DhFQ==
-X-Received: by 2002:a17:902:7883:: with SMTP id q3mr124656755pll.89.1561054112215;
-        Thu, 20 Jun 2019 11:08:32 -0700 (PDT)
-Received: from localhost.localdomain ([112.196.181.13])
-        by smtp.googlemail.com with ESMTPSA id 85sm289016pgb.52.2019.06.20.11.08.28
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 11:08:31 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2 0/3] net: fddi: skfp: Use PCI generic definitions instead of private duplicates
-Date:   Thu, 20 Jun 2019 23:37:51 +0530
-Message-Id: <20190620180754.15413-1-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.21.0
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 28BC52082C;
+        Thu, 20 Jun 2019 18:08:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561054112;
+        bh=PtveUy+0uOZbpOHnaV4yvABE3ro4XwdM4Y9Hp9DxeCI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=roeWDdskuSxDPoyM7d7R3kjO6+Tubtb0ZFYS74kwsypA2upw1RfXhslfXKHTgbRrW
+         STzgKv3d+LQtAdIPZ8xuJrzTLgdAmujfiort16qDDpO0KZJdvPl8mfuJxRnny4ejA8
+         9IqnKyfNrG0HrfpBbTnC+jmSZTzR5CcyOPm65uKA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Tianhao <tizhao@redhat.com>,
+        Ivan Vecera <ivecera@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 03/45] be2net: Fix number of Rx queues used for flow hashing
+Date:   Thu, 20 Jun 2019 19:57:05 +0200
+Message-Id: <20190620174330.439064686@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
+References: <20190620174328.608036501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch series removes the private duplicates of PCI definitions in
-favour of generic definitions defined in pci_regs.h.
+From: Ivan Vecera <ivecera@redhat.com>
 
-This driver only uses one of the generic PCI definitons, i.e.
-PCI_REVISION_ID, which is included from pci_regs.h and its private
-version is removed from skfbi.h with all other private defines.
+[ Upstream commit 718f4a2537089ea41903bf357071306163bc7c04 ]
 
-The skfbi.h defines PCI_REV_ID which is renamed to PCI_REVISION_ID in
-drvfbi.c to make it compatible with the generic define in pci_regs.h.
+Number of Rx queues used for flow hashing returned by the driver is
+incorrect and this bug prevents user to use the last Rx queue in
+indirection table.
 
-Puranjay Mohan (3):
-  net: fddi: skfp: Rename PCI_REV_ID to PCI_REVISION_ID
-  net: fddi: skfp: Include generic PCI definitions
-  net: fddi: skfp: Remove unused private PCI definitions
+Let's say we have a NIC with 6 combined queues:
 
- drivers/net/fddi/skfp/drvfbi.c  |   4 +-
- drivers/net/fddi/skfp/h/skfbi.h | 207 +-------------------------------
- 2 files changed, 3 insertions(+), 208 deletions(-)
+[root@sm-03 ~]# ethtool -l enp4s0f0
+Channel parameters for enp4s0f0:
+Pre-set maximums:
+RX:             5
+TX:             5
+Other:          0
+Combined:       6
+Current hardware settings:
+RX:             0
+TX:             0
+Other:          0
+Combined:       6
 
--- 
-2.21.0
+Default indirection table maps all (6) queues equally but the driver
+reports only 5 rings available.
+
+[root@sm-03 ~]# ethtool -x enp4s0f0
+RX flow hash indirection table for enp4s0f0 with 5 RX ring(s):
+    0:      0     1     2     3     4     5     0     1
+    8:      2     3     4     5     0     1     2     3
+   16:      4     5     0     1     2     3     4     5
+   24:      0     1     2     3     4     5     0     1
+...
+
+Now change indirection table somehow:
+
+[root@sm-03 ~]# ethtool -X enp4s0f0 weight 1 1
+[root@sm-03 ~]# ethtool -x enp4s0f0
+RX flow hash indirection table for enp4s0f0 with 6 RX ring(s):
+    0:      0     0     0     0     0     0     0     0
+...
+   64:      1     1     1     1     1     1     1     1
+...
+
+Now it is not possible to change mapping back to equal (default) state:
+
+[root@sm-03 ~]# ethtool -X enp4s0f0 equal 6
+Cannot set RX flow hash configuration: Invalid argument
+
+Fixes: 594ad54a2c3b ("be2net: Add support for setting and getting rx flow hash options")
+Reported-by: Tianhao <tizhao@redhat.com>
+Signed-off-by: Ivan Vecera <ivecera@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ drivers/net/ethernet/emulex/benet/be_ethtool.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+--- a/drivers/net/ethernet/emulex/benet/be_ethtool.c
++++ b/drivers/net/ethernet/emulex/benet/be_ethtool.c
+@@ -1103,7 +1103,7 @@ static int be_get_rxnfc(struct net_devic
+ 		cmd->data = be_get_rss_hash_opts(adapter, cmd->flow_type);
+ 		break;
+ 	case ETHTOOL_GRXRINGS:
+-		cmd->data = adapter->num_rx_qs - 1;
++		cmd->data = adapter->num_rx_qs;
+ 		break;
+ 	default:
+ 		return -EINVAL;
+
 
