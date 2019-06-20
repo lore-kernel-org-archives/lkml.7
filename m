@@ -2,147 +2,95 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEBDC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:50:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73290C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 317BC2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:50:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B22E2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TgIpoUSG"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AcD7rKoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfFTUt7 (ORCPT
+        id S1726225AbfFTUvF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:49:59 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:34506 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725913AbfFTUt6 (ORCPT
+        Thu, 20 Jun 2019 16:51:05 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:37602 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfFTUvF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:49:58 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8CF4CC0D2E;
-        Thu, 20 Jun 2019 20:49:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1561063798; bh=7Xu9jiEpOkMmqNXYHnZgozFosbClrmzrakUaaJSHzMk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=TgIpoUSGN8Z29denp348YrUQ7M4JCHy6erxt3AYYah8ed0I92f4wJM01DVHFEixFG
-         jkgQqyp7TLJygOTs/cNpAXhQXuYg/aXfOb567orU1VEY6fBtSFXWP232SYyoe3vs/Z
-         m3Ld/mWukZOkHvCYEj7s1hWCSTglnb0Ay6+ImFJTlUHqjAiNdqveEZWAFyE//MZHZq
-         CDzpWIv6s45yYDzElNLuUuU6+O9Vi7KpvWaGs0f+ATMa8yaevMNcWRYNfRPEeas/+y
-         bpuNY9TTcG9GVzpIimTl21Cgf0RH45MoY748qdUcfdDbJlNnXaWNyxtH9QTjxQ0MT/
-         cVnY0L3whTHXw==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 859ABA005D;
-        Thu, 20 Jun 2019 20:49:56 +0000 (UTC)
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 20 Jun 2019 13:49:55 -0700
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 21 Jun 2019 02:19:53 +0530
-Received: from [10.10.161.66] (10.10.161.66) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Fri, 21 Jun 2019 02:20:06 +0530
-Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jason Baron <jbaron@akamai.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "linux-snps-arc@lists.infradead.org" 
-        <linux-snps-arc@lists.infradead.org>,
-        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
-Newsgroups: gmane.linux.kernel.arc,gmane.linux.kernel.cross-arch,gmane.linux.kernel
-References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
- <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
- <20190619081227.GL3419@hirez.programming.kicks-ass.net>
- <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
- <20190620075224.GT3419@hirez.programming.kicks-ass.net>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Message-ID: <9192bd26-5f34-dcbf-8552-2f474866a31e@synopsys.com>
-Date:   Thu, 20 Jun 2019 13:49:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 16:51:05 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KKmsDQ064926;
+        Thu, 20 Jun 2019 20:50:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=6JP7lm2OZ/s8N3n4vrVmlS3zuDBNhdh0HIxRfpm1X88=;
+ b=AcD7rKoagx/YGPKephWJA4xky+veL8fIllJ2JTX/6X1kDfjeMC36iA3x83BZ6IBa225C
+ mhxBPDa7BX7z82TNikunwfJuwMaZ4ijYb1M+x2NZfwPWJVeXyTnQTu9SlKqykc5VxaPx
+ RlYWnluddsi5GG8btjlorBotYluSSUZl3qJ9egPGSdpXOOiiyQgD36wTfvZYZKu8Bu0Y
+ DvRo9W9TkF2hcdmQLdmkIG+oc1yON4JDLh81pxiRnkLXeExojFJ0Au4G8TMag8+4VEP0
+ fB0CgtAdxfoNjuZu1AQ0kisWnd+avPYdltLhgGAvbQqIjey9ViAoHV/ENwQYO2ctp+3Y fw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2t7809k7s5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 20:50:57 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KKnOlJ107759;
+        Thu, 20 Jun 2019 20:50:57 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2t77ynu3ua-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 20:50:57 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KKouUx007906;
+        Thu, 20 Jun 2019 20:50:56 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Jun 2019 13:50:55 -0700
+To:     Young Xiao <92siuyang@gmail.com>
+Cc:     QLogic-Storage-Upstream@qlogic.com, jejb@linux.ibm.com,
+        martin.petersen@oracle.com, linux-scsi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scsi: bnx2fc: Check if sense buffer has been allocated during completion
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1560501397-831-1-git-send-email-92siuyang@gmail.com>
+Date:   Thu, 20 Jun 2019 16:50:53 -0400
+In-Reply-To: <1560501397-831-1-git-send-email-92siuyang@gmail.com> (Young
+        Xiao's message of "Fri, 14 Jun 2019 16:36:37 +0800")
+Message-ID: <yq1v9x0q8uq.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <20190620075224.GT3419@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.66]
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=909
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906200149
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=975 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906200149
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/20/19 12:52 AM, Peter Zijlstra wrote:
-> 
-> With everything little endian, everything seems just fine. If you load
-> the first 2 byte at offset 0, you get the first 2 bytes of the
-> instruction.
 
-It has to do with the instruction encoding scheme and what part of instruction has
-the major opcode/subopcode etc. For a canonical 4 byte instruction they happen to
-be in the upper 16 bits (for some hardware efficiency reasons unknown to me). So
-when a 2 byte insn follows a 4 byte, a 4 byte fetch already tells it what the 2nd
-instruction opcode is and whether it is a 2, 4, 6 or 8 byte insn.
+Hi Young,
 
+> sc_cmd->sense_buffer is not guaranteed to be allocated so we need to
+> sc_cmd->check if the pointer is NULL before trying to copy anything
+> into it.
 
-> 
-> If OTOH your arch big endian, and you were to load the first two bytes
-> at offset 0, you get the top two.
-> 
-> So this middle endian scheme, only seems to make sense if you're
-> otherwise big endian.
+bnx2fc does not appear to use a driver-specific sense buffer.
 
-Insn encoding is always middl eendina - irrespective of endianness.
-
-> But AFAICT ARC is bi-endian and the jump-label
-> patch under condsideration is explicitly !CPU_ENDIAN_BE32 -- which
-> suggests the instruction stream is sensitive to the endian selection.
-
-Nope they are not directly related. Likely the difference is when we patch the
-instruction to memory it is written as data so might need some endian swap. Not
-really rocket science. Perhaps it saves some testing effort etc.
-Also we don't seem to have any customers interested in BE these days.
-
-> Anyway, I was just 'surprised' at seeing middle endian mentioned,
-> curiosity killed the cat and all that :-)
-
-Curiosity may certainly kill cats, but on lkml curiosity is almost always a good
-thing both for the enquirer and enquiree ;-)
-
-
-
+-- 
+Martin K. Petersen	Oracle Linux Engineering
