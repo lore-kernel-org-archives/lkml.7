@@ -2,52 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F944C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:15:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D182C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEB8A2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:15:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299F72084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054512;
-	bh=0Y6kIeY0L6yEjnbxo0rO+2g48CwMEk1CvaHVEL/4CBE=;
+	s=default; t=1561054522;
+	bh=Bpe2oIicDkwZj51P8Zy0jF3Xpm0cXdZFcHkYKZ2DzI0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=n8jIQkwKcny7yO3+jwSyMMYqRd0wME7XLIF6/pUAHz9z4b/H00e/gYg+oZIV+Bqoo
-	 pa/JTShLZ4QpW9PdDgsCEcQrwSMzO9cHIqS/2W9VOSDu6stiLD9Skntq5XGITW1Swu
-	 xVTFySgooqHcuawHBt28t27y3jBysLmemjoovFck=
+	b=o+fb621aDyBCqtc8sDzhtrwiLGznOKY+DgqtfFnS101OLeJLYKd9ra4zUUTYHOukA
+	 6GDTF3sFtnoRYZozITFTGzOwftJ75WXmyZgdMAq4/kNH12TTtcJ5Tz/lfnQB8WCEmr
+	 IxSPdiG04hEtB0l7E3cb1J98/4LJG6JxPLBT+bgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfFTSPL (ORCPT
+        id S1728553AbfFTSPU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:15:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43748 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:15:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43982 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729550AbfFTSPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:15:08 -0400
+        id S1729561AbfFTSPR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:15:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A404C205F4;
-        Thu, 20 Jun 2019 18:15:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C062B205F4;
+        Thu, 20 Jun 2019 18:15:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054507;
-        bh=0Y6kIeY0L6yEjnbxo0rO+2g48CwMEk1CvaHVEL/4CBE=;
+        s=default; t=1561054516;
+        bh=Bpe2oIicDkwZj51P8Zy0jF3Xpm0cXdZFcHkYKZ2DzI0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cP7msR1l5TmlIXjH0W36/fsEkdTn6ZEYezVG5+qAM/e99oMfFlpLNL9m4kqSgSbRG
-         ZspJ/6SAOXuaIY75bxgXVHLZuDCBDao+qcKUjJ26uyS4QoLjPwQ9Tq4RziK2iEqLeK
-         r6K19czimgvbHc44oSMmgnwSxmIvlDRp3DDdzyWY=
+        b=pZjYP0oECHj6IYt1Fu1LxmZ6RJbVZbMrvHOfagkuCH8N3yATCPN9pdb2NUXdMZdf3
+         Q+GkJhjIfxoEwUV9i44uHso8Ij3cY6TNuUtMs4ub0my3FLO2P1nOZjySA1GVIQy/mO
+         QbrrjTc7SIdFAXhTO1UVx3UbzmITsowmfiaCgs7w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 13/98] sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
-Date:   Thu, 20 Jun 2019 19:56:40 +0200
-Message-Id: <20190620174349.918337068@linuxfoundation.org>
+        Ioana Radulescu <ruxandra.radulescu@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 56/98] dpaa2-eth: Fix potential spectre issue
+Date:   Thu, 20 Jun 2019 19:57:23 +0200
+Message-Id: <20190620174351.874553506@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -60,61 +61,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+[ Upstream commit 5a20a093d965560f632b2ec325f8876918f78165 ]
 
-[ Upstream commit 07a6d63eb1b54b5fb38092780fe618dfe1d96e23 ]
+Smatch reports a potential spectre vulnerability in the dpaa2-eth
+driver, where the value of rxnfc->fs.location (which is provided
+from user-space) is used as index in an array.
 
-In d5a2aa24, the name in struct console sunhv_console was changed from "ttyS"
-to "ttyHV" while the name in struct uart_ops sunhv_pops remained unchanged.
+Add a call to array_index_nospec() to sanitize the access.
 
-This results in the hypervisor console device to be listed as "ttyHV0" under
-/proc/consoles while the device node is still named "ttyS0":
-
-root@osaka:~# cat /proc/consoles
-ttyHV0               -W- (EC p  )    4:64
-tty0                 -WU (E     )    4:1
-root@osaka:~# readlink /sys/dev/char/4:64
-../../devices/root/f02836f0/f0285690/tty/ttyS0
-root@osaka:~#
-
-This means that any userland code which tries to determine the name of the
-device file of the hypervisor console device can not rely on the information
-provided by /proc/consoles. In particular, booting current versions of debian-
-installer inside a SPARC LDOM will fail with the installer unable to determine
-the console device.
-
-After renaming the device in struct uart_ops sunhv_pops to "ttyHV" as well,
-the inconsistency is fixed and it is possible again to determine the name
-of the device file of the hypervisor console device by reading the contents
-of /proc/console:
-
-root@osaka:~# cat /proc/consoles
-ttyHV0               -W- (EC p  )    4:64
-tty0                 -WU (E     )    4:1
-root@osaka:~# readlink /sys/dev/char/4:64
-../../devices/root/f02836f0/f0285690/tty/ttyHV0
-root@osaka:~#
-
-With this change, debian-installer works correctly when installing inside
-a SPARC LDOM.
-
-Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: Ioana Radulescu <ruxandra.radulescu@nxp.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/sunhv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/tty/serial/sunhv.c
-+++ b/drivers/tty/serial/sunhv.c
-@@ -397,7 +397,7 @@ static const struct uart_ops sunhv_pops
- static struct uart_driver sunhv_reg = {
- 	.owner			= THIS_MODULE,
- 	.driver_name		= "sunhv",
--	.dev_name		= "ttyS",
-+	.dev_name		= "ttyHV",
- 	.major			= TTY_MAJOR,
- };
+diff --git a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
+index 591dfcf76adb..0610fc0bebc2 100644
+--- a/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa2/dpaa2-ethtool.c
+@@ -4,6 +4,7 @@
+  */
  
+ #include <linux/net_tstamp.h>
++#include <linux/nospec.h>
+ 
+ #include "dpni.h"	/* DPNI_LINK_OPT_* */
+ #include "dpaa2-eth.h"
+@@ -589,6 +590,8 @@ static int dpaa2_eth_get_rxnfc(struct net_device *net_dev,
+ 	case ETHTOOL_GRXCLSRULE:
+ 		if (rxnfc->fs.location >= max_rules)
+ 			return -EINVAL;
++		rxnfc->fs.location = array_index_nospec(rxnfc->fs.location,
++							max_rules);
+ 		if (!priv->cls_rules[rxnfc->fs.location].in_use)
+ 			return -EINVAL;
+ 		rxnfc->fs = priv->cls_rules[rxnfc->fs.location].fs;
+-- 
+2.20.1
+
 
 
