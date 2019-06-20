@@ -2,260 +2,218 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19077C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:20:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1995BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1C6120656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:20:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="r3ANeOT9"
+	by mail.kernel.org (Postfix) with ESMTP id DEA5420656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:20:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730833AbfFTJUD (ORCPT
+        id S1730850AbfFTJUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:20:03 -0400
-Received: from mail-eopbgr810080.outbound.protection.outlook.com ([40.107.81.80]:45248
-        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfFTJUD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:20:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector1-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vXQQnqNNCdqJAWCuSxei/N8WB8wUBeQGuDm8VkLygFM=;
- b=r3ANeOT9dz9xPTtGpqW+SplSkWrS1UAVAB0mDZtQxSc50tBg3FD1a8ZWwFqxpymxJ5TGiCmNmaI7RzV2aH9sTLIv1qxBYC1b5+ngdiO9QwK/A7xvoulApZULdt0YGwP6Ze6HWviSZ+w9f2rdTN/JxJfYdnAN+piyGmfEpVQSyH0=
-Received: from BN6PR03CA0096.namprd03.prod.outlook.com (10.164.122.162) by
- BN3PR03MB2257.namprd03.prod.outlook.com (10.167.5.145) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.11; Thu, 20 Jun 2019 09:19:59 +0000
-Received: from SN1NAM02FT021.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e44::205) by BN6PR03CA0096.outlook.office365.com
- (2603:10b6:405:6f::34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1965.14 via Frontend
- Transport; Thu, 20 Jun 2019 09:19:59 +0000
-Authentication-Results: spf=pass (sender IP is 137.71.25.55)
- smtp.mailfrom=analog.com; metafoo.de; dkim=none (message not signed)
- header.d=none;metafoo.de; dmarc=bestguesspass action=none
- header.from=analog.com;
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- SN1NAM02FT021.mail.protection.outlook.com (10.152.72.144) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1987.11
- via Frontend Transport; Thu, 20 Jun 2019 09:19:57 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id x5K9JtwP023189
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Thu, 20 Jun 2019 02:19:55 -0700
-Received: from mircea-Latitude-E6540.ad.analog.com (10.48.65.115) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Thu, 20 Jun 2019 05:19:55 -0400
-From:   Mircea Caprioru <mircea.caprioru@analog.com>
-To:     <jic23@kernel.org>
-CC:     <Michael.Hennerich@analog.com>, <stefan.popa@analog.com>,
-        <lars@metafoo.de>, <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>, <linux-iio@vger.kernel.org>,
-        Mircea Caprioru <mircea.caprioru@analog.com>
-Subject: [PATCH 4/4] dt-bindings: iio: adc: Convert ad7124 documentation to YAML
-Date:   Thu, 20 Jun 2019 12:19:08 +0300
-Message-ID: <20190620091908.12041-4-mircea.caprioru@analog.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190620091908.12041-1-mircea.caprioru@analog.com>
-References: <20190620091908.12041-1-mircea.caprioru@analog.com>
+        Thu, 20 Jun 2019 05:20:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34992 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725875AbfFTJUs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:20:48 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5K98VWG000986
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:20:47 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t878bremj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:20:47 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Thu, 20 Jun 2019 10:20:45 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Jun 2019 10:20:41 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5K9Kewl36503834
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 09:20:40 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1FBEC11C05C;
+        Thu, 20 Jun 2019 09:20:40 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B31611C04A;
+        Thu, 20 Jun 2019 09:20:39 +0000 (GMT)
+Received: from pic2.home (unknown [9.145.54.139])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Jun 2019 09:20:39 +0000 (GMT)
+Subject: Re: [PATCH v2] ocxl: Allow contexts to be attached with a NULL mm
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Andrew Donnellan <ajd@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
+References: <20190620041203.12274-1-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Thu, 20 Jun 2019 11:20:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(376002)(396003)(346002)(136003)(39860400002)(2980300002)(199004)(189003)(305945005)(7636002)(426003)(77096007)(50226002)(486006)(48376002)(186003)(2616005)(336012)(7696005)(476003)(966005)(72206003)(26005)(76176011)(53376002)(51416003)(126002)(107886003)(50466002)(446003)(106002)(4326008)(47776003)(246002)(478600001)(6916009)(16586007)(316002)(356004)(6666004)(2906002)(54906003)(5660300002)(11346002)(36756003)(2351001)(8676002)(6306002)(8936002)(70206006)(70586007)(44832011)(1076003)(86362001);DIR:OUT;SFP:1101;SCL:1;SRVR:BN3PR03MB2257;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 2bf28c94-b650-47bc-058b-08d6f56077a4
-X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(4709080)(1401327)(2017052603328);SRVR:BN3PR03MB2257;
-X-MS-TrafficTypeDiagnostic: BN3PR03MB2257:
-X-MS-Exchange-PUrlCount: 3
-X-Microsoft-Antispam-PRVS: <BN3PR03MB22579E96E6BB288351F215F781E40@BN3PR03MB2257.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0074BBE012
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam-Message-Info: FYCJZTQ5AqGTxNGAl1sicESyF7f3FE4rnl0q3wo2q9R/E1+cBs4/Jif/0aplVHjKtYOJM8arcgrJD7foWrNmci2tv+1uIGPH4DPV0PzwEKJ4c63yuA1Xb9kbjJIx7ncXCfyrDhv5xHAwyYU+NvB7PBd0KQjCyrqhcLnhyrxIxZH5R4C3xCIQ8pWQiB02/Yze4foqeCLS/exL11dQxNi22IoOEU/vFTcRxu21g6nfkUicqNeGaDDQz2WvS60b1x2vRb53DDCaNiUbFsYDAPDJETkqDAazh/HZkxwMr0Q520AviABQ7UmOEKc5GlbHEX485mbWJQCwFCl1MTLvSCZv4IlfEmnVSuDNt3KaeGqwx6zyQqMsBuD+uqRhJETjPl40Ou3HNf9taAnus4/IooQKzrBtzBsq1c1qMWJl/7UBPeY=
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Jun 2019 09:19:57.2929
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 2bf28c94-b650-47bc-058b-08d6f56077a4
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN3PR03MB2257
+In-Reply-To: <20190620041203.12274-1-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr-MC
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062009-0020-0000-0000-0000034BCAAF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062009-0021-0000-0000-0000219F244B
+Message-Id: <0e4965a7-04e7-6412-be37-ea96bcf0e007@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=823 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200068
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert AD7124 bindings documentation to YAML format.
 
-Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
----
- .../bindings/iio/adc/adi,ad7124.yaml          | 146 ++++++++++++++++++
- 1 file changed, 146 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-new file mode 100644
-index 000000000000..2dba3759b8e3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-@@ -0,0 +1,146 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 Analog Devices Inc.
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Analog Devices AD7124 ADC device driver
-+
-+maintainers:
-+  - Stefan Popa <stefan.popa@analog.com>
-+
-+description: |
-+  Bindings for the Analog Devices AD7124 ADC device. Datasheet can be
-+  found here:
-+    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7124-8.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - adi,ad7124-4
-+      - adi,ad7124-8
-+
-+  reg:
-+    description: SPI chip select number for the device
-+    maxItems: 1
-+
-+  clocks:
-+    maxItems: 1
-+    description: phandle to the master clock (mclk)
-+
-+  clock-names:
-+    items:
-+      - const: mclk
-+
-+  interrupts:
-+    description: IRQ line for the ADC
-+    maxItems: 1
-+
-+  '#address-cells':
-+    const: 1
-+
-+  '#size-cells':
-+    const: 0
-+
-+  refin1-supply:
-+    description: refin1 supply can be used as reference for conversion.
-+    maxItems: 1
-+
-+  refin2-supply:
-+    description: refin2 supply can be used as reference for conversion.
-+    maxItems: 1
-+
-+  avdd-supply:
-+    description: avdd supply can be used as reference for conversion.
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - clock-names
-+  - interrupts
-+
-+patternProperties:
-+  "^channel@[01]$":
-+    type: object
-+    description: |
-+      Represents the external channels which are connected to the ADC.
-+      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-+
-+    properties:
-+      reg:
-+        description: |
-+          The channel number. It can have up to 8 channels on ad7124-4
-+          and 16 channels on ad7124-8, numbered from 0 to 15.
-+        maxItems: 1
-+
-+      adi,reference-select:
-+        description: |
-+          Select the reference source to use when converting on
-+          the specific channel.
-+          If this field is left empty, internal reference is selected.
-+        maxItems: 1
-+
-+      diff-channels:
-+        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-+        maxItems: 1
-+
-+      bipolar:
-+        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-+        maxItems: 1
-+
-+      adi,buffered-positive:
-+        description: Enable buffered mode for positive input.
-+        maxItems: 1
-+
-+      adi,buffered-negative:
-+        description: Enable buffered mode for negative input.
-+        maxItems: 1
-+
-+    required:
-+      - reg
-+      - diff-channels
-+
-+examples:
-+  - |
-+    adc@0 {
-+      compatible = "adi,ad7124-4";
-+      reg = <0>;
-+      spi-max-frequency = <5000000>;
-+      interrupts = <25 2>;
-+      interrupt-parent = <&gpio>;
-+      refin1-supply = <&adc_vref>;
-+      clocks = <&ad7124_mclk>;
-+      clock-names = "mclk";
-+
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      channel@0 {
-+        reg = <0>;
-+        diff-channels = <0 1>;
-+        adi,reference-select = <0>;
-+        adi,buffered-positive;
-+      };
-+
-+      channel@1 {
-+        reg = <1>;
-+        bipolar;
-+        diff-channels = <2 3>;
-+        adi,reference-select = <0>;
-+        adi,buffered-positive;
-+        adi,buffered-negative;
-+      };
-+
-+      channel@2 {
-+        reg = <2>;
-+        diff-channels = <4 5>;
-+      };
-+
-+      channel@3 {
-+        reg = <3>;
-+        diff-channels = <6 7>;
-+      };
-+    };
--- 
-2.17.1
+Le 20/06/2019 à 06:12, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> If an OpenCAPI context is to be used directly by a kernel driver, there
+> may not be a suitable mm to use.
+> 
+> The patch makes the mm parameter to ocxl_context_attach optional.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
+
+Thanks for the update.
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+
+
+
+>   arch/powerpc/mm/book3s64/radix_tlb.c |  5 +++++
+>   drivers/misc/ocxl/context.c          |  9 ++++++---
+>   drivers/misc/ocxl/link.c             | 28 ++++++++++++++++++++++++----
+>   3 files changed, 35 insertions(+), 7 deletions(-)
+> 
+> diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
+> index bb9835681315..ce8a77fae6a7 100644
+> --- a/arch/powerpc/mm/book3s64/radix_tlb.c
+> +++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+> @@ -666,6 +666,11 @@ EXPORT_SYMBOL(radix__flush_tlb_page);
+>   #define radix__flush_all_mm radix__local_flush_all_mm
+>   #endif /* CONFIG_SMP */
+>   
+> +/*
+> + * If kernel TLBIs ever become local rather than global, then
+> + * drivers/misc/ocxl/link.c:ocxl_link_add_pe will need some work, as it
+> + * assumes kernel TLBIs are global.
+> + */
+>   void radix__flush_tlb_kernel_range(unsigned long start, unsigned long end)
+>   {
+>   	_tlbie_pid(0, RIC_FLUSH_ALL);
+> diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
+> index bab9c9364184..994563a078eb 100644
+> --- a/drivers/misc/ocxl/context.c
+> +++ b/drivers/misc/ocxl/context.c
+> @@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
+>   int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
+>   {
+>   	int rc;
+> +	unsigned long pidr = 0;
+>   
+>   	// Locks both status & tidr
+>   	mutex_lock(&ctx->status_mutex);
+> @@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
+>   		goto out;
+>   	}
+>   
+> -	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
+> -			mm->context.id, ctx->tidr, amr, mm,
+> -			xsl_fault_error, ctx);
+> +	if (mm)
+> +		pidr = mm->context.id;
+> +
+> +	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, ctx->tidr,
+> +			      amr, mm, xsl_fault_error, ctx);
+>   	if (rc)
+>   		goto out;
+>   
+> diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
+> index cce5b0d64505..58d111afd9f6 100644
+> --- a/drivers/misc/ocxl/link.c
+> +++ b/drivers/misc/ocxl/link.c
+> @@ -224,6 +224,17 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
+>   		ack_irq(spa, ADDRESS_ERROR);
+>   		return IRQ_HANDLED;
+>   	}
+> +
+> +	if (!pe_data->mm) {
+> +		/*
+> +		 * translation fault from a kernel context - an OpenCAPI
+> +		 * device tried to access a bad kernel address
+> +		 */
+> +		rcu_read_unlock();
+> +		pr_warn("Unresolved OpenCAPI xsl fault in kernel context\n");
+> +		ack_irq(spa, ADDRESS_ERROR);
+> +		return IRQ_HANDLED;
+> +	}
+>   	WARN_ON(pe_data->mm->context.id != pid);
+>   
+>   	if (mmget_not_zero(pe_data->mm)) {
+> @@ -523,7 +534,13 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   	pe->amr = cpu_to_be64(amr);
+>   	pe->software_state = cpu_to_be32(SPA_PE_VALID);
+>   
+> -	mm_context_add_copro(mm);
+> +	/*
+> +	 * For user contexts, register a copro so that TLBIs are seen
+> +	 * by the nest MMU. If we have a kernel context, TLBIs are
+> +	 * already global.
+> +	 */
+> +	if (mm)
+> +		mm_context_add_copro(mm);
+>   	/*
+>   	 * Barrier is to make sure PE is visible in the SPA before it
+>   	 * is used by the device. It also helps with the global TLBI
+> @@ -546,7 +563,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
+>   	 * have a reference on mm_users. Incrementing mm_count solves
+>   	 * the problem.
+>   	 */
+> -	mmgrab(mm);
+> +	if (mm)
+> +		mmgrab(mm);
+>   	trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, tidr);
+>   unlock:
+>   	mutex_unlock(&spa->spa_lock);
+> @@ -652,8 +670,10 @@ int ocxl_link_remove_pe(void *link_handle, int pasid)
+>   	if (!pe_data) {
+>   		WARN(1, "Couldn't find pe data when removing PE\n");
+>   	} else {
+> -		mm_context_remove_copro(pe_data->mm);
+> -		mmdrop(pe_data->mm);
+> +		if (pe_data->mm) {
+> +			mm_context_remove_copro(pe_data->mm);
+> +			mmdrop(pe_data->mm);
+> +		}
+>   		kfree_rcu(pe_data, rcu);
+>   	}
+>   unlock:
+> 
 
