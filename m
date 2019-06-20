@@ -2,31 +2,31 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53CD3C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF44C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F1A52082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EB2D206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726445AbfFTScK (ORCPT
+        id S1726972AbfFTScS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:32:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53006 "EHLO mx1.redhat.com"
+        Thu, 20 Jun 2019 14:32:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50602 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726092AbfFTScG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:32:06 -0400
+        id S1726977AbfFTScO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:32:14 -0400
 Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 37276C18B2EB;
-        Thu, 20 Jun 2019 18:32:04 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1785475726;
+        Thu, 20 Jun 2019 18:32:14 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-116-71.ams2.redhat.com [10.36.116.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4FA1619C5B;
-        Thu, 20 Jun 2019 18:31:58 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E49CA19C5B;
+        Thu, 20 Jun 2019 18:32:11 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dan Williams <dan.j.williams@intel.com>,
@@ -35,201 +35,74 @@ Cc:     Dan Williams <dan.j.williams@intel.com>,
         linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         "Rafael J. Wysocki" <rafael@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@suse.com>,
-        Mel Gorman <mgorman@techsingularity.net>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Arun KS <arunks@codeaurora.org>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 1/6] mm: Section numbers use the type "unsigned long"
-Date:   Thu, 20 Jun 2019 20:31:34 +0200
-Message-Id: <20190620183139.4352-2-david@redhat.com>
+        Keith Busch <keith.busch@intel.com>,
+        Oscar Salvador <osalvador@suse.de>
+Subject: [PATCH v3 3/6] mm: Make register_mem_sect_under_node() static
+Date:   Thu, 20 Jun 2019 20:31:36 +0200
+Message-Id: <20190620183139.4352-4-david@redhat.com>
 In-Reply-To: <20190620183139.4352-1-david@redhat.com>
 References: <20190620183139.4352-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 20 Jun 2019 18:32:06 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 20 Jun 2019 18:32:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We are using a mixture of "int" and "unsigned long". Let's make this
-consistent by using "unsigned long" everywhere. We'll do the same with
-memory block ids next.
-
-While at it, turn the "unsigned long i" in removable_show() into an
-int - sections_per_block is an int.
+It is only used internally.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: "Rafael J. Wysocki" <rafael@kernel.org>
 Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Mel Gorman <mgorman@techsingularity.net>
-Cc: Wei Yang <richard.weiyang@gmail.com>
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Arun KS <arunks@codeaurora.org>
-Cc: Pavel Tatashin <pasha.tatashin@oracle.com>
+Cc: Keith Busch <keith.busch@intel.com>
 Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
-Cc: Baoquan He <bhe@redhat.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/base/memory.c  | 27 +++++++++++++--------------
- include/linux/mmzone.h |  4 ++--
- mm/sparse.c            | 12 ++++++------
- 3 files changed, 21 insertions(+), 22 deletions(-)
+ drivers/base/node.c  | 3 ++-
+ include/linux/node.h | 7 -------
+ 2 files changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 826dd76f662e..5947b5a5686d 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -34,7 +34,7 @@ static DEFINE_MUTEX(mem_sysfs_mutex);
- 
- static int sections_per_block;
- 
--static inline int base_memory_block_id(int section_nr)
-+static inline int base_memory_block_id(unsigned long section_nr)
- {
- 	return section_nr / sections_per_block;
- }
-@@ -131,9 +131,9 @@ static ssize_t phys_index_show(struct device *dev,
- static ssize_t removable_show(struct device *dev, struct device_attribute *attr,
- 			      char *buf)
- {
--	unsigned long i, pfn;
--	int ret = 1;
- 	struct memory_block *mem = to_memory_block(dev);
-+	unsigned long pfn;
-+	int ret = 1, i;
- 
- 	if (mem->state != MEM_ONLINE)
- 		goto out;
-@@ -691,15 +691,15 @@ static int init_memory_block(struct memory_block **memory, int block_id,
- 	return ret;
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index 9be88fd05147..e6364e3e3e31 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -752,7 +752,8 @@ static int __ref get_nid_for_pfn(unsigned long pfn)
  }
  
--static int add_memory_block(int base_section_nr)
-+static int add_memory_block(unsigned long base_section_nr)
+ /* register memory section under specified node if it spans that node */
+-int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
++static int register_mem_sect_under_node(struct memory_block *mem_blk,
++					 void *arg)
  {
-+	int ret, section_count = 0;
- 	struct memory_block *mem;
--	int i, ret, section_count = 0;
-+	unsigned long nr;
+ 	int ret, nid = *(int *)arg;
+ 	unsigned long pfn, sect_start_pfn, sect_end_pfn;
+diff --git a/include/linux/node.h b/include/linux/node.h
+index 548c226966a2..4866f32a02d8 100644
+--- a/include/linux/node.h
++++ b/include/linux/node.h
+@@ -137,8 +137,6 @@ static inline int register_one_node(int nid)
+ extern void unregister_one_node(int nid);
+ extern int register_cpu_under_node(unsigned int cpu, unsigned int nid);
+ extern int unregister_cpu_under_node(unsigned int cpu, unsigned int nid);
+-extern int register_mem_sect_under_node(struct memory_block *mem_blk,
+-						void *arg);
+ extern void unregister_memory_block_under_nodes(struct memory_block *mem_blk);
  
--	for (i = base_section_nr;
--	     i < base_section_nr + sections_per_block;
--	     i++)
--		if (present_section_nr(i))
-+	for (nr = base_section_nr; nr < base_section_nr + sections_per_block;
-+	     nr++)
-+		if (present_section_nr(nr))
- 			section_count++;
- 
- 	if (section_count == 0)
-@@ -822,10 +822,9 @@ static const struct attribute_group *memory_root_attr_groups[] = {
-  */
- int __init memory_dev_init(void)
+ extern int register_memory_node_under_compute_node(unsigned int mem_nid,
+@@ -170,11 +168,6 @@ static inline int unregister_cpu_under_node(unsigned int cpu, unsigned int nid)
  {
--	unsigned int i;
- 	int ret;
- 	int err;
--	unsigned long block_sz;
-+	unsigned long block_sz, nr;
- 
- 	ret = subsys_system_register(&memory_subsys, memory_root_attr_groups);
- 	if (ret)
-@@ -839,9 +838,9 @@ int __init memory_dev_init(void)
- 	 * during boot and have been initialized
- 	 */
- 	mutex_lock(&mem_sysfs_mutex);
--	for (i = 0; i <= __highest_present_section_nr;
--		i += sections_per_block) {
--		err = add_memory_block(i);
-+	for (nr = 0; nr <= __highest_present_section_nr;
-+	     nr += sections_per_block) {
-+		err = add_memory_block(nr);
- 		if (!ret)
- 			ret = err;
- 	}
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 427b79c39b3c..83b6aae16f13 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1220,7 +1220,7 @@ static inline struct mem_section *__nr_to_section(unsigned long nr)
- 		return NULL;
- 	return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
+ 	return 0;
  }
--extern int __section_nr(struct mem_section* ms);
-+extern unsigned long __section_nr(struct mem_section *ms);
- extern unsigned long usemap_size(void);
- 
- /*
-@@ -1292,7 +1292,7 @@ static inline struct mem_section *__pfn_to_section(unsigned long pfn)
- 	return __nr_to_section(pfn_to_section_nr(pfn));
- }
- 
--extern int __highest_present_section_nr;
-+extern unsigned long __highest_present_section_nr;
- 
- #ifndef CONFIG_HAVE_ARCH_PFN_VALID
- static inline int pfn_valid(unsigned long pfn)
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 1552c855d62a..e8c57e039be8 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -102,7 +102,7 @@ static inline int sparse_index_init(unsigned long section_nr, int nid)
- #endif
- 
- #ifdef CONFIG_SPARSEMEM_EXTREME
--int __section_nr(struct mem_section* ms)
-+unsigned long __section_nr(struct mem_section *ms)
+-static inline int register_mem_sect_under_node(struct memory_block *mem_blk,
+-							void *arg)
+-{
+-	return 0;
+-}
+ static inline void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
  {
- 	unsigned long root_nr;
- 	struct mem_section *root = NULL;
-@@ -121,9 +121,9 @@ int __section_nr(struct mem_section* ms)
- 	return (root_nr * SECTIONS_PER_ROOT) + (ms - root);
  }
- #else
--int __section_nr(struct mem_section* ms)
-+unsigned long __section_nr(struct mem_section *ms)
- {
--	return (int)(ms - mem_section[0]);
-+	return (unsigned long)(ms - mem_section[0]);
- }
- #endif
- 
-@@ -178,10 +178,10 @@ void __meminit mminit_validate_memmodel_limits(unsigned long *start_pfn,
-  * Keeping track of this gives us an easy way to break out of
-  * those loops early.
-  */
--int __highest_present_section_nr;
-+unsigned long __highest_present_section_nr;
- static void section_mark_present(struct mem_section *ms)
- {
--	int section_nr = __section_nr(ms);
-+	unsigned long section_nr = __section_nr(ms);
- 
- 	if (section_nr > __highest_present_section_nr)
- 		__highest_present_section_nr = section_nr;
-@@ -189,7 +189,7 @@ static void section_mark_present(struct mem_section *ms)
- 	ms->section_mem_map |= SECTION_MARKED_PRESENT;
- }
- 
--static inline int next_present_section_nr(int section_nr)
-+static inline unsigned long next_present_section_nr(unsigned long section_nr)
- {
- 	do {
- 		section_nr++;
 -- 
 2.21.0
 
