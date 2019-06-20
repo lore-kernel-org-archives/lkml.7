@@ -2,124 +2,192 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5630C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:01:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68515C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:10:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9BCA2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:01:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561068094;
-	bh=JbuElVbN3Z0lxncKmpOc3j7BcuU4pLJzsm2POWaHbOo=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=RA4g1d3wVHOWiqH1z+U/Xrgb4ZCnjTBH6NK0sc5IjsAov/21drSqhfkkm05qcJ4tq
-	 b41tocIDWUZcrczrd9DPptKJXp9YVlAU8peSJXVy0jXtKtPk7Q1Kp+hjJ/P/fSn+lN
-	 a3Do/eiJsbNILJf1e6aewqvkcLQ+O2OE9qjpcXNI=
+	by mail.kernel.org (Postfix) with ESMTP id 3BE6C2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:10:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="JrwSrOMq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfFTWBd (ORCPT
+        id S1726304AbfFTWKK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 18:01:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58250 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726027AbfFTWBd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 18:01:33 -0400
-Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C31F82082C;
-        Thu, 20 Jun 2019 22:01:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561068091;
-        bh=JbuElVbN3Z0lxncKmpOc3j7BcuU4pLJzsm2POWaHbOo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r2ObBBEXMMVIpWzdPcHq+HCuoYoELbl52kWYsuBEcO/MYhbWgIFzfhhIzWmTqg1b7
-         u5NNWy2Sd4oq+dXI5MtYmQZ/C+MGQPQebzG9cwK/J3QlPTADjs19n197i/aAu0DUsr
-         gnAavpclHADBh73WeYugpvdNKIZXIELjHNx0vldc=
-Received: by mail-qk1-f177.google.com with SMTP id i125so3030633qkd.6;
-        Thu, 20 Jun 2019 15:01:31 -0700 (PDT)
-X-Gm-Message-State: APjAAAUAVA4xP+BSwMKPad0Cvp9T+WKLFw1Sd01Jimz9SdiLRJ2T0F+Q
-        f33qYvNEkqSXPSLod1o71Z4V1p9jamZXCrdQyA==
-X-Google-Smtp-Source: APXvYqxqswdc7BYIsSMkGt5yP29+KcMyoMC1aGIIaXPNTqblUxRNrTBW56OaKRe6HWPw4iAja6Qj6vVGBKu/Kf9NMWc=
-X-Received: by 2002:a37:69c5:: with SMTP id e188mr108358787qkc.119.1561068091034;
- Thu, 20 Jun 2019 15:01:31 -0700 (PDT)
+        Thu, 20 Jun 2019 18:10:10 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44164 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726180AbfFTWKJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 18:10:09 -0400
+Received: by mail-wr1-f65.google.com with SMTP id r16so4530864wrl.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 15:10:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=osQ4T6cHI9dS6FXTVEWB3XzgaXkhdOGQwr24b6JLCQo=;
+        b=JrwSrOMqW6pdRX/MfVgjguikzmfB2AM5MTvWAoZcvSUV87L4iAhtFu+vVuAqerIFG4
+         YD9OJqiT5a56xrSyv71I38B7Pt5v8iOQBMdMXLsI79lqkTCWEo02Nt3jtnKh6SFsB8EG
+         KuskCykxLQkQ992OrO59yi9LtmL0VofckfHvmHr884smqufwyRlaXXm9j8pdtXC9r28x
+         h0uOIb32beFoOYUiZXETw8u7Ae6wChqgCX+7DmXEqpT8lijAMIvdTF2di9x9b9HBBMZP
+         PYkSFbcucR2Ilsh9OAOcuzv4cVW/xib12ot2hwFaQJYq1bpQZJaCoifkFff68L1p/Xsc
+         hQGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=osQ4T6cHI9dS6FXTVEWB3XzgaXkhdOGQwr24b6JLCQo=;
+        b=O3ThBmfsOvwnrYSC/Rox6PWvHBv9hnIQRRgbt/OxVw9l4gIFquVgM8vYoF0gC+xlhc
+         tT1dztFr6mJkI00KnE+P0Wj0O8LnWyb97nuTIilAohKnEfQU8+FH3u3subfHkPQ0+9J9
+         WgJq7FXpxzT3matrESYWSMc7KEwAED3yqsUNaXhJbTmFuqUH+jNwF8IwzbnldkIkt40z
+         v4Aepf2Ddj48OMA6gaiSCU2fUf4V1/N6NvVlDygHZV0G84TKMJIwYdPvOkHQi+83zvuV
+         +so5MbKunjie9c/uYF19zs2ORhbaqmYkcYEy9/gTGN/OPm54VORS4gDJY97gByQwJ0VD
+         gDDw==
+X-Gm-Message-State: APjAAAVO8M5BtJTy9UXQLCtvqzyWI3p2YB/pgKH8FZJy0uGp+Kpc9SB4
+        fjubdsNfWlMhX5ZAyYTM71H6sg==
+X-Google-Smtp-Source: APXvYqy/anSRn/zCi4pr0B+FnsissvYptswWTiSJCYV1O2ADeDbazP83NMugvS4Ri9Oq77DuK6ekSg==
+X-Received: by 2002:adf:ec8e:: with SMTP id z14mr8010601wrn.125.1561068606919;
+        Thu, 20 Jun 2019 15:10:06 -0700 (PDT)
+Received: from brauner.io ([212.91.227.56])
+        by smtp.gmail.com with ESMTPSA id x129sm525212wmg.44.2019.06.20.15.10.05
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 15:10:06 -0700 (PDT)
+Date:   Fri, 21 Jun 2019 00:10:04 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jannh@google.com,
+        keescook@chromium.org, fweimer@redhat.com, oleg@redhat.com,
+        arnd@arndb.de, dhowells@redhat.com,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Adrian Reber <adrian@lisas.de>, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v3 2/2] arch: wire-up clone3() syscall
+Message-ID: <20190620221003.ciuov5fzqxrcaykp@brauner.io>
+References: <20190604160944.4058-1-christian@brauner.io>
+ <20190604160944.4058-2-christian@brauner.io>
+ <20190620184451.GA28543@roeck-us.net>
 MIME-Version: 1.0
-References: <20190619215156.27795-1-robh@kernel.org> <20190620090122.GB26689@ulmo>
- <CAL_JsqKC-RDjdMQWM6yk_HiWu-WwuU+vUf946t=TDJAxnqMW7Q@mail.gmail.com>
-In-Reply-To: <CAL_JsqKC-RDjdMQWM6yk_HiWu-WwuU+vUf946t=TDJAxnqMW7Q@mail.gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Thu, 20 Jun 2019 16:01:19 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+LME4N4aoUsw946hBGO4y8Q8yBVa2coeSZMr1Ns_XrSg@mail.gmail.com>
-Message-ID: <CAL_Jsq+LME4N4aoUsw946hBGO4y8Q8yBVa2coeSZMr1Ns_XrSg@mail.gmail.com>
-Subject: Re: [RFC PATCH 1/4] dt-bindings: display: Convert common panel
- bindings to DT schema
-To:     Thierry Reding <thierry.reding@gmail.com>
-Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190620184451.GA28543@roeck-us.net>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 8:52 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu, Jun 20, 2019 at 3:01 AM Thierry Reding <thierry.reding@gmail.com> wrote:
-> >
-> > On Wed, Jun 19, 2019 at 03:51:53PM -0600, Rob Herring wrote:
-> > > Convert the common panel bindings to DT schema consolidating scattered
-> > > definitions to a single schema file.
-> > >
-> > > The 'simple-panel' binding just a collection of properties and not a
-> > > complete binding itself. All of the 'simple-panel' properties are
-> > > covered by the panel-common.txt binding with the exception of the
-> > > 'no-hpd' property, so add that to the schema.
-> > >
-> > > As there are lots of references to simple-panel.txt, just keep the file
-> > > with a reference to panel-common.yaml for now until all the bindings are
-> > > converted.
-> > >
-> > > Cc: Thierry Reding <thierry.reding@gmail.com>
-> > > Cc: Sam Ravnborg <sam@ravnborg.org>
-> > > Cc: Maxime Ripard <maxime.ripard@bootlin.com>
-> > > Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > > Cc: dri-devel@lists.freedesktop.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > > Note there's still some references to panel-common.txt that I need to
-> > > update or just go ahead and convert to schema.
-> > >
-> > >  .../bindings/display/panel/panel-common.txt   | 101 -------------
-> > >  .../bindings/display/panel/panel-common.yaml  | 143 ++++++++++++++++++
-> > >  .../bindings/display/panel/panel.txt          |   4 -
-> > >  .../bindings/display/panel/simple-panel.txt   |  29 +---
-> > >  4 files changed, 144 insertions(+), 133 deletions(-)
-> > >  delete mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.txt
-> > >  create mode 100644 Documentation/devicetree/bindings/display/panel/panel-common.yaml
-> >
-> > I know it was this way before, but perhaps remove the redundant panel-
-> > prefix while at it?
->
-> Sure.
+On Thu, Jun 20, 2019 at 11:44:51AM -0700, Guenter Roeck wrote:
+> On Tue, Jun 04, 2019 at 06:09:44PM +0200, Christian Brauner wrote:
+> > Wire up the clone3() call on all arches that don't require hand-rolled
+> > assembly.
+> > 
+> > Some of the arches look like they need special assembly massaging and it is
+> > probably smarter if the appropriate arch maintainers would do the actual
+> > wiring. Arches that are wired-up are:
+> > - x86{_32,64}
+> > - arm{64}
+> > - xtensa
+> > 
+> 
+> This patch results in build failures on various architecetures.
+> 
+> h8300-linux-ld: arch/h8300/kernel/syscalls.o:(.data+0x6d0): undefined reference to `sys_clone3'
+> 
+> nios2-linux-ld: arch/nios2/kernel/syscall_table.o:(.data+0x6d0): undefined reference to `sys_clone3'
+> 
+> There may be others; -next is in too bad shape right now to get a complete
+> picture. Wondering, though: What is special with this syscall ? Normally
+> one would only get a warning that a syscall is not wired up.
 
-On 2nd thought, I prefer it as-is. The reason being the schema
-including this file are more readable with:
+clone3() was placed under __ARCH_WANT_SYS_CLONE. Most architectures
+simply define __ARCH_WANT_SYS_CLONE and are done with it.
+Some however, such as nios2 and h8300 don't define it but instead
+provide a sys_clone stub of their own because of architectural
+requirements (or tweaks) and they are mostly written in assembly. (That
+should be left to arch maintainers for sys_clone3.)
 
-allOf:
-  - $ref: panel-common.yaml#
+The build failures were on my radar already. I hadn't yet replied
+since I haven't pushed the fixup below.
+The solution is to define __ARCH_WANT_SYS_CLONE3 and add a
+cond_syscall(clone3) so we catch all architectures that do not yet
+provide clone3 with a ENOSYS until maintainers have added it.
 
-Compared to one of:
-
-$ref: common.yaml#
-$ref: /schemas/display/panel/common.yaml#
-
-I suppose we could automagically include a 'common.yaml' file if
-existing in the same directory. That's a bigger change though...
-
-Rob
+diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
+index 7a39e77984ef..aa35aa5d68dc 100644
+--- a/arch/arm/include/asm/unistd.h
++++ b/arch/arm/include/asm/unistd.h
+@@ -40,6 +40,7 @@
+ #define __ARCH_WANT_SYS_FORK
+ #define __ARCH_WANT_SYS_VFORK
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ /*
+  * Unimplemented (or alternatively implemented) syscalls
+diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
+index 24480c2d95da..e4e0523102e2 100644
+--- a/arch/arm64/include/asm/unistd.h
++++ b/arch/arm64/include/asm/unistd.h
+@@ -48,6 +48,7 @@
+ #endif
+ 
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
+ 
+ #ifndef __COMPAT_SYSCALL_NR
+ #include <uapi/asm/unistd.h>
+diff --git a/arch/x86/include/asm/unistd.h b/arch/x86/include/asm/unistd.h
+index 146859efd83c..097589753fec 100644
+--- a/arch/x86/include/asm/unistd.h
++++ b/arch/x86/include/asm/unistd.h
+@@ -54,5 +54,6 @@
+ # define __ARCH_WANT_SYS_FORK
+ # define __ARCH_WANT_SYS_VFORK
+ # define __ARCH_WANT_SYS_CLONE
++# define __ARCH_WANT_SYS_CLONE3
+ 
+ #endif /* _ASM_X86_UNISTD_H */
+diff --git a/arch/xtensa/include/asm/unistd.h b/arch/xtensa/include/asm/unistd.h
+index 30af4dc3ce7b..b52236245e51 100644
+--- a/arch/xtensa/include/asm/unistd.h
++++ b/arch/xtensa/include/asm/unistd.h
+@@ -3,6 +3,7 @@
+ #define _XTENSA_UNISTD_H
+ 
+ #define __ARCH_WANT_SYS_CLONE
++#define __ARCH_WANT_SYS_CLONE3
+ #include <uapi/asm/unistd.h>
+ 
+ #define __ARCH_WANT_NEW_STAT
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 08ff131f26b4..98abea995629 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2490,7 +2490,9 @@ SYSCALL_DEFINE5(clone, unsigned long, clone_flags, unsigned long, newsp,
+ 
+ 	return _do_fork(&args);
+ }
++#endif
+ 
++#ifdef __ARCH_WANT_SYS_CLONE3
+ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 					      struct clone_args __user *uargs,
+ 					      size_t size)
+diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
+index 4d9ae5ea6caf..34b76895b81e 100644
+--- a/kernel/sys_ni.c
++++ b/kernel/sys_ni.c
+@@ -137,6 +137,8 @@ COND_SYSCALL(capset);
+ /* kernel/exit.c */
+ 
+ /* kernel/fork.c */
++/* __ARCH_WANT_SYS_CLONE3 */
++COND_SYSCALL(clone3);
+ 
+ /* kernel/futex.c */
+ COND_SYSCALL(futex);
