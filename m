@@ -5,58 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB55C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCAA8C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 052F521537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2AB5208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054580;
-	bh=v/vNDN6E0szz0Hmj3pzT3NLPezLmBzFhdmb1zb2l6hI=;
+	s=default; t=1561054581;
+	bh=tD2RAf82b2kqlaZW6P4sPKJfmUPs4KxIDFFk2dbs47s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K6iLHwrfHKGfSFRYJfznEcZz5jlwgMgvTdMLI274Wwohg4PQ0AZOlrCZJP76NEQWe
-	 gI/KGhs7SRB3JPVDYdt+3mkl/4PqrCLz4YY2Mcpy0x1964ZCs6r26xqFjKZMVHIxvf
-	 dHAbwnK9LsYgXA/zKsXQzS0CE75m0lKidpZKOAB8=
+	b=BFgR6BGwGf8Lx0J3QVpTAkjY9kqmPrYBonmPvcCr6LBZmSGm9vS1c78LRwfkrZPb3
+	 5nO6WOeWlKwGqjni+C19S3X7hJUEJySWPR7JHH6S8s8e/QbSVQfzXBDCafDQk6uiSa
+	 7P0ML2a9Etg4Q3f5CYmSwRddvF4XAZN3G2hm33VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfFTSQS (ORCPT
+        id S1726015AbfFTSQQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45340 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:16:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729744AbfFTSQP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:15 -0400
+        id S1729505AbfFTSQL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81CFE205F4;
-        Thu, 20 Jun 2019 18:16:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E1F205F4;
+        Thu, 20 Jun 2019 18:16:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054574;
-        bh=v/vNDN6E0szz0Hmj3pzT3NLPezLmBzFhdmb1zb2l6hI=;
+        s=default; t=1561054571;
+        bh=tD2RAf82b2kqlaZW6P4sPKJfmUPs4KxIDFFk2dbs47s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qb2HsCOXzDbhgydQAyO0LUC785GNsaVZzAAIDmT8zRj574YChAol9buhBbk7qhXm9
-         l/OTdQywjk41/r6MNsSkMKDYD7IUSdE7APpKPOdwDiiV8KjTrGyM/iA9xDFp8+wwSZ
-         o6xFAm/Sy9pxg/PKhqP++nkc7P5wsoiFvVr5jHSE=
+        b=ZSkkx5H7UNo3EIquZ3aHaiO3rlonUaDJur2Pf1sDclnrYf27AGEcRrW1aMkDBprtN
+         PrEgyRhQpnU1wOeyGptSLFKesMKO3IpptDXvXN3V6mLeBOWX/bVRJzRtfPRmAvkqKv
+         118lGonJmdAeXFFVbi57EK6wzyabK8y26clIj54A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, mark.rutland@arm.com,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 48/98] perf/ring_buffer: Fix exposing a temporarily decreased data_head
-Date:   Thu, 20 Jun 2019 19:57:15 +0200
-Message-Id: <20190620174351.394999456@linuxfoundation.org>
+        stable@vger.kernel.org, Gen Zhang <blackgod016574@gmail.com>,
+        Paulo Alcantara <palcantara@suse.de>,
+        Steve French <stfrench@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 74/98] dfs_cache: fix a wrong use of kfree in flush_cache_ent()
+Date:   Thu, 20 Jun 2019 19:57:41 +0200
+Message-Id: <20190620174352.941043088@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -69,95 +61,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1b038c6e05ff70a1e66e3e571c2e6106bdb75f53 ]
+[ Upstream commit 50fbc13dc12666f3604dc2555a47fc8c4e29162b ]
 
-In perf_output_put_handle(), an IRQ/NMI can happen in below location and
-write records to the same ring buffer:
+In flush_cache_ent(), 'ce->ce_path' is allocated by kstrdup_const().
+It should be freed by kfree_const(), rather than kfree().
 
-	...
-	local_dec_and_test(&rb->nest)
-	...                          <-- an IRQ/NMI can happen here
-	rb->user_page->data_head = head;
-	...
-
-In this case, a value A is written to data_head in the IRQ, then a value
-B is written to data_head after the IRQ. And A > B. As a result,
-data_head is temporarily decreased from A to B. And a reader may see
-data_head < data_tail if it read the buffer frequently enough, which
-creates unexpected behaviors.
-
-This can be fixed by moving dec(&rb->nest) to after updating data_head,
-which prevents the IRQ/NMI above from updating data_head.
-
-[ Split up by peterz. ]
-
-Signed-off-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: mark.rutland@arm.com
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.224478157@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Gen Zhang <blackgod016574@gmail.com>
+Reviewed-by: Paulo Alcantara <palcantara@suse.de>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/events/ring_buffer.c | 24 ++++++++++++++++++++----
- 1 file changed, 20 insertions(+), 4 deletions(-)
+ fs/cifs/dfs_cache.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index 674b35383491..009467a60578 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -51,11 +51,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	head = local_read(&rb->head);
+diff --git a/fs/cifs/dfs_cache.c b/fs/cifs/dfs_cache.c
+index 09b7d0d4f6e4..007cfa39be5f 100644
+--- a/fs/cifs/dfs_cache.c
++++ b/fs/cifs/dfs_cache.c
+@@ -131,7 +131,7 @@ static inline void flush_cache_ent(struct dfs_cache_entry *ce)
+ 		return;
  
- 	/*
--	 * IRQ/NMI can happen here, which means we can miss a head update.
-+	 * IRQ/NMI can happen here and advance @rb->head, causing our
-+	 * load above to be stale.
- 	 */
+ 	hlist_del_init_rcu(&ce->ce_hlist);
+-	kfree(ce->ce_path);
++	kfree_const(ce->ce_path);
+ 	free_tgts(ce);
+ 	dfs_cache_count--;
+ 	call_rcu(&ce->ce_rcu, free_cache_entry);
+@@ -421,7 +421,7 @@ alloc_cache_entry(const char *path, const struct dfs_info3_param *refs,
  
--	if (!local_dec_and_test(&rb->nest))
-+	/*
-+	 * If this isn't the outermost nesting, we don't have to update
-+	 * @rb->user_page->data_head.
-+	 */
-+	if (local_read(&rb->nest) > 1) {
-+		local_dec(&rb->nest);
- 		goto out;
-+	}
- 
- 	/*
- 	 * Since the mmap() consumer (userspace) can run on a different CPU:
-@@ -87,9 +94,18 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	rb->user_page->data_head = head;
- 
- 	/*
--	 * Now check if we missed an update -- rely on previous implied
--	 * compiler barriers to force a re-read.
-+	 * We must publish the head before decrementing the nest count,
-+	 * otherwise an IRQ/NMI can publish a more recent head value and our
-+	 * write will (temporarily) publish a stale value.
-+	 */
-+	barrier();
-+	local_set(&rb->nest, 0);
-+
-+	/*
-+	 * Ensure we decrement @rb->nest before we validate the @rb->head.
-+	 * Otherwise we cannot be sure we caught the 'last' nested update.
- 	 */
-+	barrier();
- 	if (unlikely(head != local_read(&rb->head))) {
- 		local_inc(&rb->nest);
- 		goto again;
+ 	rc = copy_ref_data(refs, numrefs, ce, NULL);
+ 	if (rc) {
+-		kfree(ce->ce_path);
++		kfree_const(ce->ce_path);
+ 		kmem_cache_free(dfs_cache_slab, ce);
+ 		ce = ERR_PTR(rc);
+ 	}
 -- 
 2.20.1
 
