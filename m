@@ -1,139 +1,121 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F4FC4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8CDCC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 235EF206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561026746;
-	bh=RhE7+xSF467AX7mbVOQqLJhEzla+5xkKhxQvEGFG8ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d5RLnueAVLZRdE1KG3E01gZddLjS//HyYg/k9UILzVDXnTO5HyxphmsMAqb7HVXWT
-	 bk7D208tNtixo6C04eVwT5nymvWM4yHI0F2vxg49WpQdQQOh7H65aCy8JnooiXVfH9
-	 jD5FEKAmGhadqQ8P1lrsfkAPN+AT/z3+VzRu8BfM=
+	by mail.kernel.org (Postfix) with ESMTP id B944820B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:33:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726807AbfFTKcY (ORCPT
+        id S1731528AbfFTKdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:32:24 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35934 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726081AbfFTKcX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:32:23 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f21so1369771pgi.3;
-        Thu, 20 Jun 2019 03:32:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Vh/TaWAXivsCSm93ZkOvEDBkx2UKyyCx6lOeAnqGOlE=;
-        b=ttF/SnGYG3MOm+YgtgBbYEgYcC3Gryeob5F0AgH9pKO3BZ4CD/56pVCkDIFxyQBGnJ
-         vNodJ0g4aVQaCP6EaAGUeJY4lkffwXbWCXY68CjsUqSHCBAiAuab7MFHcHqwsatieGZ/
-         nYHo33JOSHtedVBSCYVCfNsAMCaDihPzCFYwRPUZDvjFhv1MN0GcPnaiTSpTH1xgHIYn
-         tqu9zrsbTkMcFADzh3sHS5xHtVOW2Jfsd6SQL+SxKAix+d8k8hOq9KsmgMZEIPp/xKXy
-         oe32UVSZTA6hZKSfi0QIXidVgJrfAoU4o67stK283mjbTtEtY6VrboiGudu85+RMdB8r
-         ClnA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Vh/TaWAXivsCSm93ZkOvEDBkx2UKyyCx6lOeAnqGOlE=;
-        b=bcuF+2HcJ7S5abOniVmBUod+hu7RIQIS3jqbvtTgdGnwMoHL0j3Y2Q108X+5O2rkCK
-         579RNsBCQtO/2mH7cu/2xWrL6Rds0vnxErk8K+E2yqjGhLjSU69MMo6Efd3Ub4t0IGaY
-         SAp5V05FZDcek80iDIIH45KK1psjEIPLCMS+LC9gLhk78ZQkyaCWtUm0MJFM0RemAuWU
-         cpAUwe/wtN0YUU/v6mlB0YyWCvmeEEz/HkW1wtPGAlMAk1cy1upnbaSQ+Tmm2ZX8Ckg6
-         7uBr6cmZucDldIO9C7ldSEsd1Yri0AfPxoAdDmb/iQcTf7Kf3wYsz0haaF0ZxRJKHlLg
-         6q9g==
-X-Gm-Message-State: APjAAAVeyh615FWO4St6H54jfv3hAC+Bs9r/jRE1ZIvE7jQgrOWeXig3
-        f75+SnPQbOQ1613/ufvRwhM=
-X-Google-Smtp-Source: APXvYqzG+Ny73nTkuvycxB2Qtw2No/JfB1pM/xIlj0jTTPw8WMCkRlsju9l456JNXOtmVU5qfE89Vw==
-X-Received: by 2002:a63:d008:: with SMTP id z8mr12308782pgf.335.1561026742731;
-        Thu, 20 Jun 2019 03:32:22 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id 12sm21098259pfi.60.2019.06.20.03.32.17
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 03:32:21 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 19:32:15 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
-Message-ID: <20190620103215.GF105727@google.com>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-5-minchan@kernel.org>
- <20190619132450.GQ2968@dhcp22.suse.cz>
- <20190620041620.GB105727@google.com>
- <20190620070444.GB12083@dhcp22.suse.cz>
- <20190620084040.GD105727@google.com>
- <20190620092209.GD12083@dhcp22.suse.cz>
+        Thu, 20 Jun 2019 06:33:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18645 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726318AbfFTKdf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:33:35 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id E76CD590D75BBE78D99E;
+        Thu, 20 Jun 2019 18:33:32 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 20 Jun 2019 18:33:26 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <xuwei5@huawei.com>
+CC:     <bhelgaas@google.com>, <linuxarm@huawei.com>, <arm@kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        <joe@perches.com>, John Garry <john.garry@huawei.com>
+Subject: [PATCH 5/5] lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at registration
+Date:   Thu, 20 Jun 2019 18:31:56 +0800
+Message-ID: <1561026716-140537-6-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
+In-Reply-To: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
+References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620092209.GD12083@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:22:09AM +0200, Michal Hocko wrote:
-> On Thu 20-06-19 17:40:40, Minchan Kim wrote:
-> > > > > Pushing out a shared page cache
-> > > > > is possible even now but this interface gives a much easier tool to
-> > > > > evict shared state and perform all sorts of timing attacks. Unless I am
-> > > > > missing something we should be doing something similar to mincore and
-> > > > > ignore shared pages without a writeable access or at least document why
-> > > > > we do not care.
-> > > > 
-> > > > I'm not sure IIUC side channel attach. As you mentioned, without this syscall,
-> > > > 1. they already can do that simply by memory hogging
-> > > 
-> > > This is way much more harder for practical attacks because the reclaim
-> > > logic is not fully under the attackers control. Having a direct tool to
-> > > reclaim memory directly then just opens doors to measure the other
-> > > consumers of that memory and all sorts of side channel.
-> > 
-> > Not sure it's much more harder. It's really easy on my experience.
-> > Just creating new memory hogger and consume memory step by step until
-> > you newly allocated pages will be reclaimed.
-> 
-> You can contain an untrusted application into a memcg and it will only
-> reclaim its own working set.
-> 
-> > > > 2. If we need fix MADV_PAGEOUT, that means we need to fix MADV_DONTNEED, too?
-> > > 
-> > > nope because MADV_DONTNEED doesn't unmap from other processes.
-> > 
-> > Hmm, I don't understand. MADV_PAGEOUT doesn't unmap from other
-> > processes, either.
-> 
-> Either I am confused or missing something. shrink_page_list does
-> try_to_unmap and that unmaps from all processes, right?
+Since the only LOGIC_PIO_INDIRECT host (hisi-lpc) now sets the ops prior
+to registration, enforce this check at registration instead of in the IO
+port accessors to simplify and marginally optimise the code.
 
-You don't miss it. It seems now I undetstand what you pointed out.
-What you meant is attacker can see what page was faulting-in from other processes
-via measuring access delay from his address space and MADV_PAGEOUT makes it more
-easiler. Thus, it's an issue regardless of recent mincore fix. Right?
-Then, okay, I will add can_do_mincore similar check for the MADV_PAGEOUT syscall
-if others have different ideas.
+A slight misalignment is also tidied.
 
-Thanks.
+Suggested-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
+ lib/logic_pio.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
+
+diff --git a/lib/logic_pio.c b/lib/logic_pio.c
+index 45eb57af2574..126593ed9049 100644
+--- a/lib/logic_pio.c
++++ b/lib/logic_pio.c
+@@ -39,7 +39,8 @@ int logic_pio_register_range(struct logic_pio_hwaddr *new_range)
+ 	resource_size_t iio_sz = MMIO_UPPER_LIMIT;
+ 	int ret = 0;
+ 
+-	if (!new_range || !new_range->fwnode || !new_range->size)
++	if (!new_range || !new_range->fwnode || !new_range->size ||
++	    (new_range->flags == LOGIC_PIO_INDIRECT && !new_range->ops))
+ 		return -EINVAL;
+ 
+ 	start = new_range->hw_start;
+@@ -237,7 +238,7 @@ type logic_in##bw(unsigned long addr)					\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) { \
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			ret = entry->ops->in(entry->hostdata,		\
+ 					addr, sizeof(type));		\
+ 		else							\
+@@ -253,7 +254,7 @@ void logic_out##bw(type value, unsigned long addr)			\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->out(entry->hostdata,		\
+ 					addr, value, sizeof(type));	\
+ 		else							\
+@@ -261,7 +262,7 @@ void logic_out##bw(type value, unsigned long addr)			\
+ 	}								\
+ }									\
+ 									\
+-void logic_ins##bw(unsigned long addr, void *buffer,		\
++void logic_ins##bw(unsigned long addr, void *buffer,			\
+ 		   unsigned int count)					\
+ {									\
+ 	if (addr < MMIO_UPPER_LIMIT) {					\
+@@ -269,7 +270,7 @@ void logic_ins##bw(unsigned long addr, void *buffer,		\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->ins(entry->hostdata,		\
+ 				addr, buffer, sizeof(type), count);	\
+ 		else							\
+@@ -286,7 +287,7 @@ void logic_outs##bw(unsigned long addr, const void *buffer,		\
+ 	} else if (addr >= MMIO_UPPER_LIMIT && addr < IO_SPACE_LIMIT) {	\
+ 		struct logic_pio_hwaddr *entry = find_io_range(addr);	\
+ 									\
+-		if (entry && entry->ops)				\
++		if (entry)						\
+ 			entry->ops->outs(entry->hostdata,		\
+ 				addr, buffer, sizeof(type), count);	\
+ 		else							\
+-- 
+2.17.1
+
