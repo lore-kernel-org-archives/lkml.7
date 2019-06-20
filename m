@@ -2,98 +2,117 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C43AAC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:17:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DB9C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AA6620675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:17:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A39B02070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="KL5ut//f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfFTPRg (ORCPT
+        id S1731991AbfFTPSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:17:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:46939 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726512AbfFTPRf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:17:35 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:17:35 -0700
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="154144455"
-Received: from ahduyck-desk1.jf.intel.com ([10.7.198.76])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:17:35 -0700
-Message-ID: <d11cf6a9ac9f2f21b6102464bf80925ada02bc78.camel@linux.intel.com>
-Subject: Re: [PATCH RFC] mm: fix regression with deferred struct page init
-From:   Alexander Duyck <alexander.h.duyck@linux.intel.com>
-To:     Juergen Gross <jgross@suse.com>, xen-devel@lists.xenproject.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Date:   Thu, 20 Jun 2019 08:17:35 -0700
-In-Reply-To: <20190620094015.21206-1-jgross@suse.com>
-References: <20190620094015.21206-1-jgross@suse.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 20 Jun 2019 11:18:53 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:32967 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726979AbfFTPSv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:18:51 -0400
+Received: by mail-io1-f66.google.com with SMTP id u13so1348594iop.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:18:50 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cjD1oM5q5tMvxLtnHLi6QjIV6Kzj0WhrdaBw8sxqP6E=;
+        b=KL5ut//fcz2BIKILaDyB8ohi01uo46BlAttcUNa51KKAK1tcFXFhC8SCH2ucE0+zu0
+         joRzLAIQOyAlR2Jt4XsZvDwQoJQxyJxF0Eha7wO+Lcc8hMsDmgZFzdjia1zGXgTCUqe+
+         R4q+jSRaCPpupw065Ncg6Ytj3OtHHyjuvu7rI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=cjD1oM5q5tMvxLtnHLi6QjIV6Kzj0WhrdaBw8sxqP6E=;
+        b=KsfPLMXX2f0wiiIUV+SqcCJzDLhr0LzpFdXCPH3TN4k7Vt1Jwf2HbtM4KYmfxUz0Zo
+         KB5bUQY4F2+dZXcsJ9E5hPFQ/Aj/sBRlPJ7ju8YVW9iZV0qnevxw0a73Ajio58y5Zs36
+         LGj09u8Sgz5hu675JnPMLDUBSYeiqEaovXkmvHiBqq02g9s16hyqbW/2T8D7UeAkSjqU
+         YXwDE6c8eQlUm2pXUHdsj7MkNMzEwXHL2qs7fCEcBhlx2nF+h3IWi7Ys+6cnd4YmCp7h
+         mabgVPIAoUXJBEItVy04ed4cfcIxMlwOrGJU6QMS53wprNA9O+lELfmpGzWvAJb8Ks7K
+         R2cg==
+X-Gm-Message-State: APjAAAXqlhfRBoFveVKSL2P0yxgAXch/G5vx6LPHO9tSm/566FJ28Iat
+        yykq4PjW3DFhNbXEOJAssuz2LRZiycY=
+X-Google-Smtp-Source: APXvYqyhVkr7S5sXnpnoik5KXYCmAR287xq9lSFfhPvYClEQVEFY414UtXFLtAdnecBoub+5eQcwPg==
+X-Received: by 2002:a6b:641a:: with SMTP id t26mr5195793iog.3.1561043929997;
+        Thu, 20 Jun 2019 08:18:49 -0700 (PDT)
+Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
+        by smtp.gmail.com with ESMTPSA id c23sm140526iod.11.2019.06.20.08.18.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 08:18:49 -0700 (PDT)
+From:   Ross Zwisler <zwisler@chromium.org>
+X-Google-Original-From: Ross Zwisler <zwisler@google.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Ross Zwisler <zwisler@google.com>, "Theodore Ts'o" <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Fletcher Woodruff <fletcherw@google.com>,
+        Justin TerAvest <teravest@google.com>
+Subject: [PATCH v2 0/3] Add dirty range scoping to jbd2
+Date:   Thu, 20 Jun 2019 09:18:36 -0600
+Message-Id: <20190620151839.195506-1-zwisler@google.com>
+X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 11:40 +0200, Juergen Gross wrote:
-> Commit 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time
-> instead of doing larger sections") is causing a regression on some
-> systems when the kernel is booted as Xen dom0.
-> 
-> The system will just hang in early boot.
-> 
-> Reason is an endless loop in get_page_from_freelist() in case the first
-> zone looked at has no free memory. deferred_grow_zone() is always
-> returning true due to the following code snipplet:
-> 
->   /* If the zone is empty somebody else may have cleared out the zone */
->   if (!deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
->                                            first_deferred_pfn)) {
->           pgdat->first_deferred_pfn = ULONG_MAX;
->           pgdat_resize_unlock(pgdat, &flags);
->           return true;
->   }
-> 
-> This in turn results in the loop as get_page_from_freelist() is
-> assuming forward progress can be made by doing some more struct page
-> initialization.
-> 
-> Fixes: 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time instead of doing larger sections")
-> ---
-> This patch makes my system boot again as Xen dom0, but I'm not really
-> sure it is the correct way to do it, hence the RFC.
-> Signed-off-by: Juergen Gross <jgross@suse.com>
-> ---
->  mm/page_alloc.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index d66bc8abe0af..6ee754b5cd92 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -1826,7 +1826,7 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
->  						 first_deferred_pfn)) {
->  		pgdat->first_deferred_pfn = ULONG_MAX;
->  		pgdat_resize_unlock(pgdat, &flags);
-> -		return true;
-> +		return false;
->  	}
->  
->  	/*
+Changes from v1:
+ - Relocated the code which resets dirty range upon transaction completion.
+   (Jan)
+ - Cc'd stable@vger.kernel.org because we see this issue with v4.14 and
+   v4.19 stable kernels in the field.
 
-The one change I might make to this would be to do:
-	return first_deferred_pfn != ULONG_MAX;
+---
 
-That way in the event the previous caller did free up the last of the 
-pages and empty the zone just before we got here then we will try one more
-time. Otherwise if it was already done before we got here we exit.
+This patch series fixes the issue I described here:
+
+https://www.spinics.net/lists/linux-block/msg38274.html
+
+Essentially the issue is that journal_finish_inode_data_buffers() operates
+on the entire address space of each of the inodes associated with a given
+journal entry.  This means that if we have an inode where we are constantly
+appending dirty pages we can end up waiting for an indefinite amount of
+time in journal_finish_inode_data_buffers().
+
+This series improves this situation in ext4 by scoping each of the inode
+dirty ranges associated with a given transaction.  Other users of jbd2
+which don't (yet?) take advantage of this scoping (ocfs2) will continue to
+have the old behavior.
+
+Ross Zwisler (3):
+  mm: add filemap_fdatawait_range_keep_errors()
+  jbd2: introduce jbd2_inode dirty range scoping
+  ext4: use jbd2_inode dirty range scoping
+
+ fs/ext4/ext4_jbd2.h   | 12 +++++------
+ fs/ext4/inode.c       | 13 +++++++++---
+ fs/ext4/move_extent.c |  3 ++-
+ fs/jbd2/commit.c      | 23 ++++++++++++++------
+ fs/jbd2/journal.c     |  2 ++
+ fs/jbd2/transaction.c | 49 ++++++++++++++++++++++++-------------------
+ include/linux/fs.h    |  2 ++
+ include/linux/jbd2.h  | 22 +++++++++++++++++++
+ mm/filemap.c          | 22 +++++++++++++++++++
+ 9 files changed, 111 insertions(+), 37 deletions(-)
+
+-- 
+2.22.0.410.gd8fdbe21b5-goog
 
