@@ -4,234 +4,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40989C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:15:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E332C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:16:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04AE92082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:15:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5A9C206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:16:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726635AbfFTLP0 (ORCPT
+        id S1726978AbfFTLQA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:15:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:60226 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfFTLPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:15:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2E3F2B;
-        Thu, 20 Jun 2019 04:15:24 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C64C23F718;
-        Thu, 20 Jun 2019 04:15:22 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 12:15:20 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     Peng Fan <peng.fan@nxp.com>
-Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        dl-linux-imx <linux-imx@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "andre.przywara@arm.com" <andre.przywara@arm.com>,
-        "van.freenix@gmail.com" <van.freenix@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20190620111520.GB9575@e107155-lin>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com>
- <20190620092301.GD1248@e107155-lin>
- <AM0PR04MB4481203DE76D290F311E3BFA88E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
+        Thu, 20 Jun 2019 07:16:00 -0400
+Received: from mx2.suse.de ([195.135.220.15]:42022 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726234AbfFTLQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:16:00 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 17F02AE82;
+        Thu, 20 Jun 2019 11:15:58 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id C461F1E4241; Thu, 20 Jun 2019 13:15:57 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 13:15:57 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Ross Zwisler <zwisler@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Fletcher Woodruff <fletcherw@google.com>,
+        Justin TerAvest <teravest@google.com>
+Subject: Re: [PATCH 3/3] ext4: use jbd2_inode dirty range scoping
+Message-ID: <20190620111557.GM13630@quack2.suse.cz>
+References: <20190619172156.105508-1-zwisler@google.com>
+ <20190619172156.105508-4-zwisler@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB4481203DE76D290F311E3BFA88E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190619172156.105508-4-zwisler@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 10:21:09AM +0000, Peng Fan wrote:
-> Hi Sudeep,
->
-> > Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-> >
-> > On Mon, Jun 03, 2019 at 04:30:05PM +0800, peng.fan@nxp.com wrote:
-> > > From: Peng Fan <peng.fan@nxp.com>
-> > >
-> > > This mailbox driver implements a mailbox which signals transmitted
-> > > data via an ARM smc (secure monitor call) instruction. The mailbox
-> > > receiver is implemented in firmware and can synchronously return data
-> > > when it returns execution to the non-secure world again.
-> > > An asynchronous receive path is not implemented.
-> > > This allows the usage of a mailbox to trigger firmware actions on SoCs
-> > > which either don't have a separate management processor or on which
-> > > such a core is not available. A user of this mailbox could be the SCP
-> > > interface.
-> > >
-> > > Modified from Andre Przywara's v2 patch
-> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
-> > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7
-> > Cpeng.fa
-> > >
-> > n%40nxp.com%7C6b37f78032e446be750e08d6f560e707%7C686ea1d3bc2b4
-> > c6fa92cd
-> > >
-> > 99c5c301635%7C0%7C0%7C636966193913988679&amp;sdata=UNM4MTPs
-> > brqoMqWStEy
-> > > YzzwMEWTmX7hHO3TeNEz%2BOAw%3D&amp;reserved=0
-> > >
-> > > Cc: Andre Przywara <andre.przywara@arm.com>
-> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> > > ---
-> > >
-> > > V2:
-> > >  Add interrupts notification support.
-> > >
-> > >  drivers/mailbox/Kconfig                 |   7 ++
-> > >  drivers/mailbox/Makefile                |   2 +
-> > >  drivers/mailbox/arm-smc-mailbox.c       | 190
-> > ++++++++++++++++++++++++++++++++
-> > >  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
-> > >  4 files changed, 209 insertions(+)
-> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
-> > > 100644 include/linux/mailbox/arm-smc-mailbox.h
-> > >
-> > > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
-> > > 595542bfae85..c3bd0f1ddcd8 100644
-> > > --- a/drivers/mailbox/Kconfig
-> > > +++ b/drivers/mailbox/Kconfig
-> > > @@ -15,6 +15,13 @@ config ARM_MHU
-> > >  	  The controller has 3 mailbox channels, the last of which can be
-> > >  	  used in Secure mode only.
-> > >
-> > > +config ARM_SMC_MBOX
-> > > +	tristate "Generic ARM smc mailbox"
-> > > +	depends on OF && HAVE_ARM_SMCCC
-> > > +	help
-> > > +	  Generic mailbox driver which uses ARM smc calls to call into
-> > > +	  firmware for triggering mailboxes.
-> > > +
-> > >  config IMX_MBOX
-> > >  	tristate "i.MX Mailbox"
-> > >  	depends on ARCH_MXC || COMPILE_TEST
-> > > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
-> > > c22fad6f696b..93918a84c91b 100644
-> > > --- a/drivers/mailbox/Makefile
-> > > +++ b/drivers/mailbox/Makefile
-> > > @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+= mailbox-test.o
-> > >
-> > >  obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
-> > >
-> > > +obj-$(CONFIG_ARM_SMC_MBOX)	+= arm-smc-mailbox.o
-> > > +
-> > >  obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
-> > >
-> > >  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=
-> > armada-37xx-rwtm-mailbox.o
-> > > diff --git a/drivers/mailbox/arm-smc-mailbox.c
-> > > b/drivers/mailbox/arm-smc-mailbox.c
-> > > new file mode 100644
-> > > index 000000000000..fef6e38d8b98
-> > > --- /dev/null
-> > > +++ b/drivers/mailbox/arm-smc-mailbox.c
-> > > @@ -0,0 +1,190 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (C) 2016,2017 ARM Ltd.
-> > > + * Copyright 2019 NXP
-> > > + */
-> > > +
-> > > +#include <linux/arm-smccc.h>
-> > > +#include <linux/device.h>
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/interrupt.h>
-> > > +#include <linux/mailbox_controller.h> #include
-> > > +<linux/mailbox/arm-smc-mailbox.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/platform_device.h>
-> > > +
-> > > +#define ARM_SMC_MBOX_USE_HVC	BIT(0)
-> > > +#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
-> > > +
-> > > +struct arm_smc_chan_data {
-> > > +	u32 function_id;
-> > > +	u32 flags;
-> > > +	int irq;
-> > > +};
-> > > +
-> > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
-> > > +	struct arm_smc_chan_data *chan_data = link->con_priv;
-> > > +	struct arm_smccc_mbox_cmd *cmd = data;
-> > > +	struct arm_smccc_res res;
-> > > +	u32 function_id;
-> > > +
-> > > +	if (chan_data->function_id != UINT_MAX)
-> > > +		function_id = chan_data->function_id;
-> > > +	else
-> > > +		function_id = cmd->a0;
-> > > +
-> > > +	if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
-> > > +		arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3,
-> > cmd->a4,
-> > > +			      cmd->a5, cmd->a6, cmd->a7, &res);
-> > > +	else
-> > > +		arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3,
-> > cmd->a4,
-> > > +			      cmd->a5, cmd->a6, cmd->a7, &res);
-> > > +
-> >
-> > So how will the SMC/HVC handler in EL3/2 find which mailbox is being
-> > referred with this command ? I prefer 2nd argument to be the mailbox
-> > number.
-> You mean channel number as following?
->
-> @@ -37,10 +38,10 @@ static int arm_smc_send_data(struct mbox_chan *link, void *data)
->                 function_id = cmd->a0;
->
->         if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
-> -               arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
-> +               arm_smccc_hvc(function_id, chan_data->chan_id, cmd->a2, cmd->a3, cmd->a4,
->                               cmd->a5, cmd->a6, cmd->a7, &res);
->         else
-> -               arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
-> +               arm_smccc_smc(function_id, chan_data->chan_id, cmd->a2, cmd->a3, cmd->a4,
->                               cmd->a5, cmd->a6, cmd->a7, &res);
->
+On Wed 19-06-19 11:21:56, Ross Zwisler wrote:
+> Use the newly introduced jbd2_inode dirty range scoping to prevent us
+> from waiting forever when trying to complete a journal transaction.
+> 
+> Signed-off-by: Ross Zwisler <zwisler@google.com>
 
-Yes something like above. There's a brief description of the same in
-latest SCMI specification though it's not related to SCMI, it more 
-general note for SMC based mailbox.
+Looks good to me. You can add:
 
-"In case the doorbell is SMC/HVC based, it should follow the SMC Calling
-Convention [SMCCC] and needs to provide the identifier of the Shared Memory
-area that contains the payload. On return from the call, the Shared Memory
-area which contained the payload is now updated with the SCMI return response.
-The identifier of the Shared Memory area should be 32-bits and each identifier
-should denote a distinct Shared Memory area."
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-> Or should that be passed from firmware driver?
->
+								Honza
 
-No, we can't assume the id's in DT are 1-1 translation to mailbox ID used
-though it may be the same most of the time.
-
-> If not from firmware driver, just as above, I do not have a good idea which
-> should be passed to smc, from cmd->a1 to a5 or from cmd->a2 to a6.
->
-
-Also I found copying those registers may not be always needed and can
-be sub-optimal. May be a way to indicate that this in DT whether
-register based transfers are used or using memory. Just a thought.
-
---
-Regards,
-Sudeep
+> ---
+>  fs/ext4/ext4_jbd2.h   | 12 ++++++------
+>  fs/ext4/inode.c       | 13 ++++++++++---
+>  fs/ext4/move_extent.c |  3 ++-
+>  3 files changed, 18 insertions(+), 10 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
+> index 75a5309f22315..ef8fcf7d0d3b3 100644
+> --- a/fs/ext4/ext4_jbd2.h
+> +++ b/fs/ext4/ext4_jbd2.h
+> @@ -361,20 +361,20 @@ static inline int ext4_journal_force_commit(journal_t *journal)
+>  }
+>  
+>  static inline int ext4_jbd2_inode_add_write(handle_t *handle,
+> -					    struct inode *inode)
+> +		struct inode *inode, loff_t start_byte, loff_t length)
+>  {
+>  	if (ext4_handle_valid(handle))
+> -		return jbd2_journal_inode_add_write(handle,
+> -						    EXT4_I(inode)->jinode);
+> +		return jbd2_journal_inode_ranged_write(handle,
+> +				EXT4_I(inode)->jinode, start_byte, length);
+>  	return 0;
+>  }
+>  
+>  static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
+> -					   struct inode *inode)
+> +		struct inode *inode, loff_t start_byte, loff_t length)
+>  {
+>  	if (ext4_handle_valid(handle))
+> -		return jbd2_journal_inode_add_wait(handle,
+> -						   EXT4_I(inode)->jinode);
+> +		return jbd2_journal_inode_ranged_wait(handle,
+> +				EXT4_I(inode)->jinode, start_byte, length);
+>  	return 0;
+>  }
+>  
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index c7f77c6430085..27fec5c594459 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -731,10 +731,16 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
+>  		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
+>  		    !ext4_is_quota_file(inode) &&
+>  		    ext4_should_order_data(inode)) {
+> +			loff_t start_byte =
+> +				(loff_t)map->m_lblk << inode->i_blkbits;
+> +			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
+> +
+>  			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
+> -				ret = ext4_jbd2_inode_add_wait(handle, inode);
+> +				ret = ext4_jbd2_inode_add_wait(handle, inode,
+> +						start_byte, length);
+>  			else
+> -				ret = ext4_jbd2_inode_add_write(handle, inode);
+> +				ret = ext4_jbd2_inode_add_write(handle, inode,
+> +						start_byte, length);
+>  			if (ret)
+>  				return ret;
+>  		}
+> @@ -4085,7 +4091,8 @@ static int __ext4_block_zero_page_range(handle_t *handle,
+>  		err = 0;
+>  		mark_buffer_dirty(bh);
+>  		if (ext4_should_order_data(inode))
+> -			err = ext4_jbd2_inode_add_write(handle, inode);
+> +			err = ext4_jbd2_inode_add_write(handle, inode, from,
+> +					length);
+>  	}
+>  
+>  unlock:
+> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
+> index 1083a9f3f16a1..c7ded4e2adff5 100644
+> --- a/fs/ext4/move_extent.c
+> +++ b/fs/ext4/move_extent.c
+> @@ -390,7 +390,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
+>  
+>  	/* Even in case of data=writeback it is reasonable to pin
+>  	 * inode to transaction, to prevent unexpected data loss */
+> -	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
+> +	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
+> +			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
+>  
+>  unlock_pages:
+>  	unlock_page(pagep[0]);
+> -- 
+> 2.22.0.410.gd8fdbe21b5-goog
+> 
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
