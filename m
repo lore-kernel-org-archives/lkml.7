@@ -2,189 +2,374 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2689DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:11:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2BECC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:13:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE2802070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:11:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="wEo3wGjo"
+	by mail.kernel.org (Postfix) with ESMTP id ADC362082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:13:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726451AbfFTWLL (ORCPT
+        id S1726245AbfFTWNl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 18:11:11 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:38802 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfFTWLL (ORCPT
+        Thu, 20 Jun 2019 18:13:41 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51002 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725906AbfFTWNk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 18:11:11 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KM3qBJ117650;
-        Thu, 20 Jun 2019 22:09:48 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=34yrDpyIlCnapuEelQkMxzELpTn9E3Oq0EEgTNp3pMo=;
- b=wEo3wGjoiDRLmfFiBOSYftkqF9BxyNKUscmBHul8oqMnrOQ2CuuZil1ROkycJEV6VL7i
- K/EZENHDp/fbYpjQeBCVWiy/W0Tz7wb4eQqeU8hP8XSZ126W7yTiTbuSaF2YghMDkyDz
- 1JjI5jgZUM6pLkd8QOel+rUwWuFInCdHZHVl+HAdZhL5eL30xXYf07aNzmm5sQfUY3Xi
- u8qnsSTO1Nnw83kcS80Cgv88V0Im23B5q/abGAirRb0yn4qxQanHw+7gT0cIk1IKOss/
- NQ08jOFoC7P0Gxtp1eUAT6k37gmOMLQ6i9bzdXCoNF+Y2BY5IL9mn4FAiou7/jCFeHkN BA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2t7809kfc9-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 22:09:48 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KM9DaG104726;
-        Thu, 20 Jun 2019 22:09:47 GMT
-Received: from pps.reinject (localhost [127.0.0.1])
-        by userp3020.oracle.com with ESMTP id 2t77ynv76j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Thu, 20 Jun 2019 22:09:47 +0000
-Received: from userp3020.oracle.com (userp3020.oracle.com [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x5KM9lfD106008;
-        Thu, 20 Jun 2019 22:09:47 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2t77ynv76b-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 22:09:47 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KM9hLr020247;
-        Thu, 20 Jun 2019 22:09:43 GMT
-Received: from localhost (/10.145.179.81)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Jun 2019 15:09:43 -0700
-Date:   Thu, 20 Jun 2019 15:09:40 -0700
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
-        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
-        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
-        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
-        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
-        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
-        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
-        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
-        linux-btrfs@vger.kernel.org
-Subject: Re: [PATCH 2/6] vfs: flush and wait for io when setting the
- immutable flag via SETFLAGS
-Message-ID: <20190620220940.GC5375@magnolia>
-References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
- <156022838496.3227213.3771632042609589318.stgit@magnolia>
- <20190620140028.GH30243@quack2.suse.cz>
+        Thu, 20 Jun 2019 18:13:40 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KM2v5A128682
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:13:39 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t8hte1w2f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:13:38 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Thu, 20 Jun 2019 23:13:38 +0100
+Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Jun 2019 23:13:35 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KMDYjU44630378
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 22:13:34 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9755AB20B5;
+        Thu, 20 Jun 2019 22:13:34 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68821B20B4;
+        Thu, 20 Jun 2019 22:13:34 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Jun 2019 22:13:34 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 716CF16C6AC7; Thu, 20 Jun 2019 15:13:36 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 15:13:36 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        frederic@kernel.org, tglx@linutronix.de
+Subject: Re: [PATCH] time/tick-broadcast: Fix tick_broadcast_offline()
+ lockdep complaint
+Reply-To: paulmck@linux.ibm.com
+References: <20190619181903.GA14233@linux.ibm.com>
+ <20190620121032.GU3436@hirez.programming.kicks-ass.net>
+ <20190620160118.GQ26519@linux.ibm.com>
+ <20190620211019.GA3436@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620140028.GH30243@quack2.suse.cz>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=772 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906200158
+In-Reply-To: <20190620211019.GA3436@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19062022-0052-0000-0000-000003D35A43
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011299; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01220888; UDB=6.00642286; IPR=6.01002026;
+ MB=3.00027398; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-20 22:13:37
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062022-0053-0000-0000-00006165A359
+Message-Id: <20190620221336.GZ26519@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200158
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 04:00:28PM +0200, Jan Kara wrote:
-> On Mon 10-06-19 21:46:25, Darrick J. Wong wrote:
-> > From: Darrick J. Wong <darrick.wong@oracle.com>
+On Thu, Jun 20, 2019 at 11:10:19PM +0200, Peter Zijlstra wrote:
+> On Thu, Jun 20, 2019 at 09:01:18AM -0700, Paul E. McKenney wrote:
+> 
+> > > > +#define TICK_SCHED_REMOTE_OFFLINE	0
+> > > > +#define TICK_SCHED_REMOTE_RUNNING	1
+> > > > +#define TICK_SCHED_REMOTE_OFFLINING	2
+> > > 
+> > > That seems a daft set of values; consider { RUNNING, OFFLINING, OFFLINE }
+> > > and see below.
 > > 
-> > When we're using FS_IOC_SETFLAGS to set the immutable flag on a file, we
-> > need to ensure that userspace can't continue to write the file after the
-> > file becomes immutable.  To make that happen, we have to flush all the
-> > dirty pagecache pages to disk to ensure that we can fail a page fault on
-> > a mmap'd region, wait for pending directio to complete, and hope the
-> > caller locked out any new writes by holding the inode lock.
+> > As in make it an enum?  I could do that.
+> 
+> Enum or define, I don't much care, but the 'natural' ordering of the
+> states is either: running -> offlining -> offline, or the other way
+> around, the given order in the patch just didn't make sense.
+> 
+> The one with running=0 just seems to work out nicer.
+
+Aside from now needing to be initialized, but so it goes.  Which is
+why TICK_SCHED_REMOTE_OFFLINE was zero in my version, in case you were
+wondering.  ;-)
+
+> > > > +
+> > > > +// State diagram for ->state:
+> > > > +//
+> > > > +//
+> > > > +//      +----->OFFLINE--------------------------+
+> > > > +//      |                                       |
+> > > > +//      |                                       |
+> > > > +//      |                                       | sched_tick_start()
+> > > > +//      | sched_tick_remote()                   |
+> > > > +//      |                                       |
+> > > > +//      |                                       V
+> > > > +//      |                        +---------->RUNNING
+> > > > +//      |                        |              |
+> > > > +//      |                        |              |
+> > > > +//      |                        |              |
+> > > > +//      |     sched_tick_start() |              | sched_tick_stop()
+> > > > +//      |                        |              |
+> > > > +//      |                        |              |
+> > > > +//      |                        |              |
+> > > > +//      +--------------------OFFLINING<---------+
+> > > > +//
+> > > > +//
+> > > > +// Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
+> > > > +// and sched_tick_start() are happy to leave the state in RUNNING.
+> 
+> > > Also, I find it harder to read that needed, maybe a little something
+> > > like so:
+> > > 
+> > > /*
+> > >  *              OFFLINE
+> > >  *               |   ^
+> > >  *               |   | tick_remote()
+> > >  *               |   |
+> > >  *               +--OFFLINING
+> > >  *               |   ^
+> > >  *  tick_start() |   | tick_stop()
+> > >  *               v   |
+> > >  *              RUNNING
+> > >  */
 > > 
-> > Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+> > As in remove the leading "sched_" from the function names?  (The names
+> > were already there, so I left them be.)
 > 
-> ...
-> 
-> > diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
-> > index 6aa1df1918f7..a05341b94d98 100644
-> > --- a/fs/ext4/ioctl.c
-> > +++ b/fs/ext4/ioctl.c
-> > @@ -290,6 +290,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
-> >  	jflag = flags & EXT4_JOURNAL_DATA_FL;
-> >  
-> >  	err = vfs_ioc_setflags_check(inode, oldflags, flags);
-> > +	if (err)
-> > +		goto flags_out;
-> > +	err = vfs_ioc_setflags_flush_data(inode, flags);
-> >  	if (err)
-> >  		goto flags_out;
-> >  
-> 
-> ...
-> 
-> > diff --git a/include/linux/fs.h b/include/linux/fs.h
-> > index 8dad3c80b611..9c899c63957e 100644
-> > --- a/include/linux/fs.h
-> > +++ b/include/linux/fs.h
-> > @@ -3548,7 +3548,41 @@ static inline struct sock *io_uring_get_socket(struct file *file)
-> >  
-> >  int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags);
-> >  
-> > +/*
-> > + * Do we need to flush the file data before changing attributes?  When we're
-> > + * setting the immutable flag we must stop all directio writes and flush the
-> > + * dirty pages so that we can fail the page fault on the next write attempt.
-> > + */
-> > +static inline bool vfs_ioc_setflags_need_flush(struct inode *inode, int flags)
-> > +{
-> > +	if (S_ISREG(inode->i_mode) && !IS_IMMUTABLE(inode) &&
-> > +	    (flags & FS_IMMUTABLE_FL))
-> > +		return true;
-> > +
-> > +	return false;
-> > +}
-> > +
-> > +/*
-> > + * Flush file data before changing attributes.  Caller must hold any locks
-> > + * required to prevent further writes to this file until we're done setting
-> > + * flags.
-> > + */
-> > +static inline int inode_flush_data(struct inode *inode)
-> > +{
-> > +	inode_dio_wait(inode);
-> > +	return filemap_write_and_wait(inode->i_mapping);
-> > +}
-> > +
-> > +/* Flush file data before changing attributes, if necessary. */
-> > +static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
-> > +{
-> > +	if (vfs_ioc_setflags_need_flush(inode, flags))
-> > +		return inode_flush_data(inode);
-> > +	return 0;
-> > +}
-> > +
-> 
-> But this is racy at least for page faults, isn't it? What protects you
-> against write faults just after filemap_write_and_wait() has finished?
-> So either you need to set FS_IMMUTABLE_FL before flushing data or you need
-> to get more protection from the fs than just i_rwsem. In the case of ext4
-> that would be i_mmap_rwsem but other filesystems don't have equivalent
-> protection...
+> That was just me being lazy, the main part being getting the states in a
+> linear order, instead of spread around a 2d grid.
 
-Yes, I see that now.  I think it'll work to set S_IMMUTABLE before
-trying the flush, so long as I am careful to put the call sites right
-before we update the inode flags.
+OK, I will expand them.  Including the ones where I was being lazy.
 
---D
-
+> > > While not wrong, it seems overly complicated; can't we do something
+> > > like:
+> > > 
+> > > tick:
+> > 
+> > As in sched_tick_remote(), right?
+> > 
+> > > 	state = atomic_read(->state);
+> > > 	if (state) {
+> > 
+> > You sure you don't want "if (state != RUNNING)"?  But I guess you need
+> > to understand that RUNNING==0 to understand the atomic_inc_not_zero().
 > 
-> 								Honza
-> -- 
-> Jan Kara <jack@suse.com>
-> SUSE Labs, CR
+> Right..
+> 
+> > 
+> > > 		WARN_ON_ONCE(state != OFFLINING);
+> > > 		if (atomic_inc_not_zero(->state))
+> > 
+> > This assumes that there cannot be concurrent calls to sched_tick_remote(),
+> > otherwise, you can end up with ->state==3.  Which is a situation that
+> > my version does a WARN_ON_ONCE() for, so I guess the only difference is
+> > that mine would be guaranteed to complain and yours would complain with
+> > high probability.  So fair enough!
+> 
+> I was assuming there was only a single work per CPU and there'd not be
+> concurrency on this path.
+> 
+> > > 			return;
+> > > 	}
+> > > 	queue_delayed_work();
+> > > 
+> > > 
+> > > stop:
+> > > 	/*
+> > > 	 * This is hotplug; even without stop-machine, there cannot be
+> > > 	 * concurrency on offlining specific CPUs.
+> > > 	 */
+> > > 	state = atomic_read(->state);
+> > 
+> > There cannot be a sched_tick_stop() or sched_tick_stop(), but there really
+> > can be a sched_tick_remote() right here in the absence of stop-machine,
+> > can't there?  Or am I missing something other than stop-machine that
+> > prevents this?
+> 
+> There can be a remote tick, indeed.
+> 
+> > Now, you could argue that concurrency is safe: Either sched_tick_remote()
+> > sees RUNNING and doesn't touch the value, or it sees offlining and
+> > sched_tick_stop() makes no further changes,
+> 
+> That was indeed the thinking.
+> 
+> > but I am not sure that this qualifies as simpler...
+> 
+> There is that I suppose. I think my initial version was a little more
+> complicated, but after a few passes this happened :-)
+> 
+> > > 	WARN_ON_ONCE(state != RUNNING);
+> > > 	atomic_set(->state, OFFLINING);
+> > 
+> > Another option would be to use atomic_xchg() as below instead of the
+> > atomic_read()/atomic_set() pair.  Would that work for you?
+> 
+> Yes, that works I suppose. Is more expensive, but I don't think we
+> particularly care about that here.
+
+Not on this code path, agreed.
+
+> > > start:
+> > > 	state = atomic_xchg(->state, RUNNING);
+> > > 	WARN_ON_ONCE(state == RUNNING);
+> > > 	if (state == OFFLINE) {
+> > > 		// ...
+> > > 		queue_delayed_work();
+> > > 	}
+> > 
+> > This one looks to be an improvement on mine regardless of the other two.
+
+So how about the following patch, which passes very light rcutorture
+testing but should otherwise be regarded as being under suspicion?
+
+							Thanx, Paul
+
+------------------------------------------------------------------------
+
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 874c427742a9..36631d2eff05 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -3051,8 +3051,36 @@ void scheduler_tick(void)
+ 
+ struct tick_work {
+ 	int			cpu;
++	atomic_t		state;
+ 	struct delayed_work	work;
+ };
++/* Values for ->state, see diagram below. */
++#define TICK_SCHED_REMOTE_RUNNING	0
++#define TICK_SCHED_REMOTE_OFFLINING	1
++#define TICK_SCHED_REMOTE_OFFLINE	2
++
++/*
++ * State diagram for ->state:
++ *
++ *
++ *          TICK_SCHED_REMOTE_OFFLINE
++ *                    |   ^
++ *                    |   |
++ *                    |   | sched_tick_remote()
++ *                    |   |
++ *                    |   |
++ *                    +--TICK_SCHED_REMOTE_OFFLINING
++ *                    |   ^
++ *                    |   |
++ * sched_tick_start() |   | sched_tick_stop()
++ *                    |   |
++ *                    V   |
++ *          TICK_SCHED_REMOTE_RUNNING
++ *
++ *
++ * Other transitions get WARN_ON_ONCE(), except that sched_tick_remote()
++ * and sched_tick_start() are happy to leave the state in RUNNING.
++ */
+ 
+ static struct tick_work __percpu *tick_work_cpu;
+ 
+@@ -3065,6 +3093,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 	struct task_struct *curr;
+ 	struct rq_flags rf;
+ 	u64 delta;
++	int os;
+ 
+ 	/*
+ 	 * Handle the tick only if it appears the remote CPU is running in full
+@@ -3078,7 +3107,7 @@ static void sched_tick_remote(struct work_struct *work)
+ 
+ 	rq_lock_irq(rq, &rf);
+ 	curr = rq->curr;
+-	if (is_idle_task(curr))
++	if (is_idle_task(curr) || cpu_is_offline(cpu))
+ 		goto out_unlock;
+ 
+ 	update_rq_clock(rq);
+@@ -3098,13 +3127,21 @@ static void sched_tick_remote(struct work_struct *work)
+ 	/*
+ 	 * Run the remote tick once per second (1Hz). This arbitrary
+ 	 * frequency is large enough to avoid overload but short enough
+-	 * to keep scheduler internal stats reasonably up to date.
++	 * to keep scheduler internal stats reasonably up to date.  But
++	 * first update state to reflect hotplug activity if required.
+ 	 */
++	os = atomic_read(&twork->state);
++	if (os) {
++		WARN_ON_ONCE(os != TICK_SCHED_REMOTE_OFFLINING);
++		if (atomic_inc_not_zero(&twork->state))
++			return;
++	}
+ 	queue_delayed_work(system_unbound_wq, dwork, HZ);
+ }
+ 
+ static void sched_tick_start(int cpu)
+ {
++	int os;
+ 	struct tick_work *twork;
+ 
+ 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+@@ -3113,15 +3150,20 @@ static void sched_tick_start(int cpu)
+ 	WARN_ON_ONCE(!tick_work_cpu);
+ 
+ 	twork = per_cpu_ptr(tick_work_cpu, cpu);
+-	twork->cpu = cpu;
+-	INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
+-	queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_RUNNING);
++	WARN_ON_ONCE(os == TICK_SCHED_REMOTE_RUNNING);
++	if (os == TICK_SCHED_REMOTE_OFFLINE) {
++		twork->cpu = cpu;
++		INIT_DELAYED_WORK(&twork->work, sched_tick_remote);
++		queue_delayed_work(system_unbound_wq, &twork->work, HZ);
++	}
+ }
+ 
+ #ifdef CONFIG_HOTPLUG_CPU
+ static void sched_tick_stop(int cpu)
+ {
+ 	struct tick_work *twork;
++	int os;
+ 
+ 	if (housekeeping_cpu(cpu, HK_FLAG_TICK))
+ 		return;
+@@ -3129,14 +3171,21 @@ static void sched_tick_stop(int cpu)
+ 	WARN_ON_ONCE(!tick_work_cpu);
+ 
+ 	twork = per_cpu_ptr(tick_work_cpu, cpu);
+-	cancel_delayed_work_sync(&twork->work);
++	/* There cannot be competing actions, but don't rely on stop-machine. */
++	os = atomic_xchg(&twork->state, TICK_SCHED_REMOTE_OFFLINING);
++	WARN_ON_ONCE(os != TICK_SCHED_REMOTE_RUNNING);
++	/* Don't cancel, as this would mess up the state machine. */
+ }
+ #endif /* CONFIG_HOTPLUG_CPU */
+ 
+ int __init sched_tick_offload_init(void)
+ {
++	int cpu;
++
+ 	tick_work_cpu = alloc_percpu(struct tick_work);
+ 	BUG_ON(!tick_work_cpu);
++	for_each_possible_cpu(cpu)
++		atomic_set(&per_cpu(tick_work_cpu, cpu)->state, TICK_SCHED_REMOTE_OFFLINE);
+ 
+ 	return 0;
+ }
+
