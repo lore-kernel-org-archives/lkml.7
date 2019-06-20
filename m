@@ -7,46 +7,55 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92F12C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A289DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65D8F2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E998215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054640;
-	bh=zbbJ+n/QIA+V23v39znOaxtd+3fxvubQF/dCTR4+Cec=;
+	s=default; t=1561054644;
+	bh=CwuNLpEDyUvrUMko3mgZ9Lba9moKYdrcfGPPQ9IkNkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=S0JAjqqVY/8OXhwOir87KxQVMyb9ogfUjAMjTcPcC1ohEGhEWJEuckIdQE1hAm6gd
-	 VAf/U4cttRYpY4DwBRd8VfyA5Oi126Ub3YsicHDW0qkoTtqOaTXupBaWSOjH+EWvIq
-	 uc89pvLCohL+Fd1FIHSfAvOHAvBz7jBiA/dmlbwQ=
+	b=jiyYl7TLWVBL6mk5QFpCtqtbtJQzDX0lkDs7fsra07kYG63UjirlSFqkw1PEAPIvK
+	 UgwPkxtMDYpTivdUTMgQX6H9JKOWWJEsOdBiVXqmzjwrZY6X78PcTGJOF4zAwHyl4A
+	 wHK/f+7o9BvNcsfJX1k09T9Tpt14LSatm/1C4KLQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729920AbfFTSRT (ORCPT
+        id S1729926AbfFTSRX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46540 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:17:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46638 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729904AbfFTSRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:15 -0400
+        id S1729474AbfFTSRV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 45CB92084E;
-        Thu, 20 Jun 2019 18:17:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F306205F4;
+        Thu, 20 Jun 2019 18:17:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054634;
-        bh=zbbJ+n/QIA+V23v39znOaxtd+3fxvubQF/dCTR4+Cec=;
+        s=default; t=1561054639;
+        bh=CwuNLpEDyUvrUMko3mgZ9Lba9moKYdrcfGPPQ9IkNkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uylZSdq7GMkzyool9u33r72RhXZrwpHtn9++tfdLnbudkYh9Bw4IVpvbuVSCZJgGu
-         kA+SLW22Clg3GF5jhH9drEXqtBnKgCsjViMK+9gaOoGtVkjHI+Ch1Q7Z5bUnANjYjZ
-         YtnJDoFd1IrN5XSPXTvVFw74cycUmGDVwo4DYL3g=
+        b=KMNYbXIvQh+hwlXpwZ+BSiJaDJ0H4et4chUVMF0nO7ZRgoFWBrhmupTbrmqRW+K7L
+         g4ftlZaD0iLszBDI38Ai4p3RjXzVN8kaCYtBwHVchrtLE50Ndjlu67gFCV+aOOshmN
+         daPoDO6//kKz/Wb1wLBuPsq7zqQ5AYJuYo0I+pjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.1 96/98] nvme-tcp: fix possible null deref on a timed out io queue connect
-Date:   Thu, 20 Jun 2019 19:58:03 +0200
-Message-Id: <20190620174354.249889996@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Michal Hocko <mhocko@suse.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Oleg Nesterov <oleg@redhat.com>, Jann Horn <jannh@google.com>,
+        Hugh Dickins <hughd@google.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Peter Xu <peterx@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.1 98/98] coredump: fix race condition between collapse_huge_page() and core dumping
+Date:   Thu, 20 Jun 2019 19:58:05 +0200
+Message-Id: <20190620174354.374371652@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -59,32 +68,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-commit f34e25898a608380a60135288019c4cb6013bec8 upstream.
+commit 59ea6d06cfa9247b586a695c21f94afa7183af74 upstream.
 
-If I/O queue connect times out, we might have freed the queue socket
-already, so check for that on the error path in nvme_tcp_start_queue.
+When fixing the race conditions between the coredump and the mmap_sem
+holders outside the context of the process, we focused on
+mmget_not_zero()/get_task_mm() callers in 04f5866e41fb70 ("coredump: fix
+race condition between mmget_not_zero()/get_task_mm() and core
+dumping"), but those aren't the only cases where the mmap_sem can be
+taken outside of the context of the process as Michal Hocko noticed
+while backporting that commit to older -stable kernels.
 
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+If mmgrab() is called in the context of the process, but then the
+mm_count reference is transferred outside the context of the process,
+that can also be a problem if the mmap_sem has to be taken for writing
+through that mm_count reference.
+
+khugepaged registration calls mmgrab() in the context of the process,
+but the mmap_sem for writing is taken later in the context of the
+khugepaged kernel thread.
+
+collapse_huge_page() after taking the mmap_sem for writing doesn't
+modify any vma, so it's not obvious that it could cause a problem to the
+coredump, but it happens to modify the pmd in a way that breaks an
+invariant that pmd_trans_huge_lock() relies upon.  collapse_huge_page()
+needs the mmap_sem for writing just to block concurrent page faults that
+call pmd_trans_huge_lock().
+
+Specifically the invariant that "!pmd_trans_huge()" cannot become a
+"pmd_trans_huge()" doesn't hold while collapse_huge_page() runs.
+
+The coredump will call __get_user_pages() without mmap_sem for reading,
+which eventually can invoke a lockless page fault which will need a
+functional pmd_trans_huge_lock().
+
+So collapse_huge_page() needs to use mmget_still_valid() to check it's
+not running concurrently with the coredump...  as long as the coredump
+can invoke page faults without holding the mmap_sem for reading.
+
+This has "Fixes: khugepaged" to facilitate backporting, but in my view
+it's more a bug in the coredump code that will eventually have to be
+rewritten to stop invoking page faults without the mmap_sem for reading.
+So the long term plan is still to drop all mmget_still_valid().
+
+Link: http://lkml.kernel.org/r/20190607161558.32104-1-aarcange@redhat.com
+Fixes: ba76149f47d8 ("thp: khugepaged")
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Reported-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Jann Horn <jannh@google.com>
+Cc: Hugh Dickins <hughd@google.com>
+Cc: Mike Rapoport <rppt@linux.vnet.ibm.com>
+Cc: Mike Kravetz <mike.kravetz@oracle.com>
+Cc: Peter Xu <peterx@redhat.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nvme/host/tcp.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/linux/sched/mm.h |    4 ++++
+ mm/khugepaged.c          |    3 +++
+ 2 files changed, 7 insertions(+)
 
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -1423,7 +1423,8 @@ static int nvme_tcp_start_queue(struct n
- 	if (!ret) {
- 		set_bit(NVME_TCP_Q_LIVE, &ctrl->queues[idx].flags);
- 	} else {
--		__nvme_tcp_stop_queue(&ctrl->queues[idx]);
-+		if (test_bit(NVME_TCP_Q_ALLOCATED, &ctrl->queues[idx].flags))
-+			__nvme_tcp_stop_queue(&ctrl->queues[idx]);
- 		dev_err(nctrl->device,
- 			"failed to connect queue: %d ret=%d\n", idx, ret);
- 	}
+--- a/include/linux/sched/mm.h
++++ b/include/linux/sched/mm.h
+@@ -54,6 +54,10 @@ static inline void mmdrop(struct mm_stru
+  * followed by taking the mmap_sem for writing before modifying the
+  * vmas or anything the coredump pretends not to change from under it.
+  *
++ * It also has to be called when mmgrab() is used in the context of
++ * the process, but then the mm_count refcount is transferred outside
++ * the context of the process to run down_write() on that pinned mm.
++ *
+  * NOTE: find_extend_vma() called from GUP context is the only place
+  * that can modify the "mm" (notably the vm_start/end) under mmap_sem
+  * for reading and outside the context of the process, so it is also
+--- a/mm/khugepaged.c
++++ b/mm/khugepaged.c
+@@ -1004,6 +1004,9 @@ static void collapse_huge_page(struct mm
+ 	 * handled by the anon_vma lock + PG_lock.
+ 	 */
+ 	down_write(&mm->mmap_sem);
++	result = SCAN_ANY_PROCESS;
++	if (!mmget_still_valid(mm))
++		goto out;
+ 	result = hugepage_vma_revalidate(mm, address, &vma);
+ 	if (result)
+ 		goto out;
 
 
