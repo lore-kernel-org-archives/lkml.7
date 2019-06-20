@@ -2,103 +2,72 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89160C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FC21C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:52:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64C9620673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:52:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 032F720673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:52:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731944AbfFTOw1 (ORCPT
+        id S1731984AbfFTOw3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 20 Jun 2019 10:52:29 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55614 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726491AbfFTOw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 10:52:27 -0400
-Received: from mga02.intel.com ([134.134.136.20]:38054 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726582AbfFTOw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:52:26 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 07:52:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="243650599"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by orsmga001.jf.intel.com with ESMTP; 20 Jun 2019 07:52:23 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hdyQH-0001LG-V7; Thu, 20 Jun 2019 17:52:21 +0300
-Date:   Thu, 20 Jun 2019 17:52:21 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
-        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v5 2/7] i2c: acpi: Use available IRQ helper functions
-Message-ID: <20190620145221.GC9224@smile.fi.intel.com>
-References: <20190620133420.4632-1-ckeepax@opensource.cirrus.com>
- <20190620133420.4632-3-ckeepax@opensource.cirrus.com>
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9C5C7C574976AC3D21A3;
+        Thu, 20 Jun 2019 22:52:19 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 20 Jun 2019 22:52:12 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <Matt.Sickler@daktronics.com>, <bnvandana@gmail.com>,
+        <valerio.click@gmail.com>, <manwatkar@outlook.com>,
+        <simon@nikanor.nu>
+CC:     YueHaibing <yuehaibing@huawei.com>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-janitors@vger.kernel.org>
+Subject: [PATCH -next] Staging: kpc2000: kpc_dma: Fix platform_no_drv_owner.cocci warnings
+Date:   Thu, 20 Jun 2019 14:59:26 +0000
+Message-ID: <20190620145926.122597-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620133420.4632-3-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 02:34:15PM +0100, Charles Keepax wrote:
-> Use the available IRQ helper functions, most of the functions have
-> additional helpful side affects like configuring the trigger type of the
-> IRQ.
-> 
-> Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Remove .owner field if calls are used which set it automatically
+Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
 
-Some last minute observations / questions.
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-> +	struct resource r;
-> +
-> +	if (*irq <= 0 && acpi_dev_resource_interrupt(ares, 0, &r))
-> +		*irq = i2c_dev_irq_from_resources(&r, 1);
-> +
-> +	return 1; /* No need to add resource to the list */
+diff --git a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
+index 08af269adabe..a05ae6d40db9 100644
+--- a/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
++++ b/drivers/staging/kpc2000/kpc_dma/kpc_dma_driver.c
+@@ -197,7 +197,6 @@ static struct platform_driver kpc_dma_plat_driver_i = {
+ 	.remove       = kpc_dma_remove,
+ 	.driver = {
+ 		.name   = KP_DRIVER_NAME_DMA_CONTROLLER,
+-		.owner  = THIS_MODULE,
+ 	},
+ };
+ 
 
-If we don't add it to the list, do we still need to manage the empty
-resource_list below?
 
->  	/* Then fill IRQ number if any */
->  	INIT_LIST_HEAD(&resource_list);
-> -	ret = acpi_dev_get_resources(adev, &resource_list, NULL, NULL);
-> +	ret = acpi_dev_get_resources(adev, &resource_list,
-> +				     i2c_acpi_add_resource, &irq);
->  	if (ret < 0)
->  		return -EINVAL;
->  
-> -	resource_list_for_each_entry(entry, &resource_list) {
-> -		if (resource_type(entry->res) == IORESOURCE_IRQ) {
-> -			info->irq = entry->res->start;
-> -			break;
-> -		}
-> -	}
 
-> +	if (irq > 0)
-> +		info->irq = irq;
-
-Hmm... can't we just assign it directly inside the _add_resource() call back as
-original code did?
-
--- 
-With Best Regards,
-Andy Shevchenko
 
 
