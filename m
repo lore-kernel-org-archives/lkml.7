@@ -2,101 +2,143 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A34C4646C
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4E6C43613
 	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C025214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F407620B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HrJpaYTf"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SblfIPUm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731291AbfFTDGV (ORCPT
+        id S1731028AbfFTDF2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 23:06:21 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35512 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726419AbfFTDGV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 23:06:21 -0400
-Received: by mail-pl1-f195.google.com with SMTP id p1so766806plo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 20:06:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3k+ZqG6fxcx9wjJdYzN51AwwDrKWOBygZ2ckfqKNWZk=;
-        b=HrJpaYTfh5iJbgSLgstdGwcJAa1gk2U+dDIGKCefttcxJR2S9+gmgMD9cBuHOZBrbn
-         jQAwb4Wot4lmy9hxiJmrtHn1hThMmUIg3+CT9yKxqC55sISKDNdvoJpdH2Nk/+hjuei0
-         mO3S8ukJFHAYeHrMHHfeaIe0X5o+j09Hl6Lwy7p4WoAVhMnBYQIEnGTJ/Q8Osw6QYOht
-         w6wIaJ+Aj/UTaDVtoxQ1m4bSQzIoihV/m31J6jWfdIt/ht7l5HPbJQXbZoAP/O6R6U1y
-         uJuNgGwKZ+VRFqdRy3RUra1ywpgiK96uKYtZJoVTdp0iGj2zmx02t7H+aUmLKymZ6VUt
-         eVZA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=3k+ZqG6fxcx9wjJdYzN51AwwDrKWOBygZ2ckfqKNWZk=;
-        b=hFOevfaJUXwKU0eywNg4r75mIenFZ7U/26CA2PMWoVjHZg6Mn/owiI1TCtBRWRTnMO
-         HAB3GXpD4xT74AWk+tLKdww7CaF+ZSog3TFEALdDKkr9zlnvGcYCMrD2teu7R4wAn4rf
-         P9bysLyoaIECoYIyjdRw1lz8OvPo8OOElreKmWiuxGaYw4Qi7SjtYceziMCJVhrPC0YO
-         jvBWIbnOXEd/dMR9aElp10ap2A2jQPB7V+gfMjh472rpZ8WVFBCLv9hZ4oZbL9ZPWeDw
-         KPvf1j5x5ZGIsK0ZK2NY3/ZsOe2yLoUpNb6nipDXL2L23WapvUkxzaqLo/BU9WVr6jVN
-         eCsw==
-X-Gm-Message-State: APjAAAUJv9ZemvEXbHI9eQ5wrFio8rclglWSur+LRDo8Ppp0y+505wCt
-        lK2kaStoFMaATVRnuwFV+MhjHg==
-X-Google-Smtp-Source: APXvYqxA1ihvMaKN2NzXGUveqK4utf/bDtTmrRm5hK+cBzH/KHvsbQsG//5VuL8TwVOv8uDmfmCP9A==
-X-Received: by 2002:a17:902:1003:: with SMTP id b3mr124316996pla.172.1560999980612;
-        Wed, 19 Jun 2019 20:06:20 -0700 (PDT)
-Received: from localhost ([122.172.66.84])
-        by smtp.gmail.com with ESMTPSA id e184sm25563402pfa.169.2019.06.19.20.06.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 20:06:18 -0700 (PDT)
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Rafael Wysocki <rjw@rjwysocki.net>
-Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH V2 0/5] cpufreq: cleanups
-Date:   Thu, 20 Jun 2019 08:35:45 +0530
-Message-Id: <cover.1560999838.git.viresh.kumar@linaro.org>
-X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+        Wed, 19 Jun 2019 23:05:28 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:43439 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726370AbfFTDF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 23:05:28 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TmsJ0ZLQz9s4Y;
+        Thu, 20 Jun 2019 13:05:24 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1560999924;
+        bh=QaFCNX3OUowNfBv/P8OXlaNhXbceCmWNBURqyz3+3vk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=SblfIPUmgcDiTRpZ6z6MK4oxViUQ6bAsWSKakSVmbZbNdP8mn5dJb/ntKwr3kKx8S
+         Y4nIxOoh6aML54HxAGaLwLXwDsKYbfi+9A3/iLW5OsswJJsW/6J5MVS6NaXL/eVorz
+         2NbC2sOy2Y4Y12rr4zQaPiVXXbZn3a1GGgbyOiPP4i4ATbnXn3998+ULTiJpg6SbBb
+         OiVnbOo3nfztkND4YeNWxnUMcy3qlNeZ5nXF+7F91JCJn3n8kWbFaoksgyyxWktTki
+         UbL/iz7Lc5y4fR/Qhpl3gNGSjQSXVRz0h2+/pQ8JPKUAqVKcPiNE37WqyQKI8+jg/V
+         CXdur/htfM+8g==
+Date:   Thu, 20 Jun 2019 13:05:23 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Leon Romanovsky <leon@kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
+        Maor Gottlieb <maorg@mellanox.com>
+Subject: Re: linux-next: manual merge of the mlx5-next tree with Linus' tree
+Message-ID: <20190620130523.176d4ca5@canb.auug.org.au>
+In-Reply-To: <20190617121959.55976690@canb.auug.org.au>
+References: <20190617121959.55976690@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/euKSa5GIot+P+XpVrVMRuyU"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+--Sig_/euKSa5GIot+P+XpVrVMRuyU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I accumulated these while reworking the freq-constraint series and it
-would be nice if these can get in before I send the next version of
-freq-constraint stuff.
+Hi all,
 
-These are mostly cleanups and code consolidation for better management
-of code. Compile and boot tested only.
+On Mon, 17 Jun 2019 12:19:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
+wrote:
+>
+> Hi Leon,
+>=20
+> Today's linux-next merge of the mlx5-next tree got a conflict in:
+>=20
+>   include/linux/mlx5/eswitch.h
+>=20
+> between commit:
+>=20
+>   02f3afd97556 ("net/mlx5: E-Switch, Correct type to u16 for vport_num an=
+d int for vport_index")
+>=20
+> from Linus' tree and commit:
+>=20
+>   82b11f071936 ("net/mlx5: Expose eswitch encap mode")
+>=20
+> from the mlx5-next tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any particularly
+> complex conflicts.
+>=20
+> --=20
+> Cheers,
+> Stephen Rothwell
+>=20
+> diff --cc include/linux/mlx5/eswitch.h
+> index e9a55c0d50fd,174eec0871d9..000000000000
+> --- a/include/linux/mlx5/eswitch.h
+> +++ b/include/linux/mlx5/eswitch.h
+> @@@ -61,5 -62,16 +62,16 @@@ void *mlx5_eswitch_uplink_get_proto_dev
+>   u8 mlx5_eswitch_mode(struct mlx5_eswitch *esw);
+>   struct mlx5_flow_handle *
+>   mlx5_eswitch_add_send_to_vport_rule(struct mlx5_eswitch *esw,
+>  -				    int vport, u32 sqn);
+>  +				    u16 vport_num, u32 sqn);
+> +=20
+> + #ifdef CONFIG_MLX5_ESWITCH
+> + enum devlink_eswitch_encap_mode
+> + mlx5_eswitch_get_encap_mode(const struct mlx5_core_dev *dev);
+> + #else  /* CONFIG_MLX5_ESWITCH */
+> + static inline enum devlink_eswitch_encap_mode
+> + mlx5_eswitch_get_encap_mode(const struct mlx5_core_dev *dev)
+> + {
+> + 	return DEVLINK_ESWITCH_ENCAP_MODE_NONE;
+> + }
+> + #endif /* CONFIG_MLX5_ESWITCH */
+>   #endif
 
-Thanks.
+This is now a conflict between Linus' tree and the rdma tree.
 
-V1->V2:
-- Merged patch 2/6 and 3/6 (now called 2/5).
-- Updated commit log of 3/5 as it wasn't clear enough earlier.
+--=20
+Cheers,
+Stephen Rothwell
 
-Viresh Kumar (5):
-  cpufreq: Remove the redundant !setpolicy check
-  cpufreq: Replace few CPUFREQ_CONST_LOOPS checks with has_target()
-  cpufreq: Use has_target() instead of !setpolicy
-  cpufreq: Reuse cpufreq_update_current_freq() in __cpufreq_get()
-  cpufreq: Avoid calling cpufreq_verify_current_freq() from
-    handle_update()
+--Sig_/euKSa5GIot+P+XpVrVMRuyU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
- drivers/cpufreq/cpufreq.c | 115 +++++++++++++++++---------------------
- 1 file changed, 52 insertions(+), 63 deletions(-)
+-----BEGIN PGP SIGNATURE-----
 
--- 
-2.21.0.rc0.269.g1a574e7a288b
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0K9/MACgkQAVBC80lX
+0GzcpwgAkRzLJxsJ9PEtIuB/1ndwzOu8ff49Df/KyvUOkvAXs0zTtEEpVDgUoYyd
+raRa3uBPZzHOY5WxiJ6wQ7FLSf048agh4x2wT30WXp1NuHqdowW03J/+7onhc2YK
+RDkXXXZqWLIcyKieIegVjaEXdTrJayYs62pJZlUh8bRrLHyMR1HDACjArOhdPrlT
+zmU2HX1325OKVeXDkK/LS1aXdhTF3qxf/4At4LICkDBtuHfZvu8BCazmEwUP/w5b
+rDtzYkmplSWkcNrj1O27NSRjtvl/7Gly96hrpS1nnjdMs3Ic1LAxGmR0bfPWkQpQ
+HPZwCSfYHcPD+HBl5dYWwkrnlXb+zQ==
+=gqPH
+-----END PGP SIGNATURE-----
 
+--Sig_/euKSa5GIot+P+XpVrVMRuyU--
