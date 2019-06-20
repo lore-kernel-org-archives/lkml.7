@@ -2,110 +2,162 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D27EEC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:53:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D79C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3EE12084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:53:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 791D720673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="if6+rXao"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZAl+pOXY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AR65EvCs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732063AbfFTOxB (ORCPT
+        id S1731648AbfFTOy3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:53:01 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:36039 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732048AbfFTOw6 (ORCPT
+        Thu, 20 Jun 2019 10:54:29 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54642 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726686AbfFTOy3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:52:58 -0400
-Received: by mail-qk1-f194.google.com with SMTP id g18so2109997qkl.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:52:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=5oMdsQsw1n7pkd5dZK0BAR68goU9Cphs7Z7vjhmXNXA=;
-        b=if6+rXaoBnz+H02oYwem3HWXB48VPwWoSvmotiKQcqueZkz88R/UOJrQJGPnqSxWh0
-         X3WWxz+KMriBFBvZG0/EZYb9KDDdGilbulSCa5O193BQx6OEd9S4APxsT3UV78tLkx6n
-         9WXhfxiDzSEcl6WRrOWKy533PY7TkmIDzQcBW47lcU6tBxY6A/Leti2v2Qxk0TsMDGA6
-         1hqoNBZw/ZyMe154WWMQCmMz6g4Lj58hgSdmjM6+cwvRNW3fbMoFd6qdZ0iPJMu4of9V
-         y7ZbI0HRLfHcm8QOkYoc0KpKXqUbujLWeiBtQ02Z71c6zN+vOkispdwvmTBl0TJGOVHZ
-         H8Bw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=5oMdsQsw1n7pkd5dZK0BAR68goU9Cphs7Z7vjhmXNXA=;
-        b=P/ZB6n8mDiQtB975yV/Df6ShnsrctaWKGV/x2iKM8XCExti6STF2IH4sBOcJY7VrUJ
-         f9OezE4NSEwtMnVKHA+h8mRSW5fr/ygit+dU4kGNkBYaeEu+ifDkNF1saCXwEdbVQ8Ap
-         dNc+ax2bcTaPOVHL1WY/GEqM6VrO8Q0PoXXjaZUiTXTvGwYCg9N+R3QN4WbQqZK8On34
-         qPyKyrD2niAvVYAAQPUXJLFwrRAyYvIB6a3yq6CPsNmI5OzIwUTrKbsDIodr1DxmWOcy
-         Z0yS50ypdU9Z0xhK5C2fBTTOFSxI7Zc6Ra9VXHW5D6L150R6etg4/GFHvMV0j3syjTNj
-         ROmA==
-X-Gm-Message-State: APjAAAWogSsz/7QaA6MIkbz8cy3meQD9mdLiNN01F1h2nGtAIwCjrWmx
-        AJgFYyOL13nDcDw3+jcXT0fn3g==
-X-Google-Smtp-Source: APXvYqyLJk0+3HOrUCnuJqkk0jfG4hnZ4d747OQBhmE1HQEm9E2OZkcZvXeiDoYq6X0FOJ8JYq4oTw==
-X-Received: by 2002:ae9:eb96:: with SMTP id b144mr25466663qkg.321.1561042377583;
-        Thu, 20 Jun 2019 07:52:57 -0700 (PDT)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id f9sm10553867qtl.75.2019.06.20.07.52.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 07:52:57 -0700 (PDT)
-From:   Qian Cai <cai@lca.pw>
-To:     davem@davemloft.net
-Cc:     edumazet@google.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] inet: fix compilation warnings in fqdir_pre_exit()
-Date:   Thu, 20 Jun 2019 10:52:40 -0400
-Message-Id: <1561042360-20480-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Thu, 20 Jun 2019 10:54:29 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 65BBF609CD; Thu, 20 Jun 2019 14:54:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561042468;
+        bh=pMqbryRRbIU4AIh4v96MaC9JtLkGuFViwuA1Q/TdhH8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ZAl+pOXYBGO7whhGuWHJc4btecmjFZ/53wZvCO5XkGpRYwPCSFzuqq6VHJsbV3HGx
+         az/aX0jZPsp/ZqgoFQK9p3M8GbsOrdDm1SxaHPrqpQAMq17AVi3LC1dB0a4LRAqPNu
+         EKJntTC+hf8yK7OqihIDPW6iIzdp0Z3CPXOVoXLc=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94B6A608BA;
+        Thu, 20 Jun 2019 14:54:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561042467;
+        bh=pMqbryRRbIU4AIh4v96MaC9JtLkGuFViwuA1Q/TdhH8=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=AR65EvCstzMeE5tDxoWxP15ede45s1/eKvpOiavIWK/aCqSi5jeazJ8BS3UAHLxUd
+         PPIwOW0Y+rAPUB7FM8z3/hA5yXnXIqyxuAnBFStp+YBoypeD/rRsnbiJTx9pxlQZ0R
+         +YvfJAEgKc1Lthg0wn0GRgqy2j6Y6ZNCpbuzzpNY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94B6A608BA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH 1/2] coresight: Set affinity to invalid for missing CPU
+ phandle
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mathieu.poirier@linaro.org, leo.yan@linaro.org,
+        alexander.shishkin@linux.intel.com, andy.gross@linaro.org,
+        david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <49d6554536047b9f5526c4ea33990b7c904673d3.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <f7a3592b-7ed7-b011-9ae1-dc2ca0e49ae4@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <fc72dab8-d287-38d4-1abd-faca02c09118@codeaurora.org>
+Date:   Thu, 20 Jun 2019 20:24:21 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <f7a3592b-7ed7-b011-9ae1-dc2ca0e49ae4@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The linux-next commit "inet: fix various use-after-free in defrags
-units" [1] introduced compilation warnings,
+Hi Suzuki,
 
-./include/net/inet_frag.h:117:1: warning: 'inline' is not at beginning
-of declaration [-Wold-style-declaration]
- static void inline fqdir_pre_exit(struct fqdir *fqdir)
- ^~~~~~
-In file included from ./include/net/netns/ipv4.h:10,
-                 from ./include/net/net_namespace.h:20,
-                 from ./include/linux/netdevice.h:38,
-                 from ./include/linux/icmpv6.h:13,
-                 from ./include/linux/ipv6.h:86,
-                 from ./include/net/ipv6.h:12,
-                 from ./include/rdma/ib_verbs.h:51,
-                 from ./include/linux/mlx5/device.h:37,
-                 from ./include/linux/mlx5/driver.h:51,
-                 from
-drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c:37:
+Thanks for the review.
 
-[1] https://lore.kernel.org/netdev/20190618180900.88939-3-edumazet@google.com/
+On 6/20/2019 7:25 PM, Suzuki K Poulose wrote:
+> 
+> Sai,
+> 
+> Thanks for the patch. Please could you change the subject to :
+> 
+> "coresight: Do not default to CPU0 for missing CPU phandle"
+> 
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- include/net/inet_frag.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Sure.
 
-diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
-index 46574d996f1d..010f26b31c89 100644
---- a/include/net/inet_frag.h
-+++ b/include/net/inet_frag.h
-@@ -114,7 +114,7 @@ struct inet_frags {
- 
- int fqdir_init(struct fqdir **fqdirp, struct inet_frags *f, struct net *net);
- 
--static void inline fqdir_pre_exit(struct fqdir *fqdir)
-+static inline void fqdir_pre_exit(struct fqdir *fqdir)
- {
- 	fqdir->high_thresh = 0; /* prevent creation of new frags */
- 	fqdir->dead = true;
+> On 20/06/2019 14:45, Sai Prakash Ranjan wrote:
+>> Affinity defaults to CPU0 in case of missing CPU phandle
+>> and this leads to crashes in some cases because of such
+>> wrong assumption. Fix this by returning -ENODEV in
+> 
+> Thats not the right justification. Causing crashes is due to
+> bad DT/firmware. I would be happy with something like :
+> 
+> "Coresight platform support assumes that a missing \"cpu\" phandle
+> defaults to CPU0. This could be problematic and unnecessarily binds
+> components to CPU0, where they may not be. Let us make the DT binding
+> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
+> affinity information."
+> 
+> Also, you must
+> 
+> 1) update the devicetree/bindings document to reflect the same.
+> 2) update the drivers to take appropriate action on the missing CPU
+>     where they are expected (e.g, CPU-debug, etm*), to prevent
+>     breaking a bisect.
+> 
+> 
+
+Sure will do it and repost.
+
+>> coresight platform for such cases and then handle it
+>> in the coresight drivers.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-platform.c | 10 ++++++----
+>>   1 file changed, 6 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-platform.c 
+>> b/drivers/hwtracing/coresight/coresight-platform.c
+>> index 3c5ceda8db24..b1ea60c210e1 100644
+>> --- a/drivers/hwtracing/coresight/coresight-platform.c
+>> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+>> @@ -160,15 +160,17 @@ static int of_coresight_get_cpu(struct device *dev)
+>>       if (!dev->of_node)
+>>           return 0;
+>> +
+>>       dn = of_parse_phandle(dev->of_node, "cpu", 0);
+>> -    /* Affinity defaults to CPU0 */
+>> +
+>> +    /* Affinity defaults to invalid if no cpu nodes are found*/
+> 
+> The code is self explanatory here. You could drop the comment.
+> 
+
+Sure.
+
+>>       if (!dn)
+>> -        return 0;
+>> +        return -ENODEV;
+>> +
+>>       cpu = of_cpu_node_to_id(dn);
+>>       of_node_put(dn);
+>> -    /* Affinity to CPU0 if no cpu nodes are found */
+>> -    return (cpu < 0) ? 0 : cpu;
+>> +    return cpu;
+>>   }
+> 
+> Suzuki
+
+-Sai
+
 -- 
-1.8.3.1
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
