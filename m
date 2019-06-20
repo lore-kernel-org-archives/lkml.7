@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B2A0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3541C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D06B21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8469721537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053804;
-	bh=S5vSnau8veV4jnNwBCLbUvZEBtP89lQiDn0A+dqi00E=;
+	s=default; t=1561053806;
+	bh=WBnnoiV2xbfIcvYiH9S//5uTnemkNf6L1oc41kGnPM4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q5Rgp5fYWhtj6AFg3KupNy9SLkKJUC5g75z6sWnMlcyhn9IiIsKkZndP38PC4qI2H
-	 U2AVWCx4PZVTSBToGAmNr3S/00eTwGOnRchpJCYcDIDPwSjtgZXkYYJgvj4l29XQmn
-	 Hdl5KR4Xq1KY0lTbBINRrvxhGtloeNIyPgZfv9gY=
+	b=sXI6guBR1UBY9T7x62TYAQ8yrG32BZ1kaHFLO6IsJSlJA5iiuaRnAXJCaH/Jn6Jgf
+	 vFvnx8sBT3EWa6QsPu5nDvh6hIvpN0tvZC+DWS2yTB1eNaOrAHap/zllitwYOMYVwr
+	 qy/yr8+Z/Hq3DstqufAJl+vV7cAkwzeF6EZ38g00=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727620AbfFTSDX (ORCPT
+        id S1727581AbfFTSDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:03:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54412 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:03:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfFTSDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:19 -0400
+        id S1727176AbfFTSDQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BEDF521479;
-        Thu, 20 Jun 2019 18:03:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1250721479;
+        Thu, 20 Jun 2019 18:03:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053798;
-        bh=S5vSnau8veV4jnNwBCLbUvZEBtP89lQiDn0A+dqi00E=;
+        s=default; t=1561053795;
+        bh=WBnnoiV2xbfIcvYiH9S//5uTnemkNf6L1oc41kGnPM4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mU2zoeRIpZNg1sovYVawqXoag3Ri+s48wWGQeR93ajiRJ2mhMm6wfxbO2Sgg3yWM2
-         QQ1ROvToD3y/CGej2Q02IfNraewV+yjCVS5lut99yuFr3z3SVP6Hno9g4xYHXwjrIF
-         INFzNhBgyMpCYIv/ySudjI71iT07Ow/dMNXLivTk=
+        b=0kkcB8IknGFakML9jIvTdHgS/J5e1EpsZ6BQ8O1pEd/OhTC60Y17TM7M8QvUeiEOq
+         ZigU6bCCNlEGGA23tP3sM/6NKMAyEk0xhIAs1ysNi8HULi08Lm0P9UxtdmpNOQ0VXX
+         wEiNBrHmQ79HrytFJU9Njx+od7TTCCdlVnAgbt5g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
+        stable@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>,
+        Eduardo Valentin <edubezval@gmail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 030/117] nvmem: core: fix read buffer in place
-Date:   Thu, 20 Jun 2019 19:56:04 +0200
-Message-Id: <20190620174353.789250695@linuxfoundation.org>
+Subject: [PATCH 4.9 012/117] drivers: thermal: tsens: Dont print error message on -EPROBE_DEFER
+Date:   Thu, 20 Jun 2019 19:55:46 +0200
+Message-Id: <20190620174352.722099714@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,61 +60,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2fe518fecb3a4727393be286db9804cd82ee2d91 ]
+[ Upstream commit fc7d18cf6a923cde7f5e7ba2c1105bb106d3e29a ]
 
-When the bit_offset in the cell is zero, the pointer to the msb will
-not be properly initialized (ie, will still be pointing to the first
-byte in the buffer).
+We print a calibration failure message on -EPROBE_DEFER from
+nvmem/qfprom as follows:
+[    3.003090] qcom-tsens 4a9000.thermal-sensor: version: 1.4
+[    3.005376] qcom-tsens 4a9000.thermal-sensor: tsens calibration failed
+[    3.113248] qcom-tsens 4a9000.thermal-sensor: version: 1.4
 
-This being the case, if there are bits to clear in the msb, those will
-be left untouched while the mask will incorrectly clear bit positions
-on the first byte.
+This confuses people when, in fact, calibration succeeds later when
+nvmem/qfprom device is available. Don't print this message on a
+-EPROBE_DEFER.
 
-This commit also makes sure that any byte unused in the cell is
-cleared.
-
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+Signed-off-by: Eduardo Valentin <edubezval@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvmem/core.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ drivers/thermal/qcom/tsens.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-index 824e282cd80e..bb2f79933b17 100644
---- a/drivers/nvmem/core.c
-+++ b/drivers/nvmem/core.c
-@@ -934,7 +934,7 @@ static inline void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell,
- 						    void *buf)
- {
- 	u8 *p, *b;
--	int i, bit_offset = cell->bit_offset;
-+	int i, extra, bit_offset = cell->bit_offset;
- 
- 	p = b = buf;
- 	if (bit_offset) {
-@@ -949,11 +949,16 @@ static inline void nvmem_shift_read_buffer_in_place(struct nvmem_cell *cell,
- 			p = b;
- 			*b++ >>= bit_offset;
+diff --git a/drivers/thermal/qcom/tsens.c b/drivers/thermal/qcom/tsens.c
+index 3f9fe6aa51cc..ebbe1ec7b9e8 100644
+--- a/drivers/thermal/qcom/tsens.c
++++ b/drivers/thermal/qcom/tsens.c
+@@ -162,7 +162,8 @@ static int tsens_probe(struct platform_device *pdev)
+ 	if (tmdev->ops->calibrate) {
+ 		ret = tmdev->ops->calibrate(tmdev);
+ 		if (ret < 0) {
+-			dev_err(dev, "tsens calibration failed\n");
++			if (ret != -EPROBE_DEFER)
++				dev_err(dev, "tsens calibration failed\n");
+ 			return ret;
  		}
--
--		/* result fits in less bytes */
--		if (cell->bytes != DIV_ROUND_UP(cell->nbits, BITS_PER_BYTE))
--			*p-- = 0;
-+	} else {
-+		/* point to the msb */
-+		p += cell->bytes - 1;
  	}
-+
-+	/* result fits in less bytes */
-+	extra = cell->bytes - DIV_ROUND_UP(cell->nbits, BITS_PER_BYTE);
-+	while (--extra >= 0)
-+		*p-- = 0;
-+
- 	/* clear msb bits if any leftover in the last byte */
- 	*p &= GENMASK((cell->nbits%BITS_PER_BYTE) - 1, 0);
- }
 -- 
 2.20.1
 
