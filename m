@@ -2,118 +2,97 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E482BC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:19:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C37C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:21:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE1212084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:19:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19AEA2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:21:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="TyqKBNvB"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="QgR2ID4V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfFTQT4 (ORCPT
+        id S1732169AbfFTQVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:19:56 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:35200 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfFTQT4 (ORCPT
+        Thu, 20 Jun 2019 12:21:02 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:26484 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfFTQVC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:19:56 -0400
-Received: by mail-oi1-f196.google.com with SMTP id a127so2599416oii.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:19:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yuGyF1gaAxnc5NCYYEX6kiZekDv13zqB0UQA2n5aQis=;
-        b=TyqKBNvBRHg2N7hM9S8c6U4FOJz5mxm6Kd+KBEMqs2GVrceDbu2B5Yv+Tpqg9S34ys
-         MaHgCO6/ySGOZphnnrTbgImRuL2QMVoCGG2VWkmL5W3Uon95vGsNjpaeOGPEgMJOT3L9
-         5WEJx442dDZs/YbNnY0UQilkmAx8XpdOKM4CFfFFAge3HyxFPgiIP95x0HYvSNAaMKy6
-         1mXvvW5okLy4jiD7hQSkY3gSwkQy7MxiqZoOpVEppM+LOHSdZJYPl7dVTiAul4GD3HrH
-         y9JAaW9RA4lNlRmSX3HsfKvWxmHRadsFz/qNFrGo4+gaTh+E4u2Ot15NvBhXkJk5Bz/Z
-         edQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yuGyF1gaAxnc5NCYYEX6kiZekDv13zqB0UQA2n5aQis=;
-        b=PY//0PTB7dcltu+zgXrH3xBI815O+UmEH8Ywyho9kYQ0NAS7Fd2AyJ/4Mc+q5u80f+
-         F6jjlmK9UISt2JsLOKQ109XDV/k/1BbEPCqn3pPAcvt0sb5XWIjQKZgvHKpoop0J8SCn
-         PAtNQdDyCL5z8J2Y2FtRjg+11wq6TImROrWScUPntE7zCtLNWHuXZV4qpdC5LPZOQser
-         WG0AEJyURtwOwCvBbHPV9/cJE9VdUNUILYKPsE0+2rPB9kIa7giDeJTuUPufSiAxnG7D
-         4i4ktPQ4xpvHgsxyk1DcLrVuE1Q5qhyS+lgSi9tdaMsFdJ4ewPjfzwR4XxjEE+Rhv7Vf
-         TamA==
-X-Gm-Message-State: APjAAAXgn91NWjDXzQxM/g58H+YLcrMUYH0Rn/rpKZALtRJqKGwIoFiq
-        ffPQ8zJIwJ7xDegNI4EpAhhwxaRYiEHxTV4Ddfd5PA==
-X-Google-Smtp-Source: APXvYqycTrfFCdUGQlxbLBM8sq/vvF4AR0qE564N7NnNzy2gB1lQelj0Er/vC+yiQUqqVAU2Tj/69BOUevu0+1dRykA=
-X-Received: by 2002:aca:d60c:: with SMTP id n12mr4630027oig.105.1561047595403;
- Thu, 20 Jun 2019 09:19:55 -0700 (PDT)
+        Thu, 20 Jun 2019 12:21:02 -0400
+X-Greylist: delayed 130677 seconds by postgrey-1.27 at vger.kernel.org; Thu, 20 Jun 2019 12:21:00 EDT
+Received: from mail-vs1-f47.google.com (mail-vs1-f47.google.com [209.85.217.47]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x5KGKwJA010137;
+        Fri, 21 Jun 2019 01:20:58 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x5KGKwJA010137
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1561047659;
+        bh=vH/H/amVrIF6dYZOdR3bYRn8UJN8aLBCmB8vORY1UnU=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=QgR2ID4VWc+MB7aRJ0NTLb11Mu1qwsQSTYkOSQzUnbgBvUUwHX/WjxuRzWNWUPKYp
+         qqZL8Y5ydmrWBl1APS3s8tfTk3LC8KIWU82jRB/dzOPIpBVsyCWF6K8WdEeGJOgxWF
+         2nEcbxKy0dfnPfzwSKB+3K1ThTBYvpZoYXQh89zsX93sM/8DhqrU47FZIurvDNDK5h
+         2P1cYpk1tmZKwHTL5bUYPHTq6nYVDGKV2R3Hc8kbjfdhj39h7FmV8dNzXw5WXMHTVL
+         kEXZ79zHMT4RjygyxCvjQ7gj7n0ySPE3N23LvJmZAY4jlADlA0fZOvDPdwZloUstx5
+         0exXA0VV/yPzg==
+X-Nifty-SrcIP: [209.85.217.47]
+Received: by mail-vs1-f47.google.com with SMTP id u124so1903026vsu.2;
+        Thu, 20 Jun 2019 09:20:58 -0700 (PDT)
+X-Gm-Message-State: APjAAAV0FBUfr39ygBOa8VutEJc3JCOe5jSGtpFqExAA1gmzVNqeXT8+
+        U7Xi9l0LfP4Pcqx7cD9kx9ilq3lyQJlvRlMqXNo=
+X-Google-Smtp-Source: APXvYqxHO4/4z7w3TznBnMVgkBmgxFvlR0vphCbWHsju4uthPADyWcsnbIecx2JYf1blOnODMg+ueVEz8sQk+7tEpDM=
+X-Received: by 2002:a67:ed04:: with SMTP id l4mr4891433vsp.179.1561047657639;
+ Thu, 20 Jun 2019 09:20:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156092353780.979959.9713046515562743194.stgit@dwillia2-desk3.amr.corp.intel.com>
- <70f3559b-2832-67eb-0715-ed9f856f6ed9@redhat.com>
-In-Reply-To: <70f3559b-2832-67eb-0715-ed9f856f6ed9@redhat.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Thu, 20 Jun 2019 09:19:43 -0700
-Message-ID: <CAPcyv4jzELzrf-p6ujUwdXN2FRe0WCNhpTziP2-z4-8uBSSp7A@mail.gmail.com>
-Subject: Re: [PATCH v10 08/13] mm/sparsemem: Prepare for sub-section ranges
-To:     David Hildenbrand <david@redhat.com>
+References: <20190619200608.69474286@canb.auug.org.au>
+In-Reply-To: <20190619200608.69474286@canb.auug.org.au>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 21 Jun 2019 01:20:21 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQc14aYc_cHAYQNxKX_uY5Ssm1aWRRQE1ERaqV8qjUoXg@mail.gmail.com>
+Message-ID: <CAK7LNAQc14aYc_cHAYQNxKX_uY5Ssm1aWRRQE1ERaqV8qjUoXg@mail.gmail.com>
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
 Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 3:31 AM David Hildenbrand <david@redhat.com> wrote:
+On Wed, Jun 19, 2019 at 7:06 PM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
 >
-> On 19.06.19 07:52, Dan Williams wrote:
-> > Prepare the memory hot-{add,remove} paths for handling sub-section
-> > ranges by plumbing the starting page frame and number of pages being
-> > handled through arch_{add,remove}_memory() to
-> > sparse_{add,remove}_one_section().
-> >
-> > This is simply plumbing, small cleanups, and some identifier renames. No
-> > intended functional changes.
-> >
-> > Cc: Michal Hocko <mhocko@suse.com>
-> > Cc: Vlastimil Babka <vbabka@suse.cz>
-> > Cc: Logan Gunthorpe <logang@deltatee.com>
-> > Cc: Oscar Salvador <osalvador@suse.de>
-> > Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> > Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> > ---
-> >  include/linux/memory_hotplug.h |    5 +-
-> >  mm/memory_hotplug.c            |  114 +++++++++++++++++++++++++---------------
-> >  mm/sparse.c                    |   16 ++----
-> >  3 files changed, 81 insertions(+), 54 deletions(-)
-[..]
-> > @@ -528,31 +556,31 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
-> >   * sure that pages are marked reserved and zones are adjust properly by
-> >   * calling offline_pages().
-> >   */
-> > -void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
-> > +void __remove_pages(struct zone *zone, unsigned long pfn,
-> >                   unsigned long nr_pages, struct vmem_altmap *altmap)
-> >  {
-> > -     unsigned long i;
-> >       unsigned long map_offset = 0;
-> > -     int sections_to_remove;
-> > +     int i, start_sec, end_sec;
+> Hi all,
 >
-> As mentioned in v9, use "unsigned long" for start_sec and end_sec please.
+> After merging the akpm-current tree, today's linux-next build (x86_64
+> allmodconfig) failed like this:
+>
+> In file included from usr/include/linux/byteorder/big_endian.hdrtest.c:1:
+> ./usr/include/linux/byteorder/big_endian.h:6:2: error: #error "Unsupported endianness, check your toolchain"
+>  #error "Unsupported endianness, check your toolchain"
+>   ^~~~~
+>
+> Caused by commit
+>
+>   1ac94caaee11 ("byteorder: sanity check toolchain vs kernel endianness")
+>
+> Presumably exposed by commit
+>
+>   b91976b7c0e3 ("kbuild: compile-test UAPI headers to ensure they are self-contained")
+>
+> from the kbuild tree.
+>
+> I have reverted 1ac94caaee11 (and its following fixup) for today.
 
-Honestly I saw you and Andrew going back and forth about "unsigned
-long i" that I thought this would be handled by a follow on patchset
-when that debate settled.
+
+I can exclude big_endian.h and little_endian.h
+from the header test.
+
+
+-- 
+Best Regards
+Masahiro Yamada
