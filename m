@@ -2,103 +2,126 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F298C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D088FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CD28206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G56l50yP"
+	by mail.kernel.org (Postfix) with ESMTP id AFCF7206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561055059;
+	bh=AOopMpyt+2oZqr3lLZIV/QnUU1rTLquw7MUNmK3R80Q=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=X6Z/0drivqUgNOJuY8BjAD8dicxU3qrkhWtVIqCNgEBnzDftLFH0pM3ulBCW0p6ou
+	 lxqSBmTa/b1z5DzWHAJTYxv4ajdBeDf8M/IkdSa26Hk+iverMscoI0vhuaf6LqSx04
+	 AkfToO8WH/nycNpWGvJqR8SJnGqBn2icpOz6eNWk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728914AbfFTSYM (ORCPT
+        id S1728505AbfFTSIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:24:12 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:38359 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfFTSIk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:40 -0400
-Received: by mail-pg1-f195.google.com with SMTP id v11so1984973pgl.5;
-        Thu, 20 Jun 2019 11:08:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=DElqIywf6JUcWuo0rZ9a6EwgIu3tUka4AvA4dzhpqYE=;
-        b=G56l50yP0b6U6H4NdWWf/Dv6OP6WqAUmAoeWuHJJqTwqT9iaG1vBNKZYsh5Giuvhnw
-         aED6fgUw54XLonnrYNZZv6Cno7U/zr4c6hcbl+H3d+KIDs2Xsx/z2U/1261AbHzKUg4r
-         oNevhrr0tWXaP+L6SoMosXmCiEhK2au9AS94MvDNOVXEwA7u8oD/hgDDguZ5dMs3SmmP
-         82tINfOSiarXeRImZlPpp3hhFmrUQbvD0DLpiDzKwclAM+5YRCCqtJtomlq9zwQ1rafp
-         1r4t6oeiUv4rhpyyu/UiaUGP3QKBRvHniTQvlPiXqkGo/QBlcDlWFUa3//uYec3h3w3o
-         x9mw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=DElqIywf6JUcWuo0rZ9a6EwgIu3tUka4AvA4dzhpqYE=;
-        b=JSfGMimt+X1IwGqxjHvpX04hgM6klerN2EhgyT5vshNAiDubNK2SjntOH5IGKRnOSV
-         t53Bc4JyjUvqPVJV7aVd9pNoRuW2msqDaWzvf5tCwPmWoIHwoEGLI/dQojn5FcqcofrO
-         240vpMGrP5b0quXyklWYzWsAjKWkssAHRurvz8I1tdgiRfqRCG6yUpNgZPbNQk/hFp9x
-         fL95t4vb4F2k/hSI9o1eoGgFYbzKnPNtw3A/8YdL50CGfHPvuiHIeFQvE8XSD+cgwcwg
-         6HDKUZLSNYy1t0thi5NZSAC7tO09jTEJ8CcOz84d+3GfTavDLaWa4UqcG1tslgfNnX+B
-         55kg==
-X-Gm-Message-State: APjAAAURfnt1lQ+ueMn9P/ZUj4gRKP/Ed9atGLdoCykepPSSe8kXSmIU
-        aasbwHjyEIuPVJlB6OV0g2s=
-X-Google-Smtp-Source: APXvYqxFAQJsCXYzQ+qH0cA1M0uMpESe7qshj8mj8l4KMcP4Yo4JkiXtEV1IBXTaRIWBw9MoK6+1kw==
-X-Received: by 2002:a62:3c3:: with SMTP id 186mr14403969pfd.21.1561054119280;
-        Thu, 20 Jun 2019 11:08:39 -0700 (PDT)
-Received: from localhost.localdomain ([112.196.181.13])
-        by smtp.googlemail.com with ESMTPSA id 85sm289016pgb.52.2019.06.20.11.08.36
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 11:08:38 -0700 (PDT)
-From:   Puranjay Mohan <puranjay12@gmail.com>
-To:     Shuah Khan <skhan@linuxfoundation.org>
-Cc:     Puranjay Mohan <puranjay12@gmail.com>,
-        Bjorn Helgaas <bjorn@helgaas.com>,
-        netdev <netdev@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-pci@vger.kernel.org
-Subject: [PATCH v2 2/3] net: fddi: skfp: Include generic PCI definitions
-Date:   Thu, 20 Jun 2019 23:37:53 +0530
-Message-Id: <20190620180754.15413-3-puranjay12@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190620180754.15413-1-puranjay12@gmail.com>
-References: <20190620180754.15413-1-puranjay12@gmail.com>
+        Thu, 20 Jun 2019 14:08:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35842 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728475AbfFTSI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:27 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5538A21530;
+        Thu, 20 Jun 2019 18:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561054106;
+        bh=AOopMpyt+2oZqr3lLZIV/QnUU1rTLquw7MUNmK3R80Q=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=zOxsZbfA0rwuIw1zE5vcVRLU1v8tyHTxJpgX2NHSNOILHVGQktAc3P9Amqa94kp9r
+         aDb5vd04cARJtGvjhddb697PG8eA8ziSMZT1l+nn5CQWnmNWg7/BOOG4lRQBC2C9c1
+         /X9ziLd3sO/6jAFw/9banjFxsCwhdllejsIjOkqI=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Stephane Eranian <eranian@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
+        mark.rutland@arm.com, namhyung@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 20/45] perf/ring_buffer: Add ordering to rb->nest increment
+Date:   Thu, 20 Jun 2019 19:57:22 +0200
+Message-Id: <20190620174336.626599680@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
+References: <20190620174328.608036501@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Include the uapi/linux/pci_regs.h header file which contains the generic
-PCI defines.
+[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
 
-Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+Similar to how decrementing rb->next too early can cause data_head to
+(temporarily) be observed to go backward, so too can this happen when
+we increment too late.
+
+This barrier() ensures the rb->head load happens after the increment,
+both the one in the 'goto again' path, as the one from
+perf_output_get_handle() -- albeit very unlikely to matter for the
+latter.
+
+Suggested-by: Yabin Cui <yabinc@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: acme@kernel.org
+Cc: mark.rutland@arm.com
+Cc: namhyung@kernel.org
+Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
+Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/fddi/skfp/drvfbi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/events/ring_buffer.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
-index b324c1acf195..e8245cb281f8 100644
---- a/drivers/net/fddi/skfp/drvfbi.c
-+++ b/drivers/net/fddi/skfp/drvfbi.c
-@@ -20,7 +20,7 @@
- #include "h/supern_2.h"
- #include "h/skfbiinc.h"
- #include <linux/bitrev.h>
--
-+#include <linux/pci_regs.h>
- #ifndef	lint
- static const char ID_sccs[] = "@(#)drvfbi.c	1.63 99/02/11 (C) SK " ;
- #endif
+diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
+index fde853270c09..aef2af80a927 100644
+--- a/kernel/events/ring_buffer.c
++++ b/kernel/events/ring_buffer.c
+@@ -49,6 +49,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
+ 	unsigned long head;
+ 
+ again:
++	/*
++	 * In order to avoid publishing a head value that goes backwards,
++	 * we must ensure the load of @rb->head happens after we've
++	 * incremented @rb->nest.
++	 *
++	 * Otherwise we can observe a @rb->head value before one published
++	 * by an IRQ/NMI happening between the load and the increment.
++	 */
++	barrier();
+ 	head = local_read(&rb->head);
+ 
+ 	/*
 -- 
-2.21.0
+2.20.1
+
+
 
