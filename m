@@ -2,59 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71065C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9438C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DBC8215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C2E204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053885;
-	bh=z5SKF9DOlqPNls6ia41cYM6baailNmIznIbwfYklA1U=;
+	s=default; t=1561053886;
+	bh=W0ZoOHmqDMjJ+NHKOS0J47iPev1a8ilmNbezR/YN1yc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rQ//x02hAz4ghg+eYY/p+pi5tbgjqUZyA2aC0eBTV6u4fMF/UNVFYfN4sluXFKxii
-	 hNIEA/+7r3PuVpe0XNU78g388RwIgcqPMtKejy24weDLe2ferUU9db3DktX2Ov6yO4
-	 5g2rfX+V8Ik1pnDpk5eUhadOfqQekUF4LpEBsnAw=
+	b=Hx7QtPZk5k5u2AkPq8y+aLCo6v2/oQ+OP7n9i8crOKp+5EpMpi+e/wqDbbGWQP8vq
+	 Xy+XCPyQo9MvrfnWALQBs3FL5z3ieGN/J6gM3RNdPI3vzYqumv03PsqYhq9sMFncrp
+	 KacRr67xi+8t/1gmp79/yCJESelyD2X8qVT+octA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727912AbfFTSEn (ORCPT
+        id S1727922AbfFTSEp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:04:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:04:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727417AbfFTSEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:04:40 -0400
+        id S1726440AbfFTSEn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:04:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46E552082C;
-        Thu, 20 Jun 2019 18:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7BD7621530;
+        Thu, 20 Jun 2019 18:04:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053879;
-        bh=z5SKF9DOlqPNls6ia41cYM6baailNmIznIbwfYklA1U=;
+        s=default; t=1561053883;
+        bh=W0ZoOHmqDMjJ+NHKOS0J47iPev1a8ilmNbezR/YN1yc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qv1pGO1njzs2RDofJLZJW3kf04ZIZj7K0VZlDJZ1KtXQKSCxjIhfaCfa6BmKkBnBi
-         NlkgFWPiggOpH0MuU6mM3ubLsUhOHQkyS6GO62f0XhsBA2dgBp7el4UJ3ekMoaimFj
-         SawvdG01x6byDKDq7e+tz0grBBXNto/kF0fgko/Y=
+        b=owOkMTluWB9ISSE07qtuUjqkz25yPfHrEi43fKk+Y5aqycdQdzgjpM/9TQMQZZ7QM
+         nWfkfgtAbLmkgazxhHEZPgmekKTKUmD0xbLnZgYjQq1te66uFgTulVcFk3K8jZPA7x
+         OD0YE5RP95SQyfpzYLZs+YBfsbuztQ/H7grnXTbs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wengang Wang <wen.gang.wang@oracle.com>,
-        Daniel Sobe <daniel.sobe@nxp.com>,
-        Changwei Ge <gechangwei@live.cn>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.9 060/117] fs/ocfs2: fix race in ocfs2_dentry_attach_lock()
-Date:   Thu, 20 Jun 2019 19:56:34 +0200
-Message-Id: <20190620174356.535861617@linuxfoundation.org>
+        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 061/117] [PATCH] signal/ptrace: Dont leak unitialized kernel memory with PTRACE_PEEK_SIGINFO
+Date:   Thu, 20 Jun 2019 19:56:35 +0200
+Message-Id: <20190620174356.601936665@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -67,97 +61,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wengang Wang <wen.gang.wang@oracle.com>
+[ Upstream commit f6e2aa91a46d2bc79fce9b93a988dbe7655c90c0 ]
 
-commit be99ca2716972a712cde46092c54dee5e6192bf8 upstream.
+Recently syzbot in conjunction with KMSAN reported that
+ptrace_peek_siginfo can copy an uninitialized siginfo to userspace.
+Inspecting ptrace_peek_siginfo confirms this.
 
-ocfs2_dentry_attach_lock() can be executed in parallel threads against the
-same dentry.  Make that race safe.  The race is like this:
+The problem is that off when initialized from args.off can be
+initialized to a negaive value.  At which point the "if (off >= 0)"
+test to see if off became negative fails because off started off
+negative.
 
-            thread A                               thread B
+Prevent the core problem by adding a variable found that is only true
+if a siginfo is found and copied to a temporary in preparation for
+being copied to userspace.
 
-(A1) enter ocfs2_dentry_attach_lock,
-seeing dentry->d_fsdata is NULL,
-and no alias found by
-ocfs2_find_local_alias, so kmalloc
-a new ocfs2_dentry_lock structure
-to local variable "dl", dl1
+Prevent args.off from being truncated when being assigned to off by
+testing that off is <= the maximum possible value of off.  Convert off
+to an unsigned long so that we should not have to truncate args.off,
+we have well defined overflow behavior so if we add another check we
+won't risk fighting undefined compiler behavior, and so that we have a
+type whose maximum value is easy to test for.
 
-               .....
-
-                                    (B1) enter ocfs2_dentry_attach_lock,
-                                    seeing dentry->d_fsdata is NULL,
-                                    and no alias found by
-                                    ocfs2_find_local_alias so kmalloc
-                                    a new ocfs2_dentry_lock structure
-                                    to local variable "dl", dl2.
-
-                                                   ......
-
-(A2) set dentry->d_fsdata with dl1,
-call ocfs2_dentry_lock() and increase
-dl1->dl_lockres.l_ro_holders to 1 on
-success.
-              ......
-
-                                    (B2) set dentry->d_fsdata with dl2
-                                    call ocfs2_dentry_lock() and increase
-				    dl2->dl_lockres.l_ro_holders to 1 on
-				    success.
-
-                                                  ......
-
-(A3) call ocfs2_dentry_unlock()
-and decrease
-dl2->dl_lockres.l_ro_holders to 0
-on success.
-             ....
-
-                                    (B3) call ocfs2_dentry_unlock(),
-                                    decreasing
-				    dl2->dl_lockres.l_ro_holders, but
-				    see it's zero now, panic
-
-Link: http://lkml.kernel.org/r/20190529174636.22364-1-wen.gang.wang@oracle.com
-Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
-Reported-by: Daniel Sobe <daniel.sobe@nxp.com>
-Tested-by: Daniel Sobe <daniel.sobe@nxp.com>
-Reviewed-by: Changwei Ge <gechangwei@live.cn>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: Andrei Vagin <avagin@gmail.com>
+Cc: stable@vger.kernel.org
+Reported-by: syzbot+0d602a1b0d8c95bdf299@syzkaller.appspotmail.com
+Fixes: 84c751bd4aeb ("ptrace: add ability to retrieve signals without removing from a queue (v4)")
+Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/dcache.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ kernel/ptrace.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
---- a/fs/ocfs2/dcache.c
-+++ b/fs/ocfs2/dcache.c
-@@ -310,6 +310,18 @@ int ocfs2_dentry_attach_lock(struct dent
+diff --git a/kernel/ptrace.c b/kernel/ptrace.c
+index efba851ee018..df06d2fcbb92 100644
+--- a/kernel/ptrace.c
++++ b/kernel/ptrace.c
+@@ -710,6 +710,10 @@ static int ptrace_peek_siginfo(struct task_struct *child,
+ 	if (arg.nr < 0)
+ 		return -EINVAL;
  
- out_attach:
- 	spin_lock(&dentry_attach_lock);
-+	if (unlikely(dentry->d_fsdata && !alias)) {
-+		/* d_fsdata is set by a racing thread which is doing
-+		 * the same thing as this thread is doing. Leave the racing
-+		 * thread going ahead and we return here.
-+		 */
-+		spin_unlock(&dentry_attach_lock);
-+		iput(dl->dl_inode);
-+		ocfs2_lock_res_free(&dl->dl_lockres);
-+		kfree(dl);
++	/* Ensure arg.off fits in an unsigned long */
++	if (arg.off > ULONG_MAX)
 +		return 0;
-+	}
 +
- 	dentry->d_fsdata = dl;
- 	dl->dl_count++;
- 	spin_unlock(&dentry_attach_lock);
+ 	if (arg.flags & PTRACE_PEEKSIGINFO_SHARED)
+ 		pending = &child->signal->shared_pending;
+ 	else
+@@ -717,18 +721,20 @@ static int ptrace_peek_siginfo(struct task_struct *child,
+ 
+ 	for (i = 0; i < arg.nr; ) {
+ 		siginfo_t info;
+-		s32 off = arg.off + i;
++		unsigned long off = arg.off + i;
++		bool found = false;
+ 
+ 		spin_lock_irq(&child->sighand->siglock);
+ 		list_for_each_entry(q, &pending->list, list) {
+ 			if (!off--) {
++				found = true;
+ 				copy_siginfo(&info, &q->info);
+ 				break;
+ 			}
+ 		}
+ 		spin_unlock_irq(&child->sighand->siglock);
+ 
+-		if (off >= 0) /* beyond the end of the list */
++		if (!found) /* beyond the end of the list */
+ 			break;
+ 
+ #ifdef CONFIG_COMPAT
+-- 
+2.20.1
+
 
 
