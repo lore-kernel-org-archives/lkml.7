@@ -2,155 +2,149 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E332C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:16:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02BB0C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:16:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5A9C206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:16:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF8FF2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:16:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W3DH5gs7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726978AbfFTLQA (ORCPT
+        id S1731245AbfFTLQH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:16:00 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42022 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726234AbfFTLQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:16:00 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 17F02AE82;
-        Thu, 20 Jun 2019 11:15:58 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id C461F1E4241; Thu, 20 Jun 2019 13:15:57 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 13:15:57 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>
-Subject: Re: [PATCH 3/3] ext4: use jbd2_inode dirty range scoping
-Message-ID: <20190620111557.GM13630@quack2.suse.cz>
-References: <20190619172156.105508-1-zwisler@google.com>
- <20190619172156.105508-4-zwisler@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619172156.105508-4-zwisler@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Jun 2019 07:16:07 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:41450 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726234AbfFTLQG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:16:06 -0400
+Received: by mail-lf1-f66.google.com with SMTP id 136so2136687lfa.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 04:16:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=c6iQkmmugLgkKQH3tZ6ZgGxpxMt5nwzcVaiLxHlgP6Y=;
+        b=W3DH5gs7gzWVHxwNMOoq96D4jERRJfA72DAS1CaIDm4AZ6F5CnkkMIFPIY+l12J1Q1
+         kZPsQkSSoz151c0chEwDJCQIUpZFInUGQILOk8IxKlh+iCvtw6QsrUVM87CGm/pRhREq
+         UqSYdUMSWwWGIwCWXUNs5xoxpg61V18wH4rMnRj3Em2EcPfl9iX7lGggVAG8pCI9hppZ
+         jGPhDK5e8DU7TaztMysdH5lcGNrGLoRJzHW2RkYl7gNrY81CJY0Jm7Ya4jL2Z8ixzcNq
+         8bS7XoErntFk1chDcZutxVpx2SXYvY89CwuS0iMsxiGoUYyIiAPkqbKMwChrERe3VktX
+         /UNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=c6iQkmmugLgkKQH3tZ6ZgGxpxMt5nwzcVaiLxHlgP6Y=;
+        b=W4poIJIQzJvRKLoHLU18DlItcEbF6L40HqCyhNaB6bjP8UCZL4hsKVk94SsNMNit0L
+         aGQynJzsjCQsoW3OlXgpQ0c4iTJ6GB2wgP09mTXKlpKBBHz+P47jj1k4ZOJAQk/pb758
+         AmbE67+uCRCKxyH740gla52Z8ijOibWqnIu82cZhlgoliZXDlszn8KxCZO3+f0/hrXrh
+         2FVmV91/HruGBW8cvQ9NXDkVclxo6K498Sjq+RELCe3B79v6IKZwMjQ2xxhtYS729fbd
+         cN6r79FtLG4v3aNgvrKHGiDmMhbEsEXR73CCWa0GJM/JForKZrefWEPzAJ104OAgPcz5
+         GVjg==
+X-Gm-Message-State: APjAAAXzNUbwiEWTxcWgNHh8iNP3Yz4509lQbOpQipewOLSVos6AsLjv
+        TP2J/sJHf9VhHeDtlFppCRBeWA==
+X-Google-Smtp-Source: APXvYqxDPgRTsCyMwsJ3hroh4cJ/q57m0sncv+riRbKKWMBweWRucrVlRODHzOmTdwtuvJnlCe8/bA==
+X-Received: by 2002:ac2:50cd:: with SMTP id h13mr28508702lfm.36.1561029364872;
+        Thu, 20 Jun 2019 04:16:04 -0700 (PDT)
+Received: from localhost.localdomain (h-158-174-22-210.NA.cust.bahnhof.se. [158.174.22.210])
+        by smtp.gmail.com with ESMTPSA id s20sm3055858lfb.95.2019.06.20.04.16.03
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 04:16:04 -0700 (PDT)
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+To:     Linus <torvalds@linux-foundation.org>, linux-mmc@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Douglas Anderson <dianders@chromium.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Arend van Spriel <arend.vanspriel@broadcom.com>,
+        linux-wireless@vger.kernel.org,
+        Adrian Hunter <adrian.hunter@intel.com>
+Subject: [GIT PULL] MMC fixes for v5.2-rc6
+Date:   Thu, 20 Jun 2019 13:16:02 +0200
+Message-Id: <20190620111602.17958-1-ulf.hansson@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-06-19 11:21:56, Ross Zwisler wrote:
-> Use the newly introduced jbd2_inode dirty range scoping to prevent us
-> from waiting forever when trying to complete a journal transaction.
-> 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
+Hi Linus,
 
-Looks good to me. You can add:
+Here's a PR with quite a few MMC fixes intended for v5.2-rc6. This time the PR
+also contains fixes for a WiFi driver, which device is attached to the SDIO
+interface. Patches for the WiFi driver have been acked by the corresponding
+maintainers. More details about the highlights are as usual found in the signed
+tag.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
+Please pull this in!
 
-								Honza
+Kind regards
+Ulf Hansson
 
-> ---
->  fs/ext4/ext4_jbd2.h   | 12 ++++++------
->  fs/ext4/inode.c       | 13 ++++++++++---
->  fs/ext4/move_extent.c |  3 ++-
->  3 files changed, 18 insertions(+), 10 deletions(-)
-> 
-> diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-> index 75a5309f22315..ef8fcf7d0d3b3 100644
-> --- a/fs/ext4/ext4_jbd2.h
-> +++ b/fs/ext4/ext4_jbd2.h
-> @@ -361,20 +361,20 @@ static inline int ext4_journal_force_commit(journal_t *journal)
->  }
->  
->  static inline int ext4_jbd2_inode_add_write(handle_t *handle,
-> -					    struct inode *inode)
-> +		struct inode *inode, loff_t start_byte, loff_t length)
->  {
->  	if (ext4_handle_valid(handle))
-> -		return jbd2_journal_inode_add_write(handle,
-> -						    EXT4_I(inode)->jinode);
-> +		return jbd2_journal_inode_ranged_write(handle,
-> +				EXT4_I(inode)->jinode, start_byte, length);
->  	return 0;
->  }
->  
->  static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
-> -					   struct inode *inode)
-> +		struct inode *inode, loff_t start_byte, loff_t length)
->  {
->  	if (ext4_handle_valid(handle))
-> -		return jbd2_journal_inode_add_wait(handle,
-> -						   EXT4_I(inode)->jinode);
-> +		return jbd2_journal_inode_ranged_wait(handle,
-> +				EXT4_I(inode)->jinode, start_byte, length);
->  	return 0;
->  }
->  
-> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-> index c7f77c6430085..27fec5c594459 100644
-> --- a/fs/ext4/inode.c
-> +++ b/fs/ext4/inode.c
-> @@ -731,10 +731,16 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
->  		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
->  		    !ext4_is_quota_file(inode) &&
->  		    ext4_should_order_data(inode)) {
-> +			loff_t start_byte =
-> +				(loff_t)map->m_lblk << inode->i_blkbits;
-> +			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
-> +
->  			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
-> -				ret = ext4_jbd2_inode_add_wait(handle, inode);
-> +				ret = ext4_jbd2_inode_add_wait(handle, inode,
-> +						start_byte, length);
->  			else
-> -				ret = ext4_jbd2_inode_add_write(handle, inode);
-> +				ret = ext4_jbd2_inode_add_write(handle, inode,
-> +						start_byte, length);
->  			if (ret)
->  				return ret;
->  		}
-> @@ -4085,7 +4091,8 @@ static int __ext4_block_zero_page_range(handle_t *handle,
->  		err = 0;
->  		mark_buffer_dirty(bh);
->  		if (ext4_should_order_data(inode))
-> -			err = ext4_jbd2_inode_add_write(handle, inode);
-> +			err = ext4_jbd2_inode_add_write(handle, inode, from,
-> +					length);
->  	}
->  
->  unlock:
-> diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
-> index 1083a9f3f16a1..c7ded4e2adff5 100644
-> --- a/fs/ext4/move_extent.c
-> +++ b/fs/ext4/move_extent.c
-> @@ -390,7 +390,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
->  
->  	/* Even in case of data=writeback it is reasonable to pin
->  	 * inode to transaction, to prevent unexpected data loss */
-> -	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
-> +	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
-> +			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
->  
->  unlock_pages:
->  	unlock_page(pagep[0]);
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
-> 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
+
+  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc.git tags/mmc-v5.2-rc4
+
+for you to fetch changes up to 83293386bc95cf5e9f0c0175794455835bd1cb4a:
+
+  mmc: core: Prevent processing SDIO IRQs when the card is suspended (2019-06-18 14:06:32 +0200)
+
+----------------------------------------------------------------
+MMC core:
+ - Make switch to eMMC HS400 more robust for some controllers
+ - Add two SDIO func API to manage re-tuning constraints
+ - Prevent processing SDIO IRQs when the card is suspended
+
+MMC host:
+ - sdhi: Disallow broken HS400 for M3-W ES1.2, RZ/G2M and V3H
+ - mtk-sd: Fixup support for SDIO IRQs
+ - sdhci-pci-o2micro: Fixup support for tuning
+
+Wireless BRCMFMAC (SDIO):
+ - Deal with expected transmission errors related to the idle states
+   (handled by the Always-On-Subsystem or AOS) on the SDIO-based WiFi on
+   rk3288-veyron-minnie, rk3288-veyron-speedy and rk3288-veyron-mickey.
+
+----------------------------------------------------------------
+Douglas Anderson (5):
+      Revert "brcmfmac: disable command decode in sdio_aos"
+      mmc: core: API to temporarily disable retuning for SDIO CRC errors
+      brcmfmac: sdio: Disable auto-tuning around commands expected to fail
+      mmc: core: Add sdio_retune_hold_now() and sdio_retune_release()
+      brcmfmac: sdio: Don't tune while the card is off
+
+Raul E Rangel (1):
+      mmc: sdhci: sdhci-pci-o2micro: Correctly set bus width when tuning
+
+Ulf Hansson (1):
+      mmc: core: Prevent processing SDIO IRQs when the card is suspended
+
+Wolfram Sang (2):
+      mmc: sdhi: disallow HS400 for M3-W ES1.2, RZ/G2M, and V3H
+      mmc: core: complete HS400 before checking status
+
+jjian zhou (2):
+      mmc: mediatek: fix SDIO IRQ interrupt handle flow
+      mmc: mediatek: fix SDIO IRQ detection issue
+
+ drivers/mmc/core/core.c                            |  5 +-
+ drivers/mmc/core/mmc.c                             |  6 +-
+ drivers/mmc/core/sdio.c                            | 13 +++-
+ drivers/mmc/core/sdio_io.c                         | 77 ++++++++++++++++++++++
+ drivers/mmc/core/sdio_irq.c                        |  4 ++
+ drivers/mmc/host/mtk-sd.c                          | 39 ++++++-----
+ drivers/mmc/host/renesas_sdhi_core.c               |  9 ++-
+ drivers/mmc/host/sdhci-pci-o2micro.c               |  5 +-
+ .../wireless/broadcom/brcm80211/brcmfmac/sdio.c    | 17 +++--
+ include/linux/mmc/host.h                           |  1 +
+ include/linux/mmc/sdio_func.h                      |  6 ++
+ 11 files changed, 151 insertions(+), 31 deletions(-)
