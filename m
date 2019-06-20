@@ -2,32 +2,32 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A97DCC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:44:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3509C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CB49214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:44:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 829622166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:44:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731282AbfFTBoE (ORCPT
+        id S1731162AbfFTBnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:44:04 -0400
-Received: from mga01.intel.com ([192.55.52.88]:60109 "EHLO mga01.intel.com"
+        Wed, 19 Jun 2019 21:43:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60105 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731193AbfFTBnv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:43:51 -0400
+        id S1726325AbfFTBnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 21:43:49 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 18:43:50 -0700
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 18:43:48 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
-   d="scan'208";a="243484929"
+   d="scan'208";a="243484910"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2019 18:43:50 -0700
+  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2019 18:43:47 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -39,91 +39,115 @@ To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ravi V Shankar" <ravi.v.shankar@intel.com>
 Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v5 4/5] x86/umwait: Add sysfs interface to control umwait maximum time
-Date:   Wed, 19 Jun 2019 18:33:57 -0700
-Message-Id: <1560994438-235698-5-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v5 0/5] x86/umwait: Enable user wait instructions
+Date:   Wed, 19 Jun 2019 18:33:53 -0700
+Message-Id: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
-References: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IA32_UMWAIT_CONTROL[31:2] determines the maximum time in TSC-quanta
-that processor can stay in C0.1 or C0.2. A zero value means no maximum
-time.
+Today, if an application needs to wait for a very short duration
+they have to have spinloops. Spinloops consume more power and continue
+to use execution resources that could hurt its thread siblings in a core
+with hyperthreads. New instructions umonitor, umwait and tpause allow
+a low power alternative waiting at the same time could improve the HT
+sibling perform while giving it any power headroom. These instructions
+can be used in both user space and kernel space.
 
-Each instruction sets its own deadline in the instruction's implicit
-input EDX:EAX value. The instruction wakes up if the time-stamp counter
-reaches or exceeds the specified deadline, or the umwait maximum time
-expires, or a store happens in the monitored address range in umwait.
+A new MSR IA32_UMWAIT_CONTROL allows kernel to set a time limit in
+TSC-quanta that prevents user applications from waiting for a long time.
+This allows applications to yield the CPU and the user application
+should consider using other alternatives to wait.
 
-Users can write an unsigned 32-bit number to
-/sys/devices/system/cpu/umwait_control/max_time to change the default
-value. Note that a value of zero means there is no limit. Low order
-two bits must be zero.
+A quote from Andy Lutomirski on setting the time limit:
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Ashok Raj <ashok.raj@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
----
- arch/x86/kernel/cpu/umwait.c | 40 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
+"What I want to avoid is the case where it works dramatically
+differently on NO_HZ_FULL systems as compared to everything else.
+Also, UMWAIT may behave a bit differently if the max timeout is hit,
+and I'd like that path to get exercised widely by making it happen
+even on default configs.
 
-diff --git a/arch/x86/kernel/cpu/umwait.c b/arch/x86/kernel/cpu/umwait.c
-index 3bd6d37a7b2c..4b2aff7b2d4d 100644
---- a/arch/x86/kernel/cpu/umwait.c
-+++ b/arch/x86/kernel/cpu/umwait.c
-@@ -126,8 +126,48 @@ static ssize_t enable_c02_store(struct device *dev,
- }
- static DEVICE_ATTR_RW(enable_c02);
- 
-+static ssize_t
-+max_time_show(struct device *kobj, struct device_attribute *attr, char *buf)
-+{
-+	return sprintf(buf, "%u\n", get_umwait_ctrl_max_time());
-+}
-+
-+static ssize_t max_time_store(struct device *kobj,
-+			      struct device_attribute *attr,
-+			      const char *buf, size_t count)
-+{
-+	u32 max_time;
-+	int ret;
-+
-+	ret = kstrtou32(buf, 0, &max_time);
-+	if (ret)
-+		return ret;
-+
-+	/* bits[1:0] must be zero */
-+	if (max_time & ~MSR_IA32_UMWAIT_CONTROL_MAX_TIME)
-+		return -EINVAL;
-+
-+	mutex_lock(&umwait_lock);
-+
-+	if (max_time == get_umwait_ctrl_max_time())
-+		goto out_unlock;
-+
-+	WRITE_ONCE(umwait_control_cached,
-+		   UMWAIT_CTRL_VAL(max_time, get_umwait_ctrl_c02()));
-+
-+	/* Update umwait max time on all CPUs */
-+	on_each_cpu(umwait_control_msr_update, NULL, 1);
-+
-+out_unlock:
-+	mutex_unlock(&umwait_lock);
-+
-+	return count;
-+}
-+static DEVICE_ATTR_RW(max_time);
-+
- static struct attribute *umwait_attrs[] = {
- 	&dev_attr_enable_c02.attr,
-+	&dev_attr_max_time.attr,
- 	NULL
- };
- 
+So I propose setting the timeout to either 100 microseconds or 100k
+"cycles" by default."
+
+The processor supports two levels of optimized states: a light-weight
+power/performance optimized state (C0.1 state) or an improved
+power/performance optimized state (C0.2 state with deeper power saving
+and higher exit latency). The above MSR can be used to restrict
+entry to C0.2 and then any request for C0.2 will revert to C0.1.
+
+This patch set covers feature discovery, provides initial values for
+the MSR, adds some sysfs control files for admin to tweak the values
+in the MSR if needed.
+
+The sysfs interface files are in /sys/devices/system/cpu/umwait_control/
+
+GCC 9 enables intrinsics for the instructions. To use the instructions,
+user applications should include <immintrin.h> and be compiled with
+-mwaitpkg.
+
+Detailed information on the instructions, the MSR, and syntax of the
+intrinsics can be found in the latest Intel Architecture Instruction
+Set Extensions and Future Features Programming Reference and Intel 64
+and IA-32 Architectures Software Developer's Manual.
+
+Changelog:
+v5:
+- Change locking from mutex to disabling irq before wrmsr per
+Andy Lutomirski's comment
+- Add macro UMWAIT_CTRL_VAL to explicitly disable C0.2 per
+Thomas Gleixner's comment
+- Move umwait.c to arch/x86/kernel/cpu/ per Peter Zijlstra's comment
+- Add justification of max time 100k per Peter Zijlstra's comment
+
+v4:
+- Error out when bit[1:0] in IA32_UMWAIT_CONTROL is not zero per
+Andy Lutomirski's comment.
+- Use umwait_control_cached to cache IA32_UMWAIT_CONTROL MSR. This
+variable replaces the two previous variables umwait_max_time and
+umwait_c0_2_enabled. The code is simpler than before and the cached MSR
+will be easier to be used in future KVM support.
+
+v3:
+Address issues pointed out by Andy Lutomirski:
+- Change default umwait max time to 100k TSC cycles
+- Setting up MSR on BSP during resume suspend/hibernation
+- A few other naming and coding changes as suggested
+- Some security concerns of the user wait instructions are not issues
+of the patches and cannot be addressed in the patch set. They will be
+discussed on lkml.
+
+Plus:
+- Add ABI document entry for umwait control sysfs interfaces
+
+v2:
+- Address comments from Thomas Gleixner and Andy Lutomirski
+- Remove vDSO functions
+- Add sysfs control file for umwait max time
+
+v1:
+Based on comments from Thomas:
+- Change user APIs to vDSO functions
+- Changed sysfs per comments from Thomas.
+- Change patch descriptions etc
+
+Fenghua Yu (5):
+  x86/cpufeatures: Enumerate user wait instructions
+  x86/umwait: Initialize umwait control values
+  x86/umwait: Add sysfs interface to control umwait C0.2 state
+  x86/umwait: Add sysfs interface to control umwait maximum time
+  x86/umwait: Document umwait control sysfs interfaces
+
+ .../ABI/testing/sysfs-devices-system-cpu      |  21 ++
+ arch/x86/include/asm/cpufeatures.h            |   1 +
+ arch/x86/include/asm/msr-index.h              |   4 +
+ arch/x86/kernel/cpu/Makefile                  |   1 +
+ arch/x86/kernel/cpu/umwait.c                  | 205 ++++++++++++++++++
+ 5 files changed, 232 insertions(+)
+ create mode 100644 arch/x86/kernel/cpu/umwait.c
+
 -- 
 2.19.1
 
