@@ -2,51 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 847A1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D96D6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6430B2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC95721537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:19:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054739;
-	bh=GOp3NByKc6r9Ck4fPiuEBrX64/JzIwN9Krtx+Ulfws8=;
+	s=default; t=1561054751;
+	bh=BP8IddWGjCAgLv+nYP0K19A5yvQ9scesSZhse41AXdU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sA/Zzazwz4mGXIO6uQt46szzS2Vk00+FxPSDmL1gtZDOv4RO73kquO3rw+G8sBgwc
-	 L6QkgqriCZs5LaPNWp3nIQx58zWBWKu/WCAIBnaUcGAcgWlfQgracaNtgW4Nkyv3FO
-	 zcjGoz+RUIvyaSnV3y5kEHuUddRMUGKB1XgYdZfM=
+	b=hoB5vreYhmZd4sOUaB2YkVw4s1bqRQGZX+DLZNT6cvDzCxo3pNbGUuX6OWGFeqGCo
+	 lbsl4tBom/rVO0Tfb+MR2Jv0/9MR5Al1jvTWHvFkGzuwxS0F0u+C45y3abageT/Sir
+	 aSx7FKL16ylHy1QYyqDodBGm/aL+rpTv7RbqKUsA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729669AbfFTSPt (ORCPT
+        id S1729613AbfFTSPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:15:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44718 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:15:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44270 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729654AbfFTSPq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:15:46 -0400
+        id S1729395AbfFTSP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:15:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AAD9121530;
-        Thu, 20 Jun 2019 18:15:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4321C2084E;
+        Thu, 20 Jun 2019 18:15:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054545;
-        bh=GOp3NByKc6r9Ck4fPiuEBrX64/JzIwN9Krtx+Ulfws8=;
+        s=default; t=1561054527;
+        bh=BP8IddWGjCAgLv+nYP0K19A5yvQ9scesSZhse41AXdU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=NdbKzw7eV6BxiPEy95C9QfJi9htBtukmeTHJ1XlE8ifzopVRtx7Qw2tfEFzUEKiGK
-         c5rthQWOCXnoUVifQZEpW4+LEea05SwMsFmTjeLPmTkWNvKSHt/XEoYoAZsr7GaEg3
-         Rb9R0aBXlR8qUmLM14gH9xcGlif66xL0OdJLjmOA=
+        b=H0RJlQLqWhyH9+4TkYaqLwx0troKbrsq+F7xxAKzXSAtpugFfstde0TYzjRENBZbq
+         Mw8tEqKR0V72i8O8phvlMz5EaM6htS4URl+Uo5P7uWCeohWBugBBgd/q47Ob/rODFZ
+         8Mw43CWc1tg8NNW24TaHg0CbmkMoogzrhjDyx6iY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 65/98] configfs: Fix use-after-free when accessing sd->s_dentry
-Date:   Thu, 20 Jun 2019 19:57:32 +0200
-Message-Id: <20190620174352.391036480@linuxfoundation.org>
+        stable@vger.kernel.org, David Jander <david@protonic.nl>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 60/98] drm/etnaviv: lock MMU while dumping core
+Date:   Thu, 20 Jun 2019 19:57:27 +0200
+Message-Id: <20190620174352.099265172@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -59,56 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f6122ed2a4f9c9c1c073ddf6308d1b2ac10e0781 ]
+[ Upstream commit 1396500d673bd027683a0609ff84dca7eb6ea2e7 ]
 
-In the vfs_statx() context, during path lookup, the dentry gets
-added to sd->s_dentry via configfs_attach_attr(). In the end,
-vfs_statx() kills the dentry by calling path_put(), which invokes
-configfs_d_iput(). Ideally, this dentry must be removed from
-sd->s_dentry but it doesn't if the sd->s_count >= 3. As a result,
-sd->s_dentry is holding reference to a stale dentry pointer whose
-memory is already freed up. This results in use-after-free issue,
-when this stale sd->s_dentry is accessed later in
-configfs_readdir() path.
+The devcoredump needs to operate on a stable state of the MMU while
+it is writing the MMU state to the coredump. The missing lock
+allowed both the userspace submit, as well as the GPU job finish
+paths to mutate the MMU state while a coredump is under way.
 
-This issue can be easily reproduced, by running the LTP test case -
-sh fs_racer_file_list.sh /config
-(https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/racer/fs_racer_file_list.sh)
-
-Fixes: 76ae281f6307 ('configfs: fix race between dentry put and lookup')
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Fixes: a8c21a5451d8 (drm/etnaviv: add initial etnaviv DRM driver)
+Reported-by: David Jander <david@protonic.nl>
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+Tested-by: David Jander <david@protonic.nl>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ drivers/gpu/drm/etnaviv/etnaviv_dump.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 920d350df37b..809c1edffbaf 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -58,15 +58,13 @@ static void configfs_d_iput(struct dentry * dentry,
- 	if (sd) {
- 		/* Coordinate with configfs_readdir */
- 		spin_lock(&configfs_dirent_lock);
--		/* Coordinate with configfs_attach_attr where will increase
--		 * sd->s_count and update sd->s_dentry to new allocated one.
--		 * Only set sd->dentry to null when this dentry is the only
--		 * sd owner.
--		 * If not do so, configfs_d_iput may run just after
--		 * configfs_attach_attr and set sd->s_dentry to null
--		 * even it's still in use.
-+		/*
-+		 * Set sd->s_dentry to null only when this dentry is the one
-+		 * that is going to be killed.  Otherwise configfs_d_iput may
-+		 * run just after configfs_attach_attr and set sd->s_dentry to
-+		 * NULL even it's still in use.
- 		 */
--		if (atomic_read(&sd->s_count) <= 2)
-+		if (sd->s_dentry == dentry)
- 			sd->s_dentry = NULL;
+diff --git a/drivers/gpu/drm/etnaviv/etnaviv_dump.c b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
+index 33854c94cb85..515515ef24f9 100644
+--- a/drivers/gpu/drm/etnaviv/etnaviv_dump.c
++++ b/drivers/gpu/drm/etnaviv/etnaviv_dump.c
+@@ -125,6 +125,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
+ 		return;
+ 	etnaviv_dump_core = false;
  
- 		spin_unlock(&configfs_dirent_lock);
++	mutex_lock(&gpu->mmu->lock);
++
+ 	mmu_size = etnaviv_iommu_dump_size(gpu->mmu);
+ 
+ 	/* We always dump registers, mmu, ring and end marker */
+@@ -167,6 +169,7 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
+ 	iter.start = __vmalloc(file_size, GFP_KERNEL | __GFP_NOWARN | __GFP_NORETRY,
+ 			       PAGE_KERNEL);
+ 	if (!iter.start) {
++		mutex_unlock(&gpu->mmu->lock);
+ 		dev_warn(gpu->dev, "failed to allocate devcoredump file\n");
+ 		return;
+ 	}
+@@ -234,6 +237,8 @@ void etnaviv_core_dump(struct etnaviv_gpu *gpu)
+ 					 obj->base.size);
+ 	}
+ 
++	mutex_unlock(&gpu->mmu->lock);
++
+ 	etnaviv_core_dump_header(&iter, ETDUMP_BUF_END, iter.data);
+ 
+ 	dev_coredumpv(gpu->dev, iter.start, iter.data - iter.start, GFP_KERNEL);
 -- 
 2.20.1
 
