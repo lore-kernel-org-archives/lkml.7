@@ -2,59 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29012C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D3FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFC21206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E823206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054908;
-	bh=95GPIigMvlLUlVMsW6pUoxXKIsw1/FBEZC9liyRnEaQ=;
+	s=default; t=1561054911;
+	bh=XSmt2kupemjqB1GXrcptmo3Q9SLtuR3ACvyPs23UnSo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=U7iT0bdhDhintDCEvveWUboh4LOdXWNevFSuSr+9zfHJdlAS5xPtMbMo2ub2h9lwk
-	 oFVLCvy5d2+RtOuKB2fRbBt5+l2K9jgQXzmYLe4yS0jlK/V8MRuXu1tFY65xrIAZuA
-	 rNwDfk+v8/SSwLkdgihLGnMEuXmckI90LiAwOk+k=
+	b=E4U8A3F5cUkL1ItbLctWT9+Xp4wYtYP22hY3cZSrZmMx1cf1B3bedysghImg21WrR
+	 t5CY7tP3QWtyUz5+WjIsjthd6a7pEK+uZtA7e8r1/YmGe4ow8ImdY7Leexo584Wkg1
+	 pVg5x/ye09e0OneyR8yvQJZpGSL2c79h6PppUU9g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726923AbfFTSLx (ORCPT
+        id S1729068AbfFTSVu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39578 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:21:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39630 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728954AbfFTSLs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:48 -0400
+        id S1726650AbfFTSLu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B96802070B;
-        Thu, 20 Jun 2019 18:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 62C542084E;
+        Thu, 20 Jun 2019 18:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054307;
-        bh=95GPIigMvlLUlVMsW6pUoxXKIsw1/FBEZC9liyRnEaQ=;
+        s=default; t=1561054309;
+        bh=XSmt2kupemjqB1GXrcptmo3Q9SLtuR3ACvyPs23UnSo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CJB1y2ObySN3LJd1CoI7+foHVRTn4AhOaLarK0Hj9YXNc2gy0DIHBdCqwPympOGEo
-         Ge2CbQhP3J7CDbu1ewEkZ+JMnXik+BjXSeW60qSn/4jBCMuzVwxO5bCrrV8H8r57fH
-         deZb+v+mcygR9ZLGoFRi7ZkKG0T7MhSETAJdjgfg=
+        b=u892Q8TOYUlB1lsCWxn2VETyh4bC7ynvvPnyR7nw+jA0qWqKMLqQM4tfpoQG5TlmX
+         jgIBl/WYGk8w5HKYDnclLC0If0UubzO/Tp2nQszb9hmaeo9YH5AhDMAKiqA/pAeDZa
+         eMTzctmFvCB5IVo3Dl4HRS8x2amDFEHFutQkCPSU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 18/61] perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
-Date:   Thu, 20 Jun 2019 19:57:13 +0200
-Message-Id: <20190620174340.281076789@linuxfoundation.org>
+        stable@vger.kernel.org, Young Xiao <92siuyang@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 09/61] nfc: Ensure presence of required attributes in the deactivate_target handler
+Date:   Thu, 20 Jun 2019 19:57:04 +0200
+Message-Id: <20190620174338.988938201@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -67,153 +59,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23e3983a466cd540ffdd2bbc6e0c51e31934f941 ]
+From: Young Xiao <92siuyang@gmail.com>
 
-This patch fixes an bug revealed by the following commit:
+[ Upstream commit 385097a3675749cbc9e97c085c0e5dfe4269ca51 ]
 
-  6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
+Check that the NFC_ATTR_TARGET_INDEX attributes (in addition to
+NFC_ATTR_DEVICE_INDEX) are provided by the netlink client prior to
+accessing them. This prevents potential unhandled NULL pointer dereference
+exceptions which can be triggered by malicious user-mode programs,
+if they omit one or both of these attributes.
 
-That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
-when matching a constraint. If code+umask were needed, then the
-INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
-This broke with some of the constraints for PEBS events.
-
-Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
-fell in that category and caused the event to be rejected in PEBS mode.
-In other words, on some platforms a cmdline such as:
-
-  $ perf top -e cycles:pp
-
-would fail with -EINVAL.
-
-This patch fixes this bug by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
-when needed in the PEBS constraint tables.
-
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: kan.liang@intel.com
-Link: http://lkml.kernel.org/r/20190521005246.423-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Young Xiao <92siuyang@gmail.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/x86/events/intel/ds.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ net/nfc/netlink.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index b7b01d762d32..e91814d1a27f 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -684,7 +684,7 @@ struct event_constraint intel_core2_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1fc7, 0x1), /* SIMD_INST_RETURED.ANY */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
- 	EVENT_CONSTRAINT_END
- };
+--- a/net/nfc/netlink.c
++++ b/net/nfc/netlink.c
+@@ -922,7 +922,8 @@ static int nfc_genl_deactivate_target(st
+ 	u32 device_idx, target_idx;
+ 	int rc;
  
-@@ -693,7 +693,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x00c5, 0x1), /* MISPREDICTED_BRANCH_RETIRED */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
- 	/* Allow all events as PEBS with no flags */
- 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
- 	EVENT_CONSTRAINT_END
-@@ -701,7 +701,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
+-	if (!info->attrs[NFC_ATTR_DEVICE_INDEX])
++	if (!info->attrs[NFC_ATTR_DEVICE_INDEX] ||
++	    !info->attrs[NFC_ATTR_TARGET_INDEX])
+ 		return -EINVAL;
  
- struct event_constraint intel_slm_pebs_event_constraints[] = {
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x1),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x1),
- 	/* Allow all events as PEBS with no flags */
- 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
- 	EVENT_CONSTRAINT_END
-@@ -726,7 +726,7 @@ struct event_constraint intel_nehalem_pebs_event_constraints[] = {
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	EVENT_CONSTRAINT_END
- };
- 
-@@ -743,7 +743,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	EVENT_CONSTRAINT_END
- };
- 
-@@ -752,7 +752,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
- 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
-         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
-         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
-         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
-@@ -767,9 +767,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
-         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
- 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
- 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
- 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
-@@ -783,9 +783,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
-@@ -806,9 +806,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
-@@ -829,9 +829,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
- struct event_constraint intel_skl_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
--- 
-2.20.1
-
+ 	device_idx = nla_get_u32(info->attrs[NFC_ATTR_DEVICE_INDEX]);
 
 
