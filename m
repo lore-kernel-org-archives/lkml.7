@@ -2,107 +2,182 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BF44C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D673C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB2D206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BE9D206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dHkUN827";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VtSqWPul"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726972AbfFTScS (ORCPT
+        id S1727445AbfFTScZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:32:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50602 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbfFTScO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:32:14 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Jun 2019 14:32:25 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:54000 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727016AbfFTScQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:32:16 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F299F60E42; Thu, 20 Jun 2019 18:32:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561055535;
+        bh=Yd54+qUf89qOF87CitVUCGaXIbQK4BoasqCeVuWeJik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dHkUN827hvKy3TbixCDhZaoLogQrfZVbTq+TDcsKVPiKKlVYvMWe6L34qnPqB88WN
+         5zu7773waxm4dxNHXPHX+4wDP9/i2nF3vSS3uU5pR6JxIq7PF0tKec6lmhAy1So2t0
+         UweMQbdxYEZoAXxTlcQobY1roLBHewPe2klaTMNM=
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1785475726;
-        Thu, 20 Jun 2019 18:32:14 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-71.ams2.redhat.com [10.36.116.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E49CA19C5B;
-        Thu, 20 Jun 2019 18:32:11 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Keith Busch <keith.busch@intel.com>,
-        Oscar Salvador <osalvador@suse.de>
-Subject: [PATCH v3 3/6] mm: Make register_mem_sect_under_node() static
-Date:   Thu, 20 Jun 2019 20:31:36 +0200
-Message-Id: <20190620183139.4352-4-david@redhat.com>
-In-Reply-To: <20190620183139.4352-1-david@redhat.com>
-References: <20190620183139.4352-1-david@redhat.com>
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id DC15D6090F;
+        Thu, 20 Jun 2019 18:32:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561055532;
+        bh=Yd54+qUf89qOF87CitVUCGaXIbQK4BoasqCeVuWeJik=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=VtSqWPulOzdfF6hjpLIwlv7r/EnTnL/9N7eTlHVqqbNKJ/NwsufyIV+GXDENw5pCx
+         OCbuGP+9/yyM5ZnI5GM8m239XXJ4VtvUZfIT7o/Iaf05RwxUXUQ8mKB5lx6bJRrafH
+         SzczKGg+8/EHLSdhhyo9OlYP8IRkKWeUXTfqhvys=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org DC15D6090F
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 1/2] coresight: Do not default to CPU0 for missing CPU phandle
+Date:   Fri, 21 Jun 2019 00:01:51 +0530
+Message-Id: <92a33fa58c77206b338220427e92dabbd1d197f7.1561054498.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
+References: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 20 Jun 2019 18:32:14 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is only used internally.
+Coresight platform support assumes that a missing "cpu" phandle
+defaults to CPU0. This could be problematic and unnecessarily binds
+components to CPU0, where they may not be. Let us make the DT binding
+rules a bit stricter by not defaulting to CPU0 for missing "cpu"
+affinity information.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Oscar Salvador <osalvador@suse.de>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Also in coresight etm and cpu-debug drivers, abort the probe
+for such cases.
+
+Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/base/node.c  | 3 ++-
- include/linux/node.h | 7 -------
- 2 files changed, 2 insertions(+), 8 deletions(-)
+ Documentation/devicetree/bindings/arm/coresight.txt |  2 +-
+ drivers/hwtracing/coresight/coresight-cpu-debug.c   |  3 +++
+ drivers/hwtracing/coresight/coresight-etm3x.c       |  3 +++
+ drivers/hwtracing/coresight/coresight-etm4x.c       |  3 +++
+ drivers/hwtracing/coresight/coresight-platform.c    | 10 +++++-----
+ 5 files changed, 15 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 9be88fd05147..e6364e3e3e31 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -752,7 +752,8 @@ static int __ref get_nid_for_pfn(unsigned long pfn)
+diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+index 8a88ddebc1a2..c4659ba9457d 100644
+--- a/Documentation/devicetree/bindings/arm/coresight.txt
++++ b/Documentation/devicetree/bindings/arm/coresight.txt
+@@ -88,7 +88,7 @@ its hardware characteristcs.
+ 	  registers via co-processor 14.
+ 
+ 	* cpu: the cpu phandle this ETM/PTM is affined to. When omitted the
+-	  source is considered to belong to CPU0.
++	  affinity is set to invalid.
+ 
+ * Optional property for TMC:
+ 
+diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+index 07a1367c733f..58bfd6319f65 100644
+--- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
++++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+@@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+ 		return -ENOMEM;
+ 
+ 	drvdata->cpu = coresight_get_cpu(dev);
++	if (drvdata->cpu < 0)
++		return drvdata->cpu;
++
+ 	if (per_cpu(debug_drvdata, drvdata->cpu)) {
+ 		dev_err(dev, "CPU%d drvdata has already been initialized\n",
+ 			drvdata->cpu);
+diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
+index 225c2982e4fe..e2cb6873c3f2 100644
+--- a/drivers/hwtracing/coresight/coresight-etm3x.c
++++ b/drivers/hwtracing/coresight/coresight-etm3x.c
+@@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+ 	}
+ 
+ 	drvdata->cpu = coresight_get_cpu(dev);
++	if (drvdata->cpu < 0)
++		return drvdata->cpu;
++
+ 	desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
+ 	if (!desc.name)
+ 		return -ENOMEM;
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+index 7fe266194ab5..7bcac8896fc1 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+@@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+ 	spin_lock_init(&drvdata->spinlock);
+ 
+ 	drvdata->cpu = coresight_get_cpu(dev);
++	if (drvdata->cpu < 0)
++		return drvdata->cpu;
++
+ 	desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
+ 	if (!desc.name)
+ 		return -ENOMEM;
+diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+index 3c5ceda8db24..8b03fa573684 100644
+--- a/drivers/hwtracing/coresight/coresight-platform.c
++++ b/drivers/hwtracing/coresight/coresight-platform.c
+@@ -159,16 +159,16 @@ static int of_coresight_get_cpu(struct device *dev)
+ 	struct device_node *dn;
+ 
+ 	if (!dev->of_node)
+-		return 0;
++		return -ENODEV;
++
+ 	dn = of_parse_phandle(dev->of_node, "cpu", 0);
+-	/* Affinity defaults to CPU0 */
+ 	if (!dn)
+-		return 0;
++		return -ENODEV;
++
+ 	cpu = of_cpu_node_to_id(dn);
+ 	of_node_put(dn);
+ 
+-	/* Affinity to CPU0 if no cpu nodes are found */
+-	return (cpu < 0) ? 0 : cpu;
++	return cpu;
  }
  
- /* register memory section under specified node if it spans that node */
--int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
-+static int register_mem_sect_under_node(struct memory_block *mem_blk,
-+					 void *arg)
- {
- 	int ret, nid = *(int *)arg;
- 	unsigned long pfn, sect_start_pfn, sect_end_pfn;
-diff --git a/include/linux/node.h b/include/linux/node.h
-index 548c226966a2..4866f32a02d8 100644
---- a/include/linux/node.h
-+++ b/include/linux/node.h
-@@ -137,8 +137,6 @@ static inline int register_one_node(int nid)
- extern void unregister_one_node(int nid);
- extern int register_cpu_under_node(unsigned int cpu, unsigned int nid);
- extern int unregister_cpu_under_node(unsigned int cpu, unsigned int nid);
--extern int register_mem_sect_under_node(struct memory_block *mem_blk,
--						void *arg);
- extern void unregister_memory_block_under_nodes(struct memory_block *mem_blk);
- 
- extern int register_memory_node_under_compute_node(unsigned int mem_nid,
-@@ -170,11 +168,6 @@ static inline int unregister_cpu_under_node(unsigned int cpu, unsigned int nid)
- {
- 	return 0;
- }
--static inline int register_mem_sect_under_node(struct memory_block *mem_blk,
--							void *arg)
--{
--	return 0;
--}
- static inline void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
- {
- }
+ /*
 -- 
-2.21.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
