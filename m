@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E253C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 840B9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5093215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 576C3214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053791;
-	bh=gZWrYGruu5U/CADA8WM2KdoZ5CPFKIrqP3iR77YIUcw=;
+	s=default; t=1561053796;
+	bh=Xns1XgUtYzxGuEKYCRNoBKUoznyUt6ybGwnqXsKktyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BeGpNLO3LAt7aJ5HpgNW+NkUmz4h8xlumjLivbx7D/bOia72FRJvUvUIrJJWHiyth
-	 zS5I05sLI64f99LbZCYVMd9uSVGxfysxGJZ2GhFCH0Xf/B0YRAkxyoiBlHqpBC2B6D
-	 UtBBQFKLdj5dEDT/guihcSpl/vasjiAb7gding+g=
+	b=Npf0rXux+tGic8wX+Y24jBGccuBpmiV73/R2OEo2BOGdmhW6HSOicI540vp4daxSQ
+	 zuTBAky4WqIyj6Drbp5ATiRHpyZMf8QQVu+66kix6Mw7q3tmSiUj7MQlxOSz3hn7Xh
+	 DrslJ7nECLbIINvbSN0djXHX2KUA9W1kCZGdUksg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727578AbfFTSDJ (ORCPT
+        id S1727595AbfFTSDO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:03:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54082 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:03:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54194 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727566AbfFTSDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:05 -0400
+        id S1727566AbfFTSDK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47CC2204FD;
-        Thu, 20 Jun 2019 18:03:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F64421479;
+        Thu, 20 Jun 2019 18:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053784;
-        bh=gZWrYGruu5U/CADA8WM2KdoZ5CPFKIrqP3iR77YIUcw=;
+        s=default; t=1561053789;
+        bh=Xns1XgUtYzxGuEKYCRNoBKUoznyUt6ybGwnqXsKktyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=McwJBfQ3tE3JoYlftFwf91CMIGkMPRrKUyTv5GWpARfVOSdD7vbYSva5zh+/rv1xm
-         9CvnhC0O3FSCkapaXiVKsehntgxBqcx0ZdT0P9vF49+bYKC2IRkvqAaRrsL7Va8V1E
-         G+kyvCnPmV+umH2BNQmN6RBNOh9fj5zeXE8Mw8SQ=
+        b=l6RSx9DMpl9ObjB1mM4pKWSWJOmXcj6afVkWNdOF6LcB5a3rbsBuxHGjTR7sGJAkS
+         /N/sQ/+QKxKWA1QiC58lmtpxwI8jUTZnryxFt1KBwAmsHX9gdqmkPFaQ/OmION4KXC
+         pavqhBv6+0y5v4R3m5xCY74eTaxSvn8vQscp6yII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Georg Hofmann <georg@hofmannsweb.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 026/117] watchdog: imx2_wdt: Fix set_timeout for big timeout values
-Date:   Thu, 20 Jun 2019 19:56:00 +0200
-Message-Id: <20190620174353.545162591@linuxfoundation.org>
+        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 028/117] iommu/vt-d: Set intel_iommu_gfx_mapped correctly
+Date:   Thu, 20 Jun 2019 19:56:02 +0200
+Message-Id: <20190620174353.668773554@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,39 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b07e228eee69601addba98b47b1a3850569e5013 ]
+[ Upstream commit cf1ec4539a50bdfe688caad4615ca47646884316 ]
 
-The documentated behavior is: if max_hw_heartbeat_ms is implemented, the
-minimum of the set_timeout argument and max_hw_heartbeat_ms should be used.
-This patch implements this behavior.
-Previously only the first 7bits were used and the input argument was
-returned.
+The intel_iommu_gfx_mapped flag is exported by the Intel
+IOMMU driver to indicate whether an IOMMU is used for the
+graphic device. In a virtualized IOMMU environment (e.g.
+QEMU), an include-all IOMMU is used for graphic device.
+This flag is found to be clear even the IOMMU is used.
 
-Signed-off-by: Georg Hofmann <georg@hofmannsweb.com>
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Signed-off-by: Wim Van Sebroeck <wim@linux-watchdog.org>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Reported-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/watchdog/imx2_wdt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/watchdog/imx2_wdt.c b/drivers/watchdog/imx2_wdt.c
-index 518dfa1047cb..5098982e1a58 100644
---- a/drivers/watchdog/imx2_wdt.c
-+++ b/drivers/watchdog/imx2_wdt.c
-@@ -181,8 +181,10 @@ static void __imx2_wdt_set_timeout(struct watchdog_device *wdog,
- static int imx2_wdt_set_timeout(struct watchdog_device *wdog,
- 				unsigned int new_timeout)
- {
--	__imx2_wdt_set_timeout(wdog, new_timeout);
-+	unsigned int actual;
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 28feb1744710..25cc6ae87039 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -4119,9 +4119,7 @@ static void __init init_no_remapping_devices(void)
  
-+	actual = min(new_timeout, wdog->max_hw_heartbeat_ms * 1000);
-+	__imx2_wdt_set_timeout(wdog, actual);
- 	wdog->timeout = new_timeout;
- 	return 0;
- }
+ 		/* This IOMMU has *only* gfx devices. Either bypass it or
+ 		   set the gfx_mapped flag, as appropriate */
+-		if (dmar_map_gfx) {
+-			intel_iommu_gfx_mapped = 1;
+-		} else {
++		if (!dmar_map_gfx) {
+ 			drhd->ignored = 1;
+ 			for_each_active_dev_scope(drhd->devices,
+ 						  drhd->devices_cnt, i, dev)
+@@ -4870,6 +4868,9 @@ int __init intel_iommu_init(void)
+ 		goto out_free_reserved_range;
+ 	}
+ 
++	if (dmar_map_gfx)
++		intel_iommu_gfx_mapped = 1;
++
+ 	init_no_remapping_devices();
+ 
+ 	ret = init_dmars();
 -- 
 2.20.1
 
