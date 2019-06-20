@@ -2,100 +2,188 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B057DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:12:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E12C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A4452084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:12:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86CE2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:14:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hR5MM7jb";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hR5MM7jb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731356AbfFTIMs (ORCPT
+        id S1730317AbfFTIOC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:12:48 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:25389 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725925AbfFTIMp (ORCPT
+        Thu, 20 Jun 2019 04:14:02 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44858 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTIOC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:12:45 -0400
-X-UUID: b566a0946ec84570b984f1c3fe670ffa-20190620
-X-UUID: b566a0946ec84570b984f1c3fe670ffa-20190620
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <chunfeng.yun@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1645524193; Thu, 20 Jun 2019 16:12:39 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- MTKMBS31N1.mediatek.inc (172.27.4.69) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 20 Jun 2019 16:12:36 +0800
-Received: from localhost.localdomain (10.17.3.153) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 20 Jun 2019 16:12:35 +0800
-From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
-To:     Felipe Balbi <felipe.balbi@linux.intel.com>
-CC:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Chunfeng Yun <chunfeng.yun@mediatek.com>,
-        <linux-usb@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>
-Subject: [PATCH] usb: dwc3: remove unused @lock member of dwc3_ep struct
-Date:   Thu, 20 Jun 2019 16:12:31 +0800
-Message-ID: <342af01a252a9ef9457a6a6ec653a40698058fbc.1561018149.git.chunfeng.yun@mediatek.com>
-X-Mailer: git-send-email 1.7.9.5
+        Thu, 20 Jun 2019 04:14:02 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id DAC1C606FC; Thu, 20 Jun 2019 08:14:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561018440;
+        bh=tuUQSriThZFHcONYU0jv68aqcUoiWpP64QDN/GaLos4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hR5MM7jbhDrOkso/7PeLJVzShlT3EKV6Qv0ULTC7JdR3h+kbV0vwiPmRiP5TTKAs4
+         4NC+Jj7v2Eo+yPw022Iur50hjt/U6gIlMmgLrHBsV85EL8RqyjHDOG0gcVfgRe96V7
+         B/05cBMYfUlG0+Tx549fIKRHEpm6xT728XTmwmmo=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 54889602F4;
+        Thu, 20 Jun 2019 08:13:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561018440;
+        bh=tuUQSriThZFHcONYU0jv68aqcUoiWpP64QDN/GaLos4=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=hR5MM7jbhDrOkso/7PeLJVzShlT3EKV6Qv0ULTC7JdR3h+kbV0vwiPmRiP5TTKAs4
+         4NC+Jj7v2Eo+yPw022Iur50hjt/U6gIlMmgLrHBsV85EL8RqyjHDOG0gcVfgRe96V7
+         B/05cBMYfUlG0+Tx549fIKRHEpm6xT728XTmwmmo=
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Thu, 20 Jun 2019 13:43:45 +0530
+From:   amasule@codeaurora.org
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
+Subject: Re: [PATCH 2/5] media: venus: Initialize codec data
+In-Reply-To: <43e8022f-d231-8c36-0db8-9710a1adaabc@linaro.org>
+References: <1560233130-27264-1-git-send-email-amasule@codeaurora.org>
+ <1560233130-27264-3-git-send-email-amasule@codeaurora.org>
+ <43e8022f-d231-8c36-0db8-9710a1adaabc@linaro.org>
+Message-ID: <e75c267a5fcb1a117ea4548336fad3a4@codeaurora.org>
+X-Sender: amasule@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The member @lock of dwc2_ep struct is only initialized,
-and not used elsewhere, so remove it.
+Hi Stan,
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
- drivers/usb/dwc3/core.h   | 2 --
- drivers/usb/dwc3/gadget.c | 2 --
- 2 files changed, 4 deletions(-)
-
-diff --git a/drivers/usb/dwc3/core.h b/drivers/usb/dwc3/core.h
-index f19cbeb01087..72d28cb14bdf 100644
---- a/drivers/usb/dwc3/core.h
-+++ b/drivers/usb/dwc3/core.h
-@@ -649,7 +649,6 @@ struct dwc3_event_buffer {
-  * @cancelled_list: list of cancelled requests for this endpoint
-  * @pending_list: list of pending requests for this endpoint
-  * @started_list: list of started requests on this endpoint
-- * @lock: spinlock for endpoint request queue traversal
-  * @regs: pointer to first endpoint register
-  * @trb_pool: array of transaction buffers
-  * @trb_pool_dma: dma address of @trb_pool
-@@ -677,7 +676,6 @@ struct dwc3_ep {
- 	struct list_head	pending_list;
- 	struct list_head	started_list;
- 
--	spinlock_t		lock;
- 	void __iomem		*regs;
- 
- 	struct dwc3_trb		*trb_pool;
-diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-index d67655384eb2..7f75da30caba 100644
---- a/drivers/usb/dwc3/gadget.c
-+++ b/drivers/usb/dwc3/gadget.c
-@@ -2251,8 +2251,6 @@ static int dwc3_gadget_init_endpoint(struct dwc3 *dwc, u8 epnum)
- 		dep->endpoint.comp_desc = NULL;
- 	}
- 
--	spin_lock_init(&dep->lock);
--
- 	if (num == 0)
- 		ret = dwc3_gadget_init_control_endpoint(dep);
- 	else if (direction)
--- 
-2.21.0
-
+On 2019-06-17 14:07, Stanimir Varbanov wrote:
+> Hi Aniket,
+> 
+> On 6/11/19 9:05 AM, Aniket Masule wrote:
+>> Initialize the codec data with core resources.
+> 
+> Please squash this patch in 1/5 patch.
+Yes Stan.
+> 
+>> 
+>> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
+>> ---
+>>  drivers/media/platform/qcom/venus/helpers.c | 30 
+>> +++++++++++++++++++++++++++++
+>>  drivers/media/platform/qcom/venus/helpers.h |  1 +
+>>  drivers/media/platform/qcom/venus/vdec.c    |  4 ++++
+>>  drivers/media/platform/qcom/venus/venc.c    |  4 ++++
+>>  4 files changed, 39 insertions(+)
+>> 
+>> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
+>> b/drivers/media/platform/qcom/venus/helpers.c
+>> index 5cad601..f7f724b 100644
+>> --- a/drivers/media/platform/qcom/venus/helpers.c
+>> +++ b/drivers/media/platform/qcom/venus/helpers.c
+>> @@ -715,6 +715,36 @@ int venus_helper_set_core_usage(struct venus_inst 
+>> *inst, u32 usage)
+>>  }
+>>  EXPORT_SYMBOL_GPL(venus_helper_set_core_usage);
+>> 
+>> +int venus_helper_init_codec_data(struct venus_inst *inst)
+>> +{
+>> +	const struct codec_data *codec_data;
+>> +	unsigned int i, codec_data_size;
+>> +	u32 pixfmt;
+>> +	int ret = 0;
+>> +
+>> +	if (!IS_V4(inst->core))
+>> +		return 0;
+>> +
+>> +	codec_data = inst->core->res->codec_data;
+>> +	codec_data_size = inst->core->res->codec_data_size;
+>> +	pixfmt = inst->session_type == VIDC_SESSION_TYPE_DEC ?
+>> +			inst->fmt_out->pixfmt : inst->fmt_cap->pixfmt;
+>> +
+>> +	for (i = 0; i < codec_data_size; i++) {
+>> +		if (codec_data[i].pixfmt == pixfmt &&
+>> +		    codec_data[i].session_type == inst->session_type) {
+>> +			inst->clk_data.codec_data = &codec_data[i];
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	if (!inst->clk_data.codec_data)
+>> +		ret = -EINVAL;
+> 
+> just return -EINVAL
+> 
+>> +
+>> +	return ret;
+> 
+> return 0 is enough, and that will avoid ret variable.
+Sure Stan.
+> 
+>> +}
+>> +EXPORT_SYMBOL_GPL(venus_helper_init_codec_data);
+>> +
+>>  int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int 
+>> input_bufs,
+>>  			      unsigned int output_bufs,
+>>  			      unsigned int output2_bufs)
+>> diff --git a/drivers/media/platform/qcom/venus/helpers.h 
+>> b/drivers/media/platform/qcom/venus/helpers.h
+>> index 2475f284..f9360a8 100644
+>> --- a/drivers/media/platform/qcom/venus/helpers.h
+>> +++ b/drivers/media/platform/qcom/venus/helpers.h
+>> @@ -41,6 +41,7 @@ int venus_helper_set_output_resolution(struct 
+>> venus_inst *inst,
+>>  				       unsigned int width, unsigned int height,
+>>  				       u32 buftype);
+>>  int venus_helper_set_work_mode(struct venus_inst *inst, u32 mode);
+>> +int venus_helper_init_codec_data(struct venus_inst *inst);
+>>  int venus_helper_set_core_usage(struct venus_inst *inst, u32 usage);
+>>  int venus_helper_set_num_bufs(struct venus_inst *inst, unsigned int 
+>> input_bufs,
+>>  			      unsigned int output_bufs,
+>> diff --git a/drivers/media/platform/qcom/venus/vdec.c 
+>> b/drivers/media/platform/qcom/venus/vdec.c
+>> index 282de21..51795fd 100644
+>> --- a/drivers/media/platform/qcom/venus/vdec.c
+>> +++ b/drivers/media/platform/qcom/venus/vdec.c
+>> @@ -660,6 +660,10 @@ static int vdec_init_session(struct venus_inst 
+>> *inst)
+>>  	if (ret)
+>>  		goto deinit;
+>> 
+>> +	ret = venus_helper_init_codec_data(inst);
+>> +	if (ret)
+>> +		goto deinit;
+>> +
+>>  	return 0;
+>>  deinit:
+>>  	hfi_session_deinit(inst);
+>> diff --git a/drivers/media/platform/qcom/venus/venc.c 
+>> b/drivers/media/platform/qcom/venus/venc.c
+>> index 32cff29..792cdce 100644
+>> --- a/drivers/media/platform/qcom/venus/venc.c
+>> +++ b/drivers/media/platform/qcom/venus/venc.c
+>> @@ -847,6 +847,10 @@ static int venc_init_session(struct venus_inst 
+>> *inst)
+>>  	if (ret)
+>>  		goto deinit;
+>> 
+>> +	ret = venus_helper_init_codec_data(inst);
+>> +	if (ret)
+>> +		goto deinit;
+>> +
+>>  	ret = venc_set_properties(inst);
+>>  	if (ret)
+>>  		goto deinit;
+>> 
