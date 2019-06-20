@@ -2,151 +2,117 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A918C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:39:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D742C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0271208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:39:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D621C208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:39:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McnCESmT"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="bhc+KLrN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726244AbfFTGjD (ORCPT
+        id S1730549AbfFTGjz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 02:39:03 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:47034 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTGjC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 02:39:02 -0400
-Received: by mail-ot1-f66.google.com with SMTP id z23so1617732ote.13;
-        Wed, 19 Jun 2019 23:39:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sp3vep+gecWojxrD/V4sJjEZ27G+QN44xZ3oaMA/Ab0=;
-        b=McnCESmTtUQidbJqVN+hlYStLub6uVMispeub6VN4PS4aQOWB07bhjrnzsFg9A+6Cj
-         O+wq4kGPWxH9FJVRcHF9VN7cPYjb/oq4DHJruxjO8Vr5kVYRU9+043OQo/b4qne42uqh
-         xh/KmLE+qjMKbLfp6vD4lbww1gin6SIo1VrgyxnhslR92bVhq3cBbSmzpg7iUaxBMINW
-         wXC+HlvxqCsLg4QVUQ71NBWBjFnikrbyHNlkDPHry/61gsgoNUA89ctmVOmfqHsF4jpO
-         wpo0Tl6SEpULkB9e2GlzMTiPSX9DUUUpmN6GtwV3LQiVRHkj+IcVZvQ4Sy8m5Xtuu8i9
-         PbJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sp3vep+gecWojxrD/V4sJjEZ27G+QN44xZ3oaMA/Ab0=;
-        b=rXfQuL6nQzc/IyJWr+QdJgLdLrug+fxGrnxnxcPQ0HvxEeSO5tCFun+rrff9jv8ADI
-         5z2+EwT+jmXdd1uu5OJe5CgBe5kbsRk2lg7tnk5AZO+0TMYn5cQoNb6oof0rjM83r4CU
-         IPseRLRhfUjKpWUEIz3gypPX0h33UlXQVx8ajBUViBn+WRfZRUEPN0pFO40kKLdnMk0S
-         erYgWpvNn1P2BZGf4/t5eXnSMSYzC2JQjXzx6nxBwqiLYIcVNgiJnQwMMWdvloq8ekgq
-         Fr7kdOsHXNeuFWuQ59utCQ9Jt/fW70PyI9rOy/wNShjco9zBg4GN+ukR9ltBs0Ri/cUY
-         t5hA==
-X-Gm-Message-State: APjAAAVOmtoH1Uzb23pSo7mdvf2mJH0jsWxb+p6Sigw2fQgD4oPYno4W
-        J7XPLXnjmYI3GNhTOAHtsaSWqQHCQxFk/shYwfM=
-X-Google-Smtp-Source: APXvYqxo9G2P53t/pGrnKhAN3uBijKmUC0uAx7nWK4vX6b3m+C0zos3yAdPBRGpSuICJBBhyxMAUxICKjoSGfb0nXj4=
-X-Received: by 2002:a9d:62c4:: with SMTP id z4mr2248300otk.56.1561012742013;
- Wed, 19 Jun 2019 23:39:02 -0700 (PDT)
+        Thu, 20 Jun 2019 02:39:55 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47677 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726290AbfFTGjy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 02:39:54 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Tsck3gDBz9s5c;
+        Thu, 20 Jun 2019 16:39:50 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1561012790;
+        bh=2GFOGkgGbiLZECffsT8YZZyzO0l3qx/sbv+hYZz1p38=;
+        h=Date:From:To:Cc:Subject:From;
+        b=bhc+KLrN3RyDfztjatZqYzycUVaARoAZ1XMhGpyj494NCVu7AsWcP9aQBVxcbCOYe
+         wg53YVxgeckXsaj/GvV/8GW7A/5Af652RfO7azdYvomIxJSYth0kH75+h2qWN1j4Ij
+         3OAf9WQZEkH32lL18Jht5jtqmmvIXMnpDz4SUT+o3/1G09gfn2KinMVY/Z4RV4d5c1
+         73/OePN9eWOgwMcLN/d1dFaYJZxa3MF65uP1zltdFgroL5+Cnxm/tCercqo4cTbEuC
+         QyA+KHcrst3AWgyY/qmkRLU+WuM8ZPi2BMBWdM5zpb6Hf/xU5GXdm1GYOHpmdgLJvM
+         F5xKLjLq5qDeA==
+Date:   Thu, 20 Jun 2019 16:39:48 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dan Williams <dan.j.williams@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Pankaj Gupta <pagupta@redhat.com>
+Subject: linux-next: manual merge of the nvdimm tree with the vhost tree
+Message-ID: <20190620163948.0cfdc7c8@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190620050301.1149-1-tao3.xu@intel.com>
-In-Reply-To: <20190620050301.1149-1-tao3.xu@intel.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Thu, 20 Jun 2019 14:40:15 +0800
-Message-ID: <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
-Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
-To:     Tao Xu <tao3.xu@intel.com>
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        Radim Krcmar <rkrcmar@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>, xiaoyao.li@linux.intel.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/nExES/9MyiZFREjqxRg_dJg"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Thu, 20 Jun 2019 at 13:06, Tao Xu <tao3.xu@intel.com> wrote:
->
-> The helper vmx_xsaves_supported() returns the bit value of
-> SECONDARY_EXEC_XSAVES in vmcs_config.cpu_based_2nd_exec_ctrl, which
-> remains unchanged true if vmcs supports 1-setting of this bit after
-> setup_vmcs_config(). It should check the guest's cpuid not this
-> unchanged value when get/set msr.
->
-> Besides, vmx_compute_secondary_exec_control() adjusts
-> SECONDARY_EXEC_XSAVES bit based on guest cpuid's X86_FEATURE_XSAVE
-> and X86_FEATURE_XSAVES, it should use updated value to decide whether
-> set XSS_EXIT_BITMAP.
->
-> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
-> Signed-off-by: Tao Xu <tao3.xu@intel.com>
-> ---
->  arch/x86/kvm/vmx/vmx.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index b93e36ddee5e..935cf72439a9 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -1721,7 +1721,8 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struc=
-t msr_data *msr_info)
->                 return vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index=
-,
->                                        &msr_info->data);
->         case MSR_IA32_XSS:
-> -               if (!vmx_xsaves_supported())
-> +               if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) ||
-> +                       !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
->                         return 1;
->                 msr_info->data =3D vcpu->arch.ia32_xss;
->                 break;
-> @@ -1935,7 +1936,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struc=
-t msr_data *msr_info)
->                         return 1;
->                 return vmx_set_vmx_msr(vcpu, msr_index, data);
->         case MSR_IA32_XSS:
-> -               if (!vmx_xsaves_supported())
-> +               if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) ||
-> +                       !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
->                         return 1;
+--Sig_/nExES/9MyiZFREjqxRg_dJg
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Not complete true.
+Hi Dan,
 
->                 /*
->                  * The only supported bit as of Skylake is bit 8, but
-> @@ -4094,7 +4096,7 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
->
->         set_cr4_guest_host_mask(vmx);
->
-> -       if (vmx_xsaves_supported())
-> +       if (vmx->secondary_exec_control & SECONDARY_EXEC_XSAVES)
->                 vmcs_write64(XSS_EXIT_BITMAP, VMX_XSS_EXIT_BITMAP);
+Today's linux-next merge of the nvdimm tree got a conflict in:
 
-This is not true.
+  include/uapi/linux/virtio_ids.h
 
-SDM 24.6.20:
-On processors that support the 1-setting of the =E2=80=9Cenable
-XSAVES/XRSTORS=E2=80=9D VM-execution control, the VM-execution control fiel=
-ds
-include a 64-bit XSS-exiting bitmap.
+between commit:
 
-It depends on whether or not processors support the 1-setting instead
-of =E2=80=9Cenable XSAVES/XRSTORS=E2=80=9D is 1 in VM-exection control fiel=
-d. Anyway,
-I will send a patch to fix the msr read/write for commit
-203000993de5(kvm: vmx: add MSR logic for XSAVES), thanks for the
-report.
+  edcd69ab9a32 ("iommu: Add virtio-iommu driver")
 
-Regards,
-Wanpeng Li
+from the vhost tree and commit:
+
+  5990fce9c50e ("virtio-pmem: Add virtio pmem driver")
+
+from the nvdimm tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc include/uapi/linux/virtio_ids.h
+index cfe47c5d9a56,32b2f94d1f58..000000000000
+--- a/include/uapi/linux/virtio_ids.h
++++ b/include/uapi/linux/virtio_ids.h
+@@@ -43,6 -43,6 +43,7 @@@
+  #define VIRTIO_ID_INPUT        18 /* virtio input */
+  #define VIRTIO_ID_VSOCK        19 /* virtio vsock transport */
+  #define VIRTIO_ID_CRYPTO       20 /* virtio crypto */
+ +#define VIRTIO_ID_IOMMU        23 /* virtio IOMMU */
++ #define VIRTIO_ID_PMEM         27 /* virtio pmem */
+ =20
+  #endif /* _LINUX_VIRTIO_IDS_H */
+
+--Sig_/nExES/9MyiZFREjqxRg_dJg
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0LKjQACgkQAVBC80lX
+0Gzv3AgAkbqCtQ1tex3/mg4AWhSVb60nLI6AMLsfCvvhwCluPyyNPamZB7vgrZkg
+b7J32SkWdZ2//ol0mzHBB/UhPe+6dYQX31b6u7Oupy6BR+/7FIbpyZ3EJra6n/mo
+4ttNkaXZzcGdz8zu7qs7HxeW2dzbDUcxAh+X3X9kcgW17terEl7LQ2DXL0jqNsBv
+dA3wWRkcpU/TWtlLYryuBUFX0BNaYp0CrbXzTaa0VxQK9ik68DctRdChbFgesBKw
+RjXO4S9CFMSICcMxZoxuM0CZMn3WPOoQkdfiMMadO4nVsXHI0X7sBi7F/OMe5qhf
+38iqBEQKe0rG78vkyXPTdk6M3LyFSw==
+=hcK+
+-----END PGP SIGNATURE-----
+
+--Sig_/nExES/9MyiZFREjqxRg_dJg--
