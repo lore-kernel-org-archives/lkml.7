@@ -2,74 +2,104 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89B02C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:37:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 873E0C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:38:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73FA020656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:37:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C20820656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:38:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfFTShp (ORCPT
+        id S1726583AbfFTSic (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:37:45 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:42923 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726130AbfFTShp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:37:45 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id 54605240009;
-        Thu, 20 Jun 2019 18:37:42 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 20:37:42 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Chen-Yu Tsai <wens@kernel.org>
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Vincent Donnefort <vdonnefort@gmail.com>,
-        linux-rtc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 2/3] rtc: pcf8563: Clear event flags and disable
- interrupts before requesting irq
-Message-ID: <20190620183742.GD23549@piout.net>
-References: <20190604042337.26129-1-wens@kernel.org>
- <20190604042337.26129-3-wens@kernel.org>
+        Thu, 20 Jun 2019 14:38:32 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33806 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726052AbfFTSib (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:38:31 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1he1ws-000641-Jx; Thu, 20 Jun 2019 12:38:15 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190620161240.22738-5-logang@deltatee.com>
+ <20190620172347.GE19891@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <6e4caa21-a148-00d1-a46f-18517fb744d6@deltatee.com>
+Date:   Thu, 20 Jun 2019 12:38:13 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190604042337.26129-3-wens@kernel.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190620172347.GE19891@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, hch@lst.de, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 04/28] block: Never bounce dma-direct bios
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/06/2019 12:23:36+0800, Chen-Yu Tsai wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
-> 
-> Besides the alarm, the PCF8563 also has a timer triggered interrupt.
-> In cases where the previous system left the timer and interrupts on,
-> or somehow the bits got enabled, the interrupt would keep triggering
-> as the kernel doesn't know about it.
-> 
-> Clear both the alarm and timer event flags, and disable the interrupts,
-> before requesting the interrupt line.
-> 
-> Fixes: ede3e9d47cca ("drivers/rtc/rtc-pcf8563.c: add alarm support")
-> Fixes: a45d528aab8b ("rtc: pcf8563: clear expired alarm at boot time")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> ---
->  drivers/rtc/rtc-pcf8563.c | 11 +++++------
->  1 file changed, 5 insertions(+), 6 deletions(-)
-> 
-Applied, thanks.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+
+On 2019-06-20 11:23 a.m., Jason Gunthorpe wrote:
+> On Thu, Jun 20, 2019 at 10:12:16AM -0600, Logan Gunthorpe wrote:
+>> It is expected the creator of the dma-direct bio will ensure the
+>> target device can access the DMA address it's creating bios for.
+>> It's also not possible to bounce a dma-direct bio seeing the block
+>> layer doesn't have any way to access the underlying data behind
+>> the DMA address.
+>>
+>> Thus, never bounce dma-direct bios.
+> 
+> I wonder how feasible it would be to implement a 'dma vec' copy
+> from/to? 
+
+> That is about the only operation you could safely do on P2P BAR
+> memory. 
+> 
+> I wonder if a copy implementation could somehow query the iommu layer
+> to get a kmap of the memory pointed at by the dma address so we don't
+> need to carry struct page around?
+
+That sounds a bit nasty. First we'd have to determine what the
+dma_addr_t points to; and with P2P it may be a bus address or it may be
+an IOVA address and it would probably have to be based on whether the
+IOVA is reserved or not (PCI bus addresses should all be reserved).
+Second, if it is an IOVA then the we'd have to get the physical address
+back from the IOMMU tables and hope we can then get it back to a
+sensible kernel mapping -- and if it points to a PCI bus address we'd
+then have to somehow get back to the kernel mapping which could be
+anywhere in the VMALLOC region as we no longer have the linear mapping
+that struct page provides.
+
+I think if we need access to the memory, then this is the wrong approach
+and we should keep struct page or try pfn_t so we can map the memory in
+a way that would perform better.
+
+In theory, I could relatively easily do the same thing I did for dma_vec
+but with a pfn_t_vec. Though we'd still have the problem of determining
+virtual address from physical address for memory that isn't linearly
+mapped. We'd probably have to introduce some arch-specific thing to
+linearly map an io region or something which may be possible on some
+arches on not on others (same problems we have with struct page).
+
+Logan
