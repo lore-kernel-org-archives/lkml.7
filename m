@@ -5,48 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B414C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E45C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 371A4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 862F4205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054462;
-	bh=qaolnFThAXRJh7xb80Fx8IN+cYUOpdIQLpeqRO5twEI=;
+	s=default; t=1561054466;
+	bh=I3BsryP/5Zxl8KTwCtVmeaeJ9pMHX61Ww9t6D4ooh+c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wh9odTgHsF6E/S3Zo8R2o1ubjpUC4I8GYQFfSrXWuXrS+Nsof5To/tmuJX2h+u32r
-	 GxWOx1R5hpdUb+Q108/MetsAqixjWB9IVd6wVYRQA0xixd93BAZB804pCYSpT16zsn
-	 +KFqMWDad3PUbjVGPBMp2sdmbrwj9/X7uINRq/94=
+	b=DQTmKROs8FPpk2p3IuhWHFek7QkgFP/au1cU97y4p5EBS9RKRFIMGjLgj4C7+S+KZ
+	 vYVtdfvb7zPxn/XhZ8zzUEi0AVLq4C+lvjx9GsmWIIAk8k28ZoL/lb+WlYZ9g9HLH/
+	 JLL4Y4kOxBIJknALu6uUapJlpn1uykg03LvENJwA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfFTSOV (ORCPT
+        id S1727272AbfFTSOZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:14:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42562 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729426AbfFTSOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:19 -0400
+        id S1729440AbfFTSOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 91857205F4;
-        Thu, 20 Jun 2019 18:14:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 30F6A2082C;
+        Thu, 20 Jun 2019 18:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054458;
-        bh=qaolnFThAXRJh7xb80Fx8IN+cYUOpdIQLpeqRO5twEI=;
+        s=default; t=1561054460;
+        bh=I3BsryP/5Zxl8KTwCtVmeaeJ9pMHX61Ww9t6D4ooh+c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mipC7RZ7lqNgX6Zm6YC7Xh9fG0Fh3Xa7w5h2it3OClf2G1I4eegqNXS2cqLU8fyQM
-         gBxK9CD+fsZs4UAfuBQCgEMqMIVrzvaJKRKun0zG63qv2O6VkOd5cejvPZbPq0r2+O
-         jnTtN/LoxD3z20aLWlmqsnScjOFpMSasuHxLvw/I=
+        b=ERPQsRvOqdkson3/1l5pjwRKTn3Jmt5tSUy2HRpXBkxze0xc/JJ5cu2ApeLvPdTtb
+         xIvREfDgx0wfgC3RUK8hnHdvztBEhrA2q52jWwuj/NVHg84Dm8uV4n5N8f3PWrI6YL
+         Kgzlx5MqHFM5rxHQLzR5Dtc578d2J4SEwy+9C2WI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 35/98] staging: wilc1000: Fix some double unlock bugs in wilc_wlan_cleanup()
-Date:   Thu, 20 Jun 2019 19:57:02 +0200
-Message-Id: <20190620174350.685315646@linuxfoundation.org>
+Subject: [PATCH 5.1 36/98] pinctrl: intel: Clear interrupt status in mask/unmask callback
+Date:   Thu, 20 Jun 2019 19:57:03 +0200
+Message-Id: <20190620174350.729997143@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -59,43 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fea69916360468e364a4988db25a5afa835f3406 ]
+[ Upstream commit 670784fb4ebe54434e263837390e358405031d9e ]
 
-If ->hif_read_reg() or ->hif_write_reg() fail then the code unlocks
-and keeps executing.  It should just return.
+Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
+added because clearing interrupt status bit is required to avoid
+unexpected behavior.
 
-Fixes: c5c77ba18ea6 ("staging: wilc1000: Add SDIO/SPI 802.11 driver")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Turns out the unmask callback also needs the fix, which can solve weird
+IRQ triggering issues on I2C touchpad ELAN1200.
+
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/staging/wilc1000/wilc_wlan.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ drivers/pinctrl/intel/pinctrl-intel.c | 37 +++++----------------------
+ 1 file changed, 6 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/staging/wilc1000/wilc_wlan.c b/drivers/staging/wilc1000/wilc_wlan.c
-index c2389695fe20..70b1ab21f8a3 100644
---- a/drivers/staging/wilc1000/wilc_wlan.c
-+++ b/drivers/staging/wilc1000/wilc_wlan.c
-@@ -1076,13 +1076,17 @@ void wilc_wlan_cleanup(struct net_device *dev)
- 	acquire_bus(wilc, WILC_BUS_ACQUIRE_AND_WAKEUP);
+diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+index 70638b74f9d6..95d224404c7c 100644
+--- a/drivers/pinctrl/intel/pinctrl-intel.c
++++ b/drivers/pinctrl/intel/pinctrl-intel.c
+@@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
+ 	}
+ }
  
- 	ret = wilc->hif_func->hif_read_reg(wilc, WILC_GP_REG_0, &reg);
--	if (!ret)
-+	if (!ret) {
- 		release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
-+		return;
-+	}
+-static void intel_gpio_irq_enable(struct irq_data *d)
+-{
+-	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+-	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
+-	const struct intel_community *community;
+-	const struct intel_padgroup *padgrp;
+-	int pin;
+-
+-	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
+-	if (pin >= 0) {
+-		unsigned int gpp, gpp_offset, is_offset;
+-		unsigned long flags;
+-		u32 value;
+-
+-		gpp = padgrp->reg_num;
+-		gpp_offset = padgroup_offset(padgrp, pin);
+-		is_offset = community->is_offset + gpp * 4;
+-
+-		raw_spin_lock_irqsave(&pctrl->lock, flags);
+-		/* Clear interrupt status first to avoid unexpected interrupt */
+-		writel(BIT(gpp_offset), community->regs + is_offset);
+-
+-		value = readl(community->regs + community->ie_offset + gpp * 4);
+-		value |= BIT(gpp_offset);
+-		writel(value, community->regs + community->ie_offset + gpp * 4);
+-		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
+-	}
+-}
+-
+ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ {
+ 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
+@@ -954,15 +925,20 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+ 	if (pin >= 0) {
+ 		unsigned int gpp, gpp_offset;
+ 		unsigned long flags;
+-		void __iomem *reg;
++		void __iomem *reg, *is;
+ 		u32 value;
  
- 	ret = wilc->hif_func->hif_write_reg(wilc, WILC_GP_REG_0,
- 					(reg | ABORT_INT));
--	if (!ret)
-+	if (!ret) {
- 		release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
-+		return;
-+	}
+ 		gpp = padgrp->reg_num;
+ 		gpp_offset = padgroup_offset(padgrp, pin);
  
- 	release_bus(wilc, WILC_BUS_RELEASE_ALLOW_SLEEP);
- 	wilc->hif_func->hif_deinit(NULL);
+ 		reg = community->regs + community->ie_offset + gpp * 4;
++		is = community->regs + community->is_offset + gpp * 4;
+ 
+ 		raw_spin_lock_irqsave(&pctrl->lock, flags);
++
++		/* Clear interrupt status first to avoid unexpected interrupt */
++		writel(BIT(gpp_offset), is);
++
+ 		value = readl(reg);
+ 		if (mask)
+ 			value &= ~BIT(gpp_offset);
+@@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+ 
+ static struct irq_chip intel_gpio_irqchip = {
+ 	.name = "intel-gpio",
+-	.irq_enable = intel_gpio_irq_enable,
+ 	.irq_ack = intel_gpio_irq_ack,
+ 	.irq_mask = intel_gpio_irq_mask,
+ 	.irq_unmask = intel_gpio_irq_unmask,
 -- 
 2.20.1
 
