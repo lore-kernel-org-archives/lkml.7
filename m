@@ -2,155 +2,315 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,HEXHASH_WORD,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	HEXHASH_WORD,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AE07C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:20:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72DD6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:20:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB9E2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:20:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D96E2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:20:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfFTCUH (ORCPT
+        id S1731311AbfFTCU2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 22:20:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:41580 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbfFTCUG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 22:20:06 -0400
-Received: by mail-io1-f69.google.com with SMTP id x17so2257755iog.8
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 19:20:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=Iu/xrxl9AYtNlQ8bWEvL7In5eO8Bm3o3UBlzw7LpR/M=;
-        b=LORKy9zW8UckJX56G9DoH+AAQJQkh7FvsC76Kw0EHwl8XAnHEpt3y4It+owJyO3n9h
-         P7/yKy80RACXAdWhockLOitw+kG/pn+LUys6RuMlOB/5L0FVU1NCkxPMxKjwk1vmYiei
-         PQluDrkWqTIynT/4LJcFqpjakd2X2THZ/kVEr07vH4GXcjepnEhOUfFXuszmZKpJ7oTF
-         aMNqEc7pzC9iixiGkE45SQp4fAiC0zRdU40VwSN86whXIAXag56mObMTfKsqMz8t8x0h
-         xmb9msL+n6XI62tbXXmQap8sILNPyq/mDOK84xDmXw5D9SsdBv4hkpvyr4TCRcDllg5X
-         /mUw==
-X-Gm-Message-State: APjAAAU3HqqD8IBL7nJrq1AZ+xubkaSSu1FOQCiU6loOX1lccEr+QouE
-        8lvvSTb1zmcUDJ+hHWt2678a+7l4jkxnMHv95S0SyYcqjveh
-X-Google-Smtp-Source: APXvYqz2n//t+tr5NDxBvenma2q2JRIDk3hW0Mt3KSesG2RKEmakpCn7oKjUbjOoPYEOB4m8eG5DFCgOJBJolyCrwoaKO691U600
+        Wed, 19 Jun 2019 22:20:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34748 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726389AbfFTCU1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 22:20:27 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1F2093092671;
+        Thu, 20 Jun 2019 02:20:25 +0000 (UTC)
+Received: from xz-x1.redhat.com (ovpn-12-78.pek2.redhat.com [10.72.12.78])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D53C91001DC3;
+        Thu, 20 Jun 2019 02:20:10 +0000 (UTC)
+From:   Peter Xu <peterx@redhat.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Hugh Dickins <hughd@google.com>,
+        Maya Gokhale <gokhale2@llnl.gov>,
+        Jerome Glisse <jglisse@redhat.com>,
+        Pavel Emelyanov <xemul@virtuozzo.com>,
+        Johannes Weiner <hannes@cmpxchg.org>, peterx@redhat.com,
+        Martin Cracauer <cracauer@cons.org>,
+        Denis Plotnikov <dplotnikov@virtuozzo.com>,
+        Shaohua Li <shli@fb.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Marty McFadden <mcfadden8@llnl.gov>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Mel Gorman <mgorman@suse.de>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        "Dr . David Alan Gilbert" <dgilbert@redhat.com>
+Subject: [PATCH v5 00/25] userfaultfd: write protection support
+Date:   Thu, 20 Jun 2019 10:19:43 +0800
+Message-Id: <20190620022008.19172-1-peterx@redhat.com>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9b1a:: with SMTP id y26mr12461285ion.238.1560997205638;
- Wed, 19 Jun 2019 19:20:05 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 19:20:05 -0700
-In-Reply-To: <00000000000001de810588363aaf@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000f00cf1058bb7fb56@google.com>
-Subject: Re: KASAN: slab-out-of-bounds Read in p54u_load_firmware_cb
-From:   syzbot <syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, chunkeey@googlemail.com,
-        davem@davemloft.net, kvalo@codeaurora.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 20 Jun 2019 02:20:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+This series implements initial write protection support for
+userfaultfd.  Currently both shmem and hugetlbfs are not supported
+yet, but only anonymous memory.  This is the 4nd version of it.
 
-HEAD commit:    9939f56e usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=135e29faa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=df134eda130bb43a
-dashboard link: https://syzkaller.appspot.com/bug?extid=6d237e74cdc13f036473
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175d946ea00000
+The latest code can also be found at:
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+6d237e74cdc13f036473@syzkaller.appspotmail.com
+  https://github.com/xzpeter/linux/tree/uffd-wp-merged
 
-usb 3-1: Direct firmware load for isl3887usb failed with error -2
-usb 3-1: Firmware not found.
-==================================================================
-BUG: KASAN: slab-out-of-bounds in p54u_load_firmware_cb.cold+0x97/0x13d  
-drivers/net/wireless/intersil/p54/p54usb.c:936
-Read of size 8 at addr ffff8881c9cf7588 by task kworker/1:5/2759
+v5 changelog:
+- rebase
+- drop two patches:
+    "userfaultfd: wp: handle COW properly for uffd-wp"
+    "mm: introduce do_wp_page_cont()"
+  instead remove the write bit always when resolving uffd-wp page
+  fault in previous patch ("userfaultfd: wp: apply _PAGE_UFFD_WP bit")
+  then COW will be handled correctly in the PF irq handler [Andrea]
 
-CPU: 1 PID: 2759 Comm: kworker/1:5 Not tainted 5.2.0-rc5+ #11
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events request_firmware_work_func
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description+0x67/0x231 mm/kasan/report.c:188
-  __kasan_report.cold+0x1a/0x32 mm/kasan/report.c:317
-  kasan_report+0xe/0x20 mm/kasan/common.c:614
-  p54u_load_firmware_cb.cold+0x97/0x13d  
-drivers/net/wireless/intersil/p54/p54usb.c:936
-  request_firmware_work_func+0x126/0x242  
-drivers/base/firmware_loader/main.c:785
-  process_one_work+0x905/0x1570 kernel/workqueue.c:2269
-  worker_thread+0x96/0xe20 kernel/workqueue.c:2415
-  kthread+0x30b/0x410 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+v4 changelog:
+- add r-bs
+- use kernel-doc format for fault_flag_allow_retry_first [Jerome]
+- drop "export wp_page_copy", add new patch to split do_wp_page(), use
+  it in change_pte_range() to replace the wp_page_copy(). [Jerome] (I
+  thought about different ways to do this but I still can't find a
+  100% good way for all... in this version I still used the
+  do_wp_page_cont naming.  We can still discuss this and how we should
+  split do_wp_page)
+- make sure uffd-wp will also apply to device private entries which
+  HMM uses [Jerome]
 
-Allocated by task 1612:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_kmalloc mm/kasan/common.c:489 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:462
-  kmalloc include/linux/slab.h:547 [inline]
-  syslog_print kernel/printk/printk.c:1346 [inline]
-  do_syslog kernel/printk/printk.c:1519 [inline]
-  do_syslog+0x4f4/0x12e0 kernel/printk/printk.c:1493
-  kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
-  proc_reg_read+0x1c1/0x280 fs/proc/inode.c:221
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x18e/0x3d0 fs/read_write.c:461
-  ksys_read+0x127/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+v3 changelog:
+- take r-bs
+- patch 1: fix typo [Jerome]
+- patch 2: use brackets where proper around (flags & VM_FAULT_RETRY)
+  (there're three places to change, not four...) [Jerome]
+- patch 4: make sure TRIED is applied correctly on all archs, add more
+  comment to explain the new page fault mechanism [Jerome]
+- patch 7: in do_swap_page() remove the two lines to remove
+  FAULT_FLAG_WRITE flag [Jerome]
+- patch 10: another brackets change like above, and in
+  mfill_atomic_pte return -EINVAL when detected wp_copy==1 upon shared
+  memories [Jerome]
+- patch 12: move _PAGE_CHG_MASK change to patch 8 [Jerome]
+- patch 14: wp_page_copy() - fix write bit; change_pte_range() -
+  detect PTE change after COW [Jerome]
+- patch 17: remove last paragraph of commit message, no need to drop
+  the two lines in do_swap_page() since they've been directly dropped
+  in patch 7; touch up remove_migration_pte() to only detect uffd-wp
+  bit if it's read migration entry [Jerome]
+- add patch: "userfaultfd: wp: declare _UFFDIO_WRITEPROTECT
+  conditionally", which remove _UFFDIO_WRITEPROTECT bit if detected
+  non-anonymous memory during REGISTER; meanwhile fixup the test case
+  for shmem too for expected ioctls returned from REGISTER [Mike]
+- add patch: "userfaultfd: wp: fixup swap entries in
+  change_pte_range", the new patch will allow to apply the uffd-wp
+  bits upon swap entries directly (e.g., when the page is during
+  migration or the page was swapped out).  Please see the patch for
+  detail information.
 
-Freed by task 1612:
-  save_stack+0x1b/0x80 mm/kasan/common.c:71
-  set_track mm/kasan/common.c:79 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:451
-  slab_free_hook mm/slub.c:1421 [inline]
-  slab_free_freelist_hook mm/slub.c:1448 [inline]
-  slab_free mm/slub.c:2994 [inline]
-  kfree+0xd7/0x280 mm/slub.c:3949
-  syslog_print kernel/printk/printk.c:1405 [inline]
-  do_syslog kernel/printk/printk.c:1519 [inline]
-  do_syslog+0xff3/0x12e0 kernel/printk/printk.c:1493
-  kmsg_read+0x8a/0xb0 fs/proc/kmsg.c:40
-  proc_reg_read+0x1c1/0x280 fs/proc/inode.c:221
-  __vfs_read+0x76/0x100 fs/read_write.c:425
-  vfs_read+0x18e/0x3d0 fs/read_write.c:461
-  ksys_read+0x127/0x250 fs/read_write.c:587
-  do_syscall_64+0xb7/0x560 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+v2 changelog:
+- add some r-bs
+- split the patch "mm: userfault: return VM_FAULT_RETRY on signals"
+  into two: one to focus on the signal behavior change, the other to
+  remove the NOPAGE special path in handle_userfault().  Removing the
+  ARC specific change and remove that part of commit message since
+  it's fixed in 4d447455e73b already [Jerome]
+- return -ENOENT when VMA is invalid for UFFDIO_WRITEPROTECT to match
+  UFFDIO_COPY errno [Mike]
+- add a new patch to introduce helper to find valid VMA for uffd
+  [Mike]
+- check against VM_MAYWRITE instead of VM_WRITE when registering UFFD
+  WP [Mike]
+- MM_CP_DIRTY_ACCT is used incorrectly, fix it up [Jerome]
+- make sure the lock_page behavior will not be changed [Jerome]
+- reorder the whole series, introduce the new ioctl last. [Jerome]
+- fix up the uffdio_writeprotect() following commit df2cc96e77011cf79
+  to return -EAGAIN when detected mm layout changes [Mike]
 
-The buggy address belongs to the object at ffff8881c9cf7180
-  which belongs to the cache kmalloc-1k of size 1024
-The buggy address is located 8 bytes to the right of
-  1024-byte region [ffff8881c9cf7180, ffff8881c9cf7580)
-The buggy address belongs to the page:
-page:ffffea0007273d00 refcount:1 mapcount:0 mapping:ffff8881dac02a00  
-index:0x0 compound_mapcount: 0
-flags: 0x200000000010200(slab|head)
-raw: 0200000000010200 dead000000000100 dead000000000200 ffff8881dac02a00
-raw: 0000000000000000 00000000000e000e 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+v1 can be found at: https://lkml.org/lkml/2019/1/21/130
 
-Memory state around the buggy address:
-  ffff8881c9cf7480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c9cf7500: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff8881c9cf7580: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
-                       ^
-  ffff8881c9cf7600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff8881c9cf7680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
+Any comment would be greatly welcomed.   Thanks.
+
+Overview
+====================
+
+The uffd-wp work was initialized by Shaohua Li [1], and later
+continued by Andrea [2]. This series is based upon Andrea's latest
+userfaultfd tree, and it is a continuous works from both Shaohua and
+Andrea.  Many of the follow up ideas come from Andrea too.
+
+Besides the old MISSING register mode of userfaultfd, the new uffd-wp
+support provides another alternative register mode called
+UFFDIO_REGISTER_MODE_WP that can be used to listen to not only missing
+page faults but also write protection page faults, or even they can be
+registered together.  At the same time, the new feature also provides
+a new userfaultfd ioctl called UFFDIO_WRITEPROTECT which allows the
+userspace to write protect a range or memory or fixup write permission
+of faulted pages.
+
+Please refer to the document patch "userfaultfd: wp:
+UFFDIO_REGISTER_MODE_WP documentation update" for more information on
+the new interface and what it can do.
+
+The major workflow of an uffd-wp program should be:
+
+  1. Register a memory region with WP mode using UFFDIO_REGISTER_MODE_WP
+
+  2. Write protect part of the whole registered region using
+     UFFDIO_WRITEPROTECT, passing in UFFDIO_WRITEPROTECT_MODE_WP to
+     show that we want to write protect the range.
+
+  3. Start a working thread that modifies the protected pages,
+     meanwhile listening to UFFD messages.
+
+  4. When a write is detected upon the protected range, page fault
+     happens, a UFFD message will be generated and reported to the
+     page fault handling thread
+
+  5. The page fault handler thread resolves the page fault using the
+     new UFFDIO_WRITEPROTECT ioctl, but this time passing in
+     !UFFDIO_WRITEPROTECT_MODE_WP instead showing that we want to
+     recover the write permission.  Before this operation, the fault
+     handler thread can do anything it wants, e.g., dumps the page to
+     a persistent storage.
+
+  6. The worker thread will continue running with the correctly
+     applied write permission from step 5.
+
+Currently there are already two projects that are based on this new
+userfaultfd feature.
+
+QEMU Live Snapshot: The project provides a way to allow the QEMU
+                    hypervisor to take snapshot of VMs without
+                    stopping the VM [3].
+
+LLNL umap library:  The project provides a mmap-like interface and
+                    "allow to have an application specific buffer of
+                    pages cached from a large file, i.e. out-of-core
+                    execution using memory map" [4][5].
+
+Before posting the patchset, this series was smoke tested against QEMU
+live snapshot and the LLNL umap library (by doing parallel quicksort
+using 128 sorting threads + 80 uffd servicing threads).  My sincere
+thanks to Marty Mcfadden and Denis Plotnikov for the help along the
+way.
+
+TODO
+=============
+
+- hugetlbfs/shmem support
+- performance
+- more architectures
+- cooperate with mprotect()-allowed processes (???)
+- ...
+
+References
+==========
+
+[1] https://lwn.net/Articles/666187/
+[2] https://git.kernel.org/pub/scm/linux/kernel/git/andrea/aa.git/log/?h=userfault
+[3] https://github.com/denis-plotnikov/qemu/commits/background-snapshot-kvm
+[4] https://github.com/LLNL/umap
+[5] https://llnl-umap.readthedocs.io/en/develop/
+[6] https://git.kernel.org/pub/scm/linux/kernel/git/andrea/aa.git/commit/?h=userfault&id=b245ecf6cf59156966f3da6e6b674f6695a5ffa5
+[7] https://lkml.org/lkml/2018/11/21/370
+[8] https://lkml.org/lkml/2018/12/30/64
+
+Andrea Arcangeli (5):
+  userfaultfd: wp: hook userfault handler to write protection fault
+  userfaultfd: wp: add WP pagetable tracking to x86
+  userfaultfd: wp: userfaultfd_pte/huge_pmd_wp() helpers
+  userfaultfd: wp: add UFFDIO_COPY_MODE_WP
+  userfaultfd: wp: add the writeprotect API to userfaultfd ioctl
+
+Martin Cracauer (1):
+  userfaultfd: wp: UFFDIO_REGISTER_MODE_WP documentation update
+
+Peter Xu (16):
+  mm: gup: rename "nonblocking" to "locked" where proper
+  mm: userfault: return VM_FAULT_RETRY on signals
+  userfaultfd: don't retake mmap_sem to emulate NOPAGE
+  mm: allow VM_FAULT_RETRY for multiple times
+  mm: gup: allow VM_FAULT_RETRY for multiple times
+  mm: merge parameters for change_protection()
+  userfaultfd: wp: apply _PAGE_UFFD_WP bit
+  userfaultfd: wp: drop _PAGE_UFFD_WP properly when fork
+  userfaultfd: wp: add pmd_swp_*uffd_wp() helpers
+  userfaultfd: wp: support swap and page migration
+  khugepaged: skip collapse if uffd-wp detected
+  userfaultfd: introduce helper vma_find_uffd
+  userfaultfd: wp: don't wake up when doing write protect
+  userfaultfd: wp: declare _UFFDIO_WRITEPROTECT conditionally
+  userfaultfd: selftests: refactor statistics
+  userfaultfd: selftests: add write-protect test
+
+Shaohua Li (3):
+  userfaultfd: wp: add helper for writeprotect check
+  userfaultfd: wp: support write protection for userfault vma range
+  userfaultfd: wp: enabled write protection in userfaultfd API
+
+ Documentation/admin-guide/mm/userfaultfd.rst |  51 +++++
+ arch/alpha/mm/fault.c                        |   4 +-
+ arch/arc/mm/fault.c                          |  12 +-
+ arch/arm/mm/fault.c                          |   9 +-
+ arch/arm64/mm/fault.c                        |  11 +-
+ arch/hexagon/mm/vm_fault.c                   |   3 +-
+ arch/ia64/mm/fault.c                         |   3 +-
+ arch/m68k/mm/fault.c                         |   5 +-
+ arch/microblaze/mm/fault.c                   |   3 +-
+ arch/mips/mm/fault.c                         |   3 +-
+ arch/nds32/mm/fault.c                        |   7 +-
+ arch/nios2/mm/fault.c                        |   5 +-
+ arch/openrisc/mm/fault.c                     |   3 +-
+ arch/parisc/mm/fault.c                       |   6 +-
+ arch/powerpc/mm/fault.c                      |   8 +-
+ arch/riscv/mm/fault.c                        |   9 +-
+ arch/s390/mm/fault.c                         |  14 +-
+ arch/sh/mm/fault.c                           |   5 +-
+ arch/sparc/mm/fault_32.c                     |   4 +-
+ arch/sparc/mm/fault_64.c                     |   4 +-
+ arch/um/kernel/trap.c                        |   6 +-
+ arch/unicore32/mm/fault.c                    |   8 +-
+ arch/x86/Kconfig                             |   1 +
+ arch/x86/include/asm/pgtable.h               |  67 ++++++
+ arch/x86/include/asm/pgtable_64.h            |   8 +-
+ arch/x86/include/asm/pgtable_types.h         |  11 +-
+ arch/x86/mm/fault.c                          |   8 +-
+ arch/xtensa/mm/fault.c                       |   4 +-
+ drivers/gpu/drm/ttm/ttm_bo_vm.c              |  12 +-
+ fs/userfaultfd.c                             | 130 +++++++----
+ include/asm-generic/pgtable.h                |   1 +
+ include/asm-generic/pgtable_uffd.h           |  66 ++++++
+ include/linux/huge_mm.h                      |   2 +-
+ include/linux/mm.h                           |  60 ++++-
+ include/linux/swapops.h                      |   2 +
+ include/linux/userfaultfd_k.h                |  42 +++-
+ include/trace/events/huge_memory.h           |   1 +
+ include/uapi/linux/userfaultfd.h             |  40 +++-
+ init/Kconfig                                 |   5 +
+ mm/filemap.c                                 |   2 +-
+ mm/gup.c                                     |  61 ++---
+ mm/huge_memory.c                             |  32 ++-
+ mm/hugetlb.c                                 |  14 +-
+ mm/khugepaged.c                              |  23 ++
+ mm/memory.c                                  |  26 ++-
+ mm/mempolicy.c                               |   2 +-
+ mm/migrate.c                                 |   6 +
+ mm/mprotect.c                                |  74 ++++--
+ mm/rmap.c                                    |   6 +
+ mm/shmem.c                                   |   2 +-
+ mm/userfaultfd.c                             | 148 +++++++++---
+ tools/testing/selftests/vm/userfaultfd.c     | 225 +++++++++++++++----
+ 52 files changed, 974 insertions(+), 290 deletions(-)
+ create mode 100644 include/asm-generic/pgtable_uffd.h
+
+-- 
+2.21.0
 
