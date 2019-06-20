@@ -2,106 +2,86 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C49C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:20:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE62C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:21:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E947720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:20:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 916B420675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:21:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sIyWfeXi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732127AbfFTPUL (ORCPT
+        id S1732064AbfFTPVU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:20:11 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39046 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726654AbfFTPUL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:20:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1D804AE46;
-        Thu, 20 Jun 2019 15:20:10 +0000 (UTC)
-Subject: Re: [PATCH RFC] mm: fix regression with deferred struct page init
-To:     Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        xen-devel@lists.xenproject.org, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190620094015.21206-1-jgross@suse.com>
- <d11cf6a9ac9f2f21b6102464bf80925ada02bc78.camel@linux.intel.com>
-From:   Juergen Gross <jgross@suse.com>
-Message-ID: <0fae5789-3859-d49f-6c4c-2bde09dc3307@suse.com>
-Date:   Thu, 20 Jun 2019 17:20:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 20 Jun 2019 11:21:20 -0400
+Received: from mail-yb1-f173.google.com ([209.85.219.173]:36776 "EHLO
+        mail-yb1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726661AbfFTPVU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:21:20 -0400
+Received: by mail-yb1-f173.google.com with SMTP id w6so1387849ybo.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:21:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WWcTTKF/82/ExwUFM1sAVWc5mPz5k5o+tscsjovzbdY=;
+        b=sIyWfeXi6KwmuxnVzP1J8xyTlUH5LBx2rOkbUmIHEEbH4qtiKxfEot6fOUNodIzm22
+         BOJW1KLRlcqTIDUm8mvA/hgZCQETxs35ZW/FmAUe6Zz32N7cSqPifP+EbGHCidGq3khp
+         Eof5Mn2YrAR2RN89YJGr1V3fs4rAfIqkKhf4LvfOAOrYz+abZYmErCDqSUVwQkTUMKRq
+         Vx4ZzS+Hgyd1dAsgOYqaHRnJYgP/FhxvvhspEM7MWOkB6uUALFE/ST9Kwm4Agq9rbdul
+         Lbs78S9dLslqZ+yiWdtzwaU9D+5G10ulweUt/JDewc/ksWRSjfGvLCDAoDnMHSTGA8bi
+         YjrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WWcTTKF/82/ExwUFM1sAVWc5mPz5k5o+tscsjovzbdY=;
+        b=ZlqwQCA7dA+Yk1DOS+FwV/FuUOQP+d21/cTfXRxr+j/gIilIjcuyDbImTvdgEoufpk
+         huXiHdGKOYwHn6ZWxUdHxaLRrn+CFm5AB5k2ww2HrKDK1ZJFio3Ye/oCVMVI3G9GGsag
+         dP//rhRn3DYcV/9u9CAAOMN5KnsI+nDW1XFMRAycalVJx3Uc7LUM1G0os0ocg98dF7VG
+         sA9tQSHEcjzNo5VOcEQmUaKZFD0vrngm1AxhClwycvmKXmwnudHHzxiFPP4yYj2Uzy1E
+         +CVaDeT2KuK3pWtF+4yI9EICMWuw9Tf+KFyAaA0L4cn3CL+5Tl2cm+wrXVu22dJ6sGao
+         oafg==
+X-Gm-Message-State: APjAAAX2N2v/ittBaJ2KFGq1G5dJ/tERDPGUlAZ9L2jWksVm0/VSW27u
+        XksYtlM2XW56IPDdUIsYmbNhyPqqQ3eYbLOLV3Btlg==
+X-Google-Smtp-Source: APXvYqw+46mmXl47rsAlKbBelFwFwq7OOcf4h9cRWpPp+rUk2J7SVChb5VwvnPH8XQ2VsyehJ0FK86XudESDLPdUqXs=
+X-Received: by 2002:a25:bf83:: with SMTP id l3mr67617590ybk.446.1561044078765;
+ Thu, 20 Jun 2019 08:21:18 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <d11cf6a9ac9f2f21b6102464bf80925ada02bc78.camel@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+References: <1561042360-20480-1-git-send-email-cai@lca.pw>
+In-Reply-To: <1561042360-20480-1-git-send-email-cai@lca.pw>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Thu, 20 Jun 2019 11:21:07 -0400
+Message-ID: <CANn89iLBy+u3KTjjfvyc8-r4eUdL2b6VX=fNgqFg8f7t84EUNw@mail.gmail.com>
+Subject: Re: [PATCH -next] inet: fix compilation warnings in fqdir_pre_exit()
+To:     Qian Cai <cai@lca.pw>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20.06.19 17:17, Alexander Duyck wrote:
-> On Thu, 2019-06-20 at 11:40 +0200, Juergen Gross wrote:
->> Commit 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time
->> instead of doing larger sections") is causing a regression on some
->> systems when the kernel is booted as Xen dom0.
->>
->> The system will just hang in early boot.
->>
->> Reason is an endless loop in get_page_from_freelist() in case the first
->> zone looked at has no free memory. deferred_grow_zone() is always
->> returning true due to the following code snipplet:
->>
->>    /* If the zone is empty somebody else may have cleared out the zone */
->>    if (!deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
->>                                             first_deferred_pfn)) {
->>            pgdat->first_deferred_pfn = ULONG_MAX;
->>            pgdat_resize_unlock(pgdat, &flags);
->>            return true;
->>    }
->>
->> This in turn results in the loop as get_page_from_freelist() is
->> assuming forward progress can be made by doing some more struct page
->> initialization.
->>
->> Fixes: 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time instead of doing larger sections")
->> ---
->> This patch makes my system boot again as Xen dom0, but I'm not really
->> sure it is the correct way to do it, hence the RFC.
->> Signed-off-by: Juergen Gross <jgross@suse.com>
->> ---
->>   mm/page_alloc.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
->> index d66bc8abe0af..6ee754b5cd92 100644
->> --- a/mm/page_alloc.c
->> +++ b/mm/page_alloc.c
->> @@ -1826,7 +1826,7 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
->>   						 first_deferred_pfn)) {
->>   		pgdat->first_deferred_pfn = ULONG_MAX;
->>   		pgdat_resize_unlock(pgdat, &flags);
->> -		return true;
->> +		return false;
->>   	}
->>   
->>   	/*
-> 
-> The one change I might make to this would be to do:
-> 	return first_deferred_pfn != ULONG_MAX;
-> 
-> That way in the event the previous caller did free up the last of the
-> pages and empty the zone just before we got here then we will try one more
-> time. Otherwise if it was already done before we got here we exit.
+On Thu, Jun 20, 2019 at 10:52 AM Qian Cai <cai@lca.pw> wrote:
+>
+> The linux-next commit "inet: fix various use-after-free in defrags
+> units" [1] introduced compilation warnings,
+>
+> ./include/net/inet_frag.h:117:1: warning: 'inline' is not at beginning
+> of declaration [-Wold-style-declaration]
+>  static void inline fqdir_pre_exit(struct fqdir *fqdir)
+>  ^~~~~~
 
-Thanks for the constructive feedback!
+Interesting warning, this is kind of new compiler major feature I guess :/
 
-Will send a non-RFC variant soon.
+BTW :
 
-
-Juergen
-
+$ git grep -n "static void inline"  | wc -l
+9
