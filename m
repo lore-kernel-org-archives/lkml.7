@@ -2,53 +2,54 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9142EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:28:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9D5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DC7C20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:28:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEA9220665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055327;
-	bh=cNcSTqBV/JlD6xYl/mVHboysfBPtx7HlQQDZkb+39DM=;
+	s=default; t=1561055343;
+	bh=dXL5b03flAPcpcuWlTJ2U+RH4K9Xbh+O5tOkr79hCb8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=giwY51OXu6FU4jtCZIiYud7ZGmlDVI/pzoa4jjDMEDWofOpOd11lZo8fah/AEfbSi
-	 RVKNi2pLUku47qC/JieZW+UbYJm3qFkmlUTgMk263SMvdV+TxodveFX88hqgBPB1Vb
-	 FIt5vWrSyl3tcUsHULIb/vy0cH6MJY05OuwaXwEE=
+	b=E6fyNPEs62Kn4JxF3u1ZrMrjPSZUnBhXZk1sjWiTv1NaSrCv9XqncUB4l4PrW1OXI
+	 RduAQNLQw79V6aZv4CPRrxZ/WkhjnbzsMwHNYD8ztKHl++StbC4K4zCrysPrLJ2cxI
+	 uVGv55WpwxoCTqTzpwNwoh4h7AhaWXUIRD2AfaQo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727801AbfFTS2p (ORCPT
+        id S1727919AbfFTS3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:28:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54840 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:29:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54546 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727658AbfFTSDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:30 -0400
+        id S1727606AbfFTSDV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFC2E21655;
-        Thu, 20 Jun 2019 18:03:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F8C921479;
+        Thu, 20 Jun 2019 18:03:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053810;
-        bh=cNcSTqBV/JlD6xYl/mVHboysfBPtx7HlQQDZkb+39DM=;
+        s=default; t=1561053801;
+        bh=dXL5b03flAPcpcuWlTJ2U+RH4K9Xbh+O5tOkr79hCb8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j4we1WFtGeopDl7DGUcMZv+B7TdX8xcuCQl9qsCtKwlUoIUzuN1Alpl4+EFJCu6YC
-         gDenwmootPl2F53e8PqId5y3Vgh0hDg8XqSs5q9bGczI5XIR48nCx12aHWC4oEnU0p
-         3jNf3p9+jwyBKnbwlaTahOxF7dnQ6z8Q2N82ThkQ=
+        b=oTvVlQKCRV2rzOYciYmVRtbU+39Ic3NXScuZec6a/Mtd7WjyO65OFYypeKmD+rEHT
+         udphNgNq8MAPna9HAZxxt/vxoSC/HFQdf5juzA5KMeFPPV3GzXoXKRRNI57ZsmC0ID
+         Wm5kVI32vPy6ZLJQ4YhsKvr1KXJTVQlizkgOUFH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Enrico Granata <egranata@chromium.org>,
-        Jett Rink <jettrink@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org, Kirill Smelkov <kirr@nexedi.com>,
+        Han-Wen Nienhuys <hanwen@google.com>,
+        Jakob Unterwurzacher <jakobunt@gmail.com>,
+        Miklos Szeredi <mszeredi@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 034/117] platform/chrome: cros_ec_proto: check for NULL transfer function
-Date:   Thu, 20 Jun 2019 19:56:08 +0200
-Message-Id: <20190620174354.036072636@linuxfoundation.org>
+Subject: [PATCH 4.9 031/117] fuse: retrieve: cap requested size to negotiated max_write
+Date:   Thu, 20 Jun 2019 19:56:05 +0200
+Message-Id: <20190620174353.861621759@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,51 +62,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 94d4e7af14a1170e34cf082d92e4c02de9e9fb88 ]
+[ Upstream commit 7640682e67b33cab8628729afec8ca92b851394f ]
 
-As new transfer mechanisms are added to the EC codebase, they may
-not support v2 of the EC protocol.
+FUSE filesystem server and kernel client negotiate during initialization
+phase, what should be the maximum write size the client will ever issue.
+Correspondingly the filesystem server then queues sys_read calls to read
+requests with buffer capacity large enough to carry request header + that
+max_write bytes. A filesystem server is free to set its max_write in
+anywhere in the range between [1*page, fc->max_pages*page]. In particular
+go-fuse[2] sets max_write by default as 64K, wheres default fc->max_pages
+corresponds to 128K. Libfuse also allows users to configure max_write, but
+by default presets it to possible maximum.
 
-If the v3 initial handshake transfer fails, the kernel will try
-and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
-will be NULL, and the code will end up causing a kernel panic.
+If max_write is < fc->max_pages*page, and in NOTIFY_RETRIEVE handler we
+allow to retrieve more than max_write bytes, corresponding prepared
+NOTIFY_REPLY will be thrown away by fuse_dev_do_read, because the
+filesystem server, in full correspondence with server/client contract, will
+be only queuing sys_read with ~max_write buffer capacity, and
+fuse_dev_do_read throws away requests that cannot fit into server request
+buffer. In turn the filesystem server could get stuck waiting indefinitely
+for NOTIFY_REPLY since NOTIFY_RETRIEVE handler returned OK which is
+understood by clients as that NOTIFY_REPLY was queued and will be sent
+back.
 
-Add a check for NULL before calling the transfer function, along
-with a helpful comment explaining how one might end up in this
-situation.
+Cap requested size to negotiate max_write to avoid the problem.  This
+aligns with the way NOTIFY_RETRIEVE handler works, which already
+unconditionally caps requested retrieve size to fuse_conn->max_pages.  This
+way it should not hurt NOTIFY_RETRIEVE semantic if we return less data than
+was originally requested.
 
-Signed-off-by: Enrico Granata <egranata@chromium.org>
-Reviewed-by: Jett Rink <jettrink@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Please see [1] for context where the problem of stuck filesystem was hit
+for real, how the situation was traced and for more involving patch that
+did not make it into the tree.
+
+[1] https://marc.info/?l=linux-fsdevel&m=155057023600853&w=2
+[2] https://github.com/hanwen/go-fuse
+
+Signed-off-by: Kirill Smelkov <kirr@nexedi.com>
+Cc: Han-Wen Nienhuys <hanwen@google.com>
+Cc: Jakob Unterwurzacher <jakobunt@gmail.com>
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_proto.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ fs/fuse/dev.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index cfa3e850c49f..d225a835a64c 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -67,6 +67,17 @@ static int send_command(struct cros_ec_device *ec_dev,
- 	else
- 		xfer_fxn = ec_dev->cmd_xfer;
+--- a/fs/fuse/dev.c
++++ b/fs/fuse/dev.c
+@@ -1668,7 +1668,7 @@ static int fuse_retrieve(struct fuse_con
+ 	offset = outarg->offset & ~PAGE_MASK;
+ 	file_size = i_size_read(inode);
  
-+	if (!xfer_fxn) {
-+		/*
-+		 * This error can happen if a communication error happened and
-+		 * the EC is trying to use protocol v2, on an underlying
-+		 * communication mechanism that does not support v2.
-+		 */
-+		dev_err_once(ec_dev->dev,
-+			     "missing EC transfer API, cannot send command\n");
-+		return -EIO;
-+	}
-+
- 	ret = (*xfer_fxn)(ec_dev, msg);
- 	if (msg->result == EC_RES_IN_PROGRESS) {
- 		int i;
--- 
-2.20.1
-
+-	num = outarg->size;
++	num = min(outarg->size, fc->max_write);
+ 	if (outarg->offset > file_size)
+ 		num = 0;
+ 	else if (outarg->offset + num > file_size)
 
 
