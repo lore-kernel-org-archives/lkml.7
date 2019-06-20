@@ -2,151 +2,689 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C197C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:10:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48E2FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:10:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 22EA620679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:10:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0401520679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:10:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OXUPtQzX"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pQCwFTZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731994AbfFTOKw (ORCPT
+        id S1732046AbfFTOK4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:10:52 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:46235 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfFTOKw (ORCPT
+        Thu, 20 Jun 2019 10:10:56 -0400
+Received: from mail-lf1-f42.google.com ([209.85.167.42]:36593 "EHLO
+        mail-lf1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731943AbfFTOKy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:10:52 -0400
-Received: by mail-lf1-f68.google.com with SMTP id z15so2510425lfh.13
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:10:50 -0700 (PDT)
+        Thu, 20 Jun 2019 10:10:54 -0400
+Received: by mail-lf1-f42.google.com with SMTP id q26so2560566lfc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:10:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=vBVALGJvMoZda/xAZTPe0nEp15ZYtYZ8dyYpsQnBNe8=;
-        b=OXUPtQzXZtr7+q6/pvhfdlzXaRVXCZS4ol1oXc71P7n/BH2ltHkbGOYFqSqPrn2n+T
-         lk2GFpi+HQHtQQq5EN2HZf9kamNZaT4FS3gw5a1J3NoeTDPPOMsqwvMbMXJ7oaAQO864
-         nYxy2izA0MixazuOtlHDc89ug0QMwzfL27QSEjehucieHd28oAscEjZ6OVaUPwV2+vdc
-         +BDT+mB2t5PmLIJ15iembPvbIYLv9BPRLvmxyjsR3V7T5jz/Isb/sK9e4fR8Ftr1zJEe
-         80UY0YUhnAxJ/UTp2h4T+zRMtdHwhKpk0288/tS8+wqKMKsQpxIr/idwF4w9cN1BTqIG
-         3B8w==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=Nm6e+fyb1tzhQ6KtC2+53Ull99x2I6gajOSBkh5w9v4=;
+        b=pQCwFTZR9FFlxvH0iPSAADuzbCNKm7960WKnK9YBAmP2MtPYh6WPhyLzLpnCFANn7H
+         V+AAIf8tUoCI4HFct45dosuCm3d2sK+9rzjUd+OeIYGFWy8rs2alHFf0TxON7gR4UBUf
+         WPeO3MXwv2NgVMr0sW7ug3nUHsDEgfjRg0Dy24lgUBDSrATouBknVTWObyaAzMtrMzTE
+         xZqjka8DHllTB1MMaPjOV18oMq/X/YqQpGg6YxQG+dNqoi8mb7f44QQCEkiPUBiuGZqL
+         LUbgujD7PpJYr2B6yxOWPOHDYEt+p1p/zg9rm5BmTAQqHrgq1y2JcpART6sq9c01c+9d
+         1H4w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=vBVALGJvMoZda/xAZTPe0nEp15ZYtYZ8dyYpsQnBNe8=;
-        b=KI62p1k1/eRLPrlb3Z5TqT7ziDG5g7Vul3UPuOWbCv2m3ZFISYaSD3j95/dydhdAmo
-         oxQaCECu8h9Yb0FtG++MesDQdp8WTY7yVfnvg+gUlav58fvV1Mann8323d+p3mjXLhID
-         Mgmb9E8dZ6YpUJy/X4xEh4++H1x0Dn9dKhi3iWtaGgPEYvIq9P4iwrNOOw+frWVzllEe
-         Qr2KYZkYeSno2ueXev/+rgXysNpwrsmQcjCQKvkMG+RwJlvmXDwscV+8YeRV6Ka/oEM6
-         Cz0kouuy2aZVxvoZmPyfpkKDCw2iVGNgarYy9XCfLxE6kuAtG1wHSw6RJryd9IaPL1Um
-         PSzA==
-X-Gm-Message-State: APjAAAXLgbSJoCPH5M7xueIyrH/otAg6+Kmk6K4JAIsa3C+IQWI/H6V3
-        TnvLLm8QsmcWx2dw7MmmaBj9l5pB
-X-Google-Smtp-Source: APXvYqzp/ZU5oKhK7NBYAhFlniV4nUaNDrS/D0JgpJPHynmbIcIg93sVFdPPOreUV96mTCEJzxTrwA==
-X-Received: by 2002:a19:6a07:: with SMTP id u7mr65076716lfu.74.1561039849716;
-        Thu, 20 Jun 2019 07:10:49 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Nm6e+fyb1tzhQ6KtC2+53Ull99x2I6gajOSBkh5w9v4=;
+        b=IRKKkGxJI38E75tyIXILCKLQhXyXEkR6J6qNSpK9NFCfSRK+S2yQgziQ9C0YnMsu50
+         ornJrB7g9zAtnpALm6W3wKaXfwxGEsl3QSrOOegLfQtd9ZscqTUfzj7B8hqfkm21LTDc
+         ANGbjmWOaXWxizUoqWxBdW1gglUHrm60M4pmHxPmZvizids1ZGZFIJuRNAi4E9Nb90UK
+         en6Lm3gzTL3rKguesPt+Ru/hfQBNP1f4yQlj3uP1ioyujoFVPCoJSbxTLgMXuRZSZQAW
+         uOKC2yuz7q5GaOCsA4N5N1KLcPoKQWQvbHG0czer8ZVU339vzgGp+D+vziHINGUFJ9aZ
+         8k8Q==
+X-Gm-Message-State: APjAAAXfyWJjfLXxeA0zhXoerYXSm6/sJlqcVzbPLKRSRzLy7P4aPLck
+        dVHo1sJeLUigDfpSbGN/xpMrMxJp
+X-Google-Smtp-Source: APXvYqyqu4w0M7KOTavdMEdhWHprlisVrbr/cvPrz7LkBK+JDGIoBLPIN5391N1nkRKX+ln3CeAGlA==
+X-Received: by 2002:a19:e30b:: with SMTP id a11mr65025201lfh.8.1561039850961;
+        Thu, 20 Jun 2019 07:10:50 -0700 (PDT)
 Received: from localhost.localdomain (v902-804.aalto.fi. [130.233.11.55])
-        by smtp.gmail.com with ESMTPSA id 27sm3524684ljw.97.2019.06.20.07.10.48
+        by smtp.gmail.com with ESMTPSA id 27sm3524684ljw.97.2019.06.20.07.10.49
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 07:10:49 -0700 (PDT)
+        Thu, 20 Jun 2019 07:10:50 -0700 (PDT)
 From:   Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 0/7] rslib: RS decoder is severely broken
-Date:   Thu, 20 Jun 2019 17:10:32 +0300
-Message-Id: <20190620141039.9874-1-ferdinand.blomqvist@gmail.com>
+Subject: [PATCH v2 1/7] rslib: Add tests for the encoder and decoder
+Date:   Thu, 20 Jun 2019 17:10:33 +0300
+Message-Id: <20190620141039.9874-2-ferdinand.blomqvist@gmail.com>
 X-Mailer: git-send-email 2.17.2
+In-Reply-To: <20190620141039.9874-1-ferdinand.blomqvist@gmail.com>
+References: <20190620141039.9874-1-ferdinand.blomqvist@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the second revision of this series that fixes the bugs/flaws in
-the RS decoder. This addresses all of Thomas' comments/suggestions.
+A Reed-Solomon code with minimum distance d can correct any error and
+erasure pattern that satisfies 2 * #error + #erasures < d. If the
+error correction capacity is exceeded, then correct decoding cannot be
+guaranteed. The decoder must, however, return a valid codeword or report
+failure.
 
-Changes in v2:
-- Replace code that requires the FPU (one small thing in test_rslib.c)
-- More verbose changelog (patch 2/7)
-- Clarifying comment (patch 7/7)
-- Fixed some small whitespace issues (patches 1 and 5)
+There are two main tests:
 
-------
+- Check for correct behaviour up to the error correction capacity
+- Check for correct behaviour beyond error corrupted capacity
 
-The Reed_Solomon library used in the kernel is based on Phil Karn's
-fec library. When playing with this library I found a couple of bugs. It
-turn out that all of these bugs, and some additional flaws, are present
-in rslib.
+Both tests are simple:
 
-The Reed-Solomon decoder has several bugs/flaws:
+1. Generate random data
+2. Encode data with the chosen code
+3. Add errors and erasures to data
+4. Decode the corrupted word
+5. Check for correct behaviour
 
-- Decoding of shortened codes is broken. The decoder only works as
-  expected if there are no erasures.
+When testing up to capacity we test for:
 
-- The decoder sometimes fails silently, i.e. it announces success but
-  returns a word that is not a codeword.
+- Correct decoding
+- Correct return value (i.e. the number of corrected symbols)
+- That the returned error positions are correct
 
-- The return value of the decoder is incoherent with respect to how
-  fixed erasures are counted. If the word to be decoded is a codeword,
-  then the decoder always returns zero even if some erasures are given.
-  On the other hand, if the word to be decoded contains errors, then the
-  number of erasures is always included in the count of corrected
-  symbols. So the decoder handles erasures without symbol corruption
-  inconsistently. This inconsistency probably doesn't affect anyone
-  using the decoder, but it is inconsistent with the documentation.
+There are two kinds of erasures; the erased symbol can be corrupted or
+not. When counting the number of corrected symbols, erasures without
+symbol corruption should not be counted. Similarly, the returned error
+positions should only include positions where a correction is necessary.
 
-- The error positions returned in eras_pos include all erasures, but the
-  corrections are only set in the correction buffer if there actually is
-  a symbol error. So if there are erasures without symbol corruption,
-  then the correction buffer will contain errors (unless initialized to
-  zero before calling the decoder) or some values will be unset (if the
-  correction buffer is uninitialized).
+We run the up to capacity tests for three different interfaces of
+decode_rs:
 
-- Assumes that the syndromes provided by callers are in index form.
-  This is simply undocumented.
+- Use the correction buffers
+- Use the correction buffers with syndromes provided by the caller
+- Error correction in place (does not check the error positions)
 
-- When correcting data in-place the decoder does not correct errors in
-  the parity. On the other hand, when returning the errors in correction
-  buffers, errors in the parity are included.
+When testing beyond capacity we test for silent failures. A silent
+failure is when the decoder returns success but the returned word is not
+a valid codeword.
 
-This series provides a module with tests for rslib and fixes all the
-bugs/flaws. I am not sure that the provided self tests are written in
-the 'right way'. I just looked at other self tests in lib and
-implemented something similar.
+There are a couple of options for the tests:
 
-The fixes are tested with the self tests. They should probably also be
-tested with drivers etc. that use rslib, but it is unclear to me how to
-do this.
+- Verbosity.
 
-I looked a bit on two of the drivers that use rslib:
+- Whether to test for correct behaviour beyond capacity. Default is to
+  test beyond capacity.
 
-drivers/mtd/nand/raw/cafe_nand.c
-drivers/mtd/nand/raw/diskonchip.c
+- Whether to allow erasures without symbol corruption. Defaults to yes.
 
-Both of them seem to do some additional error checking after calling
-decode_rs16. Maybe this is needed because of the bugs in the decoder?
+Note that the tests take a couple of minutes to complete.
 
-Ferdinand Blomqvist (7):
-  rslib: Add tests for the encoder and decoder
-  rslib: Fix decoding of shortened codes
-  rslib: decode_rs: Fix length parameter check
-  rslib: decode_rs: code cleanup
-  rslib: Fix handling of of caller provided syndrome
-  rslib: Update documentation
-  rslib: Fix remaining decoder flaws
-
- lib/Kconfig.debug               |  12 +
- lib/reed_solomon/Makefile       |   2 +-
- lib/reed_solomon/decode_rs.c    | 115 +++++--
- lib/reed_solomon/reed_solomon.c |  12 +-
- lib/reed_solomon/test_rslib.c   | 516 ++++++++++++++++++++++++++++++++
- 5 files changed, 622 insertions(+), 35 deletions(-)
+Signed-off-by: Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
+---
+ lib/Kconfig.debug             |  12 +
+ lib/reed_solomon/Makefile     |   2 +-
+ lib/reed_solomon/test_rslib.c | 516 ++++++++++++++++++++++++++++++++++
+ 3 files changed, 529 insertions(+), 1 deletion(-)
  create mode 100644 lib/reed_solomon/test_rslib.c
 
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index cbdfae379896..b0d71d9293dc 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -1754,6 +1754,18 @@ config RBTREE_TEST
+ 	  A benchmark measuring the performance of the rbtree library.
+ 	  Also includes rbtree invariant checks.
+ 
++config REED_SOLOMON_TEST
++	tristate "Reed-Solomon library test"
++	depends on DEBUG_KERNEL || m
++	select REED_SOLOMON
++	select REED_SOLOMON_ENC16
++	select REED_SOLOMON_DEC16
++	help
++	  This option enables the self-test function of rslib at boot,
++	  or at module load time.
++
++	  If unsure, say N.
++
+ config INTERVAL_TREE_TEST
+ 	tristate "Interval tree test"
+ 	depends on DEBUG_KERNEL
+diff --git a/lib/reed_solomon/Makefile b/lib/reed_solomon/Makefile
+index ba9d7a3329eb..5d4fa68f26cb 100644
+--- a/lib/reed_solomon/Makefile
++++ b/lib/reed_solomon/Makefile
+@@ -4,4 +4,4 @@
+ #
+ 
+ obj-$(CONFIG_REED_SOLOMON) += reed_solomon.o
+-
++obj-$(CONFIG_REED_SOLOMON_TEST) += test_rslib.o
+diff --git a/lib/reed_solomon/test_rslib.c b/lib/reed_solomon/test_rslib.c
+new file mode 100644
+index 000000000000..aa40e7ba5824
+--- /dev/null
++++ b/lib/reed_solomon/test_rslib.c
+@@ -0,0 +1,516 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Tests for Generic Reed Solomon encoder / decoder library
++ *
++ * Written by Ferdinand Blomqvist
++ * Based on previous work by Phil Karn, KA9Q
++ */
++#include <linux/rslib.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/moduleparam.h>
++#include <linux/random.h>
++#include <linux/slab.h>
++
++enum verbosity {
++	V_SILENT,
++	V_PROGRESS,
++	V_CSUMMARY
++};
++
++enum method {
++	CORR_BUFFER,
++	CALLER_SYNDROME,
++	IN_PLACE
++};
++
++#define __param(type, name, init, msg)		\
++	static type name = init;		\
++	module_param(name, type, 0444);		\
++	MODULE_PARM_DESC(name, msg)
++
++__param(int, v, V_PROGRESS, "Verbosity level");
++__param(int, ewsc, 1, "Erasures without symbol corruption");
++__param(int, bc, 1, "Test for correct behaviour beyond error correction capacity");
++
++struct etab {
++	int	symsize;
++	int	genpoly;
++	int	fcs;
++	int	prim;
++	int	nroots;
++	int	ntrials;
++};
++
++/* List of codes to test */
++static struct etab Tab[] = {
++	{2,	0x7,	1,	1,	1,	100000	},
++	{3,	0xb,	1,	1,	2,	100000	},
++	{3,	0xb,	1,	1,	3,	100000	},
++	{3,	0xb,	2,	1,	4,	100000	},
++	{4,	0x13,	1,	1,	4,	10000	},
++	{5,	0x25,	1,	1,	6,	1000	},
++	{6,	0x43,	3,	1,	8,	1000	},
++	{7,	0x89,	1,	1,	14,	500	},
++	{8,	0x11d,	1,	1,	30,	100	},
++	{8,	0x187,	112,	11,	32,	100	},
++	{9,	0x211,	1,	1,	33,	80	},
++	{0, 0, 0, 0, 0, 0},
++};
++
++
++struct estat {
++	int	dwrong;
++	int	irv;
++	int	wepos;
++	int	nwords;
++};
++
++struct bcstat {
++	int	rfail;
++	int	rsuccess;
++	int	noncw;
++	int	nwords;
++};
++
++struct wspace {
++	uint16_t	*c;		/* sent codeword */
++	uint16_t	*r;		/* received word */
++	uint16_t	*s;		/* syndrome */
++	uint16_t	*corr;		/* correction buffer */
++	int		*errlocs;
++	int		*derrlocs;
++};
++
++struct pad {
++	int	mult;
++	int	shift;
++};
++
++static struct pad pad_coef[] = {
++	{ 0, 0 },
++	{ 1, 2 },
++	{ 1, 1 },
++	{ 3, 2 },
++	{ 1, 0 },
++};
++
++static void free_ws(struct wspace *ws)
++{
++	if (!ws)
++		return;
++
++	kfree(ws->errlocs);
++	kfree(ws->c);
++	kfree(ws);
++}
++
++static struct wspace *alloc_ws(struct rs_codec *rs)
++{
++	int nroots = rs->nroots;
++	struct wspace *ws;
++	int nn = rs->nn;
++
++	ws = kzalloc(sizeof(*ws), GFP_KERNEL);
++	if (!ws)
++		return NULL;
++
++	ws->c = kmalloc_array(2 * (nn + nroots),
++				sizeof(uint16_t), GFP_KERNEL);
++	if (!ws->c)
++		goto err;
++
++	ws->r = ws->c + nn;
++	ws->s = ws->r + nn;
++	ws->corr = ws->s + nroots;
++
++	ws->errlocs = kmalloc_array(nn + nroots, sizeof(int), GFP_KERNEL);
++	if (!ws->errlocs)
++		goto err;
++
++	ws->derrlocs = ws->errlocs + nn;
++	return ws;
++
++err:
++	free_ws(ws);
++	return NULL;
++}
++
++
++/*
++ * Generates a random codeword and stores it in c. Generates random errors and
++ * erasures, and stores the random word with errors in r. Erasure positions are
++ * stored in derrlocs, while errlocs has one of three values in every position:
++ *
++ * 0 if there is no error in this position;
++ * 1 if there is a symbol error in this position;
++ * 2 if there is an erasure without symbol corruption.
++ *
++ * Returns the number of corrupted symbols.
++ */
++static int get_rcw_we(struct rs_control *rs, struct wspace *ws,
++			int len, int errs, int eras)
++{
++	int nroots = rs->codec->nroots;
++	int *derrlocs = ws->derrlocs;
++	int *errlocs = ws->errlocs;
++	int dlen = len - nroots;
++	int nn = rs->codec->nn;
++	uint16_t *c = ws->c;
++	uint16_t *r = ws->r;
++	int errval;
++	int errloc;
++	int i;
++
++	/* Load c with random data and encode */
++	for (i = 0; i < dlen; i++)
++		c[i] = prandom_u32() & nn;
++
++	memset(c + dlen, 0, nroots * sizeof(*c));
++	encode_rs16(rs, c, dlen, c + dlen, 0);
++
++	/* Make copyand add errors and erasures */
++	memcpy(r, c, len * sizeof(*r));
++	memset(errlocs, 0, len * sizeof(*errlocs));
++	memset(derrlocs, 0, nroots * sizeof(*derrlocs));
++
++	/* Generating random errors */
++	for (i = 0; i < errs; i++) {
++		do {
++			/* Error value must be nonzero */
++			errval = prandom_u32() & nn;
++		} while (errval == 0);
++
++		do {
++			/* Must not choose the same location twice */
++			errloc = prandom_u32() % len;
++		} while (errlocs[errloc] != 0);
++
++		errlocs[errloc] = 1;
++		r[errloc] ^= errval;
++	}
++
++	/* Generating random erasures */
++	for (i = 0; i < eras; i++) {
++		do {
++			/* Must not choose the same location twice */
++			errloc = prandom_u32() % len;
++		} while (errlocs[errloc] != 0);
++
++		derrlocs[i] = errloc;
++
++		if (ewsc && (prandom_u32() & 1)) {
++			/* Erasure with the symbol intact */
++			errlocs[errloc] = 2;
++		} else {
++			/* Erasure with corrupted symbol */
++			do {
++				/* Error value must be nonzero */
++				errval = prandom_u32() & nn;
++			} while (errval == 0);
++
++			errlocs[errloc] = 1;
++			r[errloc] ^= errval;
++			errs++;
++		}
++	}
++
++	return errs;
++}
++
++static void fix_err(uint16_t *data, int nerrs, uint16_t *corr, int *errlocs)
++{
++	int i;
++
++	for (i = 0; i < nerrs; i++)
++		data[errlocs[i]] ^= corr[i];
++}
++
++static void compute_syndrome(struct rs_control *rsc, uint16_t *data,
++				int len, uint16_t *syn)
++{
++	struct rs_codec *rs = rsc->codec;
++	uint16_t *alpha_to = rs->alpha_to;
++	uint16_t *index_of = rs->index_of;
++	int nroots = rs->nroots;
++	int prim = rs->prim;
++	int fcr = rs->fcr;
++	int i, j;
++
++	/* Calculating syndrome */
++	for (i = 0; i < nroots; i++) {
++		syn[i] = data[0];
++		for (j = 1; j < len; j++) {
++			if (syn[i] == 0) {
++				syn[i] = data[j];
++			} else {
++				syn[i] = data[j] ^
++					alpha_to[rs_modnn(rs, index_of[syn[i]]
++						+ (fcr + i) * prim)];
++			}
++		}
++	}
++
++	/* Convert to index form */
++	for (i = 0; i < nroots; i++)
++		syn[i] = rs->index_of[syn[i]];
++}
++
++/* Test up to error correction capacity */
++static void test_uc(struct rs_control *rs, int len, int errs,
++		int eras, int trials, struct estat *stat,
++		struct wspace *ws, int method)
++{
++	int dlen = len - rs->codec->nroots;
++	int *derrlocs = ws->derrlocs;
++	int *errlocs = ws->errlocs;
++	uint16_t *corr = ws->corr;
++	uint16_t *c = ws->c;
++	uint16_t *r = ws->r;
++	uint16_t *s = ws->s;
++	int derrs, nerrs;
++	int i, j;
++
++	for (j = 0; j < trials; j++) {
++		nerrs = get_rcw_we(rs, ws, len, errs, eras);
++
++		switch (method) {
++		case CORR_BUFFER:
++			derrs = decode_rs16(rs, r, r + dlen, dlen,
++					NULL, eras, derrlocs, 0, corr);
++			fix_err(r, derrs, corr, derrlocs);
++			break;
++		case CALLER_SYNDROME:
++			compute_syndrome(rs, r, len, s);
++			derrs = decode_rs16(rs, NULL, NULL, dlen,
++					s, eras, derrlocs, 0, corr);
++			fix_err(r, derrs, corr, derrlocs);
++			break;
++		case IN_PLACE:
++			derrs = decode_rs16(rs, r, r + dlen, dlen,
++					NULL, eras, derrlocs, 0, NULL);
++			break;
++		}
++
++		if (derrs != nerrs)
++			stat->irv++;
++
++		if (method != IN_PLACE) {
++			for (i = 0; i < derrs; i++) {
++				if (errlocs[derrlocs[i]] != 1)
++					stat->wepos++;
++			}
++		}
++
++		if (memcmp(r, c, len * sizeof(*r)))
++			stat->dwrong++;
++	}
++	stat->nwords += trials;
++}
++
++int ex_rs_helper(struct rs_control *rs, struct wspace *ws,
++		int len, int trials, int method)
++{
++	static const char * const desc[] = {
++		"Testing correction buffer interface...",
++		"Testing with caller provided syndrome...",
++		"Testing in-place interface..."
++	};
++
++	struct estat stat = {0, 0, 0, 0};
++	int nroots = rs->codec->nroots;
++	int errs, eras, retval;
++
++	if (v >= V_PROGRESS)
++		pr_info("  %s\n", desc[method]);
++
++	for (errs = 0; errs <= nroots / 2; errs++)
++		for (eras = 0; eras <= nroots - 2 * errs; eras++)
++			test_uc(rs, len, errs, eras, trials, &stat, ws, method);
++
++	if (v >= V_CSUMMARY) {
++		pr_info("    Decodes wrong:        %d / %d\n",
++				stat.dwrong, stat.nwords);
++		pr_info("    Wrong return value:   %d / %d\n",
++				stat.irv, stat.nwords);
++		if (method != IN_PLACE)
++			pr_info("    Wrong error position: %d\n", stat.wepos);
++	}
++
++	retval = stat.dwrong + stat.wepos + stat.irv;
++	if (retval && v >= V_PROGRESS)
++		pr_warn("    FAIL: %d decoding failures!\n", retval);
++
++	return retval;
++}
++
++int exercise_rs(struct rs_control *rs, struct wspace *ws,
++		int len, int trials)
++{
++
++	int retval = 0;
++	int i;
++
++	if (v >= V_PROGRESS)
++		pr_info("Testing up to error correction capacity...\n");
++
++	for (i = 0; i <= IN_PLACE; i++)
++		retval |= ex_rs_helper(rs, ws, len, trials, i);
++
++	return retval;
++}
++
++/* Tests for correct behaviour beyond error correction capacity */
++static void test_bc(struct rs_control *rs, int len, int errs,
++		int eras, int trials, struct bcstat *stat,
++		struct wspace *ws)
++{
++	int nroots = rs->codec->nroots;
++	int dlen = len - nroots;
++	int *derrlocs = ws->derrlocs;
++	uint16_t *corr = ws->corr;
++	uint16_t *r = ws->r;
++	int derrs, j;
++
++	for (j = 0; j < trials; j++) {
++		get_rcw_we(rs, ws, len, errs, eras);
++		derrs = decode_rs16(rs, r, r + dlen, dlen,
++				NULL, eras, derrlocs, 0, corr);
++		fix_err(r, derrs, corr, derrlocs);
++
++		if (derrs >= 0) {
++			stat->rsuccess++;
++
++			/*
++			 * We check that the returned word is actually a
++			 * codeword. The obious way to do this would be to
++			 * compute the syndrome, but we don't want to replicate
++			 * that code here. However, all the codes are in
++			 * systematic form, and therefore we can encode the
++			 * returned word, and see whether the parity changes or
++			 * not.
++			 */
++			memset(corr, 0, nroots * sizeof(*corr));
++			encode_rs16(rs, r, dlen, corr, 0);
++
++			if (memcmp(r + dlen, corr, nroots * sizeof(*corr)))
++				stat->noncw++;
++		} else {
++			stat->rfail++;
++		}
++	}
++	stat->nwords += trials;
++}
++
++int exercise_rs_bc(struct rs_control *rs, struct wspace *ws,
++		int len, int trials)
++{
++	struct bcstat stat = {0, 0, 0, 0};
++	int nroots = rs->codec->nroots;
++	int errs, eras, cutoff;
++
++	if (v >= V_PROGRESS)
++		pr_info("Testing beyond error correction capacity...\n");
++
++	for (errs = 1; errs <= nroots; errs++) {
++		eras = nroots - 2 * errs + 1;
++		if (eras < 0)
++			eras = 0;
++
++		cutoff = nroots <= len - errs ? nroots : len - errs;
++		for (; eras <= cutoff; eras++)
++			test_bc(rs, len, errs, eras, trials, &stat, ws);
++	}
++
++	if (v >= V_CSUMMARY) {
++		pr_info("  decoder gives up:        %d / %d\n",
++				stat.rfail, stat.nwords);
++		pr_info("  decoder returns success: %d / %d\n",
++				stat.rsuccess, stat.nwords);
++		pr_info("    not a codeword:        %d / %d\n",
++				stat.noncw, stat.rsuccess);
++	}
++
++	if (stat.noncw && v >= V_PROGRESS)
++		pr_warn("    FAIL: %d silent failures!\n", stat.noncw);
++
++	return stat.noncw;
++}
++
++static int run_exercise(struct etab *e)
++{
++	int nn = (1 << e->symsize) - 1;
++	int kk = nn - e->nroots;
++	struct rs_control *rsc;
++	int retval = -ENOMEM;
++	int max_pad = kk - 1;
++	int prev_pad = -1;
++	struct wspace *ws;
++	int i;
++
++	rsc = init_rs(e->symsize, e->genpoly, e->fcs, e->prim, e->nroots);
++	if (!rsc)
++		return retval;
++
++	ws = alloc_ws(rsc->codec);
++	if (!ws)
++		goto err;
++
++	retval = 0;
++	for (i = 0; i < ARRAY_SIZE(pad_coef); i++) {
++		int pad = (pad_coef[i].mult * max_pad) >> pad_coef[i].shift;
++		int len = nn - pad;
++
++		if (pad == prev_pad)
++			continue;
++
++		prev_pad = pad;
++		if (v >= V_PROGRESS) {
++			pr_info("Testing (%d,%d)_%d code...\n",
++					len, kk - pad, nn + 1);
++		}
++
++		retval |= exercise_rs(rsc, ws, len, e->ntrials);
++		if (bc)
++			retval |= exercise_rs_bc(rsc, ws, len, e->ntrials);
++	}
++
++	free_ws(ws);
++
++err:
++	free_rs(rsc);
++	return retval;
++}
++
++static int __init test_rslib_init(void)
++{
++	int fail, i;
++
++	for (i = 0; Tab[i].symsize != 0 ; i++) {
++		int retval;
++
++		retval = run_exercise(Tab + i);
++		if (retval < 0)
++			return -ENOMEM;
++
++		fail |= retval;
++	}
++
++	if (fail)
++		pr_warn("rslib: test failed\n");
++	else
++		pr_info("rslib: test ok\n");
++
++	return -EAGAIN; /* Fail will directly unload the module */
++}
++
++static void __exit test_rslib_exit(void)
++{
++}
++
++module_init(test_rslib_init)
++module_exit(test_rslib_exit)
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Ferdinand Blomqvist");
++MODULE_DESCRIPTION("Reed-Solomon library test");
 -- 
 2.17.2
 
