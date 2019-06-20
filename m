@@ -2,94 +2,174 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37045C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:47:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C51F2C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 172B32085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:47:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98EE82085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:51:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gibson.dropbear.id.au header.i=@gibson.dropbear.id.au header.b="Sha4u42Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfFTHrJ (ORCPT
+        id S1726485AbfFTHvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:47:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:51788 "EHLO foss.arm.com"
+        Thu, 20 Jun 2019 03:51:55 -0400
+Received: from ozlabs.org ([203.11.71.1]:41009 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726381AbfFTHrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:47:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F1BF344;
-        Thu, 20 Jun 2019 00:47:08 -0700 (PDT)
-Received: from brain-police (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 191683F246;
-        Thu, 20 Jun 2019 00:47:04 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 08:46:58 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
-        broonie@kernel.org, mark.rutland@arm.com,
-        Olof Johansson <olof@lixom.net>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Dinh Nguyen <dinguyen@kernel.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] arm64: defconfig: update and enable CONFIG_RANDOMIZE_BASE
-Message-ID: <20190620074640.GA27228@brain-police>
-References: <20190620003244.261595-1-ndesaulniers@google.com>
+        id S1725953AbfFTHvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:51:54 -0400
+Received: by ozlabs.org (Postfix, from userid 1007)
+        id 45TvCn4f3jz9sBr; Thu, 20 Jun 2019 17:51:49 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+        d=gibson.dropbear.id.au; s=201602; t=1561017109;
+        bh=KY2I3dC1Px56+CQotFXwYFAvhLT69NhbHKJ1Ta4T1+Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Sha4u42YfDlRkYyVdHB+7UMxiKsSZOusC0WbZTwuwnE6jAKyBBTpF4VPpHzYTPEtf
+         fR8fgbrFr8gql9u7+f6oGqb9NBj9GsSH1lDcxIXx6YDqa+5B8Xx20rm1cPOapz0uy2
+         5TyrJ6kflvOgpok2aWwB5UoydscA5nQ2tjyRqRoM=
+Date:   Thu, 20 Jun 2019 17:45:17 +1000
+From:   David Gibson <david@gibson.dropbear.id.au>
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-spdx@vger.kernel.org,
+        Devicetree Compiler <devicetree-compiler@vger.kernel.org>,
+        DTML <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Frank Rowand <frowand.list@gmail.com>
+Subject: Re: SPDX conversion under scripts/dtc/ of Linux Kernel
+Message-ID: <20190620074517.GA2066@umbus.BigPond>
+References: <CAK7LNARHHXv5Tu4BHN1avKOExS6HmPfd2c0ELZiQaxtmETOsDw@mail.gmail.com>
+ <20190619125948.GA27090@kroah.com>
+ <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
 Content-Disposition: inline
-In-Reply-To: <20190620003244.261595-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <CAL_JsqJQ0bkMMpgA_JpGf-mo8ue28XpGf7oMFJ8bScGAmc+_1g@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nick,
 
-On Wed, Jun 19, 2019 at 05:32:42PM -0700, Nick Desaulniers wrote:
-> Generated via:
-> $ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make defconfig
-> $ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make menuconfig
-> <enable CONFIG_RANDOMIZE_BASE aka KASLR>
-> $ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make savedefconfig
-> $ mv defconfig arch/arm64/configs/defconfig
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Hmm, I'm in two minds about whether we want this on by default. On the plus
-side, it gets us extra testing coverage, although the /vast/ majority of
-firmware implementations I run into either don't pass a seed or don't
-provide a working EFI_RNG. Perhaps that's just a chicken-and-egg problem
-which can be solved if we shout loud enough when we fail to randomize; we'll
-also eventually be in a better position when CPUs start implementing the
-v8.5 RNG instructions (but don't hold your breath unless you have an
-unusually high lung capacity).
+On Wed, Jun 19, 2019 at 09:39:13AM -0600, Rob Herring wrote:
+> On Wed, Jun 19, 2019 at 6:59 AM Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > On Wed, Jun 19, 2019 at 07:23:19PM +0900, Masahiro Yamada wrote:
+> > > Hi.
+> > >
+> > > In this development cycle of Linux kernel,
+> > > lots of files were converted to use SPDX
+> > > instead of the license boilerplate.
+> > >
+> > > However.
+> > >
+> > > Some files were imported from a different project,
+> > > and are periodically synchronized with the upstream.
+> > > Have we discussed what to do about this case?
+> > >
+> > >
+> > > For example, scripts/dtc/ is the case.
+> > >
+> > > The files in scripts/dtc/ are synced with the upstream
+> > > device tree compiler.
+> > >
+> > > Rob Herring periodically runs scripts/dtc/update-dtc-source.sh
+> > > to import outcome from the upstream.
+> > >
+> > >
+> > > The upstream DTC has not adopted SPDX yet.
+> > >
+> > > Some files in Linux (e.g. scripts/dtc/dtc.c)
+> > > have been converted to SPDX.
+> > >
+> > > So, they are out of sync now.
+> > >
+> > > The license boilerplate will come back
+> > > when Rob runs scripts/dtc/update-dtc-source.sh
+> > > next time.
+>=20
+> Already has. It just happened and is in next. The policy is everything
+> is upstream first and any changes to dtc in the kernel are rejected.
+>=20
+> > >
+> > > What shall we do?
+> > >
+> > > [1] Convert upstream DTC to SPDX
+> > >
+> > > This will be a happy solution if it is acceptable in DTC.
+> > > Since we cannot push the decision of the kernel to a different
+> > > project, this is totally up to David Gibson.
+> >
+> > That's fine with me :)
+>=20
+> I'll do the work if David is okay with it.
 
-On the flip side, I worry that it could make debugging more difficult, but I
-don't know whether that's a genuine concern or not. I'm assuming you've
-debugged your fair share of crashes from KASLR-enabled kernels; how bad is
-it? (I'm thinking of the case where somebody mails you part of a panic log
-and a .config).
+I have no objection.
 
-Irrespective of the above, I know Catalin was running into issues with his
-automated tests where the kernel would die silently during early boot with
-some seeds.  That's a bit rubbish if it's still the case -- Catalin?
 
-Finally, I know that (K)ASLR can be a bit controversial amongst security
-folks, with some seeing it as purely a smoke-and-mirrors game with no
-tangible benefits other than making us feel better about ourselves. Is it
-still the case that it can be trivially bypassed, or do you see it actually
-preventing some attacks in production?
+> > > [2] Change scripts/dtc/update-dtc-source.sh to
+> > >     take care of the license block somehow
+> >
+> > That would also be good.
+> >
+> > > [3] Go back to license boilerplate, and keep the files
+> > >     synced with the upstream
+> > >     (and scripts/dtc/ should be excluded from the
+> > >      SPDX conversion tool.)
+> >
+> > nothing is being excluded from the SPDX conversions, sorry.  The goal is
+> > to do this for every file in the kernel tree.  Otherwise it's pointless.
+> >
+> > > Or, what else?
+> >
+> > Rob remembers to keep those first lines of the files intact when doing
+> > the next sync?
+>=20
+> Patches to the import script are welcome. The only thing I have to
+> remember running the script is to add any new files. Otherwise, it's
+> scripted so I don't have to remember anything.
+>=20
+> Rob
+>=20
 
-Sorry for the barrage of questions, but I think enabling this one by default
-is quite a significant thing to do and probably deserves a bit of scrutiny
-beforehand.
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-Cheers,
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Will
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl0LOYoACgkQbDjKyiDZ
+s5JO2Q//Qnvu8CIqR9v1DPhq1I1K6wFUT3RxjlX+pE03rujjRcwTv7K7d19AWqdL
+3lwaWAc8faWWg8/ceC8hBN/yXzNwtN1nnPyeeULgVUPWoPPPg4LzWjDFfuy+6M51
+CdS8lSkiCYNR52jEkirsDW6pd6NIwbaAsSgtYxd7EB39HGWwPk6xq726aPKqD6Vo
+ae70uJsDOH3tSbeXwFIx8//wvI1VtylMxROJU6MoKcs7c538jddrJSRQHjI1V0PY
+2Git/vQSI92xIkVc4ZrDCPhZ3TGUUuK+caYaxssLdK2lxd/lrQjL3fUCIoSykzOr
+u5vaBrxoYoP4GbZX9VxCZrwocXgAYn7Qf2ihw3Xs2/StrhdNsLVkrsuzP4A9pDbZ
+73Fr7FIw6UFarugBtKahlDV0yI3mQG42Awk6Is5SxLwFheyhrGMzkk8P33pV4ffb
+RYZ++8GwzVFl3ko0vf7tZIhNnLZLY4/MT+efPfmu+0+YF67oZ/TsdtHu1rHz+cJz
+tDj4hEzPXBRaj3jB3pEw3Xvs9EZvd6a3WeBEBoV8WtJWioS9cqHTvYtq5YQfOqzc
+qg82KlJpZg74ukamcHEmwfooC9AjfKFek/7ecqlBI5fBviEMM6fI7MfyTHAErVya
+ctngxdwSqxU/9DSCo5oRoSS7vgJkaaLo5rgNkd8M2DbmU9EM1ok=
+=vqV0
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
