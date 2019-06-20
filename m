@@ -2,83 +2,66 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48F44C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1372DC48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:51:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2826C206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF01206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:51:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731404AbfFTIty (ORCPT
+        id S1731433AbfFTIvI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:49:54 -0400
-Received: from lb2-smtp-cloud9.xs4all.net ([194.109.24.26]:42387 "EHLO
-        lb2-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725966AbfFTIty (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:49:54 -0400
-Received: from [IPv6:2001:983:e9a7:1:bdf4:9145:f694:e7a2] ([IPv6:2001:983:e9a7:1:bdf4:9145:f694:e7a2])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id dslPhWOCzSfvXdslRhtY28; Thu, 20 Jun 2019 10:49:52 +0200
-Subject: Re: [PATCH v2 0/3] Add support of RGB565, YUV and JPEG to MIPID02
- bridge
-To:     Hugues Fruchet <hugues.fruchet@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Mickael Guene <mickael.guene@st.com>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>
-References: <1560779038-26012-1-git-send-email-hugues.fruchet@st.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <56ef5a64-5935-aa51-529f-262cca9ec74d@xs4all.nl>
-Date:   Thu, 20 Jun 2019 10:49:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 20 Jun 2019 04:51:08 -0400
+Received: from mga17.intel.com ([192.55.52.151]:26294 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726122AbfFTIvI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:51:08 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 01:51:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
+   d="scan'208";a="243567007"
+Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
+  by orsmga001.jf.intel.com with ESMTP; 20 Jun 2019 01:51:04 -0700
+From:   Felipe Balbi <felipe.balbi@linux.intel.com>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-usb@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] usb: dwc3: remove unused @lock member of dwc3_ep struct
+In-Reply-To: <1561019039.19385.0.camel@mhfsdcap03>
+References: <342af01a252a9ef9457a6a6ec653a40698058fbc.1561018149.git.chunfeng.yun@mediatek.com> <87pnn8brej.fsf@linux.intel.com> <1561019039.19385.0.camel@mhfsdcap03>
+Date:   Thu, 20 Jun 2019 11:51:04 +0300
+Message-ID: <87muicbpxj.fsf@linux.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1560779038-26012-1-git-send-email-hugues.fruchet@st.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfE2b1i2YAixRRYXB6rVbGo40kNkfrHlyv3JVShV/F6bNjimfsoBG6fudKtrQjvHfh2jndwuCyRD85nrUT/wGdXLMgMfJC0lqFFKkgO/xgnMLmCGhTu0u
- owCOhcKpH0d6jFZEIbVsrxcVsthyu/tlayCGHQv3u3Bc2JzNuzRuUq8sc5boZkmRnpzg3DLpkKapMbhH5viD9A+jkx/yyxx5IkLGh5okfHE3gjnVQspRVuY6
- twAaKqdj3OBrYmBBynmn8zcxvnINiFBYs/d4LO5WBrOMFPNQyRkQRy7xN8D8hmxpTK5wC9BqE9NaVwJJpGXfT8yz9j0d5g5OMg946ydI2wPgdY8zsqicH9q4
- ldMy1j7/tPKo4oKSeZq58ByhpPJIBRRAc1YOGiSmo0VaK/FpnTUIZLG0sJdpRC+TvnbSKNQcqGf7nemWg0sGixW814u+NTO9lCPBmHQ8d6FR6aJZszTVzU3V
- 6NDcyCi2Uo2qiocVIJTy5gEyCxP6iIsyv3ozUw==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/17/19 3:43 PM, Hugues Fruchet wrote:
-> Add support of RGB565, YUV and JPEG to MIPID02 bridge.
-> 
-> ===========
-> = history =
-> ===========
-> version 2:
->   - Link frequency could not be computed from pixel rate for JPEG,
->     remove JPEG case in bpp_from_code().
-> 
-> version 1:
->   - Initial submission
-> 
-> Hugues Fruchet (3):
->   media: st-mipid02: add support of RGB565
->   media: st-mipid02: add support of YUYV8 and UYVY8
->   media: st-mipid02: add support of JPEG
-> 
->  drivers/media/i2c/st-mipid02.c | 31 +++++++++++++++++++++++++------
->  1 file changed, 25 insertions(+), 6 deletions(-)
-> 
+Hi,
 
+Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
 
-For this series:
+> Hi,
+> On Thu, 2019-06-20 at 11:19 +0300, Felipe Balbi wrote:
+>> Hi,
+>> 
+>> Chunfeng Yun <chunfeng.yun@mediatek.com> writes:
+>> 
+>> > The member @lock of dwc2_ep struct is only initialized,
+>> > and not used elsewhere, so remove it.
+> Sorry, I need send v2 to fix typo of dwc2_ep
 
-Reviewed-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+I fixed when applying ;-)
 
-Regards,
-
-	Hans
+-- 
+balbi
