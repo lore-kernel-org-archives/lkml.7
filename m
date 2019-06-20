@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0E57C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 689AFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1512084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F47C2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054289;
-	bh=DCfJvXUgoP1A8hfG9soHPyW+yo3f7SmIlNViB9KaVw4=;
+	s=default; t=1561054293;
+	bh=pF+dbvagrtjDNBYMe9nGKRdkI3dXz2/olQGKQUQ4cMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OcsiFmEhpZ5VmVYIHTFojyOt58B1GjoQpmpKTyqmhdNKPZ5YBXASjInQ6kWgiCb0g
-	 JEbQIEMiB3DwnuS4/4D1YzufA74hzUe4HCB/hL/iUDemXIeT/JFvUbnUOdz4+gogaG
-	 ZyRK4FmtF5Sb2xAywdVsUrHopiJeE+iPy5hSLcH0=
+	b=oECZO/txskhpaji7H84tNtA5NNYDXfna011LWlo1/VlLpzEDG0iroJNRP6VhpRE6j
+	 DQKwGc9GbxqPcsby0S4PGOanX5Bpwi4Axdlw1O34L1jKaOEA+waB5ESzxEIKQ1JOWs
+	 zwghkTLXKdnUxyIOafPuc2TOxEIlX0if4huf+SKI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfFTSL2 (ORCPT
+        id S1728939AbfFTSLc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39088 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728631AbfFTSLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:21 -0400
+        id S1728922AbfFTSL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:27 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 383AE2082C;
-        Thu, 20 Jun 2019 18:11:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 908DF2070B;
+        Thu, 20 Jun 2019 18:11:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054280;
-        bh=DCfJvXUgoP1A8hfG9soHPyW+yo3f7SmIlNViB9KaVw4=;
+        s=default; t=1561054287;
+        bh=pF+dbvagrtjDNBYMe9nGKRdkI3dXz2/olQGKQUQ4cMA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fcQ3yXj4Qqqa5xNf3RvQnmogi7bNir7rJ5Qc1sNkfEtzNs6YIK7FVnML/tCX+r2p7
-         bDIpQ5AYMrz3eFZXt89uJC5zkdY6NkRIkZK2HfMqLAY6l9GpyWt3j86DhR14mrsGS0
-         r6j9CqPGaMLJ9nPf9wyWSnXYG6Br/IDkM6ajehKY=
+        b=uuuEVHYxqcgL76nHdHY+IA+axGwLMnAcNFZxdYNyYwkaZifWT6t9WkGRpkP3a0IDI
+         j/ZgjhL/CZH+HTaUnCBl4SZVKl7FBA246hydgaDAMicpQY3JQnjG2mKzLbJWnZ4I1Z
+         CjETDhAqjFCvk43ycgk34v6MFxJMQaVbIOmNhkbM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 35/61] net: aquantia: tx clean budget logic error
-Date:   Thu, 20 Jun 2019 19:57:30 +0200
-Message-Id: <20190620174343.477478446@linuxfoundation.org>
+Subject: [PATCH 4.19 37/61] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Date:   Thu, 20 Jun 2019 19:57:32 +0200
+Message-Id: <20190620174343.862992817@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,51 +60,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 31bafc49a7736989e4c2d9f7280002c66536e590 ]
+[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
 
-In case no other traffic happening on the ring, full tx cleanup
-may not be completed. That may cause socket buffer to overflow
-and tx traffic to stuck until next activity on the ring happens.
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-This is due to logic error in budget variable decrementor.
-Variable is compared with zero, and then post decremented,
-causing it to become MAX_INT. Solution is remove decrementor
-from the `for` statement and rewrite it in a clear way.
-
-Fixes: b647d3980948e ("net: aquantia: Add tx clean budget and valid budget handling logic")
-Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/aquantia/atlantic/aq_ring.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-index 6f3312350cac..b3c7994d73eb 100644
---- a/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-+++ b/drivers/net/ethernet/aquantia/atlantic/aq_ring.c
-@@ -139,10 +139,10 @@ void aq_ring_queue_stop(struct aq_ring_s *ring)
- bool aq_ring_tx_clean(struct aq_ring_s *self)
- {
- 	struct device *dev = aq_nic_get_dev(self->aq_nic);
--	unsigned int budget = AQ_CFG_TX_CLEAN_BUDGET;
-+	unsigned int budget;
- 
--	for (; self->sw_head != self->hw_head && budget--;
--		self->sw_head = aq_ring_next_dx(self, self->sw_head)) {
-+	for (budget = AQ_CFG_TX_CLEAN_BUDGET;
-+	     budget && self->sw_head != self->hw_head; budget--) {
- 		struct aq_ring_buff_s *buff = &self->buff_ring[self->sw_head];
- 
- 		if (likely(buff->is_mapped)) {
-@@ -167,6 +167,7 @@ bool aq_ring_tx_clean(struct aq_ring_s *self)
- 
- 		buff->pa = 0U;
- 		buff->eop_index = 0xffffU;
-+		self->sw_head = aq_ring_next_dx(self, self->sw_head);
- 	}
- 
- 	return !!budget;
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index ccd76c71af09..cb07651f4b46 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -283,6 +283,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
+ 			    msgs[i].len < 1 || msgs[i].buf[0] < 1 ||
+ 			    msgs[i].len < msgs[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
 -- 
 2.20.1
 
