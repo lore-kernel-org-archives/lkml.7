@@ -2,86 +2,152 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A501AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB70C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81FC82147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8572147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Nulylrgy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730485AbfFTGRT convert rfc822-to-8bit (ORCPT
+        id S1730559AbfFTGRe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 02:17:19 -0400
-Received: from rtits2.realtek.com ([211.75.126.72]:55612 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTGRS (ORCPT
+        Thu, 20 Jun 2019 02:17:34 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35369 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfFTGRe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 02:17:18 -0400
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x5K6HCMf015697, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (rtitcasv01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x5K6HCMf015697
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Thu, 20 Jun 2019 14:17:12 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0439.000; Thu, 20 Jun
- 2019 14:17:11 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "palmer@sifive.com" <palmer@sifive.com>,
-        "axboe@kernel.dk" <axboe@kernel.dk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        nic_swsd <nic_swsd@realtek.com>
-Subject: skb_to_sgvec() casuses sg_pcopy_to_buffer() wrong
-Thread-Topic: skb_to_sgvec() casuses sg_pcopy_to_buffer() wrong
-Thread-Index: AdUnKF3JjX6iqdk4SWCfeWKY5qIZzA==
-Date:   Thu, 20 Jun 2019 06:17:10 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F189FDF5@RTITMBSVM03.realtek.com.tw>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Thu, 20 Jun 2019 02:17:34 -0400
+Received: by mail-io1-f68.google.com with SMTP id m24so186052ioo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 23:17:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=from:references:in-reply-to:mime-version:thread-index:date
+         :message-id:subject:to:cc;
+        bh=mtli3rBvWIToeUr29Uw+Ypdz0JV5neJvf4CS556KrxE=;
+        b=NulylrgyQaHJls93qgYUS6gchWZBQuVNjK0XX5s+yZYBluAT7ANsFeWjDQbYSpguGL
+         JRVnkaHsN6ksyUxAWDaFFaEsicKKE+JA/f0mEyTlNK/ayBZkIgmtuhpZ8eBcqmNdir0i
+         XgHJ3FCYTbtg3iKw6k3//5WGRQPWmgeoEtCbE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:references:in-reply-to:mime-version
+         :thread-index:date:message-id:subject:to:cc;
+        bh=mtli3rBvWIToeUr29Uw+Ypdz0JV5neJvf4CS556KrxE=;
+        b=hEfnfjGnAuiZC66W7GDI2nd4CGn5MfK6edk6ydhA1auuhwzM9ZlNJCS0c4wLIeKXyd
+         3CHgEraojuUvMRBPSeqc9Wb/AOmYN34H5UpXYXaJA2HMFp9F+S7Q5fn66pbDSUvv+KFO
+         +JKJyLTcINa5PxUfxk6JG6o6UdL6rl5qDDuFLr0gtU9FyqFu/1Vhu+Ea4OqrDfNedAH8
+         MkHG/q5hhPmHoqPjTTdaadFE/MkRvItc9oCpvj4T4aMnhsLG5wW0cgU2C++dzND0L3u1
+         lSOVt0Mr4a9wzxzlAK/mNNHncisRzyzwTdwx+Nj7hHf+InzW0hdF2+gT0CxCEar1KE0J
+         ifJg==
+X-Gm-Message-State: APjAAAViVyTm59V5LGDoLVqAu9Yi08Q+/YmecBtSYOJ++FxsYaNKF83Q
+        dX/qHaLuaIwXSqrl8S3fQgIgJrk4Av73UIm/SamfDQ==
+X-Google-Smtp-Source: APXvYqzO8Y0ucXarVWi9Uatq6tK9bmPYC+5T+Y98XJfchKmWQ39MK3nAL9+TrQFImzlpZIcOrMz/XkDik4kq2kIiXWc=
+X-Received: by 2002:a5d:9b1a:: with SMTP id y26mr13527500ion.238.1561011453186;
+ Wed, 19 Jun 2019 23:17:33 -0700 (PDT)
+From:   Kashyap Desai <kashyap.desai@broadcom.com>
+References: <20190617122000.22181-1-hch@lst.de> <20190617122000.22181-2-hch@lst.de>
+ <CACVXFVOwCeM2JzefBpKsVZrEaWpSBR0DF8qp4oKfoHm+pwLBYw@mail.gmail.com>
+In-Reply-To: <CACVXFVOwCeM2JzefBpKsVZrEaWpSBR0DF8qp4oKfoHm+pwLBYw@mail.gmail.com>
 MIME-Version: 1.0
+X-Mailer: Microsoft Outlook 15.0
+Thread-Index: AQJRkq8kgUxIwCwNEXeP0B3fyGmx3wFs9i1PAgoiQ2Wlj4BA8A==
+Date:   Thu, 20 Jun 2019 11:47:29 +0530
+Message-ID: <6dd62da3ba56142d4a67bc207aa55a59@mail.gmail.com>
+Subject: RE: [PATCH 1/8] scsi: add a host / host template field for the virt boundary
+To:     Ming Lei <tom.leiming@gmail.com>, Christoph Hellwig <hch@lst.de>
+Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Max Gurtovoy <maxg@mellanox.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        linux-rdma <linux-rdma@vger.kernel.org>,
+        Linux SCSI List <linux-scsi@vger.kernel.org>,
+        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
+        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
+        linux-hyperv@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kashyap Desai <kashyap.desai@broadcom.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use skb_to_sgvec() to set scatter list, and sometime we would get a
-sg->offset which is more than PAGE_SIZE. Call sg_pcopy_to_buffer()
-with this scatter list would get wrong data.
+> -----Original Message-----
+> From: megaraidlinux.pdl@broadcom.com
+> [mailto:megaraidlinux.pdl@broadcom.com] On Behalf Of Ming Lei
+> Sent: Tuesday, June 18, 2019 6:05 AM
+> To: Christoph Hellwig <hch@lst.de>
+> Cc: Martin K . Petersen <martin.petersen@oracle.com>; Sagi Grimberg
+> <sagi@grimberg.me>; Max Gurtovoy <maxg@mellanox.com>; Bart Van
+> Assche <bvanassche@acm.org>; linux-rdma <linux-rdma@vger.kernel.org>;
+> Linux SCSI List <linux-scsi@vger.kernel.org>;
+> megaraidlinux.pdl@broadcom.com; MPT-FusionLinux.pdl@broadcom.com;
+> linux-hyperv@vger.kernel.org; Linux Kernel Mailing List <linux-
+> kernel@vger.kernel.org>
+> Subject: Re: [PATCH 1/8] scsi: add a host / host template field for the
+> virt
+> boundary
+>
+> On Mon, Jun 17, 2019 at 8:21 PM Christoph Hellwig <hch@lst.de> wrote:
+> >
+> > This allows drivers setting it up easily instead of branching out to
+> > block layer calls in slave_alloc, and ensures the upgraded
+> > max_segment_size setting gets picked up by the DMA layer.
+> >
+> > Signed-off-by: Christoph Hellwig <hch@lst.de>
+> > ---
+> >  drivers/scsi/hosts.c     | 3 +++
+> >  drivers/scsi/scsi_lib.c  | 3 ++-
+> >  include/scsi/scsi_host.h | 3 +++
+> >  3 files changed, 8 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c index
+> > ff0d8c6a8d0c..55522b7162d3 100644
+> > --- a/drivers/scsi/hosts.c
+> > +++ b/drivers/scsi/hosts.c
+> > @@ -462,6 +462,9 @@ struct Scsi_Host *scsi_host_alloc(struct
+> scsi_host_template *sht, int privsize)
+> >         else
+> >                 shost->dma_boundary = 0xffffffff;
+> >
+> > +       if (sht->virt_boundary_mask)
+> > +               shost->virt_boundary_mask = sht->virt_boundary_mask;
+> > +
+> >         device_initialize(&shost->shost_gendev);
+> >         dev_set_name(&shost->shost_gendev, "host%d", shost->host_no);
+> >         shost->shost_gendev.bus = &scsi_bus_type; diff --git
+> > a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c index
+> > 65d0a10c76ad..d333bb6b1c59 100644
+> > --- a/drivers/scsi/scsi_lib.c
+> > +++ b/drivers/scsi/scsi_lib.c
+> > @@ -1775,7 +1775,8 @@ void __scsi_init_queue(struct Scsi_Host *shost,
+> struct request_queue *q)
+> >         dma_set_seg_boundary(dev, shost->dma_boundary);
+> >
+> >         blk_queue_max_segment_size(q, shost->max_segment_size);
+> > -       dma_set_max_seg_size(dev, shost->max_segment_size);
+> > +       blk_queue_virt_boundary(q, shost->virt_boundary_mask);
+> > +       dma_set_max_seg_size(dev, queue_max_segment_size(q));
+>
+> The patch looks fine, also suggest to make sure that max_segment_size is
+> block-size aligned, and un-aligned max segment size has caused trouble on
+> mmc.
 
-In sg_miter_get_next_page(), you would get wrong miter->__remaining,
-when the sg->offset is more than PAGE_SIZE.
+I validated changes on latest and few older series controllers.
+Post changes, I noticed max_segment_size is updated.
+find /sys/ -name max_segment_size  |grep sdb |xargs grep -r .
+/sys/devices/pci0000:3a/0000:3a:00.0/0000:3b:00.0/0000:3c:04.0/0000:40:00.0/0000:41:00.0/0000:42:00.0/host0/target0:2:12/0:2:12:0/block/sdb/queue/max_segment_size:4294967295
 
-static bool sg_miter_get_next_page(struct sg_mapping_iter *miter)
-{
-	if (!miter->__remaining) {
-		struct scatterlist *sg;
-		unsigned long pgoffset;
+I verify that single SGE having 1MB transfer length is working fine.
 
-		if (!__sg_page_iter_next(&miter->piter))
-			return false;
+Acked-by: Kashyap Desai < kashyap.desai@broadcom.com>
 
-		sg = miter->piter.sg;
-		pgoffset = miter->piter.sg_pgoffset;
-
-		miter->__offset = pgoffset ? 0 : sg->offset;
-		miter->__remaining = sg->offset + sg->length -
-				(pgoffset << PAGE_SHIFT) - miter->__offset;
-		miter->__remaining = min_t(unsigned long, miter->__remaining,
-					   PAGE_SIZE - miter->__offset);
-	}
-
-	return true;
-}
-
-Best Regards,
-Hayes
-
+>
+> Thanks,
+> Ming Lei
+>
