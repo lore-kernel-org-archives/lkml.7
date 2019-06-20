@@ -2,274 +2,101 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4578EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:21:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D95AC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:22:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14BEB20679
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:21:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561040464;
-	bh=6F5deMei+k5+YeIpCzNrBLuu2IPKgo+Fob+rK4Iy+NQ=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=mHKSF5KynikMxrhyG9kYwF89qilEhsM8r3cosb9f3/Bw5urv5aAC+ERiY4uz1YzG+
-	 uMLjDTKn0Wg+L5pJ7uHoJ9vo8qR/djNYKMQfppryOOzpsseN4B3bRj6nTV1BE9VnzZ
-	 OouWgOx5Hi8VJN9z2/NEXD3iCU95KiC13xvWNb1Q=
+	by mail.kernel.org (Postfix) with ESMTP id 21D76206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:22:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CVLcV+OS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732110AbfFTOVC (ORCPT
+        id S1732089AbfFTOWi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:21:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35726 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfFTOVC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:21:02 -0400
-Received: from mail-qt1-f175.google.com (mail-qt1-f175.google.com [209.85.160.175])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 903BD2085A;
-        Thu, 20 Jun 2019 14:21:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561040460;
-        bh=6F5deMei+k5+YeIpCzNrBLuu2IPKgo+Fob+rK4Iy+NQ=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=D6CfA/ADEPYvgec3kZ65C4dvIwt5vIiHBo3o+qeieu87Ce+NsXE/YURm9z0yLCYL8
-         NIDFqt192RyFpvQCqFRvRyciuLjrCaMqJqiqsmTFrXWYGsHsgFjmQLtFdMhfW69TGw
-         4LGwM+HYGo7hkAula2TvcTZgMwtCfX98wHuIXkKU=
-Received: by mail-qt1-f175.google.com with SMTP id h21so3292734qtn.13;
-        Thu, 20 Jun 2019 07:21:00 -0700 (PDT)
-X-Gm-Message-State: APjAAAULEUUGa07iejw0d9orJeTFaNVzx2DtvgUqz8d72KEqL3Olfjy+
-        ZpWd/GI3+Cnw4w8lGzHUzubo9aeVDhP1qszVvA==
-X-Google-Smtp-Source: APXvYqw03gZBMsZRPNi1BjzZT8MEMjOmAfMJmJ2g9chv7u9G+/iC5PFAdptyPt9iPpUBZAF4tOoKVlaJ6n9XxPv+neY=
-X-Received: by 2002:a0c:8a43:: with SMTP id 3mr40415318qvu.138.1561040459773;
- Thu, 20 Jun 2019 07:20:59 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190620094203.13654-1-mircea.caprioru@analog.com> <20190620094203.13654-4-mircea.caprioru@analog.com>
-In-Reply-To: <20190620094203.13654-4-mircea.caprioru@analog.com>
-From:   Rob Herring <robh+dt@kernel.org>
-Date:   Thu, 20 Jun 2019 08:20:47 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+P3oG1MPcMMrEfp58Ltw92kk66os34wVwNuUC9a=F2vg@mail.gmail.com>
-Message-ID: <CAL_Jsq+P3oG1MPcMMrEfp58Ltw92kk66os34wVwNuUC9a=F2vg@mail.gmail.com>
-Subject: Re: [RESEND PATCH 4/4] dt-bindings: iio: adc: Convert ad7124
- documentation to YAML
-To:     Mircea Caprioru <mircea.caprioru@analog.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Michael Hennerich <Michael.Hennerich@analog.com>,
-        Stefan Popa <stefan.popa@analog.com>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Thu, 20 Jun 2019 10:22:38 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:46659 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731226AbfFTOWi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:22:38 -0400
+Received: by mail-pg1-f194.google.com with SMTP id v9so1652489pgr.13;
+        Thu, 20 Jun 2019 07:22:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+UzUbDRAaaNqwrtJOvlpRknxT3IijEX1YVPa5qy2MtM=;
+        b=CVLcV+OS1EoECdFxLm6kqQH5hyOWXfLAQTcbmJfoV8uhVPelXUNHU17+dRpDf9Imvy
+         xLQSiRMssA7fqybdSgQ+CL/1jTHEBJ8671OlEROL3mRHI1oRq8ETGUNYAjtmWQI1KTxN
+         0ICPLA378wp/hRV6KKBbF8jStbt2es0FYkGEgv6TI2IoiazQeyylKOUtBLQHRS2f0BqZ
+         aJ4+z/WYGX0TsK39dX0sQ9aX/B4jhu+qwmQ/T8uLuLS9MBboSd5JoPOdm1K9SEW5Ui27
+         Xvj/0YMdpPhv48a/cC7NKRXPjM4qrGLF0oQoDn80zYtvIhkZZk+yXVm8qaF6EHlHZF/G
+         Y4uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+UzUbDRAaaNqwrtJOvlpRknxT3IijEX1YVPa5qy2MtM=;
+        b=ewXdY6PCfOCJu+21TablLONfJc/Dh+Pg8L+39vO5mz7EfEbB4bmFrlsxaH8nF5v4OO
+         vyIiMqUBZKrgzfEPYJvJj7eesHyv/l4lVbQYodOFwE/z9nR/QzdCxcR4Tmutwg2nXwQN
+         a/hrNYdxckL6YN2MlO4E7ayvbb6kZ7KR8IAUSZZJOdXW4GBt+eLVtcZ8TWffByf+BrL3
+         sHfrKFwD61AouZyujjsHGKNWajW59NSoByrb4eF/mFwduMsbanbhf1zaGQyulEURbmqR
+         Qd0r93Gt/qiy+vLbRjzRi9f34OVphi88Ep2r9z0elopW9OiyS7tmeAviqbeg5asr6y1i
+         cHmA==
+X-Gm-Message-State: APjAAAWWFkvskXCmtgOp1pP3Aa7PrIyN6+I7EA839RID86nzvEUZjelW
+        DtULGF++a/LTN+tagFc+O+LFsohr
+X-Google-Smtp-Source: APXvYqzn9PE8rSgbfO8g9ZCdmiiYdGIs3UtaOb/KrFvi/6cjeIm3mYWHTGm8mmv/MtUEK+hGbww6RA==
+X-Received: by 2002:a17:90a:cf8f:: with SMTP id i15mr3256035pju.110.1561040557622;
+        Thu, 20 Jun 2019 07:22:37 -0700 (PDT)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 16sm22516557pfo.65.2019.06.20.07.22.35
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 07:22:37 -0700 (PDT)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     bjorn.andersson@linaro.org, lgirdwood@gmail.com,
+        broonie@kernel.org, jorge.ramirez-ortiz@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] regulator: qcom_spmi: Do NULL check for lvs
+Date:   Thu, 20 Jun 2019 07:22:28 -0700
+Message-Id: <20190620142228.11773-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 3:42 AM Mircea Caprioru
-<mircea.caprioru@analog.com> wrote:
->
-> Convert AD7124 bindings documentation to YAML format.
->
-> Signed-off-by: Mircea Caprioru <mircea.caprioru@analog.com>
-> ---
->  .../bindings/iio/adc/adi,ad7124.yaml          | 146 ++++++++++++++++++
->  1 file changed, 146 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
->
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> new file mode 100644
-> index 000000000000..2dba3759b8e3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7124.yaml
-> @@ -0,0 +1,146 @@
-> +# SPDX-License-Identifier: GPL-2.0
+Low-voltage switches (lvs) don't have set_points since the voltage ranges
+of the output are really controlled by the inputs.  This is a problem for
+the newly added linear range support in the probe(), as that will cause
+a null pointer dereference error on older platforms like msm8974 which
+happen to need to control some of the implemented lvs.
 
-The preference for new bindings is dual (GPL-2.0 OR BSD-2-Clause) if
-that is okay with you.
+Fix this by adding the appropriate null check.
 
-> +# Copyright 2019 Analog Devices Inc.
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/iio/adc/adi,ad7124.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Analog Devices AD7124 ADC device driver
-> +
-> +maintainers:
-> +  - Stefan Popa <stefan.popa@analog.com>
-> +
-> +description: |
-> +  Bindings for the Analog Devices AD7124 ADC device. Datasheet can be
-> +  found here:
-> +    https://www.analog.com/media/en/technical-documentation/data-sheets/AD7124-8.pdf
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - adi,ad7124-4
-> +      - adi,ad7124-8
-> +
-> +  reg:
-> +    description: SPI chip select number for the device
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +    description: phandle to the master clock (mclk)
-> +
-> +  clock-names:
-> +    items:
-> +      - const: mclk
-> +
-> +  interrupts:
-> +    description: IRQ line for the ADC
-> +    maxItems: 1
-> +
-> +  '#address-cells':
-> +    const: 1
-> +
-> +  '#size-cells':
-> +    const: 0
-> +
-> +  refin1-supply:
-> +    description: refin1 supply can be used as reference for conversion.
-> +    maxItems: 1
-> +
-> +  refin2-supply:
-> +    description: refin2 supply can be used as reference for conversion.
-> +    maxItems: 1
-> +
-> +  avdd-supply:
-> +    description: avdd supply can be used as reference for conversion.
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - interrupts
-> +
-> +patternProperties:
-> +  "^channel@[01]$":
+Fixes: 86f4ff7a0c0c ("regulator: qcom_spmi: enable linear range info")
+Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/regulator/qcom_spmi-regulator.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Need to allow 2-15?
+diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
+index 877df33e0246..7f51c5fc8194 100644
+--- a/drivers/regulator/qcom_spmi-regulator.c
++++ b/drivers/regulator/qcom_spmi-regulator.c
+@@ -2045,7 +2045,7 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
+ 			}
+ 		}
+ 
+-		if (vreg->set_points->count == 1) {
++		if (vreg->set_points && vreg->set_points->count == 1) {
+ 			/* since there is only one range */
+ 			range = vreg->set_points->range;
+ 			vreg->desc.uV_step = range->step_uV;
+-- 
+2.17.1
 
-> +    type: object
-> +    description: |
-> +      Represents the external channels which are connected to the ADC.
-> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
-> +
-> +    properties:
-> +      reg:
-> +        description: |
-> +          The channel number. It can have up to 8 channels on ad7124-4
-> +          and 16 channels on ad7124-8, numbered from 0 to 15.
-
-Sounds like constraints.
-
-items:
-  - minimum: 0
-    maximum: 15
-
-> +        maxItems: 1
-
-And then you can drop this as it is implied with the number of 'items' entries.
-
-> +
-> +      adi,reference-select:
-> +        description: |
-> +          Select the reference source to use when converting on
-> +          the specific channel.
-> +          If this field is left empty, internal reference is selected.
-> +        maxItems: 1
-
-Type? Range of values?
-
-> +
-> +      diff-channels:
-> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> +        maxItems: 1
-
-Not correct as this is an array. Assuming this is covered by a common
-adc schema, you just need to define constraints on the values:
-
-items:
-  minimum: 0
-  maximum: 15
-
-> +
-> +      bipolar:
-> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
-> +        maxItems: 1
-
-You can assume this is covered by common adc schema. So just 'bipolar:
-true' is enough.
-
-> +
-> +      adi,buffered-positive:
-> +        description: Enable buffered mode for positive input.
-> +        maxItems: 1
-
-Not right as this is bool. Needs 'type: boolean'
-
-> +      adi,buffered-negative:
-> +        description: Enable buffered mode for negative input.
-> +        maxItems: 1
-
-ditto
-
-> +
-> +    required:
-> +      - reg
-> +      - diff-channels
-> +
-> +examples:
-> +  - |
-> +    adc@0 {
-> +      compatible = "adi,ad7124-4";
-> +      reg = <0>;
-> +      spi-max-frequency = <5000000>;
-> +      interrupts = <25 2>;
-> +      interrupt-parent = <&gpio>;
-> +      refin1-supply = <&adc_vref>;
-> +      clocks = <&ad7124_mclk>;
-> +      clock-names = "mclk";
-> +
-> +      #address-cells = <1>;
-> +      #size-cells = <0>;
-> +
-> +      channel@0 {
-> +        reg = <0>;
-> +        diff-channels = <0 1>;
-> +        adi,reference-select = <0>;
-> +        adi,buffered-positive;
-> +      };
-> +
-> +      channel@1 {
-> +        reg = <1>;
-> +        bipolar;
-> +        diff-channels = <2 3>;
-> +        adi,reference-select = <0>;
-> +        adi,buffered-positive;
-> +        adi,buffered-negative;
-> +      };
-> +
-> +      channel@2 {
-> +        reg = <2>;
-> +        diff-channels = <4 5>;
-> +      };
-> +
-> +      channel@3 {
-> +        reg = <3>;
-> +        diff-channels = <6 7>;
-> +      };
-> +    };
-> --
-> 2.17.1
->
