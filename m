@@ -2,115 +2,105 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC199C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:37:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F151CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:42:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D6A32083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:37:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="qZvhTIf6"
+	by mail.kernel.org (Postfix) with ESMTP id C737A2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:42:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561045326;
+	bh=v03C322y5FrHQeDuwVvWrF4MCZyT6rtT188y+cmx1ZI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rmyJqMIi94Cy+MIdEg5c8d5qY/watLamqP1Gi3zgyb4cb8cpG6CfKxCrCJrqCYAJR
+	 TFInqyrBod1wLEn4T0ACCl5BB6VCgT2/nE2mhnOPIatRPiEAAzCB1KEEa54DsJzkTe
+	 71yXt86tx39j/Es4S6hEhnZq8nH6q9706xjVWn+A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732001AbfFTPhw (ORCPT
+        id S1726798AbfFTPmF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:37:52 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44642 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731805AbfFTPhv (ORCPT
+        Thu, 20 Jun 2019 11:42:05 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:50506 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTPmE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:37:51 -0400
-Received: by mail-vs1-f65.google.com with SMTP id v129so1807749vsb.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:37:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fAkCXQIzvrGJE7G4mvAtSJe7EeGegVZuqg9dRlW43UQ=;
-        b=qZvhTIf6xU/oaLzt7SZvKqOjBmRxjhPFeS5pyLry1fPU9IkIP9bflMbQ9thXT5EZab
-         WlMJiJI2TmkRrmM40j0SWz7IlRD5QQIokXVt37a9crDWUalwOPfVxDD+Hgtrv1809EsV
-         zhJyLJ7r/bPcEYis1k2KA7UV2HvLz3wTxVFTYMrpmQJsxuZe+KZZxfPyPum6xf2FTu+g
-         ygJjeyu/cSAsat4GbilOKDVqmgXFhk6PduBzoV9TaS5H2gsOFjobDYH53f2mZuOL0Ty+
-         tqpXhAYwjjIA0rnm//k5dDfSIVqWelTU1xQzsVTZ3nrwqU97PnuPu8Y7gR11N2y/Ae/c
-         UmvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fAkCXQIzvrGJE7G4mvAtSJe7EeGegVZuqg9dRlW43UQ=;
-        b=br6RtqVAYwizJ2czI1RpCyAtDX0QQzL1fOU0jxzSiFYGz84IpbuS4yty5/C8vfGpEa
-         7qYZGbvZ+viVE5ADptmueAthjjxC4FY6KQEmrPyvBGvdl3sTOqa83gXbqbq11shINek7
-         HrbLFP0tQTrFtnA6dLkRHY8iHNDlXu8eyJ9DUyWVzF+GrqKTqvc9tqlqjpX0ERSKHWjL
-         nNjDeTeHAahJGKYERup2lRX9vOljGoUCEHbogrZQ9w7BXhK+S0T/loIexDBJhWEkUnWQ
-         iX5PLBsWJazp9hhiP54hOc0rkWzlYg9zK5mfmN/Sd2d65+Ei8kND/PCB+MQBKzPdvNbI
-         hRDw==
-X-Gm-Message-State: APjAAAV9A/lVjWxKGPGt5GtVWkty0T+debCLVRYqCpy+zkwZqpDBpItn
-        3D1TAumzDnN9hWIlimpu7UpRRF0TeQ4sD1cMfCL7qKuiuBk=
-X-Google-Smtp-Source: APXvYqyjsTzxd6ILuE03oriIxK2fzvr1/YmzfivHfyCj2Ep7ML74BwZifmWATzt0v+egEgHdDeR3Zhhxm5KzDflUv0Q=
-X-Received: by 2002:a67:ee5b:: with SMTP id g27mr11197551vsp.165.1561045070853;
- Thu, 20 Jun 2019 08:37:50 -0700 (PDT)
+        Thu, 20 Jun 2019 11:42:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6s6aZu8b9dqDAqPoq81Bk78Hj/YlZ9Zu2gddBiQR0jA=; b=jov01KPU7Ey0HCtDvL/bMfUvM
+        q+kHss2+okCgunU54lbz7AUEXxS2cz7t6hVp3TCiDXLIBSddCYMcK66KsNAYrByHqXzLdYmj5E8ms
+        s98+kDkEwIFNMnhf/WgI7uAcAm8nRSMA5EA0gm8aA9dNtYxJ/3JhRSD6SoNS961M86AwU=;
+Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hdzCB-0000qH-N9; Thu, 20 Jun 2019 15:41:51 +0000
+Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
+        id AF546440046; Thu, 20 Jun 2019 16:41:50 +0100 (BST)
+Date:   Thu, 20 Jun 2019 16:41:50 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Collabora Kernel ML <kernel@collabora.com>,
+        Xing Zheng <zhengxing@rock-chips.com>,
+        Benson Leung <bleung@chromium.org>,
+        Jaroslav Kysela <perex@perex.cz>, alsa-devel@alsa-project.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        linux-rockchip@lists.infradead.org, Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] ASoC: rk3399_gru_sound: Support 32, 44.1 and 88.2 kHz
+ sample rates
+Message-ID: <20190620154150.GE5316@sirena.org.uk>
+References: <20190620134708.28311-1-enric.balletbo@collabora.com>
 MIME-Version: 1.0
-References: <20190620152432.1408278-1-lkundrak@v3.sk>
-In-Reply-To: <20190620152432.1408278-1-lkundrak@v3.sk>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 20 Jun 2019 17:37:14 +0200
-Message-ID: <CAPDyKFrSQR7+POv++8jW5VF4hTcQbNwZzqHntK1k4eNpy2gH=Q@mail.gmail.com>
-Subject: Re: [PATCH RESEND] mmc: core: try to use an id from the devicetree
-To:     Lubomir Rintel <lkundrak@v3.sk>
-Cc:     "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="rOnZ5ITIX7GHaQD9"
+Content-Disposition: inline
+In-Reply-To: <20190620134708.28311-1-enric.balletbo@collabora.com>
+X-Cookie: Editing is a rewording activity.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+ Doug
 
-On Thu, 20 Jun 2019 at 17:24, Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> If there's a mmc* alias in the device tree, take the device number from
-> it, so that we end up with a device name that matches the alias.
+--rOnZ5ITIX7GHaQD9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Lots of people would be happy if I queue something along the lines of
-what you propose. I am not really having any big problems with it, but
-I am reluctant to queue it because of other peoples quite strong
-opinions [1] that have been expressed in regards to this already.
+On Thu, Jun 20, 2019 at 03:47:08PM +0200, Enric Balletbo i Serra wrote:
+> According to the datasheet the max98357a also supports 32, 44.1 and
+> 88.2 kHz sample rate. This support was also introduced recently by
+> commit fdf34366d324 ("ASoC: max98357a: add missing supported rates").
+> This patch adds support for these rates also for the machine driver so
+> we get rid of the errors like the below and we are able to play files
+> using these sample rates.
 
-Kind regards
-Uffe
+Does the machine actually need to validate this at all?  The component
+drivers can all apply whatever constraints are needed and do their own
+validation, the machine driver is just getting in the way here.
 
-[1]
-https://www.spinics.net/lists/devicetree-spec/msg00254.html
+--rOnZ5ITIX7GHaQD9
+Content-Type: application/pgp-signature; name="signature.asc"
 
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  drivers/mmc/core/host.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 6a51f7a06ce7..4733ddb894da 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -411,7 +411,12 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
->         /* scanning will be enabled when we're ready */
->         host->rescan_disable = 1;
->
-> -       err = ida_simple_get(&mmc_host_ida, 0, 0, GFP_KERNEL);
-> +       /* prefer an alias */
-> +       err = of_alias_get_id(dev->of_node, "mmc");
-> +       if (err < 0)
-> +               err = 0;
-> +
-> +       err = ida_simple_get(&mmc_host_ida, err, 0, GFP_KERNEL);
->         if (err < 0) {
->                 kfree(host);
->                 return NULL;
-> --
-> 2.21.0
->
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl0LqT0ACgkQJNaLcl1U
+h9Aomwf+IWYRVucBBZvhsm/gdBVe/B8CpBjmp/2qlcOTbdBRiwV3TGlwjFiWqyNF
+a/7criDs2zMUCDb4Ad2Xh7FoRj24dC+1QikkP64iwyN/Y5wJLwQhRRDuM60vjRGp
+waQP/rQ86h14cWtTi/+IE8Rm3nFcs/0J0S+87SVuW8kIifVcEAzUGYH8fhTwgkki
+SerVWbkR+weSZLJVq/cvR2CKQvt4qPaQ2AT2V7W9pCRzBJRza8CLIg+t7jaFUuLP
+EefouE+9/aOgtVf4NT+BPfcy7pptkMZwAsbX0Obcm6+1dmIpjffWRdRzki4AVnJD
+wUUi0N6O0HWIkSLhMnqzgBaOrZBMjg==
+=cr78
+-----END PGP SIGNATURE-----
+
+--rOnZ5ITIX7GHaQD9--
