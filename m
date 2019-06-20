@@ -2,90 +2,102 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B86C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:47:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A6FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:48:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 193AA2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:47:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2119E2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:48:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j2DEPEe4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbfFTOrg (ORCPT
+        id S1731938AbfFTOsW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:47:36 -0400
-Received: from mga07.intel.com ([134.134.136.100]:31936 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfFTOrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:47:36 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 07:47:35 -0700
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="168536316"
-Received: from tzanussi-mobl.amr.corp.intel.com (HELO [10.251.131.111]) ([10.251.131.111])
-  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/AES256-SHA; 20 Jun 2019 07:47:35 -0700
-Subject: Re: No invalid histogram error
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
-References: <20190620211737.993b09619af1fc58222549b4@kernel.org>
-From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
-Message-ID: <27753f6a-9467-4dd0-d1b6-db75e577e693@linux.intel.com>
-Date:   Thu, 20 Jun 2019 09:47:25 -0500
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 20 Jun 2019 10:48:22 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:34570 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726786AbfFTOsW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:48:22 -0400
+Received: by mail-io1-f65.google.com with SMTP id k8so152324iot.1;
+        Thu, 20 Jun 2019 07:48:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=VsQgLN55m2Gadfa4Rkhy/vSEEq52+zbPqM7w5Sqzpzw=;
+        b=j2DEPEe4nld4yIyPis9Njlqjyfk9imzNxLBH6KEDxpb8hgq5acI9Z8sjs1xuyRraQd
+         HS1C7IEN6L9TQrFV2SUneM5xM/6Gs26rLPbV0Fp+jjjZsuEWIy3K7ijDfGLajiI6XJd5
+         3lPkXIEl+0iAUNndnphTgPGxOYHzQzXSABUIwbrVgtX6jH3zlRgmzKrd0Pu8p6nG3gRC
+         /CZmXYuaezyFl/6RhZrGNYo3FJ2ZKrnK3ewS02liO5Acb+W4vnOPqud0MXd/jSIJ2Tk3
+         B18WirhpJfp4Rmw5v9PYnTNFTdoNhr4iEljimEfc68Bp350tJ/ci6gNucn2JtwlfNIcd
+         ofOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=VsQgLN55m2Gadfa4Rkhy/vSEEq52+zbPqM7w5Sqzpzw=;
+        b=ruwdEfV77bbH4smPWSz/eWLzdcnSmLxQVYVjBbIgXJGl7xLyxHN2MU4BeD6DXYgrkf
+         hlkskRUi9KXVSKTqOcuzkP3kOPp/5TNvERRZut2kyyY47z0YP8TZyaLOf1uhNijvv8Kj
+         SCEEQQCU7PMrzpdPT7xuECpBkH+uUOA0cBZv7kTmtfWVkoHM8HCgJ4XAk5iie1QEFhRw
+         3xAkyat80i4KnfK4ZFIdTHjlP+L1Xntz5VYz3UFF+hm0OgOGdJe2wbpJAJcLbChIOPou
+         W2LJEkMEkxYIg993x+p0bNhofjQ+Rs1CUJs7G4ffkTKfg/5G+cdqq0ym4JLdLE5B9vbQ
+         wDxQ==
+X-Gm-Message-State: APjAAAXDOZs6oHW0LdFLOLW9S2971YItN8mNb+v5+PX7hK7FsLy+8Zed
+        SKx5hMUw58pBOynQK5fHFG2kBC23r47hUfCgeps=
+X-Google-Smtp-Source: APXvYqymqUxrf8avJ4KxgGLTzfC12Z41YYErMCh3cVS0mHma2ZJVWrRojP1WSFL43Rq+qeb5N3d6E2Un86A0iYmOnyE=
+X-Received: by 2002:a02:ac09:: with SMTP id a9mr18708279jao.48.1561042101139;
+ Thu, 20 Jun 2019 07:48:21 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190620211737.993b09619af1fc58222549b4@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <CAOCk7NoTN6JEo7B=8P=T4C3t_Xr8eQUX=KG9j4N+jXZ8Pw2f4g@mail.gmail.com>
+ <20190618221022.28749-1-robdclark@gmail.com>
+In-Reply-To: <20190618221022.28749-1-robdclark@gmail.com>
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Date:   Thu, 20 Jun 2019 08:48:08 -0600
+Message-ID: <CAOCk7NozdcpnHpot35KyQ9OStrsVUvLN3-rL=q3Lzu5jfk=3-Q@mail.gmail.com>
+Subject: Re: [Freedreno] [PATCH 5/5 v3] drm/msm/mdp5: Use the interconnect API
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Mamta Shukla <mamtashukla555@gmail.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Daniel Vetter <daniel@ffwll.ch>, Sean Paul <sean@poorly.run>,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Masami,
+On Tue, Jun 18, 2019 at 4:10 PM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Georgi Djakov <georgi.djakov@linaro.org>
+>
+> The interconnect API provides an interface for consumer drivers to
+> express their bandwidth needs in the SoC. This data is aggregated
+> and the on-chip interconnect hardware is configured to the most
+> appropriate power/performance profile.
+>
+> Use the API to configure the interconnects and request bandwidth
+> between DDR and the display hardware (MDP port(s) and rotator
+> downscaler).
+>
+> v2: update the path names to be consistent with dpu, handle the NULL
+>     path case, updated commit msg from Georgi.
+> v3: split out icc setup into it's own function, and rework logic
+>     slightly so no interconnect paths is not fatal.
+>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-On 6/20/2019 7:17 AM, Masami Hiramatsu wrote:
-> Hi Tom,
->
-> I'm trying to use histogram on a synthetic event, but faced an odd situation.
->
-> There is a synthetic event, which has foo and bar.
->
-> /sys/kernel/debug/tracing # cat synthetic_events
-> testevent	int foo; int bar
->
-> And when I tried to add hist on trigger, both foo and bar can be used as below.
->
-> /sys/kernel/debug/tracing # echo "hist:keys=bar" > events/synthetic/testevent/trigger
-> /sys/kernel/debug/tracing # echo "hist:keys=foo" > events/synthetic/testevent/trigger
->
-> And, when I missed to specify the sort key, it failed
->
-> /sys/kernel/debug/tracing # echo "hist:keys=foo:sort=bar" > events/synthetic/testevent/trigger
-> sh: write error: Invalid argument
->
-> But no error on error_log file.
->
-> /sys/kernel/debug/tracing # cat error_log
-> /sys/kernel/debug/tracing #
->
-> Could you add some error message? What about below?
->
-> [ 5422.134656] hist:synthetic:testevent: error: Sort key must be one of keys.
->    Command: keys=foo;sort=bar
->                                 ^
-
-
-Sure, I'll submit a fix for this.  Thanks for pointing it out.
-
-
-Tom
-
-
-> Thank you,
->
->
+Looks good to me.
+Reviewed-By: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
