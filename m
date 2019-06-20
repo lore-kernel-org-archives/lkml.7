@@ -2,147 +2,164 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48030C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:13:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BED5CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:13:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B6762085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:13:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24E12085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:13:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732297AbfFTQNV (ORCPT
+        id S1732321AbfFTQN0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:13:21 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:59638 "EHLO ale.deltatee.com"
+        Thu, 20 Jun 2019 12:13:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:46806 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732248AbfFTQNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:13:05 -0400
-Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
-        by ale.deltatee.com with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hdzgC-00046I-85; Thu, 20 Jun 2019 10:13:04 -0600
-Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.89)
-        (envelope-from <gunthorp@deltatee.com>)
-        id 1hdzg5-0005wu-S3; Thu, 20 Jun 2019 10:12:45 -0600
-From:   Logan Gunthorpe <logang@deltatee.com>
-To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org
-Cc:     Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stephen Bates <sbates@raithlin.com>,
-        Logan Gunthorpe <logang@deltatee.com>
-Date:   Thu, 20 Jun 2019 10:12:33 -0600
-Message-Id: <20190620161240.22738-22-logang@deltatee.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190620161240.22738-1-logang@deltatee.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
+        id S1732246AbfFTQNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:13:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1DDF42B;
+        Thu, 20 Jun 2019 09:13:24 -0700 (PDT)
+Received: from donnerap.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4E3563F246;
+        Thu, 20 Jun 2019 09:13:22 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 17:13:19 +0100
+From:   Andre Przywara <andre.przywara@arm.com>
+To:     Sudeep Holla <sudeep.holla@arm.com>
+Cc:     <peng.fan@nxp.com>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <jassisinghbrar@gmail.com>, <f.fainelli@gmail.com>,
+        <kernel@pengutronix.de>, <linux-imx@nxp.com>,
+        <shawnguo@kernel.org>, <festevam@gmail.com>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <van.freenix@gmail.com>
+Subject: Re: [PATCH V2 1/2] DT: mailbox: add binding doc for the ARM SMC
+ mailbox
+Message-ID: <20190620171319.13dae226@donnerap.cambridge.arm.com>
+In-Reply-To: <20190620092241.GC1248@e107155-lin>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+        <20190603083005.4304-2-peng.fan@nxp.com>
+        <20190620092241.GC1248@e107155-lin>
+Organization: ARM
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; aarch64-unknown-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 172.16.1.31
-X-SA-Exim-Rcpt-To: linux-nvme@lists.infradead.org, linux-kernel@vger.kernel.org, linux-block@vger.kernel.org, linux-pci@vger.kernel.org, linux-rdma@vger.kernel.org, axboe@kernel.dk, hch@lst.de, bhelgaas@google.com, dan.j.williams@intel.com, sagi@grimberg.me, kbusch@kernel.org, jgg@ziepe.ca, sbates@raithlin.com, logang@deltatee.com
-X-SA-Exim-Mail-From: gunthorp@deltatee.com
-Subject: [RFC PATCH 21/28] nvmet: Split nvmet_bdev_execute_rw() into a helper function
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move the mapping of the SG and submission of the bio
-into a static helper function to reduce the complexity.
+On Thu, 20 Jun 2019 10:22:41 +0100
+Sudeep Holla <sudeep.holla@arm.com> wrote:
 
-This will be useful in the next patch which submits dma-direct bios
-for P2P requests.
+> On Mon, Jun 03, 2019 at 04:30:04PM +0800, peng.fan@nxp.com wrote:
+> > From: Peng Fan <peng.fan@nxp.com>
+> > 
+> > The ARM SMC mailbox binding describes a firmware interface to trigger
+> > actions in software layers running in the EL2 or EL3 exception levels.
+> > The term "ARM" here relates to the SMC instruction as part of the ARM
+> > instruction set, not as a standard endorsed by ARM Ltd.
+> > 
+> > Signed-off-by: Peng Fan <peng.fan@nxp.com>
+> > ---
+> > 
+> > V2:
+> > Introduce interrupts as a property.
+> > 
+> > V1:
+> > arm,func-ids is still kept as an optional property, because there is no
+> > defined SMC funciton id passed from SCMI. So in my test, I still use
+> > arm,func-ids for ARM SIP service.
+> > 
+> >  .../devicetree/bindings/mailbox/arm-smc.txt        | 101 +++++++++++++++++++++
+> >  1 file changed, 101 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mailbox/arm-smc.txt b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > new file mode 100644
+> > index 000000000000..401887118c09
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/mailbox/arm-smc.txt
+> > @@ -0,0 +1,101 @@
+> > +ARM SMC Mailbox Interface
+> > +=========================
+> > +
+> > +This mailbox uses the ARM smc (secure monitor call) instruction to trigger
+> > +a mailbox-connected activity in firmware, executing on the very same core
+> > +as the caller. By nature this operation is synchronous and this mailbox
+> > +provides no way for asynchronous messages to be delivered the other way
+> > +round, from firmware to the OS, but asynchronous notification could also
+> > +be supported. However the value of r0/w0/x0 the firmware returns after
+> > +the smc call is delivered as a received message to the mailbox framework,
+> > +so a synchronous communication can be established, for a asynchronous
+> > +notification, no value will be returned. The exact meaning of both the
+> > +action the mailbox triggers as well as the return value is defined by
+> > +their users and is not subject to this binding.
+> > +
+> > +One use case of this mailbox is the SCMI interface, which uses shared memory
+> > +to transfer commands and parameters, and a mailbox to trigger a function
+> > +call. This allows SoCs without a separate management processor (or when
+> > +such a processor is not available or used) to use this standardized
+> > +interface anyway.
+> > +
+> > +This binding describes no hardware, but establishes a firmware interface.
+> > +Upon receiving an SMC using one of the described SMC function identifiers,
+> > +the firmware is expected to trigger some mailbox connected functionality.
+> > +The communication follows the ARM SMC calling convention[1].
+> > +Firmware expects an SMC function identifier in r0 or w0. The supported
+> > +identifiers are passed from consumers, or listed in the the arm,func-ids
+> > +properties as described below. The firmware can return one value in
+> > +the first SMC result register, it is expected to be an error value,
+> > +which shall be propagated to the mailbox client.
+> > +
+> > +Any core which supports the SMC or HVC instruction can be used, as long as
+> > +a firmware component running in EL3 or EL2 is handling these calls.
+> > +
+> > +Mailbox Device Node:
+> > +====================
+> > +
+> > +This node is expected to be a child of the /firmware node.
+> > +
+> > +Required properties:
+> > +--------------------
+> > +- compatible:		Shall be "arm,smc-mbox"
+> > +- #mbox-cells		Shall be 1 - the index of the channel needed.
+> > +- arm,num-chans		The number of channels supported.
+> > +- method:		A string, either:
+> > +			"hvc": if the driver shall use an HVC call, or
+> > +			"smc": if the driver shall use an SMC call.
+> > +
+> > +Optional properties:
+> > +- arm,func-ids		An array of 32-bit values specifying the function
+> > +			IDs used by each mailbox channel. Those function IDs
+> > +			follow the ARM SMC calling convention standard [1].
+> > +			There is one identifier per channel and the number
+> > +			of supported channels is determined by the length
+> > +			of this array.
+> > +- interrupts		SPI interrupts may be listed for notification,
+> > +			each channel should use a dedicated interrupt
+> > +			line.
+> > +  
+> 
+> I think SMC mailbox as mostly unidirectional/Tx only channel. And the
+> interrupts here as stated are for notifications, so I prefer to keep
+> them separate channel. I assume SMC call return indicates completion.
+> Or do you plan to use these interrupts as the indication for completion
+> of the command? I see in patch 2/2 the absence of IRQ is anyway dealt
+> the way I mention above.
+> 
+> Does it make sense or am I missing something here ?
 
-Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
----
- drivers/nvme/target/io-cmd-bdev.c | 52 ++++++++++++++++++-------------
- 1 file changed, 31 insertions(+), 21 deletions(-)
+I think you are right. From a mailbox point of view "completion" means
+that the trigger has reached the other side. A returning smc call is a
+perfect indication of this fact. Whether the action triggered by this
+mailbox command has completed is a totally separate question and out of
+the scope of the mailbox. This should be handled by a higher level
+protocol (SCPI in this case). Which could mean that this employs a
+separate return mailbox channel, which is RX only and implemented by
+interrupts. Which could or could not be part of this driver.
 
-diff --git a/drivers/nvme/target/io-cmd-bdev.c b/drivers/nvme/target/io-cmd-bdev.c
-index 7a1cf6437a6a..061d40b020c7 100644
---- a/drivers/nvme/target/io-cmd-bdev.c
-+++ b/drivers/nvme/target/io-cmd-bdev.c
-@@ -103,13 +103,41 @@ static void nvmet_bio_done(struct bio *bio)
- 		bio_put(bio);
- }
- 
-+static void nvmet_submit_sg(struct nvmet_req *req, struct bio *bio,
-+			    sector_t sector)
-+{
-+	int sg_cnt = req->sg_cnt;
-+	struct scatterlist *sg;
-+	int i;
-+
-+	for_each_sg(req->sg, sg, req->sg_cnt, i) {
-+		while (bio_add_page(bio, sg_page(sg), sg->length, sg->offset)
-+				!= sg->length) {
-+			struct bio *prev = bio;
-+
-+			bio = bio_alloc(GFP_KERNEL,
-+					min(sg_cnt, BIO_MAX_PAGES));
-+			bio_set_dev(bio, req->ns->bdev);
-+			bio->bi_iter.bi_sector = sector;
-+			bio->bi_opf = prev->bi_opf;
-+
-+			bio_chain(bio, prev);
-+			submit_bio(prev);
-+		}
-+
-+		sector += sg->length >> 9;
-+		sg_cnt--;
-+	}
-+
-+	submit_bio(bio);
-+}
-+
- static void nvmet_bdev_execute_rw(struct nvmet_req *req)
- {
- 	int sg_cnt = req->sg_cnt;
- 	struct bio *bio;
--	struct scatterlist *sg;
- 	sector_t sector;
--	int op, op_flags = 0, i;
-+	int op, op_flags = 0;
- 
- 	if (!req->sg_cnt) {
- 		nvmet_req_complete(req, 0);
-@@ -143,25 +171,7 @@ static void nvmet_bdev_execute_rw(struct nvmet_req *req)
- 	bio->bi_end_io = nvmet_bio_done;
- 	bio_set_op_attrs(bio, op, op_flags);
- 
--	for_each_sg(req->sg, sg, req->sg_cnt, i) {
--		while (bio_add_page(bio, sg_page(sg), sg->length, sg->offset)
--				!= sg->length) {
--			struct bio *prev = bio;
--
--			bio = bio_alloc(GFP_KERNEL, min(sg_cnt, BIO_MAX_PAGES));
--			bio_set_dev(bio, req->ns->bdev);
--			bio->bi_iter.bi_sector = sector;
--			bio_set_op_attrs(bio, op, op_flags);
--
--			bio_chain(bio, prev);
--			submit_bio(prev);
--		}
--
--		sector += sg->length >> 9;
--		sg_cnt--;
--	}
--
--	submit_bio(bio);
-+	nvmet_submit_sg(req, bio, sector);
- }
- 
- static void nvmet_bdev_execute_flush(struct nvmet_req *req)
--- 
-2.20.1
-
+Cheers,
+Andre
