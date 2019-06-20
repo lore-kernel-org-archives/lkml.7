@@ -7,54 +7,49 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55979C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88517C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 259DB21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C78F204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053995;
-	bh=xsxousgwpHcAwgTYXYlaY+cFRmLEHHxVaG65kzPCIU0=;
+	s=default; t=1561053998;
+	bh=Iz+s5FrWakQFdWSwoRfCM8MiMavQPXKCX7ztijiLTUI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tfLjWT9pKWhc4tJhPU7T+/schaLXuBEWeM8YQSEkCw2Oinm/syGzAgd0qnRzqAdaZ
-	 PscbSgRaVJGZE1tF48rXd0MTkkJcYcRhH7oblrFn3BiGow/BANtwCSlxe/g7MqVggF
-	 hKHBPjZov1LEM/TeSeNR9pAnSBSGGMqXkrg4q8Z8=
+	b=s3vSwAZIqh5/0e8N5JHcZ5Kr3Er10+NSLdiXoOurGS2XvaKdKsxPfBxjnlUKTyQKA
+	 XZobBT/kdTgsZEFlNupfVpm1m8uw2KoEg2ehT06A/WE71eD7l9OY0P51dUZYJD31wZ
+	 8MOydImEy9cjcR5fo6/MlJ0HULhT02wdPa7Qv18E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728186AbfFTSGd (ORCPT
+        id S1727734AbfFTSGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:06:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60706 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:06:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbfFTSGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:31 -0400
+        id S1727936AbfFTSGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F3D8721530;
-        Thu, 20 Jun 2019 18:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3F894204FD;
+        Thu, 20 Jun 2019 18:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053990;
-        bh=xsxousgwpHcAwgTYXYlaY+cFRmLEHHxVaG65kzPCIU0=;
+        s=default; t=1561053993;
+        bh=Iz+s5FrWakQFdWSwoRfCM8MiMavQPXKCX7ztijiLTUI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y9aSF9vl1vJo6l57vATz4S7aIYl6RXZrkne+eajWGSfjbRM9x/ATH0H7ZRbkW0aoa
-         WGWHa4MfsJfVcrxqhnQdMF2oVqgqVqx06mAAM3TlWEAH5e5AhPEsdNjDzo0x8wLIZB
-         HhraFnBzzeAN+eCt9Uo2p0KQPHN266ujB+oWg538=
+        b=m8oux/viArC9rlR78k1twhS30rillhIOBU8oQKOy+RwZUGF3tplWPPkQcyqL8uuEx
+         Pve4/DNCEsXNTgluW4b0lQ6Nl3BnyV9XNE5CYQEjuSlinTxtqHtzGFxq3L4aW8JrNG
+         M60qlidI5DJHgejvZdRRhsGELBj/vWR0i1IRKFtU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, kan.liang@intel.com,
+        stable@vger.kernel.org,
+        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 097/117] perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
-Date:   Thu, 20 Jun 2019 19:57:11 +0200
-Message-Id: <20190620174357.699514378@linuxfoundation.org>
+Subject: [PATCH 4.9 098/117] selftests: netfilter: missing error check when setting up veth interface
+Date:   Thu, 20 Jun 2019 19:57:12 +0200
+Message-Id: <20190620174357.733319559@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -67,151 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 23e3983a466cd540ffdd2bbc6e0c51e31934f941 ]
+[ Upstream commit 82ce6eb1dd13fd12e449b2ee2c2ec051e6f52c43 ]
 
-This patch fixes an bug revealed by the following commit:
+A test for the basic NAT functionality uses ip command which needs veth
+device. There is a condition where the kernel support for veth is not
+compiled into the kernel and the test script breaks. This patch contains
+code for reasonable error display and correct code exit.
 
-  6b89d4c1ae85 ("perf/x86/intel: Fix INTEL_FLAGS_EVENT_CONSTRAINT* masking")
-
-That patch modified INTEL_FLAGS_EVENT_CONSTRAINT() to only look at the event code
-when matching a constraint. If code+umask were needed, then the
-INTEL_FLAGS_UEVENT_CONSTRAINT() macro was needed instead.
-This broke with some of the constraints for PEBS events.
-
-Several of them, including the one used for cycles:p, cycles:pp, cycles:ppp
-fell in that category and caused the event to be rejected in PEBS mode.
-In other words, on some platforms a cmdline such as:
-
-  $ perf top -e cycles:pp
-
-would fail with -EINVAL.
-
-This patch fixes this bug by properly using INTEL_FLAGS_UEVENT_CONSTRAINT()
-when needed in the PEBS constraint tables.
-
-Reported-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: kan.liang@intel.com
-Link: http://lkml.kernel.org/r/20190521005246.423-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+Acked-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/intel/ds.c | 28 ++++++++++++++--------------
- 1 file changed, 14 insertions(+), 14 deletions(-)
+ tools/testing/selftests/netfilter/nft_nat.sh | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index f26e26e4d84f..ad31c01f810f 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -655,7 +655,7 @@ struct event_constraint intel_core2_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1fc7, 0x1), /* SIMD_INST_RETURED.ANY */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
- 	EVENT_CONSTRAINT_END
- };
+diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
+index 8ec76681605c..f25f72a75cf3 100755
+--- a/tools/testing/selftests/netfilter/nft_nat.sh
++++ b/tools/testing/selftests/netfilter/nft_nat.sh
+@@ -23,7 +23,11 @@ ip netns add ns0
+ ip netns add ns1
+ ip netns add ns2
  
-@@ -664,7 +664,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x00c5, 0x1), /* MISPREDICTED_BRANCH_RETIRED */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0x1),    /* MEM_LOAD_RETIRED.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x01),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x01),
- 	/* Allow all events as PEBS with no flags */
- 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
- 	EVENT_CONSTRAINT_END
-@@ -672,7 +672,7 @@ struct event_constraint intel_atom_pebs_event_constraints[] = {
+-ip link add veth0 netns ns0 type veth peer name eth0 netns ns1
++ip link add veth0 netns ns0 type veth peer name eth0 netns ns1 > /dev/null 2>&1
++if [ $? -ne 0 ];then
++    echo "SKIP: No virtual ethernet pair device support in kernel"
++    exit $ksft_skip
++fi
+ ip link add veth1 netns ns0 type veth peer name eth0 netns ns2
  
- struct event_constraint intel_slm_pebs_event_constraints[] = {
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x1),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x1),
- 	/* Allow all events as PEBS with no flags */
- 	INTEL_ALL_EVENT_CONSTRAINT(0, 0x1),
- 	EVENT_CONSTRAINT_END
-@@ -697,7 +697,7 @@ struct event_constraint intel_nehalem_pebs_event_constraints[] = {
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	EVENT_CONSTRAINT_END
- };
- 
-@@ -714,7 +714,7 @@ struct event_constraint intel_westmere_pebs_event_constraints[] = {
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xcb, 0xf),    /* MEM_LOAD_RETIRED.* */
- 	INTEL_FLAGS_EVENT_CONSTRAINT(0xf7, 0xf),    /* FP_ASSIST.* */
- 	/* INST_RETIRED.ANY_P, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	EVENT_CONSTRAINT_END
- };
- 
-@@ -723,7 +723,7 @@ struct event_constraint intel_snb_pebs_event_constraints[] = {
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
- 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
-         INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
-         INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
-         INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
-@@ -738,9 +738,9 @@ struct event_constraint intel_ivb_pebs_event_constraints[] = {
-         INTEL_PLD_CONSTRAINT(0x01cd, 0x8),    /* MEM_TRANS_RETIRED.LAT_ABOVE_THR */
- 	INTEL_PST_CONSTRAINT(0x02cd, 0x8),    /* MEM_TRANS_RETIRED.PRECISE_STORES */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_EXCLEVT_CONSTRAINT(0xd0, 0xf),    /* MEM_UOP_RETIRED.* */
- 	INTEL_EXCLEVT_CONSTRAINT(0xd1, 0xf),    /* MEM_LOAD_UOPS_RETIRED.* */
- 	INTEL_EXCLEVT_CONSTRAINT(0xd2, 0xf),    /* MEM_LOAD_UOPS_LLC_HIT_RETIRED.* */
-@@ -754,9 +754,9 @@ struct event_constraint intel_hsw_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_XLD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
-@@ -777,9 +777,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x01c0, 0x2), /* INST_RETIRED.PRECDIST */
- 	INTEL_PLD_CONSTRAINT(0x01cd, 0xf),    /* MEM_TRANS_RETIRED.* */
- 	/* UOPS_RETIRED.ALL, inv=1, cmask=16 (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c2, 0xf),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c2, 0xf),
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_NA(0x01c2, 0xf), /* UOPS_RETIRED.ALL */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_UOPS_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x21d0, 0xf), /* MEM_UOPS_RETIRED.LOCK_LOADS */
-@@ -800,9 +800,9 @@ struct event_constraint intel_bdw_pebs_event_constraints[] = {
- struct event_constraint intel_skl_pebs_event_constraints[] = {
- 	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x2),	/* INST_RETIRED.PREC_DIST */
- 	/* INST_RETIRED.PREC_DIST, inv=1, cmask=16 (cycles:ppp). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108001c0, 0x2),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108001c0, 0x2),
- 	/* INST_RETIRED.TOTAL_CYCLES_PS (inv=1, cmask=16) (cycles:p). */
--	INTEL_FLAGS_EVENT_CONSTRAINT(0x108000c0, 0x0f),
-+	INTEL_FLAGS_UEVENT_CONSTRAINT(0x108000c0, 0x0f),
- 	INTEL_PLD_CONSTRAINT(0x1cd, 0xf),		      /* MEM_TRANS_RETIRED.* */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x11d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_LOADS */
- 	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x12d0, 0xf), /* MEM_INST_RETIRED.STLB_MISS_STORES */
+ ip -net ns0 link set lo up
 -- 
 2.20.1
 
