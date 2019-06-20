@@ -2,54 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BE0DC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4087FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25B102084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BDF7215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053704;
-	bh=i4ORBx3pCH7xpGHnTrBVfT/x9fmtCRJMMQ65Zulqjy4=;
+	s=default; t=1561053708;
+	bh=5ku35xL2IOm1lfhHw1d7/RAla0NL9v23eKstzeDFCP8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zVWHNMsf6cEZt+LZknz68A7GkqFjqdW7A5ipKuJblXij9Sr4CFHNU3mV0vO2VPZA7
-	 0huYGdBp2gPnpV9XZKrC/UfSCKeX7HPv0tzrwCmujTBXMcrXWx3xbaMvixv25jBju0
-	 G6BaqjO0DIIoUyjPu3GjNY1BYIPjxgGAzy+hTmPI=
+	b=leEu9Roq3JOENeYgwxh8cJm/eSonmulcpb7jFbCkMKmqkBWy0tb8KJEK8XIjCelQ2
+	 vLMzLjMKFIl8jWKyoWnSKxmx7YayUmKum6qZslRf1bQ/VJjKlhZuzH6TGdan7kLTe7
+	 3+vt1tydGYmofqOhRC9wLVJGFNzyPajDhwIbrOJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727311AbfFTSBm (ORCPT
+        id S1727319AbfFTSBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51444 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727284AbfFTSBk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:40 -0400
+        id S1727314AbfFTSBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BAC62084A;
-        Thu, 20 Jun 2019 18:01:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39B7620B1F;
+        Thu, 20 Jun 2019 18:01:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053699;
-        bh=i4ORBx3pCH7xpGHnTrBVfT/x9fmtCRJMMQ65Zulqjy4=;
+        s=default; t=1561053702;
+        bh=5ku35xL2IOm1lfhHw1d7/RAla0NL9v23eKstzeDFCP8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rRyRoXQiUO68uWHHdAidu4toTa8KUYewF2LVVb+u53LDqkw/o9PBKuX3iQlKmiJ6k
-         NTdhu45oS9m+VrchjNLyfKmXZyjFdGSo1QEeyLEws9Bsl9JEQlD4MfJuFjk4ZNzXTw
-         1b8DP5djh1ShLIeWcQ425P9MEbKCb8DVAUAg6eto=
+        b=bwe0L3h35ajm0tnsBU3DfR+sGoAC2Z6ZoPA9bMmSzTzJlg8bCWIAxlAxT8vH9jBOS
+         4JSsMDId9X/RVpX2+wIN05QthUCFrkFeV60A60HA9PfB8rs4uxTiI6sZ+WARySXfhy
+         ZPySVrp4DGMfvhP9cXh6XC7jUvqal3HuplCvD4pw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jian Luo <luojian5@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        John Garry <john.garry@huawei.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
+        Christian Lamparter <chunkeey@gmail.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 81/84] scsi: libsas: delete sas port if expander discover failed
-Date:   Thu, 20 Jun 2019 19:57:18 +0200
-Message-Id: <20190620174349.055087498@linuxfoundation.org>
+Subject: [PATCH 4.4 82/84] Revert "crypto: crypto4xx - properly set IV after de- and encrypt"
+Date:   Thu, 20 Jun 2019 19:57:19 +0200
+Message-Id: <20190620174349.254260381@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -62,89 +61,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3b0541791453fbe7f42867e310e0c9eb6295364d ]
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-The sas_port(phy->port) allocated in sas_ex_discover_expander() will not be
-deleted when the expander failed to discover. This will cause resource leak
-and a further issue of kernel BUG like below:
+This reverts commit e9a60ab1609a7d975922adad1bf9c46ac6954584 which is
+commit fc340115ffb8235c1bbd200c28855e6373d0dd1a upstream.
 
-[159785.843156]  port-2:17:29: trying to add phy phy-2:17:29 fails: it's
-already part of another port
-[159785.852144] ------------[ cut here  ]------------
-[159785.856833] kernel BUG at drivers/scsi/scsi_transport_sas.c:1086!
-[159785.863000] Internal error: Oops - BUG: 0 [#1] SMP
-[159785.867866] CPU: 39 PID: 16993 Comm: kworker/u96:2 Tainted: G
-W  OE     4.19.25-vhulk1901.1.0.h111.aarch64 #1
-[159785.878458] Hardware name: Huawei Technologies Co., Ltd.
-Hi1620EVBCS/Hi1620EVBCS, BIOS Hi1620 CS B070 1P TA 03/21/2019
-[159785.889231] Workqueue: 0000:74:02.0_disco_q sas_discover_domain
-[159785.895224] pstate: 40c00009 (nZcv daif +PAN +UAO)
-[159785.900094] pc : sas_port_add_phy+0x188/0x1b8
-[159785.904524] lr : sas_port_add_phy+0x188/0x1b8
-[159785.908952] sp : ffff0001120e3b80
-[159785.912341] x29: ffff0001120e3b80 x28: 0000000000000000
-[159785.917727] x27: ffff802ade8f5400 x26: ffff0000681b7560
-[159785.923111] x25: ffff802adf11a800 x24: ffff0000680e8000
-[159785.928496] x23: ffff802ade8f5728 x22: ffff802ade8f5708
-[159785.933880] x21: ffff802adea2db40 x20: ffff802ade8f5400
-[159785.939264] x19: ffff802adea2d800 x18: 0000000000000010
-[159785.944649] x17: 00000000821bf734 x16: ffff00006714faa0
-[159785.950033] x15: ffff0000e8ab4ecf x14: 7261702079646165
-[159785.955417] x13: 726c612073277469 x12: ffff00006887b830
-[159785.960802] x11: ffff00006773eaa0 x10: 7968702079687020
-[159785.966186] x9 : 0000000000002453 x8 : 726f702072656874
-[159785.971570] x7 : 6f6e6120666f2074 x6 : ffff802bcfb21290
-[159785.976955] x5 : ffff802bcfb21290 x4 : 0000000000000000
-[159785.982339] x3 : ffff802bcfb298c8 x2 : 337752b234c2ab00
-[159785.987723] x1 : 337752b234c2ab00 x0 : 0000000000000000
-[159785.993108] Process kworker/u96:2 (pid: 16993, stack limit =
-0x0000000072dae094)
-[159786.000576] Call trace:
-[159786.003097]  sas_port_add_phy+0x188/0x1b8
-[159786.007179]  sas_ex_get_linkrate.isra.5+0x134/0x140
-[159786.012130]  sas_ex_discover_expander+0x128/0x408
-[159786.016906]  sas_ex_discover_dev+0x218/0x4c8
-[159786.021249]  sas_ex_discover_devices+0x9c/0x1a8
-[159786.025852]  sas_discover_root_expander+0x134/0x160
-[159786.030802]  sas_discover_domain+0x1b8/0x1e8
-[159786.035148]  process_one_work+0x1b4/0x3f8
-[159786.039230]  worker_thread+0x54/0x470
-[159786.042967]  kthread+0x134/0x138
-[159786.046269]  ret_from_fork+0x10/0x18
-[159786.049918] Code: 91322300 f0004402 91178042 97fe4c9b (d4210000)
-[159786.056083] Modules linked in: hns3_enet_ut(OE) hclge(OE) hnae3(OE)
-hisi_sas_test_hw(OE) hisi_sas_test_main(OE) serdes(OE)
-[159786.067202] ---[ end trace 03622b9e2d99e196  ]---
-[159786.071893] Kernel panic - not syncing: Fatal exception
-[159786.077190] SMP: stopping secondary CPUs
-[159786.081192] Kernel Offset: disabled
-[159786.084753] CPU features: 0x2,a2a00a38
+Hauke writes that this breaks the build and should be reverted.
 
-Fixes: 2908d778ab3e ("[SCSI] aic94xx: new driver")
-Reported-by: Jian Luo <luojian5@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
-CC: John Garry <john.garry@huawei.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: Christian Lamparter <chunkeey@gmail.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/scsi/libsas/sas_expander.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/crypto/amcc/crypto4xx_alg.c  |    3 +--
+ drivers/crypto/amcc/crypto4xx_core.c |    9 ---------
+ 2 files changed, 1 insertion(+), 11 deletions(-)
 
-diff --git a/drivers/scsi/libsas/sas_expander.c b/drivers/scsi/libsas/sas_expander.c
-index ee1f9ee995e5..400eee9d7783 100644
---- a/drivers/scsi/libsas/sas_expander.c
-+++ b/drivers/scsi/libsas/sas_expander.c
-@@ -978,6 +978,8 @@ static struct domain_device *sas_ex_discover_expander(
- 		list_del(&child->dev_list_node);
- 		spin_unlock_irq(&parent->port->dev_list_lock);
- 		sas_put_device(child);
-+		sas_port_delete(phy->port);
-+		phy->port = NULL;
- 		return NULL;
+--- a/drivers/crypto/amcc/crypto4xx_alg.c
++++ b/drivers/crypto/amcc/crypto4xx_alg.c
+@@ -138,8 +138,7 @@ static int crypto4xx_setkey_aes(struct c
+ 	sa = (struct dynamic_sa_ctl *) ctx->sa_in;
+ 	ctx->hash_final = 0;
+ 
+-	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_CBC ?
+-				 SA_SAVE_IV : SA_NOT_SAVE_IV),
++	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, SA_NOT_SAVE_IV,
+ 				 SA_LOAD_HASH_FROM_SA, SA_LOAD_IV_FROM_STATE,
+ 				 SA_NO_HEADER_PROC, SA_HASH_ALG_NULL,
+ 				 SA_CIPHER_ALG_AES, SA_PAD_TYPE_ZERO,
+--- a/drivers/crypto/amcc/crypto4xx_core.c
++++ b/drivers/crypto/amcc/crypto4xx_core.c
+@@ -645,15 +645,6 @@ static u32 crypto4xx_ablkcipher_done(str
+ 		addr = dma_map_page(dev->core_dev->device, sg_page(dst),
+ 				    dst->offset, dst->length, DMA_FROM_DEVICE);
  	}
- 	list_add_tail(&child->siblings, &parent->ex_dev.children);
--- 
-2.20.1
-
+-
+-	if (pd_uinfo->sa_va->sa_command_0.bf.save_iv == SA_SAVE_IV) {
+-		struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
+-
+-		crypto4xx_memcpy_from_le32((u32 *)req->iv,
+-			pd_uinfo->sr_va->save_iv,
+-			crypto_skcipher_ivsize(skcipher));
+-	}
+-
+ 	crypto4xx_ret_sg_desc(dev, pd_uinfo);
+ 	if (ablk_req->base.complete != NULL)
+ 		ablk_req->base.complete(&ablk_req->base, 0);
 
 
