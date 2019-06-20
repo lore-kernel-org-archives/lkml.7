@@ -2,132 +2,145 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75F4EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35623C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5515620656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055081;
-	bh=TIJD23r5HJFc6OphuwvJsTYUbHsrXMlbIRazz2zxTw4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oFBhgQdGXOhqjqiIXOSN5gkpRqFWa1CPYkg5FE+al4v9URV6egicLNvL2kUMoRknC
-	 ycwAhpmraheIiT96eBX59x78Kn8ndGcqTNvT2VQ01rItMzN/flLJ27gpdYip/mLvXP
-	 0V4LTO833iTu3fioal+0xtPiCs5I/8Wl+/16CEVY=
+	by mail.kernel.org (Postfix) with ESMTP id 1E9EC20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728662AbfFTSYj (ORCPT
+        id S1728676AbfFTSYo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:24:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35930 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:24:44 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33686 "EHLO ale.deltatee.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727683AbfFTSIb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:31 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 65BB12070B;
-        Thu, 20 Jun 2019 18:08:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054110;
-        bh=TIJD23r5HJFc6OphuwvJsTYUbHsrXMlbIRazz2zxTw4=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=PXW818DG/UW53hvhxbq9YeYTV9gvOVwr5wh/JYVT5G1X//DCvR5DKYoHwLQtBpYx3
-         sP/bCajKMiTx5K9M9ZjU6K8dKCa1Gh0gpvKAM7IVKH80VnxZYj8PSq6elzGVxyPtby
-         xj2zfioRpI+nP5P04J+k1WZAzpbXQXUVQzEhy2cs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 21/45] perf/ring-buffer: Always use {READ,WRITE}_ONCE() for rb->user_page data
-Date:   Thu, 20 Jun 2019 19:57:23 +0200
-Message-Id: <20190620174336.946675129@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
-References: <20190620174328.608036501@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1726633AbfFTSYi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:24:38 -0400
+Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
+        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1he1jU-0005yI-Se; Thu, 20 Jun 2019 12:24:26 -0600
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190620161240.22738-21-logang@deltatee.com>
+ <20190620164909.GC19891@ziepe.ca>
+ <f9186b2b-7737-965f-2dca-25e40e566e64@deltatee.com>
+ <20190620171105.GD19891@ziepe.ca>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <a3a8ad66-459c-d590-5ce7-ce593cd8f34a@deltatee.com>
+Date:   Thu, 20 Jun 2019 12:24:20 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190620171105.GD19891@ziepe.ca>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 68.147.80.180
+X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, hch@lst.de, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [RFC PATCH 20/28] IB/core: Introduce API for initializing a RW
+ ctx from a DMA address
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4d839dd9e4356bbacf3eb0ab13a549b83b008c21 ]
-
-We must use {READ,WRITE}_ONCE() on rb->user_page data such that
-concurrent usage will see whole values. A few key sites were missing
-this.
-
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: 7b732a750477 ("perf_counter: new output ABI - part 1")
-Link: http://lkml.kernel.org/r/20190517115418.394192145@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- kernel/events/ring_buffer.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index aef2af80a927..f3a69a4f0d57 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -101,7 +101,7 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	 * See perf_output_begin().
- 	 */
- 	smp_wmb(); /* B, matches C */
--	rb->user_page->data_head = head;
-+	WRITE_ONCE(rb->user_page->data_head, head);
- 
- 	/*
- 	 * We must publish the head before decrementing the nest count,
-@@ -489,7 +489,7 @@ void perf_aux_output_end(struct perf_output_handle *handle, unsigned long size)
- 		                     handle->aux_flags);
- 	}
- 
--	rb->user_page->aux_head = rb->aux_head;
-+	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
- 	if (rb_need_aux_wakeup(rb))
- 		wakeup = true;
- 
-@@ -520,7 +520,7 @@ int perf_aux_output_skip(struct perf_output_handle *handle, unsigned long size)
- 
- 	rb->aux_head += size;
- 
--	rb->user_page->aux_head = rb->aux_head;
-+	WRITE_ONCE(rb->user_page->aux_head, rb->aux_head);
- 	if (rb_need_aux_wakeup(rb)) {
- 		perf_output_wakeup(handle);
- 		handle->wakeup = rb->aux_wakeup + rb->aux_watermark;
--- 
-2.20.1
 
 
+On 2019-06-20 11:11 a.m., Jason Gunthorpe wrote:
+> On Thu, Jun 20, 2019 at 10:59:44AM -0600, Logan Gunthorpe wrote:
+>>
+>>
+>> On 2019-06-20 10:49 a.m., Jason Gunthorpe wrote:
+>>> On Thu, Jun 20, 2019 at 10:12:32AM -0600, Logan Gunthorpe wrote:
+>>>> Introduce rdma_rw_ctx_dma_init() and rdma_rw_ctx_dma_destroy() which
+>>>> peform the same operation as rdma_rw_ctx_init() and
+>>>> rdma_rw_ctx_destroy() respectively except they operate on a DMA
+>>>> address and length instead of an SGL.
+>>>>
+>>>> This will be used for struct page-less P2PDMA, but there's also
+>>>> been opinions expressed to migrate away from SGLs and struct
+>>>> pages in the RDMA APIs and this will likely fit with that
+>>>> effort.
+>>>>
+>>>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>>>>  drivers/infiniband/core/rw.c | 74 ++++++++++++++++++++++++++++++------
+>>>>  include/rdma/rw.h            |  6 +++
+>>>>  2 files changed, 69 insertions(+), 11 deletions(-)
+>>>>
+>>>> diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
+>>>> index 32ca8429eaae..cefa6b930bc8 100644
+>>>> +++ b/drivers/infiniband/core/rw.c
+>>>> @@ -319,6 +319,39 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp, u8 port_num,
+>>>>  }
+>>>>  EXPORT_SYMBOL(rdma_rw_ctx_init);
+>>>>  
+>>>> +/**
+>>>> + * rdma_rw_ctx_dma_init - initialize a RDMA READ/WRITE context from a
+>>>> + *	DMA address instead of SGL
+>>>> + * @ctx:	context to initialize
+>>>> + * @qp:		queue pair to operate on
+>>>> + * @port_num:	port num to which the connection is bound
+>>>> + * @addr:	DMA address to READ/WRITE from/to
+>>>> + * @len:	length of memory to operate on
+>>>> + * @remote_addr:remote address to read/write (relative to @rkey)
+>>>> + * @rkey:	remote key to operate on
+>>>> + * @dir:	%DMA_TO_DEVICE for RDMA WRITE, %DMA_FROM_DEVICE for RDMA READ
+>>>> + *
+>>>> + * Returns the number of WQEs that will be needed on the workqueue if
+>>>> + * successful, or a negative error code.
+>>>> + */
+>>>> +int rdma_rw_ctx_dma_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+>>>> +		u8 port_num, dma_addr_t addr, u32 len, u64 remote_addr,
+>>>> +		u32 rkey, enum dma_data_direction dir)
+>>>
+>>> Why not keep the same basic signature here but replace the scatterlist
+>>> with the dma vec ?
+>>
+>> Could do. At the moment, I had no need for dma_vec in this interface.
+> 
+> I think that is because you only did nvme not srp/iser :)
 
+I'm not sure that's true at least for the P2P case. With P2P we are able
+to  allocate one continuous region of memory for each transaction. It
+would be quite weird to allocate multiple regions for a single transaction.
+
+>>>> +{
+>>>> +	struct scatterlist sg;
+>>>> +
+>>>> +	sg_dma_address(&sg) = addr;
+>>>> +	sg_dma_len(&sg) = len;
+>>>
+>>> This needs to fail if the driver is one of the few that require
+>>> struct page to work..
+>>
+>> Yes, right. Currently P2PDMA checks for the use of dma_virt_ops. And
+>> that probably should also be done here. But is that sufficient? You're
+>> probably right that it'll take an audit of the RDMA tree to sort that out.
+> 
+> For this purpose I'd be fine if you added a flag to the struct
+> ib_device_ops that is set on drivers that we know are OK.. We can make
+> that list bigger over time.
+
+Ok, that would mirror what we did for the block layer. I'll look at
+doing something like that in the near future.
+
+Thanks,
+
+Logan
