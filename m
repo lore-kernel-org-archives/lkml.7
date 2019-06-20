@@ -2,82 +2,133 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD56AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:13:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAF7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FDB52080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:13:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2ED292080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:13:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="kzQX+mLC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E3VyLGyX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731700AbfFTMNa (ORCPT
+        id S1731771AbfFTMNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:13:30 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:34376 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726874AbfFTMN3 (ORCPT
+        Thu, 20 Jun 2019 08:13:38 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:34603 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726874AbfFTMNi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:13:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=INLoN7fo8QBg41xd5vTCQxjRIjhqdZgqFMwFhcZAuno=; b=kzQX+mLCvcIWem20bLKq8tllh
-        1wIjXEATGMItzi2s4k6mxcxl/0PbaVVA0mOlX04MM5IdfpOHRW5TkkZGEVD7SvmSoUA/oLfkta/IY
-        hswgcR/no8eUgw6j/ZQXnpNtaW4SR7qlg+eUWONBdx9e9s9XBhk+FrdflxqbfHre3aeUK3BjvmTEH
-        NY3+aqZTjtOARNwhzaM+YRwFGGKQTeUjDtdEUFoTehMTehIxR+dOB8JtMw4LyMguLYxbEIAatOEB4
-        c2dEGifXqkK42pWBHQNkVElYfFK12IByRIQfn6n89mfn2eIE16dwfbQKb/uMYiGp/da72s3XNf2Gw
-        mMeAyRAFw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hdvwM-0003gl-Ov; Thu, 20 Jun 2019 12:13:18 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C1BB7209CCE6C; Thu, 20 Jun 2019 14:13:16 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 14:13:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Liang, Kan" <kan.liang@linux.intel.com>
-Cc:     Vince Weaver <vincent.weaver@maine.edu>,
-        syzbot <syzbot+10189b9b0f8c4664badd@syzkaller.appspotmail.com>,
-        acme@kernel.org, acme@redhat.com,
-        alexander.shishkin@linux.intel.com, bp@alien8.de,
-        eranian@google.com, hpa@zytor.com, jolsa@kernel.org,
-        jolsa@redhat.com, linux-kernel@vger.kernel.org, mingo@kernel.org,
-        mingo@redhat.com, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, torvalds@linux-foundation.org, x86@kernel.org
-Subject: Re: WARNING in perf_reg_value
-Message-ID: <20190620121316.GV3436@hirez.programming.kicks-ass.net>
-References: <000000000000734545058bb27ebb@google.com>
- <alpine.DEB.2.21.1906191605380.10498@macbook-air>
- <8ec677d7-f891-1c8b-33bd-16506974fafb@linux.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ec677d7-f891-1c8b-33bd-16506974fafb@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Jun 2019 08:13:38 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k11so2819487wrl.1;
+        Thu, 20 Jun 2019 05:13:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:subject:date:message-id;
+        bh=b6QfbK+zg+CntQ2YnFA9EsYYsbhSbAKbyatBLLsVS6o=;
+        b=E3VyLGyXBRciniccq2xfnnDJ3KEBTKwNxEIMDG8aeHSgCgrA4l/llxQuU9bNLgJ4IU
+         yBXGW13NFJS0AXY5AxC1J8UHqWdwXuqSK2EE0yj6CG23qHonx/8WatFfAJLzMjWuOGjb
+         O01hXtoIH8HBiEJ071hcaelr/8phQA6qymOmggqs5BRxSGPDhoOt8UwBf9pm99jnKMh5
+         LPq7FoEG0F8vsrHTr0+t8uZhENtc+IQH1EKdXgYywN865fOETmu0IEv/ez+L8z4hgIDv
+         np9aaSgdBDPuGJ0UmFmCBxT+nr9/cOk+QeNpUsa8ZTCsIAsVyfBvIgJ5ug7k7wlSvKFI
+         SYHg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:subject:date:message-id;
+        bh=b6QfbK+zg+CntQ2YnFA9EsYYsbhSbAKbyatBLLsVS6o=;
+        b=l/EeKOMcsZz7Tx1ixy7YrStqsb6aAgNNDqPtpFEJEvHqxXUh5K8G2QdXGskoNmDH5G
+         SJivsnyY+l4fGInCOiBZAzk8N9evJPtuDIg9IMxIQ8F5DjLwX2g7teF5l7cI7Q/qi2Xj
+         bf+cIqaS/Al+CYGdMOiDynvhc6uTkRXRdbe/Z3aEtMefSx7G6/hejiJJJmfwKevVqJKM
+         h7BBurB+Q8QNnEj3sobCx+CBnp1lLf7ROniwKa6sx3g2V50qcu032nuF2MbzSNUcyoE5
+         IQogq4UBDTxvDRKCb+7/hBIScX+fd9FNvgIZ8CYHwJx/RDFCCnXCkCIVyoT0YzvTXtC1
+         DoMg==
+X-Gm-Message-State: APjAAAWt8YolQIoLOboLnOWi2d7S52L/AKpsTNBOnAdC4AsnPBSYJVar
+        xfBKaqK+nh0ltK1u3o5Ti5ysDYIH
+X-Google-Smtp-Source: APXvYqz8eIsNCFktOotZ5v5T4ToB/P2JaF1GzsBr9KUGro69jplOWK8feo66DzLVbIhqZJaoccIdAw==
+X-Received: by 2002:adf:ed41:: with SMTP id u1mr44066764wro.162.1561032815742;
+        Thu, 20 Jun 2019 05:13:35 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id j4sm16720548wrx.57.2019.06.20.05.13.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 05:13:35 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: [PATCH] KVM: svm: add nrips module parameter
+Date:   Thu, 20 Jun 2019 14:13:33 +0200
+Message-Id: <1561032813-16698-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 05:15:32PM -0400, Liang, Kan wrote:
-> Here are the patches posted.
-> https://lkml.org/lkml/2019/5/28/1022
+Allow testing code for old processors that lack the next RIP save
+feature, by disabling usage of the next_rip field.
 
-How many times do I have to tell that lkml.org links are frigging
-useless?
+Nested hypervisors however get the feature unconditionally.
 
-Now I have to copy/paste them into a browser, pray the site works today,
-and then copy paste the subject back into my mua and hopefully find the
-thread.
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ arch/x86/kvm/svm.c | 15 ++++++++++++---
+ 1 file changed, 12 insertions(+), 3 deletions(-)
 
-If you'd used the canonical form, I'd instantly have a msgid and I
-could've search for that directly, without having to have to touch a
-browser or hope the interweb actually works.
-
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 735b8c01895e..fe046c13f03b 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -367,6 +367,10 @@ struct amd_svm_iommu_ir {
+ module_param(avic, int, S_IRUGO);
+ #endif
+ 
++/* enable/disable Next RIP Save */
++static int nrips = true;
++module_param(nrips, int, 0444);
++
+ /* enable/disable Virtual VMLOAD VMSAVE */
+ static int vls = true;
+ module_param(vls, int, 0444);
+@@ -773,7 +777,7 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ {
+ 	struct vcpu_svm *svm = to_svm(vcpu);
+ 
+-	if (svm->vmcb->control.next_rip != 0) {
++	if (nrips && svm->vmcb->control.next_rip != 0) {
+ 		WARN_ON_ONCE(!static_cpu_has(X86_FEATURE_NRIPS));
+ 		svm->next_rip = svm->vmcb->control.next_rip;
+ 	}
+@@ -810,7 +814,7 @@ static void svm_queue_exception(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_deliver_exception_payload(&svm->vcpu);
+ 
+-	if (nr == BP_VECTOR && !static_cpu_has(X86_FEATURE_NRIPS)) {
++	if (nr == BP_VECTOR && !nrips) {
+ 		unsigned long rip, old_rip = kvm_rip_read(&svm->vcpu);
+ 
+ 		/*
+@@ -1367,6 +1371,11 @@ static __init int svm_hardware_setup(void)
+ 	} else
+ 		kvm_disable_tdp();
+ 
++	if (nrips) {
++		if (!boot_cpu_has(X86_FEATURE_NRIPS))
++			nrips = false;
++	}
++
+ 	if (avic) {
+ 		if (!npt_enabled ||
+ 		    !boot_cpu_has(X86_FEATURE_AVIC) ||
+@@ -3938,7 +3947,7 @@ static int rdpmc_interception(struct vcpu_svm *svm)
+ {
+ 	int err;
+ 
+-	if (!static_cpu_has(X86_FEATURE_NRIPS))
++	if (!nrips)
+ 		return emulate_on_interception(svm);
+ 
+ 	err = kvm_rdpmc(&svm->vcpu);
+-- 
+1.8.3.1
 
