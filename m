@@ -2,52 +2,57 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B718DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A611C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D45520656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A2D220656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055074;
-	bh=/SYrF4igYH9DXu7t6onqiM2r0S/NibwYcqITNb3Z4Us=;
+	s=default; t=1561055078;
+	bh=nApWgEjIB6EhKwOaE9xlu+M0VnqA5S/kjouxOuF2hRI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bHiwHmfFUF10PpUPDMnoNybxfN/O12pV5IzaOpY5LvXSCekKvLX+rzgqrDh3cob1V
-	 iq4gponSqsOjPAxfs3vPAcahkNmD5QQqUzBRzrzgaP4z96HNLpNLXeMgxyr3TUFdgY
-	 HpExWDiJHwf2ClE3PlacdiK5jnrWBl1n5OH+nIjw=
+	b=Q1BGB3SveqbYQkdPlIwK12T8C7hpUvTjyKMlo9WV8Cr2P4RF5mGUHfYyPHi9xprPX
+	 ACv0z5WW3Cr0B3gYo61vkjn4u49mI5VzGPsBsLlOvaYDatk8u0tsmcHOYyIleERBuB
+	 uN33f3pQ4Mhejh1VHRGvdLk4oiTZX3BYO8kEbCDY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728496AbfFTSIf (ORCPT
+        id S1728482AbfFTSIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35772 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:08:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728281AbfFTSIZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:25 -0400
+        id S1728269AbfFTSIT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DECFD2089C;
-        Thu, 20 Jun 2019 18:08:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A2AB32070B;
+        Thu, 20 Jun 2019 18:08:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054104;
-        bh=/SYrF4igYH9DXu7t6onqiM2r0S/NibwYcqITNb3Z4Us=;
+        s=default; t=1561054098;
+        bh=nApWgEjIB6EhKwOaE9xlu+M0VnqA5S/kjouxOuF2hRI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Vj+0UHHhYfo4UzLi2/Ng7CkmUq6rx3fAImBAzLzJQpTp5ivzLu5eW3c38JY6q7Wdf
-         qdUXBnOXonq1nardcm6Db7VYhNQCBo3dubWTn16sORidDQRU67GJ/RkPzINjITLFt6
-         nAKKf8IZPyde+8CGNIPwuLGwK/wEzqDWS+4RuNHc=
+        b=J1kyv3yy2ieuaWWv82+rsyFIjVRmOctlLSlDY+1IvPGz4ttlZfONY8mI5+QudkKeV
+         ZOHg/1l+HksV57cFZCrq4qeRMMyTW9PsWDcqp9wsON2jJb1IT8kPu31LGs/IZX+rqL
+         w4isU3gcVD2yIkdg44wsfKxXMpvQUGkY/fBLAApo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 02/45] ax25: fix inconsistent lock state in ax25_destroy_timer
-Date:   Thu, 20 Jun 2019 19:57:04 +0200
-Message-Id: <20190620174329.954085990@linuxfoundation.org>
+        stable@vger.kernel.org, Frank van der Linden <fllinden@amazon.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        jiaxun.yang@flygoat.com, Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 18/45] x86/CPU/AMD: Dont force the CPB cap when running under a hypervisor
+Date:   Thu, 20 Jun 2019 19:57:20 +0200
+Message-Id: <20190620174336.238146109@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -60,117 +65,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+[ Upstream commit 2ac44ab608705948564791ce1d15d43ba81a1e38 ]
 
-[ Upstream commit d4d5d8e83c9616aeef28a2869cea49cc3fb35526 ]
+For F17h AMD CPUs, the CPB capability ('Core Performance Boost') is forcibly set,
+because some versions of that chip incorrectly report that they do not have it.
 
-Before thread in process context uses bh_lock_sock()
-we must disable bh.
+However, a hypervisor may filter out the CPB capability, for good
+reasons. For example, KVM currently does not emulate setting the CPB
+bit in MSR_K7_HWCR, and unchecked MSR access errors will be thrown
+when trying to set it as a guest:
 
-sysbot reported :
+	unchecked MSR access error: WRMSR to 0xc0010015 (tried to write 0x0000000001000011) at rIP: 0xffffffff890638f4 (native_write_msr+0x4/0x20)
 
-WARNING: inconsistent lock state
-5.2.0-rc3+ #32 Not tainted
+	Call Trace:
+	boost_set_msr+0x50/0x80 [acpi_cpufreq]
+	cpuhp_invoke_callback+0x86/0x560
+	sort_range+0x20/0x20
+	cpuhp_thread_fun+0xb0/0x110
+	smpboot_thread_fn+0xef/0x160
+	kthread+0x113/0x130
+	kthread_create_worker_on_cpu+0x70/0x70
+	ret_from_fork+0x35/0x40
 
-inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
-blkid/26581 [HC0[0]:SC1[1]:HE1:SE0] takes:
-00000000e0da85ee (slock-AF_AX25){+.?.}, at: spin_lock include/linux/spinlock.h:338 [inline]
-00000000e0da85ee (slock-AF_AX25){+.?.}, at: ax25_destroy_timer+0x53/0xc0 net/ax25/af_ax25.c:275
-{SOFTIRQ-ON-W} state was registered at:
-  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
-  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
-  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
-  spin_lock include/linux/spinlock.h:338 [inline]
-  ax25_rt_autobind+0x3ca/0x720 net/ax25/ax25_route.c:429
-  ax25_connect.cold+0x30/0xa4 net/ax25/af_ax25.c:1221
-  __sys_connect+0x264/0x330 net/socket.c:1834
-  __do_sys_connect net/socket.c:1845 [inline]
-  __se_sys_connect net/socket.c:1842 [inline]
-  __x64_sys_connect+0x73/0xb0 net/socket.c:1842
-  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-irq event stamp: 2272
-hardirqs last  enabled at (2272): [<ffffffff810065f3>] trace_hardirqs_on_thunk+0x1a/0x1c
-hardirqs last disabled at (2271): [<ffffffff8100660f>] trace_hardirqs_off_thunk+0x1a/0x1c
-softirqs last  enabled at (1522): [<ffffffff87400654>] __do_softirq+0x654/0x94c kernel/softirq.c:320
-softirqs last disabled at (2267): [<ffffffff81449010>] invoke_softirq kernel/softirq.c:374 [inline]
-softirqs last disabled at (2267): [<ffffffff81449010>] irq_exit+0x180/0x1d0 kernel/softirq.c:414
+To avoid this issue, don't forcibly set the CPB capability for a CPU
+when running under a hypervisor.
 
-other info that might help us debug this:
- Possible unsafe locking scenario:
-
-       CPU0
-       ----
-  lock(slock-AF_AX25);
-  <Interrupt>
-    lock(slock-AF_AX25);
-
- *** DEADLOCK ***
-
-1 lock held by blkid/26581:
- #0: 0000000010fd154d ((&ax25->dtimer)){+.-.}, at: lockdep_copy_map include/linux/lockdep.h:175 [inline]
- #0: 0000000010fd154d ((&ax25->dtimer)){+.-.}, at: call_timer_fn+0xe0/0x720 kernel/time/timer.c:1312
-
-stack backtrace:
-CPU: 1 PID: 26581 Comm: blkid Not tainted 5.2.0-rc3+ #32
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- <IRQ>
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- print_usage_bug.cold+0x393/0x4a2 kernel/locking/lockdep.c:2935
- valid_state kernel/locking/lockdep.c:2948 [inline]
- mark_lock_irq kernel/locking/lockdep.c:3138 [inline]
- mark_lock+0xd46/0x1370 kernel/locking/lockdep.c:3513
- mark_irqflags kernel/locking/lockdep.c:3391 [inline]
- __lock_acquire+0x159f/0x5490 kernel/locking/lockdep.c:3745
- lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
- __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
- _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
- spin_lock include/linux/spinlock.h:338 [inline]
- ax25_destroy_timer+0x53/0xc0 net/ax25/af_ax25.c:275
- call_timer_fn+0x193/0x720 kernel/time/timer.c:1322
- expire_timers kernel/time/timer.c:1366 [inline]
- __run_timers kernel/time/timer.c:1685 [inline]
- __run_timers kernel/time/timer.c:1653 [inline]
- run_timer_softirq+0x66f/0x1740 kernel/time/timer.c:1698
- __do_softirq+0x25c/0x94c kernel/softirq.c:293
- invoke_softirq kernel/softirq.c:374 [inline]
- irq_exit+0x180/0x1d0 kernel/softirq.c:414
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0x13b/0x550 arch/x86/kernel/apic/apic.c:1068
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
- </IRQ>
-RIP: 0033:0x7f858d5c3232
-Code: 8b 61 08 48 8b 84 24 d8 00 00 00 4c 89 44 24 28 48 8b ac 24 d0 00 00 00 4c 8b b4 24 e8 00 00 00 48 89 7c 24 68 48 89 4c 24 78 <48> 89 44 24 58 8b 84 24 e0 00 00 00 89 84 24 84 00 00 00 8b 84 24
-RSP: 002b:00007ffcaf0cf5c0 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
-RAX: 00007f858d7d27a8 RBX: 00007f858d7d8820 RCX: 00007f858d3940d8
-RDX: 00007ffcaf0cf798 RSI: 00000000f5e616f3 RDI: 00007f858d394fee
-RBP: 0000000000000000 R08: 00007ffcaf0cf780 R09: 00007f858d7db480
-R10: 0000000000000000 R11: 0000000009691a75 R12: 0000000000000005
-R13: 00000000f5e616f3 R14: 0000000000000000 R15: 00007ffcaf0cf798
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: jiaxun.yang@flygoat.com
+Fixes: 0237199186e7 ("x86/CPU/AMD: Set the CPB bit unconditionally on F17h")
+Link: http://lkml.kernel.org/r/20190522221745.GA15789@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+[ Minor edits to the changelog. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ax25/ax25_route.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/kernel/cpu/amd.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---- a/net/ax25/ax25_route.c
-+++ b/net/ax25/ax25_route.c
-@@ -443,9 +443,11 @@ int ax25_rt_autobind(ax25_cb *ax25, ax25
- 	}
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index ecf82859f1c0..bbebcd7a781e 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -792,8 +792,11 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
  
- 	if (ax25->sk != NULL) {
-+		local_bh_disable();
- 		bh_lock_sock(ax25->sk);
- 		sock_reset_flag(ax25->sk, SOCK_ZAPPED);
- 		bh_unlock_sock(ax25->sk);
-+		local_bh_enable();
- 	}
+-	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
+-	if (!cpu_has(c, X86_FEATURE_CPB))
++	/*
++	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
++	 * Always set it, except when running under a hypervisor.
++	 */
++	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+ }
  
- put:
+-- 
+2.20.1
+
 
 
