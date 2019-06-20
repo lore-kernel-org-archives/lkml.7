@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAD36C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B12FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:09:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F7E2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DF22070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732141AbfFTQIf (ORCPT
+        id S1732229AbfFTQJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:08:35 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:40162 "EHLO huawei.com"
+        Thu, 20 Jun 2019 12:09:00 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:18653 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726659AbfFTQId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:08:33 -0400
+        id S1731986AbfFTQIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:08:30 -0400
 Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 3EB8D1D75DB50C23311B;
-        Fri, 21 Jun 2019 00:08:30 +0800 (CST)
+        by Forcepoint Email with ESMTP id 1C9F0CD9F86689AB3D98;
+        Fri, 21 Jun 2019 00:08:22 +0800 (CST)
 Received: from architecture4.huawei.com (10.140.130.215) by smtp.huawei.com
  (10.3.19.209) with Microsoft SMTP Server (TLS) id 14.3.439.0; Fri, 21 Jun
- 2019 00:08:19 +0800
+ 2019 00:08:13 +0800
 From:   Gao Xiang <gaoxiang25@huawei.com>
 To:     Chao Yu <yuchao0@huawei.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>
@@ -33,9 +34,9 @@ CC:     <devel@driverdev.osuosl.org>, LKML <linux-kernel@vger.kernel.org>,
         Chao Yu <chao@kernel.org>, Fang Wei <fangwei1@huawei.com>,
         Miao Xie <miaoxie@huawei.com>, Du Wei <weidu.du@huawei.com>,
         Gao Xiang <gaoxiang25@huawei.com>
-Subject: [PATCH v2 8/8] staging: erofs: integrate decompression inplace
-Date:   Fri, 21 Jun 2019 00:07:19 +0800
-Message-ID: <20190620160719.240682-9-gaoxiang25@huawei.com>
+Subject: [PATCH v2 4/8] staging: erofs: move stagingpage operations to compress.h
+Date:   Fri, 21 Jun 2019 00:07:15 +0800
+Message-ID: <20190620160719.240682-5-gaoxiang25@huawei.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190620160719.240682-1-gaoxiang25@huawei.com>
 References: <20190620160719.240682-1-gaoxiang25@huawei.com>
@@ -48,116 +49,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Decompressor needs to know whether it's a partial
-or full decompression since only full decompression
-can be decompressed in-place.
-
-On kirin980 platform, sequential read is finally
-increased to 812MiB/s after decompression inplace
-is enabled.
+stagingpages are behaved as bounce pages for temporary use.
+Move to compress.h since the upcoming decompressor will
+allocate stagingpages as well.
 
 Signed-off-by: Gao Xiang <gaoxiang25@huawei.com>
 ---
- drivers/staging/erofs/internal.h  |  3 +++
- drivers/staging/erofs/unzip_vle.c | 15 +++++++++++----
- drivers/staging/erofs/unzip_vle.h |  1 +
- drivers/staging/erofs/zmap.c      |  1 +
- 4 files changed, 16 insertions(+), 4 deletions(-)
+ drivers/staging/erofs/compress.h  | 40 +++++++++++++++++++++++++++++++
+ drivers/staging/erofs/unzip_vle.c | 11 +++++----
+ drivers/staging/erofs/unzip_vle.h | 20 ----------------
+ 3 files changed, 46 insertions(+), 25 deletions(-)
+ create mode 100644 drivers/staging/erofs/compress.h
 
-diff --git a/drivers/staging/erofs/internal.h b/drivers/staging/erofs/internal.h
-index 6c8767d4a1d5..963cc1b8b896 100644
---- a/drivers/staging/erofs/internal.h
-+++ b/drivers/staging/erofs/internal.h
-@@ -441,6 +441,7 @@ extern const struct address_space_operations z_erofs_vle_normalaccess_aops;
-  */
- enum {
- 	BH_Zipped = BH_PrivateStart,
-+	BH_FullMapped,
- };
- 
- /* Has a disk mapping */
-@@ -449,6 +450,8 @@ enum {
- #define EROFS_MAP_META		(1 << BH_Meta)
- /* The extent has been compressed */
- #define EROFS_MAP_ZIPPED	(1 << BH_Zipped)
-+/* The length of extent is full */
-+#define EROFS_MAP_FULL_MAPPED	(1 << BH_FullMapped)
- 
- struct erofs_map_blocks {
- 	erofs_off_t m_pa, m_la;
+diff --git a/drivers/staging/erofs/compress.h b/drivers/staging/erofs/compress.h
+new file mode 100644
+index 000000000000..1dcfc3b35118
+--- /dev/null
++++ b/drivers/staging/erofs/compress.h
+@@ -0,0 +1,40 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * linux/drivers/staging/erofs/compress.h
++ *
++ * Copyright (C) 2019 HUAWEI, Inc.
++ *             http://www.huawei.com/
++ * Created by Gao Xiang <gaoxiang25@huawei.com>
++ */
++#ifndef __EROFS_FS_COMPRESS_H
++#define __EROFS_FS_COMPRESS_H
++
++/*
++ * - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
++ * used to mark temporary allocated pages from other
++ * file/cached pages and NULL mapping pages.
++ */
++#define Z_EROFS_MAPPING_STAGING         ((void *)0x5A110C8D)
++
++/* check if a page is marked as staging */
++static inline bool z_erofs_page_is_staging(struct page *page)
++{
++	return page->mapping == Z_EROFS_MAPPING_STAGING;
++}
++
++static inline bool z_erofs_put_stagingpage(struct list_head *pagepool,
++					   struct page *page)
++{
++	if (!z_erofs_page_is_staging(page))
++		return false;
++
++	/* staging pages should not be used by others at the same time */
++	if (page_ref_count(page) > 1)
++		put_page(page);
++	else
++		list_add(&page->lru, pagepool);
++	return true;
++}
++
++#endif
++
 diff --git a/drivers/staging/erofs/unzip_vle.c b/drivers/staging/erofs/unzip_vle.c
-index cb870b83f3c8..316382d33783 100644
+index 08f2d4302ecb..d95f985936b6 100644
 --- a/drivers/staging/erofs/unzip_vle.c
 +++ b/drivers/staging/erofs/unzip_vle.c
-@@ -469,6 +469,9 @@ z_erofs_vle_work_register(const struct z_erofs_vle_work_finder *f,
- 				    Z_EROFS_VLE_WORKGRP_FMT_LZ4 :
- 				    Z_EROFS_VLE_WORKGRP_FMT_PLAIN);
+@@ -11,6 +11,7 @@
+  * distribution for more details.
+  */
+ #include "unzip_vle.h"
++#include "compress.h"
+ #include <linux/prefetch.h>
  
-+	if (map->m_flags & EROFS_MAP_FULL_MAPPED)
-+		grp->flags |= Z_EROFS_VLE_WORKGRP_FULL_LENGTH;
-+
- 	/* new workgrps have been claimed as type 1 */
- 	WRITE_ONCE(grp->next, *f->owned_head);
- 	/* primary and followed work for all new workgrps */
-@@ -901,7 +904,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	unsigned int i, outputsize;
+ #include <trace/events/erofs.h>
+@@ -855,7 +856,7 @@ static inline void z_erofs_vle_read_endio(struct bio *bio)
+ 		DBG_BUGON(PageUptodate(page));
+ 		DBG_BUGON(!page->mapping);
  
- 	enum z_erofs_page_type page_type;
--	bool overlapped;
-+	bool overlapped, partial;
- 	struct z_erofs_vle_work *work;
- 	int err;
+-		if (unlikely(!sbi && !z_erofs_is_stagingpage(page))) {
++		if (unlikely(!sbi && !z_erofs_page_is_staging(page))) {
+ 			sbi = EROFS_SB(page->mapping->host->i_sb);
  
-@@ -1009,10 +1012,13 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 	if (unlikely(err))
- 		goto out;
+ 			if (time_to_inject(sbi, FAULT_READ_IO)) {
+@@ -947,7 +948,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 		DBG_BUGON(!page);
+ 		DBG_BUGON(!page->mapping);
  
--	if (nr_pages << PAGE_SHIFT >= work->pageofs + grp->llen)
-+	if (nr_pages << PAGE_SHIFT >= work->pageofs + grp->llen) {
- 		outputsize = grp->llen;
--	else
-+		partial = !(grp->flags & Z_EROFS_VLE_WORKGRP_FULL_LENGTH);
-+	} else {
- 		outputsize = (nr_pages << PAGE_SHIFT) - work->pageofs;
-+		partial = true;
-+	}
+-		if (z_erofs_gather_if_stagingpage(page_pool, page))
++		if (z_erofs_put_stagingpage(page_pool, page))
+ 			continue;
  
- 	if (z_erofs_vle_workgrp_fmt(grp) == Z_EROFS_VLE_WORKGRP_FMT_PLAIN)
- 		algorithm = Z_EROFS_COMPRESSION_SHIFTED;
-@@ -1028,7 +1034,8 @@ static int z_erofs_vle_unzip(struct super_block *sb,
- 					.outputsize = outputsize,
- 					.alg = algorithm,
- 					.inplace_io = overlapped,
--					.partial_decoding = true }, page_pool);
-+					.partial_decoding = partial
-+				 }, page_pool);
+ 		if (page_type == Z_EROFS_VLE_PAGE_TYPE_HEAD)
+@@ -977,7 +978,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 		DBG_BUGON(!page);
+ 		DBG_BUGON(!page->mapping);
  
- out:
- 	/* must handle all compressed pages before endding pages */
+-		if (!z_erofs_is_stagingpage(page)) {
++		if (!z_erofs_page_is_staging(page)) {
+ 			if (erofs_page_is_managed(sbi, page)) {
+ 				if (unlikely(!PageUptodate(page)))
+ 					err = -EIO;
+@@ -1055,7 +1056,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 			continue;
+ 
+ 		/* recycle all individual staging pages */
+-		(void)z_erofs_gather_if_stagingpage(page_pool, page);
++		(void)z_erofs_put_stagingpage(page_pool, page);
+ 
+ 		WRITE_ONCE(compressed_pages[i], NULL);
+ 	}
+@@ -1068,7 +1069,7 @@ static int z_erofs_vle_unzip(struct super_block *sb,
+ 		DBG_BUGON(!page->mapping);
+ 
+ 		/* recycle all individual staging pages */
+-		if (z_erofs_gather_if_stagingpage(page_pool, page))
++		if (z_erofs_put_stagingpage(page_pool, page))
+ 			continue;
+ 
+ 		if (unlikely(err < 0))
 diff --git a/drivers/staging/erofs/unzip_vle.h b/drivers/staging/erofs/unzip_vle.h
-index a2d9b60beebd..ab509d75aefd 100644
+index 9c53009700cf..6c3e0deb63e7 100644
 --- a/drivers/staging/erofs/unzip_vle.h
 +++ b/drivers/staging/erofs/unzip_vle.h
-@@ -46,6 +46,7 @@ struct z_erofs_vle_work {
- #define Z_EROFS_VLE_WORKGRP_FMT_PLAIN        0
- #define Z_EROFS_VLE_WORKGRP_FMT_LZ4          1
- #define Z_EROFS_VLE_WORKGRP_FMT_MASK         1
-+#define Z_EROFS_VLE_WORKGRP_FULL_LENGTH      2
+@@ -16,26 +16,6 @@
+ #include "internal.h"
+ #include "unzip_pagevec.h"
  
- typedef void *z_erofs_vle_owned_workgrp_t;
- 
-diff --git a/drivers/staging/erofs/zmap.c b/drivers/staging/erofs/zmap.c
-index 77bc49c07846..ce6d955f0112 100644
---- a/drivers/staging/erofs/zmap.c
-+++ b/drivers/staging/erofs/zmap.c
-@@ -424,6 +424,7 @@ int z_erofs_map_blocks_iter(struct inode *inode,
- 			goto unmap_out;
- 		}
- 		end = (m.lcn << lclusterbits) | m.clusterofs;
-+		map->m_flags |= EROFS_MAP_FULL_MAPPED;
- 		m.delta[0] = 1;
- 		/* fallthrough */
- 	case Z_EROFS_VLE_CLUSTER_TYPE_NONHEAD:
+-/*
+- *  - 0x5A110C8D ('sallocated', Z_EROFS_MAPPING_STAGING) -
+- * used for temporary allocated pages (via erofs_allocpage),
+- * in order to seperate those from NULL mapping (eg. truncated pages)
+- */
+-#define Z_EROFS_MAPPING_STAGING		((void *)0x5A110C8D)
+-
+-#define z_erofs_is_stagingpage(page)	\
+-	((page)->mapping == Z_EROFS_MAPPING_STAGING)
+-
+-static inline bool z_erofs_gather_if_stagingpage(struct list_head *page_pool,
+-						 struct page *page)
+-{
+-	if (z_erofs_is_stagingpage(page)) {
+-		list_add(&page->lru, page_pool);
+-		return true;
+-	}
+-	return false;
+-}
+-
+ /*
+  * Structure fields follow one of the following exclusion rules.
+  *
 -- 
 2.17.1
 
