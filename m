@@ -2,105 +2,151 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8937C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A918C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:39:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC552085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:34:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561012453;
-	bh=Ho986ZwEwN6lSqW02CRO5TRKTGH2igmUfY7a/ULtRRU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=d1a+fmXnulumlmmo8YXLMyo7y33Q4Y2AglRwct1G7uy0c6+Z2+aiBFrHRCR5IVqym
-	 Tl8uQSzT4ZxvFCSKhdxQEwZxssq3YH+ezezwYbKPxqKtdLf2Ld2oizFDpfx0+5OarO
-	 Wgfh3g+7AXKRonPQrCwpRs/GQbvKJrHCNibD4vGg=
+	by mail.kernel.org (Postfix) with ESMTP id F0271208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:39:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="McnCESmT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726567AbfFTGeM (ORCPT
+        id S1726244AbfFTGjD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 02:34:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34302 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfFTGeL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 02:34:11 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 515C62070B;
-        Thu, 20 Jun 2019 06:34:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561012450;
-        bh=Ho986ZwEwN6lSqW02CRO5TRKTGH2igmUfY7a/ULtRRU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lFM3+3jhB60zvG/6yB5IE5B3Rx+VKwvPqzhLzTvAMHSgLqGN5c7UT/x7JJ1TuJGVF
-         lVevF4s7TKlP8/Hj+yX54QMnBdPlf/MMKzNcCIdDbj9TeGMDC6DOu+5ILxmtYZrzRg
-         godWZUUe0caVwlu6le/5vxZ5bW96eLKozu4FLnhk=
-Date:   Thu, 20 Jun 2019 08:34:08 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-nvdimm <linux-nvdimm@lists.01.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] driver-core, libnvdimm: Let device subsystems add
- local lockdep coverage
-Message-ID: <20190620063408.GA4768@kroah.com>
-References: <156029554317.419799.1324389595953183385.stgit@dwillia2-desk3.amr.corp.intel.com>
- <156029557585.419799.11741877483838451695.stgit@dwillia2-desk3.amr.corp.intel.com>
- <CAPcyv4h8QZBAC4kY3=mJVq0J8-W3aTLoT6h2b0WXFtymzToH-Q@mail.gmail.com>
+        Thu, 20 Jun 2019 02:39:03 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:47034 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfFTGjC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 02:39:02 -0400
+Received: by mail-ot1-f66.google.com with SMTP id z23so1617732ote.13;
+        Wed, 19 Jun 2019 23:39:02 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=sp3vep+gecWojxrD/V4sJjEZ27G+QN44xZ3oaMA/Ab0=;
+        b=McnCESmTtUQidbJqVN+hlYStLub6uVMispeub6VN4PS4aQOWB07bhjrnzsFg9A+6Cj
+         O+wq4kGPWxH9FJVRcHF9VN7cPYjb/oq4DHJruxjO8Vr5kVYRU9+043OQo/b4qne42uqh
+         xh/KmLE+qjMKbLfp6vD4lbww1gin6SIo1VrgyxnhslR92bVhq3cBbSmzpg7iUaxBMINW
+         wXC+HlvxqCsLg4QVUQ71NBWBjFnikrbyHNlkDPHry/61gsgoNUA89ctmVOmfqHsF4jpO
+         wpo0Tl6SEpULkB9e2GlzMTiPSX9DUUUpmN6GtwV3LQiVRHkj+IcVZvQ4Sy8m5Xtuu8i9
+         PbJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=sp3vep+gecWojxrD/V4sJjEZ27G+QN44xZ3oaMA/Ab0=;
+        b=rXfQuL6nQzc/IyJWr+QdJgLdLrug+fxGrnxnxcPQ0HvxEeSO5tCFun+rrff9jv8ADI
+         5z2+EwT+jmXdd1uu5OJe5CgBe5kbsRk2lg7tnk5AZO+0TMYn5cQoNb6oof0rjM83r4CU
+         IPseRLRhfUjKpWUEIz3gypPX0h33UlXQVx8ajBUViBn+WRfZRUEPN0pFO40kKLdnMk0S
+         erYgWpvNn1P2BZGf4/t5eXnSMSYzC2JQjXzx6nxBwqiLYIcVNgiJnQwMMWdvloq8ekgq
+         Fr7kdOsHXNeuFWuQ59utCQ9Jt/fW70PyI9rOy/wNShjco9zBg4GN+ukR9ltBs0Ri/cUY
+         t5hA==
+X-Gm-Message-State: APjAAAVOmtoH1Uzb23pSo7mdvf2mJH0jsWxb+p6Sigw2fQgD4oPYno4W
+        J7XPLXnjmYI3GNhTOAHtsaSWqQHCQxFk/shYwfM=
+X-Google-Smtp-Source: APXvYqxo9G2P53t/pGrnKhAN3uBijKmUC0uAx7nWK4vX6b3m+C0zos3yAdPBRGpSuICJBBhyxMAUxICKjoSGfb0nXj4=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr2248300otk.56.1561012742013;
+ Wed, 19 Jun 2019 23:39:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4h8QZBAC4kY3=mJVq0J8-W3aTLoT6h2b0WXFtymzToH-Q@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190620050301.1149-1-tao3.xu@intel.com>
+In-Reply-To: <20190620050301.1149-1-tao3.xu@intel.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 20 Jun 2019 14:40:15 +0800
+Message-ID: <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
+Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
+To:     Tao Xu <tao3.xu@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, xiaoyao.li@linux.intel.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 03:21:58PM -0700, Dan Williams wrote:
-> On Tue, Jun 11, 2019 at 4:40 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > For good reason, the standard device_lock() is marked
-> > lockdep_set_novalidate_class() because there is simply no sane way to
-> > describe the myriad ways the device_lock() ordered with other locks.
-> > However, that leaves subsystems that know their own local device_lock()
-> > ordering rules to find lock ordering mistakes manually. Instead,
-> > introduce an optional / additional lockdep-enabled lock that a subsystem
-> > can acquire in all the same paths that the device_lock() is acquired.
-> >
-> > A conversion of the NFIT driver and NVDIMM subsystem to a
-> > lockdep-validate device_lock() scheme is included. The
-> > debug_nvdimm_lock() implementation implements the correct lock-class and
-> > stacking order for the libnvdimm device topology hierarchy.
-> 
-> Greg, Peter,
-> 
-> Any thoughts on carrying this debug hack upstream? The idea being that
-> it's impossible to enable lockdep for the device_lock() globally, but
-> a constrained usage of the proposed lockdep_mutex has proven enough to
-> flush out device_lock deadlocks from libnvdimm.
-> 
-> It appears one aspect that is missing from this patch proposal is a
-> mechanism / convention to make sure that lockdep_mutex has constrained
-> usage for a given kernel build, otherwise it's obviously just as
-> problematic as device_lock(). Other concerns?
+Hi,
+On Thu, 20 Jun 2019 at 13:06, Tao Xu <tao3.xu@intel.com> wrote:
+>
+> The helper vmx_xsaves_supported() returns the bit value of
+> SECONDARY_EXEC_XSAVES in vmcs_config.cpu_based_2nd_exec_ctrl, which
+> remains unchanged true if vmcs supports 1-setting of this bit after
+> setup_vmcs_config(). It should check the guest's cpuid not this
+> unchanged value when get/set msr.
+>
+> Besides, vmx_compute_secondary_exec_control() adjusts
+> SECONDARY_EXEC_XSAVES bit based on guest cpuid's X86_FEATURE_XSAVE
+> and X86_FEATURE_XSAVES, it should use updated value to decide whether
+> set XSS_EXIT_BITMAP.
+>
+> Co-developed-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> Signed-off-by: Xiaoyao Li <xiaoyao.li@linux.intel.com>
+> Signed-off-by: Tao Xu <tao3.xu@intel.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index b93e36ddee5e..935cf72439a9 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -1721,7 +1721,8 @@ static int vmx_get_msr(struct kvm_vcpu *vcpu, struc=
+t msr_data *msr_info)
+>                 return vmx_get_vmx_msr(&vmx->nested.msrs, msr_info->index=
+,
+>                                        &msr_info->data);
+>         case MSR_IA32_XSS:
+> -               if (!vmx_xsaves_supported())
+> +               if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) ||
+> +                       !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
+>                         return 1;
+>                 msr_info->data =3D vcpu->arch.ia32_xss;
+>                 break;
+> @@ -1935,7 +1936,8 @@ static int vmx_set_msr(struct kvm_vcpu *vcpu, struc=
+t msr_data *msr_info)
+>                         return 1;
+>                 return vmx_set_vmx_msr(vcpu, msr_index, data);
+>         case MSR_IA32_XSS:
+> -               if (!vmx_xsaves_supported())
+> +               if (!guest_cpuid_has(vcpu, X86_FEATURE_XSAVE) ||
+> +                       !guest_cpuid_has(vcpu, X86_FEATURE_XSAVES))
+>                         return 1;
 
-Yeah, it feels a bit hacky but it's really up to a subsystem to mess up
-using it as much as anything else, so user beware :)
+Not complete true.
 
-I don't object to it if it makes things easier for you to debug.
+>                 /*
+>                  * The only supported bit as of Skylake is bit 8, but
+> @@ -4094,7 +4096,7 @@ static void vmx_vcpu_setup(struct vcpu_vmx *vmx)
+>
+>         set_cr4_guest_host_mask(vmx);
+>
+> -       if (vmx_xsaves_supported())
+> +       if (vmx->secondary_exec_control & SECONDARY_EXEC_XSAVES)
+>                 vmcs_write64(XSS_EXIT_BITMAP, VMX_XSS_EXIT_BITMAP);
 
-thanks,
+This is not true.
 
-greg k-h
+SDM 24.6.20:
+On processors that support the 1-setting of the =E2=80=9Cenable
+XSAVES/XRSTORS=E2=80=9D VM-execution control, the VM-execution control fiel=
+ds
+include a 64-bit XSS-exiting bitmap.
+
+It depends on whether or not processors support the 1-setting instead
+of =E2=80=9Cenable XSAVES/XRSTORS=E2=80=9D is 1 in VM-exection control fiel=
+d. Anyway,
+I will send a patch to fix the msr read/write for commit
+203000993de5(kvm: vmx: add MSR logic for XSAVES), thanks for the
+report.
+
+Regards,
+Wanpeng Li
