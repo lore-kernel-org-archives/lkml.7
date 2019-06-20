@@ -4,67 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6281DC48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFC5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:01:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39AE720673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34D1A2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:01:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ZkNBuemC"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="jiMFQLFW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732231AbfFTPBP (ORCPT
+        id S1732235AbfFTPBY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:01:15 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36031 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732023AbfFTPAa (ORCPT
+        Thu, 20 Jun 2019 11:01:24 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36879 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731986AbfFTPA3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:00:30 -0400
-Received: by mail-wr1-f67.google.com with SMTP id n4so2178155wrs.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:00:30 -0700 (PDT)
+        Thu, 20 Jun 2019 11:00:29 -0400
+Received: by mail-wr1-f68.google.com with SMTP id v14so3392482wrr.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:00:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=baylibre-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=lvCQg8fkf4AhMPMA11E/TDsr9RLDhACmfamGvoLo6Us=;
-        b=ZkNBuemC27/s9vbgndDsGwjRRSiLq96YdfPINqqKzDjQn90Qcm8t0Lj58ZfQBZYKGg
-         8bcR/XvPsILe892VTo0OmoSCiekCJCX3TlbRmHEHJ3vzE9+sGXw+vnKAhBs45P2SI07v
-         e3Oxz+tucuq69krMLV2LUbPRErpWXYbw1Js/nnOYU/94RZS05BAgy3h/bPO6/zfrOwZ4
-         F7pNiAUgM8QtuJCVp8ilAjUhGe61FLORLA8seVVdFd2cslK6440TD2MBCqoSVTL6xu0X
-         wVzWvyWRK4E0sVAODLvJRbX8E+NbHm9dcASo78JP08wjbXVEPa1TxBSF3Hg3xqEq4xUN
-         RHHA==
+        bh=xpe6ifKz7SuClVLyY+/xaKksjob7YtLZf3uysFqr17Y=;
+        b=jiMFQLFWtay0rRLzh+SDB1Dk3ZblEFbfmuUEilGmgJhW7Qz4KUAOuTU5opeNKO7nWt
+         3n6KP2WFOgh4jIbh0CB9N9m692nzvHycKqZRsgw92Mlfi9t2kewxfiNiBnBP5KlFLxic
+         9sQlOpOiP0tLfshVxMI7gTuXYR4gXXsG0+JRzy1uCzshnXvPYB+bAiQslnrgRGdC0QLh
+         NMa/SVGZJA10pDNrdq1V2bwTLxwVHMR7VPnGXjDgUXHQq/AVt4tl6/UlAxL1WAvBtdy6
+         2FmQiQyKUnniVQIQw0J8yoVz/rtn/FkGaG8a51HsMYSRhJKY5QMSsch1/WLNdyKN+7zC
+         oXzw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=lvCQg8fkf4AhMPMA11E/TDsr9RLDhACmfamGvoLo6Us=;
-        b=ENZkn/LQXMe3tBvurwLhaITKga5hqhXBWOIJ+e/bWZHs7vjOLqoNtSoTBB+rlv7OX5
-         Cnk2swt+OsFHTIl3Hs86TVp8B1D8FzgRZRqhdhb7MEjyjW7f2AyFXpsFZE614PtEQj62
-         95wgJxxMjkmZYDDVp5vzJRkxTNPek31u1tm1cm2AgDAOyIp4blaEF3kAf4e4Pj5ytnmQ
-         5qUNqjYK+NuC1Ccx5Pcax6A49oYDfNmKxl84FuTym5cMAuAsuQKKPEB3heiF7DiJB2M0
-         R73SUm2vO3bvp5Di1WBllXCXEBkVezDGhyjjuVxicaAKp0RYXWv9RTwTbSIHg4Xc1FaH
-         Jbgg==
-X-Gm-Message-State: APjAAAVZTTsFakFY6q5MHRe0cHsA3GEGMDnClEwTdD111lYKUFSyizmH
-        j/uCyoqUysC+HbqnAjBWcyHubg==
-X-Google-Smtp-Source: APXvYqzLYovsxFjf46DbcbhAjqfq5ncPgOBrMCKwL4HgOuGrU6Zszy7/dmR3PIOLGHWu/FGiIBljIQ==
-X-Received: by 2002:adf:df10:: with SMTP id y16mr4435320wrl.302.1561042829338;
-        Thu, 20 Jun 2019 08:00:29 -0700 (PDT)
+        bh=xpe6ifKz7SuClVLyY+/xaKksjob7YtLZf3uysFqr17Y=;
+        b=VQLcwXSYscZ/EwHwY2EN5hoGzn360iYbEf4n9CJBJ3YbvJcfqRw4fvVtRcI24D/DoV
+         LX+3bSu4VNSqDdqwrsHKa6KRagbf25PQlbxt0W0IXI/qKNEf1BILml1CFUny+gdtBiAE
+         x3NPKY3O9fVSSwX2Ir2/olg9VMPp4TueRlmt905ptXes0I9Fsp/a8UvPYYmwk6vnmlDm
+         uTvpCSdJYgLKjR6pM+0s3fLyAeO4C+dCHtVyFwVndvVujYF+a5S8Wadu3QKhUCPExqVP
+         zUrsOE/J6PmmO47LvLTDUX6K+6y+uCFVhKAAofwK+SkGEDpcmXYFbWDySh5g2Kphz64f
+         NUaQ==
+X-Gm-Message-State: APjAAAXAGXWioH8pNYbXfntAOXFTBgPDEhru6zHu0uPqBNx7Gz9jvm8h
+        nfk6LrXESzfkjOhdlSOq0bNSwQ==
+X-Google-Smtp-Source: APXvYqz/51ebhU5rXHGYChuENG7sgffban6b+i1SauMMfobKCffeLHRbzIr3Iq24zACKZETqEf1n9Q==
+X-Received: by 2002:adf:f046:: with SMTP id t6mr41634172wro.307.1561042827408;
+        Thu, 20 Jun 2019 08:00:27 -0700 (PDT)
 Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id o126sm6802520wmo.1.2019.06.20.08.00.28
+        by smtp.gmail.com with ESMTPSA id o126sm6802520wmo.1.2019.06.20.08.00.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Jun 2019 08:00:28 -0700 (PDT)
+        Thu, 20 Jun 2019 08:00:26 -0700 (PDT)
 From:   Neil Armstrong <narmstrong@baylibre.com>
 To:     jbrunet@baylibre.com, khilman@baylibre.com
 Cc:     linux-arm-kernel@lists.infradead.org,
         linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
         linux-clk@vger.kernel.org, martin.blumenstingl@googlemail.com,
         Neil Armstrong <narmstrong@baylibre.com>
-Subject: [RFC/RFT 08/14] clk: meson: g12a: expose CPUB clock ID for G12B
-Date:   Thu, 20 Jun 2019 17:00:07 +0200
-Message-Id: <20190620150013.13462-9-narmstrong@baylibre.com>
+Subject: [RFC/RFT 06/14] soc: amlogic: meson-clk-measure: add G12B second cluster cpu clk
+Date:   Thu, 20 Jun 2019 17:00:05 +0200
+Message-Id: <20190620150013.13462-7-narmstrong@baylibre.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190620150013.13462-1-narmstrong@baylibre.com>
 References: <20190620150013.13462-1-narmstrong@baylibre.com>
@@ -75,25 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Expose the CPUB clock id to add DVFS to the second CPU cluster of
-the Amlogic G12B SoC.
+Add the G12B second CPU cluster CPU and SYS_PLL measure IDs.
+
+These IDs returns 0Hz on G12A.
 
 Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 ---
- include/dt-bindings/clock/g12a-clkc.h | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/soc/amlogic/meson-clk-measure.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/include/dt-bindings/clock/g12a-clkc.h b/include/dt-bindings/clock/g12a-clkc.h
-index b6b127e45634..8ccc29ac7a72 100644
---- a/include/dt-bindings/clock/g12a-clkc.h
-+++ b/include/dt-bindings/clock/g12a-clkc.h
-@@ -137,5 +137,6 @@
- #define CLKID_VDEC_HEVC				207
- #define CLKID_VDEC_HEVCF			210
- #define CLKID_TS				212
-+#define CLKID_CPUB_CLK				224
- 
- #endif /* __G12A_CLKC_H */
+diff --git a/drivers/soc/amlogic/meson-clk-measure.c b/drivers/soc/amlogic/meson-clk-measure.c
+index c470e24f1dfa..f09b404b39d3 100644
+--- a/drivers/soc/amlogic/meson-clk-measure.c
++++ b/drivers/soc/amlogic/meson-clk-measure.c
+@@ -324,6 +324,8 @@ static struct meson_msr_id clk_msr_g12a[CLK_MSR_MAX] = {
+ 	CLK_MSR_ID(84, "co_tx"),
+ 	CLK_MSR_ID(89, "hdmi_todig"),
+ 	CLK_MSR_ID(90, "hdmitx_sys"),
++	CLK_MSR_ID(91, "sys_cpub_div16"),
++	CLK_MSR_ID(92, "sys_pll_cpub_div16"),
+ 	CLK_MSR_ID(94, "eth_phy_rx"),
+ 	CLK_MSR_ID(95, "eth_phy_pll"),
+ 	CLK_MSR_ID(96, "vpu_b"),
 -- 
 2.21.0
 
