@@ -2,112 +2,280 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E33C9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DC21C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C099620665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD87B206BF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055024;
-	bh=5Peh1FXWgaywm27NNKNfLWOEMmjEgJYwGEcdcWmZyW8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YopZcYqqBqKU1RInSu/4jHzkFOKQ7bJMi5Qc/RDgNgjvG1OGo5jww2/HDxmHVLeAE
-	 tb0umjowIuJnF3Jt6t+mSCBnhdu1xNWDbIUI+XAkHdwfVWqn4fSwLjxz/qBNCbJ5oa
-	 gRW7i3tljrPqPvP6PNjOmWXiG4n7FFa2d0Mmz6PE=
+	s=default; t=1561055027;
+	bh=offD5MryYKqKRg4ZESlrakVPRA9Gu1VCmz0DoF7v7j0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=WFVQ8/0uXwrEDK3yENy9/5yv6Pl5MidhKhk4TR8R4xbofeP8NO+YF+DqIgyKnZo8e
+	 jDt3PptA2SQlf1Kr/Pacln9iUr4uX7R1s+oW3jFA8ikpq2gFO7/4oVW9YXd1dyCtc9
+	 HtygKUtnh7KqApN2tFCbXtD0+ebOyFtL73UAl/vw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728360AbfFTSJA (ORCPT
+        id S1726131AbfFTSI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:09:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36372 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:08:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36314 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728140AbfFTSI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:57 -0400
+        id S1728551AbfFTSIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 630D42082C;
-        Thu, 20 Jun 2019 18:08:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B4FC121655;
+        Thu, 20 Jun 2019 18:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054135;
-        bh=5Peh1FXWgaywm27NNKNfLWOEMmjEgJYwGEcdcWmZyW8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lLEEUImuiH+z8+ijl/titfy+c5MF6bu3q09rvJK3y5mAeXsUK97aqkdAP1IkVHq/e
-         W2j1M8CjqQ9BB5C6FlJc6EKmIDtaQ0RaujTfCzWXqAGxSB0OCQcp1znH6oB8S0QkkY
-         iQ4cv2vbBy5HB75IUhie3qn6Fk1whdS3t08f/DCU=
+        s=default; t=1561054133;
+        bh=offD5MryYKqKRg4ZESlrakVPRA9Gu1VCmz0DoF7v7j0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vIY9+oTH3ulbBXsvy8bAX0NB5duMy/r9PC1nOTcTk32Hkr5nUMpKkSQzrNugPh2qv
+         HpCndsQ8cGq2X6hQKFV+jhGOcY2NSTAXGxX+IJA1aDDGIzXBQA9ClisqDNCbYgxsze
+         IJRhg3rVEWnJu0Zz6uUFLcWEPOWDKi81BzL4MF0g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 23/45] net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
-Date:   Thu, 20 Jun 2019 19:57:25 +0200
-Message-Id: <20190620174337.862895623@linuxfoundation.org>
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: [PATCH 4.14 00/45] 4.14.129-stable review
+Date:   Thu, 20 Jun 2019 19:57:02 +0200
+Message-Id: <20190620174328.608036501@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
-References: <20190620174328.608036501@linuxfoundation.org>
-User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
+X-KernelTest-Patch: http://kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.129-rc1.gz
+X-KernelTest-Tree: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
+X-KernelTest-Branch: linux-4.14.y
+X-KernelTest-Patches: git://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git
+X-KernelTest-Version: 4.14.129-rc1
+X-KernelTest-Deadline: 2019-06-22T17:43+00:00
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3e66b7cc50ef921121babc91487e1fb98af1ba6e ]
+This is the start of the stable review cycle for the 4.14.129 release.
+There are 45 patches in this series, all will be posted as a response
+to this one.  If anyone has any issues with these being applied, please
+let me know.
 
-Building with Clang reports the redundant use of MODULE_DEVICE_TABLE():
+Responses should be made by Sat 22 Jun 2019 05:42:15 PM UTC.
+Anything received after that time might be too late.
 
-drivers/net/ethernet/dec/tulip/de4x5.c:2110:1: error: redefinition of '__mod_eisa__de4x5_eisa_ids_device_table'
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:90:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
-drivers/net/ethernet/dec/tulip/de4x5.c:2100:1: note: previous definition is here
-MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
-^
-./include/linux/module.h:229:21: note: expanded from macro 'MODULE_DEVICE_TABLE'
-extern typeof(name) __mod_##type##__##name##_device_table               \
-                    ^
-<scratch space>:85:1: note: expanded from here
-__mod_eisa__de4x5_eisa_ids_device_table
-^
+The whole patch series can be found in one patch at:
+	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.14.129-rc1.gz
+or in the git tree and branch at:
+	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.14.y
+and the diffstat can be found below.
 
-This drops the one further from the table definition to match the common
-use of MODULE_DEVICE_TABLE().
+thanks,
 
-Fixes: 07563c711fbc ("EISA bus MODALIAS attributes support")
-Signed-off-by: Kees Cook <keescook@chromium.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/ethernet/dec/tulip/de4x5.c | 1 -
- 1 file changed, 1 deletion(-)
+greg k-h
 
-diff --git a/drivers/net/ethernet/dec/tulip/de4x5.c b/drivers/net/ethernet/dec/tulip/de4x5.c
-index 0affee9c8aa2..0b1e7a96ff49 100644
---- a/drivers/net/ethernet/dec/tulip/de4x5.c
-+++ b/drivers/net/ethernet/dec/tulip/de4x5.c
-@@ -2108,7 +2108,6 @@ static struct eisa_driver de4x5_eisa_driver = {
- 		.remove  = de4x5_eisa_remove,
-         }
- };
--MODULE_DEVICE_TABLE(eisa, de4x5_eisa_ids);
- #endif
- 
- #ifdef CONFIG_PCI
--- 
-2.20.1
+-------------
+Pseudo-Shortlog of commits:
 
+Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+    Linux 4.14.129-rc1
+
+Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+    Abort file_remove_privs() for non-reg. files
+
+Ajay Kaher <akaher@vmware.com>
+    infiniband: fix race condition between infiniband mlx4, mlx5 driver and core dumping
+
+Andrea Arcangeli <aarcange@redhat.com>
+    coredump: fix race condition between collapse_huge_page() and core dumping
+
+Jason Gerecke <jason.gerecke@wacom.com>
+    HID: wacom: Send BTN_TOUCH in response to INTUOSP2_BT eraser contact
+
+Jason Gerecke <jason.gerecke@wacom.com>
+    HID: wacom: Don't report anything prior to the tool entering range
+
+Jason Gerecke <jason.gerecke@wacom.com>
+    HID: wacom: Don't set tool type until we're in range
+
+Amit Cohen <amitc@mellanox.com>
+    mlxsw: spectrum: Prevent force of 56G
+
+Jason Yan <yanaijie@huawei.com>
+    scsi: libsas: delete sas port if expander discover failed
+
+YueHaibing <yuehaibing@huawei.com>
+    scsi: scsi_dh_alua: Fix possible null-ptr-deref
+
+Lianbo Jiang <lijiang@redhat.com>
+    scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
+
+Varun Prakash <varun@chelsio.com>
+    scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
+
+Max Uvarov <muvarov@gmail.com>
+    net: phy: dp83867: Set up RGMII TX delay
+
+Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+    net: sh_eth: fix mdio access in sh_eth_close() for R-Car Gen2 and RZ/A1 SoCs
+
+Paul Mackerras <paulus@ozlabs.org>
+    KVM: PPC: Book3S HV: Don't take kvm->lock around kvm_for_each_vcpu
+
+Paul Mackerras <paulus@ozlabs.org>
+    KVM: PPC: Book3S: Use new mutex to synchronize access to rtas token list
+
+Randy Dunlap <rdunlap@infradead.org>
+    ia64: fix build errors by exporting paddr_to_nid()
+
+Thomas Richter <tmricht@linux.ibm.com>
+    perf record: Fix s390 missing module symbol and warning for non-root users
+
+Shawn Landden <shawn@git.icu>
+    perf data: Fix 'strncat may truncate' build failure with recent gcc
+
+Sahitya Tummala <stummala@codeaurora.org>
+    configfs: Fix use-after-free when accessing sd->s_dentry
+
+Bard Liao <yung-chuan.liao@linux.intel.com>
+    ALSA: hda - Force polling mode on CNL for fixing codec communication
+
+Yingjoe Chen <yingjoe.chen@mediatek.com>
+    i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+
+Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+    net: aquantia: fix LRO with FCS error
+
+Kees Cook <keescook@chromium.org>
+    net: tulip: de4x5: Drop redundant MODULE_DEVICE_TABLE()
+
+Randy Dunlap <rdunlap@infradead.org>
+    gpio: fix gpio-adp5588 build errors
+
+Peter Zijlstra <peterz@infradead.org>
+    perf/ring-buffer: Always use {READ,WRITE}_ONCE() for rb->user_page data
+
+Peter Zijlstra <peterz@infradead.org>
+    perf/ring_buffer: Add ordering to rb->nest increment
+
+Yabin Cui <yabinc@google.com>
+    perf/ring_buffer: Fix exposing a temporarily decreased data_head
+
+Frank van der Linden <fllinden@amazon.com>
+    x86/CPU/AMD: Don't force the CPB cap when running under a hypervisor
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    mISDN: make sure device name is NUL terminated
+
+Anju T Sudhakar <anju@linux.vnet.ibm.com>
+    powerpc/powernv: Return for invalid IMC domain
+
+Tony Lindgren <tony@atomide.com>
+    clk: ti: clkctrl: Fix clkdm_clk handling
+
+Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
+    selftests: netfilter: missing error check when setting up veth interface
+
+YueHaibing <yuehaibing@huawei.com>
+    ipvs: Fix use-after-free in ip_vs_in
+
+Jagdish Motwani <jagdish.motwani@sophos.com>
+    netfilter: nf_queue: fix reinject verdict handling
+
+Stephane Eranian <eranian@google.com>
+    perf/x86/intel/ds: Fix EVENT vs. UEVENT PEBS constraints
+
+Dan Carpenter <dan.carpenter@oracle.com>
+    Staging: vc04_services: Fix a couple error codes
+
+John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+    sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
+
+Neil Horman <nhorman@tuxdriver.com>
+    sctp: Free cookie before we memdup a new one
+
+Taehee Yoo <ap420073@gmail.com>
+    net: openvswitch: do not free vport if register_netdevice() is failed.
+
+Eric Dumazet <edumazet@google.com>
+    neigh: fix use-after-free read in pneigh_get_next
+
+Jeremy Sowden <jeremy@azazel.net>
+    lapb: fixed leak of control-blocks.
+
+Eric Dumazet <edumazet@google.com>
+    ipv6: flowlabel: fl6_sock_lookup() must use atomic_inc_not_zero
+
+Ivan Vecera <ivecera@redhat.com>
+    be2net: Fix number of Rx queues used for flow hashing
+
+Eric Dumazet <edumazet@google.com>
+    ax25: fix inconsistent lock state in ax25_destroy_timer
+
+Arnaldo Carvalho de Melo <acme@redhat.com>
+    perf machine: Guard against NULL in machine__exit()
+
+
+-------------
+
+Diffstat:
+
+ Makefile                                           |  4 +-
+ arch/ia64/mm/numa.c                                |  1 +
+ arch/powerpc/include/asm/kvm_host.h                |  1 +
+ arch/powerpc/kvm/book3s.c                          |  1 +
+ arch/powerpc/kvm/book3s_hv.c                       |  9 +---
+ arch/powerpc/kvm/book3s_rtas.c                     | 14 +++--
+ arch/powerpc/platforms/powernv/opal-imc.c          |  4 ++
+ arch/x86/events/intel/ds.c                         | 28 +++++-----
+ arch/x86/kernel/cpu/amd.c                          |  7 ++-
+ drivers/clk/ti/clkctrl.c                           |  8 +--
+ drivers/gpio/Kconfig                               |  1 +
+ drivers/hid/wacom_wac.c                            | 41 ++++++++++-----
+ drivers/i2c/i2c-dev.c                              |  1 +
+ drivers/infiniband/hw/mlx4/main.c                  |  4 +-
+ drivers/infiniband/hw/mlx5/main.c                  |  3 ++
+ drivers/isdn/mISDN/socket.c                        |  5 +-
+ .../ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c  | 61 ++++++++++++----------
+ drivers/net/ethernet/dec/tulip/de4x5.c             |  1 -
+ drivers/net/ethernet/emulex/benet/be_ethtool.c     |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum.c     |  4 ++
+ drivers/net/ethernet/renesas/sh_eth.c              |  4 ++
+ drivers/net/phy/dp83867.c                          |  4 +-
+ drivers/scsi/cxgbi/libcxgbi.c                      |  4 ++
+ drivers/scsi/device_handler/scsi_dh_alua.c         |  6 +--
+ drivers/scsi/libsas/sas_expander.c                 |  2 +
+ drivers/scsi/smartpqi/smartpqi_init.c              |  2 +-
+ .../vc04_services/bcm2835-camera/controls.c        |  4 +-
+ drivers/tty/serial/sunhv.c                         |  2 +-
+ fs/configfs/dir.c                                  | 14 +++--
+ fs/inode.c                                         |  9 +++-
+ include/linux/sched/mm.h                           |  4 ++
+ kernel/events/ring_buffer.c                        | 39 +++++++++++---
+ mm/khugepaged.c                                    |  3 ++
+ net/ax25/ax25_route.c                              |  2 +
+ net/core/neighbour.c                               |  7 +++
+ net/ipv6/ip6_flowlabel.c                           |  7 +--
+ net/lapb/lapb_iface.c                              |  1 +
+ net/netfilter/ipvs/ip_vs_core.c                    |  2 +-
+ net/netfilter/nf_queue.c                           |  1 +
+ net/openvswitch/vport-internal_dev.c               | 18 ++++---
+ net/sctp/sm_make_chunk.c                           |  8 +++
+ sound/pci/hda/hda_intel.c                          |  5 +-
+ tools/perf/arch/s390/util/machine.c                |  9 ++--
+ tools/perf/util/data-convert-bt.c                  |  2 +-
+ tools/perf/util/machine.c                          |  3 ++
+ tools/testing/selftests/netfilter/nft_nat.sh       |  6 ++-
+ 46 files changed, 239 insertions(+), 129 deletions(-)
 
 
