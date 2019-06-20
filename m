@@ -2,87 +2,120 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26CAFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:43:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1D7C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:43:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED6492089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:43:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4DDD2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:43:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YvHD4i52"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TtS7/2F/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732023AbfFTQnK (ORCPT
+        id S1732086AbfFTQnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:43:10 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:19709 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfFTQnJ (ORCPT
+        Thu, 20 Jun 2019 12:43:51 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:41191 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfFTQnv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:43:09 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0bb79b0000>; Thu, 20 Jun 2019 09:43:07 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Jun 2019 09:43:08 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 09:43:08 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
- 2019 16:43:06 +0000
-Subject: Re: [PATCH] dmaengine: tegra210-adma: fix transfer failure
-To:     Sameer Pujar <spujar@nvidia.com>, <vkoul@kernel.org>,
-        <dan.j.williams@intel.com>
-CC:     <thierry.reding@gmail.com>, <ldewangan@nvidia.com>,
-        <dmaengine@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1561047348-14413-1-git-send-email-spujar@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <bf478236-9aa7-68cc-4a56-296db2fc4379@nvidia.com>
-Date:   Thu, 20 Jun 2019 17:43:04 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 12:43:51 -0400
+Received: by mail-vs1-f65.google.com with SMTP id 2so1956074vso.8
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:43:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=OeFgssC06Ca4X3IXaHWlew+6T79MlwgCU07uMivbM10=;
+        b=TtS7/2F/OTZGse3QP1Ezkd7+vMwTgyaEqyIgOAtPig7D5aPJz70bKNReyIUkk7+On6
+         UWVf+T8HfAS8IFEMpSLgAMqz+HQoyrcztrkZ54szcGOHzusNg5Fw0O9cWtDmQmMLZwJE
+         SE7nqQdAv/L+QXxO/PwU7I4Nw3N5EnBJEPuVE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OeFgssC06Ca4X3IXaHWlew+6T79MlwgCU07uMivbM10=;
+        b=ER1HIyaAutTYkc26ioRzZQ7Ir1MxdvX9CTaVKcgLHexBDwQPg8j+1fOzv7HLeR21JM
+         vPHRzx4hHyOAGLm+27oXHkUHbbsjSmOFtZvUJm3W+N5gUDfwKOWQ3UnP3d7pi9Q+wWHj
+         j10f+k+vUIaQR4uqqRsNA9R/KV7awdBjID7j6fMG1E4pjPHWAkws7xP+wwNII2Uo6qiG
+         DcZjkd4++yBV7FE9MN2Kcq5NCJWGmThcOPWeLd7WpbSWDWIur2mb2q4AcFH10wY0tpJu
+         4kDceFPjhxXawy3HRYWurz5pwTSaX2Xv908BAu3vHBdRjhM71gvIhFH12hzya/YFjvII
+         WyHA==
+X-Gm-Message-State: APjAAAXs304L4NDcpGe9pKh8SNpu37jjRR7ZsG+gxkUmfZq5vbTYK2EJ
+        VuL9NOs+3d15GK7fYOYQ7rOyScIlC1o=
+X-Google-Smtp-Source: APXvYqz7BCi0ldYxCixrg6KlyUa1mwwX5gH08Vl2IbAcuOwyeIcKH4NdOSGrkFNrUr6WI2REqttNnA==
+X-Received: by 2002:a05:6102:105a:: with SMTP id h26mr43892023vsq.185.1561049030536;
+        Thu, 20 Jun 2019 09:43:50 -0700 (PDT)
+Received: from mail-vs1-f53.google.com (mail-vs1-f53.google.com. [209.85.217.53])
+        by smtp.gmail.com with ESMTPSA id f66sm62112vkh.9.2019.06.20.09.43.49
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 09:43:49 -0700 (PDT)
+Received: by mail-vs1-f53.google.com with SMTP id u3so1946780vsh.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:43:49 -0700 (PDT)
+X-Received: by 2002:a67:fd91:: with SMTP id k17mr58238625vsq.121.1561049028723;
+ Thu, 20 Jun 2019 09:43:48 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1561047348-14413-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561048987; bh=LRAIEKSTmKQE5qE5AvgXkBeRvVsrbSc0H3EL4SfKT80=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=YvHD4i52J9zQIZUxt9GAovH9lWLTS+rhcMlPZQARN+5RyGsSsYDop5vfzL7vj8RmI
-         ihLcP7FE9Jb4/bW5lNAD1VsTleV/xCf/gsFtI6HxK1TRboLXUbfj8axEloRw+wJ0ru
-         YmpaVWMx5YJF68IUz6FlRZplicdZWIFvmGscvmYZaycQeTiPBBc7V80xMihWuIMm+c
-         A9wMFBGw4oY+zbRpW2xlJ4qCD1yZoGc8Ewv03NCwm87h2yqZNbzxbx0mo9gXTVEFrH
-         yJMelnI72Z+BNjN71GOwsKnsH/7cXxycM6EweXT9x2A8dhNg271D2DVFhKbzYJFplC
-         nqDKFGPZhToYQ==
+References: <20190618213406.7667-1-ezequiel@collabora.com> <20190618213406.7667-2-ezequiel@collabora.com>
+In-Reply-To: <20190618213406.7667-2-ezequiel@collabora.com>
+From:   Doug Anderson <dianders@chromium.org>
+Date:   Thu, 20 Jun 2019 09:43:33 -0700
+X-Gmail-Original-Message-ID: <CAD=FV=UpZAjrWkQ7qj5Wo2tf2wkg5Q-34Sun0MOtYLBAwY731Q@mail.gmail.com>
+Message-ID: <CAD=FV=UpZAjrWkQ7qj5Wo2tf2wkg5Q-34Sun0MOtYLBAwY731Q@mail.gmail.com>
+Subject: Re: [PATCH 1/3] dt-bindings: display: rockchip: document VOP gamma
+ LUT address
+To:     Ezequiel Garcia <ezequiel@collabora.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>,
+        Sandy Huang <hjc@rock-chips.com>, kernel@collabora.com,
+        Sean Paul <seanpaul@chromium.org>,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Jacopo Mondi <jacopo@jmondi.org>,
+        Ilia Mirkin <imirkin@alum.mit.edu>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
 
-On 20/06/2019 17:15, Sameer Pujar wrote:
-> From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
-> configuration register (bits 7:4). ADMA allows a maximum of 8 reads
-> to source and that many writes to target memory be outstanding at any
-> given point of time. If this field is not programmed, DMA transfers
-> fail to happen.
+On Tue, Jun 18, 2019 at 2:43 PM Ezequiel Garcia <ezequiel@collabora.com> wrote:
+>
+> Add the register specifier description for an
+> optional gamma LUT address.
+>
+> Signed-off-by: Ezequiel Garcia <ezequiel@collabora.com>
+> ---
+>  .../bindings/display/rockchip/rockchip-vop.txt         | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> index 4f58c5a2d195..97ad78cc7e03 100644
+> --- a/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> +++ b/Documentation/devicetree/bindings/display/rockchip/rockchip-vop.txt
+> @@ -20,6 +20,13 @@ Required properties:
+>                 "rockchip,rk3228-vop";
+>                 "rockchip,rk3328-vop";
+>
+> +- reg: Must contain one entry corresponding to the base address and length
+> +       of the register space. Can optionally contain a second entry
+> +       corresponding to the CRTC gamma LUT address.
+> +
+> +- reg-names: "base" for the base register space. If present, the CRTC
+> +       gamma LUT name should be "lut".
 
-BTW, I am not sure I follow the above. You say a max of 8 reads to the
-source, however, the field we are programming can have a value of up to
-15. So does that mean this field should only be programmed with a max of 8?
+As per Rob Herring, current suggestion is to avoid reg-names when
+possible.  The code should just look for the presence of a 2nd entry
+and assume that if it's there that it's the lut range.  Full context:
 
-Thanks
-Jon
+https://lore.kernel.org/lkml/CAL_Jsq+MMunmVWqeW9v2RyzsMKP+=kMzeTHNMG4JDHM7Fy0HBg@mail.gmail.com/
 
--- 
-nvpublic
+-Doug
