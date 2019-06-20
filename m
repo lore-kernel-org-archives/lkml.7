@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67470C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC40C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 336292084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1243A2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:54:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731428AbfFTIyc (ORCPT
+        id S1731630AbfFTIyl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:54:32 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:56120 "EHLO huawei.com"
+        Thu, 20 Jun 2019 04:54:41 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:19044 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731245AbfFTIya (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:54:30 -0400
-Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 86D9074FE51818E8CF2E;
-        Thu, 20 Jun 2019 16:54:28 +0800 (CST)
+        id S1731471AbfFTIyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:54:36 -0400
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6EB32B0C464C6BCC9673;
+        Thu, 20 Jun 2019 16:54:33 +0800 (CST)
 Received: from localhost.localdomain (10.67.212.132) by
  DGGEMS407-HUB.china.huawei.com (10.3.19.207) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 20 Jun 2019 16:54:22 +0800
+ 14.3.439.0; Thu, 20 Jun 2019 16:54:23 +0800
 From:   Huazhong Tan <tanhuazhong@huawei.com>
 To:     <davem@davemloft.net>
 CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
-        <linuxarm@huawei.com>, Jian Shen <shenjian15@huawei.com>,
+        <linuxarm@huawei.com>, Weihang Li <liweihang@hisilicon.com>,
         Peng Li <lipeng321@huawei.com>,
-        "Huazhong Tan" <tanhuazhong@huawei.com>
-Subject: [PATCH net-next 04/11] net: hns3: restore the MAC autoneg state after reset
-Date:   Thu, 20 Jun 2019 16:52:38 +0800
-Message-ID: <1561020765-14481-5-git-send-email-tanhuazhong@huawei.com>
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net-next 06/11] net: hns3: modify handling of out of memory in hclge_err.c
+Date:   Thu, 20 Jun 2019 16:52:40 +0800
+Message-ID: <1561020765-14481-7-git-send-email-tanhuazhong@huawei.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
 References: <1561020765-14481-1-git-send-email-tanhuazhong@huawei.com>
@@ -47,41 +47,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jian Shen <shenjian15@huawei.com>
+From: Weihang Li <liweihang@hisilicon.com>
 
-When doing global reset, the MAC autoneg state of fibre
-port is set to default, which may cause user configuration
-lost. This patch fixes it by restore the MAC autoneg state
-after reset.
+Users should be informed if HNS driver failed to allocate memory for
+descriptor when handling hw errors. This patch solve above issues.
 
-Fixes: 22f48e24a23d ("net: hns3: add autoneg and change speed support for fibre port")
-Signed-off-by: Jian Shen <shenjian15@huawei.com>
+Signed-off-by: Weihang Li <liweihang@hisilicon.com>
 Signed-off-by: Peng Li <lipeng321@huawei.com>
 Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-index 6e97837..0772ca1 100644
---- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-+++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
-@@ -2400,6 +2400,15 @@ static int hclge_mac_init(struct hclge_dev *hdev)
- 		return ret;
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+index 3dfb265..dd7b8a8 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_err.c
+@@ -1859,7 +1859,7 @@ static int hclge_handle_all_hw_msix_error(struct hclge_dev *hdev,
+ 	if (ret) {
+ 		dev_err(dev, "fail(%d) to query msix int status bd num\n",
+ 			ret);
+-		return ret;
++		goto out;
  	}
  
-+	if (hdev->hw.mac.support_autoneg) {
-+		ret = hclge_set_autoneg_en(hdev, hdev->hw.mac.autoneg);
-+		if (ret) {
-+			dev_err(&hdev->pdev->dev,
-+				"Config mac autoneg fail ret=%d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	mac->link = 0;
+ 	mpf_bd_num = le32_to_cpu(desc_bd.data[0]);
+@@ -1867,8 +1867,10 @@ static int hclge_handle_all_hw_msix_error(struct hclge_dev *hdev,
+ 	bd_num = max_t(u32, mpf_bd_num, pf_bd_num);
  
- 	if (mac->user_fec_mode & BIT(HNAE3_FEC_USER_DEF)) {
+ 	desc = kcalloc(bd_num, sizeof(struct hclge_desc), GFP_KERNEL);
+-	if (!desc)
++	if (!desc) {
++		ret = -ENOMEM;
+ 		goto out;
++	}
+ 
+ 	ret = hclge_handle_mpf_msix_error(hdev, desc, mpf_bd_num,
+ 					  reset_requests);
 -- 
 2.7.4
 
