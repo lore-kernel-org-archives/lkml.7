@@ -2,164 +2,101 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4813C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C755BC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:09:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DAFA2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:09:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JdvJwEXr"
+	by mail.kernel.org (Postfix) with ESMTP id 9B20B206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:09:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731998AbfFTPJQ (ORCPT
+        id S1732094AbfFTPJq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:09:16 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:37003 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726675AbfFTPJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:09:15 -0400
-Received: by mail-io1-f67.google.com with SMTP id e5so393677iok.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:09:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=ewdhs5LHMjOeAYyn48UrmEBDkixoi9wUic5LA0EV24E=;
-        b=JdvJwEXrYAnx5AAC+XXXCNKVU113R27SbHcmaFh10XoeJ19jse9UlgQHUgP9Dbs/Ly
-         L5gsnLoUu69tMP0wH9tzzv14tw9rZx8tP97CUVrh25VbPy/chgSW/u87CuNuhB99D0ob
-         Jzxea/k/UXe+JdQrG5HCVGXJ7MwB+foaI17QqOx5S+HDW8qAMFIwEImkYuYp4+F+/pbb
-         ps+qGPCzBctzDiyTzmyWhPDKhpeBzqb9KiXlkgIFz/GzkJZl5P6q2rcOg5mf0hdnnvbK
-         xq4nHwF21difWFt9jzn8/KwkphqxT7Rj2JbfX2TwfWZhWPUsPMs6hx/0kOrsaq+6o/GK
-         O02Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ewdhs5LHMjOeAYyn48UrmEBDkixoi9wUic5LA0EV24E=;
-        b=R7Rm1GVj12P9rtyuBuEpdH17jsGzSnjLQDIYloUhuPm3SzZbDh6tRDSdtuiCCdWCS8
-         YCqo0SI5KEPaEuW9tMoY7DYB3S+4eeTjHzUYtbS/XVIUHuSW37xDN4MSOeas49Ho9eZ9
-         Ea4igFUYBB1iZnZlW5lwdFCKqZe/JTtHX7bvtkT+nNtASWLBIz8am3RBwhh7dvazTnBk
-         WLjZjPcd8fspP4pmuJvxdklYEGSND5zK0ESAJK65WZx30Kw+DvujYoIKkIP/ojBDTeMN
-         CTitogBB+n38e65/6GYWsM7q3FhIekM01WjhTsulvY2XcqT6ybZqSCb5HiNTCpmmBRbA
-         wIBw==
-X-Gm-Message-State: APjAAAWmvf/wUAbWf95g6g7VHmOBpLgajN5mwnIZouKgPiRlcrmDlx9c
-        udq2MjsPccULXfHyT2G2OqlJIw==
-X-Google-Smtp-Source: APXvYqx5OhNQGc/cowc4jUU7ZK9aKOWQfczrnZebKrjxu3Ng1Qb+wjCWeQXoL4sJ7gt1IrioslXb3g==
-X-Received: by 2002:a6b:3883:: with SMTP id f125mr89642441ioa.109.1561043354165;
-        Thu, 20 Jun 2019 08:09:14 -0700 (PDT)
-Received: from google.com ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id w23sm52147ioa.51.2019.06.20.08.09.12
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 08:09:13 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 09:09:11 -0600
-From:   Ross Zwisler <zwisler@google.com>
-To:     Jan Kara <jack@suse.cz>
-Cc:     Ross Zwisler <zwisler@chromium.org>, linux-kernel@vger.kernel.org,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>
-Subject: Re: [PATCH 2/3] jbd2: introduce jbd2_inode dirty range scoping
-Message-ID: <20190620150911.GA4488@google.com>
-References: <20190619172156.105508-1-zwisler@google.com>
- <20190619172156.105508-3-zwisler@google.com>
- <20190620110454.GL13630@quack2.suse.cz>
+        Thu, 20 Jun 2019 11:09:46 -0400
+Received: from mga11.intel.com ([192.55.52.93]:54938 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726675AbfFTPJq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:09:46 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 08:09:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="186834808"
+Received: from liujing-mobl.ccr.corp.intel.com (HELO [10.255.31.204]) ([10.255.31.204])
+  by fmsmga002.fm.intel.com with ESMTP; 20 Jun 2019 08:09:42 -0700
+Subject: Re: [PATCH RFC] kvm: x86: Expose AVX512_BF16 feature to guest
+To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, jing2.liu@intel.com
+References: <1561029712-11848-1-git-send-email-jing2.liu@linux.intel.com>
+ <1561029712-11848-2-git-send-email-jing2.liu@linux.intel.com>
+ <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
+From:   "Liu, Jing2" <jing2.liu@linux.intel.com>
+Message-ID: <384bc07d-6105-d380-cd44-4518870c15f1@linux.intel.com>
+Date:   Thu, 20 Jun 2019 23:09:42 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620110454.GL13630@quack2.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <fd861e94-3ea5-3976-9855-05375f869f00@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 01:04:54PM +0200, Jan Kara wrote:
-> On Wed 19-06-19 11:21:55, Ross Zwisler wrote:
-> > Currently both journal_submit_inode_data_buffers() and
-> > journal_finish_inode_data_buffers() operate on the entire address space
-> > of each of the inodes associated with a given journal entry.  The
-> > consequence of this is that if we have an inode where we are constantly
-> > appending dirty pages we can end up waiting for an indefinite amount of
-> > time in journal_finish_inode_data_buffers() while we wait for all the
-> > pages under writeback to be written out.
-> > 
-> > The easiest way to cause this type of workload is do just dd from
-> > /dev/zero to a file until it fills the entire filesystem.  This can
-> > cause journal_finish_inode_data_buffers() to wait for the duration of
-> > the entire dd operation.
-> > 
-> > We can improve this situation by scoping each of the inode dirty ranges
-> > associated with a given transaction.  We do this via the jbd2_inode
-> > structure so that the scoping is contained within jbd2 and so that it
-> > follows the lifetime and locking rules for that structure.
-> > 
-> > This allows us to limit the writeback & wait in
-> > journal_submit_inode_data_buffers() and
-> > journal_finish_inode_data_buffers() respectively to the dirty range for
-> > a given struct jdb2_inode, keeping us from waiting forever if the inode
-> > in question is still being appended to.
-> > 
-> > Signed-off-by: Ross Zwisler <zwisler@google.com>
+Hi Paolo,
+
+On 6/20/2019 8:16 PM, Paolo Bonzini wrote:
+> On 20/06/19 13:21, Jing Liu wrote:
+>> +		for (i = 1; i <= times; i++) {
+>> +			if (*nent >= maxnent)
+>> +				goto out;
+>> +			do_cpuid_1_ent(&entry[i], function, i);
+>> +			entry[i].eax &= F(AVX512_BF16);
+>> +			entry[i].ebx = 0;
+>> +			entry[i].ecx = 0;
+>> +			entry[i].edx = 0;
+>> +			entry[i].flags |= KVM_CPUID_FLAG_SIGNIFCANT_INDEX;
+>> +			++*nent;
 > 
-> The patch looks good to me. I was thinking whether we should not have
-> separate ranges for current and the next transaction but I guess it is not
-> worth it at least for now. So just one nit below. With that applied feel free
-> to add:
+> This woud be wrong for i > 1, so instead make this
 > 
-> Reviewed-by: Jan Kara <jack@suse.cz>
-
-We could definitely keep separate dirty ranges for each of the current and
-next transaction.  I think the case where you would see a difference would be
-if you had multiple transactions in a row which grew the dirty range for a
-given jbd2_inode, and then had a random I/O workload which kept dirtying pages
-inside that enlarged dirty range.
-
-I'm not sure how often this type of workload would be a problem.  For the
-workloads I've been testing which purely append to the inode, having a single
-dirty range per jbd2_inode is sufficient.
-
-I guess for now this single range seems simpler, but if later we find that
-someone would benefit from separate tracking for each of the current and next
-transactions, I'll take a shot at adding it.
-
-Thank you for the review!
-
-> > @@ -257,15 +262,24 @@ static int journal_finish_inode_data_buffers(journal_t *journal,
-> >  	/* For locking, see the comment in journal_submit_data_buffers() */
-> >  	spin_lock(&journal->j_list_lock);
-> >  	list_for_each_entry(jinode, &commit_transaction->t_inode_list, i_list) {
-> > +		loff_t dirty_start = jinode->i_dirty_start;
-> > +		loff_t dirty_end = jinode->i_dirty_end;
-> > +
-> >  		if (!(jinode->i_flags & JI_WAIT_DATA))
-> >  			continue;
-> >  		jinode->i_flags |= JI_COMMIT_RUNNING;
-> >  		spin_unlock(&journal->j_list_lock);
-> > -		err = filemap_fdatawait_keep_errors(
-> > -				jinode->i_vfs_inode->i_mapping);
-> > +		err = filemap_fdatawait_range_keep_errors(
-> > +				jinode->i_vfs_inode->i_mapping, dirty_start,
-> > +				dirty_end);
-> >  		if (!ret)
-> >  			ret = err;
-> >  		spin_lock(&journal->j_list_lock);
-> > +
-> > +		if (!jinode->i_next_transaction) {
-> > +			jinode->i_dirty_start = 0;
-> > +			jinode->i_dirty_end = 0;
-> > +		}
+> 	if (entry->eax >= 1)
 > 
-> This would be more logical in the next loop that moves jinode into the next
-> transaction.
 
-Yep, agreed, this is much better.  Fixed in v2.
+I am confused about the @index parameter. @index seems not used for
+every case except 0x07. Since the caller function only has @index=0, so
+all other cases except 0x07 put cpuid info from subleaf=0 to max subleaf.
+
+What do you think about @index in current function? Does it mean, we
+need put cpuid from index to max subleaf to @entry[i]? If so, the logic
+seems as follows,
+
+if (index == 0) {
+     // Put subleaf 0 into @entry
+     // Put subleaf 1 into @entry[1]
+} else if (index < entry->eax) {
+     // Put subleaf 1 into @entry
+} else {
+     // Put all zero into @entry
+}
+
+But this seems not identical with other cases, for current caller
+function. Or we can simply ignore @index in 0x07 and just put all possible
+subleaf info back?
+
+> and define F(AVX512_BF16) as a new constant kvm_cpuid_7_1_eax_features.
+> 
+Got it.
+
+
+Thanks,
+Jing
+
+> Paolo
+> 
