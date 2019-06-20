@@ -2,123 +2,86 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F8D9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:27:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E59BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B43B20675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:27:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D44E20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731398AbfFTN1z (ORCPT
+        id S1730886AbfFTNaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:27:55 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:57397 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfFTN1z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:27:55 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hdx6V-0004Te-Cq; Thu, 20 Jun 2019 13:27:51 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Xue Chaojing <xuechaojing@huawei.com>,
-        Aviad Krawczyk <aviad.krawczyk@huawei.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH][net-next] hinic: fix dereference of pointer hwdev before it is null checked
-Date:   Thu, 20 Jun 2019 14:27:51 +0100
-Message-Id: <20190620132751.26438-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Thu, 20 Jun 2019 09:30:35 -0400
+Received: from inva021.nxp.com ([92.121.34.21]:55174 "EHLO inva021.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbfFTNaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:30:35 -0400
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id D317820077D;
+        Thu, 20 Jun 2019 15:30:32 +0200 (CEST)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id C6092200791;
+        Thu, 20 Jun 2019 15:30:32 +0200 (CEST)
+Received: from fsr-ub1664-120.ea.freescale.net (fsr-ub1664-120.ea.freescale.net [10.171.82.81])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 4EE7620629;
+        Thu, 20 Jun 2019 15:30:32 +0200 (CEST)
+From:   Robert Chiras <robert.chiras@nxp.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        Robert Chiras <robert.chiras@nxp.com>
+Subject: [PATCH v3 0/2] Add DSI panel driver for Raydium RM67191
+Date:   Thu, 20 Jun 2019 16:30:26 +0300
+Message-Id: <1561037428-13855-1-git-send-email-robert.chiras@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+This patch-set contains the DRM panel driver and dt-bindings documentation
+for the DSI driven panel: Raydium RM67191.
 
-Currently pointer hwdev is dereferenced when assigning hwif before
-hwdev is null checked.  Fix this by only derefencing hwdev after the
-null check.
+v3:
+- Added myself to MAINTAINERS for this driver (sam)
+- Removed display-timings property (fabio)
+- Fixed dt description (sam)
+- Re-arranged calls inside get_modes function (sam)
+- Changed ifdefs with _maybe_unused for suspend/resume functions (sam)
+- Collected Reviewed-by from Sam
 
-Addresses-Coverity: ("Dereference before null check")
-Fixes: 4fdc51bb4e92 ("hinic: add support for rss parameters with ethtool")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- .../net/ethernet/huawei/hinic/hinic_port.c    | 21 +++++++++++++------
- 1 file changed, 15 insertions(+), 6 deletions(-)
+v2:
+- Fixed 'reset-gpio' to 'reset-gpios' property naming (fabio)
+- Changed the state of the reset gpio to active low and fixed how it is
+  handled in driver (fabio)
+- Fixed copyright statement (daniel)
+- Reordered includes (sam)
+- Added defines for panel specific color formats (fabio)
+- Removed unnecessary tests in enable and unprepare (sam)
+- Removed the unnecessary backlight write in enable (sam)
 
-diff --git a/drivers/net/ethernet/huawei/hinic/hinic_port.c b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-index 6b933962de46..1c3b3c0d6298 100644
---- a/drivers/net/ethernet/huawei/hinic/hinic_port.c
-+++ b/drivers/net/ethernet/huawei/hinic/hinic_port.c
-@@ -711,14 +711,17 @@ int hinic_get_rss_type(struct hinic_dev *nic_dev, u32 tmpl_idx,
- {
- 	struct hinic_rss_context_table ctx_tbl = { 0 };
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
-+	struct hinic_hwif *hwif;
-+	struct pci_dev *pdev;
- 	u16 out_size = sizeof(ctx_tbl);
- 	int err;
- 
- 	if (!hwdev || !rss_type)
- 		return -EINVAL;
- 
-+	hwif = hwdev->hwif;
-+	pdev = hwif->pdev;
-+
- 	ctx_tbl.func_id = HINIC_HWIF_FUNC_IDX(hwif);
- 	ctx_tbl.template_id = tmpl_idx;
- 
-@@ -776,14 +779,17 @@ int hinic_rss_get_template_tbl(struct hinic_dev *nic_dev, u32 tmpl_idx,
- {
- 	struct hinic_rss_template_key temp_key = { 0 };
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
-+	struct hinic_hwif *hwif;
-+	struct pci_dev *pdev;
- 	u16 out_size = sizeof(temp_key);
- 	int err;
- 
- 	if (!hwdev || !temp)
- 		return -EINVAL;
- 
-+	hwif = hwdev->hwif;
-+	pdev = hwif->pdev;
-+
- 	temp_key.func_id = HINIC_HWIF_FUNC_IDX(hwif);
- 	temp_key.template_id = tmpl_idx;
- 
-@@ -832,14 +838,17 @@ int hinic_rss_get_hash_engine(struct hinic_dev *nic_dev, u8 tmpl_idx, u8 *type)
- {
- 	struct hinic_rss_engine_type hash_type = { 0 };
- 	struct hinic_hwdev *hwdev = nic_dev->hwdev;
--	struct hinic_hwif *hwif = hwdev->hwif;
--	struct pci_dev *pdev = hwif->pdev;
-+	struct hinic_hwif *hwif;
-+	struct pci_dev *pdev;
- 	u16 out_size = sizeof(hash_type);
- 	int err;
- 
- 	if (!hwdev || !type)
- 		return -EINVAL;
- 
-+	hwif = hwdev->hwif;
-+	pdev = hwif->pdev;
-+
- 	hash_type.func_id = HINIC_HWIF_FUNC_IDX(hwif);
- 	hash_type.template_id = tmpl_idx;
- 
+Robert Chiras (2):
+  dt-bindings: display: panel: Add support for Raydium RM67191 panel
+  drm/panel: Add support for Raydium RM67191 panel driver
+
+ .../bindings/display/panel/raydium,rm67191.txt     |  39 ++
+ MAINTAINERS                                        |   6 +
+ drivers/gpu/drm/panel/Kconfig                      |   9 +
+ drivers/gpu/drm/panel/Makefile                     |   1 +
+ drivers/gpu/drm/panel/panel-raydium-rm67191.c      | 690 +++++++++++++++++++++
+ 5 files changed, 745 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/raydium,rm67191.txt
+ create mode 100644 drivers/gpu/drm/panel/panel-raydium-rm67191.c
+
 -- 
-2.20.1
+2.7.4
 
