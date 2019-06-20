@@ -2,108 +2,128 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE831C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3F87C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24BC20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FF7520665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:31:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561055463;
+	bh=NmGogpzNpt1U2ZQTq1tpHJyoe3q8JrtJGTcpOyUdc30=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=OELGIWA2plmPHWhLKcM3kBqXOyTi0gxNzJuBWLJXRsVDipHnvu/CHUdG3A53Tq8BB
+	 3Zw2PL3fCXpzKeJgGcMsbaTu/3A+nw9G3L7l735Mx7jyniT9m7Z7UaHdUd+w3a+gKU
+	 kGaGb6QDPGM7qv4SRAqioXJL6Twxs9WMeMUkErIQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727300AbfFTSaz (ORCPT
+        id S1726974AbfFTSAb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:30:55 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:56473 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726579AbfFTSat (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:30:49 -0400
-X-Originating-IP: 90.65.161.137
-Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E774CE0006;
-        Thu, 20 Jun 2019 18:30:45 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 2/2] pinctrl: ocelot: fix pinmuxing for pins after 31
-Date:   Thu, 20 Jun 2019 20:30:37 +0200
-Message-Id: <20190620183037.29652-2-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190620183037.29652-1-alexandre.belloni@bootlin.com>
-References: <20190620183037.29652-1-alexandre.belloni@bootlin.com>
+        Thu, 20 Jun 2019 14:00:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49288 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726957AbfFTSA2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D0F41208CA;
+        Thu, 20 Jun 2019 18:00:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561053627;
+        bh=NmGogpzNpt1U2ZQTq1tpHJyoe3q8JrtJGTcpOyUdc30=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=t/CtefCjMAwdVQTqGChA2eJ6/2ztFWHdW4lWAGFaQ55hrMepNshrq2IDVwBXtRvum
+         yIlhS3SXfFS8PQWju1cq1NgLy0UWlpAsVcHB65xqhXZ3liBk3o1+HnMcT9ABnrsHSS
+         VD7kIX+8KDezWJMlHx0oHdIPBdig2XUafpccO+sA=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 55/84] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
+Date:   Thu, 20 Jun 2019 19:56:52 +0200
+Message-Id: <20190620174347.303279637@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
+References: <20190620174337.538228162@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The actual layout for OCELOT_GPIO_ALT[01] when there are more than 32 pins
-is interleaved, i.e. OCELOT_GPIO_ALT0[0], OCELOT_GPIO_ALT1[0],
-OCELOT_GPIO_ALT0[1], OCELOT_GPIO_ALT1[1]. Introduce a new REG_ALT macro to
-facilitate the register offset calculation and use it where necessary.
+[ Upstream commit 19ec166c3f39fe1d3789888a74cc95544ac266d4 ]
 
-Fixes: da801ab56ad8 pinctrl: ocelot: add MSCC Jaguar2 support
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+kselftests exposed a problem in the s390 handling for memory slots.
+Right now we only do proper memory slot handling for creation of new
+memory slots. Neither MOVE, nor DELETION are handled properly. Let us
+implement those.
+
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/pinctrl-ocelot.c | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+ arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
+ 1 file changed, 21 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-ocelot.c b/drivers/pinctrl/pinctrl-ocelot.c
-index d2478db975bd..fb76fb2e9ea5 100644
---- a/drivers/pinctrl/pinctrl-ocelot.c
-+++ b/drivers/pinctrl/pinctrl-ocelot.c
-@@ -396,7 +396,7 @@ static int ocelot_pin_function_idx(struct ocelot_pinctrl *info,
- 	return -1;
- }
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 5ddb1debba95..23911ecfbad6 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -2721,21 +2721,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+ 				const struct kvm_memory_slot *new,
+ 				enum kvm_mr_change change)
+ {
+-	int rc;
+-
+-	/* If the basics of the memslot do not change, we do not want
+-	 * to update the gmap. Every update causes several unnecessary
+-	 * segment translation exceptions. This is usually handled just
+-	 * fine by the normal fault handler + gmap, but it will also
+-	 * cause faults on the prefix page of running guest CPUs.
+-	 */
+-	if (old->userspace_addr == mem->userspace_addr &&
+-	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
+-	    old->npages * PAGE_SIZE == mem->memory_size)
+-		return;
++	int rc = 0;
  
--#define REG(r, info, p) ((r) * (info)->stride + (4 * ((p) / 32)))
-+#define REG_ALT(msb, info, p) (OCELOT_GPIO_ALT0 * (info)->stride + 4 * ((msb) + ((info)->stride * ((p) / 32))))
- 
- static int ocelot_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 				 unsigned int selector, unsigned int group)
-@@ -412,19 +412,21 @@ static int ocelot_pinmux_set_mux(struct pinctrl_dev *pctldev,
- 
- 	/*
- 	 * f is encoded on two bits.
--	 * bit 0 of f goes in BIT(pin) of ALT0, bit 1 of f goes in BIT(pin) of
--	 * ALT1
-+	 * bit 0 of f goes in BIT(pin) of ALT[0], bit 1 of f goes in BIT(pin) of
-+	 * ALT[1]
- 	 * This is racy because both registers can't be updated at the same time
- 	 * but it doesn't matter much for now.
- 	 */
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT0, info, pin->pin),
-+	regmap_update_bits(info->map, REG_ALT(0, info, pin->pin),
- 			   BIT(p), f << p);
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT1, info, pin->pin),
-+	regmap_update_bits(info->map, REG_ALT(1, info, pin->pin),
- 			   BIT(p), f << (p - 1));
- 
- 	return 0;
- }
- 
-+#define REG(r, info, p) ((r) * (info)->stride + (4 * ((p) / 32)))
-+
- static int ocelot_gpio_set_direction(struct pinctrl_dev *pctldev,
- 				     struct pinctrl_gpio_range *range,
- 				     unsigned int pin, bool input)
-@@ -445,9 +447,9 @@ static int ocelot_gpio_request_enable(struct pinctrl_dev *pctldev,
- 	struct ocelot_pinctrl *info = pinctrl_dev_get_drvdata(pctldev);
- 	unsigned int p = offset % 32;
- 
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT0, info, offset),
-+	regmap_update_bits(info->map, REG_ALT(0, info, offset),
- 			   BIT(p), 0);
--	regmap_update_bits(info->map, REG(OCELOT_GPIO_ALT1, info, offset),
-+	regmap_update_bits(info->map, REG_ALT(1, info, offset),
- 			   BIT(p), 0);
- 
- 	return 0;
+-	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
+-		mem->guest_phys_addr, mem->memory_size);
++	switch (change) {
++	case KVM_MR_DELETE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		break;
++	case KVM_MR_MOVE:
++		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
++					old->npages * PAGE_SIZE);
++		if (rc)
++			break;
++		/* FALLTHROUGH */
++	case KVM_MR_CREATE:
++		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
++				      mem->guest_phys_addr, mem->memory_size);
++		break;
++	case KVM_MR_FLAGS_ONLY:
++		break;
++	default:
++		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
++	}
+ 	if (rc)
+ 		pr_warn("failed to commit memory region\n");
+ 	return;
 -- 
-2.21.0
+2.20.1
+
+
 
