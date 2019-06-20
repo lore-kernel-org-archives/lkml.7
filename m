@@ -2,54 +2,54 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE333C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D000CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B04AE214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB450214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054360;
-	bh=Goa0ah6FbkFoqUl94JpmHMgSVOBKRZRD7HrHL8U8tn8=;
+	s=default; t=1561054365;
+	bh=cWq0Z9QT4n7CT7f9rcLqy3iF8KYjB5mlRvO3kD03/kU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X0iHQvxH7PSVs42D5aOTMXVTr5336+JHEPRAhG9vSaIL5iMimOXUDIble8OnWD+DB
-	 WW7xUeErR80lb9g+zUxVFJQsUKm39aby0RqIC4lnue+i2V138XvDYqvRFfdHZf3nbx
-	 quHqOnTpXQyp9RrAqo5sINbrNfMMbnacsiUh1njU=
+	b=wyu48rntwxg3OY+wos24P3kyMAy6In7lMgkdF9VB1GN3kOj80Die1MlLSpCt1ORTE
+	 5tx6UFJx+Qdmqsm3gQrujMobvShq71SJtETTKpDI29g/F/WZXLCBkb5NSr7CC+aaE4
+	 59Yj337g33+4X0o0dmePrNcZBq5lq4mJCgUuAXWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728776AbfFTSMi (ORCPT
+        id S1729085AbfFTSMo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:12:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40488 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:12:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40598 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728743AbfFTSMh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:37 -0400
+        id S1729070AbfFTSMm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:12:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C3B212089C;
-        Thu, 20 Jun 2019 18:12:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6586021537;
+        Thu, 20 Jun 2019 18:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054356;
-        bh=Goa0ah6FbkFoqUl94JpmHMgSVOBKRZRD7HrHL8U8tn8=;
+        s=default; t=1561054361;
+        bh=cWq0Z9QT4n7CT7f9rcLqy3iF8KYjB5mlRvO3kD03/kU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qIKNeXt8E+k5hQEb2h2e7nvWiUN49yANjQkG4z9uBNXn4gAS7ZUZfNWBGdLNOyZXI
-         V/IUIOKe89fW5vvD1U+8num6TPeAFGKf1wtEB1ZhJkMzliFHbabyXdbLEDYngVMBGT
-         KuZ8+AprbA/vmjjfUIxINJwHlAbs92D8hdvbQuTk=
+        b=EtliJ8gCAxbDIghXZ0hSpaHGHtBwM6pAKhomUMHx/VUWsXv5aNa4oSaMXNECuN6T3
+         I3+WSktDNaEdppss6it9k4JlRKERjrumwWQZMnX5wqlq7TBZnxbBXAQVsh3BZ7pbpr
+         rWynuE/0pa1QX0oYASD9GMyvfzejBdPVw5Vvz9yM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
-        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.19 61/61] Abort file_remove_privs() for non-reg. files
-Date:   Thu, 20 Jun 2019 19:57:56 +0200
-Message-Id: <20190620174347.698276201@linuxfoundation.org>
+        stable@vger.kernel.org, Thomas Richter <tmricht@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 42/61] perf record: Fix s390 missing module symbol and warning for non-root users
+Date:   Thu, 20 Jun 2019 19:57:37 +0200
+Message-Id: <20190620174344.605332408@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -62,51 +62,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+[ Upstream commit 6738028dd57df064b969d8392c943ef3b3ae705d ]
 
-commit f69e749a49353d96af1a293f56b5b56de59c668a upstream.
+Command 'perf record' and 'perf report' on a system without kernel
+debuginfo packages uses /proc/kallsyms and /proc/modules to find
+addresses for kernel and module symbols. On x86 this works for root and
+non-root users.
 
-file_remove_privs() might be called for non-regular files, e.g.
-blkdev inode. There is no reason to do its job on things
-like blkdev inodes, pipes, or cdevs. Hence, abort if
-file does not refer to a regular inode.
+On s390, when invoked as non-root user, many of the following warnings
+are shown and module symbols are missing:
 
-AV: more to the point, for devices there might be any number of
-inodes refering to given device.  Which one to strip the permissions
-from, even if that made any sense in the first place?  All of them
-will be observed with contents modified, after all.
+    proc/{kallsyms,modules} inconsistency while looking for
+        "[sha1_s390]" module!
 
-Found by LockDoc (Alexander Lochmann, Horst Schirmeier and Olaf
-Spinczyk)
+Command 'perf record' creates a list of module start addresses by
+parsing the output of /proc/modules and creates a PERF_RECORD_MMAP
+record for the kernel and each module. The following function call
+sequence is executed:
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
-Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Zubin Mithra <zsm@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+  machine__create_kernel_maps
+    machine__create_module
+      modules__parse
+        machine__create_module --> for each line in /proc/modules
+          arch__fix_module_text_start
 
+Function arch__fix_module_text_start() is s390 specific. It opens
+file /sys/module/<name>/sections/.text to extract the module's .text
+section start address. On s390 the module loader prepends a header
+before the first section, whereas on x86 the module's text section
+address is identical the the module's load address.
+
+However module section files are root readable only. For non-root the
+read operation fails and machine__create_module() returns an error.
+Command perf record does not generate any PERF_RECORD_MMAP record
+for loaded modules. Later command perf report complains about missing
+module maps.
+
+To fix this function arch__fix_module_text_start() always returns
+success. For root users there is no change, for non-root users
+the module's load address is used as module's text start address
+(the prepended header then counts as part of the text section).
+
+This enable non-root users to use module symbols and avoid the
+warning when perf report is executed.
+
+Output before:
+
+  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+
+Output after:
+
+  [tmricht@m83lp54 perf]$ ./perf report -D | fgrep MMAP
+  0 0x168 [0x50]: PERF_RECORD_MMAP ... x [kernel.kallsyms]_text
+  0 0x1b8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../autofs4.ko.xz
+  0 0x250 [0xa8]: PERF_RECORD_MMAP ... x /lib/modules/.../sha_common.ko.xz
+  0 0x2f8 [0x98]: PERF_RECORD_MMAP ... x /lib/modules/.../des_generic.ko.xz
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Link: http://lkml.kernel.org/r/20190522144601.50763-4-tmricht@linux.ibm.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/inode.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ tools/perf/arch/s390/util/machine.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1817,8 +1817,13 @@ int file_remove_privs(struct file *file)
- 	int kill;
- 	int error = 0;
+diff --git a/tools/perf/arch/s390/util/machine.c b/tools/perf/arch/s390/util/machine.c
+index 0b2054007314..a19690a17291 100644
+--- a/tools/perf/arch/s390/util/machine.c
++++ b/tools/perf/arch/s390/util/machine.c
+@@ -5,16 +5,19 @@
+ #include "util.h"
+ #include "machine.h"
+ #include "api/fs/fs.h"
++#include "debug.h"
  
--	/* Fast path for nothing security related */
--	if (IS_NOSEC(inode))
-+	/*
-+	 * Fast path for nothing security related.
-+	 * As well for non-regular files, e.g. blkdev inodes.
-+	 * For example, blkdev_write_iter() might get here
-+	 * trying to remove privs which it is not allowed to.
-+	 */
-+	if (IS_NOSEC(inode) || !S_ISREG(inode->i_mode))
- 		return 0;
+ int arch__fix_module_text_start(u64 *start, const char *name)
+ {
++	u64 m_start = *start;
+ 	char path[PATH_MAX];
  
- 	kill = dentry_needs_remove_privs(dentry);
+ 	snprintf(path, PATH_MAX, "module/%.*s/sections/.text",
+ 				(int)strlen(name) - 2, name + 1);
+-
+-	if (sysfs__read_ull(path, (unsigned long long *)start) < 0)
+-		return -1;
++	if (sysfs__read_ull(path, (unsigned long long *)start) < 0) {
++		pr_debug2("Using module %s start:%#lx\n", path, m_start);
++		*start = m_start;
++	}
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
 
 
