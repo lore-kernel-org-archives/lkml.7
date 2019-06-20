@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60C3CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:48:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CE16C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3378E2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:48:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D21332083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:48:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="i0XljY6H"
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="bAhK2MP3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732124AbfFTNr7 (ORCPT
+        id S1732144AbfFTNsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:47:59 -0400
-Received: from vps.xff.cz ([195.181.215.36]:36224 "EHLO vps.xff.cz"
+        Thu, 20 Jun 2019 09:48:12 -0400
+Received: from vps.xff.cz ([195.181.215.36]:36166 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732070AbfFTNrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1726675AbfFTNrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 09:47:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
-        t=1561038473; bh=huDbYqisR3sxN2nAvxyMjakfXzK8aN/kVX68o7cgDVg=;
+        t=1561038472; bh=eZIRAtXh9rUuple04Feis2vfaVq0NzLnMtCBPANF3QE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0XljY6H4sEaHNF4Iii6TXLcdRyF49kU4mwUvtAEpTdFnoOKDO0z4RIaOYns6TmF/
-         rz5fAqfqKtS+B7VxPANrvsyiR4Yd+AMbcuENAgEBiEcH+BOvwLA+NO1MeBVxvKgfpF
-         kACkzZGXY0T4EEcDvvdcdB09YzPQCY4mSF0awx4A=
+        b=bAhK2MP3Kh5GZrPNtnMejVPrBMjh8lwMFXb/z7Wbhw1+zyqU4iDdc9WAYTbOC2Wt2
+         uv8OXEZMSVT1OSeAI5tCGGCAp1Wl4Dj4AqBiDEZF32gUoCD9nSSaiVuHIvdm8ByNQg
+         l87cBKEEK1nkWPsoleFNmDa01nNBQJpjAm1THZ34=
 From:   megous@megous.com
 To:     linux-sunxi@googlegroups.com,
         Maxime Ripard <maxime.ripard@bootlin.com>,
@@ -44,9 +44,9 @@ Cc:     Ondrej Jirman <megous@megous.com>, David Airlie <airlied@linux.ie>,
         dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v7 5/6] drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
-Date:   Thu, 20 Jun 2019 15:47:47 +0200
-Message-Id: <20190620134748.17866-6-megous@megous.com>
+Subject: [PATCH v7 3/6] arm64: dts: allwinner: orange-pi-3: Enable ethernet
+Date:   Thu, 20 Jun 2019 15:47:45 +0200
+Message-Id: <20190620134748.17866-4-megous@megous.com>
 In-Reply-To: <20190620134748.17866-1-megous@megous.com>
 References: <20190620134748.17866-1-megous@megous.com>
 MIME-Version: 1.0
@@ -58,137 +58,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ondrej Jirman <megous@megous.com>
 
-Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
-for the DDC bus to be usable.
+Orange Pi 3 has two regulators that power the Realtek RTL8211E. According
+to the phy datasheet, both regulators need to be enabled at the same time,
+but we can only specify a single phy-supply in the DT.
 
-Add support for hdmi-connector node's optional ddc-en-gpios property to
-support this use case.
+This can be achieved by making one regulator depedning on the other via
+vin-supply. While it's not a technically correct description of the
+hardware, it achieves the purpose.
+
+All values of RX/TX delay were tested exhaustively and a middle one of the
+working values was chosen.
 
 Signed-off-by: Ondrej Jirman <megous@megous.com>
 ---
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c | 54 +++++++++++++++++++++++++--
- drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h |  2 +
- 2 files changed, 52 insertions(+), 4 deletions(-)
+ .../dts/allwinner/sun50i-h6-orangepi-3.dts    | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-index 39d8509d96a0..6733bfc9c2d6 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.c
-@@ -98,10 +98,34 @@ static u32 sun8i_dw_hdmi_find_possible_crtcs(struct drm_device *drm,
- 	return crtcs;
- }
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+index 17d496990108..2c6807b74ff6 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6-orangepi-3.dts
+@@ -15,6 +15,7 @@
  
-+static int sun8i_dw_hdmi_find_connector_pdev(struct device *dev,
-+					     struct platform_device **pdev_out)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *remote;
-+
-+	remote = of_graph_get_remote_node(dev->of_node, 1, -1);
-+	if (!remote)
-+		return -ENODEV;
-+
-+	if (!of_device_is_compatible(remote, "hdmi-connector")) {
-+		of_node_put(remote);
-+		return -ENODEV;
-+	}
-+
-+	pdev = of_find_device_by_node(remote);
-+	of_node_put(remote);
-+	if (!pdev)
-+		return -ENODEV;
-+
-+	*pdev_out = pdev;
-+	return 0;
-+}
-+
- static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 			      void *data)
- {
--	struct platform_device *pdev = to_platform_device(dev);
-+	struct platform_device *pdev = to_platform_device(dev), *connector_pdev;
- 	struct dw_hdmi_plat_data *plat_data;
- 	struct drm_device *drm = data;
- 	struct device_node *phy_node;
-@@ -151,16 +175,30 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 		return PTR_ERR(hdmi->regulator);
- 	}
+ 	aliases {
+ 		serial0 = &uart0;
++		ethernet0 = &emac;
+ 	};
  
-+	ret = sun8i_dw_hdmi_find_connector_pdev(dev, &connector_pdev);
-+	if (!ret) {
-+		hdmi->ddc_en = gpiod_get_optional(&connector_pdev->dev,
-+						  "ddc-en", GPIOD_OUT_HIGH);
-+		platform_device_put(connector_pdev);
+ 	chosen {
+@@ -44,6 +45,27 @@
+ 		regulator-max-microvolt = <5000000>;
+ 		regulator-always-on;
+ 	};
 +
-+		if (IS_ERR(hdmi->ddc_en)) {
-+			dev_err(dev, "Couldn't get ddc-en gpio\n");
-+			return PTR_ERR(hdmi->ddc_en);
-+		}
-+	}
++	/*
++	 * The board uses 2.5V RGMII signalling. Power sequence to enable
++	 * the phy is to enable GMAC-2V5 and GMAC-3V (aldo2) power rails
++	 * at the same time and to wait 100ms.
++	 */
++	reg_gmac_2v5: gmac-2v5 {
++		compatible = "regulator-fixed";
++		regulator-name = "gmac-2v5";
++		regulator-min-microvolt = <2500000>;
++		regulator-max-microvolt = <2500000>;
++		startup-delay-us = <100000>;
++		enable-active-high;
++		gpio = <&pio 3 6 GPIO_ACTIVE_HIGH>; /* PD6 */
 +
- 	ret = regulator_enable(hdmi->regulator);
- 	if (ret) {
- 		dev_err(dev, "Failed to enable regulator\n");
--		return ret;
-+		goto err_unref_ddc_en;
- 	}
- 
-+	gpiod_set_value(hdmi->ddc_en, 1);
-+
- 	ret = reset_control_deassert(hdmi->rst_ctrl);
- 	if (ret) {
- 		dev_err(dev, "Could not deassert ctrl reset control\n");
--		goto err_disable_regulator;
-+		goto err_disable_ddc_en;
- 	}
- 
- 	ret = clk_prepare_enable(hdmi->clk_tmds);
-@@ -213,8 +251,12 @@ static int sun8i_dw_hdmi_bind(struct device *dev, struct device *master,
- 	clk_disable_unprepare(hdmi->clk_tmds);
- err_assert_ctrl_reset:
- 	reset_control_assert(hdmi->rst_ctrl);
--err_disable_regulator:
-+err_disable_ddc_en:
-+	gpiod_set_value(hdmi->ddc_en, 0);
- 	regulator_disable(hdmi->regulator);
-+err_unref_ddc_en:
-+	if (hdmi->ddc_en)
-+		gpiod_put(hdmi->ddc_en);
- 
- 	return ret;
- }
-@@ -228,7 +270,11 @@ static void sun8i_dw_hdmi_unbind(struct device *dev, struct device *master,
- 	sun8i_hdmi_phy_remove(hdmi);
- 	clk_disable_unprepare(hdmi->clk_tmds);
- 	reset_control_assert(hdmi->rst_ctrl);
-+	gpiod_set_value(hdmi->ddc_en, 0);
- 	regulator_disable(hdmi->regulator);
-+
-+	if (hdmi->ddc_en)
-+		gpiod_put(hdmi->ddc_en);
- }
- 
- static const struct component_ops sun8i_dw_hdmi_ops = {
-diff --git a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-index 720c5aa8adc1..d707c9171824 100644
---- a/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-+++ b/drivers/gpu/drm/sun4i/sun8i_dw_hdmi.h
-@@ -9,6 +9,7 @@
- #include <drm/bridge/dw_hdmi.h>
- #include <drm/drm_encoder.h>
- #include <linux/clk.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/reset.h>
-@@ -190,6 +191,7 @@ struct sun8i_dw_hdmi {
- 	struct regulator		*regulator;
- 	const struct sun8i_dw_hdmi_quirks *quirks;
- 	struct reset_control		*rst_ctrl;
-+	struct gpio_desc		*ddc_en;
++		/* The real parent of gmac-2v5 is reg_vcc5v, but we need to
++		 * enable two regulators to power the phy. This is one way
++		 * to achieve that.
++		 */
++		vin-supply = <&reg_aldo2>; /* GMAC-3V */
++	};
  };
  
- static inline struct sun8i_dw_hdmi *
+ &cpu0 {
+@@ -58,6 +80,28 @@
+ 	status = "okay";
+ };
+ 
++&emac {
++	pinctrl-names = "default";
++	pinctrl-0 = <&ext_rgmii_pins>;
++	phy-mode = "rgmii";
++	phy-handle = <&ext_rgmii_phy>;
++	phy-supply = <&reg_gmac_2v5>;
++	allwinner,rx-delay-ps = <1500>;
++	allwinner,tx-delay-ps = <700>;
++	status = "okay";
++};
++
++&mdio {
++	ext_rgmii_phy: ethernet-phy@1 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <1>;
++
++		reset-gpios = <&pio 3 14 GPIO_ACTIVE_LOW>; /* PD14 */
++		reset-assert-us = <15000>;
++		reset-deassert-us = <40000>;
++	};
++};
++
+ &mmc0 {
+ 	vmmc-supply = <&reg_cldo1>;
+ 	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>; /* PF6 */
 -- 
 2.22.0
 
