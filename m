@@ -2,153 +2,236 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CD5EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40989C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:15:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F062083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:10:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="MeJ3KK8E"
+	by mail.kernel.org (Postfix) with ESMTP id 04AE92082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:15:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726915AbfFTLKl (ORCPT
+        id S1726635AbfFTLP0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:10:41 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45373 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfFTLKk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:10:40 -0400
-Received: by mail-wr1-f65.google.com with SMTP id f9so2554554wre.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 04:10:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JhYlbuI4DFmnCfRHlNZboigE7pfx/C6qRT9qZ4a8a8c=;
-        b=MeJ3KK8EMD0ilu4JR97aFwXUI5LCoCXeciWdc/TkykOLZhPWpxnpBgfxp7NDYtLRN9
-         7FSUf7L/97ZxnuM2+a1LsEc5YXV0icjFv9C5oPmvRjJAwCjinmdkarmKmjTYCRlG+/bz
-         1LFOS48271sqCIhqg7/ekqIWwlrZDchBCh7MiAFmrE1e1AggV2idSH708AkzpNb4RdaC
-         M2XgZ245Nn20ZPUtfW7xpsOO6Xuo8UeBbVhDLAIVcIqeHv30hnnjJsU+r2pbozdQJ6BH
-         kVsov2ZCAWafyP+2hpHv8Pyc6wONjyJosTqgHlCDTnmwlrFviJjem8qNac0xNK4tbpxH
-         /G+w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JhYlbuI4DFmnCfRHlNZboigE7pfx/C6qRT9qZ4a8a8c=;
-        b=pd2v8/SveDj3wemmjsN00AcZkX7UyV7x9sTg1jUlSqmJVg/HHgT3np1EoyOiKi/lUU
-         39hMLyg83N3TbTKoH1L+Z5EbhbmACeQ0SGUaoJZg+U8c0JY7tRWY/khzPJQ6ofdvUApw
-         odOAgQ8YKxxvhmCTs6pf4YO0+M6lQUQtWJKF4heCUOWCvUfmz82+Z3MZoKKRfpukU3Yd
-         T/PgstgSK0CGpss11llGYALi6P5iFXKx51wgwQ/T98ySgShSC11/qKFy79Fl1k9cKXwd
-         5x3URhf1ZBf3wEtSoE81nAYPsIZm2Y8lmZa9Y5ZSfTHNJf7MUhP1Qh+j+IMVcoYFmx5N
-         IfYA==
-X-Gm-Message-State: APjAAAXlZorVLYjjbSR/8yHDN/NhE597YsTZ+Q2GtZL5XLdGDh7oJOnw
-        caQu9MhkaBMlfoZfecrfdjwXaw==
-X-Google-Smtp-Source: APXvYqwb//NAW++WCfhs0Zqqp92HPqqFllfWn6agS2IoFgTab1kkxgF/r75jUCi/2cYBwdsQkTZCgA==
-X-Received: by 2002:a5d:4703:: with SMTP id y3mr33135290wrq.35.1561029038472;
-        Thu, 20 Jun 2019 04:10:38 -0700 (PDT)
-Received: from brauner.io ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id c4sm28178583wrb.68.2019.06.20.04.10.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 04:10:37 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 13:10:37 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] samples: make pidfd-metadata fail gracefully on older
- kernels
-Message-ID: <20190620111036.asi3mbcv4ax5ekrw@brauner.io>
-References: <20190620103105.cdxgqfelzlnkmblv@brauner.io>
- <20190620110037.GA4998@altlinux.org>
+        Thu, 20 Jun 2019 07:15:26 -0400
+Received: from foss.arm.com ([217.140.110.172]:60226 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726234AbfFTLPZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:15:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B2E3F2B;
+        Thu, 20 Jun 2019 04:15:24 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C64C23F718;
+        Thu, 20 Jun 2019 04:15:22 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 12:15:20 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Peng Fan <peng.fan@nxp.com>
+Cc:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "jassisinghbrar@gmail.com" <jassisinghbrar@gmail.com>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "andre.przywara@arm.com" <andre.przywara@arm.com>,
+        "van.freenix@gmail.com" <van.freenix@gmail.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+Message-ID: <20190620111520.GB9575@e107155-lin>
+References: <20190603083005.4304-1-peng.fan@nxp.com>
+ <20190603083005.4304-3-peng.fan@nxp.com>
+ <20190620092301.GD1248@e107155-lin>
+ <AM0PR04MB4481203DE76D290F311E3BFA88E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620110037.GA4998@altlinux.org>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <AM0PR04MB4481203DE76D290F311E3BFA88E40@AM0PR04MB4481.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 02:00:37PM +0300, Dmitry V. Levin wrote:
-> Cc'ed more people as the issue is not just with the example but
-> with the interface itself.
-> 
-> On Thu, Jun 20, 2019 at 12:31:06PM +0200, Christian Brauner wrote:
-> > On Thu, Jun 20, 2019 at 06:11:44AM +0300, Dmitry V. Levin wrote:
-> > > Initialize pidfd to an invalid descriptor, to fail gracefully on
-> > > those kernels that do not implement CLONE_PIDFD and leave pidfd
-> > > unchanged.
-> > > 
-> > > Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+On Thu, Jun 20, 2019 at 10:21:09AM +0000, Peng Fan wrote:
+> Hi Sudeep,
+>
+> > Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
+> >
+> > On Mon, Jun 03, 2019 at 04:30:05PM +0800, peng.fan@nxp.com wrote:
+> > > From: Peng Fan <peng.fan@nxp.com>
+> > >
+> > > This mailbox driver implements a mailbox which signals transmitted
+> > > data via an ARM smc (secure monitor call) instruction. The mailbox
+> > > receiver is implemented in firmware and can synchronously return data
+> > > when it returns execution to the non-secure world again.
+> > > An asynchronous receive path is not implemented.
+> > > This allows the usage of a mailbox to trigger firmware actions on SoCs
+> > > which either don't have a separate management processor or on which
+> > > such a core is not available. A user of this mailbox could be the SCP
+> > > interface.
+> > >
+> > > Modified from Andre Przywara's v2 patch
+> > > https://eur01.safelinks.protection.outlook.com/?url=https%3A%2F%2Flore
+> > > .kernel.org%2Fpatchwork%2Fpatch%2F812999%2F&amp;data=02%7C01%7
+> > Cpeng.fa
+> > >
+> > n%40nxp.com%7C6b37f78032e446be750e08d6f560e707%7C686ea1d3bc2b4
+> > c6fa92cd
+> > >
+> > 99c5c301635%7C0%7C0%7C636966193913988679&amp;sdata=UNM4MTPs
+> > brqoMqWStEy
+> > > YzzwMEWTmX7hHO3TeNEz%2BOAw%3D&amp;reserved=0
+> > >
+> > > Cc: Andre Przywara <andre.przywara@arm.com>
+> > > Signed-off-by: Peng Fan <peng.fan@nxp.com>
 > > > ---
-> > >  samples/pidfd/pidfd-metadata.c | 8 ++++++--
-> > >  1 file changed, 6 insertions(+), 2 deletions(-)
-> > > 
-> > > diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-metadata.c
-> > > index 14b454448429..ff109fdac3a5 100644
-> > > --- a/samples/pidfd/pidfd-metadata.c
-> > > +++ b/samples/pidfd/pidfd-metadata.c
-> > > @@ -83,7 +83,7 @@ static int pidfd_metadata_fd(pid_t pid, int pidfd)
-> > >  
-> > >  int main(int argc, char *argv[])
-> > >  {
-> > > -	int pidfd = 0, ret = EXIT_FAILURE;
-> > > +	int pidfd = -1, ret = EXIT_FAILURE;
-> > 
-> > Hm, that currently won't work since we added a check in fork.c for
-> > pidfd == 0. If it isn't you'll get EINVAL.
-> 
-> Sorry, I must've missed that check.  But this makes things even worse.
-> 
-> > This was done to ensure that
-> > we can potentially extend CLONE_PIDFD by passing in flags through the
-> > return argument.
-> > However, I find this increasingly unlikely. Especially since the
-> > interface would be horrendous and an absolute last resort.
-> > If clone3() gets merged for 5.3 (currently in linux-next) we also have
-> > no real need anymore to extend legacy clone() this way. So either wait
-> > until (if) we merge clone3() where the check I mentioned is gone anyway,
-> > or remove the pidfd == 0 check from fork.c in a preliminary patch.
-> > Thoughts?
-> 
-> Userspace needs a reliable way to tell whether CLONE_PIDFD is supported
-> by the kernel or not.
+> > >
+> > > V2:
+> > >  Add interrupts notification support.
+> > >
+> > >  drivers/mailbox/Kconfig                 |   7 ++
+> > >  drivers/mailbox/Makefile                |   2 +
+> > >  drivers/mailbox/arm-smc-mailbox.c       | 190
+> > ++++++++++++++++++++++++++++++++
+> > >  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
+> > >  4 files changed, 209 insertions(+)
+> > >  create mode 100644 drivers/mailbox/arm-smc-mailbox.c  create mode
+> > > 100644 include/linux/mailbox/arm-smc-mailbox.h
+> > >
+> > > diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig index
+> > > 595542bfae85..c3bd0f1ddcd8 100644
+> > > --- a/drivers/mailbox/Kconfig
+> > > +++ b/drivers/mailbox/Kconfig
+> > > @@ -15,6 +15,13 @@ config ARM_MHU
+> > >  	  The controller has 3 mailbox channels, the last of which can be
+> > >  	  used in Secure mode only.
+> > >
+> > > +config ARM_SMC_MBOX
+> > > +	tristate "Generic ARM smc mailbox"
+> > > +	depends on OF && HAVE_ARM_SMCCC
+> > > +	help
+> > > +	  Generic mailbox driver which uses ARM smc calls to call into
+> > > +	  firmware for triggering mailboxes.
+> > > +
+> > >  config IMX_MBOX
+> > >  	tristate "i.MX Mailbox"
+> > >  	depends on ARCH_MXC || COMPILE_TEST
+> > > diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile index
+> > > c22fad6f696b..93918a84c91b 100644
+> > > --- a/drivers/mailbox/Makefile
+> > > +++ b/drivers/mailbox/Makefile
+> > > @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+= mailbox-test.o
+> > >
+> > >  obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
+> > >
+> > > +obj-$(CONFIG_ARM_SMC_MBOX)	+= arm-smc-mailbox.o
+> > > +
+> > >  obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
+> > >
+> > >  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+=
+> > armada-37xx-rwtm-mailbox.o
+> > > diff --git a/drivers/mailbox/arm-smc-mailbox.c
+> > > b/drivers/mailbox/arm-smc-mailbox.c
+> > > new file mode 100644
+> > > index 000000000000..fef6e38d8b98
+> > > --- /dev/null
+> > > +++ b/drivers/mailbox/arm-smc-mailbox.c
+> > > @@ -0,0 +1,190 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2016,2017 ARM Ltd.
+> > > + * Copyright 2019 NXP
+> > > + */
+> > > +
+> > > +#include <linux/arm-smccc.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/mailbox_controller.h> #include
+> > > +<linux/mailbox/arm-smc-mailbox.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +
+> > > +#define ARM_SMC_MBOX_USE_HVC	BIT(0)
+> > > +#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
+> > > +
+> > > +struct arm_smc_chan_data {
+> > > +	u32 function_id;
+> > > +	u32 flags;
+> > > +	int irq;
+> > > +};
+> > > +
+> > > +static int arm_smc_send_data(struct mbox_chan *link, void *data) {
+> > > +	struct arm_smc_chan_data *chan_data = link->con_priv;
+> > > +	struct arm_smccc_mbox_cmd *cmd = data;
+> > > +	struct arm_smccc_res res;
+> > > +	u32 function_id;
+> > > +
+> > > +	if (chan_data->function_id != UINT_MAX)
+> > > +		function_id = chan_data->function_id;
+> > > +	else
+> > > +		function_id = cmd->a0;
+> > > +
+> > > +	if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
+> > > +		arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3,
+> > cmd->a4,
+> > > +			      cmd->a5, cmd->a6, cmd->a7, &res);
+> > > +	else
+> > > +		arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3,
+> > cmd->a4,
+> > > +			      cmd->a5, cmd->a6, cmd->a7, &res);
+> > > +
+> >
+> > So how will the SMC/HVC handler in EL3/2 find which mailbox is being
+> > referred with this command ? I prefer 2nd argument to be the mailbox
+> > number.
+> You mean channel number as following?
+>
+> @@ -37,10 +38,10 @@ static int arm_smc_send_data(struct mbox_chan *link, void *data)
+>                 function_id = cmd->a0;
+>
+>         if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
+> -               arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
+> +               arm_smccc_hvc(function_id, chan_data->chan_id, cmd->a2, cmd->a3, cmd->a4,
+>                               cmd->a5, cmd->a6, cmd->a7, &res);
+>         else
+> -               arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
+> +               arm_smccc_smc(function_id, chan_data->chan_id, cmd->a2, cmd->a3, cmd->a4,
+>                               cmd->a5, cmd->a6, cmd->a7, &res);
+>
 
-Right, that's the general problem with legacy clone(): it ignores
-unknown flags... clone3() will EINVAL you if you pass any flag it
-doesn't know about.
+Yes something like above. There's a brief description of the same in
+latest SCMI specification though it's not related to SCMI, it more 
+general note for SMC based mailbox.
 
-For legacy clone you can pass
+"In case the doorbell is SMC/HVC based, it should follow the SMC Calling
+Convention [SMCCC] and needs to provide the identifier of the Shared Memory
+area that contains the payload. On return from the call, the Shared Memory
+area which contained the payload is now updated with the SCMI return response.
+The identifier of the Shared Memory area should be 32-bits and each identifier
+should denote a distinct Shared Memory area."
 
-(CLONE_PIDFD | CLONE_DETACHED)
+> Or should that be passed from firmware driver?
+>
 
-on all relevant kernels >= 2.6.2. CLONE_DETACHED will be silently
-ignored by the kernel if specified in flags. But if you specify both
-CLONE_PIDFD and CLONE_DETACHED on a kernel that does support CLONE_PIDFD
-you'll get EINVALed. (We did this because we wanted to have the ability
-to make CLONE_DETACHED reuseable with CLONE_PIDFD.)
-Does that help?
+No, we can't assume the id's in DT are 1-1 translation to mailbox ID used
+though it may be the same most of the time.
 
-> 
-> If CLONE_PIDFD is not supported, then pidfd remains unchanged.
-> 
-> If CLONE_PIDFD is supported and fd 0 is closed, then mandatory pidfd == 0
-> also remains unchanged, which effectively means that userspace must ensure
-> that fd 0 is not closed when invoking CLONE_PIDFD.  This is ugly.
-> 
-> If we can assume that clone(CLONE_PIDFD) is not going to be extended,
-> then I'm for removing the pidfd == 0 check along with recommending
-> userspace to initialize pidfd with -1.
+> If not from firmware driver, just as above, I do not have a good idea which
+> should be passed to smc, from cmd->a1 to a5 or from cmd->a2 to a6.
+>
 
-Right, I'm ok with that too.
+Also I found copying those registers may not be always needed and can
+be sub-optimal. May be a way to indicate that this in DT whether
+register based transfers are used or using memory. Just a thought.
 
-Thanks!
-Christian
+--
+Regards,
+Sudeep
