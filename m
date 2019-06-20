@@ -2,137 +2,214 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED88C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E54C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 846AD2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h/Nq2nE3";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="a+3C9YAY"
+	by mail.kernel.org (Postfix) with ESMTP id AF2CC206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:46:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731942AbfFTNq0 (ORCPT
+        id S1732014AbfFTNql (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:46:26 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:60990 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726391AbfFTNqZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:46:25 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 9A53A60FEB; Thu, 20 Jun 2019 13:46:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561038384;
-        bh=CDu98sBkLBz6RzBo8RnhLJXtzsjr6rfol3vSoWIvAOM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h/Nq2nE34CxveyWMc821sqTTr59d8kQ8Ik12B71gUOkbEduPw//Eta6SvUoB+l/NI
-         kbd8MyObbKTHWEbiT2DCc/Ob8HvN5EjnyY2SzVGH6XjjkJyp96b0p5E6GOqXatdPXy
-         RjvB8Q6BNsIOx/3SsUGejS/ZtTkizUyb3E/UQzdg=
-Received: from blr-ubuntu-253.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B739060FE9;
-        Thu, 20 Jun 2019 13:46:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561038379;
-        bh=CDu98sBkLBz6RzBo8RnhLJXtzsjr6rfol3vSoWIvAOM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a+3C9YAYBQQ87X/jMfFOhcFPXwOCiKUOKjbcyl50POoQX9htMAh5ZpfQUh00wyIgp
-         atux3As4Mw5nEkfVbcZk+rvFZOcKUZ1tDSwDc+5g+aBdqilWBK2z4Jl9EUoNgXnH5r
-         FPS6ImPocqjGFFt3vxZEzCqPFVgHdM+9UUvT6Rk0=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B739060FE9
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Leo Yan <leo.yan@linaro.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        David Brown <david.brown@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
-        Vivek Gautam <vivek.gautam@codeaurora.org>,
-        Sibi Sankar <sibis@codeaurora.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org,
-        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 2/2] coresight: Abort probe for missing CPU phandle
-Date:   Thu, 20 Jun 2019 19:15:47 +0530
-Message-Id: <d93e28fc80227f9a385130a766a24f8f39a1dcf0.1561037262.git.saiprakash.ranjan@codeaurora.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+        Thu, 20 Jun 2019 09:46:41 -0400
+Received: from mx2.suse.de ([195.135.220.15]:45856 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726391AbfFTNqk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:46:40 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id CAA66AE2C;
+        Thu, 20 Jun 2019 13:46:37 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 504A11E434F; Thu, 20 Jun 2019 15:46:37 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 15:46:37 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, reiserfs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 4/4] vfs: teach vfs_ioc_fssetxattr_check to check extent
+ size hints
+Message-ID: <20190620134637.GG30243@quack2.suse.cz>
+References: <156022833285.3227089.11990489625041926920.stgit@magnolia>
+ <156022836522.3227089.4353401791178719941.stgit@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156022836522.3227089.4353401791178719941.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently the coresight etm and cpu-debug drivers
-assume the affinity to CPU0 returned by coresight
-platform and continue the probe in case of missing
-CPU phandle. This is not true and leads to crash
-in some cases, so abort the probe in case of missing
-CPU phandle.
+On Mon 10-06-19 21:46:05, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Move the extent size hint checks that aren't xfs-specific to the vfs.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- drivers/hwtracing/coresight/coresight-cpu-debug.c | 3 +++
- drivers/hwtracing/coresight/coresight-etm3x.c     | 3 +++
- drivers/hwtracing/coresight/coresight-etm4x.c     | 3 +++
- 3 files changed, 9 insertions(+)
+The patch looks good to me. You can add:
 
-diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-index 07a1367c733f..43f32fa71ff9 100644
---- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
-+++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
-@@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
- 		return -ENOMEM;
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu == -ENODEV)
-+		return -ENODEV;
-+
- 	if (per_cpu(debug_drvdata, drvdata->cpu)) {
- 		dev_err(dev, "CPU%d drvdata has already been initialized\n",
- 			drvdata->cpu);
-diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
-index 225c2982e4fe..882e2751746c 100644
---- a/drivers/hwtracing/coresight/coresight-etm3x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm3x.c
-@@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
- 	}
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu == -ENODEV)
-+		return -ENODEV;
-+
- 	desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 7fe266194ab5..97d71dbbeb19 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
- 	spin_lock_init(&drvdata->spinlock);
- 
- 	drvdata->cpu = coresight_get_cpu(dev);
-+	if (drvdata->cpu == -ENODEV)
-+		return -ENODEV;
-+
- 	desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
- 	if (!desc.name)
- 		return -ENOMEM;
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
+> ---
+>  fs/inode.c         |   18 +++++++++++++
+>  fs/xfs/xfs_ioctl.c |   70 ++++++++++++++++++++++------------------------------
+>  2 files changed, 47 insertions(+), 41 deletions(-)
+> 
+> 
+> diff --git a/fs/inode.c b/fs/inode.c
+> index 40ecd3a6a188..a3757051fd55 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -2214,6 +2214,24 @@ int vfs_ioc_fssetxattr_check(struct inode *inode, const struct fsxattr *old_fa,
+>  			return -EINVAL;
+>  	}
+>  
+> +	/* Check extent size hints. */
+> +	if ((fa->fsx_xflags & FS_XFLAG_EXTSIZE) && !S_ISREG(inode->i_mode))
+> +		return -EINVAL;
+> +
+> +	if ((fa->fsx_xflags & FS_XFLAG_EXTSZINHERIT) &&
+> +			!S_ISDIR(inode->i_mode))
+> +		return -EINVAL;
+> +
+> +	if ((fa->fsx_xflags & FS_XFLAG_COWEXTSIZE) &&
+> +	    !S_ISREG(inode->i_mode) && !S_ISDIR(inode->i_mode))
+> +		return -EINVAL;
+> +
+> +	/* Extent size hints of zero turn off the flags. */
+> +	if (fa->fsx_extsize == 0)
+> +		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
+> +	if (fa->fsx_cowextsize == 0)
+> +		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
+> +
+>  	return 0;
+>  }
+>  EXPORT_SYMBOL(vfs_ioc_fssetxattr_check);
+> diff --git a/fs/xfs/xfs_ioctl.c b/fs/xfs/xfs_ioctl.c
+> index 82961de98900..b494e7e881e3 100644
+> --- a/fs/xfs/xfs_ioctl.c
+> +++ b/fs/xfs/xfs_ioctl.c
+> @@ -1201,39 +1201,31 @@ xfs_ioctl_setattr_check_extsize(
+>  	struct fsxattr		*fa)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+> -
+> -	if ((fa->fsx_xflags & FS_XFLAG_EXTSIZE) && !S_ISREG(VFS_I(ip)->i_mode))
+> -		return -EINVAL;
+> -
+> -	if ((fa->fsx_xflags & FS_XFLAG_EXTSZINHERIT) &&
+> -	    !S_ISDIR(VFS_I(ip)->i_mode))
+> -		return -EINVAL;
+> +	xfs_extlen_t		size;
+> +	xfs_fsblock_t		extsize_fsb;
+>  
+>  	if (S_ISREG(VFS_I(ip)->i_mode) && ip->i_d.di_nextents &&
+>  	    ((ip->i_d.di_extsize << mp->m_sb.sb_blocklog) != fa->fsx_extsize))
+>  		return -EINVAL;
+>  
+> -	if (fa->fsx_extsize != 0) {
+> -		xfs_extlen_t    size;
+> -		xfs_fsblock_t   extsize_fsb;
+> -
+> -		extsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_extsize);
+> -		if (extsize_fsb > MAXEXTLEN)
+> -			return -EINVAL;
+> +	if (fa->fsx_extsize == 0)
+> +		return 0;
+>  
+> -		if (XFS_IS_REALTIME_INODE(ip) ||
+> -		    (fa->fsx_xflags & FS_XFLAG_REALTIME)) {
+> -			size = mp->m_sb.sb_rextsize << mp->m_sb.sb_blocklog;
+> -		} else {
+> -			size = mp->m_sb.sb_blocksize;
+> -			if (extsize_fsb > mp->m_sb.sb_agblocks / 2)
+> -				return -EINVAL;
+> -		}
+> +	extsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_extsize);
+> +	if (extsize_fsb > MAXEXTLEN)
+> +		return -EINVAL;
+>  
+> -		if (fa->fsx_extsize % size)
+> +	if (XFS_IS_REALTIME_INODE(ip) ||
+> +	    (fa->fsx_xflags & FS_XFLAG_REALTIME)) {
+> +		size = mp->m_sb.sb_rextsize << mp->m_sb.sb_blocklog;
+> +	} else {
+> +		size = mp->m_sb.sb_blocksize;
+> +		if (extsize_fsb > mp->m_sb.sb_agblocks / 2)
+>  			return -EINVAL;
+> -	} else
+> -		fa->fsx_xflags &= ~(FS_XFLAG_EXTSIZE | FS_XFLAG_EXTSZINHERIT);
+> +	}
+> +
+> +	if (fa->fsx_extsize % size)
+> +		return -EINVAL;
+>  
+>  	return 0;
+>  }
+> @@ -1259,6 +1251,8 @@ xfs_ioctl_setattr_check_cowextsize(
+>  	struct fsxattr		*fa)
+>  {
+>  	struct xfs_mount	*mp = ip->i_mount;
+> +	xfs_extlen_t		size;
+> +	xfs_fsblock_t		cowextsize_fsb;
+>  
+>  	if (!(fa->fsx_xflags & FS_XFLAG_COWEXTSIZE))
+>  		return 0;
+> @@ -1267,25 +1261,19 @@ xfs_ioctl_setattr_check_cowextsize(
+>  	    ip->i_d.di_version != 3)
+>  		return -EINVAL;
+>  
+> -	if (!S_ISREG(VFS_I(ip)->i_mode) && !S_ISDIR(VFS_I(ip)->i_mode))
+> -		return -EINVAL;
+> -
+> -	if (fa->fsx_cowextsize != 0) {
+> -		xfs_extlen_t    size;
+> -		xfs_fsblock_t   cowextsize_fsb;
+> +	if (fa->fsx_cowextsize == 0)
+> +		return 0;
+>  
+> -		cowextsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
+> -		if (cowextsize_fsb > MAXEXTLEN)
+> -			return -EINVAL;
+> +	cowextsize_fsb = XFS_B_TO_FSB(mp, fa->fsx_cowextsize);
+> +	if (cowextsize_fsb > MAXEXTLEN)
+> +		return -EINVAL;
+>  
+> -		size = mp->m_sb.sb_blocksize;
+> -		if (cowextsize_fsb > mp->m_sb.sb_agblocks / 2)
+> -			return -EINVAL;
+> +	size = mp->m_sb.sb_blocksize;
+> +	if (cowextsize_fsb > mp->m_sb.sb_agblocks / 2)
+> +		return -EINVAL;
+>  
+> -		if (fa->fsx_cowextsize % size)
+> -			return -EINVAL;
+> -	} else
+> -		fa->fsx_xflags &= ~FS_XFLAG_COWEXTSIZE;
+> +	if (fa->fsx_cowextsize % size)
+> +		return -EINVAL;
+>  
+>  	return 0;
+>  }
+> 
+> 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
