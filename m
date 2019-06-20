@@ -7,48 +7,54 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43128C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71065C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15E4D21530
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DBC8215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053880;
-	bh=vWblSKgM7/w+DGeiPntDismRJC5xmWE9Nfwes/z5ies=;
+	s=default; t=1561053885;
+	bh=z5SKF9DOlqPNls6ia41cYM6baailNmIznIbwfYklA1U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SH1RA0aocmM07iVVLwfDPSPp7KgAcQJ/RV94d/2zpK90bZpzOAjuPe/bccHJ+5Qud
-	 /cRzeUreZmUocpgFP3qVGDzMDJ+HyjvlZRLxeJvCr+LJIrD8AUXzMcan/CX+bSI+Hx
-	 lPtcGzYKd6GRG1EnBOWCguE/ZlCtqf37+oq6Lt6U=
+	b=rQ//x02hAz4ghg+eYY/p+pi5tbgjqUZyA2aC0eBTV6u4fMF/UNVFYfN4sluXFKxii
+	 hNIEA/+7r3PuVpe0XNU78g388RwIgcqPMtKejy24weDLe2ferUU9db3DktX2Ov6yO4
+	 5g2rfX+V8Ik1pnDpk5eUhadOfqQekUF4LpEBsnAw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfFTSEi (ORCPT
+        id S1727912AbfFTSEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57128 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57262 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727882AbfFTSEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:04:35 -0400
+        id S1727417AbfFTSEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:04:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EA50821479;
-        Thu, 20 Jun 2019 18:04:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46E552082C;
+        Thu, 20 Jun 2019 18:04:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053874;
-        bh=vWblSKgM7/w+DGeiPntDismRJC5xmWE9Nfwes/z5ies=;
+        s=default; t=1561053879;
+        bh=z5SKF9DOlqPNls6ia41cYM6baailNmIznIbwfYklA1U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i95V9WhROCMMlPv4RTDlO8KuYilkecUYwp7g73/IgwY0mQvZyB9nfnrohzHwUD6s2
-         p1vI2PFlKNArWanibO5HRwpYn2378b2hJ9gbwxf3X9R6402CFfRoGwSPhC5gfZLZkn
-         tr/IdYiwPll2/c3zsM7MWwNBgRLZLE8eZsrETjak=
+        b=Qv1pGO1njzs2RDofJLZJW3kf04ZIZj7K0VZlDJZ1KtXQKSCxjIhfaCfa6BmKkBnBi
+         NlkgFWPiggOpH0MuU6mM3ubLsUhOHQkyS6GO62f0XhsBA2dgBp7el4UJ3ekMoaimFj
+         SawvdG01x6byDKDq7e+tz0grBBXNto/kF0fgko/Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.9 058/117] libata: Extend quirks for the ST1000LM024 drives with NOLPM quirk
-Date:   Thu, 20 Jun 2019 19:56:32 +0200
-Message-Id: <20190620174356.227658568@linuxfoundation.org>
+        stable@vger.kernel.org, Wengang Wang <wen.gang.wang@oracle.com>,
+        Daniel Sobe <daniel.sobe@nxp.com>,
+        Changwei Ge <gechangwei@live.cn>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.9 060/117] fs/ocfs2: fix race in ocfs2_dentry_attach_lock()
+Date:   Thu, 20 Jun 2019 19:56:34 +0200
+Message-Id: <20190620174356.535861617@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,42 +67,97 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Wengang Wang <wen.gang.wang@oracle.com>
 
-commit 31f6264e225fb92cf6f4b63031424f20797c297d upstream.
+commit be99ca2716972a712cde46092c54dee5e6192bf8 upstream.
 
-We've received a bugreport that using LPM with ST1000LM024 drives leads
-to system lockups. So it seems that these models are buggy in more then
-1 way. Add NOLPM quirk to the existing quirks entry for BROKEN_FPDMA_AA.
+ocfs2_dentry_attach_lock() can be executed in parallel threads against the
+same dentry.  Make that race safe.  The race is like this:
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1571330
-Cc: stable@vger.kernel.org
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+            thread A                               thread B
+
+(A1) enter ocfs2_dentry_attach_lock,
+seeing dentry->d_fsdata is NULL,
+and no alias found by
+ocfs2_find_local_alias, so kmalloc
+a new ocfs2_dentry_lock structure
+to local variable "dl", dl1
+
+               .....
+
+                                    (B1) enter ocfs2_dentry_attach_lock,
+                                    seeing dentry->d_fsdata is NULL,
+                                    and no alias found by
+                                    ocfs2_find_local_alias so kmalloc
+                                    a new ocfs2_dentry_lock structure
+                                    to local variable "dl", dl2.
+
+                                                   ......
+
+(A2) set dentry->d_fsdata with dl1,
+call ocfs2_dentry_lock() and increase
+dl1->dl_lockres.l_ro_holders to 1 on
+success.
+              ......
+
+                                    (B2) set dentry->d_fsdata with dl2
+                                    call ocfs2_dentry_lock() and increase
+				    dl2->dl_lockres.l_ro_holders to 1 on
+				    success.
+
+                                                  ......
+
+(A3) call ocfs2_dentry_unlock()
+and decrease
+dl2->dl_lockres.l_ro_holders to 0
+on success.
+             ....
+
+                                    (B3) call ocfs2_dentry_unlock(),
+                                    decreasing
+				    dl2->dl_lockres.l_ro_holders, but
+				    see it's zero now, panic
+
+Link: http://lkml.kernel.org/r/20190529174636.22364-1-wen.gang.wang@oracle.com
+Signed-off-by: Wengang Wang <wen.gang.wang@oracle.com>
+Reported-by: Daniel Sobe <daniel.sobe@nxp.com>
+Tested-by: Daniel Sobe <daniel.sobe@nxp.com>
+Reviewed-by: Changwei Ge <gechangwei@live.cn>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/libata-core.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ fs/ocfs2/dcache.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4355,9 +4355,12 @@ static const struct ata_blacklist_entry
- 	{ "ST3320[68]13AS",	"SD1[5-9]",	ATA_HORKAGE_NONCQ |
- 						ATA_HORKAGE_FIRMWARE_WARN },
+--- a/fs/ocfs2/dcache.c
++++ b/fs/ocfs2/dcache.c
+@@ -310,6 +310,18 @@ int ocfs2_dentry_attach_lock(struct dent
  
--	/* drives which fail FPDMA_AA activation (some may freeze afterwards) */
--	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
--	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
-+	/* drives which fail FPDMA_AA activation (some may freeze afterwards)
-+	   the ST disks also have LPM issues */
-+	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
-+						ATA_HORKAGE_NOLPM, },
-+	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
-+						ATA_HORKAGE_NOLPM, },
- 	{ "VB0250EAVER",	"HPG7",		ATA_HORKAGE_BROKEN_FPDMA_AA },
- 
- 	/* Blacklist entries taken from Silicon Image 3124/3132
+ out_attach:
+ 	spin_lock(&dentry_attach_lock);
++	if (unlikely(dentry->d_fsdata && !alias)) {
++		/* d_fsdata is set by a racing thread which is doing
++		 * the same thing as this thread is doing. Leave the racing
++		 * thread going ahead and we return here.
++		 */
++		spin_unlock(&dentry_attach_lock);
++		iput(dl->dl_inode);
++		ocfs2_lock_res_free(&dl->dl_lockres);
++		kfree(dl);
++		return 0;
++	}
++
+ 	dentry->d_fsdata = dl;
+ 	dl->dl_count++;
+ 	spin_unlock(&dentry_attach_lock);
 
 
