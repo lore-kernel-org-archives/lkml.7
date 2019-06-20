@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA16FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3D11C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B1202089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6C37205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054402;
-	bh=MQN4MAjNFJVdVhKnJ8v6yKJubeZvUYDV17bY1w9W8uU=;
+	s=default; t=1561054404;
+	bh=U+Fw+56pmtSjJpXkynyZcARIJ3ukFQN6yVeJ/gkDaHU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qX+ywAVvjNGGAoEvAYP+UW12DCKLjNZbo6wELFQK6Tr0KELH1qyzviL0dFGJSQAz5
-	 RUqRe0jvMc/ERaH/9OB2GytiS3L9ZVsyCwH445WcNNQKQN8+jaP5gkjFFGp8ezTJVp
-	 GVNZ7mQVCqWNn1SwOUs3WBVNKVL8MU2byk62bLWg=
+	b=DlAH6vbL3Ul+RTFx/SwOBbF2JjxZRDE1DbtvaJDwrXHdyxyfya52DJQG/sAWYD6Kq
+	 d0IREsskISsMjVVl41BGGrs2Hw5GslXlatfxUodj7p7Cm18ovziS0AWEwrRiMww85i
+	 TgM+p0tIVeMytNb1eLwqQJ1njg7RzbFQ35coK+Kc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfFTSNU (ORCPT
+        id S1729255AbfFTSNX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:13:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41214 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:13:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729225AbfFTSNR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:13:17 -0400
+        id S1729240AbfFTSNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:13:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9435D205F4;
-        Thu, 20 Jun 2019 18:13:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A248205F4;
+        Thu, 20 Jun 2019 18:13:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054397;
-        bh=MQN4MAjNFJVdVhKnJ8v6yKJubeZvUYDV17bY1w9W8uU=;
+        s=default; t=1561054400;
+        bh=U+Fw+56pmtSjJpXkynyZcARIJ3ukFQN6yVeJ/gkDaHU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HySCpiwzGgkEOVZK27SfTVWhsQdZGT6YD6xb8R0L+2w6TeirG3Y9wygMJI775CBkD
-         6UKEu2ncJ3bdfDQsA/iZE4gc9elEIyRGHM+rHTrRSq/R6vaNoBUj7nFeznpcMs4kTD
-         bszk6qVG3VvbW4HBpk3ukgopAhTsWlEPrjoNny98=
+        b=JDROP4HSbmgc7owJ8L3+aTmubM9GHzoDo00ruvdLNuNQjde1i1gNb2aA5KRGFwpcR
+         P35KK2NZyQ+TF9J6aMI1KzbmH0QV6i3Dl4gMfOK06VsasjDI1eUvtUPk4MQWMCI1/n
+         vIQwtIShuIfDb/9R3pECKrGtXw9icaMLmwZzJ1Yk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Haiyang Zhang <haiyangz@microsoft.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 04/98] hv_netvsc: Set probe mode to sync
-Date:   Thu, 20 Jun 2019 19:56:31 +0200
-Message-Id: <20190620174349.618100712@linuxfoundation.org>
+Subject: [PATCH 5.1 05/98] ipv6: flowlabel: fl6_sock_lookup() must use atomic_inc_not_zero
+Date:   Thu, 20 Jun 2019 19:56:32 +0200
+Message-Id: <20190620174349.648944378@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -59,32 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Haiyang Zhang <haiyangz@microsoft.com>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 9a33629ba6b26caebd73e3c581ba1e6068c696a7 ]
+[ Upstream commit 65a3c497c0e965a552008db8bc2653f62bc925a1 ]
 
-For better consistency of synthetic NIC names, we set the probe mode to
-PROBE_FORCE_SYNCHRONOUS. So the names can be aligned with the vmbus
-channel offer sequence.
+Before taking a refcount, make sure the object is not already
+scheduled for deletion.
 
-Fixes: af0a5646cb8d ("use the new async probing feature for the hyperv drivers")
-Signed-off-by: Haiyang Zhang <haiyangz@microsoft.com>
+Same fix is needed in ipv6_flowlabel_opt()
+
+Fixes: 18367681a10b ("ipv6 flowlabel: Convert np->ipv6_fl_list to RCU.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/hyperv/netvsc_drv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/ip6_flowlabel.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
---- a/drivers/net/hyperv/netvsc_drv.c
-+++ b/drivers/net/hyperv/netvsc_drv.c
-@@ -2414,7 +2414,7 @@ static struct  hv_driver netvsc_drv = {
- 	.probe = netvsc_probe,
- 	.remove = netvsc_remove,
- 	.driver = {
--		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
-+		.probe_type = PROBE_FORCE_SYNCHRONOUS,
- 	},
- };
- 
+--- a/net/ipv6/ip6_flowlabel.c
++++ b/net/ipv6/ip6_flowlabel.c
+@@ -254,9 +254,9 @@ struct ip6_flowlabel *fl6_sock_lookup(st
+ 	rcu_read_lock_bh();
+ 	for_each_sk_fl_rcu(np, sfl) {
+ 		struct ip6_flowlabel *fl = sfl->fl;
+-		if (fl->label == label) {
++
++		if (fl->label == label && atomic_inc_not_zero(&fl->users)) {
+ 			fl->lastuse = jiffies;
+-			atomic_inc(&fl->users);
+ 			rcu_read_unlock_bh();
+ 			return fl;
+ 		}
+@@ -622,7 +622,8 @@ int ipv6_flowlabel_opt(struct sock *sk,
+ 						goto done;
+ 					}
+ 					fl1 = sfl->fl;
+-					atomic_inc(&fl1->users);
++					if (!atomic_inc_not_zero(&fl1->users))
++						fl1 = NULL;
+ 					break;
+ 				}
+ 			}
 
 
