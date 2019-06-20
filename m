@@ -2,178 +2,184 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C281C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:55:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9256C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:58:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34BEB2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:55:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CAE821537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:58:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAfCDZtb"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="oTUnU1I9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730969AbfFTAzJ (ORCPT
+        id S1730933AbfFTA6j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 20:55:09 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:44962 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfFTAzJ (ORCPT
+        Wed, 19 Jun 2019 20:58:39 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:35210 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726329AbfFTA6i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 20:55:09 -0400
-Received: by mail-io1-f66.google.com with SMTP id s7so863952iob.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 17:55:08 -0700 (PDT)
+        Wed, 19 Jun 2019 20:58:38 -0400
+Received: by mail-ot1-f65.google.com with SMTP id j19so1032718otq.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 17:58:37 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TtRmoGkruvSLmzfQNJOK7azAgtOLlfsMtrzHrOo4/EY=;
-        b=lAfCDZtb1DwM/J4pfSrTFUM1Gf1Z8Q0qa8RroSoOHbQFdXC+JlWuqk+9DpbtKNbUqM
-         +jpapJ+X1tyieQ+hB/nueI2gDlWuoGBe19Wg1ov12wf2d38Bm6+oSnJhmHGHgaWAp1jP
-         j44nbi6/Q27y9S1CDvzXrrKuoOMms+uJdbAOmO9hQnrOpw79u2MfLQ2C4YAgKHf/hfWm
-         dQ0janRJuPz3fT8Tg1J6tgkhLdVwNNttDaNN/YLjP8GAVFryj346xrR+VETmeOzsabrd
-         yFO9gRdiSG+3uFOBsN3GVl/TBlI6RoSkNa0qyeQ+qqp7dFyw16a397Wl/+ZkDjdxUBNO
-         hyhw==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Pv6DYs/rgMUhmFVTIlv6mQtmI4/e3SRdgmeYYSiE/gY=;
+        b=oTUnU1I9Q3P6mnwGmSHo8VtVE9FzfceDm8JYzas75iB8Vpe9bONAVPH2S3TkqM2T1F
+         AfMa+uPb+HeX3Uw62WFDmNKu7P8wioRQ2b3H0FBzHxKQnhgOOWvrNf5guNAdwAaDrF/I
+         xpJ/tV30aZvykXO0oOcH6KE4RQNKoOOFP/boZ/cieuj+impdRqlqR+E45fvl9LeIx1Md
+         p91138c9GCF1m2LJIz2xmLR3PzI9z8/c1OIFmPjKktYAjHDR16lNQgi3V8PXARwSA4Tr
+         pDxI9ygK81Mrd5QIssaBJhkHuqk1eXDNVLVe7aTsXm1Oyh8sR7oGawQguh8x4lYDolkK
+         OGhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TtRmoGkruvSLmzfQNJOK7azAgtOLlfsMtrzHrOo4/EY=;
-        b=t81BmYL+KEYa2v3uSCsPKpYXM/aVV8g9Ld9HEFLY3KK/bQwIiXHS9bmC/X2biNR7VY
-         HCD1c4oWbHjiT4bYMqKtFQsAwqTk93I0/hDO/oyIQOgv167NEfQZRlylLzb1yBnwljMl
-         Y8g1Vlonu4ClioHLtIHg/ROEh1DVWXHtcVQM4qXQmujs19nYlaV6qirQdnGgT+i79YnY
-         vclo9Uugr0nbz3nOJNO6KjBsbksbNBMBZ1cbgYTGGKgPMPUg26fSWxLhgD4D3W1N4RdM
-         xuX3TV7ZyNSa0vHoHYO+EYt5xK0d/zv3xlwvn83sso3TxgBxxtjtnAYfrtid+afDe2mZ
-         /aTQ==
-X-Gm-Message-State: APjAAAWfTb9+OknBLjYeeKq5vDkYS7Sg5l4ujOL9aS4EHq2J8WSKWUTE
-        XSSqli+gtRBNe2TodDlKVz3zJ0IbDkkQUV042qM=
-X-Google-Smtp-Source: APXvYqxIgWgfJa2h5v6NfHhR7cOJHthRCEx86Lv174iQxMcy7T6lqxw5CbcrwtneXmJpukC89D1achahMJKKogLvl+w=
-X-Received: by 2002:a5e:aa15:: with SMTP id s21mr17458310ioe.221.1560992108640;
- Wed, 19 Jun 2019 17:55:08 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pv6DYs/rgMUhmFVTIlv6mQtmI4/e3SRdgmeYYSiE/gY=;
+        b=e4BAUltng8PR/7PzhwFTbC+0Yf0fhnmvWy/wkA9+BY2G2dacmVIwXQzaEzZT/G+7QV
+         fhV1VYip0P3gdFj3lNedPeWJW4goey1LEuyHzUuzFeRTbXXBo111UC90CXU3oG8n/Ymo
+         kqXwRZCDyzfDltgu57cjovx5A4hrRkrSqxE5AQX6xpd0GjKw5Hru/DrfG/Jr/D2TJ3h7
+         9GS0/gazT5Haoy7tiS0t9PKUGnutffRF01tY/RvkDgo//GltceSj7hp5fFsMcw2LIdHH
+         lpJedwRyvU6FMYIj+KvDrdN665E+RH05ZMLPoPW3prGZnq6NuDZdPFwbrwr4Bbaho9PU
+         HsyA==
+X-Gm-Message-State: APjAAAWN/teoN6GIs/wZFl8N80V1HvF4Kz7AJ0TiF/E43KovuickLqaZ
+        iRvJdZ+jpDq5wKDDUNoRLvj77g==
+X-Google-Smtp-Source: APXvYqyGWcBsRjlJt5apXMRax/dVlTZbIM5JD9/pIw5q+E7QvXP98lnAmkC5vhNUCGfuVZN3B0sKsA==
+X-Received: by 2002:a9d:7d05:: with SMTP id v5mr8624081otn.245.1560992317485;
+        Wed, 19 Jun 2019 17:58:37 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li964-79.members.linode.com. [45.33.10.79])
+        by smtp.gmail.com with ESMTPSA id j135sm1940279oib.19.2019.06.19.17.58.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 19 Jun 2019 17:58:36 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 08:58:29 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        netdev@vger.kernel.org, bpf@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Suzuki Poulouse <suzuki.poulose@arm.com>,
+        Coresight ML <coresight@lists.linaro.org>
+Subject: Re: [PATCH] perf cs-etm: Improve completeness for kernel address
+ space
+Message-ID: <20190620005829.GH24549@leoy-ThinkPad-X240s>
+References: <20190617150024.11787-1-leo.yan@linaro.org>
+ <CANLsYkyMW=WG+=yWTLSyMT3JXqd_2kvsrx9c-EwCoKEnRZvErA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190618185502.3839-1-krzk@kernel.org> <20190618185502.3839-2-krzk@kernel.org>
-In-Reply-To: <20190618185502.3839-2-krzk@kernel.org>
-From:   Qiang Yu <yuq825@gmail.com>
-Date:   Thu, 20 Jun 2019 08:54:57 +0800
-Message-ID: <CAKGbVbvMVRiWXf8E8hpym_F7ovoXeeTc92-hh6hA6802487jOg@mail.gmail.com>
-Subject: Re: [PATCH 2/3] drm/lima: Reduce the amount of logs on deferred probe
-To:     Krzysztof Kozlowski <krzk@kernel.org>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        lima@lists.freedesktop.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CANLsYkyMW=WG+=yWTLSyMT3JXqd_2kvsrx9c-EwCoKEnRZvErA@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like lima_clk_init will have the same problem if devm_clk_get
-returns -EPROBE_DEFER.
+Hi Mathieu,
 
-Regards,
-Qiang
+On Wed, Jun 19, 2019 at 11:49:44AM -0600, Mathieu Poirier wrote:
 
-On Wed, Jun 19, 2019 at 2:55 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
->
-> There is no point to print deferred probe (and its failures to get
-> resources) as an error.  For example getting a regulator causes three
-> unneeded error messages:
->
->     lima 13000000.gpu: failed to get regulator: -517
->     lima 13000000.gpu: regulator init fail -517
->     lima 13000000.gpu: Fatal error during GPU init
->
-> Also do not print clock rates before the initialization finishes
-> because they will be duplicated after deferral.  Each probe step already
-> prints error so remove the final error message "Fatal error during GPU
-> init".
->
-> In case of multiple probe tries this would pollute the dmesg.
->
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> ---
->  drivers/gpu/drm/lima/lima_device.c | 17 ++++++-----------
->  drivers/gpu/drm/lima/lima_drv.c    |  4 +---
->  2 files changed, 7 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
-> index 570d0e93f9a9..bb2eaa4f370e 100644
-> --- a/drivers/gpu/drm/lima/lima_device.c
-> +++ b/drivers/gpu/drm/lima/lima_device.c
-> @@ -80,7 +80,6 @@ const char *lima_ip_name(struct lima_ip *ip)
->  static int lima_clk_init(struct lima_device *dev)
->  {
->         int err;
-> -       unsigned long bus_rate, gpu_rate;
->
->         dev->clk_bus = devm_clk_get(dev->dev, "bus");
->         if (IS_ERR(dev->clk_bus)) {
-> @@ -94,12 +93,6 @@ static int lima_clk_init(struct lima_device *dev)
->                 return PTR_ERR(dev->clk_gpu);
->         }
->
-> -       bus_rate = clk_get_rate(dev->clk_bus);
-> -       dev_info(dev->dev, "bus rate = %lu\n", bus_rate);
-> -
-> -       gpu_rate = clk_get_rate(dev->clk_gpu);
-> -       dev_info(dev->dev, "mod rate = %lu", gpu_rate);
-> -
->         err = clk_prepare_enable(dev->clk_bus);
->         if (err)
->                 return err;
-> @@ -145,7 +138,8 @@ static int lima_regulator_init(struct lima_device *dev)
->                 dev->regulator = NULL;
->                 if (ret == -ENODEV)
->                         return 0;
-> -               dev_err(dev->dev, "failed to get regulator: %d\n", ret);
-> +               if (ret != -EPROBE_DEFER)
-> +                       dev_err(dev->dev, "failed to get regulator: %d\n", ret);
->                 return ret;
->         }
->
-> @@ -297,10 +291,8 @@ int lima_device_init(struct lima_device *ldev)
->         }
->
->         err = lima_regulator_init(ldev);
-> -       if (err) {
-> -               dev_err(ldev->dev, "regulator init fail %d\n", err);
-> +       if (err)
->                 goto err_out0;
-> -       }
->
->         ldev->empty_vm = lima_vm_create(ldev);
->         if (!ldev->empty_vm) {
-> @@ -343,6 +335,9 @@ int lima_device_init(struct lima_device *ldev)
->         if (err)
->                 goto err_out5;
->
-> +       dev_info(ldev->dev, "bus rate = %lu\n", clk_get_rate(ldev->clk_bus));
-> +       dev_info(ldev->dev, "mod rate = %lu", clk_get_rate(ldev->clk_gpu));
-> +
->         return 0;
->
->  err_out5:
-> diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
-> index b29c26cd13b2..cebc44592e47 100644
-> --- a/drivers/gpu/drm/lima/lima_drv.c
-> +++ b/drivers/gpu/drm/lima/lima_drv.c
-> @@ -307,10 +307,8 @@ static int lima_pdev_probe(struct platform_device *pdev)
->         ldev->ddev = ddev;
->
->         err = lima_device_init(ldev);
-> -       if (err) {
-> -               dev_err(&pdev->dev, "Fatal error during GPU init\n");
-> +       if (err)
->                 goto err_out1;
-> -       }
->
->         /*
->          * Register the DRM device with the core and the connectors with
-> --
-> 2.17.1
->
+[...]
+
+> > diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> > index 51dd00f65709..4776c2c1fb6d 100644
+> > --- a/tools/perf/Makefile.config
+> > +++ b/tools/perf/Makefile.config
+> > @@ -418,6 +418,30 @@ ifdef CORESIGHT
+> >      endif
+> >      LDFLAGS += $(LIBOPENCSD_LDFLAGS)
+> >      EXTLIBS += $(OPENCSDLIBS)
+> > +    ifneq ($(wildcard $(srctree)/arch/arm64/kernel/vmlinux.lds),)
+> > +      # Extract info from lds:
+> > +      #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
+> > +      # ARM64_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000)
+> > +      ARM64_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
+> > +        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
+> > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > +        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
+> > +    else
+> > +      ARM64_PRE_START_SIZE := 0
+> > +    endif
+> > +    CFLAGS += -DARM64_PRE_START_SIZE="$(ARM64_PRE_START_SIZE)"
+> > +    ifneq ($(wildcard $(srctree)/arch/arm/kernel/vmlinux.lds),)
+> > +      # Extract info from lds:
+> > +      #   . = ((0xC0000000)) + 0x00208000;
+> > +      # ARM_PRE_START_SIZE := 0x00208000
+> > +      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
+> > +        $(srctree)/arch/arm/kernel/vmlinux.lds | \
+> > +        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
+> > +        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
+> > +    else
+> > +      ARM_PRE_START_SIZE := 0
+> > +    endif
+> > +    CFLAGS += -DARM_PRE_START_SIZE="$(ARM_PRE_START_SIZE)"
+> >      $(call detected,CONFIG_LIBOPENCSD)
+> >      ifdef CSTRACE_RAW
+> >        CFLAGS += -DCS_DEBUG_RAW
+> > diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
+> > index 0c7776b51045..ae831f836c70 100644
+> > --- a/tools/perf/util/cs-etm.c
+> > +++ b/tools/perf/util/cs-etm.c
+> > @@ -613,10 +613,34 @@ static void cs_etm__free(struct perf_session *session)
+> >  static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
+> >  {
+> >         struct machine *machine;
+> > +       u64 fixup_kernel_start = 0;
+> > +       const char *arch;
+> >
+> >         machine = etmq->etm->machine;
+> > +       arch = perf_env__arch(machine->env);
+> >
+> > -       if (address >= etmq->etm->kernel_start) {
+> > +       /*
+> > +        * Since arm and arm64 specify some memory regions prior to
+> > +        * 'kernel_start', kernel addresses can be less than 'kernel_start'.
+> > +        *
+> > +        * For arm architecture, the 16MB virtual memory space prior to
+> > +        * 'kernel_start' is allocated to device modules, a PMD table if
+> > +        * CONFIG_HIGHMEM is enabled and a PGD table.
+> > +        *
+> > +        * For arm64 architecture, the root PGD table, device module memory
+> > +        * region and BPF jit region are prior to 'kernel_start'.
+> > +        *
+> > +        * To reflect the complete kernel address space, compensate these
+> > +        * pre-defined regions for kernel start address.
+> > +        */
+> > +       if (!strcmp(arch, "arm64"))
+> > +               fixup_kernel_start = etmq->etm->kernel_start -
+> > +                                    ARM64_PRE_START_SIZE;
+> > +       else if (!strcmp(arch, "arm"))
+> > +               fixup_kernel_start = etmq->etm->kernel_start -
+> > +                                    ARM_PRE_START_SIZE;
+> 
+> I will test your work but from a quick look wouldn't it be better to
+> have a single define name here?  From looking at the modifications you
+> did to Makefile.config there doesn't seem to be a reason to have two.
+
+Thanks for suggestion.  I changed to use single define
+ARM_PRE_START_SIZE and sent patch v2 [1].
+
+If possible, please test patch v2.
+
+Thanks,
+Leo Yan
+
+[1] https://lore.kernel.org/linux-arm-kernel/20190620005428.20883-1-leo.yan@linaro.org/T/#u
+
+> > +
+> > +       if (address >= fixup_kernel_start) {
+> >                 if (machine__is_host(machine))
+> >                         return PERF_RECORD_MISC_KERNEL;
+> >                 else
+> > --
+> > 2.17.1
+> >
