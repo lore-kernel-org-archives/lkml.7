@@ -2,125 +2,106 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E22CAC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:43:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10CE4C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1672084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:43:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA256206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 19:44:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfFTTnS (ORCPT
+        id S1726947AbfFTToD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 15:43:18 -0400
-Received: from honk.sigxcpu.org ([24.134.29.49]:44604 "EHLO honk.sigxcpu.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726002AbfFTTnS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 15:43:18 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by honk.sigxcpu.org (Postfix) with ESMTP id A23C0FB06;
-        Thu, 20 Jun 2019 21:43:15 +0200 (CEST)
-X-Virus-Scanned: Debian amavisd-new at honk.sigxcpu.org
-Received: from honk.sigxcpu.org ([127.0.0.1])
-        by localhost (honk.sigxcpu.org [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id v9DpMwBc1fMx; Thu, 20 Jun 2019 21:43:14 +0200 (CEST)
-Received: by bogon.sigxcpu.org (Postfix, from userid 1000)
-        id 087FA47322; Thu, 20 Jun 2019 21:43:14 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 21:43:13 +0200
-From:   Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Johan Hovold <johan@kernel.org>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Abel Vesa <abel.vesa@nxp.com>, Li Jun <jun.li@nxp.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        DRI mailing list <dri-devel@lists.freedesktop.org>,
-        Robert Chiras <robert.chiras@nxp.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v11 2/2] phy: Add driver for mixel mipi dphy found on
- NXP's i.MX8 SoCs
-Message-ID: <20190620194313.GA13015@bogon.m.sigxcpu.org>
-References: <cover.1557657814.git.agx@sigxcpu.org>
- <2000bc4564175abd7966207a5e9fbb9bb7d82059.1557657814.git.agx@sigxcpu.org>
- <CAOMZO5BaFYJxh1v46n2mdPyc+-jg6LgvoGR1rTE+yHZg_0Z8PA@mail.gmail.com>
- <69fcb327-8b51-df9e-12d9-d75751974bce@ti.com>
- <9a872f5b-1544-32a0-bd93-1d6333468114@ti.com>
+        Thu, 20 Jun 2019 15:44:03 -0400
+Received: from relay8-d.mail.gandi.net ([217.70.183.201]:45177 "EHLO
+        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726002AbfFTToD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 15:44:03 -0400
+X-Originating-IP: 90.65.161.137
+Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id A75011BF20A;
+        Thu, 20 Jun 2019 19:43:58 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 21:43:58 +0200
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     linux-rtc@vger.kernel.org
+Cc:     Dylan Howey <Dylan.Howey@tennantco.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] rtc: pcf2123: convert to devm_rtc_allocate_device
+Message-ID: <20190620194358.GE23549@piout.net>
+References: <20190620183433.30779-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <9a872f5b-1544-32a0-bd93-1d6333468114@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190620183433.30779-1-alexandre.belloni@bootlin.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-On Thu, Jun 20, 2019 at 02:18:53PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
+On 20/06/2019 20:34:30+0200, Alexandre Belloni wrote:
+> This allows further improvement of the driver.
 > 
-> On 24/05/19 9:31 PM, Kishon Vijay Abraham I wrote:
-> > Hi,
-> > 
-> > On 24/05/19 5:53 PM, Fabio Estevam wrote:
-> >> Hi Kishon,
-> >>
-> >> On Sun, May 12, 2019 at 7:49 AM Guido Günther <agx@sigxcpu.org> wrote:
-> >>>
-> >>> This adds support for the Mixel DPHY as found on i.MX8 CPUs but since
-> >>> this is an IP core it will likely be found on others in the future. So
-> >>> instead of adding this to the nwl host driver make it a generic PHY
-> >>> driver.
-> >>>
-> >>> The driver supports the i.MX8MQ. Support for i.MX8QM and i.MX8QXP can be
-> >>> added once the necessary system controller bits are in via
-> >>> mixel_dphy_devdata.
-> >>>
-> >>> Signed-off-by: Guido Günther <agx@sigxcpu.org>
-> >>> Co-developed-by: Robert Chiras <robert.chiras@nxp.com>
-> >>> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
-> >>> Reviewed-by: Fabio Estevam <festevam@gmail.com>
-> >>> Reviewed-by: Sam Ravnborg <sam@ravnborg.org>
-> >>
-> >> Would you have any comments on this series, please?
-> > 
-> > I don't have any comments. I'll queue this once I start queuing patches for the
-> > next merge window.
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-pcf2123.c | 24 +++++++++++++++---------
+>  1 file changed, 15 insertions(+), 9 deletions(-)
 > 
-> Can you fix the following checkpatch warning and repost?
-> WARNING: quoted string split across lines
-> #420: FILE: drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:280:
-> +	dev_dbg(&phy->dev, "hs_prepare: %u, clk_prepare: %u, "
-> +		"hs_zero: %u, clk_zero: %u, "
-> 
-> WARNING: quoted string split across lines
-> #421: FILE: drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:281:
-> +		"hs_zero: %u, clk_zero: %u, "
-> +		"hs_trail: %u, clk_trail: %u, "
-> 
-> WARNING: quoted string split across lines
-> #422: FILE: drivers/phy/freescale/phy-fsl-imx8-mipi-dphy.c:282:
-> +		"hs_trail: %u, clk_trail: %u, "
-> +		"rxhs_settle: %u\n",
+> diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
+> index e8100af789ef..29e09ff57f89 100644
+> --- a/drivers/rtc/rtc-pcf2123.c
+> +++ b/drivers/rtc/rtc-pcf2123.c
+> @@ -411,14 +411,9 @@ static int pcf2123_probe(struct spi_device *spi)
+>  			(spi->max_speed_hz + 500) / 1000);
+>  
+>  	/* Finalize the initialization */
+> -	rtc = devm_rtc_device_register(&spi->dev, pcf2123_driver.driver.name,
+> -			&pcf2123_rtc_ops, THIS_MODULE);
+> -
+> -	if (IS_ERR(rtc)) {
+> -		dev_err(&spi->dev, "failed to register.\n");
+> -		ret = PTR_ERR(rtc);
+> -		goto kfree_exit;
+> -	}
+> +	rtc = devm_rtc_allocate_device(&spi->dev);
+> +	if (IS_ERR(rtc))
+> +		return PTR_ERR(rtc);
+>  
+>  	pdata->rtc = rtc;
+>  
+> @@ -438,7 +433,18 @@ static int pcf2123_probe(struct spi_device *spi)
+>  	 * support to this driver to generate interrupts more than once
+>  	 * per minute.
+>  	 */
+> -	pdata->rtc->uie_unsupported = 1;
+> +	rtc->uie_unsupported = 1;
+> +	rtc->ops = &pcf2123_rtc_ops;
+> +
+> +	ret = rtc_register_device(rtc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (IS_ERR(rtc)) {
+> +		dev_err(&spi->dev, "failed to register.\n");
+> +		ret = PTR_ERR(rtc);
+> +		goto kfree_exit;
+> +	}
+>  
 
-Fixed in v12.
-Thanks,
- -- Guido
+I need to rework that part, I'll resend...
+
+>  	return 0;
+>  
+> -- 
+> 2.21.0
+> 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
