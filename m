@@ -2,131 +2,87 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1CBFC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:15:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26393C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AF5A2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:15:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="P9JNy3PK"
+	by mail.kernel.org (Postfix) with ESMTP id F15AC2064B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:17:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732244AbfFTQPz (ORCPT
+        id S1732269AbfFTQR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:15:55 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:11668 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726881AbfFTQPy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:15:54 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0bb13a0001>; Thu, 20 Jun 2019 09:15:54 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Jun 2019 09:15:53 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 09:15:53 -0700
-Received: from HQMAIL101.nvidia.com (172.20.187.10) by HQMAIL104.nvidia.com
- (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
- 2019 16:15:53 +0000
-Received: from hqnvemgw02.nvidia.com (172.16.227.111) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Thu, 20 Jun 2019 16:15:53 +0000
-Received: from linux.nvidia.com (Not Verified[10.24.34.185]) by hqnvemgw02.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5d0bb1370000>; Thu, 20 Jun 2019 09:15:53 -0700
-From:   Sameer Pujar <spujar@nvidia.com>
-To:     <vkoul@kernel.org>, <dan.j.williams@intel.com>
-CC:     <thierry.reding@gmail.com>, <jonathanh@nvidia.com>,
-        <ldewangan@nvidia.com>, <dmaengine@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Sameer Pujar <spujar@nvidia.com>
-Subject: [PATCH] dmaengine: tegra210-adma: fix transfer failure
-Date:   Thu, 20 Jun 2019 21:45:48 +0530
-Message-ID: <1561047348-14413-1-git-send-email-spujar@nvidia.com>
-X-Mailer: git-send-email 2.7.4
+        Thu, 20 Jun 2019 12:17:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:58983 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726661AbfFTQR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:17:28 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 09:17:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="162414210"
+Received: from waelreed-mobl1.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.63.228])
+  by fmsmga007.fm.intel.com with ESMTP; 20 Jun 2019 09:17:25 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 42E1521D88; Thu, 20 Jun 2019 19:17:22 +0300 (EEST)
+Date:   Thu, 20 Jun 2019 19:17:22 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Hugues Fruchet <hugues.fruchet@st.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Yannick Fertre <yannick.fertre@st.com>,
+        Philippe CORNU <philippe.cornu@st.com>,
+        Mickael GUENE <mickael.guene@st.com>
+Subject: Re: [PATCH v2 0/3] DCMI bridge support
+Message-ID: <20190620161721.h3wn4nibomrvriw4@kekkonen.localdomain>
+References: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561047354; bh=ohJbaSrus9ivGDKfVAYHPSEvxvcXu3P+/EkE2Rx69dQ=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
-         MIME-Version:Content-Type;
-        b=P9JNy3PKkOH53Xbyzr0tn2IzDyUc6rvw1q6vv4EefhJPW0Ls6gIkxtwv15tDDQ9O0
-         QUQrXsyAoxOmCBB76werU/Km/AA7SZ+37LHZLHI7Ut8rIOUMkEqqrw2hbNcO4Q71zC
-         LTNbfXnbxK2A5flHVFQd+OZxkoJ8sSRZq3Qku8Dq/lS3dvnN64wTuT/YgyhX4lz0c+
-         BxTImo6r1ORM2cX+MFz9eAMEmP3TYWLkNGziFFgzYFv0U9ie7O8hrY/vARgiL91mN/
-         cBopQJ43ksFgPQ2MBsveaW6qBaqdf0wfO20gij0K6I+u4KMpj37de3WGA4PF8ndo06
-         xWcLQ3z9qRQWA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1560242912-17138-1-git-send-email-hugues.fruchet@st.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
-configuration register (bits 7:4). ADMA allows a maximum of 8 reads
-to source and that many writes to target memory be outstanding at any
-given point of time. If this field is not programmed, DMA transfers
-fail to happen.
+Hi Hugues,
 
-Thus added 'ch_pending_req' member in chip data structure and the
-same is populated with maximum allowed pending requests. Since the
-field is not applicable to Tegra210, mentioned bit fields are unused
-and hence the member is initialized with 0.
+On Tue, Jun 11, 2019 at 10:48:29AM +0200, Hugues Fruchet wrote:
+> This patch serie allows to connect non-parallel camera sensor to
+> DCMI thanks to a bridge connected in between such as STMIPID02 [1].
+> 
+> Media controller support is introduced first, then support of
+> several sub-devices within pipeline with dynamic linking
+> between them.
+> In order to keep backward compatibility with applications
+> relying on V4L2 interface only, format set on video node
+> is propagated to all sub-devices connected to camera interface.
+> 
+> [1] https://www.spinics.net/lists/devicetree/msg278002.html
 
-Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
+General notes on the set, not related to any single patch:
 
-Signed-off-by: Sameer Pujar <spujar@nvidia.com>
----
- drivers/dma/tegra210-adma.c | 5 +++++
- 1 file changed, 5 insertions(+)
+- Where's the sub-device representing the bridge itself?
 
-diff --git a/drivers/dma/tegra210-adma.c b/drivers/dma/tegra210-adma.c
-index 17ea4dd99..8d291cf 100644
---- a/drivers/dma/tegra210-adma.c
-+++ b/drivers/dma/tegra210-adma.c
-@@ -96,6 +96,7 @@ struct tegra_adma;
-  * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
-  * @ch_req_rx_shift: Register offset for AHUB receive channel select.
-  * @ch_base_offset: Register offset of DMA channel registers.
-+ * @ch_pending_req: Outstaning DMA requests for a channel.
-  * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
-  * @ch_req_mask: Mask for Tx or Rx channel select.
-  * @ch_req_max: Maximum number of Tx or Rx channels available.
-@@ -109,6 +110,7 @@ struct tegra_adma_chip_data {
- 	unsigned int ch_req_tx_shift;
- 	unsigned int ch_req_rx_shift;
- 	unsigned int ch_base_offset;
-+	unsigned int ch_pending_req;
- 	unsigned int ch_fifo_ctrl;
- 	unsigned int ch_req_mask;
- 	unsigned int ch_req_max;
-@@ -613,6 +615,7 @@ static int tegra_adma_set_xfer_params(struct tegra_adma_chan *tdc,
- 			 ADMA_CH_CTRL_FLOWCTRL_EN;
- 	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
- 	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
-+	ch_regs->config |= cdata->ch_pending_req;
- 	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
- 	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
- 
-@@ -797,6 +800,7 @@ static const struct tegra_adma_chip_data tegra210_chip_data = {
- 	.ch_req_tx_shift	= 28,
- 	.ch_req_rx_shift	= 24,
- 	.ch_base_offset		= 0,
-+	.ch_pending_req		= 0,
- 	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
- 	.ch_req_mask		= 0xf,
- 	.ch_req_max		= 10,
-@@ -811,6 +815,7 @@ static const struct tegra_adma_chip_data tegra186_chip_data = {
- 	.ch_req_tx_shift	= 27,
- 	.ch_req_rx_shift	= 22,
- 	.ch_base_offset		= 0x10000,
-+	.ch_pending_req		= (8 << 4),
- 	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
- 	.ch_req_mask		= 0x1f,
- 	.ch_req_max		= 20,
+- As the driver becomes MC-centric, crop configuration takes place through
+  V4L2 sub-device interface, not through the video device node.
+
+- Same goes for accessing sensor configuration: it does not take place
+  through video node but through the sub-device nodes.
+
 -- 
-2.7.4
+Kind regards,
 
+Sakari Ailus
+sakari.ailus@linux.intel.com
