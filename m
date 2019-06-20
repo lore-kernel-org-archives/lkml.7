@@ -2,143 +2,99 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A4E6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 728ECC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F407620B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF8620B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="SblfIPUm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UT17hYIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731028AbfFTDF2 (ORCPT
+        id S1731344AbfFTDGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 23:05:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:43439 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfFTDF2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 23:05:28 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TmsJ0ZLQz9s4Y;
-        Thu, 20 Jun 2019 13:05:24 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560999924;
-        bh=QaFCNX3OUowNfBv/P8OXlaNhXbceCmWNBURqyz3+3vk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=SblfIPUmgcDiTRpZ6z6MK4oxViUQ6bAsWSKakSVmbZbNdP8mn5dJb/ntKwr3kKx8S
-         Y4nIxOoh6aML54HxAGaLwLXwDsKYbfi+9A3/iLW5OsswJJsW/6J5MVS6NaXL/eVorz
-         2NbC2sOy2Y4Y12rr4zQaPiVXXbZn3a1GGgbyOiPP4i4ATbnXn3998+ULTiJpg6SbBb
-         OiVnbOo3nfztkND4YeNWxnUMcy3qlNeZ5nXF+7F91JCJn3n8kWbFaoksgyyxWktTki
-         UbL/iz7Lc5y4fR/Qhpl3gNGSjQSXVRz0h2+/pQ8JPKUAqVKcPiNE37WqyQKI8+jg/V
-         CXdur/htfM+8g==
-Date:   Thu, 20 Jun 2019 13:05:23 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Leon Romanovsky <leon@kernel.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
-        Maor Gottlieb <maorg@mellanox.com>
-Subject: Re: linux-next: manual merge of the mlx5-next tree with Linus' tree
-Message-ID: <20190620130523.176d4ca5@canb.auug.org.au>
-In-Reply-To: <20190617121959.55976690@canb.auug.org.au>
-References: <20190617121959.55976690@canb.auug.org.au>
+        Wed, 19 Jun 2019 23:06:25 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:36737 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726370AbfFTDGY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 23:06:24 -0400
+Received: by mail-pf1-f194.google.com with SMTP id r7so799783pfl.3
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 20:06:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=FbHOn34+83W+J2f3XHDBG84b3Et0zmkMSETpfTN9TuM=;
+        b=UT17hYIwO07T+JXmCNzUy25KZuNg7TFnGECmDQriV9z5Zc5iK/562PnnVfxwrM6+/z
+         NN9S6GFPYLifZ84Wh7XCcbJGNkV5Y7UWS40WSuZzMCL7Z0Qt34GwRoKObd+F35Ng7MKB
+         D1UOxmySiMuh5cLXRmvJ0EuTneYj6dlX84Fg5tPOac5vsS/WUkniFmlUUTY2F8CnwDM1
+         NrPVz78uVqELIPnN25wEg7YF4YXExqJvtPk8NbE+K8yrNvtiY47q8cUYa8GpX0KWbK4i
+         ded7OAYwOaUzU6wiTK/rOLNSus+CjQO6rUy5BKlxEdZn8ZA3EkBVeMThnnUkTQDmTfrb
+         OLrg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=FbHOn34+83W+J2f3XHDBG84b3Et0zmkMSETpfTN9TuM=;
+        b=H+PF5z611+9SnTKEtZ6worAbTiz3MKJkZLkxC4m0KVD3h+L29N3QRW6WHgKUBhztqE
+         sXyK30EZufDq6awAlvyYf+fmRfoDrh7DPMAGaLy2JuwrAX1Kqkoo66sf3EKK7a0XCxnb
+         5bkzocw+NYhL0dDfN9UuK7DCcleUY7fDN0f5UyUvXBX6aNmEPJlJbe1tPqx1X1QqiKWp
+         XQBqN7Bw5c1JYEG+egXuABp4rGt7gQ7KYs/UxsD3xftVx9/iZc7yU+blpGoskkPT3G/Q
+         CNgxh2mFQnDXrOccRWs6GyTvKl7O2VhD+8AN3yBzvX56TDswBRyWeWLTjQSqj7TvrmoA
+         uytw==
+X-Gm-Message-State: APjAAAXz1ihWP5NOeRdfUsBVxwDKD3uDgGa7N5ELYLouy5U71h4iM3lH
+        N7ioaAgXyvyIDEqMvYhxJWxpRg==
+X-Google-Smtp-Source: APXvYqwJTRDFmZNAIEaGMNDIRyAWQI1nd69Xf4gQfwcFrHb5UyE97h39NTtwabsG2oSB4Bjr2oCrzw==
+X-Received: by 2002:a62:28b:: with SMTP id 133mr5409487pfc.251.1560999983761;
+        Wed, 19 Jun 2019 20:06:23 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id g2sm18949048pgi.92.2019.06.19.20.06.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 20:06:23 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 1/5] cpufreq: Remove the redundant !setpolicy check
+Date:   Thu, 20 Jun 2019 08:35:46 +0530
+Message-Id: <b9bac95bcc36f5f70e910e4801be5d4f8fd32d0c.1560999838.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
+In-Reply-To: <cover.1560999838.git.viresh.kumar@linaro.org>
+References: <cover.1560999838.git.viresh.kumar@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/euKSa5GIot+P+XpVrVMRuyU"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/euKSa5GIot+P+XpVrVMRuyU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+cpufreq_start_governor() is only called for !setpolicy case, checking it
+again is not required.
 
-Hi all,
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/cpufreq/cpufreq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-On Mon, 17 Jun 2019 12:19:59 +1000 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> Hi Leon,
->=20
-> Today's linux-next merge of the mlx5-next tree got a conflict in:
->=20
->   include/linux/mlx5/eswitch.h
->=20
-> between commit:
->=20
->   02f3afd97556 ("net/mlx5: E-Switch, Correct type to u16 for vport_num an=
-d int for vport_index")
->=20
-> from Linus' tree and commit:
->=20
->   82b11f071936 ("net/mlx5: Expose eswitch encap mode")
->=20
-> from the mlx5-next tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc include/linux/mlx5/eswitch.h
-> index e9a55c0d50fd,174eec0871d9..000000000000
-> --- a/include/linux/mlx5/eswitch.h
-> +++ b/include/linux/mlx5/eswitch.h
-> @@@ -61,5 -62,16 +62,16 @@@ void *mlx5_eswitch_uplink_get_proto_dev
->   u8 mlx5_eswitch_mode(struct mlx5_eswitch *esw);
->   struct mlx5_flow_handle *
->   mlx5_eswitch_add_send_to_vport_rule(struct mlx5_eswitch *esw,
->  -				    int vport, u32 sqn);
->  +				    u16 vport_num, u32 sqn);
-> +=20
-> + #ifdef CONFIG_MLX5_ESWITCH
-> + enum devlink_eswitch_encap_mode
-> + mlx5_eswitch_get_encap_mode(const struct mlx5_core_dev *dev);
-> + #else  /* CONFIG_MLX5_ESWITCH */
-> + static inline enum devlink_eswitch_encap_mode
-> + mlx5_eswitch_get_encap_mode(const struct mlx5_core_dev *dev)
-> + {
-> + 	return DEVLINK_ESWITCH_ENCAP_MODE_NONE;
-> + }
-> + #endif /* CONFIG_MLX5_ESWITCH */
->   #endif
+diff --git a/drivers/cpufreq/cpufreq.c b/drivers/cpufreq/cpufreq.c
+index 85ff958e01f1..54befd775bd6 100644
+--- a/drivers/cpufreq/cpufreq.c
++++ b/drivers/cpufreq/cpufreq.c
+@@ -2153,7 +2153,7 @@ static int cpufreq_start_governor(struct cpufreq_policy *policy)
+ 
+ 	pr_debug("%s: for CPU %u\n", __func__, policy->cpu);
+ 
+-	if (cpufreq_driver->get && !cpufreq_driver->setpolicy)
++	if (cpufreq_driver->get)
+ 		cpufreq_update_current_freq(policy);
+ 
+ 	if (policy->governor->start) {
+-- 
+2.21.0.rc0.269.g1a574e7a288b
 
-This is now a conflict between Linus' tree and the rdma tree.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/euKSa5GIot+P+XpVrVMRuyU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0K9/MACgkQAVBC80lX
-0GzcpwgAkRzLJxsJ9PEtIuB/1ndwzOu8ff49Df/KyvUOkvAXs0zTtEEpVDgUoYyd
-raRa3uBPZzHOY5WxiJ6wQ7FLSf048agh4x2wT30WXp1NuHqdowW03J/+7onhc2YK
-RDkXXXZqWLIcyKieIegVjaEXdTrJayYs62pJZlUh8bRrLHyMR1HDACjArOhdPrlT
-zmU2HX1325OKVeXDkK/LS1aXdhTF3qxf/4At4LICkDBtuHfZvu8BCazmEwUP/w5b
-rDtzYkmplSWkcNrj1O27NSRjtvl/7Gly96hrpS1nnjdMs3Ic1LAxGmR0bfPWkQpQ
-HPZwCSfYHcPD+HBl5dYWwkrnlXb+zQ==
-=gqPH
------END PGP SIGNATURE-----
-
---Sig_/euKSa5GIot+P+XpVrVMRuyU--
