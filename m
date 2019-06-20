@@ -2,145 +2,92 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C70C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D163DC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:41:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B230D2147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:40:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA8A62147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:41:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=themaw.net header.i=@themaw.net header.b="Nx/xu37G";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="vlWmNlaG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htKUfnGk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726293AbfFTEkd (ORCPT
+        id S1731240AbfFTElG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 00:40:33 -0400
-Received: from out2-smtp.messagingengine.com ([66.111.4.26]:54593 "EHLO
-        out2-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbfFTEkc (ORCPT
+        Thu, 20 Jun 2019 00:41:06 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44846 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfFTElG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 00:40:32 -0400
-Received: from compute1.internal (compute1.nyi.internal [10.202.2.41])
-        by mailout.nyi.internal (Postfix) with ESMTP id B8CFF21C46;
-        Thu, 20 Jun 2019 00:40:31 -0400 (EDT)
-Received: from mailfrontend2 ([10.202.2.163])
-  by compute1.internal (MEProxy); Thu, 20 Jun 2019 00:40:31 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=themaw.net; h=
-        message-id:subject:from:to:cc:date:in-reply-to:references
-        :content-type:mime-version:content-transfer-encoding; s=fm3; bh=
-        bO10TrMSXc4cbtBZ1aAhOLsOyVdLkD26hY7cPj0wvnE=; b=Nx/xu37GMJogDhyr
-        wSOnM+xusi5GPCusW0P1Pz5jFe+2V5NuAmqTkNPTQHcU+usEKfo2X/phETiLmPfm
-        tZtt19ity+lbdyqBUvnle32A4v21mNwUEADW7CQHY755hNETux9CUviyXbolLFll
-        iLkwpHWTgP7cOz9s+mb3sXl+B6PfUAhEXsRvK5EoKmZcxLjmUyE0Hj3S4jiusZx9
-        SwzogYBeuUlxa1dDw4uUWTR8uppM/GuPFbD87aBJCPShqJs5cVtXZqxkU7Z8R42J
-        Y+fSJccm/wrj/UvQl1GC/CGPnRmuROLpjSIkWuXydu/SP7QYfio0oWxzmXsS7bHS
-        L11wuQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:in-reply-to:message-id:mime-version:references
-        :subject:to:x-me-proxy:x-me-proxy:x-me-sender:x-me-sender
-        :x-sasl-enc; s=fm3; bh=bO10TrMSXc4cbtBZ1aAhOLsOyVdLkD26hY7cPj0wv
-        nE=; b=vlWmNlaG3ecVfiAoyzfKSQOfD51jf7K3puGsMZAeuYKwng3bIBW0S2MvO
-        Iv73UNlQs+Ej2RWc3f+Q/IZaq6UQg6vvJS5ZwZX51Y4SGHrkpnRTSV0stYeBV0hP
-        VaKCc+EfK9CdjYMxKn2Ra0Ww5qiW1T8bAZadhnYoHkPVm3j+cjD3272vU0W5faTi
-        w8299pFh7K7mrJ2P/w5u1nLFQGROmtu++8cWRl7PEDoC06PYQHV6rPCHMlta6nhj
-        7NogVMfwP0pMev0Uh6Or9PrXZzYVPEBUV8FAYtEMIfmRDvrTB+x8E37JPvulM75Q
-        098GJfuCXiH0NYkVfZxjUlGDh5R6Q==
-X-ME-Sender: <xms:Pw4LXSM169v8bVLKq7WbMyXhs8CvOZxjARXRfpRUUmBKGqTpZuFcMw>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduvddrtdefgdekgecutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpefkuffhvfffjghftggfggfgsehtjeertddtreejnecuhfhrohhmpefkrghnucfm
-    vghnthcuoehrrghvvghnsehthhgvmhgrfidrnhgvtheqnecukfhppeduudekrddvtdelrd
-    dujeefrdefgeenucfrrghrrghmpehmrghilhhfrhhomheprhgrvhgvnhesthhhvghmrgif
-    rdhnvghtnecuvehluhhsthgvrhfuihiivgeptd
-X-ME-Proxy: <xmx:Pw4LXSRrb-fX_TE7HXFI95QtvWgAtWNiCy-7bGGmAahgR4ABdklPwQ>
-    <xmx:Pw4LXbs9DXASFjh8jQZ-B1gxDl1FdIpe49UnGLJXVLt0mt2gdae3ww>
-    <xmx:Pw4LXYWKOvaIt1xou2CWzrFv870ti-5T7mN2dTFLVTYKZIbfYZyYKw>
-    <xmx:Pw4LXWqqZUuMrhD2uSGmH9Ou9ISH0VrokJ10V_o2fNTI-w70nuBivg>
-Received: from pluto.themaw.net (unknown [118.209.173.34])
-        by mail.messagingengine.com (Postfix) with ESMTPA id B4188380079;
-        Thu, 20 Jun 2019 00:40:30 -0400 (EDT)
-Received: from localhost (localhost [127.0.0.1])
-        by pluto.themaw.net (Postfix) with ESMTP id 09B2A1C00FC;
-        Thu, 20 Jun 2019 12:40:27 +0800 (AWST)
-Message-ID: <1ea8ec52ce19499f021510b5c9e38be8d8ebe38f.camel@themaw.net>
-Subject: Re: [PATCH 05/13] vfs: don't parse "silent" option
-From:   Ian Kent <raven@themaw.net>
-To:     Miklos Szeredi <mszeredi@redhat.com>,
-        David Howells <dhowells@redhat.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>, linux-api@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Thu, 20 Jun 2019 12:40:26 +0800
-In-Reply-To: <20190619123019.30032-5-mszeredi@redhat.com>
-References: <20190619123019.30032-1-mszeredi@redhat.com>
-         <20190619123019.30032-5-mszeredi@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+        Thu, 20 Jun 2019 00:41:06 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k18so1328673ljc.11;
+        Wed, 19 Jun 2019 21:41:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=FFdFnoNnAiDrKBDnBQl6IzC73ew0CForrhj2N/+lPpI=;
+        b=htKUfnGk/fy8vMOz+kSidx/BLqorR8tSiJNAfViwlK2xEi3kj1M+k3hyE2dZPZbNGD
+         lytFv5G24a5jrUy3okmx/snZPB5r2BaqCJlZhwij071xnGPbTDEY3fe0uMG8zKDC5csC
+         9h4aO1Fw04jd5Q356Q9NFhUGEjibKnCXOLLCww0s1Arm1oQbP+++Je0asa0OqzfhmX3g
+         Rp/oEyhGO0BPcd8e8/Z+Ots4FGPYsyoL9xYkAMZCSqwaWRF/FHEbcWPwxLPZZSmW71VY
+         f/OP3Wllcbnc9fwIUoLtkFXH8EcVjZT0BfkEBPZsLEiwyKupQqKkb94YSkQJGc+3H0vI
+         T2eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=FFdFnoNnAiDrKBDnBQl6IzC73ew0CForrhj2N/+lPpI=;
+        b=XcgyA8ys8L8AV1x3AEFxmA2xeEn/q1sNmkBr5nz1dUK5MKD2t+gOo3w2RQyrjg6vZT
+         BcWQWv0Gcok+gFsGUf1UVjldfTu1+c+mpsS1kKmTCaXL2FOdk0omHuPXYINZAOCSYhEe
+         1Z1WArmkCOfY+HwXqF6XrZZrqX7xMyYeeTTLuh/3lLIvUtgZm6zg0jIjesDXq/GXZIEc
+         e1OdIAbPZyBl11QijrNyZGGw4GMdIBfQ3HKwjQWVP/rrif4GfclQU5HdoBCMw/HPSuPy
+         hwCpmhNOIbcxsUJtFoJkxHCoETAoNz+G1E4NZl26gXF5Wh3yApgYyy7lX/148IybnYwQ
+         VujQ==
+X-Gm-Message-State: APjAAAW6req+AeXuztcM4W3LD6Sr/b035EYtfRISP0HurGyL7g5pDoQq
+        7gH89lOEuoF8TFi7WSHFUtPfOpyFSEoM5hlleXc=
+X-Google-Smtp-Source: APXvYqykxJrfIijUvjolMDf4P69c8DbVQ4kUxhAabpLgUasSGfYtRzQNIUcKgaa0J3UBzcmMV4e+ROSEFBGO1E4QLBA=
+X-Received: by 2002:a2e:9dca:: with SMTP id x10mr36621568ljj.17.1561005663593;
+ Wed, 19 Jun 2019 21:41:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+References: <20190619160207.GA26960@embeddedor>
+In-Reply-To: <20190619160207.GA26960@embeddedor>
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date:   Wed, 19 Jun 2019 21:40:52 -0700
+Message-ID: <CAADnVQLpvxcX34TgAXK7ydkSUKxiedDymF=2REcjC_7mVKpe+w@mail.gmail.com>
+Subject: Re: [PATCH][bpf] bpf: verifier: add break statement in switch
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
+        Network Development <netdev@vger.kernel.org>,
+        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
+        Kees Cook <keescook@chromium.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-06-19 at 14:30 +0200, Miklos Szeredi wrote:
-> While this is a standard option as documented in mount(8), it is ignored by
-> most filesystems.  So reject, unless filesystem explicitly wants to handle
-> it.
-> 
-> The exception is unconverted filesystems, where it is unknown if the
-> filesystem handles this or not.
-> 
-> Any implementation, such as mount(8) that needs to parse this option
-> without failing should simply ignore the return value from fsconfig().
+On Wed, Jun 19, 2019 at 9:02 AM Gustavo A. R. Silva
+<gustavo@embeddedor.com> wrote:
+>
+> Notice that in this case, it's much clearer to explicitly add a break
+> rather than letting the code to fall through. It also avoid potential
+> future fall-through warnings[1].
+>
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+>
+> [1] https://lore.kernel.org/patchwork/patch/1087056/
+>
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-In theory this is fine but every time someone has attempted
-to change the handling of this in the past autofs has had
-problems so I'm a bit wary of the change.
-
-It was originally meant to tell the file system to ignore
-invalid options such as could be found in automount maps that
-are used with multiple OS implementations that have differences
-in their options.
-
-That was, IIRC, primarily NFS although NFS should handle most
-(if not all of those) cases these days.
-
-Nevertheless I'm a bit nervous about it, ;)
-
-> 
-> Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
-> ---
->  fs/fs_context.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/fs_context.c b/fs/fs_context.c
-> index 49636e541293..c26b353aa858 100644
-> --- a/fs/fs_context.c
-> +++ b/fs/fs_context.c
-> @@ -51,7 +51,6 @@ static const struct constant_table common_clear_sb_flag[] =
-> {
->  	{ "nolazytime",	SB_LAZYTIME },
->  	{ "nomand",	SB_MANDLOCK },
->  	{ "rw",		SB_RDONLY },
-> -	{ "silent",	SB_SILENT },
->  };
->  
->  /*
-> @@ -535,6 +534,9 @@ static int legacy_parse_param(struct fs_context *fc,
-> struct fs_parameter *param)
->  	if (ret != -ENOPARAM)
->  		return ret;
->  
-> +	if (strcmp(param->key, "silent") == 0)
-> +		fc->sb_flags |= SB_SILENT;
-> +
->  	if (strcmp(param->key, "source") == 0) {
->  		if (param->type != fs_value_is_string)
->  			return invalf(fc, "VFS: Legacy: Non-string source");
-
+this type of changes are not suitable for bpf tree.
+Pls submit both as single patch to bpf-next
