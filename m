@@ -1,198 +1,284 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 525D2C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 136A5C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:01:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 23F2F208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:01:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="k/I4WdmD"
+	by mail.kernel.org (Postfix) with ESMTP id CD6CC208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:01:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561006904;
+	bh=J+g9JHKCIDznTB42ZNE7SXVxdE9a/aQgLR0Vpu/mEko=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=F+JNFQhtqyQH7BLyRieosHONk0QsLkmidJWw6kCUgKmHpTjfdQW4/QzKmAhsYYMrw
+	 Rs/HXIgR2Ts8T8YF3HfZkkalv3h6fXFIyg1g8ERRpUAunzl+esG53KcgOGzfLRzUtr
+	 k9gClHXF/owh7XKMEhgEO/CdnlUbsOiIRgVLVBso=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726313AbfFTFBB (ORCPT
+        id S1731179AbfFTFBl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 01:01:01 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:1709 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTFBB (ORCPT
+        Thu, 20 Jun 2019 01:01:41 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:45170 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTFBl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 01:01:01 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0b130a0000>; Wed, 19 Jun 2019 22:00:58 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Wed, 19 Jun 2019 22:00:58 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Wed, 19 Jun 2019 22:00:58 -0700
-Received: from [10.19.65.14] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
- 2019 05:00:54 +0000
-Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
-To:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Dmitry Osipenko <digetx@gmail.com>
-CC:     Shardar Mohammed <smohammed@nvidia.com>,
-        Sowjanya Komatineni <skomatineni@nvidia.com>,
-        Mantravadi Karthik <mkarthik@nvidia.com>,
-        "Thierry Reding" <thierry.reding@gmail.com>
-References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
-From:   Bitan Biswas <bbiswas@nvidia.com>
-Message-ID: <a2a94eb5-c3c3-24bb-e7a6-0d02f2546f94@nvidia.com>
-Date:   Wed, 19 Jun 2019 22:00:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 01:01:41 -0400
+Received: by mail-pf1-f196.google.com with SMTP id r1so931042pfq.12;
+        Wed, 19 Jun 2019 22:01:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZnHKcO/AdXB5nY2IUk+trHT+q+fznBBu7HQwtNrjGAk=;
+        b=Qa3bydsIHKJBhOMk7gYmp0o3qMDC3J5LhBP9lfxk1676C6RCjuIJ5yk6OTwQ6tk3U5
+         oMR25pVuLTNI2CE3iStstuYkCoNFtMKo0RfCFvn1mRHdhyuZlRHr+fZ9qKMPB1HXrqFm
+         rxae4Q9Gl+ojjqDc9sFeZQkOAqjopHSk8cg2D0l1ofFZdRiZj9+RY2v2VBg+dUg8RidI
+         EMwcuUroZ7RX2BXI/CDHOIzDL7Y7DLfYKmgEW9Sd7wHIkXmbF1TV2gngnAsA8khnIOTa
+         z5iMFTWNKEWSocl9UZE5KYPIlUv1g1jzGqkoks6uZPD3vyVWIJswB/SiMY5OLv9XKJan
+         JjEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZnHKcO/AdXB5nY2IUk+trHT+q+fznBBu7HQwtNrjGAk=;
+        b=E+hw4NLdX3x96+hqr8Uh6GN9TE8Zj85oD4WoZekDRW67uyLgtgZCzjsg468g+1ZxsO
+         NiJJi2VjgpzkoyUc+Jc8UNWsodiKhwMPwRXEP48cyozU2gx588UQE+0T/DNQrjLjKB05
+         /PubUBNLhJOu3YuoI6k8WTc+8t3C65TpqGGRN3zY0ae29ovIYmwlimBWWHg6Q4U/oUhH
+         tr07jRAxUr5/dZPu+Gffbo4xUQbHjeqahhgfDiaKlTyXY9b8OEe7YIui8YcKkR/4Rrzj
+         fupB8d+Liwj0c8ZF1VMNa69oNSwws9Hk1jWRnK6E1W4n/FqNxhN97fjBY8UP63n5Om7H
+         wLJA==
+X-Gm-Message-State: APjAAAUStmjwvDBghXRBlgZjxAOgTOKupoZ1SVBDxYx73gsXc9/FjuWd
+        H6mxfWTYIhqqOU92w9N5w1WW99Oz
+X-Google-Smtp-Source: APXvYqzsxnJB6epMwEqEkgB+WpWeMOmsTBRAbdAEBhcnSeNO6RQO5pNjIrNiARsQTnyP7EpksTPfUA==
+X-Received: by 2002:a65:510c:: with SMTP id f12mr10859898pgq.92.1561006900098;
+        Wed, 19 Jun 2019 22:01:40 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id j8sm19364153pfi.148.2019.06.19.22.01.34
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 22:01:38 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 14:01:32 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Joel Fernandes <joel@joelfernandes.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, vdavydov.dev@gmail.com
+Subject: Re: [PATCH v1 1/4] mm: introduce MADV_COLD
+Message-ID: <20190620050132.GC105727@google.com>
+References: <20190603053655.127730-1-minchan@kernel.org>
+ <20190603053655.127730-2-minchan@kernel.org>
+ <20190604203841.GC228607@google.com>
+ <20190610100904.GC55602@google.com>
+ <20190612172104.GA125771@google.com>
+ <20190613044824.GF55602@google.com>
+ <20190619171340.GA83620@google.com>
 MIME-Version: 1.0
-In-Reply-To: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561006858; bh=fYK1YbOLXLOtJfuwb+ssRvSQx1QHtpEJNfYKlLvob5Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=k/I4WdmDTLwcuyLc2eosg3rscAeySxlTqFn8VH3dri5WOfRnKe7DoPeh9vKvVkD0Q
-         XWeUcSdPPSJ9hUk0xC6+y9qGpWqJaomL5IcQ7Se8qao/+W1mnrHZ9ouS1WaraMABda
-         NElV4FpAB7faFin8e1HqoP7S0/ZpX6gEB4hJUwcZBZq9o7bFyWnU6jNE+bLOc4CgST
-         cCMj4s5OFbwogdZkAhhwPRlin9FxiIzIFm4MeXD3uIKZ1Bh4P+8uqHtNzjo/jeeUjL
-         ik/7t60MhV2YFAl+txpRbgpfANDlzwc5hazdpWK9X6Cz/7FIlUVYBLwAYOon4SsXrI
-         tULrs5g0TZyLw==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619171340.GA83620@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Jun 19, 2019 at 01:13:40PM -0400, Joel Fernandes wrote:
+< snip >
 
+Ccing Vladimir
 
-On 6/18/19 4:09 AM, Bitan Biswas wrote:
-> The usage of BUG() macro is generally discouraged in kernel, unless
-> it's a problem that results in a physical damage or loss of data.
-> This patch removes unnecessary BUG() macros and replaces the rest
-> with warning.
+> > > > > > +static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
+> > > > > > +				unsigned long end, struct mm_walk *walk)
+> > > > > > +{
+> > > > > > +	pte_t *orig_pte, *pte, ptent;
+> > > > > > +	spinlock_t *ptl;
+> > > > > > +	struct page *page;
+> > > > > > +	struct vm_area_struct *vma = walk->vma;
+> > > > > > +	unsigned long next;
+> > > > > > +
+> > > > > > +	next = pmd_addr_end(addr, end);
+> > > > > > +	if (pmd_trans_huge(*pmd)) {
+> > > > > > +		ptl = pmd_trans_huge_lock(pmd, vma);
+> > > > > > +		if (!ptl)
+> > > > > > +			return 0;
+> > > > > > +
+> > > > > > +		if (is_huge_zero_pmd(*pmd))
+> > > > > > +			goto huge_unlock;
+> > > > > > +
+> > > > > > +		page = pmd_page(*pmd);
+> > > > > > +		if (page_mapcount(page) > 1)
+> > > > > > +			goto huge_unlock;
+> > > > > > +
+> > > > > > +		if (next - addr != HPAGE_PMD_SIZE) {
+> > > > > > +			int err;
+> > > > > > +
+> > > > > > +			get_page(page);
+> > > > > > +			spin_unlock(ptl);
+> > > > > > +			lock_page(page);
+> > > > > > +			err = split_huge_page(page);
+> > > > > > +			unlock_page(page);
+> > > > > > +			put_page(page);
+> > > > > > +			if (!err)
+> > > > > > +				goto regular_page;
+> > > > > > +			return 0;
+> > > > > > +		}
+> > > > > > +
+> > > > > > +		pmdp_test_and_clear_young(vma, addr, pmd);
+> > > > > > +		deactivate_page(page);
+> > > > > > +huge_unlock:
+> > > > > > +		spin_unlock(ptl);
+> > > > > > +		return 0;
+> > > > > > +	}
+> > > > > > +
+> > > > > > +	if (pmd_trans_unstable(pmd))
+> > > > > > +		return 0;
+> > > > > > +
+> > > > > > +regular_page:
+> > > > > > +	orig_pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> > > > > > +	for (pte = orig_pte; addr < end; pte++, addr += PAGE_SIZE) {
+> > > > > > +		ptent = *pte;
+> > > > > > +
+> > > > > > +		if (pte_none(ptent))
+> > > > > > +			continue;
+> > > > > > +
+> > > > > > +		if (!pte_present(ptent))
+> > > > > > +			continue;
+> > > > > > +
+> > > > > > +		page = vm_normal_page(vma, addr, ptent);
+> > > > > > +		if (!page)
+> > > > > > +			continue;
+> > > > > > +
+> > > > > > +		if (page_mapcount(page) > 1)
+> > > > > > +			continue;
+> > > > > > +
+> > > > > > +		ptep_test_and_clear_young(vma, addr, pte);
+> > > > > 
+> > > > > Wondering here how it interacts with idle page tracking. Here since young
+> > > > > flag is cleared by the cold hint, page_referenced_one() or
+> > > > > page_idle_clear_pte_refs_one() will not be able to clear the page-idle flag
+> > > > > if it was previously set since it does not know any more that a page was
+> > > > > actively referenced.
+> > > > 
+> > > > ptep_test_and_clear_young doesn't change PG_idle/young so idle page tracking
+> > > > doesn't affect.
+> > 
+> > You said *young flag* in the comment, which made me confused. I thought you meant
+> > PG_young flag but you mean PTE access bit.
+> > 
+> > > 
+> > > Clearing of the young bit in the PTE does affect idle tracking.
+> > > 
+> > > Both page_referenced_one() and page_idle_clear_pte_refs_one() check this bit.
+> > > 
+> > > > > bit was previously set, just so that page-idle tracking works smoothly when
+> > > > > this hint is concurrently applied?
+> > > > 
+> > > > deactivate_page will remove PG_young bit so that the page will be reclaimed.
+> > > > Do I miss your point?
+> > > 
+> > > Say a process had accessed PTE bit not set, then idle tracking is run and PG_Idle
+> > > is set. Now the page is accessed from userspace thus setting the accessed PTE
+> > > bit.  Now a remote process passes this process_madvise cold hint (I know your
+> > > current series does not support remote process, but I am saying for future
+> > > when you post this). Because you cleared the PTE accessed bit through the
+> > > hint, idle tracking no longer will know that the page is referenced and the
+> > > user gets confused because accessed page appears to be idle.
+> > 
+> > Right.
+> > 
+> > > 
+> > > I think to fix this, what you should do is clear the PG_Idle flag if the
+> > > young/accessed PTE bits are set. If PG_Idle is already cleared, then you
+> > > don't need to do anything.
+> > 
+> > I'm not sure. What does it make MADV_COLD special?
+> > How about MADV_FREE|MADV_DONTNEED?
+> > Why don't they clear PG_Idle if pte was young at tearing down pte? 
 > 
-> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
-> ---
->   drivers/i2c/busses/i2c-tegra.c | 47 +++++++++++++++++++++++++++++++++++-------
->   1 file changed, 39 insertions(+), 8 deletions(-)
+> Good point, so it sounds like those (MADV_FREE|MADV_DONTNEED) also need to be fixed then?
+
+Not sure. If you want it, maybe you need to fix every pte clearing and pte_mkold
+part, which is more general to cover every sites like munmap, get_user_pages and
+so on. Anyway, I don't think it's related to this patchset.
+
 > 
-> diff --git a/drivers/i2c/busses/i2c-tegra.c b/drivers/i2c/busses/i2c-tegra.c
-> index 4dfb4c1..e9ff96d 100644
-> --- a/drivers/i2c/busses/i2c-tegra.c
-> +++ b/drivers/i2c/busses/i2c-tegra.c
-> @@ -73,6 +73,7 @@
->   #define I2C_ERR_NO_ACK				BIT(0)
->   #define I2C_ERR_ARBITRATION_LOST		BIT(1)
->   #define I2C_ERR_UNKNOWN_INTERRUPT		BIT(2)
-> +#define I2C_ERR_RX_BUFFER_OVERFLOW		BIT(3)
->   
->   #define PACKET_HEADER0_HEADER_SIZE_SHIFT	28
->   #define PACKET_HEADER0_PACKET_ID_SHIFT		16
-> @@ -489,6 +490,13 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->   	size_t buf_remaining = i2c_dev->msg_buf_remaining;
->   	int words_to_transfer;
->   
-> +	/*
-> +	 * Catch overflow due to message fully sent
-> +	 * before the check for RX FIFO availability.
-> +	 */
-> +	if (WARN_ON_ONCE(!(i2c_dev->msg_buf_remaining)))
-> +		return -EINVAL;
-> +
->   	if (i2c_dev->hw->has_mst_fifo) {
->   		val = i2c_readl(i2c_dev, I2C_MST_FIFO_STATUS);
->   		rx_fifo_avail = (val & I2C_MST_FIFO_STATUS_RX_MASK) >>
-> @@ -515,7 +523,11 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->   	 * prevent overwriting past the end of buf
->   	 */
->   	if (rx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
-> +		/*
-> +		 * buf_remaining > 3 check not needed as rx_fifo_avail == 0
-> +		 * when (words_to_transfer was > rx_fifo_avail) earlier
-> +		 * in this function.
-> +		 */
->   		val = i2c_readl(i2c_dev, I2C_RX_FIFO);
->   		val = cpu_to_le32(val);
->   		memcpy(buf, &val, buf_remaining);
-> @@ -523,7 +535,10 @@ static int tegra_i2c_empty_rx_fifo(struct tegra_i2c_dev *i2c_dev)
->   		rx_fifo_avail--;
->   	}
->   
-> -	BUG_ON(rx_fifo_avail > 0 && buf_remaining > 0);
-> +	/* RX FIFO must be drained, otherwise it's an Overflow case. */
-> +	if (WARN_ON_ONCE(rx_fifo_avail))
-> +		return -EINVAL;
-> +
->   	i2c_dev->msg_buf_remaining = buf_remaining;
->   	i2c_dev->msg_buf = buf;
->   
-> @@ -581,7 +596,11 @@ static int tegra_i2c_fill_tx_fifo(struct tegra_i2c_dev *i2c_dev)
->   	 * boundary and fault.
->   	 */
->   	if (tx_fifo_avail > 0 && buf_remaining > 0) {
-> -		BUG_ON(buf_remaining > 3);
-> +		/*
-> +		 * buf_remaining > 3 check not needed as tx_fifo_avail == 0
-> +		 * when (words_to_transfer was > tx_fifo_avail) earlier
-> +		 * in this function for non-zero words_to_transfer.
-> +		 */
->   		memcpy(&val, buf, buf_remaining);
->   		val = le32_to_cpu(val);
->   
-> @@ -847,10 +866,15 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->   
->   	if (!i2c_dev->is_curr_dma_xfer) {
->   		if (i2c_dev->msg_read && (status & I2C_INT_RX_FIFO_DATA_REQ)) {
-> -			if (i2c_dev->msg_buf_remaining)
-> -				tegra_i2c_empty_rx_fifo(i2c_dev);
-> -			else
-> -				BUG();
-> +			if (tegra_i2c_empty_rx_fifo(i2c_dev)) {
-> +				/*
-> +				 * Overflow error condition: message fully sent,
-> +				 * with no XFER_COMPLETE interrupt but hardware
-> +				 * asks to transfer more.
-> +				 */
-> +				i2c_dev->msg_err |= I2C_ERR_RX_BUFFER_OVERFLOW;
-> +				goto err;
-> +			}
->   		}
->   
->   		if (!i2c_dev->msg_read && (status & I2C_INT_TX_FIFO_DATA_REQ)) {
-> @@ -876,7 +900,14 @@ static irqreturn_t tegra_i2c_isr(int irq, void *dev_id)
->   	if (status & I2C_INT_PACKET_XFER_COMPLETE) {
->   		if (i2c_dev->is_curr_dma_xfer)
->   			i2c_dev->msg_buf_remaining = 0;
-> -		BUG_ON(i2c_dev->msg_buf_remaining);
-> +		/*
-> +		 * Underflow error condition: XFER_COMPLETE before message
-> +		 * fully sent.
-> +		 */
-> +		if (WARN_ON_ONCE(i2c_dev->msg_buf_remaining)) {
-> +			i2c_dev->msg_err |= I2C_ERR_UNKNOWN_INTERRUPT;
-> +			goto err;
-> +		}
->   		complete(&i2c_dev->msg_complete);
->   	}
->   	goto done;
+> > The page could be shared by other processes so if we miss to clear out
+> > PG_idle in there, page idle tracking could miss the access history forever.
 > 
+> I did not understand this. So say a page X is shared process P and Q and
+> assume the PG_idle flag is set on the page.
+> 
+> P accesses memory and has the pte accessed bit set. P now gets the MADV_COLD
+> hint and forgets to clear the idle flag while clearing the pte accessed bit.
+> 
+> Now the page appears to be idle, even though it was not. This has nothing to
+> do with Q and whether the page is shared or not.
 
-Please get back if there are any further comments regarding this patch.
+What I meant was MADV_FREE|MADV_DONTNEED.
 
--regards,
-  Bitan
+> 
+> > If it's not what you want, maybe we need to fix all places all at once.
+> > However, I'm not sure. Rather than, I want to keep PG_idle in those hints
+> > even though pte was accesssed because the process now gives strong hint
+> > "The page is idle from now on". It's valid because he knows himself better than
+> > others, even admin. IOW, he declare the page is not workingset any more.
+> 
+> Even if the PG_idle flag is not cleared - it is not a strong hint for working
+> set size IMHO, because the page *was* accessed so the process definitely needed the
+> page at some point even though now it says it is MADV_COLD. So that is part
+> of working set. I don't think we should implicitly provide such hints and we
+> should fix it.
+> 
+> Also I was saying in previous email, if process_madvise (future extension) is
+> called from say activity manager, then the process and the user running the
+> idle tracking feature has no idea that the page was accessed because the idle
+> flag is still set. That is a bit weird and is loss of information.
+> 
+> It may not be a big deal in the long run if the page is accessed a lot, since
+> the PTE accessed bit will be set again and idle-tracking feature may not miss
+> it, but why leave it to chance if it is a simple fix?
 
+Consistency with other madvise hints.
+
+There are many places you could lose the information as I mentioned and I'm
+really not conviced we need fixing because currently page-idle tracking
+feature is biased to work with . If you believe we need to fix it,
+it would be better to have a separate discussion, not here.
+
+> 
+> > What's the problem if page idle tracking feature miss it?
+> 
+> What's the problem if PG_idle flag is cleared here? It is just a software
+> flag.
+
+Again consistency. I don't think it's a MADV_PAGEOUT specific issue.
+Since I pointed out other places idle tracking is missing(? not sure),
+Let's discuss it separately if you feel we need fix.
+
+Furthermore, once the page is reclaimed, that means the page could be
+deallocated so you automatically don't see any PG_idle from the page.
+
+> 
+> > If other processs still have access bit of their pte for the page, page idle
+> > tracking could find the page as non-idle so it's no problem, either.
+> 
+> Yes, but if the other process also does not access the page, then the access
+> information is lost.
+> 
+> thanks!
+> 
+>  - Joel
+> 
