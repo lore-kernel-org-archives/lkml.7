@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBBC9C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A12C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97BF42083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30D152083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051551;
-	bh=yNYwqeSTSPwIiEd4eYb8uNZq/cfje8/TcJ0O9vDkwOw=;
+	s=default; t=1561051556;
+	bh=ipAnUHiXjTEL/Vvt9v5F2Orf7IAKvOxeWADrSavweNQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wq7SFZ0aDEJbzA9kVBdXBcmW4dW/0/O3ITtzA3ctXbeIzpS8WM3yV2+uVEzwLwHID
-	 FbcoVIK3Xy5Qr9iLSasjZBNr4OURxUh4FD5i6ZVO7G+UWc4vE015vJmkXaMTlaUo+K
-	 9hFlN/90o7ScG1X6EUmcnl1kTI4hw1gk6UfsCMLs=
+	b=xPBkWALRdXm8XBjmLjMh5xMtgNOcavZwyNj8K4SWDcSs9tzGV2vP0dmbp9ERDnlhF
+	 Dfo6aC9QJlSUY1/GDWIaC9OYe1NCBfoc6+nagK1btZ6gmIW1RlE7W7r1H5fRAIygM9
+	 rqvgbc0Lgt+qFgbU/A3SsxuMHh5guSbodJb27yjM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732120AbfFTRXT (ORCPT
+        id S1732576AbfFTRZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:23:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52510 "EHLO
+        Thu, 20 Jun 2019 13:25:54 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52530 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfFTRXS (ORCPT
+        with ESMTP id S1726758AbfFTRXS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 13:23:18 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=3v0sS61wq796LTjrCIGlnUicOjJQzGAsiyF19M1EX2c=; b=BHPzhVhOZwMh3d/RcJHWR2KT2V
-        c/KE75ncCdARdrowcjh4PR6QVQRFwDFL1K5aHq4cbDOoI5G0HgBPC+efJXQZF+Ggpni4GRBUX4kj9
-        OV6gNJj33krplHue/bd9Bw4GeJ7jUdidotoY01VfCJiVgF1UAXItgcNlt/bsT6L083B141r2Q7b7X
-        hgjiurh59po0CnSa+5cL+VTibHDiPp984MnAESNWvkd6kxd0nYqzY1jDA7TmvdxgSm237N4vwVGsg
-        wlm+cLflfuj+evf88NUwnQMkFwqq8KJPkLyGp8aE4xlk634peCStN535LcC+SvGTlyKajn7NQJe77
-        sCRUUVZA==;
+        bh=4yo27ijYQu1yYo30q/R/RGMGUqSkkm83kufrAmJA9ng=; b=Bfk95lQbh+8kmjHfnS9t42zdM7
+        GVOZCTygmwqJitE5dgYSWqJt/nfNKMTNHS1LyrnF+lshSqbrtJ+M1FSQvUjOJoy0oU4Ggc5R6x8SJ
+        SuISoX2aHeGXxOtgw2hIa6BWQ3rAfHE4IbaEp3GYGt+5AIUbsD7thrG6REGSpp0hCt65nwOzxMVwR
+        zgySLezwEm3c0O6XQVFOD9ITlGshinpnEle5PvDwxwiMPZ5eX35FaP8tQJl5dY2zAiE45eWJtAdBr
+        LnIg9L5whzAHnKE7DYuEkXJwuFB6utN8Jcx3yXzBm+YPHEx0gcvIHii4ImCLDqi5xh7MCXl4ZsjiE
+        d6JWBFmA==;
 Received: from [177.97.20.138] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he0mL-0008Rk-Oy; Thu, 20 Jun 2019 17:23:17 +0000
+        id 1he0mM-0008Rp-77; Thu, 20 Jun 2019 17:23:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1he0mJ-0000D8-Ns; Thu, 20 Jun 2019 14:23:15 -0300
+        id 1he0mJ-0000Db-TX; Thu, 20 Jun 2019 14:23:15 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 08/22] scripts/get_abi.pl: represent what in tables
-Date:   Thu, 20 Jun 2019 14:23:00 -0300
-Message-Id: <8a1ae200b2ccdc04811a11cececeaad16c020556.1561050806.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 15/22] sphinx/kernel_abi.py: make it compatible with Sphinx 1.7+
+Date:   Thu, 20 Jun 2019 14:23:07 -0300
+Message-Id: <76a9db53d324ff55fca23fae86b223110aca7678.1561050806.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
 References: <cover.1561050806.git.mchehab+samsung@kernel.org>
@@ -64,88 +64,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Several entries at the ABI have multiple What: with the same
-description.
+The same way kerneldoc.py needed changes to work with newer
+Sphinx, this script needs the same changes.
 
-Instead of showing those symbols as sections, let's show them
-as tables. That makes easier to read on the final output,
-and avoid too much recursion at Sphinx parsing.
-
-We need to put file references at the end, as we don't want
-non-file tables to be mangled with other entries.
+While here, reorganize the include order to match kerneldoc.py.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/get_abi.pl | 41 ++++++++++++++++++++++++++++++++++++-----
- 1 file changed, 36 insertions(+), 5 deletions(-)
+ Documentation/sphinx/kernel_abi.py | 39 +++++++++++++++++++++---------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index ecf6b91df7c4..7d454e359d25 100755
---- a/scripts/get_abi.pl
-+++ b/scripts/get_abi.pl
-@@ -193,16 +193,19 @@ sub parse_abi {
- #
- # Outputs the book on ReST format
- #
-+
- sub output_rest {
--	foreach my $what (sort keys %data) {
-+	foreach my $what (sort {
-+				($data{$a}->{type} eq "File") cmp ($data{$b}->{type} eq "File") ||
-+				$a cmp $b
-+			       } keys %data) {
- 		my $type = $data{$what}->{type};
- 		my $file = $data{$what}->{file};
-+		my $filepath = $data{$what}->{filepath};
+diff --git a/Documentation/sphinx/kernel_abi.py b/Documentation/sphinx/kernel_abi.py
+index 0f3e51e67e8d..2d5d582207f7 100644
+--- a/Documentation/sphinx/kernel_abi.py
++++ b/Documentation/sphinx/kernel_abi.py
+@@ -30,18 +30,27 @@ u"""
+ """
  
- 		my $w = $what;
- 		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
+ import codecs
+-import sys
+ import os
+-from os import path
+ import subprocess
++import sys
  
--		my $bar = $w;
--		$bar =~ s/./-/g;
+-from sphinx.ext.autodoc import AutodocReporter
++from os import path
  
- 		foreach my $p (@{$data{$what}->{label}}) {
- 			my ($content, $label) = @{$p};
-@@ -222,9 +225,37 @@ sub output_rest {
- 			last;
- 		}
+-from docutils import nodes
+-from docutils.parsers.rst import Directive, directives
++from docutils import nodes, statemachine
+ from docutils.statemachine import ViewList
++from docutils.parsers.rst import directives, Directive
+ from docutils.utils.error_reporting import ErrorString
  
--		print "$w\n$bar\n\n";
++#
++# AutodocReporter is only good up to Sphinx 1.7
++#
++import sphinx
++
++Use_SSI = sphinx.__version__[:3] >= '1.7'
++if Use_SSI:
++    from sphinx.util.docutils import switch_source_input
++else:
++    from sphinx.ext.autodoc import AutodocReporter
  
--		print "- defined on file $file (type: $type)\n\n" if ($type ne "File");
-+		$filepath =~ s,.*/(.*/.*),\1,;;
-+		$filepath =~ s,[/\-],_,g;;
-+		my $fileref = "abi_file_".$filepath;
-+
-+		if ($type eq "File") {
-+			my $bar = $w;
-+			$bar =~ s/./-/g;
-+
-+			print ".. _$fileref:\n\n";
-+			print "$w\n$bar\n\n";
-+		} else {
-+			my @names = split /\s*,\s*/,$w;
-+
-+			my $len = 0;
-+
-+			foreach my $name (@names) {
-+				$len = length($name) if (length($name) > $len);
-+			}
-+
-+			print "What:\n\n";
-+
-+			print "+-" . "-" x $len . "-+\n";
-+			foreach my $name (@names) {
-+				printf "| %s", $name . " " x ($len - length($name)) . " |\n";
-+				print "+-" . "-" x $len . "-+\n";
-+			}
-+			print "\n";
-+		}
-+
-+		print "Defined on file :ref:`$file <$fileref>`\n\n" if ($type ne "File");
+ __version__  = '1.0'
  
- 		my $desc = $data{$what}->{description};
- 		$desc =~ s/^\s+//;
+@@ -139,11 +148,17 @@ class KernelCmd(Directive):
+             content.append(l, fname, c)
+ 
+         buf  = self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter
+-        self.state.memo.title_styles  = []
+-        self.state.memo.section_level = 0
+-        self.state.memo.reporter      = AutodocReporter(content, self.state.memo.reporter)
+-        try:
+-            self.state.nested_parse(content, 0, node, match_titles=1)
+-        finally:
+-            self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
++
++        if Use_SSI:
++            with switch_source_input(self.state, content):
++                self.state.nested_parse(content, 0, node, match_titles=1)
++        else:
++            self.state.memo.title_styles  = []
++            self.state.memo.section_level = 0
++            self.state.memo.reporter      = AutodocReporter(content, self.state.memo.reporter)
++            try:
++                self.state.nested_parse(content, 0, node, match_titles=1)
++            finally:
++                self.state.memo.title_styles, self.state.memo.section_level, self.state.memo.reporter = buf
++
+         return node.children
 -- 
 2.21.0
 
