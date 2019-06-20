@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B77F2C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43D1BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DB421479
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23F4421479
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:04:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053844;
-	bh=qGO+q+JsVVgwAlTKu7uvOt2zufFjhDx4vTWoTvVnsxg=;
+	s=default; t=1561053849;
+	bh=ZEN0/7RT2JRG+vR8Wf2F7wNcWnsS6JLk2C5xXOH/tEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ey1sv1sHIUOdQkQln2KX4ITkmDejKbVVQ+R8HFKvpyl0Y3Y/oFSKbyjWIUGemPa3S
-	 rYh6pDnSrKmtGFKJCVWOpAcsQ3oyXDO0YHUKGJiV9iW7vp0Fn42kYiEGPu/2ZxGUuu
-	 ypkFhtNPtTMcp5+LTUr6qQlPLdN4/WKwLTIZymbI=
+	b=TP4HY8xfr9i5T2zVHuBacxR7NQahifDq10YLN7TX2ClII2LK5l8Uc+9ivS8Bq92rD
+	 C2YaEUWMhxVv4MVlP+MtORp6Gg+MKiUneQ1ELT91ir2i7vEGuFvWf6mLqEiWK3i7QI
+	 EpzEUHk+eFBm4b4b2Zcnab8nbSduOuq65sk/QbxY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727774AbfFTSED (ORCPT
+        id S1726534AbfFTSEI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:04:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55886 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:04:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55992 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727765AbfFTSD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:59 -0400
+        id S1727770AbfFTSED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:04:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E06A2204FD;
-        Thu, 20 Jun 2019 18:03:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D71E0204FD;
+        Thu, 20 Jun 2019 18:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053839;
-        bh=qGO+q+JsVVgwAlTKu7uvOt2zufFjhDx4vTWoTvVnsxg=;
+        s=default; t=1561053842;
+        bh=ZEN0/7RT2JRG+vR8Wf2F7wNcWnsS6JLk2C5xXOH/tEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=STbjfBsnXZotmAwUdvMafIkmmi9Ug2ws8Aw0k/rUd5kydTlPyLBLOCFjk3Hs1sgVv
-         l74z9aAxELAy4RQx97RhLQXVIyJOtd+FMHxCqieuXhBjQVNQ8NN5tV68H1zGf5uhWI
-         IHQzJVXDOa2YaLmSoOetKXdyHROtuQXYnoCuh3Zg=
+        b=00pyS6Ple4NSEhdwIXpOtuRrvQH6UCOmycLMCk0iU6/ihjWsswtGYhAOKvqvCajJR
+         yX+tey2dE890doDF6JLvW9SovOenyc0zf96HuQ2hvFue9AnSaAXI2DKsIhaiurz2eI
+         0Cmk2VxISXc/3UEW1GfYIcfZFw0O6DPh47qym23A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 015/117] mfd: twl6040: Fix device init errors for ACCCTL register
-Date:   Thu, 20 Jun 2019 19:55:49 +0200
-Message-Id: <20190620174352.910704725@linuxfoundation.org>
+        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
+        kan.liang@intel.com, vincent.weaver@maine.edu,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 016/117] perf/x86/intel: Allow PEBS multi-entry in watermark mode
+Date:   Thu, 20 Jun 2019 19:55:50 +0200
+Message-Id: <20190620174352.968489047@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -61,60 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
+[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
 
-I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
+This patch fixes a restriction/bug introduced by:
 
-twl6040 0-004b: Failed to write 2d = 19: -121
+   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
 
-And then any following register access will produce errors.
+The original patch prevented using multi-entry PEBS when wakeup_events != 0.
+However given that wakeup_events is part of a union with wakeup_watermark, it
+means that in watermark mode, PEBS multi-entry is also disabled which is not the
+intent. This patch fixes this by checking is watermark mode is enabled.
 
-There 2d offset above is register ACCCTL that gets written on twl6040
-powerup. With error checking added to the related regcache_sync() call,
-the -EREMOTEIO error is reproducable on twl6040 powerup at least
-duovero.
-
-To fix the error, we need to wait until twl6040 is accessible after the
-powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
-powerup before register write will complete without failures. Let's also
-make sure we warn about possible errors too.
-
-Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
-configuration and regcache_sync() will write the new value to ACCCTL.
-
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: jolsa@redhat.com
+Cc: kan.liang@intel.com
+Cc: vincent.weaver@maine.edu
+Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/mfd/twl6040.c | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
+ arch/x86/events/intel/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
-index dd19f17a1b63..2b8c479dbfa6 100644
---- a/drivers/mfd/twl6040.c
-+++ b/drivers/mfd/twl6040.c
-@@ -322,8 +322,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
- 			}
- 		}
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index cb8178a2783a..e98e238d3775 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -2867,7 +2867,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
+ 		return ret;
  
-+		/*
-+		 * Register access can produce errors after power-up unless we
-+		 * wait at least 8ms based on measurements on duovero.
-+		 */
-+		usleep_range(10000, 12000);
-+
- 		/* Sync with the HW */
--		regcache_sync(twl6040->regmap);
-+		ret = regcache_sync(twl6040->regmap);
-+		if (ret) {
-+			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
-+				ret);
-+			goto out;
-+		}
- 
- 		/* Default PLL configuration after power up */
- 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
+ 	if (event->attr.precise_ip) {
+-		if (!(event->attr.freq || event->attr.wakeup_events)) {
++		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
+ 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
+ 			if (!(event->attr.sample_type &
+ 			      ~intel_pmu_free_running_flags(event)))
 -- 
 2.20.1
 
