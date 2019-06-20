@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A9E3C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE8EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3013F208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6970C21670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053670;
-	bh=UFiHQNYzOBvgg/6HU+6lO8B/JEmfpNhFn9G0j9ouWVc=;
+	s=default; t=1561053673;
+	bh=8EyeSjUpQh19iCE24F3U8olC8MptdrzOxFATJHzEoSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GfXojAp+k8GGr+oilOUs+RCAgb/hQ5Yk5id8s46ZzGm1IovEK0jZyod2EHxBFCl/z
-	 lbYotGtkSmQdsYmNct0s5po8SXQ8bt/qnee8TgniQ9MKaVx5hBwLnpFHHRl2F47eVi
-	 0uRydgbIrE4KdGkcXJKloRfRghkI+DrR981+A+Sw=
+	b=x7Til91y3qMslE9FkYUtqHKKwoIYTBColtU/NbxbaIByu3j8mZUZvLiRS0jp4xg/t
+	 V8S2c0Dregoj6k/0FXoPL+OMLcr/yKzXLFHBtF6xDafzjYHZnXf1aswrIBKN/YBJAN
+	 2nCWc/OWZW5V5k8xJGV3+UjKz58RnZP7ElK0UM8c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727163AbfFTSBI (ORCPT
+        id S1727181AbfFTSBL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50344 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727150AbfFTSBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:05 -0400
+        id S1727161AbfFTSBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52E57214AF;
-        Thu, 20 Jun 2019 18:01:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F9F82089C;
+        Thu, 20 Jun 2019 18:01:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053664;
-        bh=UFiHQNYzOBvgg/6HU+6lO8B/JEmfpNhFn9G0j9ouWVc=;
+        s=default; t=1561053667;
+        bh=8EyeSjUpQh19iCE24F3U8olC8MptdrzOxFATJHzEoSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=faF/bTpxExyaIEuj6b1caHtOZZrTTSRPRI2gd03lEqb+cGmNFKU7e4OoDX7xWoG0k
-         OrGZMPcbVKmPkBmyfhTbgdLKL1KSxI3i0qfMHhaYsB/aH4osFxgsn2uCnLAReV0Kaf
-         /0ZxMNQE/rIw/tnbT9WeRrFnK+jN7qWZZKfB8XiQ=
+        b=AwiEU7p0Y4TdxUOXamE/WiZGJlYIGSZeKxuT+C3s3e60VvIJm6gzD7UqBrG4KAzxk
+         b78/HVDq1GsSsKj+jgy2CXGIyyIB9h5avF9MgnLQkC/KPhnV0wB1EEOUxLRw2MvmPB
+         PMWgVRPqN8shT8ySk9mxOAcYcN3jP60aw/yi1vMk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 4.4 40/84] ALSA: seq: Cover unsubscribe_port() in list_mutex
-Date:   Thu, 20 Jun 2019 19:56:37 +0200
-Message-Id: <20190620174344.288202803@linuxfoundation.org>
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.4 41/84] libata: Extend quirks for the ST1000LM024 drives with NOLPM quirk
+Date:   Thu, 20 Jun 2019 19:56:38 +0200
+Message-Id: <20190620174344.378289560@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,37 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Hans de Goede <hdegoede@redhat.com>
 
-commit 7c32ae35fbf9cffb7aa3736f44dec10c944ca18e upstream.
+commit 31f6264e225fb92cf6f4b63031424f20797c297d upstream.
 
-The call of unsubscribe_port() which manages the group count and
-module refcount from delete_and_unsubscribe_port() looks racy; it's
-not covered by the group list lock, and it's likely a cause of the
-reported unbalance at port deletion.  Let's move the call inside the
-group list_mutex to plug the hole.
+We've received a bugreport that using LPM with ST1000LM024 drives leads
+to system lockups. So it seems that these models are buggy in more then
+1 way. Add NOLPM quirk to the existing quirks entry for BROKEN_FPDMA_AA.
 
-Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1571330
+Cc: stable@vger.kernel.org
+Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/seq/seq_ports.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/ata/libata-core.c |    9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
 
---- a/sound/core/seq/seq_ports.c
-+++ b/sound/core/seq/seq_ports.c
-@@ -550,10 +550,10 @@ static void delete_and_unsubscribe_port(
- 		list_del_init(list);
- 	grp->exclusive = 0;
- 	write_unlock_irq(&grp->list_lock);
--	up_write(&grp->list_mutex);
+--- a/drivers/ata/libata-core.c
++++ b/drivers/ata/libata-core.c
+@@ -4176,9 +4176,12 @@ static const struct ata_blacklist_entry
+ 	{ "ST3320[68]13AS",	"SD1[5-9]",	ATA_HORKAGE_NONCQ |
+ 						ATA_HORKAGE_FIRMWARE_WARN },
  
- 	if (!empty)
- 		unsubscribe_port(client, port, grp, &subs->info, ack);
-+	up_write(&grp->list_mutex);
- }
+-	/* drives which fail FPDMA_AA activation (some may freeze afterwards) */
+-	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
+-	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
++	/* drives which fail FPDMA_AA activation (some may freeze afterwards)
++	   the ST disks also have LPM issues */
++	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
++						ATA_HORKAGE_NOLPM, },
++	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
++						ATA_HORKAGE_NOLPM, },
+ 	{ "VB0250EAVER",	"HPG7",		ATA_HORKAGE_BROKEN_FPDMA_AA },
  
- /* connect two ports */
+ 	/* Blacklist entries taken from Silicon Image 3124/3132
 
 
