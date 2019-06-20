@@ -7,49 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F20AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F1AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BB8D2168B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A3ED2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:03:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053812;
-	bh=fN+mNrmLgtHQROZH8aqQZFI7JhULnm8CryM/SGFakXo=;
+	s=default; t=1561053823;
+	bh=bJI+V1gh/uq0NxRVUsZFGBc8Nn9UpXKvaSqzQyWelOQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bkUuj+80f3OP47HyVO0GedBkyPgaVuScEs6jwnaJ4BNnswQ5zIlnerNxv3MfB/O8/
-	 EmNfypFDl0AEwr983XmN9fALLkxKcYYZmCLOLroh6m9eTU+vmFrYOcr1yEAqvX6fkF
-	 Zz5vd/prXdd2Be0AJMSx7e9AbgZ2WLe+b5LBVUvU=
+	b=ESsSkhOHVf9aX85ecR/WW1huMuZK6zDYPK/oXWrkocTYQB65ueR+4nmC0J91KoEXs
+	 puyhuQQRzjdYGfVzhg51410fvQFyeYhAa4pN7iCWwpmz8wXzGXYrBKsSoGHXFDZV1c
+	 +Cf+8t8gYUlJCpkphGN7in0lehDqRlFRouF2aY/I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727663AbfFTSDb (ORCPT
+        id S1727704AbfFTSDl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:03:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54760 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:03:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55104 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725921AbfFTSD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:03:28 -0400
+        id S1726210AbfFTSDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:03:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F37221537;
-        Thu, 20 Jun 2019 18:03:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C9A442089C;
+        Thu, 20 Jun 2019 18:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053807;
-        bh=fN+mNrmLgtHQROZH8aqQZFI7JhULnm8CryM/SGFakXo=;
+        s=default; t=1561053819;
+        bh=bJI+V1gh/uq0NxRVUsZFGBc8Nn9UpXKvaSqzQyWelOQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GCCWay2bADT3pz6HxbLlgnJscD2kVYTIOuriilxu1/oNvitMHcrNAeCcW4WvkV7j3
-         t2Q3Zeexp74vjCfPXLV5CfZablpYlhf634qw1bnn+iFAyeAxXH9vpxiDzTZwXxuZFC
-         G6MBqYKSmPBXWJ8q5AcZBy+YcR3dAZK8iSlHbn9I=
+        b=m2x6GxwSQHFlwYJQF9FL32kBD2R4Z4CA6iT2PfTN0WkjHbP1agm7v2qruwbAKbUjh
+         4VArmJdyFux78ohy82KkoyU2KOJcwDxLjALSf8k5td/iBSdFSBtb8AkvUVctLfHEl/
+         tFRXVbS2GwPCAJBQjT1WSomVm2J0hWalxqSZn6Kg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Wenwen Wang <wang6495@umn.edu>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        stable@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>,
+        "Angus Ainslie (Purism)" <angus@akkea.ca>,
+        Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Fabio Estevam <fabio.estevam@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 033/117] x86/PCI: Fix PCI IRQ routing table memory leak
-Date:   Thu, 20 Jun 2019 19:56:07 +0200
-Message-Id: <20190620174353.978290184@linuxfoundation.org>
+Subject: [PATCH 4.9 037/117] ARM: dts: imx6sx: Specify IMX6SX_CLK_IPG as "ahb" clock to SDMA
+Date:   Thu, 20 Jun 2019 19:56:11 +0200
+Message-Id: <20190620174354.213301414@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -62,65 +65,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ea094d53580f40c2124cef3d072b73b2425e7bfd ]
+[ Upstream commit cc839d0f8c284fcb7591780b568f13415bbb737c ]
 
-In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is first
-found through pirq_find_routing_table().  If the table is not found and
-CONFIG_PCI_BIOS is defined, the table is then allocated in
-pcibios_get_irq_routing_table() using kmalloc().  Later, if the I/O APIC is
-used, this table is actually not used.  In that case, the allocated table
-is not freed, which is a memory leak.
+Since 25aaa75df1e6 SDMA driver uses clock rates of "ipg" and "ahb"
+clock to determine if it needs to configure the IP block as operating
+at 1:1 or 1:2 clock ratio (ACR bit in SDMAARM_CONFIG). Specifying both
+clocks as IMX6SL_CLK_SDMA results in driver incorrectly thinking that
+ratio is 1:1 which results in broken SDMA funtionality. Fix the code
+to specify IMX6SL_CLK_AHB as "ahb" clock for SDMA, to avoid detecting
+incorrect clock ratio.
 
-Free the allocated table if it is not used.
-
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-[bhelgaas: added Ingo's reviewed-by, since the only change since v1 was to
-use the irq_routing_table local variable name he suggested]
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/pci/irq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6sl.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 9bd115484745..5f0e596b0519 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1117,6 +1117,8 @@ static struct dmi_system_id __initdata pciirq_dmi_table[] = {
- 
- void __init pcibios_irq_init(void)
- {
-+	struct irq_routing_table *rtable = NULL;
-+
- 	DBG(KERN_DEBUG "PCI: IRQ init\n");
- 
- 	if (raw_pci_ops == NULL)
-@@ -1127,8 +1129,10 @@ void __init pcibios_irq_init(void)
- 	pirq_table = pirq_find_routing_table();
- 
- #ifdef CONFIG_PCI_BIOS
--	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-+	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
- 		pirq_table = pcibios_get_irq_routing_table();
-+		rtable = pirq_table;
-+	}
- #endif
- 	if (pirq_table) {
- 		pirq_peer_trick();
-@@ -1143,8 +1147,10 @@ void __init pcibios_irq_init(void)
- 		 * If we're using the I/O APIC, avoid using the PCI IRQ
- 		 * routing table
- 		 */
--		if (io_apic_assign_pci_irqs)
-+		if (io_apic_assign_pci_irqs) {
-+			kfree(rtable);
- 			pirq_table = NULL;
-+		}
- 	}
- 
- 	x86_init.pci.fixup_irqs();
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index 02378db3f5fc..a2c76797e871 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -704,7 +704,7 @@
+ 				reg = <0x020ec000 0x4000>;
+ 				interrupts = <0 2 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&clks IMX6SL_CLK_SDMA>,
+-					 <&clks IMX6SL_CLK_SDMA>;
++					 <&clks IMX6SL_CLK_AHB>;
+ 				clock-names = "ipg", "ahb";
+ 				#dma-cells = <3>;
+ 				/* imx6sl reuses imx6q sdma firmware */
 -- 
 2.20.1
 
