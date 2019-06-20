@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15411C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E8E4C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E090820675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AD742089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054648;
-	bh=Hh+/0dLR3lXaoa/X7xixagvLxOl2uk4rmHTiPO7TSgM=;
+	s=default; t=1561054653;
+	bh=TBAws2c/GmHnYBrpWrysQHwua9SqWMmW78aPAlCjFQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vkyhV0cybiXmr46K/Ud3bVcxNRg3/6Sr4TzYIaeKanHkqzsnZnIG7W9B+td5zBTe/
-	 QrWeWLeYbhMVyeImlEzkO+w2ZduR1ioZ8HmUb8CfJiGzz5kr5cj0UqZKNmzcLx90hf
-	 83QVSSukLYf8kpoYdCl7oI+PEge7Vxme8inj/teU=
+	b=od/NGjlZaPfs/QstDfWkl/V9lSxVausSTxzaSTFWyKL6iMDwUzADLbigPSMym3HtN
+	 8o4EqHBDQ39eVBodwUN+AFJyUqVztgHrMEXfAaFjlNEMTWduyECUre+uCji+5erFe0
+	 G4/gPtad8dAfaSOB+7xJTXNasPaJSY0e0cge7dtw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbfFTSR0 (ORCPT
+        id S1729049AbfFTSRb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46694 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:17:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729916AbfFTSRW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:22 -0400
+        id S1729916AbfFTSR2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7B922089C;
-        Thu, 20 Jun 2019 18:17:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C9422089C;
+        Thu, 20 Jun 2019 18:17:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054642;
-        bh=Hh+/0dLR3lXaoa/X7xixagvLxOl2uk4rmHTiPO7TSgM=;
+        s=default; t=1561054647;
+        bh=TBAws2c/GmHnYBrpWrysQHwua9SqWMmW78aPAlCjFQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0+hF3n2KU880f5ogHu2bgrBKGHCMh2UogXZ4kIUDQauJyCTOmT4gYoA714fDP8mTt
-         +FcYDj8AUnx8jFfZh09aJ14UmABQsDl2/ySREowq5ekEri5XBXwwUX+un6DPbAZhwu
-         9BSHaT7My8Q6Nj3wyEbIe897dEi6fpeubZz9RWtc=
+        b=SvhL19gtAJ3E6HrG7Osj49Z8DNX9OfqSgUy+gsfAuL7W+R3fh6gvRTz/r8dgUQ0tO
+         0G0ILxX5vqtWajygez60gxPttK/mkCUIauAWNWoX0Tb7ea4FhJ7/mrnIoZL/wQRC2e
+         5PYD0WLcceKCY+lg6V+ekGJd6EPDh1ZVcPstN0+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 79/98] arm64: fix syscall_fn_t type
-Date:   Thu, 20 Jun 2019 19:57:46 +0200
-Message-Id: <20190620174353.242096782@linuxfoundation.org>
+Subject: [PATCH 5.1 81/98] arm64: use the correct function type for __arm64_sys_ni_syscall
+Date:   Thu, 20 Jun 2019 19:57:48 +0200
+Message-Id: <20190620174353.375988101@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -61,33 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ef8f368ce72b5e17f7c1f1ef15c38dcfd0fef64 ]
+[ Upstream commit 1e29ab3186e33c77dbb2d7566172a205b59fa390 ]
 
-Syscall wrappers in <asm/syscall_wrapper.h> use const struct pt_regs *
-as the argument type. Use const in syscall_fn_t as well to fix indirect
-call type mismatches with Control-Flow Integrity checking.
+Calling sys_ni_syscall through a syscall_fn_t pointer trips indirect
+call Control-Flow Integrity checking due to a function type
+mismatch. Use SYSCALL_DEFINE0 for __arm64_sys_ni_syscall instead and
+remove the now unnecessary casts.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/syscall.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/kernel/sys.c   | 14 +++++++++-----
+ arch/arm64/kernel/sys32.c |  7 ++-----
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index a179df3674a1..6206ab9bfcfc 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -20,7 +20,7 @@
- #include <linux/compat.h>
- #include <linux/err.h>
+diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+index 162a95ed0881..fe20c461582a 100644
+--- a/arch/arm64/kernel/sys.c
++++ b/arch/arm64/kernel/sys.c
+@@ -47,22 +47,26 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
+ 	return ksys_personality(personality);
+ }
  
--typedef long (*syscall_fn_t)(struct pt_regs *regs);
-+typedef long (*syscall_fn_t)(const struct pt_regs *regs);
++asmlinkage long sys_ni_syscall(void);
++
++asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
++{
++	return sys_ni_syscall();
++}
++
+ /*
+  * Wrappers to pass the pt_regs argument.
+  */
+ #define __arm64_sys_personality		__arm64_sys_arm64_personality
  
- extern const syscall_fn_t sys_call_table[];
+-asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-#define __arm64_sys_ni_syscall	sys_ni_syscall
+-
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+ #include <asm/unistd.h>
  
+ #undef __SYSCALL
+-#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
++#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+ 
+ const syscall_fn_t sys_call_table[__NR_syscalls] = {
+-	[0 ... __NR_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
++	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
+ #include <asm/unistd.h>
+ };
+diff --git a/arch/arm64/kernel/sys32.c b/arch/arm64/kernel/sys32.c
+index 0f8bcb7de700..3c80a40c1c9d 100644
+--- a/arch/arm64/kernel/sys32.c
++++ b/arch/arm64/kernel/sys32.c
+@@ -133,17 +133,14 @@ COMPAT_SYSCALL_DEFINE6(aarch32_fallocate, int, fd, int, mode,
+ 	return ksys_fallocate(fd, mode, arg_u64(offset), arg_u64(len));
+ }
+ 
+-asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-#define __arm64_sys_ni_syscall	sys_ni_syscall
+-
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+ #include <asm/unistd32.h>
+ 
+ #undef __SYSCALL
+-#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
++#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+ 
+ const syscall_fn_t compat_sys_call_table[__NR_compat_syscalls] = {
+-	[0 ... __NR_compat_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
++	[0 ... __NR_compat_syscalls - 1] = __arm64_sys_ni_syscall,
+ #include <asm/unistd32.h>
+ };
 -- 
 2.20.1
 
