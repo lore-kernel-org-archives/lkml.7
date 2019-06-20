@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F28F5C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8485DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CDE642082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 647D4215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054564;
-	bh=Ch5HL6LHxkpD0Xof5UBAKBdyTDjTs0Dix0o9qgpDwuc=;
+	s=default; t=1561054568;
+	bh=A0ZMX69gc3yuNN1AmuTtB2l1SGUCCmEgsDeBG7r0wa8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=aET4kLit9evWo48UCVbgrxloCmW4DXZzFVkXicE0Qo72a9+CEOmEm56Em3frTRiT3
-	 ZDpMPPhfkZbolug2/i9qibyRaJb5H7aYsbHa34bKEUFpS50NaILXwMflVMMwvUV4vk
-	 ZUsGxB332RkTewOhnFYIga5h6UWOxGztpkZJrD80=
+	b=Kwakx/z7f+dFJzxJ6i1PYdzVgtFbuAJM2F9kia8BQQO74zUiHHWIw/LjDKNUo+aEi
+	 B7YIwAxeOyZ5BACEXim7583K767bLNTamsfw92m1NU/P/qJoj76exXiibWpw4VH8dQ
+	 c+keAAu5J/eRp4y+YJUHuj+QG3Ja4UVJs0AHkGtU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729714AbfFTSQD (ORCPT
+        id S1729722AbfFTSQG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:16:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45060 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:16:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729704AbfFTSQA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:00 -0400
+        id S1729711AbfFTSQE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC88521743;
-        Thu, 20 Jun 2019 18:15:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26F47208CA;
+        Thu, 20 Jun 2019 18:16:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054559;
-        bh=Ch5HL6LHxkpD0Xof5UBAKBdyTDjTs0Dix0o9qgpDwuc=;
+        s=default; t=1561054562;
+        bh=A0ZMX69gc3yuNN1AmuTtB2l1SGUCCmEgsDeBG7r0wa8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vPcxIMRwsK6Um6q1IaBda12QdCvz+t8jOHRHpkMO1t8lQ7R1oHnf3GUfeAtxNlP05
-         NiR/5R5eCXXzTgef5E7y+SLzYxrOGVTvMZttpV0iI2NqrnH0XMY4f8YvBS4tlBJCB0
-         HjgfRQnoFKcwuU2zsbg/naXyATGlerSpccYhtETc=
+        b=hzty2LQPaNRx6e3yYKHi1GbhxVCMb3KF4r9hJ7ec08lVsW/cyyvUE+1Bka27AmH4S
+         kaSwtHgcjWH65riUkM3VYFL41SLmeujqrNbPUEBdrpdfYtb/EhfoLr37U2y5oYtD0d
+         2lQA20IFfjjOZnp/zkzVyGtpE/sOu5Y9IXJl8yik=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>, linux-ia64@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Madalin Bucur <madalin.bucur@nxp.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 70/98] ia64: fix build errors by exporting paddr_to_nid()
-Date:   Thu, 20 Jun 2019 19:57:37 +0200
-Message-Id: <20190620174352.672987898@linuxfoundation.org>
+Subject: [PATCH 5.1 71/98] dpaa_eth: use only online CPU portals
+Date:   Thu, 20 Jun 2019 19:57:38 +0200
+Message-Id: <20190620174352.739435973@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -63,56 +60,93 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 9a626c4a6326da4433a0d4d4a8a7d1571caf1ed3 ]
+[ Upstream commit 7aae703f8096d21e34ce5f34f16715587bc30902 ]
 
-Fix build errors on ia64 when DISCONTIGMEM=y and NUMA=y by
-exporting paddr_to_nid().
+Make sure only the portals for the online CPUs are used.
+Without this change, there are issues when someone boots with
+maxcpus=n, with n < actual number of cores available as frames
+either received or corresponding to the transmit confirmation
+path would be offered for dequeue to the offline CPU portals,
+getting lost.
 
-Fixes these build errors:
-
-ERROR: "paddr_to_nid" [sound/core/snd-pcm.ko] undefined!
-ERROR: "paddr_to_nid" [net/sunrpc/sunrpc.ko] undefined!
-ERROR: "paddr_to_nid" [fs/cifs/cifs.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/video/fbdev/core/fb.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/usb/mon/usbmon.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/usb/core/usbcore.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/raid1.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-mod.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-crypt.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/md/dm-bufio.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/ide/ide-core.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/ide/ide-cd_mod.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/gpu/drm/drm.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/char/agp/agpgart.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/nbd.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/loop.ko] undefined!
-ERROR: "paddr_to_nid" [drivers/block/brd.ko] undefined!
-ERROR: "paddr_to_nid" [crypto/ccm.ko] undefined!
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: linux-ia64@vger.kernel.org
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Madalin Bucur <madalin.bucur@nxp.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/ia64/mm/numa.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/freescale/dpaa/dpaa_eth.c     | 9 ++++-----
+ drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c | 4 ++--
+ 2 files changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/arch/ia64/mm/numa.c b/arch/ia64/mm/numa.c
-index a03803506b0c..5e1015eb6d0d 100644
---- a/arch/ia64/mm/numa.c
-+++ b/arch/ia64/mm/numa.c
-@@ -55,6 +55,7 @@ paddr_to_nid(unsigned long paddr)
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+index d3f2408dc9e8..f38c3fa7d705 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_eth.c
+@@ -780,7 +780,7 @@ static void dpaa_eth_add_channel(u16 channel)
+ 	struct qman_portal *portal;
+ 	int cpu;
  
- 	return (i < num_node_memblks) ? node_memblk[i].nid : (num_node_memblks ? -1 : 0);
- }
-+EXPORT_SYMBOL(paddr_to_nid);
+-	for_each_cpu(cpu, cpus) {
++	for_each_cpu_and(cpu, cpus, cpu_online_mask) {
+ 		portal = qman_get_affine_portal(cpu);
+ 		qman_p_static_dequeue_add(portal, pool);
+ 	}
+@@ -896,7 +896,7 @@ static void dpaa_fq_setup(struct dpaa_priv *priv,
+ 	u16 channels[NR_CPUS];
+ 	struct dpaa_fq *fq;
  
- #if defined(CONFIG_SPARSEMEM) && defined(CONFIG_NUMA)
- /*
+-	for_each_cpu(cpu, affine_cpus)
++	for_each_cpu_and(cpu, affine_cpus, cpu_online_mask)
+ 		channels[num_portals++] = qman_affine_channel(cpu);
+ 
+ 	if (num_portals == 0)
+@@ -2174,7 +2174,6 @@ static int dpaa_eth_poll(struct napi_struct *napi, int budget)
+ 	if (cleaned < budget) {
+ 		napi_complete_done(napi, cleaned);
+ 		qman_p_irqsource_add(np->p, QM_PIRQ_DQRI);
+-
+ 	} else if (np->down) {
+ 		qman_p_irqsource_add(np->p, QM_PIRQ_DQRI);
+ 	}
+@@ -2448,7 +2447,7 @@ static void dpaa_eth_napi_enable(struct dpaa_priv *priv)
+ 	struct dpaa_percpu_priv *percpu_priv;
+ 	int i;
+ 
+-	for_each_possible_cpu(i) {
++	for_each_online_cpu(i) {
+ 		percpu_priv = per_cpu_ptr(priv->percpu_priv, i);
+ 
+ 		percpu_priv->np.down = 0;
+@@ -2461,7 +2460,7 @@ static void dpaa_eth_napi_disable(struct dpaa_priv *priv)
+ 	struct dpaa_percpu_priv *percpu_priv;
+ 	int i;
+ 
+-	for_each_possible_cpu(i) {
++	for_each_online_cpu(i) {
+ 		percpu_priv = per_cpu_ptr(priv->percpu_priv, i);
+ 
+ 		percpu_priv->np.down = 1;
+diff --git a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+index bdee441bc3b7..7ce2e99b594d 100644
+--- a/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
++++ b/drivers/net/ethernet/freescale/dpaa/dpaa_ethtool.c
+@@ -569,7 +569,7 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 	qman_dqrr_get_ithresh(portal, &prev_thresh);
+ 
+ 	/* set new values */
+-	for_each_cpu(cpu, cpus) {
++	for_each_cpu_and(cpu, cpus, cpu_online_mask) {
+ 		portal = qman_get_affine_portal(cpu);
+ 		res = qman_portal_set_iperiod(portal, period);
+ 		if (res)
+@@ -586,7 +586,7 @@ static int dpaa_set_coalesce(struct net_device *dev,
+ 
+ revert_values:
+ 	/* restore previous values */
+-	for_each_cpu(cpu, cpus) {
++	for_each_cpu_and(cpu, cpus, cpu_online_mask) {
+ 		if (!needs_revert[cpu])
+ 			continue;
+ 		portal = qman_get_affine_portal(cpu);
 -- 
 2.20.1
 
