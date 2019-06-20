@@ -1,145 +1,163 @@
-Return-Path: <SRS0=Bkl1=UT=noreply.com=noreply@kernel.org>
+Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_HTML_ONLY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.8 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C6E2C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:52 +0000 (UTC)
-X-Greylist: delayed 34724 seconds by postgrey-1.34 at mail.kernel.org; Thu, 20 Jun 2019 12:16:51 UTC
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org ADB4B2080C
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=noreply.com
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=noreply@noreply.com
-Received: from host.btflhosting.com (unknown [69.16.193.59])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by mail.kernel.org (Postfix) with ESMTPS id ADB4B2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:16:51 +0000 (UTC)
-Received: from mta-d-189.sentinbox.com ([185.235.15.190]:59609 helo=noreply.com)
-	by host.btflhosting.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-	(Exim 4.87)
-	(envelope-from <noreply@noreply.com>)
-	id 1hdmxi-000JG5-4v
-	for linux-kernel@archiver.kernel.org; Wed, 19 Jun 2019 22:38:06 -0400
-From: archiver.kernel.org  <noreply@noreply.com>
-To: linux-kernel@archiver.kernel.org
-Subject: Warning!!! Email Update
-Date: 19 Jun 2019 19:37:58 -0700
-Message-ID: <20190619193758.DFC292987856281C@noreply.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8108C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:17:38 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id B25D32080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:17:38 +0000 (UTC)
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S1731774AbfFTMRh (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 20 Jun 2019 08:17:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38864 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730886AbfFTMRg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:17:36 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KCFWnZ122636
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:17:35 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t87q8x4x6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:17:35 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 20 Jun 2019 13:17:33 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Jun 2019 13:17:31 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KCHTdk48169198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 12:17:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5EA3D5204E;
+        Thu, 20 Jun 2019 12:17:29 +0000 (GMT)
+Received: from osiris (unknown [9.145.74.86])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 1BFE35204F;
+        Thu, 20 Jun 2019 12:17:29 +0000 (GMT)
+Date:   Thu, 20 Jun 2019 14:17:27 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.2-rc6
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - host.btflhosting.com
-X-AntiAbuse: Original Domain - archiver.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - noreply.com
-X-Get-Message-Sender-Via: host.btflhosting.com: authenticated_id: test@btflhosting.com
-X-Authenticated-Sender: host.btflhosting.com: test@btflhosting.com
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-List-Id: <linux-kernel.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 19062012-4275-0000-0000-000003441300
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062012-4276-0000-0000-00003854426D
+Message-Id: <20190620121727.GA4387@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=978 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200091
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-<html><head></head><body><div style=3D"color:#000;background-color:#fff;fon=
-t-family:Helvetica Neue,Helvetica,Arial,Lucida Grande,sans-serif;font-size:=
-13px"><div id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym=
-19_1_1555803250049_95266" dir=3D"ltr"><br id=3D"m_2296189881713917254ydp4a1=
-92433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97327"/></div><table widt=
-h=3D"478" cellspacing=3D"0" cellpadding=3D"0" border=3D"1" style=3D"font-fa=
-mily:Arial,Helvetica,sans-serif;font-size:small;color:rgb(33,33,33)" id=3D"=
-m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155580325004=
-9_97328"><tbody id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16=
-_0_ym19_1_1555803250049_97329"><tr id=3D"m_2296189881713917254ydp4a192433yi=
-v4067848516yui_3_16_0_ym19_1_1555803250049_97330"><td style=3D"font-family:=
-Roboto,RobotoDraft,Helvetica,Arial,sans-serif;margin:0px;border:medium none=
-;padding:11.25pt 7.5pt 11.25pt 15pt" id=3D"m_2296189881713917254ydp4a192433=
-yiv4067848516yui_3_16_0_ym19_1_1555803250049_97331"><div style=3D"margin:0i=
-n 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,serif,EmojiFon=
-t" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155=
-5803250049_97332"><span style=3D"font-size:11.5pt" id=3D"m_2296189881713917=
-254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97333"></span></=
-div><div style=3D"margin:0in 0in 0.0001pt;font-size:11pt;font-family:Calibr=
-i,sans-serif,serif,EmojiFont" id=3D"m_2296189881713917254ydp4a192433yiv4067=
-848516yui_3_16_0_ym19_1_1555803250049_97334">Hello=A0<span style=3D"font-fa=
-mily:Roboto,RobotoDraft,Helvetica,Arial,sans-serif;font-size:small" id=3D"m=
-_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049=
-_97335">linux-kernel@archiver.kernel.org</span><span style=3D"font-size:11p=
-t" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155=
-5803250049_97336">,</span></div><div style=3D"margin:0in 0in 0.0001pt;font-=
-size:11pt;font-family:Calibri,sans-serif,serif,EmojiFont" id=3D"m_229618988=
-1713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97337"><s=
-pan style=3D"font-size:11.5pt" id=3D"m_2296189881713917254ydp4a192433yiv406=
-7848516yui_3_16_0_ym19_1_1555803250049_97338"></span></div><div style=3D"ma=
-rgin:0in 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,serif,E=
-mojiFont" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym1=
-9_1_1555803250049_97339"><br id=3D"m_2296189881713917254ydp4a192433yiv40678=
-48516yui_3_16_0_ym19_1_1555803250049_97340"/></div><div style=3D"margin:0in=
- 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,serif,EmojiFont=
-" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555=
-803250049_97341">You have three messages On Hold due to your mail account l=
-imit</div></td><td style=3D"font-family:Roboto,RobotoDraft,Helvetica,Arial,=
-sans-serif;margin:0px;border:medium none;padding:11.25pt 15pt 11.25pt 7.5pt=
-" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555=
-803250049_97342"><div align=3D"right" style=3D"margin:0in 0in 0.0001pt;font=
--size:11pt;font-family:Calibri,sans-serif,serif,EmojiFont;text-align:right"=
- id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_15558=
-03250049_97343"></div><br id=3D"m_2296189881713917254ydp4a192433yiv40678485=
-16yui_3_16_0_ym19_1_1555803250049_97344"/></td></tr><tr id=3D"m_22961898817=
-13917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97345"><td =
-colspan=3D"2" style=3D"font-family:Roboto,RobotoDraft,Helvetica,Arial,sans-=
-serif;margin:0px;border:medium none;padding:0in 15pt 15pt" id=3D"m_22961898=
-81713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97346"><=
-table width=3D"438" cellspacing=3D"0" cellpadding=3D"0" border=3D"0" style=
-=3D"width:328.5pt;background-image:none" id=3D"m_2296189881713917254ydp4a19=
-2433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97347"><tbody id=3D"m_2296=
-189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_9734=
-8"><tr id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1=
-_1555803250049_97349"><td style=3D"margin:0px;padding:15pt 0in 15pt 15pt" i=
-d=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803=
-250049_97350"><font color=3D"#0000ff" face=3D"Calibri, sans-serif" id=3D"m_=
-2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_=
-97351"><span style=3D"font-size:16px" id=3D"m_2296189881713917254ydp4a19243=
-3yiv4067848516yui_3_16_0_ym19_1_1555803250049_97352">Inbox (3)</span></font=
-><br id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1=
-555803250049_97353"/><div style=3D"margin:0in 0in 0.0001pt;font-family:Cali=
-bri,sans-serif,serif,EmojiFont" id=3D"m_2296189881713917254ydp4a192433yiv40=
-67848516yui_3_16_0_ym19_1_1555803250049_97354"><font size=3D"4" id=3D"m_229=
-6189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_973=
-55"><span style=3D"color:black" id=3D"m_2296189881713917254ydp4a192433yiv40=
-67848516yui_3_16_0_ym19_1_1555803250049_97356">Please click on the below bu=
-tton to=A0preview messages and Upgrade Limit</span></font></div><div style=
-=3D"margin:0in 0in 0.0001pt;font-size:11pt;font-family:Calibri,sans-serif,s=
-erif,EmojiFont" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16=
-_0_ym19_1_1555803250049_97357">
-</div><table width=3D"393" cellpadding=3D"0" border=3D"0" style=3D"width:29=
-4.75pt" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_=
-1_1555803250049_97358"><tbody id=3D"m_2296189881713917254ydp4a192433yiv4067=
-848516yui_3_16_0_ym19_1_1555803250049_97359"><tr style=3D"min-height:22.5pt=
-" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555=
-803250049_97360"><td nowrap=3D"" width=3D"200" style=3D"margin:0px;width:15=
-0pt;border:1pt solid rgb(0,120,215);background-image:none;background-color:=
-rgb(0,120,215);padding:0.75pt 15pt;min-height:22.5pt" id=3D"m_2296189881713=
-917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97361"><div a=
-lign=3D"center" style=3D"margin:0in 0in 0.0001pt;font-size:11pt;font-family=
-:Calibri,sans-serif,serif,EmojiFont;text-align:center" dir=3D"ltr" id=3D"m_=
-2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_=
-97362"><span style=3D"font-size:12pt" id=3D"m_2296189881713917254ydp4a19243=
-3yiv4067848516yui_3_16_0_ym19_1_1555803250049_97363"><b id=3D"m_22961898817=
-13917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97364"><spa=
-n style=3D"font-size:10.5pt;font-family:Tahoma,sans-serif,serif,EmojiFont" =
-id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_155580=
-3250049_97365"><a href=3D"https://marquiss.co.kr/update/?email=3Dlinux-kern=
-el@archiver.kernel.org" style=3D"color:rgb(17,85,204)" id=3D"m_229618988171=
-3917254ydp4a192433yiv4067848516yui_3_16_0_ym19_1_1555803250049_97366" rel=
-=3D"nofollow" target=3D"_blank" data-saferedirecturl=3D"https://www.google.=
-com/url?q=3Dhttp://ktca.com.au/admin/logs/update%25202/index.php?email%3D%5=
-B%5B-Email-%5D%5D&amp;source=3Dgmail&amp;ust=3D1559185558494000&amp;usg=3DA=
-FQjCNEzG9XcEjaVH3Xg_pQj9Xhu8v28Fg" data-saferedirectreason=3D"2"><font colo=
-r=3D"#ffffff" id=3D"m_2296189881713917254ydp4a192433yiv4067848516yui_3_16_0=
-_ym19_1_1555803250049_97367">View Here</font></a></span></b></span></div></=
-td></tr></tbody></table></td></tr></tbody></table></td></tr></tbody></table=
-></div></body></html>
+Hello Linus,
+
+The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
+
+  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
+
+are available in the git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-5
+
+for you to fetch changes up to 11aff183225c5cf48fae074cd99d8f18ba84ed34:
+
+  vfio-ccw: Destroy kmem cache region on module exit (2019-06-13 15:52:28 +0200)
+
+----------------------------------------------------------------
+s390 updates for 5.2-rc6
+
+ - Disable address-of-packed-member warning in s390 specific boot code
+   to get rid of a gcc9 warning which otherwise is already disabled
+   for the whole kernel.
+
+ - Fix yet another compiler error seen with CONFIG_OPTIMIZE_INLINING
+   enabled.
+
+ - Fix memory leak in vfio-ccw code on module exit.
+
+----------------------------------------------------------------
+Farhan Ali (1):
+      vfio-ccw: Destroy kmem cache region on module exit
+
+Guenter Roeck (1):
+      s390/ctl_reg: mark __ctl_set_bit and __ctl_clear_bit as __always_inline
+
+Heiko Carstens (1):
+      s390/boot: disable address-of-packed-member warning
+
+ arch/s390/Makefile              | 1 +
+ arch/s390/include/asm/ctl_reg.h | 4 ++--
+ drivers/s390/cio/vfio_ccw_drv.c | 1 +
+ 3 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index de8521f..e48013c 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -30,6 +30,7 @@ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
+ KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
+ KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
++KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
+ KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
+ UTS_MACHINE	:= s390x
+diff --git a/arch/s390/include/asm/ctl_reg.h b/arch/s390/include/asm/ctl_reg.h
+index 4600453..3bda757 100644
+--- a/arch/s390/include/asm/ctl_reg.h
++++ b/arch/s390/include/asm/ctl_reg.h
+@@ -55,7 +55,7 @@
+ 		: "i" (low), "i" (high));				\
+ } while (0)
+ 
+-static inline void __ctl_set_bit(unsigned int cr, unsigned int bit)
++static __always_inline void __ctl_set_bit(unsigned int cr, unsigned int bit)
+ {
+ 	unsigned long reg;
+ 
+@@ -64,7 +64,7 @@ static inline void __ctl_set_bit(unsigned int cr, unsigned int bit)
+ 	__ctl_load(reg, cr, cr);
+ }
+ 
+-static inline void __ctl_clear_bit(unsigned int cr, unsigned int bit)
++static __always_inline void __ctl_clear_bit(unsigned int cr, unsigned int bit)
+ {
+ 	unsigned long reg;
+ 
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index ee8767f..9125f7f 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -299,6 +299,7 @@ static void __exit vfio_ccw_sch_exit(void)
+ 	css_driver_unregister(&vfio_ccw_sch_driver);
+ 	isc_unregister(VFIO_CCW_ISC);
+ 	kmem_cache_destroy(vfio_ccw_io_region);
++	kmem_cache_destroy(vfio_ccw_cmd_region);
+ 	destroy_workqueue(vfio_ccw_work_q);
+ }
+ module_init(vfio_ccw_sch_init);
+
