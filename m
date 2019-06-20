@@ -2,124 +2,72 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8208C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:33:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC712C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:33:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAF24208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:33:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C59B2085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:33:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730791AbfFTIdR (ORCPT
+        id S1730927AbfFTIde (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:33:17 -0400
-Received: from relay2-d.mail.gandi.net ([217.70.183.194]:48089 "EHLO
-        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIdQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:33:16 -0400
-X-Originating-IP: 92.137.69.152
-Received: from localhost (alyon-656-1-672-152.w92-137.abo.wanadoo.fr [92.137.69.152])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay2-d.mail.gandi.net (Postfix) with ESMTPSA id 05CC440011;
-        Thu, 20 Jun 2019 08:33:10 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 10:33:09 +0200
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Ken Sloat <KSloat@aampglobal.com>
-Cc:     "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>,
-        "wim@linux-watchdog.org" <wim@linux-watchdog.org>,
-        "linux@roeck-us.net" <linux@roeck-us.net>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 1/1] watchdog: atmel: atmel-sama5d4-wdt: Disable
- watchdog on system suspend
-Message-ID: <20190620083309.GU23549@piout.net>
-References: <20190614125310.29458-1-ksloat@aampglobal.com>
+        Thu, 20 Jun 2019 04:33:34 -0400
+Received: from mx2.suse.de ([195.135.220.15]:35564 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbfFTIdd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:33:33 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 521A5AF22;
+        Thu, 20 Jun 2019 08:33:32 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 10:33:31 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Cheng Jian <cj.chengjian@huawei.com>
+cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
+        jpoimboe@redhat.com, tglx@linutronix.de, mingo@redhat.com,
+        huawei.libin@huawei.com, xiexiuqi@huawei.com,
+        yangyingliang@huawei.com, bobo.shaobowang@huawei.com
+Subject: Re: [PATCH] Revert "x86/module: Detect and skip invalid
+ relocations"
+In-Reply-To: <1561019068-132672-1-git-send-email-cj.chengjian@huawei.com>
+Message-ID: <alpine.LSU.2.21.1906201028490.25778@pobox.suse.cz>
+References: <1561019068-132672-1-git-send-email-cj.chengjian@huawei.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190614125310.29458-1-ksloat@aampglobal.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14/06/2019 12:53:22+0000, Ken Sloat wrote:
-> From: Ken Sloat <ksloat@aampglobal.com>
-> 
-> Currently, the atmel-sama5d4-wdt continues to run after system suspend.
-> Unless the system resumes within the watchdog timeout period so the
-> userspace can kick it, the system will be reset. This change disables
-> the watchdog on suspend if it is active and re-enables on resume. These
-> actions occur during the late and early phases of suspend and resume
-> respectively to minimize chances where a lock could occur while the
-> watchdog is disabled.
-> 
-> Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+On Thu, 20 Jun 2019, Cheng Jian wrote:
 
-> ---
->  Changes in v2:
->  -Consolidate resume and resume early statements.
+> This reverts commit eda9cec4c9a12208a6f69fbe68f72a6311d50032.
 > 
->  drivers/watchdog/sama5d4_wdt.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
+> Since commit (eda9cec4c9a1 'x86/module: Detect and skip invalid
+> relocations') add some sanity check in apply_relocate_add, borke
+> re-insmod a kernel module which has been patched before,
 > 
-> diff --git a/drivers/watchdog/sama5d4_wdt.c b/drivers/watchdog/sama5d4_wdt.c
-> index 111695223aae..0d123f8cbcc6 100644
-> --- a/drivers/watchdog/sama5d4_wdt.c
-> +++ b/drivers/watchdog/sama5d4_wdt.c
-> @@ -280,7 +280,17 @@ static const struct of_device_id sama5d4_wdt_of_match[] = {
->  MODULE_DEVICE_TABLE(of, sama5d4_wdt_of_match);
->  
->  #ifdef CONFIG_PM_SLEEP
-> -static int sama5d4_wdt_resume(struct device *dev)
-> +static int sama5d4_wdt_suspend_late(struct device *dev)
-> +{
-> +	struct sama5d4_wdt *wdt = dev_get_drvdata(dev);
-> +
-> +	if (watchdog_active(&wdt->wdd))
-> +		sama5d4_wdt_stop(&wdt->wdd);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sama5d4_wdt_resume_early(struct device *dev)
->  {
->  	struct sama5d4_wdt *wdt = dev_get_drvdata(dev);
->  
-> @@ -291,12 +301,17 @@ static int sama5d4_wdt_resume(struct device *dev)
->  	 */
->  	sama5d4_wdt_init(wdt);
->  
-> +	if (watchdog_active(&wdt->wdd))
-> +		sama5d4_wdt_start(&wdt->wdd);
-> +
->  	return 0;
->  }
->  #endif
->  
-> -static SIMPLE_DEV_PM_OPS(sama5d4_wdt_pm_ops, NULL,
-> -			 sama5d4_wdt_resume);
-> +static const struct dev_pm_ops sama5d4_wdt_pm_ops = {
-> +	SET_LATE_SYSTEM_SLEEP_PM_OPS(sama5d4_wdt_suspend_late,
-> +			sama5d4_wdt_resume_early)
-> +};
->  
->  static struct platform_driver sama5d4_wdt_driver = {
->  	.probe		= sama5d4_wdt_probe,
-> -- 
-> 2.17.1
+> The relocation informations of the livepatch module have been
+> overwritten since first patched, so if we rmmod and insmod the
+> kernel module, these values are not zero anymore, when
+> klp_module_coming doing, and that commit marks them as invalid
+> invalid_relocation.
 > 
+> Then the following error occurs:
+> 
+> 	module: x86/modules: Skipping invalid relocation target, existing value is nonzero for type 2, loc (____ptrval____), val ffffffffc000236c
+> 	livepatch: failed to initialize patch 'livepatch_0001_test' for module 'test' (-8)
+> 	livepatch: patch 'livepatch_0001_test' failed for module 'test', refusing to load module 'test'
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Oh yeah. First reported here 20180602161151.apuhs2dygsexmcg2@treble (LP ML 
+only and there is no archive on lore.kernel.org yet. Sorry about that.). I 
+posted v1 here 
+https://lore.kernel.org/lkml/20180607092949.1706-1-mbenes@suse.cz/ and 
+even started to work on v2 in March with arch-specific nullifying, but 
+then I got sidetracked again. I'll move it up my todo list a bit.
+
+Miroslav
