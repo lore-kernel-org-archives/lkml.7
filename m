@@ -7,47 +7,52 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B665C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE8EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 786232082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F6992166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:06:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054000;
-	bh=/NRaRJ0jp8elJzijBdTeELMvF+Ynqa9zz4v4LSQZ5ZU=;
+	s=default; t=1561054004;
+	bh=bDBU2rsX9swvTzPHVgf99wGmSk/InOxpTryZw0jnALs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XuqIu1R1XAShTZj3u6L66CII4hspOr6mG9qcnsSwgv2aArvGlMd7mREeUu9KZ0p3r
-	 FVcjgUDs9s3AjknUOGBMhbP3KX3BhyyN81MDjDo/6ktJ9tRKP/CYFsZGFSATkgX3bB
-	 xx9lAhGg6dJgh1WLmC83Lfh5bH55G3j7/+4+lNyc=
+	b=zH2rVi5pS+C4tLE2wR6TlL0qQbqYoCMeicrkfJPCB9yfCn9GijM3T+9coHM6M4bdp
+	 GUzLhGw5PfryAlszANIa9lZpVGR4nspOdSVb/07h7mEywiuoivJ2WbjzIDJb5WzcTn
+	 kt7dXLv8I0UzCJ9EmDXjAKNg4U6xQDxtkiIEsI98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728204AbfFTSGj (ORCPT
+        id S1728211AbfFTSGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:06:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:06:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60892 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728189AbfFTSGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:37 -0400
+        id S1728189AbfFTSGk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:40 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D92C3215EA;
-        Thu, 20 Jun 2019 18:06:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE17A204FD;
+        Thu, 20 Jun 2019 18:06:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053996;
-        bh=/NRaRJ0jp8elJzijBdTeELMvF+Ynqa9zz4v4LSQZ5ZU=;
+        s=default; t=1561053999;
+        bh=bDBU2rsX9swvTzPHVgf99wGmSk/InOxpTryZw0jnALs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XQz4kUScaVM6kTbo2j6iWJVv2L4z2WdKcFVD1l+vOs2sPHxmxx0vrvoV6v6m9W3Cm
-         43LmDoft3jotNTiF35AnPM21ebuMzl1VZZ2GhIxM4l6IchyAEQAs6b8N6ROv27eGiq
-         yR30wGIKhr32tTpxTLQAJPzfwhaPE8/lnUQqEAoA=
+        b=Fy5jPduR4TyOR7S1WtoTDK6irH3d20Ff8a0lBt3GJaVIoehjpwov0IWsFDo1D2ntV
+         iwXLQgj6d0T3x0LuaUAyF8HRybxxKboWA6PlgYbyvxUyxLNNK5amXBCOjWRHM1kUoC
+         daiOoJdJG10ehaUXdFSNJCOvgku2PvZvu83Kax80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Frank van der Linden <fllinden@amazon.com>,
+        Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, bp@alien8.de,
+        jiaxun.yang@flygoat.com, Ingo Molnar <mingo@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 099/117] mISDN: make sure device name is NUL terminated
-Date:   Thu, 20 Jun 2019 19:57:13 +0200
-Message-Id: <20190620174357.769992972@linuxfoundation.org>
+Subject: [PATCH 4.9 100/117] x86/CPU/AMD: Dont force the CPB cap when running under a hypervisor
+Date:   Thu, 20 Jun 2019 19:57:14 +0200
+Message-Id: <20190620174357.804264248@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,54 +65,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit ccfb62f27beb295103e9392462b20a6ed807d0ea ]
+[ Upstream commit 2ac44ab608705948564791ce1d15d43ba81a1e38 ]
 
-The user can change the device_name with the IMSETDEVNAME ioctl, but we
-need to ensure that the user's name is NUL terminated.  Otherwise it
-could result in a buffer overflow when we copy the name back to the user
-with IMGETDEVINFO ioctl.
+For F17h AMD CPUs, the CPB capability ('Core Performance Boost') is forcibly set,
+because some versions of that chip incorrectly report that they do not have it.
 
-I also changed two strcpy() calls which handle the name to strscpy().
-Hopefully, there aren't any other ways to create a too long name, but
-it's nice to do this as a kernel hardening measure.
+However, a hypervisor may filter out the CPB capability, for good
+reasons. For example, KVM currently does not emulate setting the CPB
+bit in MSR_K7_HWCR, and unchecked MSR access errors will be thrown
+when trying to set it as a guest:
 
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	unchecked MSR access error: WRMSR to 0xc0010015 (tried to write 0x0000000001000011) at rIP: 0xffffffff890638f4 (native_write_msr+0x4/0x20)
+
+	Call Trace:
+	boost_set_msr+0x50/0x80 [acpi_cpufreq]
+	cpuhp_invoke_callback+0x86/0x560
+	sort_range+0x20/0x20
+	cpuhp_thread_fun+0xb0/0x110
+	smpboot_thread_fn+0xef/0x160
+	kthread+0x113/0x130
+	kthread_create_worker_on_cpu+0x70/0x70
+	ret_from_fork+0x35/0x40
+
+To avoid this issue, don't forcibly set the CPB capability for a CPU
+when running under a hypervisor.
+
+Signed-off-by: Frank van der Linden <fllinden@amazon.com>
+Acked-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: bp@alien8.de
+Cc: jiaxun.yang@flygoat.com
+Fixes: 0237199186e7 ("x86/CPU/AMD: Set the CPB bit unconditionally on F17h")
+Link: http://lkml.kernel.org/r/20190522221745.GA15789@dev-dsk-fllinden-2c-c1893d73.us-west-2.amazon.com
+[ Minor edits to the changelog. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/isdn/mISDN/socket.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/amd.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
-index f96b8f2bdf74..d7c986fb0b3b 100644
---- a/drivers/isdn/mISDN/socket.c
-+++ b/drivers/isdn/mISDN/socket.c
-@@ -394,7 +394,7 @@ data_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
- 			memcpy(di.channelmap, dev->channelmap,
- 			       sizeof(di.channelmap));
- 			di.nrbchan = dev->nrbchan;
--			strcpy(di.name, dev_name(&dev->dev));
-+			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
- 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
- 				err = -EFAULT;
- 		} else
-@@ -678,7 +678,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
- 			memcpy(di.channelmap, dev->channelmap,
- 			       sizeof(di.channelmap));
- 			di.nrbchan = dev->nrbchan;
--			strcpy(di.name, dev_name(&dev->dev));
-+			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
- 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
- 				err = -EFAULT;
- 		} else
-@@ -692,6 +692,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
- 			err = -EFAULT;
- 			break;
- 		}
-+		dn.name[sizeof(dn.name) - 1] = '\0';
- 		dev = get_mdevice(dn.id);
- 		if (dev)
- 			err = device_rename(&dev->dev, dn.name);
+diff --git a/arch/x86/kernel/cpu/amd.c b/arch/x86/kernel/cpu/amd.c
+index be6d0543e626..52a65f14db06 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -766,8 +766,11 @@ static void init_amd_zn(struct cpuinfo_x86 *c)
+ {
+ 	set_cpu_cap(c, X86_FEATURE_ZEN);
+ 
+-	/* Fix erratum 1076: CPB feature bit not being set in CPUID. */
+-	if (!cpu_has(c, X86_FEATURE_CPB))
++	/*
++	 * Fix erratum 1076: CPB feature bit not being set in CPUID.
++	 * Always set it, except when running under a hypervisor.
++	 */
++	if (!cpu_has(c, X86_FEATURE_HYPERVISOR) && !cpu_has(c, X86_FEATURE_CPB))
+ 		set_cpu_cap(c, X86_FEATURE_CPB);
+ }
+ 
 -- 
 2.20.1
 
