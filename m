@@ -2,105 +2,140 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32D3BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:29:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 660B0C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07E952083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:29:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561048191;
-	bh=aTPE4/MlVDXLh/bVBjr+tH+7DtK2ze10qXN75K5G0Og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OLzQ5ykKVZqoY8AnStEudZ7AXmvh9xK044JyVcdYNOgP/4itbPNjO0H/pdw41Mv1g
-	 SHsgbfqDruQgINFWYTmjiWirYSv2hfP4O3GSNArMYoTwg84T6y3ORxiJhSEyc2gDqy
-	 LcK+MMGX/v289Sd4XB724GOUeZC5ulQwRl7n4rSo=
+	by mail.kernel.org (Postfix) with ESMTP id 3CEA42085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:30:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="IbYvmcN3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732260AbfFTQ3t (ORCPT
+        id S1732263AbfFTQaW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:29:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45734 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfFTQ3t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:29:49 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA0172064A;
-        Thu, 20 Jun 2019 16:29:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561048188;
-        bh=aTPE4/MlVDXLh/bVBjr+tH+7DtK2ze10qXN75K5G0Og=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ktHE00JdENjw6it5sMr7BPX8b2uSgQ+Fu5iXr2GDSsuZIjjo04Qi7T8dkjxtg2wjh
-         DBOLyCUD7f1iCk/44OXUqwzI86k4oKQ7Ltqa4527WOz0jQQv72CLkPHITlYsgksrbj
-         uBylIw/v2VqxFSNILCjPZtpaD5DbXbnVHnj7BTyE=
-Date:   Thu, 20 Jun 2019 18:29:45 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Johan Hovold <johan@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>
-Subject: Re: [PATCH 04/14] ABI: better identificate tables
-Message-ID: <20190620162945.GC23052@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
- <20190619125135.GG25248@localhost>
- <20190619105633.7f7315a5@coco.lan>
- <20190619150207.GA19346@kroah.com>
- <20190620120150.GH6241@localhost>
- <20190620125413.GA5170@kroah.com>
- <20190620112034.0d2be447@coco.lan>
+        Thu, 20 Jun 2019 12:30:22 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:36445 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726620AbfFTQaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 12:30:22 -0400
+Received: by mail-ot1-f66.google.com with SMTP id r6so3348099oti.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 09:30:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=DApYrgtFGUX8hglw1AcOz6adgUtgKXSMo50u9kqGqWo=;
+        b=IbYvmcN3FD1XsFJRWLBVeAh4cj+ztsE2rAJY2j9X45js8FuU/UPlkV5Z4mXnvi7Y7S
+         A1GJpNUvJJbYn4ayjrn7/ANF+NiX7qKfqVlzDYpeflENEtIxLPu+qyys3bQLnsGfTQ1q
+         nP6mTojxuOtLIWObuYkjJyA/1wtWC7fvvWuTmmiY8UwiqIT0/aeMmX6iPRbPwOg5iGPr
+         uvfM5n2Dc7iiy1RvSAtGN0+PsX0kiVynUGI3ramtVIYzCGNtSNnR70SGPuHH87OdZOvD
+         shvfqPmJ4PpbxFg34W9zwV3aCJNPq3GMuGB4dV59hH1kuK1Ja8KmFwrH/fL/dTGr3744
+         /wLg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=DApYrgtFGUX8hglw1AcOz6adgUtgKXSMo50u9kqGqWo=;
+        b=VInNQTuTvKvwzgWLWFEXxnN1hpZqBdaykbYebnCz+c9aV99k+GFuAfKtwXWjwgpXWK
+         h6j/3WCLNWGEtRVQoHLqFbIBm1s0dkSXkXdxpulsU45k2lp5amFOCU3D8hmg5X02O+By
+         75HHxoYKesl00H+R5qdrgdQZ8BMCvTVS2TzDyZKnayeaCGdipMv7lT/AV8rgagmmuxRQ
+         z9O7CUB6Bf8RVSrBbhjOWbIgmSoGA9taOLZp+ifHaP5rGudvTN1VnDKMdJBp/n03k5Sw
+         oAynTaNLooHFFH8C8J/XSsLC5TdXDozzDdEBdzI2RO6U4R36mBpZ8CzMO3cV4u7KyS2y
+         9zxg==
+X-Gm-Message-State: APjAAAXdNM6B9VpiQlOgyayx/oD2s9AhcY9WET0YssnnfGFqt4Wueshq
+        Ho+INUPtel8k23z23nL8ScTxrruerxsv/7CiOxSqHQ==
+X-Google-Smtp-Source: APXvYqxIllarlavyR5g1oQ37eeWGGe9Qov4pSV/b7aFTtPwH8mY5U/JzeG/yRiJUeWSkE5MXZLJELq2eNsiljKeKmTU=
+X-Received: by 2002:a9d:7b48:: with SMTP id f8mr14032030oto.207.1561048221363;
+ Thu, 20 Jun 2019 09:30:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620112034.0d2be447@coco.lan>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <874l4kjv6o.fsf@linux.ibm.com>
+In-Reply-To: <874l4kjv6o.fsf@linux.ibm.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 20 Jun 2019 09:30:10 -0700
+Message-ID: <CAPcyv4ioWRhU9AbyTHhf9PavL0GSs=6h3dGyaQPb7vLJ2+z23g@mail.gmail.com>
+Subject: Re: [PATCH v10 00/13] mm: Sub-section memory hotplug support
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Jonathan Corbet <corbet@lwn.net>, Qian Cai <cai@lca.pw>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 11:20:34AM -0300, Mauro Carvalho Chehab wrote:
-> Em Thu, 20 Jun 2019 14:54:13 +0200
-> Greg Kroah-Hartman <gregkh@linuxfoundation.org> escreveu:
-> 
-> > On Thu, Jun 20, 2019 at 02:01:50PM +0200, Johan Hovold wrote:
-> > > > I don't know when "Description" and "RST-Description" would be used.
-> > > > Why not just parse "Description" like rst text and if things are "messy"
-> > > > we fix them up as found, like you did with the ":" here?  It doesn't
-> > > > have to be complex, we can always fix them up after-the-fact if new
-> > > > stuff gets added that doesn't quite parse properly.
-> > > > 
-> > > > Just like we do for most kernel-doc formatting :)  
-> > > 
-> > > But kernel-doc has a documented format, which was sort of the point I
-> > > was trying to make. If the new get_abi.pl scripts expects a colon I
-> > > think it should be mentioned somewhere (e.g. Documentation/ABI/README).
-> > > 
-> > > Grepping for attribute entries in linux-next still reveals a number
-> > > descriptions that still lack that colon and use varying formatting. More
-> > > are bound to be added later, but perhaps that's ok depending on what
-> > > you're aiming at here.  
-> > 
-> > I'm aiming for "good enough" to start with, and then we can work through
-> > the exceptions.
-> > 
-> > But given that Mauro hasn't resent the script that does the conversion
-> > of the files, I don't know if that will even matter... {hint}
-> 
-> It sounds I missed something... are you expecting a new version? 
+On Thu, Jun 20, 2019 at 5:31 AM Aneesh Kumar K.V
+<aneesh.kumar@linux.ibm.com> wrote:
+>
+> Dan Williams <dan.j.williams@intel.com> writes:
+>
+> > Changes since v9 [1]:
+> > - Fix multiple issues related to the fact that pfn_valid() has
+> >   traditionally returned true for any pfn in an 'early' (onlined at
+> >   boot) section regardless of whether that pfn represented 'System RAM'.
+> >   Teach pfn_valid() to maintain its traditional behavior in the presence
+> >   of subsections. Specifically, subsection precision for pfn_valid() is
+> >   only considered for non-early / hot-plugged sections. (Qian)
+> >
+> > - Related to the first item introduce a SECTION_IS_EARLY
+> >   (->section_mem_map flag) to remove the existing hacks for determining
+> >   an early section by looking at whether the usemap was allocated from the
+> >   slab.
+> >
+> > - Kill off the EEXIST hackery in __add_pages(). It breaks
+> >   (arch_add_memory() false-positive) the detection of subsection
+> >   collisions reported by section_activate(). It is also obviated by
+> >   David's recent reworks to move the 'System RAM' request_region() earlier
+> >   in the add_memory() sequence().
+> >
+> > - Switch to an arch-independent / static subsection-size of 2MB.
+> >   Otherwise, a per-arch subsection-size is a roadblock on the path to
+> >   persistent memory namespace compatibility across archs. (Jeff)
+> >
+> > - Update the changelog for "libnvdimm/pfn: Fix fsdax-mode namespace
+> >   info-block zero-fields" to clarify that the "Cc: stable" is only there
+> >   as safety measure for a distro that decides to backport "libnvdimm/pfn:
+> >   Stop padding pmem namespaces to section alignment", otherwise there is
+> >   no known bug exposure in older kernels. (Andrew)
+> >
+> > - Drop some redundant subsection checks (Oscar)
+> >
+> > - Collect some reviewed-bys
+> >
+> > [1]: https://lore.kernel.org/lkml/155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com/
+>
+>
+> You can add Tested-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> for ppc64.
 
-Yes, the last round of patches didn't have a SPDX header on the script,
-so I couldn't add it to the tree :(
+Thank you!
 
-thanks,
+> BTW even after this series we have the kernel crash mentioned in the
+> below email on reconfigure.
+>
+> https://lore.kernel.org/linux-mm/20190514025354.9108-1-aneesh.kumar@linux.ibm.com
+>
+> I guess we need to conclude how the reserve space struct page should be
+> initialized ?
 
-greg k-h
+Yes, that issue is independent of the subsection changes. I'll take a
+closer look.
