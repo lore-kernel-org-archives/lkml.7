@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB44CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA209C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB2692089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C02CF21721
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053620;
-	bh=9XSoFio4Y21xVYPOSxS4PB8P2EtuoI2hV+SBpdkm8wY=;
+	s=default; t=1561053623;
+	bh=lYwmXNi2gRXd0Sj13VdaDEUHQXlhtornMixWj3JjQKA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EaRssRsdWHDrr5L5Cl0YBhPUAn0aSx0pwpFAPj6q1OYTlVcXkhSNZL2pNBoOSJs/J
-	 40/xzHAP3AGQrYwhwKb/IMDI2DNnvaoqY4aOyi4Ou5z5+g3lHhf6aJKfszkL0jKDCI
-	 SFe1sUqaB6uMRYYpvabjq/CKyvxHfqEYWL5me738=
+	b=gphiGEBl+cm8uezFEOeQctiwoWPX2TEwmBkcy+XKcO6lPjXLQYPR23KuZBCgIqv4B
+	 IDImq+PdSpkD8B2mSx2TgQxQVZwZSJwKXORA4Tw7bNRPRZfyFhouSg75ToAOJVUtco
+	 1JI9UnnI53c0uLjBBvhpngOP8rAfK9vr5JA/ICxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726924AbfFTSAT (ORCPT
+        id S1726940AbfFTSAW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48868 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48958 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726903AbfFTSAQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:16 -0400
+        id S1726907AbfFTSAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C0922089C;
-        Thu, 20 Jun 2019 18:00:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0481F208CA;
+        Thu, 20 Jun 2019 18:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053615;
-        bh=9XSoFio4Y21xVYPOSxS4PB8P2EtuoI2hV+SBpdkm8wY=;
+        s=default; t=1561053618;
+        bh=lYwmXNi2gRXd0Sj13VdaDEUHQXlhtornMixWj3JjQKA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aaETY11M4Vg3Jh6uaosrlCJpG6EHkR0ykXtTaZSsVAcTvWgAymZWBK69QbSHX4rX5
-         2Xd9XJ4g3I90Mak8MxSvgevJf08J9QtScIoR4BrnXAYwu2PDQMRUDKKfk/IqCVmW5d
-         OhbgkC9DQljJMWCc2nrMf279YY9JjNGR5wtg9ZHo=
+        b=hgBrTBzKLV8Hg0SM8EAP4lrDHJ7xggNfMb9BIfBu0oL9xOcl5gu5kBwav6Sl/TqQy
+         Cox0KkK8Ab6lhd09KYE1w8p2eZhG8JhYlsOdNJu1vwScAizDrY4sQau5ngljyq29RO
+         3jD97TKjFWmYjqWLn3cL5WmDfXBD4ba5g2jvhMzI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Colin Ian King <colin.king@canonical.com>,
-        Saurav Kashyap <skashyap@marvell.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 52/84] scsi: bnx2fc: fix incorrect cast to u64 on shift operation
-Date:   Thu, 20 Jun 2019 19:56:49 +0200
-Message-Id: <20190620174346.749003077@linuxfoundation.org>
+Subject: [PATCH 4.4 35/84] ARM: dts: exynos: Always enable necessary APIO_1V8 and ABB_1V8 regulators on Arndale Octa
+Date:   Thu, 20 Jun 2019 19:56:32 +0200
+Message-Id: <20190620174343.321036371@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,35 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d0c0d902339249c75da85fd9257a86cbb98dfaa5 ]
+[ Upstream commit 5ab99cf7d5e96e3b727c30e7a8524c976bd3723d ]
 
-Currently an int is being shifted and the result is being cast to a u64
-which leads to undefined behaviour if the shift is more than 31 bits. Fix
-this by casting the integer value 1 to u64 before the shift operation.
+The PVDD_APIO_1V8 (LDO2) and PVDD_ABB_1V8 (LDO8) regulators were turned
+off by Linux kernel as unused.  However they supply critical parts of
+SoC so they should be always on:
 
-Addresses-Coverity: ("Bad shift operation")
-Fixes: 7b594769120b ("[SCSI] bnx2fc: Handle REC_TOV error code from firmware")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Acked-by: Saurav Kashyap <skashyap@marvell.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+1. PVDD_APIO_1V8 supplies SYS pins (gpx[0-3], PSHOLD), HDMI level shift,
+   RTC, VDD1_12 (DRAM internal 1.8 V logic), pull-up for PMIC interrupt
+   lines, TTL/UARTR level shift, reset pins and SW-TACT1 button.
+   It also supplies unused blocks like VDDQ_SRAM (for SROM controller) and
+   VDDQ_GPIO (gpm7, gpy7).
+   The LDO2 cannot be turned off (S2MPS11 keeps it on anyway) so
+   marking it "always-on" only reflects its real status.
+
+2. PVDD_ABB_1V8 supplies Adaptive Body Bias Generator for ARM cores,
+   memory and Mali (G3D).
+
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/bnx2fc/bnx2fc_hwi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/scsi/bnx2fc/bnx2fc_hwi.c b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-index 28c671b609b2..0c71b69b9f88 100644
---- a/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-+++ b/drivers/scsi/bnx2fc/bnx2fc_hwi.c
-@@ -829,7 +829,7 @@ ret_err_rqe:
- 			((u64)err_entry->data.err_warn_bitmap_hi << 32) |
- 			(u64)err_entry->data.err_warn_bitmap_lo;
- 		for (i = 0; i < BNX2FC_NUM_ERR_BITS; i++) {
--			if (err_warn_bit_map & (u64) (1 << i)) {
-+			if (err_warn_bit_map & ((u64)1 << i)) {
- 				err_warn = i;
- 				break;
- 			}
+diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+index 4ecef6981d5c..b54c0b8a5b34 100644
+--- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
++++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+@@ -97,6 +97,7 @@
+ 				regulator-name = "PVDD_APIO_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 			};
+ 
+ 			ldo3_reg: LDO3 {
+@@ -135,6 +136,7 @@
+ 				regulator-name = "PVDD_ABB_1V8";
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
+ 			};
+ 
+ 			ldo9_reg: LDO9 {
 -- 
 2.20.1
 
