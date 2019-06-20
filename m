@@ -2,199 +2,151 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279B8C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA751C48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:52:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECFAE2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC04E2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 22:52:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726148AbfFTWcL (ORCPT
+        id S1726002AbfFTWvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 18:32:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13266 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725864AbfFTWcL (ORCPT
+        Thu, 20 Jun 2019 18:51:04 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:53628 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfFTWvD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 18:32:11 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KMOO8S146246
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:32:10 -0400
-Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8ht02esn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 18:32:10 -0400
-Received: from localhost
-        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
-        Thu, 20 Jun 2019 23:32:09 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Jun 2019 23:32:06 +0100
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KMW6dT38011304
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 22:32:06 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E9A97B2064;
-        Thu, 20 Jun 2019 22:32:05 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BDCB0B2066;
-        Thu, 20 Jun 2019 22:32:05 +0000 (GMT)
-Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.26])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Jun 2019 22:32:05 +0000 (GMT)
-Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
-        id CCB2016C2A15; Thu, 20 Jun 2019 15:32:07 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 15:32:07 -0700
-From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de
-Subject: Re: Review of RCU-related patches in -rt
-Reply-To: paulmck@linux.ibm.com
-References: <20190528205030.GA27149@linux.ibm.com>
- <20190607160857.nsxkrytedyfroxf3@linutronix.de>
+        Thu, 20 Jun 2019 18:51:03 -0400
+Received: from localhost ([127.0.0.1] helo=vostro.local)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <john.ogness@linutronix.de>)
+        id 1he5tN-00052S-1l; Fri, 21 Jun 2019 00:50:53 +0200
+From:   John Ogness <john.ogness@linutronix.de>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH v2 1/2] printk-rb: add a new printk ringbuffer implementation
+References: <20190607162349.18199-1-john.ogness@linutronix.de>
+        <20190607162349.18199-2-john.ogness@linutronix.de>
+        <20190618112237.GP3436@hirez.programming.kicks-ass.net>
+        <87a7eebk71.fsf@linutronix.de> <20190619104655.GA6668@andrea>
+Date:   Fri, 21 Jun 2019 00:50:45 +0200
+In-Reply-To: <20190619104655.GA6668@andrea> (Andrea Parri's message of "Wed,
+        19 Jun 2019 12:46:55 +0200")
+Message-ID: <87fto327ne.fsf@linutronix.de>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/23.4 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190607160857.nsxkrytedyfroxf3@linutronix.de>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19062022-0052-0000-0000-000003D35B5C
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011299; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01220894; UDB=6.00642290; IPR=6.01002032;
- MB=3.00027398; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-20 22:32:08
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062022-0053-0000-0000-00006165ACD3
-Message-Id: <20190620223207.GC26519@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_15:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200159
+Content-Type: text/plain; charset=us-ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Jun 07, 2019 at 06:08:57PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-05-28 13:50:30 [-0700], Paul E. McKenney wrote:
-> > Hello, Sebastian,
-> Hi Paul,
-> 
-> > Finally getting around to taking another look:
-> > 
-> > c7e07056a108 EXP rcu: skip the workqueue path on RT
-> > 
-> > 	This one makes sense given the later commit setting the
-> > 	rcu_normal_after_boot kernel parameter.  Otherwise, it is
-> > 	slowing down expedited grace periods for no reason.  But
-> > 	should the check also include rcu_normal_after_boot and
-> > 	rcu_normal?  For example:
-> > 
-> > 		if ((IS_ENABLED(CONFIG_PREEMPT_RT_FULL) &&
-> > 		     (rcu_normal || rcu_normal_after_boot) ||
-> > 		    !READ_ONCE(rcu_par_gp_wq) ||
-> > 		    rcu_scheduler_active != RCU_SCHEDULER_RUNNING ||
-> > 		    rcu_is_last_leaf_node(rnp)) {
-> 
-> I recently dropped that patch from the queue because the workqueue
-> problem vanished.
-> 
-> > 	Alternatively, one approach would be to take the kernel
-> > 	parameters out in -rt:
-> > 
-> > 		static int rcu_normal_after_boot = IS_ENABLED(CONFIG_PREEMPT_RT_FULL);
-> > 		#ifndef CONFIG_PREEMPT_RT_FULL
-> > 		module_param(rcu_normal_after_boot, int, 0);
-> > 		#endif
-> > 
-> > 	And similar for rcu_normal and rcu_expedited.
-> 
-> This makes sense.
-> 
-> > 	Or is there some reason to allow run-time expedited grace
-> > 	periods in CONFIG_PREEMPT_RT_FULL=y kernels?
-> 
-> No, I doubt there is any need to use the `expedited' version. The
-> problem is that it increases latencies.
-> 
-> > d1f52391bd8a rcu: Disable RCU_FAST_NO_HZ on RT
-> > 
-> > 	Looks good.  More complexity could be added if too many people
-> > 	get themselves in trouble via "select RCU_FAST_NO_HZ".
-> 
-> That patch disables RCU_FAST_NO_HZ and claims that it has something to
-> do with a timer_list timer and IRQ-off section. We couldn't schedule
-> timers from IRQ-off regions but not anymore. Only del_timer_sync() can't
-> be invoked from IRQ-off regions.
-> I just booted a box with this enabled together with NO_HZ/ NO_HZ_FULL
-> and I not complains yet. So I might drop that…
-> 
-> > 42b346870326 rcu: make RCU_BOOST default on RT
-> > 
-> > 	To avoid complaints about this showing up when people don't
-> > 	expected, could you please instead "select RCU_BOOST" in
-> > 	the Kconfig definition of PREEMPT_RT_FULL?
-> > 
-> > 	Or do people really want to be able to disable boosting?
-> 
-> I have no idea. I guess most people don't know what it does and stay
-> with the default. It become default on RT once a few people complained
-> that they run OOM during boot on some "memory contrained systems". That
-> option avoided it.
-> So yes, will make it depend on RT.
-> 
-> > 457c1b0d9c0e sched: Do not account rcu_preempt_depth on RT in might_sleep()
-> > 
-> > 	The idea behind this one is to avoid false-positive complaints
-> > 	about -rt's sleeping spinlocks, correct?
-> 
-> Correct. Maybe we could invoke a different schedule() primitiv so RCU is
-> aware that this is a sleeping spinlock and not a regular sleeping lock.
-> 
-> > 7ee13e640b01 rbtree: don't include the rcu header
-> > c9b0c9b87081 rtmutex: annotate sleeping lock context
-> > 
-> > 	No specific comments.
-> > 
-> > 7912d002ebf9 rcu: Eliminate softirq processing from rcutree
-> > 
-> > 	This hasn't caused any problems in -rcu from what I can see.
-> > 	I am therefore planning to submit the -rcu variant of this to
-> > 	mainline during the next merge window.
-> 
-> wonderful.
-> 
-> > f06d34ebdbbb srcu: Remove srcu_queue_delayed_work_on()
-> > 
-> > 	Looks plausible.  I will check more carefully for mainline.
-> 
-> Hmmm. I though this was already upstream.
-> That said, we can now schedule work from a preempt_disable() section but
-> I still like the negative diffstat here :)
+On 2019-06-19, Andrea Parri <andrea.parri@amarulasolutions.com> wrote:
+>> I would appreciate it if you could point out a source file that
+>> documents its memory barriers the way you would like to see these memory
+>> barriers documented.
+>
+> IMO, you could find some inspiration by looking at the memory barriers
+> comments from:
+>
+>   kernel/sched/core.c:try_to_wake_up()
+>   include/linux/wait.h:waitqueue_active()
+>   kernel/futex.c [header _and inline annotations]
+>
+> I'll detail a single example here, and then conclude with some general
+> guidelines:
+>
+> ---
+> [from kernel/sched/rt.c]
+>
+> static inline void rt_set_overload(struct rq *rq)
+> {
+> 	if (!rq->online)
+> 		return;
+>
+> 	cpumask_set_cpu(rq->cpu, rq->rd->rto_mask);
+> 	/*
+> 	 * Make sure the mask is visible before we set
+> 	 * the overload count. That is checked to determine
+> 	 * if we should look at the mask. It would be a shame
+> 	 * if we looked at the mask, but the mask was not
+> 	 * updated yet.
+> 	 *
+> 	 * Matched by the barrier in pull_rt_task().
+> 	 */
+> 	smp_wmb();
+> 	atomic_inc(&rq->rd->rto_count);
+> }
+>
+> static void pull_rt_task(struct rq *this_rq)
+> {
+> 	int this_cpu = this_rq->cpu, cpu;
+> 	bool resched = false;
+> 	struct task_struct *p;
+> 	struct rq *src_rq;
+> 	int rt_overload_count = rt_overloaded(this_rq);
+>
+> 	if (likely(!rt_overload_count))
+> 		return;
+>
+> 	/*
+> 	 * Match the barrier from rt_set_overloaded; this guarantees that if we
+> 	 * see overloaded we must also see the rto_mask bit.
+> 	 */
+> 	smp_rmb();
+>
+> 	/* If we are the only overloaded CPU do nothing */
+> 	if (rt_overload_count == 1 &&
+> 	    cpumask_test_cpu(this_rq->cpu, this_rq->rd->rto_mask))
+> 		return;
+>
+> 	[...]
+>
+> }
+> ---
+>
+> Notice that the comments provide the following information: for _each_
+> memory barrier primitive,
+>
+>   1) the _memory accesses_ being ordered
+>
+>      the store to ->rto_mask and the store to ->rto_count for the smp_wmb()
+>      the load from ->rto_count and the from ->rto_mask for the smp_rmb()
+>
+>   2) the _matching barrier_ (and its location)
+>
+>   3) an informal description of the _underlying guarantee(s)_  (c.f.,
+>      "if we see overloaded we must also see the rto_mask bit").
+>
+> One can provide this information by embedding some snippet/pseudo-code
+> in its comments as illustrated in the examples pointed out above.
+>
+> I'd suggest to _not be stingy with memory barriers explanations:  this
+> eases/makes it possible the review itself as well as future changes or
+> fixes to the implementation.
 
-Right you are!  e81baf4cb19a ("srcu: Remove srcu_queue_delayed_work_on()")
-is in v5.1.
+Thank you for the specific examples and explanations. I need to frame
+your email and hang it next to my monitor for reference.
 
-> > aeb04e894cc9 srcu: replace local_irqsave() with a locallock
-> > e48989b033ad irqwork: push most work into softirq context
-> > 
-> > 	These look to still be -rt only.
-> 
-> I might get rid of the local_lock in srcu. Will have to check.
-> 
-> Thank you Paul.
+> FWIW (and as anticipated time ago in a private email), when I see code
+> like this I tend to look elsewhere...  ;-/
 
-And you!  I will check again in a few months, for some definition of "a few".
+Do you really mean "code" or are you just referring to "code comments"?
+If you really mean code, then I'd appreciate some feedback about what
+should change.
 
-							Thanx, Paul
+Your private email helped me a great deal. The memory barrier work in v2
+is vastly superior to v1, even if it still crap in your eyes. I
+appreciate you continuing to support me on this.
 
+John Ogness
