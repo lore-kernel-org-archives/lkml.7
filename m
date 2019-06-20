@@ -6,44 +6,44 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3777FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:07:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE39BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:07:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DE83206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:07:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC61B2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:07:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732021AbfFTPHm (ORCPT
+        id S1732173AbfFTPH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:07:42 -0400
-Received: from shell.v3.sk ([90.176.6.54]:51654 "EHLO shell.v3.sk"
+        Thu, 20 Jun 2019 11:07:58 -0400
+Received: from shell.v3.sk ([90.176.6.54]:51661 "EHLO shell.v3.sk"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726649AbfFTPHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:07:39 -0400
+        id S1726740AbfFTPHk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:07:40 -0400
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 0F851CC535;
-        Thu, 20 Jun 2019 17:07:37 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id 5354ECC526;
+        Thu, 20 Jun 2019 17:07:38 +0200 (CEST)
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id x_DnkKbfHN_v; Thu, 20 Jun 2019 17:07:29 +0200 (CEST)
+        with ESMTP id lffjTS16E2mP; Thu, 20 Jun 2019 17:07:29 +0200 (CEST)
 Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id 4F836CC360;
-        Thu, 20 Jun 2019 17:07:29 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTP id C83D4CC54A;
+        Thu, 20 Jun 2019 17:07:28 +0200 (CEST)
 X-Virus-Scanned: amavisd-new at zimbra.v3.sk
 Received: from shell.v3.sk ([127.0.0.1])
         by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id G5jCZypA0uo0; Thu, 20 Jun 2019 17:07:27 +0200 (CEST)
+        with ESMTP id Cte7mtSO9kfM; Thu, 20 Jun 2019 17:07:27 +0200 (CEST)
 Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 602F1CC535;
-        Thu, 20 Jun 2019 17:07:27 +0200 (CEST)
+        by zimbra.v3.sk (Postfix) with ESMTPSA id EBDA9CC415;
+        Thu, 20 Jun 2019 17:07:26 +0200 (CEST)
 From:   Lubomir Rintel <lkundrak@v3.sk>
 To:     Olof Johansson <olof@lixom.net>
 Cc:     Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 3/5] ARM: dts: mmp2: rename the USB PHY node
-Date:   Thu, 20 Jun 2019 17:07:22 +0200
-Message-Id: <20190620150724.1406757-4-lkundrak@v3.sk>
+Subject: [PATCH 1/5] ARM: dts: mmp2: trivial whitespace fix
+Date:   Thu, 20 Jun 2019 17:07:20 +0200
+Message-Id: <20190620150724.1406757-2-lkundrak@v3.sk>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190620150724.1406757-1-lkundrak@v3.sk>
 References: <20190620150724.1406757-1-lkundrak@v3.sk>
@@ -54,36 +54,26 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This device is not an OTG phy, it's a regular USB HS phy. Follow the
-generic node name recommendation, and rename it to "usb-phy".
+A missing space before a curly brace.
 
 Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 ---
- arch/arm/boot/dts/mmp2.dtsi | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/mmp2.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index e64639ce57a9..21432cb9143f 100644
+index b6f40743e07b..50b6c38b39cc 100644
 --- a/arch/arm/boot/dts/mmp2.dtsi
 +++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -117,7 +117,7 @@
- 				mrvl,intc-nr-irqs =3D <2>;
+@@ -379,7 +379,7 @@
  			};
+ 		};
 =20
--			usb_otg_phy0: usb-otg-phy@d4207000 {
-+			usb_phy0: usb-phy@d4207000 {
- 				compatible =3D "marvell,mmp2-usb-phy";
- 				reg =3D <0xd4207000 0x40>;
- 				#phy-cells =3D <0>;
-@@ -130,7 +130,7 @@
- 				interrupts =3D <44>;
- 				clocks =3D <&soc_clocks MMP2_CLK_USB>;
- 				clock-names =3D "USBCLK";
--				phys =3D <&usb_otg_phy0>;
-+				phys =3D <&usb_phy0>;
- 				phy-names =3D "usb";
- 				status =3D "disabled";
- 			};
+-		soc_clocks: clocks{
++		soc_clocks: clocks {
+ 			compatible =3D "marvell,mmp2-clock";
+ 			reg =3D <0xd4050000 0x1000>,
+ 			      <0xd4282800 0x400>,
 --=20
 2.21.0
 
