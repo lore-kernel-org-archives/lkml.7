@@ -2,81 +2,92 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F953C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE0A4C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:13:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2539E208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:08:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561014539;
-	bh=ogt+ZT+RKCQqdqSRZSWx6Rl+GHqO1cQlJhHR6upE17o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1dHzC5+nd8/fc5AFh8c/yN6gTXPaPPXheKzqXo8W3yvSqR3qFJGi5Gn6GsYLkDCeb
-	 1h0KXzA76BX9QMj9LqWH+6RrDv5155S8FzrjofAzKEaxWIxPybfzb21rrBR+/rDEWS
-	 9JiosRiJpeIPKvFhQk/9OATtXYSWnpoRy3AgjrbA=
+	by mail.kernel.org (Postfix) with ESMTP id C09EA2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:13:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbfFTHI5 (ORCPT
+        id S1730020AbfFTHNT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:08:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43926 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725872AbfFTHI5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:08:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C31BEAE34;
-        Thu, 20 Jun 2019 07:08:55 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 09:08:54 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Minchan Kim <minchan@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 1/5] mm: introduce MADV_COLD
-Message-ID: <20190620070854.GC12083@dhcp22.suse.cz>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-2-minchan@kernel.org>
- <20190619125611.GO2968@dhcp22.suse.cz>
- <20190620000650.GB52978@google.com>
+        Thu, 20 Jun 2019 03:13:19 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:47012 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725889AbfFTHNS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:13:18 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 5F3D82639EC;
+        Thu, 20 Jun 2019 08:13:17 +0100 (BST)
+Date:   Thu, 20 Jun 2019 09:13:14 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     liaoweixiong <liaoweixiong@allwinnertech.com>
+Cc:     Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Frieder Schrempf <frieder.schrempf@exceet.de>,
+        Peter Pan <peterpandong@micron.com>,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Schrempf Frieder <frieder.schrempf@kontron.De>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] mtd: spinand: read return badly if the last page has
+ bitflips
+Message-ID: <20190620091314.70bc99a2@collabora.com>
+In-Reply-To: <1560992416-5753-1-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1560992416-5753-1-git-send-email-liaoweixiong@allwinnertech.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620000650.GB52978@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20-06-19 09:06:51, Minchan Kim wrote:
-> On Wed, Jun 19, 2019 at 02:56:12PM +0200, Michal Hocko wrote:
-[...]
-> > Why cannot we reuse a large part of that code and differ essentially on
-> > the reclaim target check and action? Have you considered to consolidate
-> > the code to share as much as possible? Maybe that is easier said than
-> > done because the devil is always in details...
+On Thu, 20 Jun 2019 09:00:16 +0800
+liaoweixiong <liaoweixiong@allwinnertech.com> wrote:
+
+> In case of the last page containing bitflips (ret > 0),
+> spinand_mtd_read() will return that number of bitflips for the last
+> page. But to me it looks like it should instead return max_bitflips like
+> it does when the last page read returns with 0.
 > 
-> Yub, it was not pretty when I tried. Please see last patch in this
-> patchset.
+> Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
 
-That is bad because this code is quite subtle - especially the THP part
-of it. I will be staring at the code some more. Maybe some
-simplification pops out.
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
 
--- 
-Michal Hocko
-SUSE Labs
+> ---
+>  drivers/mtd/nand/spi/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
+> index 556bfdb..6b9388d 100644
+> --- a/drivers/mtd/nand/spi/core.c
+> +++ b/drivers/mtd/nand/spi/core.c
+> @@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
+>  		if (ret == -EBADMSG) {
+>  			ecc_failed = true;
+>  			mtd->ecc_stats.failed++;
+> -			ret = 0;
+>  		} else {
+>  			mtd->ecc_stats.corrected += ret;
+>  			max_bitflips = max_t(unsigned int, max_bitflips, ret);
+>  		}
+>  
+> +		ret = 0;
+>  		ops->retlen += iter.req.datalen;
+>  		ops->oobretlen += iter.req.ooblen;
+>  	}
+
