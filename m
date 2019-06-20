@@ -4,51 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE8EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 933D8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6970C21670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71B6B21655
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053673;
-	bh=8EyeSjUpQh19iCE24F3U8olC8MptdrzOxFATJHzEoSY=;
+	s=default; t=1561053676;
+	bh=4EQFF575OSksr+Czwy7Daf1KcxUt6KdPuAr8LL/g0+I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x7Til91y3qMslE9FkYUtqHKKwoIYTBColtU/NbxbaIByu3j8mZUZvLiRS0jp4xg/t
-	 V8S2c0Dregoj6k/0FXoPL+OMLcr/yKzXLFHBtF6xDafzjYHZnXf1aswrIBKN/YBJAN
-	 2nCWc/OWZW5V5k8xJGV3+UjKz58RnZP7ElK0UM8c=
+	b=FaZs5N7q9wtTqIOgc3gGYKpbWHulLpfAiHJgxwSH/Z69c3nJZh9iRELuaCQuiQx6F
+	 waaNIKNVIfU2lbOeND9+ef2t6M6GMnOIAWk/JJ+ydpPAo4g+QsghFhvNvdP6iqh0vK
+	 BYxrnNYxW3z2TSh1e+PaXGOi+3+3QtfTf3qaOIFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfFTSBL (ORCPT
+        id S1727191AbfFTSBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50446 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50542 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727161AbfFTSBI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:08 -0400
+        id S1727177AbfFTSBL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:11 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6F9F82089C;
-        Thu, 20 Jun 2019 18:01:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 20BC9214AF;
+        Thu, 20 Jun 2019 18:01:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053667;
-        bh=8EyeSjUpQh19iCE24F3U8olC8MptdrzOxFATJHzEoSY=;
+        s=default; t=1561053670;
+        bh=4EQFF575OSksr+Czwy7Daf1KcxUt6KdPuAr8LL/g0+I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AwiEU7p0Y4TdxUOXamE/WiZGJlYIGSZeKxuT+C3s3e60VvIJm6gzD7UqBrG4KAzxk
-         b78/HVDq1GsSsKj+jgy2CXGIyyIB9h5avF9MgnLQkC/KPhnV0wB1EEOUxLRw2MvmPB
-         PMWgVRPqN8shT8ySk9mxOAcYcN3jP60aw/yi1vMk=
+        b=0M4RFprbvj4y1SrcCt3HBl1gYdA8+RdUTNgbbgteJbNaqZ92akj2rzw2WZp/anfFZ
+         ho2Y0BsPncER2FPaG2sjB0wlluzkuYTxqAX1JlIT/foQbdHuY4dZQOtdjM0cABioFW
+         c0gn4vTRK6DrwW4x5UD8xZOuaxXTFg6shx50NO2E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.4 41/84] libata: Extend quirks for the ST1000LM024 drives with NOLPM quirk
-Date:   Thu, 20 Jun 2019 19:56:38 +0200
-Message-Id: <20190620174344.378289560@linuxfoundation.org>
+        syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com,
+        Shakeel Butt <shakeelb@google.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Kirill Tkhai <ktkhai@virtuozzo.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.4 42/84] mm/list_lru.c: fix memory leak in __memcg_init_list_lru_node
+Date:   Thu, 20 Jun 2019 19:56:39 +0200
+Message-Id: <20190620174344.583952251@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,42 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hans de Goede <hdegoede@redhat.com>
+From: Shakeel Butt <shakeelb@google.com>
 
-commit 31f6264e225fb92cf6f4b63031424f20797c297d upstream.
+commit 3510955b327176fd4cbab5baa75b449f077722a2 upstream.
 
-We've received a bugreport that using LPM with ST1000LM024 drives leads
-to system lockups. So it seems that these models are buggy in more then
-1 way. Add NOLPM quirk to the existing quirks entry for BROKEN_FPDMA_AA.
+Syzbot reported following memory leak:
 
-BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1571330
-Cc: stable@vger.kernel.org
-Reviewed-by: Martin K. Petersen <martin.petersen@oracle.com>
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+ffffffffda RBX: 0000000000000003 RCX: 0000000000441f79
+BUG: memory leak
+unreferenced object 0xffff888114f26040 (size 32):
+  comm "syz-executor626", pid 7056, jiffies 4294948701 (age 39.410s)
+  hex dump (first 32 bytes):
+    40 60 f2 14 81 88 ff ff 40 60 f2 14 81 88 ff ff  @`......@`......
+    00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  backtrace:
+     slab_post_alloc_hook mm/slab.h:439 [inline]
+     slab_alloc mm/slab.c:3326 [inline]
+     kmem_cache_alloc_trace+0x13d/0x280 mm/slab.c:3553
+     kmalloc include/linux/slab.h:547 [inline]
+     __memcg_init_list_lru_node+0x58/0xf0 mm/list_lru.c:352
+     memcg_init_list_lru_node mm/list_lru.c:375 [inline]
+     memcg_init_list_lru mm/list_lru.c:459 [inline]
+     __list_lru_init+0x193/0x2a0 mm/list_lru.c:626
+     alloc_super+0x2e0/0x310 fs/super.c:269
+     sget_userns+0x94/0x2a0 fs/super.c:609
+     sget+0x8d/0xb0 fs/super.c:660
+     mount_nodev+0x31/0xb0 fs/super.c:1387
+     fuse_mount+0x2d/0x40 fs/fuse/inode.c:1236
+     legacy_get_tree+0x27/0x80 fs/fs_context.c:661
+     vfs_get_tree+0x2e/0x120 fs/super.c:1476
+     do_new_mount fs/namespace.c:2790 [inline]
+     do_mount+0x932/0xc50 fs/namespace.c:3110
+     ksys_mount+0xab/0x120 fs/namespace.c:3319
+     __do_sys_mount fs/namespace.c:3333 [inline]
+     __se_sys_mount fs/namespace.c:3330 [inline]
+     __x64_sys_mount+0x26/0x30 fs/namespace.c:3330
+     do_syscall_64+0x76/0x1a0 arch/x86/entry/common.c:301
+     entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+This is a simple off by one bug on the error path.
+
+Link: http://lkml.kernel.org/r/20190528043202.99980-1-shakeelb@google.com
+Fixes: 60d3fd32a7a9 ("list_lru: introduce per-memcg lists")
+Reported-by: syzbot+f90a420dfe2b1b03cb2c@syzkaller.appspotmail.com
+Signed-off-by: Shakeel Butt <shakeelb@google.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Reviewed-by: Kirill Tkhai <ktkhai@virtuozzo.com>
+Cc: <stable@vger.kernel.org>	[4.0+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/ata/libata-core.c |    9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
+ mm/list_lru.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/ata/libata-core.c
-+++ b/drivers/ata/libata-core.c
-@@ -4176,9 +4176,12 @@ static const struct ata_blacklist_entry
- 	{ "ST3320[68]13AS",	"SD1[5-9]",	ATA_HORKAGE_NONCQ |
- 						ATA_HORKAGE_FIRMWARE_WARN },
+--- a/mm/list_lru.c
++++ b/mm/list_lru.c
+@@ -313,7 +313,7 @@ static int __memcg_init_list_lru_node(st
+ 	}
+ 	return 0;
+ fail:
+-	__memcg_destroy_list_lru_node(memcg_lrus, begin, i - 1);
++	__memcg_destroy_list_lru_node(memcg_lrus, begin, i);
+ 	return -ENOMEM;
+ }
  
--	/* drives which fail FPDMA_AA activation (some may freeze afterwards) */
--	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
--	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA },
-+	/* drives which fail FPDMA_AA activation (some may freeze afterwards)
-+	   the ST disks also have LPM issues */
-+	{ "ST1000LM024 HN-M101MBB", "2AR10001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
-+						ATA_HORKAGE_NOLPM, },
-+	{ "ST1000LM024 HN-M101MBB", "2BA30001",	ATA_HORKAGE_BROKEN_FPDMA_AA |
-+						ATA_HORKAGE_NOLPM, },
- 	{ "VB0250EAVER",	"HPG7",		ATA_HORKAGE_BROKEN_FPDMA_AA },
- 
- 	/* Blacklist entries taken from Silicon Image 3124/3132
 
 
