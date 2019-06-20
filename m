@@ -7,52 +7,51 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F5FBC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 554C3C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF4242084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B9FF20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053505;
-	bh=/cC1kmlS19a+4DW3fvTVQ9I6aRUhCNvMoGNsPxNR0EA=;
+	s=default; t=1561053510;
+	bh=Q3Y+jTMtwJ6igER/h8jL54dZxpdJqUUZCd15E/OgiYU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=T5+3rCOpEo87BfXVkJvYg/ScL/GK3AqMrplUkY5GrIejiuRj6V4WsYBnVzlETQ3Ns
-	 EF1R8uzGYdn0LDpIRFNmUTueTjZxgDXXuOwY88X36WB3ZhxbL8e+D2GFduB+syHQZS
-	 mj5sQqhaz/0Ygh0b8W397vXb6EaXvZUrWgUii6rU=
+	b=tSb/ySQTy39gI0cPKw0r20e+GgRSZIOpzoqHJWqSCbQhIEkhByBhQ/7ub8nJXB9XI
+	 ufhzvKnWBdrwv3SJzYWnSU1kUyzUELfiwVSbPMiiNbdBUD5+VIxPdmpc88wMHGA9lF
+	 0QM+1i386sX1448mSsUf/UyIhF2o6V2p3EXcOuxw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726034AbfFTR6Y (ORCPT
+        id S1726073AbfFTR62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:58:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45066 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:58:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45152 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfFTR6W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:58:22 -0400
+        id S1725815AbfFTR6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:58:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C2CF2089C;
-        Thu, 20 Jun 2019 17:58:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97F68208CA;
+        Thu, 20 Jun 2019 17:58:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053501;
-        bh=/cC1kmlS19a+4DW3fvTVQ9I6aRUhCNvMoGNsPxNR0EA=;
+        s=default; t=1561053505;
+        bh=Q3Y+jTMtwJ6igER/h8jL54dZxpdJqUUZCd15E/OgiYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=on2MVZxeTkY3HnbbL3uHGjNZag+fMsMiLDuWpX49a3rMEYJ9+BkEW8squI+jM0bGi
-         dAPtpTpyNEvRxixnrigKCq80vGcR/Yb+Evc+d3BOfIgVSE2CYp+KsFaGPcs+arqwuA
-         ACXTFD2aDTUclps3jrKribO/2U1+6MbsCpDEPiHU=
+        b=dbzbrKLhFOipFxjvmZLW5NppCZ9CUYPD0fRt7AZ/EHsR5AuTick0hnmYbWJPrl9Sv
+         Te7gGQWjx5IVyTMHBSKghu9bOqFNuUzVBc9xjbKbZ1opxujTYpcmtRsK8LpxlMNP0O
+         U9zl7qW9zhJOg4PnTPV2AINNORiT5WonEIjjjfVY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Zhang Yu <zhangyu31@baidu.com>,
-        Davidlohr Bueso <dbueso@suse.de>,
-        Manfred Spraul <manfred@colorfullife.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Ondrej Mosnacek <omosnace@redhat.com>,
+        Miroslav Lichvar <mlichvar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        John Stultz <john.stultz@linaro.org>,
+        Richard Cochran <richardcochran@gmail.com>,
+        Prarit Bhargava <prarit@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 03/84] ipc: prevent lockup on alloc_msg and free_msg
-Date:   Thu, 20 Jun 2019 19:56:00 +0200
-Message-Id: <20190620174338.016420880@linuxfoundation.org>
+Subject: [PATCH 4.4 12/84] ntp: Allow TAI-UTC offset to be set to zero
+Date:   Thu, 20 Jun 2019 19:56:09 +0200
+Message-Id: <20190620174339.252672771@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -65,157 +64,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit d6a2946a88f524a47cc9b79279667137899db807 ]
+[ Upstream commit fdc6bae940ee9eb869e493990540098b8c0fd6ab ]
 
-msgctl10 of ltp triggers the following lockup When CONFIG_KASAN is
-enabled on large memory SMP systems, the pages initialization can take a
-long time, if msgctl10 requests a huge block memory, and it will block
-rcu scheduler, so release cpu actively.
+The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
+It is typically set by NTP/PTP implementations and it is automatically
+updated by the kernel on leap seconds. The initial value is zero (which
+applications may interpret as unknown), but this value cannot be set by
+adjtimex. This limitation seems to go back to the original "nanokernel"
+implementation by David Mills.
 
-After adding schedule() in free_msg, free_msg can not be called when
-holding spinlock, so adding msg to a tmp list, and free it out of
-spinlock
+Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
+order to allow setting it back to the initial value.
 
-  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-  rcu:     Tasks blocked on level-1 rcu_node (CPUs 16-31): P32505
-  rcu:     Tasks blocked on level-1 rcu_node (CPUs 48-63): P34978
-  rcu:     (detected by 11, t=35024 jiffies, g=44237529, q=16542267)
-  msgctl10        R  running task    21608 32505   2794 0x00000082
-  Call Trace:
-   preempt_schedule_irq+0x4c/0xb0
-   retint_kernel+0x1b/0x2d
-  RIP: 0010:__is_insn_slot_addr+0xfb/0x250
-  Code: 82 1d 00 48 8b 9b 90 00 00 00 4c 89 f7 49 c1 ee 03 e8 59 83 1d 00 48 b8 00 00 00 00 00 fc ff df 4c 39 eb 48 89 9d 58 ff ff ff <41> c6 04 06 f8 74 66 4c 8d 75 98 4c 89 f1 48 c1 e9 03 48 01 c8 48
-  RSP: 0018:ffff88bce041f758 EFLAGS: 00000246 ORIG_RAX: ffffffffffffff13
-  RAX: dffffc0000000000 RBX: ffffffff8471bc50 RCX: ffffffff828a2a57
-  RDX: dffffc0000000000 RSI: dffffc0000000000 RDI: ffff88bce041f780
-  RBP: ffff88bce041f828 R08: ffffed15f3f4c5b3 R09: ffffed15f3f4c5b3
-  R10: 0000000000000001 R11: ffffed15f3f4c5b2 R12: 000000318aee9b73
-  R13: ffffffff8471bc50 R14: 1ffff1179c083ef0 R15: 1ffff1179c083eec
-   kernel_text_address+0xc1/0x100
-   __kernel_text_address+0xe/0x30
-   unwind_get_return_address+0x2f/0x50
-   __save_stack_trace+0x92/0x100
-   create_object+0x380/0x650
-   __kmalloc+0x14c/0x2b0
-   load_msg+0x38/0x1a0
-   do_msgsnd+0x19e/0xcf0
-   do_syscall_64+0x117/0x400
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-  rcu: INFO: rcu_preempt detected stalls on CPUs/tasks:
-  rcu:     Tasks blocked on level-1 rcu_node (CPUs 0-15): P32170
-  rcu:     (detected by 14, t=35016 jiffies, g=44237525, q=12423063)
-  msgctl10        R  running task    21608 32170  32155 0x00000082
-  Call Trace:
-   preempt_schedule_irq+0x4c/0xb0
-   retint_kernel+0x1b/0x2d
-  RIP: 0010:lock_acquire+0x4d/0x340
-  Code: 48 81 ec c0 00 00 00 45 89 c6 4d 89 cf 48 8d 6c 24 20 48 89 3c 24 48 8d bb e4 0c 00 00 89 74 24 0c 48 c7 44 24 20 b3 8a b5 41 <48> c1 ed 03 48 c7 44 24 28 b4 25 18 84 48 c7 44 24 30 d0 54 7a 82
-  RSP: 0018:ffff88af83417738 EFLAGS: 00000282 ORIG_RAX: ffffffffffffff13
-  RAX: dffffc0000000000 RBX: ffff88bd335f3080 RCX: 0000000000000002
-  RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffff88bd335f3d64
-  RBP: ffff88af83417758 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000001 R11: ffffed13f3f745b2 R12: 0000000000000000
-  R13: 0000000000000002 R14: 0000000000000000 R15: 0000000000000000
-   is_bpf_text_address+0x32/0xe0
-   kernel_text_address+0xec/0x100
-   __kernel_text_address+0xe/0x30
-   unwind_get_return_address+0x2f/0x50
-   __save_stack_trace+0x92/0x100
-   save_stack+0x32/0xb0
-   __kasan_slab_free+0x130/0x180
-   kfree+0xfa/0x2d0
-   free_msg+0x24/0x50
-   do_msgrcv+0x508/0xe60
-   do_syscall_64+0x117/0x400
-   entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Davidlohr said:
- "So after releasing the lock, the msg rbtree/list is empty and new
-  calls will not see those in the newly populated tmp_msg list, and
-  therefore they cannot access the delayed msg freeing pointers, which
-  is good. Also the fact that the node_cache is now freed before the
-  actual messages seems to be harmless as this is wanted for
-  msg_insert() avoiding GFP_ATOMIC allocations, and after releasing the
-  info->lock the thing is freed anyway so it should not change things"
-
-Link: http://lkml.kernel.org/r/1552029161-4957-1-git-send-email-lirongqing@baidu.com
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Signed-off-by: Zhang Yu <zhangyu31@baidu.com>
-Reviewed-by: Davidlohr Bueso <dbueso@suse.de>
-Cc: Manfred Spraul <manfred@colorfullife.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 153b5d054ac2 ("ntp: support for TAI")
+Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
+Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: John Stultz <john.stultz@linaro.org>
+Cc: Richard Cochran <richardcochran@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>
+Link: https://lkml.kernel.org/r/20190417084833.7401-1-mlichvar@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- ipc/mqueue.c  | 10 ++++++++--
- ipc/msgutil.c |  6 ++++++
- 2 files changed, 14 insertions(+), 2 deletions(-)
+ kernel/time/ntp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/ipc/mqueue.c b/ipc/mqueue.c
-index 5e24eb0ab5dd..6ed74825ab54 100644
---- a/ipc/mqueue.c
-+++ b/ipc/mqueue.c
-@@ -373,7 +373,8 @@ static void mqueue_evict_inode(struct inode *inode)
- 	struct user_struct *user;
- 	unsigned long mq_bytes, mq_treesize;
- 	struct ipc_namespace *ipc_ns;
--	struct msg_msg *msg;
-+	struct msg_msg *msg, *nmsg;
-+	LIST_HEAD(tmp_msg);
- 
- 	clear_inode(inode);
- 
-@@ -384,10 +385,15 @@ static void mqueue_evict_inode(struct inode *inode)
- 	info = MQUEUE_I(inode);
- 	spin_lock(&info->lock);
- 	while ((msg = msg_get(info)) != NULL)
--		free_msg(msg);
-+		list_add_tail(&msg->m_list, &tmp_msg);
- 	kfree(info->node_cache);
- 	spin_unlock(&info->lock);
- 
-+	list_for_each_entry_safe(msg, nmsg, &tmp_msg, m_list) {
-+		list_del(&msg->m_list);
-+		free_msg(msg);
-+	}
-+
- 	/* Total amount of bytes accounted for the mqueue */
- 	mq_treesize = info->attr.mq_maxmsg * sizeof(struct msg_msg) +
- 		min_t(unsigned int, info->attr.mq_maxmsg, MQ_PRIO_MAX) *
-diff --git a/ipc/msgutil.c b/ipc/msgutil.c
-index ed81aafd2392..9467307487f7 100644
---- a/ipc/msgutil.c
-+++ b/ipc/msgutil.c
-@@ -18,6 +18,7 @@
- #include <linux/utsname.h>
- #include <linux/proc_ns.h>
- #include <linux/uaccess.h>
-+#include <linux/sched.h>
- 
- #include "util.h"
- 
-@@ -66,6 +67,9 @@ static struct msg_msg *alloc_msg(size_t len)
- 	pseg = &msg->next;
- 	while (len > 0) {
- 		struct msg_msgseg *seg;
-+
-+		cond_resched();
-+
- 		alen = min(len, DATALEN_SEG);
- 		seg = kmalloc(sizeof(*seg) + alen, GFP_KERNEL);
- 		if (seg == NULL)
-@@ -178,6 +182,8 @@ void free_msg(struct msg_msg *msg)
- 	kfree(msg);
- 	while (seg != NULL) {
- 		struct msg_msgseg *tmp = seg->next;
-+
-+		cond_resched();
- 		kfree(seg);
- 		seg = tmp;
+diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
+index ab861771e37f..0e0dc5d89911 100644
+--- a/kernel/time/ntp.c
++++ b/kernel/time/ntp.c
+@@ -633,7 +633,7 @@ static inline void process_adjtimex_modes(struct timex *txc,
+ 		time_constant = max(time_constant, 0l);
  	}
+ 
+-	if (txc->modes & ADJ_TAI && txc->constant > 0)
++	if (txc->modes & ADJ_TAI && txc->constant >= 0)
+ 		*time_tai = txc->constant;
+ 
+ 	if (txc->modes & ADJ_OFFSET)
 -- 
 2.20.1
 
