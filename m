@@ -2,92 +2,122 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D163DC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE17BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA8A62147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:41:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8317E2147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:50:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htKUfnGk"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="invRPHWw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731240AbfFTElG (ORCPT
+        id S1726299AbfFTEuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 00:41:06 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44846 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbfFTElG (ORCPT
+        Thu, 20 Jun 2019 00:50:44 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:40825 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725872AbfFTEun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 00:41:06 -0400
-Received: by mail-lj1-f194.google.com with SMTP id k18so1328673ljc.11;
-        Wed, 19 Jun 2019 21:41:04 -0700 (PDT)
+        Thu, 20 Jun 2019 00:50:43 -0400
+Received: by mail-ot1-f65.google.com with SMTP id e8so1433797otl.7
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 21:50:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=FFdFnoNnAiDrKBDnBQl6IzC73ew0CForrhj2N/+lPpI=;
-        b=htKUfnGk/fy8vMOz+kSidx/BLqorR8tSiJNAfViwlK2xEi3kj1M+k3hyE2dZPZbNGD
-         lytFv5G24a5jrUy3okmx/snZPB5r2BaqCJlZhwij071xnGPbTDEY3fe0uMG8zKDC5csC
-         9h4aO1Fw04jd5Q356Q9NFhUGEjibKnCXOLLCww0s1Arm1oQbP+++Je0asa0OqzfhmX3g
-         Rp/oEyhGO0BPcd8e8/Z+Ots4FGPYsyoL9xYkAMZCSqwaWRF/FHEbcWPwxLPZZSmW71VY
-         f/OP3Wllcbnc9fwIUoLtkFXH8EcVjZT0BfkEBPZsLEiwyKupQqKkb94YSkQJGc+3H0vI
-         T2eg==
+        bh=H7KfXwWshFgYCRp/rB3EC7KJ7aO3/YBFcG4HpA2yrRc=;
+        b=invRPHWwsG//4HFgg9KwSVpDmW6VW+E3xuRUlv6jjX+XcUyFbQHVG471IpclLNl2VX
+         I3AZlwTuDX0/+rRDEabV4QRS/D9gr1ubU0bH9ZKJTFadXBg0m9J5DXEib9hp+IP5zJRn
+         1hMMPiE2UdXow03GY4JfUMU6W21H2egfNnhEY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=FFdFnoNnAiDrKBDnBQl6IzC73ew0CForrhj2N/+lPpI=;
-        b=XcgyA8ys8L8AV1x3AEFxmA2xeEn/q1sNmkBr5nz1dUK5MKD2t+gOo3w2RQyrjg6vZT
-         BcWQWv0Gcok+gFsGUf1UVjldfTu1+c+mpsS1kKmTCaXL2FOdk0omHuPXYINZAOCSYhEe
-         1Z1WArmkCOfY+HwXqF6XrZZrqX7xMyYeeTTLuh/3lLIvUtgZm6zg0jIjesDXq/GXZIEc
-         e1OdIAbPZyBl11QijrNyZGGw4GMdIBfQ3HKwjQWVP/rrif4GfclQU5HdoBCMw/HPSuPy
-         hwCpmhNOIbcxsUJtFoJkxHCoETAoNz+G1E4NZl26gXF5Wh3yApgYyy7lX/148IybnYwQ
-         VujQ==
-X-Gm-Message-State: APjAAAW6req+AeXuztcM4W3LD6Sr/b035EYtfRISP0HurGyL7g5pDoQq
-        7gH89lOEuoF8TFi7WSHFUtPfOpyFSEoM5hlleXc=
-X-Google-Smtp-Source: APXvYqykxJrfIijUvjolMDf4P69c8DbVQ4kUxhAabpLgUasSGfYtRzQNIUcKgaa0J3UBzcmMV4e+ROSEFBGO1E4QLBA=
-X-Received: by 2002:a2e:9dca:: with SMTP id x10mr36621568ljj.17.1561005663593;
- Wed, 19 Jun 2019 21:41:03 -0700 (PDT)
+        bh=H7KfXwWshFgYCRp/rB3EC7KJ7aO3/YBFcG4HpA2yrRc=;
+        b=Wg4DpOlYQvlh25ZTzPwWIgUrL6ljNunUpF66WSvs67utZ795MUlGLTEBwmHYUKKjRp
+         OH+R9tlCLLfVPkmvIVsUlcud0KCXfkn/RMFlt89v/Gi04r36BY9QFq2674kzaAqlh03D
+         6s6fllAw0LDKyEDPa1zsmmrG3Htdp8n9pTZENEa62zHlezopJwlK6m7cn43iHvZxU8KS
+         f84Xa/WDOgb+0g/ct9BsLf6cKFZNNaCi2/S2U9GKbUlgr3Y8TE2+nBeRdskLTv99VVc5
+         XmlRyKlMkZkLyABfTGjipYmFoCFcPrHARR8iPSNp9WGos7M/3UaeFlsuENXFWACd+Q/5
+         vSfQ==
+X-Gm-Message-State: APjAAAVg496V45s0Wy3BlI2pDcaeCwK6zBW2LiKNb4Ikkmq1zoiIDZJy
+        eTxmrtkQ9n/G/aPf7gAiimKYds4Hs9iJEA==
+X-Google-Smtp-Source: APXvYqyqEXqLF9EJd1H70SF7cbk0ewlT6nauwHCAiiSTjYyrkHOaBwDjMNBHMAEbA1NY+MCwLBDOFQ==
+X-Received: by 2002:a9d:6a4b:: with SMTP id h11mr11653201otn.266.1561006242644;
+        Wed, 19 Jun 2019 21:50:42 -0700 (PDT)
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
+        by smtp.gmail.com with ESMTPSA id m5sm7688701oif.13.2019.06.19.21.50.41
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 21:50:42 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id b7so1408894otl.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 21:50:41 -0700 (PDT)
+X-Received: by 2002:a9d:711e:: with SMTP id n30mr12204552otj.97.1561006241374;
+ Wed, 19 Jun 2019 21:50:41 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190619160207.GA26960@embeddedor>
-In-Reply-To: <20190619160207.GA26960@embeddedor>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Wed, 19 Jun 2019 21:40:52 -0700
-Message-ID: <CAADnVQLpvxcX34TgAXK7ydkSUKxiedDymF=2REcjC_7mVKpe+w@mail.gmail.com>
-Subject: Re: [PATCH][bpf] bpf: verifier: add break statement in switch
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        Andrii Nakryiko <andrii.nakryiko@gmail.com>,
-        Network Development <netdev@vger.kernel.org>,
-        bpf <bpf@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>,
-        Kees Cook <keescook@chromium.org>
+References: <20190612093648.47412-1-tfiga@chromium.org>
+In-Reply-To: <20190612093648.47412-1-tfiga@chromium.org>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Thu, 20 Jun 2019 13:50:30 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MWaq1W0bCUTmx0ad29vBpH1xOEoe-Q33vQj2b8AvEHoVg@mail.gmail.com>
+Message-ID: <CAPBb6MWaq1W0bCUTmx0ad29vBpH1xOEoe-Q33vQj2b8AvEHoVg@mail.gmail.com>
+Subject: Re: [PATCH] media: Clarify the meaning of file descriptors in VIDIOC_DQBUF
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Hirokazu Honda <hiroh@chromium.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 9:02 AM Gustavo A. R. Silva
-<gustavo@embeddedor.com> wrote:
+On Wed, Jun 12, 2019 at 6:36 PM Tomasz Figa <tfiga@chromium.org> wrote:
 >
-> Notice that in this case, it's much clearer to explicitly add a break
-> rather than letting the code to fall through. It also avoid potential
-> future fall-through warnings[1].
+> When the application calls VIDIOC_DQBUF with the DMABUF memory type, the
+> v4l2_buffer structure (or v4l2_plane structures) are filled with DMA-buf
+> file descriptors. However, the current documentation does not explain
+> whether those are new file descriptors referring to the same DMA-bufs or
+> just the same integers as passed to VIDIOC_QBUF back in time. Clarify
+> the documentation that it's the latter.
 >
-> This patch is part of the ongoing efforts to enable
-> -Wimplicit-fallthrough.
->
-> [1] https://lore.kernel.org/patchwork/patch/1087056/
->
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 
-this type of changes are not suitable for bpf tree.
-Pls submit both as single patch to bpf-next
+That's a welcome precision indeed.
+
+Reviewed-by: Alexandre Courbot <acourbot@chromium.org>
+
+> ---
+>  Documentation/media/uapi/v4l/vidioc-qbuf.rst | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+>
+> diff --git a/Documentation/media/uapi/v4l/vidioc-qbuf.rst b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
+> index dbf7b445a27b..407302d80684 100644
+> --- a/Documentation/media/uapi/v4l/vidioc-qbuf.rst
+> +++ b/Documentation/media/uapi/v4l/vidioc-qbuf.rst
+> @@ -139,6 +139,14 @@ may continue as normal, but should be aware that data in the dequeued
+>  buffer might be corrupted. When using the multi-planar API, the planes
+>  array must be passed in as well.
+>
+> +If the application sets the ``memory`` field to ``V4L2_MEMORY_DMABUF`` to
+> +dequeue a :ref:`DMABUF <dmabuf>` buffer, the driver fills the ``m.fd`` field
+> +with a file descriptor numerically the same as the one given to ``VIDIOC_QBUF``
+> +when the buffer was enqueued. No new file descriptor is created at dequeue time
+> +and the value is only for the application convenience. When the multi-planar
+> +API is used the ``m.fd`` fields of the passed array of struct
+> +:c:type:`v4l2_plane` are filled instead.
+> +
+>  By default ``VIDIOC_DQBUF`` blocks when no buffer is in the outgoing
+>  queue. When the ``O_NONBLOCK`` flag was given to the
+>  :ref:`open() <func-open>` function, ``VIDIOC_DQBUF`` returns
+> --
+> 2.22.0.rc2.383.gf4fbbf30c2-goog
+>
