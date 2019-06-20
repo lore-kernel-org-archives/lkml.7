@@ -2,53 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0AD6C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D6E2C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCB4D2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1D513208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053659;
-	bh=9bPUddwenO1C0qTF7Qi4ohydxVEsApGo0LBqq8AN8wI=;
+	s=default; t=1561053663;
+	bh=a/1GfeBAV+OW7g05LGfi9Pc5yqXULZUr//lb0XNGTPc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=urSLeJj2tajCjRN42EcxuqICc3rcBQnIWERscbhpsfYiren2ik4ymuu9/m4qGZpcM
-	 kokdLSXX0T+dZQEZ5w0yUeHetO0+/VvyhxksqtbGmAxTkLzZCxOlmRG4Q0IhxnhViK
-	 C/r6p1NQCwaMU0CejMq31+bLkemEmziqQPpPGx8c=
+	b=MWxWl8B48KSA8rcN4PQm19pQfchVfEtlCwwQeeFVoh2JAsNJ6F9mQxH5ljCAtEAPQ
+	 QzI/MYr3Co+N/Abn8zFnXYy5RunwRDRlSNUbPhWsPn21/506coDPWDnq6clNV3W6Ht
+	 /x1ueJGcmUaMcqWdlfhgeWQoE6Y2fuJH4921crTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727127AbfFTSA6 (ORCPT
+        id S1727140AbfFTSBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:58 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50112 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:01 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbfFTSA5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:57 -0400
+        id S1726485AbfFTSA7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5900214AF;
-        Thu, 20 Jun 2019 18:00:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8EE802089C;
+        Thu, 20 Jun 2019 18:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053656;
-        bh=9bPUddwenO1C0qTF7Qi4ohydxVEsApGo0LBqq8AN8wI=;
+        s=default; t=1561053659;
+        bh=a/1GfeBAV+OW7g05LGfi9Pc5yqXULZUr//lb0XNGTPc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CqwwY1Hg35KzwtswhYrNIeG9ouNCF053gDL7hYKPX5K2fk11sJ9gpNkAoAjKZjfIs
-         bU0TLv3Shweff1bCAFj88yAaHx+hkjGRccjTYysncYNto3dNL8MR93P5FspYINQf+d
-         P+Ci7AT+S36HQk3Aj3EM9iZPrXIrK6xa8Q7Uda5U=
+        b=U6ro1axeO8grHxJZHnKZrKKJD79Pf/zKUDAKc34GsERF7K5g5rpcjBmPNdANT5bMT
+         EvITjWljVWWJlpnf1M2SyYPRlyaTTBsJodS8zClgYPyPjnjjsGF31Lpx5HOc6pEk4d
+         2+PoztdpV0Mg0DQxpL4GGQ48uLxcvd7nggdT3dkk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 37/84] ARM: exynos: Fix undefined instruction during Exynos5422 resume
-Date:   Thu, 20 Jun 2019 19:56:34 +0200
-Message-Id: <20190620174343.669895262@linuxfoundation.org>
+        stable@vger.kernel.org, ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 4.4 38/84] futex: Fix futex lock the wrong page
+Date:   Thu, 20 Jun 2019 19:56:35 +0200
+Message-Id: <20190620174343.863170360@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,88 +59,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 4d8e3e951a856777720272ce27f2c738a3eeef8c ]
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-During early system resume on Exynos5422 with performance counters enabled
-the following kernel oops happens:
+The upstram commit 65d8fc777f6d ("futex: Remove requirement
+for lock_page() in get_futex_key()") use variable 'page' as
+the page head, when merge it to stable branch, the variable
+`page_head` is page head.
 
-    Internal error: Oops - undefined instruction: 0 [#1] PREEMPT SMP ARM
-    Modules linked in:
-    CPU: 0 PID: 1433 Comm: bash Tainted: G        W         5.0.0-rc5-next-20190208-00023-gd5fb5a8a13e6-dirty #5480
-    Hardware name: SAMSUNG EXYNOS (Flattened Device Tree)
-    ...
-    Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment none
-    Control: 10c5387d  Table: 4451006a  DAC: 00000051
-    Process bash (pid: 1433, stack limit = 0xb7e0e22f)
-    ...
-    (reset_ctrl_regs) from [<c0112ad0>] (dbg_cpu_pm_notify+0x1c/0x24)
-    (dbg_cpu_pm_notify) from [<c014c840>] (notifier_call_chain+0x44/0x84)
-    (notifier_call_chain) from [<c014cbc0>] (__atomic_notifier_call_chain+0x7c/0x128)
-    (__atomic_notifier_call_chain) from [<c01ffaac>] (cpu_pm_notify+0x30/0x54)
-    (cpu_pm_notify) from [<c055116c>] (syscore_resume+0x98/0x3f4)
-    (syscore_resume) from [<c0189350>] (suspend_devices_and_enter+0x97c/0xe74)
-    (suspend_devices_and_enter) from [<c0189fb8>] (pm_suspend+0x770/0xc04)
-    (pm_suspend) from [<c0187740>] (state_store+0x6c/0xcc)
-    (state_store) from [<c09fa698>] (kobj_attr_store+0x14/0x20)
-    (kobj_attr_store) from [<c030159c>] (sysfs_kf_write+0x4c/0x50)
-    (sysfs_kf_write) from [<c0300620>] (kernfs_fop_write+0xfc/0x1e0)
-    (kernfs_fop_write) from [<c0282be8>] (__vfs_write+0x2c/0x160)
-    (__vfs_write) from [<c0282ea4>] (vfs_write+0xa4/0x16c)
-    (vfs_write) from [<c0283080>] (ksys_write+0x40/0x8c)
-    (ksys_write) from [<c0101000>] (ret_fast_syscall+0x0/0x28)
+In the stable branch, the variable `page` not means the page
+head, when lock the page head, we should lock 'page_head',
+rather than 'page'.
 
-Undefined instruction is triggered during CP14 reset, because bits: #16
-(Secure privileged invasive debug disabled) and #17 (Secure privileged
-noninvasive debug disable) are set in DSCR. Those bits depend on SPNIDEN
-and SPIDEN lines, which are provided by Secure JTAG hardware block. That
-block in turn is powered from cluster 0 (big/Eagle), but the Exynos5422
-boots on cluster 1 (LITTLE/KFC).
+It maybe lead a hung task problem.
 
-To fix this issue it is enough to turn on the power on the cluster 0 for
-a while. This lets the Secure JTAG block to propagate the needed signals
-to LITTLE/KFC cores and change their DSCR.
-
-Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Cc: stable@vger.kernel.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mach-exynos/suspend.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ kernel/futex.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-exynos/suspend.c b/arch/arm/mach-exynos/suspend.c
-index a003833ac112..013f4d55ede8 100644
---- a/arch/arm/mach-exynos/suspend.c
-+++ b/arch/arm/mach-exynos/suspend.c
-@@ -508,8 +508,27 @@ early_wakeup:
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -593,8 +593,8 @@ again:
+ 		 * applies. If this is really a shmem page then the page lock
+ 		 * will prevent unexpected transitions.
+ 		 */
+-		lock_page(page);
+-		shmem_swizzled = PageSwapCache(page) || page->mapping;
++		lock_page(page_head);
++		shmem_swizzled = PageSwapCache(page_head) || page_head->mapping;
+ 		unlock_page(page_head);
+ 		put_page(page_head);
  
- static void exynos5420_prepare_pm_resume(void)
- {
-+	unsigned int mpidr, cluster;
-+
-+	mpidr = read_cpuid_mpidr();
-+	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
-+
- 	if (IS_ENABLED(CONFIG_EXYNOS5420_MCPM))
- 		WARN_ON(mcpm_cpu_powered_up());
-+
-+	if (IS_ENABLED(CONFIG_HW_PERF_EVENTS) && cluster != 0) {
-+		/*
-+		 * When system is resumed on the LITTLE/KFC core (cluster 1),
-+		 * the DSCR is not properly updated until the power is turned
-+		 * on also for the cluster 0. Enable it for a while to
-+		 * propagate the SPNIDEN and SPIDEN signals from Secure JTAG
-+		 * block and avoid undefined instruction issue on CP14 reset.
-+		 */
-+		pmu_raw_writel(S5P_CORE_LOCAL_PWR_EN,
-+				EXYNOS_COMMON_CONFIGURATION(0));
-+		pmu_raw_writel(0,
-+				EXYNOS_COMMON_CONFIGURATION(0));
-+	}
- }
- 
- static void exynos5420_pm_resume(void)
--- 
-2.20.1
-
 
 
