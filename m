@@ -2,100 +2,128 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8184CC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:32:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A3FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:38:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A9B92084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:32:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5400E2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:38:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ii2RKoyR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="drTB1igf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbfFTUcq (ORCPT
+        id S1726129AbfFTUiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:32:46 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:50648 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfFTUcp (ORCPT
+        Thu, 20 Jun 2019 16:38:50 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:45363 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfFTUiu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:32:45 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KKO7b8045039;
-        Thu, 20 Jun 2019 20:32:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2018-07-02;
- bh=4OeBcn9e/hhlLrtRhAZE+XYp/xCDVF5HETiYD7GCSAs=;
- b=Ii2RKoyRtMzRinltQK6lHLX/GC8xNTWfy4WqWZ/VoP77kAOCASzKnOqdIR0bx4vE96In
- Gg8V47smVYAZxV+QTE30ijVB9U8H4lRTUVdx7KGixfgkS6bX5tdni6svXzPsF5IPOav9
- /TFNcY24kClP8W8Q+KIc/ZxU+E8kKACkTf+5pVVibR0o8xQu/xYuuPGKjZeoR2tlhPgr
- DCvlvMPuOrqf2rovSjW07D/ZYbnYIaKvBJqtwAkHj4lDoo9Br/d4RdjfGiFt5kUA2C+6
- o5mfzZSvd9pquagjzzefelJQ26+jZcOWCK/5C7zxTiCzCFTs0zKUBIbdGdn2+atYekOU 9Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2t7809k57p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 20:32:42 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KKVHpt127956;
-        Thu, 20 Jun 2019 20:32:41 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2t7rdxc79m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 20:32:41 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x5KKWe6U028624;
-        Thu, 20 Jun 2019 20:32:40 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 20 Jun 2019 13:32:40 -0700
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
-        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>
-Subject: Re: [PATCH 1/2] scsi: devinfo: BLIST_TRY_VPD_PAGES for SanDisk Cruzer Blade
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <20190618013146.21961-1-marcos.souza.org@gmail.com>
-        <20190618013146.21961-2-marcos.souza.org@gmail.com>
-        <yq1r27quuod.fsf@oracle.com> <20190619094540.GA26980@continental>
-        <20190619120346.GC26980@continental>
-Date:   Thu, 20 Jun 2019 16:32:38 -0400
-In-Reply-To: <20190619120346.GC26980@continental> (Marcos Paulo de Souza's
-        message of "Wed, 19 Jun 2019 09:03:52 -0300")
-Message-ID: <yq14l4kro9l.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        Thu, 20 Jun 2019 16:38:50 -0400
+Received: by mail-ed1-f66.google.com with SMTP id a14so6495523edv.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:38:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=3NNpxQC9inEMdQiCtKdevzqLpK6p/o11oFFffa2tXtA=;
+        b=drTB1igfYgyVGqDFahZ5NCLWxeC+zgZym5tNhHU9P8EVSYWsif8ATO7pGEP+d9b4jh
+         JAOnze86pJuhlaTw0qlD/nW6rmrmbt2IBo7iigDcsRG6wUQWA25EcHINzbbeiMWc6kbv
+         TIuJ7KJQbLsp195+3AwE47Er77voagXXJT1rsAjFejlw31omdfGinBG6DPOUaGItFu+D
+         ys8HdSTj7s+FDlec/VPr03RWlEH28OKXZuN5/b58TkSNoU+KY/KedGOeatIk/zPPPXh0
+         /tB97o72J1eTHRzAcS1bmSx1VBukLqxVclGb2OyRv47B3yeHVfSUQUjUoYCoslao1nwy
+         iMOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3NNpxQC9inEMdQiCtKdevzqLpK6p/o11oFFffa2tXtA=;
+        b=Xv+x6F6WxapgwKqTgv1wIW7DFHARCHFFpIvvaVqA2BVdK+sTFKN8gD5UlFRlIV+FW3
+         EfQaulFSHDCzha7UQPRLuEGVYaGFbPwvI6PwMyKF3F1Vs3MU0VHpKMUzAqaNNddBGzEc
+         +v7qkmSaIMeSjwUzfEiF0uBAm768g9TIcA+5u4gusN9vGL0NZSL/1Pei1uy9BiFpJkeW
+         2mWPgOICH68O5hZlng9BdQscc0eWx3FyhcZ+KfG3XeXPWYnVtCd8xwjlrtbQf+y9TCNC
+         8yufn50sRgwf8REAvt7Dj3wc73L2bYtvzfTX33vazkv985ziuk9Xnny96DW+gfkM+ZRN
+         5qyA==
+X-Gm-Message-State: APjAAAUud7mQsjIOfKgXv2/RFTxtg3UV+5Nc6NCU6JVW9ABPhOj5tfCB
+        +ZyW2yJcbewCvn7IERSRZr9PmleRPeMOdQ==
+X-Google-Smtp-Source: APXvYqyFv7TcKmDYh6aGGxLZIuOvRIKKOd88Mr+MJzIGjGqg4v29rEZylk+bGGm4BsLzINtBP1v0qQ==
+X-Received: by 2002:a17:906:3385:: with SMTP id v5mr112020844eja.301.1561063128315;
+        Thu, 20 Jun 2019 13:38:48 -0700 (PDT)
+Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
+        by smtp.gmail.com with ESMTPSA id g6sm69844ejb.18.2019.06.20.13.38.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 13:38:47 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 13:38:45 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Doug Anderson <dianders@google.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Tom Roeder <tmroeder@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Raul E Rangel <rrangel@chromium.org>,
+        Tom Hughes <tomhughes@chromium.org>,
+        Ryan Case <ryandcase@chromium.org>, Yu Liu <yudiliu@google.com>
+Subject: Re: [PATCH] gen_compile_command: Add support for separate
+ KBUILD_OUTPUT directory
+Message-ID: <20190620203845.GA102280@archlinux-epyc>
+References: <20190620184523.155756-1-mka@chromium.org>
+ <CAKwvOdn-o9UszRW+MQ9Z0Ds9B2wSVBWUsPBPSF0S2DYxVFYpqA@mail.gmail.com>
+ <CAD=FV=WcH=dVeVWznO7Ti5A8HBDRM=rPvvH=-XJ2o1PKXvHAQw@mail.gmail.com>
+ <CAKwvOd=twuZAAyKsBRSeJEFuQZGdyTw+=JAwmJugUhV+bppdtg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1906200146
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1906200146
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOd=twuZAAyKsBRSeJEFuQZGdyTw+=JAwmJugUhV+bppdtg@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Jun 20, 2019 at 01:25:36PM -0700, Nick Desaulniers wrote:
+> On Thu, Jun 20, 2019 at 1:13 PM Doug Anderson <dianders@google.com> wrote:
+> > On Thu, Jun 20, 2019 at 12:53 PM Nick Desaulniers
+> > <ndesaulniers@google.com> wrote:
+> > >
+> > > I do miss Doug's Kbuild caching patches' speedup.
+> >
+> > You actually get quite a bit of this by grabbing a new version of
+> > ccache (assuming you use ccache).  :-P  You still have to pay the
+> > penalty (twice) for all the options that are tested that the compiler
+> > _doesn't_ support, but at least you get the cache for the commands
+> > that the compiler does support.
+> 
+> Hello darkness my old friend:
+> https://nickdesaulniers.github.io/blog/2018/06/02/speeding-up-linux-kernel-builds-with-ccache/
+> Man, that post has not aged well.  Here's what we do now:
+> https://github.com/ClangBuiltLinux/continuous-integration/blob/45ab5842a69cb0c72d27d34e73b0599ec2a0e2ed/driver.sh#L227-L245
+> 
+> > Specifically, make sure you have a ccache with:
+> >
+> >     * https://github.com/ccache/ccache/pull/365
+> >     * https://github.com/ccache/ccache/pull/370
+> 
+> Oh! Interesting finds and thanks for the pointers.  Did these make it
+> into a release version of ccache, yet? If so, do you know which
+> version?
+>
 
-Marcos,
+It should be available in 3.7 if I am reading git history right.
 
-> My first idea was to add a vendor:product mapping at SCSI layer, but
-> so far I haven't found one, so I added the model/vendor found by
-> INQUIRY. Would it be better to check for prod:vendor (as values,
-> instead of the description)?
+Cheers,
+Nathan
 
-Your patch is functionally fine. I'm just trying to establish how risky
-it is for me to pick it up.
-
--- 
-Martin K. Petersen	Oracle Linux Engineering
+> > I still have it in my thoughts to avoid the penalty for options that
+> > the compiler doesn't support but haven't had time to work on it
+> > recently.
+> 
+> It had better not be autoconf! (Hopefully yet-to-be-written GNU C
+> extensions can support feature detection via C preprocessor)
+> -- 
+> Thanks,
+> ~Nick Desaulniers
