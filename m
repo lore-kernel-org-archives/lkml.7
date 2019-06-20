@@ -2,94 +2,107 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8925DC48BDF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:41:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06E93C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DCE6214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:41:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GWJtBALX"
+	by mail.kernel.org (Postfix) with ESMTP id CE8B6214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:43:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731118AbfFTBlb (ORCPT
+        id S1731189AbfFTBnt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:41:31 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56597 "EHLO ozlabs.org"
+        Wed, 19 Jun 2019 21:43:49 -0400
+Received: from mga01.intel.com ([192.55.52.88]:60105 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726325AbfFTBlb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:41:31 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Tl0R43Rpz9s5c;
-        Thu, 20 Jun 2019 11:41:27 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1560994887;
-        bh=WGOTRMBeLBmilogT0tIxAInw7Nr8PQY7ILBf8vwykm8=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GWJtBALXVOruaEH4fhJt870lXQSSdBxlNSmRpYwTzc3YoAxihz+BACTpZV5jYjTY3
-         lnc7TPILbA8hs5zMx1pa+O3IX9cOrxlkSK9YYWkzndGZ75Ltz/yPapB7dnJFBDP/yj
-         2N99Xm9eG2XmNlNXl+xe9xSnhaE0i08yzNiZiBOZn+YDlMV9a3qmVs/6CdrIngPlBM
-         ZlGueeupZBj/WNZ9wFA8tl858tE1rRHf6fpISofvj82JP6d0SAocJcT4XD85ITLhpV
-         5iCTWwkv63St7uQeqL41l9NTfNuLs9ZrMS4o3XJ/WVU/9uIdtwkcCNBahne66s36zK
-         wen89ka/be5oA==
-Date:   Thu, 20 Jun 2019 11:41:26 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: linux-next: build failure after merge of the fbdev tree
-Message-ID: <20190620114126.2f13ab9c@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/d82EgSM/EAI_ZmuqNlG4tHm"; protocol="application/pgp-signature"
+        id S1726349AbfFTBnt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 21:43:49 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga001.jf.intel.com ([10.7.209.18])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 18:43:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,394,1557212400"; 
+   d="scan'208";a="243484914"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by orsmga001.jf.intel.com with ESMTP; 19 Jun 2019 18:43:48 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     "Thomas Gleixner" <tglx@linutronix.de>,
+        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
+        "H Peter Anvin" <hpa@zytor.com>,
+        "Andy Lutomirski" <luto@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        "Ashok Raj" <ashok.raj@intel.com>,
+        "Tony Luck" <tony.luck@intel.com>,
+        "Ravi V Shankar" <ravi.v.shankar@intel.com>
+Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
+        "x86" <x86@kernel.org>, Fenghua Yu <fenghua.yu@intel.com>
+Subject: [PATCH v5 1/5] x86/cpufeatures: Enumerate user wait instructions
+Date:   Wed, 19 Jun 2019 18:33:54 -0700
+Message-Id: <1560994438-235698-2-git-send-email-fenghua.yu@intel.com>
+X-Mailer: git-send-email 2.5.0
+In-Reply-To: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
+References: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/d82EgSM/EAI_ZmuqNlG4tHm
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+umonitor, umwait, and tpause are a set of user wait instructions.
 
-Hi all,
+umonitor arms address monitoring hardware using an address. The
+address range is determined by using CPUID.0x5. A store to
+an address within the specified address range triggers the
+monitoring hardware to wake up the processor waiting in umwait.
 
-After merging the fbdev tree, today's linux-next build (x86_64
-allmodconfig) failed like this:
+umwait instructs the processor to enter an implementation-dependent
+optimized state while monitoring a range of addresses. The optimized
+state may be either a light-weight power/performance optimized state
+(C0.1 state) or an improved power/performance optimized state
+(C0.2 state).
 
-x86_64-linux-gnu-ld: drivers/gpu/vga/vga_switcheroo.o: in function `vga_swi=
-tchto_stage2':
-vga_switcheroo.c:(.text+0x997): undefined reference to `fbcon_remap_all'
+tpause instructs the processor to enter an implementation-dependent
+optimized state C0.1 or C0.2 state and wake up when time-stamp counter
+reaches specified timeout.
 
-Caused by commit
+The three instructions may be executed at any privilege level.
 
-  1cd51b5d200d ("vgaswitcheroo: call fbcon_remap_all directly")
+The instructions provide power saving method while waiting in
+user space. Additionally, they can allow a sibling hyperthread to
+make faster progress while this thread is waiting. One example of an
+application usage of umwait is when waiting for input data from another
+application, such as a user level multi-threaded packet processing
+engine.
 
-I have used the version of the fbdev tree from next-20190619 for today.
+Availability of the user wait instructions is indicated by the presence
+of the CPUID feature flag WAITPKG CPUID.0x07.0x0:ECX[5].
 
---=20
-Cheers,
-Stephen Rothwell
+Detailed information on the instructions and CPUID feature WAITPKG flag
+can be found in the latest Intel Architecture Instruction Set Extensions
+and Future Features Programming Reference and Intel 64 and IA-32
+Architectures Software Developer's Manual.
 
---Sig_/d82EgSM/EAI_ZmuqNlG4tHm
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+Reviewed-by: Ashok Raj <ashok.raj@intel.com>
+Reviewed-by: Andy Lutomirski <luto@kernel.org>
+---
+ arch/x86/include/asm/cpufeatures.h | 1 +
+ 1 file changed, 1 insertion(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
+index 75f27ee2c263..b8bd428ae5bc 100644
+--- a/arch/x86/include/asm/cpufeatures.h
++++ b/arch/x86/include/asm/cpufeatures.h
+@@ -322,6 +322,7 @@
+ #define X86_FEATURE_UMIP		(16*32+ 2) /* User Mode Instruction Protection */
+ #define X86_FEATURE_PKU			(16*32+ 3) /* Protection Keys for Userspace */
+ #define X86_FEATURE_OSPKE		(16*32+ 4) /* OS Protection Keys Enable */
++#define X86_FEATURE_WAITPKG		(16*32+ 5) /* UMONITOR/UMWAIT/TPAUSE Instructions */
+ #define X86_FEATURE_AVX512_VBMI2	(16*32+ 6) /* Additional AVX512 Vector Bit Manipulation Instructions */
+ #define X86_FEATURE_GFNI		(16*32+ 8) /* Galois Field New Instructions */
+ #define X86_FEATURE_VAES		(16*32+ 9) /* Vector AES */
+-- 
+2.19.1
 
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0K5EYACgkQAVBC80lX
-0GwMDgf+PY58cbMSpretI0KZAamybNU96+QSAj9P6Ah5dZgzJTREF0w3mrvb9+Gq
-HCYLQGPIaaoZJyVE4xUGfKaUJfeFavUGTHLfqeRBNjrHNMWERA3az7p97KTNcmNU
-kKLzeIJ/bSWki+9a6VQ8ebrjr0R7it/f1EU8obNqL0rc5xLYlm8NnEtvvg8famwS
-TuPlpXvOkyb94/E/sJjelWRnt4S7Db1FJXeuUHRDBdCk40gkR/eYsppOU6SxKMDf
-NZSMFcumB1RiE38d9e9fASIAyCr7mw8b+J0btLNG0hn/EKK3A2iCyZRh3ksKmADI
-OUTdvEK1tXjUMM0ccCrO/lUB6InSHA==
-=etdo
------END PGP SIGNATURE-----
-
---Sig_/d82EgSM/EAI_ZmuqNlG4tHm--
