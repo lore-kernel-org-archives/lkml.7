@@ -2,111 +2,119 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE89C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:04:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20856C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 231532082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:04:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015AC2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:06:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731842AbfFTNEp (ORCPT
+        id S1731937AbfFTNGY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:04:45 -0400
-Received: from foss.arm.com ([217.140.110.172]:36626 "EHLO foss.arm.com"
+        Thu, 20 Jun 2019 09:06:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:36712 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726569AbfFTNEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:04:45 -0400
+        id S1731733AbfFTNGX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:06:23 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6E87A360;
-        Thu, 20 Jun 2019 06:04:42 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 690673F718;
-        Thu, 20 Jun 2019 06:04:41 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 14:04:39 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     Douglas Raillard <douglas.raillard@arm.com>
-Cc:     Quentin Perret <quentin.perret@arm.com>,
-        linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        mingo@redhat.com, peterz@infradead.org, dietmar.eggemann@arm.com
-Subject: Re: [RFC PATCH 1/7] PM: Introduce em_pd_get_higher_freq()
-Message-ID: <20190620130439.c3tk7osezd37pfmj@e110439-lin>
-References: <20190508174301.4828-1-douglas.raillard@arm.com>
- <20190508174301.4828-2-douglas.raillard@arm.com>
- <20190516124200.opxczohjelhvrzmo@e110439-lin>
- <20190516130148.uhq55ptut47usnae@queper01-lin>
- <20190516132250.hedtianse7rnk3wq@e110439-lin>
- <11976c37-65d3-e0c6-034d-cfec9ebb5b49@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <11976c37-65d3-e0c6-034d-cfec9ebb5b49@arm.com>
-User-Agent: NeoMutt/20180716
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id EC969360;
+        Thu, 20 Jun 2019 06:06:22 -0700 (PDT)
+Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BB733F718;
+        Thu, 20 Jun 2019 06:06:21 -0700 (PDT)
+From:   Julien Grall <julien.grall@arm.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu
+Cc:     james.morse@arm.com, marc.zyngier@arm.com, julien.thierry@arm.com,
+        suzuki.poulose@arm.com, catalin.marinas@arm.com,
+        will.deacon@arm.com, Julien Grall <julien.grall@arm.com>,
+        Russell King <linux@armlinux.org.uk>
+Subject: [RFC v2 00/14] kvm/arm: Align the VMID allocation with the arm64 ASID one
+Date:   Thu, 20 Jun 2019 14:05:54 +0100
+Message-Id: <20190620130608.17230-1-julien.grall@arm.com>
+X-Mailer: git-send-email 2.11.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-Jun 17:08, Douglas Raillard wrote:
-> Hi Patrick,
-> 
-> On 5/16/19 2:22 PM, Patrick Bellasi wrote:
-> > On 16-May 14:01, Quentin Perret wrote:
-> > > On Thursday 16 May 2019 at 13:42:00 (+0100), Patrick Bellasi wrote:
-> > > > > +static inline unsigned long em_pd_get_higher_freq(struct em_perf_domain *pd,
-> > > > > +	unsigned long min_freq, unsigned long cost_margin)
-> > > > > +{
-> > > > > +	unsigned long max_cost = 0;
-> > > > > +	struct em_cap_state *cs;
-> > > > > +	int i;
-> > > > > +
-> > > > > +	if (!pd)
-> > > > > +		return min_freq;
-> > > > > +
-> > > > > +	/* Compute the maximum allowed cost */
-> > > > > +	for (i = 0; i < pd->nr_cap_states; i++) {
-> > > > > +		cs = &pd->table[i];
-> > > > > +		if (cs->frequency >= min_freq) {
-> > > > > +			max_cost = cs->cost + (cs->cost * cost_margin) / 1024;
-> > > >                                                                           ^^^^
-> > > > ... end here we should probably better use SCHED_CAPACITY_SCALE
-> > > > instead of hard-coding in values, isn't it?
-> > > 
-> > > I'm not sure to agree. This isn't part of the scheduler per se, and the
-> > > cost thing isn't in units of capacity, but in units of power, so I don't
-> > > think SCHED_CAPACITY_SCALE is correct here.
-> > 
-> > Right, I get the units do not match and it would not be elegant to use
-> > it here...
-> > 
-> > > But I agree these hard coded values (that one, and the 512 in one of the
-> > > following patches) could use some motivation :-)
-> > 
-> > ... ultimately SCHED_CAPACITY_SCALE is just SCHED_FIXEDPOINT_SCALE,
-> > which is adimensional. Perhaps we should use that or yet another alias
-> > for the same.
-> 
-> Would it be a good idea to use SCHED_FIXEDPOINT_SCALE in energy.c ?
-> Since it's not part of the scheduler, maybe there is a scale covering a wider scope,
-> or we can introduce a similar ENERGY_FIXEDPOINT_SCALE in energy_model.h.
+Hi all,
 
-Well, in energy_model.c we have references to "capacity" and
-"utilization" which are all SCHED_FIXEDPOINT_SCALE range values.
-That symbol is defined in <linux/sched.h> and we already pull
-in other <linux/sched/*> headers.
+This patch series is moving out the ASID allocator in a separate file in order
+to re-use it for the VMID. The benefits are:
+    - CPUs are not forced to exit on a roll-over.
+    - Context invalidation is now per-CPU rather than
+      broadcasted.
 
-So, to me it seems it's not unreasonable to say that we use scheduler
-related concepts and it makes more sense than introducing yet another
-scaling factor.
+There are no performance regression on the fastpath for ASID allocation.
+Actually on the hackbench measurement (300 hackbench) it was .7% faster.
 
-But that's just my two cents ;)
+The measurement was made on a Seattle based SoC (8 CPUs), with the
+number of VMID limited to 4-bit. The test involves running concurrently 40
+guests with 2 vCPUs. Each guest will then execute hackbench 5 times
+before exiting.
 
-Best,
-Patrick
+The performance difference (on 5.1-rc1) between the current algo and the
+new one are:
+    - 2.5% less exit from the guest
+    - 22.4% more flush, although they are now local rather than broadcasted
+    - 0.11% faster (just for the record)
+
+The ASID allocator rework to make it generic has been divided in multiple
+patches to make the review easier.
+
+Compare to the first RFC, Arm is not duplicated most of the code anymore.
+Instead, Arm will build the version from Arm64.
+
+A branch with the patch based on 5.2-rc5 can be found:
+
+http://xenbits.xen.org/gitweb/?p=people/julieng/linux-arm.git;a=shortlog;h=refs/heads/vmid-rework/rfc-v2
+
+Best regards,
+
+Cc: Russell King <linux@armlinux.org.uk>
+
+Julien Grall (14):
+  arm64/mm: Introduce asid_info structure and move
+    asid_generation/asid_map to it
+  arm64/mm: Move active_asids and reserved_asids to asid_info
+  arm64/mm: Move bits to asid_info
+  arm64/mm: Move the variable lock and tlb_flush_pending to asid_info
+  arm64/mm: Remove dependency on MM in new_context
+  arm64/mm: Store the number of asid allocated per context
+  arm64/mm: Introduce NUM_ASIDS
+  arm64/mm: Split asid_inits in 2 parts
+  arm64/mm: Split the function check_and_switch_context in 3 parts
+  arm64/mm: Introduce a callback to flush the local context
+  arm64: Move the ASID allocator code in a separate file
+  arm64/lib: asid: Allow user to update the context under the lock
+  arm/kvm: Introduce a new VMID allocator
+  kvm/arm: Align the VMID allocation with the arm64 ASID one
+
+ arch/arm/include/asm/kvm_asm.h    |   2 +-
+ arch/arm/include/asm/kvm_host.h   |   5 +-
+ arch/arm/include/asm/kvm_hyp.h    |   1 +
+ arch/arm/include/asm/lib_asid.h   |  81 +++++++++++++++
+ arch/arm/kvm/Makefile             |   1 +
+ arch/arm/kvm/hyp/tlb.c            |   8 +-
+ arch/arm64/include/asm/kvm_asid.h |   8 ++
+ arch/arm64/include/asm/kvm_asm.h  |   2 +-
+ arch/arm64/include/asm/kvm_host.h |   5 +-
+ arch/arm64/include/asm/lib_asid.h |  81 +++++++++++++++
+ arch/arm64/kvm/hyp/tlb.c          |  10 +-
+ arch/arm64/lib/Makefile           |   2 +
+ arch/arm64/lib/asid.c             | 191 +++++++++++++++++++++++++++++++++++
+ arch/arm64/mm/context.c           | 205 ++++++--------------------------------
+ virt/kvm/arm/arm.c                | 112 +++++++--------------
+ 15 files changed, 447 insertions(+), 267 deletions(-)
+ create mode 100644 arch/arm/include/asm/lib_asid.h
+ create mode 100644 arch/arm64/include/asm/kvm_asid.h
+ create mode 100644 arch/arm64/include/asm/lib_asid.h
+ create mode 100644 arch/arm64/lib/asid.c
 
 -- 
-#include <best/regards.h>
+2.11.0
 
-Patrick Bellasi
