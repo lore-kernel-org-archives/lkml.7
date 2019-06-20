@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4087FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EF6AC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BDF7215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54FCC215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053708;
-	bh=5ku35xL2IOm1lfhHw1d7/RAla0NL9v23eKstzeDFCP8=;
+	s=default; t=1561053711;
+	bh=RTjCHlT6pU07SFK20zW/+U94647eGMThrw8QqN3GMUw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=leEu9Roq3JOENeYgwxh8cJm/eSonmulcpb7jFbCkMKmqkBWy0tb8KJEK8XIjCelQ2
-	 vLMzLjMKFIl8jWKyoWnSKxmx7YayUmKum6qZslRf1bQ/VJjKlhZuzH6TGdan7kLTe7
-	 3+vt1tydGYmofqOhRC9wLVJGFNzyPajDhwIbrOJU=
+	b=MZfuBPa0XEbPfK8ZjacR9fJ96j4ISXrk8XuBkbnxJk540bJNPsxHTcw9KjJiB1zMG
+	 IDTtkN0ZZI4aidBixxhdFYqVab0eSyHRfj+mm1g+TEzGiHQBOvyMpGYtwk+XUAXu+G
+	 NOQmmFVBdya6k8KZwE8VVKFKzgaVlVH6czPz1wis=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727319AbfFTSBq (ORCPT
+        id S1726761AbfFTSBu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51548 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51652 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727314AbfFTSBn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:43 -0400
+        id S1727316AbfFTSBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39B7620B1F;
-        Thu, 20 Jun 2019 18:01:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAADC208CA;
+        Thu, 20 Jun 2019 18:01:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053702;
-        bh=5ku35xL2IOm1lfhHw1d7/RAla0NL9v23eKstzeDFCP8=;
+        s=default; t=1561053705;
+        bh=RTjCHlT6pU07SFK20zW/+U94647eGMThrw8QqN3GMUw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bwe0L3h35ajm0tnsBU3DfR+sGoAC2Z6ZoPA9bMmSzTzJlg8bCWIAxlAxT8vH9jBOS
-         4JSsMDId9X/RVpX2+wIN05QthUCFrkFeV60A60HA9PfB8rs4uxTiI6sZ+WARySXfhy
-         ZPySVrp4DGMfvhP9cXh6XC7jUvqal3HuplCvD4pw=
+        b=nKWXE7A2nQr+LAQvaCRw6O2KIyd3A1PM83Y+we2J3fWCn1D161q6KHvD2EF1IlowS
+         UkRQdSsAQR5BoiufdzSQ/5eghdnUIIXO1jg/N0vPq/tG6sNshM/AsBK1YxAf6lDCEs
+         5XjK1XSNLvVJOdWpLp8/VYBGW00ac5kHKTybKdHI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>,
-        Christian Lamparter <chunkeey@gmail.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 82/84] Revert "crypto: crypto4xx - properly set IV after de- and encrypt"
-Date:   Thu, 20 Jun 2019 19:57:19 +0200
-Message-Id: <20190620174349.254260381@linuxfoundation.org>
+        stable@vger.kernel.org, Andrea Arcangeli <aarcange@redhat.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Peter Xu <peterx@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: [PATCH 4.4 83/84] coredump: fix race condition between mmget_not_zero()/get_task_mm() and core dumping
+Date:   Thu, 20 Jun 2019 19:57:20 +0200
+Message-Id: <20190620174349.460746253@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,52 +66,251 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Andrea Arcangeli <aarcange@redhat.com>
 
-This reverts commit e9a60ab1609a7d975922adad1bf9c46ac6954584 which is
-commit fc340115ffb8235c1bbd200c28855e6373d0dd1a upstream.
+commit 04f5866e41fb70690e28397487d8bd8eea7d712a upstream.
 
-Hauke writes that this breaks the build and should be reverted.
+The core dumping code has always run without holding the mmap_sem for
+writing, despite that is the only way to ensure that the entire vma
+layout will not change from under it.  Only using some signal
+serialization on the processes belonging to the mm is not nearly enough.
+This was pointed out earlier.  For example in Hugh's post from Jul 2017:
 
-Reported-by: Hauke Mehrtens <hauke@hauke-m.de>
-Cc: Christian Lamparter <chunkeey@gmail.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Sasha Levin <sashal@kernel.org>
+  https://lkml.kernel.org/r/alpine.LSU.2.11.1707191716030.2055@eggly.anvils
+
+  "Not strictly relevant here, but a related note: I was very surprised
+   to discover, only quite recently, how handle_mm_fault() may be called
+   without down_read(mmap_sem) - when core dumping. That seems a
+   misguided optimization to me, which would also be nice to correct"
+
+In particular because the growsdown and growsup can move the
+vm_start/vm_end the various loops the core dump does around the vma will
+not be consistent if page faults can happen concurrently.
+
+Pretty much all users calling mmget_not_zero()/get_task_mm() and then
+taking the mmap_sem had the potential to introduce unexpected side
+effects in the core dumping code.
+
+Adding mmap_sem for writing around the ->core_dump invocation is a
+viable long term fix, but it requires removing all copy user and page
+faults and to replace them with get_dump_page() for all binary formats
+which is not suitable as a short term fix.
+
+For the time being this solution manually covers the places that can
+confuse the core dump either by altering the vma layout or the vma flags
+while it runs.  Once ->core_dump runs under mmap_sem for writing the
+function mmget_still_valid() can be dropped.
+
+Allowing mmap_sem protected sections to run in parallel with the
+coredump provides some minor parallelism advantage to the swapoff code
+(which seems to be safe enough by never mangling any vma field and can
+keep doing swapins in parallel to the core dumping) and to some other
+corner case.
+
+In order to facilitate the backporting I added "Fixes: 86039bd3b4e6"
+however the side effect of this same race condition in /proc/pid/mem
+should be reproducible since before 2.6.12-rc2 so I couldn't add any
+other "Fixes:" because there's no hash beyond the git genesis commit.
+
+Because find_extend_vma() is the only location outside of the process
+context that could modify the "mm" structures under mmap_sem for
+reading, by adding the mmget_still_valid() check to it, all other cases
+that take the mmap_sem for reading don't need the new check after
+mmget_not_zero()/get_task_mm().  The expand_stack() in page fault
+context also doesn't need the new check, because all tasks under core
+dumping are frozen.
+
+Link: http://lkml.kernel.org/r/20190325224949.11068-1-aarcange@redhat.com
+Fixes: 86039bd3b4e6 ("userfaultfd: add new syscall to provide memory externalization")
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+Reported-by: Jann Horn <jannh@google.com>
+Suggested-by: Oleg Nesterov <oleg@redhat.com>
+Acked-by: Peter Xu <peterx@redhat.com>
+Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+Reviewed-by: Jann Horn <jannh@google.com>
+Acked-by: Jason Gunthorpe <jgg@mellanox.com>
+Acked-by: Michal Hocko <mhocko@suse.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
+[mhocko@suse.com: stable 4.4 backport
+ - drop infiniband part because of missing 5f9794dc94f59
+ - drop userfaultfd_event_wait_completion hunk because of
+   missing 9cd75c3cd4c3d]
+ - handle binder_update_page_range because of missing 720c241924046
+ - handle mlx5_ib_disassociate_ucontext - akaher@vmware.com
+]
+Signed-off-by: Michal Hocko <mhocko@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/crypto/amcc/crypto4xx_alg.c  |    3 +--
- drivers/crypto/amcc/crypto4xx_core.c |    9 ---------
- 2 files changed, 1 insertion(+), 11 deletions(-)
 
---- a/drivers/crypto/amcc/crypto4xx_alg.c
-+++ b/drivers/crypto/amcc/crypto4xx_alg.c
-@@ -138,8 +138,7 @@ static int crypto4xx_setkey_aes(struct c
- 	sa = (struct dynamic_sa_ctl *) ctx->sa_in;
- 	ctx->hash_final = 0;
+---
+ drivers/android/binder.c          |    6 ++++++
+ drivers/infiniband/hw/mlx4/main.c |    3 +++
+ fs/proc/task_mmu.c                |   18 ++++++++++++++++++
+ fs/userfaultfd.c                  |    7 +++++++
+ include/linux/mm.h                |   21 +++++++++++++++++++++
+ mm/mmap.c                         |    7 ++++++-
+ 6 files changed, 61 insertions(+), 1 deletion(-)
+
+--- a/drivers/android/binder.c
++++ b/drivers/android/binder.c
+@@ -570,6 +570,12 @@ static int binder_update_page_range(stru
  
--	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, (cm == CRYPTO_MODE_CBC ?
--				 SA_SAVE_IV : SA_NOT_SAVE_IV),
-+	set_dynamic_sa_command_0(sa, SA_NOT_SAVE_HASH, SA_NOT_SAVE_IV,
- 				 SA_LOAD_HASH_FROM_SA, SA_LOAD_IV_FROM_STATE,
- 				 SA_NO_HEADER_PROC, SA_HASH_ALG_NULL,
- 				 SA_CIPHER_ALG_AES, SA_PAD_TYPE_ZERO,
---- a/drivers/crypto/amcc/crypto4xx_core.c
-+++ b/drivers/crypto/amcc/crypto4xx_core.c
-@@ -645,15 +645,6 @@ static u32 crypto4xx_ablkcipher_done(str
- 		addr = dma_map_page(dev->core_dev->device, sg_page(dst),
- 				    dst->offset, dst->length, DMA_FROM_DEVICE);
+ 	if (mm) {
+ 		down_write(&mm->mmap_sem);
++		if (!mmget_still_valid(mm)) {
++			if (allocate == 0)
++				goto free_range;
++			goto err_no_vma;
++		}
++
+ 		vma = proc->vma;
+ 		if (vma && mm != proc->vma_vm_mm) {
+ 			pr_err("%d: vma mm and task mm mismatch\n",
+--- a/drivers/infiniband/hw/mlx4/main.c
++++ b/drivers/infiniband/hw/mlx4/main.c
+@@ -1042,6 +1042,8 @@ static void mlx4_ib_disassociate_ucontex
+ 	 * mlx4_ib_vma_close().
+ 	 */
+ 	down_write(&owning_mm->mmap_sem);
++	if (!mmget_still_valid(owning_mm))
++		goto skip_mm;
+ 	for (i = 0; i < HW_BAR_COUNT; i++) {
+ 		vma = context->hw_bar_info[i].vma;
+ 		if (!vma)
+@@ -1061,6 +1063,7 @@ static void mlx4_ib_disassociate_ucontex
+ 		context->hw_bar_info[i].vma->vm_ops = NULL;
  	}
--
--	if (pd_uinfo->sa_va->sa_command_0.bf.save_iv == SA_SAVE_IV) {
--		struct crypto_skcipher *skcipher = crypto_skcipher_reqtfm(req);
--
--		crypto4xx_memcpy_from_le32((u32 *)req->iv,
--			pd_uinfo->sr_va->save_iv,
--			crypto_skcipher_ivsize(skcipher));
--	}
--
- 	crypto4xx_ret_sg_desc(dev, pd_uinfo);
- 	if (ablk_req->base.complete != NULL)
- 		ablk_req->base.complete(&ablk_req->base, 0);
+ 
++skip_mm:
+ 	up_write(&owning_mm->mmap_sem);
+ 	mmput(owning_mm);
+ 	put_task_struct(owning_process);
+--- a/fs/proc/task_mmu.c
++++ b/fs/proc/task_mmu.c
+@@ -947,6 +947,24 @@ static ssize_t clear_refs_write(struct f
+ 					continue;
+ 				up_read(&mm->mmap_sem);
+ 				down_write(&mm->mmap_sem);
++				/*
++				 * Avoid to modify vma->vm_flags
++				 * without locked ops while the
++				 * coredump reads the vm_flags.
++				 */
++				if (!mmget_still_valid(mm)) {
++					/*
++					 * Silently return "count"
++					 * like if get_task_mm()
++					 * failed. FIXME: should this
++					 * function have returned
++					 * -ESRCH if get_task_mm()
++					 * failed like if
++					 * get_proc_task() fails?
++					 */
++					up_write(&mm->mmap_sem);
++					goto out_mm;
++				}
+ 				for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 					vma->vm_flags &= ~VM_SOFTDIRTY;
+ 					vma_set_page_prot(vma);
+--- a/fs/userfaultfd.c
++++ b/fs/userfaultfd.c
+@@ -446,6 +446,8 @@ static int userfaultfd_release(struct in
+ 	 * taking the mmap_sem for writing.
+ 	 */
+ 	down_write(&mm->mmap_sem);
++	if (!mmget_still_valid(mm))
++		goto skip_mm;
+ 	prev = NULL;
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+ 		cond_resched();
+@@ -468,6 +470,7 @@ static int userfaultfd_release(struct in
+ 		vma->vm_flags = new_flags;
+ 		vma->vm_userfaultfd_ctx = NULL_VM_UFFD_CTX;
+ 	}
++skip_mm:
+ 	up_write(&mm->mmap_sem);
+ 	mmput(mm);
+ wakeup:
+@@ -769,6 +772,8 @@ static int userfaultfd_register(struct u
+ 		goto out;
+ 
+ 	down_write(&mm->mmap_sem);
++	if (!mmget_still_valid(mm))
++		goto out_unlock;
+ 	vma = find_vma_prev(mm, start, &prev);
+ 	if (!vma)
+ 		goto out_unlock;
+@@ -914,6 +919,8 @@ static int userfaultfd_unregister(struct
+ 		goto out;
+ 
+ 	down_write(&mm->mmap_sem);
++	if (!mmget_still_valid(mm))
++		goto out_unlock;
+ 	vma = find_vma_prev(mm, start, &prev);
+ 	if (!vma)
+ 		goto out_unlock;
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1098,6 +1098,27 @@ void zap_page_range(struct vm_area_struc
+ void unmap_vmas(struct mmu_gather *tlb, struct vm_area_struct *start_vma,
+ 		unsigned long start, unsigned long end);
+ 
++/*
++ * This has to be called after a get_task_mm()/mmget_not_zero()
++ * followed by taking the mmap_sem for writing before modifying the
++ * vmas or anything the coredump pretends not to change from under it.
++ *
++ * NOTE: find_extend_vma() called from GUP context is the only place
++ * that can modify the "mm" (notably the vm_start/end) under mmap_sem
++ * for reading and outside the context of the process, so it is also
++ * the only case that holds the mmap_sem for reading that must call
++ * this function. Generally if the mmap_sem is hold for reading
++ * there's no need of this check after get_task_mm()/mmget_not_zero().
++ *
++ * This function can be obsoleted and the check can be removed, after
++ * the coredump code will hold the mmap_sem for writing before
++ * invoking the ->core_dump methods.
++ */
++static inline bool mmget_still_valid(struct mm_struct *mm)
++{
++	return likely(!mm->core_state);
++}
++
+ /**
+  * mm_walk - callbacks for walk_page_range
+  * @pmd_entry: if set, called for each non-empty PMD (3rd-level) entry
+--- a/mm/mmap.c
++++ b/mm/mmap.c
+@@ -42,6 +42,7 @@
+ #include <linux/memory.h>
+ #include <linux/printk.h>
+ #include <linux/userfaultfd_k.h>
++#include <linux/mm.h>
+ 
+ #include <asm/uaccess.h>
+ #include <asm/cacheflush.h>
+@@ -2398,7 +2399,8 @@ find_extend_vma(struct mm_struct *mm, un
+ 	vma = find_vma_prev(mm, addr, &prev);
+ 	if (vma && (vma->vm_start <= addr))
+ 		return vma;
+-	if (!prev || expand_stack(prev, addr))
++	/* don't alter vm_end if the coredump is running */
++	if (!prev || !mmget_still_valid(mm) || expand_stack(prev, addr))
+ 		return NULL;
+ 	if (prev->vm_flags & VM_LOCKED)
+ 		populate_vma_page_range(prev, addr, prev->vm_end, NULL);
+@@ -2424,6 +2426,9 @@ find_extend_vma(struct mm_struct *mm, un
+ 		return vma;
+ 	if (!(vma->vm_flags & VM_GROWSDOWN))
+ 		return NULL;
++	/* don't alter vm_start if the coredump is running */
++	if (!mmget_still_valid(mm))
++		return NULL;
+ 	start = vma->vm_start;
+ 	if (expand_stack(vma, addr))
+ 		return NULL;
 
 
