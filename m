@@ -4,37 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6547C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:07:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF1A0C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:07:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77BA32082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:07:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF4082083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:07:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732107AbfFTNHD (ORCPT
+        id S1732117AbfFTNHK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:07:03 -0400
-Received: from foss.arm.com ([217.140.110.172]:36800 "EHLO foss.arm.com"
+        Thu, 20 Jun 2019 09:07:10 -0400
+Received: from foss.arm.com ([217.140.110.172]:36780 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731983AbfFTNGh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:06:37 -0400
+        id S1731998AbfFTNGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:06:34 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02CBFC0A;
-        Thu, 20 Jun 2019 06:06:37 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8415C0A;
+        Thu, 20 Jun 2019 06:06:33 -0700 (PDT)
 Received: from e108454-lin.cambridge.arm.com (e108454-lin.cambridge.arm.com [10.1.196.50])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A17143F718;
-        Thu, 20 Jun 2019 06:06:35 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82DB33F718;
+        Thu, 20 Jun 2019 06:06:32 -0700 (PDT)
 From:   Julien Grall <julien.grall@arm.com>
 To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         kvmarm@lists.cs.columbia.edu
 Cc:     james.morse@arm.com, marc.zyngier@arm.com, julien.thierry@arm.com,
         suzuki.poulose@arm.com, catalin.marinas@arm.com,
         will.deacon@arm.com, Julien Grall <julien.grall@arm.com>
-Subject: [RFC v2 09/14] arm64/mm: Split the function check_and_switch_context in 3 parts
-Date:   Thu, 20 Jun 2019 14:06:03 +0100
-Message-Id: <20190620130608.17230-10-julien.grall@arm.com>
+Subject: [RFC v2 07/14] arm64/mm: Introduce NUM_ASIDS
+Date:   Thu, 20 Jun 2019 14:06:01 +0100
+Message-Id: <20190620130608.17230-8-julien.grall@arm.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190620130608.17230-1-julien.grall@arm.com>
 References: <20190620130608.17230-1-julien.grall@arm.com>
@@ -43,119 +42,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function check_and_switch_context is used to:
-    1) Check whether the ASID is still valid
-    2) Generate a new one if it is not valid
-    3) Switch the context
+At the moment ASID_FIRST_VERSION is used to know the number of ASIDs
+supported. As we are going to move the ASID allocator in a separate, it
+would be better to use a different name for external users.
 
-While the latter is specific to the MM subsystem, the rest could be part
-of the generic ASID allocator.
-
-After this patch, the function is now split in 3 parts which corresponds
-to the use of the functions:
-    1) asid_check_context: Check if the ASID is still valid
-    2) asid_new_context: Generate a new ASID for the context
-    3) check_and_switch_context: Call 1) and 2) and switch the context
-
-1) and 2) have not been merged in a single function because we want to
-avoid to add a branch in when the ASID is still valid. This will matter
-when the code will be moved in separate file later on as 1) will reside
-in the header as a static inline function.
+This patch adds NUM_ASIDS and implements ASID_FIRST_VERSION using it.
 
 Signed-off-by: Julien Grall <julien.grall@arm.com>
-
 ---
-
-    Will wants to avoid to add a branch when the ASID is still valid. So
-    1) and 2) are in separates function. The former will move to a new
-    header and make static inline.
----
- arch/arm64/mm/context.c | 51 +++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 39 insertions(+), 12 deletions(-)
+ arch/arm64/mm/context.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/arch/arm64/mm/context.c b/arch/arm64/mm/context.c
-index 81bc3d365436..fbef5a5c5624 100644
+index d128f02644b0..beba8e5b4100 100644
 --- a/arch/arm64/mm/context.c
 +++ b/arch/arm64/mm/context.c
-@@ -204,16 +204,21 @@ static u64 new_context(struct asid_info *info, atomic64_t *pasid)
- 	return idx2asid(info, asid) | generation;
- }
+@@ -48,7 +48,9 @@ static DEFINE_PER_CPU(atomic64_t, active_asids);
+ static DEFINE_PER_CPU(u64, reserved_asids);
  
--void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
-+static void asid_new_context(struct asid_info *info, atomic64_t *pasid,
-+			     unsigned int cpu);
+ #define ASID_MASK(info)			(~GENMASK((info)->bits - 1, 0))
+-#define ASID_FIRST_VERSION(info)	(1UL << ((info)->bits))
++#define NUM_ASIDS(info)			(1UL << ((info)->bits))
 +
-+/*
-+ * Check the ASID is still valid for the context. If not generate a new ASID.
-+ *
-+ * @pasid: Pointer to the current ASID batch
-+ * @cpu: current CPU ID. Must have been acquired throught get_cpu()
-+ */
-+static void asid_check_context(struct asid_info *info,
-+			       atomic64_t *pasid, unsigned int cpu)
- {
--	unsigned long flags;
- 	u64 asid, old_active_asid;
--	struct asid_info *info = &asid_info;
++#define ASID_FIRST_VERSION(info)	NUM_ASIDS(info)
  
--	if (system_supports_cnp())
--		cpu_set_reserved_ttbr0();
--
--	asid = atomic64_read(&mm->context.id);
-+	asid = atomic64_read(pasid);
+ #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ #define ASID_PER_CONTEXT		2
+@@ -56,7 +58,7 @@ static DEFINE_PER_CPU(u64, reserved_asids);
+ #define ASID_PER_CONTEXT		1
+ #endif
  
- 	/*
- 	 * The memory ordering here is subtle.
-@@ -234,14 +239,30 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 	    !((asid ^ atomic64_read(&info->generation)) >> info->bits) &&
- 	    atomic64_cmpxchg_relaxed(&active_asid(info, cpu),
- 				     old_active_asid, asid))
--		goto switch_mm_fastpath;
-+		return;
-+
-+	asid_new_context(info, pasid, cpu);
-+}
-+
-+/*
-+ * Generate a new ASID for the context.
-+ *
-+ * @pasid: Pointer to the current ASID batch allocated. It will be updated
-+ * with the new ASID batch.
-+ * @cpu: current CPU ID. Must have been acquired through get_cpu()
-+ */
-+static void asid_new_context(struct asid_info *info, atomic64_t *pasid,
-+			     unsigned int cpu)
-+{
-+	unsigned long flags;
-+	u64 asid;
- 
- 	raw_spin_lock_irqsave(&info->lock, flags);
- 	/* Check that our ASID belongs to the current generation. */
--	asid = atomic64_read(&mm->context.id);
-+	asid = atomic64_read(pasid);
- 	if ((asid ^ atomic64_read(&info->generation)) >> info->bits) {
--		asid = new_context(info, &mm->context.id);
--		atomic64_set(&mm->context.id, asid);
-+		asid = new_context(info, pasid);
-+		atomic64_set(pasid, asid);
- 	}
- 
- 	if (cpumask_test_and_clear_cpu(cpu, &info->flush_pending))
-@@ -249,8 +270,14 @@ void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
- 
- 	atomic64_set(&active_asid(info, cpu), asid);
- 	raw_spin_unlock_irqrestore(&info->lock, flags);
-+}
-+
-+void check_and_switch_context(struct mm_struct *mm, unsigned int cpu)
-+{
-+	if (system_supports_cnp())
-+		cpu_set_reserved_ttbr0();
- 
--switch_mm_fastpath:
-+	asid_check_context(&asid_info, &mm->context.id, cpu);
- 
- 	arm64_apply_bp_hardening();
+-#define NUM_CTXT_ASIDS(info)		(ASID_FIRST_VERSION(info) >> (info)->ctxt_shift)
++#define NUM_CTXT_ASIDS(info)		(NUM_ASIDS(info) >> (info)->ctxt_shift)
+ #define asid2idx(info, asid)		(((asid) & ~ASID_MASK(info)) >> (info)->ctxt_shift)
+ #define idx2asid(info, idx)		(((idx) << (info)->ctxt_shift) & ~ASID_MASK(info))
  
 -- 
 2.11.0
