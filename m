@@ -2,93 +2,126 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B92C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E999AC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7FE42084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2AE220673
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:55:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="X/+XOmxY";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="flQUbIQ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731934AbfFTOyh (ORCPT
+        id S1731818AbfFTOz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:54:37 -0400
-Received: from mga07.intel.com ([134.134.136.100]:32281 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfFTOyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:54:37 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 07:54:36 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
-   d="scan'208";a="183091685"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga004.fm.intel.com with ESMTP; 20 Jun 2019 07:54:33 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hdySO-0001MZ-M0; Thu, 20 Jun 2019 17:54:32 +0300
-Date:   Thu, 20 Jun 2019 17:54:32 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Charles Keepax <ckeepax@opensource.cirrus.com>
-Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
-        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v5 3/7] i2c: acpi: Factor out getting the IRQ from ACPI
-Message-ID: <20190620145432.GD9224@smile.fi.intel.com>
-References: <20190620133420.4632-1-ckeepax@opensource.cirrus.com>
- <20190620133420.4632-4-ckeepax@opensource.cirrus.com>
+        Thu, 20 Jun 2019 10:55:29 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56174 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTOz1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:55:27 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3384560ACE; Thu, 20 Jun 2019 14:55:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561042526;
+        bh=lp+jYH159W3J3+bnQT9chGwWKrrMYUzb9E4b8qJNR9U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=X/+XOmxYO7QISQ7qD7o6Mx+MqamjdNSfmn+e0JUTachlrs6/le8Zu0rxKVNECZphp
+         Ypcjwd9ImM/PxC0vntjhQVyLl03Cv3vLegTX+CO/D69e5S1s09T8KtNEmWD9LSfd68
+         HlkJgijH9ixoStY0jqcJYIMc1iTpBnAX7VFb0/n4=
+Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id EC87160ACE;
+        Thu, 20 Jun 2019 14:55:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561042522;
+        bh=lp+jYH159W3J3+bnQT9chGwWKrrMYUzb9E4b8qJNR9U=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=flQUbIQ99CMAijIbse9AyEtVxoH+Lfj8A8LdDcc+cIZS5yWeun0d45D3iByJtmUNz
+         6WfERkzKW3xvyhOHZr0T3k/gCHNeITKLCmqPaSaXt/w11n7AwgfGJx4bwYPjeTk4lZ
+         HrLmC6EOn2mdXmepgiLXPcVMotVwIWmouh/ni3B4=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org EC87160ACE
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH 2/2] coresight: Abort probe for missing CPU phandle
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        mathieu.poirier@linaro.org, leo.yan@linaro.org,
+        alexander.shishkin@linux.intel.com, david.brown@linaro.org,
+        mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <d93e28fc80227f9a385130a766a24f8f39a1dcf0.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <1ddee3c1-8299-1991-eb88-151b9c3ee180@arm.com>
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Message-ID: <e3e13629-a723-8b08-cbae-5a3295170900@codeaurora.org>
+Date:   Thu, 20 Jun 2019 20:25:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620133420.4632-4-ckeepax@opensource.cirrus.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1ddee3c1-8299-1991-eb88-151b9c3ee180@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 02:34:16PM +0100, Charles Keepax wrote:
-> In preparation for future refactoring factor out the fetch of the IRQ
-> into its own helper function.
+On 6/20/2019 7:28 PM, Suzuki K Poulose wrote:
+> 
+> 
+> On 20/06/2019 14:45, Sai Prakash Ranjan wrote:
+>> Currently the coresight etm and cpu-debug drivers
+>> assume the affinity to CPU0 returned by coresight
+>> platform and continue the probe in case of missing
+>> CPU phandle. This is not true and leads to crash
+>> in some cases, so abort the probe in case of missing
+>> CPU phandle.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>> ---
+>>   drivers/hwtracing/coresight/coresight-cpu-debug.c | 3 +++
+>>   drivers/hwtracing/coresight/coresight-etm3x.c     | 3 +++
+>>   drivers/hwtracing/coresight/coresight-etm4x.c     | 3 +++
+>>   3 files changed, 9 insertions(+)
+>>
+>> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c 
+>> b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+>> index 07a1367c733f..43f32fa71ff9 100644
+>> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+>> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+>> @@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, 
+>> const struct amba_id *id)
+>>           return -ENOMEM;
+>>       drvdata->cpu = coresight_get_cpu(dev);
+>> +    if (drvdata->cpu == -ENODEV)
+>> +        return -ENODEV;
+> 
+> if (drvdata->cpu < 0)
+>      return drvdata->cpu;
+> 
+> Same everywhere below ?
+> 
+> Also, I would like to hear Mathieu's thoughts on this change. If he's OK
+> with it:
+> 
+> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com> with the change 
+> above.
+> 
+> 
 
-> +static int i2c_acpi_get_irq(struct acpi_device *adev)
-> +{
-> +	struct list_head resource_list;
-> +	int irq = -ENOENT;
-> +	int ret;
-> +
-> +	INIT_LIST_HEAD(&resource_list);
-> +
-> +	ret = acpi_dev_get_resources(adev, &resource_list,
-> +				     i2c_acpi_add_resource, &irq);
-> +	if (ret < 0)
+Thanks, I will make the change and repost.
 
-> +		return -EINVAL;
-
-Can't we return ret value?
-
-> +
-> +	acpi_dev_free_resource_list(&resource_list);
-> +
-> +	return irq;
-> +}
-
-> +	ret = i2c_acpi_get_irq(adev);
-> +	if (ret > 0)
-> +		info->irq = ret;
-
-And on error we do not bail out. This changes the behaviour.
+-Sai
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
-
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
