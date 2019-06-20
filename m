@@ -2,70 +2,82 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF23C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:45:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4992BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:46:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8224E20657
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:45:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2105C20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:46:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730967AbfFTIpP (ORCPT
+        id S1726425AbfFTIqE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:45:15 -0400
-Received: from mga05.intel.com ([192.55.52.43]:28960 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfFTIpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:45:14 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 01:45:14 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
-   d="scan'208";a="170814221"
-Received: from pdaleax-wtg.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.61.225])
-  by orsmga002.jf.intel.com with ESMTP; 20 Jun 2019 01:45:03 -0700
-Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
-        id 5B51021D88; Thu, 20 Jun 2019 11:44:58 +0300 (EEST)
-Date:   Thu, 20 Jun 2019 11:44:58 +0300
-From:   Sakari Ailus <sakari.ailus@linux.intel.com>
-To:     Tomasz Figa <tfiga@chromium.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Hirokazu Honda <hiroh@chromium.org>
-Subject: Re: [PATCH] media: Clarify the meaning of file descriptors in
- VIDIOC_DQBUF
-Message-ID: <20190620084457.irkmv4wy7pbvlj5r@kekkonen.localdomain>
-References: <20190612093648.47412-1-tfiga@chromium.org>
+        Thu, 20 Jun 2019 04:46:04 -0400
+Received: from mx2.suse.de ([195.135.220.15]:38164 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbfFTIqE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:46:04 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id A1EA9ADC4;
+        Thu, 20 Jun 2019 08:46:02 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 10:45:51 +0200
+From:   Borislav Petkov <bp@suse.de>
+To:     Ethan Sommer <e5ten.arch@gmail.com>
+Cc:     hpa@zytor.com, Jonathan Corbet <corbet@lwn.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        Joe Perches <joe@perches.com>,
+        Federico Vaga <federico.vaga@vaga.pv.it>,
+        Ingo Molnar <mingo@kernel.org>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        John Stultz <john.stultz@linaro.org>,
+        Corey Minyard <cminyard@mvista.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] replace timeconst bc script with an sh script
+Message-ID: <20190620084550.GC28346@zn.tnic>
+References: <8a9ffb4b-791d-35d1-bb2a-7b6ad812bff1@ideasonboard.com>
+ <20190620081142.31302-1-e5ten.arch@gmail.com>
+ <20190620082557.GB28346@zn.tnic>
+ <CAMEGPiqk5TU=z2_wvMfPuihVc5zOLRrTSVCpLA23k0r-hmAzmg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190612093648.47412-1-tfiga@chromium.org>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAMEGPiqk5TU=z2_wvMfPuihVc5zOLRrTSVCpLA23k0r-hmAzmg@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 06:36:48PM +0900, Tomasz Figa wrote:
-> When the application calls VIDIOC_DQBUF with the DMABUF memory type, the
-> v4l2_buffer structure (or v4l2_plane structures) are filled with DMA-buf
-> file descriptors. However, the current documentation does not explain
-> whether those are new file descriptors referring to the same DMA-bufs or
-> just the same integers as passed to VIDIOC_QBUF back in time. Clarify
-> the documentation that it's the latter.
-> 
-> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
+On Thu, Jun 20, 2019 at 04:29:19AM -0400, Ethan Sommer wrote:
+> Ah sorry about that, I accidentally replied to Kieran only instead of to
+> all, my response was "I will upload a patch with those issues fixed
+> shortly, in terms of the dependency as far as I know commands only required
+> for running tests don't count as kernel compilation dependencies, and I
+> don't see any other uses of bc except for Documentation/EDID/Makefile, so I
+> believe that bc can be removed from the kernel compilation section of the
+> process document and will include that change with the updated patch that
+> fixes the 2 issues you pointed out."
 
-Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+Sounds like parts of it should be in your commit message as a
+justification *why* you're doing it. You can do that for your next
+revision once you've waited a couple of days to gather feedback.
+
+Also, please do not top-post.
+
+Thx.
 
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+Regards/Gruss,
+    Boris.
+
+SUSE Linux GmbH, GF: Felix Imendörffer, Mary Higgins, Sri Rasiah, HRB 21284 (AG Nürnberg)
