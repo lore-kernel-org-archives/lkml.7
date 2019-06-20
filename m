@@ -2,156 +2,155 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D8BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:42:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4630C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:43:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0DDB206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:42:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82DD62070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:43:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XruAXWpU";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ApshshCG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NhbZE295"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726811AbfFTRmo (ORCPT
+        id S1726975AbfFTRnM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:42:44 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32312 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbfFTRmo (ORCPT
+        Thu, 20 Jun 2019 13:43:12 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43422 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTRnL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:42:44 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KHdcUn024973;
-        Thu, 20 Jun 2019 10:42:38 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=x0vdkZunL9IfXEYc28/T8hr7b2Q35Kh/yS1RLSs3HQI=;
- b=XruAXWpUwRcz8jNKfDXZ0QeqpPWDZE7tOlp8aPVbAKx8b53bJCIor8gEgIDa+Z4GToSH
- PiaiqK4BzFXekBqsBbfC2tdtWanriKTGbC6d5fuCMZC4B883GXlJ2UoDECn61W9Wr6pn
- IgjvY7yX9eqI57Vw7a/9LilYL6abGTFeIOY= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t85v8hv9a-6
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Thu, 20 Jun 2019 10:42:38 -0700
-Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Thu, 20 Jun 2019 10:42:03 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Thu, 20 Jun 2019 10:42:03 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=x0vdkZunL9IfXEYc28/T8hr7b2Q35Kh/yS1RLSs3HQI=;
- b=ApshshCG6UUg0rHxIrxyuQ8YdScn8SbnWo3AiHVwc7AJUZEx82XwurQh7qGAyJMn1Lzw3t1gb9z6chkE2SJ1foGsWGUPd5UzMuOkhlApg1mZXxG7T3kIuvXM4sn2WnWgPCg9G5983H/bKVdX5mvC9nDlcpvCNqgvcGuK5LNOd1Q=
-Received: from BYAPR15MB3479.namprd15.prod.outlook.com (20.179.60.19) by
- BYAPR15MB3477.namprd15.prod.outlook.com (20.179.60.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2008.13; Thu, 20 Jun 2019 17:42:02 +0000
-Received: from BYAPR15MB3479.namprd15.prod.outlook.com
- ([fe80::2569:19ec:512f:fda9]) by BYAPR15MB3479.namprd15.prod.outlook.com
- ([fe80::2569:19ec:512f:fda9%5]) with mapi id 15.20.1987.014; Thu, 20 Jun 2019
- 17:42:02 +0000
-From:   Rik van Riel <riel@fb.com>
-To:     Song Liu <songliubraving@fb.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "Kernel Team" <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
-Subject: Re: [PATCH v4 6/6] mm,thp: avoid writes to file with THP in pagecache
-Thread-Topic: [PATCH v4 6/6] mm,thp: avoid writes to file with THP in
- pagecache
-Thread-Index: AQHVJ42WlKpSo0vXAUuQuCQtIhxoiaakz86A
-Date:   Thu, 20 Jun 2019 17:42:02 +0000
-Message-ID: <c29e2daf2e3c9c8acbdfae62ba8090f572d88345.camel@fb.com>
-References: <20190620172752.3300742-1-songliubraving@fb.com>
-         <20190620172752.3300742-7-songliubraving@fb.com>
-In-Reply-To: <20190620172752.3300742-7-songliubraving@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MWHPR11CA0005.namprd11.prod.outlook.com
- (2603:10b6:301:1::15) To BYAPR15MB3479.namprd15.prod.outlook.com
- (2603:10b6:a03:112::19)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2620:10d:c090:180::1:f51]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 669ceda0-af1a-4109-49e9-08d6f5a69a0e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB3477;
-x-ms-traffictypediagnostic: BYAPR15MB3477:
-x-microsoft-antispam-prvs: <BYAPR15MB3477FBF380B43E021063380BA3E40@BYAPR15MB3477.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
-x-forefront-prvs: 0074BBE012
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(136003)(39860400002)(199004)(189003)(71190400001)(36756003)(229853002)(6246003)(118296001)(4326008)(54906003)(110136005)(316002)(99286004)(25786009)(6512007)(52116002)(6116002)(2906002)(6436002)(6486002)(256004)(53936002)(446003)(46003)(102836004)(2501003)(11346002)(8676002)(305945005)(2616005)(476003)(386003)(7736002)(6506007)(186003)(2201001)(66946007)(68736007)(14444005)(86362001)(76176011)(5660300002)(73956011)(486006)(66446008)(81156014)(64756008)(66556008)(66476007)(478600001)(14454004)(8936002)(71200400001)(81166006)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3477;H:BYAPR15MB3479.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: +nOx2LLcEtCHczR0yW4whiONcBwCZN3KEGmuhEWbDqPHSEyjvyiCgYwLMMoYG6RDouyE58f0296Y1MtSoREZcHAsZ65JcZw4BAnkyEHYIGEHDz5xc+HLDA6XyaS1XvxBDUnBk9FxLkwZ8rJd495NR1Ah77yADCrPPM665gpeeVzLdxvf22hUUU2tS23vvB1L6XbjkgIRRz+dxc7Z6bWyWZKJNzkgaiR4bzTHhy8y9z+udVBAlufUgJBqStspcvuUZ5FaqrqPJIZvWdUHVm1VJJZ2t/g3wmgg5DbdEHz1CYyhGhlM0XQCQLf/Rg1MUMpikaVNt+wNflYVPFUa6FwQOgF6Nd1yb5hnCeHkXG7D6YX1svmOJhAZhgr/Hclw7zUIdtwUvpAMB3PXRufmatzi8ZH571E4G93xAIi34Dsrt+A=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <282599B8798A4C4C9C2909D41B9A1221@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Thu, 20 Jun 2019 13:43:11 -0400
+Received: by mail-pl1-f196.google.com with SMTP id cl9so1663677plb.10
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:43:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1KJ0e9ekOabFfxqwKvIk2A6/zmASWNljaHVvnXYUQxY=;
+        b=NhbZE295vHsBmR1o4reSr3vcb9K8QjxL6emGCch81QYlNOzn7tv09NGjCC4euADxnF
+         kQ9KHGtlQFK1CrMuPhar8/Gj18tnyoWZvwEwjjoeZ2Y8SXMRT0ZyVfD+LvYgGCWATUny
+         i8Lyu2TMQ2OIPveZZ4LNrdJYrwqd0pP0sMzbjmZjiJMHYCcIrzLZQIWHl1FFlesbP1ox
+         NNsDRkkjMXOQfhrCxZSpHUhVEU3i+VRqLDAwl1jKSZ+erU61VvXj4/vDVX52htPpCiYG
+         gAm41dgBnAfhpb1fsukKduPkNOHXyGnyxvX6uxP9MRSJlzwV52XRAveCMA5b4uhZ74Vl
+         U+lA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1KJ0e9ekOabFfxqwKvIk2A6/zmASWNljaHVvnXYUQxY=;
+        b=HzjwHDeclCQTSLi+z6AAYIO8bSrHnZSAqcpZHz7o5NI8wpZ3g03bWb3Q8pK/r21mtJ
+         0zk2DoYHd48e/nKPdSAue/TH5wG+Zu11kkxd4F+snNv2TJeNUtDnvkILLky7BRTyKkQe
+         JxO5tRpsoFANQLO5V70Srrt4/6oOx5wSXkHJGz2TGf6OGG4liVP4sltiPKxMCX/+jbed
+         et7bDDtLiQLIXE2E8RhsjZFRu58BTDWqylo91ZmJsdoOJitCSr2dUo0/9lKjCt3dhOQ4
+         Xv1knm7kbXHGaXexYkSR5HmnhqlbS03Hz/wv6CkU4oOsDXFZf5f4fT49RBt+u5mi8o4q
+         RvhA==
+X-Gm-Message-State: APjAAAWDBpkagn7BUz7HoYyy7kWoDjF2Y6KWZ8yxiIb1yVHLHGEAXu6s
+        JxbOQTgn9WWULWHkzhc9pvMv+Q==
+X-Google-Smtp-Source: APXvYqyrJ3P57l2hXzKwykASSM4m8XDMhpVpPOdFDF+6NySV8L9SKNqqSA+NS5K7Rf8cf9mtKD7jIQ==
+X-Received: by 2002:a17:902:2aa8:: with SMTP id j37mr82097915plb.316.1561052591240;
+        Thu, 20 Jun 2019 10:43:11 -0700 (PDT)
+Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
+        by smtp.gmail.com with ESMTPSA id y185sm95763pfy.110.2019.06.20.10.43.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 10:43:10 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 11:43:08 -0600
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+To:     Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org
+Subject: Re: [PATCH 2/2] coresight: Abort probe for missing CPU phandle
+Message-ID: <20190620174308.GB5581@xps15>
+References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <d93e28fc80227f9a385130a766a24f8f39a1dcf0.1561037262.git.saiprakash.ranjan@codeaurora.org>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 669ceda0-af1a-4109-49e9-08d6f5a69a0e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2019 17:42:02.0875
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: riel@fb.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3477
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_12:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200126
-X-FB-Internal: deliver
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d93e28fc80227f9a385130a766a24f8f39a1dcf0.1561037262.git.saiprakash.ranjan@codeaurora.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVGh1LCAyMDE5LTA2LTIwIGF0IDEwOjI3IC0wNzAwLCBTb25nIExpdSB3cm90ZToNCg0KPiAr
-KysgYi9tbS9tbWFwLmMNCj4gQEAgLTMwODgsNiArMzA4OCwxOCBAQCBpbnQgdm1fYnJrKHVuc2ln
-bmVkIGxvbmcgYWRkciwgdW5zaWduZWQgbG9uZw0KPiBsZW4pDQo+ICB9DQo+ICBFWFBPUlRfU1lN
-Qk9MKHZtX2Jyayk7DQo+ICANCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCByZWxlYXNlX2ZpbGVfdGhw
-KHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hKQ0KPiArew0KPiArI2lmZGVmIENPTkZJR19SRUFE
-X09OTFlfVEhQX0ZPUl9GUw0KPiArCXN0cnVjdCBmaWxlICpmaWxlID0gdm1hLT52bV9maWxlOw0K
-PiArDQo+ICsJaWYgKGZpbGUgJiYgKHZtYS0+dm1fZmxhZ3MgJiBWTV9ERU5ZV1JJVEUpICYmDQo+
-ICsJICAgIGF0b21pY19yZWFkKCZmaWxlX2lub2RlKGZpbGUpLT5pX3dyaXRlY291bnQpID09IDAg
-JiYNCj4gKwkgICAgZmlsZW1hcF9ucl90aHBzKGZpbGVfaW5vZGUoZmlsZSktPmlfbWFwcGluZykp
-DQo+ICsJCXRydW5jYXRlX3BhZ2VjYWNoZShmaWxlX2lub2RlKGZpbGUpLCAwKTsNCj4gKyNlbmRp
-Zg0KPiArfQ0KPiArDQo+ICAvKiBSZWxlYXNlIGFsbCBtbWFwcy4gKi8NCj4gIHZvaWQgZXhpdF9t
-bWFwKHN0cnVjdCBtbV9zdHJ1Y3QgKm1tKQ0KPiAgew0KPiBAQCAtMzE1Myw2ICszMTY1LDggQEAg
-dm9pZCBleGl0X21tYXAoc3RydWN0IG1tX3N0cnVjdCAqbW0pDQo+ICAJd2hpbGUgKHZtYSkgew0K
-PiAgCQlpZiAodm1hLT52bV9mbGFncyAmIFZNX0FDQ09VTlQpDQo+ICAJCQlucl9hY2NvdW50ZWQg
-Kz0gdm1hX3BhZ2VzKHZtYSk7DQo+ICsNCj4gKwkJcmVsZWFzZV9maWxlX3RocCh2bWEpOw0KPiAg
-CQl2bWEgPSByZW1vdmVfdm1hKHZtYSk7DQo+ICAJfQ0KPiAgCXZtX3VuYWNjdF9tZW1vcnkobnJf
-YWNjb3VudGVkKTsNCg0KSSBsaWtlIGhvdyB5b3UgbWFrZSB0aGUgZmlsZSBhY2Nlc3NpYmxlIGFn
-YWluIHRvIG90aGVyDQp1c2VycywgYnV0IGFtIHNvbWV3aGF0IHVuc3VyZSBhYm91dCB0aGUgbWVj
-aGFuaXNtIHVzZWQuDQoNCkZpcnN0LCBpZiBtdWx0aXBsZSBwcm9jZXNzZXMgaGF2ZSB0aGUgc2Ft
-ZSBmaWxlIG1tYXBwZWQsDQpkbyB5b3UgcmVhbGx5IHdhbnQgdG8gYmxvdyBhd2F5IHRoZSBwYWdl
-IGNhY2hlPw0KDQpTZWNvbmRseSwgYnkgaG9va2luZyBpbnRvIGV4aXRfbW1hcCwgeW91IG1pc3Mg
-bWFraW5nDQpmaWxlcyB3cml0YWJsZSBhZ2FpbiB0aGF0IGdldCB1bm1hcHBlZCB0aHJvdWdoIG11
-bm1hcC4NCg0KV291bGQgaXQgYmUgYmV0dGVyIHRvIGJsb3cgYXdheSB0aGUgcGFnZSBjYWNoZSB3
-aGVuDQp0aGUgbGFzdCBtbWFwIHVzZXIgdW5tYXBzIGl0Pw0KDQpUaGUgcGFnZS0+bWFwcGluZy0+
-aV9tbWFwIGludGVydmFsIHRyZWUgd2lsbCBiZSBlbXB0eQ0Kd2hlbiBub2JvZHkgaGFzIHRoZSBm
-aWxlIG1tYXAoKWQuDQoNCkFsdGVybmF0aXZlbHksIG9wZW4oKSBjb3VsZCBjaGVjayB3aGV0aGVy
-IHRoZSBmaWxlIGlzDQpjdXJyZW50bHkgbW1hcGVkLCBhbmQgYmxvdyBhd2F5IHRoZSBwYWdlIGNh
-Y2hlIHRoZW4uDQpUaGF0IHdvdWxkIGxlYXZlIHRoZSBwYWdlIGNhY2hlIGludGFjdCBpZiB0aGUg
-c2FtZSBmaWxlIA0KZ2V0cyBleGVjdmUoKWQgc2V2ZXJhbCB0aW1lcyBpbiBhIHJvdyB3aXRob3V0
-IGFueSB3cml0ZXMNCmluLWJldHdlZW4sIHdoaWNoIHNlZW1zIGxpa2UgaXQgbWlnaHQgYmUgYSBy
-ZWxhdGl2ZWx5DQpjb21tb24gY2FzZS4NCg0KDQoNCg==
+On Thu, Jun 20, 2019 at 07:15:47PM +0530, Sai Prakash Ranjan wrote:
+> Currently the coresight etm and cpu-debug drivers
+> assume the affinity to CPU0 returned by coresight
+> platform and continue the probe in case of missing
+> CPU phandle. This is not true and leads to crash
+> in some cases, so abort the probe in case of missing
+> CPU phandle.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  drivers/hwtracing/coresight/coresight-cpu-debug.c | 3 +++
+>  drivers/hwtracing/coresight/coresight-etm3x.c     | 3 +++
+>  drivers/hwtracing/coresight/coresight-etm4x.c     | 3 +++
+>  3 files changed, 9 insertions(+)
+> 
+> diff --git a/drivers/hwtracing/coresight/coresight-cpu-debug.c b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> index 07a1367c733f..43f32fa71ff9 100644
+> --- a/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> +++ b/drivers/hwtracing/coresight/coresight-cpu-debug.c
+> @@ -579,6 +579,9 @@ static int debug_probe(struct amba_device *adev, const struct amba_id *id)
+>  		return -ENOMEM;
+>  
+>  	drvdata->cpu = coresight_get_cpu(dev);
+> +	if (drvdata->cpu == -ENODEV)
+> +		return -ENODEV;
+
+As Suzuki pointed out, simply return the error message conveyed by
+coresight_get_cpu().
+
+Also please merge both patches together to avoid bisect nightmare.
+
+Thank you for the contribution,
+Mathieu
+
+> +
+>  	if (per_cpu(debug_drvdata, drvdata->cpu)) {
+>  		dev_err(dev, "CPU%d drvdata has already been initialized\n",
+>  			drvdata->cpu);
+> diff --git a/drivers/hwtracing/coresight/coresight-etm3x.c b/drivers/hwtracing/coresight/coresight-etm3x.c
+> index 225c2982e4fe..882e2751746c 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm3x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm3x.c
+> @@ -816,6 +816,9 @@ static int etm_probe(struct amba_device *adev, const struct amba_id *id)
+>  	}
+>  
+>  	drvdata->cpu = coresight_get_cpu(dev);
+> +	if (drvdata->cpu == -ENODEV)
+> +		return -ENODEV;
+> +
+>  	desc.name  = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
+>  	if (!desc.name)
+>  		return -ENOMEM;
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> index 7fe266194ab5..97d71dbbeb19 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -1101,6 +1101,9 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+>  	spin_lock_init(&drvdata->spinlock);
+>  
+>  	drvdata->cpu = coresight_get_cpu(dev);
+> +	if (drvdata->cpu == -ENODEV)
+> +		return -ENODEV;
+> +
+>  	desc.name = devm_kasprintf(dev, GFP_KERNEL, "etm%d", drvdata->cpu);
+>  	if (!desc.name)
+>  		return -ENOMEM;
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
