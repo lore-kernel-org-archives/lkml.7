@@ -3,107 +3,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A383C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A1A1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A0C42082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 52E342082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:29:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="svCCjT6A"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="Bo3SAk17"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726369AbfFTJ3p (ORCPT
+        id S1727076AbfFTJ3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:29:45 -0400
-Received: from ozlabs.org ([203.11.71.1]:33263 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726084AbfFTJ3o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:29:44 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45TxNj40Q7z9s3l;
-        Thu, 20 Jun 2019 19:29:41 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1561022981;
-        bh=K59OXEootkBW9/39ic60PcVuvJF1I7LsPOVfv1qbMPE=;
-        h=Date:From:To:Cc:Subject:From;
-        b=svCCjT6AsCF3x8LpPEOWxrWmQPgZz/qcS16fhNt71m95GWzTY+8aJVBveiFcov815
-         q/8lPJD4byQaNEHefde3klVVCl7uzY3aEFSIFaenckV/SZpWP1lbNV78qx4Gb1rmxZ
-         JAMo4vXDSxb05vPNmQNDCJ0z9gy4M8TxldtTEILdn+DVvfzpoYuU7U2Na0lwX9iaWn
-         oVccTozQlGL6npQFMCXIS/7At4J3Pvw8yXuB61d9Z0WRj+UugzEVsmyl5xIAFzi+Mk
-         Ee1LrqMwdmDtGztaGzOIpwVVSawNgmgIQ7RLBen92kztk2JT/gYN0p/rezWNnEWvRD
-         nOsxrGTDa1mpA==
-Date:   Thu, 20 Jun 2019 19:29:39 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Pankaj Gupta <pagupta@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: linux-next: build failure after merge of the nvdimm tree
-Message-ID: <20190620192939.139bf5c0@canb.auug.org.au>
+        Thu, 20 Jun 2019 05:29:55 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:34636 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfFTJ3y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:29:54 -0400
+Received: by mail-yb1-f193.google.com with SMTP id x32so991815ybh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:29:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hj2LK8IWRYBdQ0R1r6pmm07xyZU9AXmd7btS3Jqax5U=;
+        b=Bo3SAk17rTWl5zOPk2OgnCMZqs9lRWwiIQS4YR3VUA8VmvI48o4gu7+7OloFoGYlwN
+         AkvE5Bfmi0BVjgYJHtP0LQQ0AYKFew9e7Xt0h+2Kakr+tXX4+P1CZXU9cbF6KbfSDhaM
+         17KL3fxJaDVdNGOXTaeomYp48XP32+2Cvx2+QNzyLr3UaKk8tmMxEFr6b+YEel0Aio5c
+         lsSHeM/VWSS2U86RqnANlLJXTINZxTGcTFbOQEnm7naIwnm7sqsbgWj5RAqJRbAU/j7O
+         ZGJfaTdmhLpjkmmvo0q749pwa3mkxgwvHhrlpFN7bH8crdhyfVEQmQikUqOmMHYK5p2S
+         s7uQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hj2LK8IWRYBdQ0R1r6pmm07xyZU9AXmd7btS3Jqax5U=;
+        b=TiVZ5OSxFMwKuLmyQnkmMEULtpMGHqLwpMGzlzNr/cBPQNL5S1+tKa7xHcnRRCMkhV
+         QVeTewVkG4UFvPPjvmn3k8XyfjHAhsvaS0jNPdCiWFmFUMq9hqHs/zOeNuRp3ZDNfF0t
+         1t5QD/919pnwfjLl+zqTMaOa5svJ7gVq8rG1rLrazrWpS2iNUSpU0nheatCH5d7LBc66
+         wKriv07PUQfuY7nvbpRynfa+RkQ8O9yDCzdGpSWBNVH5rXLHMFkG8dfRWnSEdfrv0QDr
+         TMymHk+DgND3ML50q1iDF4caVCO175oQxhSm354b6r3vjIhvdrEOSOzVz3Lsfqoeayz5
+         pKHg==
+X-Gm-Message-State: APjAAAVQatSBNodV7psH8O5c02pMxVP9384VVEygoKzK225EfbDJnE/1
+        bAOTw1BXB4VyVydAXnmWYEk8yqWbhCZfHHHu
+X-Google-Smtp-Source: APXvYqyWpX5kcQzhqQVr831NmEzD6uXasQb3bUu/eTNGZZmi3oHFZ1zTiFIotPiCj4RaxWT2pGGI9w==
+X-Received: by 2002:a25:d98a:: with SMTP id q132mr63412471ybg.19.1561022992869;
+        Thu, 20 Jun 2019 02:29:52 -0700 (PDT)
+Received: from ?IPv6:2600:380:5278:90d8:9c74:6b59:c9f5:5bd0? ([2600:380:5278:90d8:9c74:6b59:c9f5:5bd0])
+        by smtp.gmail.com with ESMTPSA id 144sm5343556ywb.66.2019.06.20.02.29.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 02:29:52 -0700 (PDT)
+Subject: Re: [PATCH] blk-iolatency: only account submitted bios
+To:     Dennis Zhou <dennis@kernel.org>, Josef Bacik <josef@toxicpanda.com>
+Cc:     kernel-team@fb.com, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190523201018.49615-1-dennis@kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <11086c9d-7d73-bcc4-1427-ac7807397997@kernel.dk>
+Date:   Thu, 20 Jun 2019 03:29:47 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/4KtIhbTHIDjH6/JTpyQoNoR"; protocol="application/pgp-signature"
+In-Reply-To: <20190523201018.49615-1-dennis@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/4KtIhbTHIDjH6/JTpyQoNoR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 5/23/19 2:10 PM, Dennis Zhou wrote:
+> As is, iolatency recognizes done_bio and cleanup as ending paths. If a
+> request is marked REQ_NOWAIT and fails to get a request, the bio is
+> cleaned up via rq_qos_cleanup() and ended in bio_wouldblock_error().
+> This results in underflowing the inflight counter. Fix this by only
+> accounting bios that were actually submitted.
 
-Hi Dan,
+Looks good to me, applied.
 
-After merging the nvdimm tree, today's linux-next build (i386 defconfig)
-failed like this:
+-- 
+Jens Axboe
 
-drivers/md/dm-table.c: In function 'device_synchronous':
-drivers/md/dm-table.c:897:9: error: implicit declaration of function 'dax_s=
-ynchronous'; did you mean 'device_synchronous'? [-Werror=3Dimplicit-functio=
-n-declaration]
-  return dax_synchronous(dev->dax_dev);
-         ^~~~~~~~~~~~~~~
-         device_synchronous
-drivers/md/dm-table.c: In function 'dm_table_set_restrictions':
-drivers/md/dm-table.c:1925:4: error: implicit declaration of function 'set_=
-dax_synchronous'; did you mean 'device_synchronous'? [-Werror=3Dimplicit-fu=
-nction-declaration]
-    set_dax_synchronous(t->md->dax_dev);
-    ^~~~~~~~~~~~~~~~~~~
-    device_synchronous
-cc1: some warnings being treated as errors
-
-Caused by commit
-
-  38887edec247 ("dm: enable synchronous dax")
-
-CONFIG_DAX is not set for this build.
-
-I have reverted that commit for today.
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/4KtIhbTHIDjH6/JTpyQoNoR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl0LUgMACgkQAVBC80lX
-0GzxNAf3Qf1H6IS0CTWobhKTsaAIDGl5vnmUL3zJbOvM88FO0YUcnkvznZr6SWK8
-5b7nZEXopjnAnhIxw1tnau2JL17ToJ5/+du/pUSHyhld48H054fDc0LD0P8dvQ4I
-gwdbgkHXHFH5ZRXzWxjJwU+DWaKG53oHyD+ww9nTHnz0qSxPNHyC0jUlCoPcuagE
-L51MucbLDZRUTeEnlyoVOYUWzKCSUXT2jhh/h29vvhpapA1lU74BNIcLsHjZhVFW
-MEx3nWw7yaDL63Kq7hWN8m5y0ZVlb8C7GeeGpqf7ycu/WdrzlYWLkrscq7l58b94
-lULd4ogV5nc1Y1r9E5/6le2sQdcx
-=ilBF
------END PGP SIGNATURE-----
-
---Sig_/4KtIhbTHIDjH6/JTpyQoNoR--
