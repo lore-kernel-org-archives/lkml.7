@@ -2,52 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F3D8C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DABFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A85921670
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A7C52082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054635;
-	bh=mK45/Xbhgfwdi2FZYz42Tj69FVZGZYKwaWYPZwqd6P4=;
+	s=default; t=1561054638;
+	bh=SJE9LZ9YHhAAp7GuxHcP/85NZDSBqP1o+ERQa94aOk4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=znnk0XySkK4GOuGHmQq6CuIlvDmGs7/rvC5fe7gWh5aEJvPHYPwBqYJGvdW7Eu2f8
-	 Dxufx20TuaUVd5gRyJyvCi3UAA95wV+lPBggJfwQqnIfDNiygL3eqAlWCK8c9hN+Hj
-	 c1tOnA59a0Vxvn5JxCLURlDs3g7F7fQYewJBtrto=
+	b=BgMtQwcOMQgVFndBzalDHC8WUZt3Q0p/go2zSviyy3/ruLDJN22PYJ8cG9GhClq3j
+	 bvyyXTeteapSAUWl1qgniK+zDDW1EpS2Fgz+1MA0Jt7RewJki24HtSiPYY6LWE+dyK
+	 78gjPe/vxdElMXCKkC+zTiEKWiaHhb3VdhQlIEoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfFTSRO (ORCPT
+        id S1729911AbfFTSRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:17:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46440 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:17:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729671AbfFTSRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:17:09 -0400
+        id S1729050AbfFTSRN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:17:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7221C205F4;
-        Thu, 20 Jun 2019 18:17:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3C7A2082C;
+        Thu, 20 Jun 2019 18:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054628;
-        bh=mK45/Xbhgfwdi2FZYz42Tj69FVZGZYKwaWYPZwqd6P4=;
+        s=default; t=1561054632;
+        bh=SJE9LZ9YHhAAp7GuxHcP/85NZDSBqP1o+ERQa94aOk4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yjbysLiuYbtNIYXVciAv1atfSA+D1MxMEX22PO/8iB3L5TO9ZbC78zfWYl+RYZ2Mu
-         T0HT1uH+f3Ak3WA/dq/h1drsIeuZh/zbe2Z5b6d58fVuyeU1DA7UWNpQLBtIxcaf6T
-         Sle76NbsKoy7a2wRFnHAHujOzDarUSgoVZ6XMWMA=
+        b=sk5AMo6lvrzWg113RWGZAEG0aG55HaeEEXtSxp3tzBshoPNI5jrvVhCbatdccHm5C
+         Ljw2J1k13v6fQNEnKJc1UHcuqwTXvG66TvMsLygdUi7SaGjWHlivlIqSfND4oE6PXk
+         YBjDNRMOusA0UMdg4vOnbcDXi+iyT3ewO00J3K6E=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sagi Grimberg <sagi@grimberg.me>,
-        Minwoo Im <minwoo.im@samsung.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.1 95/98] nvme-tcp: rename function to have nvme_tcp prefix
-Date:   Thu, 20 Jun 2019 19:58:02 +0200
-Message-Id: <20190620174354.182824738@linuxfoundation.org>
+        stable@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>,
+        Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 78/98] ALSA: fireface: Use ULL suffixes for 64-bit constants
+Date:   Thu, 20 Jun 2019 19:57:45 +0200
+Message-Id: <20190620174353.177190471@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -60,75 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sagi Grimberg <sagi@grimberg.me>
+[ Upstream commit 6954158a16404e7091cea494cd0a435ca2f90388 ]
 
-commit efb973b19b88642bb7e08b8ce8e03b0bbd2a7e2a upstream.
+With gcc 4.1:
 
-usually nvme_ prefix is for core functions.
-While we're cleaning up, remove redundant empty lines
+    sound/firewire/fireface/ff-protocol-latter.c: In function ‘latter_switch_fetching_mode’:
+    sound/firewire/fireface/ff-protocol-latter.c:97: warning: integer constant is too large for ‘long’ type
+    sound/firewire/fireface/ff-protocol-latter.c: In function ‘latter_begin_session’:
+    sound/firewire/fireface/ff-protocol-latter.c:170: warning: integer constant is too large for ‘long’ type
+    sound/firewire/fireface/ff-protocol-latter.c:197: warning: integer constant is too large for ‘long’ type
+    sound/firewire/fireface/ff-protocol-latter.c:205: warning: integer constant is too large for ‘long’ type
+    sound/firewire/fireface/ff-protocol-latter.c: In function ‘latter_finish_session’:
+    sound/firewire/fireface/ff-protocol-latter.c:214: warning: integer constant is too large for ‘long’ type
 
-Signed-off-by: Sagi Grimberg <sagi@grimberg.me>
-Reviewed-by: Minwoo Im <minwoo.im@samsung.com>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Fix this by adding the missing "ULL" suffixes.
+Add the same suffix to the last constant, to maintain consistency.
 
+Fixes: fd1cc9de64c2ca6c ("ALSA: fireface: add support for Fireface UCX")
+Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Reviewed-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/nvme/host/tcp.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ sound/firewire/fireface/ff-protocol-latter.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
---- a/drivers/nvme/host/tcp.c
-+++ b/drivers/nvme/host/tcp.c
-@@ -473,7 +473,6 @@ static int nvme_tcp_handle_c2h_data(stru
- 	}
+diff --git a/sound/firewire/fireface/ff-protocol-latter.c b/sound/firewire/fireface/ff-protocol-latter.c
+index c8236ff89b7f..b30d02d359b1 100644
+--- a/sound/firewire/fireface/ff-protocol-latter.c
++++ b/sound/firewire/fireface/ff-protocol-latter.c
+@@ -9,11 +9,11 @@
  
- 	return 0;
--
- }
+ #include "ff.h"
  
- static int nvme_tcp_handle_comp(struct nvme_tcp_queue *queue,
-@@ -634,7 +633,6 @@ static inline void nvme_tcp_end_request(
- 	nvme_end_request(rq, cpu_to_le16(status << 1), res);
- }
+-#define LATTER_STF		0xffff00000004
+-#define LATTER_ISOC_CHANNELS	0xffff00000008
+-#define LATTER_ISOC_START	0xffff0000000c
+-#define LATTER_FETCH_MODE	0xffff00000010
+-#define LATTER_SYNC_STATUS	0x0000801c0000
++#define LATTER_STF		0xffff00000004ULL
++#define LATTER_ISOC_CHANNELS	0xffff00000008ULL
++#define LATTER_ISOC_START	0xffff0000000cULL
++#define LATTER_FETCH_MODE	0xffff00000010ULL
++#define LATTER_SYNC_STATUS	0x0000801c0000ULL
  
--
- static int nvme_tcp_recv_data(struct nvme_tcp_queue *queue, struct sk_buff *skb,
- 			      unsigned int *offset, size_t *len)
- {
-@@ -1535,7 +1533,7 @@ out_free_queue:
- 	return ret;
- }
- 
--static int nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
-+static int __nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
- {
- 	int i, ret;
- 
-@@ -1565,7 +1563,7 @@ static unsigned int nvme_tcp_nr_io_queue
- 	return nr_io_queues;
- }
- 
--static int nvme_alloc_io_queues(struct nvme_ctrl *ctrl)
-+static int nvme_tcp_alloc_io_queues(struct nvme_ctrl *ctrl)
- {
- 	unsigned int nr_io_queues;
- 	int ret;
-@@ -1582,7 +1580,7 @@ static int nvme_alloc_io_queues(struct n
- 	dev_info(ctrl->device,
- 		"creating %d I/O queues.\n", nr_io_queues);
- 
--	return nvme_tcp_alloc_io_queues(ctrl);
-+	return __nvme_tcp_alloc_io_queues(ctrl);
- }
- 
- static void nvme_tcp_destroy_io_queues(struct nvme_ctrl *ctrl, bool remove)
-@@ -1599,7 +1597,7 @@ static int nvme_tcp_configure_io_queues(
- {
- 	int ret;
- 
--	ret = nvme_alloc_io_queues(ctrl);
-+	ret = nvme_tcp_alloc_io_queues(ctrl);
- 	if (ret)
- 		return ret;
- 
+ static int parse_clock_bits(u32 data, unsigned int *rate,
+ 			    enum snd_ff_clock_src *src)
+-- 
+2.20.1
+
 
 
