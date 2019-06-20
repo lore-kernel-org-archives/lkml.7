@@ -2,78 +2,68 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68BE8C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3BD4C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:00:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DA22084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:58:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="tA2EL2AF"
+	by mail.kernel.org (Postfix) with ESMTP id ACD372084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:00:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731171AbfFTI6p (ORCPT
+        id S1731361AbfFTJAA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:58:45 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34709 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTI6p (ORCPT
+        Thu, 20 Jun 2019 05:00:00 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:36583 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726071AbfFTJAA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:58:45 -0400
-Received: by mail-lf1-f68.google.com with SMTP id y198so1872648lfa.1
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:58:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=dfxJ4a2QTSJhkHiDqzwqK9Tivfex2EusFAKfwRKgyto=;
-        b=tA2EL2AFfZRqDrIIYLfmZxNarz18c+FrlQ9uWa9jZGI2Xz7DlZylft13OUaLaZKFFh
-         XsQbVTBSNkhBHWR/ZMnTfshfgmfCSmYhtz59wxZN9OVHXRxxt5CkEQAn5aNXS5PdZHJ/
-         H0NpPb+3EpxxnyOjrnDB2IsVRG+jR5J7egrYr+dqo/gf9fDtEbWaKLakQol6Zfa1J0pk
-         BIFoi6pCIPadQHBmH9Wq0BDx88ZiZd5R+tINXxFhqiq6F+gIF1QMQXvmFw1tsyC1uhhL
-         cgLkRfeP/f8Zy3eW4DOPLZIRQc1fTRKn8lR1qkBBhzTRJBgewbfwPLmxlwuWpQ8A1Z01
-         fJsQ==
+        Thu, 20 Jun 2019 05:00:00 -0400
+Received: by mail-wm1-f67.google.com with SMTP id u8so2301997wmm.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:59:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=dfxJ4a2QTSJhkHiDqzwqK9Tivfex2EusFAKfwRKgyto=;
-        b=XvQnNTmCAxTNHBEhuG1Q/q1ieWwk4p6vRIbNLOILuRuf3pBQap+KCDHCREvSjy96Kp
-         60mFJfjf1mt5O4bGqA9Pys0vcux6v3TxoOPrIZpNrjCDVD1LiyJ7tyQqQ+/KQH7EPICR
-         jALCoPbG33wh48TLybtdYhbfFvPRcN25BwmXxVpQATDLvE6q6Oo/BFiYwolrBucUDm+r
-         rlqCeDzK0z56vdBGajtMq5phSgPMU4p4KgpHL7zsx1jlUUaycnS2iPaq4w7jktPgP9DL
-         CAJQd//Fe7t0Pp+YXK3+SygWzmZhStho1ThZRvDd3mNhfmlT9KWftTnlUxIqz223YOeF
-         uxug==
-X-Gm-Message-State: APjAAAWuB1nDn2To2ennTQKMZ0r2MhrIgg9qel+mAZ5RDXg+w21FUTYI
-        X4QVH8IbHNHvSrCOK+Jt6BWBmA==
-X-Google-Smtp-Source: APXvYqx5ktYLTZynXGSE+vTJdFLuUIHLNqlOp0FQpxzu8dC2WHR3IFfJrM3Ppk6ii7J96jDCV+r9Nw==
-X-Received: by 2002:ac2:46ef:: with SMTP id q15mr2537282lfo.63.1561021123413;
-        Thu, 20 Jun 2019 01:58:43 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.80.13])
-        by smtp.gmail.com with ESMTPSA id m25sm3062325lfp.97.2019.06.20.01.58.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 01:58:42 -0700 (PDT)
-Subject: Re: [PATCH net] net: mvpp2: prs: Don't override the sign bit in SRAM
- parser shift
-To:     Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Antoine Tenart <antoine.tenart@bootlin.com>,
-        thomas.petazzoni@bootlin.com, gregory.clement@bootlin.com,
-        nadavh@marvell.com, stefanc@marvell.com, mw@semihalf.com,
-        Alan Winkowski <walan@marvell.com>
-References: <20190619145413.21852-1-maxime.chevallier@bootlin.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <64727f68-866b-b2eb-38c9-5670efe68aaf@cogentembedded.com>
-Date:   Thu, 20 Jun 2019 11:58:18 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        bh=vddaDNU08aTNsQcXmYBUi4ms30pth+CnMAqKshaYelA=;
+        b=X5W5G/XNsjuAaE6IkFzJT4B+bK5C6vYSD22gFr2CVxPzXrrjjt4RVoEOKzUCB1Oft1
+         K4XrWjlbX12Udflv9DnyxKjci2jWn/tWYi5VW84q8dU29GOS58bb/FDeffC8TinD19DD
+         HFZgqIg3JsssRFcTkddIzH4mWu1rdSA69D3xpPd4uwVWv9rFqMuwErRjDebjA9M/zqcw
+         iC54CgTFYDVf9MUXUjIjbdTtRn1U0uBp+s1rgOfJ7NUk2YQxaY8E6rYoBsemi8ATFs0D
+         oU5yMor2Z2NkqBz1kRki48K/kC9rNfnHXs4lq4t0JrV5uK6WNuvZgqUIjYTzPhYniQ8U
+         drXw==
+X-Gm-Message-State: APjAAAVMfAQTVWX+UUF+OfNtjtxu9DfC23e8nqDI9j2MTqlMQg1loBNF
+        e/UIPUn+Ps85ysLJsaYiR37PypDvDX0=
+X-Google-Smtp-Source: APXvYqzbNKZHwFaDBe6SMO2bSr6qfYnU7CP2hxFaCBO+4IgEmShvwUEIym/VhGTbzqTkuDXSF9OE5g==
+X-Received: by 2002:a1c:f20f:: with SMTP id s15mr1823342wmc.33.1561021197712;
+        Thu, 20 Jun 2019 01:59:57 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7822:aa18:a9d8:39ab? ([2001:b07:6468:f312:7822:aa18:a9d8:39ab])
+        by smtp.gmail.com with ESMTPSA id a2sm4789699wmj.9.2019.06.20.01.59.56
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 01:59:57 -0700 (PDT)
+Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
+To:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Wanpeng Li <kernellwp@gmail.com>, Tao Xu <tao3.xu@intel.com>
+Cc:     Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190620050301.1149-1-tao3.xu@intel.com>
+ <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
+ <f358c914-ae58-9889-a8ef-6ea9f3b2650e@linux.intel.com>
+ <b3f76acd-cc7e-9cd7-d7f7-404ba756ab87@redhat.com>
+ <2032f811-b583-eca1-3ece-d1e95738ff64@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d9b3e4ff-e14b-1bc5-2a7e-c89b545bb2fc@redhat.com>
+Date:   Thu, 20 Jun 2019 10:59:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190619145413.21852-1-maxime.chevallier@bootlin.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <2032f811-b583-eca1-3ece-d1e95738ff64@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,27 +71,15 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19.06.2019 17:54, Maxime Chevallier wrote:
-
-> The Header Parser allows identifying various fields in the packet
-> headers, used for for various kind of filtering and classification
-
-    One "for" is enough. :-)
-
-> steps.
+On 20/06/19 10:55, Xiaoyao Li wrote:
 > 
-> This is a re-entrant process, where the offset in the packet header
-> depends on the previous lookup results. This offset is represented in
-> the SRAM results of the TCAM, as a shift to be operated.
+>> However I may be wrong because I didn't review the code very closely:
+>> the old code is obvious and so there is no point in changing it.
 > 
-> This shift can be negative in some cases, such as in IPv6 parsing.
-> 
-> This commit prevents overriding the sign bit when setting the shift
-> value, which could cause instabilities when parsing IPv6 flows.
-> 
-> Fixes: 3f518509dedc ("ethernet: Add new driver for Marvell Armada 375 network unit")
-> Suggested-by: Alan Winkowski <walan@marvell.com>
-> Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-[...]
+> you mean this part about XSS_EXIT_BITMAP? how about the other part in
+> vmx_set/get_msr() in this patch?
 
-MBR, Sergei
+Yes, only the XSS_EXIT_BITMAP part.  The other is a bugfix, I didn't
+understand Wanpeng's objection very well.
+
+Paolo
