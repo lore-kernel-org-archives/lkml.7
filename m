@@ -5,50 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8A1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9947C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4342084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9E492070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054322;
-	bh=8zmPrUDhOYw7RhDGNZLje9f56sPmfq1pcfsFsnMtljc=;
+	s=default; t=1561054326;
+	bh=9TlGhu5PE6MnakiwtG3u2ciQ4gIz2gyIJSShFYv6hJ0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5jjq/KD2z6CZs7U3v2Ajr853/muYu+99pIVkRduPufher5x44Cf+bJWVfxE/3rJ+
-	 S9dzzoWAOB7C243OYUXCpMcbijsKGibnzlz2NT0bZL0/7DHDkRSB21O6fvzS9hLCLH
-	 k6SN9EMikZp9LNx1R1L29ZlrFAs5sI3piUBV4XIA=
+	b=XWAsAgcLbQcmReCJr8RBKgBGPZm6pk6W1CnZ7yDcI3yljA50F1iPNsPLCUO+A2VzR
+	 i9rkRWPs5ZNnovHX9rPIW72Hg0JHWaqY6WautEZ38Q1nkfJ+YY4uXYbPbQ5dwqEpqc
+	 Wcg9HTJ0JjDpaghFNWI9x4ErKBAEcRgnHbWNwKLk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728976AbfFTSMA (ORCPT
+        id S1728655AbfFTSMF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:12:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39710 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:12:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39772 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728247AbfFTSL4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:56 -0400
+        id S1728959AbfFTSL7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 44B452084E;
-        Thu, 20 Jun 2019 18:11:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BF682084E;
+        Thu, 20 Jun 2019 18:11:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054315;
-        bh=8zmPrUDhOYw7RhDGNZLje9f56sPmfq1pcfsFsnMtljc=;
+        s=default; t=1561054319;
+        bh=9TlGhu5PE6MnakiwtG3u2ciQ4gIz2gyIJSShFYv6hJ0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e0sAaAHD8ON9mSlg3W9X3FM3flGVn4UWMQ+2zrcu1mrQmUksgi80dOj+dHYxSpiD4
-         4FQITwYbDpOkurEDczJHxIp+yDAOTcJ94/FU/EGUJCtFvki40hZGw824/mDJUl2ZjG
-         IyMqRmPG/5zgMsobzGMPy0yY/R9mLuW8um9my7Fw=
+        b=W06JYHvhU2FT7hi2ViO5M9rZJs/zA9aG4bq6M9vQfAQAhixHk9pTg6lOhVFHVHufh
+         jMJ/qQVoO7QOlzfsv/L5wLRwmUchPmBX0Y+2jEzdhXrD8zMAg5YJuUkkPio/gno3Yi
+         P/2ZB/419ppHcksBUCxjhWtUTyUOOVPlEJT+NURg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
-        Mark Rutland <mark.rutland@arm.com>,
         Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 48/61] arm64: fix syscall_fn_t type
-Date:   Thu, 20 Jun 2019 19:57:43 +0200
-Message-Id: <20190620174345.621893387@linuxfoundation.org>
+Subject: [PATCH 4.19 49/61] arm64: use the correct function type in SYSCALL_DEFINE0
+Date:   Thu, 20 Jun 2019 19:57:44 +0200
+Message-Id: <20190620174345.789949072@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,33 +60,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 8ef8f368ce72b5e17f7c1f1ef15c38dcfd0fef64 ]
+[ Upstream commit 0e358bd7b7ebd27e491dabed938eae254c17fe3b ]
 
-Syscall wrappers in <asm/syscall_wrapper.h> use const struct pt_regs *
-as the argument type. Use const in syscall_fn_t as well to fix indirect
-call type mismatches with Control-Flow Integrity checking.
+Although a syscall defined using SYSCALL_DEFINE0 doesn't accept
+parameters, use the correct function type to avoid indirect call
+type mismatches with Control-Flow Integrity checking.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
 Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/include/asm/syscall.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/include/asm/syscall_wrapper.h | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/include/asm/syscall.h b/arch/arm64/include/asm/syscall.h
-index ad8be16a39c9..58102652bf9e 100644
---- a/arch/arm64/include/asm/syscall.h
-+++ b/arch/arm64/include/asm/syscall.h
-@@ -20,7 +20,7 @@
- #include <linux/compat.h>
- #include <linux/err.h>
+diff --git a/arch/arm64/include/asm/syscall_wrapper.h b/arch/arm64/include/asm/syscall_wrapper.h
+index a4477e515b79..507d0ee6bc69 100644
+--- a/arch/arm64/include/asm/syscall_wrapper.h
++++ b/arch/arm64/include/asm/syscall_wrapper.h
+@@ -30,10 +30,10 @@
+ 	}										\
+ 	static inline long __do_compat_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
  
--typedef long (*syscall_fn_t)(struct pt_regs *regs);
-+typedef long (*syscall_fn_t)(const struct pt_regs *regs);
+-#define COMPAT_SYSCALL_DEFINE0(sname)					\
+-	asmlinkage long __arm64_compat_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);	\
+-	asmlinkage long __arm64_compat_sys_##sname(void)
++#define COMPAT_SYSCALL_DEFINE0(sname)							\
++	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused);	\
++	ALLOW_ERROR_INJECTION(__arm64_compat_sys_##sname, ERRNO);			\
++	asmlinkage long __arm64_compat_sys_##sname(const struct pt_regs *__unused)
  
- extern const syscall_fn_t sys_call_table[];
+ #define COND_SYSCALL_COMPAT(name) \
+ 	cond_syscall(__arm64_compat_sys_##name);
+@@ -62,11 +62,11 @@
+ 	static inline long __do_sys##name(__MAP(x,__SC_DECL,__VA_ARGS__))
  
+ #ifndef SYSCALL_DEFINE0
+-#define SYSCALL_DEFINE0(sname)					\
+-	SYSCALL_METADATA(_##sname, 0);				\
+-	asmlinkage long __arm64_sys_##sname(void);		\
+-	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);	\
+-	asmlinkage long __arm64_sys_##sname(void)
++#define SYSCALL_DEFINE0(sname)							\
++	SYSCALL_METADATA(_##sname, 0);						\
++	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused);	\
++	ALLOW_ERROR_INJECTION(__arm64_sys_##sname, ERRNO);			\
++	asmlinkage long __arm64_sys_##sname(const struct pt_regs *__unused)
+ #endif
+ 
+ #ifndef COND_SYSCALL
 -- 
 2.20.1
 
