@@ -2,158 +2,158 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD2DFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:16:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC0FDC48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B22DA20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:16:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="Eqt/oafq";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="h0ITYzP1"
+	by mail.kernel.org (Postfix) with ESMTP id C54252084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:18:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730618AbfFTHQv (ORCPT
+        id S1726310AbfFTHSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:16:51 -0400
-Received: from mail180-24.suw31.mandrillapp.com ([198.2.180.24]:16363 "EHLO
-        mail180-24.suw31.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726310AbfFTHQp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:16:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:In-Reply-To:References:Message-Id:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=LMg3Bk6kln69Vs5t8MxVxPy3A99uh33UqnDkBfEpokk=;
- b=Eqt/oafqB0/S7B51V8T5s4mI2wlX5qECgmIaI91Q0OZx8pORHB1WbBe+dDnA5ExRud7MnENLTdjI
-   T+HhJyEtOPjawdUrGn+LuVI+kkouESm8bN5ym8UZRIhPMIsYdV9fYm3Hc5EvG2toKoMlmhQdviG3
-   2IK0jk4wEFlZJG6dFds=
-Received: from pmta03.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail180-24.suw31.mandrillapp.com id h1cpdo22sc00 for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:01:44 +0000 (envelope-from <bounce-md_31050260.5d0b2f57.v1-1cf7cd72e6274ddeafb0967d931fd70d@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1561014103; h=From : 
- Subject : To : Cc : In-Reply-To : References : Message-Id : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=LMg3Bk6kln69Vs5t8MxVxPy3A99uh33UqnDkBfEpokk=; 
- b=h0ITYzP1NEgCkRQPorkXWYej5GuBGP9yK+Lh6k/2h2rbLPhhuZcTKQqwLTaFHt5WVkvuHA
- oGH9454xxVgw0crxSvCJbYUKJDbMHcYLwTWBbFZzJlKZsEf8D8kcQMPC7b04yRjoqW/ARbgx
- +ZqRiJbXcmhqG4Rb3gkOuGPyN0l8Y=
-From:   <kirr@nexedi.com>
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Received: from [87.98.221.171] by mandrillapp.com id 1cf7cd72e6274ddeafb0967d931fd70d; Thu, 20 Jun 2019 07:01:43 +0000
-X-Sender: kirr@nexedi.com
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kbuild-all@01.org>
-In-Reply-To: <20190619201859.GA197717@google.com>
-References: <alpine.DEB.2.20.1906191227430.3726@hadrien> <20190619162713.GA19859@deco.navytux.spb.ru> <20190619201859.GA197717@google.com>
-Message-Id: <e6568b7107d4cbef639f82a400ba8b1a@nexedi.com>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.1cf7cd72e6274ddeafb0967d931fd70d
-X-Mandrill-User: md_31050260
-Date:   Thu, 20 Jun 2019 07:01:43 +0000
+        Thu, 20 Jun 2019 03:18:46 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46108 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725875AbfFTHSp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:18:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 90EBFAF3B;
+        Thu, 20 Jun 2019 07:18:43 +0000 (UTC)
+Subject: Re: [PATCH] mm: mempolicy: handle vma with unmovable pages mapped
+ correctly in mbind
+To:     Yang Shi <yang.shi@linux.alibaba.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     akpm@linux-foundation.org, mgorman@techsingularity.net,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        Eric Dumazet <edumazet@google.com>,
+        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
+References: <1560797290-42267-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190618130253.GH3318@dhcp22.suse.cz>
+ <cf33b724-fdd5-58e3-c06a-1bc563525311@linux.alibaba.com>
+ <20190618182848.GJ3318@dhcp22.suse.cz>
+ <68c2592d-b747-e6eb-329f-7a428bff1f86@linux.alibaba.com>
+ <20190619052133.GB2968@dhcp22.suse.cz>
+ <21a0b20c-5b62-490e-ad8e-26b4b78ac095@suse.cz>
+ <687f4e57-5c50-7900-645e-6ef3a5c1c0c7@linux.alibaba.com>
+ <55eb2ea9-2c74-87b1-4568-b620c7913e17@linux.alibaba.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <d81b36bb-876e-917a-6115-cedf496b4923@suse.cz>
+Date:   Thu, 20 Jun 2019 09:18:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <55eb2ea9-2c74-87b1-4568-b620c7913e17@linux.alibaba.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bjorn Helgaas =D0=BF=D0=B8=D1=81=D0=B0=D0=BB 2019-06-19 23:19:
-> On Wed, Jun 19, 2019 at 04:27:52PM +0000, Kirill Smelkov wrote:
->> Hi Julia, everyone.
->> 
->> On Wed, Jun 19, 2019 at 12:28:47PM +0200, Julia Lawall wrote:
->> > Hi,
->> >
->> > Can you forward this patch to the people below if you think it is
->> > appropriate?
->> 
->> Yes, this patch is appropriate. It was actually part of
->> git.kernel.org/linus/c5bf68fe0c86 . It should be safe, (and desirable 
->> as
->> it removes a chance for deadlock) to apply it.
->> 
->> Sebastian, Kurt, Logan, Bjorn, please consider picking it up.
+On 6/19/19 8:19 PM, Yang Shi wrote:
+>>>> This is getting even more muddy TBH. Is there any reason that we 
+>>>> have to
+>>>> handle this problem during the isolation phase rather the migration?
+>>> I think it was already said that if pages can't be isolated, then
+>>> migration phase won't process them, so they're just ignored.
+>>
+>> Yes，exactly.
+>>
+>>> However I think the patch is wrong to abort immediately when
+>>> encountering such page that cannot be isolated (AFAICS). IMHO it should
+>>> still try to migrate everything it can, and only then return -EIO.
+>>
+>> It is fine too. I don't see mbind semantics define how to handle such 
+>> case other than returning -EIO.
+
+I think it does. There's:
+If MPOL_MF_MOVE is specified in flags, then the kernel *will attempt to
+move all the existing pages* ... If MPOL_MF_STRICT is also specified,
+then the call fails with the error *EIO if some pages could not be moved*
+
+Aborting immediately would be against the attempt to move all.
+
+> By looking into the code, it looks not that easy as what I thought. 
+> do_mbind() would check the return value of queue_pages_range(), it just 
+> applies the policy and manipulates vmas as long as the return value is 0 
+> (success), then migrate pages on the list. We could put the movable 
+> pages on the list by not breaking immediately, but they will be ignored. 
+> If we migrate the pages regardless of the return value, it may break the 
+> policy since the policy will *not* be applied at all.
+
+I think we just need to remember if there was at least one page that
+failed isolation or migration, but keep working, and in the end return
+EIO if there was such page(s). I don't think it breaks the policy. Once
+pages are allocated in a mapping, changing the policy is a best effort
+thing anyway.
+
+>>
+>>
 > 
-> I don't get it.  This appeared in v5.2-rc1 as c5bf68fe0c86 ("*: convert
-> stream-like files from nonseekable_open -> stream_open"), so it looks 
-> like
-> this is already done.  What would you like me to do with it?
-
-I meant just that it was ok to pick this change into 5.0-RT tree as 
-kbuild robot was suggesting. Sorry for not being clear.
-
-Kirill
-
->> > Could I tell the kbuild people to add you to the CC list for
->> > this semantic patch?
->> 
->> Yes, sure. Please feel free to add me to CC list for stream_open.cocci
->> related patches.
->> 
->> Kirill
->> 
->> 
->> > thanks,
->> > julia
->> >
->> > ---------- Forwarded message ----------
->> > Date: Wed, 19 Jun 2019 18:23:18 +0800
->> > From: kbuild test robot <lkp@intel.com>
->> > To: kbuild@01.org
->> > Cc: Julia Lawall <julia.lawall@lip6.fr>
->> > Subject: [PATCH] pci/switchtec: fix stream_open.cocci warnings
->> >
->> > CC: kbuild-all@01.org
->> > TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
->> > CC: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
->> > CC: Logan Gunthorpe <logang@deltatee.com>
->> > CC: Bjorn Helgaas <helgaas@kernel.org>
->> > CC: linux-pci@vger.kernel.org
->> > CC: linux-kernel@vger.kernel.org
->> >
->> > From: kbuild test robot <lkp@intel.com>
->> >
->> > drivers/pci/switch/switchtec.c:395:1-17: ERROR: switchtec_fops: .read(=
-) can deadlock .write(); change nonseekable_open -> stream_open to fix.
->> >
->> > Generated by: scripts/coccinelle/api/stream_open.cocci
->> >
->> > Fixes: a3a1e895d4fa ("pci/switchtec: Don't use completion's wait queue=
-")
->> > Signed-off-by: kbuild test robot <lkp@intel.com>
->> > ---
->> >
->> > tree:   https://git.kernel.org/pub/scm/linux/kernel/git/rt/linux-rt-de=
-vel.git linux-5.0.y-rt-rebase
->> > head:   31cc76d5590f5e60c2f26f029e40bc7d0441d93f
->> > commit: a3a1e895d4fa0508e11ac9107ace883a5b2a4d3b [171/305] pci/switcht=
-ec: Don't use completion's wait queue
->> > :::::: branch date: 6 days ago
->> > :::::: commit date: 6 days ago
->> >
->> > Please take the patch only if it's a positive warning. Thanks!
->> >
->> >  switchtec.c |    2 +-
->> >  1 file changed, 1 insertion(+), 1 deletion(-)
->> >
->> > --- a/drivers/pci/switch/switchtec.c
->> > +++ b/drivers/pci/switch/switchtec.c
->> > @@ -392,7 +392,7 @@ static int switchtec_dev_open(struct ino
->> >  =09=09return PTR_ERR(stuser);
->> >
->> >  =09filp->private_data =3D stuser;
->> > -=09nonseekable_open(inode, filp);
->> > +=09stream_open(inode, filp);
->> >
->> >  =09dev_dbg(&stdev->dev, "%s: %p\n", __func__, stuser);
->> >
 
