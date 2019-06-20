@@ -2,703 +2,563 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36075C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:34:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1109C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D67A720675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:34:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AnZ/koNz"
+	by mail.kernel.org (Postfix) with ESMTP id 70BAD2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:34:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731926AbfFTNeQ (ORCPT
+        id S1731993AbfFTNe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:34:16 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43908 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726491AbfFTNeN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:34:13 -0400
-Received: by mail-wr1-f65.google.com with SMTP id p13so3035667wru.10;
-        Thu, 20 Jun 2019 06:34:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=f91FKm6IArK6QXXJVE4klnrFyZz3Ypo44ZU+rqXi8Lg=;
-        b=AnZ/koNzDwHLE6y7+JMBDFldY1CbipLdbUHoLK4RC8wSQ8I5Y6ZSAMNSkARyr/YYX8
-         6In8Vkye0EwEhS64XL9FGqGlrF/p9JKWsqUePu+OizJCByQW5mbiblk9A/LcXD3amFE7
-         bN5WzL7DtSIai4rxyuZSE3mksyyQtbmNqHh+dtE339+xhCEjsMxLHvC6a53h5AuLOMCS
-         XqOLMownfYoLoIxN/bXay47xApQvzIOXpXvp5H7jbtZAZmfRojaMomCm5tFX0M6kfTSE
-         grat2W3d2tmpMbQkU9boTp6q4snQHqM6guXKjiMH2/Iv/0nbu53aavFbb2dUOvr9fbmY
-         IM2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=f91FKm6IArK6QXXJVE4klnrFyZz3Ypo44ZU+rqXi8Lg=;
-        b=NrVVLri7sGnWRuBfc/CUfUItfeCRX9eG+lofeUPQVwtkLqcsK1nXSX1Qd6glPvfQTP
-         1RzCDo6td3VmgCwaQCIMRY6vy3+en2okhmXK+Sv4saMyGCqzfhL4iK9yXb+S52pKlOyS
-         UMlEw2anoYGF1zGxUNrGs2bkC44E4v/4KltnhzxEWBtS9j4mKPYM2yHw7TERzvxerx3W
-         3kLGPsyLCkHc1l9LguihaGIN87/atNcOtaz4yqIqWHsKccA57U0pLYTjpWm2pNAVEWbE
-         ffwlnmREUL/osDxDH0MaObBx/JeGG51KIru1Oay80OW/8d8VlmFDza53hxD+UYzvBh+l
-         P9qQ==
-X-Gm-Message-State: APjAAAXRlXTR0VZfVeiMWxeBiRiT0PEbJkQnQtc90ItCUVVLMKGAzhlF
-        2RIkPpWi96oSd/+ZMmXba7E=
-X-Google-Smtp-Source: APXvYqzuIsgMUGYKHA5sk5h7l5wLNaCLWKfqAldOyYEsBj6WFbCg+Kud14Ih+6bJYZWIQNnNQapy0Q==
-X-Received: by 2002:a5d:51d1:: with SMTP id n17mr35255912wrv.52.1561037649897;
-        Thu, 20 Jun 2019 06:34:09 -0700 (PDT)
-Received: from localhost.localdomain ([212.146.100.6])
-        by smtp.gmail.com with ESMTPSA id i128sm1972290wmi.16.2019.06.20.06.34.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 06:34:09 -0700 (PDT)
-From:   Andra Danciu <andradanciu1997@gmail.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org
-Cc:     leoyang.li@nxp.com, aisheng.dong@nxp.com, sriram.dash@nxp.com,
-        pramod.kumar_1@nxp.com, bhaskar.upadhaya@nxp.com,
-        vabhav.sharma@nxp.com, pankaj.bansal@nxp.com,
-        richard.hu@technexion.com, l.stach@pengutronix.de,
-        ping.bai@nxp.com, manivannan.sadhasivam@linaro.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        daniel.baluta@nxp.com
-Subject: [RFC PATCH] arm64: dts: fsl: wandboard: Add a device tree for the PICO-PI-IMX8M
-Date:   Thu, 20 Jun 2019 16:32:52 +0300
-Message-Id: <20190620133252.31373-1-andradanciu1997@gmail.com>
-X-Mailer: git-send-email 2.11.0
+        Thu, 20 Jun 2019 09:34:26 -0400
+Received: from mx2.suse.de ([195.135.220.15]:43290 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726491AbfFTNeZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:34:25 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 43BF7ADF1;
+        Thu, 20 Jun 2019 13:34:22 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9CA6B1E434F; Thu, 20 Jun 2019 15:34:20 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 15:34:20 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        shaggy@kernel.org, ard.biesheuvel@linaro.org, josef@toxicpanda.com,
+        clm@fb.com, adilger.kernel@dilger.ca, jk@ozlabs.org, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, viro@zeniv.linux.org.uk,
+        cluster-devel@redhat.com, jfs-discussion@lists.sourceforge.net,
+        linux-efi@vger.kernel.org, reiserfs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-nilfs@vger.kernel.org, linux-mtd@lists.infradead.org,
+        ocfs2-devel@oss.oracle.com, linux-fsdevel@vger.kernel.org,
+        linux-ext4@vger.kernel.org, linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH v2 1/4] vfs: create a generic checking function for
+ FS_IOC_SETFLAGS
+Message-ID: <20190620133420.GD30243@quack2.suse.cz>
+References: <156022833285.3227089.11990489625041926920.stgit@magnolia>
+ <156022834076.3227089.14763553158562888103.stgit@magnolia>
+ <20190612004258.GX1871505@magnolia>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612004258.GX1871505@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Hu <richard.hu@technexion.com>
+On Tue 11-06-19 17:42:58, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
+> 
+> Create a generic checking function for the incoming FS_IOC_SETFLAGS flag
+> values so that we can standardize the implementations that follow ext4's
+> flag values.
+> 
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-The current level of support yields a working console and is able to boot
-userspace from an initial ramdisk copied via u-boot in RAM.
+The patch looks good to me. You can add:
 
-Additional subsystems that are active :
-	- Ethernet
-	- USB
+Reviewed-by: Jan Kara <jack@suse.cz>
 
-Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Signed-off-by: Richard Hu <richard.hu@technexion.com>
-Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
----
- I am using pico-pi-8mxm board to work on my project for Google Summer of Code.
- This is based on patches from https://github.com/wandboard-org.
+								Honza
 
- arch/arm64/boot/dts/freescale/Makefile       |   1 +
- arch/arm64/boot/dts/freescale/wand-pi-8m.dts | 590 +++++++++++++++++++++++++++
- 2 files changed, 591 insertions(+)
- create mode 100644 arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/freescale/Makefile
-index 984554343c83..5904d6a8a033 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -23,3 +23,4 @@ dtb-$(CONFIG_ARCH_LAYERSCAPE) += fsl-lx2160a-rdb.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mm-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8mq-evk.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx8qxp-mek.dtb
-+dtb-$(CONFIG_ARCH_MXC) += wand-pi-8m.dtb
-diff --git a/arch/arm64/boot/dts/freescale/wand-pi-8m.dts b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-new file mode 100644
-index 000000000000..9f7121014722
---- /dev/null
-+++ b/arch/arm64/boot/dts/freescale/wand-pi-8m.dts
-@@ -0,0 +1,590 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright 2018 Wandboard, Org.
-+ * Copyright 2017 NXP
-+ *
-+ * Author: Richard Hu <hakahu@gmail.com>
-+ */
-+
-+/dts-v1/;
-+
-+#include "imx8mq.dtsi"
-+
-+/ {
-+	model = "WAND-PI-8M";
-+	compatible = "wand,imx8mq-wand-pi", "fsl,imx8mq";
-+
-+	chosen {
-+		bootargs = "console=ttymxc0,115200 earlycon=ec_imx6q,0x30860000,115200";
-+		stdout-path = &uart1;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_usb_otg_vbus: usb_otg_vbus {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_otg_vbus>;
-+			compatible = "regulator-fixed";
-+			regulator-name = "usb_otg_vbus";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			gpio = <&gpio3 14 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	regulator-virtuals {
-+		compatible = "simple-bus";
-+
-+		virt-buck1 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck1";
-+		};
-+		virt-buck2 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck2";
-+		};
-+		virt-buck3 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck3";
-+		};
-+		virt-buck4 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck4";
-+		};
-+		virt-buck5 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck5";
-+		};
-+		virt-buck6 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck6";
-+		};
-+		virt-buck7 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck7";
-+		};
-+		virt-buck8 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "buck8";
-+		};
-+		virt-ldo1 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo1";
-+		};
-+		virt-ldo2 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo2";
-+		};
-+		virt-ldo3 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo3";
-+		};
-+		virt-ldo4 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo4";
-+		};
-+		virt-ldo5 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo5";
-+		};
-+		virt-ldo6 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo6";
-+		};
-+		virt-ldo7 {
-+			compatible = "regulator-virtual";
-+			virtual-supply = "ldo7";
-+		};
-+	};
-+
-+	gpio-edm {
-+		compatible = "gpio-edm";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_wifi_ctrl>;
-+
-+		gpio_wifi_wl_reg_on {
-+			label = "WL_REG_ON";
-+			gpios = <&gpio3 0 GPIO_ACTIVE_LOW>;
-+			dir   = "out";
-+		};
-+
-+		gpio_wifi_pwr_en {
-+			label = "WIFI_PWR_EN";
-+			gpios = <&gpio3 15 GPIO_ACTIVE_LOW>;
-+			dir   = "out";
-+		};
-+	};
-+};
-+
-+&iomuxc {
-+	pinctrl-names = "default";
-+
-+	wand-pi-8m {
-+		pinctrl_otg_vbus: otgvbusgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_DQS_GPIO3_IO14		0x19   /* USB OTG VBUS Enable */
-+			>;
-+		};
-+
-+		pinctrl_csi1: csi1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_DATA01_GPIO3_IO7		0x19   /* CSI P1 PWDN */
-+				MX8MQ_IOMUXC_GPIO1_IO12_GPIO1_IO12		0x19   /* CSI nRST */
-+				MX8MQ_IOMUXC_GPIO1_IO15_CCMSRCGPCMIX_CLKO2	0x59
-+			>;
-+		};
-+
-+		pinctrl_enet_3v3: enet3v3grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_GPIO1_IO00_GPIO1_IO0		0x19
-+			>;
-+		};
-+
-+		pinctrl_fec1: fec1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_ENET_MDC_ENET1_MDC		0x3
-+				MX8MQ_IOMUXC_ENET_MDIO_ENET1_MDIO	0x23
-+				MX8MQ_IOMUXC_ENET_TD3_ENET1_RGMII_TD3	0x1f
-+				MX8MQ_IOMUXC_ENET_TD2_ENET1_RGMII_TD2	0x1f
-+				MX8MQ_IOMUXC_ENET_TD1_ENET1_RGMII_TD1	0x1f
-+				MX8MQ_IOMUXC_ENET_TD0_ENET1_RGMII_TD0	0x1f
-+				MX8MQ_IOMUXC_ENET_RD3_ENET1_RGMII_RD3	0x91
-+				MX8MQ_IOMUXC_ENET_RD2_ENET1_RGMII_RD2	0x91
-+				MX8MQ_IOMUXC_ENET_RD1_ENET1_RGMII_RD1	0x91
-+				MX8MQ_IOMUXC_ENET_RD0_ENET1_RGMII_RD0	0x91
-+				MX8MQ_IOMUXC_ENET_TXC_ENET1_RGMII_TXC	0x1f
-+				MX8MQ_IOMUXC_ENET_RXC_ENET1_RGMII_RXC	0x91
-+				MX8MQ_IOMUXC_ENET_RX_CTL_ENET1_RGMII_RX_CTL	0x91
-+				MX8MQ_IOMUXC_ENET_TX_CTL_ENET1_RGMII_TX_CTL	0x1f
-+				MX8MQ_IOMUXC_GPIO1_IO09_GPIO1_IO9	0x19
-+			>;
-+		};
-+
-+		pinctrl_i2c1: i2c1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_I2C1_SCL_I2C1_SCL			0x4000007f
-+				MX8MQ_IOMUXC_I2C1_SDA_I2C1_SDA			0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_i2c2: i2c2grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_I2C2_SCL_I2C2_SCL			0x4000007f
-+				MX8MQ_IOMUXC_I2C2_SDA_I2C2_SDA			0x4000007f
-+			>;
-+		};
-+
-+		pinctrl_uart1: uart1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_UART1_RXD_UART1_DCE_RX		0x49
-+				MX8MQ_IOMUXC_UART1_TXD_UART1_DCE_TX		0x49
-+			>;
-+		};
-+
-+		pinctrl_uart2: uart2grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_UART2_RXD_UART2_DCE_RX		0x49
-+				MX8MQ_IOMUXC_UART2_TXD_UART2_DCE_TX		0x49
-+				MX8MQ_IOMUXC_UART4_RXD_UART2_DCE_CTS_B		0x49
-+				MX8MQ_IOMUXC_UART4_TXD_UART2_DCE_RTS_B		0x49
-+			>;
-+		};
-+
-+		pinctrl_usdhc1: usdhc1grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x83
-+				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc3
-+				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc3
-+				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc3
-+				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x83
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_100mhz: usdhc1grp100mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
-+				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
-+				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
-+				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
-+				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
-+			>;
-+		};
-+
-+		pinctrl_usdhc1_200mhz: usdhc1grp200mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
-+				MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
-+				MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
-+				MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
-+				MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_gpio: usdhc2grpgpio {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CD_B_GPIO2_IO12	0x41
-+			>;
-+		};
-+
-+		pinctrl_usdhc2: usdhc2grp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x83
-+				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc3
-+				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc3
-+				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc3
-+				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc3
-+				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc3
-+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_100mhz: usdhc2grp100mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x85
-+				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc5
-+				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc5
-+				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc5
-+				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc5
-+				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc5
-+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+			>;
-+		};
-+
-+		pinctrl_usdhc2_200mhz: usdhc2grp200mhz {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_SD2_CLK_USDHC2_CLK			0x87
-+				MX8MQ_IOMUXC_SD2_CMD_USDHC2_CMD			0xc7
-+				MX8MQ_IOMUXC_SD2_DATA0_USDHC2_DATA0		0xc7
-+				MX8MQ_IOMUXC_SD2_DATA1_USDHC2_DATA1		0xc7
-+				MX8MQ_IOMUXC_SD2_DATA2_USDHC2_DATA2		0xc7
-+				MX8MQ_IOMUXC_SD2_DATA3_USDHC2_DATA3		0xc7
-+				MX8MQ_IOMUXC_GPIO1_IO04_USDHC2_VSELECT		0xc1
-+			>;
-+		};
-+
-+		pinctrl_wdog: wdoggrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_GPIO1_IO02_WDOG1_WDOG_B 0xc6
-+			>;
-+		};
-+
-+		pinctrl_pmic: pmicirq {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_GPIO1_IO03_GPIO1_IO3	0x41
-+			>;
-+		};
-+
-+		pinctrl_wifi_ctrl: wifi_ctrlgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_ALE_GPIO3_IO0		0x19 /* WL_REG_ON */
-+				MX8MQ_IOMUXC_NAND_RE_B_GPIO3_IO15	0x19 /* WIFI_PWR_EN */
-+			>;
-+		};
-+
-+		pinctrl_tusb320_irq: tusb320_irqgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_DATA00_GPIO3_IO6	0x41
-+			>;
-+		};
-+
-+		pinctrl_typec_ss_sel: typec_ss_selgrp {
-+			fsl,pins = <
-+				MX8MQ_IOMUXC_NAND_CLE_GPIO3_IO5		0x19
-+			>;
-+		};
-+	};
-+};
-+
-+&fec1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_fec1 &pinctrl_enet_3v3>;
-+	phy-mode = "rgmii-id";
-+	pinctrl-assert-gpios = <&gpio1 0 GPIO_ACTIVE_HIGH>;
-+	phy-handle = <&ethphy0>;
-+	fsl,magic-packet;
-+	status = "okay";
-+
-+	mdio {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ethphy0: ethernet-phy@1 {
-+			compatible = "ethernet-phy-ieee802.3-c22";
-+			reg = <1>;
-+			at803x,led-act-blind-workaround;
-+			at803x,eee-disabled;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c1>;
-+	status = "okay";
-+
-+	typec_tusb320:tusb320@47 {
-+		compatible = "ti,tusb320";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_tusb320_irq &pinctrl_typec_ss_sel>;
-+		reg = <0x47>;
-+		vbus-supply = <&reg_usb_otg_vbus>;
-+		ss-sel-gpios = <&gpio3 5 GPIO_ACTIVE_HIGH>;
-+		tusb320,int-gpio = <&gpio3 6 GPIO_ACTIVE_LOW>;
-+		tusb320,select-mode = <0>;
-+		tusb320,dfp-power = <0>;
-+	};
-+
-+	pmic: bd71837@4b {
-+		reg = <0x4b>;
-+		compatible = "rohm,bd71837";
-+		/* PMIC BD71837 PMIC_nINT GPIO1_IO12 */
-+		pinctrl-0 = <&pinctrl_pmic>;
-+		gpio_intr = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+
-+		bd71837,pmic-buck1-uses-i2c-dvs;
-+		bd71837,pmic-buck1-dvs-voltage = <900000>, <850000>, <800000>; /* VDD_SOC: Run-Idle-Suspend */
-+		bd71837,pmic-buck2-uses-i2c-dvs;
-+		bd71837,pmic-buck2-dvs-voltage = <1000000>, <900000>, <0>; /* VDD_ARM: Run-Idle */
-+		bd71837,pmic-buck3-uses-i2c-dvs;
-+		bd71837,pmic-buck3-dvs-voltage = <1000000>, <0>, <0>; /* VDD_GPU: Run */
-+		bd71837,pmic-buck4-uses-i2c-dvs;
-+		bd71837,pmic-buck4-dvs-voltage = <1000000>, <0>, <0>; /* VDD_VPU: Run */
-+
-+		gpo {
-+			rohm,drv = <0x0C>;	/* 0b0000_1100 all gpos with cmos output mode */
-+		};
-+
-+		regulators {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			buck1_reg: regulator@0 {
-+				reg = <0>;
-+				regulator-compatible = "buck1";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <1250>;
-+			};
-+
-+			buck2_reg: regulator@1 {
-+				reg = <1>;
-+				regulator-compatible = "buck2";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+				regulator-ramp-delay = <1250>;
-+			};
-+
-+			buck3_reg: regulator@2 {
-+				reg = <2>;
-+				regulator-compatible = "buck3";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck4_reg: regulator@3 {
-+				reg = <3>;
-+				regulator-compatible = "buck4";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck5_reg: regulator@4 {
-+				reg = <4>;
-+				regulator-compatible = "buck5";
-+				regulator-min-microvolt = <700000>;
-+				regulator-max-microvolt = <1350000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck6_reg: regulator@5 {
-+				reg = <5>;
-+				regulator-compatible = "buck6";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck7_reg: regulator@6 {
-+				reg = <6>;
-+				regulator-compatible = "buck7";
-+				regulator-min-microvolt = <1605000>;
-+				regulator-max-microvolt = <1995000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			buck8_reg: regulator@7 {
-+				reg = <7>;
-+				regulator-compatible = "buck8";
-+				regulator-min-microvolt = <800000>;
-+				regulator-max-microvolt = <1400000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo1_reg: regulator@8 {
-+				reg = <8>;
-+				regulator-compatible = "ldo1";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo2_reg: regulator@9 {
-+				reg = <9>;
-+				regulator-compatible = "ldo2";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo3_reg: regulator@10 {
-+				reg = <10>;
-+				regulator-compatible = "ldo3";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo4_reg: regulator@11 {
-+				reg = <11>;
-+				regulator-compatible = "ldo4";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo5_reg: regulator@12 {
-+				reg = <12>;
-+				regulator-compatible = "ldo5";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo6_reg: regulator@13 {
-+				reg = <13>;
-+				regulator-compatible = "ldo6";
-+				regulator-min-microvolt = <900000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			ldo7_reg: regulator@14 {
-+				reg = <14>;
-+				regulator-compatible = "ldo7";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <3300000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c2 {
-+	clock-frequency = <100000>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_i2c2>;
-+	status = "okay";
-+};
-+
-+&uart1 { /* console */
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_uart1>;
-+	status = "okay";
-+};
-+
-+&usdhc1 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc1>;
-+	pinctrl-1 = <&pinctrl_usdhc1_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc1_200mhz>;
-+	bus-width = <8>;
-+	non-removable;
-+	status = "okay";
-+};
-+
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>, <&pinctrl_usdhc2_gpio>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>, <&pinctrl_usdhc2_gpio>;
-+	bus-width = <4>;
-+	cd-gpios = <&gpio2 12 GPIO_ACTIVE_LOW>;
-+	status = "okay";
-+};
-+
-+&usb3_phy0 {
-+	status = "okay";
-+};
-+
-+&usb_dwc3_0 {
-+	extcon = <&typec_tusb320>;
-+	dr_mode = "otg";
-+	status = "okay";
-+};
-+
-+&usb3_phy1 {
-+	status = "okay";
-+};
-+
-+&usb_dwc3_1 {
-+	status = "okay";
-+	dr_mode = "host";
-+};
-+
-+&wdog1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_wdog>;
-+	fsl,ext-reset-output;
-+	status = "okay";
-+};
-+
-+&A53_0 {
-+	operating-points = <
-+		/* kHz    uV */
-+		1500000 1000000
-+		1300000 1000000
-+		1000000 900000
-+		800000  900000
-+	>;
-+};
+> ---
+> v2: fix jfs locking and remove its opencoded flags check
+> ---
+>  fs/btrfs/ioctl.c    |   13 +++++--------
+>  fs/efivarfs/file.c  |   18 +++++++++++++-----
+>  fs/ext2/ioctl.c     |   16 ++++------------
+>  fs/ext4/ioctl.c     |   13 +++----------
+>  fs/f2fs/file.c      |    7 ++++---
+>  fs/gfs2/file.c      |   42 +++++++++++++++++++++++++++++-------------
+>  fs/hfsplus/ioctl.c  |   21 ++++++++++++---------
+>  fs/inode.c          |   17 +++++++++++++++++
+>  fs/jfs/ioctl.c      |   22 +++++++---------------
+>  fs/nilfs2/ioctl.c   |    9 ++-------
+>  fs/ocfs2/ioctl.c    |   13 +++----------
+>  fs/reiserfs/ioctl.c |   10 ++++------
+>  fs/ubifs/ioctl.c    |   13 +++----------
+>  include/linux/fs.h  |    2 ++
+>  14 files changed, 108 insertions(+), 108 deletions(-)
+> 
+> diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+> index 6dafa857bbb9..f408aa93b0cf 100644
+> --- a/fs/btrfs/ioctl.c
+> +++ b/fs/btrfs/ioctl.c
+> @@ -187,7 +187,7 @@ static int btrfs_ioctl_setflags(struct file *file, void __user *arg)
+>  	struct btrfs_inode *binode = BTRFS_I(inode);
+>  	struct btrfs_root *root = binode->root;
+>  	struct btrfs_trans_handle *trans;
+> -	unsigned int fsflags;
+> +	unsigned int fsflags, old_fsflags;
+>  	int ret;
+>  	const char *comp = NULL;
+>  	u32 binode_flags = binode->flags;
+> @@ -212,13 +212,10 @@ static int btrfs_ioctl_setflags(struct file *file, void __user *arg)
+>  	inode_lock(inode);
+>  
+>  	fsflags = btrfs_mask_fsflags_for_type(inode, fsflags);
+> -	if ((fsflags ^ btrfs_inode_flags_to_fsflags(binode->flags)) &
+> -	    (FS_APPEND_FL | FS_IMMUTABLE_FL)) {
+> -		if (!capable(CAP_LINUX_IMMUTABLE)) {
+> -			ret = -EPERM;
+> -			goto out_unlock;
+> -		}
+> -	}
+> +	old_fsflags = btrfs_inode_flags_to_fsflags(binode->flags);
+> +	ret = vfs_ioc_setflags_check(inode, old_fsflags, fsflags);
+> +	if (ret)
+> +		goto out_unlock;
+>  
+>  	if (fsflags & FS_SYNC_FL)
+>  		binode_flags |= BTRFS_INODE_SYNC;
+> diff --git a/fs/efivarfs/file.c b/fs/efivarfs/file.c
+> index 8e568428c88b..f4f6c1bec132 100644
+> --- a/fs/efivarfs/file.c
+> +++ b/fs/efivarfs/file.c
+> @@ -110,16 +110,22 @@ static ssize_t efivarfs_file_read(struct file *file, char __user *userbuf,
+>  	return size;
+>  }
+>  
+> -static int
+> -efivarfs_ioc_getxflags(struct file *file, void __user *arg)
+> +static inline unsigned int efivarfs_getflags(struct inode *inode)
+>  {
+> -	struct inode *inode = file->f_mapping->host;
+>  	unsigned int i_flags;
+>  	unsigned int flags = 0;
+>  
+>  	i_flags = inode->i_flags;
+>  	if (i_flags & S_IMMUTABLE)
+>  		flags |= FS_IMMUTABLE_FL;
+> +	return flags;
+> +}
+> +
+> +static int
+> +efivarfs_ioc_getxflags(struct file *file, void __user *arg)
+> +{
+> +	struct inode *inode = file->f_mapping->host;
+> +	unsigned int flags = efivarfs_getflags(inode);
+>  
+>  	if (copy_to_user(arg, &flags, sizeof(flags)))
+>  		return -EFAULT;
+> @@ -132,6 +138,7 @@ efivarfs_ioc_setxflags(struct file *file, void __user *arg)
+>  	struct inode *inode = file->f_mapping->host;
+>  	unsigned int flags;
+>  	unsigned int i_flags = 0;
+> +	unsigned int oldflags = efivarfs_getflags(inode);
+>  	int error;
+>  
+>  	if (!inode_owner_or_capable(inode))
+> @@ -143,8 +150,9 @@ efivarfs_ioc_setxflags(struct file *file, void __user *arg)
+>  	if (flags & ~FS_IMMUTABLE_FL)
+>  		return -EOPNOTSUPP;
+>  
+> -	if (!capable(CAP_LINUX_IMMUTABLE))
+> -		return -EPERM;
+> +	error = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (error)
+> +		return error;
+>  
+>  	if (flags & FS_IMMUTABLE_FL)
+>  		i_flags |= S_IMMUTABLE;
+> diff --git a/fs/ext2/ioctl.c b/fs/ext2/ioctl.c
+> index 0367c0039e68..88b3b9720023 100644
+> --- a/fs/ext2/ioctl.c
+> +++ b/fs/ext2/ioctl.c
+> @@ -60,18 +60,10 @@ long ext2_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		}
+>  		oldflags = ei->i_flags;
+>  
+> -		/*
+> -		 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+> -		 * the relevant capability.
+> -		 *
+> -		 * This test looks nicer. Thanks to Pauline Middelink
+> -		 */
+> -		if ((flags ^ oldflags) & (EXT2_APPEND_FL | EXT2_IMMUTABLE_FL)) {
+> -			if (!capable(CAP_LINUX_IMMUTABLE)) {
+> -				inode_unlock(inode);
+> -				ret = -EPERM;
+> -				goto setflags_out;
+> -			}
+> +		ret = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +		if (ret) {
+> +			inode_unlock(inode);
+> +			goto setflags_out;
+>  		}
+>  
+>  		flags = flags & EXT2_FL_USER_MODIFIABLE;
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index e486e49b31ed..5126ee351a84 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -289,16 +289,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
+>  	/* The JOURNAL_DATA flag is modifiable only by root */
+>  	jflag = flags & EXT4_JOURNAL_DATA_FL;
+>  
+> -	/*
+> -	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+> -	 * the relevant capability.
+> -	 *
+> -	 * This test looks nicer. Thanks to Pauline Middelink
+> -	 */
+> -	if ((flags ^ oldflags) & (EXT4_APPEND_FL | EXT4_IMMUTABLE_FL)) {
+> -		if (!capable(CAP_LINUX_IMMUTABLE))
+> -			goto flags_out;
+> -	}
+> +	err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (err)
+> +		goto flags_out;
+>  
+>  	/*
+>  	 * The JOURNAL_DATA flag can only be changed by
+> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+> index 45b45f37d347..a969d5497e03 100644
+> --- a/fs/f2fs/file.c
+> +++ b/fs/f2fs/file.c
+> @@ -1670,6 +1670,7 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+>  {
+>  	struct f2fs_inode_info *fi = F2FS_I(inode);
+>  	unsigned int oldflags;
+> +	int err;
+>  
+>  	/* Is it quota file? Do not allow user to mess with it */
+>  	if (IS_NOQUOTA(inode))
+> @@ -1679,9 +1680,9 @@ static int __f2fs_ioc_setflags(struct inode *inode, unsigned int flags)
+>  
+>  	oldflags = fi->i_flags;
+>  
+> -	if ((flags ^ oldflags) & (F2FS_APPEND_FL | F2FS_IMMUTABLE_FL))
+> -		if (!capable(CAP_LINUX_IMMUTABLE))
+> -			return -EPERM;
+> +	err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (err)
+> +		return err;
+>  
+>  	flags = flags & F2FS_FL_USER_MODIFIABLE;
+>  	flags |= oldflags & ~F2FS_FL_USER_MODIFIABLE;
+> diff --git a/fs/gfs2/file.c b/fs/gfs2/file.c
+> index d174b1f8fd08..99f53cf699c6 100644
+> --- a/fs/gfs2/file.c
+> +++ b/fs/gfs2/file.c
+> @@ -136,27 +136,36 @@ static struct {
+>  	{FS_JOURNAL_DATA_FL, GFS2_DIF_JDATA | GFS2_DIF_INHERIT_JDATA},
+>  };
+>  
+> +static inline u32 gfs2_gfsflags_to_fsflags(struct inode *inode, u32 gfsflags)
+> +{
+> +	int i;
+> +	u32 fsflags = 0;
+> +
+> +	if (S_ISDIR(inode->i_mode))
+> +		gfsflags &= ~GFS2_DIF_JDATA;
+> +	else
+> +		gfsflags &= ~GFS2_DIF_INHERIT_JDATA;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(fsflag_gfs2flag); i++)
+> +		if (gfsflags & fsflag_gfs2flag[i].gfsflag)
+> +			fsflags |= fsflag_gfs2flag[i].fsflag;
+> +	return fsflags;
+> +}
+> +
+>  static int gfs2_get_flags(struct file *filp, u32 __user *ptr)
+>  {
+>  	struct inode *inode = file_inode(filp);
+>  	struct gfs2_inode *ip = GFS2_I(inode);
+>  	struct gfs2_holder gh;
+> -	int i, error;
+> -	u32 gfsflags, fsflags = 0;
+> +	int error;
+> +	u32 fsflags;
+>  
+>  	gfs2_holder_init(ip->i_gl, LM_ST_SHARED, 0, &gh);
+>  	error = gfs2_glock_nq(&gh);
+>  	if (error)
+>  		goto out_uninit;
+>  
+> -	gfsflags = ip->i_diskflags;
+> -	if (S_ISDIR(inode->i_mode))
+> -		gfsflags &= ~GFS2_DIF_JDATA;
+> -	else
+> -		gfsflags &= ~GFS2_DIF_INHERIT_JDATA;
+> -	for (i = 0; i < ARRAY_SIZE(fsflag_gfs2flag); i++)
+> -		if (gfsflags & fsflag_gfs2flag[i].gfsflag)
+> -			fsflags |= fsflag_gfs2flag[i].fsflag;
+> +	fsflags = gfs2_gfsflags_to_fsflags(inode, ip->i_diskflags);
+>  
+>  	if (put_user(fsflags, ptr))
+>  		error = -EFAULT;
+> @@ -200,9 +209,11 @@ void gfs2_set_inode_flags(struct inode *inode)
+>   * @filp: file pointer
+>   * @reqflags: The flags to set
+>   * @mask: Indicates which flags are valid
+> + * @fsflags: The FS_* inode flags passed in
+>   *
+>   */
+> -static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask)
+> +static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask,
+> +			     const u32 fsflags)
+>  {
+>  	struct inode *inode = file_inode(filp);
+>  	struct gfs2_inode *ip = GFS2_I(inode);
+> @@ -210,7 +221,7 @@ static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask)
+>  	struct buffer_head *bh;
+>  	struct gfs2_holder gh;
+>  	int error;
+> -	u32 new_flags, flags;
+> +	u32 new_flags, flags, oldflags;
+>  
+>  	error = mnt_want_write_file(filp);
+>  	if (error)
+> @@ -220,6 +231,11 @@ static int do_gfs2_set_flags(struct file *filp, u32 reqflags, u32 mask)
+>  	if (error)
+>  		goto out_drop_write;
+>  
+> +	oldflags = gfs2_gfsflags_to_fsflags(inode, ip->i_diskflags);
+> +	error = vfs_ioc_setflags_check(inode, oldflags, fsflags);
+> +	if (error)
+> +		goto out;
+> +
+>  	error = -EACCES;
+>  	if (!inode_owner_or_capable(inode))
+>  		goto out;
+> @@ -308,7 +324,7 @@ static int gfs2_set_flags(struct file *filp, u32 __user *ptr)
+>  		mask &= ~(GFS2_DIF_TOPDIR | GFS2_DIF_INHERIT_JDATA);
+>  	}
+>  
+> -	return do_gfs2_set_flags(filp, gfsflags, mask);
+> +	return do_gfs2_set_flags(filp, gfsflags, mask, fsflags);
+>  }
+>  
+>  static int gfs2_getlabel(struct file *filp, char __user *label)
+> diff --git a/fs/hfsplus/ioctl.c b/fs/hfsplus/ioctl.c
+> index 5e6502ef7415..862a3c9481d7 100644
+> --- a/fs/hfsplus/ioctl.c
+> +++ b/fs/hfsplus/ioctl.c
+> @@ -57,9 +57,8 @@ static int hfsplus_ioctl_bless(struct file *file, int __user *user_flags)
+>  	return 0;
+>  }
+>  
+> -static int hfsplus_ioctl_getflags(struct file *file, int __user *user_flags)
+> +static inline unsigned int hfsplus_getflags(struct inode *inode)
+>  {
+> -	struct inode *inode = file_inode(file);
+>  	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
+>  	unsigned int flags = 0;
+>  
+> @@ -69,6 +68,13 @@ static int hfsplus_ioctl_getflags(struct file *file, int __user *user_flags)
+>  		flags |= FS_APPEND_FL;
+>  	if (hip->userflags & HFSPLUS_FLG_NODUMP)
+>  		flags |= FS_NODUMP_FL;
+> +	return flags;
+> +}
+> +
+> +static int hfsplus_ioctl_getflags(struct file *file, int __user *user_flags)
+> +{
+> +	struct inode *inode = file_inode(file);
+> +	unsigned int flags = hfsplus_getflags(inode);
+>  
+>  	return put_user(flags, user_flags);
+>  }
+> @@ -78,6 +84,7 @@ static int hfsplus_ioctl_setflags(struct file *file, int __user *user_flags)
+>  	struct inode *inode = file_inode(file);
+>  	struct hfsplus_inode_info *hip = HFSPLUS_I(inode);
+>  	unsigned int flags, new_fl = 0;
+> +	unsigned int oldflags = hfsplus_getflags(inode);
+>  	int err = 0;
+>  
+>  	err = mnt_want_write_file(file);
+> @@ -96,13 +103,9 @@ static int hfsplus_ioctl_setflags(struct file *file, int __user *user_flags)
+>  
+>  	inode_lock(inode);
+>  
+> -	if ((flags & (FS_IMMUTABLE_FL|FS_APPEND_FL)) ||
+> -	    inode->i_flags & (S_IMMUTABLE|S_APPEND)) {
+> -		if (!capable(CAP_LINUX_IMMUTABLE)) {
+> -			err = -EPERM;
+> -			goto out_unlock_inode;
+> -		}
+> -	}
+> +	err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (err)
+> +		goto out_unlock_inode;
+>  
+>  	/* don't silently ignore unsupported ext2 flags */
+>  	if (flags & ~(FS_IMMUTABLE_FL|FS_APPEND_FL|FS_NODUMP_FL)) {
+> diff --git a/fs/inode.c b/fs/inode.c
+> index df6542ec3b88..0ce60b720608 100644
+> --- a/fs/inode.c
+> +++ b/fs/inode.c
+> @@ -2170,3 +2170,20 @@ struct timespec64 current_time(struct inode *inode)
+>  	return timespec64_trunc(now, inode->i_sb->s_time_gran);
+>  }
+>  EXPORT_SYMBOL(current_time);
+> +
+> +/* Generic function to check FS_IOC_SETFLAGS values. */
+> +int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags)
+> +{
+> +	/*
+> +	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+> +	 * the relevant capability.
+> +	 *
+> +	 * This test looks nicer. Thanks to Pauline Middelink
+> +	 */
+> +	if ((flags ^ oldflags) & (FS_APPEND_FL | FS_IMMUTABLE_FL) &&
+> +	    !capable(CAP_LINUX_IMMUTABLE))
+> +		return -EPERM;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(vfs_ioc_setflags_check);
+> diff --git a/fs/jfs/ioctl.c b/fs/jfs/ioctl.c
+> index ba34dae8bd9f..b485c2d7620f 100644
+> --- a/fs/jfs/ioctl.c
+> +++ b/fs/jfs/ioctl.c
+> @@ -98,24 +98,16 @@ long jfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  		/* Lock against other parallel changes of flags */
+>  		inode_lock(inode);
+>  
+> -		oldflags = jfs_inode->mode2;
+> -
+> -		/*
+> -		 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+> -		 * the relevant capability.
+> -		 */
+> -		if ((oldflags & JFS_IMMUTABLE_FL) ||
+> -			((flags ^ oldflags) &
+> -			(JFS_APPEND_FL | JFS_IMMUTABLE_FL))) {
+> -			if (!capable(CAP_LINUX_IMMUTABLE)) {
+> -				inode_unlock(inode);
+> -				err = -EPERM;
+> -				goto setflags_out;
+> -			}
+> +		oldflags = jfs_map_ext2(jfs_inode->mode2 & JFS_FL_USER_VISIBLE,
+> +					0);
+> +		err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +		if (err) {
+> +			inode_unlock(inode);
+> +			goto setflags_out;
+>  		}
+>  
+>  		flags = flags & JFS_FL_USER_MODIFIABLE;
+> -		flags |= oldflags & ~JFS_FL_USER_MODIFIABLE;
+> +		flags |= jfs_inode->mode2 & ~JFS_FL_USER_MODIFIABLE;
+>  		jfs_inode->mode2 = flags;
+>  
+>  		jfs_set_inode_flags(inode);
+> diff --git a/fs/nilfs2/ioctl.c b/fs/nilfs2/ioctl.c
+> index 9b96d79eea6c..0632336d2515 100644
+> --- a/fs/nilfs2/ioctl.c
+> +++ b/fs/nilfs2/ioctl.c
+> @@ -148,13 +148,8 @@ static int nilfs_ioctl_setflags(struct inode *inode, struct file *filp,
+>  
+>  	oldflags = NILFS_I(inode)->i_flags;
+>  
+> -	/*
+> -	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by the
+> -	 * relevant capability.
+> -	 */
+> -	ret = -EPERM;
+> -	if (((flags ^ oldflags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) &&
+> -	    !capable(CAP_LINUX_IMMUTABLE))
+> +	ret = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (ret)
+>  		goto out;
+>  
+>  	ret = nilfs_transaction_begin(inode->i_sb, &ti, 0);
+> diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+> index 994726ada857..467a2faf0305 100644
+> --- a/fs/ocfs2/ioctl.c
+> +++ b/fs/ocfs2/ioctl.c
+> @@ -106,16 +106,9 @@ static int ocfs2_set_inode_attr(struct inode *inode, unsigned flags,
+>  	flags = flags & mask;
+>  	flags |= oldflags & ~mask;
+>  
+> -	/*
+> -	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+> -	 * the relevant capability.
+> -	 */
+> -	status = -EPERM;
+> -	if ((oldflags & OCFS2_IMMUTABLE_FL) || ((flags ^ oldflags) &
+> -		(OCFS2_APPEND_FL | OCFS2_IMMUTABLE_FL))) {
+> -		if (!capable(CAP_LINUX_IMMUTABLE))
+> -			goto bail_unlock;
+> -	}
+> +	status = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (status)
+> +		goto bail_unlock;
+>  
+>  	handle = ocfs2_start_trans(osb, OCFS2_INODE_UPDATE_CREDITS);
+>  	if (IS_ERR(handle)) {
+> diff --git a/fs/reiserfs/ioctl.c b/fs/reiserfs/ioctl.c
+> index acbbaf7a0bb2..92bcb1ecd994 100644
+> --- a/fs/reiserfs/ioctl.c
+> +++ b/fs/reiserfs/ioctl.c
+> @@ -74,13 +74,11 @@ long reiserfs_ioctl(struct file *filp, unsigned int cmd, unsigned long arg)
+>  				err = -EPERM;
+>  				goto setflags_out;
+>  			}
+> -			if (((flags ^ REISERFS_I(inode)->
+> -			      i_attrs) & (REISERFS_IMMUTABLE_FL |
+> -					  REISERFS_APPEND_FL))
+> -			    && !capable(CAP_LINUX_IMMUTABLE)) {
+> -				err = -EPERM;
+> +			err = vfs_ioc_setflags_check(inode,
+> +						     REISERFS_I(inode)->i_attrs,
+> +						     flags);
+> +			if (err)
+>  				goto setflags_out;
+> -			}
+>  			if ((flags & REISERFS_NOTAIL_FL) &&
+>  			    S_ISREG(inode->i_mode)) {
+>  				int result;
+> diff --git a/fs/ubifs/ioctl.c b/fs/ubifs/ioctl.c
+> index 4f1a397fda69..bdea836fc38b 100644
+> --- a/fs/ubifs/ioctl.c
+> +++ b/fs/ubifs/ioctl.c
+> @@ -107,18 +107,11 @@ static int setflags(struct inode *inode, int flags)
+>  	if (err)
+>  		return err;
+>  
+> -	/*
+> -	 * The IMMUTABLE and APPEND_ONLY flags can only be changed by
+> -	 * the relevant capability.
+> -	 */
+>  	mutex_lock(&ui->ui_mutex);
+>  	oldflags = ubifs2ioctl(ui->flags);
+> -	if ((flags ^ oldflags) & (FS_APPEND_FL | FS_IMMUTABLE_FL)) {
+> -		if (!capable(CAP_LINUX_IMMUTABLE)) {
+> -			err = -EPERM;
+> -			goto out_unlock;
+> -		}
+> -	}
+> +	err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (err)
+> +		goto out_unlock;
+>  
+>  	ui->flags = ioctl2ubifs(flags);
+>  	ubifs_set_inode_flags(inode);
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index f7fdfe93e25d..1825d055808c 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3546,4 +3546,6 @@ static inline struct sock *io_uring_get_socket(struct file *file)
+>  }
+>  #endif
+>  
+> +int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags);
+> +
+>  #endif /* _LINUX_FS_H */
+> 
 -- 
-2.11.0
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
