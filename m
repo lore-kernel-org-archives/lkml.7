@@ -2,314 +2,178 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA725C48BE0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:54:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C281C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C98B2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34BEB2084B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Hl7fifOL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lAfCDZtb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730926AbfFTAyv (ORCPT
+        id S1730969AbfFTAzJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 20:54:51 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40698 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726262AbfFTAyu (ORCPT
+        Wed, 19 Jun 2019 20:55:09 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:44962 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726096AbfFTAzJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 20:54:50 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e8so991142otl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 17:54:50 -0700 (PDT)
+        Wed, 19 Jun 2019 20:55:09 -0400
+Received: by mail-io1-f66.google.com with SMTP id s7so863952iob.11
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 17:55:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rfkobxRjanEVPCRzEAlI3lKJ7cTgn4WDB+7+usu4syE=;
-        b=Hl7fifOLF3zsppBuVoauVT7fR3CaL7bwjYcs0H2HVa5M1lg9/IKBOlDS2oYcFteuTg
-         3QzPsxx1maxQIquc0c/XDCBpyZRaWHLGgrcWnEzdD/o+gwlf2Xc0dVxjNEACsUsZfVo/
-         dWOeLgBflO34tNXvMCl7cGzKPEb4VH66EXodGi94r6J8GDyhtsqRcqRqK+cZfLcpFt+4
-         jlr7W2H8AEB5+JdZe2z8dZ6G4KOkYB7WAapV6vrFyPvtH26H/MDvuSXGzmpu8ptzCPPu
-         G8k/enGH978yQ5rDIgMzgTvoYoAi5xPdXM1DOTzdpZu2W2z0YWZsEwllfV30TQOwpRLu
-         xaVQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TtRmoGkruvSLmzfQNJOK7azAgtOLlfsMtrzHrOo4/EY=;
+        b=lAfCDZtb1DwM/J4pfSrTFUM1Gf1Z8Q0qa8RroSoOHbQFdXC+JlWuqk+9DpbtKNbUqM
+         +jpapJ+X1tyieQ+hB/nueI2gDlWuoGBe19Wg1ov12wf2d38Bm6+oSnJhmHGHgaWAp1jP
+         j44nbi6/Q27y9S1CDvzXrrKuoOMms+uJdbAOmO9hQnrOpw79u2MfLQ2C4YAgKHf/hfWm
+         dQ0janRJuPz3fT8Tg1J6tgkhLdVwNNttDaNN/YLjP8GAVFryj346xrR+VETmeOzsabrd
+         yFO9gRdiSG+3uFOBsN3GVl/TBlI6RoSkNa0qyeQ+qqp7dFyw16a397Wl/+ZkDjdxUBNO
+         hyhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=rfkobxRjanEVPCRzEAlI3lKJ7cTgn4WDB+7+usu4syE=;
-        b=WzIpFCjRaY3nb0hasK1UaUvmBY5EUNI5wkSK962xOLmsRX8aqBzJ4VQGya2SEWquPc
-         M1lkbbfhwFuU0e+jrhu2YyMObpbR28dbvN3A3cRrgEXUO+bHD/UuBjr/T1jUf1jeE4VP
-         Z9spnRRY7dkxuwy4mR9b97ZxODO+qhJKvjwmyoZXJwrtd2Zkvd++gnhNOZ0jto2NfwxO
-         ck1wpwszQgXdHRF3ubFRi0N19oviw7Njc17U4qddMz7pPvb8Eiqp75PnltnWM7Q1dL/k
-         tSj4rx/3BBoKC+m9u9NCljYQxnqldDYg+7xJag3d1GWP6yr1PY+VB89QvXaf9lTFsS6Q
-         dFzA==
-X-Gm-Message-State: APjAAAVjIAPWq4hwyWirxJ6G8OaXAAMllx8Fvzsq2n4+S+qLmp6OIaNk
-        aiccXrQgFXF5VAUGW+Tc1GrCfw==
-X-Google-Smtp-Source: APXvYqxXPjVnT9XqaWX2E7u7FhdKuVhuOsWrDioXcGKD7g2ZY54jNpEtB7fZrDBdyo2i9tvOaEANFg==
-X-Received: by 2002:a9d:1d22:: with SMTP id m31mr36691749otm.92.1560992089586;
-        Wed, 19 Jun 2019 17:54:49 -0700 (PDT)
-Received: from localhost.localdomain (li964-79.members.linode.com. [45.33.10.79])
-        by smtp.gmail.com with ESMTPSA id c19sm7327761otl.70.2019.06.19.17.54.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 19 Jun 2019 17:54:48 -0700 (PDT)
-From:   Leo Yan <leo.yan@linaro.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        netdev@vger.kernel.org, bpf@vger.kernel.org
-Cc:     Leo Yan <leo.yan@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        coresight@lists.linaro.org
-Subject: [PATCH v2] perf cs-etm: Improve completeness for kernel address space
-Date:   Thu, 20 Jun 2019 08:54:28 +0800
-Message-Id: <20190620005428.20883-1-leo.yan@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TtRmoGkruvSLmzfQNJOK7azAgtOLlfsMtrzHrOo4/EY=;
+        b=t81BmYL+KEYa2v3uSCsPKpYXM/aVV8g9Ld9HEFLY3KK/bQwIiXHS9bmC/X2biNR7VY
+         HCD1c4oWbHjiT4bYMqKtFQsAwqTk93I0/hDO/oyIQOgv167NEfQZRlylLzb1yBnwljMl
+         Y8g1Vlonu4ClioHLtIHg/ROEh1DVWXHtcVQM4qXQmujs19nYlaV6qirQdnGgT+i79YnY
+         vclo9Uugr0nbz3nOJNO6KjBsbksbNBMBZ1cbgYTGGKgPMPUg26fSWxLhgD4D3W1N4RdM
+         xuX3TV7ZyNSa0vHoHYO+EYt5xK0d/zv3xlwvn83sso3TxgBxxtjtnAYfrtid+afDe2mZ
+         /aTQ==
+X-Gm-Message-State: APjAAAWfTb9+OknBLjYeeKq5vDkYS7Sg5l4ujOL9aS4EHq2J8WSKWUTE
+        XSSqli+gtRBNe2TodDlKVz3zJ0IbDkkQUV042qM=
+X-Google-Smtp-Source: APXvYqxIgWgfJa2h5v6NfHhR7cOJHthRCEx86Lv174iQxMcy7T6lqxw5CbcrwtneXmJpukC89D1achahMJKKogLvl+w=
+X-Received: by 2002:a5e:aa15:: with SMTP id s21mr17458310ioe.221.1560992108640;
+ Wed, 19 Jun 2019 17:55:08 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20190618185502.3839-1-krzk@kernel.org> <20190618185502.3839-2-krzk@kernel.org>
+In-Reply-To: <20190618185502.3839-2-krzk@kernel.org>
+From:   Qiang Yu <yuq825@gmail.com>
+Date:   Thu, 20 Jun 2019 08:54:57 +0800
+Message-ID: <CAKGbVbvMVRiWXf8E8hpym_F7ovoXeeTc92-hh6hA6802487jOg@mail.gmail.com>
+Subject: Re: [PATCH 2/3] drm/lima: Reduce the amount of logs on deferred probe
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        lima@lists.freedesktop.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Arm and arm64 architecture reserve some memory regions prior to the
-symbol '_stext' and these memory regions later will be used by device
-module and BPF jit.  The current code misses to consider these memory
-regions thus any address in the regions will be taken as user space
-mode, but perf cannot find the corresponding dso with the wrong CPU
-mode so we misses to generate samples for device module and BPF
-related trace data.
+It looks like lima_clk_init will have the same problem if devm_clk_get
+returns -EPROBE_DEFER.
 
-This patch parse the link scripts to get the memory size prior to start
-address and reduce this size from 'etmq->etm->kernel_start', then can
-get a fixed up kernel start address which contain memory regions for
-device module and BPF.  Finally, cs_etm__cpu_mode() can return right
-mode for these memory regions and perf can successfully generate
-samples.
+Regards,
+Qiang
 
-The reason for parsing the link scripts is Arm architecture changes text
-offset dependent on different platforms, which define multiple text
-offsets in $kernel/arch/arm/Makefile.  This offset is decided when build
-kernel and the final value is extended in the link script, so we can
-extract the used value from the link script.  We use the same way to
-parse arm64 link script as well.  If fail to find the link script, the
-pre start memory size is assumed as zero, in this case it has no any
-change caused with this patch.
-
-Below is detailed info for testing this patch:
-
-- Build LLVM/Clang 8.0 or later version;
-
-- Configure perf with ~/.perfconfig:
-
-  root@debian:~# cat ~/.perfconfig
-  # this file is auto-generated.
-  [llvm]
-          clang-path = /mnt/build/llvm-build/build/install/bin/clang
-          kbuild-dir = /mnt/linux-kernel/linux-cs-dev/
-          clang-opt = "-g"
-          dump-obj = true
-
-  [trace]
-          show_zeros = yes
-          show_duration = no
-          no_inherit = yes
-          show_timestamp = no
-          show_arg_names = no
-          args_alignment = 40
-          show_prefix = yes
-
-- Run 'perf trace' command with eBPF event:
-
-  root@debian:~# perf trace -e string \
-      -e $kernel/tools/perf/examples/bpf/augmented_raw_syscalls.c
-
-- Read eBPF program memory mapping in kernel:
-
-  root@debian:~# echo 1 > /proc/sys/net/core/bpf_jit_kallsyms
-  root@debian:~# cat /proc/kallsyms | grep -E "bpf_prog_.+_sys_[enter|exit]"
-  ffff000000086a84 t bpf_prog_f173133dc38ccf87_sys_enter  [bpf]
-  ffff000000088618 t bpf_prog_c1bd85c092d6e4aa_sys_exit   [bpf]
-
-- Launch any program which accesses file system frequently so can hit
-  the system calls trace flow with eBPF event;
-
-- Capture CoreSight trace data with filtering eBPF program:
-
-  root@debian:~# perf record -e cs_etm/@20070000.etr/ \
-	  --filter 'filter 0xffff000000086a84/0x800' -a sleep 5s
-
-- Annotate for symbol 'bpf_prog_f173133dc38ccf87_sys_enter':
-
-  root@debian:~# perf report
-  Then select 'branches' samples and press 'a' to annotate symbol
-  'bpf_prog_f173133dc38ccf87_sys_enter', press 'P' to print to the
-  bpf_prog_f173133dc38ccf87_sys_enter.annotation file:
-
-  root@debian:~# cat bpf_prog_f173133dc38ccf87_sys_enter.annotation
-
-  bpf_prog_f173133dc38ccf87_sys_enter() bpf_prog_f173133dc38ccf87_sys_enter
-  Event: branches
-
-  Percent      int sys_enter(struct syscall_enter_args *args)
-                 stp  x29, x30, [sp, #-16]!
-
-               	int key = 0;
-                 mov  x29, sp
-
-                       augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-                 stp  x19, x20, [sp, #-16]!
-
-                       augmented_args = bpf_map_lookup_elem(&augmented_filename_map, &key);
-                 stp  x21, x22, [sp, #-16]!
-
-                 stp  x25, x26, [sp, #-16]!
-
-               	return bpf_get_current_pid_tgid();
-                 mov  x25, sp
-
-               	return bpf_get_current_pid_tgid();
-                 mov  x26, #0x0                   	// #0
-
-                 sub  sp, sp, #0x10
-
-               	return bpf_map_lookup_elem(pids, &pid) != NULL;
-                 add  x19, x0, #0x0
-
-                 mov  x0, #0x0                   	// #0
-
-                 mov  x10, #0xfffffffffffffff8    	// #-8
-
-               	if (pid_filter__has(&pids_filtered, getpid()))
-                 str  w0, [x25, x10]
-
-               	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
-                 add  x1, x25, #0x0
-
-               	probe_read(&augmented_args->args, sizeof(augmented_args->args), args);
-                 mov  x10, #0xfffffffffffffff8    	// #-8
-
-               	syscall = bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_nr);
-                 add  x1, x1, x10
-
-               	syscall = bpf_map_lookup_elem(&syscalls, &augmented_args->args.syscall_nr);
-                 mov  x0, #0xffff8009ffffffff    	// #-140694538682369
-
-                 movk x0, #0x6698, lsl #16
-
-                 movk x0, #0x3e00
-
-                 mov  x10, #0xffffffffffff1040    	// #-61376
-
-               	if (syscall == NULL || !syscall->enabled)
-                 movk x10, #0x1023, lsl #16
-
-               	if (syscall == NULL || !syscall->enabled)
-                 movk x10, #0x0, lsl #32
-
-               	loop_iter_first()
-    3.69       → blr  bpf_prog_f173133dc38ccf87_sys_enter
-               	loop_iter_first()
-                 add  x7, x0, #0x0
-
-               	loop_iter_first()
-                 add  x20, x7, #0x0
-
-               	int size = probe_read_str(&augmented_filename->value, filename_len, filename_arg);
-                 mov  x0, #0x1                   	// #1
-
-  [...]
-
-Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Suzuki Poulouse <suzuki.poulose@arm.com>
-Cc: coresight@lists.linaro.org
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
----
- tools/perf/Makefile.config | 20 ++++++++++++++++++++
- tools/perf/util/cs-etm.c   | 19 ++++++++++++++++++-
- 2 files changed, 38 insertions(+), 1 deletion(-)
-
-diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
-index 51dd00f65709..cf5906d667aa 100644
---- a/tools/perf/Makefile.config
-+++ b/tools/perf/Makefile.config
-@@ -418,6 +418,26 @@ ifdef CORESIGHT
-     endif
-     LDFLAGS += $(LIBOPENCSD_LDFLAGS)
-     EXTLIBS += $(OPENCSDLIBS)
-+    ARM_PRE_START_SIZE := 0
-+    ifeq ($(SRCARCH),arm64)
-+      # Extract info from lds:
-+      #  . = ((((((((0xffffffffffffffff)) - (((1)) << (48)) + 1) + (0)) + (0x08000000))) + (0x08000000))) + 0x00080000;
-+      # ARM_PRE_START_SIZE := (0x08000000 + 0x08000000 + 0x00080000)
-+      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({8}0x[0-9a-fA-F]+\){2}' \
-+        $(srctree)/arch/arm64/kernel/vmlinux.lds | \
-+        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-+        awk -F' ' '{print "("$$6 "+"  $$7 "+" $$8")"}' 2>/dev/null)
-+    endif
-+    ifeq ($(SRCARCH),arm)
-+      # Extract info from lds:
-+      #   . = ((0xC0000000)) + 0x00208000;
-+      # ARM_PRE_START_SIZE := 0x00208000
-+      ARM_PRE_START_SIZE := $(shell egrep ' \. \= \({2}0x[0-9a-fA-F]+\){2}' \
-+        $(srctree)/arch/arm/kernel/vmlinux.lds | \
-+        sed -e 's/[(|)|.|=|+|<|;|-]//g' -e 's/ \+/ /g' -e 's/^[ \t]*//' | \
-+        awk -F' ' '{print "("$$2")"}' 2>/dev/null)
-+    endif
-+    CFLAGS += -DARM_PRE_START_SIZE="$(ARM_PRE_START_SIZE)"
-     $(call detected,CONFIG_LIBOPENCSD)
-     ifdef CSTRACE_RAW
-       CFLAGS += -DCS_DEBUG_RAW
-diff --git a/tools/perf/util/cs-etm.c b/tools/perf/util/cs-etm.c
-index 0c7776b51045..5fa0be3a3904 100644
---- a/tools/perf/util/cs-etm.c
-+++ b/tools/perf/util/cs-etm.c
-@@ -613,10 +613,27 @@ static void cs_etm__free(struct perf_session *session)
- static u8 cs_etm__cpu_mode(struct cs_etm_queue *etmq, u64 address)
- {
- 	struct machine *machine;
-+	u64 fixup_kernel_start = 0;
- 
- 	machine = etmq->etm->machine;
- 
--	if (address >= etmq->etm->kernel_start) {
-+	/*
-+	 * Since arm and arm64 specify some memory regions prior to
-+	 * 'kernel_start', kernel addresses can be less than 'kernel_start'.
-+	 *
-+	 * For arm architecture, the 16MB virtual memory space prior to
-+	 * 'kernel_start' is allocated to device modules, a PMD table if
-+	 * CONFIG_HIGHMEM is enabled and a PGD table.
-+	 *
-+	 * For arm64 architecture, the root PGD table, device module memory
-+	 * region and BPF jit region are prior to 'kernel_start'.
-+	 *
-+	 * To reflect the complete kernel address space, compensate these
-+	 * pre-defined regions for kernel start address.
-+	 */
-+	fixup_kernel_start = etmq->etm->kernel_start - ARM_PRE_START_SIZE;
-+
-+	if (address >= fixup_kernel_start) {
- 		if (machine__is_host(machine))
- 			return PERF_RECORD_MISC_KERNEL;
- 		else
--- 
-2.17.1
-
+On Wed, Jun 19, 2019 at 2:55 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> There is no point to print deferred probe (and its failures to get
+> resources) as an error.  For example getting a regulator causes three
+> unneeded error messages:
+>
+>     lima 13000000.gpu: failed to get regulator: -517
+>     lima 13000000.gpu: regulator init fail -517
+>     lima 13000000.gpu: Fatal error during GPU init
+>
+> Also do not print clock rates before the initialization finishes
+> because they will be duplicated after deferral.  Each probe step already
+> prints error so remove the final error message "Fatal error during GPU
+> init".
+>
+> In case of multiple probe tries this would pollute the dmesg.
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>  drivers/gpu/drm/lima/lima_device.c | 17 ++++++-----------
+>  drivers/gpu/drm/lima/lima_drv.c    |  4 +---
+>  2 files changed, 7 insertions(+), 14 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/lima/lima_device.c b/drivers/gpu/drm/lima/lima_device.c
+> index 570d0e93f9a9..bb2eaa4f370e 100644
+> --- a/drivers/gpu/drm/lima/lima_device.c
+> +++ b/drivers/gpu/drm/lima/lima_device.c
+> @@ -80,7 +80,6 @@ const char *lima_ip_name(struct lima_ip *ip)
+>  static int lima_clk_init(struct lima_device *dev)
+>  {
+>         int err;
+> -       unsigned long bus_rate, gpu_rate;
+>
+>         dev->clk_bus = devm_clk_get(dev->dev, "bus");
+>         if (IS_ERR(dev->clk_bus)) {
+> @@ -94,12 +93,6 @@ static int lima_clk_init(struct lima_device *dev)
+>                 return PTR_ERR(dev->clk_gpu);
+>         }
+>
+> -       bus_rate = clk_get_rate(dev->clk_bus);
+> -       dev_info(dev->dev, "bus rate = %lu\n", bus_rate);
+> -
+> -       gpu_rate = clk_get_rate(dev->clk_gpu);
+> -       dev_info(dev->dev, "mod rate = %lu", gpu_rate);
+> -
+>         err = clk_prepare_enable(dev->clk_bus);
+>         if (err)
+>                 return err;
+> @@ -145,7 +138,8 @@ static int lima_regulator_init(struct lima_device *dev)
+>                 dev->regulator = NULL;
+>                 if (ret == -ENODEV)
+>                         return 0;
+> -               dev_err(dev->dev, "failed to get regulator: %d\n", ret);
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(dev->dev, "failed to get regulator: %d\n", ret);
+>                 return ret;
+>         }
+>
+> @@ -297,10 +291,8 @@ int lima_device_init(struct lima_device *ldev)
+>         }
+>
+>         err = lima_regulator_init(ldev);
+> -       if (err) {
+> -               dev_err(ldev->dev, "regulator init fail %d\n", err);
+> +       if (err)
+>                 goto err_out0;
+> -       }
+>
+>         ldev->empty_vm = lima_vm_create(ldev);
+>         if (!ldev->empty_vm) {
+> @@ -343,6 +335,9 @@ int lima_device_init(struct lima_device *ldev)
+>         if (err)
+>                 goto err_out5;
+>
+> +       dev_info(ldev->dev, "bus rate = %lu\n", clk_get_rate(ldev->clk_bus));
+> +       dev_info(ldev->dev, "mod rate = %lu", clk_get_rate(ldev->clk_gpu));
+> +
+>         return 0;
+>
+>  err_out5:
+> diff --git a/drivers/gpu/drm/lima/lima_drv.c b/drivers/gpu/drm/lima/lima_drv.c
+> index b29c26cd13b2..cebc44592e47 100644
+> --- a/drivers/gpu/drm/lima/lima_drv.c
+> +++ b/drivers/gpu/drm/lima/lima_drv.c
+> @@ -307,10 +307,8 @@ static int lima_pdev_probe(struct platform_device *pdev)
+>         ldev->ddev = ddev;
+>
+>         err = lima_device_init(ldev);
+> -       if (err) {
+> -               dev_err(&pdev->dev, "Fatal error during GPU init\n");
+> +       if (err)
+>                 goto err_out1;
+> -       }
+>
+>         /*
+>          * Register the DRM device with the core and the connectors with
+> --
+> 2.17.1
+>
