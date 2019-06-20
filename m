@@ -2,248 +2,88 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7C7C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED27C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B162085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:35:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="OMOhoz7b"
+	by mail.kernel.org (Postfix) with ESMTP id 1EA702085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:36:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731111AbfFTIfO (ORCPT
+        id S1730842AbfFTIgw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:35:14 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:12696 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725925AbfFTIfN (ORCPT
+        Thu, 20 Jun 2019 04:36:52 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46257 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfFTIgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:35:13 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0b453e0000>; Thu, 20 Jun 2019 01:35:10 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Jun 2019 01:35:11 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 01:35:11 -0700
-Received: from [10.21.132.148] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
- 2019 08:35:09 +0000
-Subject: Re: [PATCH v6 1/2] arm64: tegra: add ACONNECT, ADMA and AGIC nodes
-To:     Sameer Pujar <spujar@nvidia.com>, <thierry.reding@gmail.com>,
-        <robh+dt@kernel.org>, <mark.rutland@arm.com>
-CC:     <mkumard@nvidia.com>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <1560945082-24554-1-git-send-email-spujar@nvidia.com>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <953850e1-c562-65bd-a7a1-75d31d4cd154@nvidia.com>
-Date:   Thu, 20 Jun 2019 09:35:07 +0100
+        Thu, 20 Jun 2019 04:36:52 -0400
+Received: by mail-wr1-f65.google.com with SMTP id n4so2036835wrw.13
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:36:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=78XTCBJ6IQe9uXplpuD9BRY7lz4VHH50PsExpp8KaFU=;
+        b=abtrABWm6fr7WDwGhAMd//8J9WJpXcZOExbuxj4z+krCjqWJJ8dx6Y7ImK28uoAFL4
+         9qlqv2wdIiEOPzh7w4Ndhr3fv1A0o9xj4hOaE/ERnjh2kuBZeTtG75u1NUVmGUnEDoIG
+         7HXQkdL1OzNTC5JqgxXqO09RBN5TdAk1wew/RcmihNyqq437syFmOav5Vj0ADc7LN+yW
+         5WFeoKDP/Fi/xBo8i5JKzG0lGPlW4rjXa3KZ54lXSOfu0TNyuM1iunVzCT2k2JFeV+vU
+         hwZWpelegz0BSlqzkUpPCDwtp/H0nO7+waCcsOz87Ud16L77z1W+3yudDqeLCcPimkB1
+         wOEQ==
+X-Gm-Message-State: APjAAAXpmj+MUDRHj4U6/90W/92KoSfqcZPR277K0NDpaLi9pyo++u+k
+        8Sx1t/ea2aY8Xy3TnenVYH0SF/XXQBk=
+X-Google-Smtp-Source: APXvYqwPvibP8/SSGIkMVjMpSYvP/Q55IC+qHplvCz6Ywcjqwe3zcNYu0+B2xocYRnlWJAQ8dlQ9yQ==
+X-Received: by 2002:adf:ce03:: with SMTP id p3mr67060669wrn.94.1561019809656;
+        Thu, 20 Jun 2019 01:36:49 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:7822:aa18:a9d8:39ab? ([2001:b07:6468:f312:7822:aa18:a9d8:39ab])
+        by smtp.gmail.com with ESMTPSA id v67sm5067971wme.24.2019.06.20.01.36.48
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 01:36:49 -0700 (PDT)
+Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Tao Xu <tao3.xu@intel.com>, Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+References: <20190620050301.1149-1-tao3.xu@intel.com>
+ <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
+ <f358c914-ae58-9889-a8ef-6ea9f3b2650e@linux.intel.com>
+ <b3f76acd-cc7e-9cd7-d7f7-404ba756ab87@redhat.com>
+ <CANRm+Cy_oo7BkYXD-nc0Ro=rivJircL6aheuFujMv6twS3gk=g@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <165af492-027d-c640-9dea-c4c2d76fa1aa@redhat.com>
+Date:   Thu, 20 Jun 2019 10:36:49 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <1560945082-24554-1-git-send-email-spujar@nvidia.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <CANRm+Cy_oo7BkYXD-nc0Ro=rivJircL6aheuFujMv6twS3gk=g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561019710; bh=u8ruBWZaG4+DMY43KeT5wsAt3fh+0m2tf7B99LSbLp4=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=OMOhoz7bhWzwwLx0CLZJzJG7UgTNjRaOi+uLprovtsMM+D6Nu8qZfWa5ebrt9JCoM
-         2mV3Uz+unUAnZ4eq4gBTw7ld6yV+8rk+1o6naD2MQ+RM/1aGh/f5oqhTt8QbJtgKxN
-         q8PzS8T/hNK9vuRu0e6m2LUX4//tLvdvHNF0KTenvT8MyvfRIQ+wLMMmz3/XCDpzzQ
-         3utDxz1x8cmT3jJqNvJdynhrlYFHQX/vYPi0Iih//HFs4kvjZAJ4l0XNS4oZOBF/3z
-         mBPNzsh42Q6gukUKLLKQtSX+rh5rEvAha+CfzAq5CeYY0Eq1fxC2sSL0RPf8hcK+T1
-         E7/xDaevtRotg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 20/06/19 10:27, Wanpeng Li wrote:
+> Agreed, in addition, guest can enable/disable cpuid bits by grub
+> parameter
 
-On 19/06/2019 12:51, Sameer Pujar wrote:
-> Add DT nodes for following devices on Tegra186 and Tegra194
->  * ACONNECT
->  * ADMA
->  * AGIC
-> 
-> Signed-off-by: Sameer Pujar <spujar@nvidia.com>
-> ---
->  changes in current revision
->    * updated ranges property for aconnect
->    * renamed agic node
-> 
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi | 67 ++++++++++++++++++++++++++++++++
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi | 67 ++++++++++++++++++++++++++++++++
->  2 files changed, 134 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> index 426ac0b..4bb765d 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
-> @@ -1295,4 +1295,71 @@
->  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->  		interrupt-parent = <&gic>;
->  	};
-> +
-> +	aconnect {
-> +		compatible = "nvidia,tegra210-aconnect";
-> +		clocks = <&bpmp TEGRA186_CLK_APE>,
-> +			 <&bpmp TEGRA186_CLK_APB2APE>;
-> +		clock-names = "ape", "apb2ape";
-> +		power-domains = <&bpmp TEGRA186_POWER_DOMAIN_AUD>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x02900000 0x0 0x02900000 0x200000>;
-> +		status = "disabled";
-> +
-> +		dma-controller@2930000 {
-> +			compatible = "nvidia,tegra186-adma";
-> +			reg = <0x02930000 0x20000>;
-> +			interrupt-parent = <&agic>;
-> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells = <1>;
-> +			clocks = <&bpmp TEGRA186_CLK_AHUB>;
-> +			clock-names = "d_audio";
-> +			status = "disabled";
-> +		};
-> +
-> +		agic: interrupt-controller@2a40000 {
-> +			compatible = "nvidia,tegra210-agic";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x02a41000 0x1000>,
-> +			      <0x02a42000 0x2000>;
-> +			interrupts = <GIC_SPI 145
-> +				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			clocks = <&bpmp TEGRA186_CLK_APE>;
-> +			clock-names = "clk";
-> +			status = "disabled";
-> +		};
-> +	};
->  };
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> index c77ca21..d6aee0d 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
-> @@ -1054,4 +1054,71 @@
->  				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
->  		interrupt-parent = <&gic>;
->  	};
-> +
-> +	aconnect {
-> +		compatible = "nvidia,tegra210-aconnect";
-> +		clocks = <&bpmp TEGRA194_CLK_APE>,
-> +			 <&bpmp TEGRA194_CLK_APB2APE>;
-> +		clock-names = "ape", "apb2ape";
-> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_AUD>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges = <0x02900000 0x0 0x02900000 0x200000>;
-> +		status = "disabled";
-> +
-> +		dma-controller@2930000 {
-> +			compatible = "nvidia,tegra186-adma";
-> +			reg = <0x02930000 0x20000>;
-> +			interrupt-parent = <&agic>;
-> +			interrupts =  <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 2 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 19 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>,
-> +				      <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-> +			#dma-cells = <1>;
-> +			clocks = <&bpmp TEGRA194_CLK_AHUB>;
-> +			clock-names = "d_audio";
-> +			status = "disabled";
-> +		};
-> +
-> +		agic: interrupt-controller@2a40000 {
-> +			compatible = "nvidia,tegra210-agic";
-> +			#interrupt-cells = <3>;
-> +			interrupt-controller;
-> +			reg = <0x02a41000 0x1000>,
-> +			      <0x02a42000 0x2000>;
-> +			interrupts = <GIC_SPI 145
-> +				(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
-> +			clocks = <&bpmp TEGRA194_CLK_APE>;
-> +			clock-names = "clk";
-> +			status = "disabled";
-> +		};
-> +	};
->  };
-> 
+Through what path?  Guest can disable X86_FEATURE_* but that's purely a
+Linux feature, the few CPUID bits that can change at runtime already
+call kvm_x86_ops->cpuid_update().
 
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Paolo
 
-Cheers
-Jon
+> , should we call kvm_x86_ops->cpuid_update() in
+> kvm_vcpu_reset() path to reflect the new guest cpuid influence to
+> exec_control? e.g. the first boot guest disable xsaves in grub, kvm
+> disables xsaves in exec_control; then guest reboot w/ xsaves enabled,
+> it still get an #UD when executing.
 
--- 
-nvpublic
