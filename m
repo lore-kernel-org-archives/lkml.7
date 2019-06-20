@@ -2,56 +2,58 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6560DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998DFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363BC215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BB402168B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054384;
-	bh=O7c2awUdbbtZs2EvYOyiLVtc9HeulBl01pu+z1OwIHc=;
+	s=default; t=1561054389;
+	bh=Xr8RRqfm6iC62CPmAI2DjDo2oSRBq9HZpmm18yqeb0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NOROOozAusx0ldv/KNbDeX9rjI9Lj0uEM9lejEeS20Cj3vl0qhMCiX/3Ni67XrYkU
-	 yZhV8wxa6pZrbppf2XmziE0fBNd8UUbncUKeCnQD3tb72l+8yGqVl34bqbcG8tBOql
-	 DqLVwLI+XczpigmhdD/i1+n2/peheNYxlgZfwZPs=
+	b=tMPa1yukXzPhTXN9VXh/aFtUdHoQFUSrRp6zi12RtgRqILurQn6bMy8J3yoJdqmF9
+	 ZVaHiBjmB9irYhaRPqSX3OLnIoVyYhFmIUFqbVH8d8ZDJSC9wmEIF0p6eco1I9LHMw
+	 AaV14ExjwvDYzeKOGyIRjfu4k2RoGUiPlNTgDfw8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729164AbfFTSND (ORCPT
+        id S1729176AbfFTSNI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:13:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:13:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40932 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729143AbfFTSM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:58 -0400
+        id S1729158AbfFTSNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:13:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 17CE12084E;
-        Thu, 20 Jun 2019 18:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BECD721530;
+        Thu, 20 Jun 2019 18:12:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054377;
-        bh=O7c2awUdbbtZs2EvYOyiLVtc9HeulBl01pu+z1OwIHc=;
+        s=default; t=1561054380;
+        bh=Xr8RRqfm6iC62CPmAI2DjDo2oSRBq9HZpmm18yqeb0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Rq4BCBM49A3TohbTqwNEkvtrrjkuA/Lz7ghjht4NKy8NmHv45TrGk2MZd+n+6LXNB
-         5BNyycUCMrHCuI+PdvXELd0ZrZakmVMz/zlUjZ/yq9ctq7s9uhZvVYA/Wp0QleKJwr
-         iN3Ejka9hu83RydtXX6Jk+Fsi9DgeqE7b5x3Uw9M=
+        b=HpjuKxtSvz9yDxEypXtp+RiqdbSiAU86kKCqcEzLTd+XENbscgCwVo7aalFWpFGI2
+         5ZLJZGKkQJniR0KM7lofaA+hwLUSW02dTFML4zd4QijLR923c4zuZXI5DbTd5vNPb4
+         RHiqM/RFX8GAvOp/UqR6Ap3JKYq+czZ+idcqltvo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Bard Liao <yung-chuan.liao@linux.intel.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 38/61] ALSA: hda - Force polling mode on CNL for fixing codec communication
-Date:   Thu, 20 Jun 2019 19:57:33 +0200
-Message-Id: <20190620174344.015284833@linuxfoundation.org>
+        stable@vger.kernel.org, Marc Haber <mh+netdev@zugschlus.de>,
+        Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>
+Subject: [PATCH 5.1 01/98] netfilter: nat: fix udp checksum corruption
+Date:   Thu, 20 Jun 2019 19:56:28 +0200
+Message-Id: <20190620174349.489982747@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
-References: <20190620174336.357373754@linuxfoundation.org>
+In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
+References: <20190620174349.443386789@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -60,44 +62,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fa763f1b2858752e6150ffff46886a1b7faffc82 ]
+From: Florian Westphal <fw@strlen.de>
 
-We observed the same issue as reported by commit a8d7bde23e7130686b7662
-("ALSA: hda - Force polling mode on CFL for fixing codec communication")
-We don't have a better solution. So apply the same workaround to CNL.
+commit 6bac76db1da3cb162c425d58ae421486f8e43955 upstream.
 
-Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Due to copy&paste error nf_nat_mangle_udp_packet passes IPPROTO_TCP,
+resulting in incorrect udp checksum when payload had to be mangled.
+
+Fixes: dac3fe72596f9 ("netfilter: nat: remove csum_recalc hook")
+Reported-by: Marc Haber <mh+netdev@zugschlus.de>
+Tested-by: Marc Haber <mh+netdev@zugschlus.de>
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/pci/hda/hda_intel.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ net/netfilter/nf_nat_helper.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
-index 45bf89ed31de..308ce76149cc 100644
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -378,6 +378,7 @@ enum {
+--- a/net/netfilter/nf_nat_helper.c
++++ b/net/netfilter/nf_nat_helper.c
+@@ -170,7 +170,7 @@ nf_nat_mangle_udp_packet(struct sk_buff
+ 	if (!udph->check && skb->ip_summed != CHECKSUM_PARTIAL)
+ 		return true;
  
- #define IS_BXT(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x5a98)
- #define IS_CFL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0xa348)
-+#define IS_CNL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x9dc8)
+-	nf_nat_csum_recalc(skb, nf_ct_l3num(ct), IPPROTO_TCP,
++	nf_nat_csum_recalc(skb, nf_ct_l3num(ct), IPPROTO_UDP,
+ 			   udph, &udph->check, datalen, oldlen);
  
- static char *driver_short_names[] = {
- 	[AZX_DRIVER_ICH] = "HDA Intel",
-@@ -1795,8 +1796,8 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
- 	else
- 		chip->bdl_pos_adj = bdl_pos_adj[dev];
- 
--	/* Workaround for a communication error on CFL (bko#199007) */
--	if (IS_CFL(pci))
-+	/* Workaround for a communication error on CFL (bko#199007) and CNL */
-+	if (IS_CFL(pci) || IS_CNL(pci))
- 		chip->polling_mode = 1;
- 
- 	err = azx_bus_init(chip, model[dev], &pci_hda_io_ops);
--- 
-2.20.1
-
+ 	return true;
 
 
