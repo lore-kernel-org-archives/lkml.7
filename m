@@ -1,212 +1,183 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A7E0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DCA0C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D81A208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:13:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F01BF21537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 04:16:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561004191;
+	bh=OTRG5L04oVjCWu42HoeufbsUcW9z1Bazdk0t3gfRMHQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bYdGnpPlEIc13U6HWNsi6U8xJlmdSDG+Yof5LPkQvU3fMvD0P46894TC5XnwykDk9
+	 3Ur+hA2h8a/CxZql8RtlHUJNvxICFLxajyhdBor7lewoZKI34d9fyTlU3GI85hUJMn
+	 lCZqaiQsPkzOTCcHRdlFdnO1JMdYDrO423s9fwt4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfFTENJ (ORCPT
+        id S1726194AbfFTEQ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 00:13:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51184 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725781AbfFTENJ (ORCPT
+        Thu, 20 Jun 2019 00:16:29 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:33047 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725781AbfFTEQ2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 00:13:09 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5K4CNSN018659
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 00:13:08 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t81pgsvp5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 00:13:07 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <alastair@au1.ibm.com>;
-        Thu, 20 Jun 2019 05:13:05 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Jun 2019 05:13:01 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5K4D0PO51970296
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 04:13:00 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A58AC4C04E;
-        Thu, 20 Jun 2019 04:13:00 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1342E4C044;
-        Thu, 20 Jun 2019 04:13:00 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 20 Jun 2019 04:13:00 +0000 (GMT)
-Received: from adsilva.ozlabs.ibm.com (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id AECBFA011C;
-        Thu, 20 Jun 2019 14:12:57 +1000 (AEST)
-From:   "Alastair D'Silva" <alastair@au1.ibm.com>
-To:     alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Suraj Jitindar Singh <sjitindarsingh@gmail.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] ocxl: Allow contexts to be attached with a NULL mm
-Date:   Thu, 20 Jun 2019 14:12:01 +1000
-X-Mailer: git-send-email 2.21.0
+        Thu, 20 Jun 2019 00:16:28 -0400
+Received: by mail-pf1-f194.google.com with SMTP id x15so903647pfq.0;
+        Wed, 19 Jun 2019 21:16:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=zyH9dIWlfmNUKOXTFOi3+3dsuAgnXj2LnHyE8VRoTXc=;
+        b=HlccYEDLCGdFzCWc2+XXxnlUmoO3pAyGNRqwlxTIzNi6/R1X8imdVc9BrUqQe7kxdf
+         wjirXLQPBRskmIKpqzycg3O5Ks6K4WhYfFe2AHnmgHwkhyjQ3O1iikugt6psHm5jvF6C
+         xzy8pIOiL1mVmYHXDSZ8qTeRt6Uw2pi6024sfFV2YhUQz3+IHRz2JvX/THa3K/cH1gKl
+         tMCqBy1WtvaSQoh7+FtpVwYGUU88Rzuj2sj8k+PGUbqT+q3jfzKgXtyspVWDXCv69Bi6
+         2AD2boCNs/jDfYHodWX5ISOCvWMQWCsLkEIV1mujAIOiJ3ET9i45v4Cv2mEu0qyjX23j
+         65Kw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=zyH9dIWlfmNUKOXTFOi3+3dsuAgnXj2LnHyE8VRoTXc=;
+        b=eDefnp/Fdx4XYVTA4WmI+1OPQmpnQyMJBjPM/oK1UZ2sokBeKCrxjn44/MvmYUnUIM
+         6CgxdJfQPO9Uom1/LUi8vkezaSTCsXsiBK6BDIvcubMFWACZS0mv0lv4XxXPPo9TBCkD
+         ToFN+u0DYeSIml98PFt9vfItW8Ov1FULopze+cosm3g1ouJR7nA0iJE0uD1b9U+xb4wA
+         gHAvsk5JRj43cSosWfTefAdsfPH+diFu83RTngozo6ntWDQe616vxYw9gy01uvKovcqp
+         u3W+DPXJhZV9z4zRt/kWgNxgvCMwc62XZqBti1xr2J4Dm46viWMLKA19XtdYklpc/L+2
+         PKXA==
+X-Gm-Message-State: APjAAAXa941mZW6krzLWPvyadaiWFOtSolKzQm99dpsUX9JpxqIGJztM
+        hDHcYQKbGd68UYeGNNcRDLk=
+X-Google-Smtp-Source: APXvYqyrXakYf1mOgEwcNtY1GbmgWRkGU/vcHWbzk94WlGzEI7BfgdBAHm4S3UHVri6Jafyu625cLQ==
+X-Received: by 2002:a63:1226:: with SMTP id h38mr10879479pgl.196.1561004187871;
+        Wed, 19 Jun 2019 21:16:27 -0700 (PDT)
+Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
+        by smtp.gmail.com with ESMTPSA id j64sm30038956pfb.126.2019.06.19.21.16.22
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 19 Jun 2019 21:16:26 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 13:16:20 +0900
+From:   Minchan Kim <minchan@kernel.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Tim Murray <timmurray@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Daniel Colascione <dancol@google.com>,
+        Shakeel Butt <shakeelb@google.com>,
+        Sonny Rao <sonnyrao@google.com>,
+        Brian Geffon <bgeffon@google.com>, jannh@google.com,
+        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
+        hdanton@sina.com, lizeb@google.com
+Subject: Re: [PATCH v2 4/5] mm: introduce MADV_PAGEOUT
+Message-ID: <20190620041620.GB105727@google.com>
+References: <20190610111252.239156-1-minchan@kernel.org>
+ <20190610111252.239156-5-minchan@kernel.org>
+ <20190619132450.GQ2968@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19062004-4275-0000-0000-00000343F20B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062004-4276-0000-0000-000038541FDE
-Message-Id: <20190620041203.12274-1-alastair@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=500 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200032
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190619132450.GQ2968@dhcp22.suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva <alastair@d-silva.org>
+On Wed, Jun 19, 2019 at 03:24:50PM +0200, Michal Hocko wrote:
+> On Mon 10-06-19 20:12:51, Minchan Kim wrote:
+> [...]
+> > +static int madvise_pageout_pte_range(pmd_t *pmd, unsigned long addr,
+> > +				unsigned long end, struct mm_walk *walk)
+> 
+> Again the same question about a potential code reuse...
+> [...]
+> > +regular_page:
+> > +	tlb_change_page_size(tlb, PAGE_SIZE);
+> > +	orig_pte = pte = pte_offset_map_lock(vma->vm_mm, pmd, addr, &ptl);
+> > +	flush_tlb_batched_pending(mm);
+> > +	arch_enter_lazy_mmu_mode();
+> > +	for (; addr < end; pte++, addr += PAGE_SIZE) {
+> > +		ptent = *pte;
+> > +		if (!pte_present(ptent))
+> > +			continue;
+> > +
+> > +		page = vm_normal_page(vma, addr, ptent);
+> > +		if (!page)
+> > +			continue;
+> > +
+> > +		if (isolate_lru_page(page))
+> > +			continue;
+> > +
+> > +		isolated++;
+> > +		if (pte_young(ptent)) {
+> > +			ptent = ptep_get_and_clear_full(mm, addr, pte,
+> > +							tlb->fullmm);
+> > +			ptent = pte_mkold(ptent);
+> > +			set_pte_at(mm, addr, pte, ptent);
+> > +			tlb_remove_tlb_entry(tlb, pte, addr);
+> > +		}
+> > +		ClearPageReferenced(page);
+> > +		test_and_clear_page_young(page);
+> > +		list_add(&page->lru, &page_list);
+> > +		if (isolated >= SWAP_CLUSTER_MAX) {
+> 
+> Why do we need SWAP_CLUSTER_MAX batching? Especially when we need ...
+> [...]
 
-If an OpenCAPI context is to be used directly by a kernel driver, there
-may not be a suitable mm to use.
+It aims for preventing early OOM kill since we isolate too many LRU
+pages concurrently.
 
-The patch makes the mm parameter to ocxl_context_attach optional.
+> 
+> > +unsigned long reclaim_pages(struct list_head *page_list)
+> > +{
+> > +	int nid = -1;
+> > +	unsigned long nr_reclaimed = 0;
+> > +	LIST_HEAD(node_page_list);
+> > +	struct reclaim_stat dummy_stat;
+> > +	struct scan_control sc = {
+> > +		.gfp_mask = GFP_KERNEL,
+> > +		.priority = DEF_PRIORITY,
+> > +		.may_writepage = 1,
+> > +		.may_unmap = 1,
+> > +		.may_swap = 1,
+> > +	};
+> > +
+> > +	while (!list_empty(page_list)) {
+> > +		struct page *page;
+> > +
+> > +		page = lru_to_page(page_list);
+> > +		if (nid == -1) {
+> > +			nid = page_to_nid(page);
+> > +			INIT_LIST_HEAD(&node_page_list);
+> > +		}
+> > +
+> > +		if (nid == page_to_nid(page)) {
+> > +			list_move(&page->lru, &node_page_list);
+> > +			continue;
+> > +		}
+> > +
+> > +		nr_reclaimed += shrink_page_list(&node_page_list,
+> > +						NODE_DATA(nid),
+> > +						&sc, 0,
+> > +						&dummy_stat, false);
+> 
+> per-node batching in fact. Other than that nothing really jumped at me.
+> Except for the shared page cache side channel timing aspect not being
+> considered AFAICS. To be more specific. Pushing out a shared page cache
+> is possible even now but this interface gives a much easier tool to
+> evict shared state and perform all sorts of timing attacks. Unless I am
+> missing something we should be doing something similar to mincore and
+> ignore shared pages without a writeable access or at least document why
+> we do not care.
 
-Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
----
- arch/powerpc/mm/book3s64/radix_tlb.c |  5 +++++
- drivers/misc/ocxl/context.c          |  9 ++++++---
- drivers/misc/ocxl/link.c             | 28 ++++++++++++++++++++++++----
- 3 files changed, 35 insertions(+), 7 deletions(-)
-
-diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c b/arch/powerpc/mm/book3s64/radix_tlb.c
-index bb9835681315..ce8a77fae6a7 100644
---- a/arch/powerpc/mm/book3s64/radix_tlb.c
-+++ b/arch/powerpc/mm/book3s64/radix_tlb.c
-@@ -666,6 +666,11 @@ EXPORT_SYMBOL(radix__flush_tlb_page);
- #define radix__flush_all_mm radix__local_flush_all_mm
- #endif /* CONFIG_SMP */
- 
-+/*
-+ * If kernel TLBIs ever become local rather than global, then
-+ * drivers/misc/ocxl/link.c:ocxl_link_add_pe will need some work, as it
-+ * assumes kernel TLBIs are global.
-+ */
- void radix__flush_tlb_kernel_range(unsigned long start, unsigned long end)
- {
- 	_tlbie_pid(0, RIC_FLUSH_ALL);
-diff --git a/drivers/misc/ocxl/context.c b/drivers/misc/ocxl/context.c
-index bab9c9364184..994563a078eb 100644
---- a/drivers/misc/ocxl/context.c
-+++ b/drivers/misc/ocxl/context.c
-@@ -69,6 +69,7 @@ static void xsl_fault_error(void *data, u64 addr, u64 dsisr)
- int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
- {
- 	int rc;
-+	unsigned long pidr = 0;
- 
- 	// Locks both status & tidr
- 	mutex_lock(&ctx->status_mutex);
-@@ -77,9 +78,11 @@ int ocxl_context_attach(struct ocxl_context *ctx, u64 amr, struct mm_struct *mm)
- 		goto out;
- 	}
- 
--	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid,
--			mm->context.id, ctx->tidr, amr, mm,
--			xsl_fault_error, ctx);
-+	if (mm)
-+		pidr = mm->context.id;
-+
-+	rc = ocxl_link_add_pe(ctx->afu->fn->link, ctx->pasid, pidr, ctx->tidr,
-+			      amr, mm, xsl_fault_error, ctx);
- 	if (rc)
- 		goto out;
- 
-diff --git a/drivers/misc/ocxl/link.c b/drivers/misc/ocxl/link.c
-index cce5b0d64505..58d111afd9f6 100644
---- a/drivers/misc/ocxl/link.c
-+++ b/drivers/misc/ocxl/link.c
-@@ -224,6 +224,17 @@ static irqreturn_t xsl_fault_handler(int irq, void *data)
- 		ack_irq(spa, ADDRESS_ERROR);
- 		return IRQ_HANDLED;
- 	}
-+
-+	if (!pe_data->mm) {
-+		/*
-+		 * translation fault from a kernel context - an OpenCAPI
-+		 * device tried to access a bad kernel address
-+		 */
-+		rcu_read_unlock();
-+		pr_warn("Unresolved OpenCAPI xsl fault in kernel context\n");
-+		ack_irq(spa, ADDRESS_ERROR);
-+		return IRQ_HANDLED;
-+	}
- 	WARN_ON(pe_data->mm->context.id != pid);
- 
- 	if (mmget_not_zero(pe_data->mm)) {
-@@ -523,7 +534,13 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
- 	pe->amr = cpu_to_be64(amr);
- 	pe->software_state = cpu_to_be32(SPA_PE_VALID);
- 
--	mm_context_add_copro(mm);
-+	/*
-+	 * For user contexts, register a copro so that TLBIs are seen
-+	 * by the nest MMU. If we have a kernel context, TLBIs are
-+	 * already global.
-+	 */
-+	if (mm)
-+		mm_context_add_copro(mm);
- 	/*
- 	 * Barrier is to make sure PE is visible in the SPA before it
- 	 * is used by the device. It also helps with the global TLBI
-@@ -546,7 +563,8 @@ int ocxl_link_add_pe(void *link_handle, int pasid, u32 pidr, u32 tidr,
- 	 * have a reference on mm_users. Incrementing mm_count solves
- 	 * the problem.
- 	 */
--	mmgrab(mm);
-+	if (mm)
-+		mmgrab(mm);
- 	trace_ocxl_context_add(current->pid, spa->spa_mem, pasid, pidr, tidr);
- unlock:
- 	mutex_unlock(&spa->spa_lock);
-@@ -652,8 +670,10 @@ int ocxl_link_remove_pe(void *link_handle, int pasid)
- 	if (!pe_data) {
- 		WARN(1, "Couldn't find pe data when removing PE\n");
- 	} else {
--		mm_context_remove_copro(pe_data->mm);
--		mmdrop(pe_data->mm);
-+		if (pe_data->mm) {
-+			mm_context_remove_copro(pe_data->mm);
-+			mmdrop(pe_data->mm);
-+		}
- 		kfree_rcu(pe_data, rcu);
- 	}
- unlock:
--- 
-2.21.0
-
+I'm not sure IIUC side channel attach. As you mentioned, without this syscall,
+1. they already can do that simply by memory hogging
+2. If we need fix MADV_PAGEOUT, that means we need to fix MADV_DONTNEED, too?
