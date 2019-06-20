@@ -2,96 +2,110 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2F02C48BE4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:52:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D27EEC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:53:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6CEB2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:52:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3EE12084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:53:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="if6+rXao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbfFTOw5 (ORCPT
+        id S1732063AbfFTOxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:52:57 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60284 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726675AbfFTOw5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:52:57 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 327B0AE32;
-        Thu, 20 Jun 2019 14:52:55 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id AF6F01E434F; Thu, 20 Jun 2019 16:52:54 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 16:52:54 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Dave Chinner <david@fromorbit.com>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Jeff Layton <jlayton@kernel.org>, linux-xfs@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-ext4@vger.kernel.org,
-        linux-mm@kvack.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org
-Subject: Re: [PATCH RFC 00/10] RDMA/FS DAX truncate proposal
-Message-ID: <20190620145254.GJ30243@quack2.suse.cz>
-References: <20190606014544.8339-1-ira.weiny@intel.com>
- <20190606104203.GF7433@quack2.suse.cz>
- <20190606220329.GA11698@iweiny-DESK2.sc.intel.com>
- <20190607110426.GB12765@quack2.suse.cz>
- <20190607182534.GC14559@iweiny-DESK2.sc.intel.com>
- <20190608001036.GF14308@dread.disaster.area>
- <20190612123751.GD32656@bombadil.infradead.org>
- <20190613002555.GH14363@dread.disaster.area>
- <20190613152755.GI32656@bombadil.infradead.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613152755.GI32656@bombadil.infradead.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Thu, 20 Jun 2019 10:53:01 -0400
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:36039 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732048AbfFTOw6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:52:58 -0400
+Received: by mail-qk1-f194.google.com with SMTP id g18so2109997qkl.3
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:52:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=5oMdsQsw1n7pkd5dZK0BAR68goU9Cphs7Z7vjhmXNXA=;
+        b=if6+rXaoBnz+H02oYwem3HWXB48VPwWoSvmotiKQcqueZkz88R/UOJrQJGPnqSxWh0
+         X3WWxz+KMriBFBvZG0/EZYb9KDDdGilbulSCa5O193BQx6OEd9S4APxsT3UV78tLkx6n
+         9WXhfxiDzSEcl6WRrOWKy533PY7TkmIDzQcBW47lcU6tBxY6A/Leti2v2Qxk0TsMDGA6
+         1hqoNBZw/ZyMe154WWMQCmMz6g4Lj58hgSdmjM6+cwvRNW3fbMoFd6qdZ0iPJMu4of9V
+         y7ZbI0HRLfHcm8QOkYoc0KpKXqUbujLWeiBtQ02Z71c6zN+vOkispdwvmTBl0TJGOVHZ
+         H8Bw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5oMdsQsw1n7pkd5dZK0BAR68goU9Cphs7Z7vjhmXNXA=;
+        b=P/ZB6n8mDiQtB975yV/Df6ShnsrctaWKGV/x2iKM8XCExti6STF2IH4sBOcJY7VrUJ
+         f9OezE4NSEwtMnVKHA+h8mRSW5fr/ygit+dU4kGNkBYaeEu+ifDkNF1saCXwEdbVQ8Ap
+         dNc+ax2bcTaPOVHL1WY/GEqM6VrO8Q0PoXXjaZUiTXTvGwYCg9N+R3QN4WbQqZK8On34
+         qPyKyrD2niAvVYAAQPUXJLFwrRAyYvIB6a3yq6CPsNmI5OzIwUTrKbsDIodr1DxmWOcy
+         Z0yS50ypdU9Z0xhK5C2fBTTOFSxI7Zc6Ra9VXHW5D6L150R6etg4/GFHvMV0j3syjTNj
+         ROmA==
+X-Gm-Message-State: APjAAAWogSsz/7QaA6MIkbz8cy3meQD9mdLiNN01F1h2nGtAIwCjrWmx
+        AJgFYyOL13nDcDw3+jcXT0fn3g==
+X-Google-Smtp-Source: APXvYqyLJk0+3HOrUCnuJqkk0jfG4hnZ4d747OQBhmE1HQEm9E2OZkcZvXeiDoYq6X0FOJ8JYq4oTw==
+X-Received: by 2002:ae9:eb96:: with SMTP id b144mr25466663qkg.321.1561042377583;
+        Thu, 20 Jun 2019 07:52:57 -0700 (PDT)
+Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
+        by smtp.gmail.com with ESMTPSA id f9sm10553867qtl.75.2019.06.20.07.52.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 07:52:57 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     davem@davemloft.net
+Cc:     edumazet@google.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] inet: fix compilation warnings in fqdir_pre_exit()
+Date:   Thu, 20 Jun 2019 10:52:40 -0400
+Message-Id: <1561042360-20480-1-git-send-email-cai@lca.pw>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 13-06-19 08:27:55, Matthew Wilcox wrote:
-> On Thu, Jun 13, 2019 at 10:25:55AM +1000, Dave Chinner wrote:
-> > e.g. Process A has an exclusive layout lease on file F. It does an
-> > IO to file F. The filesystem IO path checks that Process A owns the
-> > lease on the file and so skips straight through layout breaking
-> > because it owns the lease and is allowed to modify the layout. It
-> > then takes the inode metadata locks to allocate new space and write
-> > new data.
-> > 
-> > Process B now tries to write to file F. The FS checks whether
-> > Process B owns a layout lease on file F. It doesn't, so then it
-> > tries to break the layout lease so the IO can proceed. The layout
-> > breaking code sees that process A has an exclusive layout lease
-> > granted, and so returns -ETXTBSY to process B - it is not allowed to
-> > break the lease and so the IO fails with -ETXTBSY.
-> 
-> This description doesn't match the behaviour that RDMA wants either.
-> Even if Process A has a lease on the file, an IO from Process A which
-> results in blocks being freed from the file is going to result in the
-> RDMA device being able to write to blocks which are now freed (and
-> potentially reallocated to another file).
+The linux-next commit "inet: fix various use-after-free in defrags
+units" [1] introduced compilation warnings,
 
-I think you're partially wrong here. You are correct that the lease won't
-stop process A from doing truncate on the file. *But* there are still page
-pins in existence so truncate will block on waiting for these pins to go
-away (after all this is a protection that guards all short-term page pin
-users). So there is no problem with blocks being freed under the RDMA app.
-Yes, the app will effectively deadlock and sysadmin has to kill it. IMO an
-acceptable answer for doing something stupid and unsupportable...
+./include/net/inet_frag.h:117:1: warning: 'inline' is not at beginning
+of declaration [-Wold-style-declaration]
+ static void inline fqdir_pre_exit(struct fqdir *fqdir)
+ ^~~~~~
+In file included from ./include/net/netns/ipv4.h:10,
+                 from ./include/net/net_namespace.h:20,
+                 from ./include/linux/netdevice.h:38,
+                 from ./include/linux/icmpv6.h:13,
+                 from ./include/linux/ipv6.h:86,
+                 from ./include/net/ipv6.h:12,
+                 from ./include/rdma/ib_verbs.h:51,
+                 from ./include/linux/mlx5/device.h:37,
+                 from ./include/linux/mlx5/driver.h:51,
+                 from
+drivers/net/ethernet/mellanox/mlx5/core/pagealloc.c:37:
 
-								Honza
+[1] https://lore.kernel.org/netdev/20190618180900.88939-3-edumazet@google.com/
+
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ include/net/inet_frag.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/include/net/inet_frag.h b/include/net/inet_frag.h
+index 46574d996f1d..010f26b31c89 100644
+--- a/include/net/inet_frag.h
++++ b/include/net/inet_frag.h
+@@ -114,7 +114,7 @@ struct inet_frags {
+ 
+ int fqdir_init(struct fqdir **fqdirp, struct inet_frags *f, struct net *net);
+ 
+-static void inline fqdir_pre_exit(struct fqdir *fqdir)
++static inline void fqdir_pre_exit(struct fqdir *fqdir)
+ {
+ 	fqdir->high_thresh = 0; /* prevent creation of new frags */
+ 	fqdir->dead = true;
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+1.8.3.1
+
