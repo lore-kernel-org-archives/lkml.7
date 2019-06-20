@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92DC0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DFDCC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61A68205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E1E0205F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054831;
-	bh=xh82Oq10IAg2tIgfkxQvYdcJPdGAQ7vUAQhGRQWV0jA=;
+	s=default; t=1561054835;
+	bh=0CgCchADOBaHHioHCcaH5lWzVgjsVrqsQTGCDsq1Ajs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LHvmzFZZ6ZRxrLMkyY2ZNtwnYiUMPvLI2fUaLc2bJaPw3t4Aw6sHlpN9UaaggZscV
-	 OnH96Hhq0O86VWNIwjo/3MJor3O3PvIohhu44SO/pNRCV6QQRMgXILI3s8ipk4Dokl
-	 lX9KbNNyfi+i2JoC735CdjzHT0lv+3lt8vbpUe7w=
+	b=xQAzSRrMhNtZ0yx9KCVHYInwqBk+XtmteQ61ZwYXEfNbN955kdrBu8zidnsnYUAIS
+	 id3Rlxx5Qov8MafGUXSS7tO3DJM7cfdIfPiQdiNFRUbi5TWbK2YIX3F+yEQMqlhpip
+	 gSEx1XGHh1lX82/bT8kpQBefiELWC37LRVgz+2Og=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728472AbfFTSUa (ORCPT
+        id S1729293AbfFTSNh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41614 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:13:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728945AbfFTSNi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:13:38 -0400
+        id S1728945AbfFTSNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:13:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F02A02082C;
-        Thu, 20 Jun 2019 18:13:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D48F205F4;
+        Thu, 20 Jun 2019 18:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054417;
-        bh=xh82Oq10IAg2tIgfkxQvYdcJPdGAQ7vUAQhGRQWV0jA=;
+        s=default; t=1561054411;
+        bh=0CgCchADOBaHHioHCcaH5lWzVgjsVrqsQTGCDsq1Ajs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S2TRAPyNd9U0rduaFRXv3er6hjmovaUstCeQWLTjxV13Ltmnek6VaIO9FWA6w5JFA
-         AHJeMEHr3ZQiV0frcY6OVfBDaYUH2AGNHnsiO0pbGNeILoB4aZoWiIeaW2wvgwZCFK
-         2MN5RBa8nyg7hAXO6afbr0FcgAgq2zgZdLl8aYy8=
+        b=kvqpdV2+uvzviraZBhVdNNmtgYabxcHwWo92j9EdiyHZ16ZsTsueX77BdRH629Y0Z
+         DBC+661fH98cNNlCqcLiHQdtawqDNEspFKILQQp8I6wnp9xek+IfhnLk2awqGmiXZg
+         N1Nj8NeyKwGeGt4C8UE4lmwZ7+SLn6bw/QS9b+iA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Ying Xue <ying.xue@windriver.com>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Greg Rose <gvrose8192@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.1 14/98] tipc: purge deferredq list for each grp member in tipc_group_delete
-Date:   Thu, 20 Jun 2019 19:56:41 +0200
-Message-Id: <20190620174349.952997959@linuxfoundation.org>
+Subject: [PATCH 5.1 09/98] net: openvswitch: do not free vport if register_netdevice() is failed.
+Date:   Thu, 20 Jun 2019 19:56:36 +0200
+Message-Id: <20190620174349.784586254@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -62,38 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 5cf02612b33f104fe1015b2dfaf1758ad3675588 ]
+[ Upstream commit 309b66970ee2abf721ecd0876a48940fa0b99a35 ]
 
-Syzbot reported a memleak caused by grp members' deferredq list not
-purged when the grp is be deleted.
+In order to create an internal vport, internal_dev_create() is used and
+that calls register_netdevice() internally.
+If register_netdevice() fails, it calls dev->priv_destructor() to free
+private data of netdev. actually, a private data of this is a vport.
 
-The issue occurs when more(msg_grp_bc_seqno(hdr), m->bc_rcv_nxt) in
-tipc_group_filter_msg() and the skb will stay in deferredq.
+Hence internal_dev_create() should not free and use a vport after failure
+of register_netdevice().
 
-So fix it by calling __skb_queue_purge for each member's deferredq
-in tipc_group_delete() when a tipc sk leaves the grp.
+Test command
+    ovs-dpctl add-dp bonding_masters
 
-Fixes: b87a5ea31c93 ("tipc: guarantee group unicast doesn't bypass group broadcast")
-Reported-by: syzbot+78fbe679c8ca8d264a8d@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Ying Xue <ying.xue@windriver.com>
+Splat looks like:
+[ 1035.667767] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[ 1035.675958] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[ 1035.676916] CPU: 1 PID: 1028 Comm: ovs-vswitchd Tainted: G    B             5.2.0-rc3+ #240
+[ 1035.676916] RIP: 0010:internal_dev_create+0x2e5/0x4e0 [openvswitch]
+[ 1035.676916] Code: 48 c1 ea 03 80 3c 02 00 0f 85 9f 01 00 00 4c 8b 23 48 b8 00 00 00 00 00 fc ff df 49 8d bc 24 60 05 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 86 01 00 00 49 8b bc 24 60 05 00 00 e8 e4 68 f4
+[ 1035.713720] RSP: 0018:ffff88810dcb7578 EFLAGS: 00010206
+[ 1035.713720] RAX: dffffc0000000000 RBX: ffff88810d13fe08 RCX: ffffffff84297704
+[ 1035.713720] RDX: 00000000000000ac RSI: 0000000000000000 RDI: 0000000000000560
+[ 1035.713720] RBP: 00000000ffffffef R08: fffffbfff0d3b881 R09: fffffbfff0d3b881
+[ 1035.713720] R10: 0000000000000001 R11: fffffbfff0d3b880 R12: 0000000000000000
+[ 1035.768776] R13: 0000607ee460b900 R14: ffff88810dcb7690 R15: ffff88810dcb7698
+[ 1035.777709] FS:  00007f02095fc980(0000) GS:ffff88811b400000(0000) knlGS:0000000000000000
+[ 1035.777709] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1035.777709] CR2: 00007ffdf01d2f28 CR3: 0000000108258000 CR4: 00000000001006e0
+[ 1035.777709] Call Trace:
+[ 1035.777709]  ovs_vport_add+0x267/0x4f0 [openvswitch]
+[ 1035.777709]  new_vport+0x15/0x1e0 [openvswitch]
+[ 1035.777709]  ovs_vport_cmd_new+0x567/0xd10 [openvswitch]
+[ 1035.777709]  ? ovs_dp_cmd_dump+0x490/0x490 [openvswitch]
+[ 1035.777709]  ? __kmalloc+0x131/0x2e0
+[ 1035.777709]  ? genl_family_rcv_msg+0xa54/0x1030
+[ 1035.777709]  genl_family_rcv_msg+0x63a/0x1030
+[ 1035.777709]  ? genl_unregister_family+0x630/0x630
+[ 1035.841681]  ? debug_show_all_locks+0x2d0/0x2d0
+[ ... ]
+
+Fixes: cf124db566e6 ("net: Fix inconsistent teardown and release of private netdev state.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Reviewed-by: Greg Rose <gvrose8192@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/tipc/group.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/openvswitch/vport-internal_dev.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/net/tipc/group.c
-+++ b/net/tipc/group.c
-@@ -218,6 +218,7 @@ void tipc_group_delete(struct net *net,
+--- a/net/openvswitch/vport-internal_dev.c
++++ b/net/openvswitch/vport-internal_dev.c
+@@ -170,7 +170,9 @@ static struct vport *internal_dev_create
+ {
+ 	struct vport *vport;
+ 	struct internal_dev *internal_dev;
++	struct net_device *dev;
+ 	int err;
++	bool free_vport = true;
  
- 	rbtree_postorder_for_each_entry_safe(m, tmp, tree, tree_node) {
- 		tipc_group_proto_xmit(grp, m, GRP_LEAVE_MSG, &xmitq);
-+		__skb_queue_purge(&m->deferredq);
- 		list_del(&m->list);
- 		kfree(m);
+ 	vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
+ 	if (IS_ERR(vport)) {
+@@ -178,8 +180,9 @@ static struct vport *internal_dev_create
+ 		goto error;
  	}
+ 
+-	vport->dev = alloc_netdev(sizeof(struct internal_dev),
+-				  parms->name, NET_NAME_USER, do_setup);
++	dev = alloc_netdev(sizeof(struct internal_dev),
++			   parms->name, NET_NAME_USER, do_setup);
++	vport->dev = dev;
+ 	if (!vport->dev) {
+ 		err = -ENOMEM;
+ 		goto error_free_vport;
+@@ -200,8 +203,10 @@ static struct vport *internal_dev_create
+ 
+ 	rtnl_lock();
+ 	err = register_netdevice(vport->dev);
+-	if (err)
++	if (err) {
++		free_vport = false;
+ 		goto error_unlock;
++	}
+ 
+ 	dev_set_promiscuity(vport->dev, 1);
+ 	rtnl_unlock();
+@@ -211,11 +216,12 @@ static struct vport *internal_dev_create
+ 
+ error_unlock:
+ 	rtnl_unlock();
+-	free_percpu(vport->dev->tstats);
++	free_percpu(dev->tstats);
+ error_free_netdev:
+-	free_netdev(vport->dev);
++	free_netdev(dev);
+ error_free_vport:
+-	ovs_vport_free(vport);
++	if (free_vport)
++		ovs_vport_free(vport);
+ error:
+ 	return ERR_PTR(err);
+ }
 
 
