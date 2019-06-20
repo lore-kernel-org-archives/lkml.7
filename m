@@ -2,135 +2,95 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF241C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B96DBC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:53:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 964F5206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89C742075E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:53:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="u27duObe"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="h3QxGgfY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726256AbfFTVvG (ORCPT
+        id S1726159AbfFTVxd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:51:06 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:44318 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726066AbfFTVvF (ORCPT
+        Thu, 20 Jun 2019 17:53:33 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:49268 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfFTVxc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:51:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id r16so4491391wrl.11
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 14:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=hRfNWLmAN1kN9+qUVVhKW3SVXeFOGVUJPL68CIg8o+E=;
-        b=u27duObejx4JNLGQLCsLfLy4LVeKNKcJZD0IyVD4T9c0XndFERVY/RqvBo2pYtGs23
-         1haMSzqNGqI2a6+thGSYGd8EDrSwUU7nBkcp4GQCuaxZag4Ji9/ETB8VwhV7IUcWcRlF
-         Z4mFq0DwaEnqULtnp1+CwUBFKmVLy2rFdW6tOnGmyU9Gm+XzIP+WhCHAMVO5sRwDO5pl
-         DY4+t7ElJLE0Q4qeVMFqQ2Axrv0fk7dyYq5fYtvdN8BmLfPEB5BvREh7KYUUlAfaF6fW
-         tshEhYdmlfU/RvcjsItOB99sUbDNoHg0uRcBgDoi47FPLiJZZPKMSGaC/qBKRVD2QJz5
-         Ybpw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=hRfNWLmAN1kN9+qUVVhKW3SVXeFOGVUJPL68CIg8o+E=;
-        b=goQJEsy43GQt57JW7c1CuQ5rRV49Sa1b2vPv4ndRqOaWwKaJVgK/WOhRb2N3mpagDR
-         rh7z4SjUKFKpU6JVpOALOsI8iqiVZJiJPJ3XvqWgAVztmbDn1C2PmUSqH0i39/DZpuiy
-         TGK4RH3mM9yM9fNiSHKO2PXKtybLK67T2+vgyz4Rr9FpblV1HKI58Pf5HoYWoKEhtHV1
-         JpZvwKlYz735bm8w2P9/Y2w8FpjrUOkS8VELLGJubRC0DgHovmOtdNumqO+eQNhKLE+l
-         jFO9joA4yLJkTX1UsQybsAVpnMK7b2gpihFyw3pcxiECN87/8HTC4Hq2soMmbD1miZKW
-         qf2Q==
-X-Gm-Message-State: APjAAAVTRl/fto3FZtyoHiOqYHzdJofTyqJeynUsoo7HgMCHSF/qUMUy
-        Z0J13KOyTVEQd5USSlH3cUj+/g==
-X-Google-Smtp-Source: APXvYqwF8kwk69GoEVRPbky5+oL7qWCG1rkDbKx10SP7jMbBOiViweq9xq4+PuSQZ1JYcRqDUKIf6A==
-X-Received: by 2002:adf:e8c8:: with SMTP id k8mr65161424wrn.285.1561067463063;
-        Thu, 20 Jun 2019 14:51:03 -0700 (PDT)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id p26sm1698396wrp.58.2019.06.20.14.51.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 14:51:02 -0700 (PDT)
-Message-ID: <5d0bffc6.1c69fb81.b2a7c.a927@mx.google.com>
-Date:   Thu, 20 Jun 2019 14:51:02 -0700 (PDT)
-Content-Type: text/plain; charset="utf-8"
+        Thu, 20 Jun 2019 17:53:32 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KLmcVH098536;
+        Thu, 20 Jun 2019 21:52:53 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=kDQao6pEV9HdsFlEB4nEftCDUPOrB/eF7wS+pHAhRRw=;
+ b=h3QxGgfYliCuHMG24Vd/aSTO0WiOkw1pba+5vBNAdpNfO8gWbU+9BHoY06+BRfY4/rzs
+ fZphZf30Cgc9C5j2WZjCIcGaZfscUXuJmGUGEtuwyF1ZF/vnDvKoinUjZFe5GO/VRi2Z
+ +8I0tB3m0cETV26m2a2bslk8/O+NQ1rlrKaIMcr6C65ISsArrvvvQAIA2G0Zx0OPfqJ0
+ oTfkNlcbuChQK61JXYnobxMzlMStz1GD3x5b4WMNPBo5QZa74rC1z0r99Wb720fKOnEq
+ POInXBaWgmaJsN5GNC3D2PythRNUBOBNI3a9PrXWq9z/hiUX5GaitggBoYiTXKL456Am rQ== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2t7809keu2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 21:52:53 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x5KLpHkr119716;
+        Thu, 20 Jun 2019 21:52:52 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2t7rdxda0w-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Jun 2019 21:52:52 +0000
+Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x5KLqoHC014433;
+        Thu, 20 Jun 2019 21:52:50 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 20 Jun 2019 14:52:49 -0700
+To:     Dongli Zhang <dongli.zhang@oracle.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mst@redhat.com, jasowang@redhat.com, pbonzini@redhat.com,
+        stefanha@redhat.com, jejb@linux.ibm.com, martin.petersen@oracle.com
+Subject: Re: [PATCH 1/1] scsi: virtio_scsi: remove unused 'affinity_hint_set'
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <1560930739-25692-1-git-send-email-dongli.zhang@oracle.com>
+Date:   Thu, 20 Jun 2019 17:52:46 -0400
+In-Reply-To: <1560930739-25692-1-git-send-email-dongli.zhang@oracle.com>
+        (Dongli Zhang's message of "Wed, 19 Jun 2019 15:52:19 +0800")
+Message-ID: <yq1imszrkk1.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.14.128-46-g593d1fadd024
-X-Kernelci-Branch: linux-4.14.y
-X-Kernelci-Tree: stable-rc
-In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
-References: <20190620174328.608036501@linuxfoundation.org>
-Subject: Re: [PATCH 4.14 00/45] 4.14.129-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=966
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1906200156
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9294 signatures=668687
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1906200156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.14.y boot: 118 boots: 1 failed, 112 passed with 4 offline=
-, 1 untried/unknown (v4.14.128-46-g593d1fadd024)
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.14.y/kernel/v4.14.128-46-g593d1fadd024/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.14.=
-y/kernel/v4.14.128-46-g593d1fadd024/
+Dongli,
 
-Tree: stable-rc
-Branch: linux-4.14.y
-Git Describe: v4.14.128-46-g593d1fadd024
-Git Commit: 593d1fadd0247d5932dd5e626b90fe30984c2ae5
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 65 unique boards, 23 SoC families, 14 builds out of 201
+> The 'affinity_hint_set' is not used any longer since
+> commit 0d9f0a52c8b9 ("virtio_scsi: use virtio IRQ affinity").
 
-Boot Regressions Detected:
+Applied to 5.3/scsi-queue. Thanks!
 
-arm64:
-
-    defconfig:
-        gcc-8:
-          meson-gxl-s905x-nexbox-a95x:
-              lab-baylibre-seattle: new failure (last pass: v4.14.128)
-
-Boot Failure Detected:
-
-arm64:
-    defconfig:
-        gcc-8:
-            meson-gxl-s905x-nexbox-a95x: 1 failed lab
-
-Offline Platforms:
-
-arm:
-
-    exynos_defconfig:
-        gcc-8
-            exynos5800-peach-pi: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            da850-evm: 1 offline lab
-            dm365evm,legacy: 1 offline lab
-
-arm64:
-
-    defconfig:
-        gcc-8
-            apq8016-sbc: 1 offline lab
-
----
-For more info write to <info@kernelci.org>
+-- 
+Martin K. Petersen	Oracle Linux Engineering
