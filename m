@@ -2,63 +2,103 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2733BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:06:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E90BCC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:08:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A9E12064B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:06:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0D6E2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:08:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="OmXGcAXD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730937AbfFTIGe (ORCPT
+        id S1730965AbfFTIIG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:06:34 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:43602 "EHLO deadmen.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725877AbfFTIGe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:06:34 -0400
-Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
-        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hds5S-0002ED-0a; Thu, 20 Jun 2019 16:06:26 +0800
-Received: from herbert by gondobar with local (Exim 4.89)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hds5R-0007aV-M2; Thu, 20 Jun 2019 16:06:25 +0800
-Date:   Thu, 20 Jun 2019 16:06:25 +0800
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     "David S. Miller" <davem@davemloft.net>, horia.geanta@nxp.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH] crypto: talitos - fix max key size for sha384 and sha512
-Message-ID: <20190620080625.5q5sok7ihh4ell2y@gondor.apana.org.au>
-References: <5f1004d33b2347dcfbc677551bafc9d469bb079e.1560318544.git.christophe.leroy@c-s.fr>
+        Thu, 20 Jun 2019 04:08:06 -0400
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:44625 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725877AbfFTIIF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:08:05 -0400
+Received: by mail-lf1-f48.google.com with SMTP id r15so1710973lfm.11
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:08:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=5nLDF4KvNjOO0UGhzTbw+kgDFdu3GO4N4s2vFIPF9iU=;
+        b=OmXGcAXDCg5tpnkC3zM065z42PKi+z/FVjoDHqkRFwQQ351XflSo05WQbSV3o17OA1
+         ZCsdnjvvy8dS/tX2Yrk0+vtSVbKzdotrcrp1d3vJpozy0Jdb5LybpVHsiW48i/dDVI4m
+         ck78rIIOF3bMUbZaiZAMkWKmJcJn6Z/ZVjyWEsqoSws8e7XxsYNIIMXEHmshvOdBKAcx
+         J/hpS3vishBxStBuT5Vd6dFmaBnP06wN4IJ6LTtHWz3vxRs0dzNXAKspTbq1O91EelUW
+         7USUCZOQGv2Sw7kPzWpfZs5oEBsiyWFpcnyvM6d2Eb0IbXkpG8FtvbT1xWFcC5FeFvd/
+         egbg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=5nLDF4KvNjOO0UGhzTbw+kgDFdu3GO4N4s2vFIPF9iU=;
+        b=O0dAu3g1c2zpTiuIz1xZUMFkZ+PIxoW8WEXPHcgmmUV/m9xv/gDjqjLiSHLUywfC+R
+         NE/6DzVLjTa4Ely2i8f21dkNTp6UN5dkN/GlbscUQpmYoUi6cvKiSXAVt5edgeHeF89d
+         ohPUx7jDZLMXmfn07o2QFDkbPazn93FAmbBFeYALL8/dwLs4yC+moCy7+9RPO+4cengR
+         pcaELFE1mQKUN2IhsF5GvWlrXr8kp2x8ClItu5BGWve2tjC+hfBYttl7c/c186JmL1zE
+         NdsRCvoYWy5ivg0wTUJBUEyjbGKiCHGX8wc4X0hHlg6No1ABmS4lbffPGFh6gJRfwUoh
+         xlbg==
+X-Gm-Message-State: APjAAAXGapMrsiVE6g+lthN7iR1Gu/nBtpMfKKj8rb6nWzygC/TPNTfH
+        /ZdqjkRcGSeXs5OVe6spoe5dXQUER1FIhAX43O0pRA==
+X-Google-Smtp-Source: APXvYqyU7SYZ3r1zFZE21AN1DFeMgGQwh6SguX3BRtEUzUX/aM0TrfFkxtA08Wzok29Qq+v25QAmavsjX/AI8Qz4iuA=
+X-Received: by 2002:a19:671c:: with SMTP id b28mr12475324lfc.164.1561018083426;
+ Thu, 20 Jun 2019 01:08:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <5f1004d33b2347dcfbc677551bafc9d469bb079e.1560318544.git.christophe.leroy@c-s.fr>
-User-Agent: NeoMutt/20170113 (1.7.2)
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Thu, 20 Jun 2019 13:37:52 +0530
+Message-ID: <CA+G9fYsMcdHmKY66CNhsrizO-gErkOQCkTcBSyOHLpOs+8g5=g@mail.gmail.com>
+Subject: selftests: bpf: test_libbpf.sh failed at file test_l4lb.o
+To:     "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, bpf@vger.kernel.org,
+        Netdev <netdev@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        xdp-newbies@vger.kernel.org
+Cc:     "David S. Miller" <davem@davemloft.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>, kafai@fb.com,
+        Yonghong Song <yhs@fb.com>, john.fastabend@gmail.com,
+        hawk@kernel.org, jakub.kicinski@netronome.com,
+        Shuah Khan <shuah@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 12, 2019 at 05:49:50AM +0000, Christophe Leroy wrote:
-> Below commit came with a typo in the CONFIG_ symbol, leading
-> to a permanently reduced max key size regarless of the driver
-> capabilities.
-> 
-> Reported-by: Horia Geantă <horia.geanta@nxp.com>
-> Fixes: b8fbdc2bc4e7 ("crypto: talitos - reduce max key size for SEC1")
-> Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> ---
->  drivers/crypto/talitos.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+selftests: bpf test_libbpf.sh failed running Linux -next kernel
+20190618 and 20190619.
 
-Patch applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Here is the log from x86_64,
+# selftests bpf test_libbpf.sh
+bpf: test_libbpf.sh_ #
+# [0] libbpf BTF is required, but is missing or corrupted.
+libbpf: BTF_is #
+# test_libbpf failed at file test_l4lb.o
+failed: at_file #
+# selftests test_libbpf [FAILED]
+test_libbpf: [FAILED]_ #
+[FAIL] 29 selftests bpf test_libbpf.sh
+selftests: bpf_test_libbpf.sh [FAIL]
+
+Full test log,
+https://qa-reports.linaro.org/lkft/linux-next-oe/build/next-20190619/testrun/781777/log
+
+Test results comparison,
+https://qa-reports.linaro.org/lkft/linux-next-oe/tests/kselftest/bpf_test_libbpf.sh
+
+Good linux -next tag: next-20190617
+Bad linux -next tag: next-20190618
+git branch     master
+git commit    1c6b40509daf5190b1fd2c758649f7df1da4827b
+git repo
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+
+Best regards
+Naresh Kamboju
