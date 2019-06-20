@@ -2,52 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A98E0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5CA7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B34B2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8D6552089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054448;
-	bh=51G2RfOZqniUpFsAvtY2p//KMg0DjegK6uTOlGuPi8w=;
+	s=default; t=1561054455;
+	bh=jpoG5OfWr9KUYqixqHKTTx28JxU1Pd3vMM8nuxwZcgc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VAGV9DHKsnqCA9wHmXBf91DUrTmmUOS7Ge7eSIWYOM3R5V40/ffW3u56wndIl1IP0
-	 N8Z0b0VII9RFYYvqH0a6DNneT0v1RVEd0UXubVEvnLcmou8ZvHvHHgpzYhoAeFEh3Z
-	 o/Pp3PYbEXzisbMlGFjYRQSZArtsUhaWVCMvDRBk=
+	b=iMekY1nO19koPTOM2XzRhtZUviuUq+lES6Nq8gHqXJpSPo0O9quhAnQf+QrESHJ79
+	 37cJaQ9icgRSuirNHjU+x9E7gTfPzEhpxiD9UE6KulNeVfeoGUn1zTgg673ysp7kSi
+	 hknsVitS6nCLRxDu3zTKRZOPkKUPSO1wIkKIoL5w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfFTSOH (ORCPT
+        id S1729422AbfFTSOO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:14:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42244 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729379AbfFTSOE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:04 -0400
+        id S1728856AbfFTSOM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5FA02082C;
-        Thu, 20 Jun 2019 18:14:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ADD79205F4;
+        Thu, 20 Jun 2019 18:14:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054443;
-        bh=51G2RfOZqniUpFsAvtY2p//KMg0DjegK6uTOlGuPi8w=;
+        s=default; t=1561054452;
+        bh=jpoG5OfWr9KUYqixqHKTTx28JxU1Pd3vMM8nuxwZcgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pzLLHj0Ap226XiGenkQuX+SbyDxivpJREiAUTUiWtK8jaD9nyvvY011i+jyIC7wt3
-         jmXMQf/BOXmxsbr1F3Q+QJKVHyI4CsyMKrI79YRJb72d7u2GrVPQYF6+keqA6jg32C
-         8/6dDE7phHLL2pPWTUxnIJCDF571QaSwGzwhlu4I=
+        b=W1EJ6BITwKHwZ0LnQPY2ap5ipEfy6ER7SoLSOalM75Zk6Kr5jV7rHeonDTvZ6GeNO
+         q18U18yNcFQlYrWlda4Ja76lQdbmqX4X/L+pLOLJJDiKECvmS/51EeNUnqS1KmyAAx
+         stlsVRbRyUoKxU/ucEexeIpuZDptdPVTBT9wBmt0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alaa Hleihel <alaa@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 5.1 31/98] net/mlx5e: Avoid detaching non-existing netdev under switchdev mode
-Date:   Thu, 20 Jun 2019 19:56:58 +0200
-Message-Id: <20190620174350.526714136@linuxfoundation.org>
+        stable@vger.kernel.org, Chengguang Xu <cgxu519@gmail.com>,
+        Chao Yu <yuchao0@huawei.com>,
+        Gao Xiang <gaoxiang25@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.1 33/98] staging: erofs: set sb->s_root to NULL when failing from __getname()
+Date:   Thu, 20 Jun 2019 19:57:00 +0200
+Message-Id: <20190620174350.604609689@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -60,38 +61,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alaa Hleihel <alaa@mellanox.com>
+[ Upstream commit f2dcb8841e6b155da098edae09125859ef7e853d ]
 
-After introducing dedicated uplink representor, the netdev instance
-set over the esw manager vport (PF) became no longer in use, so it was
-removed in the cited commit once we're on switchdev mode.
-However, the mlx5e_detach function was not updated accordingly, and it
-still tries to detach a non-existing netdev, causing a kernel crash.
+Set sb->s_root to NULL when failing from __getname(),
+so that we can avoid double dput and unnecessary operations
+in generic_shutdown_super().
 
-This patch fixes this issue.
-
-Fixes: aec002f6f82c ("net/mlx5e: Uninstantiate esw manager vport netdev on switchdev mode")
-Signed-off-by: Alaa Hleihel <alaa@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Signed-off-by: Chengguang Xu <cgxu519@gmail.com>
+Reviewed-by: Chao Yu <yuchao0@huawei.com>
+Reviewed-by: Gao Xiang <gaoxiang25@huawei.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_main.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/staging/erofs/super.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_main.c
-@@ -5165,6 +5165,11 @@ static void mlx5e_detach(struct mlx5_cor
- 	struct mlx5e_priv *priv = vpriv;
- 	struct net_device *netdev = priv->netdev;
- 
-+#ifdef CONFIG_MLX5_ESWITCH
-+	if (MLX5_ESWITCH_MANAGER(mdev) && vpriv == mdev)
-+		return;
-+#endif
-+
- 	if (!netif_device_present(netdev))
- 		return;
- 
+diff --git a/drivers/staging/erofs/super.c b/drivers/staging/erofs/super.c
+index 15c784fba879..c8981662a49b 100644
+--- a/drivers/staging/erofs/super.c
++++ b/drivers/staging/erofs/super.c
+@@ -459,6 +459,7 @@ static int erofs_read_super(struct super_block *sb,
+ 	 */
+ err_devname:
+ 	dput(sb->s_root);
++	sb->s_root = NULL;
+ err_iget:
+ #ifdef EROFS_FS_HAS_MANAGED_CACHE
+ 	iput(sbi->managed_cache);
+-- 
+2.20.1
+
 
 
