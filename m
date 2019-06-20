@@ -2,162 +2,93 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D79C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4B92C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 791D720673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ZAl+pOXY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="AR65EvCs"
+	by mail.kernel.org (Postfix) with ESMTP id A7FE42084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:54:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731648AbfFTOy3 (ORCPT
+        id S1731934AbfFTOyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:54:29 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54642 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfFTOy3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:54:29 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 65BBF609CD; Thu, 20 Jun 2019 14:54:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561042468;
-        bh=pMqbryRRbIU4AIh4v96MaC9JtLkGuFViwuA1Q/TdhH8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=ZAl+pOXYBGO7whhGuWHJc4btecmjFZ/53wZvCO5XkGpRYwPCSFzuqq6VHJsbV3HGx
-         az/aX0jZPsp/ZqgoFQK9p3M8GbsOrdDm1SxaHPrqpQAMq17AVi3LC1dB0a4LRAqPNu
-         EKJntTC+hf8yK7OqihIDPW6iIzdp0Z3CPXOVoXLc=
-Received: from [10.79.136.27] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: saiprakash.ranjan@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 94B6A608BA;
-        Thu, 20 Jun 2019 14:54:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561042467;
-        bh=pMqbryRRbIU4AIh4v96MaC9JtLkGuFViwuA1Q/TdhH8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=AR65EvCstzMeE5tDxoWxP15ede45s1/eKvpOiavIWK/aCqSi5jeazJ8BS3UAHLxUd
-         PPIwOW0Y+rAPUB7FM8z3/hA5yXnXIqyxuAnBFStp+YBoypeD/rRsnbiJTx9pxlQZ0R
-         +YvfJAEgKc1Lthg0wn0GRgqy2j6Y6ZNCpbuzzpNY=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 94B6A608BA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH 1/2] coresight: Set affinity to invalid for missing CPU
- phandle
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>,
-        mathieu.poirier@linaro.org, leo.yan@linaro.org,
-        alexander.shishkin@linux.intel.com, andy.gross@linaro.org,
-        david.brown@linaro.org, mark.rutland@arm.com
-Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
-        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
- <49d6554536047b9f5526c4ea33990b7c904673d3.1561037262.git.saiprakash.ranjan@codeaurora.org>
- <f7a3592b-7ed7-b011-9ae1-dc2ca0e49ae4@arm.com>
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Message-ID: <fc72dab8-d287-38d4-1abd-faca02c09118@codeaurora.org>
-Date:   Thu, 20 Jun 2019 20:24:21 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 10:54:37 -0400
+Received: from mga07.intel.com ([134.134.136.100]:32281 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfFTOyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:54:37 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 07:54:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="183091685"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
+  by fmsmga004.fm.intel.com with ESMTP; 20 Jun 2019 07:54:33 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hdySO-0001MZ-M0; Thu, 20 Jun 2019 17:54:32 +0300
+Date:   Thu, 20 Jun 2019 17:54:32 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Charles Keepax <ckeepax@opensource.cirrus.com>
+Cc:     wsa@the-dreams.de, mika.westerberg@linux.intel.com,
+        jarkko.nikula@linux.intel.com, linux-i2c@vger.kernel.org,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        benjamin.tissoires@redhat.com, jbroadus@gmail.com,
+        patches@opensource.cirrus.com
+Subject: Re: [PATCH v5 3/7] i2c: acpi: Factor out getting the IRQ from ACPI
+Message-ID: <20190620145432.GD9224@smile.fi.intel.com>
+References: <20190620133420.4632-1-ckeepax@opensource.cirrus.com>
+ <20190620133420.4632-4-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
-In-Reply-To: <f7a3592b-7ed7-b011-9ae1-dc2ca0e49ae4@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190620133420.4632-4-ckeepax@opensource.cirrus.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Suzuki,
+On Thu, Jun 20, 2019 at 02:34:16PM +0100, Charles Keepax wrote:
+> In preparation for future refactoring factor out the fetch of the IRQ
+> into its own helper function.
 
-Thanks for the review.
+> +static int i2c_acpi_get_irq(struct acpi_device *adev)
+> +{
+> +	struct list_head resource_list;
+> +	int irq = -ENOENT;
+> +	int ret;
+> +
+> +	INIT_LIST_HEAD(&resource_list);
+> +
+> +	ret = acpi_dev_get_resources(adev, &resource_list,
+> +				     i2c_acpi_add_resource, &irq);
+> +	if (ret < 0)
 
-On 6/20/2019 7:25 PM, Suzuki K Poulose wrote:
-> 
-> Sai,
-> 
-> Thanks for the patch. Please could you change the subject to :
-> 
-> "coresight: Do not default to CPU0 for missing CPU phandle"
-> 
+> +		return -EINVAL;
 
-Sure.
+Can't we return ret value?
 
-> On 20/06/2019 14:45, Sai Prakash Ranjan wrote:
->> Affinity defaults to CPU0 in case of missing CPU phandle
->> and this leads to crashes in some cases because of such
->> wrong assumption. Fix this by returning -ENODEV in
-> 
-> Thats not the right justification. Causing crashes is due to
-> bad DT/firmware. I would be happy with something like :
-> 
-> "Coresight platform support assumes that a missing \"cpu\" phandle
-> defaults to CPU0. This could be problematic and unnecessarily binds
-> components to CPU0, where they may not be. Let us make the DT binding
-> rules a bit stricter by not defaulting to CPU0 for missing "cpu"
-> affinity information."
-> 
-> Also, you must
-> 
-> 1) update the devicetree/bindings document to reflect the same.
-> 2) update the drivers to take appropriate action on the missing CPU
->     where they are expected (e.g, CPU-debug, etm*), to prevent
->     breaking a bisect.
-> 
-> 
+> +
+> +	acpi_dev_free_resource_list(&resource_list);
+> +
+> +	return irq;
+> +}
 
-Sure will do it and repost.
+> +	ret = i2c_acpi_get_irq(adev);
+> +	if (ret > 0)
+> +		info->irq = ret;
 
->> coresight platform for such cases and then handle it
->> in the coresight drivers.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->> ---
->>   drivers/hwtracing/coresight/coresight-platform.c | 10 ++++++----
->>   1 file changed, 6 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/hwtracing/coresight/coresight-platform.c 
->> b/drivers/hwtracing/coresight/coresight-platform.c
->> index 3c5ceda8db24..b1ea60c210e1 100644
->> --- a/drivers/hwtracing/coresight/coresight-platform.c
->> +++ b/drivers/hwtracing/coresight/coresight-platform.c
->> @@ -160,15 +160,17 @@ static int of_coresight_get_cpu(struct device *dev)
->>       if (!dev->of_node)
->>           return 0;
->> +
->>       dn = of_parse_phandle(dev->of_node, "cpu", 0);
->> -    /* Affinity defaults to CPU0 */
->> +
->> +    /* Affinity defaults to invalid if no cpu nodes are found*/
-> 
-> The code is self explanatory here. You could drop the comment.
-> 
-
-Sure.
-
->>       if (!dn)
->> -        return 0;
->> +        return -ENODEV;
->> +
->>       cpu = of_cpu_node_to_id(dn);
->>       of_node_put(dn);
->> -    /* Affinity to CPU0 if no cpu nodes are found */
->> -    return (cpu < 0) ? 0 : cpu;
->> +    return cpu;
->>   }
-> 
-> Suzuki
-
--Sai
+And on error we do not bail out. This changes the behaviour.
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+With Best Regards,
+Andy Shevchenko
+
+
