@@ -2,228 +2,111 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAB7C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0BA0C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F7D2075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:01:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JD+NNQgW"
+	by mail.kernel.org (Postfix) with ESMTP id 9F864204FD
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:02:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731253AbfFTLBs (ORCPT
+        id S1726879AbfFTLCp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:01:48 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35803 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726345AbfFTLBr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:01:47 -0400
-Received: by mail-wm1-f68.google.com with SMTP id c6so2728780wml.0;
-        Thu, 20 Jun 2019 04:01:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=IF1UrzkwmllV6FGnyrzvVneNFAPUj7twgof+cG/GUpc=;
-        b=JD+NNQgW19oNRgSd06HC2uGvQaFBvrgQWSYwgHBKr2S+ufx9hPwHzpDMDfLBbW7hsn
-         cLD5QhMs+C5t15puHlS0opsPJRgBlCMJ7Hmyubc5EVWjc9uW8k2iVp3J54aMAO4nR0jN
-         uBcYsH+rap54RR+4JqGAl9QkfOTHvtmKQLoKRtqVd35dQiulpfyAi1VjEB6swbgGlvsd
-         CzRyw/WTeBfQvnkufg2C8wMV0bhO13fsZITOeO1W2jqPnDv3w8a7glpcD6glYjgBiJ0p
-         NCxH7XcY61mHCrQlx+kePNlXVw3jQtyyEL4qeB5vi6RE36iQKyR1BXjoqA3Lmj2ZQLIo
-         PfLg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=IF1UrzkwmllV6FGnyrzvVneNFAPUj7twgof+cG/GUpc=;
-        b=S5N45vDAj2IRnG+D8YtCVQ6pTAXYYeokzc/3dozDlirZtX52nUUyxmlZoWYF15KmU8
-         YFUvahWU5l/eQoueamA4nArmuj/9WoC3CEuNn6QQtwmNuEhsqs+oTVJ65/z1Qpi8CXeL
-         jqQM5OUsnFKigLlVL9rs+9L+UDO408LyP13FLJANs+mnQVrunNFSmbTvE7vYLvDMnjQt
-         zIcSrqoJ1e0/wKk6ie1MGXyq781MrHPimx2d1aZBsagSywTOIK1+0bbJYBzGHDrVPsJH
-         Re/65G1e40bB28Zq1PCt5UH07zp3PzgAG3kQMjaYmzc055pHYArq//HTvWOw+aJC0Yv+
-         i4Rw==
-X-Gm-Message-State: APjAAAXt6SaqY0SFbOb8b3H74BQFw3GzjSWiNcPNdig8nXLlolKWVxkF
-        qdunEBYgmLNUGoeCULqH0II=
-X-Google-Smtp-Source: APXvYqwNWQMemI2u6x6OPYvPpZUAnjFUhDWBD6VyDhpD1JiXbXPDS5UK7eBLywUJkgssbzISohn3eA==
-X-Received: by 2002:a7b:cbcb:: with SMTP id n11mr2365032wmi.146.1561028503945;
-        Thu, 20 Jun 2019 04:01:43 -0700 (PDT)
-Received: from localhost (p2E5BEF36.dip0.t-ipconnect.de. [46.91.239.54])
-        by smtp.gmail.com with ESMTPSA id y133sm6010161wmg.5.2019.06.20.04.01.42
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 04:01:43 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 13:01:41 +0200
-From:   Thierry Reding <thierry.reding@gmail.com>
-To:     Vidya Sagar <vidyas@nvidia.com>
-Cc:     lorenzo.pieralisi@arm.com, bhelgaas@google.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, jonathanh@nvidia.com, kishon@ti.com,
-        catalin.marinas@arm.com, will.deacon@arm.com, jingoohan1@gmail.com,
-        gustavo.pimentel@synopsys.com, digetx@gmail.com,
-        mperttunen@nvidia.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kthota@nvidia.com, mmaddireddy@nvidia.com, sagar.tv@gmail.com
-Subject: Re: [PATCH V10 12/15] arm64: tegra: Enable PCIe slots in P2972-0000
- board
-Message-ID: <20190620110141.GB15892@ulmo>
-References: <20190612095339.20118-1-vidyas@nvidia.com>
- <20190612095339.20118-13-vidyas@nvidia.com>
+        Thu, 20 Jun 2019 07:02:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37882 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726268AbfFTLCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:02:44 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9AFB2300DA2B;
+        Thu, 20 Jun 2019 11:02:44 +0000 (UTC)
+Received: from vitty.brq.redhat.com (unknown [10.43.2.155])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2AB7E5D9E5;
+        Thu, 20 Jun 2019 11:02:43 +0000 (UTC)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jim Mattson <jmattson@google.com>
+Subject: [PATCH RFC 0/5] x86/KVM/svm: get rid of hardcoded instructions lengths
+Date:   Thu, 20 Jun 2019 13:02:35 +0200
+Message-Id: <20190620110240.25799-1-vkuznets@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
-Content-Disposition: inline
-In-Reply-To: <20190612095339.20118-13-vidyas@nvidia.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 20 Jun 2019 11:02:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Jim rightfully complains that hardcoding instuctions lengths is not always
+correct: additional (redundant) prefixes can be used. Luckily, the ugliness
+is mostly harmless: modern AMD CPUs support NRIP_SAVE feature but I'd like
+to clean things up and sacrifice speed in favor of correctness.
 
---TRYliJ5NKNqkz5bu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Early RFC. Unfortunately, I got distracted by some other problems so
+sending it out half-baked.
 
-On Wed, Jun 12, 2019 at 03:23:36PM +0530, Vidya Sagar wrote:
-> Enable PCIe controller nodes to enable respective PCIe slots on
-> P2972-0000 board. Following is the ownership of slots by different
-> PCIe controllers.
-> Controller-0 : M.2 Key-M slot
-> Controller-1 : On-board Marvell eSATA controller
-> Controller-3 : M.2 Key-E slot
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
-> ---
-> Changes since [v9]:
-> * None
->=20
-> Changes since [v8]:
-> * None
->=20
-> Changes since [v7]:
-> * None
->=20
-> Changes since [v6]:
-> * None
->=20
-> Changes since [v5]:
-> * Arranged PCIe nodes in the order of their addresses
->=20
-> Changes since [v4]:
-> * None
->=20
-> Changes since [v3]:
-> * None
->=20
-> Changes since [v2]:
-> * Changed P2U label names to reflect new format that includes 'hsio'/'nvh=
-s'
->   strings to reflect UPHY brick they belong to
->=20
-> Changes since [v1]:
-> * Dropped 'pcie-' from phy-names property strings
->=20
->  .../arm64/boot/dts/nvidia/tegra194-p2888.dtsi |  2 +-
->  .../boot/dts/nvidia/tegra194-p2972-0000.dts   | 41 +++++++++++++++++++
->  2 files changed, 42 insertions(+), 1 deletion(-)
+TODO:
+- Get rid of hardcoded '+ 3' in vmrun_interception().
+- Test.
 
-Applied to for-5.3/arm64/dt, thanks.
+P.S. If you'd like to test the series you'll have to have a CPU without
+NRIP_SAVE feature or forcefully disable it, something like:
 
-Thierry
+index 8d4e50428b68..93c7eaad7915 100644
+--- a/arch/x86/kernel/cpu/amd.c
++++ b/arch/x86/kernel/cpu/amd.c
+@@ -922,6 +922,9 @@ static void init_amd(struct cpuinfo_x86 *c)
+        /* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
+        if (!cpu_has(c, X86_FEATURE_XENPV))
+                set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
++
++       /* No nrips */
++       clear_cpu_cap(c, X86_FEATURE_NRIPS);
+ }
+ 
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 5beca1030c9a..5b2ea34bc9f2 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -773,11 +773,11 @@ static void skip_emulated_instruction(struct kvm_vcpu *vcpu)
+ {
+        struct vcpu_svm *svm = to_svm(vcpu);
+ 
+-       if (svm->vmcb->control.next_rip != 0) {
++/*     if (svm->vmcb->control.next_rip != 0) {
+                WARN_ON_ONCE(!static_cpu_has(X86_FEATURE_NRIPS));
+                svm->next_rip = svm->vmcb->control.next_rip;
+        }
+-
++*/
+        if (!svm->next_rip) {
+                if (kvm_emulate_instruction(vcpu, EMULTYPE_SKIP) !=
+                                EMULATE_DONE)
 
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi b/arch/arm64/=
-boot/dts/nvidia/tegra194-p2888.dtsi
-> index 9f5810765efc..62e07e1197cc 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2888.dtsi
-> @@ -191,7 +191,7 @@
->  						regulator-boot-on;
->  					};
-> =20
-> -					sd3 {
-> +					vdd_1v8ao: sd3 {
->  						regulator-name =3D "VDD_1V8AO";
->  						regulator-min-microvolt =3D <1800000>;
->  						regulator-max-microvolt =3D <1800000>;
-> diff --git a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts b/arch/ar=
-m64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> index 6e6df650a4b0..eb79663b2af8 100644
-> --- a/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> +++ b/arch/arm64/boot/dts/nvidia/tegra194-p2972-0000.dts
-> @@ -167,4 +167,45 @@
->  			};
->  		};
->  	};
-> +
-> +	pcie@14100000 {
-> +		status =3D "okay";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_hsio_0>;
-> +		phy-names =3D "p2u-0";
-> +	};
-> +
-> +	pcie@14140000 {
-> +		status =3D "okay";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_hsio_7>;
-> +		phy-names =3D "p2u-0";
-> +	};
-> +
-> +	pcie@14180000 {
-> +		status =3D "okay";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
-> +		       <&p2u_hsio_5>;
-> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3";
-> +	};
-> +
-> +	pcie@141a0000 {
-> +		status =3D "disabled";
-> +
-> +		vddio-pex-ctl-supply =3D <&vdd_1v8ao>;
-> +
-> +		phys =3D <&p2u_nvhs_0>, <&p2u_nvhs_1>, <&p2u_nvhs_2>,
-> +		       <&p2u_nvhs_3>, <&p2u_nvhs_4>, <&p2u_nvhs_5>,
-> +		       <&p2u_nvhs_6>, <&p2u_nvhs_7>;
-> +
-> +		phy-names =3D "p2u-0", "p2u-1", "p2u-2", "p2u-3", "p2u-4",
-> +			    "p2u-5", "p2u-6", "p2u-7";
-> +	};
->  };
-> --=20
-> 2.17.1
->=20
+Vitaly Kuznetsov (5):
+  x86: KVM: svm: don't pretend to advance RIP in case
+    wrmsr_interception() results in #GP
+  x86: KVM: svm: avoid flooding logs when skip_emulated_instruction()
+    fails
+  x86: KVM: svm: clear interrupt shadow on all paths in
+    skip_emulated_instruction()
+  x86: KVM: add xsetbv to the emulator
+  x86: KVM: svm: remove hardcoded instruction length from intercepts
 
---TRYliJ5NKNqkz5bu
-Content-Type: application/pgp-signature; name="signature.asc"
+ arch/x86/include/asm/kvm_emulate.h |  1 +
+ arch/x86/kvm/emulate.c             |  9 ++++++++-
+ arch/x86/kvm/svm.c                 | 19 ++++++-------------
+ 3 files changed, 15 insertions(+), 14 deletions(-)
 
------BEGIN PGP SIGNATURE-----
+-- 
+2.20.1
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAl0LZ5UACgkQ3SOs138+
-s6E0OxAAqHtlSQS8hK55p9RUs8cm+q25f/x4sLncet4I7dGg+1mwumU92ACOOAo5
-phKrW0oi/ZaR2KpU9T9edmuaWP3dDjXIvUBjJ+vIQTBvA5FzB8xOO+LGcvgj6Sj8
-W/9pozwzVswEtxv/EolG7HIqNV4rbb8yKzIagqXc8pQBElS8NPJkUEz+VSj6+1b+
-9QqFl/bqp+iQzdLvCCMKcIUKISJM4JVnqLQ3dgeJuRajAqVm7UzQOtg7Yhm3hGML
-QEU48F8vmeutUyu6wziMkOX+EBGBx9ogiTi5J+IwZHnsVN8kn9aMAKmZyoZW0aOa
-WQI4sy/6WWnKqisRNc6H+gepjdw0MG+ToJKjDFNfMld+8CRrqm9YlwpTVgRx6MT7
-MPY2CJ7mUQzj/+tUrq7WueQOLI+kmqpB2PNeWe2pPDFCyE0tZgW99S8C7YKMF3Zp
-n77aTAOXTAWvbB78nakTik4DQmzuETZl2XEoqHDYVJ7WBzjXH2t1nFaU2+9Yx6kI
-EIiWYuSyR3NFzBuK368HQlJ3hyAmR0dvKapobzGz4zZrW+rAFT6INeQet+Snolhm
-IQ6shdCKCkD8p90VrV8UOowNJSo7df5mr6LdGv/zWhEU0YnqhI6cv0XtYs1yUh/1
-ZNbJfLMebxvjqwmB4n7pCnpt1otenWTcKgEfw0fxDiD2hJK51vw=
-=sH4H
------END PGP SIGNATURE-----
-
---TRYliJ5NKNqkz5bu--
