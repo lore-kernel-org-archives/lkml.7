@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C18DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF925C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E3FB20656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA95320665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:26:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055172;
-	bh=x7wSzYAg5Z3U5c4Cr/R9upcHWEUgoG1se+17GB55b8o=;
+	s=default; t=1561055176;
+	bh=qcaCHRrJutC7PBtw8DrRMnauqZWyAhYooM+x7R3QrsU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=reEUZiIWLVS0T4Wd0cKgAmoypFp5eyX0YyM+u9dkDKyxRkJzycVOI1Rh6uuw/mJUO
-	 9l5WAy+nm3eFiHwQA1A9DYUvMUXbAQFIGXnay7L5oh2dAC/+L3/zB8lp0s8cX1rYrE
-	 /GTUUxPPkN4HjnyOBCNdwcnW4m1OaSzeYFKhwqmg=
+	b=NDq1kQeJUeK4Oze0yJg9LIRLB1KgVAOBOk2jnTjez39R9zd+JWSNMBOKCrGUIDIln
+	 IJMH5LhfTDewYtZOJcXHrovhJFUeYMP10zinQKEl4QDOJqywKiyQsBnyxQIEKtG7vD
+	 726nIlwUGcNtb8Z6VveA17zWQsSl/AcZjROLBR+g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfFTSGc (ORCPT
+        id S1728165AbfFTSGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:06:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60652 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbfFTSG3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:06:29 -0400
+        id S1728143AbfFTSGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:06:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84485204FD;
-        Thu, 20 Jun 2019 18:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 73995214AF;
+        Thu, 20 Jun 2019 18:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053988;
-        bh=x7wSzYAg5Z3U5c4Cr/R9upcHWEUgoG1se+17GB55b8o=;
+        s=default; t=1561053985;
+        bh=qcaCHRrJutC7PBtw8DrRMnauqZWyAhYooM+x7R3QrsU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aj/j2p/WGsAe1dfLM/zL9WbaKQOkcjgCj1rKdHX3p3fjnUFrXg2hjy2xe4Zv4iS7d
-         kni6pe4qLHmo44Fw/0HvP3OK3B/UFyDMYEnz/lPnv7Lc3O5QUPEC7xrHFTtyUtL+RP
-         qdKYYRckw0NKlHiO4FBgDgqv1PhVm65HAzutbJh4=
+        b=CRbapW1ONXA67w4Dv0HEBvbWkKZSJW53XRDDnQzZLo0BE4dSYI8M4/xs3wnainaqL
+         t0QyvNE/DwRvncstbDSfHm5Mhdibs6Hv2x8nHBAAgTdCgRPbvVjtO69dzMCOHyVcBJ
+         Ou0bHZBU3w/yqpIGto5WwlWF8sOeslQnpUzNxRKU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Martin Weinelt <martin@linuxlounge.net>,
-        Dan Carpenter <dan.carpenter@oracle.com>
-Subject: [PATCH 4.9 096/117] Revert "staging: vc04_services: prevent integer overflow in create_pagelist()"
-Date:   Thu, 20 Jun 2019 19:57:10 +0200
-Message-Id: <20190620174357.661920821@linuxfoundation.org>
+        stable@vger.kernel.org,
+        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 095/117] sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
+Date:   Thu, 20 Jun 2019 19:57:09 +0200
+Message-Id: <20190620174357.628574230@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -59,45 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
 
-This reverts commit cf07331c8827c9e9e0b4274c9b60204c18592241 which was
-commit ca641bae6da977d638458e78cd1487b6160a2718 upstream.
+[ Upstream commit 07a6d63eb1b54b5fb38092780fe618dfe1d96e23 ]
 
-Martin writes:
-	This commit breaks the kernel build because the vchiq_pagelist_info
-	struct is not defined in v4.9.182.
+In d5a2aa24, the name in struct console sunhv_console was changed from "ttyS"
+to "ttyHV" while the name in struct uart_ops sunhv_pops remained unchanged.
 
-	It was only added in v4.10, in commit
-	4807f2c0e684e907c501cb96049809d7a957dbc2.
+This results in the hypervisor console device to be listed as "ttyHV0" under
+/proc/consoles while the device node is still named "ttyS0":
 
-Reported-by: Martin Weinelt <martin@linuxlounge.net>
-Cc: Dan Carpenter <dan.carpenter@oracle.com>
+root@osaka:~# cat /proc/consoles
+ttyHV0               -W- (EC p  )    4:64
+tty0                 -WU (E     )    4:1
+root@osaka:~# readlink /sys/dev/char/4:64
+../../devices/root/f02836f0/f0285690/tty/ttyS0
+root@osaka:~#
+
+This means that any userland code which tries to determine the name of the
+device file of the hypervisor console device can not rely on the information
+provided by /proc/consoles. In particular, booting current versions of debian-
+installer inside a SPARC LDOM will fail with the installer unable to determine
+the console device.
+
+After renaming the device in struct uart_ops sunhv_pops to "ttyHV" as well,
+the inconsistency is fixed and it is possible again to determine the name
+of the device file of the hypervisor console device by reading the contents
+of /proc/console:
+
+root@osaka:~# cat /proc/consoles
+ttyHV0               -W- (EC p  )    4:64
+tty0                 -WU (E     )    4:1
+root@osaka:~# readlink /sys/dev/char/4:64
+../../devices/root/f02836f0/f0285690/tty/ttyHV0
+root@osaka:~#
+
+With this change, debian-installer works correctly when installing inside
+a SPARC LDOM.
+
+Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c |    9 ---------
- 1 file changed, 9 deletions(-)
+ drivers/tty/serial/sunhv.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-+++ b/drivers/staging/vc04_services/interface/vchiq_arm/vchiq_2835_arm.c
-@@ -381,18 +381,9 @@ create_pagelist(char __user *buf, size_t
- 	int run, addridx, actual_pages;
-         unsigned long *need_release;
+--- a/drivers/tty/serial/sunhv.c
++++ b/drivers/tty/serial/sunhv.c
+@@ -392,7 +392,7 @@ static struct uart_ops sunhv_pops = {
+ static struct uart_driver sunhv_reg = {
+ 	.owner			= THIS_MODULE,
+ 	.driver_name		= "sunhv",
+-	.dev_name		= "ttyS",
++	.dev_name		= "ttyHV",
+ 	.major			= TTY_MAJOR,
+ };
  
--	if (count >= INT_MAX - PAGE_SIZE)
--		return NULL;
--
- 	offset = (unsigned int)buf & (PAGE_SIZE - 1);
- 	num_pages = (count + offset + PAGE_SIZE - 1) / PAGE_SIZE;
- 
--	if (num_pages > (SIZE_MAX - sizeof(PAGELIST_T) -
--			 sizeof(struct vchiq_pagelist_info)) /
--			(sizeof(u32) + sizeof(pages[0]) +
--			 sizeof(struct scatterlist)))
--		return NULL;
--
- 	*ppagelist = NULL;
- 
- 	/* Allocate enough storage to hold the page pointers and the page
 
 
