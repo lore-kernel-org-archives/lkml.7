@@ -2,135 +2,92 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=FREEMAIL_FORGED_FROMDOMAIN,
-	FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DBFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:01:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6FB7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:01:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 91D60208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:01:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B96772084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:01:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qrr7l1Ci"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731257AbfFTJBn (ORCPT
+        id S1731477AbfFTJBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:01:43 -0400
-Received: from ns.iliad.fr ([212.27.33.1]:60114 "EHLO ns.iliad.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfFTJBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:01:42 -0400
-Received: from ns.iliad.fr (localhost [127.0.0.1])
-        by ns.iliad.fr (Postfix) with ESMTP id 2867920600;
-        Thu, 20 Jun 2019 11:01:40 +0200 (CEST)
-Received: from [192.168.108.49] (freebox.vlq16.iliad.fr [213.36.7.13])
-        by ns.iliad.fr (Postfix) with ESMTP id 0FF8E2067B;
-        Thu, 20 Jun 2019 11:01:40 +0200 (CEST)
-Subject: Re: [PATCH v1] scsi: Don't select SCSI_PROC_FS by default
-To:     Douglas Gilbert <dgilbert@interlog.com>
-Cc:     Finn Thain <fthain@telegraphics.com.au>,
-        Bart Van Assche <bvanassche@acm.org>,
-        James Bottomley <jejb@linux.ibm.com>,
-        Martin Petersen <martin.petersen@oracle.com>,
-        SCSI <linux-scsi@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>
-References: <2de15293-b9be-4d41-bc67-a69417f27f7a@free.fr>
- <621306ee-7ab6-9cd2-e934-94b3d6d731fc@acm.org>
- <fb2d2e74-6725-4bf2-cf6c-63c0a2a10f4f@interlog.com>
- <alpine.LNX.2.21.1906181107240.287@nippy.intranet>
- <017cf3cf-ecd8-19c2-3bbd-7e7c28042c3c@free.fr>
- <f8339103-5b45-b72d-9f87-fd4dd7b3081e@interlog.com>
- <f1f98ab0-399a-6c12-073d-ee8ad47d5588@free.fr>
- <48912bc0-8c79-408d-7ed2-c127b99b8bcc@interlog.com>
-From:   Marc Gonzalez <marc.w.gonzalez@free.fr>
-Message-ID: <e04e14b7-e1ee-c0c1-9e6d-2628d2c873a9@free.fr>
-Date:   Thu, 20 Jun 2019 11:01:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Thu, 20 Jun 2019 05:01:46 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:33687 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfFTJBp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:01:45 -0400
+Received: by mail-ot1-f68.google.com with SMTP id i4so2064588otk.0;
+        Thu, 20 Jun 2019 02:01:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9XWALfDZsuDseMJ4aeFkChWWJWcZ4a9nteKLEt49TTw=;
+        b=qrr7l1CioNR8wIDkHD1EIRbzrQW1RxP5Hz3hm/662yglpTWvNKcW92yKLXiHIy/vEs
+         4WQEMK3OwEsAcQS/P2A7tNYixmS87ThBPQfjCpy8KcWRdBpjN1isNVjhnzZH6YeRW+jv
+         tebU05wd+GKmL5PrLPzewMTSHpO3B2o/EZ6mZWfyeKb1AAqJBiX6lBBcWEt+ZVOmoCsd
+         a+FALgnN31H8fup1wDenMvMG1BEm0ho5ZXezWF7SETv5CWXGMh3d+9bPMOWmIpjwD7gZ
+         mAHpDG9fyfV+ysI/gGjME78ayzQUu8gEqgIBwRTm4NaX0ynXfhCHxAXS18jQahGo96a6
+         cauA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9XWALfDZsuDseMJ4aeFkChWWJWcZ4a9nteKLEt49TTw=;
+        b=AQwtCgcRbrTB65Q5RP/DqQUD8iPoldwILkfwvjfTrraY6YIs1UG1vQQaId71HHheWf
+         eC6bELBUvFJ4Zu06puq+IBUrUHBQH7LumqzWwwKNgld1tv0huCFKo+pvcGDTq9SdZ/Ou
+         32jadjQl50HoEnpL6a4KqdW6/Ici+9UFsPKiwqLoNdqdp8yDKr00DzrATDH0ppcfsGh6
+         n1PTtcNoZDTI5PwIKMXXCgkUxwvMWgpK2tQcurnbSMODccjRlCJG0lfKG+rFR4V7dgGs
+         dhXlICcwhesHNX5BCf3lBzlxqKnVBXEt5rajVPk1im1H5vfXXIZj4fM2GfBur5J+1xtq
+         fOUw==
+X-Gm-Message-State: APjAAAV51HDxbBAVte0hVrQyqYS6Go48OC80Ia9BVCWkLu8yQNvvNjhC
+        plLON6+P5Perv7UL3cvqmHzFb8Rm/oY1OK8pR04=
+X-Google-Smtp-Source: APXvYqwWsIIp/o0pN10sFuCvbSWrFLP/so3UOmDqaKG5SeJWGBQd2M4ahM1uMfnCI4vJRjkEmfHH/DmQ3kI8JZc/VL4=
+X-Received: by 2002:a9d:62c4:: with SMTP id z4mr2613071otk.56.1561021304529;
+ Thu, 20 Jun 2019 02:01:44 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <48912bc0-8c79-408d-7ed2-c127b99b8bcc@interlog.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: ClamAV using ClamSMTP ; ns.iliad.fr ; Thu Jun 20 11:01:40 2019 +0200 (CEST)
+References: <20190620050301.1149-1-tao3.xu@intel.com> <CANRm+Cwg7ogTN1w=xNyn+8CfxwofdxRykULFe217pXidzEhh6Q@mail.gmail.com>
+ <f358c914-ae58-9889-a8ef-6ea9f3b2650e@linux.intel.com> <b3f76acd-cc7e-9cd7-d7f7-404ba756ab87@redhat.com>
+ <2032f811-b583-eca1-3ece-d1e95738ff64@linux.intel.com> <d9b3e4ff-e14b-1bc5-2a7e-c89b545bb2fc@redhat.com>
+In-Reply-To: <d9b3e4ff-e14b-1bc5-2a7e-c89b545bb2fc@redhat.com>
+From:   Wanpeng Li <kernellwp@gmail.com>
+Date:   Thu, 20 Jun 2019 17:02:56 +0800
+Message-ID: <CANRm+Cx2qsBJkauu9OryN7mR_dEgyha_KUZC=5-uqc5JoSgvPA@mail.gmail.com>
+Subject: Re: [PATCH] KVM: vmx: Fix the broken usage of vmx_xsaves_supported
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Xiaoyao Li <xiaoyao.li@linux.intel.com>,
+        Tao Xu <tao3.xu@intel.com>, Radim Krcmar <rkrcmar@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, kvm <kvm@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19/06/2019 16:34, Douglas Gilbert wrote:
+On Thu, 20 Jun 2019 at 16:59, Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 20/06/19 10:55, Xiaoyao Li wrote:
+> >
+> >> However I may be wrong because I didn't review the code very closely:
+> >> the old code is obvious and so there is no point in changing it.
+> >
+> > you mean this part about XSS_EXIT_BITMAP? how about the other part in
+> > vmx_set/get_msr() in this patch?
+>
+> Yes, only the XSS_EXIT_BITMAP part.  The other is a bugfix, I didn't
+> understand Wanpeng's objection very well.
 
-> On 2019-06-19 5:42 a.m., Marc Gonzalez wrote:
-> 
->> I assume sg3_utils requires CHR_DEV_SG. Is it the case?
->>
->> If so, we would just need to enable SCSI_PROC_FS when CHR_DEV_SG is enabled.
->>
->> diff --git a/drivers/scsi/Kconfig b/drivers/scsi/Kconfig
->> index 73bce9b6d037..642ca0e7d363 100644
->> --- a/drivers/scsi/Kconfig
->> +++ b/drivers/scsi/Kconfig
->> @@ -54,14 +54,12 @@ config SCSI_NETLINK
->>   config SCSI_PROC_FS
->>   	bool "legacy /proc/scsi/ support"
->>   	depends on SCSI && PROC_FS
->> -	default y
->> +	default CHR_DEV_SG
->>   	---help---
->>   	  This option enables support for the various files in
->>   	  /proc/scsi.  In Linux 2.6 this has been superseded by
->>   	  files in sysfs but many legacy applications rely on this.
->>   
->> -	  If unsure say Y.
->> -
->>   comment "SCSI support type (disk, tape, CD-ROM)"
->>   	depends on SCSI
->>   
->>
->> Would that work for you?
->> I checked that SCSI_PROC_FS=y whether CHR_DEV_SG=y or m
->> I can spin a v2, with a blurb about how sg3_utils relies on SCSI_PROC_FS.
-> 
-> Yes, but (see below) ...
-> 
-> Example of use of /proc/scsi/scsi [...]
-> Now looking at /proc/scsi/device_info [...]
-> 
-> IMO unless there is a replacement for /proc/scsi/device_info
-> then your patch should not go ahead . If it does, any reasonable
-> distro should override it.
-> 
-> That is a black (or quirks) list that can be added to by writing an
-> entry to /proc/scsi/device_info . So if a user has a device that needs
-> one of those quirks defined to stop their system locking up when a
-> device of that type is plugged in, and the distro or some app (say,
-> that needs that device) knows about that, then it would be sad if
-> /proc/scsi/device_info was missing due to the changed default that is
-> being proposed.
+https://lkml.org/lkml/2019/6/20/227 A more complete one.
 
-You've made it clear that SCSI_PROC_FS is important for several classes
-of hardware.
-
-You worry that changing the Kconfig default would force distro maintainers
-(we are talking about Debian/Redhat/Suse/etc right?) to actually turn the
-feature on, instead of relying on the "default y" behavior (as they have
-done in the past).
-
-How likely is it that distro kernels would *not* enable CHR_DEV_SG?
-(Distros tend to enable everything, and then some.)
-
-CHR_DEV_SG is enabled in the default configs for i386 and x86_64:
-
-$ git grep CHR_DEV_SG arch/x86/configs/
-arch/x86/configs/i386_defconfig:CONFIG_CHR_DEV_SG=y
-arch/x86/configs/x86_64_defconfig:CONFIG_CHR_DEV_SG=y
-
-=> As soon as CHR_DEV_SG is enabled, SCSI_PROC_FS is also enabled.
-
-(I work on smaller systems where we do use /proc occasionally, but we
-don't enable CHR_DEV_SG or SCSI_PROC_FS.)
-
-I think we just need to find a reasonable condition for enabling
-SCSI_PROC_FS by default on "your" sytems, and not on "mine" ;-)
-
-Regards.
+Regards,
+Wanpeng Li
