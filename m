@@ -2,131 +2,240 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63020C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:47:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D16AFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:48:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D562082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:47:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LPdPtGZm"
+	by mail.kernel.org (Postfix) with ESMTP id A33142082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:48:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726215AbfFTUrE (ORCPT
+        id S1726230AbfFTUss (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:47:04 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45976 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfFTUrE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:47:04 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k35so547790pgm.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:47:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=O7l+Vz8Z+P5e/XZWrPOY5NRWsmIcQSKPNpkfC3vTPbA=;
-        b=LPdPtGZm3Cn4AH88lhL8O5Q3ngb9omPQ6UlcQz+FUPIDjiuAqz0J341JuPnNaUYkSQ
-         /2WDq945SjNbhP0UH69dhcavWBJUFj1jh+R5LOnEc7xa2Rsfh3bWsYu5uurPZzBwV32R
-         Wie2iQCTYHkHjSE7VCDn6rzndnvldaDH5+Hvc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=O7l+Vz8Z+P5e/XZWrPOY5NRWsmIcQSKPNpkfC3vTPbA=;
-        b=P1PplnCfneL5e2hbNZcAZhVLb7B0OVaf3tntClZpnrO/zegJK+fxActrRU0p2HB8B2
-         69DobWsKaDI3qEVma0ZLMMTyvC697vvxgWf2abTzJgJDWL+yA+m9hQNiGiGkWiBszNi2
-         lopTVD8cBbEillYJ8CRNCf2Woc3RWRK77rkJ4YnDtpcYuZGvlfrJnWZVhjLoQZJE+vOP
-         CQkknQPl8rErl8OtkezzilTIckce+S9L2I3uB3wgbyE1LtP+iMO6OfxTfkD5tu6+Kiio
-         UfIWOzhFAvIfW6B4qG87AOHli8GSiBs0/Pwb/1EPfXxWy2mlvQ5rvfCx2+oBI7LwtSDQ
-         BMew==
-X-Gm-Message-State: APjAAAX+ifM4XckOzIBBaoR3IOpyOd685RokCihdbDG3unJJWjm1uAZB
-        PcobcHDzFqPzHNsvGac78KMaIA==
-X-Google-Smtp-Source: APXvYqx5GZWgd48a6+yKfnLbweOOJhEBeIBAGntj/FOqK0vjt6TATda1inqr3cAGAltTTmAiF918jg==
-X-Received: by 2002:a17:90a:ac11:: with SMTP id o17mr1639575pjq.134.1561063623898;
-        Thu, 20 Jun 2019 13:47:03 -0700 (PDT)
-Received: from localhost ([2620:15c:202:1:75a:3f6e:21d:9374])
-        by smtp.gmail.com with ESMTPSA id f15sm564455pje.17.2019.06.20.13.47.03
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 13:47:03 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 13:47:01 -0700
-From:   Matthias Kaehlcke <mka@chromium.org>
-To:     Tom Roeder <tmroeder@google.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org, Raul E Rangel <rrangel@chromium.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Tom Hughes <tomhughes@chromium.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Ryan Case <ryandcase@chromium.org>, Yu Liu <yudiliu@google.com>
-Subject: Re: [PATCH] gen_compile_command: Add support for separate
- KBUILD_OUTPUT directory
-Message-ID: <20190620204701.GX137143@google.com>
-References: <20190620184523.155756-1-mka@chromium.org>
- <20190620192345.GA133204@google.com>
+        Thu, 20 Jun 2019 16:48:48 -0400
+Received: from sauhun.de ([88.99.104.3]:45474 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725958AbfFTUsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 16:48:47 -0400
+Received: from localhost (p5486CFDE.dip0.t-ipconnect.de [84.134.207.222])
+        by pokefinder.org (Postfix) with ESMTPSA id E04712C376D;
+        Thu, 20 Jun 2019 22:48:45 +0200 (CEST)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Kieran Bingham <kieran.bingham@ideasonboard.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: [RFC/RFT PATCH RESEND] i2c: replace i2c_new_secondary_device with an ERR_PTR variant
+Date:   Thu, 20 Jun 2019 22:48:34 +0200
+Message-Id: <20190620204834.1575-1-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190620192345.GA133204@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:23:45PM -0700, Tom Roeder wrote:
-> I can confirm that I can still run clang-tidy on the kernel using this
-> new version of the script; it generates a version of
-> compile_commands.json that works in my case.
-> 
-> On Thu, Jun 20, 2019 at 11:45:23AM -0700, Matthias Kaehlcke wrote:
-> > gen_compile_command.py currently assumes that the .cmd files and the
-> > source code live in the same directory, which is not the case when
-> > a separate KBUILD_OUTPUT directory is used.
-> > 
-> > Add a new option to specify the kbuild output directory. If the
-> > option is not set the kernel source directory is used.
-> > 
-> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> Reviewed-by: Tom Roeder <tmroeder@google.com>
-> Tested-by: Tom Roeder <tmroeder@google.com>
+In the general move to have i2c_new_*_device functions which return
+ERR_PTR instead of NULL, this patch converts i2c_new_secondary_device().
 
-Thanks!
+There are only few users, so this patch converts the I2C core and all
+users in one go. The function gets renamed to i2c_new_ancillary_device()
+so out-of-tree users will get a build failure to understand they need to
+adapt their error checking code.
 
-> >  scripts/gen_compile_commands.py | 28 +++++++++++++++++++---------
-> >  1 file changed, 19 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/scripts/gen_compile_commands.py b/scripts/gen_compile_commands.py
-> > index 7915823b92a5..5a738ec66cc7 100755
-> > --- a/scripts/gen_compile_commands.py
-> > +++ b/scripts/gen_compile_commands.py
-> > @@ -31,15 +31,21 @@ def parse_arguments():
-> >  
-> >      Returns:
-> >          log_level: A logging level to filter log output.
-> > -        directory: The directory to search for .cmd files.
-> > +        source_directory: The kernel source directory.
-> > +        kbuild_output_directory: The directory to search for .cmd files.
-> >          output: Where to write the compile-commands JSON file.
-> >      """
-> >      usage = 'Creates a compile_commands.json database from kernel .cmd files'
-> >      parser = argparse.ArgumentParser(description=usage)
-> >  
-> > -    directory_help = ('Path to the kernel source directory to search '
-> > +    directory_help = ('Path to the kernel source directory'
-> Minor detail: this needs a space after "directory" so that it reads
-> "directory '". Otherwise, the output doesn't have a space before the
-> parenthesis.
-> 
-> >                        '(defaults to the working directory)')
-> >      parser.add_argument('-d', '--directory', type=str, help=directory_help)
-> > +    kbuild_output_directory_help = ('Path to the directory to search for '
-> > +                                    '.cmd files'
-> Same comment here: this should be "files '", with a space before the
-> ending quote character.
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
 
-Ok, I'll wait a bit for it there are other comments and send out a new
-version with the spaces added.
+Sorry for the resend. I missed to add quite some relevant ppl to cc.
+
+This patch is RFC for now because:
+
+* there is one FIXME blob which I can only remove after a missing
+  header update which I will try to get into v5.2-rc6
+
+* I wanted to check if media-maintainers agree to let me apply
+  this via the I2C tree?
+
+* maybe someone with ADV HW is willing to test this?
+
+The patch is based on v5.2-rc5 and tested with a Renesas Lager board
+(R-Car H2) and a tweaked DA9063 driver. I don't have any of these ADV
+devices properly set up so the code is only build tested.
+
+If this is acceptable, I likely will add a patch adding a devm_ variant
+of this new function to the patch stack and convert the users, too.
+
+I think this new i2c_new_ancillary_device() should replace
+i2c_new_dummy() in quite some places later. But we will see...
+
+ drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 18 +++++++++---------
+ drivers/i2c/i2c-core-base.c                  | 10 +++++-----
+ drivers/media/i2c/adv748x/adv748x-core.c     |  6 +++---
+ drivers/media/i2c/adv7604.c                  | 12 ++++++++----
+ include/linux/i2c.h                          |  2 +-
+ 5 files changed, 26 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+index f6d2681f6927..9e13e466e72c 100644
+--- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
++++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
+@@ -981,10 +981,10 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
+ {
+ 	int ret;
+ 
+-	adv->i2c_cec = i2c_new_secondary_device(adv->i2c_main, "cec",
++	adv->i2c_cec = i2c_new_ancillary_device(adv->i2c_main, "cec",
+ 						ADV7511_CEC_I2C_ADDR_DEFAULT);
+-	if (!adv->i2c_cec)
+-		return -EINVAL;
++	if (IS_ERR(adv->i2c_cec))
++		return PTR_ERR(adv->i2c_cec);
+ 	i2c_set_clientdata(adv->i2c_cec, adv);
+ 
+ 	adv->regmap_cec = devm_regmap_init_i2c(adv->i2c_cec,
+@@ -1165,20 +1165,20 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
+ 
+ 	adv7511_packet_disable(adv7511, 0xffff);
+ 
+-	adv7511->i2c_edid = i2c_new_secondary_device(i2c, "edid",
++	adv7511->i2c_edid = i2c_new_ancillary_device(i2c, "edid",
+ 					ADV7511_EDID_I2C_ADDR_DEFAULT);
+-	if (!adv7511->i2c_edid) {
+-		ret = -EINVAL;
++	if (IS_ERR(adv7511->i2c_edid)) {
++		ret = PTR_ERR(adv7511->i2c_edid);
+ 		goto uninit_regulators;
+ 	}
+ 
+ 	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
+ 		     adv7511->i2c_edid->addr << 1);
+ 
+-	adv7511->i2c_packet = i2c_new_secondary_device(i2c, "packet",
++	adv7511->i2c_packet = i2c_new_ancillary_device(i2c, "packet",
+ 					ADV7511_PACKET_I2C_ADDR_DEFAULT);
+-	if (!adv7511->i2c_packet) {
+-		ret = -EINVAL;
++	if (IS_ERR(adv7511->i2c_packet)) {
++		ret = PTR_ERR(adv7511->i2c_packet);
+ 		goto err_i2c_unregister_edid;
+ 	}
+ 
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index e77bab2fb467..8b7855f3a199 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -965,7 +965,7 @@ struct i2c_client *devm_i2c_new_dummy_device(struct device *dev,
+ EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
+ 
+ /**
+- * i2c_new_secondary_device - Helper to get the instantiated secondary address
++ * i2c_new_ancillary_device - Helper to get the instantiated secondary address
+  * and create the associated device
+  * @client: Handle to the primary client
+  * @name: Handle to specify which secondary address to get
+@@ -984,9 +984,9 @@ EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
+  * cell whose "reg-names" value matches the slave name.
+  *
+  * This returns the new i2c client, which should be saved for later use with
+- * i2c_unregister_device(); or NULL to indicate an error.
++ * i2c_unregister_device(); or an ERR_PTR to describe the error.
+  */
+-struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
++struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
+ 						const char *name,
+ 						u16 default_addr)
+ {
+@@ -1001,9 +1001,9 @@ struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
+ 	}
+ 
+ 	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
+-	return i2c_new_dummy(client->adapter, addr);
++	return i2c_new_dummy_device(client->adapter, addr);
+ }
+-EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
++EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
+ 
+ /* ------------------------------------------------------------------------- */
+ 
+diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
+index f57cd77a32fa..2567de2b0037 100644
+--- a/drivers/media/i2c/adv748x/adv748x-core.c
++++ b/drivers/media/i2c/adv748x/adv748x-core.c
+@@ -183,14 +183,14 @@ static int adv748x_initialise_clients(struct adv748x_state *state)
+ 	int ret;
+ 
+ 	for (i = ADV748X_PAGE_DPLL; i < ADV748X_PAGE_MAX; ++i) {
+-		state->i2c_clients[i] = i2c_new_secondary_device(
++		state->i2c_clients[i] = i2c_new_ancillary_device(
+ 				state->client,
+ 				adv748x_default_addresses[i].name,
+ 				adv748x_default_addresses[i].default_addr);
+ 
+-		if (state->i2c_clients[i] == NULL) {
++		if (IS_ERR(state->i2c_clients[i])) {
+ 			adv_err(state, "failed to create i2c client %u\n", i);
+-			return -ENOMEM;
++			return PTR_ERR(state->i2c_clients[i]);
+ 		}
+ 
+ 		ret = adv748x_configure_regmap(state, i);
+diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+index 28a84bf9f8a9..ad68f24a369f 100644
+--- a/drivers/media/i2c/adv7604.c
++++ b/drivers/media/i2c/adv7604.c
+@@ -2881,11 +2881,15 @@ static struct i2c_client *adv76xx_dummy_client(struct v4l2_subdev *sd,
+ 		new_client = i2c_new_dummy(client->adapter,
+ 					   pdata->i2c_addresses[page]);
+ 	else
+-		new_client = i2c_new_secondary_device(client,
++		new_client = i2c_new_ancillary_device(client,
+ 				adv76xx_default_addresses[page].name,
+ 				adv76xx_default_addresses[page].default_addr);
+ 
+-	if (new_client)
++	/* FIXME: can be removed once i2c_new_dummy_device hits upstream */
++	if (!new_client)
++		new_client = ERR_PTR(-ENOENT);
++
++	if (!IS_ERR(new_client))
+ 		io_write(sd, io_reg, new_client->addr << 1);
+ 
+ 	return new_client;
+@@ -3520,8 +3524,8 @@ static int adv76xx_probe(struct i2c_client *client,
+ 			continue;
+ 
+ 		state->i2c_clients[i] = adv76xx_dummy_client(sd, i);
+-		if (!state->i2c_clients[i]) {
+-			err = -EINVAL;
++		if (IS_ERR(state->i2c_clients[i])) {
++			err = PTR_ERR(state->i2c_clients[i]);
+ 			v4l2_err(sd, "failed to create i2c client %u\n", i);
+ 			goto err_i2c;
+ 		}
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index fa5552c2307b..ebbe024dd9e0 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -473,7 +473,7 @@ extern struct i2c_client *
+ devm_i2c_new_dummy_device(struct device *dev, struct i2c_adapter *adap, u16 address);
+ 
+ extern struct i2c_client *
+-i2c_new_secondary_device(struct i2c_client *client,
++i2c_new_ancillary_device(struct i2c_client *client,
+ 				const char *name,
+ 				u16 default_addr);
+ 
+-- 
+2.20.1
+
