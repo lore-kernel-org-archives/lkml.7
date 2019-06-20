@@ -2,165 +2,105 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA9F0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:36:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 61771C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:37:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE15206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:36:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3545F2070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:37:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="Zui/vej+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731709AbfFTKgF (ORCPT
+        id S1726900AbfFTKhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:36:05 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52822 "EHLO mx1.redhat.com"
+        Thu, 20 Jun 2019 06:37:33 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:41342 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731681AbfFTKgD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:36:03 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726222AbfFTKhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:37:33 -0400
+Received: from zn.tnic (p200300EC2F07DE001CBAC5B40D023BBB.dip0.t-ipconnect.de [IPv6:2003:ec:2f07:de00:1cba:c5b4:d02:3bbb])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3AF3386663;
-        Thu, 20 Jun 2019 10:36:02 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-117-88.ams2.redhat.com [10.36.117.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 628215C66B;
-        Thu, 20 Jun 2019 10:35:59 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>
-Subject: [PATCH v2 6/6] drivers/base/memory.c: Get rid of find_memory_block_hinted()
-Date:   Thu, 20 Jun 2019 12:35:20 +0200
-Message-Id: <20190620103520.23481-7-david@redhat.com>
-In-Reply-To: <20190620103520.23481-1-david@redhat.com>
-References: <20190620103520.23481-1-david@redhat.com>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 5705B1EC08BF;
+        Thu, 20 Jun 2019 12:37:31 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1561027051;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=uNCl92NHKqImItrHgjFdygAi3apkvbs9h7DQxi7o4Q8=;
+        b=Zui/vej+25gdHxS3fERSrEEahZQzkYs8gXbaocYaNy9+1nAm1Rz+VnRN0B5BIfJCIgDvt7
+        tSR+IRpWMwK8BycxNu7O10ule8dBeFnJK/ieFgDnjgkQQAcVn3BhLIu7PLrlgj/bsbOjWn
+        60WdYGnCczIJ/CMX9I5I08zsTt1OjMk=
+Date:   Thu, 20 Jun 2019 12:37:20 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, H Peter Anvin <hpa@zytor.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Radim Krcmar <rkrcmar@redhat.com>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
+Subject: Re: [PATCH v2 2/2] x86/cpufeatures: Enumerate new AVX512 BFLOAT16
+ instructions
+Message-ID: <20190620103720.GB28032@zn.tnic>
+References: <1560794416-217638-1-git-send-email-fenghua.yu@intel.com>
+ <1560794416-217638-3-git-send-email-fenghua.yu@intel.com>
+ <20190619173140.GH9574@zn.tnic>
+ <20190619213404.GB234387@romley-ivt3.sc.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Thu, 20 Jun 2019 10:36:02 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190619213404.GB234387@romley-ivt3.sc.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-No longer needed, let's remove it. Also, drop the "hint" parameter
-completely from "find_memory_block_by_id", as nobody needs it anymore.
+On Wed, Jun 19, 2019 at 02:34:04PM -0700, Fenghua Yu wrote:
+> diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+> index efb114298cfb..4910cb421b82 100644
+> --- a/arch/x86/kernel/cpu/common.c
+> +++ b/arch/x86/kernel/cpu/common.c
+> @@ -847,6 +847,9 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+>  		c->x86_capability[CPUID_7_0_EBX] = ebx;
+>  		c->x86_capability[CPUID_7_ECX] = ecx;
+>  		c->x86_capability[CPUID_7_EDX] = edx;
+> +
+> +		cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
+> +		c->x86_capability[CPUID_7_1_EAX] = eax;
+>  	}
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c  | 32 ++++++++++----------------------
- include/linux/memory.h |  2 --
- 2 files changed, 10 insertions(+), 24 deletions(-)
+You need to test the sub-leaf index validity here before accessing
+subleaf 1:
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 0204384b4d1d..fefb64d3588e 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -592,26 +592,12 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
-  * A reference for the returned object is held and the reference for the
-  * hinted object is released.
-  */
--static struct memory_block *find_memory_block_by_id(unsigned long block_id,
--						    struct memory_block *hint)
-+static struct memory_block *find_memory_block_by_id(unsigned long block_id)
- {
--	struct device *hintdev = hint ? &hint->dev : NULL;
- 	struct device *dev;
+diff --git a/arch/x86/kernel/cpu/common.c b/arch/x86/kernel/cpu/common.c
+index 4910cb421b82..dad20bc891d5 100644
+--- a/arch/x86/kernel/cpu/common.c
++++ b/arch/x86/kernel/cpu/common.c
+@@ -848,8 +848,11 @@ void get_cpu_cap(struct cpuinfo_x86 *c)
+ 		c->x86_capability[CPUID_7_ECX] = ecx;
+ 		c->x86_capability[CPUID_7_EDX] = edx;
  
--	dev = subsys_find_device_by_id(&memory_subsys, block_id, hintdev);
--	if (hint)
--		put_device(&hint->dev);
--	if (!dev)
--		return NULL;
--	return to_memory_block(dev);
--}
--
--struct memory_block *find_memory_block_hinted(struct mem_section *section,
--					      struct memory_block *hint)
--{
--	unsigned long block_id = base_memory_block_id(__section_nr(section));
--
--	return find_memory_block_by_id(block_id, hint);
-+	dev = subsys_find_device_by_id(&memory_subsys, block_id, NULL);
-+	return dev ? to_memory_block(dev) : NULL;
- }
+-		cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
+-		c->x86_capability[CPUID_7_1_EAX] = eax;
++		/* Check valid sub-leaf index before accessing it */
++		if (eax >= 1) {
++			cpuid_count(0x00000007, 1, &eax, &ebx, &ecx, &edx);
++			c->x86_capability[CPUID_7_1_EAX] = eax;
++		}
+ 	}
  
- /*
-@@ -624,7 +610,9 @@ struct memory_block *find_memory_block_hinted(struct mem_section *section,
-  */
- struct memory_block *find_memory_block(struct mem_section *section)
- {
--	return find_memory_block_hinted(section, NULL);
-+	unsigned long block_id = base_memory_block_id(__section_nr(section));
-+
-+	return find_memory_block_by_id(block_id);
- }
- 
- static struct attribute *memory_memblk_attrs[] = {
-@@ -675,7 +663,7 @@ static int init_memory_block(struct memory_block **memory,
- 	unsigned long start_pfn;
- 	int ret = 0;
- 
--	mem = find_memory_block_by_id(block_id, NULL);
-+	mem = find_memory_block_by_id(block_id);
- 	if (mem) {
- 		put_device(&mem->dev);
- 		return -EEXIST;
-@@ -755,7 +743,7 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
- 		end_block_id = block_id;
- 		for (block_id = start_block_id; block_id != end_block_id;
- 		     block_id++) {
--			mem = find_memory_block_by_id(block_id, NULL);
-+			mem = find_memory_block_by_id(block_id);
- 			mem->section_count = 0;
- 			unregister_memory(mem);
- 		}
-@@ -782,7 +770,7 @@ void remove_memory_block_devices(unsigned long start, unsigned long size)
- 
- 	mutex_lock(&mem_sysfs_mutex);
- 	for (block_id = start_block_id; block_id != end_block_id; block_id++) {
--		mem = find_memory_block_by_id(block_id, NULL);
-+		mem = find_memory_block_by_id(block_id);
- 		if (WARN_ON_ONCE(!mem))
- 			continue;
- 		mem->section_count = 0;
-@@ -882,7 +870,7 @@ int walk_memory_blocks(unsigned long start, unsigned long size,
- 	int ret = 0;
- 
- 	for (block_id = start_block_id; block_id <= end_block_id; block_id++) {
--		mem = find_memory_block_by_id(block_id, NULL);
-+		mem = find_memory_block_by_id(block_id);
- 		if (!mem)
- 			continue;
- 
-diff --git a/include/linux/memory.h b/include/linux/memory.h
-index b3b388775a30..02e633f3ede0 100644
---- a/include/linux/memory.h
-+++ b/include/linux/memory.h
-@@ -116,8 +116,6 @@ void remove_memory_block_devices(unsigned long start, unsigned long size);
- extern int memory_dev_init(void);
- extern int memory_notify(unsigned long val, void *v);
- extern int memory_isolate_notify(unsigned long val, void *v);
--extern struct memory_block *find_memory_block_hinted(struct mem_section *,
--							struct memory_block *);
- extern struct memory_block *find_memory_block(struct mem_section *);
- typedef int (*walk_memory_blocks_func_t)(struct memory_block *, void *);
- extern int walk_memory_blocks(unsigned long start, unsigned long size,
+ 	/* Extended state features: level 0x0000000d */
+
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
