@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6E45C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE5FCC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 862F4205F4
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 88B5D2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054466;
-	bh=I3BsryP/5Zxl8KTwCtVmeaeJ9pMHX61Ww9t6D4ooh+c=;
+	s=default; t=1561054469;
+	bh=VqzwzHHbmfYIgfW2lSoHJXCgE3kN9UfqUcUCgn0i6Ds=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DQTmKROs8FPpk2p3IuhWHFek7QkgFP/au1cU97y4p5EBS9RKRFIMGjLgj4C7+S+KZ
-	 vYVtdfvb7zPxn/XhZ8zzUEi0AVLq4C+lvjx9GsmWIIAk8k28ZoL/lb+WlYZ9g9HLH/
-	 JLL4Y4kOxBIJknALu6uUapJlpn1uykg03LvENJwA=
+	b=t9lti4uITypuYYqpKurlKfs7rwnc4xvU5f7pWZ6xGrJTPXBx33/lnm/ic/mcs6DMO
+	 dOpq0/CUR4xRCiwiYHzkmsNY/DJ1f413Vv1iL/RKUIKuAvYGXeRGDUZnYOmNFWU9uZ
+	 UYED1BMaUTxJjytx9wNjUzmAR6T+zYtn7Av6Kk1A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727272AbfFTSOZ (ORCPT
+        id S1729451AbfFTSO2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:14:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42610 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:28 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42690 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729440AbfFTSOV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:21 -0400
+        id S1728962AbfFTSOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 30F6A2082C;
-        Thu, 20 Jun 2019 18:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 65CEB205F4;
+        Thu, 20 Jun 2019 18:14:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054460;
-        bh=I3BsryP/5Zxl8KTwCtVmeaeJ9pMHX61Ww9t6D4ooh+c=;
+        s=default; t=1561054463;
+        bh=VqzwzHHbmfYIgfW2lSoHJXCgE3kN9UfqUcUCgn0i6Ds=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ERPQsRvOqdkson3/1l5pjwRKTn3Jmt5tSUy2HRpXBkxze0xc/JJ5cu2ApeLvPdTtb
-         xIvREfDgx0wfgC3RUK8hnHdvztBEhrA2q52jWwuj/NVHg84Dm8uV4n5N8f3PWrI6YL
-         Kgzlx5MqHFM5rxHQLzR5Dtc578d2J4SEwy+9C2WI=
+        b=GgtF71D25WrlgNXTD+gBKNe0JL5CPy9Lpas3IBQDxO/Mbk99Kjg3VMU43vHeZQsZj
+         0uy7VZkeqpYgUDFMtcqV6gUcwucjDkg0sAO65OU9nyxYtZVvS4jDlbhX9KewTESMBB
+         gy5TB+wiboiPo8nvr49m3KJ1MYTqDRVAHY63GGEg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        stable@vger.kernel.org, Florian Westphal <fw@strlen.de>,
+        Pablo Neira Ayuso <pablo@netfilter.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 36/98] pinctrl: intel: Clear interrupt status in mask/unmask callback
-Date:   Thu, 20 Jun 2019 19:57:03 +0200
-Message-Id: <20190620174350.729997143@linuxfoundation.org>
+Subject: [PATCH 5.1 37/98] netfilter: nf_tables: fix oops during rule dump
+Date:   Thu, 20 Jun 2019 19:57:04 +0200
+Message-Id: <20190620174350.778751666@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -61,92 +60,107 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 670784fb4ebe54434e263837390e358405031d9e ]
+[ Upstream commit 2c82c7e724ff51cab78e1afd5c2aaa31994fe41e ]
 
-Commit a939bb57cd47 ("pinctrl: intel: implement gpio_irq_enable") was
-added because clearing interrupt status bit is required to avoid
-unexpected behavior.
+We can oops in nf_tables_fill_rule_info().
 
-Turns out the unmask callback also needs the fix, which can solve weird
-IRQ triggering issues on I2C touchpad ELAN1200.
+Its not possible to fetch previous element in rcu-protected lists
+when deletions are not prevented somehow: list_del_rcu poisons
+the ->prev pointer value.
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Before rcu-conversion this was safe as dump operations did hold
+nfnetlink mutex.
+
+Pass previous rule as argument, obtained by keeping a pointer to
+the previous rule during traversal.
+
+Fixes: d9adf22a291883 ("netfilter: nf_tables: use call_rcu in netlink dumps")
+Signed-off-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pinctrl/intel/pinctrl-intel.c | 37 +++++----------------------
- 1 file changed, 6 insertions(+), 31 deletions(-)
+ net/netfilter/nf_tables_api.c | 20 +++++++++++---------
+ 1 file changed, 11 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 70638b74f9d6..95d224404c7c 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -913,35 +913,6 @@ static void intel_gpio_irq_ack(struct irq_data *d)
- 	}
- }
- 
--static void intel_gpio_irq_enable(struct irq_data *d)
--{
--	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
--	struct intel_pinctrl *pctrl = gpiochip_get_data(gc);
--	const struct intel_community *community;
--	const struct intel_padgroup *padgrp;
--	int pin;
--
--	pin = intel_gpio_to_pin(pctrl, irqd_to_hwirq(d), &community, &padgrp);
--	if (pin >= 0) {
--		unsigned int gpp, gpp_offset, is_offset;
--		unsigned long flags;
--		u32 value;
--
--		gpp = padgrp->reg_num;
--		gpp_offset = padgroup_offset(padgrp, pin);
--		is_offset = community->is_offset + gpp * 4;
--
--		raw_spin_lock_irqsave(&pctrl->lock, flags);
--		/* Clear interrupt status first to avoid unexpected interrupt */
--		writel(BIT(gpp_offset), community->regs + is_offset);
--
--		value = readl(community->regs + community->ie_offset + gpp * 4);
--		value |= BIT(gpp_offset);
--		writel(value, community->regs + community->ie_offset + gpp * 4);
--		raw_spin_unlock_irqrestore(&pctrl->lock, flags);
--	}
--}
--
- static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+diff --git a/net/netfilter/nf_tables_api.c b/net/netfilter/nf_tables_api.c
+index aa5e7b00a581..101975386547 100644
+--- a/net/netfilter/nf_tables_api.c
++++ b/net/netfilter/nf_tables_api.c
+@@ -2261,13 +2261,13 @@ static int nf_tables_fill_rule_info(struct sk_buff *skb, struct net *net,
+ 				    u32 flags, int family,
+ 				    const struct nft_table *table,
+ 				    const struct nft_chain *chain,
+-				    const struct nft_rule *rule)
++				    const struct nft_rule *rule,
++				    const struct nft_rule *prule)
  {
- 	struct gpio_chip *gc = irq_data_get_irq_chip_data(d);
-@@ -954,15 +925,20 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
- 	if (pin >= 0) {
- 		unsigned int gpp, gpp_offset;
- 		unsigned long flags;
--		void __iomem *reg;
-+		void __iomem *reg, *is;
- 		u32 value;
+ 	struct nlmsghdr *nlh;
+ 	struct nfgenmsg *nfmsg;
+ 	const struct nft_expr *expr, *next;
+ 	struct nlattr *list;
+-	const struct nft_rule *prule;
+ 	u16 type = nfnl_msg_type(NFNL_SUBSYS_NFTABLES, event);
  
- 		gpp = padgrp->reg_num;
- 		gpp_offset = padgroup_offset(padgrp, pin);
+ 	nlh = nlmsg_put(skb, portid, seq, type, sizeof(struct nfgenmsg), flags);
+@@ -2287,8 +2287,7 @@ static int nf_tables_fill_rule_info(struct sk_buff *skb, struct net *net,
+ 			 NFTA_RULE_PAD))
+ 		goto nla_put_failure;
  
- 		reg = community->regs + community->ie_offset + gpp * 4;
-+		is = community->regs + community->is_offset + gpp * 4;
+-	if ((event != NFT_MSG_DELRULE) && (rule->list.prev != &chain->rules)) {
+-		prule = list_prev_entry(rule, list);
++	if (event != NFT_MSG_DELRULE && prule) {
+ 		if (nla_put_be64(skb, NFTA_RULE_POSITION,
+ 				 cpu_to_be64(prule->handle),
+ 				 NFTA_RULE_PAD))
+@@ -2335,7 +2334,7 @@ static void nf_tables_rule_notify(const struct nft_ctx *ctx,
  
- 		raw_spin_lock_irqsave(&pctrl->lock, flags);
-+
-+		/* Clear interrupt status first to avoid unexpected interrupt */
-+		writel(BIT(gpp_offset), is);
-+
- 		value = readl(reg);
- 		if (mask)
- 			value &= ~BIT(gpp_offset);
-@@ -1106,7 +1082,6 @@ static irqreturn_t intel_gpio_irq(int irq, void *data)
+ 	err = nf_tables_fill_rule_info(skb, ctx->net, ctx->portid, ctx->seq,
+ 				       event, 0, ctx->family, ctx->table,
+-				       ctx->chain, rule);
++				       ctx->chain, rule, NULL);
+ 	if (err < 0) {
+ 		kfree_skb(skb);
+ 		goto err;
+@@ -2360,12 +2359,13 @@ static int __nf_tables_dump_rules(struct sk_buff *skb,
+ 				  const struct nft_chain *chain)
+ {
+ 	struct net *net = sock_net(skb->sk);
++	const struct nft_rule *rule, *prule;
+ 	unsigned int s_idx = cb->args[0];
+-	const struct nft_rule *rule;
  
- static struct irq_chip intel_gpio_irqchip = {
- 	.name = "intel-gpio",
--	.irq_enable = intel_gpio_irq_enable,
- 	.irq_ack = intel_gpio_irq_ack,
- 	.irq_mask = intel_gpio_irq_mask,
- 	.irq_unmask = intel_gpio_irq_unmask,
++	prule = NULL;
+ 	list_for_each_entry_rcu(rule, &chain->rules, list) {
+ 		if (!nft_is_active(net, rule))
+-			goto cont;
++			goto cont_skip;
+ 		if (*idx < s_idx)
+ 			goto cont;
+ 		if (*idx > s_idx) {
+@@ -2377,11 +2377,13 @@ static int __nf_tables_dump_rules(struct sk_buff *skb,
+ 					NFT_MSG_NEWRULE,
+ 					NLM_F_MULTI | NLM_F_APPEND,
+ 					table->family,
+-					table, chain, rule) < 0)
++					table, chain, rule, prule) < 0)
+ 			return 1;
+ 
+ 		nl_dump_check_consistent(cb, nlmsg_hdr(skb));
+ cont:
++		prule = rule;
++cont_skip:
+ 		(*idx)++;
+ 	}
+ 	return 0;
+@@ -2537,7 +2539,7 @@ static int nf_tables_getrule(struct net *net, struct sock *nlsk,
+ 
+ 	err = nf_tables_fill_rule_info(skb2, net, NETLINK_CB(skb).portid,
+ 				       nlh->nlmsg_seq, NFT_MSG_NEWRULE, 0,
+-				       family, table, chain, rule);
++				       family, table, chain, rule, NULL);
+ 	if (err < 0)
+ 		goto err;
+ 
 -- 
 2.20.1
 
