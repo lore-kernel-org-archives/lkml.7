@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C16F7C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFDE9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D96A2089C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF5AE20B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053512;
-	bh=bC0gw+SJhoxFhmYM/wDBLhS8c777+Mzpr3hB6Lna+UU=;
+	s=default; t=1561053516;
+	bh=qD7rRMlMkGFzEViLQsXquczuXA6clGsZX22a62qL9EI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWVlBQkd+nnSWKc7n9cy4i1MMmpFm6p2ZUdkNJjIffUtFA1icgtO4eaSezqtj1OXZ
-	 F9pr/KSJgI5jmmpDkVMggS0cCK84cNyVaFk0/jjN8+WaNWhQZ5HVxfxI3IzVN8I5CS
-	 SZ+BDf577BiZeAMSmadmwRY8rRc21pDpeNJgmepc=
+	b=0M+rtg/fq0ko2eV8HelUcYb7tzjUSO7i9g+F2wUZA5XEff1VhgFTQzI6gX/7wO9dn
+	 bE2PpQ2yGcUb4q5YAzb7FkYmGusgIMIRO6LPcPSrkGWHAWR3/6v0ridnZtZNcaRhl2
+	 HBUt/EyUyTbCy77PVtzyMiqdJ3aC/mAnaBfMb/VQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbfFTR6b (ORCPT
+        id S1726174AbfFTR6f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:58:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45228 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:58:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726043AbfFTR62 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:58:28 -0400
+        id S1726127AbfFTR6e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:58:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37F3C2089C;
-        Thu, 20 Jun 2019 17:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 245F32147A;
+        Thu, 20 Jun 2019 17:58:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053507;
-        bh=bC0gw+SJhoxFhmYM/wDBLhS8c777+Mzpr3hB6Lna+UU=;
+        s=default; t=1561053513;
+        bh=qD7rRMlMkGFzEViLQsXquczuXA6clGsZX22a62qL9EI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5FWvoc6vrldT0k94zqWArZykZ9LTlnxrksABtrBeT+5MyRz0X5UqYSpT76qYAfhg
-         uxZECFUQLqhpDuMU73qS9/zWpiX+31lKxTkCJ3Tri8Dsr330IySGjxBXHhzUrTWdgi
-         4HUUif+J8oEIxppmeZZi+L0hPuxn8PdLc4WiLeyw=
+        b=LB9vppZjcCB6qbEf5zhK5gVFgKwikr/xp7joiAI/ytwL/b/eRdray5HPj6lRjPDyo
+         qYBK065GYFiD4dNm+ThXHrKxKYKkbK3rcE5BTH90CJZ+zbjJhW3dCSncUIxgsWlsf6
+         j0T2Zn7U/w31+eTBxKU6/Ic1FTQR+nYg882wZfDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 13/84] f2fs: fix to avoid panic in do_recover_data()
-Date:   Thu, 20 Jun 2019 19:56:10 +0200
-Message-Id: <20190620174339.462434842@linuxfoundation.org>
+        stable@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        Kevin Tian <kevin.tian@intel.com>,
+        Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Joerg Roedel <jroedel@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 15/84] iommu/vt-d: Set intel_iommu_gfx_mapped correctly
+Date:   Thu, 20 Jun 2019 19:56:12 +0200
+Message-Id: <20190620174339.749730162@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,76 +63,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 22d61e286e2d9097dae36f75ed48801056b77cac ]
+[ Upstream commit cf1ec4539a50bdfe688caad4615ca47646884316 ]
 
-As Jungyeon reported in bugzilla:
+The intel_iommu_gfx_mapped flag is exported by the Intel
+IOMMU driver to indicate whether an IOMMU is used for the
+graphic device. In a virtualized IOMMU environment (e.g.
+QEMU), an include-all IOMMU is used for graphic device.
+This flag is found to be clear even the IOMMU is used.
 
-https://bugzilla.kernel.org/show_bug.cgi?id=203227
-
-- Overview
-When mounting the attached crafted image, following errors are reported.
-Additionally, it hangs on sync after trying to mount it.
-
-The image is intentionally fuzzed from a normal f2fs image for testing.
-Compile options for F2FS are as follows.
-CONFIG_F2FS_FS=y
-CONFIG_F2FS_STAT_FS=y
-CONFIG_F2FS_FS_XATTR=y
-CONFIG_F2FS_FS_POSIX_ACL=y
-CONFIG_F2FS_CHECK_FS=y
-
-- Reproduces
-mkdir test
-mount -t f2fs tmp.img test
-sync
-
-- Messages
- kernel BUG at fs/f2fs/recovery.c:549!
- RIP: 0010:recover_data+0x167a/0x1780
- Call Trace:
-  f2fs_recover_fsync_data+0x613/0x710
-  f2fs_fill_super+0x1043/0x1aa0
-  mount_bdev+0x16d/0x1a0
-  mount_fs+0x4a/0x170
-  vfs_kern_mount+0x5d/0x100
-  do_mount+0x200/0xcf0
-  ksys_mount+0x79/0xc0
-  __x64_sys_mount+0x1c/0x20
-  do_syscall_64+0x43/0xf0
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-During recovery, if ofs_of_node is inconsistent in between recovered
-node page and original checkpointed node page, let's just fail recovery
-instead of making kernel panic.
-
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+Cc: Ashok Raj <ashok.raj@intel.com>
+Cc: Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc: Kevin Tian <kevin.tian@intel.com>
+Reported-by: Zhenyu Wang <zhenyuw@linux.intel.com>
+Fixes: c0771df8d5297 ("intel-iommu: Export a flag indicating that the IOMMU is used for iGFX.")
+Suggested-by: Kevin Tian <kevin.tian@intel.com>
+Signed-off-by: Lu Baolu <baolu.lu@linux.intel.com>
+Signed-off-by: Joerg Roedel <jroedel@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/recovery.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ drivers/iommu/intel-iommu.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
-index 2878be3e448f..410354c334d7 100644
---- a/fs/f2fs/recovery.c
-+++ b/fs/f2fs/recovery.c
-@@ -413,7 +413,15 @@ static int do_recover_data(struct f2fs_sb_info *sbi, struct inode *inode,
+diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+index 3e97c4b2ebed..b965561a4162 100644
+--- a/drivers/iommu/intel-iommu.c
++++ b/drivers/iommu/intel-iommu.c
+@@ -3983,9 +3983,7 @@ static void __init init_no_remapping_devices(void)
  
- 	get_node_info(sbi, dn.nid, &ni);
- 	f2fs_bug_on(sbi, ni.ino != ino_of_node(page));
--	f2fs_bug_on(sbi, ofs_of_node(dn.node_page) != ofs_of_node(page));
+ 		/* This IOMMU has *only* gfx devices. Either bypass it or
+ 		   set the gfx_mapped flag, as appropriate */
+-		if (dmar_map_gfx) {
+-			intel_iommu_gfx_mapped = 1;
+-		} else {
++		if (!dmar_map_gfx) {
+ 			drhd->ignored = 1;
+ 			for_each_active_dev_scope(drhd->devices,
+ 						  drhd->devices_cnt, i, dev)
+@@ -4694,6 +4692,9 @@ int __init intel_iommu_init(void)
+ 		goto out_free_reserved_range;
+ 	}
+ 
++	if (dmar_map_gfx)
++		intel_iommu_gfx_mapped = 1;
 +
-+	if (ofs_of_node(dn.node_page) != ofs_of_node(page)) {
-+		f2fs_msg(sbi->sb, KERN_WARNING,
-+			"Inconsistent ofs_of_node, ino:%lu, ofs:%u, %u",
-+			inode->i_ino, ofs_of_node(dn.node_page),
-+			ofs_of_node(page));
-+		err = -EFAULT;
-+		goto err;
-+	}
+ 	init_no_remapping_devices();
  
- 	for (; start < end; start++, dn.ofs_in_node++) {
- 		block_t src, dest;
+ 	ret = init_dmars();
 -- 
 2.20.1
 
