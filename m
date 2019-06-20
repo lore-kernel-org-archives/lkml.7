@@ -2,69 +2,69 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B656C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:13:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 880F4C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:14:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAC41215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:13:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3417320B1F
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 05:14:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="XUzH400E"
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="DsUCzuNw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731473AbfFTFNw (ORCPT
+        id S1731602AbfFTFOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 01:13:52 -0400
-Received: from mail-pf1-f174.google.com ([209.85.210.174]:34796 "EHLO
-        mail-pf1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726096AbfFTFNu (ORCPT
+        Thu, 20 Jun 2019 01:14:01 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33023 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731534AbfFTFN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 01:13:50 -0400
-Received: by mail-pf1-f174.google.com with SMTP id c85so978936pfc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 22:13:50 -0700 (PDT)
+        Thu, 20 Jun 2019 01:13:59 -0400
+Received: by mail-pg1-f194.google.com with SMTP id m4so321551pgk.0
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 22:13:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=endlessm-com.20150623.gappssmtp.com; s=20150623;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=DwjIUbZI6XrLVZXngoHyb1nJEnqXQ8wZy4HOV6PoeSc=;
-        b=XUzH400ExQFQZYmBWBWyM/kEDYRVphyEk8d7EB0zffgil9iJrCwEKd6J+6bztX8cQM
-         Awarii9N0Ld740/V8/V3y6fByH7H+MzGKLn2ee33f+ofAX1xG7aHGlG+gmE2dKbQ9Kue
-         7q6VqHidGtooa1QPHIWWhra8Q2UlsTpXIGzU9JvroWjX+NOmVjfrSwa1s0vZXuNa7hUi
-         mkDSWGMj80c5YkqEhErdonsiImJY4D6aXz4L42Kdm28YN61CQY8vpyMDHksgOiCzlfOp
-         /6CDuMA8bJyeDNILxgMyAix1MHUlR1WZFbJGwwE4a8YZVQq8ssY56zTBDtcbwhcBlhj3
-         j7Gg==
+        bh=Zwj6pgAx91kNYKKDkKkwVwInhzJr8JOsFqA27cQX0yg=;
+        b=DsUCzuNwoq+s82zrDbpZ6P/+pskSxBDybu/8VtCsiUDpgLrVQFQxRohID+bwwOZDsl
+         Ubh5ciW1UjRV7K6gJeAeQHtYVYg7dNojI7ywf+ASjVLdqnkl/ncm/2OKU+VtCXOH2hJ8
+         2W67MSTp+/cGr7636Y+H15jCPIsdLjo9yfBBVoFpIyT4EWHEH5AxHNR1eH61fm4SDs68
+         5ajpkq7Y8GBYGh6Jl+2QwgwY17vNkeg4d6JFNZA9gOEHiKl8E7aJyGDILcvODeWOUiUO
+         /jJB0a6aR4Uw4VJoQfg+4HPCPaAp00J4WqDNapjsi6FkmVQ5anWMWbtL3t3H/EHF7oRe
+         Q4Xg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=DwjIUbZI6XrLVZXngoHyb1nJEnqXQ8wZy4HOV6PoeSc=;
-        b=fZMafNPUYCDqMUhiDp5qm5hdazn1/4HevmBcsgI4ht8YP9ERCA14+LEYzbR6m4j6Bc
-         kBjVi7YFKGA3UqCqOhIq1xsx1gpHlr8XkucnPWeJj6oeauzSrQNwfPkUulvzAvwanJts
-         G7yXihVQMYul3VvlQ5fhtMWFujhHdbae6RYWjBCyVfQ3rZWoxdHklpXvoYBSckQCmdci
-         ijr9e02f6QmU1R5QPwG/VD014eVfJC7VV+3kN6W4EY4U4xtR0FbWBC5I5ughkufAlW39
-         UJqVVbkeQqLhFrq/xdOl5O/oNZFYXgbbvzEIuubf5oPMwBa45psjCK9DJIOE5DhxU0Q2
-         1FnQ==
-X-Gm-Message-State: APjAAAW5x44Kg5t/gwml+ZixoevemYJyLJI8nrMeihNk0TXY21bbxapW
-        Cvhc3zGjoPT3SnCfzW30qT09ug==
-X-Google-Smtp-Source: APXvYqyxsrsNm/odNEYXRnh4T67omunw7EsliVUtLx1ch/qBhDSop/BAcBt1J7Dcx1n8gB8tsV22hQ==
-X-Received: by 2002:a63:8d4a:: with SMTP id z71mr673352pgd.346.1561007629321;
-        Wed, 19 Jun 2019 22:13:49 -0700 (PDT)
+        bh=Zwj6pgAx91kNYKKDkKkwVwInhzJr8JOsFqA27cQX0yg=;
+        b=VdyPDJw/CqHbxvULFvJkNAaFcd/XVGzI9uIuSKp4G2cnVL509IQQcR5GV08IXtxWrE
+         UUcsKl1hSP9aNmRj5md29tldr/OoVNXHLEbUuixzHYrCstpYlY6Um2O81Y3qHmalZB6H
+         /GOA0Dr6yqYj/KMrqENuPNkU950xQSDnBO87QjOErPQq/rr4TFrvdEZFI9gOihtEiuB/
+         1V8QpGWhpaZ+r6gdjedU7DQ7Gy6WT9BGw5s/8s8yghL3J8h9dY0vQ42E85wmOjO28RTd
+         6nb5aBTt9+n1fYpEw8SKiZrZQCHHfxKybpJvVdt6Ty6VlKKRQwEMtJVbNZse9SucRpJp
+         fdsw==
+X-Gm-Message-State: APjAAAU8hk2PEB0yaf43NuNuoWxzp/XxpvI4jxPOQaJdP9+RBldjXvoh
+        DD/nP7UX2RjqOjz3h2clMXMh6w==
+X-Google-Smtp-Source: APXvYqz8lRzH76PxRjN8/H5sESe6sWft2hZvgBcc6QsytNXjQErqAx3GdiHgMbR6NHktxkhPrtmnKA==
+X-Received: by 2002:a65:508b:: with SMTP id r11mr10762504pgp.387.1561007637598;
+        Wed, 19 Jun 2019 22:13:57 -0700 (PDT)
 Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id j2sm26383423pfn.135.2019.06.19.22.13.45
+        by smtp.gmail.com with ESMTPSA id j2sm26383423pfn.135.2019.06.19.22.13.54
         (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 22:13:48 -0700 (PDT)
+        Wed, 19 Jun 2019 22:13:57 -0700 (PDT)
 From:   Daniel Drake <drake@endlessm.com>
 To:     axboe@kernel.dk, kbusch@kernel.org, hch@lst.de, sagi@grimberg.me
 Cc:     linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
         bhelgaas@google.com, linux-ide@vger.kernel.org, linux@endlessm.com,
         linux-kernel@vger.kernel.org, hare@suse.de,
         alex.williamson@redhat.com, dan.j.williams@intel.com
-Subject: [PATCH v2 1/5] ahci: Discover Intel remapped NVMe devices
-Date:   Thu, 20 Jun 2019 13:13:29 +0800
-Message-Id: <20190620051333.2235-2-drake@endlessm.com>
+Subject: [PATCH v2 3/5] nvme: introduce nvme_dev_ops
+Date:   Thu, 20 Jun 2019 13:13:31 +0800
+Message-Id: <20190620051333.2235-4-drake@endlessm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190620051333.2235-1-drake@endlessm.com>
 References: <20190620051333.2235-1-drake@endlessm.com>
@@ -75,535 +75,812 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Intel SATA AHCI controllers support a strange mode where NVMe devices
-disappear from the PCI bus, and instead are remapped into AHCI PCI memory
-space.
-
-Many current and upcoming consumer products ship with the AHCI controller
-in this "RAID" or "Intel RST Premium with Intel Optane System Acceleration"
-mode by default. Without Linux support for this remapped mode,
-the default out-of-the-box experience is that the NVMe storage device
-is inaccessible (which in many cases is the only internal storage device).
-
-Using partial information provided by Intel in datasheets, emails,
-and previous patches, extend the AHCI driver to detect the remapped NVMe
-devices and create corresponding platform devices, to be picked up
-by the nvme driver.
-
-Our knowledge of the design and workings of this remapping scheme
-has been collected in ahci-remap.h, which can be considered the best
-spec we have at the moment.
+In preparation for a platform device nvme driver, move the bus specific
+portions of nvme to nvme_dev_ops, or otherwise rewrite routines to use a
+generic 'struct device' instead of 'struct pci_dev'.
 
 Based on earlier work by Dan Williams.
 
 Signed-off-by: Daniel Drake <drake@endlessm.com>
 ---
- drivers/ata/Kconfig        |  32 +++++++
- drivers/ata/ahci.c         | 173 ++++++++++++++++++++++++++++++++-----
- drivers/ata/ahci.h         |  14 +++
- include/linux/ahci-remap.h | 140 +++++++++++++++++++++++++++---
- 4 files changed, 329 insertions(+), 30 deletions(-)
+ drivers/nvme/host/pci.c | 410 +++++++++++++++++++++++++++-------------
+ 1 file changed, 275 insertions(+), 135 deletions(-)
 
-diff --git a/drivers/ata/Kconfig b/drivers/ata/Kconfig
-index a6beb2c5a692..6e82d66d7516 100644
---- a/drivers/ata/Kconfig
-+++ b/drivers/ata/Kconfig
-@@ -109,6 +109,38 @@ config SATA_MOBILE_LPM_POLICY
- 	  Note "Minimum power" is known to cause issues, including disk
- 	  corruption, with some disks and should not be used.
+ I took Dan William's earlier patch here and refreshed it for the
+latest nvme driver, which has gained a few more places where it uses
+the PCI device, so nvme_dev_ops grew a bit more.
+
+Is this a suitable way of handling this case? It feels a little
+unclean to have both the NVMe host layer and the PCI-specific dev ops
+in the same file. Maybe it makes sense because NVMe is inherently a PCI
+thing under normal circumstances? Or would it be cleaner for me to
+rename "pci.c" to "mmio.c" and then separate the pci dev ops into
+a new "pci.c"?
+
+diff --git a/drivers/nvme/host/pci.c b/drivers/nvme/host/pci.c
+index 42990b93349d..23bda524f16b 100644
+--- a/drivers/nvme/host/pci.c
++++ b/drivers/nvme/host/pci.c
+@@ -89,10 +89,51 @@ struct nvme_queue;
+ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown);
+ static bool __nvme_disable_io_queues(struct nvme_dev *dev, u8 opcode);
  
-+config SATA_AHCI_INTEL_NVME_REMAP
-+	bool "AHCI: Intel Remapped NVMe device support"
-+	depends on SATA_AHCI
-+	depends on BLK_DEV_NVME
-+	help
-+	  Support access to remapped NVMe devices that appear in AHCI PCI
-+	  memory space.
++struct nvme_dev_ops {
++	/* Enable device (required) */
++	int (*enable)(struct nvme_dev *dev);
 +
-+	  You'll need this in order to access your NVMe storage if you are
-+	  running an Intel AHCI controller in "RAID" or "Intel RST Premium
-+	  with Intel Optane System Acceleration" mode. This is the default
-+	  configuration of many consumer products. If you have storage devices
-+	  being affected by this, you'll have noticed that such devices are
-+	  absent, and you'll see a warning in your kernel logs about remapped
-+	  NVMe devices.
++	/* Disable device (required) */
++	void (*disable)(struct nvme_dev *dev);
 +
-+	  Instead of enabling this option, it is recommended to go into the
-+	  BIOS menu and change the SATA device into "AHCI" mode in order to
-+	  gain access to the affected devices, while also enjoying all
-+	  available NVMe features and performance.
++	/* Allocate IRQ vectors for given number of io queues (required) */
++	int (*setup_irqs)(struct nvme_dev *dev, int nr_io_queues);
 +
-+	  However, if you do want to access the NVMe devices in remapped
-+	  mode, say Y. Negative consequences of remapped device access
-+	  include:
-+	  - No NVMe device power management
-+	  - No NVMe reset support
-+	  - No NVMe quirks based on PCI ID
-+	  - No SR-IOV VFs
-+	  - Reduced performance through a shared, legacy interrupt
++	/* Get the IRQ vector for a specific queue */
++	int (*q_irq)(struct nvme_queue *q);
 +
-+	  If unsure, say N.
++	/* Allocate device-specific SQ command buffer (optional) */
++	int (*cmb_alloc_sq_cmds)(struct nvme_queue *nvmeq, size_t size,
++				 struct nvme_command **sq_cmds,
++				 dma_addr_t *sq_dma_addr);
 +
- config SATA_AHCI_PLATFORM
- 	tristate "Platform AHCI SATA support"
- 	help
-diff --git a/drivers/ata/ahci.c b/drivers/ata/ahci.c
-index f7652baa6337..b58316347539 100644
---- a/drivers/ata/ahci.c
-+++ b/drivers/ata/ahci.c
-@@ -23,6 +23,7 @@
- #include <linux/delay.h>
- #include <linux/interrupt.h>
- #include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
- #include <linux/device.h>
- #include <linux/dmi.h>
- #include <linux/gfp.h>
-@@ -1499,11 +1500,11 @@ static irqreturn_t ahci_thunderx_irq_handler(int irq, void *dev_instance)
- }
- #endif
- 
--static void ahci_remap_check(struct pci_dev *pdev, int bar,
-+static int ahci_remap_init(struct pci_dev *pdev, int bar,
- 		struct ahci_host_priv *hpriv)
- {
- 	int i, count = 0;
--	u32 cap;
-+	u32 supported_devs;
- 
- 	/*
- 	 * Check if this device might have remapped nvme devices.
-@@ -1511,33 +1512,68 @@ static void ahci_remap_check(struct pci_dev *pdev, int bar,
- 	if (pdev->vendor != PCI_VENDOR_ID_INTEL ||
- 	    pci_resource_len(pdev, bar) < SZ_512K ||
- 	    bar != AHCI_PCI_BAR_STANDARD ||
--	    !(readl(hpriv->mmio + AHCI_VSCAP) & 1))
--		return;
-+	    !(readl(hpriv->mmio + AHCI_VS_CAP) & AHCI_VS_CAP_NRMBE))
-+		return -ENODEV;
- 
--	cap = readq(hpriv->mmio + AHCI_REMAP_CAP);
--	for (i = 0; i < AHCI_MAX_REMAP; i++) {
--		if ((cap & (1 << i)) == 0)
-+	supported_devs = readl(hpriv->mmio + AHCI_REMAP_RCR_L)
-+			 & AHCI_REMAP_RCR_L_NRS_MASK;
-+	for_each_set_bit(i, (unsigned long *)&supported_devs, AHCI_MAX_REMAP) {
-+		struct ahci_remap *rdev;
-+		u32 dcc;
++	/* Free device-specific SQ command buffer (optional) */
++	void (*cmb_free_sq_cmds)(struct nvme_queue *nvmeq,
++				 struct nvme_command *sq_cmds, size_t size);
 +
-+		/* Check that the remapped device is NVMe */
-+		dcc = readl(hpriv->mmio + ahci_remap_dcc(i));
-+		if ((dcc & AHCI_REMAP_DCC_DT) != AHCI_REMAP_DCC_DT_NVME)
- 			continue;
--		if (readl(hpriv->mmio + ahci_remap_dcc(i))
--				!= PCI_CLASS_STORAGE_EXPRESS)
++	/* Device-specific mapping of blk queues to CPUs (optional) */
++	int (*map_queues)(struct nvme_dev *dev, struct blk_mq_queue_map *map,
++			  int offset);
 +
-+		dcc &= AHCI_REMAP_DCC_CC_MASK;
-+		if (dcc != PCI_CLASS_STORAGE_EXPRESS)
- 			continue;
- 
--		/* We've found a remapped device */
- 		count++;
-+		if (!IS_ENABLED(CONFIG_SATA_AHCI_INTEL_NVME_REMAP))
-+			continue;
++	/* Check if device is enabled on the bus (required) */
++	int (*is_enabled)(struct nvme_dev *dev);
 +
-+		/*
-+		 * Note the memory area that corresponds to the remapped
-+		 * device.
-+		 */
-+		rdev = devm_kzalloc(&pdev->dev, sizeof(*rdev), GFP_KERNEL);
-+		if (!rdev)
-+			return -ENOMEM;
++	/* Check if channel is in running state (required) */
++	int (*is_offline)(struct nvme_dev *dev);
 +
-+		rdev->id = i;
-+		rdev->mem.start = pci_resource_start(pdev, bar)
-+			+ ahci_remap_base(i);
-+		rdev->mem.end = rdev->mem.start + AHCI_REMAP_MMIO_SIZE - 1;
-+		rdev->mem.flags = IORESOURCE_MEM;
++	/* Check if device is present and responding (optional) */
++	bool (*is_present)(struct nvme_dev *dev);
 +
-+		/*
-+		 * This will be translated to kernel irq vector after
-+		 * ahci irq initialization.
-+		 */
-+		rdev->irq.start = 0;
-+		rdev->irq.end = 0;
-+		rdev->irq.flags = IORESOURCE_IRQ;
-+
-+		hpriv->remap[i] = rdev;
- 	}
- 
--	if (!count)
--		return;
-+	if (count == 0)
-+		return -ENODEV;
- 
- 	dev_warn(&pdev->dev, "Found %d remapped NVMe devices.\n", count);
-+
-+	if (!IS_ENABLED(CONFIG_SATA_AHCI_INTEL_NVME_REMAP)) {
-+		dev_warn(&pdev->dev,
-+			 "To use these, switch your BIOS from RAID to AHCI mode for fully featured NVMe access, or alternatively enable AHCI Remapped NVMe support in your kernel for access in reduced features mode.\n");
-+		return -ENODEV;
-+	}
-+
- 	dev_warn(&pdev->dev,
--		 "Switch your BIOS from RAID to AHCI mode to use them.\n");
-+		 "These devices will be made available, but with reduced features and lower performance. Enable full NVMe functionality by switching your BIOS from RAID to AHCI mode.\n");
- 
--	/*
--	 * Don't rely on the msi-x capability in the remap case,
--	 * share the legacy interrupt across ahci and remapped devices.
--	 */
--	hpriv->flags |= AHCI_HFLAG_NO_MSI;
-+	return 0;
- }
- 
- static int ahci_get_irq_vector(struct ata_host *host, int port)
-@@ -1550,7 +1586,7 @@ static int ahci_init_msi(struct pci_dev *pdev, unsigned int n_ports,
- {
- 	int nvec;
- 
--	if (hpriv->flags & AHCI_HFLAG_NO_MSI)
-+	if (hpriv->flags & (AHCI_HFLAG_NO_MSI | AHCI_HFLAG_REMAP))
- 		return -ENODEV;
- 
- 	/*
-@@ -1619,6 +1655,65 @@ static void ahci_update_initial_lpm_policy(struct ata_port *ap,
- 		ap->target_lpm_policy = policy;
- }
- 
-+static void ahci_remap_restore(void *data)
-+{
-+	struct pci_dev *pdev = data;
-+	int bar = AHCI_PCI_BAR_STANDARD;
-+
-+	/* Restore the full AHCI BAR */
-+	pci_resource_end(pdev, bar) = pci_resource_start(pdev, bar)
-+				      + SZ_512K - 1;
-+}
-+
-+static void ahci_remap_unregister(void *data)
-+{
-+	struct platform_device *pdev = data;
-+
-+	platform_device_del(pdev);
-+	put_device(&pdev->dev);
-+}
-+
-+/* Register platform devices for remapped NVMe storage */
-+static void ahci_remap_register_devices(struct device *dev,
-+		struct ahci_host_priv *hpriv)
-+{
-+	struct platform_device *pdev;
-+	int i;
-+
-+	if ((hpriv->flags & AHCI_HFLAG_REMAP) == 0)
-+		return;
-+
-+	for (i = 0; i < AHCI_MAX_REMAP; i++) {
-+		struct ahci_remap *rdev = hpriv->remap[i];
-+
-+		if (!rdev)
-+			continue;
-+
-+		pdev = platform_device_alloc("intel_ahci_nvme",
-+					     rdev->id);
-+		if (!pdev)
-+			continue;
-+
-+		if (platform_device_add_resources(pdev, &rdev->mem, 2) != 0) {
-+			platform_device_put(pdev);
-+			continue;
-+		}
-+
-+		pdev->dev.parent = dev;
-+		if (platform_device_add(pdev) != 0) {
-+			platform_device_put(pdev);
-+			continue;
-+		}
-+
-+		if (devm_add_action_or_reset(dev, ahci_remap_unregister,
-+					pdev) != 0)
-+			continue;
-+
-+		dev_info(dev, "remap: %s %pR %pR\n", dev_name(&pdev->dev),
-+				&rdev->mem, &rdev->irq);
-+	}
-+}
-+
- static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- {
- 	unsigned int board_id = ent->driver_data;
-@@ -1717,7 +1812,28 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	hpriv->mmio = pcim_iomap_table(pdev)[ahci_pci_bar];
- 
- 	/* detect remapped nvme devices */
--	ahci_remap_check(pdev, ahci_pci_bar, hpriv);
-+	if (ahci_remap_init(pdev, ahci_pci_bar, hpriv) == 0) {
-+		/*
-+		 * Modify the AHCI BAR to exclude the memory regions that
-+		 * correspond to remapped NVMe devices.
-+		 */
-+		pcim_iounmap_regions(pdev, 1 << ahci_pci_bar);
-+		pci_resource_end(pdev, ahci_pci_bar)
-+			= pci_resource_start(pdev, ahci_pci_bar) + SZ_16K - 1;
-+
-+		rc = devm_add_action_or_reset(dev, ahci_remap_restore, pdev);
-+		if (rc)
-+			return rc;
-+
-+		rc = pcim_iomap_regions(pdev, 1 << ahci_pci_bar, DRV_NAME);
-+		if (rc == -EBUSY)
-+			pcim_pin_device(pdev);
-+		if (rc)
-+			return rc;
-+
-+		hpriv->mmio = pcim_iomap_table(pdev)[ahci_pci_bar];
-+		hpriv->flags |= AHCI_HFLAG_REMAP;
-+	}
- 
- 	/* must set flag prior to save config in order to take effect */
- 	if (ahci_broken_devslp(pdev))
-@@ -1800,6 +1916,21 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (ahci_init_msi(pdev, n_ports, hpriv) < 0) {
- 		/* legacy intx interrupts */
- 		pci_intx(pdev, 1);
-+
-+		/*
-+		 * MSI-X support for the remap case is not yet supported,
-+		 * so share the legacy interrupt across ahci and remapped
-+		 * devices.
-+		 */
-+		if (hpriv->flags & AHCI_HFLAG_REMAP)
-+			for (i = 0; i < AHCI_MAX_REMAP; i++) {
-+				struct ahci_remap *rdev = hpriv->remap[i];
-+
-+				if (!rdev || resource_size(&rdev->irq) < 1)
-+					continue;
-+				rdev->irq.start = pdev->irq;
-+				rdev->irq.end = rdev->irq.start;
-+			}
- 	}
- 	hpriv->irq = pci_irq_vector(pdev, 0);
- 
-@@ -1853,6 +1984,8 @@ static int ahci_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	if (rc)
- 		return rc;
- 
-+	ahci_remap_register_devices(&pdev->dev, hpriv);
-+
- 	pm_runtime_put_noidle(&pdev->dev);
- 	return 0;
- }
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 0570629d719d..6947c76a78d1 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -22,6 +22,7 @@
- #include <linux/pci.h>
- #include <linux/clk.h>
- #include <linux/libata.h>
-+#include <linux/ahci-remap.h>
- #include <linux/phy/phy.h>
- #include <linux/regulator/consumer.h>
- 
-@@ -240,6 +241,7 @@ enum {
- 							as default lpm_policy */
- 	AHCI_HFLAG_SUSPEND_PHYS		= (1 << 26), /* handle PHYs during
- 							suspend/resume */
-+	AHCI_HFLAG_REMAP		= (1 << 27),
- 
- 	/* ap->flags bits */
- 
-@@ -317,6 +319,17 @@ struct ahci_port_priv {
- 	char			*irq_desc;	/* desc in /proc/interrupts */
- };
- 
-+struct ahci_remap {
-+	int id;
-+	/*
-+	 * @mem and @irq must be consecutive for
-+	 * platform_device_add_resources() in
-+	 * ahci_remap_register_devices()
-+	 */
-+	struct resource mem;
-+	struct resource irq;
++	/* Check & log device state before it gets reset (optional) */
++	void (*warn_reset)(struct nvme_dev *dev);
 +};
 +
- struct ahci_host_priv {
- 	/* Input fields */
- 	unsigned int		flags;		/* AHCI_HFLAG_* */
-@@ -348,6 +361,7 @@ struct ahci_host_priv {
- 	unsigned		nports;		/* Number of ports */
- 	void			*plat_data;	/* Other platform data */
- 	unsigned int		irq;		/* interrupt line */
-+	struct ahci_remap	*remap[AHCI_MAX_REMAP]; /* remapped devices */
+ /*
+  * Represents an NVM Express device.  Each nvme_dev is a PCI function.
+  */
+ struct nvme_dev {
++	const struct resource *res;
++	const struct nvme_dev_ops *ops;
+ 	struct nvme_queue *queues;
+ 	struct blk_mq_tag_set tagset;
+ 	struct blk_mq_tag_set admin_tagset;
+@@ -178,6 +219,7 @@ static inline struct nvme_dev *to_nvme_dev(struct nvme_ctrl *ctrl)
+  */
+ struct nvme_queue {
+ 	struct nvme_dev *dev;
++	char irqname[24];	/* nvme4294967295-65535\0 */
+ 	spinlock_t sq_lock;
+ 	struct nvme_command *sq_cmds;
+ 	 /* only used for poll queues: */
+@@ -384,6 +426,11 @@ static unsigned int nvme_pci_iod_alloc_size(struct nvme_dev *dev,
+ 	return alloc_size + sizeof(struct scatterlist) * nseg;
+ }
+ 
++static int nvme_pci_q_irq(struct nvme_queue *nvmeq)
++{
++	return pci_irq_vector(to_pci_dev(nvmeq->dev->dev), nvmeq->cq_vector);
++}
++
+ static int nvme_admin_init_hctx(struct blk_mq_hw_ctx *hctx, void *data,
+ 				unsigned int hctx_idx)
+ {
+@@ -444,7 +491,14 @@ static int queue_irq_offset(struct nvme_dev *dev)
+ 	return 0;
+ }
+ 
+-static int nvme_pci_map_queues(struct blk_mq_tag_set *set)
++static int nvme_pci_map_queues(struct nvme_dev *dev,
++			       struct blk_mq_queue_map *map,
++			       int offset)
++{
++	return blk_mq_pci_map_queues(map, to_pci_dev(dev->dev), offset);
++}
++
++static int nvme_map_queues(struct blk_mq_tag_set *set)
+ {
+ 	struct nvme_dev *dev = set->driver_data;
+ 	int i, qoff, offset;
+@@ -464,8 +518,8 @@ static int nvme_pci_map_queues(struct blk_mq_tag_set *set)
+ 		 * affinity), so use the regular blk-mq cpu mapping
+ 		 */
+ 		map->queue_offset = qoff;
+-		if (i != HCTX_TYPE_POLL && offset)
+-			blk_mq_pci_map_queues(map, to_pci_dev(dev->dev), offset);
++		if (i != HCTX_TYPE_POLL && offset && dev->ops->map_queues)
++			dev->ops->map_queues(dev, map, offset);
+ 		else
+ 			blk_mq_map_queues(map);
+ 		qoff += map->nr_queues;
+@@ -1068,7 +1122,7 @@ static irqreturn_t nvme_irq_check(int irq, void *data)
+  */
+ static int nvme_poll_irqdisable(struct nvme_queue *nvmeq, unsigned int tag)
+ {
+-	struct pci_dev *pdev = to_pci_dev(nvmeq->dev->dev);
++	struct nvme_dev *dev = nvmeq->dev;
+ 	u16 start, end;
+ 	int found;
+ 
+@@ -1082,9 +1136,9 @@ static int nvme_poll_irqdisable(struct nvme_queue *nvmeq, unsigned int tag)
+ 		found = nvme_process_cq(nvmeq, &start, &end, tag);
+ 		spin_unlock(&nvmeq->cq_poll_lock);
+ 	} else {
+-		disable_irq(pci_irq_vector(pdev, nvmeq->cq_vector));
++		disable_irq(dev->ops->q_irq(nvmeq));
+ 		found = nvme_process_cq(nvmeq, &start, &end, tag);
+-		enable_irq(pci_irq_vector(pdev, nvmeq->cq_vector));
++		enable_irq(dev->ops->q_irq(nvmeq));
+ 	}
+ 
+ 	nvme_complete_cqes(nvmeq, start, end);
+@@ -1232,7 +1286,7 @@ static bool nvme_should_reset(struct nvme_dev *dev, u32 csts)
+ 	return true;
+ }
+ 
+-static void nvme_warn_reset(struct nvme_dev *dev, u32 csts)
++static void nvme_pci_warn_reset(struct nvme_dev *dev)
+ {
+ 	/* Read a config register to help see what died. */
+ 	u16 pci_status;
+@@ -1241,13 +1295,10 @@ static void nvme_warn_reset(struct nvme_dev *dev, u32 csts)
+ 	result = pci_read_config_word(to_pci_dev(dev->dev), PCI_STATUS,
+ 				      &pci_status);
+ 	if (result == PCIBIOS_SUCCESSFUL)
+-		dev_warn(dev->ctrl.device,
+-			 "controller is down; will reset: CSTS=0x%x, PCI_STATUS=0x%hx\n",
+-			 csts, pci_status);
++		dev_warn(dev->ctrl.device, "PCI_STATUS=0x%hx\n", pci_status);
+ 	else
+ 		dev_warn(dev->ctrl.device,
+-			 "controller is down; will reset: CSTS=0x%x, PCI_STATUS read failed (%d)\n",
+-			 csts, result);
++			 "PCI_STATUS read failed (%d)\n", result);
+ }
+ 
+ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+@@ -1263,14 +1314,18 @@ static enum blk_eh_timer_return nvme_timeout(struct request *req, bool reserved)
+ 	 * the recovery mechanism will surely fail.
+ 	 */
+ 	mb();
+-	if (pci_channel_offline(to_pci_dev(dev->dev)))
++	if (dev->ops->is_offline(dev))
+ 		return BLK_EH_RESET_TIMER;
+ 
  	/*
- 	 * Optional ahci_start_engine override, if not set this gets set to the
- 	 * default ahci_start_engine during ahci_save_initial_config, this can
-diff --git a/include/linux/ahci-remap.h b/include/linux/ahci-remap.h
-index 230c871ba084..aa3387936b01 100644
---- a/include/linux/ahci-remap.h
-+++ b/include/linux/ahci-remap.h
-@@ -1,29 +1,149 @@
- /* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Intel AHCI remapped NVMe device support.
-+ *
-+ * Intel SATA AHCI controllers support a strange mode where NVMe devices
-+ * disappear from the PCI bus, and instead are remapped into AHCI PCI memory
-+ * space.
-+ *
-+ * The reason for the existence of such functionality is unknown, but it
-+ * is suspected to be a scheme employed by Intel in order to avoid usage
-+ * of the standard Windows device drivers, and instead promote usage
-+ * of Intel's own Windows drivers, which are assumed to be more power
-+ * efficient[1].
-+ *
-+ * Many consumer products ship with the AHCI controller in this mode by
-+ * default, but this can usually be controlled by the user in the BIOS
-+ * setup menu: the SATA controller can be configured to "AHCI" mode
-+ * (where AHCI and NVMe devices appear as separate PCI devices, i.e. the
-+ * usual case) or the remapped mode which is labelled as "RAID" or
-+ * "Intel RST Premium with Intel Optane System Acceleration".
-+ *
-+ * Linux's support for remapped NVMe devices is based on limited
-+ * information shared by Intel. Until something more substantial is
-+ * provided, this file can be considered as the spec.
-+ *
-+ * The Vendor-Specific Capabilities Register (VS_CAP) can be used to
-+ * determine if NVMe devices have been remapped (section 16.2.10 of [3]).
-+ *
-+ * A maximum of 3 devices can be remapped (section 3.2.1 of [2]).
-+ *
-+ * The configuration space of the remapped devices is not available[5].
-+ *
-+ * Interrupts are shared between AHCI & remapped NVMe devices[4]. Sharing
-+ * the single legacy interrupt appears to work fine. There are some registers
-+ * related to MSI-X (see section 15.2 of [3]) but the details are not
-+ * completely clear.
-+ *
-+ * Simultaneous access to AHCI and NVMe devices is allowed and expected[4].
-+ *
-+ * Changing between AHCI remapped mode does change the PCI ID of the AHCI
-+ * controller. However, the PCI ID of the AHCI device is not uniquely
-+ * identifiable when in this  mode[4]. The same PCI IDs are shared with other
-+ * Intel devices that do not remap NVMe devices.
-+ *
-+ * The firmware enables the remapped NVMe mode in early boot, via
-+ * configuration registers of the the virtual "Intel(R) RST for PCIe Storage
-+ * (Remapping)" PCI device (section 15 of [2]), and then uses a write-once
-+ * register (once per reset) in order to lock down against further
-+ * configuration changes. This virtual PCI device then appears to be
-+ * completely inaccessible from Linux. There is no way that Linux could
-+ * escape out of this mode[6].
-+ *
-+ * References:
-+ * 1. Microsoft aren't forcing Lenovo to block free operating systems
-+ *    https://mjg59.dreamwidth.org/44694.html
-+ *
-+ * 2. Intel(R) 300 Series and Intel(R) C240 Series Chipset Family Platform
-+ *    Controller Hub (PCH). Datasheet - Volume 1 of 2. March 2019.
-+ *    https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/300-series-chipset-pch-datasheet-vol-1.pdf
-+ *
-+ * 3. Intel(R) 300 Series and Intel(R) C240 Series Chipset Family Platform
-+ *    Controller Hub (PCH). Datasheet - Volume 2 of 2. June 2018.
-+ *    https://www.intel.com/content/dam/www/public/us/en/documents/datasheets/300-series-chipset-pch-datasheet-vol-2.pdf
-+ *
-+ * 4. Dan Williams (Intel) via linux-ide mailing list
-+ *    https://marc.info/?l=linux-ide&m=147733119300691
-+ *    Message-Id: <CAPcyv4jSx5c3DzEsbfUph5Akk-XyxQ2sXAgmLZfhvGEOUtBqdQ@mail.gmail.com>
-+ *
-+ * 5. Dan Williams (Intel) via linux-ide mailing list
-+ *    https://marc.info/?l=linux-ide&m=147734288604783&w=2
-+ *    Message-Id: <CAPcyv4hHqkFirpaGTjs+iNKB9sr_thYOKN=N58vkLDYcXErOcQ@mail.gmail.com>
-+ *
-+ * 6. Dan Williams (Intel) via linux-ide mailing list
-+ *    https://marc.info/?l=linux-ide&m=147953592417285&w=2
-+ *    Message-Id: <CAPcyv4ge6OO+N619t48m_aCNSEX1aEipP18E6_fvurmu5nr40w@mail.gmail.com>
-+ */
-+
- #ifndef _LINUX_AHCI_REMAP_H
- #define _LINUX_AHCI_REMAP_H
+ 	 * Reset immediately if the controller is failed
+ 	 */
+ 	if (nvme_should_reset(dev, csts)) {
+-		nvme_warn_reset(dev, csts);
++		dev_warn(dev->ctrl.device,
++			 "controller is down; will reset: CSTS=0x%x\n",
++			 csts);
++		if (dev->ops->warn_reset)
++			dev->ops->warn_reset(dev);
+ 		nvme_dev_disable(dev, false);
+ 		nvme_reset_ctrl(&dev->ctrl);
+ 		return BLK_EH_DONE;
+@@ -1367,8 +1422,8 @@ static void nvme_free_queue(struct nvme_queue *nvmeq)
+ 		return;
  
-+#include <linux/bits.h>
- #include <linux/sizes.h>
- 
--#define AHCI_VSCAP		0xa4
--#define AHCI_REMAP_CAP		0x800
-+/* Maximum 3 supported remappings. */
-+#define AHCI_MAX_REMAP			3
-+
-+/* Vendor Specific Capabilities register */
-+#define AHCI_VS_CAP			0xa4
-+
-+/*
-+ * VS_CAP: NAND Memory BAR Remapped Enable
-+ * This is set to 1 if one or more NVMe devices have been remapped.
-+ */
-+#define AHCI_VS_CAP_NRMBE		BIT(0)
-+
-+
-+/* Remap Configuration register */
-+#define AHCI_REMAP_RCR_L		0x800
-+
-+/*
-+ * RCR_L: Number of Remapped Device Supported
-+ * A bitmap indicating which of the 3 remappings are enabled.
-+ */
-+#define AHCI_REMAP_RCR_L_NRS_MASK	0x7
-+
-+
-+/*
-+ * Starting at 0x880, there are 3 repeating register maps, one for each
-+ * remapping.
-+ */
-+#define AHCI_REMAP_DEV_BASE		0x880
-+#define AHCI_REMAP_DEV_SIZE		0x80
-+
-+
-+/* Device Class Code (offset within AHCI_REMAP_DEV space) */
-+#define AHCI_REMAP_DCC_OFFSET		0x0
-+
-+/* DCC: Device Type. 0 for NVMe, 1 for AHCI */
-+#define AHCI_REMAP_DCC_DT		BIT(31)
-+#define AHCI_REMAP_DCC_DT_NVME		(0 << 31)
-+#define AHCI_REMAP_DCC_DT_AHCI		(1 << 31)
-+
-+/* DCC: Base Class Code, Sub Class Code and Progamming Interface */
-+#define AHCI_REMAP_DCC_CC_MASK		0xffffff
-+
- 
--/* device class code */
--#define AHCI_REMAP_N_DCC	0x880
-+/* Remapped devices always start at this fixed offset in the AHCI BAR */
-+#define AHCI_REMAP_MMIO_START		SZ_16K
- 
--/* remap-device base relative to ahci-bar */
--#define AHCI_REMAP_N_OFFSET	SZ_16K
--#define AHCI_REMAP_N_SIZE	SZ_16K
-+/*
-+ * Each remapped device is expected to have this fixed size.
-+ * The Intel docs mention a DMBL register that could perhaps be used to
-+ * detect this dynamically, however the register description is unclear.
-+ */
-+#define AHCI_REMAP_MMIO_SIZE		SZ_16K
- 
--#define AHCI_MAX_REMAP		3
- 
- static inline unsigned int ahci_remap_dcc(int i)
- {
--	return AHCI_REMAP_N_DCC + i * 0x80;
-+	return (AHCI_REMAP_DEV_BASE + i * AHCI_REMAP_DEV_SIZE)
-+		+ AHCI_REMAP_DCC_OFFSET;
+ 	if (test_and_clear_bit(NVMEQ_SQ_CMB, &nvmeq->flags)) {
+-		pci_free_p2pmem(to_pci_dev(nvmeq->dev->dev),
+-				nvmeq->sq_cmds, SQ_SIZE(nvmeq->q_depth));
++		nvmeq->dev->ops->cmb_free_sq_cmds(nvmeq, nvmeq->sq_cmds,
++						  SQ_SIZE(nvmeq->q_depth));
+ 	} else {
+ 		dma_free_coherent(nvmeq->dev->dev, SQ_SIZE(nvmeq->q_depth),
+ 				nvmeq->sq_cmds, nvmeq->sq_dma_addr);
+@@ -1401,7 +1456,7 @@ static int nvme_suspend_queue(struct nvme_queue *nvmeq)
+ 	if (!nvmeq->qid && nvmeq->dev->ctrl.admin_q)
+ 		blk_mq_quiesce_queue(nvmeq->dev->ctrl.admin_q);
+ 	if (!test_and_clear_bit(NVMEQ_POLLED, &nvmeq->flags))
+-		pci_free_irq(to_pci_dev(nvmeq->dev->dev), nvmeq->cq_vector, nvmeq);
++		free_irq(nvmeq->dev->ops->q_irq(nvmeq), nvmeq);
+ 	return 0;
  }
  
- static inline unsigned int ahci_remap_base(int i)
- {
--	return AHCI_REMAP_N_OFFSET + i * AHCI_REMAP_N_SIZE;
-+	return AHCI_REMAP_MMIO_START + i * AHCI_REMAP_MMIO_SIZE;
+@@ -1449,19 +1504,49 @@ static int nvme_cmb_qdepth(struct nvme_dev *dev, int nr_io_queues,
+ 	return q_depth;
  }
  
- #endif /* _LINUX_AHCI_REMAP_H */
+-static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
+-				int qid, int depth)
++static int nvme_pci_cmb_alloc_sq_cmds(struct nvme_queue *nvmeq,
++				      size_t size,
++				      struct nvme_command **sq_cmds,
++				      dma_addr_t *sq_dma_addr)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev->dev);
++	struct pci_dev *pdev = to_pci_dev(nvmeq->dev->dev);
++	struct nvme_command *cmds;
++	dma_addr_t dma_addr;
+ 
+-	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)) {
+-		nvmeq->sq_cmds = pci_alloc_p2pmem(pdev, SQ_SIZE(depth));
+-		nvmeq->sq_dma_addr = pci_p2pmem_virt_to_bus(pdev,
+-						nvmeq->sq_cmds);
+-		if (nvmeq->sq_dma_addr) {
+-			set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
+-			return 0; 
+-		}
++	cmds = pci_alloc_p2pmem(pdev, size);
++	if (!cmds)
++		return -ENOMEM;
++
++	dma_addr = pci_p2pmem_virt_to_bus(pdev, cmds);
++	if (!dma_addr) {
++		pci_free_p2pmem(pdev, cmds, size);
++		return -EIO;
++	}
++
++	*sq_cmds = cmds;
++	*sq_dma_addr = dma_addr;
++	return 0;
++}
++
++static void nvme_pci_cmb_free_sq_cmds(struct nvme_queue *nvmeq,
++				     struct nvme_command *sq_cmds,
++				     size_t size)
++{
++	pci_free_p2pmem(to_pci_dev(nvmeq->dev->dev), sq_cmds, size);
++}
++
++static int nvme_alloc_sq_cmds(struct nvme_dev *dev, struct nvme_queue *nvmeq,
++			      int qid, int depth)
++{
++	if (qid && dev->cmb_use_sqes && (dev->cmbsz & NVME_CMBSZ_SQS)
++			&& dev->ops->cmb_alloc_sq_cmds
++			&& dev->ops->cmb_alloc_sq_cmds(nvmeq,
++						       SQ_SIZE(depth),
++						       &nvmeq->sq_cmds,
++						       &nvmeq->sq_dma_addr)
++				== 0) {
++		set_bit(NVMEQ_SQ_CMB, &nvmeq->flags);
++		return 0;
+ 	}
+ 
+ 	nvmeq->sq_cmds = dma_alloc_coherent(dev->dev, SQ_SIZE(depth),
+@@ -1487,6 +1572,8 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 		goto free_cqdma;
+ 
+ 	nvmeq->dev = dev;
++	snprintf(nvmeq->irqname, sizeof(nvmeq->irqname), "nvme%dq%d",
++		 dev->ctrl.instance, qid);
+ 	spin_lock_init(&nvmeq->sq_lock);
+ 	spin_lock_init(&nvmeq->cq_poll_lock);
+ 	nvmeq->cq_head = 0;
+@@ -1507,16 +1594,16 @@ static int nvme_alloc_queue(struct nvme_dev *dev, int qid, int depth)
+ 
+ static int queue_request_irq(struct nvme_queue *nvmeq)
+ {
+-	struct pci_dev *pdev = to_pci_dev(nvmeq->dev->dev);
+-	int nr = nvmeq->dev->ctrl.instance;
++	struct nvme_dev *dev = nvmeq->dev;
+ 
+-	if (use_threaded_interrupts) {
+-		return pci_request_irq(pdev, nvmeq->cq_vector, nvme_irq_check,
+-				nvme_irq, nvmeq, "nvme%dq%d", nr, nvmeq->qid);
+-	} else {
+-		return pci_request_irq(pdev, nvmeq->cq_vector, nvme_irq,
+-				NULL, nvmeq, "nvme%dq%d", nr, nvmeq->qid);
+-	}
++	if (use_threaded_interrupts)
++		return request_threaded_irq(dev->ops->q_irq(nvmeq),
++					    nvme_irq_check, nvme_irq,
++					    IRQF_SHARED, nvmeq->irqname,
++					    nvmeq);
++	else
++		return request_irq(dev->ops->q_irq(nvmeq), nvme_irq,
++				   IRQF_SHARED, nvmeq->irqname, nvmeq);
+ }
+ 
+ static void nvme_init_queue(struct nvme_queue *nvmeq, u16 qid)
+@@ -1597,7 +1684,7 @@ static const struct blk_mq_ops nvme_mq_ops = {
+ 	.commit_rqs	= nvme_commit_rqs,
+ 	.init_hctx	= nvme_init_hctx,
+ 	.init_request	= nvme_init_request,
+-	.map_queues	= nvme_pci_map_queues,
++	.map_queues	= nvme_map_queues,
+ 	.timeout	= nvme_timeout,
+ 	.poll		= nvme_poll,
+ };
+@@ -1656,15 +1743,15 @@ static unsigned long db_bar_size(struct nvme_dev *dev, unsigned nr_io_queues)
+ 
+ static int nvme_remap_bar(struct nvme_dev *dev, unsigned long size)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev->dev);
++	struct device *ddev = dev->dev;
+ 
+ 	if (size <= dev->bar_mapped_size)
+ 		return 0;
+-	if (size > pci_resource_len(pdev, 0))
++	if (size > resource_size(dev->res))
+ 		return -ENOMEM;
+ 	if (dev->bar)
+-		iounmap(dev->bar);
+-	dev->bar = ioremap(pci_resource_start(pdev, 0), size);
++		devm_iounmap(ddev, dev->bar);
++	dev->bar = devm_ioremap(ddev, dev->res->start, size);
+ 	if (!dev->bar) {
+ 		dev->bar_mapped_size = 0;
+ 		return -ENOMEM;
+@@ -1784,7 +1871,7 @@ static u32 nvme_cmb_size(struct nvme_dev *dev)
+ 	return (dev->cmbsz >> NVME_CMBSZ_SZ_SHIFT) & NVME_CMBSZ_SZ_MASK;
+ }
+ 
+-static void nvme_map_cmb(struct nvme_dev *dev)
++static void nvme_pci_map_cmb(struct nvme_dev *dev)
+ {
+ 	u64 size, offset;
+ 	resource_size_t bar_size;
+@@ -2059,14 +2146,31 @@ static void nvme_calc_irq_sets(struct irq_affinity *affd, unsigned int nrirqs)
+ 	affd->nr_sets = nr_read_queues ? 2 : 1;
+ }
+ 
+-static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
++static int nvme_pci_setup_irqs(struct nvme_dev *dev, int nr_io_queues)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
++	struct nvme_queue *adminq = &dev->queues[0];
+ 	struct irq_affinity affd = {
+ 		.pre_vectors	= 1,
+ 		.calc_sets	= nvme_calc_irq_sets,
+ 		.priv		= dev,
+ 	};
++
++	/* Deregister the admin queue's interrupt */
++	free_irq(pci_irq_vector(pdev, 0), adminq);
++
++	/*
++	 * If we enable msix early due to not intx, disable it again before
++	 * setting up the full range we need.
++	 */
++	pci_free_irq_vectors(pdev);
++
++	return pci_alloc_irq_vectors_affinity(pdev, 1, nr_io_queues,
++			      PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY, &affd);
++}
++
++static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
++{
+ 	unsigned int irq_queues, this_p_queues;
+ 
+ 	/*
+@@ -2086,8 +2190,7 @@ static int nvme_setup_irqs(struct nvme_dev *dev, unsigned int nr_io_queues)
+ 	dev->io_queues[HCTX_TYPE_DEFAULT] = 1;
+ 	dev->io_queues[HCTX_TYPE_READ] = 0;
+ 
+-	return pci_alloc_irq_vectors_affinity(pdev, 1, irq_queues,
+-			      PCI_IRQ_ALL_TYPES | PCI_IRQ_AFFINITY, &affd);
++	return dev->ops->setup_irqs(dev, irq_queues);
+ }
+ 
+ static void nvme_disable_io_queues(struct nvme_dev *dev)
+@@ -2099,7 +2202,6 @@ static void nvme_disable_io_queues(struct nvme_dev *dev)
+ static int nvme_setup_io_queues(struct nvme_dev *dev)
+ {
+ 	struct nvme_queue *adminq = &dev->queues[0];
+-	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 	int result, nr_io_queues;
+ 	unsigned long size;
+ 
+@@ -2133,15 +2235,6 @@ static int nvme_setup_io_queues(struct nvme_dev *dev)
+ 	adminq->q_db = dev->dbs;
+ 
+  retry:
+-	/* Deregister the admin queue's interrupt */
+-	pci_free_irq(pdev, 0, adminq);
+-
+-	/*
+-	 * If we enable msix early due to not intx, disable it again before
+-	 * setting up the full range we need.
+-	 */
+-	pci_free_irq_vectors(pdev);
+-
+ 	result = nvme_setup_irqs(dev, nr_io_queues);
+ 	if (result <= 0)
+ 		return -EIO;
+@@ -2292,6 +2385,18 @@ static int nvme_dev_add(struct nvme_dev *dev)
+ 	return 0;
+ }
+ 
++static int nvme_enable(struct nvme_dev *dev)
++{
++	dev->ctrl.cap = lo_hi_readq(dev->bar + NVME_REG_CAP);
++
++	dev->q_depth = min_t(int, NVME_CAP_MQES(dev->ctrl.cap) + 1,
++				io_queue_depth);
++	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
++	dev->dbs = dev->bar + 4096;
++
++	return 0;
++}
++
+ static int nvme_pci_enable(struct nvme_dev *dev)
+ {
+ 	int result = -ENOMEM;
+@@ -2302,15 +2407,6 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+ 
+ 	pci_set_master(pdev);
+ 
+-	if (dma_set_mask_and_coherent(dev->dev, DMA_BIT_MASK(64)) &&
+-	    dma_set_mask_and_coherent(dev->dev, DMA_BIT_MASK(32)))
+-		goto disable;
+-
+-	if (readl(dev->bar + NVME_REG_CSTS) == -1) {
+-		result = -ENODEV;
+-		goto disable;
+-	}
+-
+ 	/*
+ 	 * Some devices and/or platforms don't advertise or work with INTx
+ 	 * interrupts. Pre-enable a single MSIX or MSI vec for setup. We'll
+@@ -2320,12 +2416,13 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+ 	if (result < 0)
+ 		return result;
+ 
+-	dev->ctrl.cap = lo_hi_readq(dev->bar + NVME_REG_CAP);
++	if (dma_set_mask_and_coherent(dev->dev, DMA_BIT_MASK(64)) &&
++	    dma_set_mask_and_coherent(dev->dev, DMA_BIT_MASK(32)))
++		return -ENXIO;
+ 
+-	dev->q_depth = min_t(int, NVME_CAP_MQES(dev->ctrl.cap) + 1,
+-				io_queue_depth);
+-	dev->db_stride = 1 << NVME_CAP_STRIDE(dev->ctrl.cap);
+-	dev->dbs = dev->bar + 4096;
++	result = nvme_enable(dev);
++	if (result)
++		goto disable;
+ 
+ 	/*
+ 	 * Temporary fix for the Apple controller found in the MacBook8,1 and
+@@ -2344,7 +2441,7 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+                         "set queue depth=%u\n", dev->q_depth);
+ 	}
+ 
+-	nvme_map_cmb(dev);
++	nvme_pci_map_cmb(dev);
+ 
+ 	pci_enable_pcie_error_reporting(pdev);
+ 	pci_save_state(pdev);
+@@ -2355,13 +2452,6 @@ static int nvme_pci_enable(struct nvme_dev *dev)
+ 	return result;
+ }
+ 
+-static void nvme_dev_unmap(struct nvme_dev *dev)
+-{
+-	if (dev->bar)
+-		iounmap(dev->bar);
+-	pci_release_mem_regions(to_pci_dev(dev->dev));
+-}
+-
+ static void nvme_pci_disable(struct nvme_dev *dev)
+ {
+ 	struct pci_dev *pdev = to_pci_dev(dev->dev);
+@@ -2374,13 +2464,27 @@ static void nvme_pci_disable(struct nvme_dev *dev)
+ 	}
+ }
+ 
++static int nvme_pci_is_enabled(struct nvme_dev *dev)
++{
++	return pci_is_enabled(to_pci_dev(dev->dev));
++}
++
++static int nvme_pci_is_offline(struct nvme_dev *dev)
++{
++	return pci_channel_offline(to_pci_dev(dev->dev));
++}
++
++static bool nvme_pci_is_present(struct nvme_dev *dev)
++{
++	return pci_device_is_present(to_pci_dev(dev->dev));
++}
++
+ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ {
+ 	bool dead = true, freeze = false;
+-	struct pci_dev *pdev = to_pci_dev(dev->dev);
+ 
+ 	mutex_lock(&dev->shutdown_lock);
+-	if (pci_is_enabled(pdev)) {
++	if (dev->ops->is_enabled(dev)) {
+ 		u32 csts = readl(dev->bar + NVME_REG_CSTS);
+ 
+ 		if (dev->ctrl.state == NVME_CTRL_LIVE ||
+@@ -2389,7 +2493,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 			nvme_start_freeze(&dev->ctrl);
+ 		}
+ 		dead = !!((csts & NVME_CSTS_CFS) || !(csts & NVME_CSTS_RDY) ||
+-			pdev->error_state  != pci_channel_io_normal);
++			dev->ops->is_offline(dev));
+ 	}
+ 
+ 	/*
+@@ -2407,7 +2511,7 @@ static void nvme_dev_disable(struct nvme_dev *dev, bool shutdown)
+ 	}
+ 	nvme_suspend_io_queues(dev);
+ 	nvme_suspend_queue(&dev->queues[0]);
+-	nvme_pci_disable(dev);
++	dev->ops->disable(dev);
+ 
+ 	blk_mq_tagset_busy_iter(&dev->tagset, nvme_cancel_request, &dev->ctrl);
+ 	blk_mq_tagset_busy_iter(&dev->admin_tagset, nvme_cancel_request, &dev->ctrl);
+@@ -2495,7 +2599,7 @@ static void nvme_reset_work(struct work_struct *work)
+ 	nvme_sync_queues(&dev->ctrl);
+ 
+ 	mutex_lock(&dev->shutdown_lock);
+-	result = nvme_pci_enable(dev);
++	result = dev->ops->enable(dev);
+ 	if (result)
+ 		goto out_unlock;
+ 
+@@ -2603,10 +2707,10 @@ static void nvme_reset_work(struct work_struct *work)
+ static void nvme_remove_dead_ctrl_work(struct work_struct *work)
+ {
+ 	struct nvme_dev *dev = container_of(work, struct nvme_dev, remove_work);
+-	struct pci_dev *pdev = to_pci_dev(dev->dev);
++	struct device *ddev = dev->dev;
+ 
+-	if (pci_get_drvdata(pdev))
+-		device_release_driver(&pdev->dev);
++	if (dev_get_drvdata(ddev))
++		device_release_driver(ddev);
+ 	nvme_put_ctrl(&dev->ctrl);
+ }
+ 
+@@ -2630,9 +2734,9 @@ static int nvme_mmio_reg_read64(struct nvme_ctrl *ctrl, u32 off, u64 *val)
+ 
+ static int nvme_mmio_get_address(struct nvme_ctrl *ctrl, char *buf, int size)
+ {
+-	struct pci_dev *pdev = to_pci_dev(to_nvme_dev(ctrl)->dev);
++	struct device *ddev = to_nvme_dev(ctrl)->dev;
+ 
+-	return snprintf(buf, size, "%s", dev_name(&pdev->dev));
++	return snprintf(buf, size, "%s", dev_name(ddev));
+ }
+ 
+ static const struct nvme_ctrl_ops nvme_mmio_ctrl_ops = {
+@@ -2648,21 +2752,19 @@ static const struct nvme_ctrl_ops nvme_mmio_ctrl_ops = {
+ 	.get_address		= nvme_mmio_get_address,
+ };
+ 
+-static int nvme_dev_map(struct nvme_dev *dev)
+-{
+-	struct pci_dev *pdev = to_pci_dev(dev->dev);
+-
+-	if (pci_request_mem_regions(pdev, "nvme"))
+-		return -ENODEV;
+-
+-	if (nvme_remap_bar(dev, NVME_REG_DBS + 4096))
+-		goto release;
+-
+-	return 0;
+-  release:
+-	pci_release_mem_regions(pdev);
+-	return -ENODEV;
+-}
++static const struct nvme_dev_ops nvme_pci_dev_ops = {
++	.enable			= nvme_pci_enable,
++	.disable		= nvme_pci_disable,
++	.setup_irqs		= nvme_pci_setup_irqs,
++	.q_irq			= nvme_pci_q_irq,
++	.cmb_alloc_sq_cmds	= nvme_pci_cmb_alloc_sq_cmds,
++	.cmb_free_sq_cmds	= nvme_pci_cmb_free_sq_cmds,
++	.map_queues		= nvme_pci_map_queues,
++	.is_enabled		= nvme_pci_is_enabled,
++	.is_offline		= nvme_pci_is_offline,
++	.is_present		= nvme_pci_is_present,
++	.warn_reset		= nvme_pci_warn_reset,
++};
+ 
+ static unsigned long check_vendor_combination_bug(struct pci_dev *pdev)
+ {
+@@ -2704,16 +2806,24 @@ static void nvme_async_probe(void *data, async_cookie_t cookie)
+ 	nvme_put_ctrl(&dev->ctrl);
+ }
+ 
+-static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++static int nvme_probe(struct device *ddev, struct resource *res,
++		      const struct nvme_dev_ops *ops, unsigned long quirks)
+ {
+ 	int node, result = -ENOMEM;
+ 	struct nvme_dev *dev;
+-	unsigned long quirks = id->driver_data;
+ 	size_t alloc_size;
+ 
+-	node = dev_to_node(&pdev->dev);
++	if (!ops || !ops->enable
++		 || !ops->disable
++		 || !ops->setup_irqs
++		 || !ops->q_irq
++		 || !ops->is_enabled
++		 || !ops->is_offline)
++		return -EINVAL;
++
++	node = dev_to_node(ddev);
+ 	if (node == NUMA_NO_NODE)
+-		set_dev_node(&pdev->dev, first_memory_node);
++		set_dev_node(ddev, first_memory_node);
+ 
+ 	dev = kzalloc_node(sizeof(*dev), GFP_KERNEL, node);
+ 	if (!dev)
+@@ -2724,12 +2834,16 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	if (!dev->queues)
+ 		goto free;
+ 
+-	dev->dev = get_device(&pdev->dev);
+-	pci_set_drvdata(pdev, dev);
++	dev->ops = ops;
++	dev->res = res;
++	dev->dev = get_device(ddev);
++	dev_set_drvdata(ddev, dev);
+ 
+-	result = nvme_dev_map(dev);
+-	if (result)
+-		goto put_pci;
++	dev->bar = devm_ioremap(ddev, dev->res->start, 8192);
++	if (!dev->bar) {
++		result = -ENODEV;
++		goto put_dev;
++	}
+ 
+ 	INIT_WORK(&dev->ctrl.reset_work, nvme_reset_work);
+ 	INIT_WORK(&dev->remove_work, nvme_remove_dead_ctrl_work);
+@@ -2737,9 +2851,7 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 
+ 	result = nvme_setup_prp_pools(dev);
+ 	if (result)
+-		goto unmap;
+-
+-	quirks |= check_vendor_combination_bug(pdev);
++		goto put_dev;
+ 
+ 	/*
+ 	 * Double check that our mempool alloc size will cover the biggest
+@@ -2758,12 +2870,13 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 		goto release_pools;
+ 	}
+ 
+-	result = nvme_init_ctrl(&dev->ctrl, &pdev->dev, &nvme_mmio_ctrl_ops,
+-			quirks);
++	result = nvme_init_ctrl(&dev->ctrl, ddev, &nvme_mmio_ctrl_ops,
++				quirks);
+ 	if (result)
+ 		goto release_mempool;
+ 
+-	dev_info(dev->ctrl.device, "pci function %s\n", dev_name(&pdev->dev));
++	dev_info(dev->ctrl.device, "%s function %s\n",
++		 ddev->bus ? ddev->bus->name : "", dev_name(ddev));
+ 
+ 	nvme_get_ctrl(&dev->ctrl);
+ 	async_schedule(nvme_async_probe, dev);
+@@ -2774,16 +2887,41 @@ static int nvme_probe(struct pci_dev *pdev, const struct pci_device_id *id)
+ 	mempool_destroy(dev->iod_mempool);
+  release_pools:
+ 	nvme_release_prp_pools(dev);
+- unmap:
+-	nvme_dev_unmap(dev);
+- put_pci:
+-	put_device(dev->dev);
++ put_dev:
++	put_device(ddev);
+  free:
+ 	kfree(dev->queues);
+ 	kfree(dev);
+ 	return result;
+ }
+ 
++static void nvme_pci_release_regions(void *data)
++{
++	struct pci_dev *pdev = data;
++
++	pci_release_mem_regions(pdev);
++}
++
++static int nvme_pci_probe(struct pci_dev *pdev, const struct pci_device_id *id)
++{
++	int rc;
++	unsigned long quirks = id->driver_data;
++
++	rc = pci_request_mem_regions(pdev, "nvme");
++	if (rc)
++		return rc;
++
++	rc = devm_add_action_or_reset(&pdev->dev, nvme_pci_release_regions,
++			pdev);
++	if (rc)
++		return rc;
++
++	quirks |= check_vendor_combination_bug(pdev);
++
++	return nvme_probe(&pdev->dev, &pdev->resource[0], &nvme_pci_dev_ops,
++			  quirks);
++}
++
+ static void nvme_reset_prepare(struct pci_dev *pdev)
+ {
+ 	struct nvme_dev *dev = pci_get_drvdata(pdev);
+@@ -2796,7 +2934,7 @@ static void nvme_reset_done(struct pci_dev *pdev)
+ 	nvme_reset_ctrl_sync(&dev->ctrl);
+ }
+ 
+-static void nvme_shutdown(struct pci_dev *pdev)
++static void nvme_pci_shutdown(struct pci_dev *pdev)
+ {
+ 	struct nvme_dev *dev = pci_get_drvdata(pdev);
+ 	nvme_dev_disable(dev, true);
+@@ -2807,14 +2945,14 @@ static void nvme_shutdown(struct pci_dev *pdev)
+  * state. This function must not have any dependencies on the device state in
+  * order to proceed.
+  */
+-static void nvme_remove(struct pci_dev *pdev)
++static void nvme_remove(struct device *ddev)
+ {
+-	struct nvme_dev *dev = pci_get_drvdata(pdev);
++	struct nvme_dev *dev = dev_get_drvdata(ddev);
+ 
+ 	nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DELETING);
+-	pci_set_drvdata(pdev, NULL);
++	dev_set_drvdata(ddev, NULL);
+ 
+-	if (!pci_device_is_present(pdev)) {
++	if (dev->ops->is_present && !dev->ops->is_present(dev)) {
+ 		nvme_change_ctrl_state(&dev->ctrl, NVME_CTRL_DEAD);
+ 		nvme_dev_disable(dev, true);
+ 		nvme_dev_remove_admin(dev);
+@@ -2830,15 +2968,18 @@ static void nvme_remove(struct pci_dev *pdev)
+ 	nvme_free_queues(dev, 0);
+ 	nvme_uninit_ctrl(&dev->ctrl);
+ 	nvme_release_prp_pools(dev);
+-	nvme_dev_unmap(dev);
+ 	nvme_put_ctrl(&dev->ctrl);
+ }
+ 
++static void nvme_pci_remove(struct pci_dev *pdev)
++{
++	nvme_remove(&pdev->dev);
++}
++
+ #ifdef CONFIG_PM_SLEEP
+ static int nvme_suspend(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct nvme_dev *ndev = pci_get_drvdata(pdev);
++	struct nvme_dev *ndev = dev_get_drvdata(dev);
+ 
+ 	nvme_dev_disable(ndev, true);
+ 	return 0;
+@@ -2846,8 +2987,7 @@ static int nvme_suspend(struct device *dev)
+ 
+ static int nvme_resume(struct device *dev)
+ {
+-	struct pci_dev *pdev = to_pci_dev(dev);
+-	struct nvme_dev *ndev = pci_get_drvdata(pdev);
++	struct nvme_dev *ndev = dev_get_drvdata(dev);
+ 
+ 	nvme_reset_ctrl(&ndev->ctrl);
+ 	return 0;
+@@ -2956,9 +3096,9 @@ MODULE_DEVICE_TABLE(pci, nvme_id_table);
+ static struct pci_driver nvme_driver = {
+ 	.name		= "nvme",
+ 	.id_table	= nvme_id_table,
+-	.probe		= nvme_probe,
+-	.remove		= nvme_remove,
+-	.shutdown	= nvme_shutdown,
++	.probe		= nvme_pci_probe,
++	.remove		= nvme_pci_remove,
++	.shutdown	= nvme_pci_shutdown,
+ 	.driver		= {
+ 		.pm	= &nvme_dev_pm_ops,
+ 	},
 -- 
 2.20.1
 
