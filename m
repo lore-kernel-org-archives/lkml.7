@@ -2,89 +2,125 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD948C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:38:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2CA3C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:40:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A726C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:38:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 979572084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 23:40:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="0cnLFHw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726037AbfFTXiH (ORCPT
+        id S1726070AbfFTXkw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 19:38:07 -0400
-Received: from mga02.intel.com ([134.134.136.20]:62691 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725886AbfFTXiG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 19:38:06 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 16:38:05 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,398,1557212400"; 
-   d="scan'208";a="171047534"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga002.jf.intel.com with ESMTP; 20 Jun 2019 16:38:05 -0700
-Date:   Thu, 20 Jun 2019 16:28:29 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>, x86 <x86@kernel.org>
-Subject: Re: [PATCH v5 0/5] x86/umwait: Enable user wait instructions
-Message-ID: <20190620232829.GB238683@romley-ivt3.sc.intel.com>
-References: <1560994438-235698-1-git-send-email-fenghua.yu@intel.com>
- <CALCETrVcnccgOtxzEYqjES3qXKMVofmFfOdcY8y3s4knbw7eow@mail.gmail.com>
+        Thu, 20 Jun 2019 19:40:52 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:42753 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725905AbfFTXkw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 19:40:52 -0400
+Received: by mail-oi1-f193.google.com with SMTP id s184so3405759oie.9
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 16:40:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=scNy0Tfe+BdKZYj5qpcGlHdmruocVLL136U7yeONjQY=;
+        b=0cnLFHw3wyYOy7GJtgs9QmCRnq9eswmVPzeiBI0nzxLIy08w2sne8Vna1Y1grmzkuK
+         orXF6GaJfScNIrL+CmEEjfEWeebyFY2BN5C/NjI21notoMZHMFZD8O85FX4FqZJ8Z8r9
+         c9WxGq/LLz3LwW3HtljqhWfi0h5SxokaderedRePsLiY444AX/karrDFsSoksoWcCCgZ
+         +7KfzBlJb6BYSae/aXYMhV6RyOh/BJhvk9JSH7sv18Mz9knbjhajd4FDNRnGNZuLTc2X
+         k/ws4WPi1RFgTyfCmAwHTUeSPhtAYFKNfpXRN3OehGFyz6DqnUc2COeygcoP24s922vi
+         ch3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=scNy0Tfe+BdKZYj5qpcGlHdmruocVLL136U7yeONjQY=;
+        b=UkB+u7fBX5STD1X+vS+S8WJ/r9svDhwjet0etiGWynzKasMfGMCsjch2NAV1//Ki7y
+         IxqU4l1CcqgYTjLYjLuisS8h3FGR2xZ7TkBbv0UgjlDxsiTxteVtH7NHkTa4NOZLq3Tm
+         m8vqLGiKlk5ptkIIzZx8ryVGjXtIyB4Ui6OgkhJV2r6vyCZ+UuHzSwD4v50mV1Duz+yJ
+         h20HPq39zrPMR+RhRRGTd4O5+1LZ/sx4LWC2Ey/7JK8RuY1ENtNfsJwXZvCDYUW0iGca
+         X1m+lFag5hIUnvy3WUSpreH4T3ac7uN0ik9shtGqnSOS18LmeCkWcUhxyS+ocRZdpeRQ
+         IrZQ==
+X-Gm-Message-State: APjAAAU7fdYDxEMDk/wgteFCjyeYxf2H1MGj2/bimNLfqgfcVSK/Lcst
+        IkX9BppRHGEfUw5aCNsI6lJUIaXNqIehOoTyUKncAw==
+X-Google-Smtp-Source: APXvYqy+dAobdNgdfPhzhP0DQIKrQv88wgGeAk/7F+FLUOR+10JaG31ibuPbYrW/Rv/5imGwwlnZKa4QroXz2NVXZYc=
+X-Received: by 2002:aca:ec82:: with SMTP id k124mr901169oih.73.1561074051695;
+ Thu, 20 Jun 2019 16:40:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALCETrVcnccgOtxzEYqjES3qXKMVofmFfOdcY8y3s4knbw7eow@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <20190620161240.22738-1-logang@deltatee.com> <CAPcyv4ijztOK1FUjLuFing7ps4LOHt=6z=eO=98HHWauHA+yog@mail.gmail.com>
+ <91eba9a0-27b4-08b4-7c12-86e24e1bfe85@deltatee.com>
+In-Reply-To: <91eba9a0-27b4-08b4-7c12-86e24e1bfe85@deltatee.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Thu, 20 Jun 2019 16:40:40 -0700
+Message-ID: <CAPcyv4gPOXaL3qks6RMufu==O9RV2m_-7bBmJqKOFYTf4v_jXQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 00/28] Removing struct page from P2PDMA
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
+        linux-pci@vger.kernel.org, linux-rdma <linux-rdma@vger.kernel.org>,
+        Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Stephen Bates <sbates@raithlin.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 09:25:44AM -0700, Andy Lutomirski wrote:
-> On Wed, Jun 19, 2019 at 6:43 PM Fenghua Yu <fenghua.yu@intel.com> wrote:
-> > The sysfs interface files are in /sys/devices/system/cpu/umwait_control/
-> 
-> This might be a silly question, but: what do we envision as the use
-> case for changing the C0.2 setting?  I'm wondering if we'll ever end
-> up wanting it as a prctl() instead of a sysfs file.
+On Thu, Jun 20, 2019 at 12:35 PM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+>
+>
+> On 2019-06-20 12:45 p.m., Dan Williams wrote:
+> > On Thu, Jun 20, 2019 at 9:13 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+> >>
+> >> For eons there has been a debate over whether or not to use
+> >> struct pages for peer-to-peer DMA transactions. Pro-pagers have
+> >> argued that struct pages are necessary for interacting with
+> >> existing code like scatterlists or the bio_vecs. Anti-pagers
+> >> assert that the tracking of the memory is unecessary and
+> >> allocating the pages is a waste of memory. Both viewpoints are
+> >> valid, however developers working on GPUs and RDMA tend to be
+> >> able to do away with struct pages relatively easily
+> >
+> > Presumably because they have historically never tried to be
+> > inter-operable with the block layer or drivers outside graphics and
+> > RDMA.
+>
+> Yes, but really there are three main sets of users for P2P right now:
+> graphics, RDMA and NVMe. And every time a patch set comes from GPU/RDMA
+> people they don't bother with struct page. I seem to be the only one
+> trying to push P2P with NVMe and it seems to be a losing battle.
+>
+> > Please spell out the value, it is not immediately obvious to me
+> > outside of some memory capacity savings.
+>
+> There are a few things:
+>
+> * Have consistency with P2P efforts as most other efforts have been
+> avoiding struct page. Nobody else seems to want
+> pci_p2pdma_add_resource() or any devm_memremap_pages() call.
+>
+> * Avoid all arch-specific dependencies for P2P. With struct page the IO
+> memory must fit in the linear mapping. This requires some work with
+> RISC-V and I remember some complaints from the powerpc people regarding
+> this. Certainly not all arches will be able to fit the IO region into
+> the linear mapping space.
+>
+> * Remove a bunch of PCI P2PDMA special case mapping stuff from the block
+> layer and RDMA interface (which I've been hearing complaints over).
 
-There may be some use cases, e.g. C0.2 state is enabled for saving more
-power when the system has less workloads and is disabled for better
-performance when the system is busy, or a real time system wants to disable
-C0.2 for better response time, etc.
-
-We thought about controling C0.2 per process before. But if doing so, the
-umwait control MSR is per proces and needs to be saved/restored in
-context switch. xsave/xrestore doesn't support the MSR. So the overhead
-of saving/restoring the MSR could be high, especially the overhead
-may hurt real time apps.
-
-And there is no clear usage cases for changing C0.2 per process.
-
-We hope the current patches to be available in upstream first for its
-simplity and usage.
-
-If we find usage of controling C0.2 per process, we can add code later
-and/or may have xsave/xrestore support for the MSR to speed up context
-switch.
-
-The current C0.2 control won't block potential per process control if
-the per process control is supported in the future.
-
-Thanks.
-
--Fenghua
+This seems to be the most salient point. I was missing the fact that
+this replaces custom hacks and "special" pages with an explicit "just
+pass this pre-mapped address down the stack". It's functionality that
+might plausibly be used outside of p2p, as long as the driver can
+assert that it never needs to touch the data with the cpu before
+handing it off to a dma-engine.
