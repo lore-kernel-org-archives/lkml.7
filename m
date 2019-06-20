@@ -2,220 +2,85 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC401C4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:48:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D13C4646B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:49:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B5652084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:48:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C225E2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:49:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q6QDxp4g"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q8dvbg7Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731655AbfFTPsO (ORCPT
+        id S1731943AbfFTPtR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:48:14 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40744 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfFTPsO (ORCPT
+        Thu, 20 Jun 2019 11:49:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:44070 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTPtR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:48:14 -0400
-Received: by mail-yw1-f66.google.com with SMTP id b143so1367544ywb.7
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iCLF3w7Rvl9XKP5ezt5wuQDWbrChP9wAnz7WglcxIZM=;
-        b=Q6QDxp4gp/spAAY1x6Si9KfHY3KLyGGQmfOr0fRfZFp00TC0d65nROUC5a7YBUN8Qw
-         7HS034aNDgyD3FwthRpiDcOFgBXxardG+/rIAzg0tYNNvj21W7c5GcQRRgjnqT/Akoex
-         evDrhEdkqCvBhHwUbFsjCQb1Ulub+cK2qAI6R7g8aOjPFrSww8kjIuixDgkoCRx7bCOB
-         VY4DpHgIoYkJJUAOzDC06eakRdCp+BX7NBeRIeKUQerccMdCTe0NsAms+yCAhENa5a6r
-         ZhO9pby6MQ8Xmo6Won0/3Padf7waqlezL7Ik1ky1nm/OixVN2DscttKVKgwfJwyjPjK4
-         jjAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iCLF3w7Rvl9XKP5ezt5wuQDWbrChP9wAnz7WglcxIZM=;
-        b=HQdUQZhqeCB1fDxauIZvjWjL5eDKosnN0OVCm03VjKBxvZuWCsxMmMp1dR9Q/dMQKA
-         vKcyor2RfAdRI4bMyasB6re4PIALiz2jHJ7gvFClMIWBgy3WFBlxaWuXugncfJLfEwD6
-         i0Onvsdy6G77NFdvhI1paEkoWcPVYRVm4XgdJXb3zaoqWdn1MgO45U+zHZvXLWu4PwRK
-         omTJtAiIW4RZGFFmJ0+rgI3SrfPAKZfjT5iDJT/MdvJCfulojKEjoq9eLzZDupXcUAnV
-         BBcxsIKCOtJVlQiTwEf9lKbnFcTxjGbgZ0am6fKMWSAfbBW6o5N2/jidjpivJy/eG2q6
-         1MfQ==
-X-Gm-Message-State: APjAAAXcxuPqj3mtyZfyBeVt/gS1rKwH2iWGrRmwQAutCF0N+Rs97abO
-        HvkRhpDCPwwRBRbteW7J4pCWFEPXmUu8KhdFS2i4UA==
-X-Google-Smtp-Source: APXvYqycBkM3JbJwuXx7GyrkR4kR1O3Tg5R2peMGdSnGcGwIaVGmgpHpUZhpezQ+nTO2od6oR6jsisdDUWt7A+16WAY=
-X-Received: by 2002:a81:4c44:: with SMTP id z65mr5090029ywa.4.1561045691785;
- Thu, 20 Jun 2019 08:48:11 -0700 (PDT)
+        Thu, 20 Jun 2019 11:49:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Transfer-Encoding:Content-Type:
+        In-Reply-To:MIME-Version:Date:Message-ID:From:References:To:Subject:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=DEHl/heRoFE3pmtAOs3jRbe+EMJIxlq4+fAPJDAKNqA=; b=Q8dvbg7Y3KEguFux87Tlx8c4nI
+        TzRU0UFrSH0P5s98Ir4S7dS3oFK63/wyKX/EX9awC86Z4Lp/RmiDXdS/rWlSXwuz8FpMlJqT97jzE
+        8BgOhI3ManVmb4M15/4DF851rnD+ujzuR7FcZVkUKPU4StnexKlSXhp3F7yX9fifgd9BHu9mgc/l9
+        Rm8jaiQ+3L1+e4ExkTlf0yQ8G8NiOS9o537wp1iWcdguBUqtBW1oUSLtGWdPNvKqMmHIcOMG/h1Me
+        jU/P1a3P6/0bgnpPWPJGSXH3yUdmgSVkoc+q+jL0vmermx/de1lRLpX4Fny6RGoDoaYx/WOfOHylU
+        v94QgEpQ==;
+Received: from static-50-53-52-16.bvtn.or.frontiernet.net ([50.53.52.16] helo=dragon.dunlab)
+        by merlin.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hdzJ5-0000MQ-Ia; Thu, 20 Jun 2019 15:48:59 +0000
+Subject: Re: mmotm 2019-06-19-20-32 uploaded (drivers/base/memory.c)
+To:     akpm@linux-foundation.org, broonie@kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-next@vger.kernel.org, mhocko@suse.cz,
+        mm-commits@vger.kernel.org, sfr@canb.auug.org.au,
+        David Hildenbrand <david@redhat.com>
+References: <20190620033253.hao9i0PFT%akpm@linux-foundation.org>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <bbc205e3-f947-ad46-6b62-afb72af7791e@infradead.org>
+Date:   Thu, 20 Jun 2019 08:48:51 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190620015554.1888119-1-guro@fb.com>
-In-Reply-To: <20190620015554.1888119-1-guro@fb.com>
-From:   Shakeel Butt <shakeelb@google.com>
-Date:   Thu, 20 Jun 2019 08:48:00 -0700
-Message-ID: <CALvZod6MzPvX67AxrGddNWhr99oVY7_v6tXh_7yXdf-g24b6nQ@mail.gmail.com>
-Subject: Re: [PATCH] mm: memcg/slab: properly handle kmem_caches reparented to root_mem_cgroup
-To:     Roman Gushchin <guro@fb.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Kernel Team <kernel-team@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Waiman Long <longman@redhat.com>,
-        Christoph Lameter <cl@linux.com>,
-        Michal Hocko <mhocko@suse.com>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Pekka Enberg <penberg@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190620033253.hao9i0PFT%akpm@linux-foundation.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 6:57 PM Roman Gushchin <guro@fb.com> wrote:
->
-> As a result of reparenting a kmem_cache might belong to the root
-> memory cgroup. It happens when a top-level memory cgroup is removed,
-> and all associated kmem_caches are reparented to the root memory
-> cgroup.
->
-> The root memory cgroup is special, and requires a special handling.
-> Let's make sure that we don't try to charge or uncharge it,
-> and we handle system-wide vmstats exactly as for root kmem_caches.
->
-> Note, that we still need to alter the kmem_cache reference counter,
-> so that the kmem_cache can be released properly.
->
-> The issue was discovered by running CRIU tests; the following warning
-> did appear:
->
-> [  381.345960] WARNING: CPU: 0 PID: 11655 at mm/page_counter.c:62
-> page_counter_cancel+0x26/0x30
-> [  381.345992] Modules linked in:
-> [  381.345998] CPU: 0 PID: 11655 Comm: kworker/0:8 Not tainted
-> 5.2.0-rc5-next-20190618+ #1
-> [  381.346001] Hardware name: Google Google Compute Engine/Google
-> Compute Engine, BIOS Google 01/01/2011
-> [  381.346010] Workqueue: memcg_kmem_cache kmemcg_workfn
-> [  381.346013] RIP: 0010:page_counter_cancel+0x26/0x30
-> [  381.346017] Code: 1f 44 00 00 0f 1f 44 00 00 48 89 f0 53 48 f7 d8
-> f0 48 0f c1 07 48 29 f0 48 89 c3 48 89 c6 e8 61 ff ff ff 48 85 db 78
-> 02 5b c3 <0f> 0b 5b c3 66 0f 1f 44 00 00 0f 1f 44 00 00 48 85 ff 74 41
-> 41 55
-> [  381.346019] RSP: 0018:ffffb3b34319f990 EFLAGS: 00010086
-> [  381.346022] RAX: fffffffffffffffc RBX: fffffffffffffffc RCX: 0000000000000004
-> [  381.346024] RDX: 0000000000000000 RSI: fffffffffffffffc RDI: ffff9c2cd7165270
-> [  381.346026] RBP: 0000000000000004 R08: 0000000000000000 R09: 0000000000000001
-> [  381.346028] R10: 00000000000000c8 R11: ffff9c2cd684e660 R12: 00000000fffffffc
-> [  381.346030] R13: 0000000000000002 R14: 0000000000000006 R15: ffff9c2c8ce1f200
-> [  381.346033] FS:  0000000000000000(0000) GS:ffff9c2cd8200000(0000)
-> knlGS:0000000000000000
-> [  381.346039] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [  381.346041] CR2: 00000000007be000 CR3: 00000001cdbfc005 CR4: 00000000001606f0
-> [  381.346043] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> [  381.346045] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> [  381.346047] Call Trace:
-> [  381.346054]  page_counter_uncharge+0x1d/0x30
-> [  381.346065]  __memcg_kmem_uncharge_memcg+0x39/0x60
-> [  381.346071]  __free_slab+0x34c/0x460
-> [  381.346079]  deactivate_slab.isra.80+0x57d/0x6d0
-> [  381.346088]  ? add_lock_to_list.isra.36+0x9c/0xf0
-> [  381.346095]  ? __lock_acquire+0x252/0x1410
-> [  381.346106]  ? cpumask_next_and+0x19/0x20
-> [  381.346110]  ? slub_cpu_dead+0xd0/0xd0
-> [  381.346113]  flush_cpu_slab+0x36/0x50
-> [  381.346117]  ? slub_cpu_dead+0xd0/0xd0
-> [  381.346125]  on_each_cpu_mask+0x51/0x70
-> [  381.346131]  ? ksm_migrate_page+0x60/0x60
-> [  381.346134]  on_each_cpu_cond_mask+0xab/0x100
-> [  381.346143]  __kmem_cache_shrink+0x56/0x320
-> [  381.346150]  ? ret_from_fork+0x3a/0x50
-> [  381.346157]  ? unwind_next_frame+0x73/0x480
-> [  381.346176]  ? __lock_acquire+0x252/0x1410
-> [  381.346188]  ? kmemcg_workfn+0x21/0x50
-> [  381.346196]  ? __mutex_lock+0x99/0x920
-> [  381.346199]  ? kmemcg_workfn+0x21/0x50
-> [  381.346205]  ? kmemcg_workfn+0x21/0x50
-> [  381.346216]  __kmemcg_cache_deactivate_after_rcu+0xe/0x40
-> [  381.346220]  kmemcg_cache_deactivate_after_rcu+0xe/0x20
-> [  381.346223]  kmemcg_workfn+0x31/0x50
-> [  381.346230]  process_one_work+0x23c/0x5e0
-> [  381.346241]  worker_thread+0x3c/0x390
-> [  381.346248]  ? process_one_work+0x5e0/0x5e0
-> [  381.346252]  kthread+0x11d/0x140
-> [  381.346255]  ? kthread_create_on_node+0x60/0x60
-> [  381.346261]  ret_from_fork+0x3a/0x50
-> [  381.346275] irq event stamp: 10302
-> [  381.346278] hardirqs last  enabled at (10301): [<ffffffffb2c1a0b9>]
-> _raw_spin_unlock_irq+0x29/0x40
-> [  381.346282] hardirqs last disabled at (10302): [<ffffffffb2182289>]
-> on_each_cpu_mask+0x49/0x70
-> [  381.346287] softirqs last  enabled at (10262): [<ffffffffb2191f4a>]
-> cgroup_idr_replace+0x3a/0x50
-> [  381.346290] softirqs last disabled at (10260): [<ffffffffb2191f2d>]
-> cgroup_idr_replace+0x1d/0x50
-> [  381.346293] ---[ end trace b324ba73eb3659f0 ]---
->
-> Reported-by: Andrei Vagin <avagin@gmail.com>
-> Signed-off-by: Roman Gushchin <guro@fb.com>
-> Cc: Christoph Lameter <cl@linux.com>
-> Cc: Johannes Weiner <hannes@cmpxchg.org>
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: Shakeel Butt <shakeelb@google.com>
-> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-> Cc: Waiman Long <longman@redhat.com>
-> Cc: David Rientjes <rientjes@google.com>
-> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> ---
->  mm/slab.h | 17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
->
-> diff --git a/mm/slab.h b/mm/slab.h
-> index a4c9b9d042de..c02e7f44268b 100644
-> --- a/mm/slab.h
-> +++ b/mm/slab.h
-> @@ -294,8 +294,12 @@ static __always_inline int memcg_charge_slab(struct page *page,
->                 memcg = parent_mem_cgroup(memcg);
->         rcu_read_unlock();
->
-> -       if (unlikely(!memcg))
-> +       if (unlikely(!memcg || mem_cgroup_is_root(memcg))) {
-> +               mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
-> +                                   (1 << order));
-> +               percpu_ref_get_many(&s->memcg_params.refcnt, 1 << order);
->                 return true;
+On 6/19/19 8:32 PM, akpm@linux-foundation.org wrote:
+> The mm-of-the-moment snapshot 2019-06-19-20-32 has been uploaded to
+> 
+>    http://www.ozlabs.org/~akpm/mmotm/
+> 
+> mmotm-readme.txt says
+> 
+> README for mm-of-the-moment:
+> 
+> http://www.ozlabs.org/~akpm/mmotm/
+> 
+> This is a snapshot of my -mm patch queue.  Uploaded at random hopefully
+> more than once a week.
+> 
 
-Should the above be "return 0;" instead of true?
+on i386 or x86_64:
 
-> +       }
->
->         ret = memcg_kmem_charge_memcg(page, gfp, order, memcg);
->         if (ret)
-> @@ -324,9 +328,14 @@ static __always_inline void memcg_uncharge_slab(struct page *page, int order,
->
->         rcu_read_lock();
->         memcg = READ_ONCE(s->memcg_params.memcg);
-> -       lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
-> -       mod_lruvec_state(lruvec, cache_vmstat_idx(s), -(1 << order));
-> -       memcg_kmem_uncharge_memcg(page, order, memcg);
-> +       if (likely(!mem_cgroup_is_root(memcg))) {
-> +               lruvec = mem_cgroup_lruvec(page_pgdat(page), memcg);
-> +               mod_lruvec_state(lruvec, cache_vmstat_idx(s), -(1 << order));
-> +               memcg_kmem_uncharge_memcg(page, order, memcg);
-> +       } else {
-> +               mod_node_page_state(page_pgdat(page), cache_vmstat_idx(s),
-> +                                   -(1 << order));
-> +       }
->         rcu_read_unlock();
->
->         percpu_ref_put_many(&s->memcg_params.refcnt, 1 << order);
-> --
-> 2.21.0
->
+../drivers/base/memory.c: In function 'find_memory_block':
+../drivers/base/memory.c:621:43: error: 'hint' undeclared (first use in this function); did you mean 'uint'?
+  return find_memory_block_by_id(block_id, hint);
+                                           ^~~~
+
+
+-- 
+~Randy
