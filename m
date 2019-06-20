@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12384C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D9AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA26B21537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86516208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:01:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053715;
-	bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
+	s=default; t=1561053718;
+	bh=9zCuTz2MR1VwzSH06hdNX1UrRVjULp8CQKn86vM3loQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1xz0bIS3tthpPxrXHJ+acrD0NikQWCgJNKcvDVc1Viww1VlQ8nEZbWkd4p12EoVwj
-	 +x86Fig220PtpKiIShl3DK0EhLB9hfiwQYpzVynxXvzXlIy2wgSm+ulBjyPRx5wdiD
-	 zeEXfhdYtpd5dRQS0F77ZEIH9z1PcSv1p1X091BQ=
+	b=lLcW5+a2QM/8/U05LLG778ShhwzDgJiKUblrTgR/PYnuE5VaHL2v2MOyCvNNw1Ep2
+	 Af01piB9Ry5/agoVF2TUclZyj65pBA9hGqzhCmq7SD88SpY7F800rJnzMJx/inap/A
+	 98Vg0sX+Uxyr0GykWj1Wnv5cwCZS0Qn1T7BdtYvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727347AbfFTSBy (ORCPT
+        id S1727360AbfFTSB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51808 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:01:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51896 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727329AbfFTSBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:49 -0400
+        id S1727316AbfFTSBw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 66CA8214AF;
-        Thu, 20 Jun 2019 18:01:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1472720B1F;
+        Thu, 20 Jun 2019 18:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053708;
-        bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
+        s=default; t=1561053711;
+        bh=9zCuTz2MR1VwzSH06hdNX1UrRVjULp8CQKn86vM3loQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=p8MYRB70fSQGgjs56W/+vzfEml+I8TGBN3VArjHO36eHR4KcoJ/MzoICwHBmJbj8h
-         M/oaqMMsymmqdYuovcBkuk+t38af8egnGgYtpCoTfK/ua+Slh3u2U1N22aMptx8Y4q
-         XD7BnBKs81ILpVwQxU9dk+L761yMSesgo3A4ni9g=
+        b=H1jApYnR2XRDbEmgiPRAqaRz6bMC5S3uDqxDjiLbT29uhCFbgr/lRZmThWC2M6zkJ
+         +q4Y80NzMLtA2r+WsKNJF3ke+HoZF7cRTpJB6tHaNU6sINpK53ccEMXBQ2yncejlM9
+         3Qv+VSCHiRmvEE9eA9Jrj+30T4jYLWMs7xtvTMBE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.4 66/84] lapb: fixed leak of control-blocks.
-Date:   Thu, 20 Jun 2019 19:57:03 +0200
-Message-Id: <20190620174348.199249261@linuxfoundation.org>
+        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
+        Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
+        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Zubin Mithra <zsm@chromium.org>
+Subject: [PATCH 4.4 84/84] Abort file_remove_privs() for non-reg. files
+Date:   Thu, 20 Jun 2019 19:57:21 +0200
+Message-Id: <20190620174349.500021445@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,42 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
 
-[ Upstream commit 6be8e297f9bcea666ea85ac7a6cd9d52d6deaf92 ]
+commit f69e749a49353d96af1a293f56b5b56de59c668a upstream.
 
-lapb_register calls lapb_create_cb, which initializes the control-
-block's ref-count to one, and __lapb_insert_cb, which increments it when
-adding the new block to the list of blocks.
+file_remove_privs() might be called for non-regular files, e.g.
+blkdev inode. There is no reason to do its job on things
+like blkdev inodes, pipes, or cdevs. Hence, abort if
+file does not refer to a regular inode.
 
-lapb_unregister calls __lapb_remove_cb, which decrements the ref-count
-when removing control-block from the list of blocks, and calls lapb_put
-itself to decrement the ref-count before returning.
+AV: more to the point, for devices there might be any number of
+inodes refering to given device.  Which one to strip the permissions
+from, even if that made any sense in the first place?  All of them
+will be observed with contents modified, after all.
 
-However, lapb_unregister also calls __lapb_devtostruct to look up the
-right control-block for the given net_device, and __lapb_devtostruct
-also bumps the ref-count, which means that when lapb_unregister returns
-the ref-count is still 1 and the control-block is leaked.
+Found by LockDoc (Alexander Lochmann, Horst Schirmeier and Olaf
+Spinczyk)
 
-Call lapb_put after __lapb_devtostruct to fix leak.
-
-Reported-by: syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Zubin Mithra <zsm@chromium.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/lapb/lapb_iface.c |    1 +
- 1 file changed, 1 insertion(+)
 
---- a/net/lapb/lapb_iface.c
-+++ b/net/lapb/lapb_iface.c
-@@ -182,6 +182,7 @@ int lapb_unregister(struct net_device *d
- 	lapb = __lapb_devtostruct(dev);
- 	if (!lapb)
- 		goto out;
-+	lapb_put(lapb);
+---
+ fs/inode.c |    9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+--- a/fs/inode.c
++++ b/fs/inode.c
+@@ -1744,8 +1744,13 @@ int file_remove_privs(struct file *file)
+ 	int kill;
+ 	int error = 0;
  
- 	lapb_stop_t1timer(lapb);
- 	lapb_stop_t2timer(lapb);
+-	/* Fast path for nothing security related */
+-	if (IS_NOSEC(inode))
++	/*
++	 * Fast path for nothing security related.
++	 * As well for non-regular files, e.g. blkdev inodes.
++	 * For example, blkdev_write_iter() might get here
++	 * trying to remove privs which it is not allowed to.
++	 */
++	if (IS_NOSEC(inode) || !S_ISREG(inode->i_mode))
+ 		return 0;
+ 
+ 	kill = dentry_needs_remove_privs(dentry);
 
 
