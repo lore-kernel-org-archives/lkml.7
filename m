@@ -7,48 +7,53 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A965AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32586C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F25F21479
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E5292089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053535;
-	bh=eDOu6ShsslUalUYJi3yKS4My3OeSY/qmqS79F4rru9U=;
+	s=default; t=1561053539;
+	bh=dgDLQHfZ0VlXlL+JJBDpMsWiA6fPwJwJf7eZOmvk3fw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XC1DhZQpLtHqmTSo9e7/OqdgSazl6mKkpb8vEYnKkAB1w/orJsK+T0xUAgAEHlJL5
-	 2BJXFXq+M6dskkNsUoRrosJbjCI1Ylh1rIUqbqkROoeMrh3SfGEZbDVZ/x2O9DiN9L
-	 TprnTQlDZjv+Y7rB1QFiCybwunSqyQiI/b9NPWY4=
+	b=jetX8aVa0BM5F+lvUuyJBDUQoJGBFP5EkAiIoaD76cixnBOVdOrCXfnyRfDt0NtRp
+	 Gi9i3J8JtEHq76CBSPVcJuOlWxvQft5Q6X1dTMWhLykG/FcVQHw+3fWGbgY9hhoY3N
+	 IbxbhZlFg5hMTt5KmjAPAq1+clGGM7yMhMKcD73M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfFTR6y (ORCPT
+        id S1726372AbfFTR65 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:58:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45702 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:58:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45788 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726304AbfFTR6v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:58:51 -0400
+        id S1726331AbfFTR6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:58:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A03521479;
-        Thu, 20 Jun 2019 17:58:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 64822214AF;
+        Thu, 20 Jun 2019 17:58:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053531;
-        bh=eDOu6ShsslUalUYJi3yKS4My3OeSY/qmqS79F4rru9U=;
+        s=default; t=1561053533;
+        bh=dgDLQHfZ0VlXlL+JJBDpMsWiA6fPwJwJf7eZOmvk3fw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rf+3IAIN50OCK2jCdJXd6ZynLlYCJHK1VdJ8XtChmrvls08rDy29lL3ONmnq8GGvb
-         hBlM2RoDDuErf5UeCluuhNofIaoZTGgvLnoHzqaGLcMmpbyMNIQxvASfVJGp6QMSV0
-         TU4JxIbJQ1nTBniCWogX/rNQnmJk31P4986jT3eg=
+        b=YovoXzHcayCAhRDd17B59/R9bW9wnYIYJkue9EQpfaAUYjngvMPHcoXIGuhgb6PCv
+         +UhnfC/82bDzbZng/zOzdNBfBQfF4LT+MkGV6tfQ5kZJhbTyJ+V8f1LRG52Xp9fvdd
+         0b3MhYecY6p7DpqXpARLtDHAhVYnYJY+bkFr1wN8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Enrico Granata <egranata@chromium.org>,
-        Jett Rink <jettrink@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        stable@vger.kernel.org, Mike Kravetz <mike.kravetz@oracle.com>,
+        Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 21/84] platform/chrome: cros_ec_proto: check for NULL transfer function
-Date:   Thu, 20 Jun 2019 19:56:18 +0200
-Message-Id: <20190620174340.804372470@linuxfoundation.org>
+Subject: [PATCH 4.4 04/84] hugetlbfs: on restore reserve error path retain subpool reservation
+Date:   Thu, 20 Jun 2019 19:56:01 +0200
+Message-Id: <20190620174338.192463610@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -61,49 +66,78 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 94d4e7af14a1170e34cf082d92e4c02de9e9fb88 ]
+[ Upstream commit 0919e1b69ab459e06df45d3ba6658d281962db80 ]
 
-As new transfer mechanisms are added to the EC codebase, they may
-not support v2 of the EC protocol.
+When a huge page is allocated, PagePrivate() is set if the allocation
+consumed a reservation.  When freeing a huge page, PagePrivate is checked.
+If set, it indicates the reservation should be restored.  PagePrivate
+being set at free huge page time mostly happens on error paths.
 
-If the v3 initial handshake transfer fails, the kernel will try
-and call cmd_xfer as a fallback. If v2 is not supported, cmd_xfer
-will be NULL, and the code will end up causing a kernel panic.
+When huge page reservations are created, a check is made to determine if
+the mapping is associated with an explicitly mounted filesystem.  If so,
+pages are also reserved within the filesystem.  The default action when
+freeing a huge page is to decrement the usage count in any associated
+explicitly mounted filesystem.  However, if the reservation is to be
+restored the reservation/use count within the filesystem should not be
+decrementd.  Otherwise, a subsequent page allocation and free for the same
+mapping location will cause the file filesystem usage to go 'negative'.
 
-Add a check for NULL before calling the transfer function, along
-with a helpful comment explaining how one might end up in this
-situation.
+Filesystem                         Size  Used Avail Use% Mounted on
+nodev                              4.0G -4.0M  4.1G    - /opt/hugepool
 
-Signed-off-by: Enrico Granata <egranata@chromium.org>
-Reviewed-by: Jett Rink <jettrink@chromium.org>
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+To fix, when freeing a huge page do not adjust filesystem usage if
+PagePrivate() is set to indicate the reservation should be restored.
+
+I did not cc stable as the problem has been around since reserves were
+added to hugetlbfs and nobody has noticed.
+
+Link: http://lkml.kernel.org/r/20190328234704.27083-2-mike.kravetz@oracle.com
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Reviewed-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/platform/chrome/cros_ec_proto.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ mm/hugetlb.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index a0b8c8a8c323..5c285f2b3a65 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -66,6 +66,17 @@ static int send_command(struct cros_ec_device *ec_dev,
- 	else
- 		xfer_fxn = ec_dev->cmd_xfer;
+diff --git a/mm/hugetlb.c b/mm/hugetlb.c
+index d7f65a8c629b..fd932e7a25dd 100644
+--- a/mm/hugetlb.c
++++ b/mm/hugetlb.c
+@@ -1221,12 +1221,23 @@ void free_huge_page(struct page *page)
+ 	ClearPagePrivate(page);
  
-+	if (!xfer_fxn) {
+ 	/*
+-	 * A return code of zero implies that the subpool will be under its
+-	 * minimum size if the reservation is not restored after page is free.
+-	 * Therefore, force restore_reserve operation.
++	 * If PagePrivate() was set on page, page allocation consumed a
++	 * reservation.  If the page was associated with a subpool, there
++	 * would have been a page reserved in the subpool before allocation
++	 * via hugepage_subpool_get_pages().  Since we are 'restoring' the
++	 * reservtion, do not call hugepage_subpool_put_pages() as this will
++	 * remove the reserved page from the subpool.
+ 	 */
+-	if (hugepage_subpool_put_pages(spool, 1) == 0)
+-		restore_reserve = true;
++	if (!restore_reserve) {
 +		/*
-+		 * This error can happen if a communication error happened and
-+		 * the EC is trying to use protocol v2, on an underlying
-+		 * communication mechanism that does not support v2.
++		 * A return code of zero implies that the subpool will be
++		 * under its minimum size if the reservation is not restored
++		 * after page is free.  Therefore, force restore_reserve
++		 * operation.
 +		 */
-+		dev_err_once(ec_dev->dev,
-+			     "missing EC transfer API, cannot send command\n");
-+		return -EIO;
++		if (hugepage_subpool_put_pages(spool, 1) == 0)
++			restore_reserve = true;
 +	}
-+
- 	ret = (*xfer_fxn)(ec_dev, msg);
- 	if (msg->result == EC_RES_IN_PROGRESS) {
- 		int i;
+ 
+ 	spin_lock(&hugetlb_lock);
+ 	clear_page_huge_active(page);
 -- 
 2.20.1
 
