@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D488C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFAF8C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D9A220675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 830A220675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:18:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054703;
-	bh=I8yePqN8pwCzyU8vApw9YiizwGXr64LMAq5Y4tEhAOI=;
+	s=default; t=1561054705;
+	bh=0rHNTe7piWPQPp9EcUqjXMi/HxZeN+SZaZjtZOxQ19s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IuCyn16MlFOigSijypgMLycIbZ/bk8d8wt7IaDbHoRM06PX6lv9csoheU/DmVTu2s
-	 Hcn1MJuz520l94roWdR7OvbD5VHjLw336Hzq2YZWigcOyYNGSdybVW9dEj5+Xu8UBo
-	 de6x+Pt42JBy3jiwCOhQ0anv0e26fzTxTrSFh9xA=
+	b=AEepaBXNL5SDnKAgZ2aJ+H/45MyahGCLsNL+0Hfr0BWCzgLmLZGwXyWpsbw39EXak
+	 D8YiOMA2BEOOn4iFgukpfMx5CtFqgYClDg7hckCEPbd7ph17FpCEoPeUSwc/7Qm/1b
+	 Jh7K7gXCl5r6INA0Bu9fHj6+a+fTdaeI7UtZLHcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfFTSQi (ORCPT
+        id S1729801AbfFTSQg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:16:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45732 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:16:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45780 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728814AbfFTSQc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:32 -0400
+        id S1729081AbfFTSQe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 00534215EA;
-        Thu, 20 Jun 2019 18:16:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94EF4205F4;
+        Thu, 20 Jun 2019 18:16:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054591;
-        bh=I8yePqN8pwCzyU8vApw9YiizwGXr64LMAq5Y4tEhAOI=;
+        s=default; t=1561054594;
+        bh=0rHNTe7piWPQPp9EcUqjXMi/HxZeN+SZaZjtZOxQ19s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Snz0up14ImcdwgM6TdurfT/Aib00TW6DzcMATxBYlOLvlvOP8kDanQ8byQwvBa16a
-         tgvluwfl50z2vjLkKlo/Prs0+aYnaa97JZBaiJBvbTFDKXa90EDmM75d/jRtBZtpPV
-         eZz7EaUXslW3jNfbA1de3sWuPJg25wCSeQoVHJLM=
+        b=Jaw5R/u0ymSnUuPODwgkEYykMjKHfodMWWIhzuDk55+A6fVyXDEo5yRLePiyno9JR
+         iOtG5U1qH/fbqyewkQdH96r42X13c3B4cUh5zV2AK72KX8H9aB0RDKv78hlw2SvmCu
+         2xx5jpteKDDFIaF6jlr/ts1Hy0thynhShw99duv4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Biao Huang <biao.huang@mediatek.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 53/98] net: stmmac: fix csr_clk cant be zero issue
-Date:   Thu, 20 Jun 2019 19:57:20 +0200
-Message-Id: <20190620174351.703795898@linuxfoundation.org>
+Subject: [PATCH 5.1 54/98] net: stmmac: dwmac-mediatek: modify csr_clk value to fix mdio read/write fail
+Date:   Thu, 20 Jun 2019 19:57:21 +0200
+Message-Id: <20190620174351.764275156@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -61,57 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5e7f7fc538d894b2d9aa41876b8dcf35f5fe11e6 ]
+[ Upstream commit f4ca7a9260dfe700f2a16f0881825de625067515 ]
 
-The specific clk_csr value can be zero, and
-stmmac_clk is necessary for MDC clock which can be set dynamically.
-So, change the condition from plat->clk_csr to plat->stmmac_clk to
-fix clk_csr can't be zero issue.
+1. the frequency of csr clock is 66.5MHz, so the csr_clk value should
+be 0 other than 5.
+2. the csr_clk can be got from device tree, so remove initialization here.
 
-Fixes: cd7201f477b9 ("stmmac: MDC clock dynamically based on the csr clock input")
+Fixes: 9992f37e346b ("stmmac: dwmac-mediatek: add support for mt2712")
 Signed-off-by: Biao Huang <biao.huang@mediatek.com>
-Acked-by: Alexandre TORGUE <alexandre.torgue@st.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c     | 6 +++---
- drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c | 5 ++++-
- 2 files changed, 7 insertions(+), 4 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 8cebc44108b2..635d88d82610 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -4380,10 +4380,10 @@ int stmmac_dvr_probe(struct device *device,
- 	 * set the MDC clock dynamically according to the csr actual
- 	 * clock input.
- 	 */
--	if (!priv->plat->clk_csr)
--		stmmac_clk_csr_set(priv);
--	else
-+	if (priv->plat->clk_csr >= 0)
- 		priv->clk_csr = priv->plat->clk_csr;
-+	else
-+		stmmac_clk_csr_set(priv);
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+index bf2562995fc8..126b66bb73a6 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+@@ -346,8 +346,6 @@ static int mediatek_dwmac_probe(struct platform_device *pdev)
+ 		return PTR_ERR(plat_dat);
  
- 	stmmac_check_pcs_mode(priv);
- 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-index 3031f2bf15d6..f45bfbef97d0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_platform.c
-@@ -408,7 +408,10 @@ stmmac_probe_config_dt(struct platform_device *pdev, const char **mac)
- 	/* Default to phy auto-detection */
- 	plat->phy_addr = -1;
- 
--	/* Get clk_csr from device tree */
-+	/* Default to get clk_csr from stmmac_clk_crs_set(),
-+	 * or get clk_csr from device tree.
-+	 */
-+	plat->clk_csr = -1;
- 	of_property_read_u32(np, "clk_csr", &plat->clk_csr);
- 
- 	/* "snps,phy-addr" is not a standard property. Mark it as deprecated
+ 	plat_dat->interface = priv_plat->phy_mode;
+-	/* clk_csr_i = 250-300MHz & MDC = clk_csr_i/124 */
+-	plat_dat->clk_csr = 5;
+ 	plat_dat->has_gmac4 = 1;
+ 	plat_dat->has_gmac = 0;
+ 	plat_dat->pmt = 0;
 -- 
 2.20.1
 
