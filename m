@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 596A9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF16C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 316CF2083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 855932083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:25:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561051537;
-	bh=PEKZLitVhbwDreRAf3ZsyL/kr7CdyykeP6MBfLvsZTE=;
+	s=default; t=1561051544;
+	bh=mx1IPJaByRyXo6N/K0E5Wwivjbb2OEqj4aKhN2KPJ18=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mSxVmmq3wdL8pedtykMCs+pWOJGYMY94YmmZ2E7l6EoNQhvx2Ty4toPWd2LCzeSuY
-	 VagyoGJNaq8q1YTGqa7epm2ScT0YEqxzNLf/lNDFGLgpAMI2BT5t5EF3oG+kbYMpEp
-	 br26OH3TM2tsvZR9SVOfYGRHrcMblWNiq466Bp0s=
+	b=D24szBaIoMEhGILWJzQoBz4d+9eJgHlgtYKCGq8I+Bn6sPXduhBCNctWGizuNH7EJ
+	 pSFEZhJ8VuDVyUUa6nQdL3FRVRNkdNSZLrv7gNCgqaqrC7l8JvWPKB5R9+eDlFGB8L
+	 bU+3IxrzeBu82xFrImRwJYm9GrGZ6SAAotS+s8TI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732556AbfFTRZf (ORCPT
+        id S1732561AbfFTRZm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:25:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:52562 "EHLO
+        Thu, 20 Jun 2019 13:25:42 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:52566 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfFTRXT (ORCPT
+        with ESMTP id S1732140AbfFTRXT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 13:23:19 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=+TcnVW4oc5Non+1YyDCeuAoLNOkHuIVoRYv61A8PqOA=; b=fys93Vkq4CBY5OFP8T6LD4eE21
-        k3+beOPwAxKRwDu+cn/+/TQ+BwKhhkQpBIV9p9rPgN+TV0uyyHn+YOdnp8FPtdlZnfCHJYYZkEBsZ
-        y7iKSiGllpq1Dgw8t7LdW13j5BTw4lJ3iwA02A/pfKHpTUSpG+FUtUkrrRcmAdb8PddqwaXT4pNPv
-        n3bDrT2Nh8f/MHXkxcGxPY9ob2HPD7y8XODfpnSnJsGMiwknAkKqD0YvSv52qu4Shsu3phqfiGBiD
-        +2LnMsf79NWcbZ5dCorAsMCbbBOJ/B7IVVmY79lz8BXvvHBitcMpuvq/l9VURaOIHzwIFPC0OQmrL
-        4cXQIWJA==;
+        bh=iyGlSzfmPRPhgV34seTobe5HD+h41lRl2+Yc0sW70Vk=; b=mkKnngnjrv232x+6XGdzBF6gOs
+        g8zlvWU5lUDgPM/UgxTW5aEtEcRUiOCr+gQoEgjVaVYsz7VX72vz2uVFmHXdeXu82Hn1sTC9tew/0
+        bBO8BoB2H7gszzSn2hQ1V1pIhf5oAAEAz9zHDr+ZnoaXQEo7Y5Xv2BtMBMYht3yAQ7rKxSmXqzt7v
+        o0bRd4zLsNMUdjG+Spxlo7v/agsWkCc17Yku2vHZw/LxgSeTRbtcK7iCWitv3FdEV0HHZZmK5Y/PZ
+        1Doem/k79Yte7fMRJUE1grbU7ebz5AN06LAb1kPr7z+9/wxyy++BsleaRF1Edfkn/W/OflLQWxTYJ
+        G43cZmZw==;
 Received: from [177.97.20.138] (helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1he0mM-0008S0-A8; Thu, 20 Jun 2019 17:23:18 +0000
+        id 1he0mM-0008Rq-8O; Thu, 20 Jun 2019 17:23:18 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1he0mJ-0000D4-N4; Thu, 20 Jun 2019 14:23:15 -0300
+        id 1he0mJ-0000Co-Jd; Thu, 20 Jun 2019 14:23:15 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH v2 07/22] scripts/get_abi.pl: add support for searching for ABI symbols
-Date:   Thu, 20 Jun 2019 14:22:59 -0300
-Message-Id: <72051952d8eac5a5aff20998909aeb52aeb4d773.1561050806.git.mchehab+samsung@kernel.org>
+Subject: [PATCH v2 03/22] scripts: add an script to parse the ABI files
+Date:   Thu, 20 Jun 2019 14:22:55 -0300
+Message-Id: <680fb978ef9322c705eca9927c79b220cd3ccc4a.1561050806.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.1561050806.git.mchehab+samsung@kernel.org>
 References: <cover.1561050806.git.mchehab+samsung@kernel.org>
@@ -64,211 +64,237 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change its syntax to allow switching between ReST output mode
-and a new search mode, with allows to seek for ABI symbols
-using regex.
+Add a script to parse the Documentation/ABI files and produce
+an output with all entries inside an ABI (sub)directory.
+
+Right now, it outputs its contents on ReST format. It shouldn't
+be hard to make it produce other kind of outputs, since the ABI
+file parser is implemented in separate than the output generator.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- scripts/get_abi.pl | 112 +++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 103 insertions(+), 9 deletions(-)
+ scripts/get_abi.pl | 212 +++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 212 insertions(+)
+ create mode 100755 scripts/get_abi.pl
 
 diff --git a/scripts/get_abi.pl b/scripts/get_abi.pl
-index f84d321a72bb..ecf6b91df7c4 100755
---- a/scripts/get_abi.pl
+new file mode 100755
+index 000000000000..f7c9944a833c
+--- /dev/null
 +++ b/scripts/get_abi.pl
-@@ -9,9 +9,11 @@ use Fcntl ':mode';
- my $help;
- my $man;
- my $debug;
-+my $prefix="Documentation/ABI";
- 
- GetOptions(
- 	"debug|d+" => \$debug,
-+	"dir=s" => \$prefix,
- 	'help|?' => \$help,
- 	man => \$man
- ) or pod2usage(2);
-@@ -19,9 +21,12 @@ GetOptions(
- pod2usage(1) if $help;
- pod2usage(-exitstatus => 0, -verbose => 2) if $man;
- 
--pod2usage(2) if (scalar @ARGV != 1);
-+pod2usage(2) if (scalar @ARGV < 1 || @ARGV > 2);
- 
--my ($prefix) = @ARGV;
-+my ($cmd, $arg) = @ARGV;
+@@ -0,0 +1,212 @@
++#!/usr/bin/perl
 +
-+pod2usage(2) if ($cmd ne "search" && $cmd ne "rest");
-+pod2usage(2) if ($cmd eq "search" && !$arg);
- 
- require Data::Dumper if ($debug);
- 
-@@ -53,6 +58,7 @@ sub parse_abi {
- 	$data{$nametag}->{what} = "File $name";
- 	$data{$nametag}->{type} = "File";
- 	$data{$nametag}->{file} = $name;
-+	$data{$nametag}->{filepath} = $file;
- 	$data{$nametag}->{is_file} = 1;
- 
- 	my $type = $file;
-@@ -115,6 +121,7 @@ sub parse_abi {
- 
- 					$data{$what}->{type} = $type;
- 					$data{$what}->{file} = $name;
-+					$data{$what}->{filepath} = $file;
- 					print STDERR "\twhat: $what\n" if ($debug > 1);
- 				}
- 
-@@ -183,7 +190,9 @@ sub parse_abi {
- 	close IN;
- }
- 
--# Outputs the output on ReST format
++use strict;
++use Pod::Usage;
++use Getopt::Long;
++use File::Find;
++use Fcntl ':mode';
++
++my $help;
++my $man;
++my $debug;
++
++GetOptions(
++	"debug|d+" => \$debug,
++	'help|?' => \$help,
++	man => \$man
++) or pod2usage(2);
++
++pod2usage(1) if $help;
++pod2usage(-exitstatus => 0, -verbose => 2) if $man;
++
++pod2usage(2) if (scalar @ARGV != 1);
++
++my ($prefix) = @ARGV;
++
++require Data::Dumper if ($debug);
++
++my %data;
++
 +#
-+# Outputs the book on ReST format
++# Displays an error message, printing file name and line
 +#
- sub output_rest {
- 	foreach my $what (sort keys %data) {
- 		my $type = $data{$what}->{type};
-@@ -262,6 +271,45 @@ sub output_rest {
- 	}
- }
- 
++sub parse_error($$$$) {
++	my ($file, $ln, $msg, $data) = @_;
++
++	print STDERR "file $file#$ln: $msg at\n\t$data";
++}
++
 +#
-+# Searches for ABI symbols
++# Parse an ABI file, storing its contents at %data
 +#
-+sub search_symbols {
++sub parse_abi {
++	my $file = $File::Find::name;
++
++	my $mode = (stat($file))[2];
++	return if ($mode & S_IFDIR);
++	return if ($file =~ m,/README,);
++
++	my $name = $file;
++	$name =~ s,.*/,,;
++
++	my $type = $file;
++	$type =~ s,.*/(.*)/.*,$1,;
++
++	my $what;
++	my $new_what;
++	my $tag;
++	my $ln;
++
++	print STDERR "Opening $file\n" if ($debug > 1);
++	open IN, $file;
++	while(<IN>) {
++		$ln++;
++		if (m/^(\S+):\s*(.*)/i) {
++			my $new_tag = lc($1);
++			my $content = $2;
++
++			if (!($new_tag =~ m/(what|date|kernelversion|contact|description|users)/)) {
++				if ($tag eq "description") {
++					$data{$what}->{$tag} .= "\n$content";;
++					$data{$what}->{$tag} =~ s/\n+$//;
++					next;
++				} else {
++					parse_error($file, $ln, "tag '$tag' is invalid", $_);
++				}
++			}
++
++			if ($new_tag =~ m/what/) {
++				if ($tag =~ m/what/) {
++					$what .= ", " . $content;
++				} else {
++					$what = $content;
++					$new_what = 1;
++				}
++				$tag = $new_tag;
++				next;
++			}
++
++			$tag = $new_tag;
++
++			if ($new_what) {
++				$new_what = 0;
++
++				$data{$what}->{type} = $type;
++				$data{$what}->{file} = $name;
++				print STDERR "\twhat: $what\n" if ($debug > 1);
++			}
++
++			if (!$what) {
++				parse_error($file, $ln, "'What:' should come first:", $_);
++				next;
++			}
++			$data{$what}->{$tag} = $content;
++			next;
++		}
++
++		# Silently ignore any headers before the database
++		next if (!$tag);
++
++		if (m/^\s*(.*)/) {
++			$data{$what}->{$tag} .= "\n$1";
++			$data{$what}->{$tag} =~ s/\n+$//;
++			next;
++		}
++
++		# Everything else is error
++		parse_error($file, $ln, "Unexpected line:", $_);
++	}
++	close IN;
++}
++
++# Outputs the output on ReST format
++sub output_rest {
 +	foreach my $what (sort keys %data) {
-+		next if (!($what =~ m/($arg)/));
-+
 +		my $type = $data{$what}->{type};
-+		next if ($type eq "File");
++		my $file = $data{$what}->{file};
 +
-+		my $file = $data{$what}->{filepath};
++		my $w = $what;
++		$w =~ s/([\(\)\_\-\*\=\^\~\\])/\\$1/g;
 +
-+		my $bar = $what;
-+		$bar =~ s/./-/g;
++		print "$w\n\n";
++		print "- defined on file $file (type: $type)\n\n::\n\n";
 +
-+		print "\n$what\n$bar\n\n";
-+
-+		my $kernelversion = $data{$what}->{kernelversion};
-+		my $contact = $data{$what}->{contact};
-+		my $users = $data{$what}->{users};
-+		my $date = $data{$what}->{date};
 +		my $desc = $data{$what}->{description};
-+		$kernelversion =~ s/^\s+//;
-+		$contact =~ s/^\s+//;
-+		$users =~ s/^\s+//;
-+		$users =~ s/\n//g;
-+		$date =~ s/^\s+//;
 +		$desc =~ s/^\s+//;
 +
-+		printf "Kernel version:\t\t%s\n", $kernelversion if ($kernelversion);
-+		printf "Date:\t\t\t%s\n", $date if ($date);
-+		printf "Contact:\t\t%s\n", $contact if ($contact);
-+		printf "Users:\t\t\t%s\n", $users if ($users);
-+		print "Defined on file:\t$file\n\n";
-+		print "Description:\n\n$desc";
++		# Remove title markups from the description, as they won't work
++		$desc =~ s/\n[\-\*\=\^\~]+\n/\n/g;
++
++		# put everything inside a code block
++		$desc =~ s/\n/\n /g;
++
++
++		if (!($desc =~ /^\s*$/)) {
++			print " $desc\n\n";
++		} else {
++			print " DESCRIPTION MISSING\n\n";
++		}
 +	}
 +}
 +
++#
++# Parses all ABI files located at $prefix dir
++#
++find({wanted =>\&parse_abi, no_chdir => 1}, $prefix);
 +
- #
- # Parses all ABI files located at $prefix dir
- #
-@@ -270,9 +318,13 @@ find({wanted =>\&parse_abi, no_chdir => 1}, $prefix);
- print STDERR Data::Dumper->Dump([\%data], [qw(*data)]) if ($debug);
- 
- #
--# Outputs an ReST file with the ABI contents
-+# Handles the command
- #
--output_rest
-+if ($cmd eq "rest") {
-+	output_rest;
-+} else {
-+	search_symbols;
-+}
- 
- 
- __END__
-@@ -283,12 +335,27 @@ abi_book.pl - parse the Linux ABI files and produce a ReST book.
- 
- =head1 SYNOPSIS
- 
--B<abi_book.pl> [--debug] <ABI_DIR>]
-+B<abi_book.pl> [--debug] <COMAND> [<ARGUMENT>]
++print STDERR Data::Dumper->Dump([\%data], [qw(*data)]) if ($debug);
 +
-+Where <COMMAND> can be:
++#
++# Outputs an ReST file with the ABI contents
++#
++output_rest
++
++
++__END__
++
++=head1 NAME
++
++abi_book.pl - parse the Linux ABI files and produce a ReST book.
++
++=head1 SYNOPSIS
++
++B<abi_book.pl> [--debug] <ABI_DIR>]
++
++=head1 OPTIONS
 +
 +=over 8
 +
-+B<search> [SEARCH_REGEX] - search for [SEARCH_REGEX] inside ABI
++=item B<--debug>
 +
-+B<rest>   - output the ABI in ReST markup language
++Put the script in verbose mode, useful for debugging. Can be called multiple
++times, to increase verbosity.
 +
-+=back
- 
- =head1 OPTIONS
- 
- =over 8
- 
-+=item B<--dir>
++=item B<--help>
 +
-+Changes the location of the ABI search. By default, it uses
-+the Documentation/ABI directory.
++Prints a brief help message and exits.
 +
- =item B<--debug>
- 
- Put the script in verbose mode, useful for debugging. Can be called multiple
-@@ -306,8 +373,35 @@ Prints the manual page and exits.
- 
- =head1 DESCRIPTION
- 
--Parse the Linux ABI files from ABI DIR (usually located at Documentation/ABI)
--and produce a ReST book containing the Linux ABI.
-+Parse the Linux ABI files from ABI DIR (usually located at Documentation/ABI),
-+allowing to search for ABI symbols or to produce a ReST book containing
-+the Linux ABI documentation.
++=item B<--man>
 +
-+=head1 EXAMPLES
-+
-+Search for all stable symbols with the word "usb":
-+
-+=over 8
-+
-+$ scripts/get_abi.pl search usb --dir Documentation/ABI/stable
++Prints the manual page and exits.
 +
 +=back
 +
-+Search for all symbols that match the regex expression "usb.*cap":
++=head1 DESCRIPTION
 +
-+=over 8
++Parse the Linux ABI files from ABI DIR (usually located at Documentation/ABI)
++and produce a ReST book containing the Linux ABI.
 +
-+$ scripts/get_abi.pl search usb.*cap
++=head1 BUGS
 +
-+=back
++Report bugs to Mauro Carvalho Chehab <mchehab@s-opensource.com>
 +
-+Output all obsoleted symbols in ReST format
++=head1 COPYRIGHT
 +
-+=over 8
++Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab@s-opensource.com>.
 +
-+$ scripts/get_abi.pl rest --dir Documentation/ABI/obsolete
++License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
 +
-+=back
- 
- =head1 BUGS
- 
-@@ -315,7 +409,7 @@ Report bugs to Mauro Carvalho Chehab <mchehab@s-opensource.com>
- 
- =head1 COPYRIGHT
- 
--Copyright (c) 2016 by Mauro Carvalho Chehab <mchehab@s-opensource.com>.
-+Copyright (c) 2016-2017 by Mauro Carvalho Chehab <mchehab@s-opensource.com>.
- 
- License GPLv2: GNU GPL version 2 <http://gnu.org/licenses/gpl.html>.
- 
++This is free software: you are free to change and redistribute it.
++There is NO WARRANTY, to the extent permitted by law.
++
++=cut
 -- 
 2.21.0
 
