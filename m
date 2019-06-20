@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C82C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51AA7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1392121655
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2D4172089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:16:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054606;
-	bh=6KortFgTHn9xDhXXxKrciBL1+5CdIJECwaCiJ6aLxVY=;
+	s=default; t=1561054609;
+	bh=0oUtWq4O4No5YNWYN3+fa6+yvVT27mA2uuNIg2eMj9U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SD1Sq3k5qrrHs3y/ppowsQCgXB93MFapSa4SG1d3hGdP0fwlRvB50cy9/2CZiduo/
-	 5PhtJ8w8bvtlF9wlwFtgHhjRdJgVSJPUfd/olUM1IlZSopOzmyoqHIyHrWgHnbhBNK
-	 B34PJHcC+4J3istiUYiqbBCw6R5Hyt4T/peCDVNA=
+	b=f7K9LmQUjQf0Dxbpcd6CcOru13pfFPTIYbjOAabnIrvC9Yko2w+5hiOTgSKrCIkt0
+	 nqLyTa/rE3j4ofTyYIQfMFiJZIuxeUHCtuKrhmvAnYqKjADdu6GvnCp+IyGP0QwF8u
+	 gxrpagwqFMthIPMRe3EwjBKyriNV+U2AOWErSLiw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfFTSQo (ORCPT
+        id S1729843AbfFTSQs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:16:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45912 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:16:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728759AbfFTSQo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:16:44 -0400
+        id S1726426AbfFTSQq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:16:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D8062089C;
-        Thu, 20 Jun 2019 18:16:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 476B12089C;
+        Thu, 20 Jun 2019 18:16:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054603;
-        bh=6KortFgTHn9xDhXXxKrciBL1+5CdIJECwaCiJ6aLxVY=;
+        s=default; t=1561054605;
+        bh=0oUtWq4O4No5YNWYN3+fa6+yvVT27mA2uuNIg2eMj9U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SncB9YtsmS3eN3pGgGQuxEoJoJzWWifF05xIS6CREcle+Z71bjLWXCyupwXVkwDZy
-         EbXhzvB36jePeSTnYNUyd5HZl9YkwglHMS53UHg9Dp/wMZG/Uz/EqplkhtbBdUoCwa
-         3zkroN44xDMVBusi/s1qRWpXvILVX4FAtM6xYEjA=
+        b=YmNyGZr3p2T0DriQ6HHdU7uPcemN+Ksmd2ESyHg0pIlKJ4tjmZlmkK8E9WeKmRbxg
+         iEdNJ+0fKL3MZSyUcP4Yep1rCQ4NIC9FJwtdBbuwa7Xswb3Ng0EQHGP9UO/cOFbyx/
+         elszpZtMQgmXDlcMrNWtWcave0c70SL09ePnlkGU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Max Uvarov <muvarov@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
         Florian Fainelli <f.fainelli@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 86/98] net: phy: dp83867: increase SGMII autoneg timer duration
-Date:   Thu, 20 Jun 2019 19:57:53 +0200
-Message-Id: <20190620174353.661952293@linuxfoundation.org>
+Subject: [PATCH 5.1 87/98] net: phy: dp83867: Set up RGMII TX delay
+Date:   Thu, 20 Jun 2019 19:57:54 +0200
+Message-Id: <20190620174353.720858985@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -62,57 +61,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 1a97a477e666cbdededab93bd3754e508f0c09d7 ]
+[ Upstream commit 2b892649254fec01678c64f16427622b41fa27f4 ]
 
-After reset SGMII Autoneg timer is set to 2us (bits 6 and 5 are 01).
-That is not enough to finalize autonegatiation on some devices.
-Increase this timer duration to maximum supported 16ms.
+PHY_INTERFACE_MODE_RGMII_RXID is less then TXID
+so code to set tx delay is never called.
 
+Fixes: 2a10154abcb75 ("net: phy: dp83867: Add TI dp83867 phy")
 Signed-off-by: Max Uvarov <muvarov@gmail.com>
-Cc: Heiner Kallweit <hkallweit1@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
 Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/net/phy/dp83867.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index 29cae4de9a4f..ffaf67bdb140 100644
+index ffaf67bdb140..2995a1788ceb 100644
 --- a/drivers/net/phy/dp83867.c
 +++ b/drivers/net/phy/dp83867.c
-@@ -26,6 +26,12 @@
- 
- /* Extended Registers */
- #define DP83867_CFG4            0x0031
-+#define DP83867_CFG4_SGMII_ANEG_MASK (BIT(5) | BIT(6))
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_11MS   (3 << 5)
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_800US  (2 << 5)
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_2US    (1 << 5)
-+#define DP83867_CFG4_SGMII_ANEG_TIMER_16MS   (0 << 5)
-+
- #define DP83867_RGMIICTL	0x0032
- #define DP83867_STRAP_STS1	0x006E
- #define DP83867_RGMIIDCTL	0x0086
-@@ -292,6 +298,18 @@ static int dp83867_config_init(struct phy_device *phydev)
- 				     0);
+@@ -255,10 +255,8 @@ static int dp83867_config_init(struct phy_device *phydev)
+ 		ret = phy_write(phydev, MII_DP83867_PHYCTRL, val);
  		if (ret)
  			return ret;
-+
-+		/* After reset SGMII Autoneg timer is set to 2us (bits 6 and 5
-+		 * are 01). That is not enough to finalize autoneg on some
-+		 * devices. Increase this timer duration to maximum 16ms.
-+		 */
-+		ret = phy_modify_mmd(phydev, DP83867_DEVADDR,
-+				     DP83867_CFG4,
-+				     DP83867_CFG4_SGMII_ANEG_MASK,
-+				     DP83867_CFG4_SGMII_ANEG_TIMER_16MS);
-+
-+		if (ret)
-+			return ret;
- 	}
+-	}
  
- 	/* Enable Interrupt output INT_OE in CFG3 register */
+-	if ((phydev->interface >= PHY_INTERFACE_MODE_RGMII_ID) &&
+-	    (phydev->interface <= PHY_INTERFACE_MODE_RGMII_RXID)) {
++		/* Set up RGMII delays */
+ 		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL);
+ 
+ 		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
 -- 
 2.20.1
 
