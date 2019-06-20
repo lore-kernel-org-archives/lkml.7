@@ -2,80 +2,102 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7049C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3094BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:05:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2DF2214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79D121537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 01:05:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Y5GuKHYy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730904AbfFTBAy (ORCPT
+        id S1731094AbfFTBFB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 21:00:54 -0400
-Received: from smtp2207-205.mail.aliyun.com ([121.197.207.205]:42714 "EHLO
-        smtp2207-205.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726165AbfFTBAy (ORCPT
+        Wed, 19 Jun 2019 21:05:01 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:23976 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731066AbfFTBFA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 21:00:54 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.09872341|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.197981-0.0224672-0.779552;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03308;MF=liaoweixiong@allwinnertech.com;NM=1;PH=DS;RN=14;RT=14;SR=0;TI=SMTPD_---.EnfKGc1_1560992440;
-Received: from PC-liaoweixiong.allwinnertech.com(mailfrom:liaoweixiong@allwinnertech.com fp:SMTPD_---.EnfKGc1_1560992440)
-          by smtp.aliyun-inc.com(10.147.41.178);
-          Thu, 20 Jun 2019 09:00:47 +0800
-From:   liaoweixiong <liaoweixiong@allwinnertech.com>
-To:     Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Frieder Schrempf <frieder.schrempf@exceet.de>,
-        Peter Pan <peterpandong@micron.com>,
-        Jeff Kletsky <git-commits@allycomm.com>,
-        Schrempf Frieder <frieder.schrempf@kontron.De>
-Cc:     linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [PATCH v2] mtd: spinand: read return badly if the last page has bitflips
-Date:   Thu, 20 Jun 2019 09:00:16 +0800
-Message-Id: <1560992416-5753-1-git-send-email-liaoweixiong@allwinnertech.com>
-X-Mailer: git-send-email 1.9.1
+        Wed, 19 Jun 2019 21:05:00 -0400
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5K130JT010943
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 18:05:00 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=facebook;
+ bh=UeowdcOCFMUQPPPGTQqUXffwP9NuXJLQNLadx7jDkj0=;
+ b=Y5GuKHYy5DU6I1d0lRR/STm3Eaxlumnyd5W/41HrCXDLFZjkvcjF21h2lWZfKTZEMVBH
+ zvIhOC07JNtIXutoqVP2x84E4t65gHgNVc3UOIFKMyNs33xeK9sGHoG5C2ubxo/TYIx1
+ jJDFit2rMxTAQnKyxBesKOVkx8mBkj3BrcA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t7wwcgegn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 18:04:59 -0700
+Received: from mx-out.facebook.com (2620:10d:c0a8:1b::d) by
+ mail.thefacebook.com (2620:10d:c0a8:83::4) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 19 Jun 2019 18:04:58 -0700
+Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
+        id ED22C62E2FFC; Wed, 19 Jun 2019 18:04:56 -0700 (PDT)
+Smtp-Origin-Hostprefix: devbig
+From:   Song Liu <songliubraving@fb.com>
+Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
+To:     <linux-kernel@vger.kernel.org>
+CC:     <kernel-team@fb.com>, <acme@redhat.com>, <davidca@fb.com>,
+        <jolsa@kernel.org>, <namhyung@kernel.org>,
+        Song Liu <songliubraving@fb.com>, <stable@vger.kernel.org>
+Smtp-Origin-Cluster: ftw2c04
+Subject: [PATCH] perf: assign proper ff->ph in perf_event__synthesize_features()
+Date:   Wed, 19 Jun 2019 18:04:53 -0700
+Message-ID: <20190620010453.4118689-1-songliubraving@fb.com>
+X-Mailer: git-send-email 2.17.1
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=659 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200005
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case of the last page containing bitflips (ret > 0),
-spinand_mtd_read() will return that number of bitflips for the last
-page. But to me it looks like it should instead return max_bitflips like
-it does when the last page read returns with 0.
+bpf/btf  write_* functions need ff->ph->env.
 
-Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+With this missing, pipe-mode (perf record -o -)  would crash like:
+
+Program terminated with signal SIGSEGV, Segmentation fault.
+
+This patch assign proper ph value to ff.
+
+Cc: stable@vger.kernel.org #v5.1+
+Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
+Reported-by: David Carrillo Cisneros <davidca@fb.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
 ---
- drivers/mtd/nand/spi/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/header.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/mtd/nand/spi/core.c b/drivers/mtd/nand/spi/core.c
-index 556bfdb..6b9388d 100644
---- a/drivers/mtd/nand/spi/core.c
-+++ b/drivers/mtd/nand/spi/core.c
-@@ -511,12 +511,12 @@ static int spinand_mtd_read(struct mtd_info *mtd, loff_t from,
- 		if (ret == -EBADMSG) {
- 			ecc_failed = true;
- 			mtd->ecc_stats.failed++;
--			ret = 0;
- 		} else {
- 			mtd->ecc_stats.corrected += ret;
- 			max_bitflips = max_t(unsigned int, max_bitflips, ret);
- 		}
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index 06ddb6618ef3..5f1aa0284e1b 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -3684,6 +3684,7 @@ int perf_event__synthesize_features(struct perf_tool *tool,
+ 		return -ENOMEM;
  
-+		ret = 0;
- 		ops->retlen += iter.req.datalen;
- 		ops->oobretlen += iter.req.ooblen;
- 	}
+ 	ff.size = sz - sz_hdr;
++	ff.ph = &session->header;
+ 
+ 	for_each_set_bit(feat, header->adds_features, HEADER_FEAT_BITS) {
+ 		if (!feat_ops[feat].synthesize) {
 -- 
-1.9.1
+2.17.1
 
