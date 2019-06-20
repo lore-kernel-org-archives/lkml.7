@@ -2,204 +2,102 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EF7EC48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:19:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1B69C48BE5
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:19:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D410206E0
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:19:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 794952080D
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:19:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WJrRXrKp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Z77iLpOX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731996AbfFTNTu (ORCPT
+        id S1732069AbfFTNT4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:19:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35887 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfFTNTu (ORCPT
+        Thu, 20 Jun 2019 09:19:56 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35424 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731972AbfFTNTz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:19:50 -0400
-Received: by mail-pl1-f194.google.com with SMTP id k8so1406998plt.3;
-        Thu, 20 Jun 2019 06:19:49 -0700 (PDT)
+        Thu, 20 Jun 2019 09:19:55 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a127so2130994oii.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 06:19:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=WAfSE9W5BajJKWLymDwp0X7mWtJXfVrKmtyqCcfxuko=;
-        b=WJrRXrKpUAFNdX86ZhIQyqXRSYMXPxhe7v+jiipgR1UWXAZ8aYSHtpZMyLHCG1XBSQ
-         kRUVi/P+lGv4MT3GdaXd8j9Ao/+JF5zQjkgOYZXzjRh3BZbY1yDeY5/rLyJtmri44qyw
-         e7afQpjZwdW4ziYXb7/FICit+n64ZPv3I3tCRzUmky3bGMC2W82qNNDPaJr6KQUMSSz0
-         mLf+kQahLUy9elZgo+AviF4T7BO6CegIUHu8iFUSAIDbc2YTWx7Cr4gdROwPXYmM3Pha
-         EZCtJTF2fqtaBHyTVoKyKRubfMqXEB0Bs+mP0pKX+jRUw2vxSGVQmPHdXyNmyzCMaYc4
-         DYHg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1IDImd+SyL7qusfZ7LEqZyeCM5Jqrmah1crodqgym2o=;
+        b=Z77iLpOXmS+LuG22+Pytd77vIOhESlIw9v0v/o6wz3WFxUVyZVuXJyx4weKeiAaHLC
+         ICyqNfMfDaMIR6ayB8jyTxh7WaXJguH7MAKdKF5UvpkAZpzjDSudYBycegmdv+cu3y15
+         GJfnWza79menUVnjzVj/C188QZVNtvPmC6BkufiJg4QDBfrgLETYgTboXga0ksf6Bg0E
+         mgqxLmAc+KD2Hbfv9VTXfG5MrxmYg+pZk4V6eZnGbPIEzp2SgIAXb6JEo3IdYTIKxYw/
+         9heW8RVFfJ52e0uQ8KD/L8xbVktXc9+p8AmFlk7oON8FotA+3R0q1CsjGObin7blMxo6
+         osdQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=WAfSE9W5BajJKWLymDwp0X7mWtJXfVrKmtyqCcfxuko=;
-        b=H+2GV1cGFVd1v9eVK4YUyEqHr9e5RR/pzEaJHjg8io8vbViFcFjw0EqqbhAgqRQ4fY
-         geHYUPeIzvhkEsuRPQm9aSCncqA1Z9rnwIS7izp31n7YglsRmi7pgkj0FIdG+K1EdpBs
-         9uzBJrxojpupHnDFtukw/1hK1VF3m4vlUGuDyfLNKl/hmt4xT9opEAbj+5NTeBAft5/P
-         385h/GflH5URU8RROY9xuJU2ZguqMCSHjCqK8G8S5U0JpWjSjphK6F+zbsDA1zYlAD2b
-         ApiEAcCJW4RwpPhn3SjRM4Pg/XJj245exYTEm8jDKycx8igKY1X4X1G4kiOoObD+nArp
-         L5eg==
-X-Gm-Message-State: APjAAAW2XZu/PCZGusuMypgc4Xavnc3ueO/i8/ACE+2ralKtem5kGPOO
-        BLDAflYuwfjFC2adO4acKA27BUiJ
-X-Google-Smtp-Source: APXvYqzIZHh9fn93IpSozHn+oIrVnPnSFkuSZ6kIv9CBdbX9yq2QnUMhjwmQYdAbHdilhG+DL1FljA==
-X-Received: by 2002:a17:902:b495:: with SMTP id y21mr123212159plr.243.1561036789060;
-        Thu, 20 Jun 2019 06:19:49 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j16sm5049251pjz.31.2019.06.20.06.19.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 06:19:48 -0700 (PDT)
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     linux-hwmon@vger.kernel.org
-Cc:     Corentin Labbe <clabbe.montjoie@gmail.com>,
-        Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH] hwmon: Convert remaining drivers to use SPDX identifier
-Date:   Thu, 20 Jun 2019 06:19:46 -0700
-Message-Id: <1561036786-23190-1-git-send-email-linux@roeck-us.net>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=1IDImd+SyL7qusfZ7LEqZyeCM5Jqrmah1crodqgym2o=;
+        b=MgsGy+aULUCa4hpeD2VAyiEMv+98BiQyFUF/LZDkg7vw07pE5x2AtIh7eYACVxiENl
+         2ISJc0riWSa70pcdmJNO2YS8t19Jr1Y8bmdljPCjXAkZM+cYPP3K3d6WbRZT/T9W6gCX
+         z3k5PrDQcqaRqwSCg5HLpVWE4kilCRjgg1mdUMeyPeaR8GcyGxwfzGIdlunHbJvSg4lX
+         LmQAYP0FNpgBagPw02kVI8mURLG0oPu7pHUDlsrXO9f3/u1k1EEwQXJ58QEUrpViPQzS
+         8CuEq1SQuyFmYtnRl4YS36j9sDDRVmD+k3kYNLndaIksLPJL1eOz6dgbo3J6er4cmgnE
+         KYvQ==
+X-Gm-Message-State: APjAAAXazT3o/Xk8x1BuOMhTjYRhIavyLfebtw4Tgww6sul/JNygm2M6
+        PISZT1dzELBHKBB1rUkKLpP8Aw==
+X-Google-Smtp-Source: APXvYqyRboXu4SbkOVXdL7maf5yqjeeaiBdvJH/64vyWK0jWSoHwuU7EkLw3RE1uOYLsi2ZI6ZrlCQ==
+X-Received: by 2002:aca:4b42:: with SMTP id y63mr6256321oia.168.1561036794590;
+        Thu, 20 Jun 2019 06:19:54 -0700 (PDT)
+Received: from alago.cortijodelrio.net (CableLink-189-218-29-147.Hosts.InterCable.net. [189.218.29.147])
+        by smtp.googlemail.com with ESMTPSA id t6sm7878945otk.36.2019.06.20.06.19.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 06:19:53 -0700 (PDT)
+From:   =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>
+To:     shuah@kernel.org
+Cc:     linux-kselftest@vger.kernel.org,
+        =?UTF-8?q?Daniel=20D=C3=ADaz?= <daniel.diaz@linaro.org>,
+        Petr Vorel <petr.vorel@gmail.com>,
+        Joey Pabalinas <joeypabalinas@gmail.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        linux-kernel@vger.kernel.org (open list)
+Subject: [PATCH] selftests/tpm2: Install run-time Python modules
+Date:   Thu, 20 Jun 2019 08:18:19 -0500
+Message-Id: <20190620131822.28944-1-daniel.diaz@linaro.org>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This gets rid of the unnecessary license boilerplate, and avoids
-having to deal with individual patches one by one.
+When ordinarily running the tests, upon `make install', the
+following error is encountered:
+  ImportError: No module named tpm2_tests
+because the Python files are not installed at the moment.
 
-No functional changes intended.
+Fix this by adding both Python modules as accompanying
+TEST_FILES in the Makefile.
 
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Signed-off-by: Daniel Díaz <daniel.diaz@linaro.org>
 ---
- drivers/hwmon/adm1029.c    | 10 ----------
- drivers/hwmon/adt7411.c    |  5 +----
- drivers/hwmon/adt7475.c    |  5 +----
- drivers/hwmon/iio_hwmon.c  |  5 +----
- drivers/hwmon/max197.c     |  5 +----
- drivers/hwmon/scpi-hwmon.c | 10 +---------
- 6 files changed, 5 insertions(+), 35 deletions(-)
+ tools/testing/selftests/tpm2/Makefile | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/hwmon/adm1029.c b/drivers/hwmon/adm1029.c
-index 388060ff85e7..f7752a5bef31 100644
---- a/drivers/hwmon/adm1029.c
-+++ b/drivers/hwmon/adm1029.c
-@@ -10,16 +10,6 @@
-  * Very rare chip please let me know if you use it
-  *
-  * http://www.analog.com/UploadedFiles/Data_Sheets/ADM1029.pdf
-- *
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation version 2 of the License
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-  */
+diff --git a/tools/testing/selftests/tpm2/Makefile b/tools/testing/selftests/tpm2/Makefile
+index 9dd848427a7b..bf401f725eef 100644
+--- a/tools/testing/selftests/tpm2/Makefile
++++ b/tools/testing/selftests/tpm2/Makefile
+@@ -2,3 +2,4 @@
+ include ../lib.mk
  
- #include <linux/module.h>
-diff --git a/drivers/hwmon/adt7411.c b/drivers/hwmon/adt7411.c
-index 44a827b031cb..7e6081ff2a74 100644
---- a/drivers/hwmon/adt7411.c
-+++ b/drivers/hwmon/adt7411.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  *  Driver for the ADT7411 (I2C/SPI 8 channel 10 bit ADC & temperature-sensor)
-  *
-  *  Copyright (C) 2008, 2010 Pengutronix
-  *
-- *  This program is free software; you can redistribute it and/or modify
-- *  it under the terms of the GNU General Public License version 2 as
-- *  published by the Free Software Foundation.
-- *
-  *  TODO: SPI, use power-down mode for suspend?, interrupt handling?
-  */
- 
-diff --git a/drivers/hwmon/adt7475.c b/drivers/hwmon/adt7475.c
-index 7caec127df86..5b6f226cf21b 100644
---- a/drivers/hwmon/adt7475.c
-+++ b/drivers/hwmon/adt7475.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * adt7475 - Thermal sensor driver for the ADT7475 chip and derivatives
-  * Copyright (C) 2007-2008, Advanced Micro Devices, Inc.
-@@ -6,10 +7,6 @@
-  * Copyright (C) 2009 Jean Delvare <jdelvare@suse.de>
-  *
-  * Derived from the lm83 driver by Jean Delvare
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-  */
- 
- #include <linux/module.h>
-diff --git a/drivers/hwmon/iio_hwmon.c b/drivers/hwmon/iio_hwmon.c
-index 1770423f7a80..e865a28052be 100644
---- a/drivers/hwmon/iio_hwmon.c
-+++ b/drivers/hwmon/iio_hwmon.c
-@@ -1,10 +1,7 @@
-+// SPDX-License-Identifier: GPL-2.0
- /* Hwmon client for industrial I/O devices
-  *
-  * Copyright (c) 2011 Jonathan Cameron
-- *
-- * This program is free software; you can redistribute it and/or modify it
-- * under the terms of the GNU General Public License version 2 as published by
-- * the Free Software Foundation.
-  */
- 
- #include <linux/kernel.h>
-diff --git a/drivers/hwmon/max197.c b/drivers/hwmon/max197.c
-index dd6a35219a18..d9b2a3fd0e41 100644
---- a/drivers/hwmon/max197.c
-+++ b/drivers/hwmon/max197.c
-@@ -1,13 +1,10 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * Maxim MAX197 A/D Converter driver
-  *
-  * Copyright (c) 2012 Savoir-faire Linux Inc.
-  *          Vivien Didelot <vivien.didelot@savoirfairelinux.com>
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * For further information, see the Documentation/hwmon/max197.rst file.
-  */
- 
-diff --git a/drivers/hwmon/scpi-hwmon.c b/drivers/hwmon/scpi-hwmon.c
-index 9bfa228d0eb0..25aac40f2764 100644
---- a/drivers/hwmon/scpi-hwmon.c
-+++ b/drivers/hwmon/scpi-hwmon.c
-@@ -1,17 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * System Control and Power Interface(SCPI) based hwmon sensor driver
-  *
-  * Copyright (C) 2015 ARM Ltd.
-  * Punit Agrawal <punit.agrawal@arm.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-- * kind, whether express or implied; without even the implied warranty
-- * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-- * GNU General Public License for more details.
-  */
- 
- #include <linux/hwmon.h>
+ TEST_PROGS := test_smoke.sh test_space.sh
++TEST_FILES := tpm2.py tpm2_tests.py
 -- 
-2.7.4
+2.20.1
 
