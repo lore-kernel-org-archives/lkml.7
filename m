@@ -2,144 +2,100 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF081C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48385C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9212220656
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 16:59:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 28F762070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:00:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731455AbfFTQ7x (ORCPT
+        id S1732000AbfFTRAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 12:59:53 -0400
-Received: from ale.deltatee.com ([207.54.116.67]:60494 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726530AbfFTQ7w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 12:59:52 -0400
-Received: from s01061831bf6ec98c.cg.shawcable.net ([68.147.80.180] helo=[192.168.6.132])
-        by ale.deltatee.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.89)
-        (envelope-from <logang@deltatee.com>)
-        id 1he0PZ-0004ZF-8g; Thu, 20 Jun 2019 10:59:46 -0600
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
-        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Keith Busch <kbusch@kernel.org>,
-        Stephen Bates <sbates@raithlin.com>
-References: <20190620161240.22738-1-logang@deltatee.com>
- <20190620161240.22738-21-logang@deltatee.com>
- <20190620164909.GC19891@ziepe.ca>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <f9186b2b-7737-965f-2dca-25e40e566e64@deltatee.com>
-Date:   Thu, 20 Jun 2019 10:59:44 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.1
+        Thu, 20 Jun 2019 13:00:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59374 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726562AbfFTRAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:00:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89D3BAFC3;
+        Thu, 20 Jun 2019 17:00:40 +0000 (UTC)
+Date:   Thu, 20 Jun 2019 19:00:35 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jane Chu <jane.chu@oracle.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Jonathan Corbet <corbet@lwn.net>, Qian Cai <cai@lca.pw>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
+        Wei Yang <richardw.yang@linux.intel.com>, linux-mm@kvack.org,
+        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v10 00/13] mm: Sub-section memory hotplug support
+Message-ID: <20190620170027.GA7126@linux>
+References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620164909.GC19891@ziepe.ca>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 68.147.80.180
-X-SA-Exim-Rcpt-To: sbates@raithlin.com, kbusch@kernel.org, sagi@grimberg.me, dan.j.williams@intel.com, bhelgaas@google.com, hch@lst.de, axboe@kernel.dk, linux-rdma@vger.kernel.org, linux-pci@vger.kernel.org, linux-nvme@lists.infradead.org, linux-block@vger.kernel.org, linux-kernel@vger.kernel.org, jgg@ziepe.ca
-X-SA-Exim-Mail-From: logang@deltatee.com
-Subject: Re: [RFC PATCH 20/28] IB/core: Introduce API for initializing a RW
- ctx from a DMA address
-X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019-06-20 10:49 a.m., Jason Gunthorpe wrote:
-> On Thu, Jun 20, 2019 at 10:12:32AM -0600, Logan Gunthorpe wrote:
->> Introduce rdma_rw_ctx_dma_init() and rdma_rw_ctx_dma_destroy() which
->> peform the same operation as rdma_rw_ctx_init() and
->> rdma_rw_ctx_destroy() respectively except they operate on a DMA
->> address and length instead of an SGL.
->>
->> This will be used for struct page-less P2PDMA, but there's also
->> been opinions expressed to migrate away from SGLs and struct
->> pages in the RDMA APIs and this will likely fit with that
->> effort.
->>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
->>  drivers/infiniband/core/rw.c | 74 ++++++++++++++++++++++++++++++------
->>  include/rdma/rw.h            |  6 +++
->>  2 files changed, 69 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
->> index 32ca8429eaae..cefa6b930bc8 100644
->> +++ b/drivers/infiniband/core/rw.c
->> @@ -319,6 +319,39 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp, u8 port_num,
->>  }
->>  EXPORT_SYMBOL(rdma_rw_ctx_init);
->>  
->> +/**
->> + * rdma_rw_ctx_dma_init - initialize a RDMA READ/WRITE context from a
->> + *	DMA address instead of SGL
->> + * @ctx:	context to initialize
->> + * @qp:		queue pair to operate on
->> + * @port_num:	port num to which the connection is bound
->> + * @addr:	DMA address to READ/WRITE from/to
->> + * @len:	length of memory to operate on
->> + * @remote_addr:remote address to read/write (relative to @rkey)
->> + * @rkey:	remote key to operate on
->> + * @dir:	%DMA_TO_DEVICE for RDMA WRITE, %DMA_FROM_DEVICE for RDMA READ
->> + *
->> + * Returns the number of WQEs that will be needed on the workqueue if
->> + * successful, or a negative error code.
->> + */
->> +int rdma_rw_ctx_dma_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
->> +		u8 port_num, dma_addr_t addr, u32 len, u64 remote_addr,
->> +		u32 rkey, enum dma_data_direction dir)
+On Tue, Jun 18, 2019 at 10:51:33PM -0700, Dan Williams wrote:
+> Changes since v9 [1]:
+> - Fix multiple issues related to the fact that pfn_valid() has
+>   traditionally returned true for any pfn in an 'early' (onlined at
+>   boot) section regardless of whether that pfn represented 'System RAM'.
+>   Teach pfn_valid() to maintain its traditional behavior in the presence
+>   of subsections. Specifically, subsection precision for pfn_valid() is
+>   only considered for non-early / hot-plugged sections. (Qian)
 > 
-> Why not keep the same basic signature here but replace the scatterlist
-> with the dma vec ?
-
-Could do. At the moment, I had no need for dma_vec in this interface.
-
->> +{
->> +	struct scatterlist sg;
->> +
->> +	sg_dma_address(&sg) = addr;
->> +	sg_dma_len(&sg) = len;
+> - Related to the first item introduce a SECTION_IS_EARLY
+>   (->section_mem_map flag) to remove the existing hacks for determining
+>   an early section by looking at whether the usemap was allocated from the
+>   slab.
 > 
-> This needs to fail if the driver is one of the few that require
-> struct page to work..
+> - Kill off the EEXIST hackery in __add_pages(). It breaks
+>   (arch_add_memory() false-positive) the detection of subsection
+>   collisions reported by section_activate(). It is also obviated by
+>   David's recent reworks to move the 'System RAM' request_region() earlier
+>   in the add_memory() sequence().
+> 
+> - Switch to an arch-independent / static subsection-size of 2MB.
+>   Otherwise, a per-arch subsection-size is a roadblock on the path to
+>   persistent memory namespace compatibility across archs. (Jeff)
+> 
+> - Update the changelog for "libnvdimm/pfn: Fix fsdax-mode namespace
+>   info-block zero-fields" to clarify that the "Cc: stable" is only there
+>   as safety measure for a distro that decides to backport "libnvdimm/pfn:
+>   Stop padding pmem namespaces to section alignment", otherwise there is
+>   no known bug exposure in older kernels. (Andrew)
+>   
+> - Drop some redundant subsection checks (Oscar)
+> 
+> - Collect some reviewed-bys
+> 
+> [1]: https://lore.kernel.org/lkml/155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com/
 
-Yes, right. Currently P2PDMA checks for the use of dma_virt_ops. And
-that probably should also be done here. But is that sufficient? You're
-probably right that it'll take an audit of the RDMA tree to sort that out.
+Hi Dan,
 
-> Really want I want to do is to have this new 'dma vec' pushed through
-> the RDMA APIs so we know that if a driver is using the dma vec
-> interface it is struct page free.
+I am planning to give it a final review later tomorrow.
+Now that this work is settled, I took the chance to dust off and push my
+vmemmap-hotplug, and I am working on that right now.
+But I would definetely come back to this tomorrow.
 
-Yeah, I know you were talking about heading this way during LSF/MM and
-is partly what inspired this series. However, largely, my focus for this
-RFC was the block layer to see this is an acceptable approach -- I just
-kind of hacked RDMA for now.
+Thanks for the work
 
-> This is not so hard to do, as most drivers are already struct page
-> free, but is pretty much blocked on needing some way to go from the
-> block layer SGL world to the dma vec world that does not hurt storage
-> performance.
-
-Maybe I can end up helping with that if it helps push the ideas here
-through. (And assuming people think it's an acceptable approach for the
-block-layer side of things).
-
-Thanks,
-
-Logan
+-- 
+Oscar Salvador
+SUSE L3
