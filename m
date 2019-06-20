@@ -2,157 +2,113 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13EAFC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A19BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:48:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBB362070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 239242070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:48:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hvFne6Ar"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731386AbfFTKrv (ORCPT
+        id S1731464AbfFTKsM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:47:51 -0400
-Received: from mga04.intel.com ([192.55.52.120]:63311 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726211AbfFTKru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:47:50 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 03:47:49 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
-   d="scan'208";a="181838324"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.150])
-  by fmsmga001.fm.intel.com with ESMTP; 20 Jun 2019 03:47:41 -0700
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Joe Perches <joe@perches.com>,
-        Alastair D'Silva <alastair@d-silva.org>
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Jassi Brar <jassisinghbrar@gmail.com>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Stanislaw Gruszka <sgruszka@redhat.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
-Subject: Re: [PATCH v3 0/7] Hexdump Enhancements
-In-Reply-To: <fcf57339aea60fb1744cea2a2593656c728c4ec4.camel@perches.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20190617020430.8708-1-alastair@au1.ibm.com> <9a000734375c0801fc16b71f4be1235f9b857772.camel@perches.com> <c68cb819257f251cbb66f8998a95c31cebe2d72e.camel@d-silva.org> <d8316be322f33ea67640ff83f2248fe433078407.camel@perches.com> <9456ca2a4ae827635bb6d864e5095a9e51f2ac45.camel@d-silva.org> <fcf57339aea60fb1744cea2a2593656c728c4ec4.camel@perches.com>
-Date:   Thu, 20 Jun 2019 13:50:33 +0300
-Message-ID: <87sgs4sf7q.fsf@intel.com>
+        Thu, 20 Jun 2019 06:48:12 -0400
+Received: from mail-io1-f68.google.com ([209.85.166.68]:33759 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726492AbfFTKsL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:48:11 -0400
+Received: by mail-io1-f68.google.com with SMTP id u13so520116iop.0
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 03:48:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=C28hrFVtjUhKIunxod04yxNRITvcCbSlVw48Ln4UVNM=;
+        b=hvFne6ArB35ze4xoP1VCRnd7RUmzT9611grtpD0tQTl7dv4MMDP9M9w9vnJNpatVWL
+         OJsoELozsc7E5Fr2R2MaKEnqtTCkdTQajIXvwUZzjjE/Acb2LtidPR9vr16QdoO4IxQp
+         ReYPvaFnqJ+2GwkkMw0JTkogvIfXzN4dz0rKYGblGY46ul/dlvV1FQxZlfzOUZOaFqJv
+         PDMFj2dZKuSrEojC2sqg9Wolpn14In/KceJYw/93k1xz6BYyJa3af4c4jlhvfQAwz++g
+         PuO2nO6zJmwCD8j568e0aQ3lrjxfrKKtw+akQFfKa6xueXT/qG2Q2zyBegDjcH7CRpyD
+         NcUg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=C28hrFVtjUhKIunxod04yxNRITvcCbSlVw48Ln4UVNM=;
+        b=r+NtZ9671EloC1dciwIO6EjJVnzQ/PVgSKP36hDYYnmR3jD5+NtF13ifUrYkUjnlNx
+         RhdWP61hPx41IuIcJPhsCIII43Y9GpocxOR761f0chJIkirT/GGA5b2vlFRkHpNIc3UX
+         ZTrvXCkQjMIZutME9VisCFpeVDJh6KFAU/4xJhao5TNe/rcgpP6HGECu0qEZEpW6GrRz
+         5qSmAqP06P8KdEj3uM6kjsoc00bABAbKayt9VIEy1D2u3pM1xoAlZPLsJuMUISHkDH6W
+         slCm5vt5xNeRSCUvpOOgKBAosGEjTnfZDW9D9eNHVckqMLWXG3yQccV6PGvCkIpeld9+
+         zrWA==
+X-Gm-Message-State: APjAAAUvc8OOFaMzUjg75ikIx+yiRMcZvsxgoYSbg/H2ik4eHc2u9/wz
+        LvtSW6NzXFeth/AGjY5Ba8AyCazrGMFPrh2BCJw=
+X-Google-Smtp-Source: APXvYqz4ecBm/0uZtWuFPMYi6ItzBQDnvCKzViadGRWJJlOcoTUzprK/0ctU680a9f2o21mgvsdIi0tJ1k0d1Oxh9ME=
+X-Received: by 2002:a5d:8451:: with SMTP id w17mr14250011ior.226.1561027690741;
+ Thu, 20 Jun 2019 03:48:10 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <1561010100-14080-1-git-send-email-laoar.shao@gmail.com>
+ <e5c695c9-2006-f2cb-e3e2-7ea8ee465817@i-love.sakura.ne.jp>
+ <CALOAHbCe9J0pOCW03dW+C4NK__amTKttAs=eNHXwvPPf5Lpwhw@mail.gmail.com> <ac52f383-697d-8102-a6af-6aa172ee2a6f@i-love.sakura.ne.jp>
+In-Reply-To: <ac52f383-697d-8102-a6af-6aa172ee2a6f@i-love.sakura.ne.jp>
+From:   Yafang Shao <laoar.shao@gmail.com>
+Date:   Thu, 20 Jun 2019 18:47:34 +0800
+Message-ID: <CALOAHbAAJ4EaZ1NaR3Kpms1Yu78gA7UBoYAfTgxDD1JxWEArmw@mail.gmail.com>
+Subject: Re: [PATCH] hung_task: recover hung task warnings in next check interval
+To:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 19 Jun 2019, Joe Perches <joe@perches.com> wrote:
-> On Thu, 2019-06-20 at 11:14 +1000, Alastair D'Silva wrote:
->> On Wed, 2019-06-19 at 17:35 -0700, Joe Perches wrote:
->> > On Thu, 2019-06-20 at 09:15 +1000, Alastair D'Silva wrote:
->> > > On Wed, 2019-06-19 at 09:31 -0700, Joe Perches wrote:
->> > > > On Mon, 2019-06-17 at 12:04 +1000, Alastair D'Silva wrote:
->> > > > > From: Alastair D'Silva <alastair@d-silva.org>
->> > > > > 
->> > > > > Apologies for the large CC list, it's a heads up for those
->> > > > > responsible
->> > > > > for subsystems where a prototype change in generic code causes
->> > > > > a
->> > > > > change
->> > > > > in those subsystems.
->> > > > > 
->> > > > > This series enhances hexdump.
->> > > > 
->> > > > Still not a fan of these patches.
->> > > 
->> > > I'm afraid there's not too much action I can take on that, I'm
->> > > happy to
->> > > address specific issues though.
->> > > 
->> > > > > These improve the readability of the dumped data in certain
->> > > > > situations
->> > > > > (eg. wide terminals are available, many lines of empty bytes
->> > > > > exist,
->> > > > > etc).
->> > 
->> > I think it's generally overkill for the desired uses.
->> 
->> I understand where you're coming from, however, these patches make it a
->> lot easier to work with large chucks of binary data. I think it makes
->> more sense to have these patches upstream, even though committed code
->> may not necessarily have all the features enabled, as it means that
->> devs won't have to apply out-of-tree patches during development to make
->> larger dumps manageable.
->> 
->> > > > Changing hexdump's last argument from bool to int is odd.
->> > > > 
->> > > 
->> > > Think of it as replacing a single boolean with many booleans.
->> > 
->> > I understand it.  It's odd.
->> > 
->> > I would rather not have a mixture of true, false, and apparently
->> > random collections of bitfields like 0xd or 0b1011 or their
->> > equivalent or'd defines.
->> > 
->> 
->> Where's the mixture? What would you propose instead?
+On Thu, Jun 20, 2019 at 6:23 PM Tetsuo Handa
+<penguin-kernel@i-love.sakura.ne.jp> wrote:
 >
-> create a hex_dump_to_buffer_ext with a new argument
-> and a new static inline for the old hex_dump_to_buffer
-> without modifying the argument list that calls
-> hex_dump_to_buffer with whatever added argument content
-> you need.
+> On 2019/06/20 19:10, Yafang Shao wrote:
+> >>> With this patch, hung task warnings will be reset with
+> >>> sys_hung_task_warnings setting in evenry check interval.
+> >>
+> >> Since it is uncommon that the messages are printed for more than 10
+> >> times for one check_hung_uninterruptible_tasks() call, this patch is
+> >> effectively changing to always print the messages (in other words,
+> >> setting -1).
+> >
+> > If sys_hung_task_warnings can't be recovered, does it make sense to exist?
+> > In which case do we need this setting ?
 >
-> Something like:
+> Someone might want to print the messages up to only a few times because he/she
+> does not like the ever-repeating messages.
+
+But some new difference hung task information may be missed.
+And the reason of the new hung task may be different with the old one.
+
+So I still can't understand it.
+
+It would be better if you could give some use cases in the real world.
+
+> But automatically resetting will
+> forbid his/her wish to print the messages for up to only a few times.
 >
-> static inline
-> int hex_dump_to_buffer(const void *buf, size_t len, int rowsize,
-> 		       int groupsize, char *linebuf, size_t linebuflen,
-> 		       bool ascii)
-> {
-> 	return hex_dump_to_buffer_ext(buf, len, rowsize, groupsize,
-> 				      linebuf, linebuflen, ascii, 0);
-> }
+> >
+> > Btw, why the default value of this setting is 10, instead of -1 ?
 >
-> and remove EXPORT_SYMBOL(hex_dump_to_buffer)
+> I don't know. I guess just by historical reason, for this variable
+> has been existed before support of -1 is added.
+>
 
-If you decide to do something like this, I'd actually suggest you drop
-the bool ascii parameter from hex_dump_to_buffer() altogether, and
-replace the callers that do require ascii with
-hex_dump_to_buffer_ext(..., HEXDUMP_ASCII). Even if that also requires
-touching all callers.
+I think we'd better change the default value from 10 to -1,
+because this is the common use case.
+And then the user don't need to write it into sysctl.conf again.
 
-But no strong opinions, really.
-
-BR,
-Jani.
-
--- 
-Jani Nikula, Intel Open Source Graphics Center
+Thanks
+Yafang
