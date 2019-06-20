@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFF31C4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F15CCC4646C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF345215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D16D32089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:20:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054853;
-	bh=YVtlttnl81jCDsQm5FgclaSwVngRwlFS1G2pxgAc0g0=;
+	s=default; t=1561054859;
+	bh=Egf73Uthvql39YGQPG2N1+kk+ff3ZyCN98Dwq0WQUj4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oftAXcadTDRxXJ/YlerMeKeIvbxVBU84FbLLmNPRxQZZoPTwq/svhofDzyP+PP/JE
-	 o4CsCjKqzKLMcQYmj3GIe+R2tn/1N9qO3w49cztFxtAuxIsZxHRZofOlYO9SpI2fXX
-	 D3JK2T43AaXihMuZP0vF0l3P5+DqK7o4KN/HojiY=
+	b=uASBnL0nAl1eK6omcznrKrblbHryTQIgZEHVorpH5utBcckA2W5+heHSi3Wq369uy
+	 tonaAEhD13Xx+uAEMAbsEfNmxWgJBEqu31PTE0OcExSodaclC9wtMvXaRbUVTnLtwt
+	 YwQs8Evhe/qujmDARX6iP1v8+8qWiPQ/1z4zlcoQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728858AbfFTSNP (ORCPT
+        id S1729184AbfFTSNL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:13:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41080 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:13:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40984 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728894AbfFTSNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:13:10 -0400
+        id S1729166AbfFTSNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:13:04 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F77E2084E;
-        Thu, 20 Jun 2019 18:13:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6C5582089C;
+        Thu, 20 Jun 2019 18:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054389;
-        bh=YVtlttnl81jCDsQm5FgclaSwVngRwlFS1G2pxgAc0g0=;
+        s=default; t=1561054383;
+        bh=Egf73Uthvql39YGQPG2N1+kk+ff3ZyCN98Dwq0WQUj4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dr3wsDNnF2NbcE9WmTfBjntyGFtCijagv91B1yoefmstWM/ystI/gj2y5aF9k1Md8
-         dgK3HK/Fn/tjosTF1BIAn18tJiWTiL/TrupFKQ1zXwoJSG1zD6Sjug3SecK8qQcdmp
-         cE+THvxXh1u05SgfBYjickBpJ3BqZt1Hq2eEhVTM=
+        b=CAEh/IOxdRXhR4WskXmnv6fv2kvT62Isp7cE40CUMVrR11yy7ERcX90BjPLl2T5AS
+         QNxuarU2qKqFuaJ9epSpX4ft1FBfPbV5Z0P8PgN/rywEgRLRP+6BmD//WWC9uiJ3FC
+         OdABTGqHCQV4J5INwymJR5BthLe/X+UcpsmF9g7A=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Horman <nhorman@tuxdriver.com>,
-        syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        Xin Long <lucien.xin@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org
-Subject: [PATCH 5.1 12/98] sctp: Free cookie before we memdup a new one
-Date:   Thu, 20 Jun 2019 19:56:39 +0200
-Message-Id: <20190620174349.888204564@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Steinar H. Gunderson" <steinar+kernel@gunderson.no>,
+        Andre Tomt <andre@tomt.net>,
+        John Fastabend <john.fastabend@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 10/98] net: tls, correctly account for copied bytes with multiple sk_msgs
+Date:   Thu, 20 Jun 2019 19:56:37 +0200
+Message-Id: <20190620174349.816327593@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -62,82 +62,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Horman <nhorman@tuxdriver.com>
+From: John Fastabend <john.fastabend@gmail.com>
 
-[ Upstream commit ce950f1050cece5e406a5cde723c69bba60e1b26 ]
+[ Upstream commit 648ee6cea7dde4a5cdf817e5d964fd60b22006a4 ]
 
-Based on comments from Xin, even after fixes for our recent syzbot
-report of cookie memory leaks, its possible to get a resend of an INIT
-chunk which would lead to us leaking cookie memory.
+tls_sw_do_sendpage needs to return the total number of bytes sent
+regardless of how many sk_msgs are allocated. Unfortunately, copied
+(the value we return up the stack) is zero'd before each new sk_msg
+is allocated so we only return the copied size of the last sk_msg used.
 
-To ensure that we don't leak cookie memory, free any previously
-allocated cookie first.
+The caller (splice, etc.) of sendpage will then believe only part
+of its data was sent and send the missing chunks again. However,
+because the data actually was sent the receiver will get multiple
+copies of the same data.
 
-Change notes
-v1->v2
-update subsystem tag in subject (davem)
-repeat kfree check for peer_random and peer_hmacs (xin)
+To reproduce this do multiple sendfile calls with a length close to
+the max record size. This will in turn call splice/sendpage, sendpage
+may use multiple sk_msg in this case and then returns the incorrect
+number of bytes. This will cause splice to resend creating duplicate
+data on the receiver. Andre created a C program that can easily
+generate this case so we will push a similar selftest for this to
+bpf-next shortly.
 
-v2->v3
-net->sctp
-also free peer_chunks
+The fix is to _not_ zero the copied field so that the total sent
+bytes is returned.
 
-v3->v4
-fix subject tags
-
-v4->v5
-remove cut line
-
-Signed-off-by: Neil Horman <nhorman@tuxdriver.com>
-Reported-by: syzbot+f7e9153b037eac9b1df8@syzkaller.appspotmail.com
-CC: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-CC: Xin Long <lucien.xin@gmail.com>
-CC: "David S. Miller" <davem@davemloft.net>
-CC: netdev@vger.kernel.org
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Reported-by: Steinar H. Gunderson <steinar+kernel@gunderson.no>
+Reported-by: Andre Tomt <andre@tomt.net>
+Tested-by: Andre Tomt <andre@tomt.net>
+Fixes: d829e9c4112b ("tls: convert to generic sk_msg interface")
+Signed-off-by: John Fastabend <john.fastabend@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sctp/sm_make_chunk.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ net/tls/tls_sw.c |    1 -
+ 1 file changed, 1 deletion(-)
 
---- a/net/sctp/sm_make_chunk.c
-+++ b/net/sctp/sm_make_chunk.c
-@@ -2600,6 +2600,8 @@ do_addr_param:
- 	case SCTP_PARAM_STATE_COOKIE:
- 		asoc->peer.cookie_len =
- 			ntohs(param.p->length) - sizeof(struct sctp_paramhdr);
-+		if (asoc->peer.cookie)
-+			kfree(asoc->peer.cookie);
- 		asoc->peer.cookie = kmemdup(param.cookie->body, asoc->peer.cookie_len, gfp);
- 		if (!asoc->peer.cookie)
- 			retval = 0;
-@@ -2664,6 +2666,8 @@ do_addr_param:
- 			goto fall_through;
+--- a/net/tls/tls_sw.c
++++ b/net/tls/tls_sw.c
+@@ -1128,7 +1128,6 @@ static int tls_sw_do_sendpage(struct soc
  
- 		/* Save peer's random parameter */
-+		if (asoc->peer.peer_random)
-+			kfree(asoc->peer.peer_random);
- 		asoc->peer.peer_random = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_random) {
-@@ -2677,6 +2681,8 @@ do_addr_param:
- 			goto fall_through;
- 
- 		/* Save peer's HMAC list */
-+		if (asoc->peer.peer_hmacs)
-+			kfree(asoc->peer.peer_hmacs);
- 		asoc->peer.peer_hmacs = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_hmacs) {
-@@ -2692,6 +2698,8 @@ do_addr_param:
- 		if (!ep->auth_enable)
- 			goto fall_through;
- 
-+		if (asoc->peer.peer_chunks)
-+			kfree(asoc->peer.peer_chunks);
- 		asoc->peer.peer_chunks = kmemdup(param.p,
- 					    ntohs(param.p->length), gfp);
- 		if (!asoc->peer.peer_chunks)
+ 		full_record = false;
+ 		record_room = TLS_MAX_PAYLOAD_SIZE - msg_pl->sg.size;
+-		copied = 0;
+ 		copy = size;
+ 		if (copy >= record_room) {
+ 			copy = record_room;
 
 
