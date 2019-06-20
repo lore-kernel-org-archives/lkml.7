@@ -2,92 +2,104 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EFC70C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:46:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3656C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:47:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BC82083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:46:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C13BF2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:47:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="1x6JgFvr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="a7G2DL7i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726785AbfFTPqg (ORCPT
+        id S1727070AbfFTPrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:46:36 -0400
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:37742 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726649AbfFTPqg (ORCPT
+        Thu, 20 Jun 2019 11:47:36 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42921 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTPrg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:46:36 -0400
-Received: from mail-vk1-f170.google.com (mail-vk1-f170.google.com [209.85.221.170]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id x5KFk5jJ029576;
-        Fri, 21 Jun 2019 00:46:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x5KFk5jJ029576
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1561045566;
-        bh=9i03caR2ECEq/q+aW869XY+C+VxbqwsnsWklWv7B9eo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=1x6JgFvrFwRMDNMIdloEL1OqqdCZS0776tvyreeTG1e6g9KehasjfbXl4tEcaaro9
-         9ZiOpVfsBb/9JafQTLMTm+avbhqUWDRY9CJSHHvEgBFXD+gR9MTS1H+DA93mceIEGU
-         a1ZJ70Up8y3+7+BPKLiHJFX++M2QRp0vSelz97/XTWmFAdEZ7RdxqOrKcGZD17/2s2
-         1YCPEMLBOod3erep0LIW5WYXFYQRfgOqHV7Elh2j7Rh0Myl2HqecuNU4Y+iToj2Kd/
-         BuOyKpTsHupFLIXe78Gd0NRbOEQyxWxBRYFiQVVXW3B6XXHOqwin9kcvK0KTHwUVGH
-         62kbyVfoemB4w==
-X-Nifty-SrcIP: [209.85.221.170]
-Received: by mail-vk1-f170.google.com with SMTP id k1so666380vkb.2;
-        Thu, 20 Jun 2019 08:46:06 -0700 (PDT)
-X-Gm-Message-State: APjAAAX0kjmf9eV0giGwxN4NazSI8ty9XD5ShoZeQG6uXTshIZbIcBCv
-        10bB+4a/ZAd3wNCrvzVvXn8/wE5Lts9SnyIJrZc=
-X-Google-Smtp-Source: APXvYqyp1S2LP2eYsGfXBtTBzMi1H805FURj8jPyinxB7XMBDVa3H8a/TkxCh192R+l3WO5nO6TBP6dtRro99IRiNK8=
-X-Received: by 2002:a1f:6347:: with SMTP id x68mr7258691vkb.64.1561045565131;
- Thu, 20 Jun 2019 08:46:05 -0700 (PDT)
+        Thu, 20 Jun 2019 11:47:36 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x17so3523559wrl.9;
+        Thu, 20 Jun 2019 08:47:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=j8+O/FpjGEp5DMwDwlNn6YYVJi0XgVp0kNC/STZbtEU=;
+        b=a7G2DL7iS4UbSDyFHlZOt6gKtJamMp/qfpGySB+qvl5QIMgRi8u3Ut0Sa2Dw/k1Pz2
+         7iNZ4pUk8GMd46O4PxGk80ppkgFDfnAFNxbKL14h+yTOiF5f3BwkZbir65F4Y7xEGLJ9
+         SI8cLSGVyRynl6LsNTsshElVDLAUUteWO9o8hESIO7QPzimF/9fCHcBJlyYhURyy1mHN
+         l3bA475pko/ng+rpoWW0GaKL8F9oXrRuIqDLQ6bKdlwMGmGvaDmf1iq8afXYilHH2cN+
+         1GrCeS/EuTcD9sOJqC2aUIhCbsJx2E/XvOaN1zKIYif8YqE1a37uYInaoJqf/1f5dM0d
+         tVKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=j8+O/FpjGEp5DMwDwlNn6YYVJi0XgVp0kNC/STZbtEU=;
+        b=fcO94G/ilIKmB1Waxm8AwWsYrrQCa/TzApurrz8aIHLDyavOMBBdOuF7CJQCF2/fhn
+         2gjmBz4wra/JHC54m3TnFGeRga2/66WpG5t5k0UQvpz+bt/n5HwHSfpXbpn//iBkDEnP
+         HSm4mWafTG4Dom2dl7JVy2AcEAI/CiEMHHAIlIiRFW/uUVYA0RbDBbFlyOCfbMGHsUbu
+         boiMis6cy7O5WY7AjhPOvyp7AaXlTyxSrpFKbEdNtDp7VIjVHpIxlpbeCFg/DvazFr5/
+         MoKq5DegHMuKpffrSCm8H/n4NQKebOeHGzy465ctOmhW80xH1N8WPX44COqUYI4mZXTJ
+         08FA==
+X-Gm-Message-State: APjAAAXU4l2j4pnB97cDDk9Dwor8TEFf6X7WOBkK3Dl97Q68gDL6Moum
+        mNcOEhMYIJox4Q6chVh+oFk=
+X-Google-Smtp-Source: APXvYqzHNm9RBSmLyiRY/o0XRv5jhDv7AQySfI5uddGuB8TuFA9tiBLHxxYFpdEKryoOHuXSd1FtIw==
+X-Received: by 2002:adf:db4c:: with SMTP id f12mr11932674wrj.342.1561045653597;
+        Thu, 20 Jun 2019 08:47:33 -0700 (PDT)
+Received: from jernej-laptop.localnet (cpe-86-58-52-202.static.triera.net. [86.58.52.202])
+        by smtp.gmail.com with ESMTPSA id f1sm6408689wml.28.2019.06.20.08.47.30
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 08:47:32 -0700 (PDT)
+From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To:     linux-sunxi@googlegroups.com, megous@megous.com
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
+Subject: Re: [linux-sunxi] [PATCH v7 5/6] drm: sun4i: Add support for enabling DDC I2C bus to sun8i_dw_hdmi glue
+Date:   Thu, 20 Jun 2019 17:47:29 +0200
+Message-ID: <3014360.88acaTKTIR@jernej-laptop>
+In-Reply-To: <20190620134748.17866-6-megous@megous.com>
+References: <20190620134748.17866-1-megous@megous.com> <20190620134748.17866-6-megous@megous.com>
 MIME-Version: 1.0
-References: <20190614165242.79257-1-natechancellor@gmail.com>
-In-Reply-To: <20190614165242.79257-1-natechancellor@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 21 Jun 2019 00:45:29 +0900
-X-Gmail-Original-Message-ID: <CAK7LNASn9wDnhbP=FAg8tvXyXSQTUqQu_JY-+HqCds5c8Tor8g@mail.gmail.com>
-Message-ID: <CAK7LNASn9wDnhbP=FAg8tvXyXSQTUqQu_JY-+HqCds5c8Tor8g@mail.gmail.com>
-Subject: Re: [PATCH] kbuild: Enable -Wuninitialized
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Jun 15, 2019 at 1:53 AM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
-> This helps fine very dodgy behavior through both -Wuninitialized
-> (warning that a variable is always uninitialized) and
-> -Wsometimes-uninitialized (warning that a variable is sometimes
-> uninitialized, like GCC's -Wmaybe-uninitialized). These warnings
-> catch things that GCC doesn't such as:
->
-> https://lore.kernel.org/lkml/86649ee4-9794-77a3-502c-f4cd10019c36@lca.pw/
->
-> We very much want to catch these so turn this warning on so that CI is
-> aware of it.
->
-> Link: https://github.com/ClangBuiltLinux/linux/issues/381
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
+Dne =C4=8Detrtek, 20. junij 2019 ob 15:47:47 CEST je megous via linux-sunxi=
+=20
+napisal(a):
+> From: Ondrej Jirman <megous@megous.com>
+>=20
+> Orange Pi 3 board requires enabling a voltage shifting circuit via GPIO
+> for the DDC bus to be usable.
+>=20
+> Add support for hdmi-connector node's optional ddc-en-gpios property to
+> support this use case.
+>=20
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
-Applied to linux-kbuild.
-Thanks!
+Reviewed-by: Jernej Skrabec <jernej.skrabec@siol.net>
+
+Best regards,
+Jernej
 
 
--- 
-Best Regards
-Masahiro Yamada
