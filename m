@@ -4,35 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8631C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5625C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD881206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A7920665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:34:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726390AbfFTSen (ORCPT
+        id S1726538AbfFTSes (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:34:43 -0400
-Received: from relay8-d.mail.gandi.net ([217.70.183.201]:43221 "EHLO
-        relay8-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726321AbfFTSem (ORCPT
+        Thu, 20 Jun 2019 14:34:48 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:32893 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726321AbfFTSer (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:34:42 -0400
-X-Originating-IP: 90.65.161.137
+        Thu, 20 Jun 2019 14:34:47 -0400
 Received: from localhost (lfbn-1-1545-137.w90-65.abo.wanadoo.fr [90.65.161.137])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay8-d.mail.gandi.net (Postfix) with ESMTPSA id C57E51BF205;
-        Thu, 20 Jun 2019 18:34:39 +0000 (UTC)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id D9A24240004;
+        Thu, 20 Jun 2019 18:34:38 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     linux-rtc@vger.kernel.org
 Cc:     Dylan Howey <Dylan.Howey@tennantco.com>,
         linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH 3/4] rtc: pcf2123: convert to SPDX identifier
-Date:   Thu, 20 Jun 2019 20:34:32 +0200
-Message-Id: <20190620183433.30779-3-alexandre.belloni@bootlin.com>
+Subject: [PATCH 2/4] rtc: pcf2123: let the core handle range offsetting
+Date:   Thu, 20 Jun 2019 20:34:31 +0200
+Message-Id: <20190620183433.30779-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190620183433.30779-1-alexandre.belloni@bootlin.com>
 References: <20190620183433.30779-1-alexandre.belloni@bootlin.com>
@@ -43,33 +42,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use SPDX-License-Identifier instead of a verbose license text.
+Set the RTC range properly and use the core windowing and offsetting to
+(unfortunately) map back to a 1970-2069 range.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/rtc/rtc-pcf2123.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/rtc/rtc-pcf2123.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/rtc/rtc-pcf2123.c b/drivers/rtc/rtc-pcf2123.c
-index d263c8bab62a..f31feffed2d2 100644
+index 29e09ff57f89..d263c8bab62a 100644
 --- a/drivers/rtc/rtc-pcf2123.c
 +++ b/drivers/rtc/rtc-pcf2123.c
-@@ -1,3 +1,4 @@
-+// SPDX-License-Identifier: GPL-2.0-only
- /*
-  * An SPI driver for the Philips PCF2123 RTC
-  * Copyright 2009 Cyber Switching, Inc.
-@@ -10,10 +11,6 @@
-  * Thanks to Christian Pellegrin <chripell@fsfe.org> for
-  * the sysfs contributions to this driver.
-  *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-  * Please note that the CS is active high, so platform data
-  * should look something like:
-  *
+@@ -198,9 +198,7 @@ static int pcf2123_rtc_read_time(struct device *dev, struct rtc_time *tm)
+ 	tm->tm_mday = bcd2bin(rxbuf[3] & 0x3F);
+ 	tm->tm_wday = rxbuf[4] & 0x07;
+ 	tm->tm_mon = bcd2bin(rxbuf[5] & 0x1F) - 1; /* rtc mn 1-12 */
+-	tm->tm_year = bcd2bin(rxbuf[6]);
+-	if (tm->tm_year < 70)
+-		tm->tm_year += 100;	/* assume we are in 1970...2069 */
++	tm->tm_year = bcd2bin(rxbuf[6]) + 100;
+ 
+ 	dev_dbg(dev, "%s: tm is %ptR\n", __func__, tm);
+ 
+@@ -227,7 +225,7 @@ static int pcf2123_rtc_set_time(struct device *dev, struct rtc_time *tm)
+ 	txbuf[3] = bin2bcd(tm->tm_mday & 0x3F);
+ 	txbuf[4] = tm->tm_wday & 0x07;
+ 	txbuf[5] = bin2bcd((tm->tm_mon + 1) & 0x1F); /* rtc mn 1-12 */
+-	txbuf[6] = bin2bcd(tm->tm_year < 100 ? tm->tm_year : tm->tm_year - 100);
++	txbuf[6] = bin2bcd(tm->tm_year - 100);
+ 
+ 	ret = regmap_bulk_write(pdata->map, PCF2123_REG_SC, txbuf,
+ 				sizeof(txbuf));
+@@ -435,6 +433,9 @@ static int pcf2123_probe(struct spi_device *spi)
+ 	 */
+ 	rtc->uie_unsupported = 1;
+ 	rtc->ops = &pcf2123_rtc_ops;
++	rtc->range_min = RTC_TIMESTAMP_BEGIN_2000;
++	rtc->range_max = RTC_TIMESTAMP_END_2099;
++	rtc->set_start_time = true;
+ 
+ 	ret = rtc_register_device(rtc);
+ 	if (ret)
 -- 
 2.21.0
 
