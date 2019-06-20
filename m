@@ -7,32 +7,32 @@ X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AA4C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:38:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF661C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D7E1215EA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:38:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8542E215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:38:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731624AbfFTCix (ORCPT
+        id S1731656AbfFTCiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 22:38:53 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:60761 "EHLO
+        Wed, 19 Jun 2019 22:38:54 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:25309 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731398AbfFTCie (ORCPT
+        with ESMTP id S1731419AbfFTCie (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 19 Jun 2019 22:38:34 -0400
-X-UUID: 74418fb1bfa34bf59fd5d055c50a9962-20190620
-X-UUID: 74418fb1bfa34bf59fd5d055c50a9962-20190620
+X-UUID: ee61adb782c04c0c83064dc144777d72-20190620
+X-UUID: ee61adb782c04c0c83064dc144777d72-20190620
 Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <weiyi.lu@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 819501253; Thu, 20 Jun 2019 10:38:20 +0800
+        with ESMTP id 1330393547; Thu, 20 Jun 2019 10:38:21 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Thu, 20 Jun 2019 10:38:18 +0800
+ mtkmbs07n1.mediatek.inc (172.21.101.16) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 20 Jun 2019 10:38:20 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 20 Jun 2019 10:38:18 +0800
+ Transport; Thu, 20 Jun 2019 10:38:20 +0800
 From:   Weiyi Lu <weiyi.lu@mediatek.com>
 To:     Nicolas Boichat <drinkcat@chromium.org>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -44,111 +44,288 @@ CC:     James Liao <jamesjj.liao@mediatek.com>,
         <linux-mediatek@lists.infradead.org>,
         <srv_heupstream@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>,
         Yong Wu <yong.wu@mediatek.com>
-Subject: [PATCH v6 02/14] dt-bindings: soc: Add MT8183 power dt-bindings
-Date:   Thu, 20 Jun 2019 10:37:54 +0800
-Message-ID: <1560998286-9189-3-git-send-email-weiyi.lu@mediatek.com>
+Subject: [PATCH v6 10/14] soc: mediatek: Add multiple step bus protection control
+Date:   Thu, 20 Jun 2019 10:38:02 +0800
+Message-ID: <1560998286-9189-11-git-send-email-weiyi.lu@mediatek.com>
 X-Mailer: git-send-email 1.8.1.1.dirty
 In-Reply-To: <1560998286-9189-1-git-send-email-weiyi.lu@mediatek.com>
 References: <1560998286-9189-1-git-send-email-weiyi.lu@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 620B5F2A292B75485CA1069B5ECFA36A6B80AD4C2D35130F8C94D715EFF820492000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add power dt-bindings of MT8183 and introduces "BASIC" and
-"SUBSYS" clock types in binding document.
-The "BASIC" type is compatible to the original power control with
-clock name [a-z]+[0-9]*, e.g. mm, vpu1.
-The "SUBSYS" type is used for bus protection control with clock
-name [a-z]+-[0-9]+, e.g. isp-0, cam-1.
+Both MT8183 & MT6765 have more control steps of bus protection
+than previous project. And there add more bus protection registers
+reside at infracfg & smi-common. Also add new APIs for multiple
+step bus protection control with more customized arguments.
 
 Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
 ---
- .../devicetree/bindings/soc/mediatek/scpsys.txt    | 14 ++++++++++++
- include/dt-bindings/power/mt8183-power.h           | 26 ++++++++++++++++++++++
- 2 files changed, 40 insertions(+)
- create mode 100644 include/dt-bindings/power/mt8183-power.h
+ drivers/soc/mediatek/Makefile           |  2 +-
+ drivers/soc/mediatek/mtk-scpsys-ext.c   | 99 +++++++++++++++++++++++++++++++++
+ drivers/soc/mediatek/mtk-scpsys.c       | 39 +++++++++----
+ include/linux/soc/mediatek/scpsys-ext.h | 39 +++++++++++++
+ 4 files changed, 168 insertions(+), 11 deletions(-)
+ create mode 100644 drivers/soc/mediatek/mtk-scpsys-ext.c
+ create mode 100644 include/linux/soc/mediatek/scpsys-ext.h
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-index 876693a..00eab7e 100644
---- a/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-+++ b/Documentation/devicetree/bindings/soc/mediatek/scpsys.txt
-@@ -14,6 +14,7 @@ power/power_domain.txt. It provides the power domains defined in
- - include/dt-bindings/power/mt2701-power.h
- - include/dt-bindings/power/mt2712-power.h
- - include/dt-bindings/power/mt7622-power.h
-+- include/dt-bindings/power/mt8183-power.h
- 
- Required properties:
- - compatible: Should be one of:
-@@ -25,18 +26,31 @@ Required properties:
- 	- "mediatek,mt7623a-scpsys": For MT7623A SoC
- 	- "mediatek,mt7629-scpsys", "mediatek,mt7622-scpsys": For MT7629 SoC
- 	- "mediatek,mt8173-scpsys"
-+	- "mediatek,mt8183-scpsys"
- - #power-domain-cells: Must be 1
- - reg: Address range of the SCPSYS unit
- - infracfg: must contain a phandle to the infracfg controller
- - clock, clock-names: clocks according to the common clock binding.
-                       These are clocks which hardware needs to be
-                       enabled before enabling certain power domains.
-+                      The new clock type "BASIC" belongs to the type above.
-+                      As to the new clock type "SUBSYS" needs to be
-+                      enabled before releasing bus protection.
- 	Required clocks for MT2701 or MT7623: "mm", "mfg", "ethif"
- 	Required clocks for MT2712: "mm", "mfg", "venc", "jpgdec", "audio", "vdec"
- 	Required clocks for MT6797: "mm", "mfg", "vdec"
- 	Required clocks for MT7622 or MT7629: "hif_sel"
- 	Required clocks for MT7623A: "ethif"
- 	Required clocks for MT8173: "mm", "mfg", "venc", "venc_lt"
-+	Required clocks for MT8183: BASIC: "audio", "mfg", "mm", "cam", "isp",
-+					   "vpu", "vpu1", "vpu2", "vpu3"
-+				    SUBSYS: "mm-0", "mm-1", "mm-2", "mm-3",
-+					    "mm-4", "mm-5", "mm-6", "mm-7",
-+					    "mm-8", "mm-9", "isp-0", "isp-1",
-+					    "cam-0", "cam-1", "cam-2", "cam-3",
-+					    "cam-4", "cam-5", "cam-6", "vpu-0",
-+					    "vpu-1", "vpu-2", "vpu-3", "vpu-4",
-+					    "vpu-5"
- 
- Optional properties:
- - vdec-supply: Power supply for the vdec power domain
-diff --git a/include/dt-bindings/power/mt8183-power.h b/include/dt-bindings/power/mt8183-power.h
+diff --git a/drivers/soc/mediatek/Makefile b/drivers/soc/mediatek/Makefile
+index 64ce5ee..b9dbad6 100644
+--- a/drivers/soc/mediatek/Makefile
++++ b/drivers/soc/mediatek/Makefile
+@@ -1,4 +1,4 @@
+ obj-$(CONFIG_MTK_CMDQ) += mtk-cmdq-helper.o
+-obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o
++obj-$(CONFIG_MTK_INFRACFG) += mtk-infracfg.o mtk-scpsys-ext.o
+ obj-$(CONFIG_MTK_PMIC_WRAP) += mtk-pmic-wrap.o
+ obj-$(CONFIG_MTK_SCPSYS) += mtk-scpsys.o
+diff --git a/drivers/soc/mediatek/mtk-scpsys-ext.c b/drivers/soc/mediatek/mtk-scpsys-ext.c
 new file mode 100644
-index 0000000..5c0c8c7
+index 0000000..b24321e
 --- /dev/null
-+++ b/include/dt-bindings/power/mt8183-power.h
-@@ -0,0 +1,26 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
++++ b/drivers/soc/mediatek/mtk-scpsys-ext.c
+@@ -0,0 +1,99 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
 + * Copyright (c) 2018 MediaTek Inc.
-+ * Author: Weiyi Lu <weiyi.lu@mediatek.com>
++ * Author: Owen Chen <Owen.Chen@mediatek.com>
 + */
++#include <linux/ktime.h>
++#include <linux/mfd/syscon.h>
++#include <linux/of_device.h>
++#include <linux/regmap.h>
++#include <linux/soc/mediatek/scpsys-ext.h>
 +
-+#ifndef _DT_BINDINGS_POWER_MT8183_POWER_H
-+#define _DT_BINDINGS_POWER_MT8183_POWER_H
++#define MTK_POLL_DELAY_US   10
++#define MTK_POLL_TIMEOUT    USEC_PER_SEC
 +
-+#define MT8183_POWER_DOMAIN_AUDIO	0
-+#define MT8183_POWER_DOMAIN_CONN	1
-+#define MT8183_POWER_DOMAIN_MFG_ASYNC	2
-+#define MT8183_POWER_DOMAIN_MFG		3
-+#define MT8183_POWER_DOMAIN_MFG_CORE0	4
-+#define MT8183_POWER_DOMAIN_MFG_CORE1	5
-+#define MT8183_POWER_DOMAIN_MFG_2D	6
-+#define MT8183_POWER_DOMAIN_DISP	7
-+#define MT8183_POWER_DOMAIN_CAM		8
-+#define MT8183_POWER_DOMAIN_ISP		9
-+#define MT8183_POWER_DOMAIN_VDEC	10
-+#define MT8183_POWER_DOMAIN_VENC	11
-+#define MT8183_POWER_DOMAIN_VPU_TOP	12
-+#define MT8183_POWER_DOMAIN_VPU_CORE0	13
-+#define MT8183_POWER_DOMAIN_VPU_CORE1	14
++static int set_bus_protection(struct regmap *map, u32 mask, u32 ack_mask,
++		u32 reg_set, u32 reg_sta, u32 reg_en)
++{
++	u32 val;
 +
-+#endif /* _DT_BINDINGS_POWER_MT8183_POWER_H */
++	if (reg_set)
++		regmap_write(map, reg_set, mask);
++	else
++		regmap_update_bits(map, reg_en, mask, mask);
++
++	return regmap_read_poll_timeout(map, reg_sta,
++			val, (val & ack_mask) == ack_mask,
++			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++}
++
++static int clear_bus_protection(struct regmap *map, u32 mask, u32 ack_mask,
++		u32 reg_clr, u32 reg_sta, u32 reg_en)
++{
++	u32 val;
++
++	if (reg_clr)
++		regmap_write(map, reg_clr, mask);
++	else
++		regmap_update_bits(map, reg_en, mask, 0);
++
++	return regmap_read_poll_timeout(map, reg_sta,
++			val, !(val & ack_mask),
++			MTK_POLL_DELAY_US, MTK_POLL_TIMEOUT);
++}
++
++int mtk_scpsys_ext_set_bus_protection(const struct bus_prot *bp_table,
++	struct regmap *infracfg, struct regmap *smi_common)
++{
++	int i;
++
++	for (i = 0; i < MAX_STEPS; i++) {
++		struct regmap *map;
++		int ret;
++
++		if (bp_table[i].type == INVALID_TYPE)
++			continue;
++		else if (bp_table[i].type == IFR_TYPE)
++			map = infracfg;
++		else if (bp_table[i].type == SMI_TYPE)
++			map = smi_common;
++
++		ret = set_bus_protection(map,
++				bp_table[i].mask, bp_table[i].mask,
++				bp_table[i].set_ofs, bp_table[i].sta_ofs,
++				bp_table[i].en_ofs);
++
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
++int mtk_scpsys_ext_clear_bus_protection(const struct bus_prot *bp_table,
++	struct regmap *infracfg, struct regmap *smi_common)
++{
++	int i;
++
++	for (i = MAX_STEPS - 1; i >= 0; i--) {
++		struct regmap *map;
++		int ret;
++
++		if (bp_table[i].type == INVALID_TYPE)
++			continue;
++		else if (bp_table[i].type == IFR_TYPE)
++			map = infracfg;
++		else if (bp_table[i].type == SMI_TYPE)
++			map = smi_common;
++
++		ret = clear_bus_protection(map,
++				bp_table[i].mask, bp_table[i].clr_ack_mask,
++				bp_table[i].clr_ofs, bp_table[i].sta_ofs,
++				bp_table[i].en_ofs);
++
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
+diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+index 4a0752e..10c2440 100644
+--- a/drivers/soc/mediatek/mtk-scpsys.c
++++ b/drivers/soc/mediatek/mtk-scpsys.c
+@@ -12,6 +12,7 @@
+ #include <linux/pm_domain.h>
+ #include <linux/regulator/consumer.h>
+ #include <linux/soc/mediatek/infracfg.h>
++#include <linux/soc/mediatek/scpsys-ext.h>
+ 
+ #include <dt-bindings/power/mt2701-power.h>
+ #include <dt-bindings/power/mt2712-power.h>
+@@ -120,6 +121,7 @@ enum clk_id {
+  * @basic_clk_id: provide the same purpose with field "clk_id"
+  *                by declaring basic clock prefix name rather than clk_id.
+  * @caps: The flag for active wake-up action.
++ * @bp_table: The mask table for multiple step bus protection.
+  */
+ struct scp_domain_data {
+ 	const char *name;
+@@ -131,6 +133,7 @@ struct scp_domain_data {
+ 	enum clk_id clk_id[MAX_CLKS];
+ 	const char *basic_clk_id[MAX_CLKS];
+ 	u8 caps;
++	struct bus_prot bp_table[MAX_STEPS];
+ };
+ 
+ struct scp;
+@@ -154,6 +157,7 @@ struct scp {
+ 	struct device *dev;
+ 	void __iomem *base;
+ 	struct regmap *infracfg;
++	struct regmap *smi_common;
+ 	struct scp_ctrl_reg ctrl_reg;
+ 	bool bus_prot_reg_update;
+ };
+@@ -281,24 +285,28 @@ static int scpsys_bus_protect_enable(struct scp_domain *scpd)
+ {
+ 	struct scp *scp = scpd->scp;
+ 
+-	if (!scpd->data->bus_prot_mask)
+-		return 0;
++	if (scpd->data->bus_prot_mask) {
++		return mtk_infracfg_set_bus_protection(scp->infracfg,
++				scpd->data->bus_prot_mask,
++				scp->bus_prot_reg_update);
++	}
+ 
+-	return mtk_infracfg_set_bus_protection(scp->infracfg,
+-			scpd->data->bus_prot_mask,
+-			scp->bus_prot_reg_update);
++	return mtk_scpsys_ext_set_bus_protection(scpd->data->bp_table,
++			scp->infracfg, scp->smi_common);
+ }
+ 
+ static int scpsys_bus_protect_disable(struct scp_domain *scpd)
+ {
+ 	struct scp *scp = scpd->scp;
+ 
+-	if (!scpd->data->bus_prot_mask)
+-		return 0;
++	if (scpd->data->bus_prot_mask) {
++		return mtk_infracfg_clear_bus_protection(scp->infracfg,
++				scpd->data->bus_prot_mask,
++				scp->bus_prot_reg_update);
++	}
+ 
+-	return mtk_infracfg_clear_bus_protection(scp->infracfg,
+-			scpd->data->bus_prot_mask,
+-			scp->bus_prot_reg_update);
++	return mtk_scpsys_ext_clear_bus_protection(scpd->data->bp_table,
++			scp->infracfg, scp->smi_common);
+ }
+ 
+ static int scpsys_power_on(struct generic_pm_domain *genpd)
+@@ -466,6 +474,17 @@ static struct scp *init_scp(struct platform_device *pdev,
+ 		return ERR_CAST(scp->infracfg);
+ 	}
+ 
++	scp->smi_common = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
++			"smi_comm");
++
++	if (scp->smi_common == ERR_PTR(-ENODEV)) {
++		scp->smi_common = NULL;
++	} else if (IS_ERR(scp->smi_common)) {
++		dev_err(&pdev->dev, "Cannot find smi_common controller: %ld\n",
++				PTR_ERR(scp->smi_common));
++		return ERR_CAST(scp->smi_common);
++	}
++
+ 	for (i = 0; i < num; i++) {
+ 		struct scp_domain *scpd = &scp->domains[i];
+ 		const struct scp_domain_data *data = &scp_domain_data[i];
+diff --git a/include/linux/soc/mediatek/scpsys-ext.h b/include/linux/soc/mediatek/scpsys-ext.h
+new file mode 100644
+index 0000000..3e5b84d
+--- /dev/null
++++ b/include/linux/soc/mediatek/scpsys-ext.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef __SOC_MEDIATEK_SCPSYS_EXT_H
++#define __SOC_MEDIATEK_SCPSYS_EXT_H
++
++#define MAX_STEPS	4
++
++#define BUS_PROT(_type, _set_ofs, _clr_ofs,			\
++		_en_ofs, _sta_ofs, _mask, _clr_ack_mask) {	\
++		.type = _type,					\
++		.set_ofs = _set_ofs,				\
++		.clr_ofs = _clr_ofs,				\
++		.en_ofs = _en_ofs,				\
++		.sta_ofs = _sta_ofs,				\
++		.mask = _mask,					\
++		.clr_ack_mask = _clr_ack_mask,			\
++	}
++
++enum regmap_type {
++	INVALID_TYPE = 0,
++	IFR_TYPE,
++	SMI_TYPE,
++};
++
++struct bus_prot {
++	enum regmap_type type;
++	u32 set_ofs;
++	u32 clr_ofs;
++	u32 en_ofs;
++	u32 sta_ofs;
++	u32 mask;
++	u32 clr_ack_mask;
++};
++
++int mtk_scpsys_ext_set_bus_protection(const struct bus_prot *bp_table,
++	struct regmap *infracfg, struct regmap *smi_common);
++int mtk_scpsys_ext_clear_bus_protection(const struct bus_prot *bp_table,
++	struct regmap *infracfg, struct regmap *smi_common);
++
++#endif /* __SOC_MEDIATEK_SCPSYS_EXT_H */
 -- 
 1.8.1.1.dirty
 
