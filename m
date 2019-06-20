@@ -3,99 +3,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48385C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17A1CC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28F762070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E435020656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:01:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732000AbfFTRAm (ORCPT
+        id S1732091AbfFTRBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:00:42 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59374 "EHLO mx1.suse.de"
+        Thu, 20 Jun 2019 13:01:43 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59592 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726562AbfFTRAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:00:42 -0400
+        id S1726530AbfFTRBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:01:42 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 89D3BAFC3;
-        Thu, 20 Jun 2019 17:00:40 +0000 (UTC)
-Date:   Thu, 20 Jun 2019 19:00:35 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     akpm@linux-foundation.org, David Hildenbrand <david@redhat.com>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jane Chu <jane.chu@oracle.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Jonathan Corbet <corbet@lwn.net>, Qian Cai <cai@lca.pw>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Toshi Kani <toshi.kani@hpe.com>,
-        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>, stable@vger.kernel.org,
-        Wei Yang <richardw.yang@linux.intel.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v10 00/13] mm: Sub-section memory hotplug support
-Message-ID: <20190620170027.GA7126@linux>
-References: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
+        by mx1.suse.de (Postfix) with ESMTP id 83A00AF58;
+        Thu, 20 Jun 2019 17:01:41 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 359951E434F; Thu, 20 Jun 2019 19:01:41 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 19:01:41 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Jan Kara <jack@suse.cz>, dsterba@suse.com, clm@fb.com,
+        josef@toxicpanda.com, axboe@kernel.dk, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 4/9] blkcg: implement REQ_CGROUP_PUNT
+Message-ID: <20190620170141.GO30243@quack2.suse.cz>
+References: <20190615182453.843275-1-tj@kernel.org>
+ <20190615182453.843275-5-tj@kernel.org>
+ <20190620153733.GM30243@quack2.suse.cz>
+ <20190620164229.GK657710@devbig004.ftw2.facebook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <156092349300.979959.17603710711957735135.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <20190620164229.GK657710@devbig004.ftw2.facebook.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Jun 18, 2019 at 10:51:33PM -0700, Dan Williams wrote:
-> Changes since v9 [1]:
-> - Fix multiple issues related to the fact that pfn_valid() has
->   traditionally returned true for any pfn in an 'early' (onlined at
->   boot) section regardless of whether that pfn represented 'System RAM'.
->   Teach pfn_valid() to maintain its traditional behavior in the presence
->   of subsections. Specifically, subsection precision for pfn_valid() is
->   only considered for non-early / hot-plugged sections. (Qian)
+On Thu 20-06-19 09:42:29, Tejun Heo wrote:
+> Hello, Jan.
 > 
-> - Related to the first item introduce a SECTION_IS_EARLY
->   (->section_mem_map flag) to remove the existing hacks for determining
->   an early section by looking at whether the usemap was allocated from the
->   slab.
+> On Thu, Jun 20, 2019 at 05:37:33PM +0200, Jan Kara wrote:
+> > > +bool __blkcg_punt_bio_submit(struct bio *bio)
+> > > +{
+> > > +	struct blkcg_gq *blkg = bio->bi_blkg;
+> > > +
+> > > +	/* consume the flag first */
+> > > +	bio->bi_opf &= ~REQ_CGROUP_PUNT;
+> > > +
+> > > +	/* never bounce for the root cgroup */
+> > > +	if (!blkg->parent)
+> > > +		return false;
+> > > +
+> > > +	spin_lock_bh(&blkg->async_bio_lock);
+> > > +	bio_list_add(&blkg->async_bios, bio);
+> > > +	spin_unlock_bh(&blkg->async_bio_lock);
+> > > +
+> > > +	queue_work(blkcg_punt_bio_wq, &blkg->async_bio_work);
+> > > +	return true;
+> > > +}
+> > > +
+> > 
+> > So does this mean that if there is some inode with lots of dirty data for a
+> > blkcg that is heavily throttled, that blkcg can occupy a ton of workers all
+> > being throttled in submit_bio()? Or what is constraining a number of
+> > workers one blkcg can consume?
 > 
-> - Kill off the EEXIST hackery in __add_pages(). It breaks
->   (arch_add_memory() false-positive) the detection of subsection
->   collisions reported by section_activate(). It is also obviated by
->   David's recent reworks to move the 'System RAM' request_region() earlier
->   in the add_memory() sequence().
-> 
-> - Switch to an arch-independent / static subsection-size of 2MB.
->   Otherwise, a per-arch subsection-size is a roadblock on the path to
->   persistent memory namespace compatibility across archs. (Jeff)
-> 
-> - Update the changelog for "libnvdimm/pfn: Fix fsdax-mode namespace
->   info-block zero-fields" to clarify that the "Cc: stable" is only there
->   as safety measure for a distro that decides to backport "libnvdimm/pfn:
->   Stop padding pmem namespaces to section alignment", otherwise there is
->   no known bug exposure in older kernels. (Andrew)
->   
-> - Drop some redundant subsection checks (Oscar)
-> 
-> - Collect some reviewed-bys
-> 
-> [1]: https://lore.kernel.org/lkml/155977186863.2443951.9036044808311959913.stgit@dwillia2-desk3.amr.corp.intel.com/
+> There's only one work item per blkcg-device pair, so the maximum
+> number of kthreads a blkcg can occupy on a filesystem would be one.
+> It's the same scheme as writeback work items.
 
-Hi Dan,
+OK, I've missed the fact that although the work item can get queued while
+it is still running it cannot get executed more than once at a time (which
+is kind of obvious but I got confused). Thanks for explanation!
 
-I am planning to give it a final review later tomorrow.
-Now that this work is settled, I took the chance to dust off and push my
-vmemmap-hotplug, and I am working on that right now.
-But I would definetely come back to this tomorrow.
-
-Thanks for the work
-
+								Honza
 -- 
-Oscar Salvador
-SUSE L3
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
