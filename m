@@ -2,118 +2,101 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94607C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53A34C4646C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EF94208CB
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 02:55:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C025214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:06:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nJBn19UP"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HrJpaYTf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbfFTCzD (ORCPT
+        id S1731291AbfFTDGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 22:55:03 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:44801 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726370AbfFTCzD (ORCPT
+        Wed, 19 Jun 2019 23:06:21 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:35512 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726419AbfFTDGV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 22:55:03 -0400
-Received: by mail-ed1-f68.google.com with SMTP id k8so2259101edr.11
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 19:55:02 -0700 (PDT)
+        Wed, 19 Jun 2019 23:06:21 -0400
+Received: by mail-pl1-f195.google.com with SMTP id p1so766806plo.2
+        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 20:06:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OZ+ejxndkdfy6SmQH0Sb4mkugBsvHzjhSLcNChrvWio=;
-        b=nJBn19UPynmT3Ibyor9XDF2WMVfWpTauLfl98pZIsfjouBRoiw9pMuKnW9NeN//I9D
-         SfSaxQVpHRX0Kmnf/Z5QFl4Rk1qIJ3mxWyo088XCIDQnmhoBZu6czXrDsLnWVSiCT1IX
-         ooigmZ+JzHGbsJCqePRHhWSEbKUXii/v88oKZAqyOyFCatttqhOkMAMinBoyxk0km5Xb
-         CfqlC7gpsHj/coBMOtjtRb9Iyz7dPT5sa2rb0FY9EnCmWHWStZ1SbXN3tR0lV05TjlY1
-         HfkqvRTyIREla9LCGaU0siybl63bMNuLha/fzqenKQf6JfqFeWlxDPYeyx18yTWttQxO
-         wsxw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3k+ZqG6fxcx9wjJdYzN51AwwDrKWOBygZ2ckfqKNWZk=;
+        b=HrJpaYTfh5iJbgSLgstdGwcJAa1gk2U+dDIGKCefttcxJR2S9+gmgMD9cBuHOZBrbn
+         jQAwb4Wot4lmy9hxiJmrtHn1hThMmUIg3+CT9yKxqC55sISKDNdvoJpdH2Nk/+hjuei0
+         mO3S8ukJFHAYeHrMHHfeaIe0X5o+j09Hl6Lwy7p4WoAVhMnBYQIEnGTJ/Q8Osw6QYOht
+         w6wIaJ+Aj/UTaDVtoxQ1m4bSQzIoihV/m31J6jWfdIt/ht7l5HPbJQXbZoAP/O6R6U1y
+         uJuNgGwKZ+VRFqdRy3RUra1ywpgiK96uKYtZJoVTdp0iGj2zmx02t7H+aUmLKymZ6VUt
+         eVZA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OZ+ejxndkdfy6SmQH0Sb4mkugBsvHzjhSLcNChrvWio=;
-        b=neAK8Jed/AWgC8v5lW66XvLByxhQgwvcjMGTOjix3fRgeMAvVcUvu6ct6N5YDd+hbA
-         Sx+62Yj7bkONSrTpVdufCHoBO0uCV2FNZRdT9NQjvdKqhN5NIaL6P0QCsxjhYnRlVAPo
-         48TKGHaLo3JR9dI87CPSN8xMRrIkrlCXNMUVf4fLc90+FgQa+BqCXLr2iDenrpUz5NsQ
-         bfgim+A1nabx48JQ4B+nNYTvkVQHmBl8WcgAkFEFrViNMl/fGTYBntQL6ZzOJ7xWubJB
-         sJ69XZHxPEa6n3/5VDFpSopoY7GWzf7KgiA5UJrSTLEZcrFyT7cNu8Bfb5meZaRwyIC9
-         NnQg==
-X-Gm-Message-State: APjAAAVE8+92IoNS/vq4bOjycrvyCYsDWsP9i6WQ6V8yiCg517sH6/Nk
-        3JXJKqFZWw/pw1R1a/Ecvmc=
-X-Google-Smtp-Source: APXvYqwPRevbrgfSt4uDPXCliMqeMhgRwXbGEHZx81KfOtD6/K0ijJQWfwx9EbJnA7PP7TcFHRmjmw==
-X-Received: by 2002:a17:906:e204:: with SMTP id gf4mr66672835ejb.302.1560999301295;
-        Wed, 19 Jun 2019 19:55:01 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id n7sm3557068ejl.58.2019.06.19.19.55.00
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 19:55:00 -0700 (PDT)
-Date:   Wed, 19 Jun 2019 19:54:59 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     akpm@linux-foundation.org, clang-built-linux@googlegroups.com,
-        joe@perches.com, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] MAINTAINERS: add CLANG/LLVM BUILD SUPPORT info
-Message-ID: <20190620025459.GB5669@archlinux-epyc>
-References: <d4b42858366e50f92b133ceb6399e9f16a7cef88.camel@perches.com>
- <20190620001907.255803-1-ndesaulniers@google.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=3k+ZqG6fxcx9wjJdYzN51AwwDrKWOBygZ2ckfqKNWZk=;
+        b=hFOevfaJUXwKU0eywNg4r75mIenFZ7U/26CA2PMWoVjHZg6Mn/owiI1TCtBRWRTnMO
+         HAB3GXpD4xT74AWk+tLKdww7CaF+ZSog3TFEALdDKkr9zlnvGcYCMrD2teu7R4wAn4rf
+         P9bysLyoaIECoYIyjdRw1lz8OvPo8OOElreKmWiuxGaYw4Qi7SjtYceziMCJVhrPC0YO
+         jvBWIbnOXEd/dMR9aElp10ap2A2jQPB7V+gfMjh472rpZ8WVFBCLv9hZ4oZbL9ZPWeDw
+         KPvf1j5x5ZGIsK0ZK2NY3/ZsOe2yLoUpNb6nipDXL2L23WapvUkxzaqLo/BU9WVr6jVN
+         eCsw==
+X-Gm-Message-State: APjAAAUJv9ZemvEXbHI9eQ5wrFio8rclglWSur+LRDo8Ppp0y+505wCt
+        lK2kaStoFMaATVRnuwFV+MhjHg==
+X-Google-Smtp-Source: APXvYqxA1ihvMaKN2NzXGUveqK4utf/bDtTmrRm5hK+cBzH/KHvsbQsG//5VuL8TwVOv8uDmfmCP9A==
+X-Received: by 2002:a17:902:1003:: with SMTP id b3mr124316996pla.172.1560999980612;
+        Wed, 19 Jun 2019 20:06:20 -0700 (PDT)
+Received: from localhost ([122.172.66.84])
+        by smtp.gmail.com with ESMTPSA id e184sm25563402pfa.169.2019.06.19.20.06.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 19 Jun 2019 20:06:18 -0700 (PDT)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Rafael Wysocki <rjw@rjwysocki.net>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>, linux-pm@vger.kernel.org,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/5] cpufreq: cleanups
+Date:   Thu, 20 Jun 2019 08:35:45 +0530
+Message-Id: <cover.1560999838.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620001907.255803-1-ndesaulniers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 05:19:07PM -0700, 'Nick Desaulniers' via Clang Built Linux wrote:
-> Add keyword support so that our mailing list gets cc'ed for clang/llvm
-> patches. We're pretty active on our mailing list so far as code review.
-> There are numerous Googlers like myself that are paid to support
-> building the Linux kernel with Clang and LLVM.
-> 
-> Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Hi Rafael,
 
-FWIW, if it is not too late:
+I accumulated these while reworking the freq-constraint series and it
+would be nice if these can get in before I send the next version of
+freq-constraint stuff.
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+These are mostly cleanups and code consolidation for better management
+of code. Compile and boot tested only.
 
-> ---
-> Changes V1 -> V2:
-> - tabs vs spaces as per Joe Perches
-> 
->  MAINTAINERS | 8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ef58d9a881ee..f92432452f46 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -3940,6 +3940,14 @@ M:	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
->  S:	Maintained
->  F:	.clang-format
->  
-> +CLANG/LLVM BUILD SUPPORT
-> +L:	clang-built-linux@googlegroups.com
-> +W:	https://clangbuiltlinux.github.io/
-> +B:	https://github.com/ClangBuiltLinux/linux/issues
-> +C:	irc://chat.freenode.net/clangbuiltlinux
-> +S:	Supported
-> +K:	\b(?i:clang|llvm)\b
-> +
->  CLEANCACHE API
->  M:	Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
->  L:	linux-kernel@vger.kernel.org
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
+Thanks.
+
+V1->V2:
+- Merged patch 2/6 and 3/6 (now called 2/5).
+- Updated commit log of 3/5 as it wasn't clear enough earlier.
+
+Viresh Kumar (5):
+  cpufreq: Remove the redundant !setpolicy check
+  cpufreq: Replace few CPUFREQ_CONST_LOOPS checks with has_target()
+  cpufreq: Use has_target() instead of !setpolicy
+  cpufreq: Reuse cpufreq_update_current_freq() in __cpufreq_get()
+  cpufreq: Avoid calling cpufreq_verify_current_freq() from
+    handle_update()
+
+ drivers/cpufreq/cpufreq.c | 115 +++++++++++++++++---------------------
+ 1 file changed, 52 insertions(+), 63 deletions(-)
+
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
