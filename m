@@ -2,167 +2,88 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2DB9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:23:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C80DFC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:24:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9035F2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:23:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F86E2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:24:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="aFykmx6X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730872AbfFTJXG (ORCPT
+        id S1726525AbfFTJYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:23:06 -0400
-Received: from foss.arm.com ([217.140.110.172]:55658 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725875AbfFTJXG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:23:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0816C360;
-        Thu, 20 Jun 2019 02:23:05 -0700 (PDT)
-Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2178F3F246;
-        Thu, 20 Jun 2019 02:23:03 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 10:23:01 +0100
-From:   Sudeep Holla <sudeep.holla@arm.com>
-To:     peng.fan@nxp.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, jassisinghbrar@gmail.com,
-        f.fainelli@gmail.com, kernel@pengutronix.de, linux-imx@nxp.com,
-        shawnguo@kernel.org, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, andre.przywara@arm.com,
-        van.freenix@gmail.com, Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH V2 2/2] mailbox: introduce ARM SMC based mailbox
-Message-ID: <20190620092301.GD1248@e107155-lin>
-References: <20190603083005.4304-1-peng.fan@nxp.com>
- <20190603083005.4304-3-peng.fan@nxp.com>
+        Thu, 20 Jun 2019 05:24:06 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15092 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTJYF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:24:05 -0400
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5d0b50b30001>; Thu, 20 Jun 2019 02:24:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Thu, 20 Jun 2019 02:24:04 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Thu, 20 Jun 2019 02:24:04 -0700
+Received: from [10.19.64.157] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
+ 2019 09:24:00 +0000
+Subject: Re: [PATCH V9] i2c: tegra: remove BUG() macro
+To:     Bitan Biswas <bbiswas@nvidia.com>,
+        Thierry Reding <treding@nvidia.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        <linux-i2c@vger.kernel.org>, <linux-tegra@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Peter Rosin <peda@axentia.se>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Dmitry Osipenko <digetx@gmail.com>
+References: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+CC:     Shardar Mohammed <smohammed@nvidia.com>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        Mantravadi Karthik <mkarthik@nvidia.com>
+From:   Laxman Dewangan <ldewangan@nvidia.com>
+Message-ID: <bac4fc16-858f-0ede-0c36-7c60e215ea77@nvidia.com>
+Date:   Thu, 20 Jun 2019 14:53:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:45.0) Gecko/20100101
+ Thunderbird/45.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190603083005.4304-3-peng.fan@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1560856182-26072-1-git-send-email-bbiswas@nvidia.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL106.nvidia.com (172.18.146.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1561022644; bh=rlztNEug3hk4IBq5DjW1s4T+e1rUkPC3E75CrKzHJRY=;
+        h=X-PGP-Universal:Subject:To:References:CC:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Transfer-Encoding;
+        b=aFykmx6XFhAy9pbHntU+O7i8L7t2m79gU0JV5gtCDxcImL/RinX1L0IjiqtCmdiiO
+         1e+5WzFUMlDlA+2lu0y4gBLm8KHQMBUXZRfXYbCjTTTGDSo2mFYBkJ3aNZUlw6uSmv
+         w5YvVpMNG2BqBznTBlil29B7EiuCgNjeW9YBmc0dW494BCP0Ma3xZ4BRfm9Sk/NRod
+         aET96y5A888cPGwqbiKZAHacRntZ8Cy4Oc+KS8ORPT7sLDffGZrx9RIGoH7gOz5TAU
+         g4f2nX2u6e0BukYgz/LHB8M4GnApanOS7op3xnsZtZ1i9a83tH18ORCXCImbrvRwGA
+         3Y60TqFR+Ujcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Jun 03, 2019 at 04:30:05PM +0800, peng.fan@nxp.com wrote:
-> From: Peng Fan <peng.fan@nxp.com>
->
-> This mailbox driver implements a mailbox which signals transmitted data
-> via an ARM smc (secure monitor call) instruction. The mailbox receiver
-> is implemented in firmware and can synchronously return data when it
-> returns execution to the non-secure world again.
-> An asynchronous receive path is not implemented.
-> This allows the usage of a mailbox to trigger firmware actions on SoCs
-> which either don't have a separate management processor or on which such
-> a core is not available. A user of this mailbox could be the SCP
-> interface.
->
-> Modified from Andre Przywara's v2 patch
-> https://lore.kernel.org/patchwork/patch/812999/
->
-> Cc: Andre Przywara <andre.przywara@arm.com>
-> Signed-off-by: Peng Fan <peng.fan@nxp.com>
-> ---
->
-> V2:
->  Add interrupts notification support.
->
->  drivers/mailbox/Kconfig                 |   7 ++
->  drivers/mailbox/Makefile                |   2 +
->  drivers/mailbox/arm-smc-mailbox.c       | 190 ++++++++++++++++++++++++++++++++
->  include/linux/mailbox/arm-smc-mailbox.h |  10 ++
->  4 files changed, 209 insertions(+)
->  create mode 100644 drivers/mailbox/arm-smc-mailbox.c
->  create mode 100644 include/linux/mailbox/arm-smc-mailbox.h
->
-> diff --git a/drivers/mailbox/Kconfig b/drivers/mailbox/Kconfig
-> index 595542bfae85..c3bd0f1ddcd8 100644
-> --- a/drivers/mailbox/Kconfig
-> +++ b/drivers/mailbox/Kconfig
-> @@ -15,6 +15,13 @@ config ARM_MHU
->  	  The controller has 3 mailbox channels, the last of which can be
->  	  used in Secure mode only.
->
-> +config ARM_SMC_MBOX
-> +	tristate "Generic ARM smc mailbox"
-> +	depends on OF && HAVE_ARM_SMCCC
-> +	help
-> +	  Generic mailbox driver which uses ARM smc calls to call into
-> +	  firmware for triggering mailboxes.
-> +
->  config IMX_MBOX
->  	tristate "i.MX Mailbox"
->  	depends on ARCH_MXC || COMPILE_TEST
-> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
-> index c22fad6f696b..93918a84c91b 100644
-> --- a/drivers/mailbox/Makefile
-> +++ b/drivers/mailbox/Makefile
-> @@ -7,6 +7,8 @@ obj-$(CONFIG_MAILBOX_TEST)	+= mailbox-test.o
->
->  obj-$(CONFIG_ARM_MHU)	+= arm_mhu.o
->
-> +obj-$(CONFIG_ARM_SMC_MBOX)	+= arm-smc-mailbox.o
-> +
->  obj-$(CONFIG_IMX_MBOX)	+= imx-mailbox.o
->
->  obj-$(CONFIG_ARMADA_37XX_RWTM_MBOX)	+= armada-37xx-rwtm-mailbox.o
-> diff --git a/drivers/mailbox/arm-smc-mailbox.c b/drivers/mailbox/arm-smc-mailbox.c
-> new file mode 100644
-> index 000000000000..fef6e38d8b98
-> --- /dev/null
-> +++ b/drivers/mailbox/arm-smc-mailbox.c
-> @@ -0,0 +1,190 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2016,2017 ARM Ltd.
-> + * Copyright 2019 NXP
-> + */
-> +
-> +#include <linux/arm-smccc.h>
-> +#include <linux/device.h>
-> +#include <linux/kernel.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/mailbox_controller.h>
-> +#include <linux/mailbox/arm-smc-mailbox.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define ARM_SMC_MBOX_USE_HVC	BIT(0)
-> +#define ARM_SMC_MBOX_USB_IRQ	BIT(1)
-> +
-> +struct arm_smc_chan_data {
-> +	u32 function_id;
-> +	u32 flags;
-> +	int irq;
-> +};
-> +
-> +static int arm_smc_send_data(struct mbox_chan *link, void *data)
-> +{
-> +	struct arm_smc_chan_data *chan_data = link->con_priv;
-> +	struct arm_smccc_mbox_cmd *cmd = data;
-> +	struct arm_smccc_res res;
-> +	u32 function_id;
-> +
-> +	if (chan_data->function_id != UINT_MAX)
-> +		function_id = chan_data->function_id;
-> +	else
-> +		function_id = cmd->a0;
-> +
-> +	if (chan_data->flags & ARM_SMC_MBOX_USE_HVC)
-> +		arm_smccc_hvc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
-> +			      cmd->a5, cmd->a6, cmd->a7, &res);
-> +	else
-> +		arm_smccc_smc(function_id, cmd->a1, cmd->a2, cmd->a3, cmd->a4,
-> +			      cmd->a5, cmd->a6, cmd->a7, &res);
-> +
 
-So how will the SMC/HVC handler in EL3/2 find which mailbox is being referred
-with this command ? I prefer 2nd argument to be the mailbox number.
 
---
-Regards,
-Sudeep
+On Tuesday 18 June 2019 04:39 PM, Bitan Biswas wrote:
+> The usage of BUG() macro is generally discouraged in kernel, unless
+> it's a problem that results in a physical damage or loss of data.
+> This patch removes unnecessary BUG() macros and replaces the rest
+> with warning.
+>
+> Signed-off-by: Bitan Biswas <bbiswas@nvidia.com>
+>
+Acked By: Laxman Dewangan <ldewangan@nvidia.com>
+
+Thanks,
+Laxman
