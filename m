@@ -2,127 +2,81 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3988CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 322D7C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:25:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B878206BA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028812083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:25:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561026318;
+	bh=3ihoOPo5uYqiD4QV67dGSIY/2PGmijlFDatNdmjbsY0=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=b6DHv3TPpt6agO5jBF0yWBbQlFI1rB8njzubnQhDyCliOXIroGgSzjLt7bpxIZbPm
+	 nY55tcWR0gMJzRMyn7/mA+jhtVlozJAnbmulSF7QGlFxUEvSeh/iDK8kYD6/QSo+xF
+	 UiUSLx1yTE/SbJOF3IeTdy8neKGqwTasPv/JXj3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfFTKYR (ORCPT
+        id S1730987AbfFTKZR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:24:17 -0400
-Received: from mga03.intel.com ([134.134.136.65]:55912 "EHLO mga03.intel.com"
+        Thu, 20 Jun 2019 06:25:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49692 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726081AbfFTKYR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:24:17 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 03:24:16 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
-   d="scan'208";a="358487338"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.145])
-  by fmsmga005.fm.intel.com with ESMTP; 20 Jun 2019 03:24:12 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hduEk-0007HN-VY; Thu, 20 Jun 2019 13:24:10 +0300
-Date:   Thu, 20 Jun 2019 13:24:10 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Jeff Layton <jlayton@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, ceph-devel@vger.kernel.org,
-        idryomov@gmail.com, zyan@redhat.com, sage@redhat.com,
-        agruenba@redhat.com, joe@perches.com, pmladek@suse.com,
-        rostedt@goodmis.org, geert+renesas@glider.be
-Subject: Re: [PATCH v2 0/3] ceph: don't NULL terminate virtual xattr values
-Message-ID: <20190620102410.GT9224@smile.fi.intel.com>
-References: <20190619164528.31958-1-jlayton@kernel.org>
+        id S1726124AbfFTKZQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:25:16 -0400
+Received: from localhost.localdomain (unknown [106.201.116.189])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F1260206BA;
+        Thu, 20 Jun 2019 10:25:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561026315;
+        bh=3ihoOPo5uYqiD4QV67dGSIY/2PGmijlFDatNdmjbsY0=;
+        h=From:To:Cc:Subject:Date:From;
+        b=M1vWG7IbE231acj5Rm7J5lY0MkbNVh/1dKZMmgGUGRouYMpaakzI59I6/JhsvgKol
+         d0lfKhFRAR6+Xsh7wXK8bUVWLZdWkGwYnfUhkN6HVc7Y8dD2D5MG4aS29yFwy6AXUc
+         /ueNmmekviTpmC9LTAAGPF9LTaJoB5PV6/v6Y7zk=
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-arm-msm@vger.kernel.org,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Vinod Koul <vkoul@kernel.org>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Christian Lamparter <chunkeey@googlemail.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/5] usb: xhci: Add support for Renesas USB controllers
+Date:   Thu, 20 Jun 2019 15:51:49 +0530
+Message-Id: <20190620102154.20805-1-vkoul@kernel.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619164528.31958-1-jlayton@kernel.org>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:45:25PM -0400, Jeff Layton wrote:
-> v2: drop bogus EXPORT_SYMBOL of static function
-> 
-> The only real difference between this set and the one I sent originally
-> is the removal of a spurious EXPORT_SYMBOL in the snprintf patch.
-> 
-> I'm mostly sending this with a wider cc list in an effort to get a
-> review from the maintainers of the printf code. Basically ceph needs a
-> snprintf variant that does not NULL terminate in order to handle its
-> virtual xattrs.
-> 
+This series add support for Renesas USB controllers uPD720201 and uPD720202.
+These require firmware to be loaded and in case devices have ROM those can
+also be programmed if empty. If ROM is porgrammed, it runs from ROM as well.
 
-> Joe Perches had expressed some concerns about stack usage in vsnprintf
-> with this, but I'm not sure I really understand the basis of that
-> concern. If it is problematic, then I could use suggestions as to how
-> best to fix that up.
+This includes two patches from Christian which supported these controllers
+w/o ROM and later my patches for ROM support and multiple firmware versions.
 
-It might be problematic, since vsnprintf() can be called recursively.
+Christian Lamparter (2):
+  usb: xhci: add firmware loader for uPD720201 and uPD720202 w/o ROM
+  usb: xhci: handle uPD720201 and uPD720202 w/o ROM
 
-> ----------------------------8<-----------------------------
-> 
-> kcephfs has several "virtual" xattrs that return strings that are
-> currently populated using snprintf(), which always NULL terminates the
-> string.
-> 
-> This leads to the string being truncated when we use a buffer length
-> acquired by calling getxattr with a 0 size first. The last character
-> of the string ends up being clobbered by the termination.
+Vinod Koul (3):
+  usb: xhci: Use register defined and field names
+  usb: xhci: Add ROM loader for uPD720201
+  usb: xhci: allow multiple firmware versions
 
-So, then don't use snprintf() for this, simple memcpy() designed for that kind
-of things.
-
-> The convention with xattrs is to not store the termination with string
-> data, given that we have the length. This is how setfattr/getfattr
-> operate.
-
-Fine.
-
-> This patch makes ceph's virtual xattrs not include NULL termination
-> when formatting their values. In order to handle this, a new
-> snprintf_noterm function is added, and ceph is changed over to use
-> this to populate the xattr value buffer.
-
-In terms of vsnprintf(), and actually compiler point of view, it's not a string
-anymore, it's a text-based data.
-
-Personally, I don't see an advantage of a deep intrusion into vsnprintf().
-The wrapper can be made to achieve this w/o touching the generic code. Thus,
-you can quickly and cleanly fix the issue, while discussing this with wider
-audience.
-
-> Finally, we fix ceph to
-> return -ERANGE properly when the string didn't fit in the buffer.
-> 
-> Jeff Layton (3):
->   lib/vsprintf: add snprintf_noterm
->   ceph: don't NULL terminate virtual xattr strings
->   ceph: return -ERANGE if virtual xattr value didn't fit in buffer
-> 
->  fs/ceph/xattr.c        |  49 +++++++-------
->  include/linux/kernel.h |   2 +
->  lib/vsprintf.c         | 144 ++++++++++++++++++++++++++++-------------
->  3 files changed, 129 insertions(+), 66 deletions(-)
-> 
-> -- 
-> 2.21.0
-> 
+ drivers/usb/host/xhci-pci.c | 962 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 962 insertions(+)
 
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.20.1
 
