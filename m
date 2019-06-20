@@ -2,117 +2,146 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD467C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A48AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8AAF20652
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054962;
-	bh=SjfTpmvzvuQZ9JZgKZvtzkAgoLB4u3yXSE2feqq0kUo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ktWeWNyBBeeVNG0aQKg3/bJ7JrXrXgW0AjJX7xiyihJL1/tqzGeD9VqBOTajHVTeZ
-	 H7EdOg9/Z3O8xW7FxMl8wfFFr+n+Y0pq6D0QuDsbdochy5ABiiA5lPqRmMv+jrjiAL
-	 /EznmFB/OcXcB9piMgllI/5sREjG1wzqleAcGxOw=
+	by mail.kernel.org (Postfix) with ESMTP id 3780C20652
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:22:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JICpQbU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728809AbfFTSK0 (ORCPT
+        id S1729003AbfFTSWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:10:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37916 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728799AbfFTSKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:10:20 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D9FAC2082C;
-        Thu, 20 Jun 2019 18:10:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054220;
-        bh=SjfTpmvzvuQZ9JZgKZvtzkAgoLB4u3yXSE2feqq0kUo=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=skm4ODibmPXABGUdekoFOZ7G2orcr9/iECBeveWCggQ35tLQOexXQ1L7dlc2T5EqG
-         sT1hRJSPfQBgjxts54dsWE/J7kimDCnrSDVz7jc6NcPa00sNgq8QnPJLCXG7KMNKex
-         GNhfFYUUJWEn2JukpZRp4qBzfiMENtniYsLSwXnQ=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 07/61] net: dsa: rtl8366: Fix up VLAN filtering
-Date:   Thu, 20 Jun 2019 19:57:02 +0200
-Message-Id: <20190620174338.691124752@linuxfoundation.org>
-X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
-References: <20190620174336.357373754@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Thu, 20 Jun 2019 14:22:46 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:55181 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726494AbfFTSWp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:22:45 -0400
+Received: by mail-wm1-f67.google.com with SMTP id g135so3983455wme.4
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 11:22:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6W69Du1bctBdAeWrQSZ50pOOXCwaxniMxHy/YbHqEqI=;
+        b=JICpQbU5muSaMtq1JB5VHNGLUk8jq3GGBHMiNUcw23ZBGD91CH2nTZBoRUjsuDGAVT
+         HJIZBXEoJE+TVP+YgbXTHwtMgd2rAmWJxaNZ8RcAgDR9Z1sMjuss+1HsQtsInCd0+03t
+         In0ETrRALkN8OAWS22SMSF+hsKL4ynnzIiMIzZlzKtlmThca1O3VmBMcNird/HI8Yt+u
+         Jf1KYASutl7mZG4sEy8uTBX4FTwS27OgA/SP95K3IQhbIiopmXI2bm+0x0oYHaxSUyiF
+         mT/G68xQfAwPH+DK4LFFzXcsR9mbHRIm+o5AMVNheK8HwJgeIPlOerpn9B8GTjWuqA1P
+         FuYA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6W69Du1bctBdAeWrQSZ50pOOXCwaxniMxHy/YbHqEqI=;
+        b=YVtcJyBhEbtxTJ6avBBay1XXQzkvI7DuFlfxPkiv4fp3/lxX9Md4WF3tD/ICHmB4ft
+         TAPw36pO1WSd9ShgOwQ9Is04L8UmqSgrCt5KbHfZlLicx+ucf4FyOSiAsZIoPBemGwx6
+         GxaGShrTqUB2yryzjIvoe8ipTNsI7Nqr1dVU6twYeTaHchW7m2F2QpHjWGIt8Y0O+jTF
+         kf2rpN8QtU/M7YceI6cao8QsShpNu5OhDxQjcD5AVR7BzyHR7nkbHrZQ/YoQehg63Vup
+         FeqeNNbkW+mtqOfPqo1RcbyTWlS8aMzhoCzP6Zn/kpOZ1h+3YbRsajdnOb8RjG0uvuCW
+         Qe3A==
+X-Gm-Message-State: APjAAAWOGHhPH9ta5LqWchKSaJVn9936p9VLB48MKJ/tzVFIxdAROH++
+        vx2ne0I+7Hb3FOZr1QZqc5wO8zerJqAPyhDn/73F
+X-Google-Smtp-Source: APXvYqztEC3ToiRcw+BN0gYrgLc79Cen4f6cFKKe1+9L7Veg67QIX9zR7+/BxyQbhLEPicpGGpytgYQSxRHRZ1v9Nk0=
+X-Received: by 2002:a1c:1a88:: with SMTP id a130mr556373wma.149.1561054963668;
+ Thu, 20 Jun 2019 11:22:43 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <cover.1561050806.git.mchehab+samsung@kernel.org> <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1561050806.git.mchehab+samsung@kernel.org>
+In-Reply-To: <3b8d7c64f887ddea01df3c4eeabc745c8ec45406.1561050806.git.mchehab+samsung@kernel.org>
+From:   Bjorn Helgaas <bhelgaas@google.com>
+Date:   Thu, 20 Jun 2019 13:22:31 -0500
+Message-ID: <CAErSpo5+MH4t0OVZkuLykZhiQg-3itaozeXO6v=nnc6e1UvCSw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/22] ABI: sysfs-bus-pci-devices-aer_stats uses an
+ invalid tag
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Rajat Jain <rajatja@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Walleij <linus.walleij@linaro.org>
+On Thu, Jun 20, 2019 at 12:23 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> According with Documentation/ABI/, the right tag to describe
+> an ABI symbol is "What:", and not "Where:".
+>
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-[ Upstream commit 760c80b70bed2cd01630e8595d1bbde910339f31 ]
+Acked-by: Bjorn Helgaas <bhelgaas@google.com>
 
-We get this regression when using RTL8366RB as part of a bridge
-with OpenWrt:
+I assume somebody else will merge this series as a whole.
 
-WARNING: CPU: 0 PID: 1347 at net/switchdev/switchdev.c:291
-	 switchdev_port_attr_set_now+0x80/0xa4
-lan0: Commit of attribute (id=7) failed.
-(...)
-realtek-smi switch lan0: failed to initialize vlan filtering on this port
-
-This is because it is trying to disable VLAN filtering
-on VLAN0, as we have forgot to add 1 to the port number
-to get the right VLAN in rtl8366_vlan_filtering(): when
-we initialize the VLAN we associate VLAN1 with port 0,
-VLAN2 with port 1 etc, so we need to add 1 to the port
-offset.
-
-Fixes: d8652956cf37 ("net: dsa: realtek-smi: Add Realtek SMI driver")
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/dsa/rtl8366.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
-
---- a/drivers/net/dsa/rtl8366.c
-+++ b/drivers/net/dsa/rtl8366.c
-@@ -307,7 +307,8 @@ int rtl8366_vlan_filtering(struct dsa_sw
- 	struct rtl8366_vlan_4k vlan4k;
- 	int ret;
- 
--	if (!smi->ops->is_vlan_valid(smi, port))
-+	/* Use VLAN nr port + 1 since VLAN0 is not valid */
-+	if (!smi->ops->is_vlan_valid(smi, port + 1))
- 		return -EINVAL;
- 
- 	dev_info(smi->dev, "%s filtering on port %d\n",
-@@ -318,12 +319,12 @@ int rtl8366_vlan_filtering(struct dsa_sw
- 	 * The hardware support filter ID (FID) 0..7, I have no clue how to
- 	 * support this in the driver when the callback only says on/off.
- 	 */
--	ret = smi->ops->get_vlan_4k(smi, port, &vlan4k);
-+	ret = smi->ops->get_vlan_4k(smi, port + 1, &vlan4k);
- 	if (ret)
- 		return ret;
- 
- 	/* Just set the filter to FID 1 for now then */
--	ret = rtl8366_set_vlan(smi, port,
-+	ret = rtl8366_set_vlan(smi, port + 1,
- 			       vlan4k.member,
- 			       vlan4k.untag,
- 			       1);
-
-
+> ---
+>  .../ABI/testing/sysfs-bus-pci-devices-aer_stats      | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>
+> diff --git a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> index 4b0318c99507..ff229d71961c 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> +++ b/Documentation/ABI/testing/sysfs-bus-pci-devices-aer_stats
+> @@ -9,7 +9,7 @@ errors may be "seen" / reported by the link partner and not the
+>  problematic endpoint itself (which may report all counters as 0 as it never
+>  saw any problems).
+>
+> -Where:         /sys/bus/pci/devices/<dev>/aer_dev_correctable
+> +What:          /sys/bus/pci/devices/<dev>/aer_dev_correctable
+>  Date:          July 2018
+>  Kernel Version: 4.19.0
+>  Contact:       linux-pci@vger.kernel.org, rajatja@google.com
+> @@ -31,7 +31,7 @@ Header Log Overflow 0
+>  TOTAL_ERR_COR 2
+>  -------------------------------------------------------------------------
+>
+> -Where:         /sys/bus/pci/devices/<dev>/aer_dev_fatal
+> +What:          /sys/bus/pci/devices/<dev>/aer_dev_fatal
+>  Date:          July 2018
+>  Kernel Version: 4.19.0
+>  Contact:       linux-pci@vger.kernel.org, rajatja@google.com
+> @@ -62,7 +62,7 @@ TLP Prefix Blocked Error 0
+>  TOTAL_ERR_FATAL 0
+>  -------------------------------------------------------------------------
+>
+> -Where:         /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+> +What:          /sys/bus/pci/devices/<dev>/aer_dev_nonfatal
+>  Date:          July 2018
+>  Kernel Version: 4.19.0
+>  Contact:       linux-pci@vger.kernel.org, rajatja@google.com
+> @@ -103,19 +103,19 @@ collectors) that are AER capable. These indicate the number of error messages as
+>  device, so these counters include them and are thus cumulative of all the error
+>  messages on the PCI hierarchy originating at that root port.
+>
+> -Where:         /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
+> +What:          /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_cor
+>  Date:          July 2018
+>  Kernel Version: 4.19.0
+>  Contact:       linux-pci@vger.kernel.org, rajatja@google.com
+>  Description:   Total number of ERR_COR messages reported to rootport.
+>
+> -Where:     /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
+> +What:      /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_fatal
+>  Date:          July 2018
+>  Kernel Version: 4.19.0
+>  Contact:       linux-pci@vger.kernel.org, rajatja@google.com
+>  Description:   Total number of ERR_FATAL messages reported to rootport.
+>
+> -Where:     /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
+> +What:      /sys/bus/pci/devices/<dev>/aer_stats/aer_rootport_total_err_nonfatal
+>  Date:          July 2018
+>  Kernel Version: 4.19.0
+>  Contact:       linux-pci@vger.kernel.org, rajatja@google.com
+> --
+> 2.21.0
+>
