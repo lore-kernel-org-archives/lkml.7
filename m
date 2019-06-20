@@ -2,54 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B8C3C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0237FC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F1E92082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D34692089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:14:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054493;
-	bh=x3DQAm9fBik+KczsyNcMttT72qr4M0hPWQmDCAH5ZlI=;
+	s=default; t=1561054497;
+	bh=O1AOVWIfY8FUP0UKPr0TTotD4YyJ3xpe9kg3M8Azp08=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wYaLnv1pymHqHKMM+dpwWQdIj9ZRBExAS1+M0/+BdlYvJWM6RfTkx99a/JcQh/QMi
-	 I46FIN4AjX9gp97WDuWj4YoVC9GoeGtDH52nEam54uFhD+A2fi37Hwde5Ah4xIT+7c
-	 IrKw/+aNKwMSIydM1ZXU+uCl2ov8HWGyWRb8+3UU=
+	b=ehxCI0vwOeasJm52SYNXexw7tsai7qVZklV65J9EJAYSDiPa1WIbuVb5JiBUugsuP
+	 6hoj5e6qm6i5T3frLGu6TZoxX9vYMa/advVbDrXkOECthZH06MRKiroMoSgggoQnUq
+	 +qJNBUPy24jdzdt76pfoEMX+N53iJp1EW+ZcP8e4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729287AbfFTSOw (ORCPT
+        id S1729517AbfFTSO4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:14:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43250 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:14:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43316 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726812AbfFTSOt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:14:49 -0400
+        id S1729503AbfFTSOw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:14:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 05C41205F4;
-        Thu, 20 Jun 2019 18:14:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E27F21530;
+        Thu, 20 Jun 2019 18:14:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054488;
-        bh=x3DQAm9fBik+KczsyNcMttT72qr4M0hPWQmDCAH5ZlI=;
+        s=default; t=1561054491;
+        bh=O1AOVWIfY8FUP0UKPr0TTotD4YyJ3xpe9kg3M8Azp08=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LEp5pMXt+Sd+dv1SzH3CVZXBvWaNybHbyvkaznGYRQvqc6V4UFlhRaPekG8ir+0XS
-         ySNlPyCtIrL4xqZUqlLmShs7s/c6jZ+AyNU+LB1aV/wLauenN/EWt3UttdmfbHpo5A
-         rXUAORulpXB3T9FlqOTqHJWLWZGZMXE7412adTbI=
+        b=1KqBXslC9KyRVaAphIEmZ9vLjPCrqAGDzypsjcWnobHIGfdFdmcDEoSCfCqvf75kF
+         7+x1/m1gVrP+JAcqwxNGdny5i3ePsFVcpOMG9QsbiPtnUzMIDiCHOOwRpLBIM5njUf
+         LGLvALcWgsXmGScFQQJ5eVND9VKEe2sYXpm2vzQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavaman Subramaniyam <pavsubra@in.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.1 44/98] powerpc/powernv: Return for invalid IMC domain
-Date:   Thu, 20 Jun 2019 19:57:11 +0200
-Message-Id: <20190620174351.143824080@linuxfoundation.org>
+        stable@vger.kernel.org, Guillaume Nault <gnault@redhat.com>,
+        Stefano Brivio <sbrivio@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 5.1 17/98] vxlan: Dont assume linear buffers in error handler
+Date:   Thu, 20 Jun 2019 19:56:44 +0200
+Message-Id: <20190620174350.058456278@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174349.443386789@linuxfoundation.org>
 References: <20190620174349.443386789@linuxfoundation.org>
@@ -62,50 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b59bd3527fe3c1939340df558d7f9d568fc9f882 ]
+From: Stefano Brivio <sbrivio@redhat.com>
 
-Currently init_imc_pmu() can fail either because we try to register an
-IMC unit with an invalid domain (i.e an IMC node not supported by the
-kernel) or something went wrong while registering a valid IMC unit. In
-both the cases kernel provides a 'Register failed' error message.
+[ Upstream commit 8399a6930d12f5965230f4ff058228a4cc80c0b9 ]
 
-For example when trace-imc node is not supported by the kernel, but
-skiboot advertises a trace-imc node we print:
+In commit c3a43b9fec8a ("vxlan: ICMP error lookup handler") I wrongly
+assumed buffers from icmp_socket_deliver() would be linear. This is not
+the case: icmp_socket_deliver() only guarantees we have 8 bytes of linear
+data.
 
-  IMC Unknown Device type
-  IMC PMU (null) Register failed
+Eric fixed this same issue for fou and fou6 in commits 26fc181e6cac
+("fou, fou6: do not assume linear skbs") and 5355ed6388e2 ("fou, fou6:
+avoid uninit-value in gue_err() and gue6_err()").
 
-To avoid confusion just print the unknown device type message, before
-attempting PMU registration, so the second message isn't printed.
+Use pskb_may_pull() instead of checking skb->len, and take into account
+the fact we later access the VXLAN header with udp_hdr(), so we also
+need to sum skb_transport_header() here.
 
-Fixes: 8f95faaac56c ("powerpc/powernv: Detect and create IMC device")
-Reported-by: Pavaman Subramaniyam <pavsubra@in.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-[mpe: Reword change log a bit]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Reported-by: Guillaume Nault <gnault@redhat.com>
+Fixes: c3a43b9fec8a ("vxlan: ICMP error lookup handler")
+Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/vxlan.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 3d27f02695e4..828f6656f8f7 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -161,6 +161,10 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
- 	struct imc_pmu *pmu_ptr;
- 	u32 offset;
+--- a/drivers/net/vxlan.c
++++ b/drivers/net/vxlan.c
+@@ -1765,7 +1765,7 @@ static int vxlan_err_lookup(struct sock
+ 	struct vxlanhdr *hdr;
+ 	__be32 vni;
  
-+	/* Return for unknown domain */
-+	if (domain < 0)
-+		return -EINVAL;
-+
- 	/* memory for pmu */
- 	pmu_ptr = kzalloc(sizeof(*pmu_ptr), GFP_KERNEL);
- 	if (!pmu_ptr)
--- 
-2.20.1
-
+-	if (skb->len < VXLAN_HLEN)
++	if (!pskb_may_pull(skb, skb_transport_offset(skb) + VXLAN_HLEN))
+ 		return -EINVAL;
+ 
+ 	hdr = vxlan_hdr(skb);
 
 
