@@ -5,49 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11165C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6560DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E58A62084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363BC215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:13:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054382;
-	bh=VJ1S89d9vYRPBUIO2NFQRC4zozQmyse6TOueeTqVoos=;
+	s=default; t=1561054384;
+	bh=O7c2awUdbbtZs2EvYOyiLVtc9HeulBl01pu+z1OwIHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Clbrwt0gEAn6sMYs6DHQHMieIBoW/f0ZYrDcJmswdY4SN+bQc3X+3KseCVqkqVVb7
-	 7sejDiq7+1CrXEQA86bGaWgvW750YVr2N83x1dd7DwLugPVs1nXQBGswIansBuiCwq
-	 NtNMOHiVLipzDxRS8tIXawgBnIj/ws6Wqe8ayOnQ=
+	b=NOROOozAusx0ldv/KNbDeX9rjI9Lj0uEM9lejEeS20Cj3vl0qhMCiX/3Ni67XrYkU
+	 yZhV8wxa6pZrbppf2XmziE0fBNd8UUbncUKeCnQD3tb72l+8yGqVl34bqbcG8tBOql
+	 DqLVwLI+XczpigmhdD/i1+n2/peheNYxlgZfwZPs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727481AbfFTSNA (ORCPT
+        id S1729164AbfFTSND (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:13:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40846 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:13:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40874 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729131AbfFTSMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:55 -0400
+        id S1729143AbfFTSM6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:12:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 70D35215EA;
-        Thu, 20 Jun 2019 18:12:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 17CE12084E;
+        Thu, 20 Jun 2019 18:12:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054374;
-        bh=VJ1S89d9vYRPBUIO2NFQRC4zozQmyse6TOueeTqVoos=;
+        s=default; t=1561054377;
+        bh=O7c2awUdbbtZs2EvYOyiLVtc9HeulBl01pu+z1OwIHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IcpaoS5xex7hBW/YFps2ymquwKAY7jxn7dmkVW7vEn2KiBtM7NyF4AerWsYoxqXC0
-         wooWldoq0R2ldvLdEJWf+4V6ZWVXCca7Qjan9JgoAXSY1K0J2zDnDaoHSjdtyuFaL3
-         Xtht8MXNAY6ID1HV6xQwuX+m7NrBmK0nc68Ml73w=
+        b=Rq4BCBM49A3TohbTqwNEkvtrrjkuA/Lz7ghjht4NKy8NmHv45TrGk2MZd+n+6LXNB
+         5BNyycUCMrHCuI+PdvXELd0ZrZakmVMz/zlUjZ/yq9ctq7s9uhZvVYA/Wp0QleKJwr
+         iN3Ejka9hu83RydtXX6Jk+Fsi9DgeqE7b5x3Uw9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
-        =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 47/61] KVM: PPC: Book3S HV: Dont take kvm->lock around kvm_for_each_vcpu
-Date:   Thu, 20 Jun 2019 19:57:42 +0200
-Message-Id: <20190620174345.399737386@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Bard Liao <yung-chuan.liao@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 38/61] ALSA: hda - Force polling mode on CNL for fixing codec communication
+Date:   Thu, 20 Jun 2019 19:57:33 +0200
+Message-Id: <20190620174344.015284833@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,63 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5a3f49364c3ffa1107bd88f8292406e98c5d206c ]
+[ Upstream commit fa763f1b2858752e6150ffff46886a1b7faffc82 ]
 
-Currently the HV KVM code takes the kvm->lock around calls to
-kvm_for_each_vcpu() and kvm_get_vcpu_by_id() (which can call
-kvm_for_each_vcpu() internally).  However, that leads to a lock
-order inversion problem, because these are called in contexts where
-the vcpu mutex is held, but the vcpu mutexes nest within kvm->lock
-according to Documentation/virtual/kvm/locking.txt.  Hence there
-is a possibility of deadlock.
+We observed the same issue as reported by commit a8d7bde23e7130686b7662
+("ALSA: hda - Force polling mode on CFL for fixing codec communication")
+We don't have a better solution. So apply the same workaround to CNL.
 
-To fix this, we simply don't take the kvm->lock mutex around these
-calls.  This is safe because the implementations of kvm_for_each_vcpu()
-and kvm_get_vcpu_by_id() have been designed to be able to be called
-locklessly.
-
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
-Reviewed-by: Cédric Le Goater <clg@kaod.org>
-Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/kvm/book3s_hv.c | 9 +--------
- 1 file changed, 1 insertion(+), 8 deletions(-)
+ sound/pci/hda/hda_intel.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/kvm/book3s_hv.c b/arch/powerpc/kvm/book3s_hv.c
-index 3e3a71594e63..083dcedba11c 100644
---- a/arch/powerpc/kvm/book3s_hv.c
-+++ b/arch/powerpc/kvm/book3s_hv.c
-@@ -426,12 +426,7 @@ static void kvmppc_dump_regs(struct kvm_vcpu *vcpu)
+diff --git a/sound/pci/hda/hda_intel.c b/sound/pci/hda/hda_intel.c
+index 45bf89ed31de..308ce76149cc 100644
+--- a/sound/pci/hda/hda_intel.c
++++ b/sound/pci/hda/hda_intel.c
+@@ -378,6 +378,7 @@ enum {
  
- static struct kvm_vcpu *kvmppc_find_vcpu(struct kvm *kvm, int id)
- {
--	struct kvm_vcpu *ret;
--
--	mutex_lock(&kvm->lock);
--	ret = kvm_get_vcpu_by_id(kvm, id);
--	mutex_unlock(&kvm->lock);
--	return ret;
-+	return kvm_get_vcpu_by_id(kvm, id);
- }
+ #define IS_BXT(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x5a98)
+ #define IS_CFL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0xa348)
++#define IS_CNL(pci) ((pci)->vendor == 0x8086 && (pci)->device == 0x9dc8)
  
- static void init_vpa(struct kvm_vcpu *vcpu, struct lppaca *vpa)
-@@ -1309,7 +1304,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
- 	struct kvmppc_vcore *vc = vcpu->arch.vcore;
- 	u64 mask;
+ static char *driver_short_names[] = {
+ 	[AZX_DRIVER_ICH] = "HDA Intel",
+@@ -1795,8 +1796,8 @@ static int azx_create(struct snd_card *card, struct pci_dev *pci,
+ 	else
+ 		chip->bdl_pos_adj = bdl_pos_adj[dev];
  
--	mutex_lock(&kvm->lock);
- 	spin_lock(&vc->lock);
- 	/*
- 	 * If ILE (interrupt little-endian) has changed, update the
-@@ -1349,7 +1343,6 @@ static void kvmppc_set_lpcr(struct kvm_vcpu *vcpu, u64 new_lpcr,
- 		mask &= 0xFFFFFFFF;
- 	vc->lpcr = (vc->lpcr & ~mask) | (new_lpcr & mask);
- 	spin_unlock(&vc->lock);
--	mutex_unlock(&kvm->lock);
- }
+-	/* Workaround for a communication error on CFL (bko#199007) */
+-	if (IS_CFL(pci))
++	/* Workaround for a communication error on CFL (bko#199007) and CNL */
++	if (IS_CFL(pci) || IS_CNL(pci))
+ 		chip->polling_mode = 1;
  
- static int kvmppc_get_one_reg_hv(struct kvm_vcpu *vcpu, u64 id,
+ 	err = azx_bus_init(chip, model[dev], &pci_hda_io_ops);
 -- 
 2.20.1
 
