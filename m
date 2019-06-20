@@ -2,136 +2,103 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7601C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 720C9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D155520665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9FE20665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:32:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ie7rVlTx";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ie7rVlTx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727295AbfFTScQ (ORCPT
+        id S1726599AbfFTScy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:32:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45415 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727037AbfFTScL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:32:11 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 20 Jun 2019 14:32:54 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:53582 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfFTScH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:32:07 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 540EB6028D; Thu, 20 Jun 2019 18:32:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561055527;
+        bh=b75oQgX62jUgFlcJID73lZaMHa+SwbvHtq/u6y0s1fQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ie7rVlTxwE4pQlAgHAX2cWN6MiSsSBYJphov5Gu6MUe+WKnu1fvI3hdaUAwZua6u2
+         L5MKLuN7z9cEeoKWvjFcL19tQlV/t/Asi00h8kquZ0U6LyryLtjWM1ebxoNKyg4DQo
+         HIaruI58J+y68hJuntEw5ngrRdP96QBioAszX6d0=
+Received: from blr-ubuntu-311.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 936EA7F769;
-        Thu, 20 Jun 2019 18:32:11 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-71.ams2.redhat.com [10.36.116.71])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8358519C77;
-        Thu, 20 Jun 2019 18:32:04 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
-        linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v3 2/6] drivers/base/memory: Use "unsigned long" for block ids
-Date:   Thu, 20 Jun 2019 20:31:35 +0200
-Message-Id: <20190620183139.4352-3-david@redhat.com>
-In-Reply-To: <20190620183139.4352-1-david@redhat.com>
-References: <20190620183139.4352-1-david@redhat.com>
+        (Authenticated sender: saiprakash.ranjan@codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 186206020A;
+        Thu, 20 Jun 2019 18:32:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1561055527;
+        bh=b75oQgX62jUgFlcJID73lZaMHa+SwbvHtq/u6y0s1fQ=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ie7rVlTxwE4pQlAgHAX2cWN6MiSsSBYJphov5Gu6MUe+WKnu1fvI3hdaUAwZua6u2
+         L5MKLuN7z9cEeoKWvjFcL19tQlV/t/Asi00h8kquZ0U6LyryLtjWM1ebxoNKyg4DQo
+         HIaruI58J+y68hJuntEw5ngrRdP96QBioAszX6d0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 186206020A
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=saiprakash.ranjan@codeaurora.org
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Leo Yan <leo.yan@linaro.org>, Rob Herring <robh+dt@kernel.org>,
+        devicetree@vger.kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     Rajendra Nayak <rnayak@codeaurora.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        Sibi Sankar <sibis@codeaurora.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-msm@vger.kernel.org,
+        Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 0/2] coresight: Do not default to CPU0 for missing CPU phandle
+Date:   Fri, 21 Jun 2019 00:01:50 +0530
+Message-Id: <cover.1561054498.git.saiprakash.ranjan@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 20 Jun 2019 18:32:11 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Block ids are just shifted section numbers, so let's also use
-"unsigned long" for them, too.
+In case of missing CPU phandle, the affinity is set default to
+CPU0 which is not a correct assumption. Fix this in coresight
+platform to set affinity to invalid and abort the probe in drivers.
+Also update the dt-bindings accordingly.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- drivers/base/memory.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+Patch 2 allows the probe of coresight etm and cpu-debug to abort
+earlier in case cpus are not available.
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 5947b5a5686d..c54e80fd25a8 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -34,12 +34,12 @@ static DEFINE_MUTEX(mem_sysfs_mutex);
- 
- static int sections_per_block;
- 
--static inline int base_memory_block_id(unsigned long section_nr)
-+static inline unsigned long base_memory_block_id(unsigned long section_nr)
- {
- 	return section_nr / sections_per_block;
- }
- 
--static inline int pfn_to_block_id(unsigned long pfn)
-+static inline unsigned long pfn_to_block_id(unsigned long pfn)
- {
- 	return base_memory_block_id(pfn_to_section_nr(pfn));
- }
-@@ -587,7 +587,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
-  * A reference for the returned object is held and the reference for the
-  * hinted object is released.
-  */
--static struct memory_block *find_memory_block_by_id(int block_id,
-+static struct memory_block *find_memory_block_by_id(unsigned long block_id,
- 						    struct memory_block *hint)
- {
- 	struct device *hintdev = hint ? &hint->dev : NULL;
-@@ -604,7 +604,7 @@ static struct memory_block *find_memory_block_by_id(int block_id,
- struct memory_block *find_memory_block_hinted(struct mem_section *section,
- 					      struct memory_block *hint)
- {
--	int block_id = base_memory_block_id(__section_nr(section));
-+	unsigned long block_id = base_memory_block_id(__section_nr(section));
- 
- 	return find_memory_block_by_id(block_id, hint);
- }
-@@ -663,8 +663,8 @@ int register_memory(struct memory_block *memory)
- 	return ret;
- }
- 
--static int init_memory_block(struct memory_block **memory, int block_id,
--			     unsigned long state)
-+static int init_memory_block(struct memory_block **memory,
-+			     unsigned long block_id, unsigned long state)
- {
- 	struct memory_block *mem;
- 	unsigned long start_pfn;
-@@ -729,8 +729,8 @@ static void unregister_memory(struct memory_block *memory)
-  */
- int create_memory_block_devices(unsigned long start, unsigned long size)
- {
--	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
--	int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
-+	const unsigned long start_block_id = pfn_to_block_id(PFN_DOWN(start));
-+	unsigned long end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
- 	struct memory_block *mem;
- 	unsigned long block_id;
- 	int ret = 0;
-@@ -766,10 +766,10 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
-  */
- void remove_memory_block_devices(unsigned long start, unsigned long size)
- {
--	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
--	const int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
-+	const unsigned long start_block_id = pfn_to_block_id(PFN_DOWN(start));
-+	const unsigned long end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
- 	struct memory_block *mem;
--	int block_id;
-+	unsigned long block_id;
- 
- 	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
- 			 !IS_ALIGNED(size, memory_block_size_bytes())))
+v2:
+ * Addressed review comments from Suzuki and Mathieu.
+ * Allows the probe of etm and cpu-debug to abort earlier
+   in case of unavailability of respective cpus.
+
+Sai Prakash Ranjan (2):
+  coresight: Do not default to CPU0 for missing CPU phandle
+  coresight: Abort probe if cpus are not available
+
+ Documentation/devicetree/bindings/arm/coresight.txt |  2 +-
+ drivers/hwtracing/coresight/coresight-cpu-debug.c   |  3 +++
+ drivers/hwtracing/coresight/coresight-etm3x.c       |  3 +++
+ drivers/hwtracing/coresight/coresight-etm4x.c       |  3 +++
+ drivers/hwtracing/coresight/coresight-platform.c    | 13 ++++++++-----
+ 5 files changed, 18 insertions(+), 6 deletions(-)
+
 -- 
-2.21.0
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
