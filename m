@@ -1,113 +1,71 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24655C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADF23C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:45:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2DEE2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:44:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561020257;
-	bh=mf4MZRK5XgaL8Au5RGvFrPPm0zyIoj1CKxst6/Ouzuw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dOxkiwceXktyUp80iHlohZLWM9UgRkftOGVrY3WSNtM1SpiLe5j+D7R0cwhrZ4Nfz
-	 nBm0TTatvaD6p9VYufEnkmfZ0w8i6rb6CHphFlkegJRVa95zAO/7sxhp0PFfpBShSX
-	 rlL3s1FrhdtsFSjiL6rCDtUcsK4vp6tmyGXS6J3M=
+	by mail.kernel.org (Postfix) with ESMTP id 8224E20657
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:45:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730709AbfFTIoP (ORCPT
+        id S1730967AbfFTIpP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:44:15 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:41456 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTIoP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:44:15 -0400
-Received: by mail-pl1-f196.google.com with SMTP id m7so1096931pls.8;
-        Thu, 20 Jun 2019 01:44:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=sYUDpApbnrIBn4i7klGE9UQ92KtpIubNAiUNXQIv47k=;
-        b=aEzfvWfhJfjqwaVDjQ+y2Jj8uQ5QLxM1Z9rSTwdKEVkhpfKq1+Vqx4cQoEo3LUbewb
-         nU43G4E5gYmlEqHnYPXnoi+dPlxxjyj2hEDeLmCouA0sk/KCNJqQM5lOtVQx7zd4IeOc
-         Nu+R1IfH6LIZkVvQqJ0U2YjQ2u4vWRTNlgJkN4NcOLwYjLzEYcopTqj/2uLvHTnvSQPU
-         G6VczY8GZn0HQXUzj2HmCQ64NCkoar+aFuvgFDt+OhG2jMZha7ZvtmNq0lzwD3a6508x
-         bjre/yWIfx9smdOvOz6K9HtuVd9grJ7MlUsBVt5ku7kkUWkZ7zoHCriBmFVGGGAb2L31
-         6iuw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=sYUDpApbnrIBn4i7klGE9UQ92KtpIubNAiUNXQIv47k=;
-        b=cUQiLb+AUMUFfjGRgpb7Smdy8T8FA5/9wDfLlE7Ny+xtnhmsu2Q6n9by2CZxzp5W3/
-         pCj6+D25ELP7SpsxR0eyqDPtmUmpZbJZMZuqyMrC18xgnwMbeIHOrCPdXPzN/5pPBjbB
-         uwgg6pGS0+8TGvh4hHzh0vWEKyxSQG47X73YiPzYGUuz2wCawj4PbT2pllVsBy6+dOmA
-         7I6Hqh6PyRmiXEz9gfm/3QQKj0nIhiJ1g7DZqBTkV6Zvq75bPNLgEgT2fUwX/whcmbVg
-         4LXmbQLmaiBFgBTxkk8nOhsJZznLl6yX+vlhhpaaVzuY4qnZfPpZLkgDDsqPdnMHxCHp
-         k1Zw==
-X-Gm-Message-State: APjAAAVYlc0Az1nhFTbBDmgkx3hEyM/JgNnKFPmKNLm/PHyHgSSZA9GG
-        Z7b9JoUH2Ul7rtKRlayksUo=
-X-Google-Smtp-Source: APXvYqyNaeJOWDXCKLsONO3xoo0uW5BSwfxZeeqpUW3oEVsmOBAMneaKESWF6GWZ/kvgM7+JkXbHYQ==
-X-Received: by 2002:a17:902:290b:: with SMTP id g11mr121725061plb.26.1561020254488;
-        Thu, 20 Jun 2019 01:44:14 -0700 (PDT)
-Received: from google.com ([2401:fa00:d:0:98f1:8b3d:1f37:3e8])
-        by smtp.gmail.com with ESMTPSA id q144sm28994756pfc.103.2019.06.20.01.44.08
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 01:44:12 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 17:44:06 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 1/5] mm: introduce MADV_COLD
-Message-ID: <20190620084406.GE105727@google.com>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-2-minchan@kernel.org>
- <20190619125611.GO2968@dhcp22.suse.cz>
- <20190620000650.GB52978@google.com>
- <20190620070854.GC12083@dhcp22.suse.cz>
+        Thu, 20 Jun 2019 04:45:15 -0400
+Received: from mga05.intel.com ([192.55.52.43]:28960 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725875AbfFTIpO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 04:45:14 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 01:45:14 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,396,1557212400"; 
+   d="scan'208";a="170814221"
+Received: from pdaleax-wtg.ger.corp.intel.com (HELO kekkonen.fi.intel.com) ([10.252.61.225])
+  by orsmga002.jf.intel.com with ESMTP; 20 Jun 2019 01:45:03 -0700
+Received: by kekkonen.fi.intel.com (Postfix, from userid 1000)
+        id 5B51021D88; Thu, 20 Jun 2019 11:44:58 +0300 (EEST)
+Date:   Thu, 20 Jun 2019 11:44:58 +0300
+From:   Sakari Ailus <sakari.ailus@linux.intel.com>
+To:     Tomasz Figa <tfiga@chromium.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Hirokazu Honda <hiroh@chromium.org>
+Subject: Re: [PATCH] media: Clarify the meaning of file descriptors in
+ VIDIOC_DQBUF
+Message-ID: <20190620084457.irkmv4wy7pbvlj5r@kekkonen.localdomain>
+References: <20190612093648.47412-1-tfiga@chromium.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620070854.GC12083@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612093648.47412-1-tfiga@chromium.org>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 09:08:54AM +0200, Michal Hocko wrote:
-> On Thu 20-06-19 09:06:51, Minchan Kim wrote:
-> > On Wed, Jun 19, 2019 at 02:56:12PM +0200, Michal Hocko wrote:
-> [...]
-> > > Why cannot we reuse a large part of that code and differ essentially on
-> > > the reclaim target check and action? Have you considered to consolidate
-> > > the code to share as much as possible? Maybe that is easier said than
-> > > done because the devil is always in details...
-> > 
-> > Yub, it was not pretty when I tried. Please see last patch in this
-> > patchset.
+On Wed, Jun 12, 2019 at 06:36:48PM +0900, Tomasz Figa wrote:
+> When the application calls VIDIOC_DQBUF with the DMABUF memory type, the
+> v4l2_buffer structure (or v4l2_plane structures) are filled with DMA-buf
+> file descriptors. However, the current documentation does not explain
+> whether those are new file descriptors referring to the same DMA-bufs or
+> just the same integers as passed to VIDIOC_QBUF back in time. Clarify
+> the documentation that it's the latter.
 > 
-> That is bad because this code is quite subtle - especially the THP part
-> of it. I will be staring at the code some more. Maybe some
-> simplification pops out.
+> Signed-off-by: Tomasz Figa <tfiga@chromium.org>
 
-Yeah, I couldn't come up with better idea. Actually, I wanted to be
-left. More suggestion to make simple/readable would be great.
+Acked-by: Sakari Ailus <sakari.ailus@linux.intel.com>
+
+-- 
+Sakari Ailus
+sakari.ailus@linux.intel.com
