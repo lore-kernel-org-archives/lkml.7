@@ -2,101 +2,108 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD444C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A07E9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900622080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:09:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I8c29Wq+"
+	by mail.kernel.org (Postfix) with ESMTP id 6D6022082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:10:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561032630;
+	bh=gypvzOuIyGej/WLKSteaEHH1Cc+uthJD0zqXxf7LLJk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=l3WcB7CA0aINd7wVJaZbZTxqv1fyr2qw0CuFmuksOud5lA8XZtrVxqXu2j3Lmew0E
+	 WUr5TUPSlgmjjul2dn1YGidHgYXFjTDnvo4CKDqXgWpaCCijZlCdh5fOd01q57Y8ZQ
+	 xGrnRGD2H7ScmWmxHYSX20TZ7Wrwz6VGal6JjZ6c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731775AbfFTMJM (ORCPT
+        id S1731796AbfFTMK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:09:12 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:35478 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbfFTMJL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:09:11 -0400
-Received: by mail-lf1-f65.google.com with SMTP id a25so2283404lfg.2
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:09:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=2cr8py9sRALmCyOvLdxMhLF/8u2ioUHp2N0xgg03ILg=;
-        b=I8c29Wq+C4MPvFbYDrcrRHMeE6tYAcQivD+oMR0wnbMHTUqSD4VbEF50VTTVm/yBa5
-         1zgLzjix5NVJ0VreFbPm2U6T0FoSgGRIZPyTDrE6Qf9lGHvyPtySzXLeof3/yiK63bgj
-         cudFmcL+IH8Q4ClC+H+p6mnCFVAb+c61rCFgRcVmRNdAgibMT8PzPGmjkiks0WWjn1fs
-         6ExjOeHTwxycNbsTe8sRVHgjQmuUy/jAKOLh10T1JBxQaY5FruTGiQ/M8eo8oHSn4AJE
-         iIll65VCyi6P31ojvoTiMdVTpvX2DFYUbMeACcYXQKDdxNXnhu6ucpetnFC3609im66b
-         sFGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2cr8py9sRALmCyOvLdxMhLF/8u2ioUHp2N0xgg03ILg=;
-        b=VStN6JNekFekHoG9je4mmzH9RoSyn9qyjDhJtNnSa72IZ+OEdih27+00WmdPs7+412
-         pWaiU73e0b8x88QpCL82PW0PlgWDc3S+x4hbUAVcd5k16ygn15fKvn2m5WhyTrB7kHT4
-         naigiXAnztJ5CbNhJGMaOknDiWH+aRl/+WvGJtddnrlRze/NW/KVsCr/ZOu6E91+go2n
-         gGt8yArU7E4EBHzwentv0ins99p+/NqnyafYn8TyWANCW8q8Cj/NMPaK64WCB9U6HHem
-         RB4e4mWkTBrEoDT0jH+lIOn4lsXeFrQ1Ns0hKbnC3/jFZfMi1C7NeFkJCgdnsvHKDnFn
-         2DCQ==
-X-Gm-Message-State: APjAAAWDjMvGNQqtVqaXzCcgyevbsFwemCni/mOlrsRDNhpX0k/MslgU
-        jkLBHckHUwJlqj+kdu0iL+hP9qVn
-X-Google-Smtp-Source: APXvYqxZK+7MC2bg3h+ndXVpb5dFmtIvnQ5+bHunPpqNpPbznQI3ixdBM3HjdjMQ8ZCKrfjy2oBpVA==
-X-Received: by 2002:a19:e619:: with SMTP id d25mr21352598lfh.34.1561032549814;
-        Thu, 20 Jun 2019 05:09:09 -0700 (PDT)
-Received: from mail-personal.localdomain (v902-804.aalto.fi. [130.233.11.55])
-        by smtp.gmail.com with ESMTPSA id p29sm3508081ljp.87.2019.06.20.05.09.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 05:09:08 -0700 (PDT)
-Received: by mail-personal.localdomain (Postfix, from userid 1000)
-        id DAC9B602E7; Thu, 20 Jun 2019 15:09:04 +0300 (EEST)
-Date:   Thu, 20 Jun 2019 15:09:04 +0300
-From:   Ferdinand Blomqvist <ferdinand.blomqvist@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 7/7] rslib: Fix remaining decoder flaws
-Message-ID: <20190620120904.GB1116@mail-personal>
-References: <20190330182947.8823-1-ferdinand.blomqvist@gmail.com>
- <20190330182947.8823-8-ferdinand.blomqvist@gmail.com>
- <alpine.DEB.2.21.1906172249580.1963@nanos.tec.linutronix.de>
+        Thu, 20 Jun 2019 08:10:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39586 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730596AbfFTMK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:10:28 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0906E2080C;
+        Thu, 20 Jun 2019 12:10:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561032627;
+        bh=gypvzOuIyGej/WLKSteaEHH1Cc+uthJD0zqXxf7LLJk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wKQFXj/Kk1YUVHNUjmFWLP/OYg2Z4cD55J+GL9FwDW4/YVfOMZ+Bm5ajPWetKYjUg
+         UJ/J9WsCFYnWCc3j+g9/EEOocWMisPtXsvaQ6k8HlsrRbJy8sLYuAFVlad7O2gxuHA
+         dOHkFYG1pY93D5BhBFAESLH8hCeT6OGJpSFWDyEc=
+Date:   Thu, 20 Jun 2019 14:10:25 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Yinbo Zhu <yinbo.zhu@nxp.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>, xiaobo.xie@nxp.com,
+        jiafei.pan@nxp.com,
+        Ramneek Mehresh <ramneek.mehresh@freescale.com>,
+        Nikhil Badola <nikhil.badola@freescale.com>,
+        Ran Wang <ran.wang_1@nxp.com>, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v7 4/5] usb: host: Stops USB controller init if PLL fails
+ to lock
+Message-ID: <20190620121025.GB19295@kroah.com>
+References: <20190614085433.22344-1-yinbo.zhu@nxp.com>
+ <20190614085433.22344-4-yinbo.zhu@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1906172249580.1963@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190614085433.22344-4-yinbo.zhu@nxp.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Fri, Jun 14, 2019 at 04:54:32PM +0800, Yinbo Zhu wrote:
+> From: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+> 
+> USB erratum-A006918 workaround tries to start internal PHY inside
+> uboot (when PLL fails to lock). However, if the workaround also
+> fails, then USB initialization is also stopped inside Linux.
+> Erratum-A006918 workaround failure creates "fsl,erratum_a006918"
+> node in device-tree. Presence of this node in device-tree is
+> used to stop USB controller initialization in Linux
+> 
+> Signed-off-by: Ramneek Mehresh <ramneek.mehresh@freescale.com>
+> Signed-off-by: Suresh Gupta <suresh.gupta@freescale.com>
+> Signed-off-by: Yinbo Zhu <yinbo.zhu@nxp.com>
+> ---
+> Change in v7:
+> 		keep v5 version "fall through"
+> 
+>  drivers/usb/host/ehci-fsl.c      | 9 +++++++++
+>  drivers/usb/host/fsl-mph-dr-of.c | 3 ++-
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/host/ehci-fsl.c b/drivers/usb/host/ehci-fsl.c
+> index 8f3bf3efb038..ef3dfd33a62e 100644
+> --- a/drivers/usb/host/ehci-fsl.c
+> +++ b/drivers/usb/host/ehci-fsl.c
+> @@ -236,6 +236,15 @@ static int ehci_fsl_setup_phy(struct usb_hcd *hcd,
+>  		portsc |= PORT_PTS_PTW;
+>  		/* fall through */
+>  	case FSL_USB2_PHY_UTMI:
+> +		/* Presence of this node "has_fsl_erratum_a006918"
+> +		 * in device-tree is used to stop USB controller
+> +		 * initialization in Linux
+> +		 */
+> +		if (pdata->has_fsl_erratum_a006918) {
+> +			dev_warn(dev, "USB PHY clock invalid\n");
+> +			return -EINVAL;
+> +		}
+> +
 
-On 2019-06-17 23:00:27, Thomas Gleixner wrote:
->On Sat, 30 Mar 2019, Ferdinand Blomqvist wrote:
->> The decoder is flawed in the following ways:
->
->...
->
->Aside of the fact that I had to wrap my brain around this crime I committed
->more than a decade ago, all of this was really a pleasure to review.
->
->Thanks a lot for putting that effort in! I'm looking forward to V2 of that.
->
->Thanks,
->
->	tglx
+You need a /* fall through */ comment here, right?
 
-Thanks for the review and comments! Will submit V2 shortly. Hopefully it 
-addresses all concerns and suggestions in a satisfactory way.
+thanks,
 
-
-Best,
-Ferdinand
+greg k-h
