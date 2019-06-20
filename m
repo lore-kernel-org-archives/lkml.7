@@ -2,52 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF721C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC77CC48BE3
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B603121479
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2DF821479
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053912;
-	bh=V6tQn4HFIztHAZOLl7a11pHzVOa2UdR1sZyTUKsSDcU=;
+	s=default; t=1561053917;
+	bh=whJeBfMiylm/R46bOyt8WzjPdV07Kok0cuXnykji+30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Zc5qrjeWqgp90Q5dYi5qVq3E0e4MFRWzmaCyUHFCqIvp6DY4nBTnWfDZ5OPVyhpCy
-	 ozgOVwZdnW2qSGYvo8kiw35f6JTGeuQtbrxiB7Dmcld51vZnT6tHcUlVgsmRwfe1nw
-	 Ageli38OF58DIWfxAEKuxyT3kL3xFw3b8SgJiwVk=
+	b=tE8vn/Ogj1weXCZeKCdWee8z+55asgT/7W76PvZpsA2O1DlffRXoHjXcEIObyD4Bz
+	 Sq3tkg5KsRDMjO0ke3XKN4eHOEPDAIq4DLU0hhIAG05CWdWh1dwdOWBHLPniIbqDxh
+	 54L814O7lV5zwqk2sxy7iLDq9e0ksovD8pWPo1aY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727997AbfFTSFL (ORCPT
+        id S1728008AbfFTSFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:05:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58216 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:05:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbfFTSFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:07 -0400
+        id S1727643AbfFTSFN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED57921479;
-        Thu, 20 Jun 2019 18:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B8E4C2089C;
+        Thu, 20 Jun 2019 18:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053906;
-        bh=V6tQn4HFIztHAZOLl7a11pHzVOa2UdR1sZyTUKsSDcU=;
+        s=default; t=1561053912;
+        bh=whJeBfMiylm/R46bOyt8WzjPdV07Kok0cuXnykji+30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=M5qXja69WDH4EdtASbXUFW9975RYUAgcvrt/ZP5EvdF6UW/Ky06hgQawNtVtjc7gM
-         haGz3rdKHC33qVvD+ggHsw7mIzHvC7+XUJchuuKze9SeDbh/C3S9EQpGtPN7kp58G2
-         ijGKMc3zXXH/YgBg7Eih8eRKUh4xOKyufgN1oUNo=
+        b=WkHjzBJ9h0Jobit26Ra//EqaovQMqr3FqWMnYRoLA6y5kn8ecjnFe2+SiKydZtzVX
+         T7swg0CojnocaRXrTFsajBxSQ+kO6NvS6vxysZo8F89/Wbz/sYMKNekeiknHD1I3xB
+         bSLaX7x7B0octsjdkmGERpgtT5KUdWyzMdL3r8rM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.9 068/117] ASoC: fsl_asrc: Fix the issue about unsupported rate
-Date:   Thu, 20 Jun 2019 19:56:42 +0200
-Message-Id: <20190620174356.814269492@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.9 070/117] ALSA: seq: Protect in-kernel ioctl calls with mutex
+Date:   Thu, 20 Jun 2019 19:56:44 +0200
+Message-Id: <20190620174356.877190673@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,40 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+[ Upstream commit feb689025fbb6f0aa6297d3ddf97de945ea4ad32 ]
 
-commit b06c58c2a1eed571ea2a6640fdb85b7b00196b1e upstream.
+ALSA OSS sequencer calls the ioctl function indirectly via
+snd_seq_kernel_client_ctl().  While we already applied the protection
+against races between the normal ioctls and writes via the client's
+ioctl_mutex, this code path was left untouched.  And this seems to be
+the cause of still remaining some rare UAF as spontaneously triggered
+by syzkaller.
 
-When the output sample rate is [8kHz, 30kHz], the limitation
-of the supported ratio range is [1/24, 8]. In the driver
-we use (8kHz, 30kHz) instead of [8kHz, 30kHz].
-So this patch is to fix this issue and the potential rounding
-issue with divider.
+For the sake of robustness, wrap the ioctl_mutex also for the call via
+snd_seq_kernel_client_ctl(), too.
 
-Fixes: fff6e03c7b65 ("ASoC: fsl_asrc: add support for 8-30kHz
-output sample rate")
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: syzbot+e4c8abb920efa77bace9@syzkaller.appspotmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/soc/fsl/fsl_asrc.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ sound/core/seq/seq_clientmgr.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
---- a/sound/soc/fsl/fsl_asrc.c
-+++ b/sound/soc/fsl/fsl_asrc.c
-@@ -286,8 +286,8 @@ static int fsl_asrc_config_pair(struct f
- 		return -EINVAL;
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 09491b27092e..3b1b2e9fb33e 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -2354,14 +2354,19 @@ int snd_seq_kernel_client_ctl(int clientid, unsigned int cmd, void *arg)
+ {
+ 	const struct ioctl_handler *handler;
+ 	struct snd_seq_client *client;
++	int err;
+ 
+ 	client = clientptr(clientid);
+ 	if (client == NULL)
+ 		return -ENXIO;
+ 
+ 	for (handler = ioctl_handlers; handler->cmd > 0; ++handler) {
+-		if (handler->cmd == cmd)
+-			return handler->func(client, arg);
++		if (handler->cmd == cmd) {
++			mutex_lock(&client->ioctl_mutex);
++			err = handler->func(client, arg);
++			mutex_unlock(&client->ioctl_mutex);
++			return err;
++		}
  	}
  
--	if ((outrate > 8000 && outrate < 30000) &&
--	    (outrate/inrate > 24 || inrate/outrate > 8)) {
-+	if ((outrate >= 8000 && outrate <= 30000) &&
-+	    (outrate > 24 * inrate || inrate > 8 * outrate)) {
- 		pair_err("exceed supported ratio range [1/24, 8] for \
- 				inrate/outrate: %d/%d\n", inrate, outrate);
- 		return -EINVAL;
+ 	pr_debug("ALSA: seq unknown ioctl() 0x%x (type='%c', number=0x%02x)\n",
+-- 
+2.20.1
+
 
 
