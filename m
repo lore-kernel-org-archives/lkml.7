@@ -2,156 +2,105 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ED056C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57DB1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:10:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEC372075E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:05:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FMk4shXH"
+	by mail.kernel.org (Postfix) with ESMTP id 2D20C20679
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:10:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561039806;
+	bh=In4iPzMtA12SlLlIsTZg3dyDk6G1l8NLDcEXnix/BLk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=dG6FdXkxEaZfwQgiAjrgytqFZdyUc3BvlcmufefmRxErIygpydyQNf7H1VsXOusA6
+	 9u3DTdwKmW+VAdZc6Mj2rX58PyfLIiEBGbZJchsPgMKTthfuyxUfShIh8aNn1mVOLb
+	 xvvnBbqREaFoyff1oKhT7XmHKRZI/lhaFgmUaOrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731987AbfFTOF3 (ORCPT
+        id S1731767AbfFTOKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:05:29 -0400
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:11708 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726562AbfFTOF2 (ORCPT
+        Thu, 20 Jun 2019 10:10:04 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33809 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726562AbfFTOKE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:05:28 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5d0b92a50001>; Thu, 20 Jun 2019 07:05:25 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 20 Jun 2019 07:05:26 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 20 Jun 2019 07:05:26 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 20 Jun
- 2019 14:05:24 +0000
-Subject: Re: [PATCH net-next 3/3] net: stmmac: Convert to phylink and remove
- phylib logic
-From:   Jon Hunter <jonathanh@nvidia.com>
-To:     Jose Abreu <Jose.Abreu@synopsys.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>,
-        linux-tegra <linux-tegra@vger.kernel.org>
-References: <cover.1560266175.git.joabreu@synopsys.com>
- <6226d6a0de5929ed07d64b20472c52a86e71383d.1560266175.git.joabreu@synopsys.com>
- <d9ffce3d-4827-fa4a-89e8-0492c4bc1848@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8D6E@DE02WEMBXB.internal.synopsys.com>
- <26cfaeff-a310-3b79-5b57-fd9c93bd8929@nvidia.com>
- <78EB27739596EE489E55E81C33FEC33A0B9C8DD9@DE02WEMBXB.internal.synopsys.com>
- <b66c7578-172f-4443-f4c3-411525e28738@nvidia.com>
- <d96f8bea-f7ef-82ae-01ba-9c97aec0ee38@nvidia.com>
- <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
-Message-ID: <7f0f2ed0-f47c-4670-d169-25f0413c1fd3@nvidia.com>
-Date:   Thu, 20 Jun 2019 15:05:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        Thu, 20 Jun 2019 10:10:04 -0400
+Received: by mail-pf1-f196.google.com with SMTP id c85so1763472pfc.1;
+        Thu, 20 Jun 2019 07:10:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lCea24nGIZCu7ydKVsC+l/7geTYb5i00s0rd6yWS+Lo=;
+        b=IWe8EDOoK2wLDjqbj0Q5/jydeaDsHVyB9wekftRSAfWJT9rXjLQbWXWfgQVqkmTAON
+         Pkh5w12/Qbk8ywybCXAes9aRTnj0/CVDTJlOHgtFSaObrK8Tg+iWLnl+xP6E6P70ZyU0
+         NUvXvIJkgxm1DNoPCrYGWXkyzEzgeNWmuUpLXvwJBOPSNAtsKdp4Cyv4ujTrWU+ns7ag
+         +FvvsUK/Fx3fOzQQ0TGFCKqtZm8XxmiYQ1AFK5ZhnyOMtdBaTECVvndIgna8S0cKxUZh
+         DOnco2bN23vOj+4CqKWqGno7Ka9gU24ZMgOxJKyap/SHvXiRoR2ydSewJmFHRYEe2kTW
+         4nyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lCea24nGIZCu7ydKVsC+l/7geTYb5i00s0rd6yWS+Lo=;
+        b=ZiA+kS+eCTd8SUnE4iZsghJtRWF0TqE82pNwMO6tzTFz41C+yErzJ4veFRJNuWgvJr
+         P7kjpGL5gImh/ktfKG3zo+GD28PAHh7Ej1UnWDN7MIehOAtriUheIf6huqyD+osB581j
+         kN4ECfL1wTJpl1LdEejnmZqiLnJtBojwOUE2rf8mL855xi6zCTmbIU8f7GKaGkahd0Mg
+         9o0MFX/qTR8YmXUM9IfzmfwhdlQ+Ri3dlza9o4JYB4uNHn4uWDV6JV4SwzMg2ynzVn0m
+         TkwVrLipXfQphAjZyNdnWGCXxl9alyoQCsCQyPD5uo32kAfNPC007T089sdpu2uxO154
+         mcrA==
+X-Gm-Message-State: APjAAAXUpspHkdJs/O6UCiFxGMYm8vC3IU3KFdgw6jak5mtnW+CVJZeu
+        XfTBGveGrB6G5lhnyaw3TmCQqdy6mJE=
+X-Google-Smtp-Source: APXvYqxNob875mJkUZ2u3rUWNFdkn3jBRyn2WGNqnLD+JtO5vQY5bk0YhhB3Uo3P1Dr8kFVmA+R10Q==
+X-Received: by 2002:a17:90a:8a15:: with SMTP id w21mr3334565pjn.134.1561039803189;
+        Thu, 20 Jun 2019 07:10:03 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:a5e4])
+        by smtp.gmail.com with ESMTPSA id d132sm23393702pfd.61.2019.06.20.07.10.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 07:10:02 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 07:10:00 -0700
+From:   Tejun Heo <tj@kernel.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Oliver Neukum <oneukum@suse.com>,
+        USB list <linux-usb@vger.kernel.org>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC] deadlock with flush_work() in UAS
+Message-ID: <20190620140937.GJ657710@devbig004.ftw2.facebook.com>
+References: <1560871774.3184.16.camel@suse.com>
+ <Pine.LNX.4.44L0.1906181156370.1659-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <6f36b6b6-8209-ed98-e7e1-3dac0a92f6cd@nvidia.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1561039525; bh=kk0iROuiBw86L8JMDa5UasFqeu4eaEGk4Y4zy76zYa0=;
-        h=X-PGP-Universal:Subject:From:To:CC:References:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FMk4shXHyUbeAy1dildJ33Lcn3gZ2iR/fQjUlgiuSdiiES3WHLIV9lz409RfTMOJ1
-         GtXnMNJB5cYBuyP9R24/pinO1sWsYrELeJiRFD0cQxHHguiE6fbLbuLES3oix3t92n
-         F4eyUg9mbIyrLWFVdpBKvOOTqtffCQ7fwfcq57AhvVP7WxKmCppZvbifhTO7yBd2Tt
-         8YPZWiSDbZ3AkQkelKGq4TuYmv+wfI4o/Gy9fktBMcI+cW4yt0Rc3Euh+2K5XRiKEF
-         J87DSIyAM6fZQlDOkJA8xeiEqL2R+/JvuSKyj6BornoIZ3E9T5bJz5veXRm/lUVsfB
-         NVigdYX6UlNyQ==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1906181156370.1659-100000@iolanthe.rowland.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
 
-On 18/06/2019 20:44, Jon Hunter wrote:
+On Tue, Jun 18, 2019 at 11:59:39AM -0400, Alan Stern wrote:
+> > > Even if you disagree, perhaps we should have a global workqueue with a
+> > > permanently set noio flag.  It could be shared among multiple drivers
+> > > such as uas and the hub driver for purposes like this.  (In fact, the 
+> > > hub driver already has its own dedicated workqueue.)
+> > 
+> > That is a good idea. But does UAS need WQ_MEM_RECLAIM?
 > 
-> On 18/06/2019 16:20, Jon Hunter wrote:
->>
->> On 18/06/2019 11:18, Jon Hunter wrote:
->>>
->>> On 18/06/2019 10:46, Jose Abreu wrote:
->>>> From: Jon Hunter <jonathanh@nvidia.com>
->>>>
->>>>> I am not certain but I don't believe so. We are using a static IP address
->>>>> and mounting the root file-system via NFS when we see this ...
->>>>
->>>> Can you please add a call to napi_synchronize() before every 
->>>> napi_disable() calls, like this:
->>>>
->>>> if (queue < rx_queues_cnt) {
->>>> 	napi_synchronize(&ch->rx_napi);
->>>> 	napi_disable(&ch->rx_napi);
->>>> }
->>>>
->>>> if (queue < tx_queues_cnt) {
->>>> 	napi_synchronize(&ch->tx_napi);
->>>> 	napi_disable(&ch->tx_napi);
->>>> }
->>>>
->>>> [ I can send you a patch if you prefer ]
->>>
->>> Yes I can try this and for completeness you mean ...
->>>
->>> diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> index 4ca46289a742..d4a12cb64d8e 100644
->>> --- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> +++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
->>> @@ -146,10 +146,15 @@ static void stmmac_disable_all_queues(struct stmmac_priv *priv)
->>>         for (queue = 0; queue < maxq; queue++) {
->>>                 struct stmmac_channel *ch = &priv->channel[queue];
->>>  
->>> -               if (queue < rx_queues_cnt)
->>> +               if (queue < rx_queues_cnt) {
->>> +                       napi_synchronize(&ch->rx_napi);
->>>                         napi_disable(&ch->rx_napi);
->>> -               if (queue < tx_queues_cnt)
->>> +               }
->>> +
->>> +               if (queue < tx_queues_cnt) {
->>> +                       napi_synchronize(&ch->tx_napi);
->>>                         napi_disable(&ch->tx_napi);
->>> +               }
->>>         }
->>>  }
->>
->> So good news and bad news ...
->>
->> The good news is that the above change does fix the initial crash
->> I am seeing. However, even with this change applied on top of
->> -next, it is still dying somewhere else and so there appears to
->> be a second issue. 
-> 
-> Further testing has shown that actually this does NOT resolve the issue
-> and I am still seeing the crash. Sorry for the false-positive.
+> These are good questions, and I don't have the answers.  Perhaps Tejun 
+> or someone else on LKML can help.
 
-Any further feedback? I am still seeing this issue on today's -next.
+Any device which may host a filesystem or swap needs to use
+WQ_MEM_RECLAIM workqueues on anything which may be used during normal
+IOs including e.g. error handling which may be invoked.  One
+WQ_MEM_RECLAIM workqueue guarantees one level of concurrency for all
+its tasks regardless of memory situation, so as long as there's no
+interdependence between work items, the workqueue can be shared.
 
-Thanks
-Jon
+Thanks.
 
 -- 
-nvpublic
+tejun
