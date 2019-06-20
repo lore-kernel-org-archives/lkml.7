@@ -2,52 +2,50 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA501C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15C9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A32BF21530
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 930F72089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:05:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053950;
-	bh=GEx5pq0zga8EQ/2xGAHSBQA9HsHPaefSc6zn/tC0Bn8=;
+	s=default; t=1561053953;
+	bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gm9bJBKwQ1GzuDvkoY8WNFLZ54EqO60pKMZvekH/MSQVVi4QVIuinpAys/GeQnZct
-	 cg+CZQrtOeRIxWPDW9gl+dwthHr2aeYORhUpRTE5+MKdi+fgjc4thNSmgnkQBVOroI
-	 hA3ZAQbj0F8Ilr8ZTtK3QYV0JNCyvMRwi97PR6pA=
+	b=TB7cs7fOZ2PxkF7rasLj5MWU+qZ9Jgim1xfuNgaE4q9E09J/IE5qdW+iAal16h68M
+	 To5EP6mtmwmJYHuWbCgiTOT06chncf9+jT29n/ygSDrMsE4ZmJCytQo0Ic5Cqx+lka
+	 D1lwAcLbGcV1Sac2/QS2euYQVr9jy4I2UxURp+AE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726571AbfFTSFs (ORCPT
+        id S1727812AbfFTSFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:05:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59364 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:05:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726200AbfFTSFo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:05:44 -0400
+        id S1727485AbfFTSFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:05:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D878F2089C;
-        Thu, 20 Jun 2019 18:05:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 34FCA2089C;
+        Thu, 20 Jun 2019 18:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053943;
-        bh=GEx5pq0zga8EQ/2xGAHSBQA9HsHPaefSc6zn/tC0Bn8=;
+        s=default; t=1561053948;
+        bh=9PkkKS4eK3cHYIwtOop9pQXBjR3OgNjWLKjzMomaHd4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GYtOxwEqDB7gp/rWgjkPQr2uFt1uuWxHk2amXQXDvdLYs4IpAGHj8Yj1QxJ+3D+yU
-         v96P67zjWc8gJSwMlcHnhVd4t0BfBVWon2Y/tT8BI9DyUTU70FO/WOLje6ZrFQ++3Y
-         lnJ3BkAEqHrGQtPHb39UCTAOyNjeNIpjqykabdLw=
+        b=iPcjqoYm9iuxMXidJKMHDreN8nqUdTep+5r3vKNvGcu2EsoBoUgSjkuy2YkvjDay+
+         BWwtfa/8yuBENLKAJEWAC+oW5dfuo/LhEnFcJGYe3I0c5arhz9vzhGieJXyACOyV5v
+         fqCDY69FwFnjjbMp/mU5bHz7zdkzL6yWQNTltDJA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 042/117] PCI: rpadlpar: Fix leaked device_node references in add/remove paths
-Date:   Thu, 20 Jun 2019 19:56:16 +0200
-Message-Id: <20190620174354.508606171@linuxfoundation.org>
+        stable@vger.kernel.org, Marco Zatta <marco@zatta.me>
+Subject: [PATCH 4.9 084/117] USB: Fix chipmunk-like voice when using Logitech C270 for recording audio.
+Date:   Thu, 20 Jun 2019 19:56:58 +0200
+Message-Id: <20190620174357.272434119@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,63 +58,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit fb26228bfc4ce3951544848555c0278e2832e618 ]
+From: Marco Zatta <marco@zatta.me>
 
-The find_dlpar_node() helper returns a device node with its reference
-incremented.  Both the add and remove paths use this helper for find the
-appropriate node, but fail to release the reference when done.
+commit bd21f0222adab64974b7d1b4b8c7ce6b23e9ea4d upstream.
 
-Annotate the find_dlpar_node() helper with a comment about the incremented
-reference count and call of_node_put() on the obtained device_node in the
-add and remove paths.  Also, fixup a reference leak in the find_vio_slot()
-helper where we fail to call of_node_put() on the vdevice node after we
-iterate over its children.
+This patch fixes the chipmunk-like voice that manifets randomly when
+using the integrated mic of the Logitech Webcam HD C270.
 
-Signed-off-by: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+The issue was solved initially for this device by commit 2394d67e446b
+("USB: add RESET_RESUME for webcams shown to be quirky") but it was then
+reintroduced by e387ef5c47dd ("usb: Add USB_QUIRK_RESET_RESUME for all
+Logitech UVC webcams"). This patch is to have the fix back.
+
+Signed-off-by: Marco Zatta <marco@zatta.me>
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/pci/hotplug/rpadlpar_core.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/core/quirks.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/pci/hotplug/rpadlpar_core.c b/drivers/pci/hotplug/rpadlpar_core.c
-index c614ff7c3bc3..d3562df64456 100644
---- a/drivers/pci/hotplug/rpadlpar_core.c
-+++ b/drivers/pci/hotplug/rpadlpar_core.c
-@@ -55,6 +55,7 @@ static struct device_node *find_vio_slot_node(char *drc_name)
- 		if ((rc == 0) && (!strcmp(drc_name, name)))
- 			break;
- 	}
-+	of_node_put(parent);
+--- a/drivers/usb/core/quirks.c
++++ b/drivers/usb/core/quirks.c
+@@ -70,6 +70,9 @@ static const struct usb_device_id usb_qu
+ 	/* Cherry Stream G230 2.0 (G85-231) and 3.0 (G85-232) */
+ 	{ USB_DEVICE(0x046a, 0x0023), .driver_info = USB_QUIRK_RESET_RESUME },
  
- 	return dn;
- }
-@@ -78,6 +79,7 @@ static struct device_node *find_php_slot_pci_node(char *drc_name,
- 	return np;
- }
- 
-+/* Returns a device_node with its reference count incremented */
- static struct device_node *find_dlpar_node(char *drc_name, int *node_type)
- {
- 	struct device_node *dn;
-@@ -313,6 +315,7 @@ int dlpar_add_slot(char *drc_name)
- 			rc = dlpar_add_phb(drc_name, dn);
- 			break;
- 	}
-+	of_node_put(dn);
- 
- 	printk(KERN_INFO "%s: slot %s added\n", DLPAR_MODULE_NAME, drc_name);
- exit:
-@@ -446,6 +449,7 @@ int dlpar_remove_slot(char *drc_name)
- 			rc = dlpar_remove_pci_slot(drc_name, dn);
- 			break;
- 	}
-+	of_node_put(dn);
- 	vm_unmap_aliases();
- 
- 	printk(KERN_INFO "%s: slot %s removed\n", DLPAR_MODULE_NAME, drc_name);
--- 
-2.20.1
-
++	/* Logitech HD Webcam C270 */
++	{ USB_DEVICE(0x046d, 0x0825), .driver_info = USB_QUIRK_RESET_RESUME },
++
+ 	/* Logitech HD Pro Webcams C920, C920-C, C925e and C930e */
+ 	{ USB_DEVICE(0x046d, 0x082d), .driver_info = USB_QUIRK_DELAY_INIT },
+ 	{ USB_DEVICE(0x046d, 0x0841), .driver_info = USB_QUIRK_DELAY_INIT },
 
 
