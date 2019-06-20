@@ -2,169 +2,140 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FF4DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:00:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B263AC48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3FA32070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AEB2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:00:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731981AbfFTOAE (ORCPT
+        id S1732019AbfFTOAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:00:04 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:50484 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726428AbfFTOAE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:00:04 -0400
-X-UUID: bfe4c9f7cf214c08bcc7b371028f5cca-20190620
-X-UUID: bfe4c9f7cf214c08bcc7b371028f5cca-20190620
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <yong.wu@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 2041038722; Thu, 20 Jun 2019 21:59:55 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS31N1.mediatek.inc
- (172.27.4.69) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Thu, 20 Jun
- 2019 21:59:53 +0800
-Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
- (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Thu, 20 Jun 2019 21:59:52 +0800
-Message-ID: <1561039192.4021.23.camel@mhfsdcap03>
-Subject: Re: [PATCH v7 19/21] iommu/mediatek: Rename enable_4GB to
- dram_is_4gb
-From:   Yong Wu <yong.wu@mediatek.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Joerg Roedel <joro@8bytes.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Rob Herring" <robh+dt@kernel.org>,
-        Evan Green <evgreen@chromium.org>,
-        "Tomasz Figa" <tfiga@google.com>,
-        Will Deacon <will.deacon@arm.com>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <iommu@lists.linux-foundation.org>, <yingjoe.chen@mediatek.com>,
-        <youlin.pei@mediatek.com>, Nicolas Boichat <drinkcat@chromium.org>,
-        <anan.sun@mediatek.com>, Matthias Kaehlcke <mka@chromium.org>
-Date:   Thu, 20 Jun 2019 21:59:52 +0800
-In-Reply-To: <9bf13c22-0c73-2950-2204-23d577976b03@gmail.com>
-References: <1560169080-27134-1-git-send-email-yong.wu@mediatek.com>
-         <1560169080-27134-20-git-send-email-yong.wu@mediatek.com>
-         <9bf13c22-0c73-2950-2204-23d577976b03@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Thu, 20 Jun 2019 10:00:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:48630 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726802AbfFTOAb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:00:31 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 8BBB1AEF8;
+        Thu, 20 Jun 2019 14:00:28 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 1187D1E434F; Thu, 20 Jun 2019 16:00:28 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 16:00:28 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     matthew.garrett@nebula.com, yuchao0@huawei.com, tytso@mit.edu,
+        ard.biesheuvel@linaro.org, josef@toxicpanda.com, clm@fb.com,
+        adilger.kernel@dilger.ca, viro@zeniv.linux.org.uk, jack@suse.com,
+        dsterba@suse.com, jaegeuk@kernel.org, jk@ozlabs.org,
+        reiserfs-devel@vger.kernel.org, linux-efi@vger.kernel.org,
+        devel@lists.orangefs.org, linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-xfs@vger.kernel.org,
+        linux-mm@kvack.org, linux-nilfs@vger.kernel.org,
+        linux-mtd@lists.infradead.org, ocfs2-devel@oss.oracle.com,
+        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org,
+        linux-btrfs@vger.kernel.org
+Subject: Re: [PATCH 2/6] vfs: flush and wait for io when setting the
+ immutable flag via SETFLAGS
+Message-ID: <20190620140028.GH30243@quack2.suse.cz>
+References: <156022836912.3227213.13598042497272336695.stgit@magnolia>
+ <156022838496.3227213.3771632042609589318.stgit@magnolia>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <156022838496.3227213.3771632042609589318.stgit@magnolia>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-06-18 at 18:06 +0200, Matthias Brugger wrote:
+On Mon 10-06-19 21:46:25, Darrick J. Wong wrote:
+> From: Darrick J. Wong <darrick.wong@oracle.com>
 > 
-> On 10/06/2019 14:17, Yong Wu wrote:
-> > This patch only rename the variable name from enable_4GB to
-> > dram_is_4gb for readable.
+> When we're using FS_IOC_SETFLAGS to set the immutable flag on a file, we
+> need to ensure that userspace can't continue to write the file after the
+> file becomes immutable.  To make that happen, we have to flush all the
+> dirty pagecache pages to disk to ensure that we can fail a page fault on
+> a mmap'd region, wait for pending directio to complete, and hope the
+> caller locked out any new writes by holding the inode lock.
 > 
-> From my understanding this is true when available RAM > 4GB so I think the name
-> should be something like dram_bigger_4gb otherwise it may create confusion again.
+> Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Strictly, It is not "dram_bigger_4gb". actually if the dram size is over
-3GB (the first 1GB is the register space), the "4GB mode" will be
-enabled. then how about the name "dram_enable_32bit"?(the PA 32bit will
-be enabled in the 4GB mode.)
-     
-There is another option, please see the last part in [1] suggested by
-Evan, something like below:
-----
-data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
-if (!data->plat_data->has_4gb_mode)
-    data->enable_4GB = false;
-Then mtk_iommu_map would only have:
-    if (data->enable_4GB)
-         paddr |= BIT_ULL(32);
-----
+...
 
-Which one do you prefer?      
-      
-[1] https://lore.kernel.org/patchwork/patch/1028421/
+> diff --git a/fs/ext4/ioctl.c b/fs/ext4/ioctl.c
+> index 6aa1df1918f7..a05341b94d98 100644
+> --- a/fs/ext4/ioctl.c
+> +++ b/fs/ext4/ioctl.c
+> @@ -290,6 +290,9 @@ static int ext4_ioctl_setflags(struct inode *inode,
+>  	jflag = flags & EXT4_JOURNAL_DATA_FL;
+>  
+>  	err = vfs_ioc_setflags_check(inode, oldflags, flags);
+> +	if (err)
+> +		goto flags_out;
+> +	err = vfs_ioc_setflags_flush_data(inode, flags);
+>  	if (err)
+>  		goto flags_out;
+>  
 
-> 
-> Also from my point of view this patch should be done before
-> "[PATCH 06/21] iommu/io-pgtable-arm-v7s: Extend MediaTek 4GB Mode"
+...
 
-OK.
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index 8dad3c80b611..9c899c63957e 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -3548,7 +3548,41 @@ static inline struct sock *io_uring_get_socket(struct file *file)
+>  
+>  int vfs_ioc_setflags_check(struct inode *inode, int oldflags, int flags);
+>  
+> +/*
+> + * Do we need to flush the file data before changing attributes?  When we're
+> + * setting the immutable flag we must stop all directio writes and flush the
+> + * dirty pages so that we can fail the page fault on the next write attempt.
+> + */
+> +static inline bool vfs_ioc_setflags_need_flush(struct inode *inode, int flags)
+> +{
+> +	if (S_ISREG(inode->i_mode) && !IS_IMMUTABLE(inode) &&
+> +	    (flags & FS_IMMUTABLE_FL))
+> +		return true;
+> +
+> +	return false;
+> +}
+> +
+> +/*
+> + * Flush file data before changing attributes.  Caller must hold any locks
+> + * required to prevent further writes to this file until we're done setting
+> + * flags.
+> + */
+> +static inline int inode_flush_data(struct inode *inode)
+> +{
+> +	inode_dio_wait(inode);
+> +	return filemap_write_and_wait(inode->i_mapping);
+> +}
+> +
+> +/* Flush file data before changing attributes, if necessary. */
+> +static inline int vfs_ioc_setflags_flush_data(struct inode *inode, int flags)
+> +{
+> +	if (vfs_ioc_setflags_need_flush(inode, flags))
+> +		return inode_flush_data(inode);
+> +	return 0;
+> +}
+> +
 
-> 
-> Regards,
-> Matthias
-> 
-> > 
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > Reviewed-by: Evan Green <evgreen@chromium.org>
-> > ---
-> >  drivers/iommu/mtk_iommu.c | 10 +++++-----
-> >  drivers/iommu/mtk_iommu.h |  2 +-
-> >  2 files changed, 6 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> > index 86158d8..67cab2d 100644
-> > --- a/drivers/iommu/mtk_iommu.c
-> > +++ b/drivers/iommu/mtk_iommu.c
-> > @@ -382,7 +382,7 @@ static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
-> >  	int ret;
-> >  
-> >  	/* The "4GB mode" M4U physically can not use the lower remap of Dram. */
-> > -	if (data->plat_data->has_4gb_mode && data->enable_4GB)
-> > +	if (data->plat_data->has_4gb_mode && data->dram_is_4gb)
-> >  		paddr |= BIT_ULL(32);
-> >  
-> >  	spin_lock_irqsave(&dom->pgtlock, flags);
-> > @@ -554,13 +554,13 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
-> >  	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
-> >  
-> >  	if (data->plat_data->m4u_plat == M4U_MT8173)
-> > -		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
-> > +		regval = (data->protect_base >> 1) | (data->dram_is_4gb << 31);
-> >  	else
-> >  		regval = lower_32_bits(data->protect_base) |
-> >  			 upper_32_bits(data->protect_base);
-> >  	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
-> >  
-> > -	if (data->enable_4GB && data->plat_data->has_vld_pa_rng) {
-> > +	if (data->dram_is_4gb && data->plat_data->has_vld_pa_rng) {
-> >  		/*
-> >  		 * If 4GB mode is enabled, the validate PA range is from
-> >  		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
-> > @@ -611,8 +611,8 @@ static int mtk_iommu_probe(struct platform_device *pdev)
-> >  		return -ENOMEM;
-> >  	data->protect_base = ALIGN(virt_to_phys(protect), MTK_PROTECT_PA_ALIGN);
-> >  
-> > -	/* Whether the current dram is over 4GB */
-> > -	data->enable_4GB = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
-> > +	/* Whether the current dram is 4GB. */
-> > +	data->dram_is_4gb = !!(max_pfn > (BIT_ULL(32) >> PAGE_SHIFT));
-> >  
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	data->base = devm_ioremap_resource(dev, res);
-> > diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> > index 753266b..e8114b2 100644
-> > --- a/drivers/iommu/mtk_iommu.h
-> > +++ b/drivers/iommu/mtk_iommu.h
-> > @@ -65,7 +65,7 @@ struct mtk_iommu_data {
-> >  	struct mtk_iommu_domain		*m4u_dom;
-> >  	struct iommu_group		*m4u_group;
-> >  	struct mtk_smi_iommu		smi_imu;      /* SMI larb iommu info */
-> > -	bool                            enable_4GB;
-> > +	bool                            dram_is_4gb;
-> >  	bool				tlb_flush_active;
-> >  
-> >  	struct iommu_device		iommu;
-> > 
+But this is racy at least for page faults, isn't it? What protects you
+against write faults just after filemap_write_and_wait() has finished?
+So either you need to set FS_IMMUTABLE_FL before flushing data or you need
+to get more protection from the fs than just i_rwsem. In the case of ext4
+that would be i_mmap_rwsem but other filesystems don't have equivalent
+protection...
 
-
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
