@@ -2,240 +2,147 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D16AFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FEBDC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:50:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A33142082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:48:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 317BC2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:50:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TgIpoUSG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfFTUss (ORCPT
+        id S1726188AbfFTUt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:48:48 -0400
-Received: from sauhun.de ([88.99.104.3]:45474 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725958AbfFTUsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:48:47 -0400
-Received: from localhost (p5486CFDE.dip0.t-ipconnect.de [84.134.207.222])
-        by pokefinder.org (Postfix) with ESMTPSA id E04712C376D;
-        Thu, 20 Jun 2019 22:48:45 +0200 (CEST)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-i2c@vger.kernel.org
-Cc:     linux-media@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Wolfram Sang <wsa@the-dreams.de>,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: [RFC/RFT PATCH RESEND] i2c: replace i2c_new_secondary_device with an ERR_PTR variant
-Date:   Thu, 20 Jun 2019 22:48:34 +0200
-Message-Id: <20190620204834.1575-1-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
+        Thu, 20 Jun 2019 16:49:59 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:34506 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725913AbfFTUt6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 16:49:58 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 8CF4CC0D2E;
+        Thu, 20 Jun 2019 20:49:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1561063798; bh=7Xu9jiEpOkMmqNXYHnZgozFosbClrmzrakUaaJSHzMk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
+        b=TgIpoUSGN8Z29denp348YrUQ7M4JCHy6erxt3AYYah8ed0I92f4wJM01DVHFEixFG
+         jkgQqyp7TLJygOTs/cNpAXhQXuYg/aXfOb567orU1VEY6fBtSFXWP232SYyoe3vs/Z
+         m3Ld/mWukZOkHvCYEj7s1hWCSTglnb0Ay6+ImFJTlUHqjAiNdqveEZWAFyE//MZHZq
+         CDzpWIv6s45yYDzElNLuUuU6+O9Vi7KpvWaGs0f+ATMa8yaevMNcWRYNfRPEeas/+y
+         bpuNY9TTcG9GVzpIimTl21Cgf0RH45MoY748qdUcfdDbJlNnXaWNyxtH9QTjxQ0MT/
+         cVnY0L3whTHXw==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 859ABA005D;
+        Thu, 20 Jun 2019 20:49:56 +0000 (UTC)
+Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.106) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Thu, 20 Jun 2019 13:49:55 -0700
+Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.103) by
+ IN01WEHTCB.internal.synopsys.com (10.144.199.105) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 21 Jun 2019 02:19:53 +0530
+Received: from [10.10.161.66] (10.10.161.66) by
+ IN01WEHTCA.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Fri, 21 Jun 2019 02:20:06 +0530
+Subject: Re: [PATCH] ARC: ARCv2: jump label: implement jump label patching
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Alexey Brodkin <Alexey.Brodkin@synopsys.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jason Baron <jbaron@akamai.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>,
+        Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
+Newsgroups: gmane.linux.kernel.arc,gmane.linux.kernel.cross-arch,gmane.linux.kernel
+References: <20190614164049.31626-1-Eugeniy.Paltsev@synopsys.com>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252CCC3@us01wembx1.internal.synopsys.com>
+ <20190619081227.GL3419@hirez.programming.kicks-ass.net>
+ <C2D7FE5348E1B147BCA15975FBA2307501A252E40B@us01wembx1.internal.synopsys.com>
+ <20190620075224.GT3419@hirez.programming.kicks-ass.net>
+From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vgupta@synopsys.com; keydata=
+ mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
+ B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
+ lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
+ zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
+ cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
+ 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
+ nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
+ dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
+ JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
+ F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
+ dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
+ jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
+ xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
+ NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
+ HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
+ djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
+ XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
+ hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
+ d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
+ cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
+ tf3ClCidHNaGky9KcNSQ
+Message-ID: <9192bd26-5f34-dcbf-8552-2f474866a31e@synopsys.com>
+Date:   Thu, 20 Jun 2019 13:49:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190620075224.GT3419@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.10.161.66]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In the general move to have i2c_new_*_device functions which return
-ERR_PTR instead of NULL, this patch converts i2c_new_secondary_device().
+On 6/20/19 12:52 AM, Peter Zijlstra wrote:
+> 
+> With everything little endian, everything seems just fine. If you load
+> the first 2 byte at offset 0, you get the first 2 bytes of the
+> instruction.
 
-There are only few users, so this patch converts the I2C core and all
-users in one go. The function gets renamed to i2c_new_ancillary_device()
-so out-of-tree users will get a build failure to understand they need to
-adapt their error checking code.
+It has to do with the instruction encoding scheme and what part of instruction has
+the major opcode/subopcode etc. For a canonical 4 byte instruction they happen to
+be in the upper 16 bits (for some hardware efficiency reasons unknown to me). So
+when a 2 byte insn follows a 4 byte, a 4 byte fetch already tells it what the 2nd
+instruction opcode is and whether it is a 2, 4, 6 or 8 byte insn.
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
 
-Sorry for the resend. I missed to add quite some relevant ppl to cc.
+> 
+> If OTOH your arch big endian, and you were to load the first two bytes
+> at offset 0, you get the top two.
+> 
+> So this middle endian scheme, only seems to make sense if you're
+> otherwise big endian.
 
-This patch is RFC for now because:
+Insn encoding is always middl eendina - irrespective of endianness.
 
-* there is one FIXME blob which I can only remove after a missing
-  header update which I will try to get into v5.2-rc6
+> But AFAICT ARC is bi-endian and the jump-label
+> patch under condsideration is explicitly !CPU_ENDIAN_BE32 -- which
+> suggests the instruction stream is sensitive to the endian selection.
 
-* I wanted to check if media-maintainers agree to let me apply
-  this via the I2C tree?
+Nope they are not directly related. Likely the difference is when we patch the
+instruction to memory it is written as data so might need some endian swap. Not
+really rocket science. Perhaps it saves some testing effort etc.
+Also we don't seem to have any customers interested in BE these days.
 
-* maybe someone with ADV HW is willing to test this?
+> Anyway, I was just 'surprised' at seeing middle endian mentioned,
+> curiosity killed the cat and all that :-)
 
-The patch is based on v5.2-rc5 and tested with a Renesas Lager board
-(R-Car H2) and a tweaked DA9063 driver. I don't have any of these ADV
-devices properly set up so the code is only build tested.
+Curiosity may certainly kill cats, but on lkml curiosity is almost always a good
+thing both for the enquirer and enquiree ;-)
 
-If this is acceptable, I likely will add a patch adding a devm_ variant
-of this new function to the patch stack and convert the users, too.
 
-I think this new i2c_new_ancillary_device() should replace
-i2c_new_dummy() in quite some places later. But we will see...
-
- drivers/gpu/drm/bridge/adv7511/adv7511_drv.c | 18 +++++++++---------
- drivers/i2c/i2c-core-base.c                  | 10 +++++-----
- drivers/media/i2c/adv748x/adv748x-core.c     |  6 +++---
- drivers/media/i2c/adv7604.c                  | 12 ++++++++----
- include/linux/i2c.h                          |  2 +-
- 5 files changed, 26 insertions(+), 22 deletions(-)
-
-diff --git a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-index f6d2681f6927..9e13e466e72c 100644
---- a/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-+++ b/drivers/gpu/drm/bridge/adv7511/adv7511_drv.c
-@@ -981,10 +981,10 @@ static int adv7511_init_cec_regmap(struct adv7511 *adv)
- {
- 	int ret;
- 
--	adv->i2c_cec = i2c_new_secondary_device(adv->i2c_main, "cec",
-+	adv->i2c_cec = i2c_new_ancillary_device(adv->i2c_main, "cec",
- 						ADV7511_CEC_I2C_ADDR_DEFAULT);
--	if (!adv->i2c_cec)
--		return -EINVAL;
-+	if (IS_ERR(adv->i2c_cec))
-+		return PTR_ERR(adv->i2c_cec);
- 	i2c_set_clientdata(adv->i2c_cec, adv);
- 
- 	adv->regmap_cec = devm_regmap_init_i2c(adv->i2c_cec,
-@@ -1165,20 +1165,20 @@ static int adv7511_probe(struct i2c_client *i2c, const struct i2c_device_id *id)
- 
- 	adv7511_packet_disable(adv7511, 0xffff);
- 
--	adv7511->i2c_edid = i2c_new_secondary_device(i2c, "edid",
-+	adv7511->i2c_edid = i2c_new_ancillary_device(i2c, "edid",
- 					ADV7511_EDID_I2C_ADDR_DEFAULT);
--	if (!adv7511->i2c_edid) {
--		ret = -EINVAL;
-+	if (IS_ERR(adv7511->i2c_edid)) {
-+		ret = PTR_ERR(adv7511->i2c_edid);
- 		goto uninit_regulators;
- 	}
- 
- 	regmap_write(adv7511->regmap, ADV7511_REG_EDID_I2C_ADDR,
- 		     adv7511->i2c_edid->addr << 1);
- 
--	adv7511->i2c_packet = i2c_new_secondary_device(i2c, "packet",
-+	adv7511->i2c_packet = i2c_new_ancillary_device(i2c, "packet",
- 					ADV7511_PACKET_I2C_ADDR_DEFAULT);
--	if (!adv7511->i2c_packet) {
--		ret = -EINVAL;
-+	if (IS_ERR(adv7511->i2c_packet)) {
-+		ret = PTR_ERR(adv7511->i2c_packet);
- 		goto err_i2c_unregister_edid;
- 	}
- 
-diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
-index e77bab2fb467..8b7855f3a199 100644
---- a/drivers/i2c/i2c-core-base.c
-+++ b/drivers/i2c/i2c-core-base.c
-@@ -965,7 +965,7 @@ struct i2c_client *devm_i2c_new_dummy_device(struct device *dev,
- EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
- 
- /**
-- * i2c_new_secondary_device - Helper to get the instantiated secondary address
-+ * i2c_new_ancillary_device - Helper to get the instantiated secondary address
-  * and create the associated device
-  * @client: Handle to the primary client
-  * @name: Handle to specify which secondary address to get
-@@ -984,9 +984,9 @@ EXPORT_SYMBOL_GPL(devm_i2c_new_dummy_device);
-  * cell whose "reg-names" value matches the slave name.
-  *
-  * This returns the new i2c client, which should be saved for later use with
-- * i2c_unregister_device(); or NULL to indicate an error.
-+ * i2c_unregister_device(); or an ERR_PTR to describe the error.
-  */
--struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
-+struct i2c_client *i2c_new_ancillary_device(struct i2c_client *client,
- 						const char *name,
- 						u16 default_addr)
- {
-@@ -1001,9 +1001,9 @@ struct i2c_client *i2c_new_secondary_device(struct i2c_client *client,
- 	}
- 
- 	dev_dbg(&client->adapter->dev, "Address for %s : 0x%x\n", name, addr);
--	return i2c_new_dummy(client->adapter, addr);
-+	return i2c_new_dummy_device(client->adapter, addr);
- }
--EXPORT_SYMBOL_GPL(i2c_new_secondary_device);
-+EXPORT_SYMBOL_GPL(i2c_new_ancillary_device);
- 
- /* ------------------------------------------------------------------------- */
- 
-diff --git a/drivers/media/i2c/adv748x/adv748x-core.c b/drivers/media/i2c/adv748x/adv748x-core.c
-index f57cd77a32fa..2567de2b0037 100644
---- a/drivers/media/i2c/adv748x/adv748x-core.c
-+++ b/drivers/media/i2c/adv748x/adv748x-core.c
-@@ -183,14 +183,14 @@ static int adv748x_initialise_clients(struct adv748x_state *state)
- 	int ret;
- 
- 	for (i = ADV748X_PAGE_DPLL; i < ADV748X_PAGE_MAX; ++i) {
--		state->i2c_clients[i] = i2c_new_secondary_device(
-+		state->i2c_clients[i] = i2c_new_ancillary_device(
- 				state->client,
- 				adv748x_default_addresses[i].name,
- 				adv748x_default_addresses[i].default_addr);
- 
--		if (state->i2c_clients[i] == NULL) {
-+		if (IS_ERR(state->i2c_clients[i])) {
- 			adv_err(state, "failed to create i2c client %u\n", i);
--			return -ENOMEM;
-+			return PTR_ERR(state->i2c_clients[i]);
- 		}
- 
- 		ret = adv748x_configure_regmap(state, i);
-diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-index 28a84bf9f8a9..ad68f24a369f 100644
---- a/drivers/media/i2c/adv7604.c
-+++ b/drivers/media/i2c/adv7604.c
-@@ -2881,11 +2881,15 @@ static struct i2c_client *adv76xx_dummy_client(struct v4l2_subdev *sd,
- 		new_client = i2c_new_dummy(client->adapter,
- 					   pdata->i2c_addresses[page]);
- 	else
--		new_client = i2c_new_secondary_device(client,
-+		new_client = i2c_new_ancillary_device(client,
- 				adv76xx_default_addresses[page].name,
- 				adv76xx_default_addresses[page].default_addr);
- 
--	if (new_client)
-+	/* FIXME: can be removed once i2c_new_dummy_device hits upstream */
-+	if (!new_client)
-+		new_client = ERR_PTR(-ENOENT);
-+
-+	if (!IS_ERR(new_client))
- 		io_write(sd, io_reg, new_client->addr << 1);
- 
- 	return new_client;
-@@ -3520,8 +3524,8 @@ static int adv76xx_probe(struct i2c_client *client,
- 			continue;
- 
- 		state->i2c_clients[i] = adv76xx_dummy_client(sd, i);
--		if (!state->i2c_clients[i]) {
--			err = -EINVAL;
-+		if (IS_ERR(state->i2c_clients[i])) {
-+			err = PTR_ERR(state->i2c_clients[i]);
- 			v4l2_err(sd, "failed to create i2c client %u\n", i);
- 			goto err_i2c;
- 		}
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index fa5552c2307b..ebbe024dd9e0 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -473,7 +473,7 @@ extern struct i2c_client *
- devm_i2c_new_dummy_device(struct device *dev, struct i2c_adapter *adap, u16 address);
- 
- extern struct i2c_client *
--i2c_new_secondary_device(struct i2c_client *client,
-+i2c_new_ancillary_device(struct i2c_client *client,
- 				const char *name,
- 				u16 default_addr);
- 
--- 
-2.20.1
 
