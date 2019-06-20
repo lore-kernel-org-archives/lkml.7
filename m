@@ -2,85 +2,178 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313B4C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:40:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A87C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:40:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05B7E2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:40:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 652EC2080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:40:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731005AbfFTJkT (ORCPT
+        id S1731103AbfFTJkp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:40:19 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49268 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725937AbfFTJkT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:40:19 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 795A9AED4;
-        Thu, 20 Jun 2019 09:40:18 +0000 (UTC)
-From:   Juergen Gross <jgross@suse.com>
-To:     xen-devel@lists.xenproject.org, linux-mm@kvack.org,
+        Thu, 20 Jun 2019 05:40:45 -0400
+Received: from foss.arm.com ([217.140.110.172]:56426 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725925AbfFTJko (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:40:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 73A51360;
+        Thu, 20 Jun 2019 02:40:43 -0700 (PDT)
+Received: from [10.1.197.61] (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 331A83F246;
+        Thu, 20 Jun 2019 02:40:42 -0700 (PDT)
+Subject: Re: [PATCH] genirq: Remove warning on preemptible in
+ prepare_percpu_nmi()
+To:     Lecopzer Chen <lecopzer.chen@mediatek.com>,
         linux-kernel@vger.kernel.org
-Cc:     Juergen Gross <jgross@suse.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>
-Subject: [PATCH RFC] mm: fix regression with deferred struct page init
-Date:   Thu, 20 Jun 2019 11:40:15 +0200
-Message-Id: <20190620094015.21206-1-jgross@suse.com>
-X-Mailer: git-send-email 2.16.4
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Julien Thierry <julien.thierry@arm.com>,
+        YJ Chiang <yj.chiang@mediatek.com>
+References: <20190620091233.22731-1-lecopzer.chen@mediatek.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+ Z46HaNmN2hZS/oJ69c1DI5Rcww==
+Organization: ARM Ltd
+Message-ID: <7aebef0d-5795-0464-5dc8-6a2eb05fcc4e@arm.com>
+Date:   Thu, 20 Jun 2019 10:40:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <20190620091233.22731-1-lecopzer.chen@mediatek.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time
-instead of doing larger sections") is causing a regression on some
-systems when the kernel is booted as Xen dom0.
+Hi Lecopzer,
 
-The system will just hang in early boot.
+On 20/06/2019 10:12, Lecopzer Chen wrote:
+> prepare_percpu_nmi() acquires lock first by irq_get_desc_lock(),
+> no matter whether preempt enabled or not, acquiring lock forces preempt off.
+> 
+> This simplifies the usage of prepare_percpu_nmi() and we don't need to
+> acquire extra lock or explicitly call preempt_[disable,enable]().
 
-Reason is an endless loop in get_page_from_freelist() in case the first
-zone looked at has no free memory. deferred_grow_zone() is always
-returning true due to the following code snipplet:
+I strongly disagree. If you're calling these functions *from* a
+preemptible context, you've already lost, and that's what these
+WARN_ON() calls are warning you about.
 
-  /* If the zone is empty somebody else may have cleared out the zone */
-  if (!deferred_init_mem_pfn_range_in_zone(&i, zone, &spfn, &epfn,
-                                           first_deferred_pfn)) {
-          pgdat->first_deferred_pfn = ULONG_MAX;
-          pgdat_resize_unlock(pgdat, &flags);
-          return true;
-  }
+These functions can only be called from a context that is naturally
+preemption free, such as a hotplug notifier. Otherwise, you have no idea
+which CPU you're configuring the NMI on, and I cannot see that as a good
+thing.
 
-This in turn results in the loop as get_page_from_freelist() is
-assuming forward progress can be made by doing some more struct page
-initialization.
+Thanks,
 
-Fixes: 0e56acae4b4dd4a9 ("mm: initialize MAX_ORDER_NR_PAGES at a time instead of doing larger sections")
----
-This patch makes my system boot again as Xen dom0, but I'm not really
-sure it is the correct way to do it, hence the RFC.
-Signed-off-by: Juergen Gross <jgross@suse.com>
----
- mm/page_alloc.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+	M.
 
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d66bc8abe0af..6ee754b5cd92 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -1826,7 +1826,7 @@ deferred_grow_zone(struct zone *zone, unsigned int order)
- 						 first_deferred_pfn)) {
- 		pgdat->first_deferred_pfn = ULONG_MAX;
- 		pgdat_resize_unlock(pgdat, &flags);
--		return true;
-+		return false;
- 	}
- 
- 	/*
+> 
+> Signed-off-by: Lecopzer Chen <lecopzer.chen@mediatek.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> Cc: Julien Thierry <julien.thierry@arm.com>
+> Cc: YJ Chiang <yj.chiang@mediatek.com>
+> Cc: Lecopzer Chen <lecopzer.chen@mediatek.com>
+> ---
+>  kernel/irq/manage.c | 10 ----------
+>  1 file changed, 10 deletions(-)
+> 
+> diff --git a/kernel/irq/manage.c b/kernel/irq/manage.c
+> index 78f3ddeb7fe4..aa03640cd7fb 100644
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -2509,9 +2509,6 @@ int request_percpu_nmi(unsigned int irq, irq_handler_t handler,
+>   *	This call prepares an interrupt line to deliver NMI on the current CPU,
+>   *	before that interrupt line gets enabled with enable_percpu_nmi().
+>   *
+> - *	As a CPU local operation, this should be called from non-preemptible
+> - *	context.
+> - *
+>   *	If the interrupt line cannot be used to deliver NMIs, function
+>   *	will fail returning a negative value.
+>   */
+> @@ -2521,8 +2518,6 @@ int prepare_percpu_nmi(unsigned int irq)
+>  	struct irq_desc *desc;
+>  	int ret = 0;
+>  
+> -	WARN_ON(preemptible());
+> -
+>  	desc = irq_get_desc_lock(irq, &flags,
+>  				 IRQ_GET_DESC_CHECK_PERCPU);
+>  	if (!desc)
+> @@ -2554,17 +2549,12 @@ int prepare_percpu_nmi(unsigned int irq)
+>   *	This call undoes the setup done by prepare_percpu_nmi().
+>   *
+>   *	IRQ line should not be enabled for the current CPU.
+> - *
+> - *	As a CPU local operation, this should be called from non-preemptible
+> - *	context.
+>   */
+>  void teardown_percpu_nmi(unsigned int irq)
+>  {
+>  	unsigned long flags;
+>  	struct irq_desc *desc;
+>  
+> -	WARN_ON(preemptible());
+> -
+>  	desc = irq_get_desc_lock(irq, &flags,
+>  				 IRQ_GET_DESC_CHECK_PERCPU);
+>  	if (!desc)
+> 
+
+
 -- 
-2.16.4
-
+Jazz is not dead. It just smells funny...
