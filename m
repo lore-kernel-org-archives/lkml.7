@@ -2,51 +2,51 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AC7C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48EC1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BFD20665
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2822620665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055411;
-	bh=wZJ6i255Avu2b78vVG0xeKXBLHHluZogYmBhvaZV6WE=;
+	s=default; t=1561055414;
+	bh=8uFCBRZcKyrWDPmsWHXrrJb227bZ4ZzlxiIaQ6uOQdc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=g0ZIj+mgbKIULR2r6fH6nq4QuvR4a6BLtEGsWQaBds88+jAI980oxEJVhymiKzUu5
-	 le4dWHwDRoDKFVzeewR3KrJal+/6R6vrfCJyvt4v0V/8ixYg//nXChfTuuG4yP3oPt
-	 c5+Ek4CMHCJOu7yE1bt1ym+5Sj87Pl2dm7SHYmmQ=
+	b=f3c7m0huVpjo/cfriTPdFbanguZA8Mg1m77nV7iP/OKrZ5lFGbEg0nfSIHyq7A302
+	 O0+ZJUIcNngv0XlLv8Rr6bmO9RVMS5fIW6uVLrJ5xaowG+xP7y8lx37Qh/2jJ+dU4b
+	 06M51Gg+RpbzLpwLNsSObalm/I6c6B3H5HGk3m04=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727253AbfFTSBc (ORCPT
+        id S1727646AbfFTSaM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:01:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51046 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:30:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51244 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727239AbfFTSB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:01:26 -0400
+        id S1727246AbfFTSBb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:01:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F40A72083B;
-        Thu, 20 Jun 2019 18:01:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9080C2089C;
+        Thu, 20 Jun 2019 18:01:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053685;
-        bh=wZJ6i255Avu2b78vVG0xeKXBLHHluZogYmBhvaZV6WE=;
+        s=default; t=1561053691;
+        bh=8uFCBRZcKyrWDPmsWHXrrJb227bZ4ZzlxiIaQ6uOQdc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CuB7bWBcVMck/7NWt1NYeovYy6d6JZMCoBT5w3e7Fw/YXJcMGx+CgF6eSx8JJeiA9
-         CeDSx45n/dXg5THZKvoO55b3+0jNecoq6L35VCgDrfcPJgUmhK6X7QQ4YuEWWO7NqZ
-         clfUd8Cw/CTvev5n4ikaLB0tpL2H/H8FzYmNQmr0=
+        b=ZYjCoCM2YQHgDFuQQ3eSNOkYAWmj830x03UwWDTLt6omUsWpH+NfdGIA/1HK+Q5Sp
+         eakMaqFNKIAUJlWyU9i6arHcekQU7jm7by08TZaatvQKtBKBUbkNh6SSY4a5utm3Tr
+         rZ5Z82GcEC2utQ4ZprZmTYoNlZDAF+iFxT1SBo+Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sahitya Tummala <stummala@codeaurora.org>,
-        Christoph Hellwig <hch@lst.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 76/84] configfs: Fix use-after-free when accessing sd->s_dentry
-Date:   Thu, 20 Jun 2019 19:57:13 +0200
-Message-Id: <20190620174348.883894809@linuxfoundation.org>
+        stable@vger.kernel.org, Paul Mackerras <paulus@ozlabs.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 78/84] KVM: PPC: Book3S: Use new mutex to synchronize access to rtas token list
+Date:   Thu, 20 Jun 2019 19:57:15 +0200
+Message-Id: <20190620174348.956200566@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -59,56 +59,122 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit f6122ed2a4f9c9c1c073ddf6308d1b2ac10e0781 ]
+[ Upstream commit 1659e27d2bc1ef47b6d031abe01b467f18cb72d9 ]
 
-In the vfs_statx() context, during path lookup, the dentry gets
-added to sd->s_dentry via configfs_attach_attr(). In the end,
-vfs_statx() kills the dentry by calling path_put(), which invokes
-configfs_d_iput(). Ideally, this dentry must be removed from
-sd->s_dentry but it doesn't if the sd->s_count >= 3. As a result,
-sd->s_dentry is holding reference to a stale dentry pointer whose
-memory is already freed up. This results in use-after-free issue,
-when this stale sd->s_dentry is accessed later in
-configfs_readdir() path.
+Currently the Book 3S KVM code uses kvm->lock to synchronize access
+to the kvm->arch.rtas_tokens list.  Because this list is scanned
+inside kvmppc_rtas_hcall(), which is called with the vcpu mutex held,
+taking kvm->lock cause a lock inversion problem, which could lead to
+a deadlock.
 
-This issue can be easily reproduced, by running the LTP test case -
-sh fs_racer_file_list.sh /config
-(https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/fs/racer/fs_racer_file_list.sh)
+To fix this, we add a new mutex, kvm->arch.rtas_token_lock, which nests
+inside the vcpu mutexes, and use that instead of kvm->lock when
+accessing the rtas token list.
 
-Fixes: 76ae281f6307 ('configfs: fix race between dentry put and lookup')
-Signed-off-by: Sahitya Tummala <stummala@codeaurora.org>
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+This removes the lockdep_assert_held() in kvmppc_rtas_tokens_free().
+At this point we don't hold the new mutex, but that is OK because
+kvmppc_rtas_tokens_free() is only called when the whole VM is being
+destroyed, and at that point nothing can be looking up a token in
+the list.
+
+Signed-off-by: Paul Mackerras <paulus@ozlabs.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/configfs/dir.c | 14 ++++++--------
- 1 file changed, 6 insertions(+), 8 deletions(-)
+ arch/powerpc/include/asm/kvm_host.h |  1 +
+ arch/powerpc/kvm/book3s.c           |  1 +
+ arch/powerpc/kvm/book3s_rtas.c      | 14 ++++++--------
+ 3 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index a7a1b218f308..8e709b641b55 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -58,15 +58,13 @@ static void configfs_d_iput(struct dentry * dentry,
- 	if (sd) {
- 		/* Coordinate with configfs_readdir */
- 		spin_lock(&configfs_dirent_lock);
--		/* Coordinate with configfs_attach_attr where will increase
--		 * sd->s_count and update sd->s_dentry to new allocated one.
--		 * Only set sd->dentry to null when this dentry is the only
--		 * sd owner.
--		 * If not do so, configfs_d_iput may run just after
--		 * configfs_attach_attr and set sd->s_dentry to null
--		 * even it's still in use.
-+		/*
-+		 * Set sd->s_dentry to null only when this dentry is the one
-+		 * that is going to be killed.  Otherwise configfs_d_iput may
-+		 * run just after configfs_attach_attr and set sd->s_dentry to
-+		 * NULL even it's still in use.
- 		 */
--		if (atomic_read(&sd->s_count) <= 2)
-+		if (sd->s_dentry == dentry)
- 			sd->s_dentry = NULL;
+diff --git a/arch/powerpc/include/asm/kvm_host.h b/arch/powerpc/include/asm/kvm_host.h
+index a92d95aee42d..1883627eb12c 100644
+--- a/arch/powerpc/include/asm/kvm_host.h
++++ b/arch/powerpc/include/asm/kvm_host.h
+@@ -250,6 +250,7 @@ struct kvm_arch {
+ #ifdef CONFIG_PPC_BOOK3S_64
+ 	struct list_head spapr_tce_tables;
+ 	struct list_head rtas_tokens;
++	struct mutex rtas_token_lock;
+ 	DECLARE_BITMAP(enabled_hcalls, MAX_HCALL_OPCODE/4 + 1);
+ #endif
+ #ifdef CONFIG_KVM_MPIC
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index 099c79d8c160..4aab1c9c83e1 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -809,6 +809,7 @@ int kvmppc_core_init_vm(struct kvm *kvm)
+ #ifdef CONFIG_PPC64
+ 	INIT_LIST_HEAD(&kvm->arch.spapr_tce_tables);
+ 	INIT_LIST_HEAD(&kvm->arch.rtas_tokens);
++	mutex_init(&kvm->arch.rtas_token_lock);
+ #endif
  
- 		spin_unlock(&configfs_dirent_lock);
+ 	return kvm->arch.kvm_ops->init_vm(kvm);
+diff --git a/arch/powerpc/kvm/book3s_rtas.c b/arch/powerpc/kvm/book3s_rtas.c
+index ef27fbd5d9c5..b1b2273d1f6d 100644
+--- a/arch/powerpc/kvm/book3s_rtas.c
++++ b/arch/powerpc/kvm/book3s_rtas.c
+@@ -133,7 +133,7 @@ static int rtas_token_undefine(struct kvm *kvm, char *name)
+ {
+ 	struct rtas_token_definition *d, *tmp;
+ 
+-	lockdep_assert_held(&kvm->lock);
++	lockdep_assert_held(&kvm->arch.rtas_token_lock);
+ 
+ 	list_for_each_entry_safe(d, tmp, &kvm->arch.rtas_tokens, list) {
+ 		if (rtas_name_matches(d->handler->name, name)) {
+@@ -154,7 +154,7 @@ static int rtas_token_define(struct kvm *kvm, char *name, u64 token)
+ 	bool found;
+ 	int i;
+ 
+-	lockdep_assert_held(&kvm->lock);
++	lockdep_assert_held(&kvm->arch.rtas_token_lock);
+ 
+ 	list_for_each_entry(d, &kvm->arch.rtas_tokens, list) {
+ 		if (d->token == token)
+@@ -193,14 +193,14 @@ int kvm_vm_ioctl_rtas_define_token(struct kvm *kvm, void __user *argp)
+ 	if (copy_from_user(&args, argp, sizeof(args)))
+ 		return -EFAULT;
+ 
+-	mutex_lock(&kvm->lock);
++	mutex_lock(&kvm->arch.rtas_token_lock);
+ 
+ 	if (args.token)
+ 		rc = rtas_token_define(kvm, args.name, args.token);
+ 	else
+ 		rc = rtas_token_undefine(kvm, args.name);
+ 
+-	mutex_unlock(&kvm->lock);
++	mutex_unlock(&kvm->arch.rtas_token_lock);
+ 
+ 	return rc;
+ }
+@@ -232,7 +232,7 @@ int kvmppc_rtas_hcall(struct kvm_vcpu *vcpu)
+ 	orig_rets = args.rets;
+ 	args.rets = &args.args[be32_to_cpu(args.nargs)];
+ 
+-	mutex_lock(&vcpu->kvm->lock);
++	mutex_lock(&vcpu->kvm->arch.rtas_token_lock);
+ 
+ 	rc = -ENOENT;
+ 	list_for_each_entry(d, &vcpu->kvm->arch.rtas_tokens, list) {
+@@ -243,7 +243,7 @@ int kvmppc_rtas_hcall(struct kvm_vcpu *vcpu)
+ 		}
+ 	}
+ 
+-	mutex_unlock(&vcpu->kvm->lock);
++	mutex_unlock(&vcpu->kvm->arch.rtas_token_lock);
+ 
+ 	if (rc == 0) {
+ 		args.rets = orig_rets;
+@@ -269,8 +269,6 @@ void kvmppc_rtas_tokens_free(struct kvm *kvm)
+ {
+ 	struct rtas_token_definition *d, *tmp;
+ 
+-	lockdep_assert_held(&kvm->lock);
+-
+ 	list_for_each_entry_safe(d, tmp, &kvm->arch.rtas_tokens, list) {
+ 		list_del(&d->list);
+ 		kfree(d);
 -- 
 2.20.1
 
