@@ -3,92 +3,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B004C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:14:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72EB3C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:24:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1692D2084B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 520F720861
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 03:24:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731123AbfFTDOe convert rfc822-to-8bit (ORCPT
+        id S1731272AbfFTDYi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 23:14:34 -0400
-Received: from mga03.intel.com ([134.134.136.65]:38947 "EHLO mga03.intel.com"
+        Wed, 19 Jun 2019 23:24:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60724 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726370AbfFTDOe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 23:14:34 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 20:14:33 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,395,1557212400"; 
-   d="scan'208";a="165197511"
-Received: from pgsmsx106.gar.corp.intel.com ([10.221.44.98])
-  by orsmga006.jf.intel.com with ESMTP; 19 Jun 2019 20:14:31 -0700
-Received: from pgsmsx114.gar.corp.intel.com ([169.254.4.160]) by
- PGSMSX106.gar.corp.intel.com ([169.254.9.141]) with mapi id 14.03.0439.000;
- Thu, 20 Jun 2019 11:14:30 +0800
-From:   "Ong, Boon Leong" <boon.leong.ong@intel.com>
-To:     Andrew Lunn <andrew@lunn.ch>,
-        "Voon, Weifeng" <weifeng.voon@intel.com>
-CC:     "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jose Abreu <joabreu@synopsys.com>,
-        "Giuseppe Cavallaro" <peppe.cavallaro@st.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "Gomes, Vinicius" <vinicius.gomes@intel.com>
-Subject: RE: [RFC net-next 1/5] net: stmmac: introduce IEEE 802.1Qbv
- configuration functionalities
-Thread-Topic: [RFC net-next 1/5] net: stmmac: introduce IEEE 802.1Qbv
- configuration functionalities
-Thread-Index: AQHVJdrXUsdOVQF/k0iKWNkitFHiIaahxnCAgABfNgCAAEIFgIABeMbQ
-Date:   Thu, 20 Jun 2019 03:14:29 +0000
-Message-ID: <AF233D1473C1364ABD51D28909A1B1B75C17F4D4@pgsmsx114.gar.corp.intel.com>
-References: <1560893778-6838-1-git-send-email-weifeng.voon@intel.com>
- <1560893778-6838-2-git-send-email-weifeng.voon@intel.com>
- <20190619030729.GA26784@lunn.ch>
- <D6759987A7968C4889FDA6FA91D5CBC81472623A@PGSMSX103.gar.corp.intel.com>
- <20190619124433.GC26784@lunn.ch>
-In-Reply-To: <20190619124433.GC26784@lunn.ch>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiYzQ1NDcyOTYtNjI1MC00OWNkLTk5NjgtN2JhMGJhZWRlZjE1IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiRzEzckZXTVlOVEJ1OUE4b0Mzbk94NTcxTk9iQk1nTHUxNVVxQ29cLzZwWFpEWVNSa012UHZoRzdjNlNOczNVNm4ifQ==
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [172.30.20.206]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        id S1726133AbfFTDYh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 23:24:37 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C38830872F5;
+        Thu, 20 Jun 2019 03:24:37 +0000 (UTC)
+Received: from linux-ws.nc.xsintricity.com (ovpn-112-50.rdu2.redhat.com [10.10.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 621E71001E67;
+        Thu, 20 Jun 2019 03:24:36 +0000 (UTC)
+Message-ID: <2443017de714630058322853d4fff5213f039e56.camel@redhat.com>
+Subject: Re: linux-next: manual merge of the rdma tree with Linus' tree
+From:   Doug Ledford <dledford@redhat.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Jason Gunthorpe <jgg@mellanox.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Leon Romanovsky <leonro@mellanox.com>
+Date:   Wed, 19 Jun 2019 23:24:33 -0400
+In-Reply-To: <20190620120640.5dbcc599@canb.auug.org.au>
+References: <20190620120640.5dbcc599@canb.auug.org.au>
+Organization: Red Hat, Inc.
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-bpAVpBoi9B+tzNPPGyT1"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 20 Jun 2019 03:24:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> > It looks like most o the TSN_WARN should actually be netdev_dbg().
->> >
->> >    Andrew
->>
->> Hi Andrew,
->> This file is targeted for dual licensing which is GPL-2.0 OR BSD-3-Clause.
->> This is the reason why we are using wrappers around the functions so that
->> all the function call is generic.
->
->I don't see why dual licenses should require wrappers. Please explain.
->
->  Thanks
->	Andrew
-Agree with the Andrew. We can change those wrapper functions that have
-serve the internal development needs for multiple OS scaling reason. 
-We will update the kernel codes as suggsted.  
 
+--=-bpAVpBoi9B+tzNPPGyT1
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, 2019-06-20 at 12:06 +1000, Stephen Rothwell wrote:
+> Hi all,
+>=20
+> Today's linux-next merge of the rdma tree got a conflict in:
+>=20
+>   include/rdma/ib_verbs.h
+>=20
+> between commit:
+>=20
+>   dc1435c00fcd ("RDMA/srp: Rename SRP sysfs name after IB device
+> rename trigger")
+>=20
+> from Linus' tree and commit:
+>=20
+>   0e2d00eb6fd4 ("RDMA: Add NLDEV_GET_CHARDEV to allow char dev
+> discovery and autoload")
+>=20
+> from the rdma tree.
+>=20
+> I fixed it up (see below) and can carry the fix as necessary. This
+> is now fixed as far as linux-next is concerned, but any non trivial
+> conflicts should be mentioned to your upstream maintainer when your
+> tree
+> is submitted for merging.  You may also want to consider cooperating
+> with the maintainer of the conflicting tree to minimise any
+> particularly
+> complex conflicts.
+>=20
+
+Yep, this one was expected.  Thanks.
+
+--=20
+Doug Ledford <dledford@redhat.com>
+    GPG KeyID: B826A3330E572FDD
+    Fingerprint =3D AE6B 1BDA 122B 23B4 265B  1274 B826 A333 0E57 2FDD
+
+--=-bpAVpBoi9B+tzNPPGyT1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEErmsb2hIrI7QmWxJ0uCajMw5XL90FAl0K/HEACgkQuCajMw5X
+L90mdxAAubZeH+lhdxVlGNgymiPHJ5yD2LVDDeNbhL7KZbJRUtoYmQdQ7MRnjCy5
+ZZasrxR7/MSp8y3H0srbzIuMGlCFjg1/HugZR99he/eXfVuZBRldBkaHRcFWkM77
+PuAAoPgRL2uKOucZUs8/SQAFfzEkN+//b/ONrWnRCY6FGgbOKiaLbrx27uvF02ML
+bU+waW585AWr+vLhMDajLHbPQI1hbsVlZ/KepSfosCTBA8CTa+V/37h0FT7t152h
+EWmPW/IX5Cosk90ATKKq2s2LmqJH37CBqKo9Yise+wJLXDn3W1RazEiYaU8CTgx8
+DQXcM8mqhxa08dJiekhzYFlhEY0RkUvrsyiDUegQxZx1PDfMNaBZqGdraEbrhFgL
+sXO5BWVd68RsOWVF6tJtLou/K1GB+m0KMMhillbilIiYzM+vubXAf+qtSxH6qaV2
+N3JxP6RDlWQQYzuUxUGu72rmUyJqE7qCHDjdT9k6VEyhhb59SBG+bUsa5lH6hODc
+uMWsn1d+X3kIz6qM6T7SFOKOleNrfKoXW77FP7hqTdpkZnUKvfjrmIWYVp4lToGv
+JdCBiHJD/yRyujjT9qucaQh0nVAsi92WpvMh1EE8E9oeCBBX6eTZPSMrbBOOh4GN
+O6Hd3V/6S/pjk7Q7UqdVSj/Ke3rizurALJx4z8UeaOqUbk+Jc1c=
+=wPue
+-----END PGP SIGNATURE-----
+
+--=-bpAVpBoi9B+tzNPPGyT1--
 
