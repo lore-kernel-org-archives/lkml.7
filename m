@@ -6,132 +6,283 @@ X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DAD5C4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0011C48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80A782082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A4532083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 10:35:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731578AbfFTKfu (ORCPT
+        id S1731661AbfFTKf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 06:35:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38188 "EHLO mx1.redhat.com"
+        Thu, 20 Jun 2019 06:35:58 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37812 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731388AbfFTKfr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 06:35:47 -0400
+        id S1731553AbfFTKfz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:35:55 -0400
 Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 074DF2E97C7;
-        Thu, 20 Jun 2019 10:35:47 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 242293098576;
+        Thu, 20 Jun 2019 10:35:55 +0000 (UTC)
 Received: from t460s.redhat.com (ovpn-117-88.ams2.redhat.com [10.36.117.88])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D445160600;
-        Thu, 20 Jun 2019 10:35:41 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C66445F7C0;
+        Thu, 20 Jun 2019 10:35:49 +0000 (UTC)
 From:   David Hildenbrand <david@redhat.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dan Williams <dan.j.williams@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
         linuxppc-dev@lists.ozlabs.org, linux-acpi@vger.kernel.org,
         linux-mm@kvack.org, David Hildenbrand <david@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: [PATCH v2 2/6] drivers/base/memory: Use "unsigned long" for block ids
-Date:   Thu, 20 Jun 2019 12:35:16 +0200
-Message-Id: <20190620103520.23481-3-david@redhat.com>
+        Rashmica Gupta <rashmica.g@gmail.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Michael Neuling <mikey@neuling.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Juergen Gross <jgross@suse.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>
+Subject: [PATCH v2 4/6] mm/memory_hotplug: Rename walk_memory_range() and pass start+size instead of pfns
+Date:   Thu, 20 Jun 2019 12:35:18 +0200
+Message-Id: <20190620103520.23481-5-david@redhat.com>
 In-Reply-To: <20190620103520.23481-1-david@redhat.com>
 References: <20190620103520.23481-1-david@redhat.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 20 Jun 2019 10:35:47 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 20 Jun 2019 10:35:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Block ids are just shifted section numbers, so let's also use
-"unsigned long" for them, too.
+walk_memory_range() was once used to iterate over sections. Now, it
+iterates over memory blocks. Rename the function, fixup the
+documentation. Also, pass start+size instead of PFNs, which is what most
+callers already have at hand. (we'll rework link_mem_sections() most
+probably soon)
 
+Follow-up patches wil rework, simplify, and move walk_memory_blocks() to
+drivers/base/memory.c.
+
+Note: walk_memory_blocks() only works correctly right now if the
+start_pfn is aligned to a section start. This is the case right now,
+but we'll generalize the function in a follow up patch so the semantics
+match the documentation.
+
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Len Brown <lenb@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Rashmica Gupta <rashmica.g@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Pavel Tatashin <pavel.tatashin@microsoft.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+Cc: Michael Neuling <mikey@neuling.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Arun KS <arunks@codeaurora.org>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/base/memory.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
+ arch/powerpc/platforms/powernv/memtrace.c | 22 ++++++++++-----------
+ drivers/acpi/acpi_memhotplug.c            | 19 ++++--------------
+ drivers/base/node.c                       |  5 +++--
+ include/linux/memory_hotplug.h            |  2 +-
+ mm/memory_hotplug.c                       | 24 ++++++++++++-----------
+ 5 files changed, 32 insertions(+), 40 deletions(-)
 
-diff --git a/drivers/base/memory.c b/drivers/base/memory.c
-index 5947b5a5686d..c54e80fd25a8 100644
---- a/drivers/base/memory.c
-+++ b/drivers/base/memory.c
-@@ -34,12 +34,12 @@ static DEFINE_MUTEX(mem_sysfs_mutex);
- 
- static int sections_per_block;
- 
--static inline int base_memory_block_id(unsigned long section_nr)
-+static inline unsigned long base_memory_block_id(unsigned long section_nr)
+diff --git a/arch/powerpc/platforms/powernv/memtrace.c b/arch/powerpc/platforms/powernv/memtrace.c
+index 5e53c1392d3b..8c82c041afe6 100644
+--- a/arch/powerpc/platforms/powernv/memtrace.c
++++ b/arch/powerpc/platforms/powernv/memtrace.c
+@@ -70,23 +70,24 @@ static int change_memblock_state(struct memory_block *mem, void *arg)
+ /* called with device_hotplug_lock held */
+ static bool memtrace_offline_pages(u32 nid, u64 start_pfn, u64 nr_pages)
  {
- 	return section_nr / sections_per_block;
++	const unsigned long start = PFN_PHYS(start_pfn);
++	const unsigned long size = PFN_PHYS(nr_pages);
+ 	u64 end_pfn = start_pfn + nr_pages - 1;
+ 
+-	if (walk_memory_range(start_pfn, end_pfn, NULL,
+-	    check_memblock_online))
++	if (walk_memory_blocks(start, size, NULL, check_memblock_online))
+ 		return false;
+ 
+-	walk_memory_range(start_pfn, end_pfn, (void *)MEM_GOING_OFFLINE,
+-			  change_memblock_state);
++	walk_memory_blocks(start, size, (void *)MEM_GOING_OFFLINE,
++			   change_memblock_state);
+ 
+ 	if (offline_pages(start_pfn, nr_pages)) {
+-		walk_memory_range(start_pfn, end_pfn, (void *)MEM_ONLINE,
+-				  change_memblock_state);
++		walk_memory_blocks(start, size, (void *)MEM_ONLINE,
++				   change_memblock_state);
+ 		return false;
+ 	}
+ 
+-	walk_memory_range(start_pfn, end_pfn, (void *)MEM_OFFLINE,
+-			  change_memblock_state);
++	walk_memory_blocks(start, size, (void *)MEM_OFFLINE,
++			   change_memblock_state);
+ 
+ 
+ 	return true;
+@@ -242,9 +243,8 @@ static int memtrace_online(void)
+ 		 */
+ 		if (!memhp_auto_online) {
+ 			lock_device_hotplug();
+-			walk_memory_range(PFN_DOWN(ent->start),
+-					  PFN_UP(ent->start + ent->size - 1),
+-					  NULL, online_mem_block);
++			walk_memory_blocks(ent->start, ent->size, NULL,
++					   online_mem_block);
+ 			unlock_device_hotplug();
+ 		}
+ 
+diff --git a/drivers/acpi/acpi_memhotplug.c b/drivers/acpi/acpi_memhotplug.c
+index db013dc21c02..e294f44a7850 100644
+--- a/drivers/acpi/acpi_memhotplug.c
++++ b/drivers/acpi/acpi_memhotplug.c
+@@ -155,16 +155,6 @@ static int acpi_memory_check_device(struct acpi_memory_device *mem_device)
+ 	return 0;
  }
  
--static inline int pfn_to_block_id(unsigned long pfn)
-+static inline unsigned long pfn_to_block_id(unsigned long pfn)
+-static unsigned long acpi_meminfo_start_pfn(struct acpi_memory_info *info)
+-{
+-	return PFN_DOWN(info->start_addr);
+-}
+-
+-static unsigned long acpi_meminfo_end_pfn(struct acpi_memory_info *info)
+-{
+-	return PFN_UP(info->start_addr + info->length-1);
+-}
+-
+ static int acpi_bind_memblk(struct memory_block *mem, void *arg)
  {
- 	return base_memory_block_id(pfn_to_section_nr(pfn));
+ 	return acpi_bind_one(&mem->dev, arg);
+@@ -173,9 +163,8 @@ static int acpi_bind_memblk(struct memory_block *mem, void *arg)
+ static int acpi_bind_memory_blocks(struct acpi_memory_info *info,
+ 				   struct acpi_device *adev)
+ {
+-	return walk_memory_range(acpi_meminfo_start_pfn(info),
+-				 acpi_meminfo_end_pfn(info), adev,
+-				 acpi_bind_memblk);
++	return walk_memory_blocks(info->start_addr, info->length, adev,
++				  acpi_bind_memblk);
  }
-@@ -587,7 +587,7 @@ int __weak arch_get_memory_phys_device(unsigned long start_pfn)
-  * A reference for the returned object is held and the reference for the
-  * hinted object is released.
-  */
--static struct memory_block *find_memory_block_by_id(int block_id,
-+static struct memory_block *find_memory_block_by_id(unsigned long block_id,
- 						    struct memory_block *hint)
- {
- 	struct device *hintdev = hint ? &hint->dev : NULL;
-@@ -604,7 +604,7 @@ static struct memory_block *find_memory_block_by_id(int block_id,
- struct memory_block *find_memory_block_hinted(struct mem_section *section,
- 					      struct memory_block *hint)
- {
--	int block_id = base_memory_block_id(__section_nr(section));
-+	unsigned long block_id = base_memory_block_id(__section_nr(section));
  
- 	return find_memory_block_by_id(block_id, hint);
+ static int acpi_unbind_memblk(struct memory_block *mem, void *arg)
+@@ -186,8 +175,8 @@ static int acpi_unbind_memblk(struct memory_block *mem, void *arg)
+ 
+ static void acpi_unbind_memory_blocks(struct acpi_memory_info *info)
+ {
+-	walk_memory_range(acpi_meminfo_start_pfn(info),
+-			  acpi_meminfo_end_pfn(info), NULL, acpi_unbind_memblk);
++	walk_memory_blocks(info->start_addr, info->length, NULL,
++			   acpi_unbind_memblk);
  }
-@@ -663,8 +663,8 @@ int register_memory(struct memory_block *memory)
+ 
+ static int acpi_memory_enable_device(struct acpi_memory_device *mem_device)
+diff --git a/drivers/base/node.c b/drivers/base/node.c
+index e6364e3e3e31..d8c02e65df68 100644
+--- a/drivers/base/node.c
++++ b/drivers/base/node.c
+@@ -833,8 +833,9 @@ void unregister_memory_block_under_nodes(struct memory_block *mem_blk)
+ 
+ int link_mem_sections(int nid, unsigned long start_pfn, unsigned long end_pfn)
+ {
+-	return walk_memory_range(start_pfn, end_pfn, (void *)&nid,
+-					register_mem_sect_under_node);
++	return walk_memory_blocks(PFN_PHYS(start_pfn),
++				  PFN_PHYS(end_pfn - start_pfn), (void *)&nid,
++				  register_mem_sect_under_node);
+ }
+ 
+ #ifdef CONFIG_HUGETLBFS
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index 79e0add6a597..d9fffc34949f 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -340,7 +340,7 @@ static inline void __remove_memory(int nid, u64 start, u64 size) {}
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
+ 
+ extern void __ref free_area_init_core_hotplug(int nid);
+-extern int walk_memory_range(unsigned long start_pfn, unsigned long end_pfn,
++extern int walk_memory_blocks(unsigned long start, unsigned long size,
+ 		void *arg, int (*func)(struct memory_block *, void *));
+ extern int __add_memory(int nid, u64 start, u64 size);
+ extern int add_memory(int nid, u64 start, u64 size);
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index a88c5f334e5a..122a7d31efdd 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1126,8 +1126,7 @@ int __ref add_memory_resource(int nid, struct resource *res)
+ 
+ 	/* online pages if requested */
+ 	if (memhp_auto_online)
+-		walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1),
+-				  NULL, online_memory_block);
++		walk_memory_blocks(start, size, NULL, online_memory_block);
+ 
  	return ret;
- }
+ error:
+@@ -1665,20 +1664,24 @@ int offline_pages(unsigned long start_pfn, unsigned long nr_pages)
+ #endif /* CONFIG_MEMORY_HOTREMOVE */
  
--static int init_memory_block(struct memory_block **memory, int block_id,
--			     unsigned long state)
-+static int init_memory_block(struct memory_block **memory,
-+			     unsigned long block_id, unsigned long state)
- {
- 	struct memory_block *mem;
- 	unsigned long start_pfn;
-@@ -729,8 +729,8 @@ static void unregister_memory(struct memory_block *memory)
+ /**
+- * walk_memory_range - walks through all mem sections in [start_pfn, end_pfn)
+- * @start_pfn: start pfn of the memory range
+- * @end_pfn: end pfn of the memory range
++ * walk_memory_blocks - walk through all present memory blocks overlapped
++ *			by the range [start, start + size)
++ *
++ * @start: start address of the memory range
++ * @size: size of the memory range
+  * @arg: argument passed to func
+- * @func: callback for each memory section walked
++ * @func: callback for each memory block walked
+  *
+- * This function walks through all present mem sections in range
+- * [start_pfn, end_pfn) and call func on each mem section.
++ * This function walks through all present memory blocks overlapped by the
++ * range [start, start + size), calling func on each memory block.
+  *
+  * Returns the return value of func.
   */
- int create_memory_block_devices(unsigned long start, unsigned long size)
+-int walk_memory_range(unsigned long start_pfn, unsigned long end_pfn,
++int walk_memory_blocks(unsigned long start, unsigned long size,
+ 		void *arg, int (*func)(struct memory_block *, void *))
  {
--	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
--	int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
-+	const unsigned long start_block_id = pfn_to_block_id(PFN_DOWN(start));
-+	unsigned long end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
- 	struct memory_block *mem;
- 	unsigned long block_id;
- 	int ret = 0;
-@@ -766,10 +766,10 @@ int create_memory_block_devices(unsigned long start, unsigned long size)
-  */
- void remove_memory_block_devices(unsigned long start, unsigned long size)
- {
--	const int start_block_id = pfn_to_block_id(PFN_DOWN(start));
--	const int end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
-+	const unsigned long start_block_id = pfn_to_block_id(PFN_DOWN(start));
-+	const unsigned long end_block_id = pfn_to_block_id(PFN_DOWN(start + size));
- 	struct memory_block *mem;
--	int block_id;
-+	unsigned long block_id;
++	const unsigned long start_pfn = PFN_DOWN(start);
++	const unsigned long end_pfn = PFN_UP(start + size - 1);
+ 	struct memory_block *mem = NULL;
+ 	struct mem_section *section;
+ 	unsigned long pfn, section_nr;
+@@ -1824,8 +1827,7 @@ static int __ref try_remove_memory(int nid, u64 start, u64 size)
+ 	 * whether all memory blocks in question are offline and return error
+ 	 * if this is not the case.
+ 	 */
+-	rc = walk_memory_range(PFN_DOWN(start), PFN_UP(start + size - 1), NULL,
+-			       check_memblock_offlined_cb);
++	rc = walk_memory_blocks(start, size, NULL, check_memblock_offlined_cb);
+ 	if (rc)
+ 		goto done;
  
- 	if (WARN_ON_ONCE(!IS_ALIGNED(start, memory_block_size_bytes()) ||
- 			 !IS_ALIGNED(size, memory_block_size_bytes())))
 -- 
 2.21.0
 
