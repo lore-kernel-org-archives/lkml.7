@@ -2,123 +2,117 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB42BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 106E3C48BE1
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CBA2084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Ambiewkc"
+	by mail.kernel.org (Postfix) with ESMTP id E12CE2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:58:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561053499;
+	bh=rgd2jtMO+BBdMyAXO6+PNlLIJCWYhU9JI5YgZALnHUk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=rqudcFzBC/vGuiGnbjXxhOQLrLJ0lXzH+8vIMjWPKAgLgE/8ZYjeAF4dsJoJJNc69
+	 nktC/IETa055qHKD4uUiMEcnJaXFe+ZZLQqQpKpHxKxECe7J8DY+Y37/gfViJO/9Xd
+	 4/eIjsbNv7YNTDJtPst4usweCFN4zUmUvc9SbO4s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfFTR6L (ORCPT
+        id S1725911AbfFTR6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:58:11 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:42391 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726523AbfFTR6K (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:58:10 -0400
-Received: by mail-pf1-f195.google.com with SMTP id q10so2082107pff.9
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:58:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=S2gqNASMdYK2WX/SCojHs3iwdhiVO/ELWHI9nIiuc08=;
-        b=AmbiewkcaBZfbv3X6k0K9MkP95lI+TEtZi+vGAdEh+o40lZrmh5S6BZVYsUH2ICrSF
-         tpGdVMyZeNnqbpPHBk9WWVFcJMCTUsCjZ2KI4VFEydIFPBh8yvw0ay8avXt28l/r3kNI
-         4EFjqRRfNz4dNjG3sFQGvIQS4qDDYucB0v3jo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=S2gqNASMdYK2WX/SCojHs3iwdhiVO/ELWHI9nIiuc08=;
-        b=L+mEH/3OaZ+21IiTXzYldQJPFnwfz279J3pYk4UyPkGFs7ARc1Cwz7iPy4ZV1Gwvi/
-         UCyhaU9zzFmjv0qGVfoc6+VgRe/n/0Oha1skfUn7uOLNGD1vpmnz5YJiAPsGcm/LBkeY
-         xtnIcL7PmNtTxmsiZmyLjApPrCnDpeYzRZGh5WCGmvjPnbjqZ3Ic2ZQ/hVgcl3P6JhjZ
-         j7upNY49LManolpPq/l3Kaom8TlZpkyLY42mjiPrSXis2PKPXmL6bXSLDIt7RgTrTuz2
-         jpiNgg41c6Ch/vjTbx7t//0E0aNco8jcScCklOpEB0I9EgP1I/fWlqdgUtGWEnmuxN1j
-         7usA==
-X-Gm-Message-State: APjAAAXAT3i7RukmFAVV7o6kpSB9QZf1QkiuRKpTYDNUfCi1QOu++RN9
-        ahI0L2UO9LsY3hy5c7KB6wRKVL8YgVM=
-X-Google-Smtp-Source: APXvYqz+/nctrhTKu2rrQH0p8RYodLUvmv9QWgIYE5zMalFX2xFyZLCGds0IQDjcEJPnz2dR7N7FHA==
-X-Received: by 2002:a63:5247:: with SMTP id s7mr13372297pgl.29.1561053490021;
-        Thu, 20 Jun 2019 10:58:10 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id t8sm144231pfq.31.2019.06.20.10.58.08
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 10:58:09 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 10:58:08 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Ross Zwisler <zwisler@kernel.org>, Ingo Molnar <mingo@kernel.org>
-Cc:     Johannes Hirte <johannes.hirte@datenkhaos.de>,
-        Klaus Kusche <klaus.kusche@computerix.info>, bp@suse.de,
-        x86@kernel.org, samitolvanen@google.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Guenter Roeck <groeck@google.com>,
-        Ross Zwisler <zwisler@google.com>
-Subject: Re: [PATCH] x86/build: Move _etext to actual end of .text
-Message-ID: <201906201042.3BF5CD6@keescook>
-References: <502d5b36-e0d0-ffcc-5dd4-35db9d033561@computerix.info>
- <20190609184013.GA11237@probook>
- <CAOxpaSXKXRcZi0KnQz_6SxajZ6Nv61Bjm5xmG0Ydw3Madv0-tQ@mail.gmail.com>
+        Thu, 20 Jun 2019 13:58:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44944 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725815AbfFTR6R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:58:17 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C4E8E2084A;
+        Thu, 20 Jun 2019 17:58:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561053496;
+        bh=rgd2jtMO+BBdMyAXO6+PNlLIJCWYhU9JI5YgZALnHUk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=tvg3t1vqt+Tpu5SYWYNGpXsW0Kg5ON/u+6VxOUDAsNqxJ+k2fsOmoNChmULHyAGA0
+         /b5QgDUFqhZNDkPeY5YEc0zrSoMOeCnOKprDnCCBNEAmFy8PcIlxtzVaVOnfz2qzFZ
+         t9HchV+E8W8+wOznmmh8l2rkdemuCf9ifTgol/zc=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Hou Tao <houtao1@huawei.com>,
+        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Al Viro <viro@zeniv.linux.org.uk>, Jan Kara <jack@suse.cz>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 01/84] fs/fat/file.c: issue flush after the writeback of FAT
+Date:   Thu, 20 Jun 2019 19:55:58 +0200
+Message-Id: <20190620174337.720146010@linuxfoundation.org>
+X-Mailer: git-send-email 2.22.0
+In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
+References: <20190620174337.538228162@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOxpaSXKXRcZi0KnQz_6SxajZ6Nv61Bjm5xmG0Ydw3Madv0-tQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 12:37:11PM -0600, Ross Zwisler wrote:
-> On Sun, Jun 9, 2019 at 1:00 PM Johannes Hirte
-> <johannes.hirte@datenkhaos.de> wrote:
-> > On 2019 Jun 09, Klaus Kusche wrote:
-> > > Hello,
-> > >
-> > > Same problem for linux 5.1.7:
-> > > Kernel building fails with the same relocation error.
-> > >
-> > > 5.1.5 does not have the problem, builds fine for me.
-> > >
-> > > Is there anything I can do to investigate the problem?
-> > >
-> >
-> > Please try linux 5.1.8. The problematic patch was reverted there.
-> 
-> I'm having this same issue with v5.2-rc5 using an older version of gcc
-> (4.9.2).  If I use a more recent version of gcc (7.3.0) it works fine.
-> 
-> Reverting this patch allows gcc v4.9.2 to build kernel v5.2-rc5 successfully.
-> 
-> You said in this chain that you were reverting this patch in stable
-> kernels.  Are you going to revert it in tip-of-tree as well?
+[ Upstream commit bd8309de0d60838eef6fb575b0c4c7e95841cf73 ]
 
-My original rationale was that we shouldn't break old toolchains on
-old kernels (i.e. if a stable kernel built before it should continue to
-bulid). For the latest kernel it was fixing a future problem and
-regularizing the linker script (other architectures already do it in
-this style), however, it seems to not only be an old gcc issue, but also
-a Gold linker issue. Building with LD=ld.gold blows up on a modern gcc
-too:
+fsync() needs to make sure the data & meta-data of file are persistent
+after the return of fsync(), even when a power-failure occurs later.  In
+the case of fat-fs, the FAT belongs to the meta-data of file, so we need
+to issue a flush after the writeback of FAT instead before.
 
-$ gcc --version
-gcc (Ubuntu 7.4.0-1ubuntu1~18.04.1) 7.4.0
-...
-$ ld.gold --version
-GNU gold (GNU Binutils for Ubuntu 2.30) 1.15
-...
-$ make LD=ld.gold ...
-...
-Invalid absolute R_X86_64_32S relocation: _etext
+Also bail out early when any stage of fsync fails.
 
-Ingo, seems like this should be reverted. What do you think?
+Link: http://lkml.kernel.org/r/20190409030158.136316-1-houtao1@huawei.com
+Signed-off-by: Hou Tao <houtao1@huawei.com>
+Acked-by: OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Jan Kara <jack@suse.cz>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ fs/fat/file.c | 11 ++++++++---
+ 1 file changed, 8 insertions(+), 3 deletions(-)
 
+diff --git a/fs/fat/file.c b/fs/fat/file.c
+index a08f1039909a..d3f655ae020b 100644
+--- a/fs/fat/file.c
++++ b/fs/fat/file.c
+@@ -156,12 +156,17 @@ static int fat_file_release(struct inode *inode, struct file *filp)
+ int fat_file_fsync(struct file *filp, loff_t start, loff_t end, int datasync)
+ {
+ 	struct inode *inode = filp->f_mapping->host;
+-	int res, err;
++	int err;
++
++	err = __generic_file_fsync(filp, start, end, datasync);
++	if (err)
++		return err;
+ 
+-	res = generic_file_fsync(filp, start, end, datasync);
+ 	err = sync_mapping_buffers(MSDOS_SB(inode->i_sb)->fat_inode->i_mapping);
++	if (err)
++		return err;
+ 
+-	return res ? res : err;
++	return blkdev_issue_flush(inode->i_sb->s_bdev, GFP_KERNEL, NULL);
+ }
+ 
+ 
 -- 
-Kees Cook
+2.20.1
+
+
+
