@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 267E1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 688ADC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB8A62084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4527F2089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054098;
-	bh=PefBhdJw/AXsteVlRQNVPD3U1PT1dQIGDflaeNMa3Q4=;
+	s=default; t=1561054103;
+	bh=WUBTmVAqBuRRzLMxrZqnWP0OYnG9bRXejv9WAtmMbII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jILv7Isqs3TJyKTok6dOOEqErckHlp0bRXOYvNX7kTh8GDjSFvZhnlyEeSClGBhhW
-	 L7M6wiCuQySP4/7XlmY+CxKUVUlr2ymN4RAz656+nGb/7uzwT4Kbxa3nuHpX3rqfcN
-	 acGT3Hr4NdPI2PCfgElEShwxwwsajgPstBs8fMRM=
+	b=Gd+7ZK5k0YZ9zsUSQ5ZFcHPkrZLd0ct+yZ1KRCLJEDHjCc2yColASHQt4Sd1Q2mqo
+	 TPW7e6PSLUty9YOxX5yNUxxTbJ0Z0J/fRvTSwo89Nwr1Qfl7Q7Od6BTr+1i6qnf34r
+	 MOVrf+QS/1x+GE/FE8ilA5LtMpkSelnoUiUuo+Zk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727752AbfFTSIQ (ORCPT
+        id S1728087AbfFTSIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35426 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:08:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35494 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728035AbfFTSIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:13 -0400
+        id S1728461AbfFTSIQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD9442089C;
-        Thu, 20 Jun 2019 18:08:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 883A42070B;
+        Thu, 20 Jun 2019 18:08:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054092;
-        bh=PefBhdJw/AXsteVlRQNVPD3U1PT1dQIGDflaeNMa3Q4=;
+        s=default; t=1561054095;
+        bh=WUBTmVAqBuRRzLMxrZqnWP0OYnG9bRXejv9WAtmMbII=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LdoQWpsFKMCxZxYHUrxGRbvv0rTbfYqowx1XaDwj9gz/tRhRo21olekV9orX1sSqR
-         cgo5rBn9dmijVuSF2PY6Ko5zfbPZ4ZhRWEh+Asgb6XqdXyEzvIwitgafReI3bH6TNH
-         wI9JpGcm1+eqKsJsJSjSWRvkZzSwRQgltCksbFb8=
+        b=jLG4DXe9/x/Uy1VgKmP0FdsWvz+YO5l3U8zcbfoODLDf6TiPrbGEfcCx9i+8kEuk2
+         ILRJoO+iRZcLK/Nyh6QezcBPpaG9zurH7yIfCf/i66LKVpHkMOOowBXKbmtqK4Hlsg
+         CZUBmxMoAOzvv89H8aYVtgPAIpG8kXCn1c60MI5s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pavaman Subramaniyam <pavsubra@in.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 16/45] powerpc/powernv: Return for invalid IMC domain
-Date:   Thu, 20 Jun 2019 19:57:18 +0200
-Message-Id: <20190620174334.752489542@linuxfoundation.org>
+Subject: [PATCH 4.14 17/45] mISDN: make sure device name is NUL terminated
+Date:   Thu, 20 Jun 2019 19:57:19 +0200
+Message-Id: <20190620174336.105129844@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -62,48 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b59bd3527fe3c1939340df558d7f9d568fc9f882 ]
+[ Upstream commit ccfb62f27beb295103e9392462b20a6ed807d0ea ]
 
-Currently init_imc_pmu() can fail either because we try to register an
-IMC unit with an invalid domain (i.e an IMC node not supported by the
-kernel) or something went wrong while registering a valid IMC unit. In
-both the cases kernel provides a 'Register failed' error message.
+The user can change the device_name with the IMSETDEVNAME ioctl, but we
+need to ensure that the user's name is NUL terminated.  Otherwise it
+could result in a buffer overflow when we copy the name back to the user
+with IMGETDEVINFO ioctl.
 
-For example when trace-imc node is not supported by the kernel, but
-skiboot advertises a trace-imc node we print:
+I also changed two strcpy() calls which handle the name to strscpy().
+Hopefully, there aren't any other ways to create a too long name, but
+it's nice to do this as a kernel hardening measure.
 
-  IMC Unknown Device type
-  IMC PMU (null) Register failed
-
-To avoid confusion just print the unknown device type message, before
-attempting PMU registration, so the second message isn't printed.
-
-Fixes: 8f95faaac56c ("powerpc/powernv: Detect and create IMC device")
-Reported-by: Pavaman Subramaniyam <pavsubra@in.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-[mpe: Reword change log a bit]
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/platforms/powernv/opal-imc.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/isdn/mISDN/socket.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/powerpc/platforms/powernv/opal-imc.c b/arch/powerpc/platforms/powernv/opal-imc.c
-index 6914b289c86b..7b93191dc2e3 100644
---- a/arch/powerpc/platforms/powernv/opal-imc.c
-+++ b/arch/powerpc/platforms/powernv/opal-imc.c
-@@ -87,6 +87,10 @@ static int imc_pmu_create(struct device_node *parent, int pmu_index, int domain)
- 	struct imc_pmu *pmu_ptr;
- 	u32 offset;
- 
-+	/* Return for unknown domain */
-+	if (domain < 0)
-+		return -EINVAL;
-+
- 	/* memory for pmu */
- 	pmu_ptr = kzalloc(sizeof(struct imc_pmu), GFP_KERNEL);
- 	if (!pmu_ptr)
+diff --git a/drivers/isdn/mISDN/socket.c b/drivers/isdn/mISDN/socket.c
+index 65cb4aac8dce..477e07036add 100644
+--- a/drivers/isdn/mISDN/socket.c
++++ b/drivers/isdn/mISDN/socket.c
+@@ -394,7 +394,7 @@ data_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -678,7 +678,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			memcpy(di.channelmap, dev->channelmap,
+ 			       sizeof(di.channelmap));
+ 			di.nrbchan = dev->nrbchan;
+-			strcpy(di.name, dev_name(&dev->dev));
++			strscpy(di.name, dev_name(&dev->dev), sizeof(di.name));
+ 			if (copy_to_user((void __user *)arg, &di, sizeof(di)))
+ 				err = -EFAULT;
+ 		} else
+@@ -692,6 +692,7 @@ base_sock_ioctl(struct socket *sock, unsigned int cmd, unsigned long arg)
+ 			err = -EFAULT;
+ 			break;
+ 		}
++		dn.name[sizeof(dn.name) - 1] = '\0';
+ 		dev = get_mdevice(dn.id);
+ 		if (dev)
+ 			err = device_rename(&dev->dev, dn.name);
 -- 
 2.20.1
 
