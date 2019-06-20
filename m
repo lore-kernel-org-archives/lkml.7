@@ -7,50 +7,56 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03DE5C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 155DEC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D52E821537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA1FB217F4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053587;
-	bh=dbapNoTXx8QGVGPfMYQkU6PrijipkxRNTYwkr3ttbAc=;
+	s=default; t=1561053591;
+	bh=bEjoequiyTWxjev/YaWlKL+HKVq8yFnmIxSjk/Nmmf0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LMqEUM8BXYUsvcVkQiTu2b+Yk+dRTpZqvEX4tMnzLCxokJDd4K3l85fV8PPxOla0I
-	 iUoMwaVTD9vjjH/bjfuNNjuuCYTyIrRySesGxoSpSxPDAmiJr8arXVNU46ukoogAYP
-	 o4MUwqLBeiqtIAAQTCN4fv7hLhzYYNzJL8egzREU=
+	b=UMzn3V6Qa2j5A43fTS4MLLV+zR4qoViA3/fg9rS/TNjKpiL7hRkxMrt1wKTS4WhXL
+	 L4YPTPj7ZfyMZiFI2J+NwTi2ESo/ZWLQgu+jnMbvpXBEK9tUCUF7QkMB5FMmp2ISpU
+	 xymCs12HPQQRBZx5jYaqOJX1qnMN6yaO0eZZwf1s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726697AbfFTR7q (ORCPT
+        id S1726715AbfFTR7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:59:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47504 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:59:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47726 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfFTR7l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:59:41 -0400
+        id S1726673AbfFTR7q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:59:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1CD2B2083B;
-        Thu, 20 Jun 2019 17:59:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CBF0A21530;
+        Thu, 20 Jun 2019 17:59:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053580;
-        bh=dbapNoTXx8QGVGPfMYQkU6PrijipkxRNTYwkr3ttbAc=;
+        s=default; t=1561053586;
+        bh=bEjoequiyTWxjev/YaWlKL+HKVq8yFnmIxSjk/Nmmf0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0UIRTDrzFmRbuO6U1vyBTlBR2vUpNnF6B6+JfDmxlB7OTToe6kOr4DQzJd+5QfH79
-         AERjQy51csCshRfY99bqhxV7sbJxuLN1p7onrn1vWGW+L6i/KqjyB2E6nORbiUxpRu
-         4PyDVX8/yAMD7eHVCm4ub3IOYlTy3sBW0fdrhJA8=
+        b=I2JvUseUD0qTLM1GihIUlyatk9V1a3qKS4i99/lv/nY3nx6/DMd33h5GpmL00jdw2
+         LsGzH6ideORbGmnObTtVFAri3Itt0lKdEXiGe6LpqbdpbvSqgnwvf//9g2/YvcJOi5
+         7ec0IlfoNFpZuShUdcjUpWSakD1GFpzbYH/qv6Mk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephane Eranian <eranian@google.com>,
+        stable@vger.kernel.org, Christian Brauner <christian@brauner.io>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        Waiman Long <longman@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, jolsa@redhat.com,
-        kan.liang@intel.com, vincent.weaver@maine.edu,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 10/84] perf/x86/intel: Allow PEBS multi-entry in watermark mode
-Date:   Thu, 20 Jun 2019 19:56:07 +0200
-Message-Id: <20190620174339.136089234@linuxfoundation.org>
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 02/84] sysctl: return -EINVAL if val violates minmax
+Date:   Thu, 20 Jun 2019 19:55:59 +0200
+Message-Id: <20190620174337.856536005@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -63,45 +69,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit c7a286577d7592720c2f179aadfb325a1ff48c95 ]
+[ Upstream commit e260ad01f0aa9e96b5386d5cd7184afd949dc457 ]
 
-This patch fixes a restriction/bug introduced by:
+Currently when userspace gives us a values that overflow e.g.  file-max
+and other callers of __do_proc_doulongvec_minmax() we simply ignore the
+new value and leave the current value untouched.
 
-   583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
+This can be problematic as it gives the illusion that the limit has
+indeed be bumped when in fact it failed.  This commit makes sure to
+return EINVAL when an overflow is detected.  Please note that this is a
+userspace facing change.
 
-The original patch prevented using multi-entry PEBS when wakeup_events != 0.
-However given that wakeup_events is part of a union with wakeup_watermark, it
-means that in watermark mode, PEBS multi-entry is also disabled which is not the
-intent. This patch fixes this by checking is watermark mode is enabled.
-
-Signed-off-by: Stephane Eranian <eranian@google.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: jolsa@redhat.com
-Cc: kan.liang@intel.com
-Cc: vincent.weaver@maine.edu
-Fixes: 583feb08e7f7 ("perf/x86/intel: Fix handling of wakeup_events for multi-entry PEBS")
-Link: http://lkml.kernel.org/r/20190514003400.224340-1-eranian@google.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Link: http://lkml.kernel.org/r/20190210203943.8227-4-christian@brauner.io
+Signed-off-by: Christian Brauner <christian@brauner.io>
+Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Al Viro <viro@zeniv.linux.org.uk>
+Cc: Dominik Brodowski <linux@dominikbrodowski.net>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Joe Lawrence <joe.lawrence@redhat.com>
+Cc: Waiman Long <longman@redhat.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/kernel/cpu/perf_event_intel.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/sysctl.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/cpu/perf_event_intel.c b/arch/x86/kernel/cpu/perf_event_intel.c
-index 325ed90511cf..3572434a73cb 100644
---- a/arch/x86/kernel/cpu/perf_event_intel.c
-+++ b/arch/x86/kernel/cpu/perf_event_intel.c
-@@ -2513,7 +2513,7 @@ static int intel_pmu_hw_config(struct perf_event *event)
- 		return ret;
- 
- 	if (event->attr.precise_ip) {
--		if (!(event->attr.freq || event->attr.wakeup_events)) {
-+		if (!(event->attr.freq || (event->attr.wakeup_events && !event->attr.watermark))) {
- 			event->hw.flags |= PERF_X86_EVENT_AUTO_RELOAD;
- 			if (!(event->attr.sample_type &
- 			      ~intel_pmu_free_running_flags(event)))
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index c140659db669..24c7fe8608d0 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -2461,8 +2461,10 @@ static int __do_proc_doulongvec_minmax(void *data, struct ctl_table *table, int
+ 			if (neg)
+ 				continue;
+ 			val = convmul * val / convdiv;
+-			if ((min && val < *min) || (max && val > *max))
+-				continue;
++			if ((min && val < *min) || (max && val > *max)) {
++				err = -EINVAL;
++				break;
++			}
+ 			*i = val;
+ 		} else {
+ 			val = convdiv * (*i) / convmul;
 -- 
 2.20.1
 
