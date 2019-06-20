@@ -4,52 +4,57 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1805BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 336C7C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2082208CA
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0592C214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:12:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054356;
-	bh=degohdkmT46QhXhqgztd6HWLd7thAPLeXSXw6lMR4Xs=;
+	s=default; t=1561054358;
+	bh=LCuOsWiv7WF+Oe5V31rsGOh6q0ch6ErTxkreM7dz9f8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ij+E+LTn47yxSZOtHJMgFxMQP8purzyQtTPQ+iQc250imtCXLzEPlIg2/txiYzevE
-	 x0djG+HzV+vHxYU9PAPTKXICEvehiN0ZyBqTpvzp4WA+fyDuzMzNSgfczV7ggKxAAR
-	 7MGvwHTqmufZQ2hIJaX85lA1ls5v0WjaxNT36wlg=
+	b=QTHbd/niGw/l84bLrS5ewL5958cvB+6Yu34n4G7Ky/0qmh2pfk+6LhdCwlGETIZeQ
+	 s92vwDZDMkL9bQND8Cyq1huZ3sQBT05b0OmY0Qrbe2t0avSjG1D88ifo5Mie6ONdXd
+	 e9C7hRDzvwdlc/TVIvVViXEiy+dnKEWI8O5TvCT0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729052AbfFTSMe (ORCPT
+        id S1728550AbfFTSMh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:12:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40326 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:12:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40354 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729031AbfFTSM3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:29 -0400
+        id S1728432AbfFTSMb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:12:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 844BD214AF;
-        Thu, 20 Jun 2019 18:12:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 116B62084E;
+        Thu, 20 Jun 2019 18:12:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054348;
-        bh=degohdkmT46QhXhqgztd6HWLd7thAPLeXSXw6lMR4Xs=;
+        s=default; t=1561054350;
+        bh=LCuOsWiv7WF+Oe5V31rsGOh6q0ch6ErTxkreM7dz9f8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b6b3bTtYbHsN3zgYje/DEkoWICHiD6oz4a99cGWsW4PmY+SJn7Z6w4OGuYUtlSplM
-         qI9WUA64ENg3j9VD0w7oEJ0lxak3yzw7cB4dMOH4+93f6nqz0KoiqrJgloN27NSgu/
-         mgNedlsMGMwx2AI1LRAGyXqS4OBW30QGIy5EyDB4=
+        b=ZbbDUrM1yEDOb9ExLF3CnC68RLb+xSKIvnfOixqF6w2iImzNc7G3UsrwAz4mPkzoV
+         VWHj6tktoSjx7krrB+az2Vb1NqQPaA7cx4KZ8tm7tgqQ1yvJkNtBnWr0hOrrYcWuRA
+         go/EvNQIfzZDw9/sMoETF6cNB558YTpKlarzuJs0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, "Tobin C. Harding" <tobin@kernel.org>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 58/61] mlxsw: spectrum: Prevent force of 56G
-Date:   Thu, 20 Jun 2019 19:57:53 +0200
-Message-Id: <20190620174347.301757984@linuxfoundation.org>
+Subject: [PATCH 4.19 59/61] ocfs2: fix error path kobject memory leak
+Date:   Thu, 20 Jun 2019 19:57:54 +0200
+Message-Id: <20190620174347.458215438@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -62,39 +67,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 275e928f19117d22f6d26dee94548baf4041b773 ]
+[ Upstream commit b9fba67b3806e21b98bd5a98dc3921a8e9b42d61 ]
 
-Force of 56G is not supported by hardware in Ethernet devices. This
-configuration fails with a bad parameter error from firmware.
+If a call to kobject_init_and_add() fails we should call kobject_put()
+otherwise we leak memory.
 
-Add check of this case. Instead of trying to set 56G with autoneg off,
-return a meaningful error.
+Add call to kobject_put() in the error path of call to
+kobject_init_and_add().  Please note, this has the side effect that the
+release method is called if kobject_init_and_add() fails.
 
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Link: http://lkml.kernel.org/r/20190513033458.2824-1-tobin@kernel.org
+Signed-off-by: Tobin C. Harding <tobin@kernel.org>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ fs/ocfs2/filecheck.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index c5b82e283d13..ff2f6b8e2fab 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2488,6 +2488,10 @@ mlxsw_sp_port_set_link_ksettings(struct net_device *dev,
- 	mlxsw_reg_ptys_eth_unpack(ptys_pl, &eth_proto_cap, NULL, NULL);
- 
- 	autoneg = cmd->base.autoneg == AUTONEG_ENABLE;
-+	if (!autoneg && cmd->base.speed == SPEED_56000) {
-+		netdev_err(dev, "56G not supported with autoneg off\n");
-+		return -EINVAL;
-+	}
- 	eth_proto_new = autoneg ?
- 		mlxsw_sp_to_ptys_advert_link(cmd) :
- 		mlxsw_sp_to_ptys_speed(cmd->base.speed);
+diff --git a/fs/ocfs2/filecheck.c b/fs/ocfs2/filecheck.c
+index f65f2b2f594d..1906cc962c4d 100644
+--- a/fs/ocfs2/filecheck.c
++++ b/fs/ocfs2/filecheck.c
+@@ -193,6 +193,7 @@ int ocfs2_filecheck_create_sysfs(struct ocfs2_super *osb)
+ 	ret = kobject_init_and_add(&entry->fs_kobj, &ocfs2_ktype_filecheck,
+ 					NULL, "filecheck");
+ 	if (ret) {
++		kobject_put(&entry->fs_kobj);
+ 		kfree(fcheck);
+ 		return ret;
+ 	}
 -- 
 2.20.1
 
