@@ -4,58 +4,62 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EB0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:32:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB5BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:32:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8712B2064A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:32:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 958EB20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:32:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561037563;
-	bh=yhustiNzl9qWWiBl3aSbvtAFJKRUJrmcokoSaLt5Us4=;
+	s=default; t=1561037567;
+	bh=RoNAfsM6rN98Xv31iXu7kTySompQYakxcxu2bv+1S00=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=VtbDWYiC92lCg+X2I+GY5LUlMy4+n4A115le+kQLcqJZGjJSg7Mh1y7b4/u5HK9vZ
-	 L5SbcuAsNg3B68id4vCde7RpZGbWaYX7p4WUhCVyyHLTs7N3UEm4F2Hf2Bkw9KgzTp
-	 SgKNLDZI/8mvYPQNWWp2HBrP2cIKQxay6Ar8bGyM=
+	b=D6GnuiHN3zkS0ZQThn0ZXVO0BOyozsKeAhLkv0Fzkjt8teV59HSPC54FduWpVIX1a
+	 qDTrPhnNZH3M8aaVD/LbEpQkGfrXH8gvVPdQMXZkNkB1joTfdz/LatU87hQU7qmTgQ
+	 YdlKYtnQDQCXzpvXIKzpXHTd0Q9CrYCEkuSsOdRo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731947AbfFTNcm (ORCPT
+        id S1731904AbfFTNcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:32:42 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59374 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731553AbfFTNcl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 09:32:41 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:59276 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731770AbfFTNci (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:32:38 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Dv9ZBE80g7Z3d10imVyCnlRbO2J+0mkQKX+QLqGV7YY=; b=p3r5yCvPJSwj
-        +5y0GAkBB519r+d45x2QbdB5SHY1v/qA1HpDKwIzConMTN7PwHpm/i0GUDUgmArfUrqaDHh62/pTz
-        4nIgWHayiuSiWsvdLX5oZgYbkfIzPhQNXRM5IdDepjLJQEI4K622CsihU+8uezq45XXzruIKt3Ry8
-        NQmwk=;
-Received: from [2001:470:1f1d:6b5:7e7a:91ff:fede:4a45] (helo=finisterre.sirena.org.uk)
+        List-Archive; bh=OU8h7GYHNznH778rX36bPEvMnuvSQdzNrA5A/oaRaAk=; b=Ec6GFCf2FlA6
+        u44e2e7k9+5fyKBC7wetOUC+VUPyOdpTDrSU5Mek3sOBT5Fo5a/BIDIGY6ofFpJSREj5UqiDZtDNS
+        ZZvK2c7xqKZnkqzSUuF93HZeS+L4Sg44uiYlDMH9WtJbBJKq1nrkA3YK+3mO3vfkn9TrpIPNTkKF8
+        oXE90=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=finisterre.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hdxB7-0000kt-8y; Thu, 20 Jun 2019 13:32:37 +0000
+        id 1hdxB2-0000kJ-3U; Thu, 20 Jun 2019 13:32:32 +0000
 Received: by finisterre.sirena.org.uk (Postfix, from userid 1000)
-        id B1610440046; Thu, 20 Jun 2019 14:32:36 +0100 (BST)
+        id 9ADFB44004A; Thu, 20 Jun 2019 14:32:31 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Tudor Ambarus <tudor.ambarus@microchip.com>
-Cc:     broonie@kernel.org, linus.walleij@linaro.org,
-        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, Nicolas.Ferre@microchip.com,
-        Tudor.Ambarus@microchip.com
-Subject: Applied "spi: fix ctrl->num_chipselect constraint" to the spi tree
-In-Reply-To: <20190619143820.4045-1-tudor.ambarus@microchip.com>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Georg Waibel <georg.waibel@sensor-technik.de>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Mark Brown <broonie@kernel.org>,
+        Sangbeom Kim <sbkim73@samsung.com>, <stable@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Applied "regulator: s2mps11: Fix ERR_PTR dereference on GPIO lookup failure" to the regulator tree
+In-Reply-To: <1560948159-21926-1-git-send-email-krzk@kernel.org>
 X-Patchwork-Hint: ignore
-Message-Id: <20190620133236.B1610440046@finisterre.sirena.org.uk>
-Date:   Thu, 20 Jun 2019 14:32:36 +0100 (BST)
+Message-Id: <20190620133231.9ADFB44004A@finisterre.sirena.org.uk>
+Date:   Thu, 20 Jun 2019 14:32:31 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -63,11 +67,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: fix ctrl->num_chipselect constraint
+   regulator: s2mps11: Fix ERR_PTR dereference on GPIO lookup failure
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.3
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -88,65 +92,43 @@ to this mail.
 Thanks,
 Mark
 
-From f9481b08220d7dc1ff21e296a330ee8b721b44e4 Mon Sep 17 00:00:00 2001
-From: Tudor Ambarus <tudor.ambarus@microchip.com>
-Date: Wed, 19 Jun 2019 14:38:28 +0000
-Subject: [PATCH] spi: fix ctrl->num_chipselect constraint
+From 70ca117b02f3b1c8830fe95e4e3dea2937038e11 Mon Sep 17 00:00:00 2001
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Date: Wed, 19 Jun 2019 14:42:39 +0200
+Subject: [PATCH] regulator: s2mps11: Fix ERR_PTR dereference on GPIO lookup
+ failure
 
-at91sam9g25ek showed the following error at probe:
-atmel_spi f0000000.spi: Using dma0chan2 (tx) and dma0chan3 (rx)
-for DMA transfers
-atmel_spi: probe of f0000000.spi failed with error -22
+If devm_gpiod_get_from_of_node() call returns ERR_PTR, it is assigned
+into an array of GPIO descriptors and used later because such error is
+not treated as critical thus it is not propagated back to the probe
+function.
 
-Commit 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-moved the calling of spi_get_gpio_descs() after ctrl->dev is set,
-but didn't move the !ctrl->num_chipselect check. When there are
-chip selects in the device tree, the spi-atmel driver lets the
-SPI core discover them when registering the SPI master.
-The ctrl->num_chipselect is thus expected to be set by
-spi_get_gpio_descs().
+All code later expects that such GPIO descriptor is either a NULL or
+proper value.  This later might lead to dereference of ERR_PTR.
 
-Move the !ctlr->num_chipselect after spi_get_gpio_descs() as it was
-before the aforementioned commit. While touching this block, get rid
-of the explicit comparison with 0 and update the commenting style.
+Only devices with S2MPS14 flavor are affected (other do not control
+regulators with GPIOs).
 
-Fixes: 0a919ae49223 ("spi: Don't call spi_get_gpio_descs() before device name is set")
-Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+Fixes: 1c984942f0a4 ("regulator: s2mps11: Pass descriptor instead of GPIO number")
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi.c | 12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/regulator/s2mps11.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index a31e1e291335..80d2d14f6294 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -2375,11 +2375,6 @@ int spi_register_controller(struct spi_controller *ctlr)
- 	if (status)
- 		return status;
- 
--	/* even if it's just one always-selected device, there must
--	 * be at least one chipselect
--	 */
--	if (ctlr->num_chipselect == 0)
--		return -EINVAL;
- 	if (ctlr->bus_num >= 0) {
- 		/* devices with a fixed bus num must check-in with the num */
- 		mutex_lock(&board_lock);
-@@ -2450,6 +2445,13 @@ int spi_register_controller(struct spi_controller *ctlr)
+diff --git a/drivers/regulator/s2mps11.c b/drivers/regulator/s2mps11.c
+index 134c62db36c5..af9bf10b4c33 100644
+--- a/drivers/regulator/s2mps11.c
++++ b/drivers/regulator/s2mps11.c
+@@ -824,6 +824,7 @@ static void s2mps14_pmic_dt_parse_ext_control_gpio(struct platform_device *pdev,
+ 		if (IS_ERR(gpio[reg])) {
+ 			dev_err(&pdev->dev, "Failed to get control GPIO for %d/%s\n",
+ 				reg, rdata[reg].name);
++			gpio[reg] = NULL;
+ 			continue;
  		}
- 	}
- 
-+	/*
-+	 * Even if it's just one always-selected device, there must
-+	 * be at least one chipselect.
-+	 */
-+	if (!ctlr->num_chipselect)
-+		return -EINVAL;
-+
- 	status = device_add(&ctlr->dev);
- 	if (status < 0) {
- 		/* free bus id */
+ 		if (gpio[reg])
 -- 
 2.20.1
 
