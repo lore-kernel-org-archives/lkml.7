@@ -2,171 +2,101 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEAAC4646B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:19:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D78C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:19:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33C842084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:19:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C93F20675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:19:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="E18fnBvQ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="QE4URSfx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731891AbfFTPTB (ORCPT
+        id S1732152AbfFTPTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:19:01 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45386 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732054AbfFTPSz (ORCPT
+        Thu, 20 Jun 2019 11:19:11 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:38120 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726798AbfFTPTI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:18:55 -0400
-Received: by mail-io1-f67.google.com with SMTP id e3so777926ioc.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=8qPSgW/MPmMfMRbYOSrZE2Wb0C0QAL6xUVu8BnMULPU=;
-        b=E18fnBvQxeTWGcLPU7yJtnVUsZk1M7260uW49AWUEQwpDTLXW4zaL81bfOBaOIKkJe
-         izk337ElLT6ixdEAM82Alqqvi8RTCa5t/m7TIIGM2CTO/X/MhLTAbXsdT4WaLEPQzOwi
-         5M/ks9JI6LULaQnx5ORxgNivEqZfrhzLXyxFY=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=8qPSgW/MPmMfMRbYOSrZE2Wb0C0QAL6xUVu8BnMULPU=;
-        b=XZPUSV0QfF9yoXGY5k0D2Row8fwxuf3sCjHM70BaVM6ncBioKCZWF3VSsnmzW/Wb9r
-         5oNEvS7JAw2xOeBLlelMc5W463WYf+nZVsh4nFba1c0rjI5YOt43obWsfPk1Dgx9AXZ8
-         OYLJ1g9Gg0yhT78VptQ4dk64NjI1NoP1Uj8LE7u1DDyVzdJ7UPUeDT6aj087UdbFiUsw
-         lfOXiMP+MBFwWeXAaC2xZFScZTF4uQUrm+FEbshpRXa5RrEVkDxcNKcEm+oBDtNVvUqJ
-         8QIcYtui+z5e96WdjWLTAY4eojNlAydh6uI4LWJ2U1sfzkBPM9YMnteBuhtXlraumdkQ
-         bNmg==
-X-Gm-Message-State: APjAAAUIfWKyuylQCFHyYnGXy4yNfXqNrmJqM1TEOJnU7vjE//ltWYXa
-        6A9oAg+ujJf72fW9D1nOo7EqqHmL2cQ=
-X-Google-Smtp-Source: APXvYqyKoB4ShJDQDvXm8iMpldDQ7RBFe5iQW/R6q5N6coubvTjfHUDrQI1UrGttuBMzscYMvKWwFg==
-X-Received: by 2002:a5d:8794:: with SMTP id f20mr30867938ion.128.1561043934904;
-        Thu, 20 Jun 2019 08:18:54 -0700 (PDT)
-Received: from localhost ([2620:15c:183:200:855f:8919:84a7:4794])
-        by smtp.gmail.com with ESMTPSA id e22sm51531iob.66.2019.06.20.08.18.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 20 Jun 2019 08:18:54 -0700 (PDT)
-From:   Ross Zwisler <zwisler@chromium.org>
-X-Google-Original-From: Ross Zwisler <zwisler@google.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Ross Zwisler <zwisler@google.com>, "Theodore Ts'o" <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>, Jan Kara <jack@suse.cz>,
-        stable@vger.kernel.org
-Subject: [PATCH v2 3/3] ext4: use jbd2_inode dirty range scoping
-Date:   Thu, 20 Jun 2019 09:18:39 -0600
-Message-Id: <20190620151839.195506-4-zwisler@google.com>
-X-Mailer: git-send-email 2.22.0.410.gd8fdbe21b5-goog
-In-Reply-To: <20190620151839.195506-1-zwisler@google.com>
-References: <20190620151839.195506-1-zwisler@google.com>
+        Thu, 20 Jun 2019 11:19:08 -0400
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KFHhOE011982;
+        Thu, 20 Jun 2019 17:18:05 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=3awahpLzjIg/zQ8bAq/yq4u/Eajukl1uJeabfahZE1k=;
+ b=QE4URSfxjpHaljx4dsJHe7OiqHVN6fRUApZ7Yc2CHBNzWUJ0sELxztHUhoNWPWJA9H+p
+ 7bAVnFzPrpkMJ3zKoP/vmqvYoJ4dvQ5bE4U89jwhIRfnJy0I9BTc5ljcBwXAxVp35OOo
+ etfmfe+F7NIo7hFUzjXFv7uPJfEX03p44gkNNV77syS3TtMiB5Q7hP6BEzSII79JKmfW
+ WrkyoyNiAjxyV8RxFpUuCChqDuS3ZJjIL6C3PNr2uosibu4XfNu9UMTZJo7+S7utW3W5
+ RegGBa6tbYoq9e3OhzSxlmX92P8iXb18fHvUVSYGxZCyFtNmyGYvv9XKNGyLWikcjlPp lA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2t78132f08-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Thu, 20 Jun 2019 17:18:05 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id EC41831;
+        Thu, 20 Jun 2019 15:18:03 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag3node3.st.com [10.75.127.9])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C8FE02C8C;
+        Thu, 20 Jun 2019 15:18:03 +0000 (GMT)
+Received: from SFHDAG3NODE2.st.com (10.75.127.8) by SFHDAG3NODE3.st.com
+ (10.75.127.9) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Thu, 20 Jun
+ 2019 17:18:03 +0200
+Received: from SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96]) by
+ SFHDAG3NODE2.st.com ([fe80::b82f:1ce:8854:5b96%20]) with mapi id
+ 15.00.1347.000; Thu, 20 Jun 2019 17:18:03 +0200
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+To:     Lee Jones <lee.jones@linaro.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+CC:     Dan Carpenter <dan.carpenter@oracle.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>
+Subject: Re: [PATCH] mfd: stmfx: Fix an endian bug in stmfx_irq_handler()
+Thread-Topic: [PATCH] mfd: stmfx: Fix an endian bug in stmfx_irq_handler()
+Thread-Index: AQHVJT/EzC9etQZAeEm7fd3OYhvByKag8E+AgADT/ICAAJenAIACLrsA
+Date:   Thu, 20 Jun 2019 15:18:03 +0000
+Message-ID: <f0ff1e54-c1b9-4a08-c7ff-2ff545e398c3@st.com>
+References: <CAHk-=wgTL5sYCGxX8+xQqyBRWRUE05GAdL58+UTG8bYwjFxMkw@mail.gmail.com>
+ <20190617190605.GA21332@mwanda> <20190618081645.GM16364@dell>
+ <CAHk-=wghW+AKvRGevUiVWwTqWObygSZSdq6Dz2ad81H73VeuRQ@mail.gmail.com>
+ <20190619055816.GF18371@dell>
+In-Reply-To: <20190619055816.GF18371@dell>
+Accept-Language: fr-FR, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.50]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <18B2C5B8D6D879419D1A363687D100BA@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_11:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Use the newly introduced jbd2_inode dirty range scoping to prevent us
-from waiting forever when trying to complete a journal transaction.
-
-Signed-off-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Jan Kara <jack@suse.cz>
-Cc: stable@vger.kernel.org
----
- fs/ext4/ext4_jbd2.h   | 12 ++++++------
- fs/ext4/inode.c       | 13 ++++++++++---
- fs/ext4/move_extent.c |  3 ++-
- 3 files changed, 18 insertions(+), 10 deletions(-)
-
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 75a5309f22315..ef8fcf7d0d3b3 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -361,20 +361,20 @@ static inline int ext4_journal_force_commit(journal_t *journal)
- }
- 
- static inline int ext4_jbd2_inode_add_write(handle_t *handle,
--					    struct inode *inode)
-+		struct inode *inode, loff_t start_byte, loff_t length)
- {
- 	if (ext4_handle_valid(handle))
--		return jbd2_journal_inode_add_write(handle,
--						    EXT4_I(inode)->jinode);
-+		return jbd2_journal_inode_ranged_write(handle,
-+				EXT4_I(inode)->jinode, start_byte, length);
- 	return 0;
- }
- 
- static inline int ext4_jbd2_inode_add_wait(handle_t *handle,
--					   struct inode *inode)
-+		struct inode *inode, loff_t start_byte, loff_t length)
- {
- 	if (ext4_handle_valid(handle))
--		return jbd2_journal_inode_add_wait(handle,
--						   EXT4_I(inode)->jinode);
-+		return jbd2_journal_inode_ranged_wait(handle,
-+				EXT4_I(inode)->jinode, start_byte, length);
- 	return 0;
- }
- 
-diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
-index c7f77c6430085..27fec5c594459 100644
---- a/fs/ext4/inode.c
-+++ b/fs/ext4/inode.c
-@@ -731,10 +731,16 @@ int ext4_map_blocks(handle_t *handle, struct inode *inode,
- 		    !(flags & EXT4_GET_BLOCKS_ZERO) &&
- 		    !ext4_is_quota_file(inode) &&
- 		    ext4_should_order_data(inode)) {
-+			loff_t start_byte =
-+				(loff_t)map->m_lblk << inode->i_blkbits;
-+			loff_t length = (loff_t)map->m_len << inode->i_blkbits;
-+
- 			if (flags & EXT4_GET_BLOCKS_IO_SUBMIT)
--				ret = ext4_jbd2_inode_add_wait(handle, inode);
-+				ret = ext4_jbd2_inode_add_wait(handle, inode,
-+						start_byte, length);
- 			else
--				ret = ext4_jbd2_inode_add_write(handle, inode);
-+				ret = ext4_jbd2_inode_add_write(handle, inode,
-+						start_byte, length);
- 			if (ret)
- 				return ret;
- 		}
-@@ -4085,7 +4091,8 @@ static int __ext4_block_zero_page_range(handle_t *handle,
- 		err = 0;
- 		mark_buffer_dirty(bh);
- 		if (ext4_should_order_data(inode))
--			err = ext4_jbd2_inode_add_write(handle, inode);
-+			err = ext4_jbd2_inode_add_write(handle, inode, from,
-+					length);
- 	}
- 
- unlock:
-diff --git a/fs/ext4/move_extent.c b/fs/ext4/move_extent.c
-index 1083a9f3f16a1..c7ded4e2adff5 100644
---- a/fs/ext4/move_extent.c
-+++ b/fs/ext4/move_extent.c
-@@ -390,7 +390,8 @@ move_extent_per_page(struct file *o_filp, struct inode *donor_inode,
- 
- 	/* Even in case of data=writeback it is reasonable to pin
- 	 * inode to transaction, to prevent unexpected data loss */
--	*err = ext4_jbd2_inode_add_write(handle, orig_inode);
-+	*err = ext4_jbd2_inode_add_write(handle, orig_inode,
-+			(loff_t)orig_page_offset << PAGE_SHIFT, replaced_size);
- 
- unlock_pages:
- 	unlock_page(pagep[0]);
--- 
-2.22.0.410.gd8fdbe21b5-goog
-
+T24gNi8xOS8xOSA3OjU4IEFNLCBMZWUgSm9uZXMgd3JvdGU6DQo+IE9uIFR1ZSwgMTggSnVuIDIw
+MTksIExpbnVzIFRvcnZhbGRzIHdyb3RlOg0KPiANCj4+IE9uIFR1ZSwgSnVuIDE4LCAyMDE5IGF0
+IDE6MTYgQU0gTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJvLm9yZz4gd3JvdGU6DQo+Pj4NCj4+
+Pj4gUmVwb3J0ZWQtYnk6IExpbnVzIFRvcnZhbGRzIDx0b3J2YWxkc0BsaW51eC1mb3VuZGF0aW9u
+Lm9yZz4NCj4+Pg0KPj4+IElkZWFsbHkgd2UgY2FuIGdldCBhIHJldmlldyB0b28uDQo+Pg0KPj4g
+TG9va3MgZmluZSB0byBtZSwgYnV0IG9idmlvdXNseSBzb21lYm9keSBzaG91bGQgYWN0dWFsbHkg
+X3Rlc3RfIGl0IHRvby4NCj4gDQo+IEFtZWxpZSwgd291bGQgeW91IGJlIHNvIGtpbmQ/DQo+IA0K
+DQpUZXN0ZWQgb24gc3RtMzJtcDE1N2MtZXYxLg0KDQpUZXN0ZWQtYnk6IEFtZWxpZSBEZWxhdW5h
+eSA8YW1lbGllLmRlbGF1bmF5QHN0LmNvbT4=
