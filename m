@@ -2,46 +2,46 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CC8DC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B449C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 663E72084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31D392085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:54:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="bmnEUWpp"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="b3fuWxEO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726953AbfFTUyN (ORCPT
+        id S1727179AbfFTUyY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:54:13 -0400
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:7364 "EHLO
+        Thu, 20 Jun 2019 16:54:24 -0400
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:35110 "EHLO
         mx0b-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726761AbfFTUyJ (ORCPT
+        by vger.kernel.org with ESMTP id S1726192AbfFTUyN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:54:09 -0400
+        Thu, 20 Jun 2019 16:54:13 -0400
 Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KKs22Y010777
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:54:07 -0700
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KKs22h010777
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:54:12 -0700
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=Rd2surzaIHpsaXLZZ+uUyTgCfzwHrwQk/kkn9z9rfxg=;
- b=bmnEUWpp8Y8WJH7dw7bmchR2wyhNRQUERSe+Zg6nd5c39AHPWdSFJpF+Ky6w48V4pwA3
- qMjVqvcEns9twS1FqAZeYVdzUfiSwRHkXtvUUpc3IR4eQ8w6EZONYHRKK2baFtmd9OI/
- wngv+NAW04YT2hZzMN91BEvskAUFRzlODFQ= 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=iFz1RdjWCbrw1b7w4eZ5iGWyb2zDfKg3QSt6me6ZtqE=;
+ b=b3fuWxEO2bh8EURL6LgbdwtTE0On0VONM5U8+/w2EiFEQLS9oOFpgcdCbTuOe5hPfUgz
+ kX/6nUK8e79VK9unMApm+cqPvb8ZTUgxxa3bWBBZOu1nadIBd17jpOUIEKSHA+fcuzZM
+ Xo1So6jIa9/E94+wKRc2OB4oh0s9UJpjX60= 
 Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2t8aj31pkm-2
+        by mx0a-00082601.pphosted.com with ESMTP id 2t8aj31pkm-10
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:54:03 -0700
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:54:12 -0700
 Received: from mx-out.facebook.com (2620:10d:c081:10::13) by
  mail.thefacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Thu, 20 Jun 2019 13:53:53 -0700
+ Thu, 20 Jun 2019 13:54:02 -0700
 Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id C847B62E2A35; Thu, 20 Jun 2019 13:53:52 -0700 (PDT)
+        id 6532D62E2A35; Thu, 20 Jun 2019 13:54:01 -0700 (PDT)
 Smtp-Origin-Hostprefix: devbig
 From:   Song Liu <songliubraving@fb.com>
 Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
@@ -51,10 +51,12 @@ CC:     <matthew.wilcox@oracle.com>, <kirill.shutemov@linux.intel.com>,
         <kernel-team@fb.com>, <william.kucharski@oracle.com>,
         <akpm@linux-foundation.org>, Song Liu <songliubraving@fb.com>
 Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 0/6] Enable THP for text section of non-shmem files
-Date:   Thu, 20 Jun 2019 13:53:42 -0700
-Message-ID: <20190620205348.3980213-1-songliubraving@fb.com>
+Subject: [PATCH v5 3/6] mm,thp: stats for file backed THP
+Date:   Thu, 20 Jun 2019 13:53:45 -0700
+Message-ID: <20190620205348.3980213-4-songliubraving@fb.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190620205348.3980213-1-songliubraving@fb.com>
+References: <20190620205348.3980213-1-songliubraving@fb.com>
 X-FB-Internal: Safe
 MIME-Version: 1.0
 Content-Type: text/plain
@@ -71,88 +73,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changes v4 => v5:
-1. Move the logic to drop THP from pagecache to open() path (Rik).
-2. Revise description of CONFIG_READ_ONLY_THP_FOR_FS.
+In preparation for non-shmem THP, this patch adds two stats and exposes
+them in /proc/meminfo
 
-Changes v3 => v4:
-1. Put the logic to drop THP from pagecache in a separate function (Rik).
-2. Move the function to drop THP from pagecache to exit_mmap().
-3. Revise confusing commit log 6/6.
+Acked-by: Rik van Riel <riel@surriel.com>
+Signed-off-by: Song Liu <songliubraving@fb.com>
+---
+ fs/proc/meminfo.c      | 4 ++++
+ include/linux/mmzone.h | 2 ++
+ mm/vmstat.c            | 2 ++
+ 3 files changed, 8 insertions(+)
 
-Changes v2 => v3:
-1. Removed the limitation (cannot write to file with THP) by truncating
-   whole file during sys_open (see 6/6);
-2. Fixed a VM_BUG_ON_PAGE() in filemap_fault() (see 2/6);
-3. Split function rename to a separate patch (Rik);
-4. Updated condition in hugepage_vma_check() (Rik).
-
-Changes v1 => v2:
-1. Fixed a missing mem_cgroup_commit_charge() for non-shmem case.
-
-This set follows up discussion at LSF/MM 2019. The motivation is to put
-text section of an application in THP, and thus reduces iTLB miss rate and
-improves performance. Both Facebook and Oracle showed strong interests to
-this feature.
-
-To make reviews easier, this set aims a mininal valid product. Current
-version of the work does not have any changes to file system specific
-code. This comes with some limitations (discussed later).
-
-This set enables an application to "hugify" its text section by simply
-running something like:
-
-          madvise(0x600000, 0x80000, MADV_HUGEPAGE);
-
-Before this call, the /proc/<pid>/maps looks like:
-
-    00400000-074d0000 r-xp 00000000 00:27 2006927     app
-
-After this call, part of the text section is split out and mapped to
-THP:
-
-    00400000-00425000 r-xp 00000000 00:27 2006927     app
-    00600000-00e00000 r-xp 00200000 00:27 2006927     app   <<< on THP
-    00e00000-074d0000 r-xp 00a00000 00:27 2006927     app
-
-Limitations:
-
-1. This only works for text section (vma with VM_DENYWRITE).
-2. Original limitation #2 is removed in v3.
-
-We gated this feature with an experimental config, READ_ONLY_THP_FOR_FS.
-Once we get better support on the write path, we can remove the config and
-enable it by default.
-
-Tested cases:
-1. Tested with btrfs and ext4.
-2. Tested with real work application (memcache like caching service).
-3. Tested with "THP aware uprobe":
-   https://patchwork.kernel.org/project/linux-mm/list/?series=131339
-
-Please share your comments and suggestions on this.
-
-Thanks!
-
-Song Liu (6):
-  filemap: check compound_head(page)->mapping in filemap_fault()
-  filemap: update offset check in filemap_fault()
-  mm,thp: stats for file backed THP
-  khugepaged: rename collapse_shmem() and khugepaged_scan_shmem()
-  mm,thp: add read-only THP support for (non-shmem) FS
-  mm,thp: avoid writes to file with THP in pagecache
-
- fs/inode.c             |   3 ++
- fs/namei.c             |  22 ++++++++-
- fs/proc/meminfo.c      |   4 ++
- include/linux/fs.h     |  31 ++++++++++++
- include/linux/mmzone.h |   2 +
- mm/Kconfig             |  11 +++++
- mm/filemap.c           |   9 ++--
- mm/khugepaged.c        | 104 +++++++++++++++++++++++++++++++++--------
- mm/rmap.c              |  12 +++--
- mm/vmstat.c            |   2 +
- 10 files changed, 171 insertions(+), 29 deletions(-)
-
---
+diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
+index 568d90e17c17..bac395fc11f9 100644
+--- a/fs/proc/meminfo.c
++++ b/fs/proc/meminfo.c
+@@ -136,6 +136,10 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
+ 		    global_node_page_state(NR_SHMEM_THPS) * HPAGE_PMD_NR);
+ 	show_val_kb(m, "ShmemPmdMapped: ",
+ 		    global_node_page_state(NR_SHMEM_PMDMAPPED) * HPAGE_PMD_NR);
++	show_val_kb(m, "FileHugePages: ",
++		    global_node_page_state(NR_FILE_THPS) * HPAGE_PMD_NR);
++	show_val_kb(m, "FilePmdMapped: ",
++		    global_node_page_state(NR_FILE_PMDMAPPED) * HPAGE_PMD_NR);
+ #endif
+ 
+ #ifdef CONFIG_CMA
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 70394cabaf4e..827f9b777938 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -234,6 +234,8 @@ enum node_stat_item {
+ 	NR_SHMEM,		/* shmem pages (included tmpfs/GEM pages) */
+ 	NR_SHMEM_THPS,
+ 	NR_SHMEM_PMDMAPPED,
++	NR_FILE_THPS,
++	NR_FILE_PMDMAPPED,
+ 	NR_ANON_THPS,
+ 	NR_UNSTABLE_NFS,	/* NFS unstable pages */
+ 	NR_VMSCAN_WRITE,
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index fd7e16ca6996..6afc892a148a 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1158,6 +1158,8 @@ const char * const vmstat_text[] = {
+ 	"nr_shmem",
+ 	"nr_shmem_hugepages",
+ 	"nr_shmem_pmdmapped",
++	"nr_file_hugepages",
++	"nr_file_pmdmapped",
+ 	"nr_anon_transparent_hugepages",
+ 	"nr_unstable",
+ 	"nr_vmscan_write",
+-- 
 2.17.1
+
