@@ -2,87 +2,93 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E391C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15DA5C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:38:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0FBB2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3EC92084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 21:37:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561066679;
+	bh=TNmYr6CvvNadt0CrFEbwkNnYFLKwnqfGdwLIPynMFJc=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=AqdWtj//TIzjyAT71AId9r36c2S9/XSptSMQM7lUn2yE2GWkgof2/d1VF1+xANoXd
+	 AqAhRsDLbZXGPWqVZpFM08l/Qt/naH8jHM3ePoIOVH4cW9oei4+2ha6jFlklmQxET2
+	 cUGOKvJrvuTjSH2qKSkG+Fp7aloZosXwPMeJRfqc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726453AbfFTVhx (ORCPT
+        id S1726548AbfFTVh6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 17:37:53 -0400
-Received: from mga18.intel.com ([134.134.136.126]:34601 "EHLO mga18.intel.com"
+        Thu, 20 Jun 2019 17:37:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46804 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725815AbfFTVhx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:37:53 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga007.fm.intel.com ([10.253.24.52])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 14:37:52 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.63,398,1557212400"; 
-   d="scan'208";a="162491010"
-Received: from mudigirx-mobl1.gar.corp.intel.com (HELO localhost) ([10.252.61.12])
-  by fmsmga007.fm.intel.com with ESMTP; 20 Jun 2019 14:37:48 -0700
-Date:   Fri, 21 Jun 2019 00:37:46 +0300
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     Matthew Garrett <mjg59@google.com>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Hariprasad Kelam <hariprasad.kelam@gmail.com>,
-        tpmdd-devel@lists.sourceforge.net,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers: firmware: efi: fix gcc warning -Wint-conversion
-Message-ID: <20190620213722.GA17841@linux.intel.com>
-References: <20190615040210.GA9112@hari-Inspiron-1545>
- <CAKv+Gu9-wiJNxPsVn06dBSU8Gchg8LjV=mi0cThZUWywmt2xzQ@mail.gmail.com>
- <CACdnJuudmE-MNuO7z87Mm65VaXbRzhOrBEpU5F=yC67uSLytGQ@mail.gmail.com>
+        id S1725815AbfFTVh5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 17:37:57 -0400
+Received: from localhost (odyssey.drury.edu [64.22.249.253])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 997182084A;
+        Thu, 20 Jun 2019 21:37:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561066676;
+        bh=TNmYr6CvvNadt0CrFEbwkNnYFLKwnqfGdwLIPynMFJc=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=xbcxdOGjQwdd+KsHTxdBW/6Mn4LrjOJDdcATrKHeCYZWK4QU9SvwHmaUEW8iDYuOj
+         aE7c0meBbMgEWfTvPeK7Y2ALcZ21grwNmQ3xkeLbXc1x4qw1MzX1vqgPieLpbAS+3P
+         ZtFEOyxnCTr1JHxQuwZJ62AqkPYy4FnjrUuK2E+A=
+Date:   Thu, 20 Jun 2019 16:37:55 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Puranjay Mohan <puranjay12@gmail.com>
+Cc:     Shuah Khan <skhan@linuxfoundation.org>,
+        Bjorn Helgaas <bjorn@helgaas.com>,
+        netdev <netdev@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-pci@vger.kernel.org
+Subject: Re: [PATCH v2 2/3] net: fddi: skfp: Include generic PCI definitions
+Message-ID: <20190620213755.GE110859@google.com>
+References: <20190620180754.15413-1-puranjay12@gmail.com>
+ <20190620180754.15413-3-puranjay12@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CACdnJuudmE-MNuO7z87Mm65VaXbRzhOrBEpU5F=yC67uSLytGQ@mail.gmail.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20190620180754.15413-3-puranjay12@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 03:48:23PM -0700, Matthew Garrett wrote:
-> On Wed, Jun 19, 2019 at 2:55 AM Ard Biesheuvel
-> <ard.biesheuvel@linaro.org> wrote:
-> >
-> > (+ Jarkko, tpmdd, Matthew)
-> >
-> > On Sat, 15 Jun 2019 at 06:02, Hariprasad Kelam
-> > <hariprasad.kelam@gmail.com> wrote:
-> > >
-> > > This patch fixes below warning
-> > >
-> > > drivers/firmware/efi/tpm.c:78:38: warning: passing argument 1 of
-> > > ‘tpm2_calc_event_log_size’ makes pointer from integer without a cast
-> > > [-Wint-conversion]
-> > >
-> > > Signed-off-by: Hariprasad Kelam <hariprasad.kelam@gmail.com>
-> >
-> > I think we already have a fix queued for this, no?
+On Thu, Jun 20, 2019 at 11:37:53PM +0530, Puranjay Mohan wrote:
+> Include the uapi/linux/pci_regs.h header file which contains the generic
+> PCI defines.
 > 
-> It looks like I fixed this in "Don't duplicate events from the final
-> event log in the TCG2 log" rather than a separate patch - I'm fine
-> merging this, based on Jarkko's preferences.
+> Signed-off-by: Puranjay Mohan <puranjay12@gmail.com>
+> ---
+>  drivers/net/fddi/skfp/drvfbi.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/net/fddi/skfp/drvfbi.c b/drivers/net/fddi/skfp/drvfbi.c
+> index b324c1acf195..e8245cb281f8 100644
+> --- a/drivers/net/fddi/skfp/drvfbi.c
+> +++ b/drivers/net/fddi/skfp/drvfbi.c
+> @@ -20,7 +20,7 @@
+>  #include "h/supern_2.h"
+>  #include "h/skfbiinc.h"
+>  #include <linux/bitrev.h>
+> -
+> +#include <linux/pci_regs.h>
 
-Right! OK, I squashed just the fix to the earlier patch. Master and
-next are updated. Can you take a peek of [1] and see if it looks
-legit given all the fuzz around these changes? Then I'm confident
-enough to do the 5.3 PR.
+You removed the blank line between the list of include files and the
+SCCS ID (now there's an anachronism) below.  That blank line is part
+of typical Linux style and you should keep it.
 
-[1] git://git.infradead.org/users/jjs/linux-tpmdd.git
-
-/Jarkko
+>  #ifndef	lint
+>  static const char ID_sccs[] = "@(#)drvfbi.c	1.63 99/02/11 (C) SK " ;
+>  #endif
+> -- 
+> 2.21.0
+> 
