@@ -2,137 +2,114 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42683C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:48:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84296C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:51:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2226A2080C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:48:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 573E12080C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 11:51:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rKmSOdqg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726755AbfFTLsY (ORCPT
+        id S1731276AbfFTLvm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 07:48:24 -0400
-Received: from shell.v3.sk ([90.176.6.54]:51068 "EHLO shell.v3.sk"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726391AbfFTLsX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 07:48:23 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id E3BB0CC114;
-        Thu, 20 Jun 2019 13:48:21 +0200 (CEST)
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id mjjGVXUkeHZO; Thu, 20 Jun 2019 13:48:19 +0200 (CEST)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra.v3.sk (Postfix) with ESMTP id A4BABCC073;
-        Thu, 20 Jun 2019 13:48:19 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at zimbra.v3.sk
-Received: from shell.v3.sk ([127.0.0.1])
-        by localhost (zimbra.v3.sk [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id yRqnqWP2PzPw; Thu, 20 Jun 2019 13:48:18 +0200 (CEST)
-Received: from belphegor.brq.redhat.com (nat-pool-brq-t.redhat.com [213.175.37.10])
-        by zimbra.v3.sk (Postfix) with ESMTPSA id 973DACC12B;
-        Thu, 20 Jun 2019 13:48:18 +0200 (CEST)
-From:   Lubomir Rintel <lkundrak@v3.sk>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH] ARM: multi_v7_defconfig: enable MMP2 platform
-Date:   Thu, 20 Jun 2019 13:48:16 +0200
-Message-Id: <20190620114816.1387881-1-lkundrak@v3.sk>
-X-Mailer: git-send-email 2.21.0
+        Thu, 20 Jun 2019 07:51:42 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42280 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726391AbfFTLvm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 07:51:42 -0400
+Received: by mail-wr1-f65.google.com with SMTP id x17so2688339wrl.9;
+        Thu, 20 Jun 2019 04:51:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=96Go4rPJQEtcKvxvDEzsJJuj+W2bYPYU8UdDTcqGGh8=;
+        b=rKmSOdqg3lCj3oK0q1utDN1n/JQsDtCFdrUI5DoeZlG6vW4zCD1GCxbNeQ86FGvHtE
+         MPrzRiX8/eXHpHySNhhFNxyMGrLKe/UtI40af7qzdwpdxVSJbcJlTWx4ediGDfTLKsxg
+         vyfmNn3sTvIwDMclJwPg8JWVRBOE9sND3cCO0wxkiAbv6kNgjefRfACIVH1fSEicQREZ
+         1pBrxS7VdozZCEbruU6P6bn+VtLI/7JkIeby1IbHl1F6qSQrlnZ2JQNLyi8J/jG8ucbr
+         OOru3CdpMEqmawNjMAlsgHaSgVCSAYwAfPdCnyybSff1BYLoS11X9CcS27rkb5rt8suU
+         tBQQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=96Go4rPJQEtcKvxvDEzsJJuj+W2bYPYU8UdDTcqGGh8=;
+        b=VglLVY0e1RiWRXtvAjdJWE6/BA28aykq5f0MoqVE2PNaZ2fjruihkzqXILaVOU2dBZ
+         BHDo4q7mcGRUE+6/K+ToAlJ8c5toCfOV6JkqcYn2BihKUH/s86mh/rEA53g4Iij5AAtV
+         LDWHbre1NS9qz3SW70kIDJWLHnto8r8cLaHuQUAPgVDGpWzCVm33mLwb5iTGqmTmmws6
+         uvqtwkTiM9pbgo5Sg59BtEK4RG0BuggxI8Un/0FQxoloBjwpMMOTGCTBkki9QZDnWYo3
+         V58Mpd4Io8yfXyp4ZAFOElTPUi3PhpkOJVYShH9/pwdqjk6ve/9AD2krM3ef7kDg4bhG
+         +GaQ==
+X-Gm-Message-State: APjAAAWgIsQ6cvEne5ubNvkOttgWsfmPkgKGakDsswoCLrVk86Kg8QPM
+        h6wBsIqRHPDUbJGHmRR05fjMm9ij
+X-Google-Smtp-Source: APXvYqxhqJdyQkUJehlXfnY/gXjhYcoFvOtcwmE9WImKcxs+LMXAzcj8srgcHbBqbNI2Yqwps+WmsA==
+X-Received: by 2002:adf:c614:: with SMTP id n20mr34300781wrg.17.1561031499425;
+        Thu, 20 Jun 2019 04:51:39 -0700 (PDT)
+Received: from xws.fritz.box (pD9E5A621.dip0.t-ipconnect.de. [217.229.166.33])
+        by smtp.gmail.com with ESMTPSA id s7sm7918213wmc.2.2019.06.20.04.51.37
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 20 Jun 2019 04:51:38 -0700 (PDT)
+From:   Maximilian Luz <luzmaximilian@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, linux-input@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Chen Yu <yu.c.chen@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Maximilian Luz <luzmaximilian@gmail.com>
+Subject: [PATCH 0/2] Support for buttons on newer MS Surface devices
+Date:   Thu, 20 Jun 2019 13:50:54 +0200
+Message-Id: <20190620115056.4169-1-luzmaximilian@gmail.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Marvell MMP/PXA/MMP2 platforms seem to be excluded from the defconfig
-for no good reasons. Enable the DT-based boards and the modules for
-their peripherals.
+This series adds suport for power and volume buttons on 5th and 6th
+generation Microsoft Surface devices. Specifically, it adds support for
+the power-button on the Surface Laptop 1 and Laptop 2, as well as
+support for power- and (on-device) volume-buttons on the Surface Pro 5
+(2017), Pro 6, and Book 2.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
----
- arch/arm/configs/multi_v7_defconfig | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+These devices use the same MSHW0040 device as on the Surface Pro 4,
+however, whereas the Pro 4 uses an ACPI notify handler, the newer
+devices use GPIO interrupts to signal these events.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi=
-_v7_defconfig
-index 6b748f214eae..ef91f41bd48a 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -51,6 +51,8 @@ CONFIG_ARCH_MEDIATEK=3Dy
- CONFIG_ARCH_MESON=3Dy
- CONFIG_ARCH_MILBEAUT=3Dy
- CONFIG_ARCH_MILBEAUT_M10V=3Dy
-+CONFIG_ARCH_MMP=3Dy
-+CONFIG_MACH_MMP2_DT=3Dy
- CONFIG_ARCH_MVEBU=3Dy
- CONFIG_MACH_ARMADA_370=3Dy
- CONFIG_MACH_ARMADA_375=3Dy
-@@ -278,6 +280,7 @@ CONFIG_INPUT_EVDEV=3Dy
- CONFIG_KEYBOARD_QT1070=3Dm
- CONFIG_KEYBOARD_GPIO=3Dy
- CONFIG_KEYBOARD_TEGRA=3Dy
-+CONFIG_KEYBOARD_PXA27x=3Dm
- CONFIG_KEYBOARD_SAMSUNG=3Dm
- CONFIG_KEYBOARD_ST_KEYSCAN=3Dy
- CONFIG_KEYBOARD_SPEAR=3Dy
-@@ -312,6 +315,7 @@ CONFIG_SERIAL_8250_EM=3Dy
- CONFIG_SERIAL_8250_OMAP=3Dy
- CONFIG_SERIAL_8250_MT6577=3Dy
- CONFIG_SERIAL_8250_UNIPHIER=3Dy
-+CONFIG_SERIAL_8250_PXA=3Dm
- CONFIG_SERIAL_OF_PLATFORM=3Dy
- CONFIG_SERIAL_AMBA_PL011=3Dy
- CONFIG_SERIAL_AMBA_PL011_CONSOLE=3Dy
-@@ -589,6 +593,7 @@ CONFIG_VIDEO_V4L2_SUBDEV_API=3Dy
- CONFIG_MEDIA_USB_SUPPORT=3Dy
- CONFIG_USB_VIDEO_CLASS=3Dm
- CONFIG_V4L_PLATFORM_DRIVERS=3Dy
-+CONFIG_VIDEO_MMP_CAMERA=3Dm
- CONFIG_VIDEO_STM32_DCMI=3Dm
- CONFIG_VIDEO_SAMSUNG_EXYNOS4_IS=3Dm
- CONFIG_VIDEO_S5P_FIMC=3Dm
-@@ -681,6 +686,9 @@ CONFIG_SND_ATMEL_SOC_PDMIC=3Dm
- CONFIG_SND_ATMEL_SOC_I2S=3Dm
- CONFIG_SND_BCM2835_SOC_I2S=3Dm
- CONFIG_SND_SOC_FSL_SAI=3Dm
-+CONFIG_SND_MMP_SOC=3Dy
-+CONFIG_SND_PXA_SOC_SSP=3Dm
-+CONFIG_SND_PXA910_SOC=3Dm
- CONFIG_SND_SOC_ROCKCHIP=3Dm
- CONFIG_SND_SOC_ROCKCHIP_SPDIF=3Dm
- CONFIG_SND_SOC_ROCKCHIP_MAX98090=3Dm
-@@ -719,6 +727,7 @@ CONFIG_USB_EHCI_HCD=3Dy
- CONFIG_USB_EHCI_HCD_STI=3Dy
- CONFIG_USB_EHCI_TEGRA=3Dy
- CONFIG_USB_EHCI_EXYNOS=3Dy
-+CONFIG_USB_EHCI_MV=3Dm
- CONFIG_USB_OHCI_HCD=3Dy
- CONFIG_USB_OHCI_HCD_STI=3Dy
- CONFIG_USB_OHCI_EXYNOS=3Dm
-@@ -788,6 +797,7 @@ CONFIG_MMC_SDHCI_DOVE=3Dy
- CONFIG_MMC_SDHCI_TEGRA=3Dy
- CONFIG_MMC_SDHCI_S3C=3Dy
- CONFIG_MMC_SDHCI_PXAV3=3Dy
-+CONFIG_MMC_SDHCI_PXAV2=3Dm
- CONFIG_MMC_SDHCI_SPEAR=3Dy
- CONFIG_MMC_SDHCI_S3C_DMA=3Dy
- CONFIG_MMC_SDHCI_BCM_KONA=3Dy
-@@ -853,6 +863,7 @@ CONFIG_RTC_DRV_DA9063=3Dm
- CONFIG_RTC_DRV_EFI=3Dm
- CONFIG_RTC_DRV_DIGICOLOR=3Dm
- CONFIG_RTC_DRV_S3C=3Dm
-+CONFIG_RTC_DRV_SA1100=3Dm
- CONFIG_RTC_DRV_PL031=3Dy
- CONFIG_RTC_DRV_AT91RM9200=3Dm
- CONFIG_RTC_DRV_AT91SAM9=3Dm
---=20
-2.21.0
+The first patch of this series ensures that the surfacepro3_button
+driver, used for MSHW0040 on the Pro 4, does not probe for the newer
+devices. The second patch adapts soc_button_array to implement the
+actual button support.
+
+I think the changes to soc_button_array in the second patch warrant a
+thorough review. I've tried to make things a bit more generic to be able
+to integrate arbitrary ACPI GPIO power-/volume-button devices more
+easily, I'm not sure if there may be reasons against this.
+
+These patches have also been tested on various Surface devices via the
+github.com/jakeday/linux-surface patchset.
+
+Maximilian Luz (2):
+  platform: Fix device check for surfacepro3_button
+  input: soc_button_array for newer surface devices
+
+ drivers/input/misc/soc_button_array.c     | 134 ++++++++++++++++++++--
+ drivers/platform/x86/surfacepro3_button.c |  38 ++++++
+ 2 files changed, 160 insertions(+), 12 deletions(-)
+
+-- 
+2.22.0
 
