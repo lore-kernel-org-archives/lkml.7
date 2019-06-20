@@ -2,138 +2,140 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA686C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:51:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F085C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:54:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B02D02085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:51:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cnBfFGGl"
+	by mail.kernel.org (Postfix) with ESMTP id 61E912084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561038859;
+	bh=ujco4toh4VcjlC1PwExMobr+TbEakBM2rfFRTVzVA9w=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
+	b=Y29RvW7aTHAfW4tlnzZEPxnBOwL8+4D5EHYVE0BCe0RLAoEuG1AeNFq7IpRlR9Pb8
+	 1K4TpOlXSYclGL8kx2WPWS2vvAJEPAPK0SCNhli7IwXWf6Gu4IgdUouwiMtNgaBV1D
+	 /ImZ5w80Jsj6Ro9E8xbsJ4Sk7fYVHlocvAXhuVX4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732116AbfFTNvF (ORCPT
+        id S1731553AbfFTNyS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:51:05 -0400
-Received: from mail-ua1-f68.google.com ([209.85.222.68]:36347 "EHLO
-        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732105AbfFTNvE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:51:04 -0400
-Received: by mail-ua1-f68.google.com with SMTP id v20so1682359uao.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 06:51:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2IFwlqbKib7dWbeVbv8X2YweFdeF4XDbaSTOpsTFt9E=;
-        b=cnBfFGGl3pJdpKp1MmBsF47mWvkNWCygNpH36R5cENrnDyoojF55rqerYfDLfwbbTj
-         RFNj58C5CUCULzDhnJhuuGUawX8GzXHIVIZhOz7jX/xVeIdC14e76z4ee9EhQzScRn3r
-         yZyPrtDQwDjqyu6vqRuq4CLTKqp19vhLDP1kzyZlJral0qqZUmCvS5srHMy+sgfXo7OX
-         8J3/HDJJtVqUJPoO9R3c2uQaBqDPo5Hb8yFlY4a3lZNrdJXrZ2uvs7wDiEP1uZSr6Jfu
-         RATefM9/IOvINHrRt3pDF9AMIZimpQikwZUjdX3vOvvUC0JBvtUIxqFbJK3SbyUB77sX
-         swNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2IFwlqbKib7dWbeVbv8X2YweFdeF4XDbaSTOpsTFt9E=;
-        b=iD0er6Kywd7CFhvH/O5XKooUN89xeof9bohyQYuAX4X83T3ILNZGu3RMSUNgWnkl06
-         dn03oBvfYE2jzub2C1rpMr+DUoqNgnzmai+o9ok1mshFi3e2ZKWUPlSwYP8FhR6oRQyL
-         e/9/tQW/XHd/GxA5iuFKaP1w56XRABEXYdp6x5dOh3W57Tzq8mCy2YX64YC+esZ827M+
-         SoVhpsnbST14Eyf6FJvApByxjAiAnmj0PkmtNPnbk6w0Qa11EOAd80Jgecj0DOTMbp3Z
-         gg3hXhxOfUXYMl9zgmmqS5UpF/TmVHIk+Zux5HJwi02K+vVjUdFOiY8asyee+Uqe6o6J
-         U+SQ==
-X-Gm-Message-State: APjAAAUAEL5RozifVXmBaruxGq97W2oQLtSZpkfV+l8uZNqAz5lpGN7f
-        L2jp6EaEUohSsMLEyALS9kV1PFbRK3hv4oVRevIwWg==
-X-Google-Smtp-Source: APXvYqyZXCFrwLLbuKH87ntBoB1uPTcKE017Mrw8Z9+j3VOUxMLwq/g1pwfocngRvtK/nHu4TYQODtwzbAxVOv/4r8s=
-X-Received: by 2002:a9f:242e:: with SMTP id 43mr8151929uaq.100.1561038663128;
- Thu, 20 Jun 2019 06:51:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <1559577325-19266-1-git-send-email-ludovic.Barre@st.com>
- <5b7e1ae5-c97e-5a21-fc3e-7cc328087f04@st.com> <CAPDyKFrULRk=cHzVodU9aa6LDX9ip-VPHNwG7QXhmNZrMpPjGw@mail.gmail.com>
-In-Reply-To: <CAPDyKFrULRk=cHzVodU9aa6LDX9ip-VPHNwG7QXhmNZrMpPjGw@mail.gmail.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Thu, 20 Jun 2019 15:50:26 +0200
-Message-ID: <CAPDyKFr_KNpNY-xgGdKXdAnmmD5OD1=wxgs2LmBAUJOn0mZwqg@mail.gmail.com>
-Subject: Re: [PATCH V3 0/3] mmc: mmci: add busy detect for stm32 sdmmc variant
-To:     Ludovic BARRE <ludovic.barre@st.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Thu, 20 Jun 2019 09:54:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726551AbfFTNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:54:17 -0400
+Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 149E920675;
+        Thu, 20 Jun 2019 13:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561038856;
+        bh=ujco4toh4VcjlC1PwExMobr+TbEakBM2rfFRTVzVA9w=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=DcVNrNiFpeuOwljp7LA2Gtb02dNaMIRCyt2onZkB+mR6mFkpcrSlYGpiTB9KervaC
+         /H9aM9bFIH90qaIB4tLZYT5gsUm8dXfLXtqP0hiqbkQiyxN/OtVbv7oXBTxHX9fWFk
+         qfMa7L8TI19+SYm/jjA1KH+05QZpKoxAhMLYBMng=
+Message-ID: <d8218bd280f19ebbd38f396dbf4e763b945d40bd.camel@kernel.org>
+Subject: Re: [PATCH v2 0/3] ceph: don't NULL terminate virtual xattr values
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        DTML <devicetree@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>,
-        linux-stm32@st-md-mailman.stormreply.com
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
+        sage@redhat.com, agruenba@redhat.com,
+        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Date:   Thu, 20 Jun 2019 09:54:13 -0400
+In-Reply-To: <CAMuHMdUtwtruJtcUe4-YQJQ5h9B-WCcjK57hVMvxjnrZeFjrfA@mail.gmail.com>
+References: <20190619164528.31958-1-jlayton@kernel.org>
+         <20190620102410.GT9224@smile.fi.intel.com>
+         <7c12abe8a7e6cd3cfe9129a1e74d9c788ff2f1a9.camel@kernel.org>
+         <CAMuHMdUtwtruJtcUe4-YQJQ5h9B-WCcjK57hVMvxjnrZeFjrfA@mail.gmail.com>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Ludovic,
+On Thu, 2019-06-20 at 14:22 +0200, Geert Uytterhoeven wrote:
+> Hi Jeff,
+> 
+> On Thu, Jun 20, 2019 at 1:41 PM Jeff Layton <jlayton@kernel.org> wrote:
+> > On Thu, 2019-06-20 at 13:24 +0300, Andy Shevchenko wrote:
+> > > On Wed, Jun 19, 2019 at 12:45:25PM -0400, Jeff Layton wrote:
+> > > > v2: drop bogus EXPORT_SYMBOL of static function
+> > > > 
+> > > > The only real difference between this set and the one I sent originally
+> > > > is the removal of a spurious EXPORT_SYMBOL in the snprintf patch.
+> > > > 
+> > > > I'm mostly sending this with a wider cc list in an effort to get a
+> > > > review from the maintainers of the printf code. Basically ceph needs a
+> > > > snprintf variant that does not NULL terminate in order to handle its
+> > > > virtual xattrs.
+> > > > 
+> > > > Joe Perches had expressed some concerns about stack usage in vsnprintf
+> > > > with this, but I'm not sure I really understand the basis of that
+> > > > concern. If it is problematic, then I could use suggestions as to how
+> > > > best to fix that up.
+> > > 
+> > > It might be problematic, since vsnprintf() can be called recursively.
+> > > 
+> > 
+> > So the concern is that we'd have extra call/ret activity in the stack?
+> > That seems like a lot of hand-wringing over very little, but ok if so.
+> > 
+> > > > ----------------------------8<-----------------------------
+> > > > 
+> > > > kcephfs has several "virtual" xattrs that return strings that are
+> > > > currently populated using snprintf(), which always NULL terminates the
+> > > > string.
+> > > > 
+> > > > This leads to the string being truncated when we use a buffer length
+> > > > acquired by calling getxattr with a 0 size first. The last character
+> > > > of the string ends up being clobbered by the termination.
+> > > 
+> > > So, then don't use snprintf() for this, simple memcpy() designed for that kind
+> > > of things.
+> > > 
+> > 
+> > memcpy from what? For many of these xattrs, we need to format integer
+> > data into strings. I could roll my own routine to do this formatting,
+> > but that's sort of what sprintf and its variants are for and I'd rather
+> > not reimplement all of it from scratch.
+> 
+> snprintf() to a temporary buffer, and memcpy() to the final destination.
+> These are all fairly small buffers (most are single integer values),
+> so the overhead should be minimal, right?
+> 
 
-On Thu, 13 Jun 2019 at 15:13, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+Yeah. I was trying to avoid having to deal with a second buffer, but
+this is not a performance-critical codepath, so maybe that's the best
+option.
+
+> In fact the two largest strings are already formatted in a temporary
+> buffer, so there is no reason ceph_vxattrcb_layout() cannot just use
+> snprintf() now.
 >
-> On Thu, 13 Jun 2019 at 15:02, Ludovic BARRE <ludovic.barre@st.com> wrote:
-> >
-> > hi Ulf
-> >
-> > Just a "gentleman ping" about this series.
-> > I know you are busy, it's just to be sure you do not forget me :-)
->
-> Thanks! I started briefly to review, but got distracted again. I will
-> come to it, but it just seems to take more time than it should, my
-> apologies.
+> Or perhaps this can use the existing seq_*() interface in some form?
+> 
 
-Alright, so I planned to review this this week - but failed. I have
-been overwhelmed with work lately (as usual when vacation is getting
-closer).
+Hmm. I'll have to think about that.
 
-I need to gently request to come back to this as of week 28, when I
-will give this the highest prio. Again apologize for the delays!
+> BTW, while at it, please get rid of the casts when calling snprintf(), and
+> use the correct format specifiers instead.
+> 
 
-Kind regards
-Uffe
+Sure, will do.
 
->
-> Br
-> Uffe
->
-> >
-> > Regards
-> > Ludo
-> >
-> > On 6/3/19 5:55 PM, Ludovic Barre wrote:
-> > > From: Ludovic Barre <ludovic.barre@st.com>
-> > >
-> > > This patch series adds busy detect for stm32 sdmmc variant.
-> > > Some adaptations are required:
-> > > -Clear busy status bit if busy_detect_flag and busy_detect_mask are
-> > >   different.
-> > > -Add hardware busy timeout with MMCIDATATIMER register.
-> > >
-> > > V3:
-> > > -rebase on latest mmc next
-> > > -replace re-read by status parameter.
-> > >
-> > > V2:
-> > > -mmci_cmd_irq cleanup in separate patch.
-> > > -simplify the busy_detect_flag exclude
-> > > -replace sdmmc specific comment in
-> > > "mmc: mmci: avoid fake busy polling in mmci_irq"
-> > > to focus on common behavior
-> > >
-> > > Ludovic Barre (3):
-> > >    mmc: mmci: fix read status for busy detect
-> > >    mmc: mmci: add hardware busy timeout feature
-> > >    mmc: mmci: add busy detect for stm32 sdmmc variant
-> > >
-> > >   drivers/mmc/host/mmci.c | 49 +++++++++++++++++++++++++++++++++++++++++--------
-> > >   drivers/mmc/host/mmci.h |  3 +++
-> > >   2 files changed, 44 insertions(+), 8 deletions(-)
-> > >
+Thanks for the suggestions so far (and from Andy too),
+-- 
+Jeff Layton <jlayton@kernel.org>
+
