@@ -2,110 +2,171 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1913C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:11:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 246ACC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB27A2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:11:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561050669;
-	bh=n6B7VqKGVawxjMyw2yq5bPlq66NxeaTyVE4Kp1Ja2ZM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=kthAFk4YJUl2Ar3bbqlg/lWyQGEIXT7l+22zhR/xrlgmWrOVwxt2GBiatnB5DuLTI
-	 EcT2lz0ViXCIUAXkPUJWOXCIjGPr0O8QUlVefukTbAHxEA6W0eBX622ULf3cRIPFZU
-	 nrTYx+c/zZ2hfeQkkvO2Mbxw1yekapsy3QtF2SVg=
+	by mail.kernel.org (Postfix) with ESMTP id E7DBE2084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:11:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="iDKiiByf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731712AbfFTRLI (ORCPT
+        id S1732048AbfFTRLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 20 Jun 2019 13:11:09 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:39594 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726649AbfFTRLI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 20 Jun 2019 13:11:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43740 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbfFTRLI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:11:08 -0400
-Received: from localhost (unknown [106.51.107.82])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 14F3B2082C;
-        Thu, 20 Jun 2019 17:11:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561050667;
-        bh=n6B7VqKGVawxjMyw2yq5bPlq66NxeaTyVE4Kp1Ja2ZM=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=LWlLGHKfRvVKXAbg+FOMx8R3T3+6/zBofP35Xv3UB02sJZ8RbG6xzepsaHKuAw3Oe
-         Hx7hWFcZxUud2TKy0YCCXiKtFtQNuDIWamTPThRtWwkE5jZI1nfEV56+G2oecmcCI2
-         +43jxUUZG35+r9g0ikqflgR1BuWRO1SRThpYLZjQ=
-Date:   Thu, 20 Jun 2019 22:37:56 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Mathias Nyman <mathias.nyman@intel.com>,
-        linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>
-Subject: Re: [PATCH 5/5] usb: xhci: allow multiple firmware versions
-Message-ID: <20190620170756.GP2962@vkoul-mobl>
-References: <20190620102154.20805-1-vkoul@kernel.org>
- <20190620102154.20805-6-vkoul@kernel.org>
- <20190620122013.GE19295@kroah.com>
+Received: by mail-qt1-f195.google.com with SMTP id i34so3927958qta.6
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:11:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=B/Z1xHhYAjAI7ioTCGgFoDOmi7PSKcfXMaUReB0Dr1o=;
+        b=iDKiiByf/rCLVBiwQKacZOEFqluND5l/Q7B8xuyrYYiT8npctI6tkA6bd5Z3+X6WXJ
+         7gP3l17z5AQNjEKoghc1QQGWYYTQhxhcX9yGx54PMvjgvEHZEh7JKLlg64yxdauLIkD6
+         PlX1F93t1CtWxQ8kNNXs9JCH7/Ycn3pW7NdVjaUwoeBrG9xILQAk6iI0m+ngDTRaz0n2
+         KHM4oMsjPmMO77I7PU4GywcSoyfCFebua5oLxUE6W85UfxNuyOXg7jsaASQUndU7XOUT
+         zN203NLRIh3JOjlN2kSuwATpWhmPazDPI0SbRVShwbgeM2SVzNCO4ifAlBXeUKKBuJD+
+         jaDw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=B/Z1xHhYAjAI7ioTCGgFoDOmi7PSKcfXMaUReB0Dr1o=;
+        b=LEChPhyHH9sxSkg/0P8Rx/U9mcxHusca4N1cK+uWmFjP8MojyTFBPgOiGGmo5r3nFz
+         YJ+C+9FnhzXezdmQWJoil2mtXdOccKyuB3Tgz8tfPhYLLQxiekb4tGxUxrh3l7c9iaOy
+         iZFnZT6HaXJzZTsc6iCRuOTS4Ao4ClKXpxW44NVvQvswLKVdh0rmSzNk35O4nY3+aO2z
+         6xx5uK0xF7L+p2pH/eILNLLuGcwybQ8DdCVFSrF9vOBKVtZCRHUNfl2fLrV7ISbgf75e
+         21jPl7AF/F21hRfsCkFoel3dRAeWdKB3a3pSV0F4jKCBbwt2UjOhuGKJszH6Sc7shvtT
+         CtOQ==
+X-Gm-Message-State: APjAAAXN9fjDgW61cs/VSO5LBTP9Dd9KPzshOULLisSl4AM+jjt8TsMZ
+        hMzQRMQu5KJhouJSKfId80920c0cmqm8uQ==
+X-Google-Smtp-Source: APXvYqwc2iwZPScenX0v4jDBGu4RdLUTLz2n8sdXn8hwtd0G64nXQQ8UGnDbXfC6MHvJ9vTLmjr9lQ==
+X-Received: by 2002:ac8:2e5d:: with SMTP id s29mr105147696qta.70.1561050666885;
+        Thu, 20 Jun 2019 10:11:06 -0700 (PDT)
+Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
+        by smtp.gmail.com with ESMTPSA id t29sm152221qtt.42.2019.06.20.10.11.06
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 20 Jun 2019 10:11:06 -0700 (PDT)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1he0aX-0005SU-RR; Thu, 20 Jun 2019 14:11:05 -0300
+Date:   Thu, 20 Jun 2019 14:11:05 -0300
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-nvme@lists.infradead.org, linux-pci@vger.kernel.org,
+        linux-rdma@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
+        Christoph Hellwig <hch@lst.de>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        Keith Busch <kbusch@kernel.org>,
+        Stephen Bates <sbates@raithlin.com>
+Subject: Re: [RFC PATCH 20/28] IB/core: Introduce API for initializing a RW
+ ctx from a DMA address
+Message-ID: <20190620171105.GD19891@ziepe.ca>
+References: <20190620161240.22738-1-logang@deltatee.com>
+ <20190620161240.22738-21-logang@deltatee.com>
+ <20190620164909.GC19891@ziepe.ca>
+ <f9186b2b-7737-965f-2dca-25e40e566e64@deltatee.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190620122013.GE19295@kroah.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <f9186b2b-7737-965f-2dca-25e40e566e64@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 20-06-19, 14:20, Greg Kroah-Hartman wrote:
-> On Thu, Jun 20, 2019 at 03:51:54PM +0530, Vinod Koul wrote:
-> > Allow multiple firmware file versions in table and load them in
-> > increasing order as we find them in the file system.
+On Thu, Jun 20, 2019 at 10:59:44AM -0600, Logan Gunthorpe wrote:
+> 
+> 
+> On 2019-06-20 10:49 a.m., Jason Gunthorpe wrote:
+> > On Thu, Jun 20, 2019 at 10:12:32AM -0600, Logan Gunthorpe wrote:
+> >> Introduce rdma_rw_ctx_dma_init() and rdma_rw_ctx_dma_destroy() which
+> >> peform the same operation as rdma_rw_ctx_init() and
+> >> rdma_rw_ctx_destroy() respectively except they operate on a DMA
+> >> address and length instead of an SGL.
+> >>
+> >> This will be used for struct page-less P2PDMA, but there's also
+> >> been opinions expressed to migrate away from SGLs and struct
+> >> pages in the RDMA APIs and this will likely fit with that
+> >> effort.
+> >>
+> >> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> >>  drivers/infiniband/core/rw.c | 74 ++++++++++++++++++++++++++++++------
+> >>  include/rdma/rw.h            |  6 +++
+> >>  2 files changed, 69 insertions(+), 11 deletions(-)
+> >>
+> >> diff --git a/drivers/infiniband/core/rw.c b/drivers/infiniband/core/rw.c
+> >> index 32ca8429eaae..cefa6b930bc8 100644
+> >> +++ b/drivers/infiniband/core/rw.c
+> >> @@ -319,6 +319,39 @@ int rdma_rw_ctx_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp, u8 port_num,
+> >>  }
+> >>  EXPORT_SYMBOL(rdma_rw_ctx_init);
+> >>  
+> >> +/**
+> >> + * rdma_rw_ctx_dma_init - initialize a RDMA READ/WRITE context from a
+> >> + *	DMA address instead of SGL
+> >> + * @ctx:	context to initialize
+> >> + * @qp:		queue pair to operate on
+> >> + * @port_num:	port num to which the connection is bound
+> >> + * @addr:	DMA address to READ/WRITE from/to
+> >> + * @len:	length of memory to operate on
+> >> + * @remote_addr:remote address to read/write (relative to @rkey)
+> >> + * @rkey:	remote key to operate on
+> >> + * @dir:	%DMA_TO_DEVICE for RDMA WRITE, %DMA_FROM_DEVICE for RDMA READ
+> >> + *
+> >> + * Returns the number of WQEs that will be needed on the workqueue if
+> >> + * successful, or a negative error code.
+> >> + */
+> >> +int rdma_rw_ctx_dma_init(struct rdma_rw_ctx *ctx, struct ib_qp *qp,
+> >> +		u8 port_num, dma_addr_t addr, u32 len, u64 remote_addr,
+> >> +		u32 rkey, enum dma_data_direction dir)
 > > 
-> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> > Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> > Cc: Christian Lamparter <chunkeey@googlemail.com>
-> > ---
-> >  drivers/usb/host/xhci-pci.c | 39 +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 39 insertions(+)
+> > Why not keep the same basic signature here but replace the scatterlist
+> > with the dma vec ?
+> 
+> Could do. At the moment, I had no need for dma_vec in this interface.
+
+I think that is because you only did nvme not srp/iser :)
+
+> >> +{
+> >> +	struct scatterlist sg;
+> >> +
+> >> +	sg_dma_address(&sg) = addr;
+> >> +	sg_dma_len(&sg) = len;
 > > 
-> > diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-> > index 3574afac44c5..2ee9e6bbabcb 100644
-> > --- a/drivers/usb/host/xhci-pci.c
-> > +++ b/drivers/usb/host/xhci-pci.c
-> > @@ -333,9 +333,12 @@ static const struct renesas_fw_entry {
-> >  	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
-> >  	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
-> >  	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-> > +	 *
-> > +	 *  Entry expected_version should be kept in increasing order
+> > This needs to fail if the driver is one of the few that require
+> > struct page to work..
 > 
-> Why?
+> Yes, right. Currently P2PDMA checks for the use of dma_virt_ops. And
+> that probably should also be done here. But is that sufficient? You're
+> probably right that it'll take an audit of the RDMA tree to sort that out.
 
-I should have explained more :)
-This is required only for the devices which have multiple versions
-available, so it will pick one try it out and if not found go to
-subsequent one. So I thought it would be make sense to keep the version
-values for a specific device (not whole table) ordered so that we can
-pick the next entry. Of course if you have better idea to manage two
-versions, am all ears :)
+For this purpose I'd be fine if you added a flag to the struct
+ib_device_ops that is set on drivers that we know are OK.. We can make
+that list bigger over time.
 
+> > This is not so hard to do, as most drivers are already struct page
+> > free, but is pretty much blocked on needing some way to go from the
+> > block layer SGL world to the dma vec world that does not hurt storage
+> > performance.
 > 
-> >  	 */
-> >  	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
-> >  	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
-> > +	{ "K2026090.mem", 0x0014, 0x03, 0x2026 },
-> >  	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
-> 
-> Just put a { } entry here at the end and then you don't care about the
-> order at all.  Much simpler and easier to maintain over time.
-> 
+> Maybe I can end up helping with that if it helps push the ideas here
+> through. (And assuming people think it's an acceptable approach for the
+> block-layer side of things).
 
--- 
-~Vinod
+Let us hope for a clear decision then
+
+Jason
