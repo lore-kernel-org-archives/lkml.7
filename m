@@ -4,58 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B51ACC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0600C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 900A820673
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F7132084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053744;
-	bh=BsWIxMOcWtpcr2boHLUPzToAXcpp9jOaWhh8N129Mzk=;
+	s=default; t=1561053747;
+	bh=HTx1fHVj5uezsO/DXs83fYpWV86qC1ZT8ZkQv5D7U4A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EYR/Y0PtXXUG9RmzoO0Ylc6x12vO18hewYQwnsIxapXnJy6f3K3nBi282nxNwncQL
-	 3JyZPFECErHr90ZxnnyvJDwkCUAStHWjFBJPBd88JI+Uaj0FyeX1qxD/UEJ6E7rQBc
-	 dTQ94NmqAltZwyw/nKNrrE3vXNijPH9eoGwYxxrE=
+	b=xlPTE9mWz3w/KfuPXr0tO1WuRSEuy2W1MzyYVBJaW2QVniAuMSJ+2PRxoOO7y2k+1
+	 tdmHpVfQkU5QBJu6mOeb8DbLPJCqa83bzUINu3FluOk5jaACuu9XnXRyEMDiKpUruk
+	 xsAmIGfly9A8J7+TLW+wHl57KaZYGGny03K/lpTs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726532AbfFTSCW (ORCPT
+        id S1727427AbfFTSC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:02:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52484 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726859AbfFTSCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:02:11 -0400
+        id S1726890AbfFTSCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:02:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2407A2089C;
-        Thu, 20 Jun 2019 18:02:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBCEF214AF;
+        Thu, 20 Jun 2019 18:02:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053730;
-        bh=BsWIxMOcWtpcr2boHLUPzToAXcpp9jOaWhh8N129Mzk=;
+        s=default; t=1561053737;
+        bh=HTx1fHVj5uezsO/DXs83fYpWV86qC1ZT8ZkQv5D7U4A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZOn/AL6QWmA8594BzqU1gANJZmeG7QESI7FFzoA4yMxm4jNUPMhskm6Vw024tUpgp
-         Ws/G9M7giFeGeMiqx2Ayiod/v5f7XYj1PHnqSeqUq0fKcMEVtMB+EzaqeKqPpPJ3Kn
-         Vzv/VIjgvSZ331e+mySD569R4YtRk71iPAiyB7EY=
+        b=zulmr1bYPs82IxxRKQ6aSJ0gY4k5YTQ38rUvwdUuTBBKR7TEu8goa7ES6Pz/aZbMS
+         t6Vd89kZxs6/boYhkN6AidCjJy8m44eVKVE7SOgpsRw9hGyDBgTpQ5N5Dzbekug7Oy
+         X/Vr9XzQeO+T1tS1yMNvbduqXUqhLi1YXLeMJ1VA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, kbuild test robot <lkp@intel.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
+        stable@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 73/84] gpio: fix gpio-adp5588 build errors
-Date:   Thu, 20 Jun 2019 19:57:10 +0200
-Message-Id: <20190620174348.753976681@linuxfoundation.org>
+Subject: [PATCH 4.9 001/117] rapidio: fix a NULL pointer dereference when create_workqueue() fails
+Date:   Thu, 20 Jun 2019 19:55:35 +0200
+Message-Id: <20190620174352.046564144@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
-In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
-References: <20190620174337.538228162@linuxfoundation.org>
+In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
+References: <20190620174351.964339809@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -64,49 +65,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e9646f0f5bb62b7d43f0968f39d536cfe7123b53 ]
+[ Upstream commit 23015b22e47c5409620b1726a677d69e5cd032ba ]
 
-The gpio-adp5588 driver uses interfaces that are provided by
-GPIOLIB_IRQCHIP, so select that symbol in its Kconfig entry.
+In case create_workqueue fails, the fix releases resources and returns
+-ENOMEM to avoid NULL pointer dereference.
 
-Fixes these build errors:
-
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_handler’:
-../drivers/gpio/gpio-adp5588.c:266:26: error: ‘struct gpio_chip’ has no member named ‘irq’
-            dev->gpio_chip.irq.domain, gpio));
-                          ^
-../drivers/gpio/gpio-adp5588.c: In function ‘adp5588_irq_setup’:
-../drivers/gpio/gpio-adp5588.c:298:2: error: implicit declaration of function ‘gpiochip_irqchip_add_nested’ [-Werror=implicit-function-declaration]
-  ret = gpiochip_irqchip_add_nested(&dev->gpio_chip,
-  ^
-../drivers/gpio/gpio-adp5588.c:307:2: error: implicit declaration of function ‘gpiochip_set_nested_irqchip’ [-Werror=implicit-function-declaration]
-  gpiochip_set_nested_irqchip(&dev->gpio_chip,
-  ^
-
-Fixes: 459773ae8dbb ("gpio: adp5588-gpio: support interrupt controller")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
-Cc: linux-gpio@vger.kernel.org
-Reviewed-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Acked-by: Michael Hennerich <michael.hennerich@analog.com>
-Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Kangjie Lu <kjlu@umn.edu>
+Acked-by: Alexandre Bounine <alex.bou9@gmail.com>
+Cc: Matt Porter <mporter@kernel.crashing.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpio/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/rapidio/rio_cm.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 469dc378adeb..aaae6040b4c8 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -579,6 +579,7 @@ config GPIO_ADP5588
- config GPIO_ADP5588_IRQ
- 	bool "Interrupt controller support for ADP5588"
- 	depends on GPIO_ADP5588=y
-+	select GPIOLIB_IRQCHIP
- 	help
- 	  Say yes here to enable the adp5588 to be used as an interrupt
- 	  controller. It requires the driver to be built in the kernel.
+diff --git a/drivers/rapidio/rio_cm.c b/drivers/rapidio/rio_cm.c
+index bad0e0ea4f30..ef989a15aefc 100644
+--- a/drivers/rapidio/rio_cm.c
++++ b/drivers/rapidio/rio_cm.c
+@@ -2145,6 +2145,14 @@ static int riocm_add_mport(struct device *dev,
+ 	mutex_init(&cm->rx_lock);
+ 	riocm_rx_fill(cm, RIOCM_RX_RING_SIZE);
+ 	cm->rx_wq = create_workqueue(DRV_NAME "/rxq");
++	if (!cm->rx_wq) {
++		riocm_error("failed to allocate IBMBOX_%d on %s",
++			    cmbox, mport->name);
++		rio_release_outb_mbox(mport, cmbox);
++		kfree(cm);
++		return -ENOMEM;
++	}
++
+ 	INIT_WORK(&cm->rx_work, rio_ibmsg_handler);
+ 
+ 	cm->tx_slot = 0;
 -- 
 2.20.1
 
