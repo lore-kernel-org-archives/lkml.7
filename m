@@ -2,54 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36D76C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09222C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE7A72084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE7BF215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054184;
-	bh=Goa0ah6FbkFoqUl94JpmHMgSVOBKRZRD7HrHL8U8tn8=;
+	s=default; t=1561054189;
+	bh=gI+9GKnFAdUY0K+fbh1vYOGBLn1al+T1hwahrVBIaZU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Kfzgswso8yPPeEhBNoTk8CrzfmuGX6XBKiG877yH9joR4AmiTZgCnH6ABuy6TtqvE
-	 m1tYxmIZ8x04qCwZTt+CrXsjUlvYKgIqhFh4hEPGT4w0HDYmFGSCNzYCDrWsDhC+4q
-	 argS0mSjTZpT8oAmqxlbCcj54gq86p/2xPzcQy6s=
+	b=H6UQHxmP9sQF/lKAEl9cNEVqz+AcrxkB0O/NkiJXgSvak3Ena1u2FbX2hnm60iEuY
+	 DP1bM8Agr6k3pinb6PEIySrUs2TFQ1KmZpFPsm5IRZAkzdL4dWhmksGvA7K/ccUDFs
+	 yuY8dKUMkUZqld2YA/3McXwnV9xWHq7EN2h1RzgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728679AbfFTSJm (ORCPT
+        id S1728703AbfFTSJs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:09:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37132 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:09:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728672AbfFTSJj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:09:39 -0400
+        id S1728677AbfFTSJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:09:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3953C21530;
-        Thu, 20 Jun 2019 18:09:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA5D12168B;
+        Thu, 20 Jun 2019 18:09:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054178;
-        bh=Goa0ah6FbkFoqUl94JpmHMgSVOBKRZRD7HrHL8U8tn8=;
+        s=default; t=1561054181;
+        bh=gI+9GKnFAdUY0K+fbh1vYOGBLn1al+T1hwahrVBIaZU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bYs7P/guBu4CmaPJ82gJCx7qb52RpCNh/gUGS3dPJHqycO3n/Eq3oSuh7uz9yf9Py
-         7Io5GpbpMo3tR3NAU0Hhoo5w32kIvEJ2B1VSAaqmtkyJoTUMYG/nnxmuhFs8GW366S
-         1eAk75Xhop3+T/fJ8ttEfUh928TIMVsFp4hQpjh0=
+        b=n9W90/0IcdLDM6qq8lKNvudc/ce7S2YyrRXkQ53pJUX2VAStL3rW5tbyLoa9fKR2T
+         lYiPUF7b4dD7HQCrBP4uu+r6CBerjEzSBamV8xNL67d1SwteFc4oleQrvxuTGVPExp
+         YEh5ehLHlil1aeq6PSqSNizTlKkaRqD97bPlAqP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jan Kara <jack@suse.cz>,
-        Alexander Lochmann <alexander.lochmann@tu-dortmund.de>,
-        Horst Schirmeier <horst.schirmeier@tu-dortmund.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Zubin Mithra <zsm@chromium.org>
-Subject: [PATCH 4.14 45/45] Abort file_remove_privs() for non-reg. files
-Date:   Thu, 20 Jun 2019 19:57:47 +0200
-Message-Id: <20190620174341.933502431@linuxfoundation.org>
+        stable@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>,
+        Wolfram Sang <wsa@the-dreams.de>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 25/45] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
+Date:   Thu, 20 Jun 2019 19:57:27 +0200
+Message-Id: <20190620174338.192490154@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -62,51 +60,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
+[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
 
-commit f69e749a49353d96af1a293f56b5b56de59c668a upstream.
+If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
+will not be freed. Pump index up so it will be freed.
 
-file_remove_privs() might be called for non-regular files, e.g.
-blkdev inode. There is no reason to do its job on things
-like blkdev inodes, pipes, or cdevs. Hence, abort if
-file does not refer to a regular inode.
-
-AV: more to the point, for devices there might be any number of
-inodes refering to given device.  Which one to strip the permissions
-from, even if that made any sense in the first place?  All of them
-will be observed with contents modified, after all.
-
-Found by LockDoc (Alexander Lochmann, Horst Schirmeier and Olaf
-Spinczyk)
-
-Reviewed-by: Jan Kara <jack@suse.cz>
-Signed-off-by: Alexander Lochmann <alexander.lochmann@tu-dortmund.de>
-Signed-off-by: Horst Schirmeier <horst.schirmeier@tu-dortmund.de>
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Zubin Mithra <zsm@chromium.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
+Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
+Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/inode.c |    9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/i2c/i2c-dev.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/fs/inode.c
-+++ b/fs/inode.c
-@@ -1817,8 +1817,13 @@ int file_remove_privs(struct file *file)
- 	int kill;
- 	int error = 0;
- 
--	/* Fast path for nothing security related */
--	if (IS_NOSEC(inode))
-+	/*
-+	 * Fast path for nothing security related.
-+	 * As well for non-regular files, e.g. blkdev inodes.
-+	 * For example, blkdev_write_iter() might get here
-+	 * trying to remove privs which it is not allowed to.
-+	 */
-+	if (IS_NOSEC(inode) || !S_ISREG(inode->i_mode))
- 		return 0;
- 
- 	kill = dentry_needs_remove_privs(dentry);
+diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
+index 00e8e675cbeb..eaa312bc3a3c 100644
+--- a/drivers/i2c/i2c-dev.c
++++ b/drivers/i2c/i2c-dev.c
+@@ -297,6 +297,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
+ 			    rdwr_pa[i].buf[0] < 1 ||
+ 			    rdwr_pa[i].len < rdwr_pa[i].buf[0] +
+ 					     I2C_SMBUS_BLOCK_MAX) {
++				i++;
+ 				res = -EINVAL;
+ 				break;
+ 			}
+-- 
+2.20.1
+
 
 
