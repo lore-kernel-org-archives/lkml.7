@@ -2,52 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C0AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6893EC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F51C2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A2DE215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054305;
-	bh=980y4+/bM4nqKR5zFJc08I4f1d9BaMa28HhT7rOx/s4=;
+	s=default; t=1561054310;
+	bh=oZYhfpp0Op1xc6m4V+6kPYh6gfC2XpR7/BahVh4+Pxw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1skNS980posAe/n4qFpplFV9z7MLJFZzS6uW3ltlYJIP6V/HKntm178Cngspt9oXA
-	 hTGQX5Z/62fdA1tskY7kwtxgDI76j2ymljvcNLwaMsFrGhfdbql7xW3LpJMcJfQgZy
-	 XPFVRN3k6/feyANLkICOv3YOWli+yoxj4ioeDADA=
+	b=yZL0YBmeHeb0cK/pgROSJn1+Mb0JIhSi6Fkg7M4YH3poflzCNVgS9v+Sn6PxfqEyR
+	 rhPhtE3A49kx6cYBhpPvHcmY+2RikOsQtNFzeP7QS9k6s6wkI3fctnKHQhfUrcCcVq
+	 3XTizHpDEsxOY03mf7jrxGlbtIVQ707fPyii/vus=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726544AbfFTSLo (ORCPT
+        id S1728956AbfFTSLr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39430 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39514 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728806AbfFTSLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:39 -0400
+        id S1728947AbfFTSLo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:44 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E22F2070B;
-        Thu, 20 Jun 2019 18:11:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C40962070B;
+        Thu, 20 Jun 2019 18:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054298;
-        bh=980y4+/bM4nqKR5zFJc08I4f1d9BaMa28HhT7rOx/s4=;
+        s=default; t=1561054304;
+        bh=oZYhfpp0Op1xc6m4V+6kPYh6gfC2XpR7/BahVh4+Pxw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c4aWRpHdj1pRxSNp3rjMvuDMhDrtF+im5NzIMJn0jYUoIHn8qmQabaNZtEB8xJ2Bs
-         kprL0qRZZFhJ2e0CQgZROOWRUfMFlXnv0Qll3sgrhqkynCLtbibxQq9T+LOEV1dwMp
-         se4KrSDzNr+Gkao/L3J9+d08JW0qfM5zSv5D0V5Y=
+        b=IF2mG9j5acBI2J9ubO2NQIyPp/qmU1/ny0XTPa+0LTPzvDmEDlZKZATlkxk+Jji+4
+         pYxgFqRSTeiZmO1fiRMqKSLgc0KgyaSy2wY9dcMXAVs8QzUGMDGLXSs8DIj5mW0NOO
+         94BpZJaHEXiRbIQcaR8kYGizp7uurN1xYun871po=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuri Chipchev <yuric@marvell.com>,
-        Maxime Chevallier <maxime.chevallier@bootlin.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 15/61] net: mvpp2: prs: Fix parser range for VID filtering
-Date:   Thu, 20 Jun 2019 19:57:10 +0200
-Message-Id: <20190620174339.749869176@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Stefan Wahren <stefan.wahren@i2se.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 17/61] Staging: vc04_services: Fix a couple error codes
+Date:   Thu, 20 Jun 2019 19:57:12 +0200
+Message-Id: <20190620174340.093063170@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,77 +60,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxime Chevallier <maxime.chevallier@bootlin.com>
+[ Upstream commit ca4e4efbefbbdde0a7bb3023ea08d491f4daf9b9 ]
 
-[ Upstream commit 46b0090a6636cf34c0e856f15dd03e15ba4cdda6 ]
+These are accidentally returning positive EINVAL instead of negative
+-EINVAL.  Some of the callers treat positive values as success.
 
-VID filtering is implemented in the Header Parser, with one range of 11
-vids being assigned for each no-loopback port.
-
-Make sure we use the per-port range when looking for existing entries in
-the Parser.
-
-Since we used a global range instead of a per-port one, this causes VIDs
-to be removed from the whitelist from all ports of the same PPv2
-instance.
-
-Fixes: 56beda3db602 ("net: mvpp2: Add hardware offloading for VLAN filtering")
-Suggested-by: Yuri Chipchev <yuric@marvell.com>
-Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Fixes: 7b3ad5abf027 ("staging: Import the BCM2835 MMAL-based V4L2 camera driver.")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Acked-by: Stefan Wahren <stefan.wahren@i2se.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c |   17 ++++++++---------
- 1 file changed, 8 insertions(+), 9 deletions(-)
+ drivers/staging/vc04_services/bcm2835-camera/controls.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-+++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
-@@ -1905,8 +1905,7 @@ static int mvpp2_prs_ip6_init(struct mvp
+diff --git a/drivers/staging/vc04_services/bcm2835-camera/controls.c b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+index cff7b1e07153..b688ebc01740 100644
+--- a/drivers/staging/vc04_services/bcm2835-camera/controls.c
++++ b/drivers/staging/vc04_services/bcm2835-camera/controls.c
+@@ -576,7 +576,7 @@ static int ctrl_set_image_effect(struct bm2835_mmal_dev *dev,
+ 				dev->colourfx.enable ? "true" : "false",
+ 				dev->colourfx.u, dev->colourfx.v,
+ 				ret, (ret == 0 ? 0 : -EINVAL));
+-	return (ret == 0 ? 0 : EINVAL);
++	return (ret == 0 ? 0 : -EINVAL);
  }
  
- /* Find tcam entry with matched pair <vid,port> */
--static int mvpp2_prs_vid_range_find(struct mvpp2 *priv, int pmap, u16 vid,
--				    u16 mask)
-+static int mvpp2_prs_vid_range_find(struct mvpp2_port *port, u16 vid, u16 mask)
- {
- 	unsigned char byte[2], enable[2];
- 	struct mvpp2_prs_entry pe;
-@@ -1914,13 +1913,13 @@ static int mvpp2_prs_vid_range_find(stru
- 	int tid;
+ static int ctrl_set_colfx(struct bm2835_mmal_dev *dev,
+@@ -600,7 +600,7 @@ static int ctrl_set_colfx(struct bm2835_mmal_dev *dev,
+ 		 "%s: After: mmal_ctrl:%p ctrl id:0x%x ctrl val:%d ret %d(%d)\n",
+ 			__func__, mmal_ctrl, ctrl->id, ctrl->val, ret,
+ 			(ret == 0 ? 0 : -EINVAL));
+-	return (ret == 0 ? 0 : EINVAL);
++	return (ret == 0 ? 0 : -EINVAL);
+ }
  
- 	/* Go through the all entries with MVPP2_PRS_LU_VID */
--	for (tid = MVPP2_PE_VID_FILT_RANGE_START;
--	     tid <= MVPP2_PE_VID_FILT_RANGE_END; tid++) {
--		if (!priv->prs_shadow[tid].valid ||
--		    priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
-+	for (tid = MVPP2_PRS_VID_PORT_FIRST(port->id);
-+	     tid <= MVPP2_PRS_VID_PORT_LAST(port->id); tid++) {
-+		if (!port->priv->prs_shadow[tid].valid ||
-+		    port->priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
- 			continue;
- 
--		mvpp2_prs_init_from_hw(priv, &pe, tid);
-+		mvpp2_prs_init_from_hw(port->priv, &pe, tid);
- 
- 		mvpp2_prs_tcam_data_byte_get(&pe, 2, &byte[0], &enable[0]);
- 		mvpp2_prs_tcam_data_byte_get(&pe, 3, &byte[1], &enable[1]);
-@@ -1950,7 +1949,7 @@ int mvpp2_prs_vid_entry_add(struct mvpp2
- 	memset(&pe, 0, sizeof(pe));
- 
- 	/* Scan TCAM and see if entry with this <vid,port> already exist */
--	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, mask);
-+	tid = mvpp2_prs_vid_range_find(port, vid, mask);
- 
- 	reg_val = mvpp2_read(priv, MVPP2_MH_REG(port->id));
- 	if (reg_val & MVPP2_DSA_EXTENDED)
-@@ -2008,7 +2007,7 @@ void mvpp2_prs_vid_entry_remove(struct m
- 	int tid;
- 
- 	/* Scan TCAM and see if entry with this <vid,port> already exist */
--	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, 0xfff);
-+	tid = mvpp2_prs_vid_range_find(port, vid, 0xfff);
- 
- 	/* No such entry */
- 	if (tid < 0)
+ static int ctrl_set_bitrate(struct bm2835_mmal_dev *dev,
+-- 
+2.20.1
+
 
 
