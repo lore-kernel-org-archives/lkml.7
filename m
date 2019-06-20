@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8A7BC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC379C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F85A214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7AC6214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053645;
-	bh=5EM7OSah/1f58GU10tMIVjyBAbKDXvBeVdbm5RAF7eA=;
+	s=default; t=1561053648;
+	bh=Rk1LHz/PcXT+5T73VuOJd3OSv+wOezI5GbsdmU5Ndc8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qkZblia8rHIgN9fqfPFmjJKFbXuXo/e1oKue6rkpNATEdqPhVc0mhmtATdqe711s6
-	 +sN+8lX6yyoM7ttGxBxJDBQJO5XrRHDugr9zlWXKhJ3V/PjYe8uLOG18v1jgZIYKTm
-	 MSfQSyg6VvjieSrhit8hkVubHXpBefcwF5eXTCbo=
+	b=EaeLKdTuVHGNboQsWJnolwOXiSKXVEBnlBEFck+xzDf8lbjyFf+gaZdB2mtlHrLoi
+	 SkhrW5uX+WNdVO5/LWXVctGKXCECi8MhcnBpJhjKn3hCbdWolfjQm0iwU83fhLUE5l
+	 vZLaTSVpQ0JBoZMACvBrN9ZAR4xYGEGk2rNU58VY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbfFTSAo (ORCPT
+        id S1726376AbfFTSAr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:44 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49648 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727048AbfFTSAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:42 -0400
+        id S1727064AbfFTSAp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0629121479;
-        Thu, 20 Jun 2019 18:00:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2D10821530;
+        Thu, 20 Jun 2019 18:00:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053641;
-        bh=5EM7OSah/1f58GU10tMIVjyBAbKDXvBeVdbm5RAF7eA=;
+        s=default; t=1561053644;
+        bh=Rk1LHz/PcXT+5T73VuOJd3OSv+wOezI5GbsdmU5Ndc8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0uvGhvgHTGJ77VALgD7PDuu0uMmZqPQLOnZmsjKOdXL6j71svGm03uzeRhMmv2wff
-         Z5TEh4jYjvqkKqyxASPf/6yduFNOjeBYT+YQI8FeVSJ0yXpL6/Wy7eAI2aPAYYshXW
-         3zuyu7rM5lpfu01cmXkZZE+fNTZrI+pna2v5FepU=
+        b=xHI+eCRYV6P0EvPjkNvk4x89VM7HqbLBox/FVrlkVZSnyhPvlI49daR7hulse3Ww2
+         kueRpPinnC5lTP6EV3VNKCOST58zuTtznrEFciFdGYcbeA2UZ5vrGl06IpU5hQ0boo
+         GzZl2OcXqlt9U/sEKJxELN73HLNbV+qiDUbpcmoo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>,
+        =?UTF-8?q?J=C3=B6rgen=20Storvist?= <jorgen.storvist@gmail.com>,
         Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.4 60/84] USB: serial: pl2303: add Allied Telesis VT-Kit3
-Date:   Thu, 20 Jun 2019 19:56:57 +0200
-Message-Id: <20190620174347.842164007@linuxfoundation.org>
+Subject: [PATCH 4.4 61/84] USB: serial: option: add support for Simcom SIM7500/SIM7600 RNDIS mode
+Date:   Thu, 20 Jun 2019 19:56:58 +0200
+Message-Id: <20190620174347.906675796@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -60,41 +60,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
+From: Jörgen Storvist <jorgen.storvist@gmail.com>
 
-commit c5f81656a18b271976a86724dadd8344e54de74e upstream.
+commit 5417a7e482962952e622eabd60cd3600dd65dedf upstream.
 
-This is adds the vendor and device id for the AT-VT-Kit3 which is a
-pl2303-based device.
+Added IDs for Simcom SIM7500/SIM7600 series cellular module in RNDIS
+mode. Reserved the interface for ADB.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
+T:  Bus=03 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  7 Spd=480 MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=1e0e ProdID=9011 Rev=03.18
+S:  Manufacturer=SimTech, Incorporated
+S:  Product=SimTech, Incorporated
+S:  SerialNumber=0123456789ABCDEF
+C:  #Ifs= 8 Cfg#= 1 Atr=a0 MxPwr=500mA
+I:  If#=0x0 Alt= 0 #EPs= 1 Cls=02(commc) Sub=02 Prot=ff Driver=rndis_host
+I:  If#=0x1 Alt= 0 #EPs= 2 Cls=0a(data ) Sub=00 Prot=00 Driver=rndis_host
+I:  If#=0x2 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=option
+I:  If#=0x3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x5 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x6 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=option
+I:  If#=0x7 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=42 Prot=01 Driver=(none)
+
+Signed-off-by: Jörgen Storvist <jorgen.storvist@gmail.com>
 Cc: stable <stable@vger.kernel.org>
 Signed-off-by: Johan Hovold <johan@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/serial/pl2303.c |    1 +
- drivers/usb/serial/pl2303.h |    3 +++
- 2 files changed, 4 insertions(+)
+ drivers/usb/serial/option.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/serial/pl2303.c
-+++ b/drivers/usb/serial/pl2303.c
-@@ -101,6 +101,7 @@ static const struct usb_device_id id_tab
- 	{ USB_DEVICE(SANWA_VENDOR_ID, SANWA_PRODUCT_ID) },
- 	{ USB_DEVICE(ADLINK_VENDOR_ID, ADLINK_ND6530_PRODUCT_ID) },
- 	{ USB_DEVICE(SMART_VENDOR_ID, SMART_PRODUCT_ID) },
-+	{ USB_DEVICE(AT_VENDOR_ID, AT_VTKIT3_PRODUCT_ID) },
- 	{ }					/* Terminating entry */
- };
- 
---- a/drivers/usb/serial/pl2303.h
-+++ b/drivers/usb/serial/pl2303.h
-@@ -159,3 +159,6 @@
- #define SMART_VENDOR_ID	0x0b8c
- #define SMART_PRODUCT_ID	0x2303
- 
-+/* Allied Telesis VT-Kit3 */
-+#define AT_VENDOR_ID		0x0caa
-+#define AT_VTKIT3_PRODUCT_ID	0x3001
+--- a/drivers/usb/serial/option.c
++++ b/drivers/usb/serial/option.c
+@@ -1767,6 +1767,8 @@ static const struct usb_device_id option
+ 	{ USB_DEVICE(ALINK_VENDOR_ID, SIMCOM_PRODUCT_SIM7100E),
+ 	  .driver_info = RSVD(5) | RSVD(6) },
+ 	{ USB_DEVICE_INTERFACE_CLASS(0x1e0e, 0x9003, 0xff) },	/* Simcom SIM7500/SIM7600 MBIM mode */
++	{ USB_DEVICE_INTERFACE_CLASS(0x1e0e, 0x9011, 0xff),	/* Simcom SIM7500/SIM7600 RNDIS mode */
++	  .driver_info = RSVD(7) },
+ 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_X060S_X200),
+ 	  .driver_info = NCTRL(0) | NCTRL(1) | RSVD(4) },
+ 	{ USB_DEVICE(ALCATEL_VENDOR_ID, ALCATEL_PRODUCT_X220_X500D),
 
 
