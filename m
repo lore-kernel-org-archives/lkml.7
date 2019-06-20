@@ -2,89 +2,94 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09E65C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37045C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:47:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA6372085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:46:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="FSisBsYV"
+	by mail.kernel.org (Postfix) with ESMTP id 172B32085A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 07:47:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730482AbfFTHqv (ORCPT
+        id S1730797AbfFTHrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 03:46:51 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:48688 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725977AbfFTHqu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 03:46:50 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=W24eAUA7DcyA1a5RfqnZ2ZD5kvrAnVHlR34KvhddraM=; b=FSisBsYVYyaTgcBTUo0febIUX
-        DDFenl4N3DxDz9HDvkuBZMqWEWt9zs0UkfZmsD2jG6fmyx2xQpWABxUa9pjrcsbg4Iq69M57mzOUj
-        sWPOB7nt4lQmrwKlJIFSZwbVT/LR27Rat8De9JlTlxlDceBpFIa1A8mBxEhjB5w/xlfA8aoN2H/xf
-        NM2SUSB6Rtl5EB12kUU86hEUVKu3MrWHFEX7oWiS11zpIVz2huPnzaErMF3mqmwh+vJRymZD1FbQX
-        zxRJA8+7DCOxjjrEv479Xgmu2JwAs/4fkJB+atb/1i7aA3/R1CL2qeQjI0+Cwma8BqT30oOKJumVD
-        wJ/OQBvtQ==;
-Received: from shell.armlinux.org.uk ([2002:4e20:1eda:1:5054:ff:fe00:4ec]:58928)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hdrmL-0005hs-Fj; Thu, 20 Jun 2019 08:46:41 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hdrmH-0002Cl-Bf; Thu, 20 Jun 2019 08:46:37 +0100
-Date:   Thu, 20 Jun 2019 08:46:37 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Parshuram Raju Thombare <pthombar@cadence.com>
-Cc:     "andrew@lunn.ch" <andrew@lunn.ch>,
-        "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "hkallweit1@gmail.com" <hkallweit1@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Rafal Ciepiela <rafalc@cadence.com>,
-        Anil Joy Varughese <aniljoy@cadence.com>,
-        Piotr Sroka <piotrs@cadence.com>
-Subject: Re: [PATCH v2 2/5] net: macb: add support for sgmii MAC-PHY interface
-Message-ID: <20190620074637.3nxe33czqdm34lgp@shell.armlinux.org.uk>
-References: <1560933600-27626-1-git-send-email-pthombar@cadence.com>
- <1560933646-29852-1-git-send-email-pthombar@cadence.com>
- <20190619093146.yajbeht7mizm4hmr@shell.armlinux.org.uk>
- <CO2PR07MB24695C706292A16D71322DB5C1E50@CO2PR07MB2469.namprd07.prod.outlook.com>
- <20190619123206.zvc7gzt4ewxby2y2@shell.armlinux.org.uk>
- <CO2PR07MB24693905766BD027DB972761C1E40@CO2PR07MB2469.namprd07.prod.outlook.com>
+        Thu, 20 Jun 2019 03:47:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:51788 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726381AbfFTHrJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 03:47:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F1BF344;
+        Thu, 20 Jun 2019 00:47:08 -0700 (PDT)
+Received: from brain-police (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 191683F246;
+        Thu, 20 Jun 2019 00:47:04 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 08:46:58 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     catalin.marinas@arm.com, ard.biesheuvel@linaro.org,
+        broonie@kernel.org, mark.rutland@arm.com,
+        Olof Johansson <olof@lixom.net>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Arnd Bergmann <arnd@arndb.de>, Shawn Guo <shawnguo@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Dinh Nguyen <dinguyen@kernel.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: defconfig: update and enable CONFIG_RANDOMIZE_BASE
+Message-ID: <20190620074640.GA27228@brain-police>
+References: <20190620003244.261595-1-ndesaulniers@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CO2PR07MB24693905766BD027DB972761C1E40@CO2PR07MB2469.namprd07.prod.outlook.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190620003244.261595-1-ndesaulniers@google.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 05:56:32AM +0000, Parshuram Raju Thombare wrote:
-> For in band mode, I see two places to config MAC speed
-> and duplex mode, 1. mac_link_state 2. mac_link_up. In mac_link_up, though state
-> read from mac_link_state is passed, it is only used for printing log and updating
-> pl->cur_interface, so if configuring MAC speed/duplex mode in mac_link_up is correct, 
-> these parameters will need to read again from HW.
+Hi Nick,
 
-That is incorrect.  Again, please read the phylink documentation.
-There is even an article on how to convert drivers.
+On Wed, Jun 19, 2019 at 05:32:42PM -0700, Nick Desaulniers wrote:
+> Generated via:
+> $ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make defconfig
+> $ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make menuconfig
+> <enable CONFIG_RANDOMIZE_BASE aka KASLR>
+> $ ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- make savedefconfig
+> $ mv defconfig arch/arm64/configs/defconfig
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+Hmm, I'm in two minds about whether we want this on by default. On the plus
+side, it gets us extra testing coverage, although the /vast/ majority of
+firmware implementations I run into either don't pass a seed or don't
+provide a working EFI_RNG. Perhaps that's just a chicken-and-egg problem
+which can be solved if we shout loud enough when we fail to randomize; we'll
+also eventually be in a better position when CPUs start implementing the
+v8.5 RNG instructions (but don't hold your breath unless you have an
+unusually high lung capacity).
+
+On the flip side, I worry that it could make debugging more difficult, but I
+don't know whether that's a genuine concern or not. I'm assuming you've
+debugged your fair share of crashes from KASLR-enabled kernels; how bad is
+it? (I'm thinking of the case where somebody mails you part of a panic log
+and a .config).
+
+Irrespective of the above, I know Catalin was running into issues with his
+automated tests where the kernel would die silently during early boot with
+some seeds.  That's a bit rubbish if it's still the case -- Catalin?
+
+Finally, I know that (K)ASLR can be a bit controversial amongst security
+folks, with some seeing it as purely a smoke-and-mirrors game with no
+tangible benefits other than making us feel better about ourselves. Is it
+still the case that it can be trivially bypassed, or do you see it actually
+preventing some attacks in production?
+
+Sorry for the barrage of questions, but I think enabling this one by default
+is quite a significant thing to do and probably deserves a bit of scrutiny
+beforehand.
+
+Cheers,
+
+Will
