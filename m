@@ -2,261 +2,130 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C72B2C48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:28:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828C1C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:29:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9642E2085A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:28:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555F7208CB
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 08:29:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ocALnvCY";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hnuGTBxG"
+	dkim=pass (1024-bit key) header.d=jms.id.au header.i=@jms.id.au header.b="CtuzE3Xr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730561AbfFTI2f (ORCPT
+        id S1730593AbfFTI3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 04:28:35 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:54770 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfFTI2f (ORCPT
+        Thu, 20 Jun 2019 04:29:50 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33932 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725875AbfFTI3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 04:28:35 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 55CEE60867; Thu, 20 Jun 2019 08:28:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561019313;
-        bh=UiZTqO2d/B91wZV2iRJUamihFX7vX8r/m9aAuZdvl0U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ocALnvCYwC9QRJQUPsRcwvqANyJqa53SfaCIEmT0QswcBf+nmnNr7SnUhXh+X6cCW
-         zmhXv405mWBfAyVbjG2dIKqTINyyN0XKOnfsocXETawt03GEEE2lGZecuH8IU5m6pV
-         zExV2PTHNMe00CBhcZgFvSXcVqvr3oMcGWt11n8A=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 62894606FC;
-        Thu, 20 Jun 2019 08:28:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1561019312;
-        bh=UiZTqO2d/B91wZV2iRJUamihFX7vX8r/m9aAuZdvl0U=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=hnuGTBxGmMYkKvVgDNbeJaWwM1/2XzNz/fv1YwdrsesW+PX8UvHsu7wuSvco1OyP3
-         5fZ2u0qrcDNa1UsCqP72vH4hiURwfsBx0+0sxPvrxTkQvBlK1nwZsrPedS8hForSP+
-         xAmi05PCri21LPPcrvDLZY3RRp7dhUoJRVXVefxo=
+        Thu, 20 Jun 2019 04:29:50 -0400
+Received: by mail-qt1-f193.google.com with SMTP id m29so2413951qtu.1
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 01:29:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=jms.id.au; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=6+LDECNzk7Ax81lY+NTXinI2CggAW7FJancdnXbish8=;
+        b=CtuzE3XrAV1rVmsdqj11M6pmKHISAnlRUomi1TlE3HzkVaVNorKLX2wW/stFBg1Bv6
+         DyIHp3jITT2jE0rKVoCLPQ360+74LzXT6mmKu2+NrX5JQsoKH9lgwciuIWycQoNxySYe
+         E/CSxBpptpTlZ//LZbwz0Wkz4IVdBnFrG+bkQ=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=6+LDECNzk7Ax81lY+NTXinI2CggAW7FJancdnXbish8=;
+        b=Q2Vvdg/l/bzMj7brRfaDSY7kUF5iAJpL8ugM2yuW8Fwlzmss6MoMN0San7eM4qWBPx
+         5ik1FfVClBGIVwnt5JMImnH0yadwAl1kPUsYrpgsjjq6URf3gJKq5ERU1wczjh+jq+lT
+         1OwlEV8yNkl/JnUVHqg7yndAWQ5Pat4lELf5Z+ou8bgt+aGSw01XHpLI9HIIvr9Xrrp/
+         1id9EVdpLcqWiyT8ZMVbkSpxGGu0aJGAi07RNf8Sfg32f4cSfVzgM/Nv/oLfkfU4YOUO
+         UU38g5SgO5XhnRpC9oaqFJXZOwEd1Zo4krYAursrNe9dtiJJHRjfSkXBRxAU/jAmXLxa
+         jBjQ==
+X-Gm-Message-State: APjAAAXP7dD6dUSreXieFW/Y0VA89yCpi4cUUb2hLsnyEFE29sZbCpGQ
+        +c/a/9aEpXaf/IDw9O0swuWrxngtHu+9owOWDROmpCjU7lM=
+X-Google-Smtp-Source: APXvYqz9ktCSXKcc8gJFwqeG+AN29q9x2gYJJMH1Lf+t9yZGIz77JKqmMdeqFF/zzNE+Y8nQBNbxTH4cVcRoubKl5l0=
+X-Received: by 2002:a0c:afd5:: with SMTP id t21mr38274708qvc.105.1561019389077;
+ Thu, 20 Jun 2019 01:29:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Thu, 20 Jun 2019 13:58:32 +0530
-From:   amasule@codeaurora.org
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, vgarodia@codeaurora.org
-Subject: Re: [PATCH 3/5] media: venus: Update clock scaling
-In-Reply-To: <e1903711-b8c1-d528-2da8-ffd511a2da72@linaro.org>
-References: <1560233130-27264-1-git-send-email-amasule@codeaurora.org>
- <1560233130-27264-4-git-send-email-amasule@codeaurora.org>
- <e1903711-b8c1-d528-2da8-ffd511a2da72@linaro.org>
-Message-ID: <0a0b2dd455f21d3ea7013c4595fb0fc7@codeaurora.org>
-X-Sender: amasule@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+References: <20190619125636.1109665-1-arnd@arndb.de>
+In-Reply-To: <20190619125636.1109665-1-arnd@arndb.de>
+From:   Joel Stanley <joel@jms.id.au>
+Date:   Thu, 20 Jun 2019 08:29:36 +0000
+Message-ID: <CACPK8Xe0Ppr8QjPSTPyNSHEbSXvuZLjC04hqP6ATTSystY888w@mail.gmail.com>
+Subject: Re: [PATCH] soc: aspeed: fix probe error handling
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Andrew Jeffery <andrew@aj.id.au>,
+        Patrick Venture <venture@google.com>,
+        Vijay Khemka <vijaykhemka@fb.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-aspeed@lists.ozlabs.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stan,
+On Wed, 19 Jun 2019 at 12:56, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> gcc warns that a mising "flash" phandle node leads to undefined
+> behavior later:
+>
+> drivers/soc/aspeed/aspeed-lpc-ctrl.c: In function 'aspeed_lpc_ctrl_probe':
+> drivers/soc/aspeed/aspeed-lpc-ctrl.c:201:18: error: '*((void *)&resm+8)' may be used uninitialized in this function [-Werror=maybe-uninitialized]
+>
+> The device cannot work without this node, so just error out here.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-On 2019-06-17 14:28, Stanimir Varbanov wrote:
-> Hi Aniket,
-> 
-> On 6/11/19 9:05 AM, Aniket Masule wrote:
->> Current clock scaling calculations are same for vpu4 and
->> previous versions. For vpu4, Clock scaling calculations
->> are updated with cycles/mb. This helps in getting precise
->> clock required.
->> 
->> Signed-off-by: Aniket Masule <amasule@codeaurora.org>
->> ---
->>  drivers/media/platform/qcom/venus/helpers.c | 88 
->> +++++++++++++++++++++++++++--
->>  1 file changed, 84 insertions(+), 4 deletions(-)
->> 
->> diff --git a/drivers/media/platform/qcom/venus/helpers.c 
->> b/drivers/media/platform/qcom/venus/helpers.c
->> index f7f724b..7bcc1e6 100644
->> --- a/drivers/media/platform/qcom/venus/helpers.c
->> +++ b/drivers/media/platform/qcom/venus/helpers.c
->> @@ -348,8 +348,9 @@ static u32 load_per_type(struct venus_core *core, 
->> u32 session_type)
->>  	return mbs_per_sec;
->>  }
->> 
->> -static int load_scale_clocks(struct venus_core *core)
->> +static int scale_clocks(struct venus_inst *inst)
->>  {
->> +	struct venus_core *core = inst->core;
->>  	const struct freq_tbl *table = core->res->freq_tbl;
->>  	unsigned int num_rows = core->res->freq_tbl_size;
->>  	unsigned long freq = table[0].freq;
->> @@ -398,6 +399,86 @@ static int load_scale_clocks(struct venus_core 
->> *core)
->>  	return ret;
->>  }
->> 
->> +static unsigned long calculate_inst_freq(struct venus_inst *inst)
->> +{
->> +	unsigned long vpp_cycles = 0;
->> +	u32 mbs_per_sec;
->> +
->> +	mbs_per_sec = load_per_instance(inst);
->> +	vpp_cycles = mbs_per_sec * inst->clk_data.codec_data->vpp_cycles;
->> +	/* 21 / 20 is overhead factor */
->> +	vpp_cycles += vpp_cycles / 20;
-> 
-> shouldn't you multiply by 21?
-> 
-Expansion of given expression results to the same.
->> +
->> +	return vpp_cycles;
-> 
-> It is not clear to me is that vpp_cycles or frequency (rate)? I just
-> lost in dimensions used here.
-> 
-> If you return vpp_cycles could you rename the function name?
-> 
-Initial calculations included frequency (for bitrate based scaling), 
-which I removed.
-I will rename it calculate_inst_vpp_cycles for this patch.
->> +}
->> +
->> +static int scale_clocks_vpu4(struct venus_inst *inst)
-> 
-> does vpu4 equivalent to HFI_VERSION_4XX? If so could you rename 
-> function
-> to scale_clocks_v4.
-> 
-Sure Stan, I will rename it to scale_clocks_v4.
->> +{
->> +	struct venus_core *core = inst->core;
->> +	const struct freq_tbl *table = core->res->freq_tbl;
->> +	unsigned int num_rows = core->res->freq_tbl_size;
->> +
->> +	struct clk *clk = core->clks[0];
->> +	struct device *dev = core->dev;
->> +	unsigned int i;
->> +	unsigned long freq = 0, freq_core0 = 0, freq_core1 = 0;
->> +	int ret;
->> +
->> +	freq = calculate_inst_freq(inst);
->> +
->> +	if (freq > table[0].freq)
->> +		goto err;
->> +
->> +	for (i = 0; i < num_rows; i++) {
->> +		if (freq > table[i].freq)
->> +			break;
->> +		freq = table[i].freq;
->> +	}
->> +
->> +	inst->clk_data.freq = freq;
->> +
->> +	mutex_lock(&core->lock);
->> +	list_for_each_entry(inst, &core->instances, list) {
->> +		if (inst->clk_data.core_id == VIDC_CORE_ID_1) {
->> +			freq_core0 += inst->clk_data.freq;
->> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_2) {
->> +			freq_core1 += inst->clk_data.freq;
->> +		} else if (inst->clk_data.core_id == VIDC_CORE_ID_3) {
->> +			freq_core0 += inst->clk_data.freq;
->> +			freq_core1 += inst->clk_data.freq;
->> +		}
->> +	}
->> +	mutex_unlock(&core->lock);
->> +
->> +	freq = max(freq_core0, freq_core1);
-> 
-> hmm, this doesn't look right. core0 and core1 frequencies can be
-> different why you get the bigger and set it on both?
-> 
-We can't set separate clocks to core0 and core1.
-As per the design, we can set clocks to the branch only not the 
-individual cores.
->> +
->> +	ret = clk_set_rate(clk, freq);
->> +	if (ret)
->> +		goto err;
->> +
->> +	ret = clk_set_rate(core->core0_clk, freq);
-> 
-> IMO this should set freq_core0
-We need set max required frequency, due to the reason mentioned above.
-> 
->> +	if (ret)
->> +		goto err;
->> +
->> +	ret = clk_set_rate(core->core1_clk, freq);
-> 
-> set freq_core1
-> 
-We need set max required frequency, due to the reason mentioned above.
->> +	if (ret)
->> +		goto err;
->> +
->> +	return 0;
->> +
->> +err:
->> +	dev_err(dev, "failed to set clock rate %lu (%d)\n", freq, ret);
->> +	return ret;
->> +}
->> +
->> +static int load_scale_clocks(struct venus_inst *inst)
->> +{
->> +	if (IS_V3(inst->core) || IS_V1(inst->core))
->> +		return scale_clocks(inst);
->> +	else
->> +		return scale_clocks_vpu4(inst);
-> 
-> could you reorder this to:
-> 
-> 	if (IS_V4())
-> 		return scale_clocks_v4(inst);
-> 
-> 	return scale_clocks(inst);
-> 
-Yes Stan.
->> +}
->> +
->>  static void fill_buffer_desc(const struct venus_buffer *buf,
->>  			     struct hfi_buffer_desc *bd, bool response)
->>  {
->> @@ -1053,7 +1134,7 @@ void venus_helper_vb2_stop_streaming(struct 
->> vb2_queue *q)
->> 
->>  		venus_helper_free_dpb_bufs(inst);
->> 
->> -		load_scale_clocks(core);
->> +		load_scale_clocks(inst);
->>  		INIT_LIST_HEAD(&inst->registeredbufs);
->>  	}
->> 
->> @@ -1070,7 +1151,6 @@ void venus_helper_vb2_stop_streaming(struct 
->> vb2_queue *q)
->> 
->>  int venus_helper_vb2_start_streaming(struct venus_inst *inst)
->>  {
->> -	struct venus_core *core = inst->core;
->>  	int ret;
->> 
->>  	ret = intbufs_alloc(inst);
->> @@ -1081,7 +1161,7 @@ int venus_helper_vb2_start_streaming(struct 
->> venus_inst *inst)
->>  	if (ret)
->>  		goto err_bufs_free;
->> 
->> -	load_scale_clocks(core);
->> +	load_scale_clocks(inst);
->> 
->>  	ret = hfi_session_load_res(inst);
->>  	if (ret)
->> 
+Thanks Arnd. This looks like it applies on top of Vijay's recent patch?
+
+The intent of that change was to make the driver usable for systems
+that do not want to depend on the flash phandle. I think the fix we
+want looks like this:
+
+--- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
++++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+@@ -224,10 +224,11 @@ static int aspeed_lpc_ctrl_probe(struct
+platform_device *pdev)
+                        dev_err(dev, "Couldn't address to resource for
+flash\n");
+                        return rc;
+                }
++
++               lpc_ctrl->pnor_size = resource_size(&resm);
++               lpc_ctrl->pnor_base = resm.start;
+        }
+
+-       lpc_ctrl->pnor_size = resource_size(&resm);
+-       lpc_ctrl->pnor_base = resm.start;
+
+
+Vijay, do you agree?
+
+Cheers,
+
+Joel
+
+> ---
+>  drivers/soc/aspeed/aspeed-lpc-ctrl.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/soc/aspeed/aspeed-lpc-ctrl.c b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> index 239520bb207e..81109d22af6a 100644
+> --- a/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> +++ b/drivers/soc/aspeed/aspeed-lpc-ctrl.c
+> @@ -212,6 +212,7 @@ static int aspeed_lpc_ctrl_probe(struct platform_device *pdev)
+>         node = of_parse_phandle(dev->of_node, "flash", 0);
+>         if (!node) {
+>                 dev_dbg(dev, "Didn't find host pnor flash node\n");
+> +               return -ENXIO;
+>         } else {
+>                 rc = of_address_to_resource(node, 1, &resm);
+>                 of_node_put(node);
+> --
+> 2.20.0
+>
