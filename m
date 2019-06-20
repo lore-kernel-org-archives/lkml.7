@@ -2,54 +2,56 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52DEDC48BE1
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CEC6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 239342084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51A38214AF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054070;
-	bh=Va/5JEP+tw+rPEBGa39qJIClkCqzSoZXW7PGsjw4NIk=;
+	s=default; t=1561054074;
+	bh=LreVumlpbITYrk5+jo8LuY8Ek1gDypEGv1kbyWnH9JU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ldtHyj0LgNlV5M277i7C1nuJZG0zMQUwzd4JmwL2EpR9LbpQLv5YQhXYL7tKL7k4/
-	 TytYtHRRhRxdE5jF8VrMvqhOFHvcX/MqmKmulRy5EP3jUJdeEiowBHIApoCtUUg3wq
-	 9K4iu8blJmtL0B1WTCAccHIcXr0RTs9aDuX41FmE=
+	b=o+efTEcc+GwzeRJZAzCkyAMrbO0BRNHbUzwRzVQOHHRS7QADut++KSi5lShEJkhTo
+	 ljz1uY8zyj1UMHDwMKZAlOV0/V3b20ZJGzgWjZ2hJRf82Yd8VcjENhRoYOW0c4gTu5
+	 9XO6KJCgbPN+lBSBQniJowY9zwXxV7mLP9w+VfhA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfFTSHt (ORCPT
+        id S1728391AbfFTSHw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:07:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34542 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34650 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728373AbfFTSHr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:47 -0400
+        id S1728381AbfFTSHu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:50 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90AD12084E;
-        Thu, 20 Jun 2019 18:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9ED9D2070B;
+        Thu, 20 Jun 2019 18:07:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054066;
-        bh=Va/5JEP+tw+rPEBGa39qJIClkCqzSoZXW7PGsjw4NIk=;
+        s=default; t=1561054069;
+        bh=LreVumlpbITYrk5+jo8LuY8Ek1gDypEGv1kbyWnH9JU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gu6n/9gPftTfVaD/WFChPiDMvebaDjoYP6xpzJV/KNXiZR9cSqlHJD+u9EovGhv9n
-         IPJpaYJbBrUNdx3OdS9z52FoJWJeXce3AbXsFfkutLLbkBHhAcy0GdpwZMORxqarKY
-         +aYqyBBvUobj70dsoBWE5bGy1H+/+COPB3CC2FOY=
+        b=sCNnRIXsZHyl9qkZyHADfqbal5eP+mpXfFkkj36j16lGnjFeZO0hXz5slKofahf0Q
+         hNCdgBnMhMWNXnZKd00lE6KTGgW4fTG2i0REkeyWtY+D2ARoUuzpLLyB7bGlPA985d
+         WWKD84AFcvsCz5o2qY3YqjBi1bUOxRXIQ2K91Y/o=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Amit Cohen <amitc@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Ido Schimmel <idosch@mellanox.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Shawn Landden <shawn@git.icu>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Wang Nan <wangnan0@huawei.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 116/117] mlxsw: spectrum: Prevent force of 56G
-Date:   Thu, 20 Jun 2019 19:57:30 +0200
-Message-Id: <20190620174358.380666634@linuxfoundation.org>
+Subject: [PATCH 4.9 107/117] perf data: Fix strncat may truncate build failure with recent gcc
+Date:   Thu, 20 Jun 2019 19:57:21 +0200
+Message-Id: <20190620174358.060246844@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -62,39 +64,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 275e928f19117d22f6d26dee94548baf4041b773 ]
+[ Upstream commit 97acec7df172cd1e450f81f5e293c0aa145a2797 ]
 
-Force of 56G is not supported by hardware in Ethernet devices. This
-configuration fails with a bad parameter error from firmware.
+This strncat() is safe because the buffer was allocated with zalloc(),
+however gcc doesn't know that. Since the string always has 4 non-null
+bytes, just use memcpy() here.
 
-Add check of this case. Instead of trying to set 56G with autoneg off,
-return a meaningful error.
+    CC       /home/shawn/linux/tools/perf/util/data-convert-bt.o
+  In file included from /usr/include/string.h:494,
+                   from /home/shawn/linux/tools/lib/traceevent/event-parse.h:27,
+                   from util/data-convert-bt.c:22:
+  In function ‘strncat’,
+      inlined from ‘string_set_value’ at util/data-convert-bt.c:274:4:
+  /usr/include/powerpc64le-linux-gnu/bits/string_fortified.h:136:10: error: ‘__builtin_strncat’ output may be truncated copying 4 bytes from a string of length 4 [-Werror=stringop-truncation]
+    136 |   return __builtin___strncat_chk (__dest, __src, __len, __bos (__dest));
+        |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Fixes: 56ade8fe3fe1 ("mlxsw: spectrum: Add initial support for Spectrum ASIC")
-Signed-off-by: Amit Cohen <amitc@mellanox.com>
-Acked-by: Jiri Pirko <jiri@mellanox.com>
-Signed-off-by: Ido Schimmel <idosch@mellanox.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Shawn Landden <shawn@git.icu>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Wang Nan <wangnan0@huawei.com>
+LPU-Reference: 20190518183238.10954-1-shawn@git.icu
+Link: https://lkml.kernel.org/n/tip-289f1jice17ta7tr3tstm9jm@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlxsw/spectrum.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ tools/perf/util/data-convert-bt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-index e3ed70a24029..585a40cc6470 100644
---- a/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-+++ b/drivers/net/ethernet/mellanox/mlxsw/spectrum.c
-@@ -2044,6 +2044,10 @@ mlxsw_sp_port_set_link_ksettings(struct net_device *dev,
- 	mlxsw_reg_ptys_unpack(ptys_pl, &eth_proto_cap, NULL, NULL);
- 
- 	autoneg = cmd->base.autoneg == AUTONEG_ENABLE;
-+	if (!autoneg && cmd->base.speed == SPEED_56000) {
-+		netdev_err(dev, "56G not supported with autoneg off\n");
-+		return -EINVAL;
-+	}
- 	eth_proto_new = autoneg ?
- 		mlxsw_sp_to_ptys_advert_link(cmd) :
- 		mlxsw_sp_to_ptys_speed(cmd->base.speed);
+diff --git a/tools/perf/util/data-convert-bt.c b/tools/perf/util/data-convert-bt.c
+index 7123f4de32cc..226f4312b8f3 100644
+--- a/tools/perf/util/data-convert-bt.c
++++ b/tools/perf/util/data-convert-bt.c
+@@ -265,7 +265,7 @@ static int string_set_value(struct bt_ctf_field *field, const char *string)
+ 				if (i > 0)
+ 					strncpy(buffer, string, i);
+ 			}
+-			strncat(buffer + p, numstr, 4);
++			memcpy(buffer + p, numstr, 4);
+ 			p += 3;
+ 		}
+ 	}
 -- 
 2.20.1
 
