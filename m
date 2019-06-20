@@ -5,53 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF2FFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E860C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA74721537
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E38821537
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:59:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053580;
-	bh=hgh0MmmjlfsY1C3iEfMNRRPgfNuNj5U04xYQ2Qpe9fY=;
+	s=default; t=1561053583;
+	bh=hErqMKTtmiv9W7Mf9Z6tNQ98BFQ2PFO0Ra4pVf0xzdY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EF8g7hmeeghhXj3o1Ku7AXpVXbGJjU940HC2C4DmQgrARClrO8bC/CB/nhSbNbr45
-	 yTSxYSYqEVF0/3fVcc2REuN7UeMBLstFcT0Ddw+eDgUdnRBKDRSyB7ANCqMuGOSOwu
-	 N3BZKgKa9VboVVuVs67jEYmOu93Qx+qJrdfOFN1w=
+	b=xNS0uRqTkRJBf5wlpcWYCR/b3qme5w0nLhFYfNAZKgNB0HvX0jYMoWuV4M+iDRWhc
+	 SxsGAPcldEOQpE8WbHd7FSuE3dM0i66tZ2QHfs0BWFwATT44zssfKUvhth+GKTX+sa
+	 7Ib/o2g+iVXWQw5DWzW3c2LDkWaAnbX955NkIUx8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726667AbfFTR7j (ORCPT
+        id S1726682AbfFTR7m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:59:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47190 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 13:59:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfFTR7c (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:59:32 -0400
+        id S1726591AbfFTR7i (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:59:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1017D21537;
-        Thu, 20 Jun 2019 17:59:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ED9D72083B;
+        Thu, 20 Jun 2019 17:59:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053571;
-        bh=hgh0MmmjlfsY1C3iEfMNRRPgfNuNj5U04xYQ2Qpe9fY=;
+        s=default; t=1561053577;
+        bh=hErqMKTtmiv9W7Mf9Z6tNQ98BFQ2PFO0Ra4pVf0xzdY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0dams5d6bhSZ/DVpLMCYSWG/4eksdLwoUOlYeq31u0watjz+aXai+z6vP7w5J2NnR
-         zfw6cfvnpePkRYBnNKyJvq4girl1GV/Lfh0NTLoYMI7WHJhP14nFWIgbsNk5PoIOmu
-         LOoMe8PT7XMYwYPieX+toBOFIoCrXYC6fT6ACe6E=
+        b=npUTEBIjM9lYKViIO7PIDK1VD59ohMWO32GDNlWeoDAjb3ma/NN027oX8u/a2flPG
+         X1SOf+yoRnnFzse90evuGucputuNId9NnpEG5SMiRrtd4PuRKuWZsRsxrKUn5+92i6
+         F4R3n36ol0Z+c7XV+NVr/ImvCZyV4gROFF81SWPA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cyrill Gorcunov <gorcunov@gmail.com>,
-        Andrey Vagin <avagin@gmail.com>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Pavel Emelyanov <xemul@virtuozzo.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Lee Jones <lee.jones@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 07/84] kernel/sys.c: prctl: fix false positive in validate_prctl_map()
-Date:   Thu, 20 Jun 2019 19:56:04 +0200
-Message-Id: <20190620174338.690742443@linuxfoundation.org>
+Subject: [PATCH 4.4 09/84] mfd: twl6040: Fix device init errors for ACCCTL register
+Date:   Thu, 20 Jun 2019 19:56:06 +0200
+Message-Id: <20190620174338.989366661@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -64,52 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a9e73998f9d705c94a8dca9687633adc0f24a19a ]
+[ Upstream commit 48171d0ea7caccf21c9ee3ae75eb370f2a756062 ]
 
-While validating new map we require the @start_data to be strictly less
-than @end_data, which is fine for regular applications (this is why this
-nit didn't trigger for that long).  These members are set from executable
-loaders such as elf handers, still it is pretty valid to have a loadable
-data section with zero size in file, in such case the start_data is equal
-to end_data once kernel loader finishes.
+I noticed that we can get a -EREMOTEIO errors on at least omap4 duovero:
 
-As a result when we're trying to restore such programs the procedure fails
-and the kernel returns -EINVAL.  From the image dump of a program:
+twl6040 0-004b: Failed to write 2d = 19: -121
 
- | "mm_start_code": "0x400000",
- | "mm_end_code": "0x8f5fb4",
- | "mm_start_data": "0xf1bfb0",
- | "mm_end_data": "0xf1bfb0",
+And then any following register access will produce errors.
 
-Thus we need to change validate_prctl_map from strictly less to less or
-equal operator use.
+There 2d offset above is register ACCCTL that gets written on twl6040
+powerup. With error checking added to the related regcache_sync() call,
+the -EREMOTEIO error is reproducable on twl6040 powerup at least
+duovero.
 
-Link: http://lkml.kernel.org/r/20190408143554.GY1421@uranus.lan
-Fixes: f606b77f1a9e3 ("prctl: PR_SET_MM -- introduce PR_SET_MM_MAP operation")
-Signed-off-by: Cyrill Gorcunov <gorcunov@gmail.com>
-Cc: Andrey Vagin <avagin@gmail.com>
-Cc: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Pavel Emelyanov <xemul@virtuozzo.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+To fix the error, we need to wait until twl6040 is accessible after the
+powerup. Based on tests on omap4 duovero, we need to wait over 8ms after
+powerup before register write will complete without failures. Let's also
+make sure we warn about possible errors too.
+
+Note that we have twl6040_patch[] reg_sequence with the ACCCTL register
+configuration and regcache_sync() will write the new value to ACCCTL.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- kernel/sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/mfd/twl6040.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/sys.c b/kernel/sys.c
-index e2446ade79ba..1855f1bf113e 100644
---- a/kernel/sys.c
-+++ b/kernel/sys.c
-@@ -1762,7 +1762,7 @@ static int validate_prctl_map(struct prctl_mm_map *prctl_map)
- 	((unsigned long)prctl_map->__m1 __op				\
- 	 (unsigned long)prctl_map->__m2) ? 0 : -EINVAL
- 	error  = __prctl_check_order(start_code, <, end_code);
--	error |= __prctl_check_order(start_data, <, end_data);
-+	error |= __prctl_check_order(start_data,<=, end_data);
- 	error |= __prctl_check_order(start_brk, <=, brk);
- 	error |= __prctl_check_order(arg_start, <=, arg_end);
- 	error |= __prctl_check_order(env_start, <=, env_end);
+diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
+index 72aab60ae846..db8684430f02 100644
+--- a/drivers/mfd/twl6040.c
++++ b/drivers/mfd/twl6040.c
+@@ -316,8 +316,19 @@ int twl6040_power(struct twl6040 *twl6040, int on)
+ 			}
+ 		}
+ 
++		/*
++		 * Register access can produce errors after power-up unless we
++		 * wait at least 8ms based on measurements on duovero.
++		 */
++		usleep_range(10000, 12000);
++
+ 		/* Sync with the HW */
+-		regcache_sync(twl6040->regmap);
++		ret = regcache_sync(twl6040->regmap);
++		if (ret) {
++			dev_err(twl6040->dev, "Failed to sync with the HW: %i\n",
++				ret);
++			goto out;
++		}
+ 
+ 		/* Default PLL configuration after power up */
+ 		twl6040->pll = TWL6040_SYSCLK_SEL_LPPLL;
 -- 
 2.20.1
 
