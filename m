@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CE7CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7710C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79ACA21655
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87A682089C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:21:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054901;
-	bh=7JGQuOrvcmw+F3qIhdXalM05EVaBfo4bHhekHH3nPUs=;
+	s=default; t=1561054905;
+	bh=TBAws2c/GmHnYBrpWrysQHwua9SqWMmW78aPAlCjFQg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Tv/4Oq1Zj7lbbDyDb+pvZvmF6UIP8GsGAhMph2Qbv4VsB82l1fpx+ZITwTd2macVh
-	 lIOMeX6gL3IFBF3BQrcUM9uIA+cLpDuzyI2XeX6AFVkH6tB91a/5hmFTgFnJH8UVvP
-	 4feBhl4leZS/5EooaSWgAlHcgUN+nZk7q1kr7Lp8=
+	b=iY3KcUyytjDMCFORHeGhf4T9tIXMv2/BhpySlakbEXcjLqUaPzkso1KMG0TawfmcR
+	 0o5uM5uAqXIxKR0vJdUsaX0iepN/p46iK8TPNsllI5IC2vYyAFnKRtrHM5VENLNsCc
+	 6nVutOmLZEm0DDbWKjzPtQui/ywL5KcX9TZe2XlM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfFTSVj (ORCPT
+        id S1729002AbfFTSVo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:21:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39970 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:21:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39808 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726597AbfFTSML (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:12:11 -0400
+        id S1727193AbfFTSMD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:12:03 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3128B2082C;
-        Thu, 20 Jun 2019 18:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3D9972070B;
+        Thu, 20 Jun 2019 18:12:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054330;
-        bh=7JGQuOrvcmw+F3qIhdXalM05EVaBfo4bHhekHH3nPUs=;
+        s=default; t=1561054321;
+        bh=TBAws2c/GmHnYBrpWrysQHwua9SqWMmW78aPAlCjFQg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KdoSbGlzKCFXBMBnM/3OaKNXgq1HvUzz6loz6MSw9YmXBbMdJiBkMN30gNsO7mY2z
-         g2UxrHoJm3NSlv/TS+YlekcCAdXh/icD2W/hF1OM6hqWitt4csQH2dwT63tB5T5aha
-         UHHi3vsLBWYshKA7CrMxMqOlPzcxKlp9ScxKDrzA=
+        b=wyLEA/crunDQl+Q1N/w0ka3hz69bRW8xYNITfGs0qLVE4w7W/o47k7ctKCesOhtqf
+         zD31KcLTX3npAExiqm9D51CKkys/jTAyydEsu69ehSzaTdQSW/mfNo0iL+1fdu0xMN
+         BCt141Nk4TYcS4I5RYpu48kZGNcDSJhnzRvVhW3g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Uvarov <muvarov@gmail.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        stable@vger.kernel.org, Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will.deacon@arm.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 53/61] net: phy: dp83867: Set up RGMII TX delay
-Date:   Thu, 20 Jun 2019 19:57:48 +0200
-Message-Id: <20190620174346.433171819@linuxfoundation.org>
+Subject: [PATCH 4.19 50/61] arm64: use the correct function type for __arm64_sys_ni_syscall
+Date:   Thu, 20 Jun 2019 19:57:45 +0200
+Message-Id: <20190620174345.934523625@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,37 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2b892649254fec01678c64f16427622b41fa27f4 ]
+[ Upstream commit 1e29ab3186e33c77dbb2d7566172a205b59fa390 ]
 
-PHY_INTERFACE_MODE_RGMII_RXID is less then TXID
-so code to set tx delay is never called.
+Calling sys_ni_syscall through a syscall_fn_t pointer trips indirect
+call Control-Flow Integrity checking due to a function type
+mismatch. Use SYSCALL_DEFINE0 for __arm64_sys_ni_syscall instead and
+remove the now unnecessary casts.
 
-Fixes: 2a10154abcb75 ("net: phy: dp83867: Add TI dp83867 phy")
-Signed-off-by: Max Uvarov <muvarov@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/phy/dp83867.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ arch/arm64/kernel/sys.c   | 14 +++++++++-----
+ arch/arm64/kernel/sys32.c |  7 ++-----
+ 2 files changed, 11 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/net/phy/dp83867.c b/drivers/net/phy/dp83867.c
-index b3935778b19f..e4bf9e7d7583 100644
---- a/drivers/net/phy/dp83867.c
-+++ b/drivers/net/phy/dp83867.c
-@@ -260,10 +260,8 @@ static int dp83867_config_init(struct phy_device *phydev)
- 		ret = phy_write(phydev, MII_DP83867_PHYCTRL, val);
- 		if (ret)
- 			return ret;
--	}
+diff --git a/arch/arm64/kernel/sys.c b/arch/arm64/kernel/sys.c
+index 162a95ed0881..fe20c461582a 100644
+--- a/arch/arm64/kernel/sys.c
++++ b/arch/arm64/kernel/sys.c
+@@ -47,22 +47,26 @@ SYSCALL_DEFINE1(arm64_personality, unsigned int, personality)
+ 	return ksys_personality(personality);
+ }
  
--	if ((phydev->interface >= PHY_INTERFACE_MODE_RGMII_ID) &&
--	    (phydev->interface <= PHY_INTERFACE_MODE_RGMII_RXID)) {
-+		/* Set up RGMII delays */
- 		val = phy_read_mmd(phydev, DP83867_DEVADDR, DP83867_RGMIICTL);
++asmlinkage long sys_ni_syscall(void);
++
++asmlinkage long __arm64_sys_ni_syscall(const struct pt_regs *__unused)
++{
++	return sys_ni_syscall();
++}
++
+ /*
+  * Wrappers to pass the pt_regs argument.
+  */
+ #define __arm64_sys_personality		__arm64_sys_arm64_personality
  
- 		if (phydev->interface == PHY_INTERFACE_MODE_RGMII_ID)
+-asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-#define __arm64_sys_ni_syscall	sys_ni_syscall
+-
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+ #include <asm/unistd.h>
+ 
+ #undef __SYSCALL
+-#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
++#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+ 
+ const syscall_fn_t sys_call_table[__NR_syscalls] = {
+-	[0 ... __NR_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
++	[0 ... __NR_syscalls - 1] = __arm64_sys_ni_syscall,
+ #include <asm/unistd.h>
+ };
+diff --git a/arch/arm64/kernel/sys32.c b/arch/arm64/kernel/sys32.c
+index 0f8bcb7de700..3c80a40c1c9d 100644
+--- a/arch/arm64/kernel/sys32.c
++++ b/arch/arm64/kernel/sys32.c
+@@ -133,17 +133,14 @@ COMPAT_SYSCALL_DEFINE6(aarch32_fallocate, int, fd, int, mode,
+ 	return ksys_fallocate(fd, mode, arg_u64(offset), arg_u64(len));
+ }
+ 
+-asmlinkage long sys_ni_syscall(const struct pt_regs *);
+-#define __arm64_sys_ni_syscall	sys_ni_syscall
+-
+ #undef __SYSCALL
+ #define __SYSCALL(nr, sym)	asmlinkage long __arm64_##sym(const struct pt_regs *);
+ #include <asm/unistd32.h>
+ 
+ #undef __SYSCALL
+-#define __SYSCALL(nr, sym)	[nr] = (syscall_fn_t)__arm64_##sym,
++#define __SYSCALL(nr, sym)	[nr] = __arm64_##sym,
+ 
+ const syscall_fn_t compat_sys_call_table[__NR_compat_syscalls] = {
+-	[0 ... __NR_compat_syscalls - 1] = (syscall_fn_t)sys_ni_syscall,
++	[0 ... __NR_compat_syscalls - 1] = __arm64_sys_ni_syscall,
+ #include <asm/unistd32.h>
+ };
 -- 
 2.20.1
 
