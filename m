@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB22C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24743C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A24BD2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E801C2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054220;
-	bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
+	s=default; t=1561054223;
+	bh=G0ZuHYD2eKYYxceBtrj2liH2/3rpu8hzJHTHKUw/gRk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wU+IAa1sOs7Rc/IEJ9fh0flCzxDs+qyhZJ3+n3KC+mdv4aKK8kIy3POKqveXSTY4o
-	 TWwMyRQVYTLbnDlyAh5m4kmHo0U82Vv+p7qg0zs3moYopP+EyOUkN2qJu/TffdJbgO
-	 OMxRzp9u2fTHtB9pUrd9NB/ctSY8tERbJ+oV72w4=
+	b=eqQ0PWg1URYVXVaQ5lBdJ27TV1ewSYcJdjTqdaRppchbto9cf06EN3tKULOrIaQ8W
+	 qPIiWNdEaq8p0QQ2kBunJ9wpd4txQTQIQ1sS/O1nPn+akPqLHIQt/EfweX7BEzxPUG
+	 +IOvUgVPSR+X9v5vsYrz52Jd4MhcC/3oEf18CowI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfFTSKT (ORCPT
+        id S1728804AbfFTSKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:10:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37836 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:10:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37882 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727982AbfFTSKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:10:16 -0400
+        id S1728574AbfFTSKS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:10:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7A2322082C;
-        Thu, 20 Jun 2019 18:10:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E36A2084E;
+        Thu, 20 Jun 2019 18:10:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054215;
-        bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
+        s=default; t=1561054217;
+        bh=G0ZuHYD2eKYYxceBtrj2liH2/3rpu8hzJHTHKUw/gRk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bhSn1y+0YvZ39csa3J+UbRR2ahqhULarDMKkKf2IgRUMuav5QEFJIkPUV/K9pSimB
-         lJvRWgqjVBn1vS/FPjs8fplv7si0Wn0MS3mCr1d0FptGhkY2ECKmp2nfwctU8rBt56
-         N/gUVoYGsRp288JA7z68aDOHx9a+bsK4zGudaRx0=
+        b=vAhRAg3bMSl5ABXU/AGmRCgtlBvXgiEwgePKHYr99KA7uY7jpOYBjnWdeoAnPRDgi
+         nvfBpnerrW3bK8Nf2FaEuCnuPel39iQY7umxAwRA0uF3ficZJAUCkQhFQcHTqQTEUs
+         0/YRGEot3m/jK2CnuEKJ0mEM+PaKkkF2K3fXDy2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com,
-        Jeremy Sowden <jeremy@azazel.net>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 05/61] lapb: fixed leak of control-blocks.
-Date:   Thu, 20 Jun 2019 19:57:00 +0200
-Message-Id: <20190620174338.536691075@linuxfoundation.org>
+Subject: [PATCH 4.19 06/61] neigh: fix use-after-free read in pneigh_get_next
+Date:   Thu, 20 Jun 2019 19:57:01 +0200
+Message-Id: <20190620174338.643231334@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -61,42 +60,185 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeremy Sowden <jeremy@azazel.net>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit 6be8e297f9bcea666ea85ac7a6cd9d52d6deaf92 ]
+[ Upstream commit f3e92cb8e2eb8c27d109e6fd73d3a69a8c09e288 ]
 
-lapb_register calls lapb_create_cb, which initializes the control-
-block's ref-count to one, and __lapb_insert_cb, which increments it when
-adding the new block to the list of blocks.
+Nine years ago, I added RCU handling to neighbours, not pneighbours.
+(pneigh are not commonly used)
 
-lapb_unregister calls __lapb_remove_cb, which decrements the ref-count
-when removing control-block from the list of blocks, and calls lapb_put
-itself to decrement the ref-count before returning.
+Unfortunately I missed that /proc dump operations would use a
+common entry and exit point : neigh_seq_start() and neigh_seq_stop()
 
-However, lapb_unregister also calls __lapb_devtostruct to look up the
-right control-block for the given net_device, and __lapb_devtostruct
-also bumps the ref-count, which means that when lapb_unregister returns
-the ref-count is still 1 and the control-block is leaked.
+We need to read_lock(tbl->lock) or risk use-after-free while
+iterating the pneigh structures.
 
-Call lapb_put after __lapb_devtostruct to fix leak.
+We might later convert pneigh to RCU and revert this patch.
 
-Reported-by: syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com
-Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
+sysbot reported :
+
+BUG: KASAN: use-after-free in pneigh_get_next.isra.0+0x24b/0x280 net/core/neighbour.c:3158
+Read of size 8 at addr ffff888097f2a700 by task syz-executor.0/9825
+
+CPU: 1 PID: 9825 Comm: syz-executor.0 Not tainted 5.2.0-rc4+ #32
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_address_description.cold+0x7c/0x20d mm/kasan/report.c:188
+ __kasan_report.cold+0x1b/0x40 mm/kasan/report.c:317
+ kasan_report+0x12/0x20 mm/kasan/common.c:614
+ __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+ pneigh_get_next.isra.0+0x24b/0x280 net/core/neighbour.c:3158
+ neigh_seq_next+0xdb/0x210 net/core/neighbour.c:3240
+ seq_read+0x9cf/0x1110 fs/seq_file.c:258
+ proc_reg_read+0x1fc/0x2c0 fs/proc/inode.c:221
+ do_loop_readv_writev fs/read_write.c:714 [inline]
+ do_loop_readv_writev fs/read_write.c:701 [inline]
+ do_iter_read+0x4a4/0x660 fs/read_write.c:935
+ vfs_readv+0xf0/0x160 fs/read_write.c:997
+ kernel_readv fs/splice.c:359 [inline]
+ default_file_splice_read+0x475/0x890 fs/splice.c:414
+ do_splice_to+0x127/0x180 fs/splice.c:877
+ splice_direct_to_actor+0x2d2/0x970 fs/splice.c:954
+ do_splice_direct+0x1da/0x2a0 fs/splice.c:1063
+ do_sendfile+0x597/0xd00 fs/read_write.c:1464
+ __do_sys_sendfile64 fs/read_write.c:1525 [inline]
+ __se_sys_sendfile64 fs/read_write.c:1511 [inline]
+ __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
+ do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4592c9
+Code: fd b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 cb b7 fb ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007f4aab51dc78 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
+RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000004592c9
+RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000005
+RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000080000000 R11: 0000000000000246 R12: 00007f4aab51e6d4
+R13: 00000000004c689d R14: 00000000004db828 R15: 00000000ffffffff
+
+Allocated by task 9827:
+ save_stack+0x23/0x90 mm/kasan/common.c:71
+ set_track mm/kasan/common.c:79 [inline]
+ __kasan_kmalloc mm/kasan/common.c:489 [inline]
+ __kasan_kmalloc.constprop.0+0xcf/0xe0 mm/kasan/common.c:462
+ kasan_kmalloc+0x9/0x10 mm/kasan/common.c:503
+ __do_kmalloc mm/slab.c:3660 [inline]
+ __kmalloc+0x15c/0x740 mm/slab.c:3669
+ kmalloc include/linux/slab.h:552 [inline]
+ pneigh_lookup+0x19c/0x4a0 net/core/neighbour.c:731
+ arp_req_set_public net/ipv4/arp.c:1010 [inline]
+ arp_req_set+0x613/0x720 net/ipv4/arp.c:1026
+ arp_ioctl+0x652/0x7f0 net/ipv4/arp.c:1226
+ inet_ioctl+0x2a0/0x340 net/ipv4/af_inet.c:926
+ sock_do_ioctl+0xd8/0x2f0 net/socket.c:1043
+ sock_ioctl+0x3ed/0x780 net/socket.c:1194
+ vfs_ioctl fs/ioctl.c:46 [inline]
+ file_ioctl fs/ioctl.c:509 [inline]
+ do_vfs_ioctl+0xd5f/0x1380 fs/ioctl.c:696
+ ksys_ioctl+0xab/0xd0 fs/ioctl.c:713
+ __do_sys_ioctl fs/ioctl.c:720 [inline]
+ __se_sys_ioctl fs/ioctl.c:718 [inline]
+ __x64_sys_ioctl+0x73/0xb0 fs/ioctl.c:718
+ do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 9824:
+ save_stack+0x23/0x90 mm/kasan/common.c:71
+ set_track mm/kasan/common.c:79 [inline]
+ __kasan_slab_free+0x102/0x150 mm/kasan/common.c:451
+ kasan_slab_free+0xe/0x10 mm/kasan/common.c:459
+ __cache_free mm/slab.c:3432 [inline]
+ kfree+0xcf/0x220 mm/slab.c:3755
+ pneigh_ifdown_and_unlock net/core/neighbour.c:812 [inline]
+ __neigh_ifdown+0x236/0x2f0 net/core/neighbour.c:356
+ neigh_ifdown+0x20/0x30 net/core/neighbour.c:372
+ arp_ifdown+0x1d/0x21 net/ipv4/arp.c:1274
+ inetdev_destroy net/ipv4/devinet.c:319 [inline]
+ inetdev_event+0xa14/0x11f0 net/ipv4/devinet.c:1544
+ notifier_call_chain+0xc2/0x230 kernel/notifier.c:95
+ __raw_notifier_call_chain kernel/notifier.c:396 [inline]
+ raw_notifier_call_chain+0x2e/0x40 kernel/notifier.c:403
+ call_netdevice_notifiers_info+0x3f/0x90 net/core/dev.c:1749
+ call_netdevice_notifiers_extack net/core/dev.c:1761 [inline]
+ call_netdevice_notifiers net/core/dev.c:1775 [inline]
+ rollback_registered_many+0x9b9/0xfc0 net/core/dev.c:8178
+ rollback_registered+0x109/0x1d0 net/core/dev.c:8220
+ unregister_netdevice_queue net/core/dev.c:9267 [inline]
+ unregister_netdevice_queue+0x1ee/0x2c0 net/core/dev.c:9260
+ unregister_netdevice include/linux/netdevice.h:2631 [inline]
+ __tun_detach+0xd8a/0x1040 drivers/net/tun.c:724
+ tun_detach drivers/net/tun.c:741 [inline]
+ tun_chr_close+0xe0/0x180 drivers/net/tun.c:3451
+ __fput+0x2ff/0x890 fs/file_table.c:280
+ ____fput+0x16/0x20 fs/file_table.c:313
+ task_work_run+0x145/0x1c0 kernel/task_work.c:113
+ tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+ exit_to_usermode_loop+0x273/0x2c0 arch/x86/entry/common.c:168
+ prepare_exit_to_usermode arch/x86/entry/common.c:199 [inline]
+ syscall_return_slowpath arch/x86/entry/common.c:279 [inline]
+ do_syscall_64+0x58e/0x680 arch/x86/entry/common.c:304
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff888097f2a700
+ which belongs to the cache kmalloc-64 of size 64
+The buggy address is located 0 bytes inside of
+ 64-byte region [ffff888097f2a700, ffff888097f2a740)
+The buggy address belongs to the page:
+page:ffffea00025fca80 refcount:1 mapcount:0 mapping:ffff8880aa400340 index:0x0
+flags: 0x1fffc0000000200(slab)
+raw: 01fffc0000000200 ffffea000250d548 ffffea00025726c8 ffff8880aa400340
+raw: 0000000000000000 ffff888097f2a000 0000000100000020 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff888097f2a600: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+ ffff888097f2a680: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+>ffff888097f2a700: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                   ^
+ ffff888097f2a780: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff888097f2a800: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+
+Fixes: 767e97e1e0db ("neigh: RCU conversion of struct neighbour")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/lapb/lapb_iface.c |    1 +
- 1 file changed, 1 insertion(+)
+ net/core/neighbour.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/net/lapb/lapb_iface.c
-+++ b/net/lapb/lapb_iface.c
-@@ -182,6 +182,7 @@ int lapb_unregister(struct net_device *d
- 	lapb = __lapb_devtostruct(dev);
- 	if (!lapb)
- 		goto out;
-+	lapb_put(lapb);
+--- a/net/core/neighbour.c
++++ b/net/core/neighbour.c
+@@ -2751,6 +2751,7 @@ static void *neigh_get_idx_any(struct se
+ }
  
- 	lapb_stop_t1timer(lapb);
- 	lapb_stop_t2timer(lapb);
+ void *neigh_seq_start(struct seq_file *seq, loff_t *pos, struct neigh_table *tbl, unsigned int neigh_seq_flags)
++	__acquires(tbl->lock)
+ 	__acquires(rcu_bh)
+ {
+ 	struct neigh_seq_state *state = seq->private;
+@@ -2761,6 +2762,7 @@ void *neigh_seq_start(struct seq_file *s
+ 
+ 	rcu_read_lock_bh();
+ 	state->nht = rcu_dereference_bh(tbl->nht);
++	read_lock(&tbl->lock);
+ 
+ 	return *pos ? neigh_get_idx_any(seq, pos) : SEQ_START_TOKEN;
+ }
+@@ -2794,8 +2796,13 @@ out:
+ EXPORT_SYMBOL(neigh_seq_next);
+ 
+ void neigh_seq_stop(struct seq_file *seq, void *v)
++	__releases(tbl->lock)
+ 	__releases(rcu_bh)
+ {
++	struct neigh_seq_state *state = seq->private;
++	struct neigh_table *tbl = state->tbl;
++
++	read_unlock(&tbl->lock);
+ 	rcu_read_unlock_bh();
+ }
+ EXPORT_SYMBOL(neigh_seq_stop);
 
 
