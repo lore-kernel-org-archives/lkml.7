@@ -2,118 +2,101 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94714C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:13:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8424DC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:14:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 594F32082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:13:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B672082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:14:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AV7X7aYg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V8bIRrbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfFTRN5 (ORCPT
+        id S1732026AbfFTROe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:13:57 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:39831 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726530AbfFTRN4 (ORCPT
+        Thu, 20 Jun 2019 13:14:34 -0400
+Received: from mail-ua1-f65.google.com ([209.85.222.65]:34926 "EHLO
+        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726530AbfFTROd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:13:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id j2so2027219pfe.6
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:13:56 -0700 (PDT)
+        Thu, 20 Jun 2019 13:14:33 -0400
+Received: by mail-ua1-f65.google.com with SMTP id j21so1958400uap.2
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 10:14:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SxlO+FSAxDd632DpLfLCq/OUwvg6eaO8V3k3L6zEVyA=;
-        b=AV7X7aYgHwBXxgw3zTNxXUoIkYIRKYXuB2SNjcPxrI5cN6QdU5ft8aLqv61MezByn9
-         Skir3SYjIi4thmMA+ZaNtCXTpB8zIoHuAXP4x2Li0v0AHE1EAGklVzNFRfD5w0XcO8aw
-         NAKrZuz9PjK0bDHSL8idlm6Du30lv3oB9bEmJfs0W0uQ4mHTLhmd1jvwKR4nzmmXhZUZ
-         kMNjCskDOQAjK0P1EXeh8f4R5TVcklnmEUbjaNEPz1n8b676CIOwjjrOSGQFBJY1O2Ql
-         SU+T+HCUc9gWfrwSXFLpSwyv9XBkGr0MnctGYDbFP4ZydiyRA9B0Eq1gFCoVNhtnBbSD
-         xC4w==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GR6x4on2th+OpGEr++2MdtxVD5WfNFN9wx4DvQ5w7Rc=;
+        b=V8bIRrbAwIjB8y/e3VK5hdGQiO8fdK96fE89vK+8xM34pSYwtIAitElGMyEc8eEZ8Y
+         JNN2Dm3GQX4EuHrYdTR03KQM7saTG0dG9xx5zg8ZkNjOfIr6ls5jeWmDIaheAotE/Yfs
+         HELQdZl4/gheu42t/o9XX2Hh2YkYYtpBtob1vLOLhf9cgFBMV0rKwK8fnXV2suKtO/C4
+         XaCv7FZXM2vP1vPi93jU4r/GnJzEFBq/C2BcDaw/yl5TkAlj+EOjsIQ+vkSq6f4v28Z8
+         W3CDYr6Ag4umJu04mO2GC/WVWTh8HbyridbYuXZEfCtzeI4aRTnbJLsQ1DmiR9jSu4Ai
+         gbtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SxlO+FSAxDd632DpLfLCq/OUwvg6eaO8V3k3L6zEVyA=;
-        b=Dc2hlFdodj7qGjI+Fc3Eo2QMDdhziQnEza6Ao41nl8nDeTz6C+Uv4g5HOQWByLB/PH
-         2nLkgtUI6V/rcCriMUWuoiBGGNIXy8XKsZkt6IkJc7jI24wIR2amv846X/Q6uw0LtoUQ
-         lCxM1O7Uvv7REBH/tvaVs6QO44DCkyS9hJ2azfuw/eoH8eKUsajVgbPlaYqbE0nOcz9h
-         RH6Sru1H28SAd40mhcb9XHQLGBYatqEEuIzt7FENLsF/BsyNSyBD8MxnN1Pbwko5K6Rt
-         4xv/Q6Z4gLb/ekSrOIUnmKJsTOgdXrVrKXAThxYzwO9S/8muQFF60dUKGLwK3ecRwiyt
-         fkDw==
-X-Gm-Message-State: APjAAAUdpCaKa1b+0wa0TN4fRE5kA+Q+rfAEarqg4vh092j4qhPim9NJ
-        JnyPCoZypLmLM+yNKGRJnUulHA==
-X-Google-Smtp-Source: APXvYqyWa7oDW4n/vwBZPT9s8zK5XpweT+4yAE05XynKgxzqLcEa8yJCFOcFKJcqjzbZfWH02mCGRQ==
-X-Received: by 2002:a63:fa0d:: with SMTP id y13mr13773253pgh.258.1561050835591;
-        Thu, 20 Jun 2019 10:13:55 -0700 (PDT)
-Received: from builder (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id s129sm32753pfb.186.2019.06.20.10.13.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 20 Jun 2019 10:13:54 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 10:13:52 -0700
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lgirdwood@gmail.com, broonie@kernel.org,
-        jorge.ramirez-ortiz@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] regulator: qcom_spmi: Do NULL check for lvs
-Message-ID: <20190620171352.GA19899@builder>
-References: <20190620142228.11773-1-jeffrey.l.hugo@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GR6x4on2th+OpGEr++2MdtxVD5WfNFN9wx4DvQ5w7Rc=;
+        b=dm9GfbBecMfCLuEA8zbBZqlnLnb5Saq94ub290r+AHM+xKtOJwWf5NiSFbftEwaphR
+         b672Ccv6EMwz0uAjTBpqxpuEnoBp3zhtTpVPYAKl2shZO22Sy/c2IIFcFqo1dmi0kyvW
+         BCjOgAfvDxGsNBIsUEp1zSdG5YgyuYtBYCPOIOnN+/WE2ZP5oEkL9W/2kqMADeRXuek/
+         q7WxVgeni37KcxluGB60uGmUh8en3/vyoWtYAZ0RK4biJhxRhWM8GNbrYMW5yRAwf4hn
+         3bV8MhFMXh+YG+kjSplYuxL2Nfy7IiqAfZgo/A2PkA+tbqjIsG+JZs7I2VYelAWTqdjN
+         GBXw==
+X-Gm-Message-State: APjAAAU6OItrsgBMozvKpi+3EQ93i0ECHFjYCJpgTfS6wJ2TJS3faNZV
+        YiSPVN6OshF+34vRPOA5sFtPgn3p12d9bNKcBVS/zQOG
+X-Google-Smtp-Source: APXvYqy13gguR6NEUfCLLKpXnDy4AttZXqs4ykBs0SX9Cxiei5TfjAP35fuOn0fKJ5MLZcb+jT6s0DLzf4BvjOV0F9U=
+X-Received: by 2002:ab0:2556:: with SMTP id l22mr9364887uan.46.1561050872751;
+ Thu, 20 Jun 2019 10:14:32 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620142228.11773-1-jeffrey.l.hugo@gmail.com>
-User-Agent: Mutt/1.10.0 (2018-05-17)
+References: <1560755897-5002-1-git-send-email-yannick.fertre@st.com>
+In-Reply-To: <1560755897-5002-1-git-send-email-yannick.fertre@st.com>
+From:   Emil Velikov <emil.l.velikov@gmail.com>
+Date:   Thu, 20 Jun 2019 18:12:16 +0100
+Message-ID: <CACvgo50vSNCTTTKp9D_07tazOE9YkU-zKAsDywvWe6h0NgcEmQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] drm/stm: drv: fix suspend/resume
+To:     =?UTF-8?Q?Yannick_Fertr=C3=A9?= <yannick.fertre@st.com>
+Cc:     Philippe Cornu <philippe.cornu@st.com>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Vincent Abriou <vincent.abriou@st.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        ML dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        LAKML <linux-arm-kernel@lists.infradead.org>,
+        "Linux-Kernel@Vger. Kernel. Org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 20 Jun 07:22 PDT 2019, Jeffrey Hugo wrote:
+Hi Yannick,
 
-> Low-voltage switches (lvs) don't have set_points since the voltage ranges
-> of the output are really controlled by the inputs.  This is a problem for
-> the newly added linear range support in the probe(), as that will cause
-> a null pointer dereference error on older platforms like msm8974 which
-> happen to need to control some of the implemented lvs.
-> 
-> Fix this by adding the appropriate null check.
-> 
+On Mon, 17 Jun 2019 at 08:18, Yannick Fertr=C3=A9 <yannick.fertre@st.com> w=
+rote:
 
-Thanks Jeff, this resolves the regression I've seen the last couple of
-days on linux-next.
+> @@ -155,15 +154,17 @@ static __maybe_unused int drv_resume(struct device =
+*dev)
+>         struct ltdc_device *ldev =3D ddev->dev_private;
+>         int ret;
+>
+> +       if (WARN_ON(!ldev->suspend_state))
+> +               return -ENOENT;
+> +
+>         pm_runtime_force_resume(dev);
+>         ret =3D drm_atomic_helper_resume(ddev, ldev->suspend_state);
+> -       if (ret) {
+> +       if (ret)
+Hmm the msm driver uses !ret here. Suspecting that you want the same,
+although I haven't checked in detail.
 
-Tested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> Fixes: 86f4ff7a0c0c ("regulator: qcom_spmi: enable linear range info")
-> Reported-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-> ---
->  drivers/regulator/qcom_spmi-regulator.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/regulator/qcom_spmi-regulator.c b/drivers/regulator/qcom_spmi-regulator.c
-> index 877df33e0246..7f51c5fc8194 100644
-> --- a/drivers/regulator/qcom_spmi-regulator.c
-> +++ b/drivers/regulator/qcom_spmi-regulator.c
-> @@ -2045,7 +2045,7 @@ static int qcom_spmi_regulator_probe(struct platform_device *pdev)
->  			}
->  		}
->  
-> -		if (vreg->set_points->count == 1) {
-> +		if (vreg->set_points && vreg->set_points->count == 1) {
->  			/* since there is only one range */
->  			range = vreg->set_points->range;
->  			vreg->desc.uV_step = range->step_uV;
-> -- 
-> 2.17.1
-> 
+HTH
+-Emil
