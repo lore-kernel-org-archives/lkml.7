@@ -2,120 +2,128 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 343F9C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:15:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D98C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:16:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07CE32083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:15:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSYg5gUd"
+	by mail.kernel.org (Postfix) with ESMTP id 5BD1520652
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 20:16:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1561061784;
+	bh=SWcfkEOEVbWaHHRHA9IDqTMmCUWrjXZHT6F+bBy/R3E=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=lhYOKZhG5nGsXS9YzLaueiEY9qKIOUPd53Ii133TAJZNhHaVr6OfPDGnYp0J5rXr/
+	 Lkgpep/IjMnRqd5gGQ/2f0f/3lD5N5/x+OQ2YKJAREXdDlcQLGo/sgM9AA0QvAFLkS
+	 v2oH8WUM+BiRt+6SJfQOBMPHdz1h+rlBFVkUzHnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727078AbfFTUPy (ORCPT
+        id S1727099AbfFTUQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 16:15:54 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:37642 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725907AbfFTUPy (ORCPT
+        Thu, 20 Jun 2019 16:16:22 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43510 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725907AbfFTUQW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 16:15:54 -0400
-Received: by mail-ed1-f65.google.com with SMTP id w13so6498058eds.4
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 13:15:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JUOkJu07O+IW6MoPhdQt/JKgqUkCkkDq6yx/iX7wBQA=;
-        b=FSYg5gUde8DWZ1DWTpWdFjbN4iYG7u1oXTRfGBNADJVVK7LrxSIXQd+pd5SxyynS9N
-         Cenl7pvCXijdvmXYC7Rh/KJr0TP8bAxtOfZR3hnKagpp39rV52jD4jElwlZyi2pn7eiK
-         AfWbP0Hef/Gk7lEF4TOTa0I2VLZ1ffLa8e16w+BQ5rz1fT6+wgzahe8YI31zNSVleeEk
-         9DEuuU5zXmDRtI5HHAr8T7C9y10XwbFu2RIq+6A2cVPZfy41lLpyFxV1oLHzoel+Cldi
-         GAGJFBxZouCUeXlj/ROBRDcLqoAcjk0efSkezKM3ogNeuTyiydKQYaVfC01+X8u+0unI
-         xFAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JUOkJu07O+IW6MoPhdQt/JKgqUkCkkDq6yx/iX7wBQA=;
-        b=dQiZvq7H0PTkoWaqpXiNaybJn5HaljDCXuCfyyIqEhdf7Erpous6vaGtWR3WHC1SDk
-         2gJWzPAirqRhpHFTZ2YE34c9nhoqt1kBcOQN4nyPnhGge1PmPk13AVRPYnlFuQWVwKaz
-         euovv+tA7sUViOP0qn+kD8O1oF1KF84W/OT+udkUjZIry1nu3tkSdxgHBM7kJx9MTt3v
-         jk/UsbltoHoWLmoJVaHj7l78g9PoE1A3jVirz6UhM5oz3Hs3GCwHAssTG5GbVQr1Wtke
-         0ftSdtKrqiA/34rbbgsJg6//waVeF6ZW7wQjJRT+8V4891BzO7CO8vT8fdc5ztBdXzyo
-         X8cA==
-X-Gm-Message-State: APjAAAWZbzRDyLnUc1jVZ4zhukU19vS00hgg33IXaqSXoateFgLG7ikm
-        shO3cASsI5Gn/OfbjKpQRNk=
-X-Google-Smtp-Source: APXvYqz2GpvLDQC36pwSn4cJtgNpRxNa/to4az7JZm/Hz5FpyteYwsXMluOlEW70lP/Jc5u2/h2bLw==
-X-Received: by 2002:a17:906:4f8f:: with SMTP id o15mr13238011eju.129.1561061752157;
-        Thu, 20 Jun 2019 13:15:52 -0700 (PDT)
-Received: from archlinux-epyc ([2a01:4f9:2b:2b15::2])
-        by smtp.gmail.com with ESMTPSA id m32sm148321edc.89.2019.06.20.13.15.50
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 13:15:51 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 13:15:49 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Richard Weinberger <richard@nod.at>,
-        Vignesh Raghavendra <vigneshr@ti.com>,
-        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Subject: Re: [PATCH] mtd: mtd-abi: Don't use C++ comments
-Message-ID: <20190620201549.GA65397@archlinux-epyc>
-References: <20190620155505.27036-1-natechancellor@gmail.com>
- <CAKwvOdk7ZTcWEXPTBASPzk1SjOdnONawtQJkR-jU=REFSo1hVQ@mail.gmail.com>
+        Thu, 20 Jun 2019 16:16:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=xLzSHA4/gkaFqrZh4lXTfktvq/utTEgs9SNl0/TIIiA=; b=dZq86h2FV+z4V1VI/QUx53zQF
+        dxVMbFlrsah5ck1D4PgYAVcG3iB9XjoIzyVuHBPABMWz/HQLuttjJiL79wRPjexu9kgLZurRiiIDX
+        KDzJ2y/KFgJ6Exk3RoKZ8YGgz1rulVez2qcknoCc8yesftHiTI72QWVj56p+PZeLQLrtpFPKSkEcg
+        sDr6f881KAZy9b0xMoBJVeedV2q0sYywr0kK17Vg6kItjOhPxzGXT4+1VhZpbO0pq7fl0ZPRbcwZI
+        lRwUgmf0ZLgYmCPxbB5aFJNPz8RWfZrp2bByCLTvPJQZg5vxfDPcz9kFvRqbwR4F8Nywuq9n9lnOW
+        Sr4HlaVog==;
+Received: from [177.97.20.138] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1he3Tp-00074O-O7; Thu, 20 Jun 2019 20:16:21 +0000
+Date:   Thu, 20 Jun 2019 17:16:17 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 4/6] time: hrtimer: use a bullet for the returns bullet
+ list
+Message-ID: <20190620171617.3368f30b@coco.lan>
+In-Reply-To: <20190620140233.3d7202ee@lwn.net>
+References: <a83ea390bc28784518fce772b4c961ea1c976f14.1560883872.git.mchehab+samsung@kernel.org>
+        <a4cab6020e0475e7a4afc65dc5854756dd1bfbe9.1560883872.git.mchehab+samsung@kernel.org>
+        <20190620140233.3d7202ee@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKwvOdk7ZTcWEXPTBASPzk1SjOdnONawtQJkR-jU=REFSo1hVQ@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 12:56:58PM -0700, Nick Desaulniers wrote:
-> On Thu, Jun 20, 2019 at 8:55 AM Nathan Chancellor
-> <natechancellor@gmail.com> wrote:
-> >
-> > When compiled standalone after commit b91976b7c0e3 ("kbuild:
-> > compile-test UAPI headers to ensure they are self-contained"),
-> > a warning about the C++ comments appears:
-> >
-> >   In file included from usr/include/mtd/mtd-user.hdrtest.c:1:
-> >   In file included from ./usr/include/mtd/mtd-user.h:25:
-> >   ./usr/include/mtd/mtd-abi.h:116:28: warning: // comments are not
-> >   allowed in this language [-Wcomment]
-> >   #define MTD_NANDECC_OFF         0       // Switch off ECC (Not recommended)
-> >                                           ^
-> >   1 warning generated.
-> >
-> > Replace them with standard C comments so this warning no longer occurs.
-> 
-> Should there be a fixes by tag?
-> -- 
-> Thanks,
-> ~Nick Desaulniers
+Em Thu, 20 Jun 2019 14:02:33 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-Normally, I would have added one but this issue has been present since
-the beginning of git history. According to Thomas Gleixner's pre-git
-history tree, it would be:
+> On Tue, 18 Jun 2019 15:51:20 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+>=20
+> > That gets rid of this warning:
+> >=20
+> > 	./kernel/time/hrtimer.c:1119: WARNING: Block quote ends without a blan=
+k line; unexpected unindent.
+> >=20
+> > and displays nicely both at the source code and at the produced
+> > documentation.
+> >=20
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> > ---
+> >  kernel/time/hrtimer.c | 7 ++++---
+> >  1 file changed, 4 insertions(+), 3 deletions(-)
+> >=20
+> > diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
+> > index edb230aba3d1..49f78453892f 100644
+> > --- a/kernel/time/hrtimer.c
+> > +++ b/kernel/time/hrtimer.c
+> > @@ -1114,9 +1114,10 @@ EXPORT_SYMBOL_GPL(hrtimer_start_range_ns);
+> >   * @timer:	hrtimer to stop
+> >   *
+> >   * Returns:
+> > - *  0 when the timer was not active
+> > - *  1 when the timer was active
+> > - * -1 when the timer is currently executing the callback function and
+> > + *
+> > + *  =E2=80=A2  0 when the timer was not active
+> > + *  =E2=80=A2  1 when the timer was active
+> > + *  =E2=80=A2 -1 when the timer is currently executing the callback fu=
+nction and
+> >   *    cannot be stopped =20
+>=20
+> So I have taken some grief for letting non-ASCII stuff into the docs
+> before; I can only imagine that those who object would be even more
+> unhappy to see it in a C source file.  I'm all for fixing the warning, but
+> I think we shouldn't start introducing exotic characters at this point...
 
-Fixes: 7df80b4c8964 ("MTD core include and device code cleanup")
+According to:
+	http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#bullet-=
+lists
 
-but since that hash doesn't exist in the normal git history, I don't
-think it is worth adding. Of course, if the maintainers want to add it,
-I won't object.
+The ASCII options are: "-", "+" or "*".
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/tglx/history.git
+Both signs ('-' and '+') aren't too nice here, due to "-1".
 
-Cheers,
-NAthan
+So, what's left is '*'.
+
+I remember someone once complained about having something like:
+
+	* * -1 when the ...
+
+But if you think we shouldn't use UTF-8 chars, be it.
+
+Feel free to replace it at the patch, or if you prefer, I'll send a new
+version tomorrow.
+
+Thanks,
+Mauro
