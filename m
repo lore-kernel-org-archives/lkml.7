@@ -2,86 +2,103 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEE62C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DBA0C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916B420675
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:21:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sIyWfeXi"
+	by mail.kernel.org (Postfix) with ESMTP id E85512084A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 15:21:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732064AbfFTPVU (ORCPT
+        id S1732100AbfFTPVr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 11:21:20 -0400
-Received: from mail-yb1-f173.google.com ([209.85.219.173]:36776 "EHLO
-        mail-yb1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726661AbfFTPVU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 11:21:20 -0400
-Received: by mail-yb1-f173.google.com with SMTP id w6so1387849ybo.3
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 08:21:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=WWcTTKF/82/ExwUFM1sAVWc5mPz5k5o+tscsjovzbdY=;
-        b=sIyWfeXi6KwmuxnVzP1J8xyTlUH5LBx2rOkbUmIHEEbH4qtiKxfEot6fOUNodIzm22
-         BOJW1KLRlcqTIDUm8mvA/hgZCQETxs35ZW/FmAUe6Zz32N7cSqPifP+EbGHCidGq3khp
-         Eof5Mn2YrAR2RN89YJGr1V3fs4rAfIqkKhf4LvfOAOrYz+abZYmErCDqSUVwQkTUMKRq
-         Vx4ZzS+Hgyd1dAsgOYqaHRnJYgP/FhxvvhspEM7MWOkB6uUALFE/ST9Kwm4Agq9rbdul
-         Lbs78S9dLslqZ+yiWdtzwaU9D+5G10ulweUt/JDewc/ksWRSjfGvLCDAoDnMHSTGA8bi
-         YjrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=WWcTTKF/82/ExwUFM1sAVWc5mPz5k5o+tscsjovzbdY=;
-        b=ZlqwQCA7dA+Yk1DOS+FwV/FuUOQP+d21/cTfXRxr+j/gIilIjcuyDbImTvdgEoufpk
-         huXiHdGKOYwHn6ZWxUdHxaLRrn+CFm5AB5k2ww2HrKDK1ZJFio3Ye/oCVMVI3G9GGsag
-         dP//rhRn3DYcV/9u9CAAOMN5KnsI+nDW1XFMRAycalVJx3Uc7LUM1G0os0ocg98dF7VG
-         sA9tQSHEcjzNo5VOcEQmUaKZFD0vrngm1AxhClwycvmKXmwnudHHzxiFPP4yYj2Uzy1E
-         +CVaDeT2KuK3pWtF+4yI9EICMWuw9Tf+KFyAaA0L4cn3CL+5Tl2cm+wrXVu22dJ6sGao
-         oafg==
-X-Gm-Message-State: APjAAAX2N2v/ittBaJ2KFGq1G5dJ/tERDPGUlAZ9L2jWksVm0/VSW27u
-        XksYtlM2XW56IPDdUIsYmbNhyPqqQ3eYbLOLV3Btlg==
-X-Google-Smtp-Source: APXvYqw+46mmXl47rsAlKbBelFwFwq7OOcf4h9cRWpPp+rUk2J7SVChb5VwvnPH8XQ2VsyehJ0FK86XudESDLPdUqXs=
-X-Received: by 2002:a25:bf83:: with SMTP id l3mr67617590ybk.446.1561044078765;
- Thu, 20 Jun 2019 08:21:18 -0700 (PDT)
+        Thu, 20 Jun 2019 11:21:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39278 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726697AbfFTPVr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 11:21:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B917CAD5D;
+        Thu, 20 Jun 2019 15:21:45 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 643371E434F; Thu, 20 Jun 2019 17:21:45 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 17:21:45 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Tejun Heo <tj@kernel.org>
+Cc:     dsterba@suse.com, clm@fb.com, josef@toxicpanda.com,
+        axboe@kernel.dk, jack@suse.cz, linux-btrfs@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
+        kernel-team@fb.com
+Subject: Re: [PATCH 2/9] blkcg, writeback: Add wbc->no_wbc_acct
+Message-ID: <20190620152145.GL30243@quack2.suse.cz>
+References: <20190615182453.843275-1-tj@kernel.org>
+ <20190615182453.843275-3-tj@kernel.org>
 MIME-Version: 1.0
-References: <1561042360-20480-1-git-send-email-cai@lca.pw>
-In-Reply-To: <1561042360-20480-1-git-send-email-cai@lca.pw>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 20 Jun 2019 11:21:07 -0400
-Message-ID: <CANn89iLBy+u3KTjjfvyc8-r4eUdL2b6VX=fNgqFg8f7t84EUNw@mail.gmail.com>
-Subject: Re: [PATCH -next] inet: fix compilation warnings in fqdir_pre_exit()
-To:     Qian Cai <cai@lca.pw>
-Cc:     David Miller <davem@davemloft.net>,
-        netdev <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190615182453.843275-3-tj@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 10:52 AM Qian Cai <cai@lca.pw> wrote:
->
-> The linux-next commit "inet: fix various use-after-free in defrags
-> units" [1] introduced compilation warnings,
->
-> ./include/net/inet_frag.h:117:1: warning: 'inline' is not at beginning
-> of declaration [-Wold-style-declaration]
->  static void inline fqdir_pre_exit(struct fqdir *fqdir)
->  ^~~~~~
+On Sat 15-06-19 11:24:46, Tejun Heo wrote:
+> When writeback IOs are bounced through async layers, the IOs should
+> only be accounted against the wbc from the original bdi writeback to
+> avoid confusing cgroup inode ownership arbitration.  Add
+> wbc->no_wbc_acct to allow disabling wbc accounting.  This will be used
+> make btfs compression work well with cgroup IO control.
+> 
+> Signed-off-by: Tejun Heo <tj@kernel.org>
+> Reviewed-by: Josef Bacik <josef@toxicpanda.com>
 
-Interesting warning, this is kind of new compiler major feature I guess :/
+I'm completely ignorant of how btrfs compressed writeback works so don't
+quite understand implications of this. So does this mean that writeback to
+btrfs compressed files won't be able to transition inodes from one memcg to
+another? Or are you trying to say the 'wbc' used from async worker thread
+is actually a dummy one and we would double-account the writeback?
 
-BTW :
+Anyway, AFAICS no_wbc_acct means: "IO done as a result of this wbc will not
+have influence on inode memcg ownership", doesn't it?
 
-$ git grep -n "static void inline"  | wc -l
-9
+								Honza
+> ---
+>  fs/fs-writeback.c         | 2 +-
+>  include/linux/writeback.h | 1 +
+>  2 files changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/fs/fs-writeback.c b/fs/fs-writeback.c
+> index c29cff345b1f..667ba07fffcd 100644
+> --- a/fs/fs-writeback.c
+> +++ b/fs/fs-writeback.c
+> @@ -724,7 +724,7 @@ void wbc_account_io(struct writeback_control *wbc, struct page *page,
+>  	 * behind a slow cgroup.  Ultimately, we want pageout() to kick off
+>  	 * regular writeback instead of writing things out itself.
+>  	 */
+> -	if (!wbc->wb)
+> +	if (!wbc->wb || wbc->no_wbc_acct)
+>  		return;
+>  
+>  	id = mem_cgroup_css_from_page(page)->id;
+> diff --git a/include/linux/writeback.h b/include/linux/writeback.h
+> index 738a0c24874f..b8f5f000cde4 100644
+> --- a/include/linux/writeback.h
+> +++ b/include/linux/writeback.h
+> @@ -68,6 +68,7 @@ struct writeback_control {
+>  	unsigned for_reclaim:1;		/* Invoked from the page allocator */
+>  	unsigned range_cyclic:1;	/* range_start is cyclic */
+>  	unsigned for_sync:1;		/* sync(2) WB_SYNC_ALL writeback */
+> +	unsigned no_wbc_acct:1;		/* skip wbc IO accounting */
+>  #ifdef CONFIG_CGROUP_WRITEBACK
+>  	struct bdi_writeback *wb;	/* wb this writeback is issued under */
+>  	struct inode *inode;		/* inode being written out */
+> -- 
+> 2.17.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
