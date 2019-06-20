@@ -2,211 +2,156 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF44C48BE3
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:40:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29D8BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:42:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 504582070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:40:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0DDB206BA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 17:42:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=wavesemi.onmicrosoft.com header.i=@wavesemi.onmicrosoft.com header.b="Z9T9Tr+w"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="XruAXWpU";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="ApshshCG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726934AbfFTRkJ (ORCPT
+        id S1726811AbfFTRmo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 13:40:09 -0400
-Received: from mail-eopbgr780137.outbound.protection.outlook.com ([40.107.78.137]:32352
-        "EHLO NAM03-BY2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726551AbfFTRkJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 13:40:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=wavesemi.onmicrosoft.com; s=selector1-wavesemi-onmicrosoft-com;
+        Thu, 20 Jun 2019 13:42:44 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:32312 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726530AbfFTRmo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 13:42:44 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KHdcUn024973;
+        Thu, 20 Jun 2019 10:42:38 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=x0vdkZunL9IfXEYc28/T8hr7b2Q35Kh/yS1RLSs3HQI=;
+ b=XruAXWpUwRcz8jNKfDXZ0QeqpPWDZE7tOlp8aPVbAKx8b53bJCIor8gEgIDa+Z4GToSH
+ PiaiqK4BzFXekBqsBbfC2tdtWanriKTGbC6d5fuCMZC4B883GXlJ2UoDECn61W9Wr6pn
+ IgjvY7yX9eqI57Vw7a/9LilYL6abGTFeIOY= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2t85v8hv9a-6
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Thu, 20 Jun 2019 10:42:38 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Thu, 20 Jun 2019 10:42:03 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Thu, 20 Jun 2019 10:42:03 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5HeaaIVt9Q4f2n9+9sahlYE+WqBkJ9bpYNxJPYWzByU=;
- b=Z9T9Tr+wimmv78CFgeS+p2eyb5iYb7sZmBId5M5KDvtNr93Uc8hl4Gc4EzBjCFUM5h4B7EQrw1Y+QbOBtJQxp50vX17qFB/T+1jaAwVKGl8C2ZQYYi/E39sLBrQaJccBCiroTua15IlpMTfwiVjG2xIpATBCCS/ANslsMb29F3E=
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com (10.172.60.12) by
- MWHPR2201MB1342.namprd22.prod.outlook.com (10.172.61.16) with Microsoft SMTP
+ bh=x0vdkZunL9IfXEYc28/T8hr7b2Q35Kh/yS1RLSs3HQI=;
+ b=ApshshCG6UUg0rHxIrxyuQ8YdScn8SbnWo3AiHVwc7AJUZEx82XwurQh7qGAyJMn1Lzw3t1gb9z6chkE2SJ1foGsWGUPd5UzMuOkhlApg1mZXxG7T3kIuvXM4sn2WnWgPCg9G5983H/bKVdX5mvC9nDlcpvCNqgvcGuK5LNOd1Q=
+Received: from BYAPR15MB3479.namprd15.prod.outlook.com (20.179.60.19) by
+ BYAPR15MB3477.namprd15.prod.outlook.com (20.179.60.17) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1987.12; Thu, 20 Jun 2019 17:40:04 +0000
-Received: from MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40]) by MWHPR2201MB1277.namprd22.prod.outlook.com
- ([fe80::6975:b632:c85b:9e40%2]) with mapi id 15.20.2008.007; Thu, 20 Jun 2019
- 17:40:04 +0000
-From:   Paul Burton <paul.burton@mips.com>
-To:     Serge Semin <fancer.lancer@gmail.com>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>
-CC:     Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Serge Semin <Sergey.Semin@t-platforms.ru>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Vadim V . Vlasov" <vadim.vlasov@t-platforms.ru>,
-        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+ 15.20.2008.13; Thu, 20 Jun 2019 17:42:02 +0000
+Received: from BYAPR15MB3479.namprd15.prod.outlook.com
+ ([fe80::2569:19ec:512f:fda9]) by BYAPR15MB3479.namprd15.prod.outlook.com
+ ([fe80::2569:19ec:512f:fda9%5]) with mapi id 15.20.1987.014; Thu, 20 Jun 2019
+ 17:42:02 +0000
+From:   Rik van Riel <riel@fb.com>
+To:     Song Liu <songliubraving@fb.com>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] mips: Remove q-accessors from non-64bit platforms
-Thread-Topic: [PATCH] mips: Remove q-accessors from non-64bit platforms
-Thread-Index: AQHVInt4cLa0IUSxeEKd/1SMoCpE8aak2WkA
-Date:   Thu, 20 Jun 2019 17:40:04 +0000
-Message-ID: <20190620174002.tgayzon7dc5d57fh@pburton-laptop>
-References: <20190614063341.1672-1-fancer.lancer@gmail.com>
-In-Reply-To: <20190614063341.1672-1-fancer.lancer@gmail.com>
+CC:     "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "Kernel Team" <Kernel-team@fb.com>,
+        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4 6/6] mm,thp: avoid writes to file with THP in pagecache
+Thread-Topic: [PATCH v4 6/6] mm,thp: avoid writes to file with THP in
+ pagecache
+Thread-Index: AQHVJ42WlKpSo0vXAUuQuCQtIhxoiaakz86A
+Date:   Thu, 20 Jun 2019 17:42:02 +0000
+Message-ID: <c29e2daf2e3c9c8acbdfae62ba8090f572d88345.camel@fb.com>
+References: <20190620172752.3300742-1-songliubraving@fb.com>
+         <20190620172752.3300742-7-songliubraving@fb.com>
+In-Reply-To: <20190620172752.3300742-7-songliubraving@fb.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-clientproxiedby: BYAPR06CA0052.namprd06.prod.outlook.com
- (2603:10b6:a03:14b::29) To MWHPR2201MB1277.namprd22.prod.outlook.com
- (2603:10b6:301:18::12)
-user-agent: NeoMutt/20180716
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=pburton@wavecomp.com; 
+x-clientproxiedby: MWHPR11CA0005.namprd11.prod.outlook.com
+ (2603:10b6:301:1::15) To BYAPR15MB3479.namprd15.prod.outlook.com
+ (2603:10b6:a03:112::19)
 x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [12.94.197.246]
+x-originating-ip: [2620:10d:c090:180::1:f51]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0da558d0-bd7d-4caf-0dd0-08d6f5a653ba
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:MWHPR2201MB1342;
-x-ms-traffictypediagnostic: MWHPR2201MB1342:
-x-microsoft-antispam-prvs: <MWHPR2201MB1342E019D6FAD0B9F7F6112BC1E40@MWHPR2201MB1342.namprd22.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-ms-office365-filtering-correlation-id: 669ceda0-af1a-4109-49e9-08d6f5a69a0e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:BYAPR15MB3477;
+x-ms-traffictypediagnostic: BYAPR15MB3477:
+x-microsoft-antispam-prvs: <BYAPR15MB3477FBF380B43E021063380BA3E40@BYAPR15MB3477.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
 x-forefront-prvs: 0074BBE012
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(7916004)(346002)(39850400004)(136003)(366004)(376002)(396003)(199004)(189003)(2906002)(1076003)(229853002)(8936002)(102836004)(6116002)(44832011)(6506007)(26005)(6436002)(3846002)(186003)(386003)(305945005)(25786009)(7736002)(5660300002)(99286004)(476003)(486006)(81166006)(81156014)(53936002)(76176011)(68736007)(6512007)(9686003)(6246003)(256004)(71200400001)(71190400001)(52116002)(4326008)(6486002)(14444005)(66446008)(64756008)(54906003)(316002)(66476007)(8676002)(110136005)(11346002)(66946007)(42882007)(58126008)(66556008)(66066001)(33716001)(478600001)(14454004)(73956011)(446003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR2201MB1342;H:MWHPR2201MB1277.namprd22.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: wavecomp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(366004)(346002)(376002)(136003)(39860400002)(199004)(189003)(71190400001)(36756003)(229853002)(6246003)(118296001)(4326008)(54906003)(110136005)(316002)(99286004)(25786009)(6512007)(52116002)(6116002)(2906002)(6436002)(6486002)(256004)(53936002)(446003)(46003)(102836004)(2501003)(11346002)(8676002)(305945005)(2616005)(476003)(386003)(7736002)(6506007)(186003)(2201001)(66946007)(68736007)(14444005)(86362001)(76176011)(5660300002)(73956011)(486006)(66446008)(81156014)(64756008)(66556008)(66476007)(478600001)(14454004)(8936002)(71200400001)(81166006)(142933001);DIR:OUT;SFP:1102;SCL:1;SRVR:BYAPR15MB3477;H:BYAPR15MB3479.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Fp1rW7ewMFSKS81hq2vDf+uWEgvdADLbcWzeBFTu69Nau3BXx1DnfrEzXQJDStY3sV3hl8inKVv3M1/eatM9Mu4lQ5GgsSIwowtfxNWAJvYyyTj8/0i09Khj0Zg1L9dKbgBvNCc1pzjSrwOZmgR+DPMIbTZK2M4B5nNVOZtJTJ3J6rNmiqMEQr6Z50sX7UVt34hCDyQVLFFhKAcwAijlX+leIncNJEVkz0dZGPm6iXZfko+OQtPpwc70JawxFAwUpja/XtH+bSBnJtRNy1vJ8DAG8BRZ1vZLvpIRLsHdpE6vmt5MH71+XdcCQtcMziZ3X3b4XAIjEXkX8074iQpgqiKVFDtiiVazr4GkB/+/AgKVFQ05SC/5/KTPMNoizHEvAuDSgUplyXf+U5/nc+V8FUXETRWBm8aBHrlUakpI9j8=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <9FCA6535F2A6F64AA724B351E6258083@namprd22.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+x-microsoft-antispam-message-info: +nOx2LLcEtCHczR0yW4whiONcBwCZN3KEGmuhEWbDqPHSEyjvyiCgYwLMMoYG6RDouyE58f0296Y1MtSoREZcHAsZ65JcZw4BAnkyEHYIGEHDz5xc+HLDA6XyaS1XvxBDUnBk9FxLkwZ8rJd495NR1Ah77yADCrPPM665gpeeVzLdxvf22hUUU2tS23vvB1L6XbjkgIRRz+dxc7Z6bWyWZKJNzkgaiR4bzTHhy8y9z+udVBAlufUgJBqStspcvuUZ5FaqrqPJIZvWdUHVm1VJJZ2t/g3wmgg5DbdEHz1CYyhGhlM0XQCQLf/Rg1MUMpikaVNt+wNflYVPFUa6FwQOgF6Nd1yb5hnCeHkXG7D6YX1svmOJhAZhgr/Hclw7zUIdtwUvpAMB3PXRufmatzi8ZH571E4G93xAIi34Dsrt+A=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <282599B8798A4C4C9C2909D41B9A1221@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-OriginatorOrg: mips.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0da558d0-bd7d-4caf-0dd0-08d6f5a653ba
-X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2019 17:40:04.4198
+X-MS-Exchange-CrossTenant-Network-Message-Id: 669ceda0-af1a-4109-49e9-08d6f5a69a0e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 20 Jun 2019 17:42:02.0875
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 463607d3-1db3-40a0-8a29-970c56230104
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: pburton@wavecomp.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR2201MB1342
+X-MS-Exchange-CrossTenant-userprincipalname: riel@fb.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR15MB3477
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906200126
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Serge,
-
-On Fri, Jun 14, 2019 at 09:33:42AM +0300, Serge Semin wrote:
-> There are some generic drivers in the kernel, which make use of the
-> q-accessors or their derivatives. While at current asm/io.h the accessors
-> are defined, their implementation is only applicable either for 64bit
-> systems, or for systems with cpu_has_64bits flag set. Obviously there
-> are MIPS systems which are neither of these, but still need to have
-> those drivers supported. In this case the solution is to define some
-> generic versions of the q-accessors, but with a limitation to be
-> non-atomic. Such accessors are defined in the
-> io-64-nonatomic-{hi-lo,lo-hi}.h file. The drivers which utilize the
-> q-suffixed IO-methods are supposed to include the header file, so
-> in case if these accessors aren't defined for the platform, the generic
-> non-atomic versions are utilized. Currently the MIPS-specific asm/io.h
-> file provides the q-accessors for any MIPS system even for ones, which
-> in fact don't support them and raise BUG() in case if any of them is
-> called. Due to this the generic versions of the accessors are never
-> used while an attempt to call the IO-methods causes the kernel BUG().
-> In order to fix this we need to define the q-accessors only for
-> the MIPS systems, which actually support them, and don't define them
-> otherwise, so to let the corresponding drivers to use the non-atomic
-> q-suffixed accessors.
->=20
-> Signed-off-by: Serge Semin <fancer.lancer@gmail.com>
-> Suggested-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Vadim V. Vlasov <vadim.vlasov@t-platforms.ru>
-> ---
->  arch/mips/include/asm/io.h | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-
-So this seems pretty reasonable. Build testing all our defconfigs only
-showed up one issue for decstation_defconfig & decstation_r4k_defconfig:
-
-  drivers/net/fddi/defza.c: In function 'fza_reads':
-  drivers/net/fddi/defza.c:88:17: error: implicit declaration of
-    function 'readq_relaxed'; did you mean 'readw_relaxed'?
-    [-Werror=3Dimplicit-function-declaration]
-   #define readq_u readq_relaxed
-                   ^~~~~~~~~~~~~
-  drivers/net/fddi/defza.c:126:13: note: in expansion of macro 'readq_u'
-      *dst++ =3D readq_u(src++);
-               ^~~~~~~
-  drivers/net/fddi/defza.c: In function 'fza_writes':
-  drivers/net/fddi/defza.c:92:18: error: implicit declaration of
-    function 'writeq_relaxed'; did you mean 'writel_relaxed'?
-    [-Werror=3Dimplicit-function-declaration]
-   #define writeq_u writeq_relaxed
-                    ^~~~~~~~~~~~~~
-  drivers/net/fddi/defza.c:151:4: note: in expansion of macro 'writeq_u'
-      writeq_u(*src++, dst++);
-      ^~~~~~~~
-    CC      net/core/scm.o
-  cc1: some warnings being treated as errors
-  make[4]: *** [scripts/Makefile.build:279: drivers/net/fddi/defza.o] Error=
- 1
-
-These uses of readq_relaxed & writeq_relaxed are both conditional upon
-sizeof(unsigned long) =3D=3D 8, ie. upon CONFIG_64BIT=3Dy so they're not go=
-ing
-to present a runtime issue but we need to provide some implementation of
-the *q accessors to keep the compiler happy.
-
-I see a few options:
-
-1) We could just have defza.c include <io-64-nonatomic-lo-hi.h> to get
-   the appropriate declarations, which should then get optimized away by
-   the compiler anyway & never actually be used.
-
-2) We could have defza.h #define its readq_u & writeq_u macros
-   differently for CONFIG_32BIT=3Dy kernels, perhaps using
-   __compiletime_error to catch any bogus use of them.
-
-3) We could do the same in a generic header, though if nobody else has
-   needed it so far & this is the only place we need it then maybe it's
-   not worth it.
-
-So I'm thinking option 2 might be best, as below. Having said that I
-don't mind option 1 either - it's simple. Maciej do you have any
-preference?
-
-Thanks,
-    Paul
-
----
-diff --git a/drivers/net/fddi/defza.c b/drivers/net/fddi/defza.c
-index c5cae8e74dc4..85d6a7f22fe7 100644
---- a/drivers/net/fddi/defza.c
-+++ b/drivers/net/fddi/defza.c
-@@ -85,11 +85,21 @@ static u8 hw_addr_beacon[8] =3D { 0x01, 0x80, 0xc2, 0x0=
-0, 0x01, 0x00 };
-  */
- #define readw_u readw_relaxed
- #define readl_u readl_relaxed
--#define readq_u readq_relaxed
-=20
- #define writew_u writew_relaxed
- #define writel_u writel_relaxed
--#define writeq_u writeq_relaxed
-+
-+#ifdef CONFIG_32BIT
-+extern u64 defza_readq_u(const void *ptr)
-+	__compiletime_error("readq_u should not be used by 32b kernels");
-+extern void defza_writeq_u(u64 val, void *ptr)
-+	__compiletime_error("writeq_u should not be used by 32b kernels");
-+# define readq_u defza_readq_u
-+# define writeq_u defza_writeq_u
-+#else
-+# define readq_u readq_relaxed
-+# define writeq_u writeq_relaxed
-+#endif
-=20
- static inline struct sk_buff *fza_alloc_skb_irq(struct net_device *dev,
- 						unsigned int length)
-
+T24gVGh1LCAyMDE5LTA2LTIwIGF0IDEwOjI3IC0wNzAwLCBTb25nIExpdSB3cm90ZToNCg0KPiAr
+KysgYi9tbS9tbWFwLmMNCj4gQEAgLTMwODgsNiArMzA4OCwxOCBAQCBpbnQgdm1fYnJrKHVuc2ln
+bmVkIGxvbmcgYWRkciwgdW5zaWduZWQgbG9uZw0KPiBsZW4pDQo+ICB9DQo+ICBFWFBPUlRfU1lN
+Qk9MKHZtX2Jyayk7DQo+ICANCj4gK3N0YXRpYyBpbmxpbmUgdm9pZCByZWxlYXNlX2ZpbGVfdGhw
+KHN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hKQ0KPiArew0KPiArI2lmZGVmIENPTkZJR19SRUFE
+X09OTFlfVEhQX0ZPUl9GUw0KPiArCXN0cnVjdCBmaWxlICpmaWxlID0gdm1hLT52bV9maWxlOw0K
+PiArDQo+ICsJaWYgKGZpbGUgJiYgKHZtYS0+dm1fZmxhZ3MgJiBWTV9ERU5ZV1JJVEUpICYmDQo+
+ICsJICAgIGF0b21pY19yZWFkKCZmaWxlX2lub2RlKGZpbGUpLT5pX3dyaXRlY291bnQpID09IDAg
+JiYNCj4gKwkgICAgZmlsZW1hcF9ucl90aHBzKGZpbGVfaW5vZGUoZmlsZSktPmlfbWFwcGluZykp
+DQo+ICsJCXRydW5jYXRlX3BhZ2VjYWNoZShmaWxlX2lub2RlKGZpbGUpLCAwKTsNCj4gKyNlbmRp
+Zg0KPiArfQ0KPiArDQo+ICAvKiBSZWxlYXNlIGFsbCBtbWFwcy4gKi8NCj4gIHZvaWQgZXhpdF9t
+bWFwKHN0cnVjdCBtbV9zdHJ1Y3QgKm1tKQ0KPiAgew0KPiBAQCAtMzE1Myw2ICszMTY1LDggQEAg
+dm9pZCBleGl0X21tYXAoc3RydWN0IG1tX3N0cnVjdCAqbW0pDQo+ICAJd2hpbGUgKHZtYSkgew0K
+PiAgCQlpZiAodm1hLT52bV9mbGFncyAmIFZNX0FDQ09VTlQpDQo+ICAJCQlucl9hY2NvdW50ZWQg
+Kz0gdm1hX3BhZ2VzKHZtYSk7DQo+ICsNCj4gKwkJcmVsZWFzZV9maWxlX3RocCh2bWEpOw0KPiAg
+CQl2bWEgPSByZW1vdmVfdm1hKHZtYSk7DQo+ICAJfQ0KPiAgCXZtX3VuYWNjdF9tZW1vcnkobnJf
+YWNjb3VudGVkKTsNCg0KSSBsaWtlIGhvdyB5b3UgbWFrZSB0aGUgZmlsZSBhY2Nlc3NpYmxlIGFn
+YWluIHRvIG90aGVyDQp1c2VycywgYnV0IGFtIHNvbWV3aGF0IHVuc3VyZSBhYm91dCB0aGUgbWVj
+aGFuaXNtIHVzZWQuDQoNCkZpcnN0LCBpZiBtdWx0aXBsZSBwcm9jZXNzZXMgaGF2ZSB0aGUgc2Ft
+ZSBmaWxlIG1tYXBwZWQsDQpkbyB5b3UgcmVhbGx5IHdhbnQgdG8gYmxvdyBhd2F5IHRoZSBwYWdl
+IGNhY2hlPw0KDQpTZWNvbmRseSwgYnkgaG9va2luZyBpbnRvIGV4aXRfbW1hcCwgeW91IG1pc3Mg
+bWFraW5nDQpmaWxlcyB3cml0YWJsZSBhZ2FpbiB0aGF0IGdldCB1bm1hcHBlZCB0aHJvdWdoIG11
+bm1hcC4NCg0KV291bGQgaXQgYmUgYmV0dGVyIHRvIGJsb3cgYXdheSB0aGUgcGFnZSBjYWNoZSB3
+aGVuDQp0aGUgbGFzdCBtbWFwIHVzZXIgdW5tYXBzIGl0Pw0KDQpUaGUgcGFnZS0+bWFwcGluZy0+
+aV9tbWFwIGludGVydmFsIHRyZWUgd2lsbCBiZSBlbXB0eQ0Kd2hlbiBub2JvZHkgaGFzIHRoZSBm
+aWxlIG1tYXAoKWQuDQoNCkFsdGVybmF0aXZlbHksIG9wZW4oKSBjb3VsZCBjaGVjayB3aGV0aGVy
+IHRoZSBmaWxlIGlzDQpjdXJyZW50bHkgbW1hcGVkLCBhbmQgYmxvdyBhd2F5IHRoZSBwYWdlIGNh
+Y2hlIHRoZW4uDQpUaGF0IHdvdWxkIGxlYXZlIHRoZSBwYWdlIGNhY2hlIGludGFjdCBpZiB0aGUg
+c2FtZSBmaWxlIA0KZ2V0cyBleGVjdmUoKWQgc2V2ZXJhbCB0aW1lcyBpbiBhIHJvdyB3aXRob3V0
+IGFueSB3cml0ZXMNCmluLWJldHdlZW4sIHdoaWNoIHNlZW1zIGxpa2UgaXQgbWlnaHQgYmUgYSBy
+ZWxhdGl2ZWx5DQpjb21tb24gY2FzZS4NCg0KDQoNCg==
