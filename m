@@ -2,140 +2,118 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F085C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:54:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80295C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:55:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E912084A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561038859;
-	bh=ujco4toh4VcjlC1PwExMobr+TbEakBM2rfFRTVzVA9w=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:List-ID:From;
-	b=Y29RvW7aTHAfW4tlnzZEPxnBOwL8+4D5EHYVE0BCe0RLAoEuG1AeNFq7IpRlR9Pb8
-	 1K4TpOlXSYclGL8kx2WPWS2vvAJEPAPK0SCNhli7IwXWf6Gu4IgdUouwiMtNgaBV1D
-	 /ImZ5w80Jsj6Ro9E8xbsJ4Sk7fYVHlocvAXhuVX4=
+	by mail.kernel.org (Postfix) with ESMTP id 63C0520675
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 13:55:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731553AbfFTNyS (ORCPT
+        id S1731768AbfFTNzX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 09:54:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51436 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 09:55:23 -0400
+Received: from foss.arm.com ([217.140.110.172]:39692 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726551AbfFTNyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 09:54:17 -0400
-Received: from tleilax.poochiereds.net (cpe-71-70-156-158.nc.res.rr.com [71.70.156.158])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 149E920675;
-        Thu, 20 Jun 2019 13:54:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561038856;
-        bh=ujco4toh4VcjlC1PwExMobr+TbEakBM2rfFRTVzVA9w=;
-        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-        b=DcVNrNiFpeuOwljp7LA2Gtb02dNaMIRCyt2onZkB+mR6mFkpcrSlYGpiTB9KervaC
-         /H9aM9bFIH90qaIB4tLZYT5gsUm8dXfLXtqP0hiqbkQiyxN/OtVbv7oXBTxHX9fWFk
-         qfMa7L8TI19+SYm/jjA1KH+05QZpKoxAhMLYBMng=
-Message-ID: <d8218bd280f19ebbd38f396dbf4e763b945d40bd.camel@kernel.org>
-Subject: Re: [PATCH v2 0/3] ceph: don't NULL terminate virtual xattr values
-From:   Jeff Layton <jlayton@kernel.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        ceph-devel <ceph-devel@vger.kernel.org>,
-        Ilya Dryomov <idryomov@gmail.com>, Zheng Yan <zyan@redhat.com>,
-        sage@redhat.com, agruenba@redhat.com,
-        Joe Perches <joe@perches.com>, Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>
-Date:   Thu, 20 Jun 2019 09:54:13 -0400
-In-Reply-To: <CAMuHMdUtwtruJtcUe4-YQJQ5h9B-WCcjK57hVMvxjnrZeFjrfA@mail.gmail.com>
-References: <20190619164528.31958-1-jlayton@kernel.org>
-         <20190620102410.GT9224@smile.fi.intel.com>
-         <7c12abe8a7e6cd3cfe9129a1e74d9c788ff2f1a9.camel@kernel.org>
-         <CAMuHMdUtwtruJtcUe4-YQJQ5h9B-WCcjK57hVMvxjnrZeFjrfA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
+        id S1726428AbfFTNzX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 09:55:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2D90344;
+        Thu, 20 Jun 2019 06:55:22 -0700 (PDT)
+Received: from [10.1.196.93] (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 55DE23F718;
+        Thu, 20 Jun 2019 06:55:21 -0700 (PDT)
+Subject: Re: [PATCH 1/2] coresight: Set affinity to invalid for missing CPU
+ phandle
+To:     saiprakash.ranjan@codeaurora.org, mathieu.poirier@linaro.org,
+        leo.yan@linaro.org, alexander.shishkin@linux.intel.com,
+        andy.gross@linaro.org, david.brown@linaro.org, mark.rutland@arm.com
+Cc:     rnayak@codeaurora.org, vivek.gautam@codeaurora.org,
+        sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+References: <cover.1561037262.git.saiprakash.ranjan@codeaurora.org>
+ <49d6554536047b9f5526c4ea33990b7c904673d3.1561037262.git.saiprakash.ranjan@codeaurora.org>
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+Message-ID: <f7a3592b-7ed7-b011-9ae1-dc2ca0e49ae4@arm.com>
+Date:   Thu, 20 Jun 2019 14:55:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
+In-Reply-To: <49d6554536047b9f5526c4ea33990b7c904673d3.1561037262.git.saiprakash.ranjan@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 2019-06-20 at 14:22 +0200, Geert Uytterhoeven wrote:
-> Hi Jeff,
+
+Sai,
+
+Thanks for the patch. Please could you change the subject to :
+
+"coresight: Do not default to CPU0 for missing CPU phandle"
+
+On 20/06/2019 14:45, Sai Prakash Ranjan wrote:
+> Affinity defaults to CPU0 in case of missing CPU phandle
+> and this leads to crashes in some cases because of such
+> wrong assumption. Fix this by returning -ENODEV in
+
+Thats not the right justification. Causing crashes is due to
+bad DT/firmware. I would be happy with something like :
+
+"Coresight platform support assumes that a missing \"cpu\" phandle
+defaults to CPU0. This could be problematic and unnecessarily binds
+components to CPU0, where they may not be. Let us make the DT binding
+rules a bit stricter by not defaulting to CPU0 for missing "cpu"
+affinity information."
+
+Also, you must
+
+1) update the devicetree/bindings document to reflect the same.
+2) update the drivers to take appropriate action on the missing CPU
+    where they are expected (e.g, CPU-debug, etm*), to prevent
+    breaking a bisect.
+
+
+> coresight platform for such cases and then handle it
+> in the coresight drivers.
 > 
-> On Thu, Jun 20, 2019 at 1:41 PM Jeff Layton <jlayton@kernel.org> wrote:
-> > On Thu, 2019-06-20 at 13:24 +0300, Andy Shevchenko wrote:
-> > > On Wed, Jun 19, 2019 at 12:45:25PM -0400, Jeff Layton wrote:
-> > > > v2: drop bogus EXPORT_SYMBOL of static function
-> > > > 
-> > > > The only real difference between this set and the one I sent originally
-> > > > is the removal of a spurious EXPORT_SYMBOL in the snprintf patch.
-> > > > 
-> > > > I'm mostly sending this with a wider cc list in an effort to get a
-> > > > review from the maintainers of the printf code. Basically ceph needs a
-> > > > snprintf variant that does not NULL terminate in order to handle its
-> > > > virtual xattrs.
-> > > > 
-> > > > Joe Perches had expressed some concerns about stack usage in vsnprintf
-> > > > with this, but I'm not sure I really understand the basis of that
-> > > > concern. If it is problematic, then I could use suggestions as to how
-> > > > best to fix that up.
-> > > 
-> > > It might be problematic, since vsnprintf() can be called recursively.
-> > > 
-> > 
-> > So the concern is that we'd have extra call/ret activity in the stack?
-> > That seems like a lot of hand-wringing over very little, but ok if so.
-> > 
-> > > > ----------------------------8<-----------------------------
-> > > > 
-> > > > kcephfs has several "virtual" xattrs that return strings that are
-> > > > currently populated using snprintf(), which always NULL terminates the
-> > > > string.
-> > > > 
-> > > > This leads to the string being truncated when we use a buffer length
-> > > > acquired by calling getxattr with a 0 size first. The last character
-> > > > of the string ends up being clobbered by the termination.
-> > > 
-> > > So, then don't use snprintf() for this, simple memcpy() designed for that kind
-> > > of things.
-> > > 
-> > 
-> > memcpy from what? For many of these xattrs, we need to format integer
-> > data into strings. I could roll my own routine to do this formatting,
-> > but that's sort of what sprintf and its variants are for and I'd rather
-> > not reimplement all of it from scratch.
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-platform.c | 10 ++++++----
+>   1 file changed, 6 insertions(+), 4 deletions(-)
 > 
-> snprintf() to a temporary buffer, and memcpy() to the final destination.
-> These are all fairly small buffers (most are single integer values),
-> so the overhead should be minimal, right?
-> 
+> diff --git a/drivers/hwtracing/coresight/coresight-platform.c b/drivers/hwtracing/coresight/coresight-platform.c
+> index 3c5ceda8db24..b1ea60c210e1 100644
+> --- a/drivers/hwtracing/coresight/coresight-platform.c
+> +++ b/drivers/hwtracing/coresight/coresight-platform.c
+> @@ -160,15 +160,17 @@ static int of_coresight_get_cpu(struct device *dev)
+>   
+>   	if (!dev->of_node)
+>   		return 0;
+> +
+>   	dn = of_parse_phandle(dev->of_node, "cpu", 0);
+> -	/* Affinity defaults to CPU0 */
+> +
+> +	/* Affinity defaults to invalid if no cpu nodes are found*/
 
-Yeah. I was trying to avoid having to deal with a second buffer, but
-this is not a performance-critical codepath, so maybe that's the best
-option.
+The code is self explanatory here. You could drop the comment.
 
-> In fact the two largest strings are already formatted in a temporary
-> buffer, so there is no reason ceph_vxattrcb_layout() cannot just use
-> snprintf() now.
->
-> Or perhaps this can use the existing seq_*() interface in some form?
-> 
+>   	if (!dn)
+> -		return 0;
+> +		return -ENODEV;
+> +
+>   	cpu = of_cpu_node_to_id(dn);
+>   	of_node_put(dn);
+>   
+> -	/* Affinity to CPU0 if no cpu nodes are found */
+> -	return (cpu < 0) ? 0 : cpu;
+> +	return cpu;
+>   }
+>   
 
-Hmm. I'll have to think about that.
-
-> BTW, while at it, please get rid of the casts when calling snprintf(), and
-> use the correct format specifiers instead.
-> 
-
-Sure, will do.
-
-Thanks for the suggestions so far (and from Andy too),
--- 
-Jeff Layton <jlayton@kernel.org>
-
+Suzuki
