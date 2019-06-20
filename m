@@ -2,58 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4206AC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE09C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ABBE20B1F
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8BC8208CA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:00:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561053655;
-	bh=H/Oz7X7/nW3FTr2cRjEkaTcDt1nImZOdKJfO0etYTrE=;
+	s=default; t=1561053658;
+	bh=/SYrF4igYH9DXu7t6onqiM2r0S/NibwYcqITNb3Z4Us=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ufgCk2TbatZXCPbMiTvYnjVYLoonznKLopnbIvXd6ZOXYcRA5viKadykULB3/La2U
-	 UduYtDk3W8MuLMd+DQnpQtgGxpsF6XhN/ks/2zwdibMAE4cCkpI0ZVMua6HXU91W1p
-	 8e6r1TaffZvtusrgKnYThM+kGnf747bGTuTf7aIo=
+	b=NcM1+3LkaNNKoiCwKBclu364f/FyMYKH3YyITROQrAJaeJFqJqq4/LTSED+RBNARl
+	 DolJXrjSrwHs4Mavv/5BGdPUxU4RFCcc29ttMUwA7BBeUISsyJviVmsSvwO24d8pla
+	 Pd8j6iOrEB2626ql5pAo3h01vm63Ki7yTsEhJ3E8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727096AbfFTSAy (ORCPT
+        id S1727110AbfFTSA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:00:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49938 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:00:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727076AbfFTSAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:00:51 -0400
+        id S1726447AbfFTSAy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:00:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F26C32084A;
-        Thu, 20 Jun 2019 18:00:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AACC8208CA;
+        Thu, 20 Jun 2019 18:00:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561053650;
-        bh=H/Oz7X7/nW3FTr2cRjEkaTcDt1nImZOdKJfO0etYTrE=;
+        s=default; t=1561053653;
+        bh=/SYrF4igYH9DXu7t6onqiM2r0S/NibwYcqITNb3Z4Us=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yKHneP8gkvBNACx8CLRJeaUjr749x8GdQvwBhVt0jnf26Yoh86tpln+sByajr5J0L
-         4/v06JbkHZSLdi3UVeHG2vnbuMf7nsrG13s8WeGY/WSJJeX1NSALW4EpwYbRzPsvMe
-         bk4Okh4kurtEVGDUb9Z1qMnvotS1On/9LTX/ebk4=
+        b=hnkxnmNHjIo3PDciIMDw9auYH/M7c1wUGSiprTm1D+6571WjJLH+p/+ztSg2HSX3P
+         bwQiUBtS2i2JhuiTwK5mj1EkNPDzMbTVVXLDw/VsRBNGA8xEa+Nfw9aHgOcaeH5eCU
+         KBwWhlpB01kpSlzbhapjHHcNWxcvsw4mNBR9TTFc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Phong Hoang <phong.hoang.wz@renesas.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Hoan Nguyen An <na-hoan@jinso.co.jp>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 36/84] pwm: Fix deadlock warning when removing PWM device
-Date:   Thu, 20 Jun 2019 19:56:33 +0200
-Message-Id: <20190620174343.531074876@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.4 63/84] ax25: fix inconsistent lock state in ax25_destroy_timer
+Date:   Thu, 20 Jun 2019 19:57:00 +0200
+Message-Id: <20190620174348.011537877@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174337.538228162@linuxfoundation.org>
 References: <20190620174337.538228162@linuxfoundation.org>
@@ -66,272 +60,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 347ab9480313737c0f1aaa08e8f2e1a791235535 ]
+From: Eric Dumazet <edumazet@google.com>
 
-This patch fixes deadlock warning if removing PWM device
-when CONFIG_PROVE_LOCKING is enabled.
+[ Upstream commit d4d5d8e83c9616aeef28a2869cea49cc3fb35526 ]
 
-This issue can be reproceduced by the following steps on
-the R-Car H3 Salvator-X board if the backlight is disabled:
+Before thread in process context uses bh_lock_sock()
+we must disable bh.
 
- # cd /sys/class/pwm/pwmchip0
- # echo 0 > export
- # ls
- device  export  npwm  power  pwm0  subsystem  uevent  unexport
- # cd device/driver
- # ls
- bind  e6e31000.pwm  uevent  unbind
- # echo e6e31000.pwm > unbind
+sysbot reported :
 
-[   87.659974] ======================================================
-[   87.666149] WARNING: possible circular locking dependency detected
-[   87.672327] 5.0.0 #7 Not tainted
-[   87.675549] ------------------------------------------------------
-[   87.681723] bash/2986 is trying to acquire lock:
-[   87.686337] 000000005ea0e178 (kn->count#58){++++}, at: kernfs_remove_by_name_ns+0x50/0xa0
-[   87.694528]
-[   87.694528] but task is already holding lock:
-[   87.700353] 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
-[   87.707405]
-[   87.707405] which lock already depends on the new lock.
-[   87.707405]
-[   87.715574]
-[   87.715574] the existing dependency chain (in reverse order) is:
-[   87.723048]
-[   87.723048] -> #1 (pwm_lock){+.+.}:
-[   87.728017]        __mutex_lock+0x70/0x7e4
-[   87.732108]        mutex_lock_nested+0x1c/0x24
-[   87.736547]        pwm_request_from_chip.part.6+0x34/0x74
-[   87.741940]        pwm_request_from_chip+0x20/0x40
-[   87.746725]        export_store+0x6c/0x1f4
-[   87.750820]        dev_attr_store+0x18/0x28
-[   87.754998]        sysfs_kf_write+0x54/0x64
-[   87.759175]        kernfs_fop_write+0xe4/0x1e8
-[   87.763615]        __vfs_write+0x40/0x184
-[   87.767619]        vfs_write+0xa8/0x19c
-[   87.771448]        ksys_write+0x58/0xbc
-[   87.775278]        __arm64_sys_write+0x18/0x20
-[   87.779721]        el0_svc_common+0xd0/0x124
-[   87.783986]        el0_svc_compat_handler+0x1c/0x24
-[   87.788858]        el0_svc_compat+0x8/0x18
-[   87.792947]
-[   87.792947] -> #0 (kn->count#58){++++}:
-[   87.798260]        lock_acquire+0xc4/0x22c
-[   87.802353]        __kernfs_remove+0x258/0x2c4
-[   87.806790]        kernfs_remove_by_name_ns+0x50/0xa0
-[   87.811836]        remove_files.isra.1+0x38/0x78
-[   87.816447]        sysfs_remove_group+0x48/0x98
-[   87.820971]        sysfs_remove_groups+0x34/0x4c
-[   87.825583]        device_remove_attrs+0x6c/0x7c
-[   87.830197]        device_del+0x11c/0x33c
-[   87.834201]        device_unregister+0x14/0x2c
-[   87.838638]        pwmchip_sysfs_unexport+0x40/0x4c
-[   87.843509]        pwmchip_remove+0xf4/0x13c
-[   87.847773]        rcar_pwm_remove+0x28/0x34
-[   87.852039]        platform_drv_remove+0x24/0x64
-[   87.856651]        device_release_driver_internal+0x18c/0x21c
-[   87.862391]        device_release_driver+0x14/0x1c
-[   87.867175]        unbind_store+0xe0/0x124
-[   87.871265]        drv_attr_store+0x20/0x30
-[   87.875442]        sysfs_kf_write+0x54/0x64
-[   87.879618]        kernfs_fop_write+0xe4/0x1e8
-[   87.884055]        __vfs_write+0x40/0x184
-[   87.888057]        vfs_write+0xa8/0x19c
-[   87.891887]        ksys_write+0x58/0xbc
-[   87.895716]        __arm64_sys_write+0x18/0x20
-[   87.900154]        el0_svc_common+0xd0/0x124
-[   87.904417]        el0_svc_compat_handler+0x1c/0x24
-[   87.909289]        el0_svc_compat+0x8/0x18
-[   87.913378]
-[   87.913378] other info that might help us debug this:
-[   87.913378]
-[   87.921374]  Possible unsafe locking scenario:
-[   87.921374]
-[   87.927286]        CPU0                    CPU1
-[   87.931808]        ----                    ----
-[   87.936331]   lock(pwm_lock);
-[   87.939293]                                lock(kn->count#58);
-[   87.945120]                                lock(pwm_lock);
-[   87.950599]   lock(kn->count#58);
-[   87.953908]
-[   87.953908]  *** DEADLOCK ***
-[   87.953908]
-[   87.959821] 4 locks held by bash/2986:
-[   87.963563]  #0: 00000000ace7bc30 (sb_writers#6){.+.+}, at: vfs_write+0x188/0x19c
-[   87.971044]  #1: 00000000287991b2 (&of->mutex){+.+.}, at: kernfs_fop_write+0xb4/0x1e8
-[   87.978872]  #2: 00000000f739d016 (&dev->mutex){....}, at: device_release_driver_internal+0x40/0x21c
-[   87.988001]  #3: 000000006313b17c (pwm_lock){+.+.}, at: pwmchip_remove+0x28/0x13c
-[   87.995481]
-[   87.995481] stack backtrace:
-[   87.999836] CPU: 0 PID: 2986 Comm: bash Not tainted 5.0.0 #7
-[   88.005489] Hardware name: Renesas Salvator-X board based on r8a7795 ES1.x (DT)
-[   88.012791] Call trace:
-[   88.015235]  dump_backtrace+0x0/0x190
-[   88.018891]  show_stack+0x14/0x1c
-[   88.022204]  dump_stack+0xb0/0xec
-[   88.025514]  print_circular_bug.isra.32+0x1d0/0x2e0
-[   88.030385]  __lock_acquire+0x1318/0x1864
-[   88.034388]  lock_acquire+0xc4/0x22c
-[   88.037958]  __kernfs_remove+0x258/0x2c4
-[   88.041874]  kernfs_remove_by_name_ns+0x50/0xa0
-[   88.046398]  remove_files.isra.1+0x38/0x78
-[   88.050487]  sysfs_remove_group+0x48/0x98
-[   88.054490]  sysfs_remove_groups+0x34/0x4c
-[   88.058580]  device_remove_attrs+0x6c/0x7c
-[   88.062671]  device_del+0x11c/0x33c
-[   88.066154]  device_unregister+0x14/0x2c
-[   88.070070]  pwmchip_sysfs_unexport+0x40/0x4c
-[   88.074421]  pwmchip_remove+0xf4/0x13c
-[   88.078163]  rcar_pwm_remove+0x28/0x34
-[   88.081906]  platform_drv_remove+0x24/0x64
-[   88.085996]  device_release_driver_internal+0x18c/0x21c
-[   88.091215]  device_release_driver+0x14/0x1c
-[   88.095478]  unbind_store+0xe0/0x124
-[   88.099048]  drv_attr_store+0x20/0x30
-[   88.102704]  sysfs_kf_write+0x54/0x64
-[   88.106359]  kernfs_fop_write+0xe4/0x1e8
-[   88.110275]  __vfs_write+0x40/0x184
-[   88.113757]  vfs_write+0xa8/0x19c
-[   88.117065]  ksys_write+0x58/0xbc
-[   88.120374]  __arm64_sys_write+0x18/0x20
-[   88.124291]  el0_svc_common+0xd0/0x124
-[   88.128034]  el0_svc_compat_handler+0x1c/0x24
-[   88.132384]  el0_svc_compat+0x8/0x18
+WARNING: inconsistent lock state
+5.2.0-rc3+ #32 Not tainted
 
-The sysfs unexport in pwmchip_remove() is completely asymmetric
-to what we do in pwmchip_add_with_polarity() and commit 0733424c9ba9
-("pwm: Unexport children before chip removal") is a strong indication
-that this was wrong to begin with. We should just move
-pwmchip_sysfs_unexport() where it belongs, which is right after
-pwmchip_sysfs_unexport_children(). In that case, we do not need
-separate functions anymore either.
+inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+blkid/26581 [HC0[0]:SC1[1]:HE1:SE0] takes:
+00000000e0da85ee (slock-AF_AX25){+.?.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+00000000e0da85ee (slock-AF_AX25){+.?.}, at: ax25_destroy_timer+0x53/0xc0 net/ax25/af_ax25.c:275
+{SOFTIRQ-ON-W} state was registered at:
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
+  __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+  _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+  spin_lock include/linux/spinlock.h:338 [inline]
+  ax25_rt_autobind+0x3ca/0x720 net/ax25/ax25_route.c:429
+  ax25_connect.cold+0x30/0xa4 net/ax25/af_ax25.c:1221
+  __sys_connect+0x264/0x330 net/socket.c:1834
+  __do_sys_connect net/socket.c:1845 [inline]
+  __se_sys_connect net/socket.c:1842 [inline]
+  __x64_sys_connect+0x73/0xb0 net/socket.c:1842
+  do_syscall_64+0xfd/0x680 arch/x86/entry/common.c:301
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+irq event stamp: 2272
+hardirqs last  enabled at (2272): [<ffffffff810065f3>] trace_hardirqs_on_thunk+0x1a/0x1c
+hardirqs last disabled at (2271): [<ffffffff8100660f>] trace_hardirqs_off_thunk+0x1a/0x1c
+softirqs last  enabled at (1522): [<ffffffff87400654>] __do_softirq+0x654/0x94c kernel/softirq.c:320
+softirqs last disabled at (2267): [<ffffffff81449010>] invoke_softirq kernel/softirq.c:374 [inline]
+softirqs last disabled at (2267): [<ffffffff81449010>] irq_exit+0x180/0x1d0 kernel/softirq.c:414
 
-We also really want to remove sysfs irrespective of whether or not
-the chip will be removed as a result of pwmchip_remove(). We can only
-assume that the driver will be gone after that, so we shouldn't leave
-any dangling sysfs files around.
+other info that might help us debug this:
+ Possible unsafe locking scenario:
 
-This warning disappears if we move pwmchip_sysfs_unexport() to
-the top of pwmchip_remove(), pwmchip_sysfs_unexport_children().
-That way it is also outside of the pwm_lock section, which indeed
-doesn't seem to be needed.
+       CPU0
+       ----
+  lock(slock-AF_AX25);
+  <Interrupt>
+    lock(slock-AF_AX25);
 
-Moving the pwmchip_sysfs_export() call outside of that section also
-seems fine and it'd be perfectly symmetric with pwmchip_remove() again.
+ *** DEADLOCK ***
 
-So, this patch fixes them.
+1 lock held by blkid/26581:
+ #0: 0000000010fd154d ((&ax25->dtimer)){+.-.}, at: lockdep_copy_map include/linux/lockdep.h:175 [inline]
+ #0: 0000000010fd154d ((&ax25->dtimer)){+.-.}, at: call_timer_fn+0xe0/0x720 kernel/time/timer.c:1312
 
-Signed-off-by: Phong Hoang <phong.hoang.wz@renesas.com>
-[shimoda: revise the commit log and code]
-Fixes: 76abbdde2d95 ("pwm: Add sysfs interface")
-Fixes: 0733424c9ba9 ("pwm: Unexport children before chip removal")
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Tested-by: Hoan Nguyen An <na-hoan@jinso.co.jp>
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
-Signed-off-by: Thierry Reding <thierry.reding@gmail.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+stack backtrace:
+CPU: 1 PID: 26581 Comm: blkid Not tainted 5.2.0-rc3+ #32
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ <IRQ>
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ print_usage_bug.cold+0x393/0x4a2 kernel/locking/lockdep.c:2935
+ valid_state kernel/locking/lockdep.c:2948 [inline]
+ mark_lock_irq kernel/locking/lockdep.c:3138 [inline]
+ mark_lock+0xd46/0x1370 kernel/locking/lockdep.c:3513
+ mark_irqflags kernel/locking/lockdep.c:3391 [inline]
+ __lock_acquire+0x159f/0x5490 kernel/locking/lockdep.c:3745
+ lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
+ __raw_spin_lock include/linux/spinlock_api_smp.h:142 [inline]
+ _raw_spin_lock+0x2f/0x40 kernel/locking/spinlock.c:151
+ spin_lock include/linux/spinlock.h:338 [inline]
+ ax25_destroy_timer+0x53/0xc0 net/ax25/af_ax25.c:275
+ call_timer_fn+0x193/0x720 kernel/time/timer.c:1322
+ expire_timers kernel/time/timer.c:1366 [inline]
+ __run_timers kernel/time/timer.c:1685 [inline]
+ __run_timers kernel/time/timer.c:1653 [inline]
+ run_timer_softirq+0x66f/0x1740 kernel/time/timer.c:1698
+ __do_softirq+0x25c/0x94c kernel/softirq.c:293
+ invoke_softirq kernel/softirq.c:374 [inline]
+ irq_exit+0x180/0x1d0 kernel/softirq.c:414
+ exiting_irq arch/x86/include/asm/apic.h:536 [inline]
+ smp_apic_timer_interrupt+0x13b/0x550 arch/x86/kernel/apic/apic.c:1068
+ apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:806
+ </IRQ>
+RIP: 0033:0x7f858d5c3232
+Code: 8b 61 08 48 8b 84 24 d8 00 00 00 4c 89 44 24 28 48 8b ac 24 d0 00 00 00 4c 8b b4 24 e8 00 00 00 48 89 7c 24 68 48 89 4c 24 78 <48> 89 44 24 58 8b 84 24 e0 00 00 00 89 84 24 84 00 00 00 8b 84 24
+RSP: 002b:00007ffcaf0cf5c0 EFLAGS: 00000206 ORIG_RAX: ffffffffffffff13
+RAX: 00007f858d7d27a8 RBX: 00007f858d7d8820 RCX: 00007f858d3940d8
+RDX: 00007ffcaf0cf798 RSI: 00000000f5e616f3 RDI: 00007f858d394fee
+RBP: 0000000000000000 R08: 00007ffcaf0cf780 R09: 00007f858d7db480
+R10: 0000000000000000 R11: 0000000009691a75 R12: 0000000000000005
+R13: 00000000f5e616f3 R14: 0000000000000000 R15: 00007ffcaf0cf798
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/pwm/core.c  | 10 +++++-----
- drivers/pwm/sysfs.c | 14 +-------------
- include/linux/pwm.h |  5 -----
- 3 files changed, 6 insertions(+), 23 deletions(-)
+ net/ax25/ax25_route.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index ec84ff8ad1b4..6911f9662300 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -284,10 +284,12 @@ int pwmchip_add_with_polarity(struct pwm_chip *chip,
- 	if (IS_ENABLED(CONFIG_OF))
- 		of_pwmchip_add(chip);
- 
--	pwmchip_sysfs_export(chip);
--
- out:
- 	mutex_unlock(&pwm_lock);
-+
-+	if (!ret)
-+		pwmchip_sysfs_export(chip);
-+
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(pwmchip_add_with_polarity);
-@@ -321,7 +323,7 @@ int pwmchip_remove(struct pwm_chip *chip)
- 	unsigned int i;
- 	int ret = 0;
- 
--	pwmchip_sysfs_unexport_children(chip);
-+	pwmchip_sysfs_unexport(chip);
- 
- 	mutex_lock(&pwm_lock);
- 
-@@ -341,8 +343,6 @@ int pwmchip_remove(struct pwm_chip *chip)
- 
- 	free_pwms(chip);
- 
--	pwmchip_sysfs_unexport(chip);
--
- out:
- 	mutex_unlock(&pwm_lock);
- 	return ret;
-diff --git a/drivers/pwm/sysfs.c b/drivers/pwm/sysfs.c
-index 375008e2be20..199370e41da9 100644
---- a/drivers/pwm/sysfs.c
-+++ b/drivers/pwm/sysfs.c
-@@ -338,19 +338,6 @@ void pwmchip_sysfs_export(struct pwm_chip *chip)
- }
- 
- void pwmchip_sysfs_unexport(struct pwm_chip *chip)
--{
--	struct device *parent;
--
--	parent = class_find_device(&pwm_class, NULL, chip,
--				   pwmchip_sysfs_match);
--	if (parent) {
--		/* for class_find_device() */
--		put_device(parent);
--		device_unregister(parent);
--	}
--}
--
--void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
- {
- 	struct device *parent;
- 	unsigned int i;
-@@ -368,6 +355,7 @@ void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
+--- a/net/ax25/ax25_route.c
++++ b/net/ax25/ax25_route.c
+@@ -443,9 +443,11 @@ int ax25_rt_autobind(ax25_cb *ax25, ax25
  	}
  
- 	put_device(parent);
-+	device_unregister(parent);
- }
+ 	if (ax25->sk != NULL) {
++		local_bh_disable();
+ 		bh_lock_sock(ax25->sk);
+ 		sock_reset_flag(ax25->sk, SOCK_ZAPPED);
+ 		bh_unlock_sock(ax25->sk);
++		local_bh_enable();
+ 	}
  
- static int __init pwm_sysfs_init(void)
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index aa8736d5b2f3..cfc3ed46cad2 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -331,7 +331,6 @@ static inline void pwm_remove_table(struct pwm_lookup *table, size_t num)
- #ifdef CONFIG_PWM_SYSFS
- void pwmchip_sysfs_export(struct pwm_chip *chip);
- void pwmchip_sysfs_unexport(struct pwm_chip *chip);
--void pwmchip_sysfs_unexport_children(struct pwm_chip *chip);
- #else
- static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
- {
-@@ -340,10 +339,6 @@ static inline void pwmchip_sysfs_export(struct pwm_chip *chip)
- static inline void pwmchip_sysfs_unexport(struct pwm_chip *chip)
- {
- }
--
--static inline void pwmchip_sysfs_unexport_children(struct pwm_chip *chip)
--{
--}
- #endif /* CONFIG_PWM_SYSFS */
- 
- #endif /* __LINUX_PWM_H */
--- 
-2.20.1
-
+ put:
 
 
