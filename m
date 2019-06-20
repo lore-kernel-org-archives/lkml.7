@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 689AFC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44FAC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F47C2082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FDF92070B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054293;
-	bh=pF+dbvagrtjDNBYMe9nGKRdkI3dXz2/olQGKQUQ4cMA=;
+	s=default; t=1561054297;
+	bh=rLGywLM7GHWIRlLUpGXkODVGWh+wZ0q8mk2YBLfdhSY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oECZO/txskhpaji7H84tNtA5NNYDXfna011LWlo1/VlLpzEDG0iroJNRP6VhpRE6j
-	 DQKwGc9GbxqPcsby0S4PGOanX5Bpwi4Axdlw1O34L1jKaOEA+waB5ESzxEIKQ1JOWs
-	 zwghkTLXKdnUxyIOafPuc2TOxEIlX0if4huf+SKI=
+	b=EVIy54UKZTPyTBbLUHkslY+3Uc2kAxfnGdPf2AJB9qg23+aLCsZ6pz/cXHy/Bz+h3
+	 URNvDOGeGfkg5gr78dOGt/Nh4LlYzcR0QgAJBn9PyyIRD3VjV40bvVw0v1NN5uuH8U
+	 GzHHTpYq/5PkFMJ2fPsdOiI3MTl7/qR9VSgYmaMI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfFTSLc (ORCPT
+        id S1728932AbfFTSLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39208 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728922AbfFTSL1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:27 -0400
+        id S1728412AbfFTSLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 908DF2070B;
-        Thu, 20 Jun 2019 18:11:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFA8A2082C;
+        Thu, 20 Jun 2019 18:11:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054287;
-        bh=pF+dbvagrtjDNBYMe9nGKRdkI3dXz2/olQGKQUQ4cMA=;
+        s=default; t=1561054284;
+        bh=rLGywLM7GHWIRlLUpGXkODVGWh+wZ0q8mk2YBLfdhSY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uuuEVHYxqcgL76nHdHY+IA+axGwLMnAcNFZxdYNyYwkaZifWT6t9WkGRpkP3a0IDI
-         j/ZgjhL/CZH+HTaUnCBl4SZVKl7FBA246hydgaDAMicpQY3JQnjG2mKzLbJWnZ4I1Z
-         CjETDhAqjFCvk43ycgk34v6MFxJMQaVbIOmNhkbM=
+        b=MGWoO7wGcQSPrnPDHKxweXg9GI4hsxIXbQ/hjoBi8HrenJ0BafT/lEBBfaMhzdWAi
+         Qi0C2iOa3NAF9nntG96rU5Zgo0eXeiAQLQEVq5/dgiwuwSH5obDEu061blmh5lKRPN
+         iAKPQxmK8jhl11VzDVKMNRQNvNVSDZ7V0aBJyFA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yingjoe Chen <yingjoe.chen@mediatek.com>,
-        Wolfram Sang <wsa@the-dreams.de>,
+        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
+        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 37/61] i2c: dev: fix potential memory leak in i2cdev_ioctl_rdwr
-Date:   Thu, 20 Jun 2019 19:57:32 +0200
-Message-Id: <20190620174343.862992817@linuxfoundation.org>
+Subject: [PATCH 4.19 36/61] net: aquantia: fix LRO with FCS error
+Date:   Thu, 20 Jun 2019 19:57:31 +0200
+Message-Id: <20190620174343.664443414@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,31 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit a0692f0eef91354b62c2b4c94954536536be5425 ]
+[ Upstream commit eaeb3b7494ba9159323814a8ce8af06a9277d99b ]
 
-If I2C_M_RECV_LEN check failed, msgs[i].buf allocated by memdup_user
-will not be freed. Pump index up so it will be freed.
+Driver stops producing skbs on ring if a packet with FCS error
+was coalesced into LRO session. Ring gets hang forever.
 
-Fixes: 838bfa6049fb ("i2c-dev: Add support for I2C_M_RECV_LEN")
-Signed-off-by: Yingjoe Chen <yingjoe.chen@mediatek.com>
-Signed-off-by: Wolfram Sang <wsa@the-dreams.de>
+Thats a logical error in driver processing descriptors:
+When rx_stat indicates MAC Error, next pointer and eop flags
+are not filled. This confuses driver so it waits for descriptor 0
+to be filled by HW.
+
+Solution is fill next pointer and eop flag even for packets with FCS error.
+
+Fixes: bab6de8fd180b ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/i2c/i2c-dev.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../aquantia/atlantic/hw_atl/hw_atl_b0.c      | 61 ++++++++++---------
+ 1 file changed, 32 insertions(+), 29 deletions(-)
 
-diff --git a/drivers/i2c/i2c-dev.c b/drivers/i2c/i2c-dev.c
-index ccd76c71af09..cb07651f4b46 100644
---- a/drivers/i2c/i2c-dev.c
-+++ b/drivers/i2c/i2c-dev.c
-@@ -283,6 +283,7 @@ static noinline int i2cdev_ioctl_rdwr(struct i2c_client *client,
- 			    msgs[i].len < 1 || msgs[i].buf[0] < 1 ||
- 			    msgs[i].len < msgs[i].buf[0] +
- 					     I2C_SMBUS_BLOCK_MAX) {
-+				i++;
- 				res = -EINVAL;
- 				break;
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index 56363ff5c891..51cd1f98bcf0 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -695,38 +695,41 @@ static int hw_atl_b0_hw_ring_rx_receive(struct aq_hw_s *self,
+ 		if ((rx_stat & BIT(0)) || rxd_wb->type & 0x1000U) {
+ 			/* MAC error or DMA error */
+ 			buff->is_error = 1U;
+-		} else {
+-			if (self->aq_nic_cfg->is_rss) {
+-				/* last 4 byte */
+-				u16 rss_type = rxd_wb->type & 0xFU;
+-
+-				if (rss_type && rss_type < 0x8U) {
+-					buff->is_hash_l4 = (rss_type == 0x4 ||
+-					rss_type == 0x5);
+-					buff->rss_hash = rxd_wb->rss_hash;
+-				}
++		}
++		if (self->aq_nic_cfg->is_rss) {
++			/* last 4 byte */
++			u16 rss_type = rxd_wb->type & 0xFU;
++
++			if (rss_type && rss_type < 0x8U) {
++				buff->is_hash_l4 = (rss_type == 0x4 ||
++				rss_type == 0x5);
++				buff->rss_hash = rxd_wb->rss_hash;
  			}
++		}
+ 
+-			if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
+-				buff->len = rxd_wb->pkt_len %
+-					AQ_CFG_RX_FRAME_MAX;
+-				buff->len = buff->len ?
+-					buff->len : AQ_CFG_RX_FRAME_MAX;
+-				buff->next = 0U;
+-				buff->is_eop = 1U;
++		if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
++			buff->len = rxd_wb->pkt_len %
++				AQ_CFG_RX_FRAME_MAX;
++			buff->len = buff->len ?
++				buff->len : AQ_CFG_RX_FRAME_MAX;
++			buff->next = 0U;
++			buff->is_eop = 1U;
++		} else {
++			buff->len =
++				rxd_wb->pkt_len > AQ_CFG_RX_FRAME_MAX ?
++				AQ_CFG_RX_FRAME_MAX : rxd_wb->pkt_len;
++
++			if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
++				rxd_wb->status) {
++				/* LRO */
++				buff->next = rxd_wb->next_desc_ptr;
++				++ring->stats.rx.lro_packets;
+ 			} else {
+-				if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
+-					rxd_wb->status) {
+-					/* LRO */
+-					buff->next = rxd_wb->next_desc_ptr;
+-					++ring->stats.rx.lro_packets;
+-				} else {
+-					/* jumbo */
+-					buff->next =
+-						aq_ring_next_dx(ring,
+-								ring->hw_head);
+-					++ring->stats.rx.jumbo_packets;
+-				}
++				/* jumbo */
++				buff->next =
++					aq_ring_next_dx(ring,
++							ring->hw_head);
++				++ring->stats.rx.jumbo_packets;
+ 			}
+ 		}
+ 	}
 -- 
 2.20.1
 
