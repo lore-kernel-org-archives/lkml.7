@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1AA1C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C3C0AC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8853C2084E
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F51C2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:11:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054300;
-	bh=hphFwK1hIXpMMA+3jCTMhQvVE8F9g39oGFKILzNNueY=;
+	s=default; t=1561054305;
+	bh=980y4+/bM4nqKR5zFJc08I4f1d9BaMa28HhT7rOx/s4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qiQRKI2ZO3++tQjQ7zRq267DiLLUHZG8RZiXc1Re+p72YYUUXsYDzcb6ymOjy5RMn
-	 68IZRJUec1MMWuM1vizBMI/6VbGJlKFGqZK1ojV0h6+6xYaEPeEeOPxrwK4wKr0/OP
-	 S0BosKRXZqUtq+n/oQqXyBO9neESihDCqU/5OQvg=
+	b=1skNS980posAe/n4qFpplFV9z7MLJFZzS6uW3ltlYJIP6V/HKntm178Cngspt9oXA
+	 hTGQX5Z/62fdA1tskY7kwtxgDI76j2ymljvcNLwaMsFrGhfdbql7xW3LpJMcJfQgZy
+	 XPFVRN3k6/feyANLkICOv3YOWli+yoxj4ioeDADA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728943AbfFTSLj (ORCPT
+        id S1726544AbfFTSLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:11:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39308 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:11:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39430 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726906AbfFTSLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:11:33 -0400
+        id S1728806AbfFTSLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:11:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2292C2070B;
-        Thu, 20 Jun 2019 18:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0E22F2070B;
+        Thu, 20 Jun 2019 18:11:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054292;
-        bh=hphFwK1hIXpMMA+3jCTMhQvVE8F9g39oGFKILzNNueY=;
+        s=default; t=1561054298;
+        bh=980y4+/bM4nqKR5zFJc08I4f1d9BaMa28HhT7rOx/s4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=KqmgEbIKIaGlqFEzI/rPBBstb1wftB1WtZd6z4XcRih2qQo8ryg1OXxjiP/KBiyeg
-         5FpUb8vYYedernfuyvCxsSOEExwmMoGSfmyamIY1RSnF3tfWtUE3BVtSwso/J0z0pG
-         beuAYEVjkb+Mwu8wc9HJL7khAfwGeDliXJH2SWtQ=
+        b=c4aWRpHdj1pRxSNp3rjMvuDMhDrtF+im5NzIMJn0jYUoIHn8qmQabaNZtEB8xJ2Bs
+         kprL0qRZZFhJ2e0CQgZROOWRUfMFlXnv0Qll3sgrhqkynCLtbibxQq9T+LOEV1dwMp
+         se4KrSDzNr+Gkao/L3J9+d08JW0qfM5zSv5D0V5Y=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Barber <smbarber@chromium.org>,
+        stable@vger.kernel.org, Yuri Chipchev <yuric@marvell.com>,
+        Maxime Chevallier <maxime.chevallier@bootlin.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 13/61] vsock/virtio: set SOCK_DONE on peer shutdown
-Date:   Thu, 20 Jun 2019 19:57:08 +0200
-Message-Id: <20190620174339.445420153@linuxfoundation.org>
+Subject: [PATCH 4.19 15/61] net: mvpp2: prs: Fix parser range for VID filtering
+Date:   Thu, 20 Jun 2019 19:57:10 +0200
+Message-Id: <20190620174339.749869176@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -59,38 +60,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Barber <smbarber@chromium.org>
+From: Maxime Chevallier <maxime.chevallier@bootlin.com>
 
-[ Upstream commit 42f5cda5eaf4396a939ae9bb43bb8d1d09c1b15c ]
+[ Upstream commit 46b0090a6636cf34c0e856f15dd03e15ba4cdda6 ]
 
-Set the SOCK_DONE flag to match the TCP_CLOSING state when a peer has
-shut down and there is nothing left to read.
+VID filtering is implemented in the Header Parser, with one range of 11
+vids being assigned for each no-loopback port.
 
-This fixes the following bug:
-1) Peer sends SHUTDOWN(RDWR).
-2) Socket enters TCP_CLOSING but SOCK_DONE is not set.
-3) read() returns -ENOTCONN until close() is called, then returns 0.
+Make sure we use the per-port range when looking for existing entries in
+the Parser.
 
-Signed-off-by: Stephen Barber <smbarber@chromium.org>
+Since we used a global range instead of a per-port one, this causes VIDs
+to be removed from the whitelist from all ports of the same PPv2
+instance.
+
+Fixes: 56beda3db602 ("net: mvpp2: Add hardware offloading for VLAN filtering")
+Suggested-by: Yuri Chipchev <yuric@marvell.com>
+Signed-off-by: Maxime Chevallier <maxime.chevallier@bootlin.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/vmw_vsock/virtio_transport_common.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c |   17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
---- a/net/vmw_vsock/virtio_transport_common.c
-+++ b/net/vmw_vsock/virtio_transport_common.c
-@@ -871,8 +871,10 @@ virtio_transport_recv_connected(struct s
- 		if (le32_to_cpu(pkt->hdr.flags) & VIRTIO_VSOCK_SHUTDOWN_SEND)
- 			vsk->peer_shutdown |= SEND_SHUTDOWN;
- 		if (vsk->peer_shutdown == SHUTDOWN_MASK &&
--		    vsock_stream_has_data(vsk) <= 0)
-+		    vsock_stream_has_data(vsk) <= 0) {
-+			sock_set_flag(sk, SOCK_DONE);
- 			sk->sk_state = TCP_CLOSING;
-+		}
- 		if (le32_to_cpu(pkt->hdr.flags))
- 			sk->sk_state_change(sk);
- 		break;
+--- a/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
++++ b/drivers/net/ethernet/marvell/mvpp2/mvpp2_prs.c
+@@ -1905,8 +1905,7 @@ static int mvpp2_prs_ip6_init(struct mvp
+ }
+ 
+ /* Find tcam entry with matched pair <vid,port> */
+-static int mvpp2_prs_vid_range_find(struct mvpp2 *priv, int pmap, u16 vid,
+-				    u16 mask)
++static int mvpp2_prs_vid_range_find(struct mvpp2_port *port, u16 vid, u16 mask)
+ {
+ 	unsigned char byte[2], enable[2];
+ 	struct mvpp2_prs_entry pe;
+@@ -1914,13 +1913,13 @@ static int mvpp2_prs_vid_range_find(stru
+ 	int tid;
+ 
+ 	/* Go through the all entries with MVPP2_PRS_LU_VID */
+-	for (tid = MVPP2_PE_VID_FILT_RANGE_START;
+-	     tid <= MVPP2_PE_VID_FILT_RANGE_END; tid++) {
+-		if (!priv->prs_shadow[tid].valid ||
+-		    priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
++	for (tid = MVPP2_PRS_VID_PORT_FIRST(port->id);
++	     tid <= MVPP2_PRS_VID_PORT_LAST(port->id); tid++) {
++		if (!port->priv->prs_shadow[tid].valid ||
++		    port->priv->prs_shadow[tid].lu != MVPP2_PRS_LU_VID)
+ 			continue;
+ 
+-		mvpp2_prs_init_from_hw(priv, &pe, tid);
++		mvpp2_prs_init_from_hw(port->priv, &pe, tid);
+ 
+ 		mvpp2_prs_tcam_data_byte_get(&pe, 2, &byte[0], &enable[0]);
+ 		mvpp2_prs_tcam_data_byte_get(&pe, 3, &byte[1], &enable[1]);
+@@ -1950,7 +1949,7 @@ int mvpp2_prs_vid_entry_add(struct mvpp2
+ 	memset(&pe, 0, sizeof(pe));
+ 
+ 	/* Scan TCAM and see if entry with this <vid,port> already exist */
+-	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, mask);
++	tid = mvpp2_prs_vid_range_find(port, vid, mask);
+ 
+ 	reg_val = mvpp2_read(priv, MVPP2_MH_REG(port->id));
+ 	if (reg_val & MVPP2_DSA_EXTENDED)
+@@ -2008,7 +2007,7 @@ void mvpp2_prs_vid_entry_remove(struct m
+ 	int tid;
+ 
+ 	/* Scan TCAM and see if entry with this <vid,port> already exist */
+-	tid = mvpp2_prs_vid_range_find(priv, (1 << port->id), vid, 0xfff);
++	tid = mvpp2_prs_vid_range_find(port, vid, 0xfff);
+ 
+ 	/* No such entry */
+ 	if (tid < 0)
 
 
