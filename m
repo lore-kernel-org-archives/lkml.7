@@ -2,94 +2,132 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF7F6C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:54:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 503A5C48BE4
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 840F62082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:54:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561035258;
-	bh=mJIzkIy1IkKq1wkFs5xq4C9Jj7aUtzPtSq2EXZZcKIc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aS1wIwY3LgHUGvdmy6S5Yd7EVreqNm96MqHLuuZ+QAxqesY5LjC3iYovAPFcu2L2p
-	 qZCSeBXs+LHG5G5ubpa/QLO9fgfMklYkoOLeDcWGt5FNuEZeBMI6Qs7U0/UL6K+ktr
-	 0e5vijPiGAY9Cf3lypqVGhXke+foEhoJRaYJ/w/0=
+	by mail.kernel.org (Postfix) with ESMTP id 3406A2082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731814AbfFTMyR (ORCPT
+        id S1731827AbfFTM4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:54:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58456 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727040AbfFTMyR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:54:17 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7BD4D2080C;
-        Thu, 20 Jun 2019 12:54:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561035256;
-        bh=mJIzkIy1IkKq1wkFs5xq4C9Jj7aUtzPtSq2EXZZcKIc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=WE3TyVQ1U7WjKVqehsGQxiDSfN20lgka+ZYGMYm/MlYieOkq/O40ifRB2PjpQcHS4
-         FujD8AVdsSG/qKJoGNlKzL5RK126UmH/KdPe41snhOXBQn+OF/+ZmkO/CTKfBtyRD8
-         Ix529taM1ls7ywfQFdzJgXC7/ZP9Z2ZHOvEInXYc=
-Date:   Thu, 20 Jun 2019 14:54:13 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Stefan Achatz <erazor_de@users.sourceforge.net>
-Subject: Re: [PATCH 04/14] ABI: better identificate tables
-Message-ID: <20190620125413.GA5170@kroah.com>
-References: <cover.1560477540.git.mchehab+samsung@kernel.org>
- <6bc45c0d5d464d25d4d16eceac48a2f407166944.1560477540.git.mchehab+samsung@kernel.org>
- <20190619125135.GG25248@localhost>
- <20190619105633.7f7315a5@coco.lan>
- <20190619150207.GA19346@kroah.com>
- <20190620120150.GH6241@localhost>
+        Thu, 20 Jun 2019 08:56:46 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:56798 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726569AbfFTM4q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:56:46 -0400
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 95CEE2A38E8229310350;
+        Thu, 20 Jun 2019 20:56:42 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 20 Jun 2019
+ 20:56:34 +0800
+Subject: Re: [PATCH 0/5] Fixes for HiSilicon LPC driver and logical PIO code
+To:     Olof Johansson <olof@lixom.net>
+References: <1561026716-140537-1-git-send-email-john.garry@huawei.com>
+ <CAOesGMg+jAae5A0LgvBH0=dF95Y208h0c5RZ6f0v6CVUhsMk4g@mail.gmail.com>
+CC:     <xuwei5@huawei.com>, Bjorn Helgaas <bhelgaas@google.com>,
+        Linuxarm <linuxarm@huawei.com>,
+        ARM-SoC Maintainers <arm@kernel.org>,
+        "Linux Kernel Mailing List" <linux-kernel@vger.kernel.org>,
+        <linux-pci@vger.kernel.org>, "Joe Perches" <joe@perches.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <8265cdc4-ce24-4efd-a64a-78ce34104b9c@huawei.com>
+Date:   Thu, 20 Jun 2019 13:56:28 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190620120150.GH6241@localhost>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <CAOesGMg+jAae5A0LgvBH0=dF95Y208h0c5RZ6f0v6CVUhsMk4g@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Jun 20, 2019 at 02:01:50PM +0200, Johan Hovold wrote:
-> > I don't know when "Description" and "RST-Description" would be used.
-> > Why not just parse "Description" like rst text and if things are "messy"
-> > we fix them up as found, like you did with the ":" here?  It doesn't
-> > have to be complex, we can always fix them up after-the-fact if new
-> > stuff gets added that doesn't quite parse properly.
-> > 
-> > Just like we do for most kernel-doc formatting :)
-> 
-> But kernel-doc has a documented format, which was sort of the point I
-> was trying to make. If the new get_abi.pl scripts expects a colon I
-> think it should be mentioned somewhere (e.g. Documentation/ABI/README).
-> 
-> Grepping for attribute entries in linux-next still reveals a number
-> descriptions that still lack that colon and use varying formatting. More
-> are bound to be added later, but perhaps that's ok depending on what
-> you're aiming at here.
+On 20/06/2019 13:42, Olof Johansson wrote:
+> Hi John,
+>
+> For patches that go to a soc maintainer for merge, we're asking that
+> people don't cc arm@kernel.org directly.
+>
+> We prefer to keep that alias mostly for pull requests from other
+> maintainers and patches we might have a reason to apply directly.
+> Otherwise we risk essentially getting all of linux-arm-kernel into
+> this mailbox as well.
+>
+>
+> Thanks!
+>
+> -Olof
+>
 
-I'm aiming for "good enough" to start with, and then we can work through
-the exceptions.
+Hi Olof,
 
-But given that Mauro hasn't resent the script that does the conversion
-of the files, I don't know if that will even matter... {hint}
+Can do in future.
 
-thanks,
+The specific reason here for me to cc arm@kernel.org was that I wanted 
+to at least make the maintainers aware that we intend to send some 
+patches outside the "arm soc" domain through their tree, * below.
 
-greg k-h
+Thanks,
+John
+
+
+> On Thu, Jun 20, 2019 at 11:33 AM John Garry <john.garry@huawei.com> wrote:
+>>
+>> As reported in [1], the hisi-lpc driver has certain issues in handling
+>> logical PIO regions, specifically unregistering regions.
+>>
+>> This series add a method to unregister a logical PIO region, and fixes up
+>> the driver to use them.
+>>
+>> RCU usage in logical PIO code looks to always have been broken, so that
+>> is fixed also. This is not a major fix as the list which RCU protects is
+>> very rarely modified.
+>>
+>> There is another patch to simplify logical PIO registration, made possible
+>> by the fixes.
+>>
+>> At this point, there are still separate ongoing discussions about how to
+>> stop the logical PIO and PCI host bridge code leaking ranges, as in [2].
+>>
+
+*
+
+>> Hopefully this series can go through the arm soc tree and the maintainers
+>> have no issue with that. I'm talking specifically about the logical PIO
+>> code, which went through PCI tree on only previous upstreaming.
+>>
+>> Cc. linux-pci@vger.kernel.org
+>>
+>> [1] https://lore.kernel.org/lkml/1560770148-57960-1-git-send-email-john.garry@huawei.com/
+>> [2] https://lore.kernel.org/lkml/4b24fd36-e716-7c5e-31cc-13da727802e7@huawei.com/
+>>
+>> John Garry (5):
+>>   lib: logic_pio: Fix RCU usage
+>>   lib: logic_pio: Add logic_pio_unregister_range()
+>>   bus: hisi_lpc: Unregister logical PIO range to avoid potential
+>>     use-after-free
+>>   bus: hisi_lpc: Add .remove method to avoid driver unbind crash
+>>   lib: logic_pio: Enforce LOGIC_PIO_INDIRECT region ops are set at
+>>     registration
+>>
+>>  drivers/bus/hisi_lpc.c    | 43 ++++++++++++++++++---
+>>  include/linux/logic_pio.h |  1 +
+>>  lib/logic_pio.c           | 78 ++++++++++++++++++++++++++++-----------
+>>  3 files changed, 95 insertions(+), 27 deletions(-)
+>>
+>> --
+>> 2.17.1
+>>
+>
+> .
+>
+
+
