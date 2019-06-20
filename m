@@ -1,153 +1,245 @@
 Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: *
-X-Spam-Status: No, score=1.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_MUTT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Level: 
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCDEDC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2787C48BDF
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:15:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953F920861
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:07:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7DFB5218D0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 00:15:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1560989223;
-	bh=YL28p8L9qQa4dUrTgNweJYXcbWPqhialAu3ZRQY1mfA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nDK72bb6HoUQVMa/7GulYCl6vjwFGvnNqUYfge9xDMBs+WikJsKQmDAw/8qF+zMRg
-	 rYYHQvb+qwsZp29wEU1fhxkMfp2zQWyLKyocB2l/tiUtdGEsW8jK+t6O4mpIBF8Hru
-	 5Zcpktxv+B1TjCubV5bY07d+xe4SLGdgrp3fF0+8=
+	s=default; t=1560989730;
+	bh=Cyw3CS4Us7cHDynulRLePwpLSsuY8ho08g4vXgTjDFM=;
+	h=In-Reply-To:References:To:From:Subject:Cc:Date:List-ID:From;
+	b=adSbGTKnrbaGErF6z2MLSnr4kyv42N8lhAJLypJPtHpU+fqgJyIOAxmO2m60YkXBJ
+	 Aj7jLcnNWMbEe6J8MedLmszHibKAF+rGuqMT5XStopmbczDI2xInLs0gfTxyRRO42u
+	 Ho8nkaxzuFfg4wvAuz7MZoqduhb+zITWooLWXfaU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730840AbfFTAHC (ORCPT
+        id S1730855AbfFTAP3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 19 Jun 2019 20:07:02 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:32793 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726496AbfFTAHC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 19 Jun 2019 20:07:02 -0400
-Received: by mail-pf1-f193.google.com with SMTP id x15so565160pfq.0;
-        Wed, 19 Jun 2019 17:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tLscf1pWbMquOzqm/J0PSG0c2NdqnQuLxzCnDb2eYKE=;
-        b=LGGsheo7k/szhAcyit449LNmwFUNGBlCPBve+8d9w8NQmjKy8LZb3bEIyYp8zTx7GY
-         y8bNrlvbOQsTKus6jOOFD8m0repNnpEsS1QMi9eCzx4ynWPJfXfvfHMGzGBK/zfWpnoE
-         kkLp3/8Hb0HdwgWFrOj+eirfIt1ExGnWwjZBR8/lBHse87ltyZmSxs2letpM3wIWst/Y
-         r3HRxg2CmuJCobJ2IXjwaS5HDKyYjnXktaiJ7hmFqAbRLDNj4/Um1EOV+/47d0H6KVoN
-         jDWHMmc5uhQJhd2L6E1JCwJIgDFBWCKBwWEP3K2KI+7N3xQi12TaGiZOgnX346Z80Nvk
-         lDkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tLscf1pWbMquOzqm/J0PSG0c2NdqnQuLxzCnDb2eYKE=;
-        b=tIL8Kewfg8bP/KyYC5SKdR9uksDTa24k5F9BFH63uAczwC9eMGBdZZMkRcrPDG+rcM
-         vxgLUKcljOfW7qyFTaUbpthLEo0lP04Fr8dy9/vQUXCvrIrVhECKNtMeKKhePrnC+2OF
-         4srLC7ajZbiUt8xnc506enyBWP5clBwCj9y6Y6hFaKt9rTR1CoD5gJJq974u+xFBjdkc
-         C/Lz5SAyYxcfTkiJtmQ+ZtAH9q2Z9k4DmWu9v1CS7GTjrM2LJppwNZ/UpK5ADFp1DRlU
-         1+PQtN4Agk6wz8Ajtb9icgDZwOjo5YYBDh1mc7ezBqHvUkCKshJN2G1y4h6Efv2c2gVz
-         Cgig==
-X-Gm-Message-State: APjAAAWjxUI4XVYcB6tl19LaORitUb9uH50llvZHItrnkM3x0ERpOKbk
-        wvirHCuqE1C3yijRNohOEXU=
-X-Google-Smtp-Source: APXvYqz3yRevnnWG6vliI4MqUARyAvpZ1qqe+X6lRv1JTMqjQ+2wW1mbJbQSVZQhA+DtqpVDpXqeOw==
-X-Received: by 2002:a17:90b:d82:: with SMTP id bg2mr14244364pjb.87.1560989221216;
-        Wed, 19 Jun 2019 17:07:01 -0700 (PDT)
-Received: from google.com ([122.38.223.241])
-        by smtp.gmail.com with ESMTPSA id r4sm2574657pjd.28.2019.06.19.17.06.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 19 Jun 2019 17:06:59 -0700 (PDT)
-Date:   Thu, 20 Jun 2019 09:06:51 +0900
-From:   Minchan Kim <minchan@kernel.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>, linux-api@vger.kernel.org,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Tim Murray <timmurray@google.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Suren Baghdasaryan <surenb@google.com>,
-        Daniel Colascione <dancol@google.com>,
-        Shakeel Butt <shakeelb@google.com>,
-        Sonny Rao <sonnyrao@google.com>,
-        Brian Geffon <bgeffon@google.com>, jannh@google.com,
-        oleg@redhat.com, christian@brauner.io, oleksandr@redhat.com,
-        hdanton@sina.com, lizeb@google.com
-Subject: Re: [PATCH v2 1/5] mm: introduce MADV_COLD
-Message-ID: <20190620000650.GB52978@google.com>
-References: <20190610111252.239156-1-minchan@kernel.org>
- <20190610111252.239156-2-minchan@kernel.org>
- <20190619125611.GO2968@dhcp22.suse.cz>
+        Wed, 19 Jun 2019 20:15:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56078 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726479AbfFTAP2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 19 Jun 2019 20:15:28 -0400
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 93426218BE;
+        Thu, 20 Jun 2019 00:15:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1560989726;
+        bh=Cyw3CS4Us7cHDynulRLePwpLSsuY8ho08g4vXgTjDFM=;
+        h=In-Reply-To:References:To:From:Subject:Cc:Date:From;
+        b=uxkDxyYpF7laGQMQdbheNapqj0FQjS0o/hFsG69mDV7yMnicTh9sX+q1GYO8mfbwg
+         E1z69sHUGBcQdsi2WlYDYbSc4B2+s17Nz6qJQoCAMJgUsjAbryk7FV2ai2kP081uXc
+         0hRlrWl2NbES9/L1UjKNP/E97FgjeS8RMgUcodoM=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619125611.GO2968@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190617082613.109131-2-brendanhiggins@google.com>
+References: <20190617082613.109131-1-brendanhiggins@google.com> <20190617082613.109131-2-brendanhiggins@google.com>
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        frowand.list@gmail.com, gregkh@linuxfoundation.org,
+        jpoimboe@redhat.com, keescook@google.com,
+        kieran.bingham@ideasonboard.com, mcgrof@kernel.org,
+        peterz@infradead.org, robh@kernel.org, shuah@kernel.org,
+        tytso@mit.edu, yamada.masahiro@socionext.com
+From:   Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v5 01/18] kunit: test: add KUnit test runner core
+Cc:     devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        kunit-dev@googlegroups.com, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-um@lists.infradead.org,
+        Alexander.Levin@microsoft.com, Tim.Bird@sony.com,
+        amir73il@gmail.com, dan.carpenter@oracle.com, daniel@ffwll.ch,
+        jdike@addtoit.com, joel@jms.id.au, julia.lawall@lip6.fr,
+        khilman@baylibre.com, knut.omang@oracle.com, logang@deltatee.com,
+        mpe@ellerman.id.au, pmladek@suse.com, rdunlap@infradead.org,
+        richard@nod.at, rientjes@google.com, rostedt@goodmis.org,
+        wfg@linux.intel.com, Brendan Higgins <brendanhiggins@google.com>
+User-Agent: alot/0.8.1
+Date:   Wed, 19 Jun 2019 17:15:25 -0700
+Message-Id: <20190620001526.93426218BE@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Jun 19, 2019 at 02:56:12PM +0200, Michal Hocko wrote:
-> On Mon 10-06-19 20:12:48, Minchan Kim wrote:
-> > When a process expects no accesses to a certain memory range, it could
-> > give a hint to kernel that the pages can be reclaimed when memory pressure
-> > happens but data should be preserved for future use.  This could reduce
-> > workingset eviction so it ends up increasing performance.
-> > 
-> > This patch introduces the new MADV_COLD hint to madvise(2) syscall.
-> > MADV_COLD can be used by a process to mark a memory range as not expected
-> > to be used in the near future. The hint can help kernel in deciding which
-> > pages to evict early during memory pressure.
-> > 
-> > It works for every LRU pages like MADV_[DONTNEED|FREE]. IOW, It moves
-> > 
-> > 	active file page -> inactive file LRU
-> > 	active anon page -> inacdtive anon LRU
-> > 
-> > Unlike MADV_FREE, it doesn't move active anonymous pages to inactive
-> > file LRU's head because MADV_COLD is a little bit different symantic.
-> > MADV_FREE means it's okay to discard when the memory pressure because
-> > the content of the page is *garbage* so freeing such pages is almost zero
-> > overhead since we don't need to swap out and access afterward causes just
-> > minor fault. Thus, it would make sense to put those freeable pages in
-> > inactive file LRU to compete other used-once pages. It makes sense for
-> > implmentaion point of view, too because it's not swapbacked memory any
-> > longer until it would be re-dirtied. Even, it could give a bonus to make
-> > them be reclaimed on swapless system. However, MADV_COLD doesn't mean
-> > garbage so reclaiming them requires swap-out/in in the end so it's bigger
-> > cost. Since we have designed VM LRU aging based on cost-model, anonymous
-> > cold pages would be better to position inactive anon's LRU list, not file
-> > LRU. Furthermore, it would help to avoid unnecessary scanning if system
-> > doesn't have a swap device. Let's start simpler way without adding
-> > complexity at this moment.
-> 
-> I would only add that it is a caveat that workloads with a lot of page
-> cache are likely to ignore MADV_COLD on anonymous memory because we
-> rarely age anonymous LRU lists.
+Quoting Brendan Higgins (2019-06-17 01:25:56)
+> diff --git a/kunit/test.c b/kunit/test.c
+> new file mode 100644
+> index 0000000000000..d05d254f1521f
+> --- /dev/null
+> +++ b/kunit/test.c
+> @@ -0,0 +1,210 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Base unit test (KUnit) API.
+> + *
+> + * Copyright (C) 2019, Google LLC.
+> + * Author: Brendan Higgins <brendanhiggins@google.com>
+> + */
+> +
+> +#include <linux/sched/debug.h>
+> +#include <kunit/test.h>
+> +
+> +static bool kunit_get_success(struct kunit *test)
+> +{
+> +       unsigned long flags;
+> +       bool success;
+> +
+> +       spin_lock_irqsave(&test->lock, flags);
+> +       success =3D test->success;
+> +       spin_unlock_irqrestore(&test->lock, flags);
 
-Okay, I will add some more.
+I still don't understand the locking scheme in this code. Is the
+intention to make getter and setter APIs that are "safe" by adding in a
+spinlock that is held around getting and setting various members in the
+kunit structure?
 
-> 
-> [...]
-> > +static int madvise_cold_pte_range(pmd_t *pmd, unsigned long addr,
-> > +				unsigned long end, struct mm_walk *walk)
-> > +{
-> 
-> This is duplicating a large part of madvise_free_pte_range with some
-> subtle differences which are not explained anywhere (e.g. why does
-> madvise_free_huge_pmd need try_lock on a page while not here? etc.).
+In what situation is there more than one thread reading or writing the
+kunit struct? Isn't it only a single process that is going to be
+operating on this structure? And why do we need to disable irqs? Are we
+expecting to be modifying the unit tests from irq contexts?
 
-madvise_free_huge_pmd handle dirty bit but this is not.
+> +
+> +       return success;
+> +}
+> +
+> +static void kunit_set_success(struct kunit *test, bool success)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&test->lock, flags);
+> +       test->success =3D success;
+> +       spin_unlock_irqrestore(&test->lock, flags);
+> +}
+> +
+> +static int kunit_vprintk_emit(int level, const char *fmt, va_list args)
+> +{
+> +       return vprintk_emit(0, level, NULL, 0, fmt, args);
+> +}
+> +
+> +static int kunit_printk_emit(int level, const char *fmt, ...)
+> +{
+> +       va_list args;
+> +       int ret;
+> +
+> +       va_start(args, fmt);
+> +       ret =3D kunit_vprintk_emit(level, fmt, args);
+> +       va_end(args);
+> +
+> +       return ret;
+> +}
+> +
+> +static void kunit_vprintk(const struct kunit *test,
+> +                         const char *level,
+> +                         struct va_format *vaf)
+> +{
+> +       kunit_printk_emit(level[1] - '0', "\t# %s: %pV", test->name, vaf);
+> +}
+> +
+> +static bool kunit_has_printed_tap_version;
 
-> 
-> Why cannot we reuse a large part of that code and differ essentially on
-> the reclaim target check and action? Have you considered to consolidate
-> the code to share as much as possible? Maybe that is easier said than
-> done because the devil is always in details...
+Can you please move this into function local scope in the function
+below?
 
-Yub, it was not pretty when I tried. Please see last patch in this
-patchset.
+> +
+> +static void kunit_print_tap_version(void)
+> +{
+> +       if (!kunit_has_printed_tap_version) {
+> +               kunit_printk_emit(LOGLEVEL_INFO, "TAP version 14\n");
+> +               kunit_has_printed_tap_version =3D true;
+> +       }
+> +}
+> +
+[...]
+> +
+> +static bool kunit_module_has_succeeded(struct kunit_module *module)
+> +{
+> +       const struct kunit_case *test_case;
+> +       bool success =3D true;
+> +
+> +       for (test_case =3D module->test_cases; test_case->run_case; test_=
+case++)
+> +               if (!test_case->success) {
+> +                       success =3D false;
+> +                       break;
+
+Why not 'return false'?
+
+> +               }
+> +
+> +       return success;
+
+And 'return true'?
+
+> +}
+> +
+> +static size_t kunit_module_counter =3D 1;
+> +
+> +static void kunit_print_subtest_end(struct kunit_module *module)
+> +{
+> +       kunit_print_ok_not_ok(false,
+> +                             kunit_module_has_succeeded(module),
+> +                             kunit_module_counter++,
+> +                             module->name);
+> +}
+> +
+> +static void kunit_print_test_case_ok_not_ok(struct kunit_case *test_case,
+> +                                           size_t test_number)
+> +{
+> +       kunit_print_ok_not_ok(true,
+> +                             test_case->success,
+> +                             test_number,
+> +                             test_case->name);
+> +}
+> +
+> +void kunit_init_test(struct kunit *test, const char *name)
+> +{
+> +       spin_lock_init(&test->lock);
+> +       test->name =3D name;
+> +       test->success =3D true;
+> +}
+> +
+> +/*
+> + * Performs all logic to run a test case.
+> + */
+> +static void kunit_run_case(struct kunit_module *module,
+> +                          struct kunit_case *test_case)
+> +{
+> +       struct kunit test;
+> +       int ret =3D 0;
+> +
+> +       kunit_init_test(&test, test_case->name);
+> +
+> +       if (module->init) {
+> +               ret =3D module->init(&test);
+> +               if (ret) {
+> +                       kunit_err(&test, "failed to initialize: %d\n", re=
+t);
+> +                       kunit_set_success(&test, false);
+> +                       return;
+> +               }
+> +       }
+> +
+> +       if (!ret)
+> +               test_case->run_case(&test);
+
+Do we need this if condition? ret can only be set to non-zero above but
+then we'll exit the function early so it seems unnecessary. Given that,
+ret should probably be moved into the module->init path.
+
+> +
+> +       if (module->exit)
+> +               module->exit(&test);
+> +
+> +       test_case->success =3D kunit_get_success(&test);
+> +}
+> +
