@@ -2,52 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E9BDC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 420E6C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DB44206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:23:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DBC020656
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055035;
-	bh=GdAVIKAYlmrnV5ik0UioPxBb+s+7a4Cqaxt58ExCFrg=;
+	s=default; t=1561055040;
+	bh=zvsQHEQrbPmKZmAkc5S6MyI8MPMNsddpk2Wdqz91InE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tL1GmHPp3MX3IPK8hhMemcR7f99K95ol8Qp4rahmVvTARtbOd2hi6WPdqCE0b/y5X
-	 AA8ik+cyypl10IP4wekzsfFKw5QDokrBQ1dq/wnnPXpYuWB7k8A/vTMXCMp+GI4BNs
-	 s5/n6Pyppctt1YZ0eP22yjSjKydg04aLvCrzo5pU=
+	b=nfcAEii9RrJk1H6nqBk8zOM6MJiCuQLaisj25U29OEjGzK+SX7A01FUSB4ZuyScUB
+	 ZVvWVrII42benz7FdHWKKkDEgf+a4UNaNW4B5w0ezSXk2nhx1btBhuV75ZhnfOxfs2
+	 K478gwEMkN3mZCSGEHwjHCVSrq04mbcPAjI5UQJI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728125AbfFTSXx (ORCPT
+        id S1728816AbfFTSX6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:23:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36250 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:23:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36166 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728521AbfFTSIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:51 -0400
+        id S1727901AbfFTSIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 71C4E2082C;
-        Thu, 20 Jun 2019 18:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9AEC22082C;
+        Thu, 20 Jun 2019 18:08:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054129;
-        bh=GdAVIKAYlmrnV5ik0UioPxBb+s+7a4Cqaxt58ExCFrg=;
+        s=default; t=1561054124;
+        bh=zvsQHEQrbPmKZmAkc5S6MyI8MPMNsddpk2Wdqz91InE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LUMOkmgwL1lRF5H5mPdtJ5xUK+bImZeDQsmPyDqzhJiSlwjaq8qAzHFqLolD+FBnu
-         gcxmcba8AefXfUOZxnEqo3aSPQinT28ToiOxY3hcGndjS7fxjNYpPsGRiP5WNo60Jw
-         fNDFi7tomWyNr0s2S/+MsxCuix/tcKHU+CmiLzLg=
+        b=qfwImR6sBA8Rox4bovQ2eVTLFWTJ/56m+wwrDLffJTqmlqDBhczoixoRjoDfNnPMi
+         Xn+Avy3N2wyRI6iLN/ddtOS/Yp3Lt+SXuu44lgZMP+o72H5YDeeXll6oBCCPshaW2E
+         ZssGxIJcQoNm5PB3VJI9IOtuozq6MAk8gdPLVQVM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        stable@vger.kernel.org, Taehee Yoo <ap420073@gmail.com>,
+        Greg Rose <gvrose8192@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 09/45] sunhv: Fix device naming inconsistency between sunhv_console and sunhv_reg
-Date:   Thu, 20 Jun 2019 19:57:11 +0200
-Message-Id: <20190620174333.195180327@linuxfoundation.org>
+Subject: [PATCH 4.14 07/45] net: openvswitch: do not free vport if register_netdevice() is failed.
+Date:   Thu, 20 Jun 2019 19:57:09 +0200
+Message-Id: <20190620174332.459843313@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -60,61 +60,108 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+From: Taehee Yoo <ap420073@gmail.com>
 
-[ Upstream commit 07a6d63eb1b54b5fb38092780fe618dfe1d96e23 ]
+[ Upstream commit 309b66970ee2abf721ecd0876a48940fa0b99a35 ]
 
-In d5a2aa24, the name in struct console sunhv_console was changed from "ttyS"
-to "ttyHV" while the name in struct uart_ops sunhv_pops remained unchanged.
+In order to create an internal vport, internal_dev_create() is used and
+that calls register_netdevice() internally.
+If register_netdevice() fails, it calls dev->priv_destructor() to free
+private data of netdev. actually, a private data of this is a vport.
 
-This results in the hypervisor console device to be listed as "ttyHV0" under
-/proc/consoles while the device node is still named "ttyS0":
+Hence internal_dev_create() should not free and use a vport after failure
+of register_netdevice().
 
-root@osaka:~# cat /proc/consoles
-ttyHV0               -W- (EC p  )    4:64
-tty0                 -WU (E     )    4:1
-root@osaka:~# readlink /sys/dev/char/4:64
-../../devices/root/f02836f0/f0285690/tty/ttyS0
-root@osaka:~#
+Test command
+    ovs-dpctl add-dp bonding_masters
 
-This means that any userland code which tries to determine the name of the
-device file of the hypervisor console device can not rely on the information
-provided by /proc/consoles. In particular, booting current versions of debian-
-installer inside a SPARC LDOM will fail with the installer unable to determine
-the console device.
+Splat looks like:
+[ 1035.667767] kasan: GPF could be caused by NULL-ptr deref or user memory access
+[ 1035.675958] general protection fault: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
+[ 1035.676916] CPU: 1 PID: 1028 Comm: ovs-vswitchd Tainted: G    B             5.2.0-rc3+ #240
+[ 1035.676916] RIP: 0010:internal_dev_create+0x2e5/0x4e0 [openvswitch]
+[ 1035.676916] Code: 48 c1 ea 03 80 3c 02 00 0f 85 9f 01 00 00 4c 8b 23 48 b8 00 00 00 00 00 fc ff df 49 8d bc 24 60 05 00 00 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 86 01 00 00 49 8b bc 24 60 05 00 00 e8 e4 68 f4
+[ 1035.713720] RSP: 0018:ffff88810dcb7578 EFLAGS: 00010206
+[ 1035.713720] RAX: dffffc0000000000 RBX: ffff88810d13fe08 RCX: ffffffff84297704
+[ 1035.713720] RDX: 00000000000000ac RSI: 0000000000000000 RDI: 0000000000000560
+[ 1035.713720] RBP: 00000000ffffffef R08: fffffbfff0d3b881 R09: fffffbfff0d3b881
+[ 1035.713720] R10: 0000000000000001 R11: fffffbfff0d3b880 R12: 0000000000000000
+[ 1035.768776] R13: 0000607ee460b900 R14: ffff88810dcb7690 R15: ffff88810dcb7698
+[ 1035.777709] FS:  00007f02095fc980(0000) GS:ffff88811b400000(0000) knlGS:0000000000000000
+[ 1035.777709] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[ 1035.777709] CR2: 00007ffdf01d2f28 CR3: 0000000108258000 CR4: 00000000001006e0
+[ 1035.777709] Call Trace:
+[ 1035.777709]  ovs_vport_add+0x267/0x4f0 [openvswitch]
+[ 1035.777709]  new_vport+0x15/0x1e0 [openvswitch]
+[ 1035.777709]  ovs_vport_cmd_new+0x567/0xd10 [openvswitch]
+[ 1035.777709]  ? ovs_dp_cmd_dump+0x490/0x490 [openvswitch]
+[ 1035.777709]  ? __kmalloc+0x131/0x2e0
+[ 1035.777709]  ? genl_family_rcv_msg+0xa54/0x1030
+[ 1035.777709]  genl_family_rcv_msg+0x63a/0x1030
+[ 1035.777709]  ? genl_unregister_family+0x630/0x630
+[ 1035.841681]  ? debug_show_all_locks+0x2d0/0x2d0
+[ ... ]
 
-After renaming the device in struct uart_ops sunhv_pops to "ttyHV" as well,
-the inconsistency is fixed and it is possible again to determine the name
-of the device file of the hypervisor console device by reading the contents
-of /proc/console:
-
-root@osaka:~# cat /proc/consoles
-ttyHV0               -W- (EC p  )    4:64
-tty0                 -WU (E     )    4:1
-root@osaka:~# readlink /sys/dev/char/4:64
-../../devices/root/f02836f0/f0285690/tty/ttyHV0
-root@osaka:~#
-
-With this change, debian-installer works correctly when installing inside
-a SPARC LDOM.
-
-Signed-off-by: John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>
+Fixes: cf124db566e6 ("net: Fix inconsistent teardown and release of private netdev state.")
+Signed-off-by: Taehee Yoo <ap420073@gmail.com>
+Reviewed-by: Greg Rose <gvrose8192@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/tty/serial/sunhv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/openvswitch/vport-internal_dev.c |   18 ++++++++++++------
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
---- a/drivers/tty/serial/sunhv.c
-+++ b/drivers/tty/serial/sunhv.c
-@@ -396,7 +396,7 @@ static const struct uart_ops sunhv_pops
- static struct uart_driver sunhv_reg = {
- 	.owner			= THIS_MODULE,
- 	.driver_name		= "sunhv",
--	.dev_name		= "ttyS",
-+	.dev_name		= "ttyHV",
- 	.major			= TTY_MAJOR,
- };
+--- a/net/openvswitch/vport-internal_dev.c
++++ b/net/openvswitch/vport-internal_dev.c
+@@ -176,7 +176,9 @@ static struct vport *internal_dev_create
+ {
+ 	struct vport *vport;
+ 	struct internal_dev *internal_dev;
++	struct net_device *dev;
+ 	int err;
++	bool free_vport = true;
  
+ 	vport = ovs_vport_alloc(0, &ovs_internal_vport_ops, parms);
+ 	if (IS_ERR(vport)) {
+@@ -184,8 +186,9 @@ static struct vport *internal_dev_create
+ 		goto error;
+ 	}
+ 
+-	vport->dev = alloc_netdev(sizeof(struct internal_dev),
+-				  parms->name, NET_NAME_USER, do_setup);
++	dev = alloc_netdev(sizeof(struct internal_dev),
++			   parms->name, NET_NAME_USER, do_setup);
++	vport->dev = dev;
+ 	if (!vport->dev) {
+ 		err = -ENOMEM;
+ 		goto error_free_vport;
+@@ -207,8 +210,10 @@ static struct vport *internal_dev_create
+ 
+ 	rtnl_lock();
+ 	err = register_netdevice(vport->dev);
+-	if (err)
++	if (err) {
++		free_vport = false;
+ 		goto error_unlock;
++	}
+ 
+ 	dev_set_promiscuity(vport->dev, 1);
+ 	rtnl_unlock();
+@@ -218,11 +223,12 @@ static struct vport *internal_dev_create
+ 
+ error_unlock:
+ 	rtnl_unlock();
+-	free_percpu(vport->dev->tstats);
++	free_percpu(dev->tstats);
+ error_free_netdev:
+-	free_netdev(vport->dev);
++	free_netdev(dev);
+ error_free_vport:
+-	ovs_vport_free(vport);
++	if (free_vport)
++		ovs_vport_free(vport);
+ error:
+ 	return ERR_PTR(err);
+ }
 
 
