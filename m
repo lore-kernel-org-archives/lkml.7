@@ -2,52 +2,53 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34CB0C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65A3BC43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1489521655
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40ED621670
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:09:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054170;
-	bh=qtChJM3wYi/nDsqYmpo+7UfEXTZggKGl/B6JxWKoYI8=;
+	s=default; t=1561054173;
+	bh=hU/XKIgyhH2fnofM7PEoGVSvOloK2zg+F/1i7rd4Nhc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=k9pBvMZAk2qC9ZxHLr28gKnJx1A6kO/twJ5FiA4hP13zXJwXnFZhD469TE7bBt3qy
-	 xwUR5VcSE9CY1ND5Pa7McE5gdwaqOBaBcXpmTkzHxAt55W2cmCLg5Ds2Kc3l+wHs/P
-	 QzzImdQ2qTP5dR1QEiSI9c60mwBFopPjGeEyk/EQ=
+	b=WzOpqncHZEyHFhypAG+/g/BW4AFzJ8eMNihQK3FHpE7kl0nTccYt0hByyJhIOW9w4
+	 fXrM9uy5/Tqu4th50HwWgdqINuVXhDawKEyNg16KfVqaP468nJBdGnr89jlUTmnoN2
+	 Yh/uExFVJ+H5+VRU44PiO95AemTkvRzw+pgcuzEk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728650AbfFTSJ3 (ORCPT
+        id S1728659AbfFTSJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:09:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36868 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:09:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36930 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727024AbfFTSJ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:09:26 -0400
+        id S1728437AbfFTSJ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:09:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6418521530;
-        Thu, 20 Jun 2019 18:09:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 88D47214AF;
+        Thu, 20 Jun 2019 18:09:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054164;
-        bh=qtChJM3wYi/nDsqYmpo+7UfEXTZggKGl/B6JxWKoYI8=;
+        s=default; t=1561054167;
+        bh=hU/XKIgyhH2fnofM7PEoGVSvOloK2zg+F/1i7rd4Nhc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Hk+YRO9fOwt6dmniPmhtTSJNsF8Y5swZy5YtZskpzVIsH+M0vsYCJawiWLQOk4zk2
-         IiuJCsTqNENZZwRJsYVyoMStmzhE5hSr2Gn/xh4ZF1tPpJimkMLYnZ+ZDSUT2tGWk7
-         WpffWapydmHDzu8znnQuX6xaY6EjUp5uy3mFxVic=
+        b=ET39pQfTOTwBjbdQGz8Ja98c6mKuVG5rEBEhzdkfIM/5qYmfLxmY4aAWi4MtiRBz8
+         NpjgjPME3PmW2swRaJRyesKmmNrBI6QElzVWiXiSg7rTGaJ+ARRULx1QxarXbSpaHs
+         zuRpKVFwGa3Mrl4zhTsAdRevWaqVNvNy6lzvHY6Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jason Gerecke <jason.gerecke@wacom.com>,
-        Aaron Armstrong Skomra <aaron.skomra@wacom.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Subject: [PATCH 4.14 41/45] HID: wacom: Dont report anything prior to the tool entering range
-Date:   Thu, 20 Jun 2019 19:57:43 +0200
-Message-Id: <20190620174340.808229807@linuxfoundation.org>
+        stable@vger.kernel.org, Igor Russkikh <igor.russkikh@aquantia.com>,
+        Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 24/45] net: aquantia: fix LRO with FCS error
+Date:   Thu, 20 Jun 2019 19:57:26 +0200
+Message-Id: <20190620174338.017113815@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -60,60 +61,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gerecke <jason.gerecke@wacom.com>
+[ Upstream commit eaeb3b7494ba9159323814a8ce8af06a9277d99b ]
 
-commit e92a7be7fe5b2510fa60965eaf25f9e3dc08b8cc upstream.
+Driver stops producing skbs on ring if a packet with FCS error
+was coalesced into LRO session. Ring gets hang forever.
 
-If the tool spends some time in prox before entering range, a series of
-events (e.g. ABS_DISTANCE, MSC_SERIAL) can be sent before we or userspace
-have any clue about the pen whose data is being reported. We need to hold
-off on reporting anything until the pen has entered range. Since we still
-want to report events that occur "in prox" after the pen has *left* range
-we use 'wacom-tool[0]' as the indicator that the pen did at one point
-enter range and provide us/userspace with tool type and serial number
-information.
+Thats a logical error in driver processing descriptors:
+When rx_stat indicates MAC Error, next pointer and eop flags
+are not filled. This confuses driver so it waits for descriptor 0
+to be filled by HW.
 
-Fixes: a48324de6d4d ("HID: wacom: Bluetooth IRQ for Intuos Pro should handle prox/range")
-Cc: <stable@vger.kernel.org> # 4.11+
-Signed-off-by: Jason Gerecke <jason.gerecke@wacom.com>
-Reviewed-by: Aaron Armstrong Skomra <aaron.skomra@wacom.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Solution is fill next pointer and eop flag even for packets with FCS error.
 
+Fixes: bab6de8fd180b ("net: ethernet: aquantia: Atlantic A0 and B0 specific functions.")
+Signed-off-by: Igor Russkikh <igor.russkikh@aquantia.com>
+Signed-off-by: Dmitry Bogdanov <dmitry.bogdanov@aquantia.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/hid/wacom_wac.c |   20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+ .../aquantia/atlantic/hw_atl/hw_atl_b0.c      | 61 ++++++++++---------
+ 1 file changed, 32 insertions(+), 29 deletions(-)
 
---- a/drivers/hid/wacom_wac.c
-+++ b/drivers/hid/wacom_wac.c
-@@ -1271,17 +1271,19 @@ static void wacom_intuos_pro2_bt_pen(str
- 			input_report_abs(pen_input, ABS_Z, rotation);
- 			input_report_abs(pen_input, ABS_WHEEL, get_unaligned_le16(&frame[11]));
- 		}
--		input_report_abs(pen_input, ABS_PRESSURE, get_unaligned_le16(&frame[5]));
--		input_report_abs(pen_input, ABS_DISTANCE, range ? frame[13] : wacom->features.distance_max);
-+		if (wacom->tool[0]) {
-+			input_report_abs(pen_input, ABS_PRESSURE, get_unaligned_le16(&frame[5]));
-+			input_report_abs(pen_input, ABS_DISTANCE, range ? frame[13] : wacom->features.distance_max);
- 
--		input_report_key(pen_input, BTN_TOUCH, frame[0] & 0x01);
--		input_report_key(pen_input, BTN_STYLUS, frame[0] & 0x02);
--		input_report_key(pen_input, BTN_STYLUS2, frame[0] & 0x04);
-+			input_report_key(pen_input, BTN_TOUCH, frame[0] & 0x01);
-+			input_report_key(pen_input, BTN_STYLUS, frame[0] & 0x02);
-+			input_report_key(pen_input, BTN_STYLUS2, frame[0] & 0x04);
- 
--		input_report_key(pen_input, wacom->tool[0], prox);
--		input_event(pen_input, EV_MSC, MSC_SERIAL, wacom->serial[0]);
--		input_report_abs(pen_input, ABS_MISC,
--				 wacom_intuos_id_mangle(wacom->id[0])); /* report tool id */
-+			input_report_key(pen_input, wacom->tool[0], prox);
-+			input_event(pen_input, EV_MSC, MSC_SERIAL, wacom->serial[0]);
-+			input_report_abs(pen_input, ABS_MISC,
-+					 wacom_intuos_id_mangle(wacom->id[0])); /* report tool id */
+diff --git a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+index f4b3554b0b67..236325f48ec9 100644
+--- a/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
++++ b/drivers/net/ethernet/aquantia/atlantic/hw_atl/hw_atl_b0.c
+@@ -683,38 +683,41 @@ static int hw_atl_b0_hw_ring_rx_receive(struct aq_hw_s *self,
+ 		if (is_err || rxd_wb->type & 0x1000U) {
+ 			/* status error or DMA error */
+ 			buff->is_error = 1U;
+-		} else {
+-			if (self->aq_nic_cfg->is_rss) {
+-				/* last 4 byte */
+-				u16 rss_type = rxd_wb->type & 0xFU;
+-
+-				if (rss_type && rss_type < 0x8U) {
+-					buff->is_hash_l4 = (rss_type == 0x4 ||
+-					rss_type == 0x5);
+-					buff->rss_hash = rxd_wb->rss_hash;
+-				}
++		}
++		if (self->aq_nic_cfg->is_rss) {
++			/* last 4 byte */
++			u16 rss_type = rxd_wb->type & 0xFU;
++
++			if (rss_type && rss_type < 0x8U) {
++				buff->is_hash_l4 = (rss_type == 0x4 ||
++				rss_type == 0x5);
++				buff->rss_hash = rxd_wb->rss_hash;
+ 			}
 +		}
  
- 		wacom->shared->stylus_in_proximity = prox;
- 
+-			if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
+-				buff->len = rxd_wb->pkt_len %
+-					AQ_CFG_RX_FRAME_MAX;
+-				buff->len = buff->len ?
+-					buff->len : AQ_CFG_RX_FRAME_MAX;
+-				buff->next = 0U;
+-				buff->is_eop = 1U;
++		if (HW_ATL_B0_RXD_WB_STAT2_EOP & rxd_wb->status) {
++			buff->len = rxd_wb->pkt_len %
++				AQ_CFG_RX_FRAME_MAX;
++			buff->len = buff->len ?
++				buff->len : AQ_CFG_RX_FRAME_MAX;
++			buff->next = 0U;
++			buff->is_eop = 1U;
++		} else {
++			buff->len =
++				rxd_wb->pkt_len > AQ_CFG_RX_FRAME_MAX ?
++				AQ_CFG_RX_FRAME_MAX : rxd_wb->pkt_len;
++
++			if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
++				rxd_wb->status) {
++				/* LRO */
++				buff->next = rxd_wb->next_desc_ptr;
++				++ring->stats.rx.lro_packets;
+ 			} else {
+-				if (HW_ATL_B0_RXD_WB_STAT2_RSCCNT &
+-					rxd_wb->status) {
+-					/* LRO */
+-					buff->next = rxd_wb->next_desc_ptr;
+-					++ring->stats.rx.lro_packets;
+-				} else {
+-					/* jumbo */
+-					buff->next =
+-						aq_ring_next_dx(ring,
+-								ring->hw_head);
+-					++ring->stats.rx.jumbo_packets;
+-				}
++				/* jumbo */
++				buff->next =
++					aq_ring_next_dx(ring,
++							ring->hw_head);
++				++ring->stats.rx.jumbo_packets;
+ 			}
+ 		}
+ 	}
+-- 
+2.20.1
+
 
 
