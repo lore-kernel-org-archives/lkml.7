@@ -2,152 +2,112 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CB70C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B1A9C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B8572147A
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Nulylrgy"
+	by mail.kernel.org (Postfix) with ESMTP id 54B962147A
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 06:17:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730559AbfFTGRe (ORCPT
+        id S1730605AbfFTGRi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 02:17:34 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35369 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725872AbfFTGRe (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 02:17:34 -0400
-Received: by mail-io1-f68.google.com with SMTP id m24so186052ioo.2
-        for <linux-kernel@vger.kernel.org>; Wed, 19 Jun 2019 23:17:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=from:references:in-reply-to:mime-version:thread-index:date
-         :message-id:subject:to:cc;
-        bh=mtli3rBvWIToeUr29Uw+Ypdz0JV5neJvf4CS556KrxE=;
-        b=NulylrgyQaHJls93qgYUS6gchWZBQuVNjK0XX5s+yZYBluAT7ANsFeWjDQbYSpguGL
-         JRVnkaHsN6ksyUxAWDaFFaEsicKKE+JA/f0mEyTlNK/ayBZkIgmtuhpZ8eBcqmNdir0i
-         XgHJ3FCYTbtg3iKw6k3//5WGRQPWmgeoEtCbE=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:references:in-reply-to:mime-version
-         :thread-index:date:message-id:subject:to:cc;
-        bh=mtli3rBvWIToeUr29Uw+Ypdz0JV5neJvf4CS556KrxE=;
-        b=hEfnfjGnAuiZC66W7GDI2nd4CGn5MfK6edk6ydhA1auuhwzM9ZlNJCS0c4wLIeKXyd
-         3CHgEraojuUvMRBPSeqc9Wb/AOmYN34H5UpXYXaJA2HMFp9F+S7Q5fn66pbDSUvv+KFO
-         +JKJyLTcINa5PxUfxk6JG6o6UdL6rl5qDDuFLr0gtU9FyqFu/1Vhu+Ea4OqrDfNedAH8
-         MkHG/q5hhPmHoqPjTTdaadFE/MkRvItc9oCpvj4T4aMnhsLG5wW0cgU2C++dzND0L3u1
-         lSOVt0Mr4a9wzxzlAK/mNNHncisRzyzwTdwx+Nj7hHf+InzW0hdF2+gT0CxCEar1KE0J
-         ifJg==
-X-Gm-Message-State: APjAAAViVyTm59V5LGDoLVqAu9Yi08Q+/YmecBtSYOJ++FxsYaNKF83Q
-        dX/qHaLuaIwXSqrl8S3fQgIgJrk4Av73UIm/SamfDQ==
-X-Google-Smtp-Source: APXvYqzO8Y0ucXarVWi9Uatq6tK9bmPYC+5T+Y98XJfchKmWQ39MK3nAL9+TrQFImzlpZIcOrMz/XkDik4kq2kIiXWc=
-X-Received: by 2002:a5d:9b1a:: with SMTP id y26mr13527500ion.238.1561011453186;
- Wed, 19 Jun 2019 23:17:33 -0700 (PDT)
-From:   Kashyap Desai <kashyap.desai@broadcom.com>
-References: <20190617122000.22181-1-hch@lst.de> <20190617122000.22181-2-hch@lst.de>
- <CACVXFVOwCeM2JzefBpKsVZrEaWpSBR0DF8qp4oKfoHm+pwLBYw@mail.gmail.com>
-In-Reply-To: <CACVXFVOwCeM2JzefBpKsVZrEaWpSBR0DF8qp4oKfoHm+pwLBYw@mail.gmail.com>
+        Thu, 20 Jun 2019 02:17:38 -0400
+Received: from mga17.intel.com ([192.55.52.151]:18366 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725872AbfFTGRh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 02:17:37 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 19 Jun 2019 23:17:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.63,395,1557212400"; 
+   d="scan'208";a="168426635"
+Received: from linux.intel.com ([10.54.29.200])
+  by FMSMGA003.fm.intel.com with ESMTP; 19 Jun 2019 23:17:36 -0700
+Received: from xyang32-mobl.amr.corp.intel.com (unknown [10.252.27.214])
+        by linux.intel.com (Postfix) with ESMTP id 6C453580418;
+        Wed, 19 Jun 2019 23:17:34 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH v2 09/11] ASoC: Intel: hdac_hdmi: Set ops to
+ NULL on remove
+To:     Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        =?UTF-8?Q?Amadeusz_S=c5=82awi=c5=84ski?= 
+        <amadeuszx.slawinski@linux.intel.com>
+Cc:     Cezary Rojewski <cezary.rojewski@intel.com>,
+        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>, Mark Brown <broonie@kernel.org>
+References: <20190617113644.25621-1-amadeuszx.slawinski@linux.intel.com>
+ <20190617113644.25621-10-amadeuszx.slawinski@linux.intel.com>
+ <75be86354032f4886cbaf7d430de2aa89eaab573.camel@linux.intel.com>
+ <20190618130015.0fc388b4@xxx>
+ <bd8855a7ab7a9958113631b76706120fd4427631.camel@linux.intel.com>
+ <20190619103859.15bf51c5@xxx>
+ <0c939329d17c50c353acacf164583ba259a775c0.camel@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <26946ff4-1c91-a7e0-4354-132cbd06235a@linux.intel.com>
+Date:   Thu, 20 Jun 2019 08:17:33 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.1
 MIME-Version: 1.0
-X-Mailer: Microsoft Outlook 15.0
-Thread-Index: AQJRkq8kgUxIwCwNEXeP0B3fyGmx3wFs9i1PAgoiQ2Wlj4BA8A==
-Date:   Thu, 20 Jun 2019 11:47:29 +0530
-Message-ID: <6dd62da3ba56142d4a67bc207aa55a59@mail.gmail.com>
-Subject: RE: [PATCH 1/8] scsi: add a host / host template field for the virt boundary
-To:     Ming Lei <tom.leiming@gmail.com>, Christoph Hellwig <hch@lst.de>
-Cc:     "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        Max Gurtovoy <maxg@mellanox.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        linux-rdma <linux-rdma@vger.kernel.org>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        PDL-MPT-FUSIONLINUX <mpt-fusionlinux.pdl@broadcom.com>,
-        linux-hyperv@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Kashyap Desai <kashyap.desai@broadcom.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <0c939329d17c50c353acacf164583ba259a775c0.camel@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: megaraidlinux.pdl@broadcom.com
-> [mailto:megaraidlinux.pdl@broadcom.com] On Behalf Of Ming Lei
-> Sent: Tuesday, June 18, 2019 6:05 AM
-> To: Christoph Hellwig <hch@lst.de>
-> Cc: Martin K . Petersen <martin.petersen@oracle.com>; Sagi Grimberg
-> <sagi@grimberg.me>; Max Gurtovoy <maxg@mellanox.com>; Bart Van
-> Assche <bvanassche@acm.org>; linux-rdma <linux-rdma@vger.kernel.org>;
-> Linux SCSI List <linux-scsi@vger.kernel.org>;
-> megaraidlinux.pdl@broadcom.com; MPT-FusionLinux.pdl@broadcom.com;
-> linux-hyperv@vger.kernel.org; Linux Kernel Mailing List <linux-
-> kernel@vger.kernel.org>
-> Subject: Re: [PATCH 1/8] scsi: add a host / host template field for the
-> virt
-> boundary
->
-> On Mon, Jun 17, 2019 at 8:21 PM Christoph Hellwig <hch@lst.de> wrote:
-> >
-> > This allows drivers setting it up easily instead of branching out to
-> > block layer calls in slave_alloc, and ensures the upgraded
-> > max_segment_size setting gets picked up by the DMA layer.
-> >
-> > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > ---
-> >  drivers/scsi/hosts.c     | 3 +++
-> >  drivers/scsi/scsi_lib.c  | 3 ++-
-> >  include/scsi/scsi_host.h | 3 +++
-> >  3 files changed, 8 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/scsi/hosts.c b/drivers/scsi/hosts.c index
-> > ff0d8c6a8d0c..55522b7162d3 100644
-> > --- a/drivers/scsi/hosts.c
-> > +++ b/drivers/scsi/hosts.c
-> > @@ -462,6 +462,9 @@ struct Scsi_Host *scsi_host_alloc(struct
-> scsi_host_template *sht, int privsize)
-> >         else
-> >                 shost->dma_boundary = 0xffffffff;
-> >
-> > +       if (sht->virt_boundary_mask)
-> > +               shost->virt_boundary_mask = sht->virt_boundary_mask;
-> > +
-> >         device_initialize(&shost->shost_gendev);
-> >         dev_set_name(&shost->shost_gendev, "host%d", shost->host_no);
-> >         shost->shost_gendev.bus = &scsi_bus_type; diff --git
-> > a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c index
-> > 65d0a10c76ad..d333bb6b1c59 100644
-> > --- a/drivers/scsi/scsi_lib.c
-> > +++ b/drivers/scsi/scsi_lib.c
-> > @@ -1775,7 +1775,8 @@ void __scsi_init_queue(struct Scsi_Host *shost,
-> struct request_queue *q)
-> >         dma_set_seg_boundary(dev, shost->dma_boundary);
-> >
-> >         blk_queue_max_segment_size(q, shost->max_segment_size);
-> > -       dma_set_max_seg_size(dev, shost->max_segment_size);
-> > +       blk_queue_virt_boundary(q, shost->virt_boundary_mask);
-> > +       dma_set_max_seg_size(dev, queue_max_segment_size(q));
->
-> The patch looks fine, also suggest to make sure that max_segment_size is
-> block-size aligned, and un-aligned max segment size has caused trouble on
-> mmc.
 
-I validated changes on latest and few older series controllers.
-Post changes, I noticed max_segment_size is updated.
-find /sys/ -name max_segment_size  |grep sdb |xargs grep -r .
-/sys/devices/pci0000:3a/0000:3a:00.0/0000:3b:00.0/0000:3c:04.0/0000:40:00.0/0000:41:00.0/0000:42:00.0/host0/target0:2:12/0:2:12:0/block/sdb/queue/max_segment_size:4294967295
+>>>>> Could you please give a bit more context on what error you see
+>>>>> when this happens?
+>>>>
+>>>> Hi,
+>>>>
+>>>> I get Oops. This is what happens with all other patches in this
+>>>> series and only this one reverted:
+>>>>
+>>>> root@APL:~# rmmod snd_soc_sst_bxt_rt298
+>>>> root@APL:~# rmmod snd_soc_hdac_hdmi
+>>>> root@APL:~# rmmod snd_soc_skl
+>>>
+>>> Thanks, Amadeusz. I think the order in which the drivers are
+>>> removed
+>>> is what's causing the oops in your case. With SOF, the order we
+>>> remove is
+>>>
+>>> 1. rmmod sof_pci_dev
+>>> 2. rmmod snd_soc_sst_bxt_rt298
+>>> 3. rmmod snd_soc_hdac_hdmi
+>>>
+>>
+>> Well, there is nothing enforcing the order in which modules can be
+>> unloaded (and I see no reason to force it), as you can see from
+>> following excerpt, you can either start unloading from
+>> snd_soc_sst_bxt_rt298 or snd_soc_skl, and yes if you start from
+>> snd_soc_skl, there is no problem.
 
-I verify that single SGE having 1MB transfer length is working fine.
+there is a fundamental dependency that you are ignoring: the module 
+snd_soc_sst_bxt_rt298 is a machine driver which will be probed when 
+snd_soc_skl creates a platform_device.
+Sure you can remove modules in a different order, but that's a bit of an 
+artificial/academic exercise isn't it?
 
-Acked-by: Kashyap Desai < kashyap.desai@broadcom.com>
+>>
+> I am good with this patch. I just wanted to understand why we werent
+> seeing this error with SOF. Sure, there's nothing enforcing the order
+> in which modules are unloaded  but there must be a logical order for
+> testing purposes.
+> 
+> Pierre, can you please comment on it. I vaguely remember discussing
+> this with you last year.
 
->
-> Thanks,
-> Ming Lei
->
+Our tests remove the modules by taking care of dependencies and it's 
+already unveiled dozens of issues.
+We could add a sequence similar to Amadeusz and unbind the modules which 
+are loaded with the creation of a platform_device (machine driver, 
+dmic), I am just not sure how of useful this would be.
