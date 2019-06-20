@@ -2,90 +2,86 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0B9EC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF173C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:28:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0FC82080D
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:26:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD1D8206E0
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 12:28:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731783AbfFTM0a (ORCPT
+        id S1731670AbfFTM2X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 08:26:30 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45218 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726692AbfFTM03 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:26:29 -0400
-Received: by mail-wr1-f66.google.com with SMTP id f9so2790455wre.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 05:26:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=QS3URIa94SoyJH8ha3lNwqgXEOsXkMKaiakNmwzqQxs=;
-        b=aRBFkCDYDInh+RhgWdA7k5ZAG1p2n39Pdhte23lCk0raE2NRx2bfgSt7Nn55KCUyPz
-         sJVJQd64sTh6864jbjsjKilHsE07qBofXWvQbUcru66+QiQqk5zmT8q2YUOEhLDWoPD0
-         EvDQAjBfCJ2Vwa78v7M4wUY31wYaK767FhAxgfR7ISm/UiO4P6nh0hHy4Xj8Ahsbya1i
-         y2D4J7Akqvn1lmBrvLBbTq9P9AaR1BeZcxpJ8vWQP9oOppuf5+Z5qo80TTzFS5J1C2Kl
-         21km0ZRNDHMVOZp+HrfUovsrWOnhS/gltj4+bHGpeNEAB1RBkP+i28YyknMlpmT5No0I
-         aQTQ==
-X-Gm-Message-State: APjAAAW60ZyrQN5Wg7d2dG3NJJ1OjUBZWA19QocpsF761ppelh6k/Jvu
-        bd4vEbFhOLXc7Vr9HNERGjADpg==
-X-Google-Smtp-Source: APXvYqx1T1KiZH01KAZnyclsZ1tojxpn79SOtdOFjSYgRAOYGyJzWJ+lCez2cSKq+nON0S52mO8EiQ==
-X-Received: by 2002:a5d:56d0:: with SMTP id m16mr38258591wrw.276.1561033587390;
-        Thu, 20 Jun 2019 05:26:27 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id g71sm6548125wmg.7.2019.06.20.05.26.26
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 20 Jun 2019 05:26:26 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jim Mattson <jmattson@google.com>
-Subject: Re: [PATCH RFC 0/5] x86/KVM/svm: get rid of hardcoded instructions lengths
-In-Reply-To: <3515d812-e5dd-4436-b73f-1d64bc93b079@redhat.com>
-References: <20190620110240.25799-1-vkuznets@redhat.com> <3515d812-e5dd-4436-b73f-1d64bc93b079@redhat.com>
-Date:   Thu, 20 Jun 2019 14:26:25 +0200
-Message-ID: <87wohgfnny.fsf@vitty.brq.redhat.com>
+        Thu, 20 Jun 2019 08:28:23 -0400
+Received: from gloria.sntech.de ([185.11.138.130]:45944 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726294AbfFTM2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 08:28:22 -0400
+Received: from ip5f5a6320.dynamic.kabel-deutschland.de ([95.90.99.32] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1hdwAp-0003Td-BK; Thu, 20 Jun 2019 14:28:15 +0200
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Doug Anderson <dianders@chromium.org>
+Cc:     "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Yakir Yang <ykk@rock-chips.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 04/10] ARM: dts: rockchip: add startup delay to rk3288-veyron panel-regulators
+Date:   Thu, 20 Jun 2019 14:28:14 +0200
+Message-ID: <2226970.BAPq4liE1j@diego>
+In-Reply-To: <CAD=FV=U23+5pcze=6zDTx0dAYF8HTmbR8s8zem93VhgYgaZeGQ@mail.gmail.com>
+References: <1458265206-15733-1-git-send-email-heiko@sntech.de> <1458265206-15733-5-git-send-email-heiko@sntech.de> <CAD=FV=U23+5pcze=6zDTx0dAYF8HTmbR8s8zem93VhgYgaZeGQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Paolo Bonzini <pbonzini@redhat.com> writes:
+Hi Doug,
 
-> On 20/06/19 13:02, Vitaly Kuznetsov wrote:
->> 
->> P.S. If you'd like to test the series you'll have to have a CPU without
->> NRIP_SAVE feature or forcefully disable it, something like:
->> 
->> index 8d4e50428b68..93c7eaad7915 100644
->> --- a/arch/x86/kernel/cpu/amd.c
->> +++ b/arch/x86/kernel/cpu/amd.c
->> @@ -922,6 +922,9 @@ static void init_amd(struct cpuinfo_x86 *c)
->>         /* AMD CPUs don't reset SS attributes on SYSRET, Xen does. */
->>         if (!cpu_has(c, X86_FEATURE_XENPV))
->>                 set_cpu_bug(c, X86_BUG_SYSRET_SS_ATTRS);
->> +
->> +       /* No nrips */
->> +       clear_cpu_cap(c, X86_FEATURE_NRIPS);
->>  }
->>  
->>  #ifdef CONFIG_X86_32
+Am Donnerstag, 20. Juni 2019, 03:27:55 CEST schrieb Doug Anderson:
+> On Wed, Fri, 18 Mar 2016 Heiko Stuebner <heiko@sntech.de> wrote:
+> >
+> > The panels need a bit of time to actually turn on. If this isn't
+> > observed, this results in problems when trying talk to the panels
+> > and thus produces detection errors. 100ms seem to be a safe value
+> > for the time being.
+> >
+> > Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> > ---
+> >  arch/arm/boot/dts/rk3288-veyron-jaq.dts    | 1 +
+> >  arch/arm/boot/dts/rk3288-veyron-jerry.dts  | 1 +
+> >  arch/arm/boot/dts/rk3288-veyron-minnie.dts | 1 +
+> >  arch/arm/boot/dts/rk3288-veyron-speedy.dts | 1 +
+> >  4 files changed, 4 insertions(+)
+> 
+> I know it was 3 years ago, but any idea how to reproduce the problems
+> you were seeing without this patch?  I believe the downstream kernel
+> never had any delay like this and I'm not aware of any issues.
 >
-> Let's add a module parameter instead.  Patch sent (forgot to Cc you).
->
+> I wonder if the need for this extra 100 ms delay is no longer there
+> now that we have:
+> 
+> 3157694d8c7f pwm-backlight: Add support for PWM delays proprieties.
+> 5fb5caee92ba pwm-backlight: Enable/disable the PWM before/after LCD
+> enable toggle.
+> 6d5922dd0d60 ARM: dts: rockchip: set PWM delay backlight settings for Veyron
 
-Sure, I thought I'm the only interested person around but if there's
-hope for more this definitely sounds like a good idea)
+I just did a non-scientific test on my jerry+minnie and yes, simply
+reverting that patch does not seem to affect display bringup and I still
+get a prompt.
 
--- 
-Vitaly
+So I guess we could just revert that patch in light of the changes.
+[patches welcome ;-) ]
+
+Heiko
+
+
