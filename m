@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9EDC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDB22C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F1C7C2070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A24BD2084E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054216;
-	bh=U+Fw+56pmtSjJpXkynyZcARIJ3ukFQN6yVeJ/gkDaHU=;
+	s=default; t=1561054220;
+	bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=K8QVQcBuuI4GhEwjDhdxChG81ofqjKNpTDe3Qr4irYSIn40PNnwnaWg/TocDAhauL
-	 IvjpfJbMV1Pg1iC1EzTNyNcvk5CN7d3jQfALvJqnE9tDShrA86spH3bOK1/Ym5o4Sf
-	 ko4EAF/MiEBSZRw+ld5X3xdu6M+zA9W6P/hGg5WE=
+	b=wU+IAa1sOs7Rc/IEJ9fh0flCzxDs+qyhZJ3+n3KC+mdv4aKK8kIy3POKqveXSTY4o
+	 TWwMyRQVYTLbnDlyAh5m4kmHo0U82Vv+p7qg0zs3moYopP+EyOUkN2qJu/TffdJbgO
+	 OMxRzp9u2fTHtB9pUrd9NB/ctSY8tERbJ+oV72w4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728786AbfFTSKO (ORCPT
+        id S1728796AbfFTSKT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:10:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37802 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:10:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37836 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728771AbfFTSKM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:10:12 -0400
+        id S1727982AbfFTSKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:10:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DCC4621530;
-        Thu, 20 Jun 2019 18:10:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7A2322082C;
+        Thu, 20 Jun 2019 18:10:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054211;
-        bh=U+Fw+56pmtSjJpXkynyZcARIJ3ukFQN6yVeJ/gkDaHU=;
+        s=default; t=1561054215;
+        bh=MnLRgpKf8bf7JXa3l3G1EigBR7h3gNLETgMTq6ZJNU8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X9Ll0lnjl0L43mv0VhkqHDn3X5vcGD8j7P74y39mHSxIYu5BQgb2p5rvAr3PjCEiv
-         QhtCdMvdPWF8los65DfKW0qP43klG03qt5Gm59uENOBS85mzkNp9p26J4oHaKriFzs
-         HPMpmFxCPbi5ycO58/c1aQb2V+hlzUE+MsgRz1jM=
+        b=bhSn1y+0YvZ39csa3J+UbRR2ahqhULarDMKkKf2IgRUMuav5QEFJIkPUV/K9pSimB
+         lJvRWgqjVBn1vS/FPjs8fplv7si0Wn0MS3mCr1d0FptGhkY2ECKmp2nfwctU8rBt56
+         N/gUVoYGsRp288JA7z68aDOHx9a+bsK4zGudaRx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        Willem de Bruijn <willemb@google.com>,
+        stable@vger.kernel.org,
+        syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com,
+        Jeremy Sowden <jeremy@azazel.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.19 04/61] ipv6: flowlabel: fl6_sock_lookup() must use atomic_inc_not_zero
-Date:   Thu, 20 Jun 2019 19:56:59 +0200
-Message-Id: <20190620174338.178666754@linuxfoundation.org>
+Subject: [PATCH 4.19 05/61] lapb: fixed leak of control-blocks.
+Date:   Thu, 20 Jun 2019 19:57:00 +0200
+Message-Id: <20190620174338.536691075@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -60,47 +61,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Jeremy Sowden <jeremy@azazel.net>
 
-[ Upstream commit 65a3c497c0e965a552008db8bc2653f62bc925a1 ]
+[ Upstream commit 6be8e297f9bcea666ea85ac7a6cd9d52d6deaf92 ]
 
-Before taking a refcount, make sure the object is not already
-scheduled for deletion.
+lapb_register calls lapb_create_cb, which initializes the control-
+block's ref-count to one, and __lapb_insert_cb, which increments it when
+adding the new block to the list of blocks.
 
-Same fix is needed in ipv6_flowlabel_opt()
+lapb_unregister calls __lapb_remove_cb, which decrements the ref-count
+when removing control-block from the list of blocks, and calls lapb_put
+itself to decrement the ref-count before returning.
 
-Fixes: 18367681a10b ("ipv6 flowlabel: Convert np->ipv6_fl_list to RCU.")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Cc: Willem de Bruijn <willemb@google.com>
+However, lapb_unregister also calls __lapb_devtostruct to look up the
+right control-block for the given net_device, and __lapb_devtostruct
+also bumps the ref-count, which means that when lapb_unregister returns
+the ref-count is still 1 and the control-block is leaked.
+
+Call lapb_put after __lapb_devtostruct to fix leak.
+
+Reported-by: syzbot+afb980676c836b4a0afa@syzkaller.appspotmail.com
+Signed-off-by: Jeremy Sowden <jeremy@azazel.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6_flowlabel.c |    7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ net/lapb/lapb_iface.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/ipv6/ip6_flowlabel.c
-+++ b/net/ipv6/ip6_flowlabel.c
-@@ -254,9 +254,9 @@ struct ip6_flowlabel *fl6_sock_lookup(st
- 	rcu_read_lock_bh();
- 	for_each_sk_fl_rcu(np, sfl) {
- 		struct ip6_flowlabel *fl = sfl->fl;
--		if (fl->label == label) {
-+
-+		if (fl->label == label && atomic_inc_not_zero(&fl->users)) {
- 			fl->lastuse = jiffies;
--			atomic_inc(&fl->users);
- 			rcu_read_unlock_bh();
- 			return fl;
- 		}
-@@ -622,7 +622,8 @@ int ipv6_flowlabel_opt(struct sock *sk,
- 						goto done;
- 					}
- 					fl1 = sfl->fl;
--					atomic_inc(&fl1->users);
-+					if (!atomic_inc_not_zero(&fl1->users))
-+						fl1 = NULL;
- 					break;
- 				}
- 			}
+--- a/net/lapb/lapb_iface.c
++++ b/net/lapb/lapb_iface.c
+@@ -182,6 +182,7 @@ int lapb_unregister(struct net_device *d
+ 	lapb = __lapb_devtostruct(dev);
+ 	if (!lapb)
+ 		goto out;
++	lapb_put(lapb);
+ 
+ 	lapb_stop_t1timer(lapb);
+ 	lapb_stop_t2timer(lapb);
 
 
