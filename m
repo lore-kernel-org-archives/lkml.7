@@ -2,123 +2,88 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBF8C48BE2
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:25:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E429BC48BE2
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:26:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5DF802082C
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:25:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD6342082C
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 09:26:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="vYO8y7Jk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730686AbfFTJZz (ORCPT
+        id S1730765AbfFTJ0p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 05:25:55 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46702 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725875AbfFTJZx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 05:25:53 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 771EBAD76;
-        Thu, 20 Jun 2019 09:25:52 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 13B0E1E434D; Thu, 20 Jun 2019 11:25:52 +0200 (CEST)
-Date:   Thu, 20 Jun 2019 11:25:52 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Ross Zwisler <zwisler@chromium.org>
-Cc:     linux-kernel@vger.kernel.org, Ross Zwisler <zwisler@google.com>,
-        Theodore Ts'o <tytso@mit.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jan Kara <jack@suse.com>, linux-ext4@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Fletcher Woodruff <fletcherw@google.com>,
-        Justin TerAvest <teravest@google.com>
-Subject: Re: [PATCH 1/3] mm: add filemap_fdatawait_range_keep_errors()
-Message-ID: <20190620092552.GK13630@quack2.suse.cz>
-References: <20190619172156.105508-1-zwisler@google.com>
- <20190619172156.105508-2-zwisler@google.com>
+        Thu, 20 Jun 2019 05:26:45 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:45113 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725953AbfFTJ0o (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 05:26:44 -0400
+Received: by mail-yb1-f193.google.com with SMTP id v104so956001ybi.12
+        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 02:26:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=yhqOWcsVMRLUugSeb1eby5Cv08pN53Ic4ZUoxcG3TJo=;
+        b=vYO8y7JkLy+Kw57JCh+SGP9xT4ECOc2Zr9Btu65hng9dKnuiBuZk6CsiLkCq4RBBiE
+         Rt814xsd2FG38spTJAwavWlrASeDrh04YJy6BJV2PJ8gnMbEFt3i07KWpbSr4StC4UMx
+         XczfK91OAASx0SUJsrdUKv4SdNXbPUbAscwoQb0bJuux7Dh4aROJ6g47hv1MQd1ZNkgG
+         1JOi23/ECEeqQaKoBA+/eNJ3TqKAigbaQYavLEKdbP8Nn9w5dY5meIxOtFRztn7dx3xZ
+         d2bTtAubK2N1SigHRkYOEgU1px3bBnd3xTKzPWbMlxtO2pk2g0d0XLAWT5IqLy74MM63
+         9PeA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=yhqOWcsVMRLUugSeb1eby5Cv08pN53Ic4ZUoxcG3TJo=;
+        b=pJA0KHNzr9tVePqGOis/39QmXjY9prbHOCTSIQdSITEKPPZr+E+qrChsatprqzrr/v
+         uWxUTRaPLPCtq6ZB7dDDvL4y6UwfCk0ej0D52ypUL/EyOkrd3PxPv/9lbFt7PbghPHPi
+         QfQb5EV7l5uUJSr10aIeld2jgyi/NNJANNuKuBiu2I1lyoeusmVUiNn4gqGL8mTbgi2s
+         orw+OVBCp492LBENO+K1zY6+VSsiZxtkCYmq1vpKv4PWYAtlTWGBJRJbBjLDDsGxI/H+
+         zvVxx/proCk5T6eXKu04HkOOZUBJXhHUVPWMMcK68N1lHyo0rUpwqnoNJH0x4m3KmO4D
+         mc0w==
+X-Gm-Message-State: APjAAAVWKR0wFrLmfduP2d/UL/cTHHyy5j2UzB7mSqY3AYnYOGKMxL+8
+        perwgQhVWmK3JUDoNVjYVKZ/MjEY90jgtiYd
+X-Google-Smtp-Source: APXvYqySUz1cIJX6NDR8ngA1GjoraRplX/O24N5dzHr1ye9UYfXOj4X5kPzZsGimkTHVjqrgsBpHlQ==
+X-Received: by 2002:a25:cc0a:: with SMTP id l10mr7239938ybf.433.1561022803695;
+        Thu, 20 Jun 2019 02:26:43 -0700 (PDT)
+Received: from ?IPv6:2600:380:5278:90d8:9c74:6b59:c9f5:5bd0? ([2600:380:5278:90d8:9c74:6b59:c9f5:5bd0])
+        by smtp.gmail.com with ESMTPSA id l143sm5657391ywl.107.2019.06.20.02.26.41
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 20 Jun 2019 02:26:42 -0700 (PDT)
+Subject: Re: [PATCH 1/1] blk-core: Remove blk_end_request*() declarations
+To:     "Pavel Begunkov (Silence)" <asml.silence@gmail.com>,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <23ecea9b-7833-5b77-11ae-7e989cc89385@kernel.dk>
+Date:   Thu, 20 Jun 2019 03:26:39 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190619172156.105508-2-zwisler@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8c174fbe05ef879f2443b01e3ffb340a7f524d40.1558626111.git.asml.silence@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 19-06-19 11:21:54, Ross Zwisler wrote:
-> In the spirit of filemap_fdatawait_range() and
-> filemap_fdatawait_keep_errors(), introduce
-> filemap_fdatawait_range_keep_errors() which both takes a range upon
-> which to wait and does not clear errors from the address space.
+On 5/23/19 9:43 AM, Pavel Begunkov (Silence) wrote:
+> From: Pavel Begunkov <asml.silence@gmail.com>
 > 
-> Signed-off-by: Ross Zwisler <zwisler@google.com>
+> Commit a1ce35fa49852db60fc6e268 ("block: remove dead elevator code")
+> deleted blk_end_request() and friends, but some declaration are still
+> left. Purge them.
 
-The patch looks good to me. You can add:
+Applied, thanks.
 
-Reviewed-by: Jan Kara <jack@suse.cz>
-
-								Honza
-
-> ---
->  include/linux/fs.h |  2 ++
->  mm/filemap.c       | 22 ++++++++++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/fs.h b/include/linux/fs.h
-> index f7fdfe93e25d3..79fec8a8413f4 100644
-> --- a/include/linux/fs.h
-> +++ b/include/linux/fs.h
-> @@ -2712,6 +2712,8 @@ extern int filemap_flush(struct address_space *);
->  extern int filemap_fdatawait_keep_errors(struct address_space *mapping);
->  extern int filemap_fdatawait_range(struct address_space *, loff_t lstart,
->  				   loff_t lend);
-> +extern int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
-> +		loff_t start_byte, loff_t end_byte);
->  
->  static inline int filemap_fdatawait(struct address_space *mapping)
->  {
-> diff --git a/mm/filemap.c b/mm/filemap.c
-> index df2006ba0cfa5..e87252ca0835a 100644
-> --- a/mm/filemap.c
-> +++ b/mm/filemap.c
-> @@ -553,6 +553,28 @@ int filemap_fdatawait_range(struct address_space *mapping, loff_t start_byte,
->  }
->  EXPORT_SYMBOL(filemap_fdatawait_range);
->  
-> +/**
-> + * filemap_fdatawait_range_keep_errors - wait for writeback to complete
-> + * @mapping:		address space structure to wait for
-> + * @start_byte:		offset in bytes where the range starts
-> + * @end_byte:		offset in bytes where the range ends (inclusive)
-> + *
-> + * Walk the list of under-writeback pages of the given address space in the
-> + * given range and wait for all of them.  Unlike filemap_fdatawait_range(),
-> + * this function does not clear error status of the address space.
-> + *
-> + * Use this function if callers don't handle errors themselves.  Expected
-> + * call sites are system-wide / filesystem-wide data flushers: e.g. sync(2),
-> + * fsfreeze(8)
-> + */
-> +int filemap_fdatawait_range_keep_errors(struct address_space *mapping,
-> +		loff_t start_byte, loff_t end_byte)
-> +{
-> +	__filemap_fdatawait_range(mapping, start_byte, end_byte);
-> +	return filemap_check_and_keep_errors(mapping);
-> +}
-> +EXPORT_SYMBOL(filemap_fdatawait_range_keep_errors);
-> +
->  /**
->   * file_fdatawait_range - wait for writeback to complete
->   * @file:		file pointing to address space structure to wait for
-> -- 
-> 2.22.0.410.gd8fdbe21b5-goog
-> 
-> 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+Jens Axboe
+
