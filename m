@@ -2,60 +2,52 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D088FC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E328C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AFCF7206BF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0961720665
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:24:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561055059;
-	bh=AOopMpyt+2oZqr3lLZIV/QnUU1rTLquw7MUNmK3R80Q=;
+	s=default; t=1561055066;
+	bh=5g4ElFNDCPyJ9TdYepS3uPQ5YhDdovUUaE1ZRrmnZNM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=X6Z/0drivqUgNOJuY8BjAD8dicxU3qrkhWtVIqCNgEBnzDftLFH0pM3ulBCW0p6ou
-	 lxqSBmTa/b1z5DzWHAJTYxv4ajdBeDf8M/IkdSa26Hk+iverMscoI0vhuaf6LqSx04
-	 AkfToO8WH/nycNpWGvJqR8SJnGqBn2icpOz6eNWk=
+	b=LWCmmeYv75GbihpoFs/XRxoTVpgZf/7lLCu9CxoA6xp2tn8Ynlbw+8VUDP0d7tBDp
+	 Es7IzFnSQhk7FGiFO2DCpYrxGl4tqDTCEcaF3O9u2BmnFdM4M0jk05rAsnq31oJ0ki
+	 smgWXNiLm8Xh9AA0FdnPjNGb3nI67urcie0oFRbY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728505AbfFTSIh (ORCPT
+        id S1728951AbfFTSYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:08:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35842 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:24:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36014 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728475AbfFTSI1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:08:27 -0400
+        id S1728104AbfFTSIg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:08:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5538A21530;
-        Thu, 20 Jun 2019 18:08:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C8022084E;
+        Thu, 20 Jun 2019 18:08:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054106;
-        bh=AOopMpyt+2oZqr3lLZIV/QnUU1rTLquw7MUNmK3R80Q=;
+        s=default; t=1561054115;
+        bh=5g4ElFNDCPyJ9TdYepS3uPQ5YhDdovUUaE1ZRrmnZNM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zOxsZbfA0rwuIw1zE5vcVRLU1v8tyHTxJpgX2NHSNOILHVGQktAc3P9Amqa94kp9r
-         aDb5vd04cARJtGvjhddb697PG8eA8ziSMZT1l+nn5CQWnmNWg7/BOOG4lRQBC2C9c1
-         /X9ziLd3sO/6jAFw/9banjFxsCwhdllejsIjOkqI=
+        b=mM/Uqnu0auq8sN2H57lqTPLZrXyTEmQcx3I9qG2wZUnABtbLXOOwxeN1d823jlo6G
+         pwlrYOorgVqt2K8ufMgTn98yvx8NUam9AJdApTP20S5myhqBeU5QOqLYmJ3fYnhp/8
+         4Yac35tVRU+T9oTjkzG9GobYu9YvO/ejNKUlsbrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yabin Cui <yabinc@google.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>, acme@kernel.org,
-        mark.rutland@arm.com, namhyung@kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 20/45] perf/ring_buffer: Add ordering to rb->nest increment
-Date:   Thu, 20 Jun 2019 19:57:22 +0200
-Message-Id: <20190620174336.626599680@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 04/45] ipv6: flowlabel: fl6_sock_lookup() must use atomic_inc_not_zero
+Date:   Thu, 20 Jun 2019 19:57:06 +0200
+Message-Id: <20190620174330.882005177@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174328.608036501@linuxfoundation.org>
 References: <20190620174328.608036501@linuxfoundation.org>
@@ -68,60 +60,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 3f9fbe9bd86c534eba2faf5d840fd44c6049f50e ]
+From: Eric Dumazet <edumazet@google.com>
 
-Similar to how decrementing rb->next too early can cause data_head to
-(temporarily) be observed to go backward, so too can this happen when
-we increment too late.
+[ Upstream commit 65a3c497c0e965a552008db8bc2653f62bc925a1 ]
 
-This barrier() ensures the rb->head load happens after the increment,
-both the one in the 'goto again' path, as the one from
-perf_output_get_handle() -- albeit very unlikely to matter for the
-latter.
+Before taking a refcount, make sure the object is not already
+scheduled for deletion.
 
-Suggested-by: Yabin Cui <yabinc@google.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: mark.rutland@arm.com
-Cc: namhyung@kernel.org
-Fixes: ef60777c9abd ("perf: Optimize the perf_output() path by removing IRQ-disables")
-Link: http://lkml.kernel.org/r/20190517115418.309516009@infradead.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Same fix is needed in ipv6_flowlabel_opt()
+
+Fixes: 18367681a10b ("ipv6 flowlabel: Convert np->ipv6_fl_list to RCU.")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Cc: Willem de Bruijn <willemb@google.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- kernel/events/ring_buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ net/ipv6/ip6_flowlabel.c |    7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/events/ring_buffer.c b/kernel/events/ring_buffer.c
-index fde853270c09..aef2af80a927 100644
---- a/kernel/events/ring_buffer.c
-+++ b/kernel/events/ring_buffer.c
-@@ -49,6 +49,15 @@ static void perf_output_put_handle(struct perf_output_handle *handle)
- 	unsigned long head;
- 
- again:
-+	/*
-+	 * In order to avoid publishing a head value that goes backwards,
-+	 * we must ensure the load of @rb->head happens after we've
-+	 * incremented @rb->nest.
-+	 *
-+	 * Otherwise we can observe a @rb->head value before one published
-+	 * by an IRQ/NMI happening between the load and the increment.
-+	 */
-+	barrier();
- 	head = local_read(&rb->head);
- 
- 	/*
--- 
-2.20.1
-
+--- a/net/ipv6/ip6_flowlabel.c
++++ b/net/ipv6/ip6_flowlabel.c
+@@ -254,9 +254,9 @@ struct ip6_flowlabel *fl6_sock_lookup(st
+ 	rcu_read_lock_bh();
+ 	for_each_sk_fl_rcu(np, sfl) {
+ 		struct ip6_flowlabel *fl = sfl->fl;
+-		if (fl->label == label) {
++
++		if (fl->label == label && atomic_inc_not_zero(&fl->users)) {
+ 			fl->lastuse = jiffies;
+-			atomic_inc(&fl->users);
+ 			rcu_read_unlock_bh();
+ 			return fl;
+ 		}
+@@ -623,7 +623,8 @@ int ipv6_flowlabel_opt(struct sock *sk,
+ 						goto done;
+ 					}
+ 					fl1 = sfl->fl;
+-					atomic_inc(&fl1->users);
++					if (!atomic_inc_not_zero(&fl1->users))
++						fl1 = NULL;
+ 					break;
+ 				}
+ 			}
 
 
