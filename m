@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 367F4C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A02C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CE062070B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D241D215EA
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:07:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054062;
-	bh=wqRuvHsdQIPV8/iiixZaPrIr9KS31Vvl5y2qzikkCTU=;
+	s=default; t=1561054065;
+	bh=GNAkOgeppAFJLfe8olWqbUZabhusjg8Ki6Qhz2n1N0Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gwVa9F+LYDsxLi+BFoR9HIgkvriFHl5FH5GtfapCYi2cR3E+docEQYkVCLTg8XNY3
-	 v5uMJoE3pYyB8cphiyiXsZ8aSfO7GAoVGrwXInduvSA0vpyQNSOB5LsqYiY89adtde
-	 yytG7IQMxHFP2O1OgfloXdIc/HBFbPBO7hY5WJW4=
+	b=gb8kd3VDcCz3/moTusSFtuFnwlyZeYSnK4eMAk3dL6X+aOMjVmGHI3TQGiohZiUPB
+	 uA4aipidnfMbgB0Cip3t2SBvv5OHlnFx0mEZdHavQKB76h9M2szeW0wtnguHeibh5R
+	 paAmc6nDiDm0jxWxf8/BdSrqnRDe2pi23AyC8oLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfFTSHk (ORCPT
+        id S1728365AbfFTSHo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:07:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34326 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:07:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727510AbfFTSHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:07:39 -0400
+        id S1727510AbfFTSHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:07:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ABA82084E;
-        Thu, 20 Jun 2019 18:07:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 407682089C;
+        Thu, 20 Jun 2019 18:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054058;
-        bh=wqRuvHsdQIPV8/iiixZaPrIr9KS31Vvl5y2qzikkCTU=;
+        s=default; t=1561054060;
+        bh=GNAkOgeppAFJLfe8olWqbUZabhusjg8Ki6Qhz2n1N0Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WBCWx8SKuMacBpasTzezGer5Vf3N8RTxOJFgRzMp2+4zTNNHDo9Krta6cCs2wtsBY
-         HYjpKuzm8bNOrv6gnp2CDKUHJm4I4my3H4PCfyDjM4zzTalT7zKecXPzp06FJ4qh8r
-         YYCS8Xw5s2wLN9XwE75I50wSlKf9DKujPM7uOATI=
+        b=U5mJizWGHACK24+lr7H/bTGDy9bniRjzxY++xYtgRSaxRyfwdGHM9n3T1hk1S0Eq2
+         yAZOJ3Gt+b+6uB7g7Xg/4tNV4brGFpUjqFVTRWnV4N6lmzD+m8OCiU2dOnQExwNNx+
+         EIr92U3OFONnLFnsEXR8SKT12epCMHK9Nkfe0miY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
+        stable@vger.kernel.org, Lianbo Jiang <lijiang@redhat.com>,
+        Don Brace <don.brace@microsemi.com>,
         "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 113/117] scsi: libcxgbi: add a check for NULL pointer in cxgbi_check_route()
-Date:   Thu, 20 Jun 2019 19:57:27 +0200
-Message-Id: <20190620174358.274189329@linuxfoundation.org>
+Subject: [PATCH 4.9 114/117] scsi: smartpqi: properly set both the DMA mask and the coherent DMA mask
+Date:   Thu, 20 Jun 2019 19:57:28 +0200
+Message-Id: <20190620174358.309462542@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174351.964339809@linuxfoundation.org>
 References: <20190620174351.964339809@linuxfoundation.org>
@@ -60,32 +61,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cc555759117e8349088e0c5d19f2f2a500bafdbd ]
+[ Upstream commit 1d94f06e7f5df4064ef336b7b710f50143b64a53 ]
 
-ip_dev_find() can return NULL so add a check for NULL pointer.
+When SME is enabled, the smartpqi driver won't work on the HP DL385 G10
+machine, which causes the failure of kernel boot because it fails to
+allocate pqi error buffer. Please refer to the kernel log:
+....
+[    9.431749] usbcore: registered new interface driver uas
+[    9.441524] Microsemi PQI Driver (v1.1.4-130)
+[    9.442956] i40e 0000:04:00.0: fw 6.70.48768 api 1.7 nvm 10.2.5
+[    9.447237] smartpqi 0000:23:00.0: Microsemi Smart Family Controller found
+         Starting dracut initqueue hook...
+[  OK  ] Started Show Plymouth Boot Scre[    9.471654] Broadcom NetXtreme-C/E driver bnxt_en v1.9.1
+en.
+[  OK  ] Started Forward Password Requests to Plymouth Directory Watch.
+[[0;[    9.487108] smartpqi 0000:23:00.0: failed to allocate PQI error buffer
+....
+[  139.050544] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
+[  139.589779] dracut-initqueue[949]: Warning: dracut-initqueue timeout - starting timeout scripts
 
-Signed-off-by: Varun Prakash <varun@chelsio.com>
+Basically, the fact that the coherent DMA mask value wasn't set caused the
+driver to fall back to SWIOTLB when SME is active.
+
+For correct operation, lets call the dma_set_mask_and_coherent() to
+properly set the mask for both streaming and coherent, in order to inform
+the kernel about the devices DMA addressing capabilities.
+
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+Acked-by: Don Brace <don.brace@microsemi.com>
+Tested-by: Don Brace <don.brace@microsemi.com>
 Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/cxgbi/libcxgbi.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/scsi/smartpqi/smartpqi_init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/scsi/cxgbi/libcxgbi.c b/drivers/scsi/cxgbi/libcxgbi.c
-index 2ffe029ff2b6..e974106f2bb5 100644
---- a/drivers/scsi/cxgbi/libcxgbi.c
-+++ b/drivers/scsi/cxgbi/libcxgbi.c
-@@ -637,6 +637,10 @@ static struct cxgbi_sock *cxgbi_check_route(struct sockaddr *dst_addr)
+diff --git a/drivers/scsi/smartpqi/smartpqi_init.c b/drivers/scsi/smartpqi/smartpqi_init.c
+index 06a062455404..b12f7f952b70 100644
+--- a/drivers/scsi/smartpqi/smartpqi_init.c
++++ b/drivers/scsi/smartpqi/smartpqi_init.c
+@@ -5478,7 +5478,7 @@ static int pqi_pci_init(struct pqi_ctrl_info *ctrl_info)
+ 	else
+ 		mask = DMA_BIT_MASK(32);
  
- 	if (ndev->flags & IFF_LOOPBACK) {
- 		ndev = ip_dev_find(&init_net, daddr->sin_addr.s_addr);
-+		if (!ndev) {
-+			err = -ENETUNREACH;
-+			goto rel_neigh;
-+		}
- 		mtu = ndev->mtu;
- 		pr_info("rt dev %s, loopback -> %s, mtu %u.\n",
- 			n->dev->name, ndev->name, mtu);
+-	rc = dma_set_mask(&ctrl_info->pci_dev->dev, mask);
++	rc = dma_set_mask_and_coherent(&ctrl_info->pci_dev->dev, mask);
+ 	if (rc) {
+ 		dev_err(&ctrl_info->pci_dev->dev, "failed to set DMA mask\n");
+ 		goto disable_device;
 -- 
 2.20.1
 
