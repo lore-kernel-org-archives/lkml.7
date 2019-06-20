@@ -2,123 +2,90 @@ Return-Path: <SRS0=KBKa=UT=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9624CC43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:47:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B86C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:47:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ED712083B
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:47:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="Oit0hFLJ"
+	by mail.kernel.org (Postfix) with ESMTP id 193AA2083B
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 14:47:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731671AbfFTOrC (ORCPT
+        id S1731779AbfFTOrg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 10:47:02 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45981 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726921AbfFTOrA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 10:47:00 -0400
-Received: by mail-wr1-f67.google.com with SMTP id f9so3290302wre.12
-        for <linux-kernel@vger.kernel.org>; Thu, 20 Jun 2019 07:46:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oyyHT2lwIblI7pqbXaGA8lthaH3RzK0tbWj+O93TtPs=;
-        b=Oit0hFLJiNyL9EMSEqexEcPXKgySrpANwU0lVIrg7hHPpm+tC6du8Xwa0nqH+37qDB
-         kVnMVGC2CbL6Xo8bWlAAVR7wzML9t8QatRqDQ9OFvVXs8Ko1+a2DqPqv5O4Ae9CpT+VH
-         CbZvW0Kzy524h244pqvDUS9FQfHcOgiejizU+DFkR3HOW4UPSp9Oy74e8/nSVk/+vl+E
-         zqte5zaoEnGWau1/BoAmgAm3CQ1P1GfPd1/gkdEKfe3BGnWbyX0Fr5oitGvMIrPOVtvf
-         0K5V1191mLtxlfVEZTgf3fAhq9Kj5m5n6y8+WbvdikSJNUNP5cceEUwEbjc+YrwUl9oe
-         8vkw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=oyyHT2lwIblI7pqbXaGA8lthaH3RzK0tbWj+O93TtPs=;
-        b=Ybhd0JwTUTf4SaQzlQaVxIl8DlICT9SEqzj+f79v8wxbYCtlKrshexgU5dypMq47b+
-         uHjI1VFUd+RUteq7xsz/x2n5x+kYT+VrKmXOWZ4p8Twwj2yAbJhKYTc/kqHcOwHgYjAA
-         lh6v6rc142MZoaIgPbgvhXEFfeLzhj9nCVQ4+YhNVl1B5Cw++lkSvOOqFPoJ+n+9E6Qn
-         LHtBDAbISx95L6g/bjL8FtnnFH2n8TIqt4CAOWqFC/nC8p3l+X3l12OGPkcFOQRfRK7W
-         0S6p/2g1YpN/33kYnd4lt2MDVyMIe9ZCfg3Bt7HCc4ld0PTAmPZMGaHN5qX5wQvKFCiR
-         AT+Q==
-X-Gm-Message-State: APjAAAWs4bAxh5Hgb9Y8aaA8JnbbY/8HnbiqVd7n1HL9c7oznh+Al/Th
-        TodWwOC90h908V5ZN9Im0+EGVQ==
-X-Google-Smtp-Source: APXvYqw3Z7uKmbYj8tHPoxZ0pdtdU567UPfWnhCzUL9GENblV9yERFF+nmh7LNw95ZafmmZ9x2hYuA==
-X-Received: by 2002:adf:e442:: with SMTP id t2mr17566195wrm.286.1561042018342;
-        Thu, 20 Jun 2019 07:46:58 -0700 (PDT)
-Received: from bender.baylibre.local (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id i25sm11297806wrc.91.2019.06.20.07.46.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Thu, 20 Jun 2019 07:46:57 -0700 (PDT)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     thierry.reding@gmail.com
-Cc:     Neil Armstrong <narmstrong@baylibre.com>,
-        linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org,
-        martin.blumenstingl@googlemail.com
-Subject: [PATCH] pwm: meson: fix the G12A AO clock parents order
-Date:   Thu, 20 Jun 2019 16:46:55 +0200
-Message-Id: <20190620144655.2142-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.21.0
+        Thu, 20 Jun 2019 10:47:36 -0400
+Received: from mga07.intel.com ([134.134.136.100]:31936 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726649AbfFTOrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 10:47:36 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 20 Jun 2019 07:47:35 -0700
+X-IronPort-AV: E=Sophos;i="5.63,397,1557212400"; 
+   d="scan'208";a="168536316"
+Received: from tzanussi-mobl.amr.corp.intel.com (HELO [10.251.131.111]) ([10.251.131.111])
+  by fmsmga003-auth.fm.intel.com with ESMTP/TLS/AES256-SHA; 20 Jun 2019 07:47:35 -0700
+Subject: Re: No invalid histogram error
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>
+References: <20190620211737.993b09619af1fc58222549b4@kernel.org>
+From:   "Zanussi, Tom" <tom.zanussi@linux.intel.com>
+Message-ID: <27753f6a-9467-4dd0-d1b6-db75e577e693@linux.intel.com>
+Date:   Thu, 20 Jun 2019 09:47:25 -0500
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.1
 MIME-Version: 1.0
+In-Reply-To: <20190620211737.993b09619af1fc58222549b4@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Amlogic G12A and G12B Documentation is wrong, the AO xtal and clk81
-clock source order is reversed, and validated when adding DVFS support by
-using the PWM AO D output to control the CPU supply voltage.
+Hi Masami,
 
-The vendor tree also uses the reversed xtal and clk81 order at [1].
+On 6/20/2019 7:17 AM, Masami Hiramatsu wrote:
+> Hi Tom,
+>
+> I'm trying to use histogram on a synthetic event, but faced an odd situation.
+>
+> There is a synthetic event, which has foo and bar.
+>
+> /sys/kernel/debug/tracing # cat synthetic_events
+> testevent	int foo; int bar
+>
+> And when I tried to add hist on trigger, both foo and bar can be used as below.
+>
+> /sys/kernel/debug/tracing # echo "hist:keys=bar" > events/synthetic/testevent/trigger
+> /sys/kernel/debug/tracing # echo "hist:keys=foo" > events/synthetic/testevent/trigger
+>
+> And, when I missed to specify the sort key, it failed
+>
+> /sys/kernel/debug/tracing # echo "hist:keys=foo:sort=bar" > events/synthetic/testevent/trigger
+> sh: write error: Invalid argument
+>
+> But no error on error_log file.
+>
+> /sys/kernel/debug/tracing # cat error_log
+> /sys/kernel/debug/tracing #
+>
+> Could you add some error message? What about below?
+>
+> [ 5422.134656] hist:synthetic:testevent: error: Sort key must be one of keys.
+>    Command: keys=foo;sort=bar
+>                                 ^
 
-[1] https://github.com/hardkernel/linux/blob/odroidn2-4.9.y/drivers/amlogic/pwm/pwm_meson.c#L462
 
-Fixes: f41efceb46e6 ("pwm: meson: Add clock source configuration for Meson G12A")
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- drivers/pwm/pwm-meson.c | 13 +++++++++++--
- 1 file changed, 11 insertions(+), 2 deletions(-)
+Sure, I'll submit a fix for this.  Thanks for pointing it out.
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 5e65b042c240..e15d045947bb 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -453,8 +453,17 @@ static const struct meson_pwm_data pwm_axg_ao_data = {
- 	.num_parents = ARRAY_SIZE(pwm_axg_ao_parent_names),
- };
- 
-+static const char * const pwm_g12a_ao_ab_parent_names[] = {
-+	"xtal", "aoclk81", "fclk_div4", "fclk_div5"
-+};
-+
-+static const struct meson_pwm_data pwm_g12a_ao_ab_data = {
-+	.parent_names = pwm_g12a_ao_ab_parent_names,
-+	.num_parents = ARRAY_SIZE(pwm_g12a_ao_ab_parent_names),
-+};
-+
- static const char * const pwm_g12a_ao_cd_parent_names[] = {
--	"aoclk81", "xtal",
-+	"xtal", "aoclk81",
- };
- 
- static const struct meson_pwm_data pwm_g12a_ao_cd_data = {
-@@ -498,7 +507,7 @@ static const struct of_device_id meson_pwm_matches[] = {
- 	},
- 	{
- 		.compatible = "amlogic,meson-g12a-ao-pwm-ab",
--		.data = &pwm_axg_ao_data
-+		.data = &pwm_g12a_ao_ab_data
- 	},
- 	{
- 		.compatible = "amlogic,meson-g12a-ao-pwm-cd",
--- 
-2.21.0
 
+Tom
+
+
+> Thank you,
+>
+>
