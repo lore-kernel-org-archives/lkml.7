@@ -5,51 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57E34C43613
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B002C43613
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E503214AF
-	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F81A2166E
+	for <linux-kernel@archiver.kernel.org>; Thu, 20 Jun 2019 18:10:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1561054242;
-	bh=Iz+s5FrWakQFdWSwoRfCM8MiMavQPXKCX7ztijiLTUI=;
+	s=default; t=1561054244;
+	bh=GA7Rj70Pk8B6oc6Hgt1wREzuMQGVvWN5sbWzzcIE+ns=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=UjQEWqmV1C+hw1wMXuKO0RszpePEl39t4B4MxMEQPDPTPwyhp8HOeVP3rrYJCJojQ
-	 ywoSijVsBiFcY5BUoIXUQqKtQnUD1TOOLzEXdAShOFo/1vmrzI99Y8awkL/QvW9Di+
-	 4lwzACzhcE0xNuNzEeVp7yIyR1lY5GzkYVFcHSUk=
+	b=MJ6cQTtyOoTv19B5VEJTcps20LkygS+ntrklQMK/AYNhAdM9gWF5h9MzJALcJjq7a
+	 Ubfgbks3oY90Lq4SDTWvziiuNGVqotCcklCSrzLOVIwOrJKu/MG4K4hhNkI+hRAYCN
+	 jEUKZnj5AcSAQ15zGoLtVy4949yHEvIVzsM2R2zI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728206AbfFTSKl (ORCPT
+        id S1728844AbfFTSKn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 20 Jun 2019 14:10:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38286 "EHLO mail.kernel.org"
+        Thu, 20 Jun 2019 14:10:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726827AbfFTSKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 20 Jun 2019 14:10:39 -0400
+        id S1728836AbfFTSKl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 20 Jun 2019 14:10:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96E4B214AF;
-        Thu, 20 Jun 2019 18:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3333A21743;
+        Thu, 20 Jun 2019 18:10:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561054238;
-        bh=Iz+s5FrWakQFdWSwoRfCM8MiMavQPXKCX7ztijiLTUI=;
+        s=default; t=1561054240;
+        bh=GA7Rj70Pk8B6oc6Hgt1wREzuMQGVvWN5sbWzzcIE+ns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JoTMmaBIZKd6bao18NCXEVcYh+8T+oezzZE5/RQez/a5p7VsO8XCJOgHfGkMjsilR
-         anuBy7XqFe+qoCdEK7Of8Nq7y/zzWRE09XpUucobhS5QKBZw91RmhDQ4sbHA0WmobB
-         oXi/fjyhwmhed2OvHNAlR65kDiBJ64JudK8mPz2Q=
+        b=LtZQbaLsPY6RJO8gVqfOJitk/U67H2tTj+oyejSoD+NiPcyd81I3MyfqFDwV9bVr2
+         m6m5zW4qkstT7RFKjiU1hUjc0mJx1b78NS+EsCznR7E9hTtiwnKlV7NMwbqlEGF9FI
+         Abjkc+I3AnRrj06XRZZrDaB2FkSK29yeR7iNcF4c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jeffrin Jose T <jeffrin@rajagiritech.edu.in>,
-        Florian Westphal <fw@strlen.de>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
+        stable@vger.kernel.org, Tony Lindgren <tony@atomide.com>,
+        Stephen Boyd <sboyd@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 21/61] selftests: netfilter: missing error check when setting up veth interface
-Date:   Thu, 20 Jun 2019 19:57:16 +0200
-Message-Id: <20190620174340.892636886@linuxfoundation.org>
+Subject: [PATCH 4.19 22/61] clk: ti: clkctrl: Fix clkdm_clk handling
+Date:   Thu, 20 Jun 2019 19:57:17 +0200
+Message-Id: <20190620174341.062147415@linuxfoundation.org>
 X-Mailer: git-send-email 2.22.0
 In-Reply-To: <20190620174336.357373754@linuxfoundation.org>
 References: <20190620174336.357373754@linuxfoundation.org>
@@ -62,38 +60,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 82ce6eb1dd13fd12e449b2ee2c2ec051e6f52c43 ]
+[ Upstream commit 1cc54078d104f5b4d7e9f8d55362efa5a8daffdb ]
 
-A test for the basic NAT functionality uses ip command which needs veth
-device. There is a condition where the kernel support for veth is not
-compiled into the kernel and the test script breaks. This patch contains
-code for reasonable error display and correct code exit.
+We need to always call clkdm_clk_enable() and clkdm_clk_disable() even
+the clkctrl clock(s) enabled for the domain do not have any gate register
+bits. Otherwise clockdomains may never get enabled except when devices get
+probed with the legacy "ti,hwmods" devicetree property.
 
-Signed-off-by: Jeffrin Jose T <jeffrin@rajagiritech.edu.in>
-Acked-by: Florian Westphal <fw@strlen.de>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
+Fixes: 88a172526c32 ("clk: ti: add support for clkctrl clocks")
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/testing/selftests/netfilter/nft_nat.sh | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/clk/ti/clkctrl.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/testing/selftests/netfilter/nft_nat.sh b/tools/testing/selftests/netfilter/nft_nat.sh
-index 8ec76681605c..f25f72a75cf3 100755
---- a/tools/testing/selftests/netfilter/nft_nat.sh
-+++ b/tools/testing/selftests/netfilter/nft_nat.sh
-@@ -23,7 +23,11 @@ ip netns add ns0
- ip netns add ns1
- ip netns add ns2
+diff --git a/drivers/clk/ti/clkctrl.c b/drivers/clk/ti/clkctrl.c
+index 421b05392220..ca3218337fd7 100644
+--- a/drivers/clk/ti/clkctrl.c
++++ b/drivers/clk/ti/clkctrl.c
+@@ -137,9 +137,6 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
+ 	int ret;
+ 	union omap4_timeout timeout = { 0 };
  
--ip link add veth0 netns ns0 type veth peer name eth0 netns ns1
-+ip link add veth0 netns ns0 type veth peer name eth0 netns ns1 > /dev/null 2>&1
-+if [ $? -ne 0 ];then
-+    echo "SKIP: No virtual ethernet pair device support in kernel"
-+    exit $ksft_skip
-+fi
- ip link add veth1 netns ns0 type veth peer name eth0 netns ns2
+-	if (!clk->enable_bit)
+-		return 0;
+-
+ 	if (clk->clkdm) {
+ 		ret = ti_clk_ll_ops->clkdm_clk_enable(clk->clkdm, hw->clk);
+ 		if (ret) {
+@@ -151,6 +148,9 @@ static int _omap4_clkctrl_clk_enable(struct clk_hw *hw)
+ 		}
+ 	}
  
- ip -net ns0 link set lo up
++	if (!clk->enable_bit)
++		return 0;
++
+ 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 
+ 	val &= ~OMAP4_MODULEMODE_MASK;
+@@ -179,7 +179,7 @@ static void _omap4_clkctrl_clk_disable(struct clk_hw *hw)
+ 	union omap4_timeout timeout = { 0 };
+ 
+ 	if (!clk->enable_bit)
+-		return;
++		goto exit;
+ 
+ 	val = ti_clk_ll_ops->clk_readl(&clk->enable_reg);
+ 
 -- 
 2.20.1
 
